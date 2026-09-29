@@ -112,14 +112,14 @@ ScannerLight.component_data = {
 	lights = {
 		size = 1,
 		ui_name = "Lights",
-		ui_type = "text_box_array",
+		ui_type = "text_box_array"
 	},
 	inputs = {
 		function_example = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return ScannerLight

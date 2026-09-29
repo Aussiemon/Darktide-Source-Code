@@ -89,27 +89,27 @@ CheckboxPassTemplates.settings_checkbox = function (width, height, settings_area
 			horizontal_alignment = "right",
 			size = {
 				settings_area_width,
-				height,
+				height
 			},
 			color = Color.terminal_corner_hover(255, true),
 			size_addition = {
 				0,
-				0,
+				0
 			},
 			offset = {
 				0,
 				0,
-				11,
-			},
+				11
+			}
 		},
 		change_function = list_item_highlight_change_function,
-		visibility_function = list_item_highight_focused_visibility_function,
+		visibility_function = list_item_highight_focused_visibility_function
 	}
 
 	local option_width = settings_area_width / num_options
 	local option_size = {
 		option_width,
-		height,
+		height
 	}
 
 	for i = 1, num_options do
@@ -134,9 +134,9 @@ CheckboxPassTemplates.settings_checkbox = function (width, height, settings_area
 				offset = {
 					horizontal_offset,
 					0,
-					10,
-				},
-			},
+					10
+				}
+			}
 		}
 		passes[#passes + 1] = {
 			pass_type = "texture",
@@ -147,9 +147,9 @@ CheckboxPassTemplates.settings_checkbox = function (width, height, settings_area
 				offset = {
 					horizontal_offset,
 					0,
-					1,
+					1
 				},
-				color = Color.terminal_corner_hover(255, true),
+				color = Color.terminal_corner_hover(255, true)
 			},
 			change_function = function (content, style)
 				local default_alpha = 255
@@ -160,7 +160,7 @@ CheckboxPassTemplates.settings_checkbox = function (width, height, settings_area
 			end,
 			visibility_function = function (content, style)
 				return content[hotspot_id].is_selected
-			end,
+			end
 		}
 		passes[#passes + 1] = {
 			pass_type = "rect",
@@ -171,16 +171,16 @@ CheckboxPassTemplates.settings_checkbox = function (width, height, settings_area
 				offset = {
 					horizontal_offset,
 					0,
-					9,
+					9
 				},
-				color = Color.terminal_corner(25.5, true),
+				color = Color.terminal_corner(25.5, true)
 			},
 			change_function = function (content, style)
 				style.color[1] = 25.5 * content[hotspot_id].anim_select_progress
 			end,
 			visibility_function = function (content, style)
 				return content[hotspot_id].is_selected and not content.disabled
-			end,
+			end
 		}
 		passes[#passes + 1] = {
 			pass_type = "text",
@@ -188,7 +188,7 @@ CheckboxPassTemplates.settings_checkbox = function (width, height, settings_area
 			style_id = "option_" .. i,
 			value_id = "option_" .. i,
 			value = "option_" .. i,
-			change_function = highlight_color_change_function,
+			change_function = highlight_color_change_function
 		}
 	end
 
@@ -200,11 +200,11 @@ local terminal_button_text_style = table.clone(UIFontSettings.button_primary)
 terminal_button_text_style.offset = {
 	70,
 	0,
-	6,
+	6
 }
 terminal_button_text_style.size_addition = {
 	-70,
-	0,
+	0
 }
 terminal_button_text_style.text_horizontal_alignment = "left"
 terminal_button_text_style.text_vertical_alignment = "center"
@@ -212,13 +212,13 @@ terminal_button_text_style.text_color = {
 	255,
 	216,
 	229,
-	207,
+	207
 }
 terminal_button_text_style.default_color = {
 	255,
 	216,
 	229,
-	207,
+	207
 }
 CheckboxPassTemplates.terminal_checkbox_button = {
 	{
@@ -227,7 +227,7 @@ CheckboxPassTemplates.terminal_checkbox_button = {
 		content = {
 			on_released_sound = nil,
 			on_hover_sound = UISoundEvents.default_mouse_hover,
-			on_pressed_sound = UISoundEvents.default_click,
+			on_pressed_sound = UISoundEvents.default_click
 		},
 		change_function = function (content, style, _, dt)
 			local checked = content.parent.checked
@@ -244,7 +244,7 @@ CheckboxPassTemplates.terminal_checkbox_button = {
 
 				content.anim_checked_progress = anim_checked_progress
 			end
-		end,
+		end
 	},
 	{
 		pass_type = "rect",
@@ -256,17 +256,17 @@ CheckboxPassTemplates.terminal_checkbox_button = {
 				180,
 				28,
 				31,
-				28,
+				28
 			},
 			size = {
-				50,
+				50
 			},
 			offset = {
 				0,
 				0,
-				2,
-			},
-		},
+				2
+			}
+		}
 	},
 	{
 		pass_type = "texture",
@@ -279,14 +279,14 @@ CheckboxPassTemplates.terminal_checkbox_button = {
 			color = Color.black(150, true),
 			size_addition = {
 				-30,
-				20,
+				20
 			},
 			offset = {
 				10,
 				0,
-				3,
-			},
-		},
+				3
+			}
+		}
 	},
 	{
 		pass_type = "texture",
@@ -294,9 +294,9 @@ CheckboxPassTemplates.terminal_checkbox_button = {
 		value = "content/ui/materials/backgrounds/default_square",
 		style = {
 			default_color = Color.terminal_background(nil, true),
-			selected_color = Color.terminal_background_selected(nil, true),
+			selected_color = Color.terminal_background_selected(nil, true)
 		},
-		change_function = terminal_button_change_function,
+		change_function = terminal_button_change_function
 	},
 	{
 		pass_type = "texture",
@@ -310,18 +310,18 @@ CheckboxPassTemplates.terminal_checkbox_button = {
 			disabled_color = Color.ui_grey_medium(255, true),
 			size_addition = {
 				-50,
-				0,
+				0
 			},
 			offset = {
 				0,
 				0,
-				1,
-			},
+				1
+			}
 		},
 		change_function = function (content, style)
 			terminal_button_change_function(content, style)
 			terminal_button_hover_change_function(content, style)
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -336,26 +336,26 @@ CheckboxPassTemplates.terminal_checkbox_button = {
 			text_vertical_alignment = "center",
 			vertical_alignment = "center",
 			size = {
-				50,
+				50
 			},
 			text_color = {
 				255,
 				10,
 				10,
-				10,
+				10
 			},
 			offset = {
 				0,
 				0,
-				5,
-			},
+				5
+			}
 		},
 		change_function = function (content, style)
 			content.checkbox = ""
 		end,
 		visibility_function = function (content, style)
 			return not content.checked
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -370,21 +370,21 @@ CheckboxPassTemplates.terminal_checkbox_button = {
 			text_vertical_alignment = "center",
 			vertical_alignment = "center",
 			size = {
-				50,
+				50
 			},
 			text_color = Color.terminal_corner_selected(nil, true),
 			offset = {
 				0,
 				0,
-				5,
-			},
+				5
+			}
 		},
 		change_function = function (content, style)
 			content.checkbox = ""
 		end,
 		visibility_function = function (content, style)
 			return content.checked
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -397,14 +397,14 @@ CheckboxPassTemplates.terminal_checkbox_button = {
 			color = Color.black(200, true),
 			size_addition = {
 				20,
-				20,
+				20
 			},
 			offset = {
 				0,
 				0,
-				3,
-			},
-		},
+				3
+			}
+		}
 	},
 	{
 		pass_type = "texture",
@@ -420,10 +420,10 @@ CheckboxPassTemplates.terminal_checkbox_button = {
 			offset = {
 				0,
 				0,
-				5,
-			},
+				5
+			}
 		},
-		change_function = terminal_button_change_function,
+		change_function = terminal_button_change_function
 	},
 	{
 		pass_type = "texture",
@@ -439,10 +439,10 @@ CheckboxPassTemplates.terminal_checkbox_button = {
 			offset = {
 				0,
 				0,
-				6,
-			},
+				6
+			}
 		},
-		change_function = terminal_button_change_function,
+		change_function = terminal_button_change_function
 	},
 	{
 		pass_type = "text",
@@ -474,8 +474,8 @@ CheckboxPassTemplates.terminal_checkbox_button = {
 			if color and default_color and hover_color then
 				color_lerp(default_color, hover_color, progress, color)
 			end
-		end,
-	},
+		end
+	}
 }
 
 return CheckboxPassTemplates

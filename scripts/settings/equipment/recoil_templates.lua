@@ -8,27 +8,27 @@ local weapon_movement_states = WeaponMovementStateSettings.weapon_movement_state
 local recoil_templates = {}
 local loaded_template_files = {}
 
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/arc_rifle/settings_templates/arc_rifle_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/autoguns/settings_templates/autogun_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/autopistols/settings_templates/autopistol_recoil_templates", recoil_templates, loaded_template_files)
-WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/dual_autopistols/settings_templates/dual_autopistol_recoil_templates", recoil_templates, loaded_template_files)
-WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/dual_stub_pistols/settings_templates/dual_stub_pistols_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/bolt_pistols/settings_templates/boltpistol_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/bolters/settings_templates/bolter_recoil_templates", recoil_templates, loaded_template_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/dual_autopistols/settings_templates/dual_autopistol_recoil_templates", recoil_templates, loaded_template_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/dual_stub_pistols/settings_templates/dual_stub_pistols_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/flamers/settings_templates/flamer_recoil_templates", recoil_templates, loaded_template_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/galvanic_rifle/settings_templates/galvanic_rifle_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/grenadier_gauntlets/settings_templates/grenadier_gauntlet_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/lasguns/settings_templates/lasgun_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/laspistols/settings_templates/laspistol_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/needlepistols/settings_templates/needlepistol_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/ogryn_heavystubbers/settings_templates/ogryn_heavystubber_recoil_templates", recoil_templates, loaded_template_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/phosphor_pistol/settings_templates/phosphor_pistol_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/plasma_rifles/settings_templates/plasma_rifle_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/ripperguns/settings_templates/rippergun_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/shotguns/settings_templates/shotgun_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/shotpistol_shield/settings_templates/shotpistol_shield_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/stub_pistols/settings_templates/stub_pistol_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/thumpers/settings_templates/thumper_recoil_templates", recoil_templates, loaded_template_files)
-WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/galvanic_rifle/settings_templates/galvanic_rifle_recoil_templates", recoil_templates, loaded_template_files)
-WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/arc_rifle/settings_templates/arc_rifle_recoil_templates", recoil_templates, loaded_template_files)
-WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/phosphor_pistol/settings_templates/phosphor_pistol_recoil_templates", recoil_templates, loaded_template_files)
 
 recoil_templates.lasgun = {
 	[weapon_movement_states.still] = {
@@ -42,143 +42,143 @@ recoil_templates.lasgun = {
 			0.175,
 			0.15,
 			0.1,
-			0.05,
+			0.05
 		},
 		decay = {
 			idle = 2,
-			shooting = 1,
+			shooting = 1
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.06,
-					0.06,
+					0.06
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.06,
-					0.06,
+					0.06
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.06,
-					0.06,
+					0.06
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.05,
-					0.05,
+					0.05
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.06,
-					0.07,
+					0.07
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.07,
-					0.08,
+					0.08
 				},
 				yaw = {
 					-0.03,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.06,
-					0.08,
+					0.08
 				},
 				yaw = {
 					-0.04,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.05,
-					0.07,
+					0.07
 				},
 				yaw = {
 					-0.07,
-					0.01,
-				},
+					0.01
+				}
 			},
 			{
 				pitch = {
 					0.03,
-					0.05,
+					0.05
 				},
 				yaw = {
 					-0.06,
-					0.01,
-				},
+					0.01
+				}
 			},
 			{
 				pitch = {
 					0.015,
-					0.03,
+					0.03
 				},
 				yaw = {
 					-0.05,
-					0.01,
-				},
-			},
+					0.01
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 2,
-			yaw = 2,
+			yaw = 2
 		},
 		aim_assist = {
-			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness,
-		},
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
+		}
 	},
 	[weapon_movement_states.moving] = {
 		new_influence_percent = 0.1,
 		inherits = {
 			"lasgun",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_still] = {
 		new_influence_percent = 0.04,
 		inherits = {
 			"lasgun",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_moving] = {
 		new_influence_percent = 0.08,
 		inherits = {
 			"lasgun",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 recoil_templates.autogun = {
 	[weapon_movement_states.still] = {
@@ -197,143 +197,143 @@ recoil_templates.autogun = {
 			0.175,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
 		decay = {
 			idle = 4,
-			shooting = 1,
+			shooting = 1
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.05,
-					0.06,
+					0.06
 				},
 				yaw = {
 					-0.025,
-					0.025,
-				},
+					0.025
+				}
 			},
 			{
 				pitch = {
 					0.05,
-					0.07,
+					0.07
 				},
 				yaw = {
 					-0.0225,
-					0.0225,
-				},
+					0.0225
+				}
 			},
 			{
 				pitch = {
 					0.05,
-					0.08,
+					0.08
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.06,
-					0.07,
+					0.07
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.06,
-					0.06,
+					0.06
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.06,
-					0.07,
+					0.07
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.05,
-					0.07,
+					0.07
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.05,
-					0.07,
+					0.07
 				},
 				yaw = {
 					-0.03,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.05,
-					0.07,
+					0.07
 				},
 				yaw = {
 					-0.04,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.05,
-					0.07,
+					0.07
 				},
 				yaw = {
 					-0.04,
-					0.02,
-				},
-			},
+					0.02
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 2,
-			yaw = 2,
+			yaw = 2
 		},
 		aim_assist = {
-			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness,
-		},
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
+		}
 	},
 	[weapon_movement_states.moving] = {
 		new_influence_percent = 0.55,
 		inherits = {
 			"autogun",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_still] = {
 		new_influence_percent = 0.25,
 		inherits = {
 			"autogun",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_moving] = {
 		new_influence_percent = 0.4,
 		inherits = {
 			"autogun",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 
 local autogun_zoomed_pitch_default = 0.02
@@ -345,126 +345,126 @@ recoil_templates.autogun_zoomed = {
 		rise_duration = 0.075,
 		rise = {
 			1,
-			0.7,
+			0.7
 		},
 		decay = {
 			idle = 1.5,
-			shooting = 0,
+			shooting = 0
 		},
 		offset_range = {
 			{
 				pitch = {
 					autogun_zoomed_pitch_default * 0.95,
-					autogun_zoomed_pitch_default * 1.05,
+					autogun_zoomed_pitch_default * 1.05
 				},
 				yaw = {
 					-0.0075,
-					0.0075,
-				},
+					0.0075
+				}
 			},
 			{
 				pitch = {
 					autogun_zoomed_pitch_default * 0.85,
-					autogun_zoomed_pitch_default * 1.15,
+					autogun_zoomed_pitch_default * 1.15
 				},
 				yaw = {
 					-0.0085,
-					0.0085,
-				},
+					0.0085
+				}
 			},
 			{
 				pitch = {
 					autogun_zoomed_pitch_default * 0.75,
-					autogun_zoomed_pitch_default * 1.25,
+					autogun_zoomed_pitch_default * 1.25
 				},
 				yaw = {
 					-0.01,
-					0.01,
-				},
+					0.01
+				}
 			},
 			{
 				pitch = {
 					autogun_zoomed_pitch_default * 0.75,
-					autogun_zoomed_pitch_default * 1.25,
+					autogun_zoomed_pitch_default * 1.25
 				},
 				yaw = {
 					-0.01,
-					0.01,
-				},
+					0.01
+				}
 			},
 			{
 				pitch = {
 					autogun_zoomed_pitch_default * 0.75,
-					autogun_zoomed_pitch_default * 1.25,
+					autogun_zoomed_pitch_default * 1.25
 				},
 				yaw = {
 					-0.01,
-					0.01,
-				},
+					0.01
+				}
 			},
 			{
 				pitch = {
 					autogun_zoomed_pitch_default * 0.75,
-					autogun_zoomed_pitch_default * 1.25,
+					autogun_zoomed_pitch_default * 1.25
 				},
 				yaw = {
 					-0.015,
-					0.015,
-				},
+					0.015
+				}
 			},
 			{
 				pitch = {
 					autogun_zoomed_pitch_default * 0.75,
-					autogun_zoomed_pitch_default * 1.25,
+					autogun_zoomed_pitch_default * 1.25
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					autogun_zoomed_pitch_default * 0.75,
-					autogun_zoomed_pitch_default * 1.25,
+					autogun_zoomed_pitch_default * 1.25
 				},
 				yaw = {
 					-0.025,
-					0.025,
-				},
-			},
+					0.025
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 0.15,
-			yaw = 0.5,
+			yaw = 0.5
 		},
 		aim_assist = {
 			reduction_per_shot = 0.25,
-			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.flat_reduction_per_shot,
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.flat_reduction_per_shot
 		},
 		visual_recoil_settings = {
 			intensity = 5,
-			lerp_scalar = 1,
-		},
+			lerp_scalar = 1
+		}
 	},
 	moving = {
 		new_influence_percent = 0.4,
 		inherits = {
 			"autogun_zoomed",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"autogun_zoomed",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"autogun_zoomed",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 
 local autogun_killshot_zoomed_pitch_default = 0.075
@@ -476,126 +476,126 @@ recoil_templates.autogun_killshot_zoomed = {
 		rise_duration = 0.05,
 		rise = {
 			1,
-			0.7,
+			0.7
 		},
 		decay = {
 			idle = 2,
-			shooting = 1,
+			shooting = 1
 		},
 		offset_range = {
 			{
 				pitch = {
 					autogun_killshot_zoomed_pitch_default * 0.95,
-					autogun_killshot_zoomed_pitch_default * 1.05,
+					autogun_killshot_zoomed_pitch_default * 1.05
 				},
 				yaw = {
 					-0.0075,
-					0.0075,
-				},
+					0.0075
+				}
 			},
 			{
 				pitch = {
 					autogun_killshot_zoomed_pitch_default * 0.85,
-					autogun_killshot_zoomed_pitch_default * 1.15,
+					autogun_killshot_zoomed_pitch_default * 1.15
 				},
 				yaw = {
 					-0.0085,
-					0.0085,
-				},
+					0.0085
+				}
 			},
 			{
 				pitch = {
 					autogun_killshot_zoomed_pitch_default * 0.75,
-					autogun_killshot_zoomed_pitch_default * 1.25,
+					autogun_killshot_zoomed_pitch_default * 1.25
 				},
 				yaw = {
 					-0.01,
-					0.01,
-				},
+					0.01
+				}
 			},
 			{
 				pitch = {
 					autogun_killshot_zoomed_pitch_default * 0.75,
-					autogun_killshot_zoomed_pitch_default * 1.25,
+					autogun_killshot_zoomed_pitch_default * 1.25
 				},
 				yaw = {
 					-0.01,
-					0.01,
-				},
+					0.01
+				}
 			},
 			{
 				pitch = {
 					autogun_killshot_zoomed_pitch_default * 0.75,
-					autogun_killshot_zoomed_pitch_default * 1.25,
+					autogun_killshot_zoomed_pitch_default * 1.25
 				},
 				yaw = {
 					-0.01,
-					0.01,
-				},
+					0.01
+				}
 			},
 			{
 				pitch = {
 					autogun_killshot_zoomed_pitch_default * 0.75,
-					autogun_killshot_zoomed_pitch_default * 1.25,
+					autogun_killshot_zoomed_pitch_default * 1.25
 				},
 				yaw = {
 					-0.015,
-					0.015,
-				},
+					0.015
+				}
 			},
 			{
 				pitch = {
 					autogun_killshot_zoomed_pitch_default * 0.75,
-					autogun_killshot_zoomed_pitch_default * 1.25,
+					autogun_killshot_zoomed_pitch_default * 1.25
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					autogun_killshot_zoomed_pitch_default * 0.75,
-					autogun_killshot_zoomed_pitch_default * 1.25,
+					autogun_killshot_zoomed_pitch_default * 1.25
 				},
 				yaw = {
 					-0.025,
-					0.025,
-				},
-			},
+					0.025
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 0.15,
-			yaw = 0.5,
+			yaw = 0.5
 		},
 		aim_assist = {
 			reduction_per_shot = 0.25,
-			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.flat_reduction_per_shot,
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.flat_reduction_per_shot
 		},
 		visual_recoil_settings = {
 			intensity = 3,
-			lerp_scalar = 1,
-		},
+			lerp_scalar = 1
+		}
 	},
 	moving = {
 		new_influence_percent = 0.4,
 		inherits = {
 			"autogun_killshot_zoomed",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"autogun_killshot_zoomed",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"autogun_killshot_zoomed",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 
 local autogun_killshot_hip_pitch_default = 0.15
@@ -607,126 +607,126 @@ recoil_templates.autogun_killshot_hip = {
 		rise_duration = 0.05,
 		rise = {
 			0.5,
-			0.7,
+			0.7
 		},
 		decay = {
 			idle = 2,
-			shooting = 1,
+			shooting = 1
 		},
 		offset_range = {
 			{
 				pitch = {
 					autogun_killshot_hip_pitch_default * 0.95,
-					autogun_killshot_hip_pitch_default * 1.05,
+					autogun_killshot_hip_pitch_default * 1.05
 				},
 				yaw = {
 					-0.15,
-					0.15,
-				},
+					0.15
+				}
 			},
 			{
 				pitch = {
 					autogun_killshot_hip_pitch_default * 0.85,
-					autogun_killshot_hip_pitch_default * 1.15,
+					autogun_killshot_hip_pitch_default * 1.15
 				},
 				yaw = {
 					-0.13,
-					0.13,
-				},
+					0.13
+				}
 			},
 			{
 				pitch = {
 					autogun_killshot_hip_pitch_default * 0.75,
-					autogun_killshot_hip_pitch_default * 1.25,
+					autogun_killshot_hip_pitch_default * 1.25
 				},
 				yaw = {
 					-0.01,
-					0.01,
-				},
+					0.01
+				}
 			},
 			{
 				pitch = {
 					autogun_killshot_hip_pitch_default * 0.75,
-					autogun_killshot_hip_pitch_default * 1.25,
+					autogun_killshot_hip_pitch_default * 1.25
 				},
 				yaw = {
 					-0.01,
-					0.01,
-				},
+					0.01
+				}
 			},
 			{
 				pitch = {
 					autogun_killshot_hip_pitch_default * 0.75,
-					autogun_killshot_hip_pitch_default * 1.25,
+					autogun_killshot_hip_pitch_default * 1.25
 				},
 				yaw = {
 					-0.01,
-					0.01,
-				},
+					0.01
+				}
 			},
 			{
 				pitch = {
 					autogun_killshot_hip_pitch_default * 0.75,
-					autogun_killshot_hip_pitch_default * 1.25,
+					autogun_killshot_hip_pitch_default * 1.25
 				},
 				yaw = {
 					-0.015,
-					0.015,
-				},
+					0.015
+				}
 			},
 			{
 				pitch = {
 					autogun_killshot_hip_pitch_default * 0.75,
-					autogun_killshot_hip_pitch_default * 1.25,
+					autogun_killshot_hip_pitch_default * 1.25
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					autogun_killshot_hip_pitch_default * 0.75,
-					autogun_killshot_hip_pitch_default * 1.25,
+					autogun_killshot_hip_pitch_default * 1.25
 				},
 				yaw = {
 					-0.025,
-					0.025,
-				},
-			},
+					0.025
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 0.15,
-			yaw = 0.5,
+			yaw = 0.5
 		},
 		aim_assist = {
 			reduction_per_shot = 0.25,
-			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.flat_reduction_per_shot,
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.flat_reduction_per_shot
 		},
 		visual_recoil_settings = {
 			intensity = 1,
-			lerp_scalar = 1,
-		},
+			lerp_scalar = 1
+		}
 	},
 	moving = {
 		new_influence_percent = 0.4,
 		inherits = {
 			"autogun_killshot_hip",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"autogun_killshot_hip",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"autogun_killshot_hip",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 recoil_templates.autopistol = {
 	[weapon_movement_states.still] = {
@@ -742,143 +742,143 @@ recoil_templates.autopistol = {
 			0.075,
 			0.05,
 			0.025,
-			0.01,
+			0.01
 		},
 		decay = {
 			idle = 4,
-			shooting = 1.5,
+			shooting = 1.5
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.05,
-					0.06,
+					0.06
 				},
 				yaw = {
 					-0.025,
-					0.025,
-				},
+					0.025
+				}
 			},
 			{
 				pitch = {
 					0.05,
-					0.07,
+					0.07
 				},
 				yaw = {
 					-0.0225,
-					0.0225,
-				},
+					0.0225
+				}
 			},
 			{
 				pitch = {
 					0.05,
-					0.08,
+					0.08
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.06,
-					0.07,
+					0.07
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.06,
-					0.06,
+					0.06
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.06,
-					0.07,
+					0.07
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.05,
-					0.07,
+					0.07
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.05,
-					0.07,
+					0.07
 				},
 				yaw = {
 					-0.03,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.05,
-					0.07,
+					0.07
 				},
 				yaw = {
 					-0.04,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.05,
-					0.07,
+					0.07
 				},
 				yaw = {
 					-0.04,
-					0.02,
-				},
-			},
+					0.02
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 0.75,
-			yaw = 0.75,
+			yaw = 0.75
 		},
 		aim_assist = {
-			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness,
-		},
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
+		}
 	},
 	[weapon_movement_states.moving] = {
 		new_influence_percent = 0.55,
 		inherits = {
 			"autopistol",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_still] = {
 		new_influence_percent = 0.25,
 		inherits = {
 			"autopistol",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_moving] = {
 		new_influence_percent = 0.4,
 		inherits = {
 			"autopistol",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 recoil_templates.laspistol_assault = {
 	[weapon_movement_states.still] = {
@@ -889,80 +889,80 @@ recoil_templates.laspistol_assault = {
 			0.35,
 			0.3,
 			0.4,
-			0.5,
+			0.5
 		},
 		decay = {
 			idle = 2,
-			shooting = 0.5,
+			shooting = 0.5
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.075,
-					0.075,
+					0.075
 				},
 				yaw = {
 					-0,
-					0,
-				},
+					0
+				}
 			},
 			{
 				pitch = {
 					0.075,
-					0.075,
+					0.075
 				},
 				yaw = {
 					-0.01,
-					0.01,
-				},
+					0.01
+				}
 			},
 			{
 				pitch = {
 					0.065,
-					0.085,
+					0.085
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.05,
-					0.075,
+					0.075
 				},
 				yaw = {
 					-0.03,
-					0.03,
-				},
-			},
+					0.03
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 1,
-			yaw = 1,
-		},
+			yaw = 1
+		}
 	},
 	[weapon_movement_states.moving] = {
 		new_influence_percent = 0.65,
 		inherits = {
 			"laspistol_assault",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_still] = {
 		new_influence_percent = 0.5,
 		inherits = {
 			"laspistol_assault",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_moving] = {
 		new_influence_percent = 0.5,
 		inherits = {
 			"laspistol_assault",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 recoil_templates.laspistol_aim_killshot = {
 	[weapon_movement_states.still] = {
@@ -975,80 +975,80 @@ recoil_templates.laspistol_aim_killshot = {
 			0.5,
 			0.45,
 			0.4,
-			0.35,
+			0.35
 		},
 		decay = {
 			idle = 2.5,
-			shooting = 0.5,
+			shooting = 0.5
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.075,
-					0.075,
+					0.075
 				},
 				yaw = {
 					-0,
-					0,
-				},
+					0
+				}
 			},
 			{
 				pitch = {
 					0.08,
-					0.08,
+					0.08
 				},
 				yaw = {
 					-0.01,
-					0.01,
-				},
+					0.01
+				}
 			},
 			{
 				pitch = {
 					0.075,
-					0.085,
+					0.085
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.06,
-					0.09,
+					0.09
 				},
 				yaw = {
 					-0.03,
-					0.03,
-				},
-			},
+					0.03
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 2,
-			yaw = 2,
-		},
+			yaw = 2
+		}
 	},
 	[weapon_movement_states.moving] = {
 		new_influence_percent = 0.75,
 		inherits = {
 			"laspistol_aim_killshot",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_still] = {
 		new_influence_percent = 0.6,
 		inherits = {
 			"laspistol_aim_killshot",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_moving] = {
 		new_influence_percent = 0.8,
 		inherits = {
 			"laspistol_aim_killshot",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 recoil_templates.lasgun_brace = {
 	[weapon_movement_states.still] = {
@@ -1059,89 +1059,89 @@ recoil_templates.lasgun_brace = {
 			0.35,
 			0.275,
 			0.2,
-			0.1,
+			0.1
 		},
 		decay = {
 			idle = 1.75,
-			shooting = 1,
+			shooting = 1
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.1,
-					0.125,
+					0.125
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.075,
-					0.1,
+					0.1
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.05,
-					0.075,
+					0.075
 				},
 				yaw = {
 					-0.03,
-					0.03,
-				},
+					0.03
+				}
 			},
 			{
 				pitch = {
 					0.02,
-					0.04,
+					0.04
 				},
 				yaw = {
 					-0.03,
-					0.03,
-				},
-			},
+					0.03
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 2,
-			yaw = 2,
+			yaw = 2
 		},
 		aim_assist = {
-			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness,
-		},
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
+		}
 	},
 	[weapon_movement_states.moving] = {
 		new_influence_percent = 0.05,
 		inherits = {
 			"lasgun_brace",
-			"still",
+			"still"
 		},
 		rise = {
 			0.5,
 			0.35,
 			0.275,
-			0.2,
-		},
+			0.2
+		}
 	},
 	[weapon_movement_states.crouch_still] = {
 		new_influence_percent = 0.04,
 		inherits = {
 			"lasgun_brace",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_moving] = {
 		new_influence_percent = 0.08,
 		inherits = {
 			"lasgun_brace",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 recoil_templates.rippergun_hip = {
 	[weapon_movement_states.still] = {
@@ -1149,57 +1149,57 @@ recoil_templates.rippergun_hip = {
 		new_influence_percent = 0.75,
 		rise_duration = 0.075,
 		rise = {
-			0.75,
+			0.75
 		},
 		decay = {
 			idle = 1.75,
-			shooting = 0.25,
+			shooting = 0.25
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.1,
-					0.125,
+					0.125
 				},
 				yaw = {
 					-0.1,
-					0.1,
-				},
-			},
+					0.1
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 2,
-			yaw = 1,
+			yaw = 1
 		},
 		aim_assist = {
-			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness,
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
 		},
 		visual_recoil_settings = {
 			intensity = 1,
-			lerp_scalar = 1,
-		},
+			lerp_scalar = 1
+		}
 	},
 	[weapon_movement_states.moving] = {
 		new_influence_percent = 1,
 		inherits = {
 			"rippergun_hip",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_still] = {
 		new_influence_percent = 0.75,
 		inherits = {
 			"rippergun_hip",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_moving] = {
 		new_influence_percent = 0.85,
 		inherits = {
 			"rippergun_hip",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 recoil_templates.rippergun_braced = {
 	[weapon_movement_states.still] = {
@@ -1213,63 +1213,63 @@ recoil_templates.rippergun_braced = {
 			0.225,
 			0.2,
 			0.15,
-			0.1,
+			0.1
 		},
 		decay = {
 			idle = 1.75,
-			shooting = 1,
+			shooting = 1
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.02,
-					0.022,
+					0.022
 				},
 				yaw = {
 					-0.005,
-					0.01,
-				},
-			},
+					0.01
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 2,
-			yaw = 2,
+			yaw = 2
 		},
 		aim_assist = {
-			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness,
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
 		},
 		visual_recoil_settings = {
 			intensity = 0.25,
-			lerp_scalar = 1,
-		},
+			lerp_scalar = 1
+		}
 	},
 	[weapon_movement_states.moving] = {
 		new_influence_percent = 0.35,
 		inherits = {
 			"rippergun_braced",
-			"still",
+			"still"
 		},
 		rise = {
 			0.5,
 			0.35,
 			0.275,
-			0.2,
-		},
+			0.2
+		}
 	},
 	[weapon_movement_states.crouch_still] = {
 		new_influence_percent = 0.3,
 		inherits = {
 			"rippergun_braced",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_moving] = {
 		new_influence_percent = 0.35,
 		inherits = {
 			"rippergun_braced",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 recoil_templates.lasgun_brace_light = {
 	[weapon_movement_states.still] = {
@@ -1279,111 +1279,111 @@ recoil_templates.lasgun_brace_light = {
 		rise = {
 			0.5,
 			0.2,
-			0.15,
+			0.15
 		},
 		decay = {
 			idle = 1.25,
-			shooting = 1,
+			shooting = 1
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.1,
-					0.125,
+					0.125
 				},
 				yaw = {
 					-0.01,
-					0.01,
-				},
+					0.01
+				}
 			},
 			{
 				pitch = {
 					0.075,
-					0.1,
+					0.1
 				},
 				yaw = {
 					-0.011,
-					0.011,
-				},
+					0.011
+				}
 			},
 			{
 				pitch = {
 					0.05,
-					0.075,
+					0.075
 				},
 				yaw = {
 					-0.015,
-					0.015,
-				},
+					0.015
+				}
 			},
 			{
 				pitch = {
 					0.02,
-					0.04,
+					0.04
 				},
 				yaw = {
 					-0.0175,
-					0.0175,
-				},
+					0.0175
+				}
 			},
 			{
 				pitch = {
 					0.015,
-					0.03,
+					0.03
 				},
 				yaw = {
 					-0.0175,
-					0.0175,
-				},
+					0.0175
+				}
 			},
 			{
 				pitch = {
 					0.0125,
-					0.025,
+					0.025
 				},
 				yaw = {
 					-0.0175,
-					0.0175,
-				},
+					0.0175
+				}
 			},
 			{
 				pitch = {
 					0.01,
-					0.02,
+					0.02
 				},
 				yaw = {
 					-0.0175,
-					0.0175,
-				},
+					0.0175
+				}
 			},
 			{
 				pitch = {
 					0.0075,
-					0.0125,
+					0.0125
 				},
 				yaw = {
 					-0.0175,
-					0.0175,
-				},
-			},
+					0.0175
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 1,
-			yaw = 1,
+			yaw = 1
 		},
 		visual_recoil_settings = {
 			intensity = 20,
-			lerp_scalar = 0.1,
+			lerp_scalar = 0.1
 		},
 		aim_assist = {
-			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness,
-		},
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
+		}
 	},
 	[weapon_movement_states.moving] = {
 		new_influence_percent = 0.25,
 		inherits = {
 			"lasgun_brace_light",
-			"still",
+			"still"
 		},
 		rise = {
 			0.5,
@@ -1391,23 +1391,23 @@ recoil_templates.lasgun_brace_light = {
 			0.275,
 			0.2,
 			0.15,
-			0.075,
-		},
+			0.075
+		}
 	},
 	[weapon_movement_states.crouch_still] = {
 		new_influence_percent = 0.1,
 		inherits = {
 			"lasgun_brace_light",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_moving] = {
 		new_influence_percent = 0.2,
 		inherits = {
 			"lasgun_brace_light",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 recoil_templates.autogun_brace = {
 	[weapon_movement_states.still] = {
@@ -1419,133 +1419,133 @@ recoil_templates.autogun_brace = {
 			0.1,
 			0.1,
 			0.1,
-			0.2,
+			0.2
 		},
 		decay = {
 			idle = 2.5,
-			shooting = 1,
+			shooting = 1
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.05,
-					0.05,
+					0.05
 				},
 				yaw = {
 					-0.01,
-					0.01,
-				},
+					0.01
+				}
 			},
 			{
 				pitch = {
 					0.065,
-					0.065,
+					0.065
 				},
 				yaw = {
 					-0.0125,
-					0.0125,
-				},
+					0.0125
+				}
 			},
 			{
 				pitch = {
 					0.05,
-					0.075,
+					0.075
 				},
 				yaw = {
 					-0.015,
-					0.015,
-				},
+					0.015
+				}
 			},
 			{
 				pitch = {
 					0.05,
-					0.075,
+					0.075
 				},
 				yaw = {
 					-0.0175,
-					0.0175,
-				},
+					0.0175
+				}
 			},
 			{
 				pitch = {
 					0.02,
-					0.03,
+					0.03
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
-			},
-			{
-				pitch = {
-					0.01,
-					0.02,
-				},
-				yaw = {
-					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.01,
-					0.02,
+					0.02
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.01,
-					0.02,
+					0.02
 				},
 				yaw = {
 					-0.02,
-					0.02,
+					0.02
+				}
+			},
+			{
+				pitch = {
+					0.01,
+					0.02
 				},
+				yaw = {
+					-0.02,
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0,
-					0.02,
+					0.02
 				},
 				yaw = {
 					-0.0225,
-					0.0225,
-				},
-			},
+					0.0225
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 2,
-			yaw = 2,
+			yaw = 2
 		},
 		aim_assist = {
-			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness,
-		},
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
+		}
 	},
 	[weapon_movement_states.moving] = {
 		new_influence_percent = 0.25,
 		inherits = {
 			"autogun_brace",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_still] = {
 		new_influence_percent = 0.25,
 		inherits = {
 			"autogun_brace",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_moving] = {
 		new_influence_percent = 0.25,
 		inherits = {
 			"autogun_brace",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 recoil_templates.shotgun_hip_assault = {
 	[weapon_movement_states.still] = {
@@ -1553,104 +1553,104 @@ recoil_templates.shotgun_hip_assault = {
 		new_influence_percent = 0.6,
 		rise_duration = 0.05,
 		rise = {
-			0.75,
+			0.75
 		},
 		decay = {
 			idle = 1,
-			shooting = 0.25,
+			shooting = 0.25
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.2,
-					0.2,
+					0.2
 				},
 				yaw = {
 					-0,
-					0,
-				},
+					0
+				}
 			},
 			{
 				pitch = {
 					0.175,
-					0.175,
+					0.175
 				},
 				yaw = {
 					-0,
-					0,
-				},
+					0
+				}
 			},
 			{
 				pitch = {
 					0.25,
-					0.3,
+					0.3
 				},
 				yaw = {
 					-0.01,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.15,
-					0.175,
+					0.175
 				},
 				yaw = {
 					-0.03,
-					0.03,
-				},
+					0.03
+				}
 			},
 			{
 				pitch = {
 					0.125,
-					0.15,
+					0.15
 				},
 				yaw = {
 					-0.04,
-					0.04,
-				},
+					0.04
+				}
 			},
 			{
 				pitch = {
 					0.1,
-					0.125,
+					0.125
 				},
 				yaw = {
 					-0.04,
-					0.04,
-				},
-			},
+					0.04
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 2,
-			yaw = 2,
+			yaw = 2
 		},
 		visual_recoil_settings = {
 			intensity = 12,
-			lerp_scalar = 1,
-		},
+			lerp_scalar = 1
+		}
 	},
 	[weapon_movement_states.moving] = {
 		new_influence_percent = 0.7,
 		inherits = {
 			"shotgun_hip_assault",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_still] = {
 		new_influence_percent = 0.4,
 		inherits = {
 			"shotgun_hip_assault",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_moving] = {
 		new_influence_percent = 0.45,
 		inherits = {
 			"shotgun_hip_assault",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 recoil_templates.lasgun_hip_killshot = {
 	[weapon_movement_states.still] = {
@@ -1659,100 +1659,100 @@ recoil_templates.lasgun_hip_killshot = {
 		rise = {
 			0.3,
 			0.3,
-			0.25,
+			0.25
 		},
 		decay = {
 			idle = 1.75,
-			shooting = 0.75,
+			shooting = 0.75
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.2,
-					0.2,
+					0.2
 				},
 				yaw = {
 					-0,
-					0,
-				},
+					0
+				}
 			},
 			{
 				pitch = {
 					0.175,
-					0.175,
+					0.175
 				},
 				yaw = {
 					-0,
-					0,
-				},
+					0
+				}
 			},
 			{
 				pitch = {
 					0.25,
-					0.3,
+					0.3
 				},
 				yaw = {
 					-0.01,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.15,
-					0.175,
+					0.175
 				},
 				yaw = {
 					-0.03,
-					0.03,
-				},
+					0.03
+				}
 			},
 			{
 				pitch = {
 					0.125,
-					0.15,
+					0.15
 				},
 				yaw = {
 					-0.04,
-					0.04,
-				},
+					0.04
+				}
 			},
 			{
 				pitch = {
 					0.1,
-					0.125,
+					0.125
 				},
 				yaw = {
 					-0.04,
-					0.04,
-				},
-			},
+					0.04
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 2,
-			yaw = 2,
-		},
+			yaw = 2
+		}
 	},
 	[weapon_movement_states.moving] = {
 		new_influence_percent = 0.6,
 		inherits = {
 			"lasgun_hip_killshot",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_still] = {
 		new_influence_percent = 0.4,
 		inherits = {
 			"lasgun_hip_killshot",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_moving] = {
 		new_influence_percent = 0.45,
 		inherits = {
 			"lasgun_hip_killshot",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 
 local lasgun_hip_assault_pitch_default = 0.1
@@ -1763,121 +1763,121 @@ recoil_templates.lasgun_hip_assault = {
 		rise_duration = 0.1,
 		rise = {
 			0.4,
-			0.2,
+			0.2
 		},
 		decay = {
 			idle = 2,
-			shooting = 0,
+			shooting = 0
 		},
 		offset_range = {
 			{
 				pitch = {
 					lasgun_hip_assault_pitch_default,
-					lasgun_hip_assault_pitch_default,
+					lasgun_hip_assault_pitch_default
 				},
 				yaw = {
 					0,
-					0,
-				},
+					0
+				}
 			},
 			{
 				pitch = {
 					lasgun_hip_assault_pitch_default,
-					lasgun_hip_assault_pitch_default,
+					lasgun_hip_assault_pitch_default
 				},
 				yaw = {
 					0,
-					0,
-				},
+					0
+				}
 			},
 			{
 				pitch = {
 					lasgun_hip_assault_pitch_default,
-					lasgun_hip_assault_pitch_default,
+					lasgun_hip_assault_pitch_default
 				},
 				yaw = {
 					0,
-					0,
-				},
+					0
+				}
 			},
 			{
 				pitch = {
 					lasgun_hip_assault_pitch_default * 0.9,
-					lasgun_hip_assault_pitch_default * 1.1,
+					lasgun_hip_assault_pitch_default * 1.1
 				},
 				yaw = {
 					-0.01,
-					0.01,
-				},
+					0.01
+				}
 			},
 			{
 				pitch = {
 					lasgun_hip_assault_pitch_default * 0.8,
-					lasgun_hip_assault_pitch_default * 1.2,
+					lasgun_hip_assault_pitch_default * 1.2
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					lasgun_hip_assault_pitch_default * 0.7,
-					lasgun_hip_assault_pitch_default * 1.2,
+					lasgun_hip_assault_pitch_default * 1.2
 				},
 				yaw = {
 					-0.03,
-					0.03,
-				},
+					0.03
+				}
 			},
 			{
 				pitch = {
 					lasgun_hip_assault_pitch_default * 0.6,
-					lasgun_hip_assault_pitch_default * 1.3,
+					lasgun_hip_assault_pitch_default * 1.3
 				},
 				yaw = {
 					-0.04,
-					0.04,
-				},
+					0.04
+				}
 			},
 			{
 				pitch = {
 					lasgun_hip_assault_pitch_default * 0.5,
-					lasgun_hip_assault_pitch_default * 1.5,
+					lasgun_hip_assault_pitch_default * 1.5
 				},
 				yaw = {
 					-0.05,
-					0.05,
-				},
-			},
+					0.05
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 0.4,
 			profile = "linear",
-			yaw = 0.4,
-		},
+			yaw = 0.4
+		}
 	},
 	[weapon_movement_states.moving] = {
 		new_influence_percent = 0.85,
 		inherits = {
 			"lasgun_hip_assault",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_still] = {
 		new_influence_percent = 0.4,
 		inherits = {
 			"lasgun_hip_assault",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_moving] = {
 		new_influence_percent = 0.45,
 		inherits = {
 			"lasgun_hip_assault",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 
 local pitch_default = 0.02
@@ -1889,134 +1889,134 @@ recoil_templates.lasgun_zoomed = {
 		rise_duration = 0.125,
 		rise = {
 			1,
-			0.7,
+			0.7
 		},
 		decay = {
 			idle = 1.5,
-			shooting = 0,
+			shooting = 0
 		},
 		offset_range = {
 			{
 				pitch = {
 					pitch_default * 0.95,
-					pitch_default * 1.05,
+					pitch_default * 1.05
 				},
 				yaw = {
 					-0.0075,
-					0.0075,
-				},
+					0.0075
+				}
 			},
 			{
 				pitch = {
 					pitch_default * 0.85,
-					pitch_default * 1.15,
+					pitch_default * 1.15
 				},
 				yaw = {
 					-0.0085,
-					0.0085,
-				},
+					0.0085
+				}
 			},
 			{
 				pitch = {
 					pitch_default * 0.75,
-					pitch_default * 1.25,
+					pitch_default * 1.25
 				},
 				yaw = {
 					-0.01,
-					0.01,
-				},
-			},
+					0.01
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 0.15,
-			yaw = 0.15,
+			yaw = 0.15
 		},
 		aim_assist = {
 			reduction_per_shot = 0.25,
-			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.flat_reduction_per_shot,
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.flat_reduction_per_shot
 		},
 		visual_recoil_settings = {
 			intensity = 12,
-			lerp_scalar = 1,
-		},
+			lerp_scalar = 1
+		}
 	},
 	[weapon_movement_states.moving] = {
 		new_influence_percent = 0.4,
 		inherits = {
 			"lasgun_zoomed",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_still] = {
 		inherits = {
 			"lasgun_zoomed",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_moving] = {
 		inherits = {
 			"lasgun_zoomed",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 recoil_templates.lasgun_zoomed_2 = table.clone(recoil_templates.lasgun_zoomed)
 recoil_templates.lasgun_zoomed_2.still.offset_range = {
 	{
 		pitch = {
 			pitch_default,
-			pitch_default,
+			pitch_default
 		},
 		yaw = {
 			0,
-			0,
-		},
+			0
+		}
 	},
 	{
 		pitch = {
 			pitch_default,
-			pitch_default,
+			pitch_default
 		},
 		yaw = {
 			0,
-			0,
-		},
+			0
+		}
 	},
 	{
 		pitch = {
 			pitch_default * 0.95,
-			pitch_default * 1.05,
+			pitch_default * 1.05
 		},
 		yaw = {
 			-0.01,
-			0.01,
-		},
+			0.01
+		}
 	},
 	{
 		pitch = {
 			pitch_default * 0.85,
-			pitch_default * 1.15,
+			pitch_default * 1.15
 		},
 		yaw = {
 			-0.0125,
-			0.0125,
-		},
+			0.0125
+		}
 	},
 	{
 		pitch = {
 			pitch_default * 0.75,
-			pitch_default * 1.25,
+			pitch_default * 1.25
 		},
 		yaw = {
 			-0.015,
-			0.015,
-		},
-	},
+			0.015
+		}
+	}
 }
 recoil_templates.lasgun_zoomed_1 = table.clone(recoil_templates.lasgun_zoomed)
 recoil_templates.lasgun_zoomed_1.still.rise = {
 	0.75,
-	0.5,
+	0.5
 }
 recoil_templates.lasgun_zoomed_1.still.new_influence_percent = 0.175
 recoil_templates.lasgun_zoomed_1.moving.new_influence_percent = 0.35
@@ -2026,112 +2026,112 @@ recoil_templates.lasgun_zoomed_medium = {
 		rise_duration = 0.095,
 		rise = {
 			0.3,
-			0.25,
+			0.25
 		},
 		decay = {
 			idle = 0.8,
-			shooting = 0,
+			shooting = 0
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.15,
-					0.15,
+					0.15
 				},
 				yaw = {
 					-0,
-					0,
-				},
+					0
+				}
 			},
 			{
 				pitch = {
 					0.15,
-					0.15,
+					0.15
 				},
 				yaw = {
 					-0,
-					0,
-				},
+					0
+				}
 			},
 			{
 				pitch = {
 					0.125,
-					0.125,
+					0.125
 				},
 				yaw = {
 					-0.01,
-					0.01,
-				},
+					0.01
+				}
 			},
 			{
 				pitch = {
 					0.125,
-					0.15,
+					0.15
 				},
 				yaw = {
 					-0.01,
-					0.03,
-				},
+					0.03
+				}
 			},
 			{
 				pitch = {
 					0.125,
-					0.15,
+					0.15
 				},
 				yaw = {
 					-0.01,
-					0.03,
-				},
+					0.03
+				}
 			},
 			{
 				pitch = {
 					0.125,
-					0.15,
+					0.15
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.1,
-					0.15,
+					0.15
 				},
 				yaw = {
 					-0.03,
-					0.03,
-				},
-			},
+					0.03
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 50,
-			yaw = 50,
+			yaw = 50
 		},
 		visual_recoil_settings = {
 			intensity = 10,
-			lerp_scalar = 0.2,
-		},
+			lerp_scalar = 0.2
+		}
 	},
 	[weapon_movement_states.moving] = {
 		new_influence_percent = 1,
 		inherits = {
 			"lasgun_zoomed_medium",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_still] = {
 		inherits = {
 			"lasgun_zoomed_medium",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_moving] = {
 		inherits = {
 			"lasgun_zoomed_medium",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 recoil_templates.bolter_alternate_fire_medium = {
 	[weapon_movement_states.still] = {
@@ -2139,82 +2139,82 @@ recoil_templates.bolter_alternate_fire_medium = {
 		new_influence_percent = 0.65,
 		rise_duration = 0.05,
 		rise = {
-			0.5,
+			0.5
 		},
 		decay = {
 			idle = 1.8,
-			shooting = 0.25,
+			shooting = 0.25
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.25,
-					0.3,
+					0.3
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.125,
-					0.15,
+					0.15
 				},
 				yaw = {
 					-0.01,
-					0.03,
-				},
+					0.03
+				}
 			},
 			{
 				pitch = {
 					0.125,
-					0.15,
+					0.15
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.1,
-					0.15,
+					0.15
 				},
 				yaw = {
 					-0.03,
-					0.03,
-				},
-			},
+					0.03
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 50,
-			yaw = 50,
+			yaw = 50
 		},
 		visual_recoil_settings = {
 			intensity = 10,
-			lerp_scalar = 1,
-		},
+			lerp_scalar = 1
+		}
 	},
 	[weapon_movement_states.moving] = {
 		new_influence_percent = 1,
 		inherits = {
 			"bolter_alternate_fire_medium",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_still] = {
 		inherits = {
 			"bolter_alternate_fire_medium",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_moving] = {
 		inherits = {
 			"bolter_alternate_fire_medium",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 recoil_templates.shotgun_alternate_fire_medium = {
 	still = {
@@ -2222,52 +2222,52 @@ recoil_templates.shotgun_alternate_fire_medium = {
 		new_influence_percent = 0.65,
 		rise_duration = 0.05,
 		rise = {
-			0.01,
+			0.01
 		},
 		decay = {
 			idle = 4.25,
-			shooting = 1.25,
+			shooting = 1.25
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.5,
-					0.75,
+					0.75
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
-			},
+					0.02
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 50,
-			yaw = 50,
+			yaw = 50
 		},
 		visual_recoil_settings = {
 			intensity = 5,
-			lerp_scalar = 2,
-		},
+			lerp_scalar = 2
+		}
 	},
 	moving = {
 		new_influence_percent = 1,
 		inherits = {
 			"bolter_alternate_fire_medium",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"bolter_alternate_fire_medium",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"bolter_alternate_fire_medium",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 recoil_templates.boltpistol_alternate_fire_medium = {
 	[weapon_movement_states.still] = {
@@ -2275,82 +2275,82 @@ recoil_templates.boltpistol_alternate_fire_medium = {
 		new_influence_percent = 0.65,
 		rise_duration = 0.05,
 		rise = {
-			0.5,
+			0.5
 		},
 		decay = {
 			idle = 1.8,
-			shooting = 0.25,
+			shooting = 0.25
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.25,
-					0.3,
+					0.3
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.125,
-					0.15,
+					0.15
 				},
 				yaw = {
 					-0.01,
-					0.03,
-				},
+					0.03
+				}
 			},
 			{
 				pitch = {
 					0.125,
-					0.15,
+					0.15
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.1,
-					0.15,
+					0.15
 				},
 				yaw = {
 					-0.03,
-					0.03,
-				},
-			},
+					0.03
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 50,
-			yaw = 50,
+			yaw = 50
 		},
 		visual_recoil_settings = {
 			intensity = 10,
-			lerp_scalar = 1,
-		},
+			lerp_scalar = 1
+		}
 	},
 	[weapon_movement_states.moving] = {
 		new_influence_percent = 1,
 		inherits = {
 			"boltpistol_alternate_fire_medium",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_still] = {
 		inherits = {
 			"boltpistol_alternate_fire_medium",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_moving] = {
 		inherits = {
 			"boltpistol_alternate_fire_medium",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 recoil_templates.shotgun_alternate_fire_medium = {
 	still = {
@@ -2358,146 +2358,146 @@ recoil_templates.shotgun_alternate_fire_medium = {
 		new_influence_percent = 0.65,
 		rise_duration = 0.05,
 		rise = {
-			0.01,
+			0.01
 		},
 		decay = {
 			idle = 4.25,
-			shooting = 1.25,
+			shooting = 1.25
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.5,
-					0.75,
+					0.75
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
-			},
+					0.02
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 50,
-			yaw = 50,
+			yaw = 50
 		},
 		visual_recoil_settings = {
 			intensity = 5,
-			lerp_scalar = 2,
-		},
+			lerp_scalar = 2
+		}
 	},
 	moving = {
 		new_influence_percent = 1,
 		inherits = {
 			"boltpistol_alternate_fire_medium",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"boltpistol_alternate_fire_medium",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"boltpistol_alternate_fire_medium",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 recoil_templates.plasma_rifle = {
 	[weapon_movement_states.still] = {
 		new_influence_percent = 0.25,
 		rise_duration = 0.15,
 		rise = {
-			0.5,
+			0.5
 		},
 		decay = {
 			idle = 1.5,
-			shooting = 0.8,
+			shooting = 0.8
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.15,
-					0.2,
+					0.2
 				},
 				yaw = {
 					-0.1,
-					0.1,
-				},
-			},
+					0.1
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 2,
-			yaw = 2,
-		},
+			yaw = 2
+		}
 	},
 	[weapon_movement_states.moving] = {
 		inherits = {
 			"plasma_rifle",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_still] = {
 		inherits = {
 			"plasma_rifle",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_moving] = {
 		inherits = {
 			"plasma_rifle",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 recoil_templates.plasma_rifle_charged = {
 	[weapon_movement_states.still] = {
 		new_influence_percent = 0.75,
 		rise_duration = 0.15,
 		rise = {
-			0.75,
+			0.75
 		},
 		decay = {
 			idle = 1.5,
-			shooting = 0.5,
+			shooting = 0.5
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.25,
-					0.3,
+					0.3
 				},
 				yaw = {
 					-0.1,
-					0.1,
-				},
-			},
+					0.1
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 3,
-			yaw = 3,
-		},
+			yaw = 3
+		}
 	},
 	[weapon_movement_states.moving] = {
 		inherits = {
 			"plasma_rifle_charged",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_still] = {
 		inherits = {
 			"plasma_rifle_charged",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_moving] = {
 		inherits = {
 			"plasma_rifle_charged",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 recoil_templates.lasgun_aim_auto = {
 	[weapon_movement_states.still] = {
@@ -2509,77 +2509,77 @@ recoil_templates.lasgun_aim_auto = {
 			0.05,
 			0.035,
 			0.03,
-			0.025,
+			0.025
 		},
 		decay = {
 			idle = 2,
-			shooting = 0.5,
+			shooting = 0.5
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.1,
-					0.1,
+					0.1
 				},
 				yaw = {
 					-0.05,
-					0.05,
-				},
+					0.05
+				}
 			},
 			{
 				pitch = {
 					0.1,
-					0.15,
+					0.15
 				},
 				yaw = {
 					-0.05,
-					0.065,
-				},
+					0.065
+				}
 			},
 			{
 				pitch = {
 					0.1,
-					0.25,
+					0.25
 				},
 				yaw = {
 					-0.05,
-					0.075,
-				},
+					0.075
+				}
 			},
 			{
 				pitch = {
 					0.1,
-					0.25,
+					0.25
 				},
 				yaw = {
 					-0.05,
-					0.1,
-				},
-			},
+					0.1
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 0.35,
-			yaw = 0.25,
-		},
+			yaw = 0.25
+		}
 	},
 	[weapon_movement_states.moving] = {
 		inherits = {
 			"lasgun_aim_auto",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_still] = {
 		inherits = {
 			"lasgun_aim_auto",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_moving] = {
 		inherits = {
 			"lasgun_aim_auto",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 recoil_templates.boltgun_hip_spray_n_pray = {
 	[weapon_movement_states.still] = {
@@ -2590,77 +2590,77 @@ recoil_templates.boltgun_hip_spray_n_pray = {
 		rise = {
 			0.5,
 			0.35,
-			0.3,
+			0.3
 		},
 		decay = {
 			idle = 2.75,
-			shooting = 2.25,
+			shooting = 2.25
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.15,
-					0.175,
+					0.175
 				},
 				yaw = {
 					-0.01,
-					0.01,
-				},
+					0.01
+				}
 			},
 			{
 				pitch = {
 					0.11,
-					0.125,
+					0.125
 				},
 				yaw = {
 					-0.0125,
-					0.0125,
-				},
+					0.0125
+				}
 			},
 			{
 				pitch = {
 					0.1,
-					0.1,
+					0.1
 				},
 				yaw = {
 					-0.015,
-					0.015,
-				},
-			},
+					0.015
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 2,
-			yaw = 2,
+			yaw = 2
 		},
 		visual_recoil_settings = {
 			intensity = 10,
-			lerp_scalar = 0.1,
+			lerp_scalar = 0.1
 		},
 		aim_assist = {
-			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness,
-		},
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
+		}
 	},
 	[weapon_movement_states.moving] = {
 		new_influence_percent = 0.75,
 		inherits = {
 			"boltgun_hip_spray_n_pray",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_still] = {
 		new_influence_percent = 0.5,
 		inherits = {
 			"boltgun_hip_spray_n_pray",
-			"still",
-		},
+			"still"
+		}
 	},
 	[weapon_movement_states.crouch_moving] = {
 		new_influence_percent = 0.75,
 		inherits = {
 			"boltgun_hip_spray_n_pray",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 
 for name, template in pairs(recoil_templates) do
@@ -2695,7 +2695,7 @@ for name, template in pairs(recoil_templates) do
 				if not offset_random_range[i] then
 					offset_random_range[i] = {
 						pitch = 0,
-						yaw = 0,
+						yaw = 0
 					}
 				end
 			end

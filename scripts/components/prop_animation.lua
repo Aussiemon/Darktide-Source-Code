@@ -47,17 +47,17 @@ PropAnimation.component_data = {
 		preview = false,
 		ui_name = "State Machine Override",
 		ui_type = "resource",
-		value = "",
+		value = ""
 	},
 	animation_variables = {
 		category = "Animation Variables",
 		size = 0,
 		ui_name = "Animation Variables",
-		ui_type = "text_box_array",
+		ui_type = "text_box_array"
 	},
 	extensions = {
-		"PropAnimationExtension",
-	},
+		"PropAnimationExtension"
+	}
 }
 
 return PropAnimation

@@ -9,17 +9,17 @@ local conversations_core_training_ground_psyker_a = {
 			"loc_training_ground_psyker_a__eavesdropping_training_ground_psyker_02",
 			"loc_training_ground_psyker_a__eavesdropping_training_ground_psyker_03",
 			"loc_training_ground_psyker_a__eavesdropping_training_ground_psyker_04",
-			"loc_training_ground_psyker_a__eavesdropping_training_ground_psyker_05",
+			"loc_training_ground_psyker_a__eavesdropping_training_ground_psyker_05"
 		},
 		sound_events_duration = {
 			4.50125,
 			5.244958,
 			6.655771,
 			5.25875,
-			6.810521,
+			6.810521
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("conversations_core_training_ground_psyker_a", conversations_core_training_ground_psyker_a)

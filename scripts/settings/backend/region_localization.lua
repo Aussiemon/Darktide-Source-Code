@@ -10,7 +10,7 @@ local RegionLocalizationMappings = {
 	mei = "loc_matchmaking_region_mei",
 	sa = "loc_matchmaking_region_sa",
 	["us-east"] = "loc_matchmaking_region_us_east",
-	["us-west"] = "loc_matchmaking_region_us_west",
+	["us-west"] = "loc_matchmaking_region_us_west"
 }
 
 return RegionLocalizationMappings

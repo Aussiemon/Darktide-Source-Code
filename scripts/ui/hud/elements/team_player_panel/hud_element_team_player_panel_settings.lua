@@ -11,7 +11,7 @@ local hud_element_team_player_panel_settings = {
 		duration_health = 3,
 		duration_health_ghost = 1.5,
 		ghost_delay = 0.25,
-		health_animation_threshold = 0.05,
+		health_animation_threshold = 0.05
 	},
 	toughness_bar_settings = {
 		alpha_fade_delay = 2.6,
@@ -21,31 +21,31 @@ local hud_element_team_player_panel_settings = {
 		duration_health = 1,
 		duration_health_ghost = 1,
 		ghost_delay = 0.25,
-		health_animation_threshold = 0.05,
+		health_animation_threshold = 0.05
 	},
 	size = {
 		180,
-		8,
+		8
 	},
 	icon_size = {
 		72,
-		80,
+		80
 	},
 	icon_bar_spacing = {
 		10,
-		0,
+		0
 	},
 	throwable_size = {
 		16,
-		16,
+		16
 	},
 	ammo_size = {
 		16,
-		16,
+		16
 	},
 	ammo_spacing = {
 		-18,
-		0,
+		0
 	},
 	critical_health_color = UIHudSettings.color_tint_alert_2,
 	default_health_color = UIHudSettings.color_tint_main_2,
@@ -53,7 +53,7 @@ local hud_element_team_player_panel_settings = {
 		255,
 		200,
 		200,
-		200,
+		200
 	},
 	feature_list = {
 		ammo = true,
@@ -69,8 +69,8 @@ local hud_element_team_player_panel_settings = {
 		throwables = true,
 		toughness = true,
 		toughness_hit_indicator = true,
-		voip = true,
-	},
+		voip = true
+	}
 }
 
 return settings("HudElementTeamPlayerPanelSettings", hud_element_team_player_panel_settings)

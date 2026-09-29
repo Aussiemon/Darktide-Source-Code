@@ -211,45 +211,45 @@ ElectricFloor.component_data = {
 	timed = {
 		ui_name = "timed",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	start_enabled = {
 		ui_name = "start enabled",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	time_on = {
 		decimals = 2,
 		ui_name = "time on",
 		ui_type = "number",
-		value = 4,
+		value = 4
 	},
 	time_off = {
 		decimals = 2,
 		ui_name = "time off",
 		ui_type = "number",
-		value = 2,
+		value = 2
 	},
 	offset_time = {
 		decimals = 2,
 		ui_name = "offset time",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	inputs = {
 		electric_floor_on = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		electric_floor_off = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		electric_floor_disable = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return ElectricFloor

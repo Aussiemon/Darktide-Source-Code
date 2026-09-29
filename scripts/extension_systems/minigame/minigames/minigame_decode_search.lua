@@ -79,7 +79,7 @@ MinigameDecodeSearch.setup_game = function (self)
 
 	self._cursor_position = {
 		x = math.floor(self._board_width / 2),
-		y = math.floor(self._board_height / 2),
+		y = math.floor(self._board_height / 2)
 	}
 
 	self:send_rpc("rpc_minigame_sync_decode_search_set_cursor", self._cursor_position.x, self._cursor_position.y)

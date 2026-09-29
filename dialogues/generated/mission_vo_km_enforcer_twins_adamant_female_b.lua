@@ -9,38 +9,38 @@ local mission_vo_km_enforcer_twins_adamant_female_b = {
 			"loc_adamant_female_b__enemy_kill_monster_02",
 			"loc_adamant_female_b__enemy_kill_monster_03",
 			"loc_adamant_female_b__enemy_kill_monster_06",
-			"loc_adamant_female_b__enemy_kill_monster_08",
+			"loc_adamant_female_b__enemy_kill_monster_08"
 		},
 		sound_events_duration = {
 			1.861344,
 			2.557344,
 			4.929333,
 			2.783344,
-			2.537344,
+			2.537344
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_enemy_kill_monster_twins = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_female_b__response_for_enemy_kill_monster_05",
+			[1] = "loc_adamant_female_b__response_for_enemy_kill_monster_05"
 		},
 		sound_events_duration = {
-			[1] = 2.356708,
+			[1] = 2.356708
 		},
 		sound_event_weights = {
-			[1] = 1,
+			[1] = 1
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_km_enforcer_twins_adamant_female_b", mission_vo_km_enforcer_twins_adamant_female_b)

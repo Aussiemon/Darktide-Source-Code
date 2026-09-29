@@ -10,9 +10,9 @@ local sound_data = {
 		vce_death_long = "wwise/events/minions/play_enemy_chaos_ogryn_heavy_gunner__death_long_vce",
 		vce_grunt = "wwise/events/minions/play_enemy_chaos_ogryn_heavy_gunner__hurt_vce",
 		vce_hurt = "wwise/events/minions/play_enemy_chaos_ogryn_heavy_gunner__hurt_vce",
-		vce_short_attack = "wwise/events/minions/play_enemy_chaos_ogryn_heavy_gunner__melee_attack_vce",
+		vce_short_attack = "wwise/events/minions/play_enemy_chaos_ogryn_heavy_gunner__melee_attack_vce"
 	},
-	use_proximity_culling = {},
+	use_proximity_culling = {}
 }
 
 table.add_missing(sound_data.events, ChaosOgrynCommonSounds.events)

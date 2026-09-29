@@ -14,7 +14,7 @@ local pickup_data = {
 	retain_charges = true,
 	smart_tag_target_type = "pickup",
 	unit_name = "content/environment/gameplay/expeditions/grenades/big_fing_grenade_01",
-	spawn_offset = Vector3Box(0, 0, 0.11),
+	spawn_offset = Vector3Box(0, 0, 0.11)
 }
 
 return pickup_data

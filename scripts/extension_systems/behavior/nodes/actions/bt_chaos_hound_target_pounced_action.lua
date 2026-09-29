@@ -88,7 +88,7 @@ end
 local cooldown_by_breed = {
 	chaos_armored_hound = "chaos_armored_hound_pounce",
 	chaos_hound = "chaos_hound_pounce",
-	chaos_hound_mutator = "chaos_hound_pounce",
+	chaos_hound_mutator = "chaos_hound_pounce"
 }
 
 BtChaosHoundTargetPouncedAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)

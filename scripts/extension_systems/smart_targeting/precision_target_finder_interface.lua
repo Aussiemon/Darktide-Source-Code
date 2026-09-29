@@ -4,7 +4,7 @@ local PrecisionTargetFinderInterface = {
 	"init",
 	"extensions_ready",
 	"update_precision_target",
-	"assisted_hitscan_trajectory",
+	"assisted_hitscan_trajectory"
 }
 
 return PrecisionTargetFinderInterface

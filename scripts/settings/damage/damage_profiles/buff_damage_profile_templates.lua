@@ -24,7 +24,7 @@ local burninating_adm = {
 	[armor_types.berserker] = 1,
 	[armor_types.super_armor] = 0.2,
 	[armor_types.disgustingly_resilient] = 1.25,
-	[armor_types.void_shield] = 1,
+	[armor_types.void_shield] = 1
 }
 local burninating_warp_adm = {
 	[armor_types.unarmored] = 1.5,
@@ -34,7 +34,7 @@ local burninating_warp_adm = {
 	[armor_types.berserker] = 1,
 	[armor_types.super_armor] = 0.25,
 	[armor_types.disgustingly_resilient] = 1.25,
-	[armor_types.void_shield] = 1,
+	[armor_types.void_shield] = 1
 }
 local burninating_barrel_adm = {
 	[armor_types.unarmored] = 2,
@@ -44,7 +44,7 @@ local burninating_barrel_adm = {
 	[armor_types.berserker] = 2,
 	[armor_types.super_armor] = 0.1,
 	[armor_types.disgustingly_resilient] = 2.25,
-	[armor_types.void_shield] = 2,
+	[armor_types.void_shield] = 2
 }
 local phosphor_burninating_adm = {
 	[armor_types.unarmored] = 1,
@@ -54,7 +54,7 @@ local phosphor_burninating_adm = {
 	[armor_types.berserker] = 1,
 	[armor_types.super_armor] = 0.1,
 	[armor_types.disgustingly_resilient] = 1,
-	[armor_types.void_shield] = 1,
+	[armor_types.void_shield] = 1
 }
 local bleeding_adm = {
 	[armor_types.unarmored] = 0.5,
@@ -64,7 +64,7 @@ local bleeding_adm = {
 	[armor_types.berserker] = 1,
 	[armor_types.super_armor] = 0.25,
 	[armor_types.disgustingly_resilient] = 0.5,
-	[armor_types.void_shield] = 1,
+	[armor_types.void_shield] = 1
 }
 local corruptor_corruption_adm = {
 	[armor_types.unarmored] = 0,
@@ -74,7 +74,7 @@ local corruptor_corruption_adm = {
 	[armor_types.berserker] = 0,
 	[armor_types.super_armor] = 0,
 	[armor_types.disgustingly_resilient] = 0,
-	[armor_types.void_shield] = 0,
+	[armor_types.void_shield] = 0
 }
 local toxin_adm = {
 	[armor_types.unarmored] = 2.5,
@@ -84,7 +84,7 @@ local toxin_adm = {
 	[armor_types.berserker] = 2,
 	[armor_types.super_armor] = 0.9,
 	[armor_types.disgustingly_resilient] = 0.9,
-	[armor_types.void_shield] = 0.1,
+	[armor_types.void_shield] = 0.1
 }
 
 damage_templates.liquid_area_fire_burning = {
@@ -94,35 +94,35 @@ damage_templates.liquid_area_fire_burning = {
 	stagger_category = "melee",
 	armor_damage_modifier = {
 		attack = burninating_adm,
-		impact = burninating_adm,
+		impact = burninating_adm
 	},
 	power_distribution = {
 		attack = 40,
-		impact = 0,
+		impact = 0
 	},
 	cleave_distribution = {
 		attack = 0.125,
-		impact = 0,
+		impact = 0
 	},
 	suppression_value = {
 		100,
-		100,
+		100
 	},
 	on_kill_area_suppression = {
 		suppression_value = {
 			1,
-			2,
+			2
 		},
 		distance = {
 			3,
-			5,
-		},
+			5
+		}
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.liquid_area_fire_burning_barrel = {
 	disorientation_type = "burninating",
@@ -133,35 +133,35 @@ damage_templates.liquid_area_fire_burning_barrel = {
 	stagger_category = "melee",
 	armor_damage_modifier = {
 		attack = burninating_barrel_adm,
-		impact = burninating_barrel_adm,
+		impact = burninating_barrel_adm
 	},
 	power_distribution = {
 		attack = 20,
-		impact = 0,
+		impact = 0
 	},
 	cleave_distribution = {
 		attack = 0.125,
-		impact = 0,
+		impact = 0
 	},
 	suppression_value = {
 		100,
-		100,
+		100
 	},
 	on_kill_area_suppression = {
 		suppression_value = {
 			1,
-			2,
+			2
 		},
 		distance = {
 			3,
-			5,
-		},
+			5
+		}
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.flame_grenade_liquid_area_fire_burning = {
 	ignore_shield = true,
@@ -177,37 +177,37 @@ damage_templates.flame_grenade_liquid_area_fire_burning = {
 			[armor_types.berserker] = 2,
 			[armor_types.super_armor] = 0.1,
 			[armor_types.disgustingly_resilient] = 2,
-			[armor_types.void_shield] = 1,
+			[armor_types.void_shield] = 1
 		},
-		impact = burninating_adm,
+		impact = burninating_adm
 	},
 	power_distribution = {
 		attack = 50,
-		impact = 0,
+		impact = 0
 	},
 	cleave_distribution = {
 		attack = 0.125,
-		impact = 0,
+		impact = 0
 	},
 	suppression_value = {
 		100,
-		100,
+		100
 	},
 	on_kill_area_suppression = {
 		suppression_value = {
 			1,
-			2,
+			2
 		},
 		distance = {
 			3,
-			5,
-		},
+			5
+		}
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.grenadier_liquid_fire_burning = {
 	disorientation_type = "burninating",
@@ -218,35 +218,35 @@ damage_templates.grenadier_liquid_fire_burning = {
 	toughness_multiplier = 4,
 	armor_damage_modifier = {
 		attack = DamageProfileSettings.flat_one_armor_mod,
-		impact = DamageProfileSettings.flat_one_armor_mod,
+		impact = DamageProfileSettings.flat_one_armor_mod
 	},
 	power_distribution = {
 		attack = 30,
-		impact = 0,
+		impact = 0
 	},
 	cleave_distribution = {
 		attack = 0.125,
-		impact = 0,
+		impact = 0
 	},
 	suppression_value = {
 		5,
-		10,
+		10
 	},
 	on_kill_area_suppression = {
 		suppression_value = {
 			1,
-			2,
+			2
 		},
 		distance = {
 			3,
-			5,
-		},
+			5
+		}
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.cultist_flamer_liquid_fire_burning = {
 	disorientation_type = "burninating",
@@ -257,21 +257,21 @@ damage_templates.cultist_flamer_liquid_fire_burning = {
 	toughness_multiplier = 4,
 	armor_damage_modifier = {
 		attack = DamageProfileSettings.flat_one_armor_mod,
-		impact = DamageProfileSettings.flat_one_armor_mod,
+		impact = DamageProfileSettings.flat_one_armor_mod
 	},
 	power_distribution = {
 		attack = 30,
-		impact = 0,
+		impact = 0
 	},
 	cleave_distribution = {
 		attack = 0.125,
-		impact = 0,
+		impact = 0
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.renegade_flamer_liquid_fire_burning = {
 	disorientation_type = "burninating",
@@ -282,21 +282,21 @@ damage_templates.renegade_flamer_liquid_fire_burning = {
 	toughness_multiplier = 4,
 	armor_damage_modifier = {
 		attack = DamageProfileSettings.flat_one_armor_mod,
-		impact = DamageProfileSettings.flat_one_armor_mod,
+		impact = DamageProfileSettings.flat_one_armor_mod
 	},
 	power_distribution = {
 		attack = 30,
-		impact = 0,
+		impact = 0
 	},
 	cleave_distribution = {
 		attack = 0.125,
-		impact = 0,
+		impact = 0
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.burning = {
 	disorientation_type = "burninating",
@@ -307,24 +307,24 @@ damage_templates.burning = {
 	toughness_multiplier = 3,
 	armor_damage_modifier = {
 		attack = burninating_adm,
-		impact = burninating_adm,
+		impact = burninating_adm
 	},
 	power_distribution = {
 		attack = 400,
-		impact = 0,
+		impact = 0
 	},
 	cleave_distribution = {
 		attack = 0.125,
-		impact = 0,
+		impact = 0
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	stat_buffs = {
-		"burning_damage",
-	},
+		"burning_damage"
+	}
 }
 damage_templates.phosphor_burning = {
 	disorientation_type = "burninating",
@@ -335,24 +335,24 @@ damage_templates.phosphor_burning = {
 	toughness_multiplier = 3,
 	armor_damage_modifier = {
 		attack = phosphor_burninating_adm,
-		impact = phosphor_burninating_adm,
+		impact = phosphor_burninating_adm
 	},
 	power_distribution = {
 		attack = 20,
-		impact = 0,
+		impact = 0
 	},
 	cleave_distribution = {
 		attack = 0.125,
-		impact = 0,
+		impact = 0
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	stat_buffs = {
-		"burning_damage",
-	},
+		"burning_damage"
+	}
 }
 
 local PROMETHIUM_ADM = burninating_adm
@@ -362,35 +362,35 @@ damage_templates.promethium = {
 	stagger_category = "flamer",
 	armor_damage_modifier = {
 		attack = PROMETHIUM_ADM,
-		impact = PROMETHIUM_ADM,
+		impact = PROMETHIUM_ADM
 	},
 	power_distribution = {
 		attack = 450,
-		impact = 0,
+		impact = 0
 	},
 	cleave_distribution = {
 		attack = 0.125,
-		impact = 0,
+		impact = 0
 	},
 	suppression_value = {
 		100,
-		100,
+		100
 	},
 	on_kill_area_suppression = {
 		suppression_value = {
 			1,
-			2,
+			2
 		},
 		distance = {
 			3,
-			5,
-		},
+			5
+		}
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.corruptor_liquid_corruption = {
 	ignore_toughness = true,
@@ -398,21 +398,21 @@ damage_templates.corruptor_liquid_corruption = {
 	stagger_category = "melee",
 	armor_damage_modifier = {
 		attack = corruptor_corruption_adm,
-		impact = corruptor_corruption_adm,
+		impact = corruptor_corruption_adm
 	},
 	power_distribution = {
 		attack = 1,
-		impact = 0,
+		impact = 0
 	},
 	cleave_distribution = {
 		attack = 1,
-		impact = 0,
+		impact = 0
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.warpfire = {
 	disorientation_type = "burninating",
@@ -423,22 +423,22 @@ damage_templates.warpfire = {
 	toughness_multiplier = 3,
 	armor_damage_modifier = {
 		attack = burninating_warp_adm,
-		impact = burninating_warp_adm,
+		impact = burninating_warp_adm
 	},
 	power_distribution = {
 		attack = 255,
-		impact = 0,
+		impact = 0
 	},
 	cleave_distribution = {
 		attack = 0.125,
-		impact = 0,
+		impact = 0
 	},
 	damage_type = damage_types.warpfire,
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.bleeding = {
 	ignore_shield = true,
@@ -448,28 +448,28 @@ damage_templates.bleeding = {
 	toughness_multiplier = 3,
 	armor_damage_modifier = {
 		attack = bleeding_adm,
-		impact = bleeding_adm,
+		impact = bleeding_adm
 	},
 	power_distribution = {
 		attack = 175,
-		impact = 0,
+		impact = 0
 	},
 	cleave_distribution = {
 		attack = 0.125,
-		impact = 0,
+		impact = 0
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.protectorate_force_field = {
 	ignore_shield = true,
 	stagger_category = "force_field",
 	power_distribution = {
 		attack = 0.15,
-		impact = 0.01,
+		impact = 0.01
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -480,7 +480,7 @@ damage_templates.protectorate_force_field = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -490,23 +490,23 @@ damage_templates.protectorate_force_field = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-		},
+			[armor_types.void_shield] = 1
+		}
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.ogryn_bonebreaker_ally_damage = {
 	ignore_toughness = true,
 	stagger_category = "melee",
 	power_distribution = {
 		attack = 500,
-		impact = 0,
+		impact = 0
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.ogryn_bonebreaker_ally_damage_permanent = {
 	ignore_toughness = true,
@@ -514,22 +514,22 @@ damage_templates.ogryn_bonebreaker_ally_damage_permanent = {
 	stagger_category = "melee",
 	power_distribution = {
 		attack = 500,
-		impact = 0,
+		impact = 0
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.killing_blow = {
 	ignore_shield = true,
 	stagger_category = "melee",
 	power_distribution = {
 		attack = 0,
-		impact = 0,
+		impact = 0
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.chain_lightning_killing_blow = {
 	ignore_shield = true,
@@ -537,15 +537,15 @@ damage_templates.chain_lightning_killing_blow = {
 	stagger_category = "sticky",
 	power_distribution = {
 		attack = 0,
-		impact = 0,
+		impact = 0
 	},
 	targets = {
-		default_target = {},
+		default_target = {}
 	},
 	damage_type = damage_types.electrocution,
 	gibbing_power = gibbing_power.infinite,
 	gibbing_type = gibbing_types.warp_lightning,
-	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
+	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy
 }
 damage_templates.trait_powersword_2h_p1_trade_overheat_lockout_for_damage = {
 	disorientation_type = "trait_bespoke_powersword_2h_p1_trade_overheat_lockout_for_damage",
@@ -563,7 +563,7 @@ damage_templates.trait_powersword_2h_p1_trade_overheat_lockout_for_damage = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 0,
@@ -573,22 +573,22 @@ damage_templates.trait_powersword_2h_p1_trade_overheat_lockout_for_damage = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-		},
+			[armor_types.void_shield] = 0
+		}
 	},
 	power_distribution = {
 		attack = 10,
-		impact = 0,
+		impact = 0
 	},
 	cleave_distribution = {
 		attack = 1,
-		impact = 0,
+		impact = 0
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.hordes_buff_damage_reflection_hit = {
 	is_push = true,
@@ -598,8 +598,8 @@ damage_templates.hordes_buff_damage_reflection_hit = {
 		attack = 0.5,
 		impact = {
 			5,
-			9,
-		},
+			9
+		}
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -610,7 +610,7 @@ damage_templates.hordes_buff_damage_reflection_hit = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
+			[armor_types.void_shield] = 1
 		},
 		impact = {
 			[armor_types.unarmored] = 1.25,
@@ -620,12 +620,12 @@ damage_templates.hordes_buff_damage_reflection_hit = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.5,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
-		},
+			[armor_types.void_shield] = 0
+		}
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.hordes_buff_damage_reflection_push_hit = table.clone(damage_templates.hordes_buff_damage_reflection_hit)
 damage_templates.hordes_buff_damage_reflection_push_hit.power_distribution.attack = 0
@@ -640,14 +640,14 @@ damage_templates.live_event_saints_out_of_area_debuff_damage_template = {
 	unblockable = true,
 	power_distribution = {
 		attack = 1,
-		impact = 0,
+		impact = 0
 	},
 	damage_type = damage_types.corruption,
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.toxin_variant_1 = {
 	disorientation_type = "burninating",
@@ -659,27 +659,27 @@ damage_templates.toxin_variant_1 = {
 	toughness_multiplier = 3,
 	armor_damage_modifier = {
 		attack = toxin_adm,
-		impact = toxin_adm,
+		impact = toxin_adm
 	},
 	power_distribution = {
 		attack = 400,
-		impact = 0,
+		impact = 0
 	},
 	cleave_distribution = {
 		attack = 0.125,
-		impact = 0,
+		impact = 0
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	stat_buffs = {
-		"burning_damage",
+		"burning_damage"
 	},
 	power_stat_buffs = {
-		"toxin_power",
-	},
+		"toxin_power"
+	}
 }
 damage_templates.toxin_variant_2 = {
 	disorientation_type = "burninating",
@@ -691,27 +691,27 @@ damage_templates.toxin_variant_2 = {
 	toughness_multiplier = 3,
 	armor_damage_modifier = {
 		attack = toxin_adm,
-		impact = toxin_adm,
+		impact = toxin_adm
 	},
 	power_distribution = {
 		attack = 500,
-		impact = 0,
+		impact = 0
 	},
 	cleave_distribution = {
 		attack = 0.125,
-		impact = 0,
+		impact = 0
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	stat_buffs = {
-		"burning_damage",
+		"burning_damage"
 	},
 	power_stat_buffs = {
-		"toxin_power",
-	},
+		"toxin_power"
+	}
 }
 damage_templates.toxin_variant_3 = {
 	disorientation_type = "burninating",
@@ -724,27 +724,27 @@ damage_templates.toxin_variant_3 = {
 	toughness_multiplier = 3,
 	armor_damage_modifier = {
 		attack = toxin_adm,
-		impact = toxin_adm,
+		impact = toxin_adm
 	},
 	power_distribution = {
 		attack = 350,
-		impact = 0,
+		impact = 0
 	},
 	cleave_distribution = {
 		attack = 0.125,
-		impact = 0,
+		impact = 0
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	stat_buffs = {
-		"burning_damage",
+		"burning_damage"
 	},
 	power_stat_buffs = {
-		"toxin_power",
-	},
+		"toxin_power"
+	}
 }
 damage_templates.horde_mode_self_propagating_toxin = {
 	disorientation_type = "burninating",
@@ -756,27 +756,27 @@ damage_templates.horde_mode_self_propagating_toxin = {
 	toughness_multiplier = 3,
 	armor_damage_modifier = {
 		attack = toxin_adm,
-		impact = toxin_adm,
+		impact = toxin_adm
 	},
 	power_distribution = {
 		attack = 200,
-		impact = 0,
+		impact = 0
 	},
 	cleave_distribution = {
 		attack = 0.125,
-		impact = 0,
+		impact = 0
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	stat_buffs = {
-		"burning_damage",
+		"burning_damage"
 	},
 	power_stat_buffs = {
-		"toxin_power",
-	},
+		"toxin_power"
+	}
 }
 damage_templates.broker_toxin_stacks_stun_interval = {
 	ignore_shield = true,
@@ -790,7 +790,7 @@ damage_templates.broker_toxin_stacks_stun_interval = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_1,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
-			[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 		},
 		impact = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -800,29 +800,29 @@ damage_templates.broker_toxin_stacks_stun_interval = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_1_5,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		},
+			[armor_types.void_shield] = damage_lerp_values.lerp_1
+		}
 	},
 	cleave_distribution = {
 		attack = 5,
-		impact = 20,
+		impact = 20
 	},
 	power_distribution = {
 		attack = 8,
-		impact = 100,
+		impact = 100
 	},
 	damage_type = damage_types.electrocution,
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	power_stat_buffs = {
-		"toxin_power",
-	},
+		"toxin_power"
+	}
 }
 
 return {
 	base_templates = damage_templates,
-	overrides = overrides,
+	overrides = overrides
 }

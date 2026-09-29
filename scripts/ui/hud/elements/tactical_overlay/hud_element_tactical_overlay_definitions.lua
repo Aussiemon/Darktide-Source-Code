@@ -11,32 +11,32 @@ local line_width = ElementSettings.line_width
 local buffer = ElementSettings.buffer
 local details_panel_size = {
 	600,
-	1080,
+	1080
 }
 local mission_info_size = {
 	details_panel_size[1] - 50,
-	160,
+	160
 }
 local circumstance_info_size = {
 	details_panel_size[1] - 50,
-	120,
+	120
 }
 local currency_info_size = {
 	110,
-	33,
+	33
 }
 local screen_size = UIWorkspaceSettings.screen.size
 local right_content_size = {
 	ElementSettings.right_grid_width,
-	550,
+	550
 }
 local right_header_size = {
 	ElementSettings.right_grid_width,
-	ElementSettings.right_header_height,
+	ElementSettings.right_header_height
 }
 local expedition_currency_info_size = {
 	300,
-	33,
+	33
 }
 local left_panel_x_position = 25
 local scenegraph_definition = {
@@ -47,13 +47,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	background = {
 		horizontal_alignment = "center",
@@ -63,8 +63,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	left_panel = {
 		horizontal_alignment = "left",
@@ -74,8 +74,8 @@ local scenegraph_definition = {
 		position = {
 			left_panel_x_position,
 			25,
-			0,
-		},
+			0
+		}
 	},
 	mission_info_panel = {
 		horizontal_alignment = "left",
@@ -85,8 +85,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	circumstance_info_panel = {
 		horizontal_alignment = "left",
@@ -96,8 +96,8 @@ local scenegraph_definition = {
 		position = {
 			420,
 			220,
-			1,
-		},
+			1
+		}
 	},
 	crafting_pickup_pivot = {
 		horizontal_alignment = "center",
@@ -105,13 +105,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			50,
-			1,
-		},
+			1
+		}
 	},
 	crafting_pickup_panel = {
 		horizontal_alignment = "center",
@@ -121,8 +121,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	right_panel = {
 		horizontal_alignment = "right",
@@ -132,8 +132,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	right_panel_content = {
 		horizontal_alignment = "right",
@@ -143,8 +143,8 @@ local scenegraph_definition = {
 		position = {
 			-15,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	right_panel_header = {
 		horizontal_alignment = "center",
@@ -154,8 +154,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			-(right_header_size[2] + ElementSettings.section_buffer),
-			0,
-		},
+			0
+		}
 	},
 	buff_pivot = {
 		horizontal_alignment = "left",
@@ -163,13 +163,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			180,
-			1,
-		},
+			1
+		}
 	},
 	buff_panel_background = {
 		horizontal_alignment = "left",
@@ -177,13 +177,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			400,
-			800,
+			800
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	buff_panel = {
 		horizontal_alignment = "left",
@@ -191,13 +191,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			400,
-			760,
+			760
 		},
 		position = {
 			0,
 			20,
-			1,
-		},
+			1
+		}
 	},
 	buff_panel_content = {
 		horizontal_alignment = "top",
@@ -205,13 +205,13 @@ local scenegraph_definition = {
 		vertical_alignment = "left",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	buff_panel_mask = {
 		horizontal_alignment = "center",
@@ -219,13 +219,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			440,
-			800,
+			800
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	buff_panel_scrollbar = {
 		horizontal_alignment = "right",
@@ -233,13 +233,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			8,
-			760,
+			760
 		},
 		position = {
 			0,
 			0,
-			3,
-		},
+			3
+		}
 	},
 	expedition_currency_pivot = {
 		horizontal_alignment = "right",
@@ -247,13 +247,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			40,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	expedition_currency_panel = {
 		horizontal_alignment = "left",
@@ -263,9 +263,9 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local widget_definitions = {
 	background = UIWidget.create_definition({
@@ -277,13 +277,13 @@ local widget_definitions = {
 					255,
 					0,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "background"),
 	buff_panel_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "buff_panel_scrollbar", {
-		using_custom_gamepad_navigation = true,
+		using_custom_gamepad_navigation = true
 	}),
 	buff_panel_scrollbar_input_icon = UIWidget.create_definition({
 		{
@@ -297,30 +297,30 @@ local widget_definitions = {
 				offset = {
 					-15,
 					40,
-					0,
+					0
 				},
 				text_color = {
 					255,
 					169,
 					191,
-					153,
-				},
-			}),
-		},
+					153
+				}
+			})
+		}
 	}, "buff_panel_mask", {
-		visible = false,
+		visible = false
 	}),
 	buff_panel_background = UIWidget.create_definition({
 		{
 			pass_type = "rect",
 			style_id = "background",
 			style = {
-				color = Color.black(127.5, true),
-			},
-		},
+				color = Color.black(127.5, true)
+			}
+		}
 	}, "buff_panel_background", {
-		visible = false,
-	}),
+		visible = false
+	})
 }
 
 local function generate_currency_passes(currency_texture)
@@ -335,9 +335,9 @@ local function generate_currency_passes(currency_texture)
 					200,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -348,14 +348,14 @@ local function generate_currency_passes(currency_texture)
 					32,
 					169,
 					211,
-					158,
+					158
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -367,9 +367,9 @@ local function generate_currency_passes(currency_texture)
 				offset = {
 					0,
 					0,
-					2,
-				},
-			},
+					2
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -380,14 +380,14 @@ local function generate_currency_passes(currency_texture)
 				vertical_alignment = "center",
 				size = {
 					28,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -403,10 +403,10 @@ local function generate_currency_passes(currency_texture)
 				offset = {
 					-28,
 					0,
-					3,
-				},
-			},
-		},
+					3
+				}
+			}
+		}
 	}
 end
 
@@ -423,18 +423,18 @@ local left_panel_widgets_definitions = {
 					255,
 					169,
 					191,
-					153,
+					153
 				},
 				offset = {
 					-6.399999999999999,
 					-2,
-					5,
+					5
 				},
 				size = {
 					72.8,
-					72.8,
-				},
-			},
+					72.8
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -448,13 +448,13 @@ local left_panel_widgets_definitions = {
 				offset = {
 					-0.8000000000000043,
 					2,
-					7,
+					7
 				},
 				size = {
 					61.599999999999994,
-					61.599999999999994,
-				},
-			},
+					61.599999999999994
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -469,20 +469,20 @@ local left_panel_widgets_definitions = {
 				offset = {
 					65,
 					-40,
-					10,
+					10
 				},
 				size = {
 					mission_info_size[1] + 100,
-					50,
+					50
 				},
 				text_color = {
 					255,
 					169,
 					191,
-					153,
-				},
-			},
-		},
+					153
+				}
+			}
+		}
 	}, "mission_info_panel", nil, nil, element_styles.difficulty),
 	mission_info = UIWidget.create_definition({
 		{
@@ -496,13 +496,13 @@ local left_panel_widgets_definitions = {
 				offset = {
 					0,
 					25,
-					2,
+					2
 				},
 				size = {
 					60,
-					60,
-				},
-			},
+					60
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -517,19 +517,19 @@ local left_panel_widgets_definitions = {
 				offset = {
 					65,
 					15,
-					10,
+					10
 				},
 				size = {
 					mission_info_size[1] + 100,
-					50,
+					50
 				},
 				text_color = {
 					255,
 					169,
 					191,
-					153,
-				},
-			},
+					153
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -543,20 +543,20 @@ local left_panel_widgets_definitions = {
 				offset = {
 					65,
 					0,
-					10,
+					10
 				},
 				size = {
 					mission_info_size[1],
-					50,
+					50
 				},
 				text_color = {
 					255,
 					169,
 					191,
-					153,
-				},
-			},
-		},
+					153
+				}
+			}
+		}
 	}, "mission_info_panel"),
 	circumstance_info = UIWidget.create_definition({
 		{
@@ -567,19 +567,19 @@ local left_panel_widgets_definitions = {
 				offset = {
 					0,
 					0,
-					-3,
+					-3
 				},
 				uvs = {
 					{
 						0,
-						1,
+						1
 					},
 					{
 						1,
-						0,
-					},
-				},
-			},
+						0
+					}
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -588,10 +588,10 @@ local left_panel_widgets_definitions = {
 				horizontal_alignment = "left",
 				vertical_alignment = "top",
 				size = {
-					3,
+					3
 				},
-				color = Color.golden_rod(255, true),
-			},
+				color = Color.golden_rod(255, true)
+			}
 		},
 		{
 			pass_type = "text",
@@ -602,19 +602,19 @@ local left_panel_widgets_definitions = {
 				offset = {
 					0,
 					-40,
-					10,
+					10
 				},
 				size = {
 					nil,
-					30,
+					30
 				},
 				text_color = {
 					255,
 					169,
 					191,
-					153,
-				},
-			},
+					153
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -628,13 +628,13 @@ local left_panel_widgets_definitions = {
 				offset = {
 					25,
 					20,
-					2,
+					2
 				},
 				size = {
 					40,
-					40,
-				},
-			},
+					40
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -648,14 +648,14 @@ local left_panel_widgets_definitions = {
 				offset = {
 					75,
 					20,
-					10,
+					10
 				},
 				size = {
 					circumstance_info_size[1] - 75,
-					40,
+					40
 				},
-				text_color = Color.golden_rod(255, true),
-			},
+				text_color = Color.golden_rod(255, true)
+			}
 		},
 		{
 			pass_type = "text",
@@ -669,20 +669,20 @@ local left_panel_widgets_definitions = {
 				offset = {
 					25,
 					60,
-					10,
+					10
 				},
 				size = {
 					circumstance_info_size[1] - 25,
-					60,
+					60
 				},
 				text_color = {
 					255,
 					169,
 					191,
-					153,
-				},
-			},
-		},
+					153
+				}
+			}
+		}
 	}, "circumstance_info_panel"),
 	plasteel_info = UIWidget.create_definition(generate_currency_passes("content/ui/materials/icons/currencies/plasteel_small"), "crafting_pickup_panel", nil, currency_info_size),
 	diamantine_info = UIWidget.create_definition(generate_currency_passes("content/ui/materials/icons/currencies/diamantine_small"), "crafting_pickup_panel", nil, currency_info_size),
@@ -695,9 +695,9 @@ local left_panel_widgets_definitions = {
 					200,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -708,14 +708,14 @@ local left_panel_widgets_definitions = {
 					32,
 					169,
 					211,
-					158,
+					158
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -727,9 +727,9 @@ local left_panel_widgets_definitions = {
 				offset = {
 					0,
 					0,
-					2,
-				},
-			},
+					2
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -741,13 +741,13 @@ local left_panel_widgets_definitions = {
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				size = {
 					nil,
-					36,
-				},
-			},
+					36
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -763,9 +763,9 @@ local left_panel_widgets_definitions = {
 				offset = {
 					10,
 					5,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -782,9 +782,9 @@ local left_panel_widgets_definitions = {
 				offset = {
 					10,
 					18,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -801,10 +801,10 @@ local left_panel_widgets_definitions = {
 				offset = {
 					-10,
 					18,
-					3,
-				},
-			},
-		},
+					3
+				}
+			}
+		}
 	}, "expedition_currency_panel", nil, expedition_currency_info_size),
 	havoc_rank_info = UIWidget.create_definition({
 		{
@@ -817,18 +817,18 @@ local left_panel_widgets_definitions = {
 					255,
 					169,
 					191,
-					153,
+					153
 				},
 				offset = {
 					5,
 					5,
-					2,
+					2
 				},
 				size = {
 					50,
-					50,
-				},
-			},
+					50
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -843,19 +843,19 @@ local left_panel_widgets_definitions = {
 				offset = {
 					60,
 					-45,
-					2,
+					2
 				},
 				size = {
 					mission_info_size[1] + 100,
-					50,
+					50
 				},
 				text_color = {
 					255,
 					169,
 					191,
-					153,
-				},
-			},
+					153
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -870,15 +870,15 @@ local left_panel_widgets_definitions = {
 				offset = {
 					420,
 					-45,
-					2,
+					2
 				},
 				size = {
 					mission_info_size[1] + 100,
-					50,
+					50
 				},
-				text_color = Color.golden_rod(255, true),
-			},
-		},
+				text_color = Color.golden_rod(255, true)
+			}
+		}
 	}, "mission_info_panel", nil, nil, element_styles.difficulty),
 	havoc_circumstance_info = UIWidget.create_definition({
 		{
@@ -889,19 +889,19 @@ local left_panel_widgets_definitions = {
 				offset = {
 					0,
 					0,
-					-3,
+					-3
 				},
 				uvs = {
 					{
 						0,
-						1,
+						1
 					},
 					{
 						1,
-						0,
-					},
-				},
-			},
+						0
+					}
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -910,10 +910,10 @@ local left_panel_widgets_definitions = {
 				horizontal_alignment = "left",
 				vertical_alignment = "top",
 				size = {
-					3,
+					3
 				},
-				color = Color.golden_rod(255, true),
-			},
+				color = Color.golden_rod(255, true)
+			}
 		},
 		{
 			pass_type = "text",
@@ -924,19 +924,19 @@ local left_panel_widgets_definitions = {
 				offset = {
 					0,
 					-40,
-					10,
+					10
 				},
 				size = {
 					nil,
-					30,
+					30
 				},
 				text_color = {
 					255,
 					169,
 					191,
-					153,
-				},
-			},
+					153
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -950,13 +950,13 @@ local left_panel_widgets_definitions = {
 				offset = {
 					25,
 					0,
-					2,
+					2
 				},
 				size = {
 					40,
-					40,
-				},
-			},
+					40
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -970,13 +970,13 @@ local left_panel_widgets_definitions = {
 				offset = {
 					25,
 					115,
-					2,
+					2
 				},
 				size = {
 					40,
-					40,
-				},
-			},
+					40
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -990,13 +990,13 @@ local left_panel_widgets_definitions = {
 				offset = {
 					25,
 					230,
-					2,
+					2
 				},
 				size = {
 					40,
-					40,
-				},
-			},
+					40
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1010,13 +1010,13 @@ local left_panel_widgets_definitions = {
 				offset = {
 					25,
 					345,
-					2,
+					2
 				},
 				size = {
 					40,
-					40,
-				},
-			},
+					40
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -1030,14 +1030,14 @@ local left_panel_widgets_definitions = {
 				offset = {
 					75,
 					0,
-					10,
+					10
 				},
 				size = {
 					400,
-					40,
+					40
 				},
-				text_color = Color.golden_rod(255, true),
-			},
+				text_color = Color.golden_rod(255, true)
+			}
 		},
 		{
 			pass_type = "text",
@@ -1051,14 +1051,14 @@ local left_panel_widgets_definitions = {
 				offset = {
 					75,
 					115,
-					10,
+					10
 				},
 				size = {
 					400,
-					40,
+					40
 				},
-				text_color = Color.golden_rod(255, true),
-			},
+				text_color = Color.golden_rod(255, true)
+			}
 		},
 		{
 			pass_type = "text",
@@ -1072,14 +1072,14 @@ local left_panel_widgets_definitions = {
 				offset = {
 					75,
 					230,
-					10,
+					10
 				},
 				size = {
 					400,
-					40,
+					40
 				},
-				text_color = Color.golden_rod(255, true),
-			},
+				text_color = Color.golden_rod(255, true)
+			}
 		},
 		{
 			pass_type = "text",
@@ -1093,14 +1093,14 @@ local left_panel_widgets_definitions = {
 				offset = {
 					75,
 					345,
-					10,
+					10
 				},
 				size = {
 					400,
-					40,
+					40
 				},
-				text_color = Color.golden_rod(255, true),
-			},
+				text_color = Color.golden_rod(255, true)
+			}
 		},
 		{
 			pass_type = "text",
@@ -1115,19 +1115,19 @@ local left_panel_widgets_definitions = {
 				offset = {
 					80,
 					40,
-					10,
+					10
 				},
 				size = {
 					500,
-					25,
+					25
 				},
 				text_color = {
 					255,
 					169,
 					191,
-					153,
-				},
-			},
+					153
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -1142,19 +1142,19 @@ local left_panel_widgets_definitions = {
 				offset = {
 					80,
 					155,
-					10,
+					10
 				},
 				size = {
 					500,
-					25,
+					25
 				},
 				text_color = {
 					255,
 					169,
 					191,
-					153,
-				},
-			},
+					153
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -1169,19 +1169,19 @@ local left_panel_widgets_definitions = {
 				offset = {
 					80,
 					270,
-					10,
+					10
 				},
 				size = {
 					500,
-					25,
+					25
 				},
 				text_color = {
 					255,
 					169,
 					191,
-					153,
-				},
-			},
+					153
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -1196,21 +1196,21 @@ local left_panel_widgets_definitions = {
 				offset = {
 					80,
 					385,
-					10,
+					10
 				},
 				size = {
 					500,
-					25,
+					25
 				},
 				text_color = {
 					255,
 					169,
 					191,
-					153,
-				},
-			},
-		},
-	}, "circumstance_info_panel"),
+					153
+				}
+			}
+		}
+	}, "circumstance_info_panel")
 }
 local right_panel_widgets_definitions = {
 	right_header_title = UIWidget.create_definition({
@@ -1227,15 +1227,15 @@ local right_panel_widgets_definitions = {
 				offset = {
 					buffer,
 					0,
-					1,
+					1
 				},
 				size = {
 					ElementSettings.right_grid_width,
-					ElementSettings.right_header_height,
+					ElementSettings.right_header_height
 				},
-				text_color = Color.terminal_text_header(255, true),
-			},
-		},
+				text_color = Color.terminal_text_header(255, true)
+			}
+		}
 	}, "right_panel_header"),
 	right_header_background = UIWidget.create_definition({
 		{
@@ -1247,21 +1247,21 @@ local right_panel_widgets_definitions = {
 				vertical_alignment = "top",
 				size = {
 					ElementSettings.right_grid_width + ElementSettings.right_header_height,
-					ElementSettings.right_header_height,
+					ElementSettings.right_header_height
 				},
 				offset = {
 					-ElementSettings.right_header_height / 2,
 					0,
-					0,
+					0
 				},
 				color = {
 					100,
 					0,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "right_panel_header"),
 	right_header_stick = UIWidget.create_definition({
 		{
@@ -1274,15 +1274,15 @@ local right_panel_widgets_definitions = {
 				offset = {
 					line_width,
 					0,
-					0,
+					0
 				},
 				size = {
 					line_width,
-					ElementSettings.right_header_height,
+					ElementSettings.right_header_height
 				},
-				color = Color.terminal_corner_hover(255, true),
-			},
-		},
+				color = Color.terminal_corner_hover(255, true)
+			}
+		}
 	}, "right_panel_header"),
 	right_grid_background = UIWidget.create_definition({
 		{
@@ -1294,11 +1294,11 @@ local right_panel_widgets_definitions = {
 				vertical_alignment = "top",
 				size = {
 					ElementSettings.right_grid_width,
-					0,
+					0
 				},
-				color = Color.terminal_grid_background_gradient(100, true),
-			},
-		},
+				color = Color.terminal_grid_background_gradient(100, true)
+			}
+		}
 	}, "right_panel_content"),
 	right_grid_stick = UIWidget.create_definition({
 		{
@@ -1311,15 +1311,15 @@ local right_panel_widgets_definitions = {
 				offset = {
 					line_width,
 					0,
-					0,
+					0
 				},
 				size = {
 					line_width,
-					0,
+					0
 				},
-				color = Color.terminal_corner_hover(255, true),
-			},
-		},
+				color = Color.terminal_corner_hover(255, true)
+			}
+		}
 	}, "right_panel_content"),
 	right_input_hint = UIWidget.create_definition({
 		{
@@ -1335,11 +1335,11 @@ local right_panel_widgets_definitions = {
 				vertical_alignment = "top",
 				size = {
 					ElementSettings.right_grid_width,
-					100,
+					100
 				},
-				text_color = Color.text_default(255, true),
-			},
-		},
+				text_color = Color.text_default(255, true)
+			}
+		}
 	}, "right_panel_content"),
 	right_timer = UIWidget.create_definition({
 		{
@@ -1352,14 +1352,14 @@ local right_panel_widgets_definitions = {
 				offset = {
 					line_width,
 					-(ElementSettings.right_timer_height + ElementSettings.section_buffer),
-					0,
+					0
 				},
 				size = {
 					line_width,
-					ElementSettings.right_timer_height,
+					ElementSettings.right_timer_height
 				},
-				color = Color.terminal_corner_hover(255, true),
-			},
+				color = Color.terminal_corner_hover(255, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1371,14 +1371,14 @@ local right_panel_widgets_definitions = {
 				offset = {
 					0,
 					-(ElementSettings.right_timer_height + ElementSettings.section_buffer),
-					0,
+					0
 				},
 				size = {
 					ElementSettings.right_grid_width / 2,
-					ElementSettings.right_timer_height,
+					ElementSettings.right_timer_height
 				},
-				color = Color.terminal_grid_background_gradient(100, true),
-			},
+				color = Color.terminal_grid_background_gradient(100, true)
+			}
 		},
 		{
 			pass_type = "text",
@@ -1394,14 +1394,14 @@ local right_panel_widgets_definitions = {
 				offset = {
 					-ElementSettings.buffer,
 					5 - (ElementSettings.right_timer_height + ElementSettings.section_buffer),
-					1,
+					1
 				},
 				size = {
 					ElementSettings.right_grid_width / 2,
-					ElementSettings.right_timer_height,
+					ElementSettings.right_timer_height
 				},
-				text_color = Color.ui_input_color(255, true),
-			},
+				text_color = Color.ui_input_color(255, true)
+			}
 		},
 		{
 			pass_type = "text",
@@ -1417,16 +1417,16 @@ local right_panel_widgets_definitions = {
 				offset = {
 					0,
 					5 - (ElementSettings.right_timer_height + ElementSettings.section_buffer),
-					1,
+					1
 				},
 				size = {
 					ElementSettings.right_grid_width / 2,
-					ElementSettings.right_timer_height,
+					ElementSettings.right_timer_height
 				},
-				text_color = Color.terminal_text_header(255, true),
-			},
-		},
-	}, "right_panel_header"),
+				text_color = Color.terminal_text_header(255, true)
+			}
+		}
+	}, "right_panel_header")
 }
 
 local function for_all_left_widgets(parent, func)
@@ -1478,7 +1478,7 @@ local animations = {
 				for_all_right_widgets(parent, function (widget)
 					widget.alpha_multiplier = 0
 				end)
-			end,
+			end
 		},
 		{
 			end_time = 0.5,
@@ -1493,7 +1493,7 @@ local animations = {
 				end)
 
 				return true
-			end,
+			end
 		},
 		{
 			end_time = 0.5,
@@ -1509,8 +1509,8 @@ local animations = {
 				end)
 
 				return true
-			end,
-		},
+			end
+		}
 	},
 	exit = {
 		{
@@ -1526,7 +1526,7 @@ local animations = {
 				end)
 
 				return true
-			end,
+			end
 		},
 		{
 			end_time = 0.5,
@@ -1542,9 +1542,9 @@ local animations = {
 				end)
 
 				return true
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
@@ -1552,5 +1552,5 @@ return {
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
 	left_panel_widgets_definitions = left_panel_widgets_definitions,
-	right_panel_widgets_definitions = right_panel_widgets_definitions,
+	right_panel_widgets_definitions = right_panel_widgets_definitions
 }

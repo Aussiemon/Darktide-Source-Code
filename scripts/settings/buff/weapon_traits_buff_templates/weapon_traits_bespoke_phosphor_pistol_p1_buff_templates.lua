@@ -27,9 +27,9 @@ templates.weapon_trait_bespoke_phosphor_pistol_p1_chance_to_explode_elites_on_ki
 		fire_buff_id = "phosphor_burn",
 		explosion_template = ExplosionTemplates.trait_buff_phosphor_pistol_p1_minion_explosion,
 		validation_keywords = {
-			keywords.burning,
-		},
-	},
+			keywords.burning
+		}
+	}
 })
 
 return templates

@@ -64,6 +64,10 @@ BtNode._init_enter_function = function (self, enter_hook)
 			local metatable = getmetatable(self)
 
 			metatable.enter(_self, unit, breed, blackboard, scratchpad, action_data, t, node_data)
+
+			local behavior_extension = ScriptUnit.extension(unit, "behavior_system")
+
+			behavior_extension:prioritize_staggered_update()
 		end
 	else
 		self.enter = function (_self, unit, breed, blackboard, scratchpad, action_data, t, node_data, old_running_child_nodes, new_running_child_nodes)
@@ -79,6 +83,10 @@ BtNode._init_enter_function = function (self, enter_hook)
 			local metatable = getmetatable(self)
 
 			metatable.enter(_self, unit, breed, blackboard, scratchpad, action_data, t, node_data)
+
+			local behavior_extension = ScriptUnit.extension(unit, "behavior_system")
+
+			behavior_extension:prioritize_staggered_update()
 		end
 	end
 end
@@ -110,6 +118,10 @@ BtNode._init_leave_function = function (self, leave_hook)
 
 				current_parent:leave(unit, breed, blackboard, scratchpad, parent_action_data, t, reason, destroy, node_data, old_running_child_nodes, new_running_child_nodes)
 			end
+
+			local behavior_extension = ScriptUnit.extension(unit, "behavior_system")
+
+			behavior_extension:prioritize_staggered_update()
 		end
 	else
 		self.leave = function (_self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy, node_data, old_running_child_nodes, new_running_child_nodes)
@@ -125,6 +137,10 @@ BtNode._init_leave_function = function (self, leave_hook)
 
 				current_parent:leave(unit, breed, blackboard, scratchpad, parent_action_data, t, reason, destroy, node_data, old_running_child_nodes, new_running_child_nodes)
 			end
+
+			local behavior_extension = ScriptUnit.extension(unit, "behavior_system")
+
+			behavior_extension:prioritize_staggered_update()
 		end
 	end
 end

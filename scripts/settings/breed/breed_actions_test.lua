@@ -30,7 +30,7 @@ local bt_node_test_functions = {
 
 		table.clear(TEMP_SEEN_STAGGER_TYPES)
 		table.clear_array(TEMP_MISSING_STAGGER_TYPES, num_missing_stagger_types)
-	end,
+	end
 }
 local CLASS_NAME_INDEX = 1
 

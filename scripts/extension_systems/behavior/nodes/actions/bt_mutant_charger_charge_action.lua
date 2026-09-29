@@ -323,7 +323,7 @@ BtMutantChargerChargeAction._update_charging = function (self, unit, breed, scra
 			local dodge_radius = action_data.dodge_collision_radius
 			local hit_unit = scratchpad.current_lag_compensation_target
 			local distance = Vector3.distance(POSITION_LOOKUP[unit], POSITION_LOOKUP[hit_unit])
-			local is_dodging = Dodge.is_dodging(hit_unit, attack_types.melee)
+			local is_dodging = Dodge.is_dodging(hit_unit, attack_types.incapacitating_grab)
 
 			if is_dodging then
 				if distance <= dodge_radius then
@@ -445,7 +445,7 @@ BtMutantChargerChargeAction._update_charging = function (self, unit, breed, scra
 	end
 
 	if is_close and has_started_charge then
-		local is_dodging, dodge_type = Dodge.is_dodging(target_unit, attack_types.melee)
+		local is_dodging, dodge_type = Dodge.is_dodging(target_unit, attack_types.incapacitating_grab)
 
 		if is_dodging and not scratchpad.target_dodged_during_attack then
 			scratchpad.target_dodged_during_attack = true
@@ -480,7 +480,7 @@ BtMutantChargerChargeAction._update_charging = function (self, unit, breed, scra
 				if scratchpad.target_dodged_during_attack then
 					dodge_type = scratchpad.target_dodged_type
 
-					Dodge.sucessful_dodge(target_unit, unit, "melee", dodge_type, breed)
+					Dodge.sucessful_dodge(target_unit, unit, attack_types.incapacitating_grab, dodge_type, breed)
 				end
 
 				return
@@ -820,7 +820,7 @@ end
 local THROW_TELEPORT_UP_OFFSET = {
 	cryptic = 0.75,
 	human = 0.75,
-	ogryn = 0,
+	ogryn = 0
 }
 
 BtMutantChargerChargeAction._update_throwing = function (self, unit, scratchpad, action_data, breed, t)
@@ -1025,7 +1025,7 @@ BtMutantChargerChargeAction._check_colliding_players = function (self, unit, scr
 				break
 			end
 
-			local is_dodging = Dodge.is_dodging(hit_unit, attack_types.melee)
+			local is_dodging = Dodge.is_dodging(hit_unit, attack_types.incapacitating_grab)
 
 			if is_dodging then
 				local distance = Vector3.distance(pos, POSITION_LOOKUP[hit_unit])

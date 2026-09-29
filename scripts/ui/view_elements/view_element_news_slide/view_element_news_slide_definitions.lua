@@ -18,13 +18,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			width,
-			height,
+			height
 		},
 		position = {
 			-90,
 			70,
-			0,
-		},
+			0
+		}
 	},
 	progress_bar = {
 		horizontal_alignment = "center",
@@ -34,8 +34,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			bar_height + 6 + buffer,
-			0,
-		},
+			0
+		}
 	},
 	input_prompt_left = {
 		horizontal_alignment = "left",
@@ -44,8 +44,8 @@ local scenegraph_definition = {
 		offset = {
 			0,
 			height + buffer,
-			10,
-		},
+			10
+		}
 	},
 	input_prompt_right = {
 		horizontal_alignment = "right",
@@ -54,8 +54,8 @@ local scenegraph_definition = {
 		offset = {
 			15,
 			height + buffer,
-			10,
-		},
+			10
+		}
 	},
 	open_news_button_pivot = {
 		horizontal_alignment = "center",
@@ -63,14 +63,14 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			Settings.bar_size[1],
-			Settings.bar_size[2] * 4 + buffer * 2,
+			Settings.bar_size[2] * 4 + buffer * 2
 		},
 		offset = {
 			0,
 			Settings.bar_size[2] * 9,
-			4,
-		},
-	},
+			4
+		}
+	}
 }
 
 local function _input_prompt_change_function(content, style)
@@ -102,8 +102,8 @@ local widget_definitions = {
 			content = {
 				on_released_sound = nil,
 				on_hover_sound = UISoundEvents.default_mouse_hover,
-				on_pressed_sound = UISoundEvents.default_click,
-			},
+				on_pressed_sound = UISoundEvents.default_click
+			}
 		},
 		{
 			pass_type = "rect",
@@ -115,14 +115,14 @@ local widget_definitions = {
 					100,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -134,15 +134,15 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					24,
-					24,
+					24
 				},
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
-				color = Color.terminal_grid_background(255, true),
-			},
+				color = Color.terminal_grid_background(255, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -158,10 +158,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					2,
-				},
+					2
+				}
 			},
-			change_function = ButtonPassTemplates.terminal_button_change_function,
+			change_function = ButtonPassTemplates.terminal_button_change_function
 		},
 		{
 			pass_type = "texture",
@@ -177,10 +177,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					9,
-				},
+					9
+				}
 			},
-			change_function = ButtonPassTemplates.terminal_button_change_function,
+			change_function = ButtonPassTemplates.terminal_button_change_function
 		},
 		{
 			pass_type = "texture",
@@ -196,10 +196,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					10,
-				},
+					10
+				}
 			},
-			change_function = ButtonPassTemplates.terminal_button_change_function,
+			change_function = ButtonPassTemplates.terminal_button_change_function
 		},
 		{
 			pass_type = "texture",
@@ -209,18 +209,18 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					nil,
-					22,
+					22
 				},
 				size_addition = {
 					12,
-					0,
+					0
 				},
 				offset = {
 					0,
 					-10,
-					8,
-				},
-			},
+					8
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -230,18 +230,18 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					nil,
-					24,
+					24
 				},
 				size_addition = {
 					12,
-					0,
+					0
 				},
 				offset = {
 					0,
 					11,
-					9,
-				},
-			},
+					9
+				}
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -256,26 +256,26 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				uvs = {
 					{
 						0,
-						0,
+						0
 					},
 					{
 						1,
-						Settings.image_size[2] / Settings.image_size[1],
-					},
+						Settings.image_size[2] / Settings.image_size[1]
+					}
 				},
 				material_values = {
 					left_offset = 0.5,
-					right_offset = 0.5,
-				},
+					right_offset = 0.5
+				}
 			},
 			visibility_function = function (content, style)
 				return not not style.material_values.texture
-			end,
+			end
 		},
 		{
 			pass_type = "rect",
@@ -285,20 +285,20 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					nil,
-					48,
+					48
 				},
 				color = {
 					150,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					7,
-				},
-			},
+					7
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -314,14 +314,14 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					width - 2 * buffer,
-					height - 2 * buffer,
+					height - 2 * buffer
 				},
 				offset = {
 					0,
 					3,
-					7,
-				},
-			}, UIFontSettings.list_button),
+					7
+				}
+			}, UIFontSettings.list_button)
 		},
 		{
 			pass_type = "rect",
@@ -331,21 +331,21 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					width - 1 * buffer,
-					height + 5 * buffer,
+					height + 5 * buffer
 				},
 				color = {
 					150,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					6,
-				},
+					6
+				}
 			},
-			visibility_function = _body_background_visibility_function,
+			visibility_function = _body_background_visibility_function
 		},
 		{
 			pass_type = "texture",
@@ -356,21 +356,21 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					width - 1 * buffer,
-					height + 10 * buffer,
+					height + 10 * buffer
 				},
 				color = {
 					150,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					-width - 1 * buffer,
 					0,
-					6,
-				},
+					6
+				}
 			},
-			visibility_function = _body_background_visibility_function,
+			visibility_function = _body_background_visibility_function
 		},
 		{
 			pass_type = "text",
@@ -386,14 +386,14 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					width - 1 * buffer,
-					height - 1 * buffer,
+					height - 1 * buffer
 				},
 				offset = {
 					-1 * buffer,
 					0,
-					7,
-				},
-			}, UIFontSettings.list_button),
+					7
+				}
+			}, UIFontSettings.list_button)
 		},
 		{
 			pass_type = "text",
@@ -408,19 +408,19 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					width - 2 * buffer,
-					height - 2 * buffer,
+					height - 2 * buffer
 				},
 				offset = {
 					0,
 					0,
-					7,
+					7
 				},
-				text_color = Color.terminal_text_body_sub_header(255, true),
+				text_color = Color.terminal_text_body_sub_header(255, true)
 			}, UIFontSettings.list_button),
 			change_function = function (content, style, optional_hotspot_id)
 				style.text_color = content.body_number and content.body_number ~= "" and Color.terminal_text_body_sub_header(255, true) or Color.terminal_text_header(255, true)
-			end,
-		},
+			end
+		}
 	}, "news_area"),
 	input_prompt_left = UIWidget.create_definition({
 		{
@@ -434,17 +434,17 @@ local widget_definitions = {
 				text_vertical_alignment = "top",
 				size = {
 					width - 2 * buffer,
-					height - 2 * buffer,
+					height - 2 * buffer
 				},
 				offset = {
 					0,
 					0,
-					12,
+					12
 				},
-				text_color = Color.terminal_text_body_sub_header(255, true),
+				text_color = Color.terminal_text_body_sub_header(255, true)
 			}, UIFontSettings.list_button),
-			change_function = _input_prompt_change_function,
-		},
+			change_function = _input_prompt_change_function
+		}
 	}, "input_prompt_left"),
 	input_prompt_right = UIWidget.create_definition({
 		{
@@ -458,27 +458,27 @@ local widget_definitions = {
 				text_vertical_alignment = "top",
 				size = {
 					width - 2 * buffer,
-					height - 2 * buffer,
+					height - 2 * buffer
 				},
 				offset = {
 					0,
 					0,
-					12,
+					12
 				},
-				text_color = Color.terminal_text_body_sub_header(255, true),
+				text_color = Color.terminal_text_body_sub_header(255, true)
 			}, UIFontSettings.list_button),
-			change_function = _input_prompt_change_function,
-		},
+			change_function = _input_prompt_change_function
+		}
 	}, "input_prompt_right"),
 	open_news_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "open_news_button_pivot", {
 		hotspot = {
-			on_pressed_sound = UISoundEvents.default_click,
-		},
+			on_pressed_sound = UISoundEvents.default_click
+		}
 	}, nil, {
 		text = {
-			font_size = 20,
-		},
-	}),
+			font_size = 20
+		}
+	})
 }
 local blueprints = {}
 
@@ -492,9 +492,9 @@ blueprints.loading_bar = UIWidget.create_definition({
 			vertical_alignment = "center",
 			size = {
 				0,
-				bar_height,
-			},
-		},
+				bar_height
+			}
+		}
 	},
 	{
 		pass_type = "rect",
@@ -505,14 +505,14 @@ blueprints.loading_bar = UIWidget.create_definition({
 			color = Color.terminal_frame(nil, true),
 			size = {
 				0,
-				bar_height,
+				bar_height
 			},
 			offset = {
 				0,
 				0,
-				0,
-			},
-		},
+				0
+			}
+		}
 	},
 	{
 		pass_type = "rect",
@@ -523,17 +523,17 @@ blueprints.loading_bar = UIWidget.create_definition({
 			color = Color.terminal_icon(nil, true),
 			size = {
 				0,
-				bar_height,
+				bar_height
 			},
 			offset = {
 				0,
 				0,
-				1,
-			},
+				1
+			}
 		},
 		visibility_function = function (content, style)
 			return content.active
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -546,29 +546,29 @@ blueprints.loading_bar = UIWidget.create_definition({
 			color = Color.terminal_icon(150, true),
 			size = {
 				0,
-				bar_height,
+				bar_height
 			},
 			offset = {
 				0,
 				0,
-				1,
+				1
 			},
 			size_addition = {
 				24,
-				24,
-			},
+				24
+			}
 		},
 		visibility_function = function (content, style)
 			return content.active and style.size[1] > 4
-		end,
-	},
+		end
+	}
 }, "progress_bar", nil, {
 	0,
-	bar_height,
+	bar_height
 })
 
 return {
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
-	blueprints = blueprints,
+	blueprints = blueprints
 }

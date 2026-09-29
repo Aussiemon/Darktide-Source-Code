@@ -23,7 +23,7 @@ DestructibleExtension.init = function (self, extension_init_context, unit, exten
 	self._visibility_info = {
 		fake_light = false,
 		lights_enabled = true,
-		visible = true,
+		visible = true
 	}
 	self._owner_system = extension_init_context.owner_system
 end
@@ -103,7 +103,7 @@ DestructibleExtension.setup_from_component = function (self, despawn_timer_durat
 		force_direction = direction,
 		force_direction_type = force_direction_type,
 		start_visible = start_visible,
-		collision_actors = {},
+		collision_actors = {}
 	}
 
 	if #collision_actor_names > 0 then
@@ -181,7 +181,7 @@ DestructibleExtension.update = function (self, unit, dt, t)
 	self._timer_to_despawn = math.max(self._timer_to_despawn, 0)
 
 	if self._timer_to_despawn == 0 then
-		self._owner_system:disable_update_function(self.__class_name, "update", self._unit, self)
+		self._owner_system:disable_update_function(self._unit, "update")
 		Managers.state.unit_spawner:mark_for_deletion(unit)
 	end
 end
@@ -449,7 +449,7 @@ DestructibleExtension._handle_stage_zero = function (self, current_stage_index)
 				self._timer_to_despawn = self._despawn_timer_duration
 			end
 
-			self._owner_system:enable_update_function(self.__class_name, "update", self._unit, self)
+			self._owner_system:enable_update_function(self._unit, "update")
 		end
 	end
 end

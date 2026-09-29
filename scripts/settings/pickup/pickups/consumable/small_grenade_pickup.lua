@@ -9,7 +9,7 @@ local pickup_data = {
 	name = "small_grenade",
 	pickup_sound = "wwise/events/player/play_pick_up_grenade",
 	smart_tag_target_type = "pickup",
-	unit_name = "content/pickups/consumables/refill_01/consumable_refill_01",
+	unit_name = "content/pickups/consumables/refill_01/consumable_refill_01"
 }
 
 return pickup_data

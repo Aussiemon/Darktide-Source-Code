@@ -13,9 +13,9 @@ local shield_templates = {
 		blocking_angle = math.degrees_to_radians(70),
 		attack_type_min_stagger_strength = {
 			[attack_types.ranged] = 3,
-			[attack_types.melee] = 10,
-		},
-	},
+			[attack_types.melee] = 10
+		}
+	}
 }
 
 return shield_templates

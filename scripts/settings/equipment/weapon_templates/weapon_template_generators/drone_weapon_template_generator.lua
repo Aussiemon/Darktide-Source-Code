@@ -10,43 +10,39 @@ local function generate_base_template()
 	local base_template = {}
 
 	base_template.action_inputs = {
-		combat_ability = {
-			buffer_time = 0,
-			input_sequence = nil,
-		},
 		aim_drone = {
 			buffer_time = 0,
 			input_sequence = {
 				{
-					input = "combat_ability_hold",
-					value = true,
-				},
-			},
+					input_alias = "wielded_input_hold",
+					value = true
+				}
+			}
 		},
 		release_drone = {
 			buffer_time = 0.6,
 			input_sequence = {
 				{
-					input = "combat_ability_hold",
+					input_alias = "wielded_input_hold",
 					value = false,
-					time_window = math.huge,
-				},
-			},
+					time_window = math.huge
+				}
+			}
 		},
 		instant_aim_drone = {
 			buffer_time = 0.1,
 			input_sequence = {
 				{
-					input = "combat_ability_hold",
+					input_alias = "wielded_input_hold",
 					value = false,
-					time_window = math.huge,
-				},
-			},
+					time_window = math.huge
+				}
+			}
 		},
 		instant_release_drone = {
 			buffer_time = 0,
 			dont_queue = true,
-			input_sequence = nil,
+			input_sequence = nil
 		},
 		cancel = {
 			buffer_time = 0,
@@ -54,33 +50,23 @@ local function generate_base_template()
 			input_sequence = {
 				{
 					input = "action_two_pressed",
-					value = true,
-				},
-			},
+					value = true
+				}
+			}
 		},
 		wield = {
 			buffer_time = 0,
 			clear_input_queue = true,
 			input_sequence = {
 				{
-					inputs = wield_inputs,
-				},
-			},
+					inputs = wield_inputs
+				}
+			}
 		},
 		unwield_to_previous = {
 			buffer_time = 0,
-			input_sequence = nil,
-		},
-		grenade_ability = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					input = "grenade_ability_pressed",
-					value = true,
-				},
-			},
-		},
+			input_sequence = nil
+		}
 	}
 
 	table.add_missing(base_template.action_inputs, BaseTemplateSettings.action_inputs)
@@ -91,76 +77,55 @@ local function generate_base_template()
 			transition = {
 				{
 					input = "release_drone",
-					transition = "base",
+					transition = "base"
 				},
 				{
 					input = "wield",
-					transition = "base",
+					transition = "base"
 				},
 				{
 					input = "cancel",
-					transition = "base",
-				},
-				{
-					input = "grenade_ability",
-					transition = "base",
-				},
-			},
+					transition = "base"
+				}
+			}
 		},
 		{
 			input = "instant_aim_drone",
 			transition = {
 				{
 					input = "instant_release_drone",
-					transition = "base",
+					transition = "base"
 				},
 				{
 					input = "wield",
-					transition = "base",
+					transition = "base"
 				},
 				{
 					input = "cancel",
-					transition = "base",
-				},
-				{
-					input = "grenade_ability",
-					transition = "base",
-				},
-			},
+					transition = "base"
+				}
+			}
 		},
 		{
 			input = "wield",
-			transition = "base",
+			transition = "base"
 		},
 		{
 			input = "cancel",
-			transition = "stay",
+			transition = "stay"
 		},
 		{
 			input = "unwield_to_previous",
-			transition = "stay",
-		},
-		{
-			input = "grenade_ability",
-			transition = "stay",
-		},
+			transition = "stay"
+		}
 	}
 	base_template.actions = {
-		action_unwield = {
-			allowed_during_sprint = true,
-			kind = "unwield",
-			start_input = "wield",
-			total_time = 0,
-			uninterruptible = true,
-			allowed_chain_actions = {},
-		},
 		action_unwield_to_previous = {
 			allowed_during_sprint = true,
 			kind = "unwield_to_previous",
 			total_time = 0,
 			uninterruptible = true,
-			unwield_to_weapon = true,
-			allowed_chain_actions = {},
+			allowed_chain_actions = {}
 		},
 		action_wield = {
 			anim_event = "equip",
@@ -171,18 +136,18 @@ local function generate_base_template()
 			weapon_handling_template = "time_scale_1",
 			conditional_state_to_action_input = {
 				action_end = {
-					input_name = "aim_drone",
-				},
+					input_name = "aim_drone"
+				}
 			},
 			allowed_chain_actions = {
 				instant_aim_drone = {
-					action_name = "action_instant_aim_drone",
+					action_name = "action_instant_aim_drone"
 				},
 				aim_drone = {
 					action_name = "action_aim_drone",
-					chain_time = 0.2,
-				},
-			},
+					chain_time = 0.2
+				}
+			}
 		},
 		action_aim_drone = {
 			abort_sprint = true,
@@ -195,20 +160,17 @@ local function generate_base_template()
 			uninterruptible = true,
 			total_time = math.huge,
 			allowed_chain_actions = {
-				wield = {
-					action_name = "action_unwield",
-				},
+				wield = BaseTemplateSettings.generate_wield_chain_actions(),
 				release_drone = {
-					action_name = "action_release_drone",
+					action_name = "action_release_drone"
 				},
 				cancel = {
-					action_name = "action_cancel",
-				},
-				grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
+					action_name = "action_cancel"
+				}
 			},
 			anim_end_event_condition_func = function (unit, data, end_reason)
 				return end_reason == "hold_input_released"
-			end,
+			end
 		},
 		action_instant_aim_drone = {
 			abort_sprint = true,
@@ -224,31 +186,28 @@ local function generate_base_template()
 			uninterruptible = true,
 			conditional_state_to_action_input = {
 				action_end = {
-					input_name = "instant_release_drone",
-				},
+					input_name = "instant_release_drone"
+				}
 			},
 			allowed_chain_actions = {
-				wield = {
-					action_name = "action_unwield",
-				},
+				wield = BaseTemplateSettings.generate_wield_chain_actions(),
 				instant_release_drone = {
-					action_name = "action_instant_release_drone",
+					action_name = "action_instant_release_drone"
 				},
 				cancel = {
-					action_name = "action_cancel",
-				},
-				grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
+					action_name = "action_cancel"
+				}
 			},
 			anim_end_event_condition_func = function (unit, data, end_reason)
 				return end_reason == "hold_input_released"
-			end,
+			end
 		},
 		action_release_drone = {
-			ability_type = "combat_ability",
 			abort_sprint = true,
 			allowed_during_sprint = true,
 			anim_end_event = "equip",
 			anim_event = "throw_underhand",
+			consume_ability_usage_cost = true,
 			fire_time = 0.4,
 			kind = "spawn_projectile",
 			position_finder_module_class_name = "drone_position_finder",
@@ -258,21 +217,18 @@ local function generate_base_template()
 			total_time = 1.3,
 			track_towards_position = true,
 			uninterruptible = true,
-			use_ability_charge = true,
 			vo_tag_release = "blitz_nuncio_a",
 			weapon_handling_template = "grenade_throw",
 			conditional_state_to_action_input = {
 				action_end = {
-					input_name = "unwield_to_previous",
-				},
+					input_name = "unwield_to_previous"
+				}
 			},
 			allowed_chain_actions = {
 				unwield_to_previous = {
-					action_name = "action_unwield_to_previous",
+					action_name = "action_unwield_to_previous"
 				},
-				wield = {
-					action_name = "action_unwield",
-				},
+				wield = BaseTemplateSettings.generate_wield_chain_actions()
 			},
 			spawn_offset = Vector3Box(0.5, -0.2, -0.2),
 			anim_end_event_condition_func = function (unit, data, end_reason)
@@ -280,14 +236,14 @@ local function generate_base_template()
 				local ability_type = "combat_ability"
 
 				return ability_extension and ability_extension:can_use_ability(ability_type)
-			end,
+			end
 		},
 		action_instant_release_drone = {
-			ability_type = "combat_ability",
 			abort_sprint = true,
 			allowed_during_sprint = true,
 			anim_end_event = "equip",
 			anim_event = "throw_underhand",
+			consume_ability_usage_cost = true,
 			fire_time = 0.25,
 			kind = "spawn_projectile",
 			position_finder_module_class_name = "drone_position_finder",
@@ -297,28 +253,25 @@ local function generate_base_template()
 			total_time = 1,
 			track_towards_position = true,
 			uninterruptible = true,
-			use_ability_charge = true,
 			vo_tag_release = "blitz_nuncio_a",
 			weapon_handling_template = "grenade_throw",
 			conditional_state_to_action_input = {
 				action_end = {
-					input_name = "unwield_to_previous",
-				},
+					input_name = "unwield_to_previous"
+				}
 			},
 			allowed_chain_actions = {
 				unwield_to_previous = {
-					action_name = "action_unwield_to_previous",
+					action_name = "action_unwield_to_previous"
 				},
-				wield = {
-					action_name = "action_unwield",
-				},
+				wield = BaseTemplateSettings.generate_wield_chain_actions()
 			},
 			anim_end_event_condition_func = function (unit, data, end_reason)
 				local ability_extension = ScriptUnit.has_extension(unit, "ability_system")
 				local ability_type = "combat_ability"
 
 				return ability_extension and ability_extension:can_use_ability(ability_type)
-			end,
+			end
 		},
 		action_cancel = {
 			anim_time_scale = 1,
@@ -329,41 +282,41 @@ local function generate_base_template()
 			action_movement_curve = {
 				{
 					modifier = 0.5,
-					t = 0.2,
+					t = 0.2
 				},
 				{
 					modifier = 0.4,
-					t = 0.3,
+					t = 0.3
 				},
 				{
 					modifier = 1,
-					t = 0.5,
+					t = 0.5
 				},
-				start_modifier = 0.8,
+				start_modifier = 0.8
 			},
 			conditional_state_to_action_input = {
 				action_end = {
-					input_name = "unwield_to_previous",
-				},
+					input_name = "unwield_to_previous"
+				}
 			},
 			allowed_chain_actions = {
 				unwield_to_previous = {
-					action_name = "action_unwield_to_previous",
-				},
-			},
-		},
+					action_name = "action_unwield_to_previous"
+				}
+			}
+		}
 	}
 
 	table.add_missing(base_template.actions, BaseTemplateSettings.actions)
 
 	base_template.keywords = {
-		"adamant",
+		"adamant"
 	}
 	base_template.conditional_state_to_action_input = {
 		{
 			conditional_state = "no_running_action",
-			input_name = "cancel",
-		},
+			input_name = "cancel"
+		}
 	}
 	base_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 	base_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/grenade"
@@ -372,7 +325,7 @@ local function generate_base_template()
 	base_template.ammo_template = "grenade"
 	base_template.hud_configuration = {
 		uses_ammunition = true,
-		uses_overheat = false,
+		uses_overheat = false
 	}
 	base_template.sprint_ready_up_time = 0.1
 	base_template.max_first_person_anim_movement_speed = 5.8

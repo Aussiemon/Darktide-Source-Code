@@ -7,7 +7,7 @@ local Interface = {
 	"get_cached",
 	"has_data",
 	"add_listener",
-	"remove_listener",
+	"remove_listener"
 }
 
 CacheWrapper.init = function (self, metadata_fn, refresh_fn, fallback_fn)
@@ -15,7 +15,7 @@ CacheWrapper.init = function (self, metadata_fn, refresh_fn, fallback_fn)
 	self._refresh_fn = refresh_fn
 	self._fallback_fn = fallback_fn
 	self._current_metadata = {
-		version = nil,
+		version = nil
 	}
 	self._current_value = nil
 	self._listeners = {}
@@ -35,7 +35,7 @@ CacheWrapper.refresh = function (self, version, url)
 	if version ~= nil and url ~= nil then
 		promise = Promise.resolved({
 			version = version,
-			url = url,
+			url = url
 		})
 	else
 		promise = self._metadata_fn()

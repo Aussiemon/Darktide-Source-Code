@@ -4,7 +4,7 @@ local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local Promise = require("scripts/foundation/utilities/promise")
 local LocalDLCVerificationState = class("LocalDLCVerificationState")
 local RPCS = {
-	"rpc_dlc_verification_host_response",
+	"rpc_dlc_verification_host_response"
 }
 
 LocalDLCVerificationState.init = function (self, state_machine, shared_state)
@@ -43,7 +43,7 @@ LocalDLCVerificationState.update = function (self, dt)
 
 	if channel_state == "disconnecting" or channel_state == "disconnected" then
 		return "disconnected", {
-			engine_reason = reason,
+			engine_reason = reason
 		}
 	end
 
@@ -52,7 +52,7 @@ LocalDLCVerificationState.update = function (self, dt)
 		local error_code = error.error_code and error.error_code or "failed_dlc_license_check"
 
 		return "error", {
-			game_reason = error_code,
+			game_reason = error_code
 		}
 	end
 
@@ -66,7 +66,7 @@ LocalDLCVerificationState.update = function (self, dt)
 		Log.info("LocalDLCVerificationState", "Timeout waiting for dlc ownership check")
 
 		return "timeout", {
-			game_reason = "timeout",
+			game_reason = "timeout"
 		}
 	end
 end
@@ -101,7 +101,7 @@ LocalDLCVerificationState._cb_on_post_license_response = function (self, respons
 		for _, product in ipairs(response.products) do
 			if not table.contains(self._backend_interface.CLIENT_POST_DLC_STATUS_WHITELIST, product.status) then
 				self._license_check_error = {
-					error_code = "failed_dlc_license_check",
+					error_code = "failed_dlc_license_check"
 				}
 
 				return
@@ -121,7 +121,7 @@ LocalDLCVerificationState.rpc_dlc_verification_host_response = function (self, c
 
 	if error_code then
 		self._license_check_error = {
-			error_code = error_code,
+			error_code = error_code
 		}
 	end
 end

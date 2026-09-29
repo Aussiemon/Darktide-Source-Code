@@ -9,23 +9,23 @@ local guidance_vo_broker_female_c = {
 			"loc_broker_female_c__guidance_correct_path_02",
 			"loc_broker_female_c__guidance_correct_path_03",
 			"loc_broker_female_c__guidance_correct_path_04",
-			"loc_broker_female_c__guidance_correct_path_05",
+			"loc_broker_female_c__guidance_correct_path_05"
 		},
 		sound_events_duration = {
 			1.784885,
 			2.603188,
 			0.867625,
 			1.952375,
-			1.432052,
+			1.432052
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_correct_path = {
 		randomize_indexes_n = 0,
@@ -35,16 +35,16 @@ local guidance_vo_broker_female_c = {
 			"loc_broker_female_c__guidance_correct_path_02",
 			"loc_broker_female_c__guidance_correct_path_03",
 			"loc_broker_female_c__guidance_correct_path_04",
-			"loc_broker_female_c__guidance_correct_path_05",
+			"loc_broker_female_c__guidance_correct_path_05"
 		},
 		sound_events_duration = {
 			1.784885,
 			2.603188,
 			0.867625,
 			1.952375,
-			1.432052,
+			1.432052
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_correct_path_1 = {
 		randomize_indexes_n = 0,
@@ -54,23 +54,23 @@ local guidance_vo_broker_female_c = {
 			"loc_broker_female_c__guidance_correct_path_02",
 			"loc_broker_female_c__guidance_correct_path_03",
 			"loc_broker_female_c__guidance_correct_path_04",
-			"loc_broker_female_c__guidance_correct_path_05",
+			"loc_broker_female_c__guidance_correct_path_05"
 		},
 		sound_events_duration = {
 			1.784885,
 			2.603188,
 			0.867625,
 			1.952375,
-			1.432052,
+			1.432052
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_correct_path_2 = {
 		randomize_indexes_n = 0,
@@ -80,23 +80,23 @@ local guidance_vo_broker_female_c = {
 			"loc_broker_female_c__guidance_correct_path_02",
 			"loc_broker_female_c__guidance_correct_path_03",
 			"loc_broker_female_c__guidance_correct_path_04",
-			"loc_broker_female_c__guidance_correct_path_05",
+			"loc_broker_female_c__guidance_correct_path_05"
 		},
 		sound_events_duration = {
 			1.784885,
 			2.603188,
 			0.867625,
 			1.952375,
-			1.432052,
+			1.432052
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_correct_path_3 = {
 		randomize_indexes_n = 0,
@@ -106,23 +106,23 @@ local guidance_vo_broker_female_c = {
 			"loc_broker_female_c__guidance_correct_path_02",
 			"loc_broker_female_c__guidance_correct_path_03",
 			"loc_broker_female_c__guidance_correct_path_04",
-			"loc_broker_female_c__guidance_correct_path_05",
+			"loc_broker_female_c__guidance_correct_path_05"
 		},
 		sound_events_duration = {
 			1.784885,
 			2.603188,
 			0.867625,
 			1.952375,
-			1.432052,
+			1.432052
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_correct_path_drop = {
 		randomize_indexes_n = 0,
@@ -132,16 +132,16 @@ local guidance_vo_broker_female_c = {
 			"loc_broker_female_c__guidance_correct_path_drop_02",
 			"loc_broker_female_c__guidance_correct_path_drop_03",
 			"loc_broker_female_c__guidance_correct_path_drop_04",
-			"loc_broker_female_c__guidance_correct_path_drop_05",
+			"loc_broker_female_c__guidance_correct_path_drop_05"
 		},
 		sound_events_duration = {
 			2.049802,
 			1.39601,
 			1.540135,
 			1.73124,
-			1.856646,
+			1.856646
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_correct_path_drop_1 = {
 		randomize_indexes_n = 0,
@@ -151,23 +151,23 @@ local guidance_vo_broker_female_c = {
 			"loc_broker_female_c__guidance_correct_path_drop_02",
 			"loc_broker_female_c__guidance_correct_path_drop_03",
 			"loc_broker_female_c__guidance_correct_path_drop_04",
-			"loc_broker_female_c__guidance_correct_path_drop_05",
+			"loc_broker_female_c__guidance_correct_path_drop_05"
 		},
 		sound_events_duration = {
 			2.049802,
 			1.39601,
 			1.540135,
 			1.73124,
-			1.856646,
+			1.856646
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_correct_path_drop_2 = {
 		randomize_indexes_n = 0,
@@ -177,23 +177,23 @@ local guidance_vo_broker_female_c = {
 			"loc_broker_female_c__guidance_correct_path_drop_02",
 			"loc_broker_female_c__guidance_correct_path_drop_03",
 			"loc_broker_female_c__guidance_correct_path_drop_04",
-			"loc_broker_female_c__guidance_correct_path_drop_05",
+			"loc_broker_female_c__guidance_correct_path_drop_05"
 		},
 		sound_events_duration = {
 			2.049802,
 			1.39601,
 			1.540135,
 			1.73124,
-			1.856646,
+			1.856646
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_correct_path_drop_3 = {
 		randomize_indexes_n = 0,
@@ -203,23 +203,23 @@ local guidance_vo_broker_female_c = {
 			"loc_broker_female_c__guidance_correct_path_drop_02",
 			"loc_broker_female_c__guidance_correct_path_drop_03",
 			"loc_broker_female_c__guidance_correct_path_drop_04",
-			"loc_broker_female_c__guidance_correct_path_drop_05",
+			"loc_broker_female_c__guidance_correct_path_drop_05"
 		},
 		sound_events_duration = {
 			2.049802,
 			1.39601,
 			1.540135,
 			1.73124,
-			1.856646,
+			1.856646
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_correct_path_drop_4 = {
 		randomize_indexes_n = 0,
@@ -229,23 +229,23 @@ local guidance_vo_broker_female_c = {
 			"loc_broker_female_c__guidance_correct_path_drop_02",
 			"loc_broker_female_c__guidance_correct_path_drop_03",
 			"loc_broker_female_c__guidance_correct_path_drop_04",
-			"loc_broker_female_c__guidance_correct_path_drop_05",
+			"loc_broker_female_c__guidance_correct_path_drop_05"
 		},
 		sound_events_duration = {
 			2.049802,
 			1.39601,
 			1.540135,
 			1.73124,
-			1.856646,
+			1.856646
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_correct_path_drop_5 = {
 		randomize_indexes_n = 0,
@@ -255,23 +255,23 @@ local guidance_vo_broker_female_c = {
 			"loc_broker_female_c__guidance_correct_path_drop_02",
 			"loc_broker_female_c__guidance_correct_path_drop_03",
 			"loc_broker_female_c__guidance_correct_path_drop_04",
-			"loc_broker_female_c__guidance_correct_path_drop_05",
+			"loc_broker_female_c__guidance_correct_path_drop_05"
 		},
 		sound_events_duration = {
 			2.049802,
 			1.39601,
 			1.540135,
 			1.73124,
-			1.856646,
+			1.856646
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_correct_path_drop_6 = {
 		randomize_indexes_n = 0,
@@ -281,23 +281,23 @@ local guidance_vo_broker_female_c = {
 			"loc_broker_female_c__guidance_correct_path_drop_02",
 			"loc_broker_female_c__guidance_correct_path_drop_03",
 			"loc_broker_female_c__guidance_correct_path_drop_04",
-			"loc_broker_female_c__guidance_correct_path_drop_05",
+			"loc_broker_female_c__guidance_correct_path_drop_05"
 		},
 		sound_events_duration = {
 			2.049802,
 			1.39601,
 			1.540135,
 			1.73124,
-			1.856646,
+			1.856646
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_correct_path_up = {
 		randomize_indexes_n = 0,
@@ -307,16 +307,16 @@ local guidance_vo_broker_female_c = {
 			"loc_broker_female_c__guidance_correct_path_up_02",
 			"loc_broker_female_c__guidance_correct_path_up_03",
 			"loc_broker_female_c__guidance_correct_path_up_04",
-			"loc_broker_female_c__guidance_correct_path_up_05",
+			"loc_broker_female_c__guidance_correct_path_up_05"
 		},
 		sound_events_duration = {
 			1.370563,
 			1.137177,
 			1.258792,
 			1.209448,
-			2.136302,
+			2.136302
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_ladder_down = {
 		randomize_indexes_n = 0,
@@ -326,23 +326,23 @@ local guidance_vo_broker_female_c = {
 			"loc_broker_female_c__ladder_sighted_02",
 			"loc_broker_female_c__ladder_sighted_03",
 			"loc_broker_female_c__ladder_sighted_04",
-			"loc_broker_female_c__ladder_sighted_05",
+			"loc_broker_female_c__ladder_sighted_05"
 		},
 		sound_events_duration = {
 			0.771219,
 			0.700854,
 			1.131625,
 			1.126344,
-			1.809406,
+			1.809406
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_ladder_sighted = {
 		randomize_indexes_n = 0,
@@ -352,23 +352,23 @@ local guidance_vo_broker_female_c = {
 			"loc_broker_female_c__ladder_sighted_02",
 			"loc_broker_female_c__ladder_sighted_03",
 			"loc_broker_female_c__ladder_sighted_04",
-			"loc_broker_female_c__ladder_sighted_05",
+			"loc_broker_female_c__ladder_sighted_05"
 		},
 		sound_events_duration = {
 			0.771219,
 			0.700854,
 			1.131625,
 			1.126344,
-			1.809406,
+			1.809406
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_ladder_up = {
 		randomize_indexes_n = 0,
@@ -378,23 +378,23 @@ local guidance_vo_broker_female_c = {
 			"loc_broker_female_c__ladder_sighted_02",
 			"loc_broker_female_c__ladder_sighted_03",
 			"loc_broker_female_c__ladder_sighted_04",
-			"loc_broker_female_c__ladder_sighted_05",
+			"loc_broker_female_c__ladder_sighted_05"
 		},
 		sound_events_duration = {
 			0.771219,
 			0.700854,
 			1.131625,
 			1.126344,
-			1.809406,
+			1.809406
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_stairs_down = {
 		randomize_indexes_n = 0,
@@ -404,23 +404,23 @@ local guidance_vo_broker_female_c = {
 			"loc_broker_female_c__stairs_sighted_02",
 			"loc_broker_female_c__stairs_sighted_03",
 			"loc_broker_female_c__stairs_sighted_04",
-			"loc_broker_female_c__stairs_sighted_05",
+			"loc_broker_female_c__stairs_sighted_05"
 		},
 		sound_events_duration = {
 			1.191552,
 			1.020958,
 			1.477594,
 			1.480708,
-			1.787615,
+			1.787615
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_stairs_sighted = {
 		randomize_indexes_n = 0,
@@ -430,23 +430,23 @@ local guidance_vo_broker_female_c = {
 			"loc_broker_female_c__stairs_sighted_02",
 			"loc_broker_female_c__stairs_sighted_03",
 			"loc_broker_female_c__stairs_sighted_04",
-			"loc_broker_female_c__stairs_sighted_05",
+			"loc_broker_female_c__stairs_sighted_05"
 		},
 		sound_events_duration = {
 			1.191552,
 			1.020958,
 			1.477594,
 			1.480708,
-			1.787615,
+			1.787615
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_stairs_sighted_1 = {
 		randomize_indexes_n = 0,
@@ -456,23 +456,23 @@ local guidance_vo_broker_female_c = {
 			"loc_broker_female_c__stairs_sighted_02",
 			"loc_broker_female_c__stairs_sighted_03",
 			"loc_broker_female_c__stairs_sighted_04",
-			"loc_broker_female_c__stairs_sighted_05",
+			"loc_broker_female_c__stairs_sighted_05"
 		},
 		sound_events_duration = {
 			1.191552,
 			1.020958,
 			1.477594,
 			1.480708,
-			1.787615,
+			1.787615
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_stairs_sighted_2 = {
 		randomize_indexes_n = 0,
@@ -482,23 +482,23 @@ local guidance_vo_broker_female_c = {
 			"loc_broker_female_c__stairs_sighted_02",
 			"loc_broker_female_c__stairs_sighted_03",
 			"loc_broker_female_c__stairs_sighted_04",
-			"loc_broker_female_c__stairs_sighted_05",
+			"loc_broker_female_c__stairs_sighted_05"
 		},
 		sound_events_duration = {
 			1.191552,
 			1.020958,
 			1.477594,
 			1.480708,
-			1.787615,
+			1.787615
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_stairs_sighted_3 = {
 		randomize_indexes_n = 0,
@@ -508,23 +508,23 @@ local guidance_vo_broker_female_c = {
 			"loc_broker_female_c__stairs_sighted_02",
 			"loc_broker_female_c__stairs_sighted_03",
 			"loc_broker_female_c__stairs_sighted_04",
-			"loc_broker_female_c__stairs_sighted_05",
+			"loc_broker_female_c__stairs_sighted_05"
 		},
 		sound_events_duration = {
 			1.191552,
 			1.020958,
 			1.477594,
 			1.480708,
-			1.787615,
+			1.787615
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_stairs_sighted_4 = {
 		randomize_indexes_n = 0,
@@ -534,23 +534,23 @@ local guidance_vo_broker_female_c = {
 			"loc_broker_female_c__stairs_sighted_02",
 			"loc_broker_female_c__stairs_sighted_03",
 			"loc_broker_female_c__stairs_sighted_04",
-			"loc_broker_female_c__stairs_sighted_05",
+			"loc_broker_female_c__stairs_sighted_05"
 		},
 		sound_events_duration = {
 			1.191552,
 			1.020958,
 			1.477594,
 			1.480708,
-			1.787615,
+			1.787615
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_stairs_up = {
 		randomize_indexes_n = 0,
@@ -560,23 +560,23 @@ local guidance_vo_broker_female_c = {
 			"loc_broker_female_c__stairs_sighted_02",
 			"loc_broker_female_c__stairs_sighted_03",
 			"loc_broker_female_c__stairs_sighted_04",
-			"loc_broker_female_c__stairs_sighted_05",
+			"loc_broker_female_c__stairs_sighted_05"
 		},
 		sound_events_duration = {
 			1.191552,
 			1.020958,
 			1.477594,
 			1.480708,
-			1.787615,
+			1.787615
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_starting_area = {
 		randomize_indexes_n = 0,
@@ -586,17 +586,17 @@ local guidance_vo_broker_female_c = {
 			"loc_broker_female_c__guidance_starting_area_02",
 			"loc_broker_female_c__guidance_starting_area_03",
 			"loc_broker_female_c__guidance_starting_area_04",
-			"loc_broker_female_c__guidance_starting_area_05",
+			"loc_broker_female_c__guidance_starting_area_05"
 		},
 		sound_events_duration = {
 			3.094688,
 			3.616292,
 			3.610115,
 			3.666156,
-			3.74175,
+			3.74175
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("guidance_vo_broker_female_c", guidance_vo_broker_female_c)

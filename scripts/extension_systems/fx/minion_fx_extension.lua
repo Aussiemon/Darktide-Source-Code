@@ -8,7 +8,7 @@ local MinionFxExtension = class("MinionFxExtension")
 local CLIENT_RPCS = {
 	"rpc_trigger_minion_inventory_wwise_event",
 	"rpc_trigger_minion_inventory_vfx",
-	"rpc_trigger_minion_fx_line",
+	"rpc_trigger_minion_fx_line"
 }
 
 MinionFxExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
@@ -46,7 +46,7 @@ MinionFxExtension.extensions_ready = function (self, world, unit)
 end
 
 local ALWAYS_TARGET_BREEDS = {
-	renegade_sniper = true,
+	renegade_sniper = true
 }
 
 MinionFxExtension.game_object_initialized = function (self, game_session, game_object_id)
@@ -304,7 +304,7 @@ end
 
 MinionFxExtension._init_dynamic_sfx = function (self, breed)
 	local dynamic_sfx = {
-		[0] = 0,
+		[0] = 0
 	}
 	local template_names = breed.dynamic_fx_templates
 
@@ -314,7 +314,7 @@ MinionFxExtension._init_dynamic_sfx = function (self, breed)
 		for i = 1, num_templates do
 			dynamic_sfx[i] = {
 				func = DynamicFXTemplates[template_names[i]].func,
-				scratch = {},
+				scratch = {}
 			}
 		end
 

@@ -79,7 +79,7 @@ local allowed_breed_tags = table.set({
 	"ranged",
 	"captain",
 	"monster",
-	"elite",
+	"elite"
 })
 
 function _can_show_outline(breed, template_data)
@@ -295,6 +295,8 @@ local function _focus_proc_func(params, template_data, template_context, t)
 
 				if tags and tags.elite then
 					cooldown_to_restore = template_context.template.sub_3_cooldown_replenish_elite
+				elseif tags and tags.special then
+					cooldown_to_restore = template_context.template.sub_3_cooldown_replenish_elite
 				end
 
 				local max_restore = template_context.template.sub_3_cooldown_replenish_max
@@ -302,7 +304,7 @@ local function _focus_proc_func(params, template_data, template_context, t)
 				cooldown_to_restore = math.min(max_restore - template_data.cooldown_restored, cooldown_to_restore)
 
 				if cooldown_to_restore > 0 then
-					template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", cooldown_to_restore)
+					template_data.ability_extension:restore_ability_resource("combat_ability", cooldown_to_restore)
 
 					template_data.cooldown_restored = template_data.cooldown_restored + cooldown_to_restore
 				end
@@ -330,21 +332,21 @@ templates.broker_focus_stance = {
 	sub_3_cooldown_replenish_max = talent_settings.combat_ability.focus.cooldown_max,
 	stat_buffs = {
 		[stat_buffs.sprint_movement_speed] = talent_settings.combat_ability.focus.sprint_movement_speed,
-		[stat_buffs.sprinting_cost_multiplier] = talent_settings.combat_ability.focus.sprinting_cost_multiplier,
+		[stat_buffs.sprinting_cost_multiplier] = talent_settings.combat_ability.focus.sprinting_cost_multiplier
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.ranged_rending_multiplier] = 0.15,
+		[stat_buffs.ranged_rending_multiplier] = 0.15
 	},
 	conditional_stat_buffs_funcs = {
 		[stat_buffs.ranged_rending_multiplier] = function (template_data, template_context)
 			return template_data.sub_2_rending
-		end,
+		end
 	},
 	lerped_stat_buffs = {
 		[stat_buffs.fov_multiplier] = {
 			max = 1,
-			min = talent_settings.combat_ability.focus.fov_multiplier,
-		},
+			min = talent_settings.combat_ability.focus.fov_multiplier
+		}
 	},
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		return math.clamp01((t - start_time) / duration)
@@ -352,11 +354,11 @@ templates.broker_focus_stance = {
 	keywords = {
 		keywords.broker_combat_ability_focus,
 		keywords.suppression_immune,
-		keywords.count_as_dodge_vs_ranged,
+		keywords.count_as_dodge_vs_ranged
 	},
 	conditional_keywords = {
 		keywords.disable_minions_collision_during_sprint,
-		keywords.disable_minions_collision_during_dodge,
+		keywords.disable_minions_collision_during_dodge
 	},
 	conditional_keywords_func = function (template_data, template_context)
 		return template_data.noclip
@@ -364,7 +366,7 @@ templates.broker_focus_stance = {
 	proc_events = {
 		[proc_events.on_kill] = 1,
 		[proc_events.on_hit] = 1,
-		[proc_events.on_minion_death] = 1,
+		[proc_events.on_minion_death] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -434,7 +436,7 @@ templates.broker_focus_stance = {
 		end,
 		[proc_events.on_minion_death] = function (params, template_data, template_context, t)
 			return _bespoke_needle_pistol_close_range_kill_check_proc_minion_death(params, template_data, template_context, t)
-		end,
+		end
 	},
 	specific_proc_func = {
 		[proc_events.on_hit] = function (params, template_data, template_context, t)
@@ -444,7 +446,7 @@ templates.broker_focus_stance = {
 			_focus_proc_func(params, template_data, template_context, t)
 			_bespoke_needle_pistol_close_range_kill_proc_on_minion_death(params, template_data, template_context, t)
 		end,
-		[proc_events.on_kill] = _focus_proc_func,
+		[proc_events.on_kill] = _focus_proc_func
 	},
 	stop_func = function (template_data, template_context, extension_destroyed)
 		local slot_secondary_component = template_data.unit_data_extension:write_component("slot_secondary")
@@ -456,7 +458,7 @@ templates.broker_focus_stance = {
 		Ammo.set_current_ammo_in_clips(slot_secondary_component, 0)
 		Ammo.transfer_from_reserve_to_clip(slot_secondary_component, current_ammo_clip)
 		_end_outlines(template_data, template_context)
-	end,
+	end
 }
 templates.broker_focus_stance_improved = table.clone(templates.broker_focus_stance)
 templates.broker_focus_stance_improved.hud_icon = "content/ui/textures/icons/buffs/hud/broker/broker_broker_gunslinger_focus_improved"
@@ -472,14 +474,14 @@ templates.broker_focus_sub_2_damage = {
 	refresh_duration_on_stack = true,
 	skip_tactical_overlay = true,
 	stat_buffs = {
-		[stat_buffs.ranged_damage] = 0.03,
+		[stat_buffs.ranged_damage] = 0.03
 	},
 	conditional_exit_func = function (template_data, template_context)
 		local buff_ext = template_context.buff_extension
 		local num_ability_stacks = buff_ext:current_stacks("broker_focus_stance") + buff_ext:current_stacks("broker_focus_stance_improved")
 
 		return num_ability_stacks <= 0
-	end,
+	end
 }
 SHOUT_DEBUFF_RESULTS = {}
 
@@ -534,8 +536,8 @@ templates.broker_punk_rage_improved_shout_debuff = {
 	predicted = false,
 	duration = talent_settings.combat_ability.punk_rage.improved_shout_duration,
 	stat_buffs = {
-		[stat_buffs.melee_attack_speed] = talent_settings.combat_ability.punk_rage.improved_shout_enemy_melee_attack_speed,
-	},
+		[stat_buffs.melee_attack_speed] = talent_settings.combat_ability.punk_rage.improved_shout_enemy_melee_attack_speed
+	}
 }
 templates.broker_punk_rage_ramping_melee_power = {
 	class_name = "buff",
@@ -547,8 +549,8 @@ templates.broker_punk_rage_ramping_melee_power = {
 	predicted = false,
 	skip_tactical_overlay = true,
 	stat_buffs = {
-		[stat_buffs.melee_power_level_modifier] = talent_settings.combat_ability.punk_rage.stacking_melee_power,
-	},
+		[stat_buffs.melee_power_level_modifier] = talent_settings.combat_ability.punk_rage.stacking_melee_power
+	}
 }
 
 local PUNK_RAGE_SFX_LOOP_NAME = "wwise/events/player/play_player_ability_broker_rage_start"
@@ -570,13 +572,13 @@ templates.broker_punk_rage_stance = {
 	sub_4_duration_extend_elite = talent_settings.combat_ability.punk_rage.sub_4_duration_extend_elite,
 	sub_4_duration_max_improved = talent_settings.combat_ability.punk_rage.sub_4_duration_max_improved,
 	player_effects = {
-		on_screen_effect = "content/fx/particles/screenspace/screen_rage_persistant",
+		on_screen_effect = "content/fx/particles/screenspace/screen_rage_persistant"
 	},
 	lerped_stat_buffs = {
 		[stat_buffs.fov_multiplier] = {
 			max = 1,
-			min = talent_settings.combat_ability.punk_rage.rage_fov_multiplier,
-		},
+			min = talent_settings.combat_ability.punk_rage.rage_fov_multiplier
+		}
 	},
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		return (t - start_time) / duration or 0
@@ -584,12 +586,12 @@ templates.broker_punk_rage_stance = {
 	stat_buffs = {
 		[stat_buffs.melee_power_level_modifier] = talent_settings.combat_ability.punk_rage.rage_melee_power_level_modifier,
 		[stat_buffs.melee_attack_speed] = talent_settings.combat_ability.punk_rage.rage_melee_attack_speed,
-		[stat_buffs.damage_taken_multiplier] = talent_settings.combat_ability.punk_rage.rage_damage_taken_multiplier,
+		[stat_buffs.damage_taken_multiplier] = talent_settings.combat_ability.punk_rage.rage_damage_taken_multiplier
 	},
 	conditional_stat_buffs = {
 		[stat_buffs.melee_heavy_rending_multiplier] = talent_settings.combat_ability.punk_rage.melee_rending_multiplier,
 		[stat_buffs.max_hit_mass_attack_modifier] = talent_settings.combat_ability.punk_rage.max_hit_mass_modifier,
-		[stat_buffs.max_hit_mass_impact_modifier] = talent_settings.combat_ability.punk_rage.max_hit_mass_modifier,
+		[stat_buffs.max_hit_mass_impact_modifier] = talent_settings.combat_ability.punk_rage.max_hit_mass_modifier
 	},
 	conditional_stat_buffs_funcs = {
 		[stat_buffs.melee_heavy_rending_multiplier] = function (template_data, template_context)
@@ -600,15 +602,15 @@ templates.broker_punk_rage_stance = {
 		end,
 		[stat_buffs.max_hit_mass_impact_modifier] = function (template_data)
 			return template_data.cleave_talent
-		end,
+		end
 	},
 	keywords = {
 		keywords.broker_combat_ability_punk_rage,
 		keywords.stun_immune,
-		keywords.slowdown_immune,
+		keywords.slowdown_immune
 	},
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -676,7 +678,7 @@ templates.broker_punk_rage_stance = {
 	specific_check_proc_funcs = {
 		[proc_events.on_hit] = function (params, template_data, template_context, t)
 			return params.attack_type == "melee"
-		end,
+		end
 	},
 	specific_proc_func = {
 		[proc_events.on_hit] = function (params, template_data, template_context, t)
@@ -708,7 +710,7 @@ templates.broker_punk_rage_stance = {
 			EXTERNAL_PROPERTIES.ability_template = "broker_punk_rage"
 
 			template_data.fx_extension:trigger_gear_wwise_event_with_source(sfx_alias, EXTERNAL_PROPERTIES, source_name, sync_to_clients, include_client)
-		end,
+		end
 	},
 	stop_func = function (template_data, template_context, extension_destroyed)
 		if extension_destroyed then
@@ -740,7 +742,7 @@ templates.broker_punk_rage_stance = {
 
 			template_data.buff_ids = nil
 		end
-	end,
+	end
 }
 templates.broker_punk_rage_exhaustion = {
 	class_name = "buff",
@@ -752,14 +754,14 @@ templates.broker_punk_rage_exhaustion = {
 	duration = talent_settings.combat_ability.punk_rage.exhaust_duration,
 	player_effects = {
 		looping_wwise_start_event = "wwise/events/player/play_player_experience_heart_beat",
-		looping_wwise_stop_event = "wwise/events/player/stop_player_experience_heart_beat",
+		looping_wwise_stop_event = "wwise/events/player/stop_player_experience_heart_beat"
 	},
 	keywords = {
-		keywords.broker_punk_rage_exhaustion,
+		keywords.broker_punk_rage_exhaustion
 	},
 	stat_buffs = {
 		[stat_buffs.damage_taken_multiplier] = talent_settings.combat_ability.punk_rage.exhaust_damage_taken_multiplier,
-		[stat_buffs.stamina_regeneration_multiplier] = talent_settings.combat_ability.punk_rage.exhaust_stamina_regeneration_multiplier,
+		[stat_buffs.stamina_regeneration_multiplier] = talent_settings.combat_ability.punk_rage.exhaust_stamina_regeneration_multiplier
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -779,7 +781,7 @@ templates.broker_punk_rage_exhaustion = {
 
 			_apply_punk_rage_shout(unit, unit_data, shout_radius, t)
 		end
-	end,
+	end
 }
 templates.broker_stimm_field_corruption_buff = {
 	class_name = "interval_buff",
@@ -790,7 +792,7 @@ templates.broker_stimm_field_corruption_buff = {
 	duration = talent_settings.combat_ability.stimm_field.interval + 0.1,
 	interval = talent_settings.combat_ability.stimm_field.interval,
 	stat_buffs = {
-		[stat_buffs.corruption_taken_multiplier] = 0,
+		[stat_buffs.corruption_taken_multiplier] = 0
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -805,7 +807,7 @@ templates.broker_stimm_field_corruption_buff = {
 		local corruption_heal_amount = talent_settings.combat_ability.stimm_field.corruption_heal_amount
 
 		template_data.health_extension:reduce_permanent_damage(corruption_heal_amount)
-	end,
+	end
 }
 
 local PICKUP_DATA_TEMP = {}
@@ -824,7 +826,7 @@ templates.broker_aura_gunslinger = {
 	talent_name = "broker_aura_gunslinger",
 	buff_category = buff_categories.aura,
 	proc_events = {
-		[proc_events.on_ammo_pickup] = 1,
+		[proc_events.on_ammo_pickup] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.parent_buff_name = template_context.template.talent_name
@@ -852,7 +854,7 @@ templates.broker_aura_gunslinger = {
 		if total_ammo_restored > 0 then
 			template_data.last_num_in_coherency = coherency_extension:evaluate_and_send_achievement_data(template_data.parent_buff_name, template_data.hook_name, total_ammo_restored)
 		end
-	end,
+	end
 }
 templates.broker_aura_gunslinger_improved = table.clone(templates.broker_aura_gunslinger)
 templates.broker_aura_gunslinger_improved.ammo_share = 0.1
@@ -870,9 +872,9 @@ templates.broker_coherency_melee_damage = {
 	buff_category = buff_categories.aura,
 	max_stacks = talent_settings.coherency.ruffian.max_stacks,
 	stat_buffs = {
-		[stat_buffs.melee_damage] = talent_settings.coherency.ruffian.melee_damage,
+		[stat_buffs.melee_damage] = talent_settings.coherency.ruffian.melee_damage
 	},
-	start_func = _penance_start_func("broker_coherency_melee_damage_tracking_buff"),
+	start_func = _penance_start_func("broker_coherency_melee_damage_tracking_buff")
 }
 templates.broker_coherency_melee_damage_tracking_buff = {
 	class_name = "proc_buff",
@@ -880,7 +882,7 @@ templates.broker_coherency_melee_damage_tracking_buff = {
 	predicted = false,
 	skip_tactical_overlay = true,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -895,7 +897,7 @@ templates.broker_coherency_melee_damage_tracking_buff = {
 		end
 
 		template_data.coherency_extension:evaluate_and_send_achievement_data(template_data.parent_buff_name, template_data.hook_name)
-	end,
+	end
 }
 templates.broker_coherency_critical_chance = {
 	class_name = "buff",
@@ -908,9 +910,9 @@ templates.broker_coherency_critical_chance = {
 	buff_category = buff_categories.aura,
 	max_stacks = talent_settings.coherency.anarchist.max_stacks,
 	stat_buffs = {
-		[stat_buffs.critical_strike_chance] = talent_settings.coherency.anarchist.critical_strike_chance,
+		[stat_buffs.critical_strike_chance] = talent_settings.coherency.anarchist.critical_strike_chance
 	},
-	start_func = _penance_start_func("broker_coherency_critical_chance_tracking_buff"),
+	start_func = _penance_start_func("broker_coherency_critical_chance_tracking_buff")
 }
 templates.broker_coherency_critical_chance_tracking_buff = {
 	class_name = "proc_buff",
@@ -918,7 +920,7 @@ templates.broker_coherency_critical_chance_tracking_buff = {
 	predicted = false,
 	skip_tactical_overlay = true,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -934,7 +936,7 @@ templates.broker_coherency_critical_chance_tracking_buff = {
 		end
 
 		template_data.coherency_extension:evaluate_and_send_achievement_data(template_data.parent_buff_name, template_data.hook_name)
-	end,
+	end
 }
 templates.broker_passive_repeated_melee_hits_increases_damage = {
 	allow_proc_while_active = true,
@@ -945,10 +947,10 @@ templates.broker_passive_repeated_melee_hits_increases_damage = {
 	max_stacks = 1,
 	predicted = false,
 	conditional_stat_buffs = {
-		[stat_buffs.damage] = talent_settings.broker_passive_repeated_melee_hits_increases_damage.damage,
+		[stat_buffs.damage] = talent_settings.broker_passive_repeated_melee_hits_increases_damage.damage
 	},
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	proc_func = function (params, template_data, template_context, t)
 		if HEALTH_ALIVE[params.attacked_unit] then
@@ -976,24 +978,24 @@ templates.broker_passive_repeated_melee_hits_increases_damage = {
 		local max_stacks = talent_settings.broker_passive_repeated_melee_hits_increases_damage.req_hits - 1
 
 		return max_stacks <= target_number_of_stacks
-	end,
+	end
 }
 templates.broker_passive_first_target_damage = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.first_target_melee_damage_modifier] = talent_settings.broker_passive_first_target_damage.damage,
-	},
+		[stat_buffs.first_target_melee_damage_modifier] = talent_settings.broker_passive_first_target_damage.damage
+	}
 }
 templates.broker_passive_reduce_swap_time = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.wield_speed] = talent_settings.broker_passive_reduce_swap_time.wield_speed,
+		[stat_buffs.wield_speed] = talent_settings.broker_passive_reduce_swap_time.wield_speed
 	},
 	conditional_stat_buffs = {
 		[stat_buffs.recoil_modifier] = talent_settings.broker_passive_reduce_swap_time.recoil_modifier,
-		[stat_buffs.spread_modifier] = talent_settings.broker_passive_reduce_swap_time.spread_modifier,
+		[stat_buffs.spread_modifier] = talent_settings.broker_passive_reduce_swap_time.spread_modifier
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		local unit_data_extension = ScriptUnit.has_extension(template_context.unit, "unit_data_system")
@@ -1006,13 +1008,13 @@ templates.broker_passive_reduce_swap_time = {
 
 			return hipfire or braced
 		end
-	end,
+	end
 }
 templates.broker_passive_increased_ranged_dodges = {
 	class_name = "buff",
 	predicted = false,
 	conditional_stat_buffs = {
-		[stat_buffs.extra_consecutive_dodges] = talent_settings.broker_passive_increased_ranged_dodges.extra_consecutive_dodges,
+		[stat_buffs.extra_consecutive_dodges] = talent_settings.broker_passive_increased_ranged_dodges.extra_consecutive_dodges
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1025,21 +1027,21 @@ templates.broker_passive_increased_ranged_dodges = {
 		local wielded_slot = template_data.inventory_component.wielded_slot
 
 		return wielded_slot == "slot_secondary"
-	end,
+	end
 }
 templates.broker_passive_increased_dodges = {
 	class_name = "buff",
 	predicted = false,
 	conditional_stat_buffs = {
-		[stat_buffs.extra_consecutive_dodges] = talent_settings.broker_passive_increased_dodges.extra_consecutive_dodges,
-	},
+		[stat_buffs.extra_consecutive_dodges] = talent_settings.broker_passive_increased_dodges.extra_consecutive_dodges
+	}
 }
 templates.broker_passive_close_ranged_damage = {
 	class_name = "buff",
 	predicted = false,
 	conditional_stat_buffs = {
 		[stat_buffs.damage_near] = talent_settings.broker_passive_close_ranged_damage.damage_near,
-		[stat_buffs.damage_far] = talent_settings.broker_passive_close_ranged_damage.damage_far,
+		[stat_buffs.damage_far] = talent_settings.broker_passive_close_ranged_damage.damage_far
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1056,7 +1058,7 @@ templates.broker_passive_close_ranged_damage = {
 		end
 
 		return false
-	end,
+	end
 }
 templates.broker_passive_ninja_grants_crit_chance = {
 	class_name = "proc_buff",
@@ -1069,11 +1071,11 @@ templates.broker_passive_ninja_grants_crit_chance = {
 	allow_proc_while_active = talent_settings.broker_passive_ninja_grants_crit_chance.allow_proc_while_active,
 	proc_events = {
 		[proc_events.on_successful_dodge] = talent_settings.broker_passive_ninja_grants_crit_chance.proc_chance,
-		[proc_events.on_perfect_block] = talent_settings.broker_passive_ninja_grants_crit_chance.proc_chance,
+		[proc_events.on_perfect_block] = talent_settings.broker_passive_ninja_grants_crit_chance.proc_chance
 	},
 	proc_stat_buffs = {
-		[stat_buffs.critical_strike_chance] = talent_settings.broker_passive_ninja_grants_crit_chance.critical_strike_chance,
-	},
+		[stat_buffs.critical_strike_chance] = talent_settings.broker_passive_ninja_grants_crit_chance.critical_strike_chance
+	}
 }
 templates.broker_passive_parries_grant_crit_chance = {
 	class_name = "proc_buff",
@@ -1085,11 +1087,11 @@ templates.broker_passive_parries_grant_crit_chance = {
 	max_stacks = talent_settings.broker_passive_parries_grant_crit_chance.max_stacks,
 	allow_proc_while_active = talent_settings.broker_passive_parries_grant_crit_chance.allow_proc_while_active,
 	proc_events = {
-		[proc_events.on_perfect_block] = talent_settings.broker_passive_parries_grant_crit_chance.proc_chance,
+		[proc_events.on_perfect_block] = talent_settings.broker_passive_parries_grant_crit_chance.proc_chance
 	},
 	proc_stat_buffs = {
-		[stat_buffs.critical_strike_chance] = talent_settings.broker_passive_parries_grant_crit_chance.critical_strike_chance,
-	},
+		[stat_buffs.critical_strike_chance] = talent_settings.broker_passive_parries_grant_crit_chance.critical_strike_chance
+	}
 }
 templates.broker_passive_backstabs_grant_crit_chance = {
 	class_name = "proc_buff",
@@ -1101,27 +1103,27 @@ templates.broker_passive_backstabs_grant_crit_chance = {
 	max_stacks = talent_settings.broker_passive_backstabs_grant_crit_chance.max_stacks,
 	allow_proc_while_active = talent_settings.broker_passive_backstabs_grant_crit_chance.allow_proc_while_active,
 	proc_events = {
-		[proc_events.on_hit] = talent_settings.broker_passive_backstabs_grant_crit_chance.proc_chance,
+		[proc_events.on_hit] = talent_settings.broker_passive_backstabs_grant_crit_chance.proc_chance
 	},
 	proc_stat_buffs = {
-		[stat_buffs.critical_strike_chance] = talent_settings.broker_passive_backstabs_grant_crit_chance.critical_strike_chance,
+		[stat_buffs.critical_strike_chance] = talent_settings.broker_passive_backstabs_grant_crit_chance.critical_strike_chance
 	},
-	check_proc_func = CheckProcFunctions.is_backstab,
+	check_proc_func = CheckProcFunctions.is_backstab
 }
 templates.broker_passive_improved_dodges = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[stat_buffs.dodge_speed_multiplier] = talent_settings.broker_passive_improved_dodges.dodge_speed_multiplier,
-		[stat_buffs.dodge_linger_time] = talent_settings.broker_passive_improved_dodges.dodge_linger_time,
-	},
+		[stat_buffs.dodge_linger_time] = talent_settings.broker_passive_improved_dodges.dodge_linger_time
+	}
 }
 templates.broker_passive_longer_dodges = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.dodge_distance_modifier] = talent_settings.broker_passive_longer_dodges.dodge_distance_modifier,
-	},
+		[stat_buffs.dodge_distance_modifier] = talent_settings.broker_passive_longer_dodges.dodge_distance_modifier
+	}
 }
 templates.broker_passive_dodge_melee_on_slide = {
 	class_name = "buff",
@@ -1140,8 +1142,8 @@ templates.broker_passive_dodge_melee_on_slide = {
 		return template_data.movement_state_component.method == "sliding"
 	end,
 	conditional_keywords = {
-		keywords.count_as_dodge_vs_melee,
-	},
+		keywords.count_as_dodge_vs_melee
+	}
 }
 templates.broker_passive_restore_toughness_on_close_ranged_kill = {
 	class_name = "proc_buff",
@@ -1150,7 +1152,7 @@ templates.broker_passive_restore_toughness_on_close_ranged_kill = {
 	hud_priority = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_ranged_close_kill,
 	proc_func = function (params, template_data, template_context)
@@ -1162,7 +1164,7 @@ templates.broker_passive_restore_toughness_on_close_ranged_kill = {
 		end
 
 		Toughness.replenish_percentage(player_unit, toughness_percentage)
-	end,
+	end
 }
 templates.broker_passive_restore_toughness_on_weakspot_kill = {
 	class_name = "proc_buff",
@@ -1171,7 +1173,7 @@ templates.broker_passive_restore_toughness_on_weakspot_kill = {
 	hud_priority = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_melee_hit,
 	start_func = function (template_data, template_context)
@@ -1210,7 +1212,7 @@ templates.broker_passive_restore_toughness_on_weakspot_kill = {
 		end
 
 		template_data.last_target_index = params.target_index
-	end,
+	end
 }
 templates.broker_passive_reduced_toughness_damage_during_reload = {
 	class_name = "proc_buff",
@@ -1220,10 +1222,10 @@ templates.broker_passive_reduced_toughness_damage_during_reload = {
 	max_stacks = 1,
 	predicted = false,
 	conditional_stat_buffs = {
-		[stat_buffs.toughness_damage_taken_modifier] = talent_settings.broker_passive_reduced_toughness_damage_during_reload.toughness_damage_taken_modifier,
+		[stat_buffs.toughness_damage_taken_modifier] = talent_settings.broker_passive_reduced_toughness_damage_during_reload.toughness_damage_taken_modifier
 	},
 	proc_events = {
-		[proc_events.on_reload_start] = 1,
+		[proc_events.on_reload_start] = 1
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		local t = FixedFrame.get_latest_fixed_time()
@@ -1255,7 +1257,7 @@ templates.broker_passive_reduced_toughness_damage_during_reload = {
 	end,
 	proc_func = function (params, template_data, template_context, t)
 		template_data.is_reloading = true
-	end,
+	end
 }
 templates.broker_passive_sprinting_reduces_threat = {
 	class_name = "buff",
@@ -1295,7 +1297,7 @@ templates.broker_passive_sprinting_reduces_threat = {
 
 			template_data.buff_extension:add_internally_controlled_buff("broker_passive_sprinting_reduces_threat_buff", t)
 		end
-	end,
+	end
 }
 templates.broker_passive_sprinting_reduces_threat_buff = {
 	class_name = "proc_buff",
@@ -1308,47 +1310,47 @@ templates.broker_passive_sprinting_reduces_threat_buff = {
 	max_stacks = talent_settings.broker_passive_sprinting_reduces_threat.max_stacks,
 	duration = talent_settings.broker_passive_sprinting_reduces_threat.duration,
 	stat_buffs = {
-		[stat_buffs.threat_weight_multiplier] = talent_settings.broker_passive_sprinting_reduces_threat.threat_weight_multiplier,
+		[stat_buffs.threat_weight_multiplier] = talent_settings.broker_passive_sprinting_reduces_threat.threat_weight_multiplier
 	},
 	proc_events = {
-		[proc_events.on_successful_dodge] = 1,
+		[proc_events.on_successful_dodge] = 1
 	},
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:refresh_duration_of_stacking_buff("broker_passive_sprinting_reduces_threat_buff", t)
 	end,
 	related_talents = {
-		"broker_passive_sprinting_reduces_threat",
-	},
+		"broker_passive_sprinting_reduces_threat"
+	}
 }
 templates.broker_passive_improved_sprint_dodge = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.sprint_dodge_reduce_angle_threshold_rad] = talent_settings.broker_passive_improved_sprint_dodge.sprint_dodge_reduce_angle_threshold_rad,
+		[stat_buffs.sprint_dodge_reduce_angle_threshold_rad] = talent_settings.broker_passive_improved_sprint_dodge.sprint_dodge_reduce_angle_threshold_rad
 	},
 	keywords = {
-		keywords.sprint_dodge_in_overtime,
-	},
+		keywords.sprint_dodge_in_overtime
+	}
 }
 templates.broker_passive_extra_consecutive_dodges = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.extra_consecutive_dodges] = talent_settings.broker_passive_extra_consecutive_dodges.extra_consecutive_dodges,
-	},
+		[stat_buffs.extra_consecutive_dodges] = talent_settings.broker_passive_extra_consecutive_dodges.extra_consecutive_dodges
+	}
 }
 templates.broker_passive_extended_mag = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.clip_size_modifier] = talent_settings.broker_passive_extended_mag.clip_size_modifier,
-	},
+		[stat_buffs.clip_size_modifier] = talent_settings.broker_passive_extended_mag.clip_size_modifier
+	}
 }
 templates.broker_passive_reload_on_crit = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_ranged_crit_hit,
 	start_func = function (template_data, template_context)
@@ -1374,7 +1376,7 @@ templates.broker_passive_reload_on_crit = {
 		if reload_template then
 			ReloadStates.reset(reload_template, inventory_slot_secondary_component)
 		end
-	end,
+	end
 }
 
 local function _broker_passive_reload_speed_on_close_kill_proc_func(params, template_data, template_context, t)
@@ -1398,12 +1400,12 @@ templates.broker_passive_reload_speed_on_close_kill = {
 	proc_events = {
 		[proc_events.on_kill] = 1,
 		[proc_events.on_hit] = 1,
-		[proc_events.on_minion_death] = 1,
+		[proc_events.on_minion_death] = 1
 	},
 	specific_check_proc_funcs = {
 		[proc_events.on_kill] = CheckProcFunctions.on_ranged_close_kill,
 		[proc_events.on_hit] = _bespoke_needlepistol_close_range_kill_check_proc_hit,
-		[proc_events.on_minion_death] = _bespoke_needle_pistol_close_range_kill_check_proc_minion_death,
+		[proc_events.on_minion_death] = _bespoke_needle_pistol_close_range_kill_check_proc_minion_death
 	},
 	specific_proc_func = {
 		[proc_events.on_kill] = _broker_passive_reload_speed_on_close_kill_proc_func,
@@ -1411,8 +1413,8 @@ templates.broker_passive_reload_speed_on_close_kill = {
 		[proc_events.on_minion_death] = function (params, template_data, template_context, t)
 			_bespoke_needle_pistol_close_range_kill_proc_on_minion_death(params, template_data, template_context, t)
 			_broker_passive_reload_speed_on_close_kill_proc_func(params, template_data, template_context, t)
-		end,
-	},
+		end
+	}
 }
 templates.broker_passive_reload_speed_on_close_kill_effect = {
 	class_name = "buff",
@@ -1424,18 +1426,18 @@ templates.broker_passive_reload_speed_on_close_kill_effect = {
 	refresh_duration_on_stack = true,
 	duration = talent_settings.broker_passive_reload_speed_on_close_kill.duration,
 	stat_buffs = {
-		[stat_buffs.reload_speed] = talent_settings.broker_passive_reload_speed_on_close_kill.reload_speed,
+		[stat_buffs.reload_speed] = talent_settings.broker_passive_reload_speed_on_close_kill.reload_speed
 	},
 	related_talents = {
-		"broker_passive_reload_speed_on_close_kill",
-	},
+		"broker_passive_reload_speed_on_close_kill"
+	}
 }
 templates.broker_passive_crit_kill_at_close_range_reload = {
 	class_name = "proc_buff",
 	predicted = false,
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_ranged_close_kill, CheckProcFunctions.on_crit),
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1457,17 +1459,17 @@ templates.broker_passive_crit_kill_at_close_range_reload = {
 		if reload_template then
 			ReloadStates.reset(reload_template, inventory_slot_secondary_component)
 		end
-	end,
+	end
 }
 templates.broker_passive_hollowtip_bullets = {
 	class_name = "proc_buff",
 	predicted = false,
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_ranged_stagger_hit),
 	stat_buffs = {
-		[stat_buffs.ranged_impact_modifier] = 1,
+		[stat_buffs.ranged_impact_modifier] = 1
 	},
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1489,13 +1491,13 @@ templates.broker_passive_hollowtip_bullets = {
 
 			Stagger.force_stagger(params.attacked_unit, force_stagger_type, attack_direction, force_stagger_duration, 1, force_stagger_duration, template_context.unit)
 		end
-	end,
+	end
 }
 templates.broker_passive_heavy_attack_dash = {
 	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_sweep_start] = 1,
+		[proc_events.on_sweep_start] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1504,7 +1506,7 @@ templates.broker_passive_heavy_attack_dash = {
 		template_data.buff_extension = buff_extension
 	end,
 	specific_check_proc_funcs = {
-		[proc_events.on_sweep_start] = CheckProcFunctions.all(CheckProcFunctions.on_heavy_attack_started, CheckProcFunctions.on_sprinting),
+		[proc_events.on_sweep_start] = CheckProcFunctions.all(CheckProcFunctions.on_heavy_attack_started, CheckProcFunctions.on_sprinting)
 	},
 	specific_proc_func = {
 		[proc_events.on_sweep_start] = function (params, template_data, template_context, t)
@@ -1523,8 +1525,8 @@ templates.broker_passive_heavy_attack_dash = {
 		end,
 		[proc_events.on_hit] = function (params, template_data, template_context, t)
 			template_data.dash_ready = true
-		end,
-	},
+		end
+	}
 }
 
 local function smoothstep_lerp_t_func(t, start_time, duration, template_data, template_context)
@@ -1538,13 +1540,13 @@ templates.broker_heavy_attack_dash = {
 	lerped_stat_buffs = {
 		[stat_buffs.movement_speed] = {
 			max = 2,
-			min = 0.8,
-		},
+			min = 0.8
+		}
 	},
 	lerp_t_func = smoothstep_lerp_t_func,
 	update_func = function (template_data, template_context, dt, t, template)
 		return
-	end,
+	end
 }
 templates.broker_heavy_attack_stat_buff = {
 	class_name = "buff",
@@ -1552,16 +1554,16 @@ templates.broker_heavy_attack_stat_buff = {
 	predicted = false,
 	stat_buffs = {
 		[stat_buffs.impact_modifier] = 1,
-		[stat_buffs.melee_damage] = 0.8,
+		[stat_buffs.melee_damage] = 0.8
 	},
-	lerp_t_func = smoothstep_lerp_t_func,
+	lerp_t_func = smoothstep_lerp_t_func
 }
 templates.broker_passive_close_ranged_finesse_damage = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.finesse_close_range_modifier] = talent_settings.broker_passive_close_ranged_finesse_damage.finesse_close_range_modifier,
-	},
+		[stat_buffs.finesse_close_range_modifier] = talent_settings.broker_passive_close_ranged_finesse_damage.finesse_close_range_modifier
+	}
 }
 templates.broker_passive_close_range_damage_on_dodge = {
 	class_name = "proc_buff",
@@ -1571,11 +1573,11 @@ templates.broker_passive_close_range_damage_on_dodge = {
 	predicted = false,
 	active_duration = talent_settings.broker_passive_close_range_damage_on_dodge.active_duration,
 	proc_events = {
-		[proc_events.on_successful_dodge] = 1,
+		[proc_events.on_successful_dodge] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.damage_near] = talent_settings.broker_passive_close_range_damage_on_dodge.damage_near,
-	},
+		[stat_buffs.damage_near] = talent_settings.broker_passive_close_range_damage_on_dodge.damage_near
+	}
 }
 templates.broker_passive_close_range_damage_on_slide = {
 	active_duration = 2,
@@ -1585,10 +1587,10 @@ templates.broker_passive_close_range_damage_on_slide = {
 	predicted = false,
 	proc_events = {
 		[proc_events.on_slide_start] = 1,
-		[proc_events.on_slide_end] = 1,
+		[proc_events.on_slide_end] = 1
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.damage_near] = talent_settings.broker_passive_close_range_damage_on_slide.damage_near,
+		[stat_buffs.damage_near] = talent_settings.broker_passive_close_range_damage_on_slide.damage_near
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.is_sliding
@@ -1602,21 +1604,21 @@ templates.broker_passive_close_range_damage_on_slide = {
 		end,
 		[proc_events.on_slide_end] = function (params, template_data, template_context)
 			template_data.is_sliding = false
-		end,
-	},
+		end
+	}
 }
 templates.broker_passive_finesse_damage = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.finesse_modifier_bonus] = talent_settings.broker_passive_finesse_damage.finesse_modifier_bonus,
-	},
+		[stat_buffs.finesse_modifier_bonus] = talent_settings.broker_passive_finesse_damage.finesse_modifier_bonus
+	}
 }
 templates.broker_passive_ramping_backstabs = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_melee_hit,
 	start_func = function (template_data, template_context)
@@ -1634,7 +1636,7 @@ templates.broker_passive_ramping_backstabs = {
 				template_data.buff_ids[buff_id] = nil
 			end
 		end
-	end,
+	end
 }
 templates.broker_ramping_backstabs_stat_buff = {
 	class_name = "buff",
@@ -1645,8 +1647,8 @@ templates.broker_ramping_backstabs_stat_buff = {
 	skip_tactical_overlay = true,
 	max_stacks = talent_settings.broker_passive_ramping_backstabs.max_stacks,
 	stat_buffs = {
-		[stat_buffs.melee_power_level_modifier] = talent_settings.broker_passive_ramping_backstabs.melee_power_level_modifier,
-	},
+		[stat_buffs.melee_power_level_modifier] = talent_settings.broker_passive_ramping_backstabs.melee_power_level_modifier
+	}
 }
 
 local function _blitz_charge_on_kill_proc_func(params, template_data, template_context, t)
@@ -1655,6 +1657,8 @@ local function _blitz_charge_on_kill_proc_func(params, template_data, template_c
 
 	if remaining_ability_charges < max_ability_charges then
 		local num_kills = template_data.tracked_kills + 1
+
+		template_context.buff_extension:add_internally_controlled_buff("broker_passive_blitz_charge_on_kill_stack", t)
 
 		if num_kills >= talent_settings.blitz.flash_grenade.num_kills then
 			num_kills = 0
@@ -1667,11 +1671,7 @@ local function _blitz_charge_on_kill_proc_func(params, template_data, template_c
 end
 
 templates.broker_passive_blitz_charge_on_kill = {
-	always_show_in_hud = true,
 	class_name = "proc_buff",
-	hud_icon = "content/ui/textures/icons/buffs/hud/broker/broker_broker_flash_grenade",
-	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_blitz",
-	hud_priority = 1,
 	max_stacks = 1,
 	predicted = false,
 	skip_tactical_overlay = true,
@@ -1679,7 +1679,7 @@ templates.broker_passive_blitz_charge_on_kill = {
 	proc_events = {
 		[proc_events.on_kill] = 1,
 		[proc_events.on_hit] = 1,
-		[proc_events.on_minion_death] = 1,
+		[proc_events.on_minion_death] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1691,6 +1691,10 @@ templates.broker_passive_blitz_charge_on_kill = {
 	end,
 	update_func = function (template_data, template_context, dt, t)
 		_bespoke_needlepistol_close_range_kill_update(template_data, template_context, dt, t)
+
+		if template_data.tracked_kills < template_context.buff_extension:current_stacks("broker_passive_blitz_charge_on_kill_stack") then
+			template_context.buff_extension:add_internally_controlled_buff("broker_passive_blitz_charge_on_kill_stack", t)
+		end
 	end,
 	specific_check_proc_funcs = {
 		[proc_events.on_hit] = function (params, template_data, template_context, t)
@@ -1698,7 +1702,7 @@ templates.broker_passive_blitz_charge_on_kill = {
 		end,
 		[proc_events.on_minion_death] = function (params, template_data, template_context, t)
 			return _bespoke_needle_pistol_close_range_kill_check_proc_minion_death(params, template_data, template_context, t)
-		end,
+		end
 	},
 	specific_proc_func = {
 		[proc_events.on_hit] = function (params, template_data, template_context, t)
@@ -1708,17 +1712,26 @@ templates.broker_passive_blitz_charge_on_kill = {
 			_blitz_charge_on_kill_proc_func(params, template_data, template_context, t)
 			_bespoke_needle_pistol_close_range_kill_proc_on_minion_death(params, template_data, template_context, t)
 		end,
-		[proc_events.on_kill] = _blitz_charge_on_kill_proc_func,
-	},
-	visual_stack_count = function (template_data, template_context)
-		return template_data.tracked_kills
-	end,
+		[proc_events.on_kill] = _blitz_charge_on_kill_proc_func
+	}
+}
+templates.broker_passive_blitz_charge_on_kill_stack = {
+	class_name = "buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/broker/broker_broker_flash_grenade",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_blitz",
+	hud_priority = 1,
+	max_stacks = 20,
+	predicted = false,
+	skip_tactical_overlay = true,
+	conditional_exit_func = function (template_data, template_context)
+		return template_context.stack_count >= template_context.template.max_stacks
+	end
 }
 templates.broker_passive_weakspot_on_x_hit = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1736,7 +1749,7 @@ templates.broker_passive_weakspot_on_x_hit = {
 		end
 
 		template_data.num_hits = num_hits
-	end,
+	end
 }
 templates.broker_passive_weakspot_on_x_hit_guaranteed_weakspot = {
 	allow_proc_while_active = true,
@@ -1745,41 +1758,41 @@ templates.broker_passive_weakspot_on_x_hit_guaranteed_weakspot = {
 	predicted = false,
 	remove_on_proc = true,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	keywords = {
-		keywords.guaranteed_weakspot_on_hit,
-	},
+		keywords.guaranteed_weakspot_on_hit
+	}
 }
 templates.broker_passive_close_range_rending = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.close_range_rending_multiplier] = talent_settings.broker_passive_close_range_rending.multiplier,
-	},
+		[stat_buffs.close_range_rending_multiplier] = talent_settings.broker_passive_close_range_rending.multiplier
+	}
 }
 templates.broker_passive_crit_to_damage = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.critical_strike_chance_to_damage_convert] = 1,
-	},
+		[stat_buffs.critical_strike_chance_to_damage_convert] = 1
+	}
 }
 templates.broker_passive_strength_vs_aggroed = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[stat_buffs.power_level_modifier_vs_aggroed_elites] = talent_settings.broker_passive_strength_vs_aggroed.power_level_modifier,
-		[stat_buffs.power_level_modifier_vs_aggroed_monsters] = talent_settings.broker_passive_strength_vs_aggroed.power_level_modifier,
-	},
+		[stat_buffs.power_level_modifier_vs_aggroed_monsters] = talent_settings.broker_passive_strength_vs_aggroed.power_level_modifier
+	}
 }
 templates.broker_passive_punk_grit = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[stat_buffs.ranged_damage] = talent_settings.broker_passive_punk_grit.ranged_damage,
-		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings.broker_passive_punk_grit.toughness_damage_taken_multiplier,
-	},
+		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings.broker_passive_punk_grit.toughness_damage_taken_multiplier
+	}
 }
 templates.broker_passive_stamina_on_successful_dodge = {
 	class_name = "proc_buff",
@@ -1788,13 +1801,13 @@ templates.broker_passive_stamina_on_successful_dodge = {
 	hud_priority = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_successful_dodge] = 1,
+		[proc_events.on_successful_dodge] = 1
 	},
 	proc_func = function (params, template_data, template_context, t)
 		local stamina_percent = talent_settings.broker_passive_stamina_on_successful_dodge.stamina
 
 		Stamina.add_stamina_percent(template_context.unit, stamina_percent)
-	end,
+	end
 }
 templates.broker_passive_improved_dodges_at_full_stamina = {
 	class_name = "buff",
@@ -1804,7 +1817,7 @@ templates.broker_passive_improved_dodges_at_full_stamina = {
 	predicted = false,
 	conditional_threshold = talent_settings.broker_passive_improved_dodges_at_full_stamina.conditional_threshold,
 	conditional_stat_buffs = {
-		[stat_buffs.dodge_cooldown_reset_modifier] = talent_settings.broker_passive_improved_dodges_at_full_stamina.dodge_cooldown_reset_modifier,
+		[stat_buffs.dodge_cooldown_reset_modifier] = talent_settings.broker_passive_improved_dodges_at_full_stamina.dodge_cooldown_reset_modifier
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
@@ -1817,7 +1830,7 @@ templates.broker_passive_improved_dodges_at_full_stamina = {
 		local conditional_threshold = override_data.conditional_threshold or buff_template.conditional_threshold or 0
 
 		return conditional_threshold <= current_stamina_fraction
-	end,
+	end
 }
 templates.broker_passive_stamina_grants_atk_speed = {
 	always_show_in_hud = true,
@@ -1830,7 +1843,7 @@ templates.broker_passive_stamina_grants_atk_speed = {
 	skip_tactical_overlay = true,
 	stack_offset = -1,
 	conditional_stat_buffs = {
-		[stat_buffs.melee_attack_speed] = talent_settings.broker_passive_stamina_grants_atk_speed.attack_speed_increase,
+		[stat_buffs.melee_attack_speed] = talent_settings.broker_passive_stamina_grants_atk_speed.attack_speed_increase
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1853,14 +1866,14 @@ templates.broker_passive_stamina_grants_atk_speed = {
 		local steps = math.floor(current_value)
 
 		return steps
-	end,
+	end
 }
 templates.broker_passive_increased_weakspot_damage = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.weakspot_damage] = talent_settings.broker_passive_increased_weakspot_damage.weakspot_damage,
-	},
+		[stat_buffs.weakspot_damage] = talent_settings.broker_passive_increased_weakspot_damage.weakspot_damage
+	}
 }
 templates.broker_passive_big_sidesteps_during_reload = {
 	class_name = "buff",
@@ -1868,9 +1881,9 @@ templates.broker_passive_big_sidesteps_during_reload = {
 	conditional_stat_buffs = {
 		[stat_buffs.dodge_distance_modifier] = 2,
 		[stat_buffs.dodge_speed_multiplier] = 0.4,
-		[stat_buffs.dodge_cooldown_reset_modifier] = -1,
+		[stat_buffs.dodge_cooldown_reset_modifier] = -1
 	},
-	conditional_stat_buffs_func = ConditionalFunctions.is_reloading,
+	conditional_stat_buffs_func = ConditionalFunctions.is_reloading
 }
 templates.broker_passive_stun_immunity_on_toughness_broken = {
 	class_name = "proc_buff",
@@ -1879,11 +1892,11 @@ templates.broker_passive_stun_immunity_on_toughness_broken = {
 	hud_priority = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_player_toughness_broken] = 1,
+		[proc_events.on_player_toughness_broken] = 1
 	},
 	check_proc_func = CheckProcFunctions.is_self,
 	proc_keywords = {
-		keywords.stun_immune,
+		keywords.stun_immune
 	},
 	active_duration = talent_settings.broker_passive_stun_immunity_on_toughness_broken.duration,
 	cooldown_duration = talent_settings.broker_passive_stun_immunity_on_toughness_broken.cooldown,
@@ -1895,18 +1908,18 @@ templates.broker_passive_stun_immunity_on_toughness_broken = {
 		local toughness_percentage = talent_settings.broker_passive_stun_immunity_on_toughness_broken.toughness
 
 		Toughness.replenish_percentage(template_context.unit, toughness_percentage)
-	end,
+	end
 }
 templates.broker_passive_push_on_damage_taken = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_damage_taken] = 1,
+		[proc_events.on_damage_taken] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_melee_hit,
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("broker_passive_push_on_damage_taken_stack", t)
-	end,
+	end
 }
 templates.broker_passive_push_on_damage_taken_stack = {
 	always_show_in_hud = true,
@@ -1916,28 +1929,28 @@ templates.broker_passive_push_on_damage_taken_stack = {
 	max_stacks = talent_settings.broker_passive_push_on_damage_taken.max_stacks,
 	max_stacks_cap = talent_settings.broker_passive_push_on_damage_taken.max_stacks,
 	proc_events = {
-		[proc_events.on_push_hit] = 1,
+		[proc_events.on_push_hit] = 1
 	},
 	stat_buffs = {
 		[stat_buffs.inner_push_angle_modifier] = talent_settings.broker_passive_push_on_damage_taken.angle,
 		[stat_buffs.outer_push_angle_modifier] = talent_settings.broker_passive_push_on_damage_taken.angle,
 		[stat_buffs.push_impact_modifier] = talent_settings.broker_passive_push_on_damage_taken.impact,
-		[stat_buffs.push_cost_multiplier] = talent_settings.broker_passive_push_on_damage_taken.push_cost_multiplier,
+		[stat_buffs.push_cost_multiplier] = talent_settings.broker_passive_push_on_damage_taken.push_cost_multiplier
 	},
 	stat_buff_multiplier = function (template_data, template_context)
 		return 1 / template_context.stack_count
-	end,
+	end
 }
 templates.broker_passive_replenish_toughness_on_ranged_toughness_damage = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_damage_taken] = 1,
+		[proc_events.on_damage_taken] = 1
 	},
 	check_proc_func = CheckProcFunctions.combine(CheckProcFunctions.has_toughness, CheckProcFunctions.on_ranged_hit),
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("broker_passive_replenish_toughness_on_ranged_toughness_damage_regen", t)
-	end,
+	end
 }
 templates.broker_passive_replenish_toughness_on_ranged_toughness_damage_regen = {
 	class_name = "proc_buff",
@@ -1951,23 +1964,23 @@ templates.broker_passive_replenish_toughness_on_ranged_toughness_damage_regen = 
 	skip_tactical_overlay = true,
 	duration = talent_settings.broker_passive_replenish_toughness_on_ranged_toughness_damage.duration,
 	keywords = {
-		keywords.prevent_toughness_regen_when_depleted,
+		keywords.prevent_toughness_regen_when_depleted
 	},
 	stat_buffs = {
-		[stat_buffs.toughness_regen_percent] = talent_settings.broker_passive_replenish_toughness_on_ranged_toughness_damage.toughness / talent_settings.broker_passive_replenish_toughness_on_ranged_toughness_damage.duration,
+		[stat_buffs.toughness_regen_percent] = talent_settings.broker_passive_replenish_toughness_on_ranged_toughness_damage.toughness / talent_settings.broker_passive_replenish_toughness_on_ranged_toughness_damage.duration
 	},
 	proc_events = {
-		[proc_events.on_player_toughness_broken] = 1,
+		[proc_events.on_player_toughness_broken] = 1
 	},
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff:force_finish()
-	end,
+	end
 }
 templates.broker_passive_ammo_on_backstab = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.any(CheckProcFunctions.on_melee_backstab_kill, CheckProcFunctions.on_crit_ranged),
 	conditional_proc_func = function (template_data, template_context)
@@ -1983,24 +1996,24 @@ templates.broker_passive_ammo_on_backstab = {
 		template_data.next_proc_allowed_t = t + talent_settings.broker_passive_ammo_on_backstab.cooldown
 
 		Ammo.add_to_all_slots(template_data.unit, talent_settings.broker_passive_ammo_on_backstab.ammo_regain)
-	end,
+	end
 }
 templates.broker_passive_stimm_increased_duration = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.syringe_duration] = talent_settings.broker_passive_stimm_increased_duration.duration_increase,
-	},
+		[stat_buffs.syringe_duration] = talent_settings.broker_passive_stimm_increased_duration.duration_increase
+	}
 }
 templates.broker_passive_stimm_cleanse_on_kill = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_syringe_used] = 1,
+		[proc_events.on_syringe_used] = 1
 	},
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("broker_passive_stimm_cleanse_on_kill_buff", t)
-	end,
+	end
 }
 templates.broker_passive_stimm_cleanse_on_kill_buff = {
 	class_name = "proc_buff",
@@ -2014,7 +2027,7 @@ templates.broker_passive_stimm_cleanse_on_kill_buff = {
 	cleanse_amount = talent_settings.broker_passive_stimm_cleanse_on_kill.cleanse_amount,
 	cleanse_threshold = talent_settings.broker_passive_stimm_cleanse_on_kill.cleanse_threshold,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	start_func = function (template_data, template_context, t)
 		template_data.corruption_cleansed = 0
@@ -2039,17 +2052,17 @@ templates.broker_passive_stimm_cleanse_on_kill_buff = {
 	end,
 	conditional_exit_func = function (template_data, template_context)
 		return not template_context.buff_extension:has_keyword(keywords.syringe)
-	end,
+	end
 }
 templates.broker_passive_damage_on_reload = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_reload] = 1,
+		[proc_events.on_reload] = 1
 	},
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("broker_passive_damage_on_reload_buff", t)
-	end,
+	end
 }
 templates.broker_passive_damage_on_reload_buff = {
 	class_name = "proc_buff",
@@ -2066,7 +2079,7 @@ templates.broker_passive_damage_on_reload_buff = {
 	damage_per_ammo_stage = talent_settings.broker_passive_damage_on_reload.damage_per_ammo_stage,
 	ammo_percentage_per_stage = talent_settings.broker_passive_damage_on_reload.ammo_percentage_per_stage,
 	stat_buffs = {
-		[stat_buffs.ranged_damage] = 1,
+		[stat_buffs.ranged_damage] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
@@ -2079,7 +2092,7 @@ templates.broker_passive_damage_on_reload_buff = {
 		template_data.ammo_spent = 0
 	end,
 	proc_events = {
-		[proc_events.on_ammo_consumed] = 1,
+		[proc_events.on_ammo_consumed] = 1
 	},
 	proc_func = function (params, template_data, template_context, t)
 		if template_data.visual_loadout_extension:currently_wielded_slot() ~= template_data.reload_slot then
@@ -2101,21 +2114,35 @@ templates.broker_passive_damage_on_reload_buff = {
 		local ammo_stage = math.floor(template_data.ammo_spent / (max_ammo_in_clip * ammo_percentage_per_stage))
 
 		return base_damage + damage_per_ammo_stage * ammo_stage
-	end,
+	end
 }
 
 local instakill_params_scratch = {}
 local instakill_passalong_params = {
+	"target_index",
+	"target_number",
+	"charge_level",
+	"is_critical_strike",
+	"attack_direction",
+	"hit_zone_name",
+	"hit_world_position",
 	"attack_type",
+	"damage_type",
+	"close_explosion_hit"
 }
 
 instakill_passalong_params[0] = #instakill_passalong_params
+
+local triggered_proc_events = {
+	on_hit = true
+}
+
 templates.broker_passive_melee_crit_instakill = {
 	class_name = "proc_buff",
 	health_by_damage_threshold = 2,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_crit_melee,
 	proc_func = function (params, template_data, template_context, t)
@@ -2144,6 +2171,8 @@ templates.broker_passive_melee_crit_instakill = {
 			instakill_params_scratch[2] = true
 			instakill_params_scratch[3] = "attacking_unit"
 			instakill_params_scratch[4] = template_context.unit
+			instakill_params_scratch[5] = "triggered_proc_events"
+			instakill_params_scratch[6] = triggered_proc_events
 
 			local next_idx = 5
 
@@ -2161,7 +2190,7 @@ templates.broker_passive_melee_crit_instakill = {
 
 			Attack.execute(params.attacked_unit, damage_profile, unpack(instakill_params_scratch))
 		end
-	end,
+	end
 }
 templates.broker_passive_dr_damage_tradeoff_on_stamina = {
 	class_name = "buff",
@@ -2170,7 +2199,7 @@ templates.broker_passive_dr_damage_tradeoff_on_stamina = {
 	damage_reduction_multiplier = talent_settings.broker_passive_dr_damage_tradeoff_on_stamina.damage_reduction_multiplier,
 	stat_buffs = {
 		[stat_buffs.damage_taken_multiplier] = 1,
-		[stat_buffs.melee_damage] = 1,
+		[stat_buffs.melee_damage] = 1
 	},
 	stat_buff_multipliers = {
 		[stat_buffs.damage_taken_multiplier] = function (template_data, template_context)
@@ -2190,7 +2219,7 @@ templates.broker_passive_dr_damage_tradeoff_on_stamina = {
 			local increase = template_context.template.damage_multiplier
 
 			return math.lerp(0, increase, 1 - math.clamp01(current_value / max_value))
-		end,
+		end
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -2199,26 +2228,26 @@ templates.broker_passive_dr_damage_tradeoff_on_stamina = {
 
 		template_data.unit_data_ext = unit_data_ext
 		template_data.stamina_read_component = stamina_read_component
-	end,
+	end
 }
 templates.broker_passive_damage_vs_elites_monsters = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[stat_buffs.damage_vs_elites] = 0.15,
-		[stat_buffs.damage_vs_monsters] = 0.15,
-	},
+		[stat_buffs.damage_vs_monsters] = 0.15
+	}
 }
 templates.broker_passive_melee_cleave_on_melee_kill = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_melee_kill,
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("broker_passive_melee_cleave_on_melee_kill_buff", t)
-	end,
+	end
 }
 templates.broker_passive_melee_cleave_on_melee_kill_buff = {
 	class_name = "buff",
@@ -2232,15 +2261,15 @@ templates.broker_passive_melee_cleave_on_melee_kill_buff = {
 	refresh_duration_on_stack = true,
 	skip_tactical_overlay = true,
 	stat_buffs = {
-		[stat_buffs.max_melee_hit_mass_attack_modifier] = 0.1,
-	},
+		[stat_buffs.max_melee_hit_mass_attack_modifier] = 0.1
+	}
 }
 templates.broker_passive_damage_vs_heavy_staggered = {
 	class_name = "buff",
 	damage_vs_medium_staggered = 0.15,
 	damage_vs_staggered = 0.1,
 	predicted = false,
-	stat_buffs = {},
+	stat_buffs = {}
 }
 templates.broker_passive_damage_vs_heavy_staggered.stat_buffs[stat_buffs.damage_vs_staggered] = templates.broker_passive_damage_vs_heavy_staggered.damage_vs_staggered
 templates.broker_passive_damage_vs_heavy_staggered.stat_buffs[stat_buffs.damage_vs_medium_staggered] = templates.broker_passive_damage_vs_heavy_staggered.damage_vs_medium_staggered - templates.broker_passive_damage_vs_heavy_staggered.damage_vs_staggered
@@ -2249,7 +2278,7 @@ templates.broker_passive_cleave_on_cleave = {
 	predicted = false,
 	min_targets = talent_settings.broker_passive_cleave_on_cleave.min_targets,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_melee_hit,
 	proc_func = function (params, template_data, template_context, t)
@@ -2262,7 +2291,7 @@ templates.broker_passive_cleave_on_cleave = {
 		else
 			template_data.procced = false
 		end
-	end,
+	end
 }
 templates.broker_passive_cleave_on_cleave_buff = {
 	class_name = "proc_buff",
@@ -2270,38 +2299,28 @@ templates.broker_passive_cleave_on_cleave_buff = {
 	remove_on_proc = true,
 	stat_buffs = {
 		[stat_buffs.max_hit_mass_attack_modifier] = talent_settings.broker_passive_cleave_on_cleave.max_hit_mass_attack_modifier,
-		[stat_buffs.max_hit_mass_impact_modifier] = talent_settings.broker_passive_cleave_on_cleave.max_hit_mass_attack_modifier,
+		[stat_buffs.max_hit_mass_impact_modifier] = talent_settings.broker_passive_cleave_on_cleave.max_hit_mass_attack_modifier
 	},
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = function (params)
 		return params.target_number < templates.broker_passive_cleave_on_cleave.min_targets
-	end,
+	end
 }
 templates.broker_passive_increased_blitz_ammo = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.extra_max_amount_of_grenades] = 1,
-	},
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local template = template_context.template
-		local extra_grenades = template.stat_buffs.extra_max_amount_of_grenades
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-
-		template_context.initial_num_charges = grenade_ability_component.num_charges
-		grenade_ability_component.num_charges = grenade_ability_component.num_charges + extra_grenades
-	end,
+		[stat_buffs.extra_max_amount_of_grenades] = 1
+	}
 }
 templates.broker_passive_increased_aura_size = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.coherency_radius_modifier] = talent_settings.broker_passive_increased_aura_size.coherency_radius_modifier,
-	},
+		[stat_buffs.coherency_radius_modifier] = talent_settings.broker_passive_increased_aura_size.coherency_radius_modifier
+	}
 }
 templates.broker_passive_stimm_cd_on_kill = {
 	class_name = "proc_buff",
@@ -2309,16 +2328,15 @@ templates.broker_passive_stimm_cd_on_kill = {
 	restore = talent_settings.broker_passive_stimm_cd_on_kill.restore,
 	restore_toxined = talent_settings.broker_passive_stimm_cd_on_kill.restore_toxined,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.ability_extension = ScriptUnit.extension(template_context.unit, "ability_system")
 	end,
+	check_proc_func = function (params, template_data, template_context)
+		return not template_data.ability_extension:is_ability_resource_regen_paused("pocketable_ability")
+	end,
 	proc_func = function (params, template_data, template_context, t)
-		if template_data.ability_extension:is_cooldown_paused("pocketable_ability") then
-			return
-		end
-
 		local restore
 		local buff_extension = ScriptUnit.has_extension(params.attacked_unit, "buff_system")
 
@@ -2328,8 +2346,8 @@ templates.broker_passive_stimm_cd_on_kill = {
 			restore = template_context.template.restore
 		end
 
-		template_data.ability_extension:reduce_ability_cooldown_percentage("pocketable_ability", restore)
-	end,
+		template_data.ability_extension:restore_ability_resource("pocketable_ability", restore)
+	end
 }
 
 local PI = math.pi
@@ -2339,12 +2357,12 @@ templates.broker_passive_stun_on_max_toxin_stacks = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_buff_stack_added] = 1,
+		[proc_events.on_buff_stack_added] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.side_system = Managers.state.extension:system("side_system")
 		template_data.relevant_keywords = table.set({
-			keywords.toxin,
+			keywords.toxin
 		})
 		template_data.buff_templates = require("scripts/settings/buff/buff_templates")
 		template_data.cooldown_list = {}
@@ -2399,7 +2417,7 @@ templates.broker_passive_stun_on_max_toxin_stacks = {
 
 			template_data.cooldown_list[params.unit] = t + settings.duration + settings.cooldown
 		end
-	end,
+	end
 }
 templates.broker_toxin_stacks_stun = {
 	buff_id = "broker_toxin_stacks_stun",
@@ -2411,17 +2429,17 @@ templates.broker_toxin_stacks_stun = {
 	start_interval_on_apply = true,
 	start_with_frame_offset = true,
 	keywords = {
-		keywords.electrocuted,
+		keywords.electrocuted
 	},
 	interval = {
 		0.3,
-		0.8,
+		0.8
 	},
 	duration = talent_settings.broker_passive_stun_on_max_toxin_stacks.duration,
 	start_func = function (template_data, template_context)
 		template_data.side_system = Managers.state.extension:system("side_system")
 		template_data.relevant_keywords = table.set({
-			keywords.toxin,
+			keywords.toxin
 		})
 		template_data.buff_templates = require("scripts/settings/buff/buff_templates")
 	end,
@@ -2451,18 +2469,18 @@ templates.broker_toxin_stacks_stun = {
 				buff_extension:add_internally_controlled_buff("shock_effect", t)
 			end
 		end
-	end,
+	end
 }
 templates.broker_passive_reduced_damage_by_toxined = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_buff_added] = 1,
+		[proc_events.on_buff_added] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.side_system = Managers.state.extension:system("side_system")
 		template_data.relevant_keywords = table.set({
-			keywords.toxin,
+			keywords.toxin
 		})
 		template_data.buff_templates = require("scripts/settings/buff/buff_templates")
 	end,
@@ -2506,7 +2524,7 @@ templates.broker_passive_reduced_damage_by_toxined = {
 		end
 
 		enemy_unit_buff_extension:add_internally_controlled_buff(buff_to_add, t)
-	end,
+	end
 }
 templates.toxin_damage_debuff = {
 	class_name = "buff",
@@ -2514,7 +2532,7 @@ templates.toxin_damage_debuff = {
 	max_stacks_cap = 1,
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.damage] = talent_settings.broker_passive_reduced_damage_by_toxined.default_damage_debuff,
+		[stat_buffs.damage] = talent_settings.broker_passive_reduced_damage_by_toxined.default_damage_debuff
 	},
 	start_func = function (template_data, template_context)
 		template_data.earliest_exit = template_context.buff:start_time() + 0.1
@@ -2525,7 +2543,7 @@ templates.toxin_damage_debuff = {
 		end
 
 		return not template_context.buff_extension:has_keyword(keywords.toxin)
-	end,
+	end
 }
 templates.toxin_damage_debuff_monster = {
 	class_name = "buff",
@@ -2533,7 +2551,7 @@ templates.toxin_damage_debuff_monster = {
 	max_stacks_cap = 1,
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.damage] = talent_settings.broker_passive_reduced_damage_by_toxined.monster_damage_debuff,
+		[stat_buffs.damage] = talent_settings.broker_passive_reduced_damage_by_toxined.monster_damage_debuff
 	},
 	start_func = function (template_data, template_context)
 		template_data.earliest_exit = template_context.buff:start_time() + 0.1
@@ -2544,7 +2562,7 @@ templates.toxin_damage_debuff_monster = {
 		end
 
 		return not template_context.buff_extension:has_keyword(keywords.toxin)
-	end,
+	end
 }
 templates.broker_passive_damage_after_toxined_enemies = {
 	always_show_in_hud = true,
@@ -2556,7 +2574,7 @@ templates.broker_passive_damage_after_toxined_enemies = {
 	max_stacks_cap = 1,
 	predicted = false,
 	conditional_stat_buffs = {
-		[stat_buffs.damage] = talent_settings.broker_passive_damage_after_toxined_enemies.damage_per_stack,
+		[stat_buffs.damage] = talent_settings.broker_passive_damage_after_toxined_enemies.damage_per_stack
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.num_toxined_in_range > 0
@@ -2621,7 +2639,7 @@ templates.broker_passive_damage_after_toxined_enemies = {
 		end
 
 		template_data.check_enemy_proximity_t = t + template_data.check_interval
-	end,
+	end
 }
 templates.broker_passive_toughness_on_toxined_kill = {
 	class_name = "proc_buff",
@@ -2630,7 +2648,7 @@ templates.broker_passive_toughness_on_toxined_kill = {
 	predicted = false,
 	proc_events = {
 		[proc_events.on_buff_added] = 1,
-		[proc_events.on_buff_stack_added] = 1,
+		[proc_events.on_buff_stack_added] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.side_system = Managers.state.extension:system("side_system")
@@ -2657,7 +2675,7 @@ templates.broker_passive_toughness_on_toxined_kill = {
 		local enemy_unit_buff_extension = ScriptUnit.has_extension(params.unit, "buff_system")
 
 		enemy_unit_buff_extension:add_internally_controlled_buff("broker_toughness_on_toxined_kill", t)
-	end,
+	end
 }
 templates.broker_toughness_on_toxined_kill = {
 	class_name = "proc_buff",
@@ -2670,7 +2688,7 @@ templates.broker_toughness_on_toxined_kill = {
 	skip_tactical_overlay = true,
 	range = talent_settings.broker_passive_toughness_on_toxined_kill.range,
 	proc_events = {
-		[proc_events.on_minion_damage_taken] = 1,
+		[proc_events.on_minion_damage_taken] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.side_system = Managers.state.extension:system("side_system")
@@ -2718,7 +2736,7 @@ templates.broker_toughness_on_toxined_kill = {
 		Toughness.replenish_percentage(attacker, amount)
 
 		template_data.done = true
-	end,
+	end
 }
 templates.broker_passive_replenish_toughness_while_toxined_enemies_in_proximity = {
 	always_show_in_hud = true,
@@ -2807,7 +2825,7 @@ templates.broker_passive_replenish_toughness_while_toxined_enemies_in_proximity 
 		local recovered_tougness = template_data.toughness_amount * math.min(template_data.num_toxined_in_range, template_data.max_enemies)
 
 		Toughness.replenish_percentage(template_context.unit, recovered_tougness)
-	end,
+	end
 }
 templates.broker_passive_increased_toxin_damage = {
 	class_name = "proc_buff",
@@ -2816,7 +2834,7 @@ templates.broker_passive_increased_toxin_damage = {
 	predicted = false,
 	proc_events = {
 		[proc_events.on_buff_added] = 1,
-		[proc_events.on_buff_stack_added] = 1,
+		[proc_events.on_buff_stack_added] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.side_system = Managers.state.extension:system("side_system")
@@ -2843,7 +2861,7 @@ templates.broker_passive_increased_toxin_damage = {
 		local enemy_unit_buff_extension = ScriptUnit.has_extension(params.unit, "buff_system")
 
 		enemy_unit_buff_extension:add_internally_controlled_buff("broker_increased_toxin_damage", t)
-	end,
+	end
 }
 templates.broker_increased_toxin_damage = {
 	class_name = "buff",
@@ -2851,7 +2869,7 @@ templates.broker_increased_toxin_damage = {
 	max_stacks_cap = 1,
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.damage_taken_from_toxin] = talent_settings.broker_passive_increased_toxin_damage.increase,
+		[stat_buffs.damage_taken_from_toxin] = talent_settings.broker_passive_increased_toxin_damage.increase
 	},
 	start_func = function (template_data, template_context)
 		template_data.earliest_exit = template_context.buff:start_time() + 0.1
@@ -2862,7 +2880,7 @@ templates.broker_increased_toxin_damage = {
 		end
 
 		return not template_context.buff_extension:has_keyword(keywords.toxin)
-	end,
+	end
 }
 
 local function _calculate_meleed_damage_carry_over(params, template_data, template_context)
@@ -2879,7 +2897,7 @@ templates.broker_passive_melee_damage_carry_over = {
 	active_duration = talent_settings.broker_passive_melee_damage_carry_over.active_duration,
 	carry_over_percentage = talent_settings.broker_passive_melee_damage_carry_over.percentage,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		if params.is_instakill then
@@ -2899,7 +2917,7 @@ templates.broker_passive_melee_damage_carry_over = {
 		return false
 	end,
 	proc_stat_buffs = {
-		[stat_buffs.melee_damage_bonus] = 1,
+		[stat_buffs.melee_damage_bonus] = 1
 	},
 	stat_buff_multiplier = function (template_data)
 		return template_data.bonus_damage
@@ -2909,7 +2927,7 @@ templates.broker_passive_melee_damage_carry_over = {
 	end,
 	start_func = function (template_data, template_context)
 		template_data.bonus_damage = 0
-	end,
+	end
 }
 templates.broker_passive_low_ammo_regen = {
 	ammo_return = 0.2,
@@ -2918,7 +2936,7 @@ templates.broker_passive_low_ammo_regen = {
 	force_predicted_proc = true,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_elite_or_special_melee_kill,
 	proc_func = function (params, template_data, template_context)
@@ -2927,13 +2945,13 @@ templates.broker_passive_low_ammo_regen = {
 
 		if max_reserve > 0 then
 			local current_ammo_reserve = Ammo.current_ammo_in_reserve(slot_secondary_component)
-			local threshold = template_data.ammo_threshold
-			local clip_percentage = current_ammo_reserve / max_reserve
+			local ammo_threshold = template_data.ammo_threshold
+			local threshold = math.floor(max_reserve * ammo_threshold)
 
-			if clip_percentage <= threshold then
-				local ammo_return = template_data.ammo_return
+			if current_ammo_reserve < threshold then
+				local ammo_return = math.floor(max_reserve * template_data.ammo_return) - current_ammo_reserve
 
-				Ammo.add_to_reserve(slot_secondary_component, math.max(math.floor(max_reserve * ammo_return) - current_ammo_reserve, 1))
+				Ammo.add_to_reserve(slot_secondary_component, math.max(ammo_return, 1))
 			end
 		end
 	end,
@@ -2941,7 +2959,7 @@ templates.broker_passive_low_ammo_regen = {
 		template_data.unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
 		template_data.ammo_threshold = template_context.template.ammo_threshold
 		template_data.ammo_return = template_context.template.ammo_return
-	end,
+	end
 }
 templates.broker_passive_melee_attacks_apply_toxin = {
 	class_name = "proc_buff",
@@ -2949,7 +2967,7 @@ templates.broker_passive_melee_attacks_apply_toxin = {
 	stacks_to_add = talent_settings.broker_passive_melee_attacks_apply_toxin.stacks,
 	buff_to_add = talent_settings.broker_passive_melee_attacks_apply_toxin.toxin_buff,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_crit_melee,
 	proc_func = function (params, template_data, template_context, t)
@@ -2963,7 +2981,7 @@ templates.broker_passive_melee_attacks_apply_toxin = {
 				buff_ext:add_internally_controlled_buff(buff_to_add, t, "owner_unit", template_context.unit)
 			end
 		end
-	end,
+	end
 }
 templates.broker_passive_blitz_inflicts_toxin = {
 	buff_to_add = "neurotoxin_interval_buff3",
@@ -2972,10 +2990,10 @@ templates.broker_passive_blitz_inflicts_toxin = {
 	stacks_to_add = {
 		[special_rules.quick_flash_grenade] = 3,
 		[special_rules.broker_missile_launcher] = 6,
-		[special_rules.tox_grenade] = 10,
+		[special_rules.tox_grenade] = 10
 	},
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.visual_loadout_extension = ScriptUnit.extension(template_context.unit, "visual_loadout_system")
@@ -2986,15 +3004,7 @@ templates.broker_passive_blitz_inflicts_toxin = {
 			return false
 		end
 
-		local attacking_item = params.attacking_item
-
-		if not attacking_item then
-			return false
-		end
-
-		local equipped_item = template_data.visual_loadout_extension:item_in_slot("slot_grenade_ability")
-
-		return equipped_item and attacking_item.name == equipped_item.name and params.attack_type == "explosion"
+		return params.attacking_slot_name == "slot_grenade_ability" and params.attack_type == "explosion"
 	end,
 	proc_func = function (params, template_data, template_context, t)
 		local buff_ext = ScriptUnit.has_extension(params.attacked_unit, "buff_system")
@@ -3017,7 +3027,7 @@ templates.broker_passive_blitz_inflicts_toxin = {
 				buff_ext:add_internally_controlled_buff(buff_to_add, t, "owner_unit", template_context.unit)
 			end
 		end
-	end,
+	end
 }
 
 local TOXIN_SPREAD_RESULTS = {}
@@ -3031,7 +3041,7 @@ templates.broker_passive_toxin_spread_on_kills = {
 	radius = 4,
 	stacks_to_add = 2,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_melee_hit, CheckProcFunctions.on_elite_kill),
 	start_func = function (template_data, template_context)
@@ -3084,13 +3094,13 @@ templates.broker_passive_toxin_spread_on_kills = {
 				fx_system:trigger_vfx("content/fx/particles/weapons/pistols/needlepistol/needlepistol_explosion_primer_m1", node_position)
 			end
 		end
-	end,
+	end
 }
 templates.broker_passive_ranged_apply_brittleness = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_ranged_weakspot_crit,
 	proc_func = function (params, template_data, template_context, t)
@@ -3105,7 +3115,7 @@ templates.broker_passive_ranged_apply_brittleness = {
 		if buff_extension then
 			buff_extension:add_internally_controlled_buff("broker_passive_ranged_apply_brittleness_stack", t)
 		end
-	end,
+	end
 }
 templates.broker_passive_ranged_apply_brittleness_stack = {
 	class_name = "buff",
@@ -3114,14 +3124,14 @@ templates.broker_passive_ranged_apply_brittleness_stack = {
 	predicted = false,
 	refresh_duration_on_stack = true,
 	stat_buffs = {
-		[stat_buffs.rending_multiplier] = 0.1,
-	},
+		[stat_buffs.rending_multiplier] = 0.1
+	}
 }
 templates.broker_passive_melee_apply_brittleness = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_melee_weakspot_crit,
 	proc_func = function (params, template_data, template_context, t)
@@ -3136,7 +3146,7 @@ templates.broker_passive_melee_apply_brittleness = {
 		if buff_extension then
 			buff_extension:add_internally_controlled_buff("broker_passive_melee_apply_brittleness_stack", t)
 		end
-	end,
+	end
 }
 templates.broker_passive_melee_apply_brittleness_stack = {
 	class_name = "buff",
@@ -3145,8 +3155,8 @@ templates.broker_passive_melee_apply_brittleness_stack = {
 	predicted = false,
 	refresh_duration_on_stack = true,
 	stat_buffs = {
-		[stat_buffs.rending_multiplier] = 0.1,
-	},
+		[stat_buffs.rending_multiplier] = 0.1
+	}
 }
 
 local EMPTY_TABLE = {}
@@ -3162,7 +3172,7 @@ templates.broker_passive_crit_grants_damage = {
 	crit_per_stack = talent_settings.broker_passive_crit_grants_damage.critical_chance,
 	max_melee_damage = talent_settings.broker_passive_crit_grants_damage.max_stacks * talent_settings.broker_passive_crit_grants_damage.melee_damage,
 	stat_buffs = {
-		[stat_buffs.melee_damage] = 1,
+		[stat_buffs.melee_damage] = 1
 	},
 	stat_buff_multiplier = function (template_data, template_context)
 		return template_data.damage_multiplier
@@ -3195,7 +3205,7 @@ templates.broker_passive_crit_grants_damage = {
 		template_data.visual_loadout_extension = ScriptUnit.extension(template_context.unit, "visual_loadout_system")
 		template_data.visual_chance = 0
 		template_data.damage_multiplier = 0
-	end,
+	end
 }
 templates.broker_passive_toxin_infected_enemies_take_increased_damage = {
 	class_name = "proc_buff",
@@ -3204,7 +3214,7 @@ templates.broker_passive_toxin_infected_enemies_take_increased_damage = {
 	predicted = false,
 	proc_events = {
 		[proc_events.on_buff_added] = 1,
-		[proc_events.on_buff_stack_added] = 1,
+		[proc_events.on_buff_stack_added] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.side_system = Managers.state.extension:system("side_system")
@@ -3231,7 +3241,7 @@ templates.broker_passive_toxin_infected_enemies_take_increased_damage = {
 		local enemy_unit_buff_extension = ScriptUnit.has_extension(params.unit, "buff_system")
 
 		enemy_unit_buff_extension:add_internally_controlled_buff("broker_passive_toxin_infected_enemies_take_increased_damage_debuff", t)
-	end,
+	end
 }
 templates.broker_passive_toxin_infected_enemies_take_increased_damage_debuff = {
 	class_name = "buff",
@@ -3240,7 +3250,7 @@ templates.broker_passive_toxin_infected_enemies_take_increased_damage_debuff = {
 	predicted = false,
 	refresh_duration_on_stack = true,
 	stat_buffs = {
-		[stat_buffs.damage_taken_modifier] = 0.1,
+		[stat_buffs.damage_taken_modifier] = 0.1
 	},
 	start_func = function (template_data, template_context)
 		template_data.earliest_exit = template_context.buff:start_time() + 0.1
@@ -3251,14 +3261,14 @@ templates.broker_passive_toxin_infected_enemies_take_increased_damage_debuff = {
 		end
 
 		return not template_context.buff_extension:has_keyword(keywords.toxin)
-	end,
+	end
 }
 templates.broker_passive_non_crits_increase_crit = {
 	class_name = "proc_buff",
 	max_stacks = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_melee_non_crit,
 	start_func = function (template_data, template_context)
@@ -3266,7 +3276,7 @@ templates.broker_passive_non_crits_increase_crit = {
 	end,
 	proc_func = function (params, template_data, template_context, t)
 		template_data.buff_extension:add_internally_controlled_buff("broker_passive_non_crits_increase_crit_stack", t)
-	end,
+	end
 }
 templates.broker_passive_non_crits_increase_crit_stack = {
 	always_show_in_hud = true,
@@ -3277,12 +3287,15 @@ templates.broker_passive_non_crits_increase_crit_stack = {
 	predicted = false,
 	remove_on_proc = true,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_crit_melee,
 	stat_buffs = {
-		[stat_buffs.melee_critical_strike_chance] = 0.05,
+		[stat_buffs.melee_critical_strike_chance] = 0.05
 	},
+	related_talents = {
+		"broker_passive_non_crits_increase_crit"
+	}
 }
 templates.broker_passive_non_crits_increase_crit_stack.max_stacks = math.ceil(1 / templates.broker_passive_non_crits_increase_crit_stack.stat_buffs[stat_buffs.melee_critical_strike_chance])
 templates.broker_passive_knockback_on_taking_melee_damage = {
@@ -3293,7 +3306,7 @@ templates.broker_passive_knockback_on_taking_melee_damage = {
 	hud_priority = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_player_hit_received] = 1,
+		[proc_events.on_player_hit_received] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t, ...)
 		if not CheckProcFunctions.on_melee_hit(params, template_data, template_context, t) then
@@ -3303,9 +3316,8 @@ templates.broker_passive_knockback_on_taking_melee_damage = {
 		local attacking_unit = params.attack_instigator_unit or params.attacking_unit
 		local target_unit_data_extension = ScriptUnit.has_extension(attacking_unit, "unit_data_system")
 		local breed = target_unit_data_extension and target_unit_data_extension:breed()
-		local enemy_type = breed and Breed.enemy_type(breed)
 
-		if enemy_type == "special" then
+		if breed.tags.disabler then
 			return false
 		end
 
@@ -3322,15 +3334,15 @@ templates.broker_passive_knockback_on_taking_melee_damage = {
 
 		Explosion.create_explosion(template_context.world, template_context.physics_world, explosion_position, Quaternion.identity(), template_context.unit, explosion_template, PowerLevelSettings.default_power_level, 1, attack_types.explosion)
 		template_data.buff_extension:add_internally_controlled_buff("broker_passive_knockback_on_taking_melee_damage_proc", t)
-	end,
+	end
 }
 templates.broker_passive_knockback_on_taking_melee_damage_proc = {
 	class_name = "buff",
 	duration = 3,
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.movement_speed] = 0.1,
-	},
+		[stat_buffs.movement_speed] = 0.1
+	}
 }
 
 local function _broker_keystone_vultures_mark_on_kill_proc_func(params, template_data, template_context, t)
@@ -3354,14 +3366,14 @@ templates.broker_keystone_vultures_mark_on_kill = {
 	proc_events = {
 		[proc_events.on_kill] = 1,
 		[proc_events.on_hit] = 1,
-		[proc_events.on_minion_death] = 1,
+		[proc_events.on_minion_death] = 1
 	},
 	start_func = _bespoke_needlepistol_close_range_kill_start,
 	update_func = _bespoke_needlepistol_close_range_kill_update,
 	specific_check_proc_funcs = {
 		[proc_events.on_kill] = CheckProcFunctions.combine(CheckProcFunctions.on_elite_or_special_kill, CheckProcFunctions.on_ranged_kill),
 		[proc_events.on_hit] = CheckProcFunctions.combine(CheckProcFunctions.on_elite_or_special_hit, _bespoke_needlepistol_close_range_kill_check_proc_hit),
-		[proc_events.on_minion_death] = _bespoke_needle_pistol_close_range_kill_check_proc_minion_death,
+		[proc_events.on_minion_death] = _bespoke_needle_pistol_close_range_kill_check_proc_minion_death
 	},
 	specific_proc_func = {
 		[proc_events.on_kill] = _broker_keystone_vultures_mark_on_kill_proc_func,
@@ -3369,8 +3381,8 @@ templates.broker_keystone_vultures_mark_on_kill = {
 		[proc_events.on_minion_death] = function (params, template_data, template_context, t)
 			_bespoke_needle_pistol_close_range_kill_proc_on_minion_death(params, template_data, template_context, t)
 			_broker_keystone_vultures_mark_on_kill_proc_func(params, template_data, template_context, t)
-		end,
-	},
+		end
+	}
 }
 templates.vultures_mark = {
 	class_name = "proc_buff",
@@ -3385,7 +3397,7 @@ templates.vultures_mark = {
 	stat_buffs = {
 		[stat_buffs.ranged_damage] = talent_settings.broker_keystone_vultures_mark_on_kill.ranged_damage,
 		[stat_buffs.ranged_critical_strike_chance] = talent_settings.broker_keystone_vultures_mark_on_kill.crit_chance,
-		[stat_buffs.movement_speed] = talent_settings.broker_keystone_vultures_mark_on_kill.movement_speed,
+		[stat_buffs.movement_speed] = talent_settings.broker_keystone_vultures_mark_on_kill.movement_speed
 	},
 	start_func = function (template_data, template_context)
 		template_data.toughness_extension = ScriptUnit.extension(template_context.unit, "toughness_system")
@@ -3401,7 +3413,7 @@ templates.vultures_mark = {
 	end,
 	check_proc_func = CheckProcFunctions.combine(CheckProcFunctions.at_max_stacks, CheckProcFunctions.on_elite_or_special_kill, CheckProcFunctions.on_ranged_kill),
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	proc_func = function (params, template_data, template_context, t)
 		if not template_context.is_server then
@@ -3415,13 +3427,13 @@ templates.vultures_mark = {
 		for coherency_unit, _ in pairs(units_in_coherence) do
 			Toughness.replenish_percentage(coherency_unit, toughness)
 		end
-	end,
+	end
 }
 templates.broker_keystone_vultures_mark_aoe_stagger = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_ranged_hit, CheckProcFunctions.on_elite_or_special_kill),
 	proc_func = function (params, template_data, template_context, t)
@@ -3435,18 +3447,18 @@ templates.broker_keystone_vultures_mark_aoe_stagger = {
 		local explosion_template = ExplosionTemplates.broker_vultures_mark_aoe_stagger
 
 		Explosion.create_explosion(template_context.world, template_context.physics_world, explosion_position, Quaternion.identity(), template_context.unit, explosion_template, PowerLevelSettings.default_power_level, 1, attack_types.explosion)
-	end,
+	end
 }
 templates.broker_keystone_vultures_mark_dodge_on_ranged_crit = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_crit_ranged,
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("broker_vultures_mark_dodge_on_ranged_crit_dodge_buff", t)
-	end,
+	end
 }
 templates.broker_vultures_mark_dodge_on_ranged_crit_dodge_buff = {
 	class_name = "buff",
@@ -3460,15 +3472,15 @@ templates.broker_vultures_mark_dodge_on_ranged_crit_dodge_buff = {
 	duration = talent_settings.broker_keystone_vultures_mark_dodge_on_ranged_crit.duration,
 	keywords = {
 		keywords.count_as_dodge_vs_melee,
-		keywords.count_as_dodge_vs_ranged,
-	},
+		keywords.count_as_dodge_vs_ranged
+	}
 }
 templates.broker_keystone_chemical_dependency = {
 	class_name = "proc_buff",
 	predicted = true,
 	sub_2_toughness_grant = talent_settings.broker_keystone_chemical_dependency.sub_2_toughness_grant,
 	proc_events = {
-		[proc_events.on_syringe_used] = 1,
+		[proc_events.on_syringe_used] = 1
 	},
 	start_func = function (template_data, template_context)
 		local talent_extension = ScriptUnit.extension(template_context.unit, "talent_system")
@@ -3481,7 +3493,7 @@ templates.broker_keystone_chemical_dependency = {
 		end
 
 		template_context.buff_extension:add_internally_controlled_buff("broker_keystone_chemical_dependency_stack", t)
-	end,
+	end
 }
 
 local STATISTICS_UPDATE_INTERVAL = 10
@@ -3525,11 +3537,11 @@ templates.broker_keystone_chemical_dependency_stack = {
 	sub_3_max_stacks = talent_settings.broker_keystone_chemical_dependency.sub_3_max_stacks,
 	sub_3_max_stacks_cap = talent_settings.broker_keystone_chemical_dependency.sub_3_max_stacks,
 	stat_buffs = {
-		[stat_buffs.combat_ability_cooldown_regen_modifier] = talent_settings.broker_keystone_chemical_dependency.combat_ability_cooldown_regen_modifier,
+		[stat_buffs.combat_ability_resource_regen_modifier] = talent_settings.broker_keystone_chemical_dependency.combat_ability_cooldown_regen_modifier
 	},
 	conditional_stat_buffs = {
 		[stat_buffs.critical_strike_chance] = talent_settings.broker_keystone_chemical_dependency.critical_strike_chance,
-		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings.broker_keystone_chemical_dependency.toughness_damage_taken_multiplier,
+		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings.broker_keystone_chemical_dependency.toughness_damage_taken_multiplier
 	},
 	stat_buff_multipliers = {
 		[stat_buffs.critical_strike_chance] = function (template_data)
@@ -3537,7 +3549,7 @@ templates.broker_keystone_chemical_dependency_stack = {
 		end,
 		[stat_buffs.toughness_damage_taken_multiplier] = function (template_data, _, value)
 			return template_data.count_toughness_reduction and 1 or 1 / value
-		end,
+		end
 	},
 	conditional_stat_buffs_funcs = {
 		[stat_buffs.critical_strike_chance] = function (template_data)
@@ -3545,7 +3557,7 @@ templates.broker_keystone_chemical_dependency_stack = {
 		end,
 		[stat_buffs.toughness_damage_taken_multiplier] = function (template_data)
 			return template_data.count_toughness_reduction
-		end,
+		end
 	},
 	start_func = function (template_data, template_context)
 		local talent_extension = ScriptUnit.extension(template_context.unit, "talent_system")
@@ -3582,8 +3594,39 @@ templates.broker_keystone_chemical_dependency_stack = {
 	end,
 	stop_func = function (template_data, template_context, extension_destroyed)
 		record_broker_max_stacks_of_chemical_dependency(template_data, template_context, true)
-	end,
+	end
 }
+
+local function _adrenaline_junkie_proc_hit(params, template_data, template_context, t)
+	local template = template_context.template
+	local on_regular = template.regular_grant
+	local stacks_to_grant = on_regular
+
+	if template_data.talent_extension:has_special_rule(special_rules.broker_keystone_adrenaline_junkie_no_regular_stacks) then
+		local sub_1_regular_grant = template.sub_1_regular_grant
+
+		stacks_to_grant = sub_1_regular_grant
+
+		if CheckProcFunctions.on_weakspot_hit(params, template_data, template_context, t) then
+			local sub_1_weakspot_grant = template.regular_grant + template.sub_1_weakspot_additional_grant
+
+			stacks_to_grant = sub_1_weakspot_grant
+		end
+	end
+
+	local is_crit = CheckProcFunctions.on_crit(params, template_data, template_context, t)
+
+	if is_crit then
+		stacks_to_grant = stacks_to_grant + template.crit_grant
+	end
+
+	for _ = 1, stacks_to_grant do
+		local buff_extension = template_context.buff_extension
+
+		buff_extension:add_internally_controlled_buff("broker_keystone_adrenaline_junkie_stack", t)
+	end
+end
+
 templates.broker_keystone_adrenaline_junkie = {
 	class_name = "proc_buff",
 	predicted = false,
@@ -3598,71 +3641,47 @@ templates.broker_keystone_adrenaline_junkie = {
 			return false
 		end
 
-		if template_data.talent_extension:has_special_rule(special_rules.broker_keystone_adrenaline_junkie_extra_killing_blow_stacks) and not CheckProcFunctions.on_melee_kill(params, template_data, template_context, t) then
-			return false
-		end
-
 		return true
 	end,
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.talent_extension = ScriptUnit.extension(template_context.unit, "talent_system")
 	end,
 	specific_proc_func = {
 		[proc_events.on_hit] = function (params, template_data, template_context, t)
-			local template = template_context.template
-			local on_regular = template.regular_grant
-			local stacks_to_grant = on_regular
-
-			if template_data.talent_extension:has_special_rule(special_rules.broker_keystone_adrenaline_junkie_no_regular_stacks) then
-				local sub_1_regular_grant = template.sub_1_regular_grant
-
-				stacks_to_grant = sub_1_regular_grant
-
-				if CheckProcFunctions.on_weakspot_hit(params, template_data, template_context, t) then
-					local sub_1_weakspot_grant = template.regular_grant + template.sub_1_weakspot_additional_grant
-
-					stacks_to_grant = sub_1_weakspot_grant
-				end
+			if template_data.talent_extension:has_special_rule(special_rules.broker_keystone_adrenaline_junkie_extra_killing_blow_stacks) then
+				return
 			end
 
-			local is_crit = CheckProcFunctions.on_crit(params, template_data, template_context, t)
-
-			if is_crit then
-				stacks_to_grant = stacks_to_grant + template.crit_grant
-			end
-
-			for _ = 1, stacks_to_grant do
-				local buff_extension = template_context.buff_extension
-
-				buff_extension:add_internally_controlled_buff("broker_keystone_adrenaline_junkie_stack", t)
-			end
+			_adrenaline_junkie_proc_hit(params, template_data, template_context, t)
 		end,
 		[proc_events.on_kill] = function (params, template_data, template_context, t)
-			local template = template_context.template
-			local stacks_to_grant = 0
-
 			if template_data.talent_extension:has_special_rule(special_rules.broker_keystone_adrenaline_junkie_extra_killing_blow_stacks) then
+				_adrenaline_junkie_proc_hit(params, template_data, template_context, t)
+
+				local template = template_context.template
+				local stacks_to_grant = 0
+
 				stacks_to_grant = stacks_to_grant + template.sub_2_kill_additional_grant
 
 				if CheckProcFunctions.on_elite_kill(params, template_data, template_context, t) then
 					stacks_to_grant = stacks_to_grant + template.sub_2_kill_additional_elite_grant
 				end
-			end
 
-			for _ = 1, stacks_to_grant do
-				local buff_extension = template_context.buff_extension
+				for _ = 1, stacks_to_grant do
+					local buff_extension = template_context.buff_extension
 
-				buff_extension:add_internally_controlled_buff("broker_keystone_adrenaline_junkie_stack", t)
+					buff_extension:add_internally_controlled_buff("broker_keystone_adrenaline_junkie_stack", t)
+				end
 			end
-		end,
+		end
 	},
 	proc_func = function (params, template_data, template_context, t)
 		return
-	end,
+	end
 }
 templates.broker_keystone_adrenaline_junkie_stack = {
 	class_name = "buff",
@@ -3679,7 +3698,7 @@ templates.broker_keystone_adrenaline_junkie_stack = {
 	max_stacks_cap = talent_settings.broker_keystone_adrenaline_junkie.adrenaline_max_stacks,
 	stat_buffs = {
 		[stat_buffs.critical_strike_chance] = 0.1,
-		[stat_buffs.movement_speed] = 0.1,
+		[stat_buffs.movement_speed] = 0.1
 	},
 	stat_buff_multipliers = {
 		[stat_buffs.critical_strike_chance] = function (template_data, template_context)
@@ -3711,7 +3730,7 @@ templates.broker_keystone_adrenaline_junkie_stack = {
 			local buff = template_context.buff
 
 			return 1 / buff:max_stacks()
-		end,
+		end
 	},
 	start_func = function (template_data, template_context)
 		local talent_extension = ScriptUnit.extension(template_context.unit, "talent_system")
@@ -3737,7 +3756,7 @@ templates.broker_keystone_adrenaline_junkie_stack = {
 	end,
 	conditional_exit_func = function (template_data, template_context)
 		return template_context.stack_count >= template_context.template.max_stacks
-	end,
+	end
 }
 templates.broker_keystone_adrenaline_junkie_proc = {
 	class_name = "buff",
@@ -3755,30 +3774,14 @@ templates.broker_keystone_adrenaline_junkie_proc = {
 	sub_5_toughness_per_tick = talent_settings.broker_keystone_adrenaline_junkie.sub_5_toughness_per_tick,
 	stat_buffs = {
 		[stat_buffs.melee_attack_speed] = talent_settings.broker_keystone_adrenaline_junkie.melee_attack_speed,
-		[stat_buffs.melee_damage] = talent_settings.broker_keystone_adrenaline_junkie.melee_damage,
+		[stat_buffs.melee_damage] = talent_settings.broker_keystone_adrenaline_junkie.melee_damage
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.alternate_fire_movement_speed_reduction_modifier] = 0,
-		[stat_buffs.weapon_action_movespeed_reduction_multiplier] = 0,
 		[stat_buffs.critical_strike_chance] = templates.broker_keystone_adrenaline_junkie_stack.stat_buffs[stat_buffs.critical_strike_chance],
 		[stat_buffs.movement_speed] = templates.broker_keystone_adrenaline_junkie_stack.stat_buffs[stat_buffs.movement_speed],
-		[stat_buffs.toughness_damage_taken_multiplier] = 0.9,
+		[stat_buffs.toughness_damage_taken_multiplier] = 0.9
 	},
 	conditional_stat_buffs_funcs = {
-		[stat_buffs.alternate_fire_movement_speed_reduction_modifier] = function (template_data, template_context)
-			local visual_loadout_extension = template_data.visual_loadout_extension
-			local wielded_slot = visual_loadout_extension:currently_wielded_slot()
-			local weapon_template = visual_loadout_extension:weapon_template_from_slot(wielded_slot)
-
-			return weapon_template and weapon_template.keywords and table.array_contains(weapon_template.keywords, "melee")
-		end,
-		[stat_buffs.weapon_action_movespeed_reduction_multiplier] = function (template_data, template_context)
-			local visual_loadout_extension = template_data.visual_loadout_extension
-			local wielded_slot = visual_loadout_extension:currently_wielded_slot()
-			local weapon_template = visual_loadout_extension:weapon_template_from_slot(wielded_slot)
-
-			return weapon_template and weapon_template.keywords and table.array_contains(weapon_template.keywords, "melee")
-		end,
 		[stat_buffs.critical_strike_chance] = function (template_data, template_context)
 			return template_data.sub_7_scaling_ms_crit
 		end,
@@ -3787,7 +3790,7 @@ templates.broker_keystone_adrenaline_junkie_proc = {
 		end,
 		[stat_buffs.toughness_damage_taken_multiplier] = function (template_data, template_context)
 			return template_data.sub_8_stamina_burst
-		end,
+		end
 	},
 	start_func = function (template_data, template_context)
 		local talent_extension = ScriptUnit.extension(template_context.unit, "talent_system")
@@ -3822,7 +3825,7 @@ templates.broker_keystone_adrenaline_junkie_proc = {
 				Toughness.replenish_percentage(template_context.unit, template_data.restore_toughness)
 			end
 		end
-	end,
+	end
 }
 templates.broker_ability_stimm_field_sub_3 = {
 	class_name = "interval_buff",
@@ -3852,7 +3855,7 @@ templates.broker_ability_stimm_field_sub_3 = {
 		local has_syringe_now = PlayerUnitVisualLoadout.has_weapon_keyword_from_slot(template_data.visual_loadout_extension, "slot_pocketable_small", "syringe") or false
 
 		if has_syringe_now and has_syringe_now ~= has_syringe_before then
-			template_data.ability_extension:reduce_ability_cooldown_percentage("combat_ability", 1)
+			template_data.ability_extension:restore_ability_charge_percentage("combat_ability", 1)
 		end
 
 		template_data.has_syringe = has_syringe_now
@@ -3861,11 +3864,11 @@ templates.broker_ability_stimm_field_sub_3 = {
 		local charges_now = template_data.ability_extension:remaining_ability_charges("pocketable_ability")
 
 		if charges_before < charges_now then
-			template_data.ability_extension:reduce_ability_cooldown_percentage("combat_ability", 1)
+			template_data.ability_extension:restore_ability_charge_percentage("combat_ability", 1)
 		end
 
 		template_data.num_ability_charges = charges_now
-	end,
+	end
 }
 templates.broker_syringe_toughness_restore = {
 	class_name = "buff",
@@ -3873,6 +3876,12 @@ templates.broker_syringe_toughness_restore = {
 	skip_tactical_overlay = true,
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
+			return
+		end
+
+		if template_context.first_time_affected == false then
+			template_data.procced = true
+
 			return
 		end
 
@@ -3887,6 +3896,10 @@ templates.broker_syringe_toughness_restore = {
 		template_data.toughness_amount = toughness_amount
 		template_data.stimm_provider = template_context.buff:owner_unit()
 		template_data.toughness_extension = ScriptUnit.extension(template_context.unit, "toughness_system")
+
+		local unit_data_extension = ScriptUnit.has_extension(template_context.unit, "unit_data_system")
+
+		template_data.character_state_component = unit_data_extension and unit_data_extension:read_component("character_state")
 	end,
 	update_func = function (template_data, template_context, dt, t)
 		if not template_context.is_server then
@@ -3908,18 +3921,18 @@ templates.broker_syringe_toughness_restore = {
 				Managers.stats:record_private("hook_broker_stimm_restored_tougness", template_context.player, recovered_tougness, template_context.player)
 			end
 		end
-	end,
+	end
 }
 templates.broker_syringe_cooldown_on_melee_kills = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_melee_kill,
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("broker_syringe_melee_cooldown_buff", t, "from_talent", template_context.from_talent)
-	end,
+	end
 }
 templates.broker_syringe_melee_cooldown_buff = {
 	class_name = "buff",
@@ -3930,7 +3943,7 @@ templates.broker_syringe_melee_cooldown_buff = {
 	refresh_duration_on_stack = true,
 	skip_tactical_overlay = true,
 	stat_buffs = {
-		[stat_buffs.combat_ability_cooldown_regen_modifier] = 0.75,
+		[stat_buffs.combat_ability_resource_regen_modifier] = 0.75
 	},
 	stat_buff_multiplier = function (template_data)
 		return template_data.melee_cd_regen
@@ -3941,18 +3954,18 @@ templates.broker_syringe_melee_cooldown_buff = {
 		template_data.melee_cd_regen = buff_params.melee_cd_regen
 
 		template_context.buff:add_duration(buff_params.melee_cd_duration - template_context.template.duration)
-	end,
+	end
 }
 templates.broker_syringe_cooldown_on_ranged_kills = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_ranged_kill,
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("broker_syringe_ranged_cooldown_buff", t, "from_talent", template_context.from_talent)
-	end,
+	end
 }
 templates.broker_syringe_ranged_cooldown_buff = {
 	class_name = "buff",
@@ -3963,7 +3976,7 @@ templates.broker_syringe_ranged_cooldown_buff = {
 	refresh_duration_on_stack = true,
 	skip_tactical_overlay = true,
 	stat_buffs = {
-		[stat_buffs.combat_ability_cooldown_regen_modifier] = 0.75,
+		[stat_buffs.combat_ability_resource_regen_modifier] = 0.75
 	},
 	stat_buff_multiplier = function (template_data)
 		return template_data.ranged_cd_regen
@@ -3974,7 +3987,7 @@ templates.broker_syringe_ranged_cooldown_buff = {
 		template_data.ranged_cd_regen = buff_params.ranged_cd_regen
 
 		template_context.buff:add_duration(buff_params.ranged_cd_duration - template_context.template.duration)
-	end,
+	end
 }
 templates.broker_syringe_health_restore = {
 	class_name = "buff",
@@ -3985,8 +3998,18 @@ templates.broker_syringe_health_restore = {
 			return
 		end
 
+		if template_context.first_time_affected == false then
+			template_data.procced = true
+
+			return
+		end
+
 		template_data.stimm_provider = template_context.buff:owner_unit()
 		template_data.health_extension = ScriptUnit.extension(template_context.unit, "health_system")
+
+		local unit_data_extension = ScriptUnit.has_extension(template_context.unit, "unit_data_system")
+
+		template_data.character_state_component = unit_data_extension and unit_data_extension:read_component("character_state")
 	end,
 	update_func = function (template_data, template_context, dt, t)
 		if not template_context.is_server then
@@ -4006,7 +4029,7 @@ templates.broker_syringe_health_restore = {
 
 			template_data.health_extension:add_heal(amount * template_data.health_extension:max_health(), DamageSettings.heal_types.syringe)
 		end
-	end,
+	end
 }
 templates.broker_syringe_toughness_over_time = {
 	class_name = "interval_buff",
@@ -4029,6 +4052,10 @@ templates.broker_syringe_toughness_over_time = {
 		template_data.toughness_amount = toughness_amount
 		template_data.stimm_provider = template_context.buff:owner_unit()
 		template_data.toughness_extension = ScriptUnit.extension(template_context.unit, "toughness_system")
+
+		local unit_data_extension = ScriptUnit.has_extension(template_context.unit, "unit_data_system")
+
+		template_data.character_state_component = unit_data_extension and unit_data_extension:read_component("character_state")
 	end,
 	interval_func = function (template_data, template_context, template)
 		if not template_context.is_server then
@@ -4046,7 +4073,16 @@ templates.broker_syringe_toughness_over_time = {
 		if recovered_tougness > 0 then
 			Managers.stats:record_private("hook_broker_stimm_restored_tougness", template_context.player, recovered_tougness, template_context.player)
 		end
-	end,
+	end
+}
+templates.broker_syringe_slow_and_stun_immune = {
+	class_name = "buff",
+	predicted = false,
+	skip_tactical_overlay = true,
+	keywords = {
+		keywords.stun_immune,
+		keywords.slowdown_immune
+	}
 }
 
 local TEMP_BUFF_APPLY_ARR = {}
@@ -4063,14 +4099,13 @@ templates.syringe_broker_buff = {
 	unique_buff_id = "syringe_stimm",
 	unique_buff_priority = 1,
 	stat_buffs = {
-		[stat_buffs.fov_multiplier] = 0.985,
+		[stat_buffs.fov_multiplier] = 0.985
 	},
 	stat_buff_multipliers = {},
 	keywords = {
 		keywords.syringe,
-		keywords.syringe_broker,
+		keywords.syringe_broker
 	},
-	single_application_buff_overrides = {},
 	start_func = function (template_data, template_context)
 		template_data.health_extension = ScriptUnit.extension(template_context.unit, "health_system")
 
@@ -4085,7 +4120,8 @@ templates.syringe_broker_buff = {
 		template_data.stimm_provider = template_context.buff:owner_unit()
 		template_data.talent_tiers = {}
 
-		local single_application_buff_overrides = template_context.template.single_application_buff_overrides
+		local first_time_affected = template_context.first_time_affected
+		local skip_toughness_replenishment = not first_time_affected
 
 		table.clear(TEMP_BUFF_APPLY_ARR)
 
@@ -4098,7 +4134,7 @@ templates.syringe_broker_buff = {
 
 			local buff_data = data.buff_data
 
-			if not template_data.skip_talent and buff_data.buff_target and not single_application_buff_overrides[talent_name] then
+			if not template_data.skip_talent and buff_data.buff_target then
 				local template = templates[buff_data.buff_target]
 
 				if not template.predicted or not template_context.added_during_server_correction then
@@ -4119,7 +4155,13 @@ templates.syringe_broker_buff = {
 			local t = FixedFrame.get_latest_fixed_time()
 
 			for _ = 1, talent_tier do
-				local _, local_index, component_index = template_context.buff_extension:add_externally_controlled_buff(buff_data.buff_target, t, "owner_unit", template_data.stimm_provider, "from_talent", talent_name)
+				local _, local_index, component_index
+
+				if not template_context.template.predicted then
+					_, local_index, component_index = template_context.buff_extension:add_externally_controlled_buff(buff_data.buff_target, t, "owner_unit", template_data.stimm_provider, "from_talent", talent_name, "first_time_affected", first_time_affected)
+				else
+					_, local_index, component_index = template_context.buff_extension:add_externally_controlled_buff(buff_data.buff_target, t, "owner_unit", template_data.stimm_provider, "from_talent", talent_name)
+				end
 
 				local_indices[#local_indices + 1] = local_index
 				component_indices[#component_indices + 1] = component_index
@@ -4160,7 +4202,7 @@ templates.syringe_broker_buff = {
 		for i = 1, #local_indices do
 			template_context.buff_extension:remove_externally_controlled_buff(local_indices[i], component_indices[i])
 		end
-	end,
+	end
 }
 
 local stat_buff_types = BuffSettings.stat_buff_types
@@ -4202,7 +4244,7 @@ for talent_name, data in pairs(stimm_talent_settings) do
 	templates[talent_name] = {
 		class_name = "buff",
 		predicted = false,
-		skip_tactical_overlay = true,
+		skip_tactical_overlay = true
 	}
 end
 
@@ -4214,7 +4256,7 @@ templates.broker_flash_grenade_cluster_stagger_tracking_buff = {
 	max_stacks_cap = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.last_grenade_kill_t = 0
@@ -4247,7 +4289,7 @@ templates.broker_flash_grenade_cluster_stagger_tracking_buff = {
 
 			template_data.recorded_cluster = true
 		end
-	end,
+	end
 }
 
 return templates

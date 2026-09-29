@@ -6,6 +6,7 @@ local behavior_gestalts = BotSettings.behavior_gestalts
 local function misc_bot_profiles(all_profiles)
 	all_profiles.darktide_seven_01 = {
 		archetype = "veteran",
+		character_height = 1,
 		current_level = 1,
 		gender = "male",
 		selected_voice = "veteran_male_a",
@@ -26,16 +27,17 @@ local function misc_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/d7_veteran_m_lowerbody",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/d7_veteran_m_upperbody",
 			slot_primary = "content/items/weapons/player/melee/chainsword_p1_m1",
-			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
+		talents = {}
 	}
 	all_profiles.darktide_seven_02 = {
 		archetype = "ogryn",
+		character_height = 1,
 		current_level = 1,
 		gender = "male",
 		selected_voice = "ogryn_a",
@@ -56,12 +58,13 @@ local function misc_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/ogryn/gear_lowerbody/d7_ogryn_lowerbody",
 			slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/d7_ogryn_upperbody",
 			slot_primary = "content/items/weapons/player/melee/ogryn_combatblade_p1_m1",
-			slot_secondary = "content/items/weapons/player/ranged/ogryn_rippergun_p1_m1",
+			slot_secondary = "content/items/weapons/player/ranged/ogryn_rippergun_p1_m1"
 		},
-		talents = {},
+		talents = {}
 	}
 	all_profiles.darktide_seven_03 = {
 		archetype = "zealot",
+		character_height = 1,
 		current_level = 1,
 		gender = "female",
 		selected_voice = "zealot_female_c",
@@ -82,12 +85,13 @@ local function misc_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/d7_zealot_f_lowerbody",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/d7_zealot_f_upperbody",
 			slot_primary = "content/items/weapons/player/melee/thunderhammer_2h_p1_m1",
-			slot_secondary = "content/items/weapons/player/ranged/autogun_p1_m1",
+			slot_secondary = "content/items/weapons/player/ranged/autogun_p1_m1"
 		},
-		talents = {},
+		talents = {}
 	}
 	all_profiles.darktide_seven_04 = {
 		archetype = "psyker",
+		character_height = 1,
 		current_level = 1,
 		gender = "male",
 		selected_voice = "psyker_male_a",
@@ -108,12 +112,13 @@ local function misc_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/d7_psyker_m_lowerbody",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/d7_psyker_m_upperbody",
 			slot_primary = "content/items/weapons/player/melee/forcesword_p1_m1",
-			slot_secondary = "content/items/weapons/player/ranged/forcestaff_p1_m1",
+			slot_secondary = "content/items/weapons/player/ranged/forcestaff_p1_m1"
 		},
-		talents = {},
+		talents = {}
 	}
 	all_profiles.darktide_seven_05 = {
 		archetype = "veteran",
+		character_height = 1,
 		current_level = 1,
 		gender = "female",
 		selected_voice = "veteran_female_b",
@@ -134,12 +139,13 @@ local function misc_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/d7_veteran_f_lowerbody",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/d7_veteran_f_upperbody",
 			slot_primary = "content/items/weapons/player/melee/powersword_p1_m1",
-			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot"
 		},
-		talents = {},
+		talents = {}
 	}
 	all_profiles.darktide_seven_06 = {
 		archetype = "zealot",
+		character_height = 1,
 		current_level = 1,
 		gender = "male",
 		selected_voice = "zealot_male_b",
@@ -161,12 +167,13 @@ local function misc_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/d7_zealot_m_lowerbody",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/d7_zealot_m_upperbody",
 			slot_primary = "content/items/weapons/player/melee/thunderhammer_2h_p1_m1",
-			slot_secondary = "content/items/weapons/player/ranged/autogun_p1_m1",
+			slot_secondary = "content/items/weapons/player/ranged/autogun_p1_m1"
 		},
-		talents = {},
+		talents = {}
 	}
 	all_profiles.darktide_seven_07 = {
 		archetype = "psyker",
+		character_height = 1,
 		current_level = 1,
 		gender = "female",
 		selected_voice = "psyker_female_a",
@@ -187,9 +194,9 @@ local function misc_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/d7_psyker_f_lowerbody",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/d7_psyker_f_upperbody",
 			slot_primary = "content/items/weapons/player/melee/forcesword_p1_m1",
-			slot_secondary = "content/items/weapons/player/ranged/forcestaff_p1_m1",
+			slot_secondary = "content/items/weapons/player/ranged/forcestaff_p1_m1"
 		},
-		talents = {},
+		talents = {}
 	}
 end
 

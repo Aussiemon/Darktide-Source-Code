@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/multiplayer/connection/local_states/local_request_host_type_state.lua
 
 local RPCS = {
-	"rpc_request_host_type_reply",
+	"rpc_request_host_type_reply"
 }
 local LocalRequestHostTypeState = class("LocalRequestHostTypeState")
 
@@ -28,7 +28,7 @@ LocalRequestHostTypeState.update = function (self, dt)
 		Log.info("LocalRequestHostTypeState", "Timeout waiting for rpc_request_host_type_reply")
 
 		return "timeout", {
-			game_reason = "timeout",
+			game_reason = "timeout"
 		}
 	end
 
@@ -38,7 +38,7 @@ LocalRequestHostTypeState.update = function (self, dt)
 		Log.info("LocalRequestHostTypeState", "Connection channel disconnected")
 
 		return "disconnected", {
-			engine_reason = reason,
+			engine_reason = reason
 		}
 	end
 

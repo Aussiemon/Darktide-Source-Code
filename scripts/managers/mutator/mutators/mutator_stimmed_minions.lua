@@ -24,7 +24,7 @@ end
 
 MutatorStimmedMinions.on_gameplay_post_init = function (self, level, themes)
 	local modify_pacing_settings = {
-		require_aggro_event = true,
+		require_aggro_event = true
 	}
 
 	if self._is_server and modify_pacing_settings then

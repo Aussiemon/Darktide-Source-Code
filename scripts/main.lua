@@ -34,8 +34,8 @@ Main.init = function (self)
 			"scripts/game_states/boot/boot_state_require_game_scripts",
 			"scripts/game_states/boot/boot_state_load_audio_settings",
 			"scripts/game_states/boot/boot_state_activate_plugins",
-			"scripts/game_states/boot/boot_state_last",
-		},
+			"scripts/game_states/boot/boot_state_last"
+		}
 	}
 
 	rawset(_G, "GameStateDebugInfo", GameStateDebug:new())
@@ -64,7 +64,7 @@ end
 
 Main.shutdown = function (self)
 	local exit_param = {
-		on_shutdown = true,
+		on_shutdown = true
 	}
 
 	self._sm:destroy(exit_param)

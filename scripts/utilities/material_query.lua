@@ -6,7 +6,7 @@ local MaterialQuery = {}
 local QUERY_DISTANCE = 0.6
 local HALF_QUERY_DISTANCE = QUERY_DISTANCE * 0.5
 local QUERY_MATERIAL_CONTEXTS = {
-	"surface_material",
+	"surface_material"
 }
 
 MaterialQuery.query_material = function (physics_world, from, to, debug_name)

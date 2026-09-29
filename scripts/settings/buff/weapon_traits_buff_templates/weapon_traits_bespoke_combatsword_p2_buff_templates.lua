@@ -32,13 +32,13 @@ templates.weapon_trait_bespoke_combatsword_p2_increased_crit_chance_on_weakspot_
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.melee_critical_strike_chance] = 0.1,
+		[stat_buffs.melee_critical_strike_chance] = 0.1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.on_weakspot_kill),
+	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.on_weakspot_kill)
 }
 
 return templates

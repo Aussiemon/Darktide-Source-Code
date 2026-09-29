@@ -13,14 +13,14 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			650,
-			90,
+			90
 		},
 		position = {
 			0,
 			160,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local title_text_style = table.clone(UIFontSettings.hud_body)
 
@@ -30,12 +30,12 @@ title_text_style.text_horizontal_alignment = "center"
 title_text_style.text_vertical_alignment = "center"
 title_text_style.size = {
 	650,
-	40,
+	40
 }
 title_text_style.offset = {
 	0,
 	-20,
-	2,
+	2
 }
 title_text_style.text_color = UIHudSettings.color_tint_main_1
 title_text_style.font_type = "machine_medium"
@@ -49,12 +49,12 @@ description_text_style.text_vertical_alignment = "center"
 description_text_style.text_color = UIHudSettings.color_tint_main_1
 description_text_style.size = {
 	650,
-	50,
+	50
 }
 description_text_style.offset = {
 	0,
 	10,
-	2,
+	2
 }
 description_text_style.font_type = "machine_medium"
 description_text_style.font_size = 30
@@ -66,15 +66,15 @@ local widget_definitions = {
 			style_id = "title_text",
 			value = "<title_text>",
 			value_id = "title_text",
-			style = title_text_style,
+			style = title_text_style
 		},
 		{
 			pass_type = "text",
 			style_id = "description_text",
 			value = "<description_text>",
 			value_id = "description_text",
-			style = description_text_style,
-		},
+			style = description_text_style
+		}
 	}, "area_popup"),
 	background = UIWidget.create_definition({
 		{
@@ -87,20 +87,20 @@ local widget_definitions = {
 				scale_to_material = true,
 				vertical_alignment = "center",
 				size = {
-					650,
+					650
 				},
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				color = get_hud_color("color_tint_main_2", 255),
 				material_values = {
-					distortion = 1,
-				},
-			},
-		},
-	}, "area_popup"),
+					distortion = 1
+				}
+			}
+		}
+	}, "area_popup")
 }
 local animations = {
 	popup_enter = {
@@ -114,7 +114,7 @@ local animations = {
 				end
 
 				widgets.background.style.texture.material_values.distortion = 1
-			end,
+			end
 		},
 		{
 			end_time = 2,
@@ -125,7 +125,7 @@ local animations = {
 				local widget = widgets.background
 
 				widget.style.texture.material_values.distortion = 0.1 + (1 - progress) * 0.9
-			end,
+			end
 		},
 		{
 			end_time = 0.5,
@@ -137,7 +137,7 @@ local animations = {
 
 				background_widget.alpha_multiplier = anim_progress
 				background_widget.offset[2] = 50 - 50 * anim_progress
-			end,
+			end
 		},
 		{
 			end_time = 1,
@@ -151,7 +151,7 @@ local animations = {
 						widget.alpha_multiplier = anim_progress
 					end
 				end
-			end,
+			end
 		},
 		{
 			end_time = 7.5,
@@ -165,7 +165,7 @@ local animations = {
 						widget.alpha_multiplier = 1 - anim_progress
 					end
 				end
-			end,
+			end
 		},
 		{
 			end_time = 6.5,
@@ -176,7 +176,7 @@ local animations = {
 				local widget = widgets.background
 
 				widget.style.texture.material_values.distortion = 0.1 + progress * 0.9
-			end,
+			end
 		},
 		{
 			end_time = 7.5,
@@ -187,13 +187,13 @@ local animations = {
 				local background_widget = widgets.background
 
 				background_widget.alpha_multiplier = 1 - anim_progress
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
 	animations = animations,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

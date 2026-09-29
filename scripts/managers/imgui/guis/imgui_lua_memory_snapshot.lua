@@ -147,7 +147,7 @@ ImguiLuaMemorySnapshot._add_snapshot = function (self, lua_memory, optional_name
 		max_children = {},
 		filtered_ids = {},
 		name_padding_cache = {},
-		children_cache = {},
+		children_cache = {}
 	})
 end
 

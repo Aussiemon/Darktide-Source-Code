@@ -243,7 +243,7 @@ ClassSelectionView._on_continue_pressed = function (self)
 
 	local product_id_promise = (IS_XBS or IS_GDK) and Managers.dlc:xbs_get_and_inform_entitlements(all_product_ids) or Promise.resolved({
 		show_popup_function = nil,
-		product_ids = all_product_ids,
+		product_ids = all_product_ids
 	})
 
 	self._promise_container:cancel_on_destroy(product_id_promise)
@@ -263,7 +263,7 @@ ClassSelectionView._cb_on_product_ids_fetched = function (self, promise_data)
 
 	if promise_data.product_ids == nil then
 		promise = Promise.resolved({
-			dlcUpdates = {},
+			dlcUpdates = {}
 		})
 	else
 		promise = Managers.backend.interfaces.external_payment:reconcile_dlc(promise_data.product_ids)
@@ -353,16 +353,16 @@ ClassSelectionView._on_quit_pressed = function (self)
 			{
 				close_on_pressed = true,
 				hotkey = "back",
-				text = "loc_popup_button_continue_game",
+				text = "loc_popup_button_continue_game"
 			},
 			{
 				close_on_pressed = true,
 				text = "loc_popup_button_quit_game",
 				callback = function ()
 					Application.quit()
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context)
@@ -481,7 +481,7 @@ ClassSelectionView._create_archetype_option_widgets = function (self)
 
 		local data = {
 			frame = frame_data,
-			option = option,
+			option = option
 		}
 
 		options_data[#options_data + 1] = data
@@ -502,20 +502,20 @@ ClassSelectionView._create_archetype_option_widgets = function (self)
 		local frame_style = frame_widget.style
 		local frame_size = {
 			frame_data.size[1] * size_ratio,
-			frame_data.size[2] * size_ratio,
+			frame_data.size[2] * size_ratio
 		}
 		local frame_texture = frame_data.texture
 		local frame_offset = {
 			frame_data.offset[1] * size_ratio,
-			frame_data.offset[2] * size_ratio,
+			frame_data.offset[2] * size_ratio
 		}
 		local icon_offset = {
 			frame_data.icon_offset[1] * size_ratio,
-			frame_data.icon_offset[2] * size_ratio,
+			frame_data.icon_offset[2] * size_ratio
 		}
 		local icon_size = {
 			ClassSelectionViewSettings.archetype_option_icon_size[1] * size_ratio,
-			ClassSelectionViewSettings.archetype_option_icon_size[2] * size_ratio,
+			ClassSelectionViewSettings.archetype_option_icon_size[2] * size_ratio
 		}
 
 		frame_style.frame.material_values.texture_map = frame_texture
@@ -578,7 +578,7 @@ ClassSelectionView._create_archetype_option_widgets = function (self)
 	self._archetype_options_frame_widgets = frame_widgets
 	self._archetype_options_select_widget = {
 		widget_left,
-		widget_right,
+		widget_right
 	}
 
 	local archetype_width, archetype_height = self:_scenegraph_size("archetype_info")
@@ -706,7 +706,7 @@ ClassSelectionView._update_archetype_info = function (self)
 	local title_style = widget.style.title
 	local title_width, title_height = self:_text_size(title, title_style, {
 		max_width,
-		2000,
+		2000
 	})
 	local initial_offset = widget.style.title.offset[2]
 
@@ -714,10 +714,15 @@ ClassSelectionView._update_archetype_info = function (self)
 	widget.style.description.offset[2] = widget.style.divider.offset[2] + widget.style.divider.size[2] + vertical_margin
 	widget.content.title = title
 	widget.content.description = Localize(selected_archetype.archetype_description)
-	widgets_by_name.corners.content.left_upper = UISettings.inventory_frames_by_archetype[selected_archetype.name].right_upper
-	widgets_by_name.corners.content.right_upper = UISettings.inventory_frames_by_archetype[selected_archetype.name].right_upper
-	widgets_by_name.corners.content.left_lower = UISettings.inventory_frames_by_archetype[selected_archetype.name].left_lower
-	widgets_by_name.corners.content.right_lower = UISettings.inventory_frames_by_archetype[selected_archetype.name].right_lower
+
+	local selected_archetype_name = selected_archetype.name
+	local corner_frames = UISettings.inventory_frames_by_archetype[selected_archetype_name]
+	local corners_widget_content = widgets_by_name.corners.content
+
+	corners_widget_content.left_lower = corner_frames.left_lower
+	corners_widget_content.left_upper = corner_frames.left_upper
+	corners_widget_content.right_lower = corner_frames.right_lower
+	corners_widget_content.right_upper = corner_frames.right_upper
 end
 
 ClassSelectionView._update_choose_button_text = function (self)
@@ -881,13 +886,13 @@ ClassSelectionView._create_archetype_abilities_info = function (self)
 			widget_icon_load_margin = 5000,
 			grid_spacing = {
 				0,
-				0,
+				0
 			},
 			grid_size = grid_size,
 			mask_size = {
 				grid_size[1] + 40,
-				grid_size[2] + mask_padding_size,
-			},
+				grid_size[2] + mask_padding_size
+			}
 		}
 		local layer = (self._draw_layer or 0) + 10
 
@@ -904,14 +909,14 @@ ClassSelectionView._create_archetype_abilities_info = function (self)
 	if archetype then
 		layout[#layout + 1] = {
 			widget_type = "video",
-			video_path = archetype.archetype_video,
+			video_path = archetype.archetype_video
 		}
 		layout[#layout + 1] = {
 			widget_type = "dynamic_spacing",
 			size = {
 				max_width,
-				25,
-			},
+				25
+			}
 		}
 
 		local nodes_to_present = {}
@@ -920,8 +925,8 @@ ClassSelectionView._create_archetype_abilities_info = function (self)
 			widget_type = "dynamic_spacing",
 			size = {
 				max_width,
-				25,
-			},
+				25
+			}
 		}
 
 		local base_class_loadout = {
@@ -929,7 +934,7 @@ ClassSelectionView._create_archetype_abilities_info = function (self)
 			blitz = {},
 			pocketable = {},
 			aura = {},
-			iconics = {},
+			iconics = {}
 		}
 		local profile = self._character_create:profile()
 		local force_base_talents = true
@@ -942,7 +947,7 @@ ClassSelectionView._create_archetype_abilities_info = function (self)
 			type = "ability",
 			widget_type = "talent_info",
 			talent = ability_talent,
-			icon = base_class_loadout.ability.icon,
+			icon = base_class_loadout.ability.icon
 		}
 
 		local blitz_talent = base_class_loadout.blitz.talent
@@ -951,7 +956,7 @@ ClassSelectionView._create_archetype_abilities_info = function (self)
 			type = "tactical",
 			widget_type = "talent_info",
 			talent = blitz_talent,
-			icon = base_class_loadout.blitz.icon,
+			icon = base_class_loadout.blitz.icon
 		}
 
 		local aura_talent = base_class_loadout.aura.talent
@@ -960,7 +965,7 @@ ClassSelectionView._create_archetype_abilities_info = function (self)
 			type = "aura",
 			widget_type = "talent_info",
 			talent = aura_talent,
-			icon = base_class_loadout.aura.icon,
+			icon = base_class_loadout.aura.icon
 		}
 
 		local iconics = base_class_loadout.iconics
@@ -971,7 +976,7 @@ ClassSelectionView._create_archetype_abilities_info = function (self)
 			nodes_to_present[#nodes_to_present + 1] = {
 				type = "iconic",
 				widget_type = "stat",
-				talent = iconic,
+				talent = iconic
 			}
 		end
 
@@ -1037,14 +1042,14 @@ ClassSelectionView._create_archetype_abilities_info = function (self)
 				if not presented_node_type_headers[node_type] then
 					layout[#layout + 1] = {
 						widget_type = "header",
-						text = Localize(settings_by_node_type.display_name),
+						text = Localize(settings_by_node_type.display_name)
 					}
 					layout[#layout + 1] = {
 						widget_type = "dynamic_spacing",
 						size = {
 							max_width,
-							10,
-						},
+							10
+						}
 					}
 					presented_node_type_headers[node_type] = true
 				end
@@ -1058,7 +1063,7 @@ ClassSelectionView._create_archetype_abilities_info = function (self)
 					icon = icon,
 					frame = frame,
 					icon_mask = icon_mask,
-					node_type = node_type,
+					node_type = node_type
 				}
 
 				if node_type ~= "iconic" then
@@ -1066,8 +1071,8 @@ ClassSelectionView._create_archetype_abilities_info = function (self)
 						widget_type = "dynamic_spacing",
 						size = {
 							max_width,
-							25,
-						},
+							25
+						}
 					}
 				end
 			end
@@ -1083,7 +1088,7 @@ ClassSelectionView._create_archetype_abilities_info = function (self)
 				if item then
 					defining_weapons[#defining_weapons + 1] = {
 						item = table.clone_instance(item),
-						display_name = weapon.display_name,
+						display_name = weapon.display_name
 					}
 				end
 			end
@@ -1094,19 +1099,19 @@ ClassSelectionView._create_archetype_abilities_info = function (self)
 				widget_type = "dynamic_spacing",
 				size = {
 					max_width,
-					20,
-				},
+					20
+				}
 			}
 			layout[#layout + 1] = {
 				widget_type = "header",
-				text = Localize("loc_class_selection_specialization_class_defining_weapons_title"),
+				text = Localize("loc_class_selection_specialization_class_defining_weapons_title")
 			}
 			layout[#layout + 1] = {
 				widget_type = "dynamic_spacing",
 				size = {
 					max_width,
-					25,
-				},
+					25
+				}
 			}
 
 			for i = 1, #defining_weapons do
@@ -1115,7 +1120,7 @@ ClassSelectionView._create_archetype_abilities_info = function (self)
 				layout[#layout + 1] = {
 					widget_type = "weapon",
 					display_name = unique_weapon.display_name,
-					item = unique_weapon.item,
+					item = unique_weapon.item
 				}
 
 				if i < #defining_weapons then
@@ -1123,8 +1128,8 @@ ClassSelectionView._create_archetype_abilities_info = function (self)
 						widget_type = "dynamic_spacing",
 						size = {
 							max_width,
-							15,
-						},
+							15
+						}
 					}
 				end
 			end
@@ -1134,8 +1139,8 @@ ClassSelectionView._create_archetype_abilities_info = function (self)
 			widget_type = "dynamic_spacing",
 			size = {
 				max_width,
-				25,
-			},
+				25
+			}
 		}
 	end
 

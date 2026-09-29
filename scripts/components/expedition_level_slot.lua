@@ -160,12 +160,12 @@ ExpeditionLevelSlot._set_script_data = function (self, unit)
 
 	script_data_to_update[#script_data_to_update + 1] = {
 		id = object.id,
-		script_data = script_data,
+		script_data = script_data
 	}
 
 	Application.console_send({
 		type = "update_script_data",
-		data = script_data_to_update,
+		data = script_data_to_update
 	})
 end
 
@@ -292,14 +292,14 @@ ExpeditionLevelSlot.component_data = {
 			"none",
 			"dsl_terrain_base_01",
 			"dsl_terrain_base_02",
-			"dsl_terrain_base_03",
+			"dsl_terrain_base_03"
 		},
 		options_values = {
 			"none",
 			"01",
 			"02",
-			"03",
-		},
+			"03"
+		}
 	},
 	mode = {
 		ui_name = "Spawn Mode",
@@ -307,12 +307,12 @@ ExpeditionLevelSlot.component_data = {
 		value = "spawn_mode_1",
 		options_keys = {
 			"default",
-			"unit",
+			"unit"
 		},
 		options_values = {
 			"spawn_mode_1",
-			"spawn_mode_2",
-		},
+			"spawn_mode_2"
+		}
 	},
 	rot_mode = {
 		category = "Only in Default Mode",
@@ -321,12 +321,12 @@ ExpeditionLevelSlot.component_data = {
 		value = "rot_mode_random",
 		options_keys = {
 			"random",
-			"slot",
+			"slot"
 		},
 		options_values = {
 			"rot_mode_random",
-			"rot_mode_slot",
-		},
+			"rot_mode_slot"
+		}
 	},
 	tags = {
 		size = 0,
@@ -341,7 +341,7 @@ ExpeditionLevelSlot.component_data = {
 			"Safe Zone Entrance",
 			"Safe Zone Exit",
 			"Interactable",
-			"Decoy",
+			"Decoy"
 		},
 		options_values = {
 			"biome_generic",
@@ -351,8 +351,8 @@ ExpeditionLevelSlot.component_data = {
 			"safe_zone_entrance",
 			"safe_zone_exit",
 			"interactable",
-			"decoy",
-		},
+			"decoy"
+		}
 	},
 	level_size = {
 		category = "Only in Default Mode",
@@ -363,45 +363,45 @@ ExpeditionLevelSlot.component_data = {
 			"16",
 			"32",
 			"48",
-			"64",
+			"64"
 		},
 		options_values = {
 			"level_size_16",
 			"level_size_32",
 			"level_size_48",
-			"level_size_64",
-		},
+			"level_size_64"
+		}
 	},
 	boolean_opportunities = {
 		category = "Only in Default Mode",
 		ui_name = "Allow Opportunity",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	boolean_traversal = {
 		category = "Only in Default Mode",
 		ui_name = "Allow Traversal",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	boolean_transition = {
 		category = "Only in Default Mode",
 		ui_name = "Allow Transition",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	boolean_extraction = {
 		category = "Only in Default Mode",
 		ui_name = "Allow Extraction",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	boolean_arrival = {
 		category = "Only in Default Mode",
 		ui_name = "Allow Arrival",
 		ui_type = "check_box",
-		value = false,
-	},
+		value = false
+	}
 }
 
 return ExpeditionLevelSlot

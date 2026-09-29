@@ -80,7 +80,7 @@ CinematicScene.component_data = {
 	name = {
 		ui_name = "Name:",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	unit_type = {
 		ui_name = "Type",
@@ -88,12 +88,12 @@ CinematicScene.component_data = {
 		value = "origin",
 		options_keys = {
 			"Origin",
-			"Destination",
+			"Destination"
 		},
 		options_values = {
 			"origin",
-			"destination",
-		},
+			"destination"
+		}
 	},
 	cinematic_name = {
 		ui_name = "Cinematic Name",
@@ -125,12 +125,13 @@ CinematicScene.component_data = {
 			"Path of Trust 08",
 			"Path of Trust 09",
 			"Traitor Captain Intro",
+			"Spillway Wizard Intro",
 			"Hub Location Intro Barber",
 			"Hub Location Intro Mission Board",
 			"Hub Location Intro Training Grounds",
 			"Hub Location Intro Contracts",
 			"Hub Location Intro Crafting",
-			"Hub Location Intro Gun Shop",
+			"Hub Location Intro Gun Shop"
 		},
 		options_values = {
 			"none",
@@ -158,13 +159,14 @@ CinematicScene.component_data = {
 			"path_of_trust_08",
 			"path_of_trust_09",
 			"traitor_captain_intro",
+			"spillway_wizard_intro",
 			"hub_location_intro_barber",
 			"hub_location_intro_mission_board",
 			"hub_location_intro_training_grounds",
 			"hub_location_intro_contracts",
 			"hub_location_intro_crafting",
-			"hub_location_intro_gun_shop",
-		},
+			"hub_location_intro_gun_shop"
+		}
 	},
 	cinematic_category = {
 		ui_name = "Cinematic Category",
@@ -221,7 +223,7 @@ CinematicScene.component_data = {
 			"Hub Location Intro Training Grounds",
 			"Hub Location Intro Contracts",
 			"Hub Location Intro Crafting",
-			"Hub Location Intro Gun Shop",
+			"Hub Location Intro Gun Shop"
 		},
 		options_values = {
 			"none",
@@ -274,25 +276,25 @@ CinematicScene.component_data = {
 			"hub_location_intro_training_grounds",
 			"hub_location_intro_contracts",
 			"hub_location_intro_crafting",
-			"hub_location_intro_gun_shop",
-		},
+			"hub_location_intro_gun_shop"
+		}
 	},
 	origin_level_name = {
 		category = "Level",
 		ui_name = "Origin Level Name",
 		ui_type = "text_box",
 		validator = "ContentPathsAllowed",
-		value = "",
+		value = ""
 	},
 	inputs = {
 		play_cutscene = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"CinematicSceneExtension",
-	},
+		"CinematicSceneExtension"
+	}
 }
 
 return CinematicScene

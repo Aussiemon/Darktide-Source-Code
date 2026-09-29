@@ -16,7 +16,7 @@ local force_field_extension_interface = {
 	"reflected_direction",
 	"on_player_enter",
 	"on_player_exit",
-	"on_death",
+	"on_death"
 }
 
 return force_field_extension_interface

@@ -41,7 +41,7 @@ VortexNodeSpawner._add_node = function (self, start_duration)
 
 	self._nodes[#self._nodes + 1] = {
 		duration = start_duration or 0,
-		spawn_particles = #vfx_particle_names > 0,
+		spawn_particles = #vfx_particle_names > 0
 	}
 end
 

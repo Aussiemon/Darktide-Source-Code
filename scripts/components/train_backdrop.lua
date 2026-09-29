@@ -16,7 +16,7 @@ TrainBackdrop.init = function (self, unit)
 		covered = self:get_data(self._unit, "enable_covered"),
 		wall_left = self:get_data(self._unit, "enable_wall_left"),
 		wall_right = self:get_data(self._unit, "enable_wall_right"),
-		flat = self:get_data(self._unit, "enable_flat"),
+		flat = self:get_data(self._unit, "enable_flat")
 	}
 	self._wagons_in_tunnel = {}
 	self._spawned_units = {}
@@ -392,7 +392,7 @@ TrainBackdrop.enable_all_chunks = function (self)
 		flat = true,
 		tunnel = true,
 		wall_left = true,
-		wall_right = true,
+		wall_right = true
 	}
 end
 
@@ -519,7 +519,7 @@ TrainBackdrop.component_data = {
 		step = 0.1,
 		ui_name = "Speed Multiplier",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	speed_dampening = {
 		decimals = 4,
@@ -528,12 +528,12 @@ TrainBackdrop.component_data = {
 		step = 0.01,
 		ui_name = "Speed Dampening",
 		ui_type = "number",
-		value = 0.01,
+		value = 0.01
 	},
 	show_train_sections = {
 		ui_name = "Debug Show Train Sections",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	chunk_units = {
 		category = "Chunk Units",
@@ -546,7 +546,7 @@ TrainBackdrop.component_data = {
 				preview = true,
 				ui_name = "Unit",
 				ui_type = "resource",
-				value = "",
+				value = ""
 			},
 			chunk_size = {
 				category = "Chunk",
@@ -554,7 +554,7 @@ TrainBackdrop.component_data = {
 				step = 1,
 				ui_name = "Size",
 				ui_type = "number",
-				value = 1,
+				value = 1
 			},
 			chunk_type = {
 				category = "Chunk",
@@ -567,8 +567,8 @@ TrainBackdrop.component_data = {
 					"covered",
 					"wall_left",
 					"wall_right",
-					"flat",
-				},
+					"flat"
+				}
 			},
 			chunk_order = {
 				category = "Chunk",
@@ -576,169 +576,169 @@ TrainBackdrop.component_data = {
 				step = 1,
 				ui_name = "Order",
 				ui_type = "number",
-				value = 1,
+				value = 1
 			},
 			chunk_flip = {
 				category = "Chunk",
 				ui_name = "Flip Chunk",
 				ui_type = "check_box",
-				value = false,
-			},
+				value = false
+			}
 		},
 		control_order = {
 			"chunk_unit",
 			"chunk_size",
 			"chunk_type",
 			"chunk_order",
-			"chunk_flip",
-		},
+			"chunk_flip"
+		}
 	},
 	enable_default = {
 		category = "Chunk Types On Spawn",
 		ui_name = "Default",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	enable_tunnel = {
 		category = "Chunk Types On Spawn",
 		ui_name = "Tunnel",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	enable_covered = {
 		category = "Chunk Types On Spawn",
 		ui_name = "Covered",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	enable_wall_left = {
 		category = "Chunk Types On Spawn",
 		ui_name = "Wall Left",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	enable_wall_right = {
 		category = "Chunk Types On Spawn",
 		ui_name = "Wall Right",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	enable_flat = {
 		category = "Chunk Types On Spawn",
 		ui_name = "Flip Chunk",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	enable_inputs = {
 		on_enter_01 = {
 			accessibility = "private",
-			type = "event",
+			type = "event"
 		},
 		on_enter_02 = {
 			accessibility = "private",
-			type = "event",
+			type = "event"
 		},
 		on_enter_03 = {
 			accessibility = "private",
-			type = "event",
+			type = "event"
 		},
 		on_enter_04 = {
 			accessibility = "private",
-			type = "event",
+			type = "event"
 		},
 		on_enter_05 = {
 			accessibility = "private",
-			type = "event",
+			type = "event"
 		},
 		on_enter_06 = {
 			accessibility = "private",
-			type = "event",
+			type = "event"
 		},
 		on_enter_07 = {
 			accessibility = "private",
-			type = "event",
+			type = "event"
 		},
 		on_enter_08 = {
 			accessibility = "private",
-			type = "event",
+			type = "event"
 		},
 		on_enter_09 = {
 			accessibility = "private",
-			type = "event",
+			type = "event"
 		},
 		on_enter_10 = {
 			accessibility = "private",
-			type = "event",
+			type = "event"
 		},
 		on_enter_11 = {
 			accessibility = "private",
-			type = "event",
+			type = "event"
 		},
 		anim_tick = {
 			accessibility = "private",
-			type = "event",
+			type = "event"
 		},
 		disable_default_chunks = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		disable_tunnel_chunks = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		disable_covered_chunks = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		disable_wall_left_chunks = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		disable_wall_right_chunks = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		disable_flat_chunks = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		enable_default_chunks = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		enable_tunnel_chunks = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		enable_covered_chunks = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		enable_wall_left_chunks = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		enable_wall_right_chunks = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		enable_flat_chunks = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		enable_all_chunks = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		start_slowdown = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		start_acceleration = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return TrainBackdrop

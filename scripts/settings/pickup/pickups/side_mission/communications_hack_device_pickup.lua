@@ -17,7 +17,7 @@ local pickup_data = {
 	spawn_rotation = Vector3Box(0, -90, 0),
 	on_pickup_func = function (pickup_unit, interactor_unit, pickup_data)
 		return
-	end,
+	end
 }
 
 return pickup_data

@@ -184,7 +184,7 @@ MainMenuBackgroundView._spawn_profile = function (self, profile)
 		ignore = false,
 		position = spawn_position,
 		rotation = spawn_rotation,
-		state_machine = companion_state_machine,
+		state_machine = companion_state_machine
 	}
 	local archetype = profile.archetype
 	local main_menu_state_machine = archetype.main_menu_state_machine
@@ -192,7 +192,7 @@ MainMenuBackgroundView._spawn_profile = function (self, profile)
 	local animations_per_archetype = MainMenuBackgroundViewSettings.animations_per_archetype
 	local animations_settings = animations_per_archetype[archetype_name]
 	local animation_event = animations_settings.initial_event
-	local profile_character_height = profile.personal and profile.personal.character_height or 1
+	local profile_character_height = profile.character_height or 1
 	local breed_name = archetype.breed
 	local breed = Breeds[breed_name]
 	local size_variation_range = breed.size_variation_range
@@ -267,7 +267,7 @@ MainMenuBackgroundView._load_profile = function (self, profile)
 	self._profiles_loading_data[#self._profiles_loading_data + 1] = {
 		profile = profile,
 		loader = profile_loader,
-		loader_index = self._profile_loader_index,
+		loader_index = self._profile_loader_index
 	}
 end
 

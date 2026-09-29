@@ -23,7 +23,7 @@ HudElementSmartTagging.init = function (self, parent, draw_layer, start_scale)
 	self._entries = {}
 	self._last_widget_hover_data = {
 		index = nil,
-		t = nil,
+		t = nil
 	}
 	self._interaction_scan_delay = HudElementSmartTaggingSettings.scan_delay
 	self._interaction_scan_delay_duration = 0
@@ -40,45 +40,45 @@ HudElementSmartTagging.init = function (self, parent, draw_layer, start_scale)
 			icon = "content/ui/materials/hud/communication_wheel/icons/for_the_emperor",
 			voice_event_data = {
 				voice_tag_concept = VoQueryConstants.concepts.on_demand_com_wheel,
-				voice_tag_id = VoQueryConstants.trigger_ids.com_wheel_vo_for_the_emperor,
+				voice_tag_id = VoQueryConstants.trigger_ids.com_wheel_vo_for_the_emperor
 			},
-			start_angle = -(math.pi / 8) * 3,
+			start_angle = -(math.pi / 8) * 3
 		},
 		{
 			display_name = "loc_communication_wheel_display_name_need_health",
 			icon = "content/ui/materials/hud/communication_wheel/icons/health",
 			chat_message_data = {
 				text = "loc_communication_wheel_need_health",
-				channel = ChannelTags.MISSION,
+				channel = ChannelTags.MISSION
 			},
 			voice_event_data = {
 				voice_tag_concept = VoQueryConstants.concepts.on_demand_com_wheel,
-				voice_tag_id = VoQueryConstants.trigger_ids.com_wheel_vo_need_health,
-			},
+				voice_tag_id = VoQueryConstants.trigger_ids.com_wheel_vo_need_health
+			}
 		},
 		{
 			display_name = "loc_communication_wheel_display_name_thanks",
 			icon = "content/ui/materials/hud/communication_wheel/icons/thanks",
 			chat_message_data = {
 				text = "loc_communication_wheel_thanks",
-				channel = ChannelTags.MISSION,
+				channel = ChannelTags.MISSION
 			},
 			voice_event_data = {
 				voice_tag_concept = VoQueryConstants.concepts.on_demand_com_wheel,
-				voice_tag_id = VoQueryConstants.trigger_ids.com_wheel_vo_thank_you,
-			},
+				voice_tag_id = VoQueryConstants.trigger_ids.com_wheel_vo_thank_you
+			}
 		},
 		{
 			display_name = "loc_communication_wheel_display_name_need_ammo",
 			icon = "content/ui/materials/hud/communication_wheel/icons/ammo",
 			chat_message_data = {
 				text = "loc_communication_wheel_need_ammo",
-				channel = ChannelTags.MISSION,
+				channel = ChannelTags.MISSION
 			},
 			voice_event_data = {
 				voice_tag_concept = VoQueryConstants.concepts.on_demand_com_wheel,
-				voice_tag_id = VoQueryConstants.trigger_ids.com_wheel_vo_need_ammo,
-			},
+				voice_tag_id = VoQueryConstants.trigger_ids.com_wheel_vo_need_ammo
+			}
 		},
 		{
 			display_name = "loc_communication_wheel_display_name_enemy",
@@ -86,9 +86,9 @@ HudElementSmartTagging.init = function (self, parent, draw_layer, start_scale)
 			tag_type = "location_threat",
 			voice_event_data = {
 				voice_tag_concept = VoQueryConstants.concepts.on_demand_com_wheel,
-				voice_tag_id = VoQueryConstants.trigger_ids.com_wheel_vo_enemy_over_here,
+				voice_tag_id = VoQueryConstants.trigger_ids.com_wheel_vo_enemy_over_here
 			},
-			start_angle = -(math.pi / 8) * 2,
+			start_angle = -(math.pi / 8) * 2
 		},
 		{
 			display_name = "loc_communication_wheel_display_name_location",
@@ -96,8 +96,8 @@ HudElementSmartTagging.init = function (self, parent, draw_layer, start_scale)
 			tag_type = "location_ping",
 			voice_event_data = {
 				voice_tag_concept = VoQueryConstants.concepts.on_demand_com_wheel,
-				voice_tag_id = VoQueryConstants.trigger_ids.com_wheel_vo_lets_go_this_way,
-			},
+				voice_tag_id = VoQueryConstants.trigger_ids.com_wheel_vo_lets_go_this_way
+			}
 		},
 		{
 			display_name = "loc_communication_wheel_display_name_attention",
@@ -105,9 +105,9 @@ HudElementSmartTagging.init = function (self, parent, draw_layer, start_scale)
 			tag_type = "location_attention",
 			voice_event_data = {
 				voice_tag_concept = VoQueryConstants.concepts.on_demand_com_wheel,
-				voice_tag_id = VoQueryConstants.trigger_ids.com_wheel_vo_over_here,
-			},
-		},
+				voice_tag_id = VoQueryConstants.trigger_ids.com_wheel_vo_over_here
+			}
+		}
 	}
 
 	self:_populate_wheel(wheel_options)
@@ -160,7 +160,7 @@ HudElementSmartTagging._setup_entries = function (self, num_entries)
 		local widget = self:_create_widget(name, definition)
 
 		entries[i] = {
-			widget = widget,
+			widget = widget
 		}
 	end
 
@@ -215,20 +215,20 @@ HudElementSmartTagging._trigger_smart_tag = function (self, template_name, targe
 	smart_tag_system:set_tag(template_name, player_unit, target_unit, target_location)
 end
 
-HudElementSmartTagging._trigger_smart_tag_interaction = function (self, tag_id, target_unit, optional_override_tag_name)
+HudElementSmartTagging._trigger_smart_tag_interaction = function (self, tag_id, target_unit, is_double_tag)
 	local parent = self._parent
 	local player_unit = parent:player_unit()
 	local smart_tag_system = Managers.state.extension:system("smart_tag_system")
 
-	smart_tag_system:trigger_tag_interaction(tag_id, player_unit, target_unit, optional_override_tag_name)
+	smart_tag_system:trigger_tag_interaction(tag_id, player_unit, target_unit, is_double_tag)
 end
 
-HudElementSmartTagging._trigger_smart_tag_unit_contextual = function (self, target_unit, alternate)
+HudElementSmartTagging._trigger_smart_tag_unit_contextual = function (self, target_unit, is_double_tag)
 	local parent = self._parent
 	local player_unit = parent:player_unit()
 	local smart_tag_system = Managers.state.extension:system("smart_tag_system")
 
-	smart_tag_system:set_contextual_unit_tag(player_unit, target_unit, alternate)
+	smart_tag_system:set_contextual_unit_tag(player_unit, target_unit, is_double_tag)
 end
 
 HudElementSmartTagging._on_tag_stop = function (self, t, ui_renderer, render_settings)
@@ -269,40 +269,21 @@ HudElementSmartTagging._on_tag_stop_callback = function (self, t, ui_renderer, r
 	local target_unit_or_marker_unit = target_unit or target_marker and target_marker.unit
 
 	if target_unit_or_marker_unit then
-		local companion_spawner_extension = ScriptUnit.has_extension(player_unit, "companion_spawner_system")
-		local can_tag_order = companion_spawner_extension and companion_spawner_extension:companion_can_tag_order()
+		local account_data = Managers.save:account_data()
+		local single_tap = account_data.input_settings.companion_command_tap == "single"
+		local smart_tag_system = Managers.state.extension:system("smart_tag_system")
+		local tag_id = smart_tag_system:unit_tag_id(target_unit_or_marker_unit)
+		local tag = smart_tag_system:unit_tag(target_unit_or_marker_unit)
+		local we_already_tagged = tag and tag:tagger_player() == player
+		local other_already_tagged = tag and not we_already_tagged
 
-		if can_tag_order then
-			local account_data = Managers.save:account_data()
-			local single_tap = account_data.input_settings.companion_command_tap == "single"
-			local smart_tag_system = Managers.state.extension:system("smart_tag_system")
-			local tag_id = smart_tag_system:unit_tag_id(target_unit_or_marker_unit)
-			local tag = smart_tag_system:unit_tag(target_unit_or_marker_unit)
-			local tag_template = tag and tag:template()
-			local companion_tag = tag_template and tag_template.companion_order
-			local we_already_tagged = tag and tag:tagger_player() == player
-			local other_already_tagged = tag and not we_already_tagged
+		if single_tap or double_tap then
+			local is_double_tag = true
 
-			if single_tap or double_tap then
-				if we_already_tagged then
-					self:_trigger_smart_tag_interaction(tag_id, target_unit_or_marker_unit, "companion_order")
-				elseif other_already_tagged then
-					if companion_tag then
-						self:_trigger_smart_tag_unit_contextual(target_unit_or_marker_unit, "companion_order")
-					else
-						self:_trigger_smart_tag_interaction(tag_id, target_unit_or_marker_unit, "companion_order")
-					end
-				else
-					self:_trigger_smart_tag_unit_contextual(target_unit_or_marker_unit, "companion_order")
-				end
-			elseif target_unit then
-				self:_handle_selected_unit(target_unit)
-
-				tag_context.enemy_tagged = true
-			elseif target_marker then
-				self:_handle_selected_marker(target_marker)
-
-				tag_context.marker_handled = true
+			if we_already_tagged or other_already_tagged then
+				self:_trigger_smart_tag_interaction(tag_id, target_unit_or_marker_unit, is_double_tag)
+			else
+				self:_trigger_smart_tag_unit_contextual(target_unit_or_marker_unit, is_double_tag)
 			end
 		elseif target_unit then
 			self:_handle_selected_unit(target_unit)
@@ -405,7 +386,7 @@ HudElementSmartTagging._on_com_wheel_stop_callback = function (self, t, ui_rende
 				wheel_context.single_tap_location_tag = {
 					tag_type = com_wheel_single_tap,
 					spawn_time = t + (DOUBLE_TAP_DELAY - (t - wheel_context.input_start_time)),
-					position = Vector3Box(target_position),
+					position = Vector3Box(target_position)
 				}
 			end
 		end
@@ -931,7 +912,7 @@ HudElementSmartTagging._handle_interaction_draw = function (self, dt, t, input_s
 					marker = best_marker,
 					tag_id = tag_id,
 					tag_template = tag_template,
-					display_name = display_name,
+					display_name = display_name
 				}
 			end
 		else
@@ -1119,7 +1100,7 @@ HudElementSmartTagging._add_smart_tag_presentation = function (self, tag_instanc
 		tag_id = tag_id,
 		player = player,
 		tagger_player = tagger_player,
-		is_my_tag = is_my_tag,
+		is_my_tag = is_my_tag
 	}
 
 	presented_smart_tags_by_tag_id[tag_id] = data
@@ -1233,7 +1214,7 @@ end
 
 local input_action_localization_params = {
 	action = "input_display_text",
-	input = "input_text",
+	input = "input_text"
 }
 
 local function _get_input_text(alias_name, input_text_key, hold_required)
@@ -1252,7 +1233,7 @@ end
 
 local description_format_localization_params = {
 	description = "description",
-	distance = "distance",
+	distance = "distance"
 }
 
 HudElementSmartTagging._update_tag_interaction_information = function (self, active_interaction_data)

@@ -4,7 +4,7 @@ local Interface = {
 	"multiplayer_privilege",
 	"communications_privilege",
 	"cross_play",
-	"update",
+	"update"
 }
 local PrivilegesManager = {}
 

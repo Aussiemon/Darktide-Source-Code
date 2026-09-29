@@ -15,36 +15,36 @@ local CATAPULTED_ANIMS = {
 	forward = {
 		enter = {
 			anim_1p = "airtime_fwd",
-			anim_3p = "airtime_bwd",
+			anim_3p = "airtime_bwd"
 		},
 		exit = {
 			anim_1p = "airtime_fwd",
-			anim_3p = "airtime_bwd",
+			anim_3p = "airtime_bwd"
 		},
 		collide = {
 			anim_1p = "airtime_fwd",
-			anim_3p = "airtime_bwd",
-		},
+			anim_3p = "airtime_bwd"
+		}
 	},
 	backward = {
 		enter = {
 			anim_1p = "airtime_bwd",
-			anim_3p = "airtime_fwd",
+			anim_3p = "airtime_fwd"
 		},
 		exit = {
 			anim_1p = "airtime_bwd",
-			anim_3p = "airtime_fwd",
+			anim_3p = "airtime_fwd"
 		},
 		collide = {
 			anim_1p = "airtime_bwd",
-			anim_3p = "airtime_fwd",
-		},
-	},
+			anim_3p = "airtime_fwd"
+		}
+	}
 }
 local SFX_SOURCE = "head"
 local STINGER_ALIAS = "disabled_enter"
 local STINGER_PROPERTIES = {
-	stinger_type = "catapulted",
+	stinger_type = "catapulted"
 }
 
 PlayerCharacterStateCatapulted.on_enter = function (self, unit, dt, t, previous_state, params)

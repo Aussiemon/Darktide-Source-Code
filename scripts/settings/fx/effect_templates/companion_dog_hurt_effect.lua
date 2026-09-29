@@ -28,7 +28,7 @@ local effect_template = {
 	stop = function (template_data, template_context)
 		template_data.source_id = nil
 		template_data.playing_id = nil
-	end,
+	end
 }
 
 return effect_template

@@ -5,7 +5,7 @@ local prop_data = {
 	name = "toxic_fog_volume",
 	unit_name = "content/environment/volumetrics/toxic_fog_volume",
 	unit_template_name = "level_prop",
-	spawn_offset = Vector3Box(0, 0, 0),
+	spawn_offset = Vector3Box(0, 0, 0)
 }
 
 return prop_data

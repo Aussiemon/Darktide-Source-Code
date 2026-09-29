@@ -12,27 +12,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_archives_activate_from_hibernation_a",
+				"mission_archives_activate_from_hibernation_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"archive_servitor",
-				},
-			},
+					"archive_servitor"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "player_prio_0",
@@ -45,32 +45,32 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo",
+				"generic_mission_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_archives_alarm",
+				"mission_archives_alarm"
 			},
 			{
 				"faction_memory",
 				"mission_archives_alarm",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_archives_alarm",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -86,13 +86,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_archives_alarm_off",
+				"mission_archives_alarm_off"
 			},
 			{
 				"user_context",
@@ -101,27 +101,27 @@ return function ()
 				args = {
 					"explicator",
 					"pilot",
-					"sergeant",
-				},
+					"sergeant"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_archives_alarm_off",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_archives_alarm_off",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -137,13 +137,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_archives_cogitator_hall",
+				"mission_archives_cogitator_hall"
 			},
 			{
 				"user_context",
@@ -152,27 +152,27 @@ return function ()
 				args = {
 					"explicator",
 					"pilot",
-					"sergeant",
-				},
+					"sergeant"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_archives_cogitator_hall",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_archives_cogitator_hall",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -188,13 +188,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_archives_deep_archives",
+				"mission_archives_deep_archives"
 			},
 			{
 				"user_context",
@@ -203,27 +203,27 @@ return function ()
 				args = {
 					"explicator",
 					"pilot",
-					"sergeant",
-				},
+					"sergeant"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_archives_deep_archives",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_archives_deep_archives",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -239,13 +239,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_archives_deeper",
+				"mission_archives_deeper"
 			},
 			{
 				"user_context",
@@ -254,27 +254,27 @@ return function ()
 				args = {
 					"explicator",
 					"pilot",
-					"sergeant",
-				},
+					"sergeant"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_archives_deeper",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_archives_deeper",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -290,13 +290,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_archives_end_event_complete",
+				"mission_archives_end_event_complete"
 			},
 			{
 				"user_context",
@@ -305,27 +305,27 @@ return function ()
 				args = {
 					"explicator",
 					"pilot",
-					"sergeant",
-				},
+					"sergeant"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_archives_end_event_complete",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_archives_end_event_complete",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -341,13 +341,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_archives_end_event_start",
+				"mission_archives_end_event_start"
 			},
 			{
 				"user_context",
@@ -356,27 +356,27 @@ return function ()
 				args = {
 					"explicator",
 					"pilot",
-					"sergeant",
-				},
+					"sergeant"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_archives_end_event_start",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_archives_end_event_start",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -392,7 +392,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -400,8 +400,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"mission_archives_start_banter_c",
-					"start_zone_direction_b",
-				},
+					"start_zone_direction_b"
+				}
 			},
 			{
 				"user_context",
@@ -410,19 +410,19 @@ return function ()
 				args = {
 					"explicator",
 					"pilot",
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -435,23 +435,23 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_archives_first_objective",
-				},
-			},
+					"mission_archives_first_objective"
+				}
+			}
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_0",
@@ -464,32 +464,32 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo",
+				"generic_mission_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_archives_front_door_a",
+				"mission_archives_front_door_a"
 			},
 			{
 				"faction_memory",
 				"mission_archives_front_door_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_archives_front_door_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_giver_default",
-		},
+			target = "mission_giver_default"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -505,15 +505,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_archives_front_door_a",
-				},
+					"mission_archives_front_door_a"
+				}
 			},
 			{
 				"user_context",
@@ -522,19 +522,19 @@ return function ()
 				args = {
 					"explicator",
 					"pilot",
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -547,23 +547,23 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"event_survive_keep_coming_a",
-				},
-			},
+					"event_survive_keep_coming_a"
+				}
+			}
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -576,32 +576,32 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"environmental_story",
+				"environmental_story"
 			},
 			{
 				"query_context",
 				"story_name",
 				OP.EQ,
-				"mission_archives_mid_conversation_one_a",
+				"mission_archives_mid_conversation_one_a"
 			},
 			{
 				"faction_memory",
 				"mission_archives_mid_conversation_one_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_archives_mid_conversation_one_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -617,34 +617,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_archives_mid_conversation_one_a",
-				},
+					"mission_archives_mid_conversation_one_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -657,32 +657,32 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"environmental_story",
+				"environmental_story"
 			},
 			{
 				"query_context",
 				"story_name",
 				OP.EQ,
-				"mission_archives_mid_conversation_three_a",
+				"mission_archives_mid_conversation_three_a"
 			},
 			{
 				"faction_memory",
 				"mission_archives_mid_conversation_three_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_archives_mid_conversation_three_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -698,34 +698,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_archives_mid_conversation_three_a",
-				},
+					"mission_archives_mid_conversation_three_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -738,32 +738,32 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"environmental_story",
+				"environmental_story"
 			},
 			{
 				"query_context",
 				"story_name",
 				OP.EQ,
-				"mission_archives_mid_conversation_two_a",
+				"mission_archives_mid_conversation_two_a"
 			},
 			{
 				"faction_memory",
 				"mission_archives_mid_conversation_two_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_archives_mid_conversation_two_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -779,34 +779,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_archives_mid_conversation_two_a",
-				},
+					"mission_archives_mid_conversation_two_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -819,44 +819,44 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"start_banter",
+				"start_banter"
 			},
 			{
 				"global_context",
 				"current_mission",
 				OP.EQ,
-				"cm_archives",
+				"cm_archives"
 			},
 			{
 				"global_context",
 				"circumstance_vo_id",
 				OP.NEQ,
-				"thischeckisdisabled",
+				"thischeckisdisabled"
 			},
 			{
 				"faction_memory",
 				"mission_archives_start_banter_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_archives_start_banter_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"user_memory",
 				"mission_archives_start_banter_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -872,34 +872,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_archives_start_banter_a",
-				},
+					"mission_archives_start_banter_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -912,39 +912,39 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_archives_start_banter_b",
-				},
+					"mission_archives_start_banter_b"
+				}
 			},
 			{
 				"user_memory",
 				"mission_archives_start_banter_a_user",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"mission_archives_start_banter_c_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -960,13 +960,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_archives_substack_alarm",
+				"mission_archives_substack_alarm"
 			},
 			{
 				"user_context",
@@ -975,27 +975,27 @@ return function ()
 				args = {
 					"explicator",
 					"pilot",
-					"sergeant",
-				},
+					"sergeant"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_archives_substack_alarm",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_archives_substack_alarm",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -1008,27 +1008,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_archives_task_complete_a",
+				"mission_archives_task_complete_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"archive_servitor",
-				},
-			},
+					"archive_servitor"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1044,13 +1044,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_archives_vault_walk",
+				"mission_archives_vault_walk"
 			},
 			{
 				"user_context",
@@ -1059,26 +1059,26 @@ return function ()
 				args = {
 					"explicator",
 					"pilot",
-					"sergeant",
-				},
+					"sergeant"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_archives_vault_walk",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_archives_vault_walk",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 end

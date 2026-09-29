@@ -20,21 +20,21 @@ local difficulty_progress_tooltip = UIWidget.create_definition({
 		pass_type = "texture",
 		style_id = "frame",
 		value = "content/ui/materials/frames/frame_tile_2px",
-		style = Styles.difficulty_progress_tooltip.frame,
+		style = Styles.difficulty_progress_tooltip.frame
 	},
 	{
 		pass_type = "rect",
 		style_id = "background",
 		value_id = "background",
-		style = Styles.difficulty_progress_tooltip.background,
+		style = Styles.difficulty_progress_tooltip.background
 	},
 	{
 		pass_type = "text",
 		style_id = "text",
 		value = "TOOLTIP TEXT",
 		value_id = "text",
-		style = Styles.difficulty_progress_tooltip.text,
-	},
+		style = Styles.difficulty_progress_tooltip.text
+	}
 }, "difficulty_stepper_tooltip")
 
 widget_definitions.difficulty_stepper = UIWidget.create_definition(StepperPassTemplates.mission_board_stepper, "difficulty_stepper")
@@ -59,7 +59,7 @@ local difficulty_progress_bar = UIWidget.create_definition({
 		change_function = _progress_bar_change_function,
 		visibility_function = function (content, style)
 			return content.progress ~= 1
-		end,
+		end
 	},
 	{
 		pass_type = "rect",
@@ -74,8 +74,8 @@ local difficulty_progress_bar = UIWidget.create_definition({
 		end,
 		visibility_function = function (content, style)
 			return content.progress ~= 1
-		end,
-	},
+		end
+	}
 }, "difficulty_progress_bar")
 
 Definitions.widget_definitions = widget_definitions

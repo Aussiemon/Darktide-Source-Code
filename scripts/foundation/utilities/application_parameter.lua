@@ -51,7 +51,7 @@ Development.init_application_parameters = function (args, do_pretty_print_args)
 	local function warn_multiple_definitions(parameter_name, old)
 		local value = application_parameters[parameter_name]
 		local t = type(value) == "table" and value or {
-			value,
+			value
 		}
 
 		Log.info("parse_application_parameters", "multiple definitions of '%s' using [%s]. old value [%s]", parameter_name, table.concat(t, ", "), table.concat(old, ", "))
@@ -127,7 +127,7 @@ Development.init_application_parameters = function (args, do_pretty_print_args)
 					else
 						local value_table = {
 							current_value,
-							value,
+							value
 						}
 
 						application_parameters[param] = value_table

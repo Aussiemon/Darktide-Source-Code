@@ -14,10 +14,10 @@ local considerations = {
 				0.60002,
 				0,
 				1,
-				0,
-			},
-		},
-	},
+				0
+			}
+		}
+	}
 }
 
 return considerations

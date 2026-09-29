@@ -2,7 +2,7 @@
 
 local Promise = require("scripts/foundation/utilities/promise")
 local PERMISSIVE_RESPONSE = {
-	has_privilege = true,
+	has_privilege = true
 }
 local PrivilegesManagerPermissive = class("PrivilegesManagerPermissive")
 

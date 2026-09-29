@@ -138,43 +138,43 @@ WeaponMaterialVariables.component_data = {
 			material_slot_name = {
 				ui_name = "Material Slot Name",
 				ui_type = "text_box",
-				value = "",
+				value = ""
 			},
 			start_time_variable_name = {
 				ui_name = "Start Time Variable",
 				ui_type = "text_box",
-				value = "",
+				value = ""
 			},
 			stop_time_variable_name = {
 				ui_name = "Stop Time Variable",
 				ui_type = "text_box",
-				value = "",
+				value = ""
 			},
 			on_off_variable_name = {
 				ui_name = "On/Off Variable",
 				ui_type = "text_box",
-				value = "",
+				value = ""
 			},
 			charge_level_variable_name = {
 				ui_name = "Charge Level Variable",
 				ui_type = "text_box",
-				value = "",
+				value = ""
 			},
 			intensity_variable_name = {
 				ui_name = "Intensity Variable",
 				ui_type = "text_box",
-				value = "",
+				value = ""
 			},
 			direction_variable_name = {
 				ui_name = "Direction Variable",
 				ui_type = "text_box",
-				value = "",
+				value = ""
 			},
 			stance_trigger_variable_name = {
 				ui_name = "Stance Trigger Variable",
 				ui_type = "text_box",
-				value = "",
-			},
+				value = ""
+			}
 		},
 		control_order = {
 			"material_slot_name",
@@ -184,9 +184,9 @@ WeaponMaterialVariables.component_data = {
 			"charge_level_variable_name",
 			"intensity_variable_name",
 			"direction_variable_name",
-			"stance_trigger_variable_name",
-		},
-	},
+			"stance_trigger_variable_name"
+		}
+	}
 }
 
 return WeaponMaterialVariables

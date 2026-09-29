@@ -9,10 +9,10 @@ local core_mutators = {
 	"mutator_drop_stolen_rations_01_pickup_medium_many_on_death",
 	"mutator_stat_trigger_stolen_rations_core",
 	"mutator_enable_twin_havoc_inventory",
-	"mutator_stolen_rations_main_path_pickup_spawns",
+	"mutator_stolen_rations_main_path_pickup_spawns"
 }
 local base_templates = CircumstanceUtils.inherit(BaseLiveEventTemplate, core_mutators, {
-	"add_stolen_rations",
+	"add_stolen_rations"
 }, "rations_core")
 
 base_templates.rations_core_darkness = nil
@@ -22,7 +22,7 @@ base_templates.rations_core_ventilation = nil
 local destroy_mutators = {
 	"mutator_more_hordes_relaxed",
 	"mutator_havoc_armored_infected",
-	"mutator_player_buff_stolen_rations_destroy",
+	"mutator_player_buff_stolen_rations_destroy"
 }
 local destroy_embers_templates = CircumstanceUtils.inherit(base_templates, destroy_mutators, nil, "rations_destroy_embers", "rations_core")
 
@@ -35,13 +35,13 @@ local recover_templates = CircumstanceUtils.inherit(base_templates, {
 	"mutator_live_abhuman_replacement",
 	"mutator_stolen_rations_headshot_parasite_enemies",
 	"mutator_stolen_rations_recover_mutant_waves",
-	"mutator_player_buff_stolen_rations_recover",
+	"mutator_player_buff_stolen_rations_recover"
 }, nil, "rations_recover", "rations_core")
 local circumstance_templates = table.reduce({
 	base_templates,
 	destroy_templates,
 	destroy_embers_templates,
-	recover_templates,
+	recover_templates
 }, table.merge, {})
 
 circumstance_templates.rations_core.ui.display_name = "loc_circumstance_stolen_rations_core_default_title"

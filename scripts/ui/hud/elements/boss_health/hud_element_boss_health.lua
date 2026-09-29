@@ -5,6 +5,7 @@ local HudElementBossHealthSettings = require("scripts/ui/hud/elements/boss_healt
 local HudElementBossToughnessSettings = require("scripts/ui/hud/elements/boss_health/hud_element_boss_toughness_settings")
 local HudHealthBarLogic = require("scripts/ui/hud/elements/hud_health_bar_logic")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local HudElementBossHealth = class("HudElementBossHealth", "HudElementBase")
 local _check_havoc_monster_health
@@ -48,7 +49,7 @@ HudElementBossHealth._setup_widget_groups = function (self)
 	self._widget_groups = {
 		single_target_widgets,
 		left_double_target_widgets,
-		right_double_target_widgets,
+		right_double_target_widgets
 	}
 end
 
@@ -74,12 +75,54 @@ end
 HudElementBossHealth.event_boss_encounter_start = function (self, unit, boss_extension)
 	local active_targets_by_unit = self._active_targets_by_unit
 	local active_targets_array = self._active_targets_array
+	local game_mode_name = Managers.state.game_mode:game_mode_name()
+
+	if game_mode_name == "shooting_range" then
+		return
+	end
 
 	if active_targets_by_unit[unit] then
 		return
 	end
 
 	local breed = ScriptUnit.extension(unit, "unit_data_system"):breed()
+	local new_priority = breed.boss_health_bar_priority or 0
+
+	if #active_targets_array >= self._max_health_bars then
+		local evict_idx
+		local lowest_priority = new_priority
+
+		for i, target in ipairs(active_targets_array) do
+			local target_breed = target.breed
+			local boss_health_bar_priority = target_breed.boss_health_bar_priority or 0
+			local target_priority = boss_health_bar_priority
+
+			if target_priority < lowest_priority then
+				lowest_priority = target_priority
+				evict_idx = i
+			end
+		end
+
+		if evict_idx then
+			local evicted_boss = active_targets_array[evict_idx]
+
+			active_targets_by_unit[evicted_boss.unit] = nil
+			self._queued_targets[#self._queued_targets + 1] = {
+				unit = evicted_boss.unit,
+				boss_extension = evicted_boss.boss_extension
+			}
+
+			table.swap_delete(active_targets_array, evict_idx)
+		else
+			self._queued_targets[#self._queued_targets + 1] = {
+				unit = unit,
+				boss_extension = boss_extension
+			}
+
+			return
+		end
+	end
+
 	local display_name = boss_extension:display_name()
 	local localized_display_name = display_name and Localize(display_name)
 	local health_extension = ScriptUnit.extension(unit, "health_system")
@@ -91,13 +134,13 @@ HudElementBossHealth.event_boss_encounter_start = function (self, unit, boss_ext
 
 		if max_health < initial_max_health and not boss_extension:is_empowered() then
 			localized_display_name = Localize("loc_weakened_monster_prefix", true, {
-				breed = localized_display_name,
+				breed = localized_display_name
 			})
 		elseif boss_extension:is_empowered() then
 			local empowered_prefix = boss_extension:is_empowered()
 
 			localized_display_name = Localize(empowered_prefix, true, {
-				breed = localized_display_name,
+				breed = localized_display_name
 			})
 		else
 			localized_display_name = _check_havoc_monster_health(initial_max_health, max_health, breed, localized_display_name)
@@ -116,7 +159,7 @@ HudElementBossHealth.event_boss_encounter_start = function (self, unit, boss_ext
 		localized_display_name = " " .. localized_display_name,
 		health_bar_logic = health_bar_logic,
 		toughness_bar_logic = toughness_bar_logic,
-		breed = breed,
+		breed = breed
 	}
 
 	active_targets_by_unit[unit] = target
@@ -144,6 +187,14 @@ HudElementBossHealth.event_boss_encounter_end = function (self, unit, boss_exten
 			self:_set_active(false)
 		else
 			self._force_update = true
+		end
+	end
+
+	if #self._queued_targets > 0 then
+		local queued = table.remove(self._queued_targets, 1)
+
+		if HEALTH_ALIVE[queued.unit] then
+			self:event_boss_encounter_start(queued.unit, queued.boss_extension)
 		end
 	end
 end
@@ -321,7 +372,7 @@ function _check_havoc_monster_health(initial_max_health, max_health, breed, loca
 
 		if max_health < multiplied_max_health then
 			localized_display_name = Localize("loc_weakened_monster_prefix", true, {
-				breed = localized_display_name,
+				breed = localized_display_name
 			})
 
 			return localized_display_name

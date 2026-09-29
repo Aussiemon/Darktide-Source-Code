@@ -7,26 +7,27 @@ ability_template.action_inputs = {
 		buffer_time = 0.5,
 		input_sequence = {
 			{
-				input = "combat_ability_pressed",
-				value = true,
-			},
-		},
-	},
+				input_alias = "wielded_input_pressed",
+				value = true
+			}
+		}
+	}
 }
 ability_template.action_input_hierarchy = {
 	{
 		input = "ability_pressed",
-		transition = "stay",
-	},
+		transition = "stay"
+	}
 }
 ability_template.actions = {
 	action_activate = {
-		ability_type = "combat_ability",
 		abort_sprint = true,
 		allowed_during_sprint = true,
 		anim = "ability_shout",
 		base_ability = true,
 		block_weapon_actions = false,
+		consume_ability_usage_cost = true,
+		consume_usage_cost_at_start = true,
 		has_husk_sound = true,
 		kind = "cryptic_discharge",
 		prevent_sprint = true,
@@ -34,16 +35,14 @@ ability_template.actions = {
 		start_input = "ability_pressed",
 		total_time = 1,
 		uninterruptible = true,
-		use_ability_charge = true,
-		use_charge_at_start = true,
-		vo_tag = "cryptic_ability_01_a",
-	},
+		vo_tag = "cryptic_ability_01_a"
+	}
 }
 ability_template.fx_sources = {}
 ability_template.ability_meta_data = {
 	activation = {
-		action_input = "ability_pressed",
-	},
+		action_input = "ability_pressed"
+	}
 }
 
 return ability_template

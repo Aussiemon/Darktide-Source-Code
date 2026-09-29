@@ -361,7 +361,7 @@ GearService.fetch_account_items_paged = function (self, item_amount, slot_filter
 			has_next = gear_list.has_next,
 			next_page = function (data)
 				return self:fetch_account_items_paged(nil, nil, gear_list.next_page(data))
-			end,
+			end
 		})
 	end):catch(function (errors)
 		local gear_list_error = unpack(errors)

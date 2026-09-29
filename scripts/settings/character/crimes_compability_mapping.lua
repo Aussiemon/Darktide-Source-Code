@@ -20,7 +20,7 @@ local compability_map = {
 	zealot_1 = "option_1",
 	zealot_2 = "option_2",
 	zealot_3 = "option_3",
-	zealot_4 = "option_4",
+	zealot_4 = "option_4"
 }
 
 return settings("crimes_compability_mapping", compability_map)

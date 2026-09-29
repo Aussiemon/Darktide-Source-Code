@@ -18,7 +18,7 @@ ScriptedFlyingAnimationExtension.init = function (self, extension_init_context, 
 	self._rotation_offset = settings.rotation_offset or {
 		0,
 		0,
-		0,
+		0
 	}
 	self._visual_rotation_node = Unit.node(self._unit, "anim_global")
 	self._corner_lean = settings.corner_lean or 0

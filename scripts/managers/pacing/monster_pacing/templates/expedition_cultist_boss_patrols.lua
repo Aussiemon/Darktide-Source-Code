@@ -12,7 +12,7 @@ local BOSS_PATROLS = {
 				"cultist_assault",
 				"cultist_shocktrooper",
 				"cultist_assault",
-				"cultist_assault",
+				"cultist_assault"
 			},
 			{
 				"cultist_gunner",
@@ -22,7 +22,7 @@ local BOSS_PATROLS = {
 				"cultist_assault",
 				"cultist_assault",
 				"cultist_assault",
-				"cultist_assault",
+				"cultist_assault"
 			},
 			{
 				"cultist_berzerker",
@@ -32,8 +32,8 @@ local BOSS_PATROLS = {
 				"cultist_melee",
 				"cultist_berzerker",
 				"cultist_melee",
-				"cultist_melee",
-			},
+				"cultist_melee"
+			}
 		},
 		{
 			{
@@ -46,7 +46,7 @@ local BOSS_PATROLS = {
 				"cultist_shocktrooper",
 				"cultist_assault",
 				"cultist_assault",
-				"cultist_shocktrooper",
+				"cultist_shocktrooper"
 			},
 			{
 				"cultist_gunner",
@@ -57,7 +57,7 @@ local BOSS_PATROLS = {
 				"cultist_assault",
 				"cultist_gunner",
 				"cultist_assault",
-				"cultist_assault",
+				"cultist_assault"
 			},
 			{
 				"cultist_berzerker",
@@ -68,56 +68,8 @@ local BOSS_PATROLS = {
 				"cultist_melee",
 				"cultist_berzerker",
 				"cultist_melee",
-				"cultist_melee",
-			},
-		},
-		{
-			{
-				"cultist_captain",
-				"cultist_shocktrooper",
-				"cultist_assault",
-				"cultist_assault",
-				"cultist_shocktrooper",
-				"cultist_assault",
-				"cultist_assault",
-				"cultist_assault",
-				"cultist_assault",
-				"cultist_assault",
-				"cultist_shocktrooper",
-				"cultist_assault",
-				"cultist_assault",
-				"cultist_shocktrooper",
-			},
-			{
-				"cultist_gunner",
-				"cultist_assault",
-				"cultist_assault",
-				"cultist_gunner",
-				"cultist_assault",
-				"cultist_assault",
-				"cultist_gunner",
-				"cultist_assault",
-				"cultist_assault",
-				"cultist_gunner",
-				"cultist_assault",
-				"cultist_assault",
-				"cultist_gunner",
-			},
-			{
-				"cultist_berzerker",
-				"cultist_melee",
-				"cultist_melee",
-				"cultist_berzerker",
-				"cultist_melee",
-				"cultist_melee",
-				"cultist_berzerker",
-				"cultist_melee",
-				"cultist_melee",
-				"cultist_berzerker",
-				"cultist_melee",
-				"cultist_melee",
-				"cultist_berzerker",
-			},
+				"cultist_melee"
+			}
 		},
 		{
 			{
@@ -131,13 +83,61 @@ local BOSS_PATROLS = {
 				"cultist_assault",
 				"cultist_assault",
 				"cultist_assault",
+				"cultist_shocktrooper",
+				"cultist_assault",
+				"cultist_assault",
+				"cultist_shocktrooper"
+			},
+			{
+				"cultist_gunner",
+				"cultist_assault",
+				"cultist_assault",
+				"cultist_gunner",
+				"cultist_assault",
+				"cultist_assault",
+				"cultist_gunner",
+				"cultist_assault",
+				"cultist_assault",
+				"cultist_gunner",
+				"cultist_assault",
+				"cultist_assault",
+				"cultist_gunner"
+			},
+			{
+				"cultist_berzerker",
+				"cultist_melee",
+				"cultist_melee",
+				"cultist_berzerker",
+				"cultist_melee",
+				"cultist_melee",
+				"cultist_berzerker",
+				"cultist_melee",
+				"cultist_melee",
+				"cultist_berzerker",
+				"cultist_melee",
+				"cultist_melee",
+				"cultist_berzerker"
+			}
+		},
+		{
+			{
+				"cultist_captain",
+				"cultist_shocktrooper",
+				"cultist_assault",
+				"cultist_assault",
+				"cultist_shocktrooper",
+				"cultist_assault",
+				"cultist_assault",
+				"cultist_assault",
+				"cultist_assault",
+				"cultist_assault",
 				"cultist_assault",
 				"cultist_assault",
 				"cultist_assault",
 				"cultist_shocktrooper",
 				"cultist_assault",
 				"cultist_assault",
-				"cultist_shocktrooper",
+				"cultist_shocktrooper"
 			},
 			{
 				"cultist_captain",
@@ -156,7 +156,7 @@ local BOSS_PATROLS = {
 				"cultist_gunner",
 				"cultist_assault",
 				"cultist_assault",
-				"cultist_gunner",
+				"cultist_gunner"
 			},
 			{
 				"cultist_berzerker",
@@ -174,7 +174,7 @@ local BOSS_PATROLS = {
 				"cultist_berzerker",
 				"cultist_melee",
 				"cultist_melee",
-				"cultist_berzerker",
+				"cultist_berzerker"
 			},
 			{
 				"chaos_ogryn_executor",
@@ -183,7 +183,7 @@ local BOSS_PATROLS = {
 				"chaos_ogryn_executor",
 				"chaos_ogryn_executor",
 				"chaos_ogryn_executor",
-				"chaos_ogryn_executor",
+				"chaos_ogryn_executor"
 			},
 			{
 				"chaos_ogryn_gunner",
@@ -192,35 +192,7 @@ local BOSS_PATROLS = {
 				"chaos_ogryn_gunner",
 				"chaos_ogryn_gunner",
 				"chaos_ogryn_gunner",
-				"chaos_ogryn_gunner",
-			},
-			{
-				"cultist_berzerker",
-				"cultist_berzerker",
-				"cultist_berzerker",
-				"cultist_berzerker",
-				"cultist_berzerker",
-				"cultist_berzerker",
-				"cultist_berzerker",
-				"cultist_berzerker",
-				"cultist_berzerker",
-				"cultist_berzerker",
-				"cultist_berzerker",
-				"cultist_berzerker",
-			},
-			{
-				"cultist_gunner",
-				"cultist_gunner",
-				"cultist_gunner",
-				"cultist_gunner",
-				"cultist_gunner",
-				"cultist_gunner",
-				"cultist_gunner",
-				"cultist_gunner",
-				"cultist_gunner",
-				"cultist_gunner",
-				"cultist_gunner",
-				"cultist_gunner",
+				"chaos_ogryn_gunner"
 			},
 			{
 				"cultist_berzerker",
@@ -234,8 +206,36 @@ local BOSS_PATROLS = {
 				"cultist_berzerker",
 				"cultist_berzerker",
 				"cultist_berzerker",
-				"cultist_berzerker",
+				"cultist_berzerker"
 			},
+			{
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner"
+			},
+			{
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker"
+			}
 		},
 		{
 			{
@@ -255,7 +255,7 @@ local BOSS_PATROLS = {
 				"cultist_shocktrooper",
 				"cultist_shocktrooper",
 				"cultist_shocktrooper",
-				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark"
 			},
 			{
 				"cultist_captain",
@@ -274,7 +274,7 @@ local BOSS_PATROLS = {
 				"cultist_gunner",
 				"cultist_gunner",
 				"cultist_gunner",
-				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner"
 			},
 			{
 				"cultist_captain",
@@ -293,7 +293,7 @@ local BOSS_PATROLS = {
 				"cultist_berzerker",
 				"cultist_berzerker",
 				"cultist_berzerker",
-				"chaos_ogryn_executor",
+				"chaos_ogryn_executor"
 			},
 			{
 				"chaos_ogryn_executor",
@@ -302,7 +302,7 @@ local BOSS_PATROLS = {
 				"chaos_ogryn_executor",
 				"chaos_ogryn_executor",
 				"chaos_ogryn_executor",
-				"chaos_ogryn_executor",
+				"chaos_ogryn_executor"
 			},
 			{
 				"cultist_shocktrooper",
@@ -316,7 +316,7 @@ local BOSS_PATROLS = {
 				"cultist_shocktrooper",
 				"cultist_shocktrooper",
 				"cultist_shocktrooper",
-				"cultist_shocktrooper",
+				"cultist_shocktrooper"
 			},
 			{
 				"cultist_gunner",
@@ -330,7 +330,7 @@ local BOSS_PATROLS = {
 				"cultist_gunner",
 				"cultist_gunner",
 				"cultist_gunner",
-				"cultist_gunner",
+				"cultist_gunner"
 			},
 			{
 				"cultist_berzerker",
@@ -347,8 +347,8 @@ local BOSS_PATROLS = {
 				"cultist_berzerker",
 				"cultist_berzerker",
 				"cultist_berzerker",
-				"cultist_berzerker",
-			},
+				"cultist_berzerker"
+			}
 		},
 		{
 			{
@@ -367,7 +367,7 @@ local BOSS_PATROLS = {
 				"cultist_shocktrooper",
 				"cultist_shocktrooper",
 				"cultist_shocktrooper",
-				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark"
 			},
 			{
 				"chaos_ogryn_bulwark",
@@ -385,7 +385,7 @@ local BOSS_PATROLS = {
 				"cultist_gunner",
 				"cultist_gunner",
 				"cultist_gunner",
-				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner"
 			},
 			{
 				"chaos_ogryn_executor",
@@ -403,7 +403,7 @@ local BOSS_PATROLS = {
 				"cultist_berzerker",
 				"cultist_berzerker",
 				"cultist_berzerker",
-				"chaos_ogryn_executor",
+				"chaos_ogryn_executor"
 			},
 			{
 				"chaos_ogryn_executor",
@@ -414,7 +414,7 @@ local BOSS_PATROLS = {
 				"chaos_ogryn_executor",
 				"chaos_ogryn_executor",
 				"chaos_ogryn_executor",
-				"chaos_ogryn_executor",
+				"chaos_ogryn_executor"
 			},
 			{
 				"chaos_ogryn_gunner",
@@ -425,7 +425,7 @@ local BOSS_PATROLS = {
 				"chaos_ogryn_gunner",
 				"chaos_ogryn_gunner",
 				"chaos_ogryn_gunner",
-				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner"
 			},
 			{
 				"cultist_berzerker",
@@ -442,7 +442,7 @@ local BOSS_PATROLS = {
 				"cultist_berzerker",
 				"cultist_berzerker",
 				"cultist_berzerker",
-				"cultist_berzerker",
+				"cultist_berzerker"
 			},
 			{
 				"cultist_gunner",
@@ -459,10 +459,10 @@ local BOSS_PATROLS = {
 				"cultist_gunner",
 				"cultist_gunner",
 				"cultist_gunner",
-				"cultist_gunner",
-			},
-		},
-	},
+				"cultist_gunner"
+			}
+		}
+	}
 }
 
 return BOSS_PATROLS

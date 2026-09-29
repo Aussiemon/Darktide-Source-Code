@@ -10,13 +10,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	panel = {
 		horizontal_alignment = "center",
@@ -24,14 +24,14 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
-	},
+			0
+		}
+	}
 }
 local widget_definitions = {
 	minion_shield_health = UIWidget.create_definition({
@@ -48,13 +48,13 @@ local widget_definitions = {
 				offset = {
 					25,
 					30,
-					2,
+					2
 				},
 				size = {
 					40,
-					40,
-				},
-			},
+					40
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -69,13 +69,13 @@ local widget_definitions = {
 				offset = {
 					25,
 					30,
-					3,
+					3
 				},
 				size = {
 					40,
-					40,
-				},
-			},
+					40
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -90,13 +90,13 @@ local widget_definitions = {
 				offset = {
 					25,
 					30,
-					3,
+					3
 				},
 				size = {
 					40,
-					40,
-				},
-			},
+					40
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -111,13 +111,13 @@ local widget_definitions = {
 				offset = {
 					-25,
 					30,
-					2,
+					2
 				},
 				size = {
 					40,
-					40,
-				},
-			},
+					40
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -132,13 +132,13 @@ local widget_definitions = {
 				offset = {
 					-25,
 					30,
-					3,
+					3
 				},
 				size = {
 					40,
-					40,
-				},
-			},
+					40
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -153,18 +153,18 @@ local widget_definitions = {
 				offset = {
 					-25,
 					30,
-					3,
+					3
 				},
 				size = {
 					40,
-					40,
-				},
-			},
-		},
-	}, "panel"),
+					40
+				}
+			}
+		}
+	}, "panel")
 }
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

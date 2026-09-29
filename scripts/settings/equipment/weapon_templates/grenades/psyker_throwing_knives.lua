@@ -4,6 +4,7 @@ local ActionInputHierarchy = require("scripts/utilities/action/action_input_hier
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
+local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
@@ -34,7 +35,7 @@ end
 
 local function _select_throw_anim(action_settings, condition_func_params)
 	local ability_extension = condition_func_params.ability_extension
-	local ability_type = action_settings.ability_type
+	local ability_type = ItemSlotSettings[condition_func_params.slot_name].ability_type
 	local charges_left = ability_extension:remaining_ability_charges(ability_type)
 	local has_charges_left = charges_left > 1
 	local anim_option_1 = action_settings.anim_event_non_last
@@ -50,28 +51,19 @@ weapon_template.action_inputs = {
 		input_sequence = {
 			{
 				input = "action_one_pressed",
-				value = true,
-			},
-		},
-	},
-	wield = {
-		buffer_time = 0,
-		clear_input_queue = true,
-		input_sequence = {
-			{
-				inputs = wield_inputs,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	rewield = {
 		buffer_time = 0,
 		clear_input_queue = true,
-		input_sequence = nil,
+		input_sequence = nil
 	},
 	force_vent = {
 		buffer_time = 0,
 		clear_input_queue = true,
-		input_sequence = nil,
+		input_sequence = nil
 	},
 	force_vent_release = {
 		buffer_time = 2,
@@ -79,18 +71,18 @@ weapon_template.action_inputs = {
 			{
 				input = "weapon_reload_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				time_window = math.huge
+			}
+		}
 	},
 	vent = {
 		buffer_time = 0,
 		input_sequence = {
 			{
 				input = "weapon_reload_hold",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	vent_release = {
 		buffer_time = 0.2,
@@ -98,9 +90,9 @@ weapon_template.action_inputs = {
 			{
 				input = "weapon_reload_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				time_window = math.huge
+			}
+		}
 	},
 	zoom_shoot = {
 		buffer_time = 0.51,
@@ -109,18 +101,18 @@ weapon_template.action_inputs = {
 			{
 				hold_input = "action_two_hold",
 				input = "action_one_pressed",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	zoom = {
 		buffer_time = 0.4,
 		input_sequence = {
 			{
 				input = "action_two_hold",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	zoom_release = {
 		buffer_time = 0.3,
@@ -128,23 +120,23 @@ weapon_template.action_inputs = {
 			{
 				input = "action_two_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				time_window = math.huge
+			}
+		}
 	},
 	inspect_start = {
 		buffer_time = 0,
 		input_sequence = {
 			{
 				input = "weapon_inspect_hold",
-				value = true,
+				value = true
 			},
 			{
 				duration = 0.2,
 				input = "weapon_inspect_hold",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	inspect_stop = {
 		buffer_time = 0.02,
@@ -152,9 +144,9 @@ weapon_template.action_inputs = {
 			{
 				input = "weapon_inspect_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				time_window = math.huge
+			}
+		}
 	},
 	inspect_3p_start = {
 		buffer_time = 0,
@@ -162,9 +154,9 @@ weapon_template.action_inputs = {
 			{
 				hold_input = "weapon_inspect_hold",
 				input = "action_two_pressed",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	inspect_3p_stop = {
 		buffer_time = 0,
@@ -172,20 +164,10 @@ weapon_template.action_inputs = {
 			{
 				hold_input = "weapon_inspect_hold",
 				input = "action_two_pressed",
-				value = true,
-			},
-		},
-	},
-	combat_ability = {
-		buffer_time = 0,
-		clear_input_queue = true,
-		input_sequence = {
-			{
-				input = "combat_ability_pressed",
-				value = true,
-			},
-		},
-	},
+				value = true
+			}
+		}
+	}
 }
 
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
@@ -196,111 +178,87 @@ weapon_template.action_input_hierarchy = {
 		transition = {
 			{
 				input = "vent_release",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "wield",
-				transition = "base",
-			},
-			{
-				input = "combat_ability",
-				transition = "base",
-			},
-		},
+				transition = "base"
+			}
+		}
 	},
 	{
 		input = "force_vent",
 		transition = {
 			{
 				input = "force_vent_release",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "wield",
-				transition = "base",
-			},
-			{
-				input = "combat_ability",
-				transition = "base",
-			},
-		},
+				transition = "base"
+			}
+		}
 	},
 	{
 		input = "zoom",
 		transition = {
 			{
 				input = "zoom_release",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "zoom_shoot",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "wield",
-				transition = "base",
-			},
-			{
-				input = "combat_ability",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "force_vent",
-				transition = "base",
-			},
-		},
+				transition = "base"
+			}
+		}
 	},
 	{
 		input = "shoot",
-		transition = "stay",
+		transition = "stay"
 	},
 	{
 		input = "wield",
-		transition = "stay",
+		transition = "stay"
 	},
 	{
 		input = "rewield",
-		transition = "stay",
-	},
-	{
-		input = "combat_ability",
-		transition = "stay",
+		transition = "stay"
 	},
 	{
 		input = "inspect_start",
 		transition = {
 			{
 				input = "inspect_stop",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "inspect_3p_start",
 				transition = {
 					{
 						input = "inspect_3p_stop",
-						transition = "previous",
+						transition = "previous"
 					},
 					{
 						input = "inspect_stop",
-						transition = "base",
-					},
-				},
-			},
-		},
-	},
+						transition = "base"
+					}
+				}
+			}
+		}
+	}
 }
 
 ActionInputHierarchy.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
-	action_unwield = {
-		allowed_during_sprint = true,
-		kind = "unwield",
-		start_input = "wield",
-		total_time = 0,
-		uninterruptible = true,
-		allowed_chain_actions = {},
-	},
 	action_rewield = {
 		allowed_during_sprint = true,
 		kind = "wield",
@@ -309,7 +267,7 @@ weapon_template.actions = {
 		uninterruptible = true,
 		anim_event_func = function (action_settings, condition_func_params, is_chain_action, previous_action)
 			local ability_extension = condition_func_params.ability_extension
-			local ability_type = "grenade_ability"
+			local ability_type = ItemSlotSettings[condition_func_params.slot_name].ability_type
 			local anim_event = "toggle_flashlight"
 			local anim_event_3p = "to_noammo"
 
@@ -323,20 +281,15 @@ weapon_template.actions = {
 		timeline_anims = {
 			[0.05] = {
 				anim_event_1p = "equip",
-				anim_event_3p = "equip_shard",
-			},
+				anim_event_3p = "equip_shard"
+			}
 		},
 		allowed_chain_actions = {
-			wield = {
-				action_name = "action_unwield",
-			},
-			combat_ability = {
-				action_name = "combat_ability",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			shoot = {
-				action_name = "action_rapid_right",
-			},
-		},
+				action_name = "action_rapid_right"
+			}
+		}
 	},
 	action_wield = {
 		allowed_during_sprint = true,
@@ -346,7 +299,7 @@ weapon_template.actions = {
 		vo_tag = "ability_gunslinger",
 		anim_event_func = function (action_settings, condition_func_params, is_chain_action, previous_action)
 			local ability_extension = condition_func_params.ability_extension
-			local ability_type = "grenade_ability"
+			local ability_type = ItemSlotSettings[condition_func_params.slot_name].ability_type
 			local anim_event = "to_noammo"
 			local anim_event_3p = "to_noammo"
 
@@ -360,29 +313,24 @@ weapon_template.actions = {
 		timeline_anims = {
 			[0.05] = {
 				anim_event_1p = "equip",
-				anim_event_3p = "equip_shard",
-			},
+				anim_event_3p = "equip_shard"
+			}
 		},
 		allowed_chain_actions = {
-			wield = {
-				action_name = "action_unwield",
-			},
-			combat_ability = {
-				action_name = "combat_ability",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			shoot = {
-				action_name = "action_rapid_right",
+				action_name = "action_rapid_right"
 			},
 			vent = {
-				action_name = "action_vent",
-			},
-		},
+				action_name = "action_vent"
+			}
+		}
 	},
 	action_rapid_right = {
-		ability_type = "grenade_ability",
 		anim_event_last = "attack_shoot_last",
 		anim_event_non_last = "attack_shoot",
 		charge_template = "psyker_throwing_knives",
+		consume_ability_usage_cost = true,
 		extra_projectile_on_crit = true,
 		fire_time = 0.25,
 		kind = "spawn_projectile",
@@ -395,62 +343,59 @@ weapon_template.actions = {
 		track_towards_position = false,
 		track_towards_target = true,
 		uninterruptible = true,
-		use_ability_charge = true,
 		vo_tag = "ability_gunslinger",
 		weapon_handling_template = "time_scale_1_5",
 		action_movement_curve = {
 			{
 				modifier = 0.5,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.4,
-				t = 0.3,
+				t = 0.3
 			},
 			{
 				modifier = 1,
-				t = 0.5,
+				t = 0.5
 			},
-			start_modifier = 0.6,
+			start_modifier = 0.6
 		},
 		allowed_chain_actions = {
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			shoot = {
 				action_name = "action_rapid_left",
-				chain_time = 0.5,
+				chain_time = 0.5
 			},
 			zoom = {
 				action_name = "action_zoom",
-				chain_time = 0.5,
+				chain_time = 0.5
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.3,
+				chain_time = 0.3
 			},
 			force_vent = {
-				action_name = "action_force_vent",
-			},
+				action_name = "action_force_vent"
+			}
 		},
 		spawn_offset = Vector3Box(0.1, -0.2, -0.22),
 		fx = {
 			crit_shoot_sfx_alias = "critical_shot_extra",
-			shoot_sfx_alias = "ranged_single_shot",
+			shoot_sfx_alias = "ranged_single_shot"
 		},
 		anim_event_func = _select_throw_anim,
 		projectile_template = ProjectileTemplates.psyker_throwing_knives,
 		projectile_template_func = _projectile_template_func,
 		smart_targeting_template = SmartTargetingTemplates.throwing_knives_default,
 		time_scale_stat_buffs = {
-			buff_stat_buffs.psyker_throwing_knife_speed_modifier,
-		},
+			buff_stat_buffs.psyker_throwing_knife_speed_modifier
+		}
 	},
 	action_rapid_left = {
-		ability_type = "grenade_ability",
 		anim_event_last = "attack_shoot_last",
 		anim_event_non_last = "attack_shoot",
 		charge_template = "psyker_throwing_knives",
+		consume_ability_usage_cost = true,
 		extra_projectile_on_crit = true,
 		fire_time = 0.25,
 		kind = "spawn_projectile",
@@ -462,47 +407,44 @@ weapon_template.actions = {
 		track_towards_position = false,
 		track_towards_target = true,
 		uninterruptible = true,
-		use_ability_charge = true,
 		vo_tag = "ability_gunslinger",
 		weapon_handling_template = "time_scale_1_5",
 		action_movement_curve = {
 			{
 				modifier = 0.5,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.4,
-				t = 0.3,
+				t = 0.3
 			},
 			{
 				modifier = 1,
-				t = 0.5,
+				t = 0.5
 			},
-			start_modifier = 0.6,
+			start_modifier = 0.6
 		},
 		allowed_chain_actions = {
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			shoot = {
 				action_name = "action_rapid_right",
-				chain_time = 0.9,
+				chain_time = 0.9
 			},
 			zoom = {
 				action_name = "action_zoom",
-				chain_time = 0.9,
+				chain_time = 0.9
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.3,
+				chain_time = 0.3
 			},
 			force_vent = {
-				action_name = "action_force_vent",
-			},
+				action_name = "action_force_vent"
+			}
 		},
 		fx = {
 			crit_shoot_sfx_alias = "critical_shot_extra",
-			shoot_sfx_alias = "ranged_single_shot",
+			shoot_sfx_alias = "ranged_single_shot"
 		},
 		spawn_offset = Vector3Box(0.1, -0.5, -0.37),
 		anim_event_func = _select_throw_anim,
@@ -510,14 +452,14 @@ weapon_template.actions = {
 		projectile_template_func = _projectile_template_func,
 		smart_targeting_template = SmartTargetingTemplates.throwing_knives_default,
 		time_scale_stat_buffs = {
-			buff_stat_buffs.psyker_throwing_knife_speed_modifier,
-		},
+			buff_stat_buffs.psyker_throwing_knife_speed_modifier
+		}
 	},
 	action_rapid_zoomed = {
-		ability_type = "grenade_ability",
 		anim_event_last = "attack_shoot_last",
 		anim_event_non_last = "attack_shoot_zoomed",
 		charge_template = "psyker_throwing_knives_homing",
+		consume_ability_usage_cost = true,
 		extra_projectile_on_crit = true,
 		fire_time = 0.25,
 		kind = "spawn_projectile",
@@ -531,40 +473,37 @@ weapon_template.actions = {
 		track_towards_position = false,
 		track_towards_target = true,
 		uninterruptible = true,
-		use_ability_charge = true,
 		vo_tag = "ability_gunslinger",
 		weapon_handling_template = "time_scale_1_5",
 		action_movement_curve = {
 			{
 				modifier = 0.5,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.4,
-				t = 0.3,
+				t = 0.3
 			},
 			{
 				modifier = 1,
-				t = 0.5,
+				t = 0.5
 			},
-			start_modifier = 0.75,
+			start_modifier = 0.75
 		},
 		allowed_chain_actions = {
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			zoom_shoot = {
 				action_name = "action_rapid_zoomed",
-				chain_time = 1.2,
+				chain_time = 1.2
 			},
 			zoom_release = {
 				action_name = "action_unzoom",
-				chain_time = 0.3,
-			},
+				chain_time = 0.3
+			}
 		},
 		fx = {
 			crit_shoot_sfx_alias = "critical_shot_extra",
-			shoot_sfx_alias = "ranged_single_shot",
+			shoot_sfx_alias = "ranged_single_shot"
 		},
 		spawn_offset = Vector3Box(0.045, -0.3, 0.2),
 		anim_event_func = _select_throw_anim,
@@ -572,11 +511,10 @@ weapon_template.actions = {
 		projectile_template_func = _aimed_projectile_template_func,
 		smart_targeting_template = SmartTargetingTemplates.throwing_knifes_single_target,
 		time_scale_stat_buffs = {
-			buff_stat_buffs.psyker_throwing_knife_speed_modifier,
-		},
+			buff_stat_buffs.psyker_throwing_knife_speed_modifier
+		}
 	},
 	action_zoom = {
-		ability_type = "grenade_ability",
 		kind = "target_finder",
 		must_have_ammo_or_charge = true,
 		soft_sticky_targeting = true,
@@ -586,7 +524,7 @@ weapon_template.actions = {
 		use_alternate_fire = true,
 		total_time = math.huge,
 		crosshair = {
-			crosshair_type = "dot",
+			crosshair_type = "dot"
 		},
 		smart_targeting_template = SmartTargetingTemplates.throwing_knifes_single_target,
 		targeting_fx = {
@@ -594,43 +532,33 @@ weapon_template.actions = {
 			has_husk_events = true,
 			husk_effect_name = "content/fx/particles/weapons/force_staff/force_staff_channel_charge",
 			wwise_event_start = "wwise/events/weapon/play_psyker_throwing_knife_aim_target_loop",
-			wwise_event_stop = "wwise/events/weapon/stop_psyker_throwing_knife_aim_target_loop",
+			wwise_event_stop = "wwise/events/weapon/stop_psyker_throwing_knife_aim_target_loop"
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			zoom_shoot = {
 				action_name = "action_rapid_zoomed",
-				chain_time = 0.5,
+				chain_time = 0.5
 			},
 			zoom_release = {
 				action_name = "action_unzoom",
-				chain_time = 0.3,
-			},
+				chain_time = 0.3
+			}
 		},
 		time_scale_stat_buffs = {
-			buff_stat_buffs.psyker_throwing_knife_speed_modifier,
-		},
+			buff_stat_buffs.psyker_throwing_knife_speed_modifier
+		}
 	},
 	action_unzoom = {
 		kind = "unaim",
 		start_input = nil,
 		total_time = 0.2,
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			zoom = {
-				action_name = "action_zoom",
-			},
-		},
+				action_name = "action_zoom"
+			}
+		}
 	},
 	action_force_vent = {
 		additional_vent_source_name = "fx_right_hand",
@@ -649,36 +577,32 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 0.4,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.4,
-				t = 0.15,
+				t = 0.15
 			},
 			{
 				modifier = 0.6,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.4,
-				t = 1,
+				t = 1
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		running_action_state_to_action_input = {
 			fully_vented = {
-				input_name = "vent_release",
-			},
+				input_name = "vent_release"
+			}
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			wield = {
-				action_name = "action_unwield",
-				chain_time = 0.15,
-			},
-		},
+			wield = BaseTemplateSettings.generate_wield_chain_actions({
+				chain_time = 0.15
+			})
+		}
 	},
 	action_vent = {
 		anim_end_event = "vent_end",
@@ -694,166 +618,109 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 0.4,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.4,
-				t = 0.15,
+				t = 0.15
 			},
 			{
 				modifier = 0.6,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.4,
-				t = 1,
+				t = 1
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		running_action_state_to_action_input = {
 			fully_vented = {
-				input_name = "vent_release",
-			},
+				input_name = "vent_release"
+			}
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			wield = {
-				action_name = "action_unwield",
-				chain_time = 0.15,
-			},
-		},
+			wield = BaseTemplateSettings.generate_wield_chain_actions({
+				chain_time = 0.15
+			})
+		}
 	},
-	combat_ability = {
-		kind = "unwield_to_specific",
-		slot_to_wield = "slot_combat_ability",
-		start_input = "combat_ability",
-		total_time = 0,
-		uninterruptible = true,
-		allowed_chain_actions = {},
-	},
-	action_inspect_3p = {
-		action_prevents_jump = true,
-		block_first_person_rotation = true,
-		can_crouch = false,
-		can_jump = false,
-		force_look = true,
-		kind = "inspect_3p",
-		lock_view = false,
-		skip_3p_anims = false,
-		stop_input = "inspect_stop",
-		total_time = math.huge,
-		anim_end_event_condition_func = function (unit, data, end_reason)
-			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
-		end,
-		crosshair = {
-			crosshair_type = "inspect",
-		},
-		allowed_chain_actions = {
-			inspect_3p_stop = {
-				action_name = "action_inspect",
-				chain_time = 1.1,
-			},
-		},
-		action_movement_curve = {
-			{
-				modifier = 0,
-				t = 0,
-			},
-			start_modifier = 0,
-		},
-	},
-	action_inspect = {
-		anim_end_event = "inspect_end",
-		anim_event = "inspect_start",
-		kind = "inspect",
-		lock_view = true,
-		skip_3p_anims = true,
-		start_input = "inspect_start",
-		stop_input = "inspect_stop",
-		total_time = math.huge,
-		crosshair = {
-			crosshair_type = "inspect",
-		},
-		allowed_chain_actions = {
-			inspect_3p_start = {
-				action_name = "action_inspect_3p",
-				chain_time = 0.75,
-			},
-		},
-	},
+	action_inspect = BaseTemplateSettings.generate_inspect_action(),
+	action_inspect_3p = BaseTemplateSettings.generate_inspect_3p_action()
 }
+
+table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
+
 weapon_template.conditional_state_to_action_input = {
 	{
 		conditional_state = "no_grenades_and_got_grenade",
-		input_name = "rewield",
-	},
+		input_name = "rewield"
+	}
 }
 weapon_template.keywords = {
-	"psyker",
+	"psyker"
 }
 weapon_template.breed_anim_state_machine_3p = {
 	cryptic = "content/characters/player/human/third_person/animations/psyker_smite",
 	human = "content/characters/player/human/third_person/animations/psyker_smite",
-	ogryn = "content/characters/player/ogryn/third_person/animations/unarmed",
+	ogryn = "content/characters/player/ogryn/third_person/animations/unarmed"
 }
 weapon_template.breed_anim_state_machine_1p = {
 	cryptic = "content/characters/player/human/first_person/animations/throwing_knives",
 	human = "content/characters/player/human/first_person/animations/throwing_knives",
-	ogryn = "content/characters/player/ogryn/first_person/animations/unarmed",
+	ogryn = "content/characters/player/ogryn/first_person/animations/unarmed"
 }
 weapon_template.alternate_fire_settings = {
 	spread_template = "no_spread",
 	start_anim_event = "to_ironsight",
 	stop_anim_event = "to_unaim_ironsight",
 	crosshair = {
-		crosshair_type = "dot",
+		crosshair_type = "dot"
 	},
 	action_movement_curve = {
 		{
 			modifier = 0.3,
-			t = 0.1,
+			t = 0.1
 		},
 		{
 			modifier = 0.3,
-			t = 0.15,
+			t = 0.15
 		},
 		{
 			modifier = 0.6,
-			t = 0.25,
+			t = 0.25
 		},
 		{
 			modifier = 0.6,
-			t = 0.5,
+			t = 0.5
 		},
 		{
 			modifier = 0.4,
-			t = 1,
+			t = 1
 		},
 		{
 			modifier = 0.3,
-			t = 2,
+			t = 2
 		},
-		start_modifier = 1,
+		start_modifier = 1
 	},
 	camera = {
 		custom_vertical_fov = 60,
 		near_range = 0.025,
-		vertical_fov = 60,
-	},
+		vertical_fov = 60
+	}
 }
 weapon_template.spread_template = "no_spread"
 weapon_template.ammo_template = "grenade"
 weapon_template.psyker_smite = true
 weapon_template.hud_configuration = {
 	uses_ammunition = true,
-	uses_overheat = false,
+	uses_overheat = false
 }
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.crosshair = {
-	crosshair_type = "dot",
+	crosshair_type = "dot"
 }
 weapon_template.hit_marker_type = "center"
 weapon_template.smart_targeting_template = SmartTargetingTemplates.throwing_knives_default
@@ -863,10 +730,10 @@ weapon_template.fx_sources = {
 	_shard_01 = "fx_shard_01",
 	_shard_02 = "fx_shard_02",
 	_shard_03 = "fx_shard_03",
-	_shard_04 = "fx_shard_04",
+	_shard_04 = "fx_shard_04"
 }
 weapon_template.wieldable_slot_scripts = {
-	"PsykerSingleTargetEffects",
+	"PsykerSingleTargetEffects"
 }
 weapon_template.dodge_template = "default"
 weapon_template.sprint_template = "default"

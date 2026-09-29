@@ -423,13 +423,13 @@ MoveablePlatform.component_data = {
 		category = "Story",
 		ui_name = "Story",
 		ui_type = "text_box",
-		value = "story_name",
+		value = "story_name"
 	},
 	story_start_immediately = {
 		category = "Story",
 		ui_name = "Start Immediately",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	story_loop_mode = {
 		category = "Story",
@@ -439,19 +439,19 @@ MoveablePlatform.component_data = {
 		options_keys = {
 			"None",
 			"Loop",
-			"Ping Pong",
+			"Ping Pong"
 		},
 		options_values = {
 			0,
 			1,
-			2,
-		},
+			2
+		}
 	},
 	story_override_forward = {
 		category = "Story",
 		ui_name = "Override Forward Story Time",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	story_time_forward = {
 		category = "Story",
@@ -459,13 +459,13 @@ MoveablePlatform.component_data = {
 		step = 0.1,
 		ui_name = "Forward Play Time (sec.)",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	story_override_backward = {
 		category = "Story",
 		ui_name = "Override Backward Story Time",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	story_time_backward = {
 		category = "Story",
@@ -473,50 +473,50 @@ MoveablePlatform.component_data = {
 		step = 0.1,
 		ui_name = "Backward Story Time (sec.)",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	player_side = {
 		ui_name = "Player Side",
 		ui_type = "text_box",
-		value = "heroes",
+		value = "heroes"
 	},
 	walls_collision = {
 		ui_name = "Walls Collision",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	walls_collision_filter = {
 		ui_name = "Walls Collision Filter",
 		ui_type = "text_box",
-		value = "default",
+		value = "default"
 	},
 	require_all_players_onboard = {
 		ui_name = "Require All Players Onboard",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	end_sound_time = {
 		ui_name = "End Sound Time",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	interactable_story_actions = {
 		category = "Interactables",
 		size = 0,
 		ui_name = "Story Actions",
-		ui_type = "text_box_array",
+		ui_type = "text_box_array"
 	},
 	interactable_hud_descriptions = {
 		category = "Interactables",
 		size = 0,
 		ui_name = "HUD Descriptions",
-		ui_type = "text_box_array",
+		ui_type = "text_box_array"
 	},
 	nav_handling_enabled = {
 		category = "Nav",
 		ui_name = "Nav Handling",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	stop_unit = {
 		category = "Nav",
@@ -524,37 +524,37 @@ MoveablePlatform.component_data = {
 		preview = true,
 		ui_name = "Stop Unit",
 		ui_type = "resource",
-		value = "",
+		value = ""
 	},
 	stop_position = {
 		category = "Nav",
 		step = 0.1,
 		ui_name = "Stop Position",
 		ui_type = "vector",
-		value = Vector3Box(0, 0, 0),
+		value = Vector3Box(0, 0, 0)
 	},
 	inputs = {
 		move_forward = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		move_backward = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		platform_toggle_loop = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		toggle_require_all_players_onboard = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
 		"MoveablePlatformExtension",
-		"InteracteeExtension",
-	},
+		"InteracteeExtension"
+	}
 }
 
 return MoveablePlatform

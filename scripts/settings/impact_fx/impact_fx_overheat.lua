@@ -16,21 +16,21 @@ local player = {
 		damage = {
 			{
 				event = "wwise/events/player/play_player_get_hit_light_2d",
-				only_1p = true,
-			},
+				only_1p = true
+			}
 		},
 		damage_reduced = {
 			{
 				event = "wwise/events/player/play_player_get_hit_light_2d",
-				only_1p = true,
-			},
+				only_1p = true
+			}
 		},
 		toughness_absorbed = {
 			{
 				event = "wwise/events/player/play_toughness_hits",
-				only_1p = true,
-			},
-		},
+				only_1p = true
+			}
+		}
 	},
 	vfx = {
 		blocked = nil,
@@ -43,7 +43,7 @@ local player = {
 		shove = nil,
 		toughness_absorbed = nil,
 		weakspot_damage = nil,
-		weakspot_died = nil,
+		weakspot_died = nil
 	},
 	linked_decal = {
 		blocked = nil,
@@ -55,7 +55,7 @@ local player = {
 		shield_blocked = nil,
 		shove = nil,
 		weakspot_damage = nil,
-		weakspot_died = nil,
+		weakspot_died = nil
 	},
 	blood_ball = {
 		blocked = nil,
@@ -67,12 +67,12 @@ local player = {
 		shield_blocked = nil,
 		shove = nil,
 		weakspot_damage = nil,
-		weakspot_died = nil,
-	},
+		weakspot_died = nil
+	}
 }
 
 return {
 	armor = {
-		[armor_types.player] = player,
-	},
+		[armor_types.player] = player
+	}
 }

@@ -5,6 +5,7 @@ local ActionAvailability = require("scripts/extension_systems/weapon/utilities/a
 local ActionHandlerSettings = require("scripts/settings/action/action_handler_settings")
 local Ammo = require("scripts/utilities/ammo")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
@@ -14,6 +15,7 @@ local proc_events = BuffSettings.proc_events
 local ActionHandler = class("ActionHandler")
 local MAX_COMBO_COUNT = NetworkConstants.action_combo_count.max
 local EMPTY_TABLE = {}
+local TRANSITION_TYPES = ActionHandlerSettings.transition_types
 local _get_active_template, _get_reset_combo
 
 ActionHandler.init = function (self, unit, data)
@@ -40,6 +42,7 @@ end
 
 ActionHandler.extensions_ready = function (self, world, unit)
 	self._visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+	self._ability_extension = ScriptUnit.extension(unit, "ability_system")
 end
 
 ActionHandler.add_component = function (self, component_name)
@@ -47,6 +50,7 @@ ActionHandler.add_component = function (self, component_name)
 	local unset_t = NetworkConstants.fixed_time_offset_unset
 
 	component.template_name = "none"
+	component.slot_name = "none"
 	component.current_action_name = "none"
 	component.previous_action_name = "none"
 	component.start_t = unset_t
@@ -56,11 +60,14 @@ ActionHandler.add_component = function (self, component_name)
 	component.is_infinite_duration = false
 	component.special_active_at_start = false
 	component.combo_count = 0
+	component.transition_type = "none"
+	component.used_input = "NO_RAW_INPUT"
+	component.action_context_id = 0
 	self._registered_components[component_name] = {
 		actions = nil,
 		running_action = nil,
 		id = component_name,
-		component = component,
+		component = component
 	}
 end
 
@@ -75,11 +82,14 @@ ActionHandler.set_action_context = function (self, action_context)
 	self._action_context = action_context
 end
 
-ActionHandler.set_active_template = function (self, id, template_name)
+ActionHandler.set_active_template = function (self, id, template_name, slot_name_or_nil)
 	local handler_data = self._registered_components[id]
 	local component = handler_data.component
 
 	component.template_name = template_name
+	component.slot_name = slot_name_or_nil or "none"
+
+	self._action_input_extension:set_active_slot(id, slot_name_or_nil)
 end
 
 ActionHandler.block_actions = function (self)
@@ -243,6 +253,16 @@ end
 local interrupting_action_data = {}
 local action_start_params = {}
 
+ActionHandler._fill_action_start_params = function (self, id, running_action, action_params, transition_type, combo_count, used_input)
+	action_start_params.is_chain_action = running_action and transition_type == TRANSITION_TYPES.chain
+	action_start_params.combo_count = combo_count
+	action_start_params.used_input = used_input
+	action_start_params.auto_completed = self._action_input_extension:last_action_auto_completed(id)
+	action_start_params.ability_extension = self._ability_extension
+	action_start_params.slot_name = action_params.wielded_slot or action_params.slot_name
+	action_start_params.ability_type = action_params.ability_type
+end
+
 ActionHandler.start_action = function (self, id, action_objects, action_name, action_params, action_settings, used_input, t, transition_type, condition_func_params, automatic_input, reset_combo_override)
 	local handler_data = self._registered_components[id]
 	local component = handler_data.component
@@ -268,10 +288,8 @@ ActionHandler.start_action = function (self, id, action_objects, action_name, ac
 	local action = action_objects[action_name]
 	local is_chain_action = transition_type == "chain"
 
-	action_start_params.is_chain_action = running_action and is_chain_action
-	action_start_params.combo_count = component.combo_count
-	action_start_params.used_input = used_input
-	action_start_params.auto_completed = self._action_input_extension:last_action_auto_completed(id)
+	self:_fill_action_start_params(id, running_action, action_params, transition_type, component.combo_count, used_input)
+
 	handler_data.running_action = action
 
 	local tweak_component = self._tweak_component
@@ -293,6 +311,9 @@ ActionHandler.start_action = function (self, id, action_objects, action_name, ac
 
 	component.end_t = is_infinite and t or t + total_time
 	component.is_infinite_duration = is_infinite
+	component.transition_type = transition_type
+	component.used_input = used_input or "NO_RAW_INPUT"
+	component.action_context_id = math.index_wrapper(component.action_context_id + 1, NetworkConstants.action_context_id.max)
 
 	local inventory_component = self._inventory_component
 	local wielded_slot = inventory_component.wielded_slot
@@ -356,7 +377,7 @@ local WIELD_ACTION_KINDS = {
 	unwield = true,
 	unwield_to_previous = true,
 	unwield_to_specific = true,
-	wield = true,
+	wield = true
 }
 
 ActionHandler._calculate_time_scale = function (self, action_settings)
@@ -490,12 +511,17 @@ ActionHandler._update_combo_count = function (self, running_action, action_setti
 	end
 end
 
-ActionHandler.server_correction_occurred = function (self, id, action_objects, action_params, actions)
+ActionHandler.server_correction_occurred = function (self, unit, from_frame, to_frame, id, action_objects, action_params, actions)
 	local handler_data = self._registered_components[id]
 	local component = handler_data.component
 	local current_action_name = component.current_action_name
 
 	if current_action_name == "none" then
+		if handler_data.running_action then
+			self:_fill_action_start_params(id, handler_data.running_action, action_params, component.transition_type, component.combo_count, component.used_input)
+			handler_data.running_action:server_correction_occurred(unit, from_frame, to_frame, "leave_action", action_start_params)
+		end
+
 		handler_data.running_action = nil
 	else
 		local action = action_objects[current_action_name]
@@ -508,7 +534,11 @@ ActionHandler.server_correction_occurred = function (self, id, action_objects, a
 			action_objects[current_action_name] = action
 		end
 
-		action:server_correction_occurred()
+		self:_fill_action_start_params(id, action, action_params, component.transition_type, component.combo_count, component.used_input)
+
+		local correction_method = handler_data.running_action ~= action and "new_action" or "resimulate"
+
+		action:server_correction_occurred(unit, from_frame, to_frame, correction_method, action_start_params)
 
 		handler_data.running_action = action
 	end
@@ -544,7 +574,7 @@ ActionHandler.stop_action = function (self, id, reason, data, t, actions, action
 
 				if chain_action_validated then
 					self._action_input_extension:action_transitioned_with_automatic_input(id, finish_reason_input, t)
-					self:start_action(id, action_objects, action_name, action_params, action_settings, nil, t, "chain", condition_func_params, reset_combo)
+					self:start_action(id, action_objects, action_name, action_params, action_settings, nil, t, TRANSITION_TYPES.chain, condition_func_params, reset_combo)
 
 					finish_action = false
 				end
@@ -592,11 +622,7 @@ ActionHandler.running_action_name = function (self, id)
 	return action_settings.name
 end
 
-ActionHandler.action_settings_from_action_input = function (self, id, actions, action_input)
-	if not actions then
-		return nil
-	end
-
+ActionHandler.action_settings_from_action_input = function (self, id, sorted_actions, action_input)
 	local registered_components = self._registered_components
 	local handler_data = registered_components[id]
 	local running_action = handler_data.running_action
@@ -607,7 +633,8 @@ ActionHandler.action_settings_from_action_input = function (self, id, actions, a
 		local current_settings
 		local current_priority = -math.huge
 
-		for name, settings in pairs(actions) do
+		for i = 1, #sorted_actions do
+			local settings = sorted_actions[i]
 			local start_input = settings.start_input
 			local priority = settings.action_priority or math.huge
 
@@ -628,7 +655,15 @@ ActionHandler.action_settings_from_action_input = function (self, id, actions, a
 		local chain_action = allowed_chain_actions[action_input]
 
 		if chain_action then
-			action_settings = actions[chain_action.action_name]
+			for i = 1, #sorted_actions do
+				local settings = sorted_actions[i]
+
+				if settings.name == chain_action.action_name then
+					action_settings = settings
+
+					break
+				end
+			end
 		end
 	end
 
@@ -802,7 +837,7 @@ ActionHandler._check_chain_actions = function (self, handler_data, current_actio
 	end
 
 	if wanted_action_name then
-		return wanted_action_name, wanted_action_settings, wanted_used_input, "chain", automatic_input, reset_combo
+		return wanted_action_name, wanted_action_settings, wanted_used_input, TRANSITION_TYPES.chain, automatic_input, reset_combo
 	else
 		return nil, nil, nil, nil, nil, nil, false
 	end
@@ -826,7 +861,18 @@ ActionHandler._validate_chain_action = function (self, chain_action, t, time_in_
 end
 
 ActionHandler._validate_single_chain_action = function (self, chain_action, t, time_in_action, time_scale, actions, condition_func_params, used_input, running_action_state)
-	local chain_time, chain_until, chain_validated
+	local chain_validated
+	local chain_time = chain_action.chain_time
+
+	if type(chain_time) == "table" then
+		chain_time = chain_time[used_input] or chain_time.default
+	end
+
+	local chain_until = chain_action.chain_until
+
+	if type(chain_until) == "table" then
+		chain_until = chain_until[used_input] or chain_until.default
+	end
 
 	if time_scale < 1 then
 		local current_action_name = self._action_context.weapon_action_component.current_action_name
@@ -834,15 +880,15 @@ ActionHandler._validate_single_chain_action = function (self, chain_action, t, t
 		local current_action_has_inverted_timescale = current_action and self._action_kinds_with_inverted_timescale[current_action.kind]
 
 		if current_action_has_inverted_timescale then
-			chain_time = chain_action.chain_time and chain_action.chain_time * time_scale
-			chain_until = chain_action.chain_until and chain_action.chain_until * time_scale
+			chain_time = chain_time and chain_time * time_scale
+			chain_until = chain_until and chain_until * time_scale
 		else
-			chain_time = chain_action.chain_time and chain_action.chain_time / time_scale
-			chain_until = chain_action.chain_until and chain_action.chain_until / time_scale
+			chain_time = chain_time and chain_time / time_scale
+			chain_until = chain_until and chain_until / time_scale
 		end
 	else
-		chain_time = chain_action.chain_time and chain_action.chain_time / time_scale
-		chain_until = chain_action.chain_until and chain_action.chain_until / time_scale
+		chain_time = chain_time and chain_time / time_scale
+		chain_until = chain_until and chain_until / time_scale
 	end
 
 	chain_validated = not chain_time or (chain_time and chain_time <= time_in_action or not not chain_until and time_in_action <= chain_until) and true
@@ -924,7 +970,7 @@ ActionHandler._check_start_actions = function (self, handler_data, t, time_in_ac
 	end
 
 	if wanted_action then
-		return wanted_action, wanted_action_settings, used_input, "start", automatic_input
+		return wanted_action, wanted_action_settings, used_input, TRANSITION_TYPES.start, automatic_input
 	else
 		return nil, nil, nil, nil, nil
 	end

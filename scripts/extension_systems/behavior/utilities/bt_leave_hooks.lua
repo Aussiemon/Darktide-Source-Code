@@ -205,6 +205,20 @@ local BtLeaveHooks = {
 		pounce_component.has_jump_off_direction = true
 		pounce_component.use_fast_jump = false
 	end,
+	wizard_boss_leave_dive_bomb = function (unit, breed, blackboard, scratchpad, action_data, t, args)
+		local spawn_component = blackboard.spawn
+		local game_session, game_object_id = spawn_component.game_session, spawn_component.game_object_id
+		local want_to_dive_bomb = GameSession.game_object_field(game_session, game_object_id, "want_to_dive_bomb")
+
+		if want_to_dive_bomb then
+			GameSession.set_game_object_field(game_session, game_object_id, "want_to_dive_bomb", false)
+
+			local boss_extension = ScriptUnit.extension(unit, "boss_system")
+			local boss_handler = boss_extension:get_boss_handler()
+
+			boss_handler:on_phase_event_triggered()
+		end
+	end
 }
 
 return BtLeaveHooks

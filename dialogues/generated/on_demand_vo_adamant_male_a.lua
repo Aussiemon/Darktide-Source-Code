@@ -7,14 +7,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__com_wheel_vo_enemy_over_here_01",
 			"loc_adamant_male_a__com_wheel_vo_enemy_over_here_03",
-			"loc_adamant_male_a__com_wheel_vo_enemy_over_here_05",
+			"loc_adamant_male_a__com_wheel_vo_enemy_over_here_05"
 		},
 		sound_events_duration = {
 			1.165094,
 			1.134896,
-			0.73726,
+			0.73726
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	com_wheel_vo_follow_you = {
 		randomize_indexes_n = 0,
@@ -22,14 +22,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__com_wheel_vo_follow_you_01",
 			"loc_adamant_male_a__com_wheel_vo_follow_you_03",
-			"loc_adamant_male_a__com_wheel_vo_follow_you_05",
+			"loc_adamant_male_a__com_wheel_vo_follow_you_05"
 		},
 		sound_events_duration = {
 			1.192854,
 			1.106219,
-			1.517531,
+			1.517531
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	com_wheel_vo_for_the_emperor = {
 		randomize_indexes_n = 0,
@@ -37,14 +37,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__com_wheel_vo_for_the_emperor_01",
 			"loc_adamant_male_a__com_wheel_vo_for_the_emperor_03",
-			"loc_adamant_male_a__com_wheel_vo_for_the_emperor_05",
+			"loc_adamant_male_a__com_wheel_vo_for_the_emperor_05"
 		},
 		sound_events_duration = {
 			1.309875,
 			1.119365,
-			1.616792,
+			1.616792
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	com_wheel_vo_location_attention = {
 		randomize_indexes_n = 0,
@@ -55,7 +55,7 @@ local on_demand_vo_adamant_male_a = {
 			"loc_adamant_male_a__com_wheel_vo_location_attention_03",
 			"loc_adamant_male_a__com_wheel_vo_location_attention_04",
 			"loc_adamant_male_a__com_wheel_vo_location_attention_05",
-			"loc_adamant_male_a__com_wheel_vo_location_attention_06",
+			"loc_adamant_male_a__com_wheel_vo_location_attention_06"
 		},
 		sound_events_duration = {
 			0.801063,
@@ -63,9 +63,9 @@ local on_demand_vo_adamant_male_a = {
 			0.929229,
 			3.45678,
 			1.005021,
-			3.45678,
+			3.45678
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	com_wheel_vo_location_ping = {
 		randomize_indexes_n = 0,
@@ -73,14 +73,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__com_wheel_vo_location_ping_01",
 			"loc_adamant_male_a__com_wheel_vo_location_ping_03",
-			"loc_adamant_male_a__com_wheel_vo_location_ping_05",
+			"loc_adamant_male_a__com_wheel_vo_location_ping_05"
 		},
 		sound_events_duration = {
 			0.937052,
 			1.029208,
-			1.014667,
+			1.014667
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	com_wheel_vo_need_ammo = {
 		randomize_indexes_n = 0,
@@ -88,14 +88,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__com_wheel_vo_need_ammo_01",
 			"loc_adamant_male_a__com_wheel_vo_need_ammo_03",
-			"loc_adamant_male_a__com_wheel_vo_need_ammo_05",
+			"loc_adamant_male_a__com_wheel_vo_need_ammo_05"
 		},
 		sound_events_duration = {
 			0.924417,
 			1.218146,
-			1.236083,
+			1.236083
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	com_wheel_vo_need_health = {
 		randomize_indexes_n = 0,
@@ -103,14 +103,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__com_wheel_vo_need_health_01",
 			"loc_adamant_male_a__com_wheel_vo_need_health_03",
-			"loc_adamant_male_a__com_wheel_vo_need_health_05",
+			"loc_adamant_male_a__com_wheel_vo_need_health_05"
 		},
 		sound_events_duration = {
 			1.148188,
 			2.467531,
-			1.517958,
+			1.517958
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	com_wheel_vo_need_that = {
 		randomize_indexes_n = 0,
@@ -118,14 +118,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__com_wheel_vo_need_that_01",
 			"loc_adamant_male_a__com_wheel_vo_need_that_03",
-			"loc_adamant_male_a__com_wheel_vo_need_that_05",
+			"loc_adamant_male_a__com_wheel_vo_need_that_05"
 		},
 		sound_events_duration = {
 			0.950479,
 			0.679667,
-			1.221875,
+			1.221875
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	com_wheel_vo_no = {
 		randomize_indexes_n = 0,
@@ -133,14 +133,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__com_wheel_vo_no_01",
 			"loc_adamant_male_a__com_wheel_vo_no_02",
-			"loc_adamant_male_a__com_wheel_vo_no_03",
+			"loc_adamant_male_a__com_wheel_vo_no_03"
 		},
 		sound_events_duration = {
 			0.541208,
 			0.618208,
-			0.772635,
+			0.772635
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	com_wheel_vo_thank_you = {
 		randomize_indexes_n = 0,
@@ -148,14 +148,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__com_wheel_vo_thank_you_01",
 			"loc_adamant_male_a__com_wheel_vo_thank_you_03",
-			"loc_adamant_male_a__com_wheel_vo_thank_you_05",
+			"loc_adamant_male_a__com_wheel_vo_thank_you_05"
 		},
 		sound_events_duration = {
 			0.985198,
 			1.583333,
-			0.799875,
+			0.799875
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	com_wheel_vo_yes = {
 		randomize_indexes_n = 0,
@@ -163,14 +163,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__com_wheel_vo_yes_01",
 			"loc_adamant_male_a__com_wheel_vo_yes_03",
-			"loc_adamant_male_a__com_wheel_vo_yes_04",
+			"loc_adamant_male_a__com_wheel_vo_yes_04"
 		},
 		sound_events_duration = {
 			0.856302,
 			0.755813,
-			0.717271,
+			0.717271
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_seen_netgunner_flee = {
 		randomize_indexes_n = 0,
@@ -181,7 +181,7 @@ local on_demand_vo_adamant_male_a = {
 			"loc_adamant_male_a__response_for_seen_netgunner_flee_03",
 			"loc_adamant_male_a__response_for_seen_netgunner_flee_04",
 			"loc_adamant_male_a__response_for_seen_netgunner_flee_05",
-			"loc_adamant_male_a__response_for_seen_netgunner_flee_06",
+			"loc_adamant_male_a__response_for_seen_netgunner_flee_06"
 		},
 		sound_events_duration = {
 			1.291229,
@@ -189,9 +189,9 @@ local on_demand_vo_adamant_male_a = {
 			1.415406,
 			2.687635,
 			1.629323,
-			3.128344,
+			3.128344
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	seen_netgunner_flee = {
 		randomize_indexes_n = 0,
@@ -204,7 +204,7 @@ local on_demand_vo_adamant_male_a = {
 			"loc_adamant_male_a__seen_netgunner_flee_05",
 			"loc_adamant_male_a__seen_netgunner_flee_06",
 			"loc_adamant_male_a__seen_netgunner_flee_07",
-			"loc_adamant_male_a__seen_netgunner_flee_08",
+			"loc_adamant_male_a__seen_netgunner_flee_08"
 		},
 		sound_events_duration = {
 			1.563875,
@@ -214,9 +214,9 @@ local on_demand_vo_adamant_male_a = {
 			1.968469,
 			1.182875,
 			2.630708,
-			1.45049,
+			1.45049
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_stimm_concentration_a = {
 		randomize_indexes_n = 0,
@@ -224,14 +224,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_stimm_concentration_a_01",
 			"loc_adamant_male_a__smart_tag_stimm_concentration_a_02",
-			"loc_adamant_male_a__smart_tag_stimm_concentration_a_03",
+			"loc_adamant_male_a__smart_tag_stimm_concentration_a_03"
 		},
 		sound_events_duration = {
 			1.332083,
 			1.251781,
-			1.323948,
+			1.323948
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_stimm_health_a = {
 		randomize_indexes_n = 0,
@@ -239,14 +239,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_stimm_health_a_01",
 			"loc_adamant_male_a__smart_tag_stimm_health_a_02",
-			"loc_adamant_male_a__smart_tag_stimm_health_a_03",
+			"loc_adamant_male_a__smart_tag_stimm_health_a_03"
 		},
 		sound_events_duration = {
 			0.808219,
 			0.850708,
-			0.995958,
+			0.995958
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_stimm_power_a = {
 		randomize_indexes_n = 0,
@@ -254,14 +254,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_stimm_power_a_01",
 			"loc_adamant_male_a__smart_tag_stimm_power_a_02",
-			"loc_adamant_male_a__smart_tag_stimm_power_a_03",
+			"loc_adamant_male_a__smart_tag_stimm_power_a_03"
 		},
 		sound_events_duration = {
 			1.032906,
 			1.045708,
-			1.024396,
+			1.024396
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_stimm_speed_a = {
 		randomize_indexes_n = 0,
@@ -269,14 +269,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_stimm_speed_a_01",
 			"loc_adamant_male_a__smart_tag_stimm_speed_a_02",
-			"loc_adamant_male_a__smart_tag_stimm_speed_a_03",
+			"loc_adamant_male_a__smart_tag_stimm_speed_a_03"
 		},
 		sound_events_duration = {
 			1.27299,
 			1.194344,
-			1.203229,
+			1.203229
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_berserker = {
 		randomize_indexes_n = 0,
@@ -284,14 +284,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_enemy_berserker_01",
 			"loc_adamant_male_a__smart_tag_vo_enemy_berserker_02",
-			"loc_adamant_male_a__smart_tag_vo_enemy_berserker_03",
+			"loc_adamant_male_a__smart_tag_vo_enemy_berserker_03"
 		},
 		sound_events_duration = {
 			0.758375,
 			0.780677,
-			0.861458,
+			0.861458
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_captain = {
 		randomize_indexes_n = 0,
@@ -299,14 +299,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_enemy_captain_01",
 			"loc_adamant_male_a__smart_tag_vo_enemy_captain_03",
-			"loc_adamant_male_a__smart_tag_vo_enemy_captain_05",
+			"loc_adamant_male_a__smart_tag_vo_enemy_captain_05"
 		},
 		sound_events_duration = {
 			1.951208,
 			1.315865,
-			1.096719,
+			1.096719
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_chaos_hound = {
 		randomize_indexes_n = 0,
@@ -314,14 +314,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_enemy_chaos_hound_01",
 			"loc_adamant_male_a__smart_tag_vo_enemy_chaos_hound_02",
-			"loc_adamant_male_a__smart_tag_vo_enemy_chaos_hound_03",
+			"loc_adamant_male_a__smart_tag_vo_enemy_chaos_hound_03"
 		},
 		sound_events_duration = {
 			0.696708,
 			0.670896,
-			0.841354,
+			0.841354
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_chaos_mutant_charger = {
 		randomize_indexes_n = 0,
@@ -329,14 +329,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_enemy_chaos_mutant_charger_01",
 			"loc_adamant_male_a__smart_tag_vo_enemy_chaos_mutant_charger_02",
-			"loc_adamant_male_a__smart_tag_vo_enemy_chaos_mutant_charger_03",
+			"loc_adamant_male_a__smart_tag_vo_enemy_chaos_mutant_charger_03"
 		},
 		sound_events_duration = {
 			0.722833,
 			0.813271,
-			0.8455,
+			0.8455
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_chaos_ogryn_armored_executor = {
 		randomize_indexes_n = 0,
@@ -344,14 +344,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_enemy_chaos_ogryn_armored_executor_01",
 			"loc_adamant_male_a__smart_tag_vo_enemy_chaos_ogryn_armored_executor_02",
-			"loc_adamant_male_a__smart_tag_vo_enemy_chaos_ogryn_armored_executor_03",
+			"loc_adamant_male_a__smart_tag_vo_enemy_chaos_ogryn_armored_executor_03"
 		},
 		sound_events_duration = {
 			0.789448,
 			0.816698,
-			0.757625,
+			0.757625
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_chaos_ogryn_bulwark = {
 		randomize_indexes_n = 0,
@@ -359,14 +359,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_enemy_chaos_ogryn_bulwark_01",
 			"loc_adamant_male_a__smart_tag_vo_enemy_chaos_ogryn_bulwark_02",
-			"loc_adamant_male_a__smart_tag_vo_enemy_chaos_ogryn_bulwark_03",
+			"loc_adamant_male_a__smart_tag_vo_enemy_chaos_ogryn_bulwark_03"
 		},
 		sound_events_duration = {
 			0.79526,
 			0.831615,
-			0.976417,
+			0.976417
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_chaos_ogryn_heavy_gunner = {
 		randomize_indexes_n = 0,
@@ -374,14 +374,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_enemy_chaos_ogryn_heavy_gunner_01",
 			"loc_adamant_male_a__smart_tag_vo_enemy_chaos_ogryn_heavy_gunner_02",
-			"loc_adamant_male_a__smart_tag_vo_enemy_chaos_ogryn_heavy_gunner_03",
+			"loc_adamant_male_a__smart_tag_vo_enemy_chaos_ogryn_heavy_gunner_03"
 		},
 		sound_events_duration = {
 			0.887417,
 			0.831302,
-			0.885125,
+			0.885125
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_chaos_poxwalker_bomber = {
 		randomize_indexes_n = 0,
@@ -389,14 +389,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_enemy_chaos_poxwalker_bomber_01",
 			"loc_adamant_male_a__smart_tag_vo_enemy_chaos_poxwalker_bomber_02",
-			"loc_adamant_male_a__smart_tag_vo_enemy_chaos_poxwalker_bomber_03",
+			"loc_adamant_male_a__smart_tag_vo_enemy_chaos_poxwalker_bomber_03"
 		},
 		sound_events_duration = {
 			1.165063,
 			0.953198,
-			1.107823,
+			1.107823
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_cultist_flamer = {
 		randomize_indexes_n = 0,
@@ -404,14 +404,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_enemy_cultist_flamer_01",
 			"loc_adamant_male_a__smart_tag_vo_enemy_cultist_flamer_02",
-			"loc_adamant_male_a__smart_tag_vo_enemy_cultist_flamer_03",
+			"loc_adamant_male_a__smart_tag_vo_enemy_cultist_flamer_03"
 		},
 		sound_events_duration = {
 			1.078896,
 			0.989354,
-			1.045406,
+			1.045406
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_cultist_grenadier = {
 		randomize_indexes_n = 0,
@@ -419,14 +419,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_enemy_cultist_grenadier_01",
 			"loc_adamant_male_a__smart_tag_vo_enemy_cultist_grenadier_02",
-			"loc_adamant_male_a__smart_tag_vo_enemy_cultist_grenadier_03",
+			"loc_adamant_male_a__smart_tag_vo_enemy_cultist_grenadier_03"
 		},
 		sound_events_duration = {
 			0.994146,
 			0.988198,
-			1.005521,
+			1.005521
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_cultist_holy_stubber_gunner = {
 		randomize_indexes_n = 0,
@@ -434,14 +434,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_enemy_cultist_holy_stubber_gunner_01",
 			"loc_adamant_male_a__smart_tag_vo_enemy_cultist_holy_stubber_gunner_02",
-			"loc_adamant_male_a__smart_tag_vo_enemy_cultist_holy_stubber_gunner_03",
+			"loc_adamant_male_a__smart_tag_vo_enemy_cultist_holy_stubber_gunner_03"
 		},
 		sound_events_duration = {
 			0.934948,
 			0.940115,
-			1.092344,
+			1.092344
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_cultist_shocktrooper = {
 		randomize_indexes_n = 0,
@@ -449,14 +449,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_enemy_cultist_shocktrooper_01",
 			"loc_adamant_male_a__smart_tag_vo_enemy_cultist_shocktrooper_02",
-			"loc_adamant_male_a__smart_tag_vo_enemy_cultist_shocktrooper_03",
+			"loc_adamant_male_a__smart_tag_vo_enemy_cultist_shocktrooper_03"
 		},
 		sound_events_duration = {
 			1.134448,
 			1.184177,
-			1.244906,
+			1.244906
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_daemonhost_witch = {
 		randomize_indexes_n = 0,
@@ -464,14 +464,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_enemy_daemonhost_witch_01",
 			"loc_adamant_male_a__smart_tag_vo_enemy_daemonhost_witch_02",
-			"loc_adamant_male_a__smart_tag_vo_enemy_daemonhost_witch_03",
+			"loc_adamant_male_a__smart_tag_vo_enemy_daemonhost_witch_03"
 		},
 		sound_events_duration = {
 			1.02674,
 			1.000417,
-			1.02124,
+			1.02124
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_daemonhost_witch_not_alerted = {
 		randomize_indexes_n = 0,
@@ -482,7 +482,7 @@ local on_demand_vo_adamant_male_a = {
 			"loc_adamant_male_a__seen_enemy_daemonhost_03",
 			"loc_adamant_male_a__seen_enemy_daemonhost_04",
 			"loc_adamant_male_a__seen_enemy_daemonhost_05",
-			"loc_adamant_male_a__seen_enemy_daemonhost_06",
+			"loc_adamant_male_a__seen_enemy_daemonhost_06"
 		},
 		sound_events_duration = {
 			0.942677,
@@ -490,7 +490,7 @@ local on_demand_vo_adamant_male_a = {
 			3.02201,
 			2.49201,
 			2.376677,
-			2.78401,
+			2.78401
 		},
 		sound_event_weights = {
 			0.1666667,
@@ -498,9 +498,9 @@ local on_demand_vo_adamant_male_a = {
 			0.1666667,
 			0.1666667,
 			0.1666667,
-			0.1666667,
+			0.1666667
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_houndmaster = {
 		randomize_indexes_n = 0,
@@ -509,15 +509,15 @@ local on_demand_vo_adamant_male_a = {
 			"loc_adamant_male_a__smart_tag_vo_enemy_houndmaster_01",
 			"loc_adamant_male_a__smart_tag_vo_enemy_houndmaster_02",
 			"loc_adamant_male_a__smart_tag_vo_enemy_houndmaster_03",
-			"loc_adamant_male_a__smart_tag_vo_enemy_houndmaster_04",
+			"loc_adamant_male_a__smart_tag_vo_enemy_houndmaster_04"
 		},
 		sound_events_duration = {
 			0.873698,
 			0.935302,
 			0.890417,
-			3.45678,
+			3.45678
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_netgunner = {
 		randomize_indexes_n = 0,
@@ -525,14 +525,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_enemy_netgunner_01",
 			"loc_adamant_male_a__smart_tag_vo_enemy_netgunner_02",
-			"loc_adamant_male_a__smart_tag_vo_enemy_netgunner_03",
+			"loc_adamant_male_a__smart_tag_vo_enemy_netgunner_03"
 		},
 		sound_events_duration = {
 			0.727083,
 			0.709594,
-			0.781521,
+			0.781521
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_plague_ogryn = {
 		randomize_indexes_n = 0,
@@ -540,27 +540,27 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_enemy_plague_ogryn_01",
 			"loc_adamant_male_a__smart_tag_vo_enemy_plague_ogryn_02",
-			"loc_adamant_male_a__smart_tag_vo_enemy_plague_ogryn_03",
+			"loc_adamant_male_a__smart_tag_vo_enemy_plague_ogryn_03"
 		},
 		sound_events_duration = {
 			1.088135,
 			1.042813,
-			1.05124,
+			1.05124
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_plasma = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
 			[1] = "loc_adamant_male_a__smart_tag_vo_enemy_plasma_01",
-			[2] = "loc_adamant_male_a__smart_tag_vo_enemy_plasma_02",
+			[2] = "loc_adamant_male_a__smart_tag_vo_enemy_plasma_02"
 		},
 		sound_events_duration = {
 			[1] = 0.865938,
-			[2] = 1.069573,
+			[2] = 1.069573
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_traitor_executor = {
 		randomize_indexes_n = 0,
@@ -568,14 +568,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_enemy_traitor_executor_01",
 			"loc_adamant_male_a__smart_tag_vo_enemy_traitor_executor_02",
-			"loc_adamant_male_a__smart_tag_vo_enemy_traitor_executor_03",
+			"loc_adamant_male_a__smart_tag_vo_enemy_traitor_executor_03"
 		},
 		sound_events_duration = {
 			0.856208,
 			1.00251,
-			0.825771,
+			0.825771
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_traitor_grenadier = {
 		randomize_indexes_n = 0,
@@ -583,14 +583,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_enemy_traitor_grenadier_01",
 			"loc_adamant_male_a__smart_tag_vo_enemy_traitor_grenadier_02",
-			"loc_adamant_male_a__smart_tag_vo_enemy_traitor_grenadier_03",
+			"loc_adamant_male_a__smart_tag_vo_enemy_traitor_grenadier_03"
 		},
 		sound_events_duration = {
 			1.204458,
 			1.075604,
-			1.253417,
+			1.253417
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_traitor_gunner = {
 		randomize_indexes_n = 0,
@@ -598,14 +598,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_enemy_traitor_gunner_01",
 			"loc_adamant_male_a__smart_tag_vo_enemy_traitor_gunner_02",
-			"loc_adamant_male_a__smart_tag_vo_enemy_traitor_gunner_03",
+			"loc_adamant_male_a__smart_tag_vo_enemy_traitor_gunner_03"
 		},
 		sound_events_duration = {
 			1.238333,
 			1.075271,
-			1.178417,
+			1.178417
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_traitor_scout_shocktrooper = {
 		randomize_indexes_n = 0,
@@ -613,14 +613,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_enemy_traitor_scout_shocktrooper_01",
 			"loc_adamant_male_a__smart_tag_vo_enemy_traitor_scout_shocktrooper_02",
-			"loc_adamant_male_a__smart_tag_vo_enemy_traitor_scout_shocktrooper_03",
+			"loc_adamant_male_a__smart_tag_vo_enemy_traitor_scout_shocktrooper_03"
 		},
 		sound_events_duration = {
 			1.494104,
 			1.350854,
-			1.36699,
+			1.36699
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_traitor_sniper = {
 		randomize_indexes_n = 0,
@@ -628,14 +628,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_enemy_traitor_sniper_01",
 			"loc_adamant_male_a__smart_tag_vo_enemy_traitor_sniper_02",
-			"loc_adamant_male_a__smart_tag_vo_enemy_traitor_sniper_03",
+			"loc_adamant_male_a__smart_tag_vo_enemy_traitor_sniper_03"
 		},
 		sound_events_duration = {
 			0.899667,
 			0.83349,
-			0.906198,
+			0.906198
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_ammo = {
 		randomize_indexes_n = 0,
@@ -643,14 +643,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_pickup_ammo_01",
 			"loc_adamant_male_a__smart_tag_vo_pickup_ammo_02",
-			"loc_adamant_male_a__smart_tag_vo_pickup_ammo_03",
+			"loc_adamant_male_a__smart_tag_vo_pickup_ammo_03"
 		},
 		sound_events_duration = {
 			0.666479,
 			0.649219,
-			0.639188,
+			0.639188
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_battery = {
 		randomize_indexes_n = 0,
@@ -658,14 +658,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_pickup_battery_01",
 			"loc_adamant_male_a__smart_tag_vo_pickup_battery_02",
-			"loc_adamant_male_a__smart_tag_vo_pickup_battery_03",
+			"loc_adamant_male_a__smart_tag_vo_pickup_battery_03"
 		},
 		sound_events_duration = {
 			0.915385,
 			0.862229,
-			0.944031,
+			0.944031
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_container = {
 		randomize_indexes_n = 0,
@@ -673,14 +673,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_pickup_container_01",
 			"loc_adamant_male_a__smart_tag_vo_pickup_container_02",
-			"loc_adamant_male_a__smart_tag_vo_pickup_container_03",
+			"loc_adamant_male_a__smart_tag_vo_pickup_container_03"
 		},
 		sound_events_duration = {
 			1.348979,
 			1.245573,
-			1.309896,
+			1.309896
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_control_rod = {
 		randomize_indexes_n = 0,
@@ -688,14 +688,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_pickup_control_rod_01",
 			"loc_adamant_male_a__smart_tag_vo_pickup_control_rod_02",
-			"loc_adamant_male_a__smart_tag_vo_pickup_control_rod_03",
+			"loc_adamant_male_a__smart_tag_vo_pickup_control_rod_03"
 		},
 		sound_events_duration = {
 			1.202125,
 			1.218729,
-			1.306385,
+			1.306385
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_deployed_ammo_crate = {
 		randomize_indexes_n = 0,
@@ -703,14 +703,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_pickup_deployed_ammo_crate_01",
 			"loc_adamant_male_a__smart_tag_vo_pickup_deployed_ammo_crate_02",
-			"loc_adamant_male_a__smart_tag_vo_pickup_deployed_ammo_crate_03",
+			"loc_adamant_male_a__smart_tag_vo_pickup_deployed_ammo_crate_03"
 		},
 		sound_events_duration = {
 			1.072708,
 			1.144031,
-			1.183823,
+			1.183823
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_deployed_medical_crate = {
 		randomize_indexes_n = 0,
@@ -718,14 +718,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_pickup_deployed_medical_crate_01",
 			"loc_adamant_male_a__smart_tag_vo_pickup_deployed_medical_crate_02",
-			"loc_adamant_male_a__smart_tag_vo_pickup_deployed_medical_crate_03",
+			"loc_adamant_male_a__smart_tag_vo_pickup_deployed_medical_crate_03"
 		},
 		sound_events_duration = {
 			1.418771,
 			1.372844,
-			1.433542,
+			1.433542
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_forge_metal = {
 		randomize_indexes_n = 0,
@@ -733,14 +733,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_pickup_forge_metal_01",
 			"loc_adamant_male_a__smart_tag_vo_pickup_forge_metal_02",
-			"loc_adamant_male_a__smart_tag_vo_pickup_forge_metal_03",
+			"loc_adamant_male_a__smart_tag_vo_pickup_forge_metal_03"
 		},
 		sound_events_duration = {
 			0.907063,
 			0.840333,
-			0.94601,
+			0.94601
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_medical_crate = {
 		randomize_indexes_n = 0,
@@ -748,14 +748,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_pickup_medical_crate_01",
 			"loc_adamant_male_a__smart_tag_vo_pickup_medical_crate_02",
-			"loc_adamant_male_a__smart_tag_vo_pickup_medical_crate_03",
+			"loc_adamant_male_a__smart_tag_vo_pickup_medical_crate_03"
 		},
 		sound_events_duration = {
 			1.0035,
 			1.13949,
-			1.070823,
+			1.070823
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_platinum = {
 		randomize_indexes_n = 0,
@@ -763,14 +763,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_pickup_platinum_01",
 			"loc_adamant_male_a__smart_tag_vo_pickup_platinum_02",
-			"loc_adamant_male_a__smart_tag_vo_pickup_platinum_03",
+			"loc_adamant_male_a__smart_tag_vo_pickup_platinum_03"
 		},
 		sound_events_duration = {
 			1.039125,
 			1.004042,
-			1.083292,
+			1.083292
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_side_mission_consumable = {
 		randomize_indexes_n = 0,
@@ -778,14 +778,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_pickup_side_mission_consumable_01",
 			"loc_adamant_male_a__smart_tag_vo_pickup_side_mission_consumable_02",
-			"loc_adamant_male_a__smart_tag_vo_pickup_side_mission_consumable_03",
+			"loc_adamant_male_a__smart_tag_vo_pickup_side_mission_consumable_03"
 		},
 		sound_events_duration = {
 			0.759281,
 			0.681927,
-			0.857594,
+			0.857594
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_side_mission_grimoire = {
 		randomize_indexes_n = 0,
@@ -793,14 +793,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_pickup_side_mission_grimoire_01",
 			"loc_adamant_male_a__smart_tag_vo_pickup_side_mission_grimoire_02",
-			"loc_adamant_male_a__smart_tag_vo_pickup_side_mission_grimoire_03",
+			"loc_adamant_male_a__smart_tag_vo_pickup_side_mission_grimoire_03"
 		},
 		sound_events_duration = {
 			0.86001,
 			0.839615,
-			0.874875,
+			0.874875
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_side_mission_tome = {
 		randomize_indexes_n = 0,
@@ -808,14 +808,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_pickup_side_mission_tome_01",
 			"loc_adamant_male_a__smart_tag_vo_pickup_side_mission_tome_02",
-			"loc_adamant_male_a__smart_tag_vo_pickup_side_mission_tome_03",
+			"loc_adamant_male_a__smart_tag_vo_pickup_side_mission_tome_03"
 		},
 		sound_events_duration = {
 			1.161719,
 			1.077708,
-			1.29275,
+			1.29275
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_small_grenade = {
 		randomize_indexes_n = 0,
@@ -823,14 +823,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_small_grenade_01",
 			"loc_adamant_male_a__smart_tag_vo_small_grenade_02",
-			"loc_adamant_male_a__smart_tag_vo_small_grenade_03",
+			"loc_adamant_male_a__smart_tag_vo_small_grenade_03"
 		},
 		sound_events_duration = {
 			0.887094,
 			0.850094,
-			0.97751,
+			0.97751
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_station_health = {
 		randomize_indexes_n = 0,
@@ -838,14 +838,14 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_station_health_01",
 			"loc_adamant_male_a__smart_tag_vo_station_health_02",
-			"loc_adamant_male_a__smart_tag_vo_station_health_03",
+			"loc_adamant_male_a__smart_tag_vo_station_health_03"
 		},
 		sound_events_duration = {
 			1.40199,
 			1.480604,
-			1.495333,
+			1.495333
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	smart_tag_vo_station_health_without_battery = {
 		randomize_indexes_n = 0,
@@ -853,15 +853,15 @@ local on_demand_vo_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_station_health_without_battery_01",
 			"loc_adamant_male_a__smart_tag_vo_station_health_without_battery_03",
-			"loc_adamant_male_a__smart_tag_vo_station_health_without_battery_05",
+			"loc_adamant_male_a__smart_tag_vo_station_health_without_battery_05"
 		},
 		sound_events_duration = {
 			1.099302,
 			1.346948,
-			1.389219,
+			1.389219
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("on_demand_vo_adamant_male_a", on_demand_vo_adamant_male_a)

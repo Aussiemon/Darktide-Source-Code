@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/settings/interaction/interaction_type_strings.lua
 
 local interaction_type_strings = {
-	"decoding",
+	"decoding"
 }
 
 return interaction_type_strings

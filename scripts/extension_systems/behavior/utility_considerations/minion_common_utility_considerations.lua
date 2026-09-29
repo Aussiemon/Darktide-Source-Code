@@ -14,9 +14,9 @@ local considerations = {
 				0.51001,
 				1,
 				1,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	melee_attack = {
 		distance_to_target = {
@@ -31,8 +31,8 @@ local considerations = {
 				0.60002,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		target_speed_away = {
 			blackboard_component = "perception",
@@ -46,8 +46,8 @@ local considerations = {
 				0.1001,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		distance_to_target_z = {
 			blackboard_component = "perception",
@@ -59,14 +59,14 @@ local considerations = {
 				0.5,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	melee_attack_elite = {
 		distance_to_target = {
@@ -81,8 +81,8 @@ local considerations = {
 				0.63002,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		target_speed_away = {
 			blackboard_component = "perception",
@@ -96,8 +96,8 @@ local considerations = {
 				0.1001,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		distance_to_target_z = {
 			blackboard_component = "perception",
@@ -109,14 +109,14 @@ local considerations = {
 				0.5,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	running_phased_melee_attack = {
 		distance_to_target = {
@@ -131,8 +131,8 @@ local considerations = {
 				0.650001,
 				1,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		distance_to_target_z = {
 			blackboard_component = "perception",
@@ -144,19 +144,19 @@ local considerations = {
 				0.5,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
+			is_condition = true
 		},
 		has_slot = {
 			blackboard_component = "slot",
 			component_field = "has_slot",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	far_ranged_follow = {
 		distance_to_target = {
@@ -171,9 +171,9 @@ local considerations = {
 				0.75,
 				0.5,
 				1,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	ranged_follow = {
 		distance_to_target = {
@@ -188,9 +188,9 @@ local considerations = {
 				0.5,
 				0.75,
 				1,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	ranged_follow_no_los = {
 		distance_to_target = {
@@ -205,15 +205,15 @@ local considerations = {
 				0.5,
 				0.75,
 				1,
-				1,
-			},
+				1
+			}
 		},
 		dont_have_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
 			invert = true,
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	move_to_combat_vector = {
 		distance_to_combat_vector = {
@@ -228,19 +228,19 @@ local considerations = {
 				0.75,
 				0.75,
 				1,
-				1,
-			},
+				1
+			}
 		},
 		has_combat_vector_position = {
 			blackboard_component = "combat_vector",
 			component_field = "has_position",
-			is_condition = true,
+			is_condition = true
 		},
 		combat_vector_is_closer = {
 			blackboard_component = "combat_vector",
 			component_field = "combat_vector_is_closer",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	move_to_combat_vector_special = {
 		distance_to_combat_vector = {
@@ -255,14 +255,14 @@ local considerations = {
 				0.75,
 				1,
 				1,
-				1,
-			},
+				1
+			}
 		},
 		has_combat_vector_position = {
 			blackboard_component = "combat_vector",
 			component_field = "has_position",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	escape_to_combat_vector = {
 		distance_to_combat_vector = {
@@ -277,8 +277,8 @@ local considerations = {
 				0.75,
 				1,
 				1,
-				1,
-			},
+				1
+			}
 		},
 		distance_to_target = {
 			blackboard_component = "perception",
@@ -296,14 +296,14 @@ local considerations = {
 				0.900001,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_combat_vector_position = {
 			blackboard_component = "combat_vector",
 			component_field = "has_position",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	escape_to_combat_vector_far = {
 		distance_to_combat_vector = {
@@ -318,8 +318,8 @@ local considerations = {
 				0.75,
 				1,
 				1,
-				1,
-			},
+				1
+			}
 		},
 		distance_to_target = {
 			blackboard_component = "perception",
@@ -337,14 +337,14 @@ local considerations = {
 				0.900001,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_combat_vector_position = {
 			blackboard_component = "combat_vector",
 			component_field = "has_position",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	run_stop_and_shoot = {
 		distance_to_combat_vector = {
@@ -361,19 +361,19 @@ local considerations = {
 				0.75,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_combat_vector_position = {
 			blackboard_component = "combat_vector",
 			component_field = "has_position",
-			is_condition = true,
+			is_condition = true
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	strafe_shoot = {
 		distance_to_combat_vector = {
@@ -388,19 +388,19 @@ local considerations = {
 				0.50001,
 				1,
 				1,
-				1,
-			},
+				1
+			}
 		},
 		has_combat_vector_position = {
 			blackboard_component = "combat_vector",
 			component_field = "has_position",
-			is_condition = true,
+			is_condition = true
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	assault_far = {
 		distance_to_target = {
@@ -415,9 +415,9 @@ local considerations = {
 				0.75,
 				1,
 				1,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	assault_close = {
 		distance_to_target = {
@@ -432,9 +432,9 @@ local considerations = {
 				0.8,
 				1,
 				1,
-				0,
-			},
-		},
+				0
+			}
+		}
 	},
 	far_combat_idle = {
 		distance_to_target = {
@@ -449,14 +449,14 @@ local considerations = {
 				0.5,
 				1,
 				1,
-				1,
-			},
+				1
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	close_combat_idle = {
 		distance_to_target = {
@@ -471,14 +471,14 @@ local considerations = {
 				0.5,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	melee_combat_idle = {
 		distance_to_target = {
@@ -493,9 +493,9 @@ local considerations = {
 				0.5,
 				0,
 				1,
-				0,
-			},
-		},
+				0
+			}
+		}
 	},
 	shoot_far = {
 		distance_to_target = {
@@ -512,14 +512,14 @@ local considerations = {
 				0.7500001,
 				0.5,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	shoot_spray_n_pray_cultist = {
 		distance_to_target = {
@@ -536,14 +536,14 @@ local considerations = {
 				0.981,
 				1,
 				1,
-				0.1,
-			},
+				0.1
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	shoot_spray_n_pray = {
 		distance_to_target = {
@@ -560,14 +560,14 @@ local considerations = {
 				0.981,
 				1,
 				1,
-				0.1,
-			},
+				0.1
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	shoot_close = {
 		distance_to_target = {
@@ -582,14 +582,14 @@ local considerations = {
 				0.900001,
 				0.25,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	plasma_gunner_shoot_utility = {
 		distance_to_target = {
@@ -606,14 +606,14 @@ local considerations = {
 				0.981,
 				1,
 				1,
-				0.1,
-			},
+				0.1
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	shoot_close = {
 		distance_to_target = {
@@ -628,14 +628,14 @@ local considerations = {
 				0.900001,
 				0.25,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	move_to_cover_shoot = {
 		distance_to_target = {
@@ -652,19 +652,19 @@ local considerations = {
 				0.900001,
 				0.2,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
+			is_condition = true
 		},
 		is_not_in_cover = {
 			blackboard_component = "cover",
 			component_field = "is_in_cover",
 			invert = true,
-			is_condition = true,
+			is_condition = true
 		},
 		last_done_time = {
 			component_field = "last_done_time",
@@ -678,22 +678,22 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
+				1
+			}
 		},
 		is_not_suppressed = {
 			blackboard_component = "suppression",
 			component_field = "is_suppressed",
 			invert = true,
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	has_cover = {
 		has_cover = {
 			blackboard_component = "cover",
 			component_field = "has_cover",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	shoot_suppressive = {
 		distance_to_target = {
@@ -708,9 +708,9 @@ local considerations = {
 				0.900001,
 				0,
 				1,
-				0,
-			},
-		},
+				0
+			}
+		}
 	},
 	ranged_elite_melee = {
 		distance_to_target = {
@@ -725,8 +725,8 @@ local considerations = {
 				0.57002,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		distance_to_target_z = {
 			blackboard_component = "perception",
@@ -738,14 +738,14 @@ local considerations = {
 				0.5,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	melee_attack_bayonet = {
 		distance_to_target = {
@@ -760,8 +760,8 @@ local considerations = {
 				0.60002,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		target_speed_away = {
 			blackboard_component = "perception",
@@ -775,8 +775,8 @@ local considerations = {
 				0.1001,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		distance_to_target_z = {
 			blackboard_component = "perception",
@@ -788,21 +788,21 @@ local considerations = {
 				0.5,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	has_line_of_sight = {
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	frag_grenade = {
 		distance_to_target = {
@@ -817,13 +817,13 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
+				1
+			}
 		},
 		has_good_last_los_position = {
 			blackboard_component = "perception",
 			component_field = "has_good_last_los_position",
-			is_condition = true,
+			is_condition = true
 		},
 		last_done_time = {
 			component_field = "last_done_time",
@@ -837,9 +837,9 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	sergeant_shout = {
 		last_done_time = {
@@ -854,10 +854,10 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
-		},
-	},
+				1
+			}
+		}
+	}
 }
 
 return considerations

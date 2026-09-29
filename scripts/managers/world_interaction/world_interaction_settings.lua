@@ -9,8 +9,8 @@ local world_interaction_settings = {
 		window_size = 30,
 		default_texture_world_size = {
 			1.5,
-			1.5,
-		},
+			1.5
+		}
 	},
 	water = {
 		debug_water = false,
@@ -28,11 +28,11 @@ local world_interaction_settings = {
 		window_size = 30,
 		default_ripple_start_size = {
 			0.5,
-			0.5,
+			0.5
 		},
 		ripple_stretch_multiplier = {
 			1,
-			2,
+			2
 		},
 		splash = {
 			default_material = "content/materials/default_water_ripple_circle",
@@ -41,14 +41,14 @@ local world_interaction_settings = {
 			timer_ref = 4,
 			start_size = {
 				0.2,
-				0.2,
+				0.2
 			},
 			stretch_multiplier = {
 				1,
-				1,
-			},
-		},
-	},
+				1
+			}
+		}
+	}
 }
 
 return settings("WorldInteractionSettings", world_interaction_settings)

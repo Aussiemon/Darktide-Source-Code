@@ -19,16 +19,16 @@ local prop_data = {
 			actors = {
 				"c_intact",
 				"c_intact_destructible",
-				"c_broken",
-			},
-		},
+				"c_broken"
+			}
+		}
 	},
 	tags = {
 		point_cost = nil,
 		tags = {
-			hazard = true,
-		},
-	},
+			hazard = true
+		}
+	}
 }
 
 return prop_data

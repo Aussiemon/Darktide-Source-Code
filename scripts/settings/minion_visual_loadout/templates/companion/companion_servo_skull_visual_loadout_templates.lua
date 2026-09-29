@@ -3,7 +3,7 @@
 local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local special_rules = SpecialRulesSettings.special_rules
 local templates = {
-	companion_servo_skull = {},
+	companion_servo_skull = {}
 }
 
 local function _is_variant(wanted_special_rule)
@@ -19,10 +19,10 @@ local hacking = {
 			is_weapon = true,
 			use_outline = false,
 			items = {
-				"content/items/characters/companion/companion_servo_skull/attachments/laspistol_functional",
-			},
-		},
-	},
+				"content/items/characters/companion/companion_servo_skull/attachments/laspistol_functional"
+			}
+		}
+	}
 }
 local medical = {
 	availability_func = _is_variant(special_rules.cryptic_servo_skull_inject_ally),
@@ -31,10 +31,10 @@ local medical = {
 			is_weapon = true,
 			use_outline = true,
 			items = {
-				"content/items/characters/companion/companion_servo_skull/gear_full/cryptic_servo_skull_medicae_var_01",
-			},
-		},
-	},
+				"content/items/characters/companion/companion_servo_skull/gear_full/cryptic_servo_skull_medicae_var_01"
+			}
+		}
+	}
 }
 local flamethrower = {
 	availability_func = _is_variant(special_rules.cryptic_servo_skull_flamethrower),
@@ -43,16 +43,16 @@ local flamethrower = {
 			is_weapon = true,
 			use_outline = true,
 			items = {
-				"content/items/characters/companion/companion_servo_skull/gear_full/cryptic_servo_skull_flamethrower_var_01",
-			},
-		},
-	},
+				"content/items/characters/companion/companion_servo_skull/gear_full/cryptic_servo_skull_flamethrower_var_01"
+			}
+		}
+	}
 }
 
 templates.companion_servo_skull.default = {
 	hacking,
 	medical,
-	flamethrower,
+	flamethrower
 }
 
 return templates

@@ -37,19 +37,19 @@ local ui_hud_settings = {
 		HudElementTacticalOverlay = default_element_draw_layer + 100,
 		HudElementTeamPanelHandler = default_element_draw_layer,
 		HudElementWeaponCounter = default_element_draw_layer + 50,
-		HudElementWieldInfo = default_element_draw_layer + 10,
+		HudElementWieldInfo = default_element_draw_layer + 10
 	},
 	bloom_settings = {
 		offset_falloffs = {
 			0,
 			0.9,
-			0.3,
+			0.3
 		},
 		ui_bloom_tints = {
 			0.617,
 			0.491,
-			0.238,
-		},
+			0.238
+		}
 	},
 	color_tint_main_1 = Color.terminal_text_header(255, true),
 	color_tint_main_2 = Color.terminal_text_body(255, true),
@@ -71,13 +71,13 @@ local ui_hud_settings = {
 		150,
 		0,
 		0,
-		0,
+		0
 	},
 	color_tint_1 = {
 		255,
 		255,
 		255,
-		255,
+		255
 	},
 	color_tint_2 = Color.ui_orange_light(153, true),
 	color_tint_3 = Color.ui_orange_dark(153, true),
@@ -101,7 +101,7 @@ local ui_hud_settings = {
 		netted = "content/ui/materials/icons/player_states/incapacitated",
 		pounced = "content/ui/materials/icons/player_states/incapacitated",
 		vortex_grabbed = "content/ui/materials/icons/player_states/incapacitated",
-		warp_grabbed = "content/ui/materials/icons/player_states/incapacitated",
+		warp_grabbed = "content/ui/materials/icons/player_states/incapacitated"
 	},
 	player_status_colors = {
 		dead = Color.ui_hud_green_super_light(255, true),
@@ -115,8 +115,8 @@ local ui_hud_settings = {
 		grabbed = Color.ui_orange_light(255, true),
 		knocked_down = Color.ui_hud_red_light(255, true),
 		ledge_hanging = Color.ui_hud_red_light(255, true),
-		luggable = Color.ui_hud_green_super_light(255, true),
-	},
+		luggable = Color.ui_hud_green_super_light(255, true)
+	}
 }
 
 local function get_hud_color(key, alpha)

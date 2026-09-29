@@ -41,17 +41,16 @@ ActionWeaponBase.init = function (self, action_context, action_params, action_se
 	self._weapon_template = weapon.weapon_template
 	self._inventory_slot_component = weapon.inventory_slot_component
 	self._wielded_slot = action_params.wielded_slot
-
-	local ability_type = self._action_settings.ability_type
-
-	if ability_type then
-		self._ability_type = ability_type
-		self._ability_pause_cooldown_setting = self._ability_extension:ability_pause_cooldown_settings(ability_type)
-	end
 end
 
 ActionWeaponBase.start = function (self, action_settings, t, time_scale, action_start_params)
 	ActionWeaponBase.super.start(self, action_settings, t, time_scale, action_start_params)
+
+	local ability_type = self._ability_type
+
+	if ability_type then
+		self._ability_pause_cooldown_setting = self._ability_extension:ability_pause_cooldown_settings(ability_type)
+	end
 
 	local weapon_lock_view_component = self._weapon_lock_view_component
 
@@ -79,11 +78,11 @@ ActionWeaponBase.start = function (self, action_settings, t, time_scale, action_
 		AlternateFire.stop(self._alternate_fire_component, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template, self._player_unit, from_action_input)
 	end
 
-	local use_ability_charge = action_settings.use_ability_charge
-	local use_charge_at_start = action_settings.use_charge_at_start
+	local consume_ability_usage_cost = action_settings.consume_ability_usage_cost
+	local consume_usage_cost_at_start = action_settings.consume_usage_cost_at_start
 
-	if use_ability_charge and use_charge_at_start then
-		self:_use_ability_charge()
+	if consume_ability_usage_cost and consume_usage_cost_at_start then
+		self:_consume_ability_usage_cost()
 	end
 
 	if action_settings.delay_explosion_to_finish then
@@ -93,7 +92,7 @@ ActionWeaponBase.start = function (self, action_settings, t, time_scale, action_
 	self:_set_haptic_trigger_template(self._action_settings, self._weapon_template)
 
 	if self._ability_pause_cooldown_setting and not self._ability_pause_cooldown_setting.manual_pause then
-		self._ability_extension:pause_cooldown(self._ability_type)
+		self._ability_extension:pause_ability_resource_regen(ability_type)
 	end
 end
 
@@ -141,8 +140,8 @@ ActionWeaponBase._set_haptic_trigger_template = function (self, action_settings,
 	end
 end
 
-ActionWeaponBase.server_correction_occurred = function (self)
-	ActionWeaponBase.super.server_correction_occurred(self)
+ActionWeaponBase.server_correction_occurred = function (self, ...)
+	ActionWeaponBase.super.server_correction_occurred(self, ...)
 	self:_set_haptic_trigger_template(self._action_settings, self._weapon_template)
 end
 

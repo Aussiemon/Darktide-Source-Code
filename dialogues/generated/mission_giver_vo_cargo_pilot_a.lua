@@ -10,7 +10,7 @@ local mission_giver_vo_cargo_pilot_a = {
 			"loc_cargo_pilot_a__mission_agnostic_dropship_withdraw_a_03",
 			"loc_cargo_pilot_a__mission_agnostic_dropship_withdraw_a_04",
 			"loc_cargo_pilot_a__mission_agnostic_dropship_withdraw_a_05",
-			"loc_cargo_pilot_a__mission_agnostic_dropship_withdraw_a_06",
+			"loc_cargo_pilot_a__mission_agnostic_dropship_withdraw_a_06"
 		},
 		sound_events_duration = {
 			3.065792,
@@ -18,10 +18,10 @@ local mission_giver_vo_cargo_pilot_a = {
 			3.282292,
 			3.628479,
 			3.257354,
-			3.239563,
+			3.239563
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_giver_vo_cargo_pilot_a", mission_giver_vo_cargo_pilot_a)

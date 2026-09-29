@@ -9,13 +9,13 @@ local _offwhite_green = {
 	255,
 	241,
 	255,
-	230,
+	230
 }
 local _light_green = {
 	255,
 	166,
 	192,
-	147,
+	147
 }
 local question_title_text_style = table.clone(UIFontSettings.header_2)
 
@@ -39,7 +39,7 @@ question_info_text_style.font_size = 32
 question_info_text_style.offset = {
 	0,
 	0,
-	0,
+	0
 }
 
 local scenegraph_definition = {
@@ -50,13 +50,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	corner_top_left = {
 		horizontal_alignment = "left",
@@ -64,13 +64,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			84,
-			224,
+			224
 		},
 		position = {
 			0,
 			0,
-			4,
-		},
+			4
+		}
 	},
 	corner_top_right = {
 		horizontal_alignment = "right",
@@ -78,13 +78,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			120,
-			224,
+			224
 		},
 		position = {
 			0,
 			0,
-			4,
-		},
+			4
+		}
 	},
 	corner_bottom_left = {
 		horizontal_alignment = "left",
@@ -92,13 +92,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			84,
-			224,
+			224
 		},
 		position = {
 			0,
 			0,
-			4,
-		},
+			4
+		}
 	},
 	corner_bottom_right = {
 		horizontal_alignment = "right",
@@ -106,14 +106,14 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			84,
-			224,
+			224
 		},
 		position = {
 			0,
 			0,
-			4,
-		},
-	},
+			4
+		}
+	}
 }
 
 scenegraph_definition.content_pivot = {
@@ -123,12 +123,12 @@ scenegraph_definition.content_pivot = {
 	offset = {
 		0,
 		0,
-		0,
+		0
 	},
 	size = {
 		scenegraph_definition.canvas.size[1] * 0.75,
-		0,
-	},
+		0
+	}
 }
 scenegraph_definition.question_title_text = {
 	horizontal_alignment = "center",
@@ -137,8 +137,8 @@ scenegraph_definition.question_title_text = {
 	offset = {
 		0,
 		-100,
-		0,
-	},
+		0
+	}
 }
 scenegraph_definition.question_subtitle_text = {
 	horizontal_alignment = "center",
@@ -147,8 +147,8 @@ scenegraph_definition.question_subtitle_text = {
 	offset = {
 		0,
 		50,
-		0,
-	},
+		0
+	}
 }
 scenegraph_definition.question_info_text = {
 	horizontal_alignment = "center",
@@ -157,8 +157,8 @@ scenegraph_definition.question_info_text = {
 	offset = {
 		0,
 		30,
-		0,
-	},
+		0
+	}
 }
 scenegraph_definition.submit_button = {
 	horizontal_alignment = "center",
@@ -168,8 +168,8 @@ scenegraph_definition.submit_button = {
 	offset = {
 		0,
 		90,
-		1,
-	},
+		1
+	}
 }
 scenegraph_definition.progress_indicator_container = {
 	horizontal_alignment = "center",
@@ -177,13 +177,13 @@ scenegraph_definition.progress_indicator_container = {
 	vertical_alignment = "bottom",
 	size = {
 		0,
-		0,
+		0
 	},
 	offset = {
 		0,
 		16,
-		1,
-	},
+		1
+	}
 }
 
 local widget_definitions = {
@@ -191,24 +191,24 @@ local widget_definitions = {
 		{
 			pass_type = "rect",
 			style = {
-				color = Color.black(153, true),
-			},
+				color = Color.black(153, true)
+			}
 		},
 		{
 			pass_type = "texture",
 			value = "content/ui/materials/backgrounds/terminal_basic",
 			style = {
-				color = Color.terminal_corner(229.5, true),
-			},
+				color = Color.terminal_corner(229.5, true)
+			}
 		},
 		{
 			pass_type = "texture",
 			value = "content/ui/materials/frames/frame_tile_2px",
 			style = {
 				scale_to_material = true,
-				color = Color.terminal_frame(255, true),
-			},
-		},
+				color = Color.terminal_frame(255, true)
+			}
+		}
 	}, "screen"),
 	question_title_text = UIWidget.create_definition({
 		{
@@ -216,8 +216,8 @@ local widget_definitions = {
 			style_id = "text",
 			value = "<<THIS IS A QUESTION!>>",
 			value_id = "text",
-			style = question_title_text_style,
-		},
+			style = question_title_text_style
+		}
 	}, "question_title_text"),
 	question_subtitle_text = UIWidget.create_definition({
 		{
@@ -225,8 +225,8 @@ local widget_definitions = {
 			style_id = "text",
 			value = "<<THIS IS A SUBTITLE!>>",
 			value_id = "text",
-			style = question_subtitle_text_style,
-		},
+			style = question_subtitle_text_style
+		}
 	}, "question_subtitle_text"),
 	question_info_text = UIWidget.create_definition({
 		{
@@ -234,16 +234,16 @@ local widget_definitions = {
 			style_id = "text",
 			value = "<<EXTRA INFO GOES HERE!>>",
 			value_id = "text",
-			style = question_info_text_style,
-		},
+			style = question_info_text_style
+		}
 	}, "question_info_text"),
 	submit_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "submit_button", {
 		gamepad_action = "secondary_action_pressed",
 		original_text = Utf8.upper(Localize("loc_character_creator_continue")),
 		hotspot = {
-			on_pressed_sound = UISoundEvents.default_click,
-		},
-	}),
+			on_pressed_sound = UISoundEvents.default_click
+		}
+	})
 }
 local legend_inputs = {
 	{
@@ -251,8 +251,8 @@ local legend_inputs = {
 		display_name = "loc_settings_menu_close_menu",
 		input_action = "back",
 		on_pressed_callback = "_cb_on_back_pressed",
-		visibility_function = nil,
-	},
+		visibility_function = nil
+	}
 }
 local animations = {}
 
@@ -268,9 +268,9 @@ local function _progress_widget_definition_factory(widget_size)
 				offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -282,12 +282,12 @@ local function _progress_widget_definition_factory(widget_size)
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
 			visibility_function = function (content, style)
 				return content.active
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -301,17 +301,17 @@ local function _progress_widget_definition_factory(widget_size)
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size_addition = {
 					24,
-					24,
-				},
+					24
+				}
 			},
 			visibility_function = function (content, style)
 				return content.active
-			end,
-		},
+			end
+		}
 	}, "progress_indicator_container")
 end
 
@@ -322,11 +322,11 @@ return {
 	scenegraph_definition = scenegraph_definition,
 	colors = {
 		offwhite_green = _offwhite_green,
-		light_green = _light_green,
+		light_green = _light_green
 	},
 	progress_widget_definition_factory = _progress_widget_definition_factory,
 	progress_widget_full_size = {
 		scenegraph_definition.submit_button.size[1],
-		8,
-	},
+		8
+	}
 }

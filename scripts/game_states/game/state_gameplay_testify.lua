@@ -49,7 +49,7 @@ local melee_damage_types = {
 	"slashing_force",
 	"knife",
 	"axe_light",
-	"spiked_blunt",
+	"spiked_blunt"
 }
 local ranged_damage_type_index = 1
 local ranged_damage_types = {
@@ -65,7 +65,7 @@ local ranged_damage_types = {
 	"shell",
 	"smite",
 	"biomancer_soul",
-	"throwing_knife",
+	"throwing_knife"
 }
 
 local function _all_cameras(camera_types)
@@ -93,15 +93,15 @@ local function _all_cameras(camera_types)
 					position = {
 						x = position.x,
 						y = position.y,
-						z = position.z,
+						z = position.z
 					},
 					rotation = {
 						x = x,
 						y = y,
 						z = z,
-						w = w,
+						w = w
 					},
-					go_to_camera_position_link = go_to_camera_position_link,
+					go_to_camera_position_link = go_to_camera_position_link
 				}
 
 				i = i + 1
@@ -117,7 +117,7 @@ local StateGameplayTestify = {
 	all_cameras = function ()
 		local camera_types = {
 			performance = "performance",
-			screenshot = "screenshot",
+			screenshot = "screenshot"
 		}
 		local cameras, length = _all_cameras(camera_types)
 
@@ -223,7 +223,7 @@ local StateGameplayTestify = {
 			aimed_traits = {},
 			overheat_traits = {},
 			warp_charge_traits = {},
-			explosive_traits = {},
+			explosive_traits = {}
 		}
 		local melee_perks = table.ukeys(WeaponPerksMelee)
 
@@ -366,7 +366,7 @@ local StateGameplayTestify = {
 		local selected_overrides = {
 			traits = params.traits,
 			perks = {},
-			base_stats = {},
+			base_stats = {}
 		}
 
 		weapon_system:debug_set_weapon_overrides(player, selected_overrides, slot_name)
@@ -522,12 +522,12 @@ local StateGameplayTestify = {
 		if health_extension then
 			return {
 				current_health = health_extension:current_health(),
-				max_health = health_extension:max_health(),
+				max_health = health_extension:max_health()
 			}
 		else
 			return {
 				current_health = "na",
-				max_health = "na",
+				max_health = "na"
 			}
 		end
 	end,
@@ -597,7 +597,7 @@ local StateGameplayTestify = {
 	end,
 	wait_for_state_gameplay_reached = function ()
 		return
-	end,
+	end
 }
 
 return StateGameplayTestify

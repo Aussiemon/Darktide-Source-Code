@@ -15,106 +15,106 @@ local class_selection_view_settings = {
 	world_name = "ui_class_selection_world",
 	grid_spacing = {
 		10,
-		0,
+		0
 	},
 	grid_size = {
 		640,
-		840,
+		840
 	},
 	scrollbar_width = scrollbar_width,
 	class_option_icon_size = {
 		306,
-		630,
+		630
 	},
 	class_size = {
 		640,
-		680,
+		680
 	},
 	class_details_size = {
 		600,
-		560,
+		560
 	},
 	archetype_option_icon_size = {
 		128,
-		263,
+		263
 	},
 	archetype_frames_textures = {
 		left = {
 			texture = "content/ui/textures/frames/class_selection/frames/class_selection_frame_left",
 			size = {
 				234,
-				380,
+				380
 			},
 			offset = {
 				0,
-				0,
+				0
 			},
 			icon_offset = {
 				94,
-				21.6,
-			},
+				21.6
+			}
 		},
 		mid_1 = {
 			texture = "content/ui/textures/frames/class_selection/frames/class_selection_frame_mid_01",
 			size = {
 				156,
-				348,
+				348
 			},
 			offset = {
 				0,
-				0,
+				0
 			},
 			icon_offset = {
 				14.6,
-				21.6,
-			},
+				21.6
+			}
 		},
 		mid_2 = {
 			texture = "content/ui/textures/frames/class_selection/frames/class_selection_frame_mid_02",
 			size = {
 				156,
-				348,
+				348
 			},
 			offset = {
 				0,
-				0,
+				0
 			},
 			icon_offset = {
 				14.6,
-				21.6,
-			},
+				21.6
+			}
 		},
 		mid_3 = {
 			texture = "content/ui/textures/frames/class_selection/frames/class_selection_frame_mid_03",
 			size = {
 				156,
-				348,
+				348
 			},
 			offset = {
 				0,
-				0,
+				0
 			},
 			icon_offset = {
 				14.6,
-				21.6,
-			},
+				21.6
+			}
 		},
 		right = {
 			texture = "content/ui/textures/frames/class_selection/frames/class_selection_frame_right",
 			size = {
 				234,
-				380,
+				380
 			},
 			offset = {
 				0,
-				0,
+				0
 			},
 			icon_offset = {
 				13.6,
-				21.6,
-			},
-		},
-	},
+				21.6
+			}
+		}
+	}
 }
 
 return settings("ClassSelectionViewSettings", class_selection_view_settings)

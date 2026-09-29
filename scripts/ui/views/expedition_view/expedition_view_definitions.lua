@@ -19,13 +19,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			1870,
-			995,
+			995
 		},
 		position = {
 			0,
 			25,
-			3,
-		},
+			3
+		}
 	},
 	sidebar = {
 		horizontal_alignment = "right",
@@ -33,13 +33,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			483,
-			995,
+			995
 		},
 		position = {
 			0,
 			0,
-			4,
-		},
+			4
+		}
 	},
 	mission_info = {
 		horizontal_alignment = "center",
@@ -47,13 +47,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			483,
-			415,
+			415
 		},
 		position = {
 			0,
 			65,
-			5,
-		},
+			5
+		}
 	},
 	mission_info_tabs = {
 		horizontal_alignment = "center",
@@ -61,13 +61,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			483,
-			80,
+			80
 		},
 		position = {
 			0,
 			0,
-			6,
-		},
+			6
+		}
 	},
 	mission_info_page = {
 		horizontal_alignment = "center",
@@ -75,13 +75,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			482,
-			250,
+			250
 		},
 		position = {
 			0,
 			80,
-			6,
-		},
+			6
+		}
 	},
 	mission_info_stats = {
 		horizontal_alignment = "center",
@@ -89,13 +89,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			483,
-			80,
+			80
 		},
 		position = {
 			0,
 			80,
-			6,
-		},
+			6
+		}
 	},
 	mapwide_stats = {
 		horizontal_alignment = "center",
@@ -103,13 +103,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			483,
-			80,
+			80
 		},
 		position = {
 			0,
 			0,
-			6,
-		},
+			6
+		}
 	},
 	sidebar_interactables = {
 		horizontal_alignment = "center",
@@ -117,13 +117,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			375,
-			240,
+			240
 		},
 		position = {
 			0,
 			0,
-			5,
-		},
+			5
+		}
 	},
 	difficulty_stepper = {
 		horizontal_alignment = "center",
@@ -131,13 +131,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			336,
-			94,
+			94
 		},
 		position = {
 			0,
 			0,
-			6,
-		},
+			6
+		}
 	},
 	difficulty_stepper_indicators = {
 		horizontal_alignment = "center",
@@ -145,13 +145,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			280,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			7,
-		},
+			7
+		}
 	},
 	play_button = {
 		horizontal_alignment = "center",
@@ -159,13 +159,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			375,
-			110,
+			110
 		},
 		position = {
 			0,
 			0,
-			6,
-		},
+			6
+		}
 	},
 	unlock_button = {
 		horizontal_alignment = "center",
@@ -173,13 +173,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			375,
-			110,
+			110
 		},
 		position = {
 			0,
 			0,
-			6,
-		},
+			6
+		}
 	},
 	quickplay_button = {
 		horizontal_alignment = "center",
@@ -187,13 +187,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			280,
-			48,
+			48
 		},
 		position = {
 			-380,
 			-30,
-			6,
-		},
+			6
+		}
 	},
 	tutorial_popup_pivot = {
 		horizontal_alignment = "center",
@@ -201,24 +201,24 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			170,
-		},
-	},
+			170
+		}
+	}
 }
 local widget_definitions = {}
 local play_button_content_overrides = {
 	gamepad_action = "confirm_pressed",
-	original_text = Utf8.upper(Localize("loc_mission_board_view_accept_mission")),
+	original_text = Utf8.upper(Localize("loc_mission_board_view_accept_mission"))
 }
 local play_button_style_overrides = {
 	text = {
-		line_spacing = 0.7,
-	},
+		line_spacing = 0.7
+	}
 }
 
 local function _get_input_text(action)
@@ -233,7 +233,7 @@ local play_button_definition = {
 		content_id = "hotspot",
 		pass_type = "hotspot",
 		style_id = "hotspot",
-		style = Styles.play_button.hotspot,
+		style = Styles.play_button.hotspot
 	},
 	{
 		pass_type = "texture",
@@ -242,7 +242,7 @@ local play_button_definition = {
 		style = Styles.play_button.default,
 		visibility_function = function (content, style)
 			return not content.hotspot.disabled
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -256,7 +256,7 @@ local play_button_definition = {
 		end,
 		visibility_function = function (content, style)
 			return not content.hotspot.disabled
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -280,7 +280,7 @@ local play_button_definition = {
 			else
 				content.default_text = content.original_text
 			end
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -289,7 +289,7 @@ local play_button_definition = {
 		style = Styles.play_button.disabled,
 		visibility_function = function (content, style)
 			return content.hotspot.disabled
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -299,8 +299,8 @@ local play_button_definition = {
 		style = Styles.play_button.disabled_text,
 		visibility_function = function (content, style)
 			return content.hotspot.disabled
-		end,
-	},
+		end
+	}
 }
 
 widget_definitions.play_button = UIWidget.create_definition(play_button_definition, "play_button", play_button_content_overrides, nil, play_button_style_overrides)
@@ -311,9 +311,9 @@ widget_definitions.play_button_legend = UIWidget.create_definition({
 		value = "",
 		value_id = "text",
 		style = {
-			horizontal_alignment = "center",
-		},
-	},
+			horizontal_alignment = "center"
+		}
+	}
 }, "play_button", nil, nil, {
 	text = {
 		font_size = 14,
@@ -324,9 +324,9 @@ widget_definitions.play_button_legend = UIWidget.create_definition({
 		offset = {
 			0,
 			58,
-			2,
-		},
-	},
+			2
+		}
+	}
 })
 widget_definitions.sidebar_fade = UIWidget.create_definition({
 	{
@@ -334,14 +334,14 @@ widget_definitions.sidebar_fade = UIWidget.create_definition({
 		style_id = "sidebar_fade",
 		value = "content/ui/materials/masks/gradient_right_one_third",
 		value_id = "sidebar_fade",
-		style = Styles.sidebar_fade,
-	},
+		style = Styles.sidebar_fade
+	}
 }, "screen")
 
 local unlock_button_content_overrides = {
 	gamepad_action = "confirm_pressed",
 	visible = false,
-	original_text = Utf8.upper(Localize("loc_action_interaction_unlock")),
+	original_text = Utf8.upper(Localize("loc_action_interaction_unlock"))
 }
 
 widget_definitions.unlock_button = UIWidget.create_definition({
@@ -349,13 +349,13 @@ widget_definitions.unlock_button = UIWidget.create_definition({
 		content_id = "hotspot",
 		pass_type = "hotspot",
 		style_id = "hotspot",
-		style = Styles.play_button.hotspot,
+		style = Styles.play_button.hotspot
 	},
 	{
 		pass_type = "texture",
 		style_id = "play_button_default",
 		value = "content/ui/materials/buttons/mb_play_button",
-		style = Styles.play_button.default,
+		style = Styles.play_button.default
 	},
 	{
 		pass_type = "texture",
@@ -368,7 +368,7 @@ widget_definitions.unlock_button = UIWidget.create_definition({
 			local hotspot_data = content.hotspot
 
 			style.color[1] = 255 * (pulse_anim_progress * 0.5 + hotspot_data.anim_hover_progress * 0.5)
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -389,63 +389,63 @@ widget_definitions.unlock_button = UIWidget.create_definition({
 			else
 				content.default_text = content.original_text
 			end
-		end,
-	},
+		end
+	}
 }, "unlock_button", unlock_button_content_overrides, nil, play_button_style_overrides)
 widget_definitions.mapwide_stats = UIWidget.create_definition({
 	{
 		pass_type = "texture",
 		style_id = "frame",
 		value = "content/ui/materials/frames/frame_tile_2px",
-		style = Styles.mapwide_stats.frame,
+		style = Styles.mapwide_stats.frame
 	},
 	{
 		pass_type = "rect",
 		style_id = "background",
-		style = Styles.mapwide_stats.background,
+		style = Styles.mapwide_stats.background
 	},
 	{
 		pass_type = "text",
 		style_id = "title",
 		value_id = "title",
 		value = Localize("loc_expedition_map_total_title"),
-		style = Styles.mapwide_stats.title,
+		style = Styles.mapwide_stats.title
 	},
 	{
 		pass_type = "rect",
 		style_id = "divider_line",
-		style = Styles.mapwide_stats.divider_line,
+		style = Styles.mapwide_stats.divider_line
 	},
 	{
 		pass_type = "text",
 		style_id = "personal_total_text",
 		value_id = "personal_total_text",
 		value = Localize("loc_expeditions_personal_total_mapwide"),
-		style = Styles.mapwide_stats.personal_total_text,
+		style = Styles.mapwide_stats.personal_total_text
 	},
 	{
 		pass_type = "text",
 		style_id = "personal_total_number",
 		value = "0",
 		value_id = "personal_total_number",
-		style = Styles.mapwide_stats.personal_total_number,
+		style = Styles.mapwide_stats.personal_total_number
 	},
 	{
 		pass_type = "texture",
 		style_id = "personal_total_icon",
 		value_id = "personal_total_icon",
 		value = Settings.loot_icon,
-		style = Styles.mapwide_stats.personal_total_icon,
-	},
+		style = Styles.mapwide_stats.personal_total_icon
+	}
 }, "mapwide_stats", {
-	visible = false,
+	visible = false
 })
 widget_definitions.loading = UIWidget.create_definition({
 	{
 		pass_type = "rect",
 		style = {
-			color = Color.black(127.5, true),
-		},
+			color = Color.black(127.5, true)
+		}
 	},
 	{
 		pass_type = "texture",
@@ -455,17 +455,17 @@ widget_definitions.loading = UIWidget.create_definition({
 			vertical_alignment = "center",
 			size = {
 				256,
-				256,
+				256
 			},
 			offset = {
 				0,
 				0,
-				1,
-			},
-		},
-	},
+				1
+			}
+		}
+	}
 }, "screen", {
-	visible = false,
+	visible = false
 })
 
 local background_world_params = {
@@ -479,7 +479,7 @@ local background_world_params = {
 	viewport_name = "ui_expedition_background_world_viewport",
 	viewport_type = "default",
 	world_layer = 1,
-	world_name = "ui_expedition_background_world",
+	world_name = "ui_expedition_background_world"
 }
 local input_legend_params = {
 	layer = 10,
@@ -488,7 +488,7 @@ local input_legend_params = {
 			alignment = "left_alignment",
 			display_name = "loc_settings_menu_close_menu",
 			input_action = "back",
-			on_pressed_callback = "cb_on_back_pressed",
+			on_pressed_callback = "cb_on_back_pressed"
 		},
 		{
 			alignment = "left_alignment",
@@ -499,7 +499,7 @@ local input_legend_params = {
 				local selection = parent:get_selection()
 
 				return InputDevice.gamepad_active and selection and selection.unlock_status == UNLOCK_STATUS.unlockable and parent:node_enter_anim_finished()
-			end,
+			end
 		},
 		{
 			alignment = "right_alignment",
@@ -508,7 +508,7 @@ local input_legend_params = {
 			on_pressed_callback = "cb_on_options_pressed",
 			visibility_function = function (parent)
 				return parent:node_enter_anim_finished()
-			end,
+			end
 		},
 		{
 			alignment = "right_alignment",
@@ -517,7 +517,7 @@ local input_legend_params = {
 			on_pressed_callback = "cb_show_tutorial",
 			visibility_function = function (parent)
 				return parent:node_enter_anim_finished()
-			end,
+			end
 		},
 		{
 			alignment = "right_alignment",
@@ -535,9 +535,9 @@ local input_legend_params = {
 				end
 
 				return view_element_expedition_view_mission_info and view_element_expedition_view_mission_info:visible() and multiple_tabs and parent:node_enter_anim_finished()
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
@@ -545,5 +545,5 @@ return {
 	scenegraph_definition = scenegraph_definition,
 	widget_definitions = widget_definitions,
 	background_world_params = background_world_params,
-	input_legend_params = input_legend_params,
+	input_legend_params = input_legend_params
 }

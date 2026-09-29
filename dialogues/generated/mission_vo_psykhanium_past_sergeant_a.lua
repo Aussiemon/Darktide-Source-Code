@@ -5,1344 +5,1344 @@ local mission_vo_psykhanium_past_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_brahms_21_b_01",
+			[1] = "loc_past_sergeant_a__story_echo_brahms_21_b_01"
 		},
 		sound_events_duration = {
-			[1] = 2.918167,
+			[1] = 2.918167
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_brahms_21_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_brahms_21_d_01",
+			[1] = "loc_past_sergeant_a__story_echo_brahms_21_d_01"
 		},
 		sound_events_duration = {
-			[1] = 3.024729,
+			[1] = 3.024729
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_brahms_21_f = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_brahms_21_f_01",
+			[1] = "loc_past_sergeant_a__story_echo_brahms_21_f_01"
 		},
 		sound_events_duration = {
-			[1] = 1.410688,
+			[1] = 1.410688
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_brahms_22_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_brahms_22_b_01",
+			[1] = "loc_past_sergeant_a__story_echo_brahms_22_b_01"
 		},
 		sound_events_duration = {
-			[1] = 3.876563,
+			[1] = 3.876563
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_brahms_22_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_brahms_22_d_01",
+			[1] = "loc_past_sergeant_a__story_echo_brahms_22_d_01"
 		},
 		sound_events_duration = {
-			[1] = 3.036688,
+			[1] = 3.036688
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_brahms_23_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_brahms_23_b_01",
+			[1] = "loc_past_sergeant_a__story_echo_brahms_23_b_01"
 		},
 		sound_events_duration = {
-			[1] = 4.831958,
+			[1] = 4.831958
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_brahms_23_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_brahms_23_d_01",
+			[1] = "loc_past_sergeant_a__story_echo_brahms_23_d_01"
 		},
 		sound_events_duration = {
-			[1] = 2.589875,
+			[1] = 2.589875
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_brahms_23_f = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_brahms_23_f_01",
+			[1] = "loc_past_sergeant_a__story_echo_brahms_23_f_01"
 		},
 		sound_events_duration = {
-			[1] = 1.998854,
+			[1] = 1.998854
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_brahms_27a_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_brahms_27a_a_01",
+			[1] = "loc_past_sergeant_a__story_echo_brahms_27a_a_01"
 		},
 		sound_events_duration = {
-			[1] = 4.663625,
+			[1] = 4.663625
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_brahms_27a_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_brahms_27a_c_01",
+			[1] = "loc_past_sergeant_a__story_echo_brahms_27a_c_01"
 		},
 		sound_events_duration = {
-			[1] = 2.861208,
+			[1] = 2.861208
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_brahms_27b_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_brahms_27b_a_01",
+			[1] = "loc_past_sergeant_a__story_echo_brahms_27b_a_01"
 		},
 		sound_events_duration = {
-			[1] = 4.226188,
+			[1] = 4.226188
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_brahms_27b_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_brahms_27b_c_01",
+			[1] = "loc_past_sergeant_a__story_echo_brahms_27b_c_01"
 		},
 		sound_events_duration = {
-			[1] = 4.1125,
+			[1] = 4.1125
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_brahms_27b_e = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_brahms_27b_e_01",
+			[1] = "loc_past_sergeant_a__story_echo_brahms_27b_e_01"
 		},
 		sound_events_duration = {
-			[1] = 2.054333,
+			[1] = 2.054333
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_marshal_01_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_marshal_01_a_01",
+			[1] = "loc_past_sergeant_a__story_echo_marshal_01_a_01"
 		},
 		sound_events_duration = {
-			[1] = 1.956917,
+			[1] = 1.956917
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_marshal_01_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_marshal_01_d_01",
+			[1] = "loc_past_sergeant_a__story_echo_marshal_01_d_01"
 		},
 		sound_events_duration = {
-			[1] = 6.280583,
+			[1] = 6.280583
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_marshal_07_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_marshal_07_a_01",
+			[1] = "loc_past_sergeant_a__story_echo_marshal_07_a_01"
 		},
 		sound_events_duration = {
-			[1] = 1.86975,
+			[1] = 1.86975
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_marshal_07_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_marshal_07_c_01",
+			[1] = "loc_past_sergeant_a__story_echo_marshal_07_c_01"
 		},
 		sound_events_duration = {
-			[1] = 5.55525,
+			[1] = 5.55525
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_marshal_07_f = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_marshal_07_f_01",
+			[1] = "loc_past_sergeant_a__story_echo_marshal_07_f_01"
 		},
 		sound_events_duration = {
-			[1] = 1.473938,
+			[1] = 1.473938
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_03_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_03_c_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_03_c_01"
 		},
 		sound_events_duration = {
-			[1] = 2.593208,
+			[1] = 2.593208
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_03_f = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_03_f_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_03_f_01"
 		},
 		sound_events_duration = {
-			[1] = 3.8,
+			[1] = 3.8
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_05_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_05_a_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_05_a_01"
 		},
 		sound_events_duration = {
-			[1] = 1.584542,
+			[1] = 1.584542
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_05_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_05_c_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_05_c_01"
 		},
 		sound_events_duration = {
-			[1] = 3.472979,
+			[1] = 3.472979
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_05_e = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_05_e_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_05_e_01"
 		},
 		sound_events_duration = {
-			[1] = 1.183417,
+			[1] = 1.183417
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_06_f = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_06_f_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_06_f_01"
 		},
 		sound_events_duration = {
-			[1] = 3.750125,
+			[1] = 3.750125
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_07_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_07_b_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_07_b_01"
 		},
 		sound_events_duration = {
-			[1] = 1.808113,
+			[1] = 1.808113
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_07_g = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_07_g_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_07_g_01"
 		},
 		sound_events_duration = {
-			[1] = 4.807917,
+			[1] = 4.807917
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_08_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_08_b_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_08_b_01"
 		},
 		sound_events_duration = {
-			[1] = 3.069458,
+			[1] = 3.069458
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_08_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_08_d_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_08_d_01"
 		},
 		sound_events_duration = {
-			[1] = 4.668271,
+			[1] = 4.668271
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_09_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_09_c_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_09_c_01"
 		},
 		sound_events_duration = {
-			[1] = 3.999979,
+			[1] = 3.999979
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_09_e = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_09_e_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_09_e_01"
 		},
 		sound_events_duration = {
-			[1] = 3.025063,
+			[1] = 3.025063
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_10_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_10_b_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_10_b_01"
 		},
 		sound_events_duration = {
-			[1] = 1.481583,
+			[1] = 1.481583
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_10_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_10_d_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_10_d_01"
 		},
 		sound_events_duration = {
-			[1] = 4.293229,
+			[1] = 4.293229
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_10_f = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_10_f_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_10_f_01"
 		},
 		sound_events_duration = {
-			[1] = 2.732104,
+			[1] = 2.732104
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_11_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_11_b_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_11_b_01"
 		},
 		sound_events_duration = {
-			[1] = 1.064271,
+			[1] = 1.064271
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_11_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_11_d_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_11_d_01"
 		},
 		sound_events_duration = {
-			[1] = 3.916292,
+			[1] = 3.916292
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_11_f = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_11_f_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_11_f_01"
 		},
 		sound_events_duration = {
-			[1] = 3,
+			[1] = 3
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_12_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_12_a_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_12_a_01"
 		},
 		sound_events_duration = {
-			[1] = 2.520396,
+			[1] = 2.520396
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_12_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_12_c_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_12_c_01"
 		},
 		sound_events_duration = {
-			[1] = 1.607542,
+			[1] = 1.607542
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_12_e = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_12_e_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_12_e_01"
 		},
 		sound_events_duration = {
-			[1] = 9.8215,
+			[1] = 9.8215
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_13_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_13_b_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_13_b_01"
 		},
 		sound_events_duration = {
-			[1] = 1.126104,
+			[1] = 1.126104
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_13_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_13_d_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_13_d_01"
 		},
 		sound_events_duration = {
-			[1] = 3.320875,
+			[1] = 3.320875
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_13a_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_13a_b_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_13a_b_01"
 		},
 		sound_events_duration = {
-			[1] = 1.745729,
+			[1] = 1.745729
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_13a_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_13a_d_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_13a_d_01"
 		},
 		sound_events_duration = {
-			[1] = 1.422,
+			[1] = 1.422
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_14_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_14_d_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_14_d_01"
 		},
 		sound_events_duration = {
-			[1] = 0.930854,
+			[1] = 0.930854
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_15_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_15_b_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_15_b_01"
 		},
 		sound_events_duration = {
-			[1] = 3.964896,
+			[1] = 3.964896
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_15_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_15_d_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_15_d_01"
 		},
 		sound_events_duration = {
-			[1] = 1.7905,
+			[1] = 1.7905
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_15_f = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_15_f_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_15_f_01"
 		},
 		sound_events_duration = {
-			[1] = 2.841021,
+			[1] = 2.841021
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_23_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_23_a_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_23_a_01"
 		},
 		sound_events_duration = {
-			[1] = 1.780438,
+			[1] = 1.780438
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_23_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_23_c_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_23_c_01"
 		},
 		sound_events_duration = {
-			[1] = 1.9265,
+			[1] = 1.9265
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_23_e = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_23_e_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_23_e_01"
 		},
 		sound_events_duration = {
-			[1] = 1.156438,
+			[1] = 1.156438
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_23_g = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_23_g_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_23_g_01"
 		},
 		sound_events_duration = {
-			[1] = 2.101208,
+			[1] = 2.101208
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_23_i = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_23_i_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_23_i_01"
 		},
 		sound_events_duration = {
-			[1] = 2.772917,
+			[1] = 2.772917
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_23_k = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_23_k_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_23_k_01"
 		},
 		sound_events_duration = {
-			[1] = 2.919729,
+			[1] = 2.919729
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_24_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_24_b_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_24_b_01"
 		},
 		sound_events_duration = {
-			[1] = 3.135604,
+			[1] = 3.135604
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_24_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_24_d_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_24_d_01"
 		},
 		sound_events_duration = {
-			[1] = 1.396667,
+			[1] = 1.396667
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_26_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_26_a_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_26_a_01"
 		},
 		sound_events_duration = {
-			[1] = 2.853688,
+			[1] = 2.853688
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_26_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_26_c_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_26_c_01"
 		},
 		sound_events_duration = {
-			[1] = 2.323333,
+			[1] = 2.323333
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_27_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_27_a_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_27_a_01"
 		},
 		sound_events_duration = {
-			[1] = 3.032708,
+			[1] = 3.032708
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_27_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_27_c_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_27_c_01"
 		},
 		sound_events_duration = {
-			[1] = 3.798063,
+			[1] = 3.798063
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_28_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_28_b_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_28_b_01"
 		},
 		sound_events_duration = {
-			[1] = 7.330396,
+			[1] = 7.330396
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_28_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_28_d_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_28_d_01"
 		},
 		sound_events_duration = {
-			[1] = 5.401979,
+			[1] = 5.401979
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_29_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_29_a_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_29_a_01"
 		},
 		sound_events_duration = {
-			[1] = 4.930208,
+			[1] = 4.930208
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_29_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_29_c_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_29_c_01"
 		},
 		sound_events_duration = {
-			[1] = 5.185063,
+			[1] = 5.185063
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_30_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_30_b_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_30_b_01"
 		},
 		sound_events_duration = {
-			[1] = 1.172833,
+			[1] = 1.172833
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_30_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_30_d_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_30_d_01"
 		},
 		sound_events_duration = {
-			[1] = 3.639708,
+			[1] = 3.639708
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_30_f = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_30_f_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_30_f_01"
 		},
 		sound_events_duration = {
-			[1] = 3.206542,
+			[1] = 3.206542
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_32_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_32_b_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_32_b_01"
 		},
 		sound_events_duration = {
-			[1] = 3.776771,
+			[1] = 3.776771
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_32_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_32_d_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_32_d_01"
 		},
 		sound_events_duration = {
-			[1] = 1.820458,
+			[1] = 1.820458
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_33_e = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_33_e_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_33_e_01"
 		},
 		sound_events_duration = {
-			[1] = 3.979375,
+			[1] = 3.979375
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_34_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_34_a_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_34_a_01"
 		},
 		sound_events_duration = {
-			[1] = 2.253833,
+			[1] = 2.253833
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_34_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_34_c_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_34_c_01"
 		},
 		sound_events_duration = {
-			[1] = 2.53,
+			[1] = 2.53
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_34_e = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_34_e_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_34_e_01"
 		},
 		sound_events_duration = {
-			[1] = 5.935604,
+			[1] = 5.935604
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_34_g = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_34_g_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_34_g_01"
 		},
 		sound_events_duration = {
-			[1] = 1.989875,
+			[1] = 1.989875
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_35_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_35_b_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_35_b_01"
 		},
 		sound_events_duration = {
-			[1] = 1.649229,
+			[1] = 1.649229
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_35_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_35_d_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_35_d_01"
 		},
 		sound_events_duration = {
-			[1] = 1.963229,
+			[1] = 1.963229
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_35_f = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_35_f_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_35_f_01"
 		},
 		sound_events_duration = {
-			[1] = 4.36025,
+			[1] = 4.36025
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_36_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_36_b_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_36_b_01"
 		},
 		sound_events_duration = {
-			[1] = 3.100833,
+			[1] = 3.100833
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_36_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_36_d_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_36_d_01"
 		},
 		sound_events_duration = {
-			[1] = 2.938813,
+			[1] = 2.938813
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_39_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_39_b_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_39_b_01"
 		},
 		sound_events_duration = {
-			[1] = 2.426875,
+			[1] = 2.426875
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_39_e = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_39_e_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_39_e_01"
 		},
 		sound_events_duration = {
-			[1] = 1.793479,
+			[1] = 1.793479
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_40_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_40_a_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_40_a_01"
 		},
 		sound_events_duration = {
-			[1] = 2.15,
+			[1] = 2.15
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_40_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_40_c_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_40_c_01"
 		},
 		sound_events_duration = {
-			[1] = 5.804979,
+			[1] = 5.804979
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_40_f = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_40_f_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_40_f_01"
 		},
 		sound_events_duration = {
-			[1] = 7.8295,
+			[1] = 7.8295
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_41_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_41_a_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_41_a_01"
 		},
 		sound_events_duration = {
-			[1] = 5.551625,
+			[1] = 5.551625
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_41_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_41_c_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_41_c_01"
 		},
 		sound_events_duration = {
-			[1] = 2.961729,
+			[1] = 2.961729
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_41_e = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_41_e_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_41_e_01"
 		},
 		sound_events_duration = {
-			[1] = 6.353938,
+			[1] = 6.353938
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_42_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_42_b_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_42_b_01"
 		},
 		sound_events_duration = {
-			[1] = 1.060729,
+			[1] = 1.060729
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_42_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_42_d_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_42_d_01"
 		},
 		sound_events_duration = {
-			[1] = 2.133479,
+			[1] = 2.133479
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_42_f = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_42_f_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_42_f_01"
 		},
 		sound_events_duration = {
-			[1] = 6.466542,
+			[1] = 6.466542
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_43_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_43_a_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_43_a_01"
 		},
 		sound_events_duration = {
-			[1] = 1.868792,
+			[1] = 1.868792
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_43_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_43_c_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_43_c_01"
 		},
 		sound_events_duration = {
-			[1] = 2.736542,
+			[1] = 2.736542
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_43_f = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_43_f_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_43_f_01"
 		},
 		sound_events_duration = {
-			[1] = 2.822063,
+			[1] = 2.822063
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_43_g = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_43_g_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_43_g_01"
 		},
 		sound_events_duration = {
-			[1] = 4.71034,
+			[1] = 4.71034
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_44_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_44_b_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_44_b_01"
 		},
 		sound_events_duration = {
-			[1] = 4.897313,
+			[1] = 4.897313
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_44_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_44_d_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_44_d_01"
 		},
 		sound_events_duration = {
-			[1] = 2.93,
+			[1] = 2.93
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_44_f = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_44_f_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_44_f_01"
 		},
 		sound_events_duration = {
-			[1] = 2.055542,
+			[1] = 2.055542
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_45_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_45_b_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_45_b_01"
 		},
 		sound_events_duration = {
-			[1] = 2.349979,
+			[1] = 2.349979
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_45_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_45_c_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_45_c_01"
 		},
 		sound_events_duration = {
-			[1] = 1.979979,
+			[1] = 1.979979
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_45_f = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_45_f_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_45_f_01"
 		},
 		sound_events_duration = {
-			[1] = 5.49898,
+			[1] = 5.49898
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_45_g = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_45_g_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_45_g_01"
 		},
 		sound_events_duration = {
-			[1] = 3.085397,
+			[1] = 3.085397
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_46_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_46_b_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_46_b_01"
 		},
 		sound_events_duration = {
-			[1] = 3.391604,
+			[1] = 3.391604
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_46_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_46_d_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_46_d_01"
 		},
 		sound_events_duration = {
-			[1] = 6.546583,
+			[1] = 6.546583
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_morrow_46_f = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_morrow_46_f_01",
+			[1] = "loc_past_sergeant_a__story_echo_morrow_46_f_01"
 		},
 		sound_events_duration = {
-			[1] = 6.794938,
+			[1] = 6.794938
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_zola_17_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_zola_17_b_01",
+			[1] = "loc_past_sergeant_a__story_echo_zola_17_b_01"
 		},
 		sound_events_duration = {
-			[1] = 6.035938,
+			[1] = 6.035938
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_zola_17_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_zola_17_d_01",
+			[1] = "loc_past_sergeant_a__story_echo_zola_17_d_01"
 		},
 		sound_events_duration = {
-			[1] = 5.944146,
+			[1] = 5.944146
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_zola_32_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_zola_32_b_01",
+			[1] = "loc_past_sergeant_a__story_echo_zola_32_b_01"
 		},
 		sound_events_duration = {
-			[1] = 3.229469,
+			[1] = 3.229469
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_zola_32_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_zola_32_d_01",
+			[1] = "loc_past_sergeant_a__story_echo_zola_32_d_01"
 		},
 		sound_events_duration = {
-			[1] = 4.398302,
+			[1] = 4.398302
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_zola_32_f = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_zola_32_f_01",
+			[1] = "loc_past_sergeant_a__story_echo_zola_32_f_01"
 		},
 		sound_events_duration = {
-			[1] = 3.026599,
+			[1] = 3.026599
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_zola_32_g = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_zola_32_g_01",
+			[1] = "loc_past_sergeant_a__story_echo_zola_32_g_01"
 		},
 		sound_events_duration = {
-			[1] = 6.58,
+			[1] = 6.58
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_zola_33_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_zola_33_a_01",
+			[1] = "loc_past_sergeant_a__story_echo_zola_33_a_01"
 		},
 		sound_events_duration = {
-			[1] = 5.900771,
+			[1] = 5.900771
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_zola_33_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_zola_33_c_01",
+			[1] = "loc_past_sergeant_a__story_echo_zola_33_c_01"
 		},
 		sound_events_duration = {
-			[1] = 2.597771,
+			[1] = 2.597771
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_zola_33_e = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_zola_33_e_01",
+			[1] = "loc_past_sergeant_a__story_echo_zola_33_e_01"
 		},
 		sound_events_duration = {
-			[1] = 4.356213,
+			[1] = 4.356213
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_zola_34_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_zola_34_a_01",
+			[1] = "loc_past_sergeant_a__story_echo_zola_34_a_01"
 		},
 		sound_events_duration = {
-			[1] = 3.727166,
+			[1] = 3.727166
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_zola_34_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_zola_34_c_01",
+			[1] = "loc_past_sergeant_a__story_echo_zola_34_c_01"
 		},
 		sound_events_duration = {
-			[1] = 2.377823,
+			[1] = 2.377823
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_zola_34_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_zola_34_d_01",
+			[1] = "loc_past_sergeant_a__story_echo_zola_34_d_01"
 		},
 		sound_events_duration = {
-			[1] = 7.28898,
+			[1] = 7.28898
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_zola_34_e = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_zola_34_e_01",
+			[1] = "loc_past_sergeant_a__story_echo_zola_34_e_01"
 		},
 		sound_events_duration = {
-			[1] = 3.237506,
+			[1] = 3.237506
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_zola_34_g = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_zola_34_g_01",
+			[1] = "loc_past_sergeant_a__story_echo_zola_34_g_01"
 		},
 		sound_events_duration = {
-			[1] = 4.242969,
+			[1] = 4.242969
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_zola_35_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_zola_35_b_01",
+			[1] = "loc_past_sergeant_a__story_echo_zola_35_b_01"
 		},
 		sound_events_duration = {
-			[1] = 7.684521,
+			[1] = 7.684521
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_zola_36_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_zola_36_b_01",
+			[1] = "loc_past_sergeant_a__story_echo_zola_36_b_01"
 		},
 		sound_events_duration = {
-			[1] = 3.468458,
+			[1] = 3.468458
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_zola_36_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_zola_36_c_01",
+			[1] = "loc_past_sergeant_a__story_echo_zola_36_c_01"
 		},
 		sound_events_duration = {
-			[1] = 6.347029,
+			[1] = 6.347029
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_zola_36_e = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_zola_36_e_01",
+			[1] = "loc_past_sergeant_a__story_echo_zola_36_e_01"
 		},
 		sound_events_duration = {
-			[1] = 1.443604,
+			[1] = 1.443604
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	story_echo_zola_36_g = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_past_sergeant_a__story_echo_zola_36_g_01",
+			[1] = "loc_past_sergeant_a__story_echo_zola_36_g_01"
 		},
 		sound_events_duration = {
-			[1] = 1.712115,
+			[1] = 1.712115
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_psykhanium_past_sergeant_a", mission_vo_psykhanium_past_sergeant_a)

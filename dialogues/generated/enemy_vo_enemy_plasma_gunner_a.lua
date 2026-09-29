@@ -14,7 +14,7 @@ local enemy_vo_enemy_plasma_gunner_a = {
 			"loc_enemy_plasma_gunner_a__alerted_idle_07",
 			"loc_enemy_plasma_gunner_a__alerted_idle_08",
 			"loc_enemy_plasma_gunner_a__alerted_idle_09",
-			"loc_enemy_plasma_gunner_a__alerted_idle_10",
+			"loc_enemy_plasma_gunner_a__alerted_idle_10"
 		},
 		sound_events_duration = {
 			0.786875,
@@ -26,9 +26,9 @@ local enemy_vo_enemy_plasma_gunner_a = {
 			1.399708,
 			1.023938,
 			1.701417,
-			1.378417,
+			1.378417
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	plasma_gunner_shooting = {
 		randomize_indexes_n = 0,
@@ -42,7 +42,7 @@ local enemy_vo_enemy_plasma_gunner_a = {
 			"loc_enemy_plasma_gunner_a__shooting_07",
 			"loc_enemy_plasma_gunner_a__shooting_08",
 			"loc_enemy_plasma_gunner_a__shooting_09",
-			"loc_enemy_plasma_gunner_a__shooting_10",
+			"loc_enemy_plasma_gunner_a__shooting_10"
 		},
 		sound_events_duration = {
 			1.219688,
@@ -53,9 +53,9 @@ local enemy_vo_enemy_plasma_gunner_a = {
 			1.162167,
 			1.407458,
 			0.93475,
-			1.397979,
+			1.397979
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	plasma_gunner_stopped_shooting = {
 		randomize_indexes_n = 0,
@@ -70,7 +70,7 @@ local enemy_vo_enemy_plasma_gunner_a = {
 			"loc_enemy_plasma_gunner_a__stopped_shooting_07",
 			"loc_enemy_plasma_gunner_a__stopped_shooting_08",
 			"loc_enemy_plasma_gunner_a__stopped_shooting_09",
-			"loc_enemy_plasma_gunner_a__stopped_shooting_10",
+			"loc_enemy_plasma_gunner_a__stopped_shooting_10"
 		},
 		sound_events_duration = {
 			1.514021,
@@ -82,9 +82,9 @@ local enemy_vo_enemy_plasma_gunner_a = {
 			1.232563,
 			1.292396,
 			0.909313,
-			1.487375,
+			1.487375
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	plasma_gunner_take_cover = {
 		randomize_indexes_n = 0,
@@ -109,7 +109,7 @@ local enemy_vo_enemy_plasma_gunner_a = {
 			"loc_enemy_plasma_gunner_a__take_cover_17",
 			"loc_enemy_plasma_gunner_a__take_cover_18",
 			"loc_enemy_plasma_gunner_a__take_cover_19",
-			"loc_enemy_plasma_gunner_a__take_cover_20",
+			"loc_enemy_plasma_gunner_a__take_cover_20"
 		},
 		sound_events_duration = {
 			0.817813,
@@ -131,10 +131,10 @@ local enemy_vo_enemy_plasma_gunner_a = {
 			0.765563,
 			0.930729,
 			0.990979,
-			1.008083,
+			1.008083
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("enemy_vo_enemy_plasma_gunner_a", enemy_vo_enemy_plasma_gunner_a)

@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/loading/loaders/signin_loader.lua
 
 local PACKAGES_TO_LOAD = {
-	"packages/ui/ui_signin_assets",
+	"packages/ui/ui_signin_assets"
 }
 local Loader = require("scripts/loading/loader")
 local SigninLoader = class("SigninLoader")

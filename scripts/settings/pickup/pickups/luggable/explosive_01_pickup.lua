@@ -32,14 +32,14 @@ local pickup_data = {
 		speed_on_hit = 5,
 		unkillable = false,
 		breed_white_list = {},
-		ignored_colliders = {},
+		ignored_colliders = {}
 	},
 	on_pickup_func = function (pickup_unit, interactor_unit, pickup_data)
 		return
 	end,
 	on_drop_func = function (pickup_unit, interactor_unit)
 		return
-	end,
+	end
 }
 
 return pickup_data

@@ -52,7 +52,7 @@ AsyncLevelSpawner.setup_world = function (world_name, parameters)
 	local flags = {
 		Application.ENABLE_MOC,
 		Application.ENABLE_VOLUMETRICS,
-		Application.ENABLE_RAY_TRACING,
+		Application.ENABLE_RAY_TRACING
 	}
 	local world_manager = Managers.world
 	local world = world_manager:create_world(world_name, parameters, unpack(flags))

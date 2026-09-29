@@ -6,7 +6,7 @@ local darkness = {
 	icon = "",
 	id = "darkness",
 	name = "loc_twin_darkness_event_name",
-	stat = "live_event_darkness_twins_won",
+	stat = "live_event_darkness_twins_won"
 }
 
 return darkness

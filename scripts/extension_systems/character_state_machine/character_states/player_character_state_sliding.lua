@@ -28,7 +28,7 @@ local IS_CRITICAL_STRIKE = false
 local slide_knock_down_damage_settings = {
 	radius = 2,
 	damage_profile = DamageProfileTemplates.slide_knockdown,
-	damage_type = damage_types.physical,
+	damage_type = damage_types.physical
 }
 local PlayerCharacterStateSliding = class("PlayerCharacterStateSliding", "PlayerCharacterStateBase")
 local _max_hit_mass
@@ -272,7 +272,7 @@ PlayerCharacterStateSliding._update_enemy_hit_detection = function (self, unit, 
 	local damage_type = damage_settings.damage_type
 	local locomotion_component = self._locomotion_component
 	local locomotion_position = locomotion_component.position
-	local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player)
+	local rewind_ms = LagCompensation.rewind_miliseconds(self._is_server, self._is_local_unit, self._player)
 	local radius = damage_settings.radius
 	local actors, num_actors = PhysicsWorld.immediate_overlap(self._physics_world, "shape", "sphere", "position", locomotion_position, "size", radius, "collision_filter", DAMAGE_COLLISION_FILTER, "rewind_ms", rewind_ms)
 	local character_state_hit_mass_component = self._character_state_hit_mass_component

@@ -16,13 +16,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	text_box_pivot = {
 		horizontal_alignment = "center",
@@ -30,13 +30,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	text_box = {
 		horizontal_alignment = "center",
@@ -44,14 +44,14 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			box_width,
-			text_box_height,
+			text_box_height
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
-	},
+			2
+		}
+	}
 }
 local action_text_style = table.clone(UIFontSettings.header_2)
 
@@ -71,7 +71,7 @@ warning_text_style.text_color = {
 	150,
 	255,
 	0,
-	0,
+	0
 }
 
 local value_text_style = table.clone(UIFontSettings.header_3)
@@ -88,15 +88,15 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					start_layer,
+					start_layer
 				},
 				color = {
 					166,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -106,14 +106,14 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					start_layer + 1,
+					start_layer + 1
 				},
 				size = {
 					nil,
-					2,
+					2
 				},
-				color = Color.terminal_corner(255, true),
-			},
+				color = Color.terminal_corner(255, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -123,16 +123,16 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					start_layer + 1,
+					start_layer + 1
 				},
 				size = {
 					nil,
-					2,
+					2
 				},
-				color = Color.terminal_corner(255, true),
-			},
-		},
-	}, "text_box_background"),
+				color = Color.terminal_corner(255, true)
+			}
+		}
+	}, "text_box_background")
 }
 local blueprints = {
 	header = {
@@ -140,14 +140,14 @@ local blueprints = {
 			local entry_height = 0
 			local desciption_height = Text.text_height(ui_renderer, element.text, action_text_style, {
 				box_width,
-				1000,
+				1000
 			}, true)
 
 			entry_height = desciption_height or entry_height
 
 			return {
 				box_width,
-				entry_height,
+				entry_height
 			}
 		end,
 		pass_template = {
@@ -156,12 +156,12 @@ local blueprints = {
 				style_id = "text",
 				value = "",
 				value_id = "text",
-				style = action_text_style,
-			},
+				style = action_text_style
+			}
 		},
 		init = function (parent, widget, element)
 			widget.content.text = element.text
-		end,
+		end
 	},
 	description = {
 		size_function = function (parent, element, ui_renderer)
@@ -172,7 +172,7 @@ local blueprints = {
 
 			return {
 				box_width,
-				entry_height,
+				entry_height
 			}
 		end,
 		pass_template = {
@@ -181,12 +181,12 @@ local blueprints = {
 				style_id = "text",
 				value = "",
 				value_id = "text",
-				style = description_text_style,
-			},
+				style = description_text_style
+			}
 		},
 		init = function (parent, widget, element)
 			widget.content.text = element.text
-		end,
+		end
 	},
 	value = {
 		size_function = function (parent, element, ui_renderer)
@@ -197,7 +197,7 @@ local blueprints = {
 
 			return {
 				box_width,
-				entry_height,
+				entry_height
 			}
 		end,
 		pass_template = {
@@ -206,8 +206,8 @@ local blueprints = {
 				style_id = "text",
 				value = "",
 				value_id = "text",
-				style = value_text_style,
-			},
+				style = value_text_style
+			}
 		},
 		init = function (parent, widget, element)
 			widget.content.text = element.text
@@ -217,21 +217,21 @@ local blueprints = {
 			local anim_progress = 0.5 + math.sin(Application.time_since_launch() * speed) * 0.5
 
 			widget.alpha_multiplier = 0.4 + 0.6 * anim_progress
-		end,
+		end
 	},
 	conflict_title = {
 		size_function = function (parent, element, ui_renderer)
 			local entry_height = 0
 			local desciption_height = Text.text_height(ui_renderer, element.text, warning_text_style, {
 				box_width,
-				1000,
+				1000
 			}, true)
 
 			entry_height = desciption_height or entry_height
 
 			return {
 				box_width,
-				entry_height,
+				entry_height
 			}
 		end,
 		pass_template = {
@@ -240,18 +240,18 @@ local blueprints = {
 				style_id = "text",
 				value = "",
 				value_id = "text",
-				style = warning_text_style,
-			},
+				style = warning_text_style
+			}
 		},
 		init = function (parent, widget, element)
 			widget.content.text = element.text
-		end,
+		end
 	},
 	dynamic_spacing = {
 		size_function = function (parent, element)
 			return element.size
-		end,
-	},
+		end
+	}
 }
 
 return {
@@ -262,13 +262,13 @@ return {
 				offset = {
 					0,
 					0,
-					start_layer - 1,
+					start_layer - 1
 				},
-				color = Color.terminal_corner(30, true),
-			},
-		},
+				color = Color.terminal_corner(30, true)
+			}
+		}
 	}, "screen"),
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
-	grid_blueprints = blueprints,
+	grid_blueprints = blueprints
 }

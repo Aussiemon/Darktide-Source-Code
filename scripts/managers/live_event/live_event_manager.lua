@@ -10,7 +10,7 @@ local REFRESH_TIMER_FAILURE = 60
 local STATE_FAIL_DELAY = 60
 local CLIENT_RPCS = {
 	"rpc_live_event_trigger_combat_feed",
-	"rpc_live_event_pledge_result",
+	"rpc_live_event_pledge_result"
 }
 
 LiveEventManager.init = function (self, is_host, event_delegate)
@@ -49,7 +49,7 @@ LiveEventManager.add_player = function (self, id, account_id, is_local)
 		id = id,
 		account_id = account_id,
 		is_local = is_local,
-		progress = {},
+		progress = {}
 	}
 end
 
@@ -142,7 +142,7 @@ LiveEventManager._on_tier_claimed_success = function (self, id, event_id, comple
 			Managers.event:trigger("event_add_notification_message", "currency", {
 				reason = reason,
 				currency = reward.currency,
-				amount = reward.amount,
+				amount = reward.amount
 			})
 		elseif reward.type == "item" then
 			local rewarded_master_item = Items.register_track_reward(reward)
@@ -151,7 +151,7 @@ LiveEventManager._on_tier_claimed_success = function (self, id, event_id, comple
 
 			Managers.event:trigger("event_add_notification_message", "item_granted", {
 				reason = reason,
-				item = rewarded_master_item,
+				item = rewarded_master_item
 			}, nil, sound_event)
 		end
 	end
@@ -204,8 +204,8 @@ LiveEventManager._on_track_state_success = function (self, id, event_id, backend
 		backend_data = {
 			state = {
 				rewarded = -1,
-				xpTracked = 0,
-			},
+				xpTracked = 0
+			}
 		}
 	end
 
@@ -238,8 +238,8 @@ LiveEventManager._on_track_state_success = function (self, id, event_id, backend
 end
 
 LiveEventManager._on_track_state_fail = function (self, id, event_id, error)
-	if error.code == 404 then
-		Log.info("LiveEventManager", "Backend failed with error 404 for user '%s' and event '%s'. Using dummy data.", id, event_id)
+	if math.floor(error.code / 100) == 4 then
+		Log.info("LiveEventManager", "Backend failed with error %d for user '%s' and event '%s'. Using dummy data.", error.code, id, event_id)
 
 		return self:_on_track_state_success(id, event_id)
 	end
@@ -284,7 +284,7 @@ LiveEventManager._update_player = function (self, dt, id)
 			event_data.update_timer = event_data.update_timer + dt
 		end
 
-		local should_write = account_id and player_data.is_local
+		local should_write = account_id and (player_data.is_local or self._is_host)
 		local has_data = event_data.value ~= nil
 		local can_write = not event_data.promise and (not has_timer or event_data.update_timer >= STATE_FAIL_DELAY)
 		local should_update = should_write and not has_data and can_write
@@ -332,7 +332,7 @@ LiveEventManager._start_event = function (self, event_id)
 			local event_listener_ids = self._listener_ids[event_id]
 
 			event_listener_ids[#event_listener_ids + 1] = Managers.stats:add_listener("TEAM", {
-				combat_feed.stat_id,
+				combat_feed.stat_id
 			}, callback(self, "_trigger_combat_feed", event_id))
 		end
 
@@ -345,7 +345,7 @@ LiveEventManager._start_event = function (self, event_id)
 
 			for i = 1, #combat_feed.stats do
 				event_listener_ids[#event_listener_ids + 1] = Managers.stats:add_listener("TEAM", {
-					combat_feed.stats[i].stat_id,
+					combat_feed.stats[i].stat_id
 				}, callback(self, "_trigger_combat_feed", event_id))
 			end
 		end
@@ -544,6 +544,8 @@ LiveEventManager._clear_events = function (self)
 	table.clear(self._backend_events)
 end
 
+local TEMP_KEYS = {}
+
 LiveEventManager._add_event = function (self, backend_data, ids)
 	local id = backend_data.id
 	local template_name = get_template_name(backend_data)
@@ -562,19 +564,21 @@ LiveEventManager._add_event = function (self, backend_data, ids)
 		if tier.xpLimit > 0 then
 			local rewards = {}
 
-			for _, reward in pairs(tier.rewards) do
+			for _, reward in table.sorted(tier.rewards, TEMP_KEYS) do
 				rewards[#rewards + 1] = {
 					id = reward.id,
 					type = reward.type,
 					amount = reward.amount,
-					currency = reward.currency,
+					currency = reward.currency
 				}
 			end
+
+			table.clear(TEMP_KEYS)
 
 			tiers[i] = {
 				backend_index = i - 1,
 				target = tier.xpLimit,
-				rewards = rewards,
+				rewards = rewards
 			}
 		end
 	end
@@ -594,7 +598,7 @@ LiveEventManager._add_event = function (self, backend_data, ids)
 		starts_at = starts_at,
 		ends_at = ends_at,
 		tiers = tiers,
-		backend_tiers = backend_tiers,
+		backend_tiers = backend_tiers
 	}
 
 	events[id] = event_data
@@ -673,13 +677,10 @@ LiveEventManager._get_current_xp = function (self, id, event_id)
 	end
 
 	local template = LiveEvents[event.template_name]
-	local stat_id = template.stat
+	local segments, stat_values, banked = self:_get_segmented_progress(id, event_id)
+	local total = LiveEventManager.combine_progress(segments, stat_values, banked)
 
-	if not stat_id then
-		return 0
-	end
-
-	return Managers.stats:read_user_stat(id, stat_id)
+	return total - banked
 end
 
 LiveEventManager.active_progress = function (self, optional_id)
@@ -751,7 +752,7 @@ LiveEventManager._show_combat_feed_message = function (self, amount, stat_id, op
 	end
 
 	local localization_data = {
-		amount = amount,
+		amount = amount
 	}
 
 	localization_data.player_name = optional_caused_by_peer_id and Managers.player:player(optional_caused_by_peer_id, 1):name()
@@ -887,6 +888,190 @@ end
 
 LiveEventManager.get_event_data_by_name = function (self, template_name)
 	return self._events_by_name[template_name]
+end
+
+LiveEventManager.get_event_by_track_name = function (self, track_name)
+	local backend_events = self:get_raw_backend_events() or {}
+
+	for i = 1, #backend_events do
+		local event = backend_events[i]
+
+		if event.name == track_name then
+			return event
+		end
+	end
+
+	return nil
+end
+
+LiveEventManager.get_tier_guards = function (self, track_name, stat_category, stat_name)
+	local tier_guards = {}
+	local event = self:get_event_by_track_name(track_name)
+
+	if not event then
+		return nil
+	end
+
+	for j = 1, #event.tiers do
+		local guards = event.tiers[j].guards and event.tiers[j].guards.global
+
+		if guards then
+			for k = 1, #guards do
+				local guard = guards[k]
+
+				if guard.type == "stat" and guard.category == stat_category and guard.name == stat_name then
+					tier_guards[#tier_guards + 1] = guard
+				end
+			end
+		end
+	end
+
+	return tier_guards
+end
+
+LiveEventManager.objective_segments = function (template, tiers)
+	local tier_count = tiers and #tiers or 0
+	local objectives = template.objectives
+
+	if not objectives then
+		local ceiling = tier_count > 0 and tiers[tier_count].target or 0
+
+		return {
+			{
+				first_tier = 1,
+				stat = template.stat,
+				condition = template.condition,
+				last_tier = tier_count,
+				ceiling = ceiling,
+				span = ceiling
+			}
+		}
+	end
+
+	local segments = {}
+	local cursor = 1
+	local prev_ceiling = 0
+	local count = #objectives
+
+	for i = 1, count do
+		local objective = objectives[i]
+		local is_last = i == count
+		local last_tier
+
+		if is_last then
+			last_tier = tier_count
+		else
+			last_tier = cursor + (objective.tiers or 0) - 1
+
+			if tier_count <= last_tier then
+				last_tier = tier_count
+			end
+		end
+
+		local ceiling = last_tier >= 1 and last_tier <= tier_count and tiers[last_tier].target or prev_ceiling
+
+		segments[#segments + 1] = {
+			stat = objective.stat,
+			condition = objective.condition,
+			first_tier = cursor,
+			last_tier = last_tier,
+			ceiling = ceiling,
+			span = ceiling - prev_ceiling
+		}
+		prev_ceiling = ceiling
+		cursor = last_tier + 1
+	end
+
+	return segments
+end
+
+LiveEventManager.combine_progress = function (segments, stat_values, banked_progress)
+	local banked = banked_progress or 0
+	local total = 0
+	local prev_ceiling = 0
+	local count = #segments
+
+	for i = 1, count do
+		local value = stat_values[i] or 0
+		local banked_in_segment = math.max(banked - prev_ceiling, 0)
+
+		if i == count then
+			total = total + banked_in_segment + value
+		else
+			local span = segments[i].span
+			local segment_progress = math.min(math.min(banked_in_segment, span) + value, span)
+
+			total = total + segment_progress
+
+			if segment_progress < span then
+				break
+			end
+
+			prev_ceiling = prev_ceiling + span
+		end
+	end
+
+	return total
+end
+
+LiveEventManager.segment_progress = function (segments, stat_values, banked_progress)
+	local banked = banked_progress or 0
+	local results = {}
+	local prev_ceiling = 0
+	local locked = false
+	local count = #segments
+
+	for i = 1, count do
+		local segment = segments[i]
+		local span = segment.span
+		local value = stat_values and stat_values[i] or 0
+		local banked_in_segment = math.max(banked - prev_ceiling, 0)
+		local progress = banked_in_segment + value
+
+		if i < count then
+			progress = math.min(progress, span)
+		end
+
+		local complete = span <= 0 or span <= progress
+		local result = table.clone(segment)
+
+		result.prev_ceiling = prev_ceiling
+		result.progress = locked and 0 or progress
+		result.complete = not locked and complete
+		result.locked = locked
+		results[i] = result
+		locked = locked or not complete
+		prev_ceiling = prev_ceiling + span
+	end
+
+	return results
+end
+
+LiveEventManager._get_segmented_progress = function (self, id, event_id)
+	local event = self._events[event_id]
+	local template = event and LiveEvents[event.template_name]
+
+	if not template then
+		return {}, {}, 0
+	end
+
+	local segments = LiveEventManager.objective_segments(template, event.tiers)
+	local stat_values = {}
+
+	for i = 1, #segments do
+		local stat_id = segments[i].stat
+
+		stat_values[i] = stat_id and Managers.stats:read_user_stat(id, stat_id) or 0
+	end
+
+	local player_data = self._players[id]
+	local progress_data = player_data and player_data.progress[event_id]
+
+	return segments, stat_values, progress_data and progress_data.value or 0
+end
+
+LiveEventManager.event_segment_progress = function (self, optional_player_id, event_id)
+	return LiveEventManager.segment_progress(self:_get_segmented_progress(optional_player_id or 1, event_id))
 end
 
 LiveEventManager.sorted_active_event_ids = function (active_events)

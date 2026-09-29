@@ -5,12 +5,12 @@ local mission_vo_lm_scavenge_adamant_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_male_a__mission_scavenge_daylight_01",
+			[1] = "loc_adamant_male_a__mission_scavenge_daylight_01"
 		},
 		sound_events_duration = {
-			[1] = 5.724385,
+			[1] = 5.724385
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	mission_scavenge_daylight_response_b = {
 		randomize_indexes_n = 0,
@@ -18,19 +18,19 @@ local mission_vo_lm_scavenge_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__region_periferus_01",
 			"loc_adamant_male_a__region_periferus_02",
-			"loc_adamant_male_a__region_periferus_03",
+			"loc_adamant_male_a__region_periferus_03"
 		},
 		sound_events_duration = {
 			3.558667,
 			3.992667,
-			4.101344,
+			4.101344
 		},
 		sound_event_weights = {
 			0.3333333,
 			0.3333333,
-			0.3333333,
+			0.3333333
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	mission_scavenge_first_objective_response = {
 		randomize_indexes_n = 0,
@@ -43,7 +43,7 @@ local mission_vo_lm_scavenge_adamant_male_a = {
 			"loc_adamant_male_a__guidance_starting_area_05",
 			"loc_adamant_male_a__guidance_starting_area_06",
 			"loc_adamant_male_a__guidance_starting_area_07",
-			"loc_adamant_male_a__guidance_starting_area_08",
+			"loc_adamant_male_a__guidance_starting_area_08"
 		},
 		sound_events_duration = {
 			1.677344,
@@ -53,7 +53,7 @@ local mission_vo_lm_scavenge_adamant_male_a = {
 			3.72001,
 			4.96401,
 			2.613344,
-			5.453344,
+			5.453344
 		},
 		sound_event_weights = {
 			0.125,
@@ -63,21 +63,21 @@ local mission_vo_lm_scavenge_adamant_male_a = {
 			0.125,
 			0.125,
 			0.125,
-			0.125,
+			0.125
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	mission_scavenge_servitors = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_male_a__mission_scavenge_servitors_01",
+			[1] = "loc_adamant_male_a__mission_scavenge_servitors_01"
 		},
 		sound_events_duration = {
-			[1] = 6.761531,
+			[1] = 6.761531
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_lm_scavenge_adamant_male_a", mission_vo_lm_scavenge_adamant_male_a)

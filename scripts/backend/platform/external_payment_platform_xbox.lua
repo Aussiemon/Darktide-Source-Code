@@ -37,7 +37,7 @@ ExternalPaymentPlatformXbox.get_platform_token = function (self)
 
 		if error_code then
 			return Promise.rejected({
-				message = string.format("get_xbs_token_async returned error_code=0x%x", error_code),
+				message = string.format("get_xbs_token_async returned error_code=0x%x", error_code)
 			})
 		end
 
@@ -54,7 +54,7 @@ ExternalPaymentPlatformXbox.get_platform_token = function (self)
 		end):catch(_handle_error)
 	else
 		return Promise.rejected({
-			message = string.format("get_xbs_token_async rejecte with invalid user id"),
+			message = string.format("get_xbs_token_async rejecte with invalid user id")
 		})
 	end
 end
@@ -64,7 +64,7 @@ local function get_purchase_id(access_token)
 
 	if error_code then
 		return Promise.rejected({
-			message = string.format("get_purchase_id_async returned error_code=0x%x", error_code),
+			message = string.format("get_purchase_id_async returned error_code=0x%x", error_code)
 		})
 	end
 
@@ -81,7 +81,7 @@ local function get_purchase_id(access_token)
 			Log.error("ExternalPayment", "get_purchase_id_result failed with code: %s", errorStr)
 
 			return nil, {
-				message = string.format("get_purchase_id_result returned error_code=%s", errorStr),
+				message = string.format("get_purchase_id_result returned error_code=%s", errorStr)
 			}
 		end
 	end):catch(_handle_error)
@@ -92,7 +92,7 @@ local function get_collections_id(access_token)
 
 	if error_code then
 		return Promise.rejected({
-			message = string.format("get_user_collection_id_async returned error_code=0x%x", error_code),
+			message = string.format("get_user_collection_id_async returned error_code=0x%x", error_code)
 		})
 	end
 
@@ -109,7 +109,7 @@ local function get_collections_id(access_token)
 			Log.error("ExternalPayment", "get_user_collection_id_result failed with code: %s", errorStr)
 
 			return nil, {
-				message = string.format("get_user_collection_id_result returned error_code=%s", errorStr),
+				message = string.format("get_user_collection_id_result returned error_code=%s", errorStr)
 			}
 		end
 	end):catch(_handle_error)
@@ -120,7 +120,7 @@ local function show_xbox_purchase_ui(product_id)
 
 	if not async_job then
 		return Promise.rejected({
-			message = string.format("show_purchase_ui_async returned error_code=0x%x", error_code),
+			message = string.format("show_purchase_ui_async returned error_code=0x%x", error_code)
 		})
 	end
 
@@ -133,11 +133,11 @@ local function show_xbox_purchase_ui(product_id)
 
 		if result == 0 then
 			return {
-				success = true,
+				success = true
 			}
 		else
 			return {
-				success = false,
+				success = false
 			}
 		end
 	end)
@@ -164,8 +164,8 @@ local function update_user_id(user_id_type, account_id)
 		return Managers.backend:title_request(BackendUtilities.url_builder():path("/store/"):path(account_id):path("/xbox/token/"):path(user_id_type):to_string(), {
 			method = "PUT",
 			body = {
-				token = user_id,
-			},
+				token = user_id
+			}
 		})
 	end)
 end
@@ -200,8 +200,8 @@ ExternalPaymentPlatformXbox.reconcile_pending_txns = function (self)
 			return Managers.backend:title_request(builder:to_string(), {
 				method = "POST",
 				headers = {
-					["platform-token"] = token,
-				},
+					["platform-token"] = token
+				}
 			}):next(function (response)
 				return response.body
 			end)
@@ -215,7 +215,7 @@ ExternalPaymentPlatformXbox.reconcile_account_entitlements = function (self)
 			local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/entitlements/reconcile"):query("platform", self:get_payment_platform())
 
 			return Managers.backend:title_request(builder:to_string(), {
-				method = "POST",
+				method = "POST"
 			}):next(function (response)
 				return response.body
 			end)
@@ -228,7 +228,7 @@ ExternalPaymentPlatformXbox.reconcile_account_entitlements = function (self)
 		Log.exception("ExternalPayment", "Failed to reconcile account entitlements, error: %s", tostring(error))
 
 		return Promise.rejected({
-			error,
+			error
 		})
 	end)
 end
@@ -240,8 +240,8 @@ ExternalPaymentPlatformXbox.init_txn = function (self, payment_option)
 		return Managers.backend:title_request(builder:to_string(), {
 			method = "POST",
 			body = {
-				paymentOptionId = payment_option,
-			},
+				paymentOptionId = payment_option
+			}
 		}):next(function (response)
 			return response.body.orderId
 		end)
@@ -256,11 +256,11 @@ ExternalPaymentPlatformXbox.finalize_txn = function (self, order_id)
 			return Managers.backend:title_request(builder:to_string(), {
 				method = "POST",
 				body = {
-					placeholder = "",
+					placeholder = ""
 				},
 				headers = {
-					["platform-token"] = token,
-				},
+					["platform-token"] = token
+				}
 			}):next(function (response)
 				return response.body.data
 			end)
@@ -273,12 +273,12 @@ ExternalPaymentPlatformXbox.fail_txn = function (self, order_id)
 		local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/payments/"):path(order_id):query("platform", self:get_payment_platform())
 
 		return Managers.backend:title_request(builder:to_string(), {
-			method = "DELETE",
+			method = "DELETE"
 		}):catch(function (error)
 			Log.error("ExternalPayment", "Failed to remove pending transaction %s", tostring(error))
 
 			return Promise.rejected({
-				error = error,
+				error = error
 			})
 		end)
 	end)
@@ -286,17 +286,17 @@ end
 
 local FAILED_TXN = {
 	body = {
-		state = "failed",
-	},
+		state = "failed"
+	}
 }
 
 ExternalPaymentPlatformXbox._decorate_option = function (self, option, platform_entitlements)
 	option.description = {
 		type = "currency",
-		description = option.value.amount .. " " .. option.value.type,
+		description = option.value.amount .. " " .. option.value.type
 	}
 	option.price = {
-		amount = {},
+		amount = {}
 	}
 
 	local offer_id = option.microsoft and option.microsoft.productId
@@ -352,7 +352,7 @@ ExternalPaymentPlatformXbox._decorate_option = function (self, option, platform_
 	option.make_purchase = function (self)
 		if self.pending_txn_promise then
 			return Promise.rejected({
-				message = "Called init transaction when a transaction was already pending",
+				message = "Called init transaction when a transaction was already pending"
 			})
 		end
 
@@ -365,7 +365,7 @@ ExternalPaymentPlatformXbox._decorate_option = function (self, option, platform_
 
 			if not success then
 				return Promise.rejected({
-					message = "Could not verify store profile match",
+					message = "Could not verify store profile match"
 				})
 			end
 
@@ -456,12 +456,12 @@ end
 ExternalPaymentPlatformXbox._is_platform_option_owned = function (self, offer, platform_entitlement)
 	if offer.productIds.microsoft then
 		return Promise.resolved({
-			is_owner = platform_entitlement.isInUserCollection,
+			is_owner = platform_entitlement.isInUserCollection
 		})
 	end
 
 	return Promise.resolved({
-		is_owner = false,
+		is_owner = false
 	})
 end
 
@@ -481,7 +481,7 @@ ExternalPaymentPlatformXbox.query_license_token = function (self, product_ids, s
 	if not async_job then
 		return Promise.rejected({
 			error_code = error_code,
-			message = string.format("query_license_token_async returned error_code=0x%x", error_code),
+			message = string.format("query_license_token_async returned error_code=0x%x", error_code)
 		})
 	end
 
@@ -495,7 +495,7 @@ ExternalPaymentPlatformXbox.query_license_token = function (self, product_ids, s
 		if error_code ~= nil then
 			return false, {
 				error_code = error_code,
-				error = string.format("query_license_token_async_result returned error_code=0x%x", error_code),
+				error = string.format("query_license_token_async_result returned error_code=0x%x", error_code)
 			}
 		end
 

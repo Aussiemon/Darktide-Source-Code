@@ -6,7 +6,7 @@ dialogue_category_config.default = {
 	mutually_exclusive = true,
 	query_score = 1,
 	interrupted_by = {},
-	playable_during_category = {},
+	playable_during_category = {}
 }
 dialogue_category_config.vox_prio_0 = {
 	mutually_exclusive = true,
@@ -27,15 +27,15 @@ dialogue_category_config.vox_prio_0 = {
 		player_on_demand_vo = true,
 		player_prio_0 = true,
 		player_prio_1 = true,
-		player_prio_2 = true,
-	},
+		player_prio_2 = true
+	}
 }
 dialogue_category_config.vox_prio_1 = {
 	interrupt_self = true,
 	mutually_exclusive = false,
 	query_score = 50,
 	interrupted_by = {
-		vox_prio_1 = true,
+		vox_prio_1 = true
 	},
 	playable_during_category = {
 		conversations_prio_0 = true,
@@ -50,8 +50,8 @@ dialogue_category_config.vox_prio_1 = {
 		player_prio_0 = false,
 		player_prio_1 = true,
 		player_prio_2 = true,
-		vox_prio_1 = true,
-	},
+		vox_prio_1 = true
+	}
 }
 dialogue_category_config.enemy_alerts_prio_0 = {
 	mutually_exclusive = true,
@@ -71,8 +71,8 @@ dialogue_category_config.enemy_alerts_prio_0 = {
 		player_prio_0 = true,
 		player_prio_1 = true,
 		player_prio_2 = true,
-		vox_prio_0 = true,
-	},
+		vox_prio_0 = true
+	}
 }
 dialogue_category_config.enemy_alerts_prio_1 = {
 	mutually_exclusive = true,
@@ -87,8 +87,8 @@ dialogue_category_config.enemy_alerts_prio_1 = {
 		player_ability_vo = true,
 		player_on_demand_vo = true,
 		player_prio_1 = true,
-		player_prio_2 = true,
-	},
+		player_prio_2 = true
+	}
 }
 dialogue_category_config.player_on_demand_vo = {
 	mutually_exclusive = false,
@@ -109,8 +109,8 @@ dialogue_category_config.player_on_demand_vo = {
 		player_prio_0 = true,
 		player_prio_1 = true,
 		player_prio_2 = true,
-		vox_prio_0 = true,
-	},
+		vox_prio_0 = true
+	}
 }
 dialogue_category_config.player_ability_vo = {
 	interrupt_self = true,
@@ -131,14 +131,14 @@ dialogue_category_config.player_ability_vo = {
 		player_prio_0 = true,
 		player_prio_1 = true,
 		player_prio_2 = true,
-		vox_prio_0 = true,
-	},
+		vox_prio_0 = true
+	}
 }
 dialogue_category_config.player_prio_0 = {
 	mutually_exclusive = true,
 	query_score = 25,
 	interrupted_by = {
-		enemy_story_vo = true,
+		enemy_story_vo = true
 	},
 	playable_during_category = {
 		conversations_prio_0 = true,
@@ -152,14 +152,14 @@ dialogue_category_config.player_prio_0 = {
 		player_ability_vo = true,
 		player_on_demand_vo = true,
 		player_prio_1 = true,
-		player_prio_2 = true,
-	},
+		player_prio_2 = true
+	}
 }
 dialogue_category_config.player_prio_1 = {
 	mutually_exclusive = true,
 	query_score = 20,
 	interrupted_by = {
-		enemy_story_vo = true,
+		enemy_story_vo = true
 	},
 	playable_during_category = {
 		default = true,
@@ -169,8 +169,8 @@ dialogue_category_config.player_prio_1 = {
 		npc_prio_1 = true,
 		player_ability_vo = true,
 		player_on_demand_vo = true,
-		player_prio_2 = true,
-	},
+		player_prio_2 = true
+	}
 }
 dialogue_category_config.player_prio_2 = {
 	mutually_exclusive = true,
@@ -183,15 +183,15 @@ dialogue_category_config.player_prio_2 = {
 		enemy_vo_prio_1 = true,
 		npc_prio_1 = true,
 		player_ability_vo = true,
-		player_on_demand_vo = true,
-	},
+		player_on_demand_vo = true
+	}
 }
 dialogue_category_config.conversations_prio_0 = {
 	mutually_exclusive = true,
 	query_score = 25,
 	queue_vox_prio_0 = true,
 	interrupted_by = {
-		vox_prio_0 = true,
+		vox_prio_0 = true
 	},
 	playable_during_category = {
 		default = true,
@@ -204,8 +204,8 @@ dialogue_category_config.conversations_prio_0 = {
 		player_ability_vo = true,
 		player_on_demand_vo = true,
 		player_prio_1 = true,
-		player_prio_2 = true,
-	},
+		player_prio_2 = true
+	}
 }
 dialogue_category_config.conversations_prio_1 = {
 	add_rule_memory_on_discard = true,
@@ -213,7 +213,7 @@ dialogue_category_config.conversations_prio_1 = {
 	query_score = 15,
 	queue_vox_prio_0 = true,
 	interrupted_by = {
-		vox_prio_0 = true,
+		vox_prio_0 = true
 	},
 	playable_during_category = {
 		default = true,
@@ -221,8 +221,8 @@ dialogue_category_config.conversations_prio_1 = {
 		enemy_vo_prio_1 = true,
 		npc_prio_1 = true,
 		player_ability_vo = true,
-		player_on_demand_vo = true,
-	},
+		player_on_demand_vo = true
+	}
 }
 dialogue_category_config.enemy_story_vo = {
 	mutually_exclusive = false,
@@ -242,14 +242,14 @@ dialogue_category_config.enemy_story_vo = {
 		player_prio_0 = true,
 		player_prio_1 = true,
 		player_prio_2 = true,
-		vox_prio_0 = true,
-	},
+		vox_prio_0 = true
+	}
 }
 dialogue_category_config.enemy_vo_prio_0 = {
 	mutually_exclusive = false,
 	query_score = 10,
 	interrupted_by = {
-		enemy_story_vo = true,
+		enemy_story_vo = true
 	},
 	playable_during_category = {
 		conversations_prio_0 = true,
@@ -264,15 +264,15 @@ dialogue_category_config.enemy_vo_prio_0 = {
 		player_prio_0 = true,
 		player_prio_1 = true,
 		player_prio_2 = true,
-		vox_prio_0 = true,
-	},
+		vox_prio_0 = true
+	}
 }
 dialogue_category_config.enemy_vo_prio_1 = {
 	mutually_exclusive = true,
 	query_score = 5,
 	interrupted_by = {
 		enemy_story_vo = true,
-		enemy_vo_prio_0 = true,
+		enemy_vo_prio_0 = true
 	},
 	playable_during_category = {
 		conversations_prio_0 = true,
@@ -285,8 +285,8 @@ dialogue_category_config.enemy_vo_prio_1 = {
 		player_on_demand_vo = true,
 		player_prio_0 = true,
 		player_prio_1 = true,
-		player_prio_2 = true,
-	},
+		player_prio_2 = true
+	}
 }
 dialogue_category_config.chorus_vo_prio_1 = {
 	multiple_allowed = true,
@@ -298,14 +298,14 @@ dialogue_category_config.chorus_vo_prio_1 = {
 		enemy_vo_prio_1 = true,
 		npc_prio_1 = true,
 		player_prio_1 = true,
-		player_prio_2 = true,
-	},
+		player_prio_2 = true
+	}
 }
 dialogue_category_config.cutscene = {
 	mutually_exclusive = false,
 	query_score = 1,
 	interrupted_by = {
-		cutscene_prio_high = true,
+		cutscene_prio_high = true
 	},
 	playable_during_category = {
 		conversations_prio_0 = true,
@@ -319,8 +319,8 @@ dialogue_category_config.cutscene = {
 		player_on_demand_vo = true,
 		player_prio_0 = true,
 		player_prio_1 = true,
-		player_prio_2 = true,
-	},
+		player_prio_2 = true
+	}
 }
 dialogue_category_config.cutscene_prio_high = {
 	mutually_exclusive = true,
@@ -338,8 +338,8 @@ dialogue_category_config.cutscene_prio_high = {
 		player_on_demand_vo = true,
 		player_prio_0 = true,
 		player_prio_1 = true,
-		player_prio_2 = true,
-	},
+		player_prio_2 = true
+	}
 }
 dialogue_category_config.npc_prio_0 = {
 	mutually_exclusive = true,
@@ -359,8 +359,8 @@ dialogue_category_config.npc_prio_0 = {
 		player_on_demand_vo = true,
 		player_prio_0 = true,
 		player_prio_1 = true,
-		player_prio_2 = true,
-	},
+		player_prio_2 = true
+	}
 }
 dialogue_category_config.npc_prio_1 = {
 	mutually_exclusive = true,
@@ -369,7 +369,7 @@ dialogue_category_config.npc_prio_1 = {
 		enemy_alerts_prio_0 = true,
 		npc_prio_0 = true,
 		player_prio_0 = true,
-		vox_prio_0 = true,
+		vox_prio_0 = true
 	},
 	playable_during_category = {
 		conversations_prio_0 = false,
@@ -384,8 +384,8 @@ dialogue_category_config.npc_prio_1 = {
 		player_on_demand_vo = true,
 		player_prio_0 = false,
 		player_prio_1 = false,
-		player_prio_2 = true,
-	},
+		player_prio_2 = true
+	}
 }
 dialogue_category_config.playable_during_cinematic = {
 	conversations_prio_0 = false,
@@ -404,7 +404,7 @@ dialogue_category_config.playable_during_cinematic = {
 	player_prio_1 = false,
 	player_prio_2 = false,
 	vox_prio_0 = false,
-	vox_prio_1 = false,
+	vox_prio_1 = false
 }
 
 return settings("DialogueCategoryConfig", dialogue_category_config)

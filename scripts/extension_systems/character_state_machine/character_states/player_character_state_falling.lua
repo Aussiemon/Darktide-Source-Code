@@ -47,7 +47,7 @@ PlayerCharacterStateFalling.init = function (self, ...)
 			Vector3Box(Quaternion.forward(Quaternion(up, tau * 2 / 8))),
 			Vector3Box(Quaternion.forward(Quaternion(up, tau * 6 / 8))),
 			Vector3Box(Quaternion.forward(Quaternion(up, tau * 3 / 8))),
-			Vector3Box(Quaternion.forward(Quaternion(up, tau * 7 / 8))),
+			Vector3Box(Quaternion.forward(Quaternion(up, tau * 7 / 8)))
 		}
 		self._raycast_object = PhysicsWorld.make_raycast(self._physics_world, "closest", "types", "statics", "collision_filter", "filter_player_mover")
 	end

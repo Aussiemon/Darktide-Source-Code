@@ -12,11 +12,11 @@ local Vector3_flat = Vector3.flat
 local Vector3_normalize = Vector3.normalize
 local resources = {
 	link_particle_name = link_particle_name,
-	hit_particle_name = hit_particle_name,
+	hit_particle_name = hit_particle_name
 }
 local vfx = {
 	link_to_source = link_particle_name,
-	hit = hit_particle_name,
+	hit = hit_particle_name
 }
 
 local function _get_positions(unit, template_data)
@@ -92,7 +92,7 @@ local effect_template = {
 		if link_particle_id then
 			World.stop_spawning_particles(world, link_particle_id)
 		end
-	end,
+	end
 }
 
 return effect_template

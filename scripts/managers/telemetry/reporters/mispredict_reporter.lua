@@ -8,10 +8,6 @@ MispredictReporter.init = function (self)
 	self._count = 0
 end
 
-MispredictReporter.update = function (self, dt, t)
-	return
-end
-
 MispredictReporter.report = function (self)
 	Managers.telemetry_events:mispredict_report(self._entries, self._count)
 end
@@ -26,7 +22,7 @@ MispredictReporter.register_event = function (self, tsm, component_name, field_n
 		average_t = 0,
 		count = 0,
 		component = component_name,
-		field = field_name,
+		field = field_name
 	}
 
 	component_data[field_name] = field_data

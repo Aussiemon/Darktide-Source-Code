@@ -127,7 +127,7 @@ AmmoBelt.component_data = {
 		step = 1,
 		ui_name = "Ammo in Unit",
 		ui_type = "slider",
-		value = 53,
+		value = 53
 	},
 	max_ammo = {
 		decimals = 0,
@@ -136,7 +136,7 @@ AmmoBelt.component_data = {
 		step = 1,
 		ui_name = "Max Ammo",
 		ui_type = "slider",
-		value = 50,
+		value = 50
 	},
 	ammo = {
 		decimals = 0,
@@ -145,7 +145,7 @@ AmmoBelt.component_data = {
 		step = 1,
 		ui_name = "Ammo",
 		ui_type = "slider",
-		value = 50,
+		value = 50
 	},
 	anim_speed = {
 		decimals = 1,
@@ -154,12 +154,12 @@ AmmoBelt.component_data = {
 		step = 0.1,
 		ui_name = "Animation Speed",
 		ui_type = "slider",
-		value = 2,
+		value = 2
 	},
 	use_simple_animation_length = {
 		ui_name = "Use Anim Length",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	num_belts = {
 		decimals = 0,
@@ -168,12 +168,12 @@ AmmoBelt.component_data = {
 		step = 1,
 		ui_name = "Number of Ammo Belts",
 		ui_type = "slider",
-		value = 1,
+		value = 1
 	},
 	dismantled = {
 		ui_name = "Dismantled",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	dismantled_ammo_mask = {
 		decimals = 3,
@@ -182,8 +182,8 @@ AmmoBelt.component_data = {
 		step = 0.001,
 		ui_name = "Dismantled Mask",
 		ui_type = "slider",
-		value = 1,
-	},
+		value = 1
+	}
 }
 
 return AmmoBelt

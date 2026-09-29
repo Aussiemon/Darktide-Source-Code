@@ -13,13 +13,13 @@ local contract_title_text_style = styles.contract_title_text_style
 
 contract_title_text_style.size = {
 	350,
-	50,
+	50
 }
 contract_title_text_style.text_color = {
 	255,
 	169,
 	191,
-	153,
+	153
 }
 contract_title_text_style.font_size = 20
 contract_title_text_style.horizontal_alignment = "right"
@@ -34,7 +34,7 @@ contracts_progress_bar_style.color = {
 	255,
 	169,
 	191,
-	153,
+	153
 }
 contracts_progress_bar_style.horizontal_alignment = "right"
 contracts_progress_bar_style.vertical_alignment = "top"
@@ -53,13 +53,13 @@ contracts_progress_bar_frame_style.color = {
 	255,
 	169,
 	191,
-	153,
+	153
 }
 contracts_progress_bar_frame_style.horizontal_alignment = "right"
 contracts_progress_bar_frame_style.vertical_alignment = "top"
 contracts_progress_bar_frame_style.size_addition = {
 	2,
-	2,
+	2
 }
 styles.contract_background_style = {}
 
@@ -69,12 +69,12 @@ contract_background_style.color = Color.terminal_background(160, true)
 contract_background_style.uvs = {
 	{
 		1,
-		0,
+		0
 	},
 	{
 		0,
-		1,
-	},
+		1
+	}
 }
 styles.contract_type_icon_style = {}
 
@@ -83,7 +83,7 @@ local contract_type_icon_style = styles.contract_type_icon_style
 contract_type_icon_style.color = Color.terminal_text_header(255, true)
 contract_type_icon_style.size = {
 	50,
-	50,
+	50
 }
 contract_type_icon_style.horizontal_alignment = "left"
 contract_type_icon_style.vertical_alignment = "top"
@@ -99,7 +99,7 @@ hud_element_tactical_overlay_settings.right_header_height = 40
 hud_element_tactical_overlay_settings.right_timer_height = 30
 hud_element_tactical_overlay_settings.right_grid_spacing = {
 	0,
-	hud_element_tactical_overlay_settings.internal_buffer,
+	hud_element_tactical_overlay_settings.internal_buffer
 }
 hud_element_tactical_overlay_settings.right_panel_grids = {
 	event = {
@@ -107,31 +107,31 @@ hud_element_tactical_overlay_settings.right_panel_grids = {
 		loc_key = "loc_event_category_label",
 		icon = {
 			blueprint_type = "texture_icon",
-			value = "content/ui/materials/icons/circumstances/live_event_01",
+			value = "content/ui/materials/icons/circumstances/live_event_01"
 		},
 		timer = {
 			loc_key = "loc_event_time_left",
 			func = function (t)
 				return Managers.live_event:active_time_left(t)
-			end,
-		},
+			end
+		}
 	},
 	achievements = {
 		index = 2,
 		loc_key = "loc_achievements_view_display_name",
 		icon = {
 			blueprint_type = "text_icon",
-			value = "",
-		},
+			value = ""
+		}
 	},
 	contracts = {
 		index = 3,
 		loc_key = "loc_contracts_view_display_name",
 		icon = {
 			blueprint_type = "texture_icon",
-			value = "content/ui/materials/hud/interactions/icons/contracts",
-		},
-	},
+			value = "content/ui/materials/hud/interactions/icons/contracts"
+		}
+	}
 }
 hud_element_tactical_overlay_settings.right_panel_order = {}
 
@@ -141,7 +141,7 @@ end
 
 hud_element_tactical_overlay_settings.default_context = {
 	show_left_side_details = true,
-	show_right_side = true,
+	show_right_side = true
 }
 
 return settings("HudElementTacticalOverlaySettings", hud_element_tactical_overlay_settings)

@@ -57,7 +57,7 @@ MultiplayerSessionBootError.loc_description = function (self)
 	local string_format = "%s %s"
 
 	return "loc_error_reason", {
-		error_reason = error_code_string,
+		error_reason = error_code_string
 	}, string_format
 end
 

@@ -200,6 +200,7 @@ CorruptorArmExtension.set_animation_target = function (self, target, speed_multi
 		self:_start_extending()
 	else
 		Unit.flow_event(unit, "lua_start_retracting")
+		self._mission_objective_target_extension:remove_unit_marker()
 
 		if self._is_extending then
 			self:_stop_extending()

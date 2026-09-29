@@ -100,7 +100,7 @@ MinionVortexExtension._init_blackboard_components = function (self, blackboard, 
 		ledges = 10,
 		ledges_with_fence = 10,
 		monster_walls = 0,
-		teleporters = 5,
+		teleporters = 5
 	}
 	local nav_cost_map_multipliers = {}
 	local traverse_logic, nav_tag_cost_table, nav_cost_map_multiplier_table = Navigation.create_traverse_logic(self._nav_world, nav_tag_allowed_layers, nav_cost_map_multipliers, false)
@@ -125,7 +125,7 @@ MinionVortexExtension._init_blackboard_components = function (self, blackboard, 
 		ledges = 0,
 		ledges_with_fence = 0,
 		monster_walls = 0,
-		teleporters = 0,
+		teleporters = 0
 	}
 	local catapult_traverse_logic, catapult_nav_tag_cost_table, catapult_cost_map_multiplier_table = Navigation.create_traverse_logic(self._nav_world, catapult_nav_tag_allowed_layers, nav_cost_map_multipliers, false)
 
@@ -601,7 +601,7 @@ MinionVortexExtension._vortex_grab = function (self, t, vortex_unit, vortex_temp
 
 	self._player_units_inside[player_data.player_unit] = {
 		vortex_eject_height = vortex_eject_height,
-		vortex_eject_time = t + vortex_template.player_in_vortex_max_duration,
+		vortex_eject_time = t + vortex_template.player_in_vortex_max_duration
 	}
 	self._vortex_component.num_players_inside = self._vortex_component.num_players_inside + 1
 end
@@ -833,28 +833,28 @@ local VFX_VARIABLE_DATA = {
 	radius_body = {
 		speed_multiplier = 1,
 		default = Vector3Box(0.5, 1.8, 0),
-		fully_dissipated = Vector3Box(0, 0.2, 0),
+		fully_dissipated = Vector3Box(0, 0.2, 0)
 	},
 	radius_ground = {
 		speed_multiplier = 1,
 		default = Vector3Box(3, 8, 0),
-		fully_dissipated = Vector3Box(0, 2, 0),
+		fully_dissipated = Vector3Box(0, 2, 0)
 	},
 	spiral_speed = {
 		speed_multiplier = 1,
 		default = Vector3Box(1, 0, 0),
-		fully_dissipated = Vector3Box(0, 0, 0),
+		fully_dissipated = Vector3Box(0, 0, 0)
 	},
 	spiral_rotation = {
 		speed_multiplier = 1,
 		default = Vector3Box(1, 0, 0),
-		fully_dissipated = Vector3Box(0, 0, 0),
+		fully_dissipated = Vector3Box(0, 0, 0)
 	},
 	velocity = {
 		speed_multiplier = 1.5,
 		default = Vector3Box(1, 1, 1),
-		fully_dissipated = Vector3Box(0, 0, 0),
-	},
+		fully_dissipated = Vector3Box(0, 0, 0)
+	}
 }
 
 KILL_PARTICLE_EMIT_AT_PROGRESS = 0.3

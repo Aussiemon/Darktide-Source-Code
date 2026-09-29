@@ -38,7 +38,7 @@ local FORMATTING_FUNCTIONS = {
 	end,
 	default = function (value, config)
 		return tostring(value)
-	end,
+	end
 }
 local FIND_VALUE_FUNCTIONS = {
 	buff_template = function (trait_definition, config, trait_level)
@@ -59,7 +59,7 @@ local FIND_VALUE_FUNCTIONS = {
 	end,
 	default = function (trait_definition, config, trait_level)
 		return config.value
-	end,
+	end
 }
 
 TraitValueParser.trait_description = function (item, trait_level, lerp_value)
@@ -127,6 +127,11 @@ function _try_localization_info(item, trait_level, lerp_value)
 
 	local trait = item.trait
 	local buff_name = trait
+
+	if not buff_name or buff_name == "" then
+		return nil
+	end
+
 	local buff_template = BuffTemplates[buff_name]
 
 	if not buff_template then

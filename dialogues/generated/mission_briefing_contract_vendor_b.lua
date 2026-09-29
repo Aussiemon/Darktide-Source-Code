@@ -8,15 +8,15 @@ local mission_briefing_contract_vendor_b = {
 			"loc_contract_vendor_b__mission_strain_briefing_a_01",
 			"loc_contract_vendor_b__mission_strain_briefing_a_02",
 			"loc_contract_vendor_b__mission_strain_briefing_a_03",
-			"loc_contract_vendor_b__mission_strain_briefing_a_04",
+			"loc_contract_vendor_b__mission_strain_briefing_a_04"
 		},
 		sound_events_duration = {
 			3.45678,
 			3.45678,
 			3.45678,
-			3.45678,
+			3.45678
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	mission_strain_briefing_b = {
 		randomize_indexes_n = 0,
@@ -25,15 +25,15 @@ local mission_briefing_contract_vendor_b = {
 			"loc_contract_vendor_b__mission_strain_briefing_b_01",
 			"loc_contract_vendor_b__mission_strain_briefing_b_02",
 			"loc_contract_vendor_b__mission_strain_briefing_b_03",
-			"loc_contract_vendor_b__mission_strain_briefing_b_04",
+			"loc_contract_vendor_b__mission_strain_briefing_b_04"
 		},
 		sound_events_duration = {
 			3.45678,
 			3.45678,
 			3.45678,
-			3.45678,
+			3.45678
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	mission_strain_briefing_c = {
 		randomize_indexes_n = 0,
@@ -42,16 +42,16 @@ local mission_briefing_contract_vendor_b = {
 			"loc_contract_vendor_b__mission_strain_briefing_c_01",
 			"loc_contract_vendor_b__mission_strain_briefing_c_02",
 			"loc_contract_vendor_b__mission_strain_briefing_c_03",
-			"loc_contract_vendor_b__mission_strain_briefing_c_04",
+			"loc_contract_vendor_b__mission_strain_briefing_c_04"
 		},
 		sound_events_duration = {
 			3.45678,
 			3.45678,
 			3.45678,
-			3.45678,
+			3.45678
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_briefing_contract_vendor_b", mission_briefing_contract_vendor_b)

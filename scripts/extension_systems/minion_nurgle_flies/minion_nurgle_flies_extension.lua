@@ -122,7 +122,7 @@ MinionNurgleFliesExtension._attach_to_hit_player = function (self, player, buff_
 	self._hit_player_data = {
 		player_unit = player.player_unit,
 		is_local_player = is_local_player,
-		buff_ext = buff_ext,
+		buff_ext = buff_ext
 	}
 
 	if is_local_player then

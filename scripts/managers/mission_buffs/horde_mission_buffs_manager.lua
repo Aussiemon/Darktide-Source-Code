@@ -11,49 +11,49 @@ local HordeMissionBuffsManager = class("HordeMissionBuffsManager", "MissionBuffs
 local CLIENT_RPCS = {
 	"rpc_client_mission_buffs_buff_choices_received",
 	"rpc_client_mission_buffs_buff_received",
-	"rpc_client_mission_buffs_family_received",
+	"rpc_client_mission_buffs_family_received"
 }
 local EVENTS = {
 	{
 		"mission_buffs_event_player_spawned",
-		"_manage_player_spawn",
+		"_manage_player_spawn"
 	},
 	{
 		"mission_buffs_event_notify_buff_to_player",
-		"notify_buff_given_to_player",
+		"notify_buff_given_to_player"
 	},
 	{
 		"mission_buffs_event_notify_buff_removed_from_player",
-		"notify_buff_removed_from_player",
+		"notify_buff_removed_from_player"
 	},
 	{
 		"mission_buffs_event_add_externally_controlled_to_player",
-		"_add_externally_controlled_buff_to_player",
+		"_add_externally_controlled_buff_to_player"
 	},
 	{
 		"mission_buffs_event_remove_externally_controlled_from_player",
-		"_remove_externally_controlled_buff_from_player",
+		"_remove_externally_controlled_buff_from_player"
 	},
 	{
 		"mission_buffs_event_request_specific_buff",
-		"_request_specific_buff",
+		"_request_specific_buff"
 	},
 	{
 		"mission_buffs_event_request_family_buff_choice",
-		"_request_buff_family_choice",
+		"_request_buff_family_choice"
 	},
 	{
 		"mission_buffs_event_request_family_buff_for_all",
-		"_request_family_buff_for_all",
+		"_request_family_buff_for_all"
 	},
 	{
 		"mission_buffs_event_request_legendary_buff_choice",
-		"_request_legendary_buff_choice",
+		"_request_legendary_buff_choice"
 	},
 	{
 		"event_surival_mode_buff_choice",
-		"_notify_server_buff_choice",
-	},
+		"_notify_server_buff_choice"
+	}
 }
 
 HordeMissionBuffsManager._register_rpcs = function (self, network_event_delegate)
@@ -145,7 +145,7 @@ HordeMissionBuffsManager.cb_get_horde_setting_from_the_backend_failed = function
 
 	self._backend_buffs_to_exclude = {}
 	self._backend_weighted_randomization = {
-		buff_family_weights = {},
+		buff_family_weights = {}
 	}
 
 	self:_manage_delayed_data_initialization_for_players()
@@ -160,7 +160,7 @@ HordeMissionBuffsManager._init_randomization_settings = function (self, horde_ba
 	end
 
 	self._backend_weighted_randomization = {
-		buff_family_weights = buff_family_weights,
+		buff_family_weights = buff_family_weights
 	}
 
 	local weighted_randomization_message = "Weighted Randomization Data\nBuff Families:"
@@ -244,7 +244,7 @@ HordeMissionBuffsManager.check_catchup_for_new_player = function (self, player, 
 		return
 	end
 
-	local waves_completed = self._game_mode:get_last_wave_completed()
+	local waves_completed = self._game_mode.get_last_wave_completed and self._game_mode:get_last_wave_completed() or 0
 
 	waves_completed = override_waves_completed_num or waves_completed
 
@@ -353,7 +353,9 @@ HordeMissionBuffsManager._manage_player_spawn = function (self, player, is_respa
 		mission_buffs_selector:try_start_new_buff_choice_for_player(player)
 	end
 
-	self:check_catchup_for_new_player(player, self._game_mode:get_last_wave_completed())
+	local wave_number = self._game_mode.get_last_wave_completed and self._game_mode:get_last_wave_completed() or 0
+
+	self:check_catchup_for_new_player(player, wave_number)
 	mission_buffs_handler:log_player_data(player)
 end
 
@@ -465,7 +467,7 @@ end
 HordeMissionBuffsManager.notify_buff_given_to_player = function (self, player, buff_name)
 	local buff_template_id = NetworkLookup.buff_templates[buff_name]
 	local is_player_hosting_client = self._is_hosting_player(player)
-	local wave_num = self._game_mode._waves_completed
+	local wave_num = self._game_mode.get_last_wave_completed and self._game_mode:get_last_wave_completed() or 0
 
 	if DEDICATED_SERVER or not is_player_hosting_client then
 		local player_peer_id = player:peer_id()
@@ -520,7 +522,7 @@ end
 HordeMissionBuffsManager.notify_buff_removed_from_player = function (self, player, buff_name)
 	local buff_template_id = NetworkLookup.buff_templates[buff_name]
 	local is_player_hosting_client = self._is_hosting_player(player)
-	local wave_num = self._game_mode._waves_completed
+	local wave_num = self._game_mode.get_last_wave_completed and self._game_mode:get_last_wave_completed() or 0
 
 	if DEDICATED_SERVER or not is_player_hosting_client then
 		Log.info("HordeMissionBuffsManager", "Buff removed (server-side notification) %s for peer_id %s, wave_num %d", buff_name, player:peer_id(), wave_num or -1)
@@ -533,7 +535,7 @@ HordeMissionBuffsManager.send_choice_options_to_player = function (self, player,
 	local is_player_hosting_client = self._is_hosting_player(player)
 	local is_buff_family_choice = current_choice.is_buff_family_choice
 	local options = current_choice.options
-	local wave_num = self._game_mode._waves_completed
+	local wave_num = self._game_mode.get_last_wave_completed and self._game_mode:get_last_wave_completed() or 0
 
 	if DEDICATED_SERVER or not is_player_hosting_client then
 		local game_session_manager = Managers.state.game_session

@@ -22,8 +22,8 @@ local scenegraph_definition = {
 		position = {
 			100,
 			-60,
-			10,
-		},
+			10
+		}
 	},
 	header = {
 		horizontal_alignment = "center",
@@ -31,13 +31,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			600,
-			50,
+			50
 		},
 		position = {
 			0,
 			40,
-			10,
-		},
+			10
+		}
 	},
 	sub_header = {
 		horizontal_alignment = "center",
@@ -45,13 +45,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			600,
-			50,
+			50
 		},
 		position = {
 			0,
 			70,
-			10,
-		},
+			10
+		}
 	},
 	header_separator = {
 		horizontal_alignment = "center",
@@ -59,13 +59,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			600,
-			50,
+			50
 		},
 		position = {
 			0,
 			125,
-			10,
-		},
+			10
+		}
 	},
 	body = {
 		horizontal_alignment = "center",
@@ -73,13 +73,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			600,
-			250,
+			250
 		},
 		position = {
 			0,
 			155,
-			10,
-		},
+			10
+		}
 	},
 	separator = {
 		horizontal_alignment = "center",
@@ -87,13 +87,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			600,
-			3,
+			3
 		},
 		position = {
 			0,
 			-100,
-			10,
-		},
+			10
+		}
 	},
 	rewards_header = {
 		horizontal_alignment = "center",
@@ -101,13 +101,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			600,
-			40,
+			40
 		},
 		position = {
 			0,
 			-40,
-			10,
-		},
+			10
+		}
 	},
 	reward_one = {
 		horizontal_alignment = "center",
@@ -117,8 +117,8 @@ local scenegraph_definition = {
 		position = {
 			-160,
 			-120,
-			10,
-		},
+			10
+		}
 	},
 	reward_two = {
 		horizontal_alignment = "center",
@@ -128,8 +128,8 @@ local scenegraph_definition = {
 		position = {
 			160,
 			-120,
-			10,
-		},
+			10
+		}
 	},
 	play_button = {
 		horizontal_alignment = "center",
@@ -137,13 +137,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			300,
-			60,
+			60
 		},
 		position = {
 			0,
 			60,
-			10,
-		},
+			10
+		}
 	},
 	difficulty_stepper = {
 		horizontal_alignment = "center",
@@ -151,13 +151,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			336,
-			94,
+			94
 		},
 		position = {
 			0,
 			150,
-			10,
-		},
+			10
+		}
 	},
 	difficulty_stepper_indicators = {
 		horizontal_alignment = "center",
@@ -165,14 +165,14 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			280,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			150,
-		},
-	},
+			150
+		}
+	}
 }
 local widget_definitions = {
 	background = UIWidget.create_definition({
@@ -185,34 +185,34 @@ local widget_definitions = {
 				scale_to_material = true,
 				size = {
 					left_panel_size[1] - 40,
-					left_panel_size[2] + 135,
+					left_panel_size[2] + 135
 				},
 				offset = {
 					-10,
 					0,
-					0,
+					0
 				},
 				size_addition = {
 					60,
-					6,
+					6
 				},
-				color = Color.terminal_grid_background(nil, true),
-			},
-		},
+				color = Color.terminal_grid_background(nil, true)
+			}
+		}
 	}, "left_panel", nil, nil),
 	header = UIWidget.create_definition({
 		{
 			pass_type = "text",
 			style_id = "header",
 			value_id = "header",
-			style = view_styles.header_font_style,
+			style = view_styles.header_font_style
 		},
 		{
 			pass_type = "text",
 			style_id = "sub_header",
 			value_id = "sub_header",
-			style = view_styles.sub_header_font_style,
-		},
+			style = view_styles.sub_header_font_style
+		}
 	}, "header"),
 	header_separator = UIWidget.create_definition({
 		{
@@ -225,24 +225,24 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					400,
-					18,
+					18
 				},
 				offset = {
 					0,
 					-6,
-					1,
+					1
 				},
-				color = Color.terminal_frame(255, true),
-			},
-		},
+				color = Color.terminal_frame(255, true)
+			}
+		}
 	}, "header_separator"),
 	body = UIWidget.create_definition({
 		{
 			pass_type = "text",
 			style_id = "body_text",
 			value_id = "body_text",
-			style = view_styles.body_font_style,
-		},
+			style = view_styles.body_font_style
+		}
 	}, "body"),
 	separator = UIWidget.create_definition({
 		{
@@ -255,18 +255,18 @@ local widget_definitions = {
 					50,
 					255,
 					255,
-					255,
-				},
-			},
-		},
+					255
+				}
+			}
+		}
 	}, "separator"),
 	rewards_header = UIWidget.create_definition({
 		{
 			pass_type = "text",
 			style_id = "text",
 			value_id = "text",
-			style = view_styles.rewards_header_font_style,
-		},
+			style = view_styles.rewards_header_font_style
+		}
 	}, "rewards_header"),
 	reward_1 = UIWidget.create_definition({
 		{
@@ -281,18 +281,18 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				color = {
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				material_values = {
-					use_placeholder_texture = 1,
-				},
-			},
+					use_placeholder_texture = 1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -300,15 +300,15 @@ local widget_definitions = {
 			value = "content/ui/materials/backgrounds/default_square",
 			value_id = "reward_1",
 			style = {
-				color = Color.black(60, true),
-			},
+				color = Color.black(60, true)
+			}
 		},
 		{
 			pass_type = "text",
 			style_id = "text",
 			value = "text",
 			value_id = "text",
-			style = view_styles.reward_font_style,
+			style = view_styles.reward_font_style
 		},
 		{
 			pass_type = "texture",
@@ -318,10 +318,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					10,
+					10
 				},
-				color = Color.terminal_text_body_dark(255, true),
-			},
+				color = Color.terminal_text_body_dark(255, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -331,11 +331,11 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					11,
+					11
 				},
-				color = Color.terminal_text_body(255, true),
-			},
-		},
+				color = Color.terminal_text_body(255, true)
+			}
+		}
 	}, "reward_one"),
 	reward_2 = UIWidget.create_definition({
 		{
@@ -344,8 +344,8 @@ local widget_definitions = {
 			value = "content/ui/materials/backgrounds/default_square",
 			value_id = "reward_2",
 			style = {
-				color = Color.black(60, true),
-			},
+				color = Color.black(60, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -359,25 +359,25 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				color = {
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				material_values = {
-					use_placeholder_texture = 1,
-				},
-			},
+					use_placeholder_texture = 1
+				}
+			}
 		},
 		{
 			pass_type = "text",
 			style_id = "text",
 			value = "text",
 			value_id = "text",
-			style = view_styles.reward_font_style,
+			style = view_styles.reward_font_style
 		},
 		{
 			pass_type = "texture",
@@ -387,10 +387,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					10,
+					10
 				},
-				color = Color.terminal_text_body_dark(255, true),
-			},
+				color = Color.terminal_text_body_dark(255, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -400,14 +400,14 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					11,
+					11
 				},
-				color = Color.terminal_text_body(255, true),
-			},
-		},
+				color = Color.terminal_text_body(255, true)
+			}
+		}
 	}, "reward_two"),
 	play_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "play_button", {
-		original_text = "PLAY BASIC",
+		original_text = "PLAY BASIC"
 	}),
 	edge_top = UIWidget.create_definition({
 		{
@@ -419,19 +419,19 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					-116,
-					11,
+					11
 				},
 				size = {
 					840,
-					200,
-				},
-			},
-		},
+					200
+				}
+			}
+		}
 	}, "left_panel"),
 	edge_bottom = UIWidget.create_definition({
 		{
@@ -443,19 +443,19 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					185,
-					11,
+					11
 				},
 				size = {
 					740,
-					120,
-				},
-			},
-		},
+					120
+				}
+			}
+		}
 	}, "left_panel"),
 	select_difficulty_text = UIWidget.create_definition({
 		{
@@ -463,12 +463,12 @@ local widget_definitions = {
 			style_id = "text",
 			value = "",
 			value_id = "text",
-			style = view_styles.select_difficulty_text_style,
-		},
-	}, "difficulty_stepper"),
+			style = view_styles.select_difficulty_text_style
+		}
+	}, "difficulty_stepper")
 }
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

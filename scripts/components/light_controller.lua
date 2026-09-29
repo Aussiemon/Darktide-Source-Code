@@ -160,25 +160,25 @@ LightController.component_data = {
 	start_enabled = {
 		ui_name = "Start Enabled",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	light_groups = {
 		category = "Light Groups",
 		size = 0,
 		ui_name = "Light Groups",
 		ui_type = "text_box_array",
-		values = {},
+		values = {}
 	},
 	fake_light = {
 		ui_name = "Fake Light",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	flicker_start_enabled = {
 		category = "Flicker",
 		ui_name = "Flicker Enabled",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	flicker_config = {
 		category = "Flicker",
@@ -188,39 +188,39 @@ LightController.component_data = {
 		options_keys = {
 			"Default",
 			"Default 2",
-			"Movement - Expensive",
+			"Movement - Expensive"
 		},
 		options_values = {
 			"default",
 			"default2",
-			"movement_expensive",
-		},
+			"movement_expensive"
+		}
 	},
 	extensions = {
-		"LightControllerExtension",
+		"LightControllerExtension"
 	},
 	inputs = {
 		enable_lights = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		disable_lights = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		enable_flicker = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		disable_flicker = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		update_state = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return LightController

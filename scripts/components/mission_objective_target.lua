@@ -10,7 +10,6 @@ MissionObjectiveTarget.init = function (self, unit)
 
 	if mission_objective_target_extension then
 		local objective_name = self:_retrieve_objective_name(unit)
-		local use_global_group = self:get_data(unit, "use_global_group")
 		local ui_target_type = self:get_data(unit, "ui_target_type")
 		local objective_stage = self:get_data(unit, "objective_stage")
 		local register_self = self:get_data(unit, "register_self")
@@ -19,7 +18,7 @@ MissionObjectiveTarget.init = function (self, unit)
 		local unit_enabled = self:get_data(unit, "unit_enabled")
 		local enabled_only_during_mission = unit_enabled == "only_mission"
 
-		mission_objective_target_extension:setup_from_component(objective_name, use_global_group, ui_target_type, objective_stage, register_self, add_marker_on_registration, add_marker_on_objective_start, enabled_only_during_mission)
+		mission_objective_target_extension:setup_from_component(objective_name, ui_target_type, objective_stage, register_self, add_marker_on_registration, add_marker_on_objective_start, enabled_only_during_mission)
 
 		self._mission_objective_target_extension = mission_objective_target_extension
 
@@ -144,7 +143,7 @@ MissionObjectiveTarget.component_data = {
 			"escort",
 			"kill",
 			"resupply",
-			"scanning",
+			"scanning"
 		},
 		options_values = {
 			"default",
@@ -153,40 +152,35 @@ MissionObjectiveTarget.component_data = {
 			"escort",
 			"kill",
 			"resupply",
-			"scanning",
-		},
+			"scanning"
+		}
 	},
 	objective_name = {
 		ui_name = "Objective Name",
 		ui_type = "text_box",
-		value = "default",
+		value = "default"
 	},
 	register_self = {
 		ui_name = "Register Self",
 		ui_type = "check_box",
-		value = true,
-	},
-	use_global_group = {
-		ui_name = "Lock to Global Objective",
-		ui_type = "check_box",
-		value = false,
+		value = true
 	},
 	add_marker_on_registration = {
 		ui_name = "Add Marker on Registration",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	add_marker_on_objective_start = {
 		ui_name = "Add Marker on Objective Start",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	objective_stage = {
 		decimals = 0,
 		min = 1,
 		ui_name = "Objective Stage",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	unit_enabled = {
 		ui_name = "Enabled Options",
@@ -194,23 +188,23 @@ MissionObjectiveTarget.component_data = {
 		value = "enabled",
 		options_keys = {
 			"Unit Enabled",
-			"Unit Enabled only during Mission Event",
+			"Unit Enabled only during Mission Event"
 		},
 		options_values = {
 			"enabled",
-			"only_mission",
-		},
+			"only_mission"
+		}
 	},
 	start_visible = {
 		ui_name = "Starts Visible",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	is_side_mission = {
 		category = "Side Mission",
 		ui_name = "Is Side Mission",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	side_objective_type = {
 		category = "Side Mission",
@@ -220,27 +214,27 @@ MissionObjectiveTarget.component_data = {
 		options_keys = {
 			"none",
 			"luggable",
-			"collect",
+			"collect"
 		},
 		options_values = {
 			"none",
 			"luggable",
-			"collect",
-		},
+			"collect"
+		}
 	},
 	inputs = {
 		objective_marker_enable = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		objective_marker_disable = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"MissionObjectiveTargetExtension",
-	},
+		"MissionObjectiveTargetExtension"
+	}
 }
 
 return MissionObjectiveTarget

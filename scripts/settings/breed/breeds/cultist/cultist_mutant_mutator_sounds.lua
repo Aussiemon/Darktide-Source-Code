@@ -7,14 +7,14 @@ local sound_data = {
 		footstep_land = "wwise/events/minions/play_minion_footsteps_chaos_ogryn_land",
 		ground_impact = "wwise/events/minions/play_enemy_foley_body_impact_large_ground",
 		run_breath = "wwise/events/minions/play_enemy_mutant_charger_run_breath",
-		run_foley = "wwise/events/minions/play_enemy_mutant_charger_run_rattle",
+		run_foley = "wwise/events/minions/play_enemy_mutant_charger_run_rattle"
 	},
 	use_proximity_culling = {
 		footstep = false,
 		footstep_land = false,
 		run_breath = false,
-		run_foley = false,
-	},
+		run_foley = false
+	}
 }
 
 return sound_data

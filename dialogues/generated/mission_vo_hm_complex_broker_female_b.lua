@@ -9,24 +9,24 @@ local mission_vo_hm_complex_broker_female_b = {
 			"loc_broker_female_b__guidance_starting_area_02",
 			"loc_broker_female_b__guidance_starting_area_03",
 			"loc_broker_female_b__guidance_starting_area_04",
-			"loc_broker_female_b__guidance_starting_area_05",
+			"loc_broker_female_b__guidance_starting_area_05"
 		},
 		sound_events_duration = {
 			3.989708,
 			3.952698,
 			3.021573,
 			3.366896,
-			2.885917,
+			2.885917
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_hm_complex_broker_female_b", mission_vo_hm_complex_broker_female_b)

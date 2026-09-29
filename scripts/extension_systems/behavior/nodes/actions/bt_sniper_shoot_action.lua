@@ -298,7 +298,7 @@ local DISALLOWED_CHARACTER_STATES = {
 	consumed = true,
 	grabbed = true,
 	mutant_charged = true,
-	pounced = true,
+	pounced = true
 }
 
 BtSniperShootAction._aim = function (self, unit, t, dt, scratchpad, action_data)

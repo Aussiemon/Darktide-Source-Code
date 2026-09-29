@@ -3,10 +3,10 @@
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local player_package_aliases = {
-	"sound_dependencies",
-	"particle_dependencies",
+	"base_unit_dependencies",
 	"decal_dependencies",
-	"base_units",
+	"particle_dependencies",
+	"sound_dependencies"
 }
 
 for index, alias in ipairs(PlayerCharacterConstants.player_package_aliases) do

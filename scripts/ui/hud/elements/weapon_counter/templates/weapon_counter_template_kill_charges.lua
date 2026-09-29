@@ -12,17 +12,17 @@ local FILLED_FILL_OPACITY = 1.3
 local UNFILLED_OUTLINE_COLOR = UIHudSettings.color_tint_main_2
 local FILLED_OUTLINE_COLOR = UIHudSettings.color_tint_main_2
 local weapon_counter_template_kill_charges = {
-	data = {},
+	data = {}
 }
 local length = 400
 local thickness = 400
 local size = {
 	length,
-	thickness,
+	thickness
 }
 local center_size = {
 	4,
-	4,
+	4
 }
 
 weapon_counter_template_kill_charges.name = "kill_charges"
@@ -217,7 +217,7 @@ weapon_counter_template_kill_charges.create_widget_defintion = function (scenegr
 	local charge_bar_offset_right = {
 		10,
 		0,
-		1,
+		1
 	}
 
 	local function create_passes(num_bars)
@@ -227,7 +227,7 @@ weapon_counter_template_kill_charges.create_widget_defintion = function (scenegr
 			local offset = {
 				charge_bar_offset_right[1],
 				charge_bar_offset_right[2],
-				ii + 1,
+				ii + 1
 			}
 
 			passes[ii] = {
@@ -240,7 +240,7 @@ weapon_counter_template_kill_charges.create_widget_defintion = function (scenegr
 					offset = offset,
 					size = {
 						size[1],
-						size[2],
+						size[2]
 					},
 					color = UIHudSettings.color_tint_main_1,
 					material_values = {
@@ -249,15 +249,15 @@ weapon_counter_template_kill_charges.create_widget_defintion = function (scenegr
 						lightning_opacity = 0,
 						arc_top_bottom = {
 							1,
-							0,
+							0
 						},
 						fill_outline_opacity = {
 							FILLED_FILL_OPACITY,
-							1,
+							1
 						},
-						outline_color = Colors.format_color_to_material(UNFILLED_OUTLINE_COLOR),
-					},
-				},
+						outline_color = Colors.format_color_to_material(UNFILLED_OUTLINE_COLOR)
+					}
+				}
 			}
 		end
 
@@ -271,11 +271,11 @@ weapon_counter_template_kill_charges.create_widget_defintion = function (scenegr
 				offset = {
 					charge_bar_offset_right[1],
 					charge_bar_offset_right[2],
-					1,
+					1
 				},
 				size = {
 					size[1],
-					size[2],
+					size[2]
 				},
 				color = UIHudSettings.color_tint_main_1,
 				material_values = {
@@ -284,15 +284,15 @@ weapon_counter_template_kill_charges.create_widget_defintion = function (scenegr
 					lightning_opacity = 0,
 					arc_top_bottom = {
 						0,
-						1,
+						1
 					},
 					fill_outline_opacity = {
 						FILLED_FILL_OPACITY,
-						1,
+						1
 					},
-					outline_color = Colors.format_color_to_material(UNFILLED_OUTLINE_COLOR),
-				},
-			},
+					outline_color = Colors.format_color_to_material(UNFILLED_OUTLINE_COLOR)
+				}
+			}
 		}
 
 		return passes

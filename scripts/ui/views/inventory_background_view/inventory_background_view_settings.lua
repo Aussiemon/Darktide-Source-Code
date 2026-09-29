@@ -15,51 +15,51 @@ local inventory_background_view = {
 	world_name = "ui_inventory",
 	allowed_slots = {
 		"slot_primary",
-		"slot_secondary",
+		"slot_secondary"
 	},
 	ignored_slots = {
 		"slot_pocketable",
 		"slot_pocketable_small",
 		"slot_luggable",
 		"slot_combat_ability",
-		"slot_grenade_ability",
+		"slot_grenade_ability"
 	},
 	allowed_duplicate_slots = {
 		slot_animation_emote_1 = true,
 		slot_animation_emote_2 = true,
 		slot_animation_emote_3 = true,
 		slot_animation_emote_4 = true,
-		slot_animation_emote_5 = true,
+		slot_animation_emote_5 = true
 	},
 	allowed_empty_slots = {
 		slot_attachment_1 = true,
 		slot_attachment_2 = true,
-		slot_attachment_3 = true,
+		slot_attachment_3 = true
 	},
 	ignored_validation_slots = {},
 	animations_per_archetype = {
 		adamant = {
-			initial_event = "character_apperance_idle",
+			initial_event = "character_apperance_idle"
 		},
 		broker = {
-			initial_event = "character_apperance_idle",
+			initial_event = "character_apperance_idle"
 		},
 		cryptic = {
-			initial_event = "character_apperance_idle",
+			initial_event = "character_apperance_idle"
 		},
 		psyker = {
-			initial_event = "character_apperance_idle",
+			initial_event = "character_apperance_idle"
 		},
 		veteran = {
-			initial_event = "character_apperance_idle",
+			initial_event = "character_apperance_idle"
 		},
 		zealot = {
-			initial_event = "character_apperance_idle",
+			initial_event = "character_apperance_idle"
 		},
 		ogryn = {
-			initial_event = "character_apperance_idle",
-		},
-	},
+			initial_event = "character_apperance_idle"
+		}
+	}
 }
 
 return settings("InventoryBackgroundViewSettings", inventory_background_view)

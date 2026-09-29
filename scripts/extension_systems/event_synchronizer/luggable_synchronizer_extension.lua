@@ -49,7 +49,7 @@ LuggableSynchronizerExtension.setup_from_component = function (self, objective_n
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
 		objective_name = is_side_mission_synchronizer and side_mission.name or objective_name
-		self._group_id = mission_objective_system:register_objective_synchronizer(objective_name, nil, unit)
+		self._group_id = mission_objective_system:register_objective_synchronizer(objective_name, unit)
 	end
 
 	self._objective_name = objective_name
@@ -379,7 +379,7 @@ LuggableSynchronizerExtension._despawn_luggable = function (self, luggable_unit_
 
 	local pickup_extension = ScriptUnit.has_extension(spawner_unit, "pickup_system")
 
-	pickup_extension:despawn_item(luggable_unit_to_del)
+	pickup_extension:despawn_item_unit(luggable_unit_to_del)
 
 	if respawn_at_spawner then
 		if self._spawner_respawn_timers[spawner_unit] then

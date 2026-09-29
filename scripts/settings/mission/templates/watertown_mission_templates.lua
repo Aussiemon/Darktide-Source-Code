@@ -2,7 +2,6 @@
 
 local mission_templates = {
 	dm_stockpile = {
-		coordinates = "loc_mission_coordinates_dm_stockpile",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/watertown/missions/mission_dm_stockpile",
@@ -20,23 +19,23 @@ local mission_templates = {
 		zone_id = "watertown",
 		cinematics = {
 			intro_abc = {
-				"c_cam",
+				"c_cam"
 			},
 			outro_fail = {
-				"outro_fail",
+				"outro_fail"
 			},
 			outro_win = {
-				"outro_win",
-			},
+				"outro_win"
+			}
 		},
 		pickup_settings = {},
 		hazard_prop_settings = {
 			explosion = 0.3,
 			fire = 0.2,
-			none = 0.4,
+			none = 0.4
 		},
 		terror_event_templates = {
-			"terror_events_dm_stockpile",
+			"terror_events_dm_stockpile"
 		},
 		health_station = {},
 		testify_flags = {},
@@ -46,19 +45,21 @@ local mission_templates = {
 			vo_events = {
 				"mission_stockpile_briefing_a",
 				"mission_stockpile_briefing_b",
-				"mission_stockpile_briefing_c",
-			},
+				"mission_stockpile_briefing_c"
+			}
 		},
 		dialogue_settings = {
 			short_story_ticker_enabled = true,
-			story_ticker_enabled = true,
+			story_ticker_enabled = true
 		},
 		spawn_settings = {
-			next_mission = "recent_mission",
+			next_mission = "recent_mission"
 		},
+		controllable_object_set_prefixes = {
+			"flow"
+		}
 	},
 	hm_cartel = {
-		coordinates = "loc_mission_coordinates_hm_cartel",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/watertown/missions/mission_hm_cartel",
@@ -77,23 +78,23 @@ local mission_templates = {
 		zone_id = "watertown",
 		cinematics = {
 			intro_abc = {
-				"c_cam",
+				"c_cam"
 			},
 			outro_fail = {
-				"outro_fail",
+				"outro_fail"
 			},
 			outro_win = {
-				"outro_win",
-			},
+				"outro_win"
+			}
 		},
 		hazard_prop_settings = {
 			explosion = 0.3,
 			fire = 0.2,
-			none = 0.4,
+			none = 0.4
 		},
 		pickup_settings = {},
 		terror_event_templates = {
-			"terror_events_hm_cartel",
+			"terror_events_hm_cartel"
 		},
 		testify_flags = {},
 		health_station = {},
@@ -103,19 +104,21 @@ local mission_templates = {
 			vo_events = {
 				"mission_cartel_brief_one",
 				"mission_cartel_brief_two",
-				"mission_cartel_brief_three",
-			},
+				"mission_cartel_brief_three"
+			}
 		},
 		dialogue_settings = {
 			short_story_ticker_enabled = true,
-			story_ticker_enabled = true,
+			story_ticker_enabled = true
 		},
 		spawn_settings = {
-			next_mission = "recent_mission",
+			next_mission = "recent_mission"
 		},
+		controllable_object_set_prefixes = {
+			"flow"
+		}
 	},
 	km_enforcer = {
-		coordinates = "loc_mission_coordinates_km_enforcer",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/watertown/missions/mission_km_enforcer",
@@ -133,23 +136,23 @@ local mission_templates = {
 		zone_id = "watertown",
 		cinematics = {
 			intro_abc = {
-				"c_cam",
+				"c_cam"
 			},
 			outro_fail = {
-				"outro_fail",
+				"outro_fail"
 			},
 			outro_win = {
-				"outro_win",
-			},
+				"outro_win"
+			}
 		},
 		pickup_settings = {},
 		hazard_prop_settings = {
 			explosion = 0.3,
 			fire = 0.2,
-			none = 0.4,
+			none = 0.4
 		},
 		terror_event_templates = {
-			"terror_events_km_enforcer",
+			"terror_events_km_enforcer"
 		},
 		health_station = {},
 		testify_flags = {},
@@ -159,19 +162,21 @@ local mission_templates = {
 			vo_events = {
 				"mission_enforcer_briefing_a",
 				"mission_enforcer_briefing_b",
-				"mission_enforcer_briefing_c",
-			},
+				"mission_enforcer_briefing_c"
+			}
 		},
 		dialogue_settings = {
 			short_story_ticker_enabled = true,
-			story_ticker_enabled = true,
+			story_ticker_enabled = true
 		},
 		spawn_settings = {
-			next_mission = "recent_mission",
+			next_mission = "recent_mission"
 		},
+		controllable_object_set_prefixes = {
+			"flow"
+		}
 	},
 	km_enforcer_twins = {
-		coordinates = "loc_mission_coordinates_km_enforcer",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/watertown_twins/missions/mission_km_enforcer_twins",
@@ -190,91 +195,91 @@ local mission_templates = {
 		zone_id = "watertown",
 		cinematics = {
 			intro_abc = {
-				"c_cam",
+				"c_cam"
 			},
 			outro_fail = {
-				"outro_fail",
+				"outro_fail"
 			},
 			outro_win = {
-				"outro_win",
+				"outro_win"
 			},
 			traitor_captain_intro = {
-				"traitor_captain_intro",
-			},
+				"traitor_captain_intro"
+			}
 		},
 		pickup_settings = {
 			primary = {
 				ammo = {
 					ammo_cache_pocketable = {
-						-100,
-					},
+						-100
+					}
 				},
 				health = {
 					medical_crate_pocketable = {
-						-100,
-					},
+						-100
+					}
 				},
 				forge_material = {
 					small_metal = {
-						-100,
+						-100
 					},
 					large_metal = {
-						-100,
+						-100
 					},
 					small_platinum = {
-						-100,
+						-100
 					},
 					large_platinum = {
-						-100,
-					},
-				},
+						-100
+					}
+				}
 			},
 			secondary = {
 				ammo = {
 					ammo_cache_pocketable = {
-						-100,
-					},
+						-100
+					}
 				},
 				health = {
 					medical_crate_pocketable = {
-						-100,
-					},
+						-100
+					}
 				},
 				forge_material = {
 					small_metal = {
-						-100,
+						-100
 					},
 					large_metal = {
-						-100,
+						-100
 					},
 					small_platinum = {
-						-100,
+						-100
 					},
 					large_platinum = {
-						-100,
-					},
-				},
+						-100
+					}
+				}
 			},
 			rubberband_pool = {
 				ammo = {
 					ammo_cache_pocketable = {
-						-100,
-					},
+						-100
+					}
 				},
 				health = {
 					medical_crate_pocketable = {
-						-100,
-					},
-				},
-			},
+						-100
+					}
+				}
+			}
 		},
 		hazard_prop_settings = {
 			explosion = 0.3,
 			fire = 0.2,
-			none = 0.4,
+			none = 0.4
 		},
 		terror_event_templates = {
-			"terror_events_km_enforcer_twins",
+			"terror_events_km_enforcer_twins"
 		},
 		health_station = {},
 		testify_flags = {},
@@ -285,17 +290,20 @@ local mission_templates = {
 				"mission_twins_briefing_a",
 				"mission_twins_briefing_b",
 				"mission_twins_briefing_b2",
-				"mission_twins_briefing_c",
-			},
+				"mission_twins_briefing_c"
+			}
 		},
 		dialogue_settings = {
 			short_story_ticker_enabled = false,
-			story_ticker_enabled = false,
+			story_ticker_enabled = false
 		},
 		spawn_settings = {
-			next_mission = "recent_mission",
+			next_mission = "recent_mission"
 		},
-	},
+		controllable_object_set_prefixes = {
+			"flow"
+		}
+	}
 }
 
 return mission_templates

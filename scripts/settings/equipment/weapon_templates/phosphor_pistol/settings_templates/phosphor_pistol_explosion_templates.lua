@@ -23,18 +23,18 @@ explosion_templates.phosphor_pistol_backblast = {
 	damage_type = damage_types.phosphor,
 	close_damage_type = damage_types.phosphor,
 	broadphase_explosion_filter = {
-		"villains",
+		"villains"
 	},
 	vfx = {
-		"content/fx/particles/weapons/pistols/phosphorpistol/phosphor_pistol_impact_blast",
+		"content/fx/particles/weapons/pistols/phosphorpistol/phosphor_pistol_impact_blast"
 	},
 	explosion_area_suppression = {
 		distance = 4,
-		suppression_value = 5,
-	},
+		suppression_value = 5
+	}
 }
 
 return {
 	base_templates = explosion_templates,
-	overrides = overrides,
+	overrides = overrides
 }

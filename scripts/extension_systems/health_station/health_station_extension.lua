@@ -196,7 +196,7 @@ end
 HealthStationExtension.track_for_telemetry = function (self, charges, plug)
 	local data = {
 		charges = charges,
-		has_battery = plug,
+		has_battery = plug
 	}
 
 	Managers.telemetry_events:health_station_spawned(self._unit, data)
@@ -363,7 +363,7 @@ HealthStationExtension.unspawn_battery = function (self)
 		if self._spawned_battery_unit ~= nil then
 			local battery_unit = self._spawned_battery_unit
 
-			self._pickup_spawner_extension:despawn_item(battery_unit)
+			self._pickup_spawner_extension:despawn_item_unit(battery_unit)
 
 			self._spawned_battery_unit = nil
 		end
@@ -393,7 +393,7 @@ HealthStationExtension.register_socket_unit = function (self, socket_unit)
 
 	local pickup_types = {
 		"battery_01_luggable",
-		"battery_02_luggable",
+		"battery_02_luggable"
 	}
 
 	self._luggable_socket_extension:set_allowed_luggable_pickup_types(pickup_types)

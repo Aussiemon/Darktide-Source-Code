@@ -113,7 +113,7 @@ ViewElementMissionBoardObjectivesInfo._update_mission_objective_info_panel = fun
 			local active_tab_width = sidebar_width
 			local active_tab_size = {
 				active_tab_width,
-				Settings.panel_height,
+				Settings.panel_height
 			}
 			local tab_idx = 1
 			local widget = self:_create_panel_widget(title, sub_title, icon, "main_objective", tab_idx, active_tab_size, tab_width)
@@ -147,7 +147,7 @@ ViewElementMissionBoardObjectivesInfo._update_mission_objective_info_panel = fun
 		local active_tab_width = sidebar_width - tab_width * (num_tabs - 1)
 		local active_tab_size = {
 			active_tab_width,
-			68,
+			68
 		}
 		local tab_idx = 1
 		local objective_template
@@ -156,7 +156,7 @@ ViewElementMissionBoardObjectivesInfo._update_mission_objective_info_panel = fun
 		if has_circumstance then
 			local category = mission.category
 			local is_story = parent.is_campaign_mission and parent:is_campaign_mission(mission)
-			local unlock_data = parent.get_mission_unlock_data and parent:get_mission_unlock_data(mission.map, category)
+			local unlock_data = parent.get_mission_unlock_data and parent:get_mission_unlock_data(mission.map, category, mission.campaign)
 			local circumstance = mission.circumstance
 			local circumstance_template = CircumstanceTemplates[circumstance]
 			local circumstance_ui_data = circumstance_template and circumstance_template.ui
@@ -201,7 +201,7 @@ ViewElementMissionBoardObjectivesInfo._update_mission_objective_info_panel = fun
 			style.objectives_panel_title.offset = {
 				68,
 				0,
-				5,
+				5
 			}
 			tab_idx = tab_idx + 1
 		end
@@ -210,9 +210,9 @@ ViewElementMissionBoardObjectivesInfo._update_mission_objective_info_panel = fun
 			local mission_template = MissionTemplates[mission.map]
 
 			objective_template = MissionTypes[mission_template.mission_type]
-			title = Localize(objective_template.name)
+			title = objective_template and objective_template.name and Localize(objective_template.name) or "n/a"
 			sub_title = Localize("loc_misison_board_main_objective_title")
-			icon = objective_template.mission_board_icon or objective_template.icon
+			icon = objective_template and objective_template.name and (objective_template.mission_board_icon or objective_template.icon) or "content/ui/materials/icons/mission_types_pj/mission_type_quick"
 
 			local widget = self:_create_panel_widget(title, sub_title, icon, "main_objective", tab_idx, active_tab_size, tab_width)
 			local content = widget.content
@@ -299,7 +299,7 @@ ViewElementMissionBoardObjectivesInfo._update_mission_objective_info = function 
 			local size_multiplier = 1 / #Settings.currency_order
 			local size = {
 				MissionBoardSettings.dimensions.details_width * size_multiplier,
-				MissionBoardSettings.dimensions.rewards_height,
+				MissionBoardSettings.dimensions.rewards_height
 			}
 
 			for _, currency_type in ipairs(Settings.currency_order) do
@@ -330,7 +330,7 @@ ViewElementMissionBoardObjectivesInfo._update_mission_objective_info = function 
 				local circumstance = mission.circumstance
 				local circumstance_template = CircumstanceTemplates[circumstance]
 				local circumstance_ui_data = circumstance_template and circumstance_template.ui
-				local unlock_data = parent.get_mission_unlock_data and parent:get_mission_unlock_data(mission.map, category)
+				local unlock_data = parent.get_mission_unlock_data and parent:get_mission_unlock_data(mission.map, category, mission.campaign)
 				local circumstance_description = "???"
 
 				if is_story then
@@ -348,8 +348,7 @@ ViewElementMissionBoardObjectivesInfo._update_mission_objective_info = function 
 				content.is_quickplay_mission = false
 			elseif tab_id == "main_objective" then
 				local mission_template = MissionTemplates[mission.map]
-				local objective_template = MissionTypes[mission_template.mission_type]
-				local mission_description = Localize(mission_template.mission_description)
+				local mission_description = mission_template.mission_description and Localize(mission_template.mission_description) or "n/a"
 
 				content.objective_description = mission_description
 				xp, credits = mission.xp, mission.credits
@@ -394,7 +393,7 @@ ViewElementMissionBoardObjectivesInfo._update_mission_objective_info = function 
 			if xp or credits then
 				local size = {
 					MissionBoardSettings.dimensions.details_width * 0.24,
-					MissionBoardSettings.dimensions.rewards_height,
+					MissionBoardSettings.dimensions.rewards_height
 				}
 				local offset_mod = 0
 
@@ -524,7 +523,6 @@ end
 
 ViewElementMissionBoardObjectivesInfo._update_panel_tabs_offset = function (self, dt, t)
 	local cumulative_offset = 0
-	local tot_size = 0
 
 	for i = 1, #self._objectives_tabs do
 		local widget = self._objectives_tabs[i]
@@ -574,7 +572,7 @@ ViewElementMissionBoardObjectivesInfo._update_panel_tabs_offset = function (self
 		if not style.objectives_panel_title.size then
 			style.objectives_panel_title.size = {
 				0,
-				0,
+				0
 			}
 		end
 

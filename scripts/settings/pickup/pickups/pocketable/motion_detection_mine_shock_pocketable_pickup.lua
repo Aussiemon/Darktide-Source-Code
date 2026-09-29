@@ -13,7 +13,7 @@ local pickup_data = {
 	pickup_sound = "wwise/events/player/play_pickup_metal_object",
 	retain_charges = true,
 	smart_tag_target_type = "pickup",
-	unit_name = "content/weapons/player/pickups/pup_landmine_shock/pickup_landmine_shock",
+	unit_name = "content/weapons/player/pickups/pup_landmine_shock/pickup_landmine_shock"
 }
 
 return pickup_data

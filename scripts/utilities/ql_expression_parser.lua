@@ -136,7 +136,7 @@ local flipped_ops = {
 	["<="] = ">=",
 	["=="] = "==",
 	[">"] = "<",
-	[">="] = "<=",
+	[">="] = "<="
 }
 local pos = 1
 
@@ -189,7 +189,7 @@ function parse_comparison(tokens)
 			type = "condition",
 			node = final_node,
 			operator = final_operator,
-			value = final_value,
+			value = final_value
 		}
 	end
 end
@@ -210,7 +210,7 @@ function parse_and(tokens)
 				op = "AND",
 				type = "AST_NODE",
 				left = node,
-				right = right,
+				right = right
 			}
 		else
 			break
@@ -236,7 +236,7 @@ function parse_or(tokens)
 				op = "OR",
 				type = "AST_NODE",
 				left = node,
-				right = right,
+				right = right
 			}
 		else
 			break

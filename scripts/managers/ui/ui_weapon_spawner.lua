@@ -9,7 +9,7 @@ local UIWeaponSpawner = class("UIWeaponSpawner")
 local NilCursor = {
 	0,
 	0,
-	0,
+	0
 }
 local FORCE_STREAM_TIMEOUT = GameParameters.force_stream_mesh_timeout
 
@@ -81,7 +81,7 @@ UIWeaponSpawner.start_presentation = function (self, item, position, rotation, s
 		level_link_unit = level_link_unit,
 		force_highest_mip = force_highest_mip,
 		use_unit_preview_rotation_offset = use_unit_preview_rotation_offset,
-		on_complete_callback = on_complete_callback,
+		on_complete_callback = on_complete_callback
 	}
 
 	single_item_loader:load_slot_item(slot_id, item, on_loaded_callback)
@@ -273,7 +273,7 @@ UIWeaponSpawner._force_stream = function (self, unit_3p, on_complete_callback)
 	end)
 
 	self._stream_promises[stream_promise] = {
-		on_complete_callback = on_complete_callback,
+		on_complete_callback = on_complete_callback
 	}
 end
 
@@ -297,7 +297,7 @@ UIWeaponSpawner._spawn_weapon = function (self, item, link_unit_name, level_link
 		unit_spawner = self._unit_spawner,
 		item_definitions = self._item_definitions,
 		extension_manager = extension_manager,
-		spawn_with_extensions = extension_manager ~= nil,
+		spawn_with_extensions = extension_manager ~= nil
 	}
 	local mission_template, equipment
 	local item_unit_3p, attachment_units_3p = VisualLoadoutCustomization.spawn_item(item, attach_settings, link_unit, true, false, true, mission_template, equipment)
@@ -309,7 +309,7 @@ UIWeaponSpawner._spawn_weapon = function (self, item, link_unit_name, level_link
 		item = item,
 		link_unit = link_unit,
 		item_unit_3p = item_unit_3p,
-		attachment_units_3p = attachment_units_3p,
+		attachment_units_3p = attachment_units_3p
 	}
 
 	self._weapon_spawn_data = spawn_data

@@ -272,12 +272,14 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 		return next_slot_name
 	else
 		for slot_name, config in pairs(slot_configuration) do
-			local wield_inputs = config.wield_inputs
+			if config.wieldable then
+				local wield_inputs = config.wield_inputs and config.wield_inputs.pressed
 
-			if config.wieldable and wield_inputs then
-				for ii = 1, #wield_inputs do
-					if wield_inputs[ii] == wield_input then
-						return slot_name
+				if wield_inputs then
+					for ii = 1, #wield_inputs do
+						if wield_inputs[ii] == wield_input then
+							return slot_name
+						end
 					end
 				end
 			end
@@ -288,7 +290,7 @@ end
 PlayerUnitVisualLoadout.wield_input_from_slot_name = function (slot_name)
 	local slot_config = slot_configuration[slot_name]
 
-	return slot_config.wield_inputs[1]
+	return slot_config.wield_inputs.pressed[1]
 end
 
 PlayerUnitVisualLoadout.slot_is_wieldable = function (visual_loadout_extension, slot_name)

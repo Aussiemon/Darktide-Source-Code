@@ -68,94 +68,94 @@ HeresyFinaleMaterialVariables.component_data = {
 	start_effect_time_variable_name = {
 		ui_name = "Start Effect Start Time Variable",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	material_slot_name = {
 		ui_name = "Material Slot Name",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	start_effect_variable_name = {
 		ui_name = "Start Effect Duration Variable",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	start_effect_duration = {
 		decimals = 2,
 		step = 0.01,
 		ui_name = "Start Effect Duration",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	stage2_time_variable_name = {
 		ui_name = "Stage 2 Effect Start Time Variable",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	stage2_effect_variable_name = {
 		ui_name = "Stage 2 Effect Duration Variable",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	stage2_effect_duration = {
 		decimals = 2,
 		step = 0.01,
 		ui_name = "Stage 2 Effect Duration",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	stage3_time_variable_name = {
 		ui_name = "Stage 2 Effect Start Time Variable",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	stage3_effect_variable_name = {
 		ui_name = "Stage 3 Effect Duration Variable",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	stage3_effect_duration = {
 		decimals = 2,
 		step = 0.01,
 		ui_name = "Stage 3 Effect Duration",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	stage4_time_variable_name = {
 		ui_name = "Stage 2 Effect Start Time Variable",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	stage4_effect_variable_name = {
 		ui_name = "Stage 4 Effect Duration Variable",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	stage4_effect_duration = {
 		decimals = 2,
 		step = 0.01,
 		ui_name = "Stage 4 Effect Duration",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	inputs = {
 		start_effect = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		stage2_effect = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		stage3_effect = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		stage4_effect = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return HeresyFinaleMaterialVariables

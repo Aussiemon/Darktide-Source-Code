@@ -36,46 +36,46 @@ minigame_settings.decode_search_symbols = {
 		4,
 		5,
 		12,
-		16,
+		16
 	},
 	{
 		3,
 		8,
-		9,
+		9
 	},
 	{
 		10,
 		11,
 		13,
 		15,
-		18,
+		18
 	},
 	{
 		1,
 		2,
-		7,
+		7
 	},
 	{
 		14,
 		17,
 		19,
-		23,
+		23
 	},
 	{
 		20,
 		21,
-		22,
+		22
 	},
 	{
 		26,
 		27,
-		28,
+		28
 	},
 	{
 		6,
 		24,
-		25,
-	},
+		25
+	}
 }
 minigame_settings.frequency_search_stage_amount = 3
 minigame_settings.frequency_width_min_scale = 1.5

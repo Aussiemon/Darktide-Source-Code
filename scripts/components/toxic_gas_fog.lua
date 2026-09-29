@@ -229,7 +229,7 @@ ToxicGasFog.editor_init = function (self, unit)
 
 	ToxicGasFog._fog_clouds[#ToxicGasFog._fog_clouds + 1] = {
 		unit = unit,
-		component = self,
+		component = self
 	}
 
 	local world = Application.main_world()
@@ -443,7 +443,7 @@ ToxicGasFog.component_data = {
 		step = 1,
 		ui_name = "ID",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	section = {
 		category = "Circumstance Gameplay Data",
@@ -452,7 +452,7 @@ ToxicGasFog.component_data = {
 		step = 1,
 		ui_name = "Section ID",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	max_liquid = {
 		category = "Circumstance Gameplay Data",
@@ -462,25 +462,25 @@ ToxicGasFog.component_data = {
 		step = 1,
 		ui_name = "Max Liquid",
 		ui_type = "slider",
-		value = 130,
+		value = 130
 	},
 	draw_liquid = {
 		category = "Circumstance Gameplay Data",
 		ui_name = "Draw Liquid",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	trigger_clouds = {
 		category = "Circumstance Gameplay Data",
 		ui_name = "Trigger Clouds",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	dont_trigger_this_cloud = {
 		category = "Circumstance Gameplay Data",
 		ui_name = "Don't trigger this cloud",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	alternating_min_range = {
 		category = "Circumstance Gameplay Data",
@@ -489,7 +489,7 @@ ToxicGasFog.component_data = {
 		step = 0.1,
 		ui_name = "Alternating Min Range",
 		ui_type = "number",
-		value = 16,
+		value = 16
 	},
 	alternating_max_range = {
 		category = "Circumstance Gameplay Data",
@@ -498,19 +498,19 @@ ToxicGasFog.component_data = {
 		step = 0.1,
 		ui_name = "Alternating Max Range",
 		ui_type = "number",
-		value = 20,
+		value = 20
 	},
 	albedo = {
 		category = "Fog Properties",
 		ui_name = "Albedo",
 		ui_type = "vector",
-		value = Vector3Box(0.1, 0.1, 0.1),
+		value = Vector3Box(0.1, 0.1, 0.1)
 	},
 	falloff = {
 		category = "Fog Properties",
 		ui_name = "Falloff",
 		ui_type = "vector",
-		value = Vector3Box(0, 0, 0),
+		value = Vector3Box(0, 0, 0)
 	},
 	extinction = {
 		category = "Fog Properties",
@@ -520,7 +520,7 @@ ToxicGasFog.component_data = {
 		step = 0.001,
 		ui_name = "Extinction",
 		ui_type = "number",
-		value = 0.01,
+		value = 0.01
 	},
 	phase = {
 		category = "Fog Properties",
@@ -529,8 +529,8 @@ ToxicGasFog.component_data = {
 		step = 0.1,
 		ui_name = "Phase",
 		ui_type = "number",
-		value = 0,
-	},
+		value = 0
+	}
 }
 
 return ToxicGasFog

@@ -8,9 +8,9 @@ local AnimCallbackTemplates = {
 			local vortex_grabbed_component = Blackboard.write_component(blackboard, "vortex_grabbed")
 
 			vortex_grabbed_component.landing_finished = true
-		end,
+		end
 	},
-	client = {},
+	client = {}
 }
 
 return AnimCallbackTemplates

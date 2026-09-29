@@ -58,8 +58,8 @@ HoloSight.component_data = {
 	glass_visibility_group_name = {
 		ui_name = "Glass Visibility Group",
 		ui_type = "text_box",
-		value = "",
-	},
+		value = ""
+	}
 }
 
 return HoloSight

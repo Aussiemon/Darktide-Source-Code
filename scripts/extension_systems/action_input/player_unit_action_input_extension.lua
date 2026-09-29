@@ -26,27 +26,27 @@ PlayerUnitActionInputExtension.extensions_ready = function (self, world, unit)
 			action_input_type = "weapon",
 			debug_draw = true,
 			templates = WeaponTemplates,
-			action_extension = weapon_extension,
+			action_extension = weapon_extension
 		},
 		combat_ability_action = {
 			ability_component_name = "combat_ability",
 			action_input_type = "ability",
 			debug_draw = true,
 			templates = AbilityTemplates,
-			action_extension = ability_extension,
+			action_extension = ability_extension
 		},
 		grenade_ability_action = {
 			ability_component_name = "grenade_ability",
 			action_input_type = "ability",
 			templates = AbilityTemplates,
-			action_extension = ability_extension,
+			action_extension = ability_extension
 		},
 		pocketable_ability_action = {
 			ability_component_name = "pocketable_ability",
 			action_input_type = "ability",
 			templates = AbilityTemplates,
-			action_extension = ability_extension,
-		},
+			action_extension = ability_extension
+		}
 	}
 	local network_data_cache = {}
 
@@ -83,7 +83,7 @@ PlayerUnitActionInputExtension.extensions_ready = function (self, world, unit)
 				input_queue_produced_by_hierarchy = string.format("%s_input_queue_produced_by_hierarchy", action_component_name),
 				input_queue_hierarchy_position = string.format("%s_input_queue_hierarchy_position", action_component_name),
 				input_queue_first_entry_became_first_entry_t = string.format("%s_input_queue_first_entry_became_first_entry_t", action_component_name),
-				hierarchy_position = string.format("%s_hierarchy_position", action_component_name),
+				hierarchy_position = string.format("%s_hierarchy_position", action_component_name)
 			}
 
 			network_data_cache_configs[action_component_name] = cache_config
@@ -108,6 +108,14 @@ PlayerUnitActionInputExtension.extensions_ready = function (self, world, unit)
 				debug_index = debug_index + 1
 			end
 		end
+	end
+end
+
+PlayerUnitActionInputExtension.set_active_slot = function (self, id, slot_name_or_nil)
+	local parser = self._action_input_parsers[id]
+
+	if parser then
+		parser:set_active_slot(slot_name_or_nil)
 	end
 end
 

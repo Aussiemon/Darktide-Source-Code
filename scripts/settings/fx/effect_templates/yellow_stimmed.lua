@@ -7,7 +7,7 @@ local PARTICLE_2_NODE = "j_lefteye"
 local PARTICLE_3_NAME = "content/fx/particles/enemies/red_glowing_eyes"
 local PARTICLE_3_NODE = "j_righteye"
 local resources = {
-	eye_vfx = PARTICLE_2_NAME,
+	eye_vfx = PARTICLE_2_NAME
 }
 local SMOKE_VARIBLE_NAME_1 = "lerp_color_a"
 local SMOKE_VARIBLE_NAME_2 = "lerp_color_b"
@@ -16,7 +16,7 @@ local TRAIL_MATERIAL_VARIABLE_NAME = "trail_color"
 local COLOR = {
 	0.358,
 	0.786,
-	0.22,
+	0.22
 }
 local effect_template = {
 	name = "yellow_stimmed",
@@ -95,7 +95,7 @@ local effect_template = {
 		local unit = template_data.unit
 
 		Unit.set_vector3_for_materials(unit, "stimmed_color", Vector3(0, 0, 0), true)
-	end,
+	end
 }
 
 return effect_template

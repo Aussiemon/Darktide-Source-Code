@@ -5,7 +5,7 @@ require("scripts/extension_systems/companion_spawner/companion_spawner_extension
 local CompanionSpawnerSystem = class("CompanionSpawnerSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
 	"rpc_companion_despawn_units",
-	"rpc_companion_spawn_unit",
+	"rpc_companion_spawn_unit"
 }
 
 CompanionSpawnerSystem.init = function (self, context, ...)

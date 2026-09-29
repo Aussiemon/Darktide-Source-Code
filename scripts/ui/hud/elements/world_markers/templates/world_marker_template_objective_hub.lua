@@ -7,15 +7,15 @@ local ColorUtilities = require("scripts/utilities/ui/colors")
 local template = {}
 local size = {
 	50,
-	50,
+	50
 }
 local arrow_size = {
 	70,
-	70,
+	70
 }
 local indicator_size = {
 	16,
-	28,
+	28
 }
 
 template.size = size
@@ -23,7 +23,7 @@ template.unit_node = "ui_objective_marker"
 template.position_offset = {
 	0,
 	0,
-	0.3,
+	0.3
 }
 template.name = "hub_objective"
 template.max_distance = 300
@@ -32,7 +32,7 @@ template.screen_margins = {
 	down = 0.23148148148148148,
 	left = 0.234375,
 	right = 0.234375,
-	up = 0.23148148148148148,
+	up = 0.23148148148148148
 }
 template.fade_settings = {
 	default_fade = 1,
@@ -41,7 +41,7 @@ template.fade_settings = {
 	fade_from = 0,
 	fade_to = 1,
 	invert = true,
-	easing_function = math.ease_exp,
+	easing_function = math.ease_exp
 }
 
 local template_visual_definitions = {
@@ -51,8 +51,8 @@ local template_visual_definitions = {
 			position_offset = {
 				0,
 				0,
-				0,
-			},
+				0
+			}
 		},
 		colors = {
 			frame = UIHudSettings.color_tint_main_1,
@@ -65,40 +65,40 @@ local template_visual_definitions = {
 				0,
 				0,
 				0,
-				0,
+				0
 			},
 			demolition_marker_2 = {
 				0,
 				0,
 				0,
-				0,
+				0
 			},
 			demolition_marker_3 = {
 				0,
 				0,
 				0,
-				0,
+				0
 			},
 			demolition_marker_shadow_1 = {
 				0,
 				0,
 				0,
-				0,
+				0
 			},
 			demolition_marker_shadow_2 = {
 				0,
 				0,
 				0,
-				0,
+				0
 			},
 			demolition_marker_shadow_3 = {
 				0,
 				0,
 				0,
-				0,
-			},
+				0
+			}
 		},
-		textures = {},
+		textures = {}
 	},
 	demolition = {
 		template_settings_overrides = {
@@ -107,51 +107,51 @@ local template_visual_definitions = {
 			position_offset = {
 				0,
 				0,
-				0,
+				0
 			},
 			scale_settings = {
 				distance_max = 30,
 				distance_min = 2,
 				scale_from = 0.5,
-				scale_to = 1,
-			},
+				scale_to = 1
+			}
 		},
 		colors = {
 			frame = {
 				0,
 				0,
 				0,
-				0,
+				0
 			},
 			arrow = {
 				0,
 				0,
 				0,
-				0,
+				0
 			},
 			icon = {
 				0,
 				0,
 				0,
-				0,
+				0
 			},
 			text = {
 				0,
 				0,
 				0,
-				0,
+				0
 			},
 			background = {
 				0,
 				0,
 				0,
-				0,
+				0
 			},
 			indicator = {
 				0,
 				0,
 				0,
-				0,
+				0
 			},
 			demolition_marker_1 = Color.ui_terminal(255, true),
 			demolition_marker_2 = Color.ui_terminal(255, true),
@@ -160,22 +160,22 @@ local template_visual_definitions = {
 				200,
 				0,
 				0,
-				0,
+				0
 			},
 			demolition_marker_shadow_2 = {
 				200,
 				0,
 				0,
-				0,
+				0
 			},
 			demolition_marker_shadow_3 = {
 				200,
 				0,
 				0,
-				0,
-			},
+				0
+			}
 		},
-		textures = {},
+		textures = {}
 	},
 	corruptor = {
 		template_settings_overrides = {
@@ -183,45 +183,45 @@ local template_visual_definitions = {
 			position_offset = {
 				0,
 				0,
-				0,
-			},
+				0
+			}
 		},
 		colors = {
 			frame = {
 				0,
 				0,
 				0,
-				0,
+				0
 			},
 			arrow = {
 				0,
 				0,
 				0,
-				0,
+				0
 			},
 			icon = {
 				0,
 				0,
 				0,
-				0,
+				0
 			},
 			text = {
 				0,
 				0,
 				0,
-				0,
+				0
 			},
 			background = {
 				0,
 				0,
 				0,
-				0,
+				0
 			},
 			indicator = {
 				0,
 				0,
 				0,
-				0,
+				0
 			},
 			demolition_marker_1 = Color.ui_terminal_highlight(255, true),
 			demolition_marker_2 = Color.ui_terminal_highlight(255, true),
@@ -230,23 +230,23 @@ local template_visual_definitions = {
 				200,
 				0,
 				0,
-				0,
+				0
 			},
 			demolition_marker_shadow_2 = {
 				200,
 				0,
 				0,
-				0,
+				0
 			},
 			demolition_marker_shadow_3 = {
 				200,
 				0,
 				0,
-				0,
-			},
+				0
+			}
 		},
-		textures = {},
-	},
+		textures = {}
+	}
 }
 
 local function setup_marker_by_visual_type(widget, marker, visual_type)
@@ -281,7 +281,7 @@ end
 local demolition_center_distance = 70
 local demolition_marker_size = {
 	46,
-	26,
+	26
 }
 local demolition_marker_style = {
 	angle = 0,
@@ -290,24 +290,24 @@ local demolition_marker_style = {
 	offset = {
 		-demolition_center_distance,
 		0,
-		1,
+		1
 	},
 	default_offset = {
 		-demolition_center_distance,
 		0,
-		1,
+		1
 	},
 	size = demolition_marker_size,
 	default_size = demolition_marker_size,
 	pivot = {
 		demolition_marker_size[1] + demolition_center_distance,
-		demolition_marker_size[2] * 0.5,
+		demolition_marker_size[2] * 0.5
 	},
 	default_pivot = {
 		demolition_marker_size[1] + demolition_center_distance,
-		demolition_marker_size[2] * 0.5,
+		demolition_marker_size[2] * 0.5
 	},
-	color = Color.ui_terminal_highlight(0, true),
+	color = Color.ui_terminal_highlight(0, true)
 }
 local demolition_marker_shadow_style = {
 	angle = 0,
@@ -316,29 +316,29 @@ local demolition_marker_shadow_style = {
 	offset = {
 		-demolition_center_distance,
 		0,
-		0,
+		0
 	},
 	default_offset = {
 		-demolition_center_distance,
 		0,
-		0,
+		0
 	},
 	size = demolition_marker_size,
 	default_size = demolition_marker_size,
 	pivot = {
 		demolition_marker_size[1] + demolition_center_distance,
-		demolition_marker_size[2] * 0.5,
+		demolition_marker_size[2] * 0.5
 	},
 	default_pivot = {
 		demolition_marker_size[1] + demolition_center_distance,
-		demolition_marker_size[2] * 0.5,
+		demolition_marker_size[2] * 0.5
 	},
 	color = {
 		0,
 		0,
 		0,
-		0,
-	},
+		0
+	}
 }
 
 template.create_widget_defintion = function (template, scenegraph_id)
@@ -355,7 +355,7 @@ template.create_widget_defintion = function (template, scenegraph_id)
 			style = demolition_marker_style,
 			visibility_function = function (content, style)
 				return style.color[1] > 0
-			end,
+			end
 		},
 		{
 			pass_type = "rotated_texture",
@@ -364,7 +364,7 @@ template.create_widget_defintion = function (template, scenegraph_id)
 			style = demolition_marker_style,
 			visibility_function = function (content, style)
 				return style.color[1] > 0
-			end,
+			end
 		},
 		{
 			pass_type = "rotated_texture",
@@ -373,7 +373,7 @@ template.create_widget_defintion = function (template, scenegraph_id)
 			style = demolition_marker_style,
 			visibility_function = function (content, style)
 				return style.color[1] > 0
-			end,
+			end
 		},
 		{
 			pass_type = "rotated_texture",
@@ -382,7 +382,7 @@ template.create_widget_defintion = function (template, scenegraph_id)
 			style = demolition_marker_shadow_style,
 			visibility_function = function (content, style)
 				return style.color[1] > 0
-			end,
+			end
 		},
 		{
 			pass_type = "rotated_texture",
@@ -391,7 +391,7 @@ template.create_widget_defintion = function (template, scenegraph_id)
 			style = demolition_marker_shadow_style,
 			visibility_function = function (content, style)
 				return style.color[1] > 0
-			end,
+			end
 		},
 		{
 			pass_type = "rotated_texture",
@@ -400,7 +400,7 @@ template.create_widget_defintion = function (template, scenegraph_id)
 			style = demolition_marker_shadow_style,
 			visibility_function = function (content, style)
 				return style.color[1] > 0
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -414,13 +414,13 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
-				color = UIHudSettings.color_tint_main_1,
+				color = UIHudSettings.color_tint_main_1
 			},
 			visibility_function = function (content, style)
 				return style.color[1] > 0
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -434,17 +434,17 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size_addition = {
 					10,
-					10,
+					10
 				},
-				color = UIHudSettings.color_tint_main_1,
+				color = UIHudSettings.color_tint_main_1
 			},
 			visibility_function = function (content, style)
 				return style.color[1] > 0
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -458,22 +458,22 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				size_addition = {
 					10,
-					10,
+					10
 				},
 				color = {
 					200,
 					0,
 					0,
-					0,
-				},
+					0
+				}
 			},
 			visibility_function = function (content, style)
 				return style.color[1] > 0
-			end,
+			end
 		},
 		{
 			pass_type = "rotated_texture",
@@ -487,17 +487,17 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
-				color = Color.ui_hud_green_super_light(255, true),
+				color = Color.ui_hud_green_super_light(255, true)
 			},
 			visibility_function = function (content, style)
 				return content.is_clamped
 			end,
 			change_function = function (content, style)
 				style.angle = content.angle
-			end,
-		},
+			end
+		}
 	}, scenegraph_id)
 end
 

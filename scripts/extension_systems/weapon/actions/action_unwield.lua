@@ -25,6 +25,10 @@ end
 ActionUnwield.start = function (self, action_settings, t, time_scale, action_start_params)
 	ActionUnwield.super.start(self, action_settings, t, time_scale, action_start_params)
 
+	local inventory_slot_component = self._inventory_slot_component
+
+	inventory_slot_component.last_unwield_t = t
+
 	local action_unwield = self._action_unwield_component
 	local used_input = action_start_params.used_input
 	local next_slot = self:_next_slot(used_input, action_settings)

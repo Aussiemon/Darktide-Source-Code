@@ -35,12 +35,12 @@ ability_action_data.actions = {
 	targeted_dash_aim = _require_ability_action("action_targeted_dash_aim"),
 	veteran_combat_ability = _require_ability_action("action_veteran_combat_ability"),
 	veteran_immediate_use = _require_ability_action("action_shout_aim"),
-	veteran_shout_aim = _require_ability_action("action_shout_aim"),
+	veteran_shout_aim = _require_ability_action("action_shout_aim")
 }
 
 local function _can_use_ability_check(action_settings, condition_func_params, used_input, t, time_in_action)
 	local ability_extension = condition_func_params.ability_extension
-	local ability_type = action_settings.ability_type
+	local ability_type = condition_func_params.ability_type
 
 	return ability_extension:can_use_ability(ability_type)
 end
@@ -162,7 +162,7 @@ ability_action_data.action_kind_condition_funcs = {
 		local can_use_ability = _can_use_ability_check(action_settings, condition_func_params, used_input)
 
 		return can_use_ability
-	end,
+	end
 }
 ability_action_data.action_kind_total_time_funcs = {}
 ability_action_data.conditional_state_functions = {
@@ -170,7 +170,7 @@ ability_action_data.conditional_state_functions = {
 		local no_time_left = remaining_time <= 0
 
 		return no_time_left
-	end,
+	end
 }
 
 for name, _ in pairs(ability_action_data.action_kind_condition_funcs) do

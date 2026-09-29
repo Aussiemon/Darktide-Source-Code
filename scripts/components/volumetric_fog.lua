@@ -52,13 +52,13 @@ VolumetricFog.component_data = {
 		Category = "Fog Properties",
 		ui_name = "Albedo",
 		ui_type = "vector",
-		value = Vector3Box(0.1, 0.1, 0.1),
+		value = Vector3Box(0.1, 0.1, 0.1)
 	},
 	falloff = {
 		Category = "Fog Properties",
 		ui_name = "Falloff",
 		ui_type = "vector",
-		value = Vector3Box(0, 0, 0),
+		value = Vector3Box(0, 0, 0)
 	},
 	extinction = {
 		Category = "Fog Properties",
@@ -68,7 +68,7 @@ VolumetricFog.component_data = {
 		step = 0.001,
 		ui_name = "Extinction",
 		ui_type = "number",
-		value = 0.01,
+		value = 0.01
 	},
 	phase = {
 		Category = "Fog Properties",
@@ -77,8 +77,8 @@ VolumetricFog.component_data = {
 		step = 0.1,
 		ui_name = "Phase",
 		ui_type = "number",
-		value = 0,
-	},
+		value = 0
+	}
 }
 
 return VolumetricFog

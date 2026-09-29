@@ -95,21 +95,21 @@ MinigameDecodeSearchView.draw_widgets = function (self, dt, t, input_service, ui
 				255,
 				0,
 				255,
-				0,
+				0
 			}
 		elseif i < current_stage then
 			widget.style.highlight.color = {
 				128,
 				0,
 				128,
-				0,
+				0
 			}
 		else
 			widget.style.highlight.color = {
 				64,
 				0,
 				64,
-				0,
+				0
 			}
 		end
 
@@ -153,10 +153,10 @@ MinigameDecodeSearchView._create_grid_widgets = function (self)
 								255,
 								0,
 								255,
-								0,
-							},
-						},
-					},
+								0
+							}
+						}
+					}
 				}, scenegraph_id, nil, widget_size)
 				local widget = UIWidget.init(widget_name, widget_definition)
 
@@ -219,10 +219,10 @@ MinigameDecodeSearchView._create_target_widgets = function (self, widgets_by_nam
 									255,
 									0,
 									255,
-									0,
-								},
-							},
-						},
+									0
+								}
+							}
+						}
 					}, scenegraph_id, nil, widget_size)
 					local widget = UIWidget.init(widget_name, widget_definition)
 
@@ -263,10 +263,10 @@ MinigameDecodeSearchView._create_stage_widgets = function (self)
 						255,
 						0,
 						255,
-						0,
-					},
-				},
-			},
+						0
+					}
+				}
+			}
 		}
 		local stage_widgets = {}
 
@@ -306,14 +306,14 @@ MinigameDecodeSearchView._update_grid = function (self, widgets_by_name, t, tran
 						255,
 						255,
 						255,
-						150,
+						150
 					}
 				else
 					widget.style.style_id_1.color = {
 						255,
 						128,
 						255,
-						0,
+						0
 					}
 				end
 			else
@@ -321,7 +321,7 @@ MinigameDecodeSearchView._update_grid = function (self, widgets_by_name, t, tran
 					255,
 					0,
 					128,
-					0,
+					0
 				}
 			end
 		end
@@ -347,14 +347,14 @@ MinigameDecodeSearchView._update_cursor = function (self, widgets_by_name, t, tr
 			255,
 			255,
 			255,
-			150,
+			150
 		}
 	else
 		widget_target.style.frame.color = {
 			255,
 			255,
 			165,
-			0,
+			0
 		}
 	end
 end
@@ -367,14 +367,14 @@ MinigameDecodeSearchView._update_target = function (self, widgets_by_name, t, tr
 			255,
 			255,
 			255,
-			150,
+			150
 		}
 	else
 		widget_target.style.highlight.color = {
 			255,
 			138,
 			90,
-			1,
+			1
 		}
 	end
 
@@ -404,14 +404,14 @@ MinigameDecodeSearchView._update_target = function (self, widgets_by_name, t, tr
 					255,
 					255,
 					255,
-					150,
+					150
 				}
 			else
 				widget.style.style_id_1.color = {
 					255,
 					0,
 					255,
-					0,
+					0
 				}
 			end
 		end

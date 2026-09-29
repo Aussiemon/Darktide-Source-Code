@@ -52,8 +52,10 @@ else
 	SaveManager = require("scripts/managers/save/save_manager")
 end
 
+local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local ServerMetricsManager = require("scripts/managers/server_metrics/server_metrics_manager")
 local ServerMetricsManagerDummy = require("scripts/managers/server_metrics/server_metrics_manager_dummy")
+local SocialManager = require("scripts/managers/social/social_manager")
 local StateGameTestify = GameParameters.testify and require("scripts/game_states/state_game_testify")
 local StateSplash = require("scripts/game_states/game/state_splash")
 local StatsManager = require("scripts/managers/stats/stats_manager")
@@ -75,14 +77,7 @@ local WorldLevelDespawnManager = require("scripts/managers/world_level_despawn/w
 local WorldManager = require("scripts/foundation/managers/world/world_manager")
 local WwiseGameSyncManager = require("scripts/managers/wwise_game_sync/wwise_game_sync_manager")
 local XAsyncManager = require("scripts/managers/xasync/xasync_manager")
-local DefaultInputSettings = {}
-
-table.insert(DefaultInputSettings, require("scripts/settings/input/default_debug_input_settings"))
-table.insert(DefaultInputSettings, require("scripts/settings/input/default_free_flight_input_settings"))
-table.insert(DefaultInputSettings, require("scripts/settings/input/default_ingame_input_settings"))
-table.insert(DefaultInputSettings, require("scripts/settings/input/default_imgui_input_settings"))
-table.insert(DefaultInputSettings, require("scripts/settings/input/default_view_input_settings"))
-
+local DefaultInputSettings = require("scripts/settings/input/default_input_settings")
 local StateGame = class("StateGame")
 
 StateGame.on_enter = function (self, parent, params)
@@ -104,7 +99,7 @@ StateGame.on_enter = function (self, parent, params)
 		network_transmit_function = function (dt)
 			Network.update_transmit()
 		end,
-		vo_sources_cache = self._vo_sources_cache,
+		vo_sources_cache = self._vo_sources_cache
 	}
 
 	self:_init_managers(event_delegate, approve_channel_delegate)
@@ -151,13 +146,13 @@ local function _connection_options(is_dedicated_hub_server, is_dedicated_mission
 				network_platform = "wan_server",
 				project_hash = "bishop",
 				wan_port = GameParameters.wan_server_port,
-				argument_hash = DevParameters.network_hash,
+				argument_hash = DevParameters.network_hash
 			}
 		else
 			options = {
 				network_platform = "wan_client",
 				project_hash = "bishop",
-				argument_hash = DevParameters.network_hash,
+				argument_hash = DevParameters.network_hash
 			}
 		end
 	end
@@ -200,6 +195,7 @@ StateGame._init_managers = function (self, event_delegate, approve_channel_deleg
 	if not DEDICATED_SERVER then
 		Managers.chat = ChatManager:new()
 		Managers.url_loader = UrlLoaderManager:new()
+		Managers.social = SocialManager:new()
 	end
 
 	local version_id = PLATFORM .. "#" .. (APPLICATION_SETTINGS.content_revision or LOCAL_CONTENT_REVISION or "")
@@ -211,7 +207,7 @@ StateGame._init_managers = function (self, event_delegate, approve_channel_deleg
 			["request-id"] = Application.guid(),
 			["platform-name"] = version_id,
 			["accept-language"] = language,
-			["is-modded"] = is_modded,
+			["is-modded"] = is_modded
 		}
 	end)
 	Managers.steam = SteamManager:new()
@@ -233,7 +229,7 @@ StateGame._init_managers = function (self, event_delegate, approve_channel_deleg
 	end
 
 	Managers.mechanism = MechanismManager:new(event_delegate, mechanism_name, {
-		mission_name = GameParameters.mission,
+		mission_name = GameParameters.mission
 	})
 	Managers.connection = ConnectionManager:new(_connection_options(is_dedicated_hub_server, is_dedicated_mission_server), event_delegate, approve_channel_delegate)
 	Managers.multiplayer_session = MultiplayerSessionManager:new()
@@ -344,7 +340,7 @@ StateGame.on_suspend = function (self)
 	local error_state = CLASSES.StateError
 	local params = {}
 	local exit_params = {
-		on_suspend = true,
+		on_suspend = true
 	}
 
 	self._sm:force_change_state(error_state, params, exit_params)
@@ -398,6 +394,8 @@ StateGame.update = function (self, dt)
 		Managers.ps5_uds:update(dt)
 	end
 
+	Managers.world:join_physics()
+
 	if GameParameters.testify then
 		Testify:poll_requests_through_handler(StateGameTestify, self)
 	end
@@ -433,6 +431,10 @@ StateGame.update = function (self, dt)
 
 	if Managers.url_loader then
 		Managers.url_loader:update(dt, t)
+	end
+
+	if Managers.social then
+		Managers.social:update(dt, t)
 	end
 
 	if Managers.chat then

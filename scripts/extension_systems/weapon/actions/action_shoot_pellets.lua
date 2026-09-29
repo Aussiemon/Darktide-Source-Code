@@ -25,7 +25,7 @@ local hit_types = SurfaceMaterialSettings.hit_types
 local proc_events = BuffSettings.proc_events
 local ActionShootPellets = class("ActionShootPellets", "ActionShoot")
 local IMPACT_FX_DATA = {
-	will_be_predicted = true,
+	will_be_predicted = true
 }
 local NUM_PELLETS = 32
 local MAX_NUM_HITS_UNITS = 128
@@ -46,7 +46,7 @@ ActionShootPellets.init = function (self, action_context, action_params, action_
 			power_level = 0,
 			fire_position = Vector3Box(),
 			direction = Vector3Box(),
-			hit_results = {},
+			hit_results = {}
 		}
 
 		for j = 1, MAX_NUM_SAVED_PELLET_HITS do
@@ -54,7 +54,7 @@ ActionShootPellets.init = function (self, action_context, action_params, action_
 				distance = 0,
 				position = Vector3Box(),
 				normal = Vector3Box(),
-				actor = ActorBox(),
+				actor = ActorBox()
 			}
 		end
 	end
@@ -92,14 +92,14 @@ ActionShootPellets.init = function (self, action_context, action_params, action_
 					hit_actor = nil,
 					hit_direction = nil,
 					hit_normal = nil,
-					hit_position = nil,
+					hit_position = nil
 				}
 			end
 
 			surface_impact_data[hit_type][ii] = {
 				attacked_unit = nil,
 				attacking_unit = nil,
-				hits = hits,
+				hits = hits
 			}
 		end
 	end
@@ -108,12 +108,12 @@ ActionShootPellets.init = function (self, action_context, action_params, action_
 	self._surface_impact_num_hits_per_unit = {
 		penetration_entry = {},
 		penetration_exit = {},
-		stop = {},
+		stop = {}
 	}
 	self._surface_impact_num_hits = {
 		penetration_entry = 0,
 		penetration_exit = 0,
-		stop = 0,
+		stop = 0
 	}
 	self._num_saved_pellets = 0
 
@@ -278,6 +278,14 @@ ActionShootPellets._save_pellet_hits = function (self, shotshell_template, hit_r
 				break
 			end
 
+			local can_collide = true
+
+			can_collide = Health.can_actor_collide_with_attack_type(hit_unit, hit_actor, "ranged")
+
+			if not can_collide then
+				break
+			end
+
 			num_hits = num_hits + 1
 
 			local hit_entry = pellet_hits.hit_results[num_hits]
@@ -343,7 +351,7 @@ end
 local unit_to_index_lookup = {
 	penetration_entry = {},
 	penetration_exit = {},
-	stop = {},
+	stop = {}
 }
 local triggered_proc_events = {}
 
@@ -777,8 +785,8 @@ ActionShootPellets._can_play_impact_fx = function (self, hit_unit, num_impact_fx
 	return false, num_impact_fx
 end
 
-ActionShootPellets.server_correction_occurred = function (self)
-	ActionShootPellets.super.server_correction_occurred(self)
+ActionShootPellets.server_correction_occurred = function (self, ...)
+	ActionShootPellets.super.server_correction_occurred(self, ...)
 	table.clear(self._hit_units)
 	table.clear(self._suppressed_hits_per_unit)
 	table.clear(self._suppressed_hit_positions_per_unit)

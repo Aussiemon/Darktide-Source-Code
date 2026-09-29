@@ -136,7 +136,7 @@ InterpolateAnimationVariable.component_data = {
 		category = "Transition",
 		ui_name = "Variable Name",
 		ui_type = "text_box",
-		value = "speed",
+		value = "speed"
 	},
 	val_from = {
 		category = "Transition",
@@ -144,7 +144,7 @@ InterpolateAnimationVariable.component_data = {
 		step = 0.1,
 		ui_name = "Value From",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	val_to = {
 		category = "Transition",
@@ -152,7 +152,7 @@ InterpolateAnimationVariable.component_data = {
 		step = 0.1,
 		ui_name = "Value To",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	method = {
 		category = "Transition",
@@ -161,12 +161,12 @@ InterpolateAnimationVariable.component_data = {
 		value = "linear",
 		options_keys = {
 			"Linear",
-			"Easing",
+			"Easing"
 		},
 		options_values = {
 			"linear",
-			"easing",
-		},
+			"easing"
+		}
 	},
 	transition_time = {
 		category = "Transition",
@@ -174,22 +174,22 @@ InterpolateAnimationVariable.component_data = {
 		step = 0.1,
 		ui_name = "Transition time",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	inputs = {
 		function_advance = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		function_revert = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		function_stop = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return InterpolateAnimationVariable

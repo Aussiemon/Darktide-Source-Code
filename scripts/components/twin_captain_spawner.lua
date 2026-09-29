@@ -66,7 +66,7 @@ TwinCaptainSpawner.component_data = {
 		step = 1,
 		ui_name = "ID",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	section = {
 		category = "Circumstance Gameplay Data",
@@ -75,7 +75,7 @@ TwinCaptainSpawner.component_data = {
 		step = 1,
 		ui_name = "Section ID",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	twin_id = {
 		category = "Circumstance Gameplay Data",
@@ -84,8 +84,8 @@ TwinCaptainSpawner.component_data = {
 		step = 1,
 		ui_name = "Twin ID",
 		ui_type = "number",
-		value = 1,
-	},
+		value = 1
+	}
 }
 
 return TwinCaptainSpawner

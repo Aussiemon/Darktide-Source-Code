@@ -178,7 +178,7 @@ end
 PerceptionSystem.set_untargetable = function (self, caller_class, unit)
 	local unit_untargetable_data = self._unit_untargetable_data
 	local untargetable_data = unit_untargetable_data[unit] or {
-		num_ids = 0,
+		num_ids = 0
 	}
 
 	unit_untargetable_data[unit] = untargetable_data
@@ -186,8 +186,8 @@ PerceptionSystem.set_untargetable = function (self, caller_class, unit)
 	local global_untargetable_id = self._next_global_untargetable_id
 	local caller_name = caller_class.__class_name or caller_class.__component_name
 
-	untargetable_data[caller_name] = global_untargetable_id
-	untargetable_data[global_untargetable_id] = caller_name
+	untargetable_data[caller_class] = global_untargetable_id
+	untargetable_data[global_untargetable_id] = caller_class
 	untargetable_data.num_ids = untargetable_data.num_ids + 1
 	self._next_global_untargetable_id = self._next_global_untargetable_id + 1
 
@@ -196,9 +196,9 @@ end
 
 PerceptionSystem.set_targetable = function (self, unit, untargetable_id)
 	local untargetable_data = self._unit_untargetable_data[unit]
-	local caller_name = untargetable_data[untargetable_id]
+	local caller_class = untargetable_data[untargetable_id]
 
-	untargetable_data[caller_name] = nil
+	untargetable_data[caller_class] = nil
 	untargetable_data[untargetable_id] = nil
 	untargetable_data.num_ids = untargetable_data.num_ids - 1
 end

@@ -24,12 +24,12 @@ templates.expedition_effective_sprinting_buff = {
 	hud_icon = "content/ui/textures/icons/buffs/hud/syringe_speed_buff_hud",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.stamina_cost_multiplier] = 0.7,
+		[stat_buffs.stamina_cost_multiplier] = 0.7
 	},
 	keywords = {},
 	start_func = function (template_data, template_context)
 		Stamina.add_stamina_percent(template_context.unit, 1)
-	end,
+	end
 }
 templates.expedition_max_toughness_buff = {
 	class_name = "buff",
@@ -38,12 +38,12 @@ templates.expedition_max_toughness_buff = {
 	max_stacks = 2,
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.toughness_bonus] = 0.25,
+		[stat_buffs.toughness_bonus] = 0.25
 	},
 	keywords = {},
 	start_func = function (template_data, template_context)
 		return
-	end,
+	end
 }
 
 local FLIES_BASE_DURATION = 15
@@ -58,18 +58,18 @@ templates.expedition_nurgle_flies = {
 	max_stacks_cap = 1,
 	predicted = true,
 	stat_buffs = {
-		[stat_buffs.movement_speed] = -0.5,
+		[stat_buffs.movement_speed] = -0.5
 	},
 	keywords = {
-		keywords.nurgle_flies,
+		keywords.nurgle_flies
 	},
 	proc_events = {
 		[proc_events.on_sweep_start] = 1,
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	player_effects = {
 		looping_wwise_start_event = "wwise/events/minions/play_nurgle_flies_swarm_enter",
-		looping_wwise_stop_event = "wwise/events/minions/play_nurgle_flies_swarm_exit",
+		looping_wwise_stop_event = "wwise/events/minions/play_nurgle_flies_swarm_exit"
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -115,7 +115,7 @@ templates.expedition_nurgle_flies = {
 		end,
 		[proc_events.on_sweep_finish] = function (params, template_data, template_context)
 			return
-		end,
+		end
 	},
 	conditional_exit_func = function (template_data, template_context)
 		local t = FixedFrame.get_latest_fixed_time()
@@ -135,7 +135,7 @@ templates.expedition_nurgle_flies = {
 		local on_screen_effect_id = template_data.on_screen_effect_id
 
 		World.destroy_particles(world, on_screen_effect_id)
-	end,
+	end
 }
 templates.expedition_nurgle_flies_dot = {
 	class_name = "interval_buff",
@@ -145,7 +145,7 @@ templates.expedition_nurgle_flies_dot = {
 	predicted = false,
 	ragdoll_push_force = {
 		50,
-		150,
+		150
 	},
 	start_func = function (template_data, template_context)
 		local t = FixedFrame.get_latest_fixed_time()
@@ -163,14 +163,14 @@ templates.expedition_nurgle_flies_dot = {
 
 			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.toxin, "attacking_unit", owner_unit, "attack_type", attack_types.buff)
 		end
-	end,
+	end
 }
 
 local SAND_ON_SCREEN_EFFECT = "content/fx/particles/screenspace/player_screen_sand_tornado"
 local SHADER_VAR = "opacity_lerp"
 local CLOUD_NAMES = {
 	"sand_clouds_screen",
-	"vignette_sand",
+	"vignette_sand"
 }
 
 local function _set_sand_screenspace_intensity(template_data, template_context)
@@ -208,7 +208,7 @@ templates.expedition_sand_vortex_move_speed = {
 	max_stacks_cap = 1,
 	predicted = true,
 	stat_buffs = {
-		[stat_buffs.movement_speed] = -0.3,
+		[stat_buffs.movement_speed] = -0.3
 	},
 	keywords = {},
 	start_func = function (template_data, template_context)
@@ -265,7 +265,7 @@ templates.expedition_sand_vortex_move_speed = {
 		end
 
 		return false
-	end,
+	end
 }
 templates.vortex_grabbed = {
 	class_name = "buff",
@@ -273,7 +273,7 @@ templates.vortex_grabbed = {
 	max_stacks = 3,
 	max_stacks_cap = 3,
 	predicted = false,
-	keywords = {},
+	keywords = {}
 }
 templates.expeditions_death_imminent = {
 	class_name = "buff",
@@ -282,8 +282,8 @@ templates.expeditions_death_imminent = {
 	predicted = false,
 	stat_buffs = {},
 	keywords = {
-		keywords.expeditions_death_imminent,
-	},
+		keywords.expeditions_death_imminent
+	}
 }
 
 return templates

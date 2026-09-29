@@ -10,8 +10,8 @@ local combat_ranges = {
 				distance = 10,
 				distance_operator = "lesser",
 				sticky_time = 0.2,
-				switch_combat_range = "melee",
-			},
+				switch_combat_range = "melee"
+			}
 		},
 		melee = {
 			{
@@ -19,10 +19,10 @@ local combat_ranges = {
 				distance = 12,
 				distance_operator = "greater",
 				sticky_time = 0,
-				switch_combat_range = "far",
-			},
-		},
-	},
+				switch_combat_range = "far"
+			}
+		}
+	}
 }
 
 return combat_ranges

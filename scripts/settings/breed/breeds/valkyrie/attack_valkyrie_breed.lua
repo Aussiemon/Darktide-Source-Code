@@ -10,6 +10,7 @@ local TargetSelectionTemplates = require("scripts/extension_systems/perception/t
 local TargetSelectionWeights = require("scripts/settings/minion_target_selection/minion_target_selection_weights")
 local breed_name = "attack_valkyrie"
 local armor_types = ArmorSettings.types
+local breed_tags = BreedSettings.tags
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
 local flee_types = FleeConstants.flee_types
@@ -52,15 +53,15 @@ local breed_data = {
 	armor_type = armor_types.armored,
 	blackboard_component_config = BreedBlackboardComponentTemplates.attack_valkyrie,
 	tags = {
-		minion = true,
+		[breed_tags.minion] = true
 	},
 	size_variation_range = {
 		1.04,
-		1.04,
+		1.04
 	},
 	outline_config = {},
 	dynamic_fx_templates = {
-		"flow_velocity_parameter",
+		"flow_velocity_parameter"
 	},
 	behavior_tree_name = breed_name,
 	flee_settings = {
@@ -71,32 +72,32 @@ local breed_data = {
 		rate_modifiers_by_in_combat_tags = {
 			captain = -1,
 			monster = -1,
-			ogryn = -0.1,
-		},
+			ogryn = -0.1
+		}
 	},
 	threat_config = {
 		max_threat = 1000,
 		threat_decay_per_second = 100,
-		threat_multiplier = 1,
+		threat_multiplier = 1
 	},
 	target_selection_template = TargetSelectionTemplates.aid_ally,
 	target_selection_weights = TargetSelectionWeights.attack_valkyrie,
 	target_changed_attack_intensities = {
-		disabling = 5,
+		disabling = 5
 	},
 	line_of_sight_data = {
 		{
 			from_node = "fx_wpn_node_1",
 			id = "left_pod",
 			to_node = "j_spine",
-			offsets = PerceptionSettings.default_minion_line_of_sight_offsets,
+			offsets = PerceptionSettings.default_minion_line_of_sight_offsets
 		},
 		{
 			from_node = "fx_wpn_node_2",
 			id = "right_pod",
 			to_node = "j_spine",
-			offsets = PerceptionSettings.default_minion_line_of_sight_offsets,
-		},
+			offsets = PerceptionSettings.default_minion_line_of_sight_offsets
+		}
 	},
 	scripted_animation_settings = {
 		extension_name = "ScriptedFlyingAnimationExtension",
@@ -110,8 +111,8 @@ local breed_data = {
 			offset = {
 				0,
 				0,
-				180,
-			},
+				180
+			}
 		},
 		idle_rotation_offset = math.degrees_to_radians(5),
 		corner_lean = math.degrees_to_radians(-48),
@@ -120,21 +121,21 @@ local breed_data = {
 		max_speed_lean_rotation_acceleration = math.degrees_to_radians(90),
 		max_lean_rotation_speed = math.degrees_to_radians(120),
 		max_rotation_speed = math.degrees_to_radians(540),
-		hover_lean_limit = math.degrees_to_radians(25),
+		hover_lean_limit = math.degrees_to_radians(25)
 	},
 	hit_zones = {
 		{
 			name = hit_zone_names.center_mass,
-			actors = {},
-		},
+			actors = {}
+		}
 	},
 	companion_pounce_setting = {
 		companion_pounce_action = "stagger_and_leap_away",
-		ignore_target_selection = true,
+		ignore_target_selection = true
 	},
 	testify_flags = {
-		spawn_all_enemies = false,
-	},
+		spawn_all_enemies = false
+	}
 }
 
 return breed_data

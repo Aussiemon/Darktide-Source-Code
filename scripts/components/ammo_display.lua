@@ -101,14 +101,14 @@ AmmoDisplay.component_data = {
 		step = 1,
 		ui_name = "Ammo Steps",
 		ui_type = "slider",
-		value = 6,
+		value = 6
 	},
 	max_ammo = {
 		decimals = 0,
 		step = 1,
 		ui_name = "Max Ammo",
 		ui_type = "slider",
-		value = 30,
+		value = 30
 	},
 	ammo = {
 		decimals = 0,
@@ -116,7 +116,7 @@ AmmoDisplay.component_data = {
 		step = 1,
 		ui_name = "Ammo",
 		ui_type = "slider",
-		value = 30,
+		value = 30
 	},
 	critical_threshold = {
 		decimals = 0,
@@ -124,13 +124,13 @@ AmmoDisplay.component_data = {
 		step = 1,
 		ui_name = "Critical Threshold",
 		ui_type = "slider",
-		value = 3,
+		value = 3
 	},
 	material_slot_name = {
 		ui_name = "Material Slot Name",
 		ui_type = "text_box",
-		value = "display_01",
-	},
+		value = "display_01"
+	}
 }
 
 return AmmoDisplay

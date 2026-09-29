@@ -66,7 +66,7 @@ HudElementCharacterNewsFeed.event_resync_character_news_feed = function (self)
 						self._new_presentation_items[#self._new_presentation_items + 1] = {
 							item = MasterItems.get_item_instance(gear, gear_id),
 							show_notification = show_notification,
-							item_gear_id = gear_id,
+							item_gear_id = gear_id
 						}
 					end
 				else

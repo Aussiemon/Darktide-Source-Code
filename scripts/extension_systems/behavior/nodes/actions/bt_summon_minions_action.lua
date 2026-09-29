@@ -169,7 +169,7 @@ local DEFAULT_OCCLUSION_SPAWN_RANGE = {
 	12,
 	24,
 	36,
-	72,
+	72
 }
 local DEFAULT_TRIES = 6
 
@@ -379,7 +379,7 @@ BtSummonMinionsAction._circle_placement = function (self, unit, spawn_position_b
 				local random_direction = Vector3(math.sin(random_radians), math.cos(random_radians), 0)
 				local roamer_slot = {
 					position = Vector3Box(position_on_navmesh),
-					rotation = QuaternionBox(Quaternion.look(random_direction)),
+					rotation = QuaternionBox(Quaternion.look(random_direction))
 				}
 
 				spawned_slots[#spawned_slots + 1] = roamer_slot
@@ -393,6 +393,10 @@ BtSummonMinionsAction._circle_placement = function (self, unit, spawn_position_b
 
 	for i = 1, #spawned_slots do
 		local current_spawn_slot = spawned_slots[i]
+		local fx_system = Managers.state.extension:system("fx_system")
+		local vfx_name = "content/fx/particles/enemies/renegade_psyker/renegade_psyker_summoning_circle"
+
+		fx_system:trigger_vfx(vfx_name, current_spawn_slot.position:unbox(), Unit.local_rotation(unit, 1))
 
 		for ii = 1, spawns_per_location do
 			local random_x = math.random(1, 10)

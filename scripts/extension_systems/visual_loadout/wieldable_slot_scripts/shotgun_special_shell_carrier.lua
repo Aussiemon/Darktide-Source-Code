@@ -19,28 +19,28 @@ ShotgunSpecialShellCarrier.init = function (self, context, slot, weapon_template
 	self._bullets = {
 		{
 			bullet_attachment_name = "special_ammo_01",
-			visible = true,
+			visible = true
 		},
 		{
 			bullet_attachment_name = "special_ammo_02",
-			visible = true,
+			visible = true
 		},
 		{
 			bullet_attachment_name = "special_ammo_03",
-			visible = true,
+			visible = true
 		},
 		{
 			bullet_attachment_name = "special_ammo_04",
-			visible = true,
+			visible = true
 		},
 		{
 			bullet_attachment_name = "special_ammo_05",
-			visible = true,
+			visible = true
 		},
 		{
 			bullet_attachment_name = "special_ammo_06",
-			visible = true,
-		},
+			visible = true
+		}
 	}
 	self._components_1p = {}
 	self._components_3p = {}
@@ -134,7 +134,7 @@ function _components(destination, destination_lookup, attachments, attachment_na
 			local data = {
 				unit = attachment_unit,
 				lookup_name = lookup_name,
-				component = component,
+				component = component
 			}
 
 			destination[#destination + 1] = data

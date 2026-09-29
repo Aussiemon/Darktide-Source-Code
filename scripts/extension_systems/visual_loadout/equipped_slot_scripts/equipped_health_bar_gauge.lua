@@ -22,7 +22,7 @@ EquippedHealthBarGauge.init = function (self, context, slot, fx_sources, item, u
 			for _, component in ipairs(components) do
 				unit_components[#unit_components + 1] = {
 					unit = attachment_unit,
-					component = component,
+					component = component
 				}
 			end
 		end
@@ -32,7 +32,7 @@ EquippedHealthBarGauge.init = function (self, context, slot, fx_sources, item, u
 		for _, component in ipairs(components) do
 			unit_components[#unit_components + 1] = {
 				unit = unit_3p,
-				component = component,
+				component = component
 			}
 		end
 	end

@@ -16,33 +16,33 @@ hitscan_templates.phosphor_pistol_p1_m1_hitscan = {
 			explode_on_minion_hit = true,
 			explode_once = true,
 			damage_profile = DamageProfileTemplates.phosphor_pistol_m1_m1_dmg,
-			explosion_template = ExplosionTemplates.phosphor_pistol_backblast,
-		},
+			explosion_template = ExplosionTemplates.phosphor_pistol_backblast
+		}
 	},
 	collision_tests = {
 		{
 			against = "statics",
 			collision_filter = "filter_player_character_shooting_raycast_statics",
-			test = "ray",
+			test = "ray"
 		},
 		{
 			against = "dynamics",
 			collision_filter = "filter_player_character_shooting_raycast_dynamics",
 			radius = 0.075,
-			test = "sphere",
-		},
-	},
+			test = "sphere"
+		}
+	}
 }
 hitscan_templates.phosphor_pistol_p1_m2_hitscan = {
 	range = 75,
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.phosphor_pistol_m1_m1_dmg,
-		},
-	},
+			damage_profile = DamageProfileTemplates.phosphor_pistol_m1_m1_dmg
+		}
+	}
 }
 
 return {
 	base_templates = hitscan_templates,
-	overrides = overrides,
+	overrides = overrides
 }

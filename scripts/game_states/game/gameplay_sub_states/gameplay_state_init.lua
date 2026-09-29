@@ -16,7 +16,7 @@ GameplayStateInit.on_enter = function (self, parent, params)
 
 	local shared_state = params.shared_state
 	local start_params = {
-		shared_state = shared_state,
+		shared_state = shared_state
 	}
 	local state_machine = GameStateMachine:new(self, GameplayInitStepFrameRate, start_params, nil, nil, "GamePlay", "GamePlayInit")
 
@@ -65,7 +65,7 @@ GameplayStateInit.update = function (self, main_dt, main_t)
 	end
 
 	local state_run_params = {
-		shared_state = shared_state,
+		shared_state = shared_state
 	}
 
 	return GameplayStateRun, state_run_params

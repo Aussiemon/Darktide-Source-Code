@@ -13,9 +13,9 @@ style.text_color = UIHudSettings.color_tint_main_1
 local hud_element_objective_text_settings = {
 	size = {
 		720,
-		32,
+		32
 	},
-	style = style,
+	style = style
 }
 
 return settings("HudElementObjectiveTextSettings", hud_element_objective_text_settings)

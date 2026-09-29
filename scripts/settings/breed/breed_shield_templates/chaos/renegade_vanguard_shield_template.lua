@@ -7,6 +7,9 @@ local shield_templates = {
 	renegade_vanguard = {
 		allow_push_stagger_override = true,
 		always_override_stagger_type = "shield_block",
+		charge_and_explosion_duration_scale = 1.5,
+		charge_and_explosion_length_scale = 1.5,
+		charge_and_explosion_stagger_type = "shield_explosion",
 		destroyed_vfx = "content/fx/particles/enemies/rotten_armor_death",
 		is_invulnerable = false,
 		open_up_threshold = 45,
@@ -20,42 +23,42 @@ local shield_templates = {
 			400,
 			500,
 			600,
-			700,
+			700
 		},
 		blocking_angle = math.degrees_to_radians(50),
 		attack_type_min_stagger_strength = {
 			[attack_types.ranged] = 3,
-			[attack_types.melee] = 10,
+			[attack_types.melee] = 10
 		},
 		shield_sound_events = {
 			foley_drastic_short = "foley_drastic_short_shield",
-			run_foley = "run_foley_shield",
+			run_foley = "run_foley_shield"
 		},
 		destroyed_settings = {
 			sfx_event = "wwise/events/weapon/play_hit_indicator_vanguard_shield_break",
 			stagger_duration = 2,
 			stagger_strength_multiplier = 10,
-			stagger_type = StaggerSettings.stagger_types.shield_broken,
+			stagger_type = StaggerSettings.stagger_types.shield_broken
 		},
 		max_damage_percentage = {
 			0.5,
 			0.5,
 			0.5,
 			0.5,
-			0.5,
+			0.5
 		},
 		visability_groups = {
 			{
-				amount = 75,
+				amount = 75
 			},
 			{
-				amount = 50,
+				amount = 50
 			},
 			{
-				amount = 0,
-			},
-		},
-	},
+				amount = 0
+			}
+		}
+	}
 }
 
 return shield_templates

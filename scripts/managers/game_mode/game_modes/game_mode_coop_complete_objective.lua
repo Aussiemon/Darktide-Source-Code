@@ -14,7 +14,7 @@ local CLIENT_RPCS = {
 	"rpc_set_player_respawn_time",
 	"rpc_fetch_session_report",
 	"rpc_client_tag_remaining_enemies",
-	"rpc_client_tag_enemies_inside_area",
+	"rpc_client_tag_enemies_inside_area"
 }
 
 local function _log(...)
@@ -387,9 +387,10 @@ GameModeCoopCompleteObjective._store_persistent_player_data = function (self, pl
 	local ability_extension = ScriptUnit.extension(unit, "ability_system")
 	local equipped_abilities = ability_extension:equipped_abilities()
 	local grenade_ability = equipped_abilities.grenade_ability
-	local grenades_percent
+	local uses_ability_charges = ability_extension:uses_ability_charges("grenade_ability")
+	local grenades_percent = 1
 
-	if grenade_ability and not grenade_ability.exclude_from_persistant_player_data then
+	if grenade_ability and not grenade_ability.exclude_from_persistant_player_data and uses_ability_charges then
 		local num_grenades = ability_extension:remaining_ability_charges("grenade_ability")
 		local max_grenades = ability_extension:max_ability_charges("grenade_ability")
 
@@ -405,7 +406,7 @@ GameModeCoopCompleteObjective._store_persistent_player_data = function (self, pl
 		permanent_damage_percent = permanent_damage_percent,
 		character_state_name = character_state_name,
 		weapon_slot_data = weapon_slot_data,
-		grenades_percent = grenades_percent,
+		grenades_percent = grenades_percent
 	}
 
 	if player:is_human_controlled() then
@@ -478,8 +479,9 @@ GameModeCoopCompleteObjective._apply_persistent_player_data = function (self, pl
 				local ability_extension = ScriptUnit.extension(player_unit, "ability_system")
 				local equipped_abilities = ability_extension:equipped_abilities()
 				local grenade_ability = equipped_abilities.grenade_ability
+				local uses_ability_charges = ability_extension:uses_ability_charges("grenade_ability")
 
-				if grenade_ability and not grenade_ability.exclude_from_persistant_player_data then
+				if grenade_ability and not grenade_ability.exclude_from_persistant_player_data and uses_ability_charges then
 					local max_grenades = ability_extension:max_ability_charges("grenade_ability")
 					local num_grenades = math.round(selected_data.grenades_percent * max_grenades)
 

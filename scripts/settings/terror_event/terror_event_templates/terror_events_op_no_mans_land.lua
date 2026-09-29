@@ -7,63 +7,63 @@ local template = {
 			"event_no_mans_land_trenches_a",
 			1,
 			"event_no_mans_land_trenches_b",
-			1,
+			1
 		},
 		op_no_mans_land_trenches_random_b = {
 			"event_no_mans_land_trenches_c",
 			1,
 			"event_no_mans_land_trenches_d",
-			1,
+			1
 		},
 		op_no_mans_land_trenches_random_c = {
 			"event_no_mans_land_trenches_e",
 			1,
 			"event_no_mans_land_trenches_f",
-			1,
+			1
 		},
 		op_no_mans_land_dead_zone_random = {
 			"event_no_mans_land_bastion_dead_zone_01",
 			1,
 			"event_no_mans_land_bastion_dead_zone_02",
-			1,
+			1
 		},
 		op_no_mans_land_bastion_monster_random = {
 			"event_no_mans_land_bastion_spawn_cs",
 			1,
 			"event_no_mans_land_bastion_spawn_po",
-			1,
-		},
+			1
+		}
 	},
 	events = {
 		event_pacing_off = {
 			{
 				"set_pacing_enabled",
-				enabled = false,
-			},
+				enabled = false
+			}
 		},
 		event_pacing_on = {
 			{
 				"set_pacing_enabled",
-				enabled = true,
-			},
+				enabled = true
+			}
 		},
 		event_hordes_off = {
 			{
 				"control_pacing_spawns",
 				enabled = false,
 				spawn_types = {
-					"hordes",
-				},
-			},
+					"hordes"
+				}
+			}
 		},
 		event_hordes_on = {
 			{
 				"control_pacing_spawns",
 				enabled = true,
 				spawn_types = {
-					"hordes",
-				},
-			},
+					"hordes"
+				}
+			}
 		},
 		event_only_roamers_specials_enabled = {
 			{
@@ -71,9 +71,9 @@ local template = {
 				enabled = false,
 				spawn_types = {
 					"hordes",
-					"trickle_hordes",
-				},
-			},
+					"trickle_hordes"
+				}
+			}
 		},
 		event_only_roamers_enabled = {
 			{
@@ -83,9 +83,9 @@ local template = {
 					"hordes",
 					"trickle_hordes",
 					"specials",
-					"monsters",
-				},
-			},
+					"monsters"
+				}
+			}
 		},
 		event_only_specials_enabled = {
 			{
@@ -95,9 +95,9 @@ local template = {
 					"hordes",
 					"roamers",
 					"trickle_hordes",
-					"monsters",
-				},
-			},
+					"monsters"
+				}
+			}
 		},
 		event_turn_all_on = {
 			{
@@ -108,17 +108,17 @@ local template = {
 					"roamers",
 					"trickle_hordes",
 					"specials",
-					"monsters",
-				},
-			},
+					"monsters"
+				}
+			}
 		},
 		event_pacing_on_stop_trickle = {
 			{
-				"stop_terror_trickle",
+				"stop_terror_trickle"
 			},
 			{
 				"set_pacing_enabled",
-				enabled = true,
+				enabled = true
 			},
 			{
 				"control_pacing_spawns",
@@ -128,9 +128,9 @@ local template = {
 					"roamers",
 					"trickle_hordes",
 					"specials",
-					"monsters",
-				},
-			},
+					"monsters"
+				}
+			}
 		},
 		event_no_mans_land_trenches_first = {
 			{
@@ -140,10 +140,10 @@ local template = {
 				spawner_group = "spawner_no_mans_land_trenches_first",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
-			},
+						"horde"
+					}
+				}
+			}
 		},
 		event_no_mans_land_trenches_a = {
 			{
@@ -153,10 +153,10 @@ local template = {
 				spawner_group = "spawner_no_mans_land_trenches_a",
 				breed_tags = {
 					{
-						"far",
-					},
-				},
-			},
+						"far"
+					}
+				}
+			}
 		},
 		event_no_mans_land_trenches_b = {
 			{
@@ -167,10 +167,10 @@ local template = {
 				breed_tags = {
 					{
 						"far",
-						"roamer",
-					},
-				},
-			},
+						"roamer"
+					}
+				}
+			}
 		},
 		event_no_mans_land_trenches_c = {
 			{
@@ -180,10 +180,10 @@ local template = {
 				spawner_group = "spawner_no_mans_land_trenches_c",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
-			},
+						"roamer"
+					}
+				}
+			}
 		},
 		event_no_mans_land_trenches_d = {
 			{
@@ -193,10 +193,10 @@ local template = {
 				spawner_group = "spawner_no_mans_land_trenches_d",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
-			},
+						"horde"
+					}
+				}
+			}
 		},
 		event_no_mans_land_trenches_e = {
 			{
@@ -206,10 +206,10 @@ local template = {
 				spawner_group = "spawner_no_mans_land_trenches_e",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
-			},
+						"roamer"
+					}
+				}
+			}
 		},
 		event_no_mans_land_trenches_f = {
 			{
@@ -219,10 +219,10 @@ local template = {
 				spawner_group = "spawner_no_mans_land_trenches_f",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
-			},
+						"horde"
+					}
+				}
+			}
 		},
 		event_no_mans_land_ruined_archway_a = {
 			{
@@ -232,10 +232,10 @@ local template = {
 				spawner_group = "spawner_no_mans_land_ruined_archway_a",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
-			},
+						"roamer"
+					}
+				}
+			}
 		},
 		event_no_mans_land_ruined_archway_b = {
 			{
@@ -245,10 +245,10 @@ local template = {
 				spawner_group = "spawner_no_mans_land_ruined_archway_b",
 				breed_tags = {
 					{
-						"far",
-					},
-				},
-			},
+						"far"
+					}
+				}
+			}
 		},
 		event_no_mans_land_bastion_dead_zone_01 = {
 			{
@@ -258,10 +258,10 @@ local template = {
 				spawner_group = "spawner_bastion_dead_zone",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
-			},
+						"roamer"
+					}
+				}
+			}
 		},
 		event_no_mans_land_bastion_dead_zone_02 = {
 			{
@@ -271,10 +271,10 @@ local template = {
 				spawner_group = "spawner_bastion_dead_zone",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
-			},
+						"horde"
+					}
+				}
+			}
 		},
 		event_no_mans_land_bastion_pre_event = {
 			{
@@ -284,9 +284,9 @@ local template = {
 				spawner_group = "spawner_bastion_pre_event",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -295,13 +295,13 @@ local template = {
 				spawner_group = "spawner_bastion_pre_event",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 10,
+				duration = 10
 			},
 			{
 				"spawn_by_points",
@@ -310,10 +310,10 @@ local template = {
 				spawner_group = "spawner_bastion_pre_event_b",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
-			},
+						"horde"
+					}
+				}
+			}
 		},
 		event_no_mans_land_ruined_archway_bridge_elite = {
 			{
@@ -323,31 +323,31 @@ local template = {
 				spawner_group = "spawner_no_mans_land_elite_bridge",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
-			},
+						"elite"
+					}
+				}
+			}
 		},
 		event_no_mans_land_ruined_archway_bridge_trickle = {
 			{
 				"start_terror_trickle",
 				delay = 4,
 				spawner_group = "spawner_no_mans_land_trickle_bridge",
-				template_name = "standard_melee",
-			},
+				template_name = "standard_melee"
+			}
 		},
 		event_no_mans_land_bastion_trickle = {
 			{
 				"start_terror_trickle",
 				delay = 4,
 				spawner_group = "spawner_bastion_trickle",
-				template_name = "standard_melee",
-			},
+				template_name = "standard_melee"
+			}
 		},
 		event_no_mans_land_bastion_stop_trickle = {
 			{
-				"stop_terror_trickle",
-			},
+				"stop_terror_trickle"
+			}
 		},
 		event_no_mans_land_bastion_west_guard = {
 			{
@@ -359,30 +359,30 @@ local template = {
 				spawner_group = "spawner_bastion_west_guard",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_bastion_guards_almost_dead",
+				flow_event_name = "event_bastion_guards_almost_dead"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_bastion_guards_dead",
-			},
+				flow_event_name = "event_bastion_guards_dead"
+			}
 		},
 		event_no_mans_land_bastion_west_elite = {
 			{
@@ -395,30 +395,30 @@ local template = {
 				breed_tags = {
 					{
 						"close",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_bastion_guards_almost_dead",
+				flow_event_name = "event_bastion_guards_almost_dead"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_bastion_guards_dead",
-			},
+				flow_event_name = "event_bastion_guards_dead"
+			}
 		},
 		event_no_mans_land_bastion_west_ranged = {
 			{
@@ -430,30 +430,30 @@ local template = {
 				spawner_group = "spawner_bastion_west_ranged",
 				breed_tags = {
 					{
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_bastion_guards_almost_dead",
+				flow_event_name = "event_bastion_guards_almost_dead"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_bastion_guards_dead",
-			},
+				flow_event_name = "event_bastion_guards_dead"
+			}
 		},
 		event_no_mans_land_bastion_west_ranged_elite = {
 			{
@@ -466,30 +466,30 @@ local template = {
 				breed_tags = {
 					{
 						"far",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_bastion_guards_almost_dead",
+				flow_event_name = "event_bastion_guards_almost_dead"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_bastion_guards_dead",
-			},
+				flow_event_name = "event_bastion_guards_dead"
+			}
 		},
 		event_no_mans_land_bastion_center_guard = {
 			{
@@ -501,30 +501,30 @@ local template = {
 				spawner_group = "spawner_bastion_center_guard",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_bastion_guards_almost_dead",
+				flow_event_name = "event_bastion_guards_almost_dead"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_bastion_guards_dead",
-			},
+				flow_event_name = "event_bastion_guards_dead"
+			}
 		},
 		event_no_mans_land_bastion_center_elite = {
 			{
@@ -537,30 +537,30 @@ local template = {
 				breed_tags = {
 					{
 						"far",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_bastion_guards_almost_dead",
+				flow_event_name = "event_bastion_guards_almost_dead"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_bastion_guards_dead",
-			},
+				flow_event_name = "event_bastion_guards_dead"
+			}
 		},
 		event_no_mans_land_bastion_east_guard = {
 			{
@@ -572,30 +572,30 @@ local template = {
 				spawner_group = "spawner_bastion_east_guard",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_bastion_guards_almost_dead",
+				flow_event_name = "event_bastion_guards_almost_dead"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_bastion_guards_dead",
-			},
+				flow_event_name = "event_bastion_guards_dead"
+			}
 		},
 		event_no_mans_land_bastion_east_elite = {
 			{
@@ -608,36 +608,36 @@ local template = {
 				breed_tags = {
 					{
 						"close",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_bastion_guards_almost_dead",
+				flow_event_name = "event_bastion_guards_almost_dead"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_bastion_guards_dead",
-			},
+				flow_event_name = "event_bastion_guards_dead"
+			}
 		},
 		event_no_mans_land_tag_remaining_enemies = {
 			{
 				"lua_event",
-				target_event = "event_tag_remaining_enemies",
-			},
+				target_event = "event_tag_remaining_enemies"
+			}
 		},
 		event_no_mans_land_bastion_basement_01 = {
 			{
@@ -647,9 +647,9 @@ local template = {
 				spawner_group = "spawner_bastion_basement_01",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -659,10 +659,10 @@ local template = {
 				spawner_group = "spawner_bastion_basement_01",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
-			},
+						"elite"
+					}
+				}
+			}
 		},
 		event_no_mans_land_bastion_basement_02 = {
 			{
@@ -674,9 +674,9 @@ local template = {
 				spawner_group = "spawner_bastion_basement_02_elite",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -687,28 +687,28 @@ local template = {
 				spawner_group = "spawner_bastion_basement_02_roamer",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_bastion_guards_dead",
-			},
+				flow_event_name = "event_bastion_guards_dead"
+			}
 		},
 		event_no_mans_land_bastion_basement_trickle = {
 			{
 				"start_terror_trickle",
 				delay = 4,
 				spawner_group = "spawner_bastion_basement_trickle",
-				template_name = "standard_melee",
-			},
+				template_name = "standard_melee"
+			}
 		},
 		event_no_mans_land_bastion_pre_monster = {
 			{
@@ -718,9 +718,9 @@ local template = {
 				spawner_group = "spawner_bastion_pre_monster",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -729,9 +729,9 @@ local template = {
 				spawner_group = "spawner_bastion_pre_monster",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -740,17 +740,17 @@ local template = {
 				spawner_group = "spawner_bastion_pre_monster",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
-			},
+						"elite"
+					}
+				}
+			}
 		},
 		event_no_mans_land_bastion_spawn_cs = {
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_spawn",
-				spawner_group = "spawner_fortification_monster_cs",
+				spawner_group = "spawner_fortification_monster_cs"
 			},
 			{
 				"spawn_by_breed_name",
@@ -759,25 +759,25 @@ local template = {
 				spawner_group = "spawner_fortification_monster_po",
 				entry_condition_function = function ()
 					return TerrorEventQueries.is_in_target_difficulty(4)
-				end,
+				end
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_bastion_monster_dead",
-			},
+				flow_event_name = "event_bastion_monster_dead"
+			}
 		},
 		event_no_mans_land_bastion_spawn_po = {
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_fortification_monster_po",
+				spawner_group = "spawner_fortification_monster_po"
 			},
 			{
 				"spawn_by_breed_name",
@@ -786,18 +786,18 @@ local template = {
 				spawner_group = "spawner_fortification_monster_cs",
 				entry_condition_function = function ()
 					return TerrorEventQueries.is_in_target_difficulty(4)
-				end,
+				end
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_bastion_monster_dead",
-			},
+				flow_event_name = "event_bastion_monster_dead"
+			}
 		},
 		event_no_mans_land_bastion_end_spawn = {
 			{
@@ -808,9 +808,9 @@ local template = {
 				spawner_group = "spawner_bastion_end_spawn",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -821,9 +821,9 @@ local template = {
 				breed_tags = {
 					{
 						"close",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -834,12 +834,12 @@ local template = {
 				breed_tags = {
 					{
 						"far",
-						"elite",
-					},
-				},
-			},
-		},
-	},
+						"elite"
+					}
+				}
+			}
+		}
+	}
 }
 
 return template

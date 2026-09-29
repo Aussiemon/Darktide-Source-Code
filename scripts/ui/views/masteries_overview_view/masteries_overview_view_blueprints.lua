@@ -10,13 +10,13 @@ local MasteriesOverviewViewDefinitions = require("scripts/ui/views/masteries_ove
 local weapon_item_size = UISettings.weapon_item_size
 local weapon_pattern_size = {
 	weapon_item_size[1] * 0.5 - 7,
-	weapon_item_size[2],
+	weapon_item_size[2]
 }
 local pattern_display_name_text_style = table.clone(UIFontSettings.header_3)
 
 pattern_display_name_text_style.size = {
 	weapon_item_size[1] - 40,
-	40,
+	40
 }
 pattern_display_name_text_style.text_color = Color.terminal_text_header(255, true)
 pattern_display_name_text_style.default_color = Color.terminal_text_header(255, true)
@@ -31,11 +31,11 @@ pattern_display_name_text_style.text_horizontal_alignment = "center"
 pattern_display_name_text_style.offset = {
 	10,
 	0,
-	10,
+	10
 }
 pattern_display_name_text_style.size = {
 	weapon_pattern_size[1] - 20,
-	40,
+	40
 }
 pattern_display_name_text_style.font_size = 16
 
@@ -51,7 +51,7 @@ expertise_level_text_style.font_size = 20
 expertise_level_text_style.offset = {
 	10,
 	5,
-	10,
+	10
 }
 
 local mastery_level_text_style = table.clone(expertise_level_text_style)
@@ -68,7 +68,7 @@ mark_text_style.text_horizontal_alignment = "center"
 mark_text_style.offset = {
 	0,
 	-10,
-	6,
+	6
 }
 
 local mark_display_name_text_style = table.clone(UIFontSettings.header_3)
@@ -78,15 +78,15 @@ mark_display_name_text_style.text_horizontal_alignment = "center"
 mark_display_name_text_style.text_vertical_alignment = "top"
 mark_display_name_text_style.size = {
 	nil,
-	40,
+	40
 }
 mark_display_name_text_style.size_addition = {
-	-20,
+	-20
 }
 mark_display_name_text_style.offset = {
 	10,
 	0,
-	6,
+	6
 }
 mark_display_name_text_style.font_size = 18
 
@@ -148,8 +148,8 @@ blueprints.weapon_pattern = {
 			pass_type = "hotspot",
 			style = {
 				on_hover_sound = UISoundEvents.default_mouse_hover,
-				on_pressed_sound = UISoundEvents.default_click,
-			},
+				on_pressed_sound = UISoundEvents.default_click
+			}
 		},
 		{
 			pass_type = "texture",
@@ -157,9 +157,9 @@ blueprints.weapon_pattern = {
 			value = "content/ui/materials/backgrounds/default_square",
 			style = {
 				default_color = Color.terminal_background(nil, true),
-				selected_color = Color.terminal_background_selected(nil, true),
+				selected_color = Color.terminal_background_selected(nil, true)
 			},
-			change_function = ButtonPassTemplates.terminal_button_change_function,
+			change_function = ButtonPassTemplates.terminal_button_change_function
 		},
 		{
 			pass_type = "texture",
@@ -173,13 +173,13 @@ blueprints.weapon_pattern = {
 				offset = {
 					0,
 					0,
-					2,
-				},
+					2
+				}
 			},
 			change_function = function (content, style)
 				ButtonPassTemplates.terminal_button_change_function(content, style)
 				ButtonPassTemplates.terminal_button_hover_change_function(content, style)
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -192,14 +192,14 @@ blueprints.weapon_pattern = {
 				color = Color.black(100, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -216,12 +216,12 @@ blueprints.weapon_pattern = {
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				size = {
 					128,
-					48,
-				},
+					48
+				}
 			},
 			change_function = function (content, style)
 				if content.completed then
@@ -231,7 +231,7 @@ blueprints.weapon_pattern = {
 
 					ButtonPassTemplates.terminal_button_change_function(content, style)
 				end
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -257,7 +257,7 @@ blueprints.weapon_pattern = {
 			end,
 			visibility_function = function (content, style)
 				return content.level_requirement_met
-			end,
+			end
 		},
 		{
 			pass_type = "rect",
@@ -266,18 +266,18 @@ blueprints.weapon_pattern = {
 				offset = {
 					0,
 					0,
-					6,
+					6
 				},
 				color = {
 					150,
 					0,
 					0,
-					0,
-				},
+					0
+				}
 			},
 			visibility_function = function (content, style)
 				return not content.level_requirement_met
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -287,18 +287,18 @@ blueprints.weapon_pattern = {
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				color = {
 					105,
 					45,
 					45,
-					45,
-				},
+					45
+				}
 			},
 			visibility_function = function (content, style)
 				return not content.level_requirement_met
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -308,7 +308,7 @@ blueprints.weapon_pattern = {
 			style = required_level_text_style,
 			visibility_function = function (content, style)
 				return not content.level_requirement_met
-			end,
+			end
 		},
 		{
 			pass_type = "rect",
@@ -317,22 +317,22 @@ blueprints.weapon_pattern = {
 				offset = {
 					0,
 					0,
-					6,
+					6
 				},
 				color = {
 					150,
 					0,
 					0,
-					0,
+					0
 				},
 				size = {
 					nil,
-					32,
-				},
+					32
+				}
 			},
 			visibility_function = function (content, style)
 				return content.level_requirement_met
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -349,7 +349,7 @@ blueprints.weapon_pattern = {
 			end,
 			visibility_function = function (content, style)
 				return content.level_requirement_met
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -366,7 +366,7 @@ blueprints.weapon_pattern = {
 			end,
 			visibility_function = function (content, style)
 				return content.level_requirement_met
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -382,12 +382,12 @@ blueprints.weapon_pattern = {
 				offset = {
 					0,
 					0,
-					12,
-				},
+					12
+				}
 			},
 			change_function = function (content, style)
 				item_change_function(content, style)
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -403,10 +403,10 @@ blueprints.weapon_pattern = {
 				offset = {
 					0,
 					0,
-					13,
-				},
+					13
+				}
 			},
-			change_function = item_change_function,
+			change_function = item_change_function
 		},
 		{
 			pass_type = "texture",
@@ -417,14 +417,14 @@ blueprints.weapon_pattern = {
 				vertical_alignment = "top",
 				size = {
 					80,
-					80,
+					80
 				},
 				offset = {
 					20,
 					0,
-					2,
+					2
 				},
-				color = Color.ui_terminal(255, true),
+				color = Color.ui_terminal(255, true)
 			},
 			visibility_function = function (content)
 				return content.show_alert and content.level_requirement_met
@@ -435,7 +435,7 @@ blueprints.weapon_pattern = {
 				else
 					style.offset[2] = -20
 				end
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -445,7 +445,7 @@ blueprints.weapon_pattern = {
 				vertical_alignment = "top",
 				size = {
 					40,
-					40,
+					40
 				},
 				color = Color.terminal_frame_selected(255, true),
 				default_color = Color.terminal_frame(180, true),
@@ -455,15 +455,15 @@ blueprints.weapon_pattern = {
 				offset = {
 					0,
 					0,
-					8,
-				},
+					8
+				}
 			},
 			visibility_function = function (content, style)
 				return content.completed
 			end,
 			change_function = function (content, style)
 				item_change_function(content, style)
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -482,16 +482,16 @@ blueprints.weapon_pattern = {
 				offset = {
 					-4,
 					-1,
-					9,
-				},
+					9
+				}
 			},
 			visibility_function = function (content, style)
 				return content.completed
 			end,
 			change_function = function (content, style)
 				item_text_change_function(content, style)
-			end,
-		},
+			end
+		}
 	},
 	init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
 		local content = widget.content
@@ -523,7 +523,7 @@ blueprints.weapon_pattern = {
 
 		if level_requirement_met == false then
 			content.required_level = Localize("loc_requires_level", true, {
-				level = element.weapon_level_requirement,
+				level = element.weapon_level_requirement
 			})
 		end
 
@@ -540,18 +540,18 @@ blueprints.weapon_pattern = {
 		end
 
 		content.completed = element.mastery_level == element.mastery_max_level
-	end,
+	end
 }
 blueprints.spacing_vertical = {
 	size = {
 		MasteriesOverviewViewDefinitions.patterns_grid_settings.grid_size[1],
-		20,
-	},
+		20
+	}
 }
 blueprints.mark = {
 	size = {
 		240,
-		200,
+		200
 	},
 	pass_template = {
 		{
@@ -559,8 +559,8 @@ blueprints.mark = {
 			pass_type = "hotspot",
 			style = {
 				on_hover_sound = UISoundEvents.default_mouse_hover,
-				on_pressed_sound = UISoundEvents.default_click,
-			},
+				on_pressed_sound = UISoundEvents.default_click
+			}
 		},
 		{
 			pass_type = "texture",
@@ -577,13 +577,13 @@ blueprints.mark = {
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				size = {
 					nil,
-					80,
-				},
-			},
+					80
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -593,7 +593,7 @@ blueprints.mark = {
 			style = unlocked_level_text_style,
 			visibility_function = function (content, style)
 				return content.unlocked
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -603,8 +603,8 @@ blueprints.mark = {
 			style = unlocked_level_text_style,
 			visibility_function = function (content, style)
 				return not content.unlocked
-			end,
-		},
+			end
+		}
 	},
 	init = function (parent, widget, element)
 		local content = widget.content
@@ -613,7 +613,7 @@ blueprints.mark = {
 		content.element = element
 		content.display_name = element.display_name
 		content.unlock_level = Localize("loc_mastery_unlocked_level", true, {
-			level = element.unlock_level or 0,
+			level = element.unlock_level or 0
 		})
 
 		local unlocked = element.unlocked
@@ -627,12 +627,12 @@ blueprints.mark = {
 		local icon_style = widget.style.icon
 
 		icon_style.color = unlocked and icon_style.default_color or icon_style.disabled_color
-	end,
+	end
 }
 blueprints.trait = {
 	size = {
 		114,
-		114,
+		114
 	},
 	pass_template = {
 		{
@@ -640,8 +640,8 @@ blueprints.trait = {
 			pass_type = "hotspot",
 			style = {
 				on_hover_sound = UISoundEvents.default_mouse_hover,
-				on_pressed_sound = UISoundEvents.default_click,
-			},
+				on_pressed_sound = UISoundEvents.default_click
+			}
 		},
 		{
 			pass_type = "texture",
@@ -652,9 +652,9 @@ blueprints.trait = {
 				horizontal_alignment = "center",
 				vertical_alignment = "center",
 				color = Color.terminal_text_body(255, true),
-				material_values = {},
-			},
-		},
+				material_values = {}
+			}
+		}
 	},
 	init = function (parent, widget, element)
 		local content = widget.content
@@ -678,7 +678,7 @@ blueprints.trait = {
 		if unlocked then
 			style.icon.color = Color.white(255, true)
 		end
-	end,
+	end
 }
 blueprints.weapon_mark = {
 	size = weapon_pattern_size,
@@ -688,8 +688,8 @@ blueprints.weapon_mark = {
 			pass_type = "hotspot",
 			style = {
 				on_hover_sound = UISoundEvents.default_mouse_hover,
-				on_pressed_sound = UISoundEvents.weapons_switch_mark,
-			},
+				on_pressed_sound = UISoundEvents.weapons_switch_mark
+			}
 		},
 		{
 			pass_type = "texture",
@@ -697,9 +697,9 @@ blueprints.weapon_mark = {
 			value = "content/ui/materials/backgrounds/default_square",
 			style = {
 				default_color = Color.terminal_background(nil, true),
-				selected_color = Color.terminal_background_selected(nil, true),
+				selected_color = Color.terminal_background_selected(nil, true)
 			},
-			change_function = ButtonPassTemplates.terminal_button_change_function,
+			change_function = ButtonPassTemplates.terminal_button_change_function
 		},
 		{
 			pass_type = "texture",
@@ -713,13 +713,13 @@ blueprints.weapon_mark = {
 				offset = {
 					0,
 					0,
-					2,
-				},
+					2
+				}
 			},
 			change_function = function (content, style)
 				ButtonPassTemplates.terminal_button_change_function(content, style)
 				ButtonPassTemplates.terminal_button_hover_change_function(content, style)
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -732,14 +732,14 @@ blueprints.weapon_mark = {
 				color = Color.black(100, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -755,14 +755,14 @@ blueprints.weapon_mark = {
 				offset = {
 					0,
 					-10,
-					5,
+					5
 				},
 				size = {
 					128,
-					48,
-				},
+					48
+				}
 			},
-			change_function = ButtonPassTemplates.terminal_button_change_function,
+			change_function = ButtonPassTemplates.terminal_button_change_function
 		},
 		{
 			pass_type = "rect",
@@ -771,18 +771,18 @@ blueprints.weapon_mark = {
 				offset = {
 					0,
 					0,
-					6,
+					6
 				},
 				color = {
 					150,
 					0,
 					0,
-					0,
-				},
+					0
+				}
 			},
 			visibility_function = function (content, style)
 				return not content.is_unlocked
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -792,25 +792,25 @@ blueprints.weapon_mark = {
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				color = {
 					105,
 					45,
 					45,
-					45,
-				},
+					45
+				}
 			},
 			visibility_function = function (content, style)
 				return not content.is_unlocked
-			end,
+			end
 		},
 		{
 			pass_type = "text",
 			style_id = "mark_name",
 			value = "",
 			value_id = "mark_name",
-			style = mark_text_style,
+			style = mark_text_style
 		},
 		{
 			pass_type = "texture",
@@ -826,12 +826,12 @@ blueprints.weapon_mark = {
 				offset = {
 					0,
 					0,
-					12,
-				},
+					12
+				}
 			},
 			change_function = function (content, style)
 				item_change_function(content, style)
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -847,10 +847,10 @@ blueprints.weapon_mark = {
 				offset = {
 					0,
 					0,
-					13,
-				},
+					13
+				}
 			},
-			change_function = item_change_function,
+			change_function = item_change_function
 		},
 		{
 			pass_type = "texture",
@@ -861,18 +861,18 @@ blueprints.weapon_mark = {
 				vertical_alignment = "top",
 				size = {
 					32,
-					32,
+					32
 				},
 				offset = {
 					0,
 					0,
-					16,
-				},
+					16
+				}
 			},
 			visibility_function = function (content, style)
 				return content.equipped
-			end,
-		},
+			end
+		}
 	},
 	init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
 		local content = widget.content
@@ -890,7 +890,7 @@ blueprints.weapon_mark = {
 
 		content.mark_name = element.mark_name
 		content.equipped = element.equipped
-	end,
+	end
 }
 
 return blueprints

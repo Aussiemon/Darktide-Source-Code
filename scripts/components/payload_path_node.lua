@@ -126,49 +126,50 @@ PayloadPathNode.component_data = {
 		category = "Path",
 		ui_name = "Path Name",
 		ui_type = "text_box",
-		value = "default",
+		value = "default"
 	},
 	node_id = {
 		category = "Path",
 		decimals = 0,
+		max = 510,
 		min = 0,
 		step = 1,
 		ui_name = "Node Id",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	branching_paths = {
 		category = "Path",
 		ui_name = "Next Path Name",
 		ui_type = "text_box_array",
-		values = {},
+		values = {}
 	},
 	continue_pathing = {
 		category = "Path",
 		ui_name = "Continue Pathing",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	movement_lerping_speed_multiplier = {
 		category = "Smooth Movement Override",
 		decimals = 2,
 		ui_name = "Horizontal Movement Lerping Speed",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	vertical_lerping_speed_multiplier = {
 		category = "Smooth Movement Override",
 		decimals = 2,
 		ui_name = "Vertical Movement Lerping Speed",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	movement_look_rotation_speed_override = {
 		category = "Smooth Movement Override",
 		decimals = 2,
 		ui_name = "Movement Look Rotation Speed",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	surface_rotation_easing_function = {
 		category = "Movement Override",
@@ -184,7 +185,7 @@ PayloadPathNode.component_data = {
 			"Ease Out Exp",
 			"Ease Out Bounce",
 			"Ease In Out Bounce",
-			"Ease In Out Quart",
+			"Ease In Out Quart"
 		},
 		options_values = {
 			"none",
@@ -195,21 +196,21 @@ PayloadPathNode.component_data = {
 			"ease_out_exp",
 			"ease_out_bounce",
 			"ease_in_out_bounce",
-			"ease_in_out_quart",
-		},
+			"ease_in_out_quart"
+		}
 	},
 	turn_when_reached = {
 		category = "Event",
 		ui_name = "Turn Before Continuing",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	turning_speed_override = {
 		category = "Event",
 		decimals = 2,
 		ui_name = "Turning Speed Override",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	reach_event = {
 		category = "Event",
@@ -219,13 +220,13 @@ PayloadPathNode.component_data = {
 		options_keys = {
 			"Continue",
 			"Stop",
-			"Teleport",
+			"Teleport"
 		},
 		options_values = {
 			"continue",
 			"stop",
-			"teleport",
-		},
+			"teleport"
+		}
 	},
 	set_speed_controller = {
 		category = "Event",
@@ -237,25 +238,25 @@ PayloadPathNode.component_data = {
 			"Proximity",
 			"Main Path",
 			"Flow",
-			"Max",
+			"Max"
 		},
 		options_values = {
 			"unchanged",
 			"proximity",
 			"main_path",
 			"flow",
-			"max",
-		},
+			"max"
+		}
 	},
 	inputs = {
 		allow_payload_to_pass = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"PayloadPathNodeExtension",
-	},
+		"PayloadPathNodeExtension"
+	}
 }
 
 return PayloadPathNode

@@ -14,8 +14,8 @@ sway_trait_templates.default_sway_stat = {
 		"pitch",
 		{
 			max = 0.95,
-			min = 0.1,
-		},
+			min = 0.1
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -25,8 +25,8 @@ sway_trait_templates.default_sway_stat = {
 		"pitch",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -36,8 +36,8 @@ sway_trait_templates.default_sway_stat = {
 		"pitch",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -47,8 +47,8 @@ sway_trait_templates.default_sway_stat = {
 		"pitch",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -58,8 +58,8 @@ sway_trait_templates.default_sway_stat = {
 		"yaw",
 		{
 			max = 0.95,
-			min = 0.1,
-		},
+			min = 0.1
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -69,8 +69,8 @@ sway_trait_templates.default_sway_stat = {
 		"yaw",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -80,8 +80,8 @@ sway_trait_templates.default_sway_stat = {
 		"yaw",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -91,8 +91,8 @@ sway_trait_templates.default_sway_stat = {
 		"yaw",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -102,8 +102,8 @@ sway_trait_templates.default_sway_stat = {
 		"pitch",
 		{
 			max = 1,
-			min = 0.3,
-		},
+			min = 0.3
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -113,8 +113,8 @@ sway_trait_templates.default_sway_stat = {
 		"yaw",
 		{
 			max = 1,
-			min = 0.3,
-		},
+			min = 0.3
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -124,8 +124,8 @@ sway_trait_templates.default_sway_stat = {
 		"pitch",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -135,8 +135,8 @@ sway_trait_templates.default_sway_stat = {
 		"yaw",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -144,8 +144,8 @@ sway_trait_templates.default_sway_stat = {
 		"pitch",
 		{
 			max = 0.95,
-			min = 0.1,
-		},
+			min = 0.1
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -153,8 +153,8 @@ sway_trait_templates.default_sway_stat = {
 		"yaw",
 		{
 			max = 0.95,
-			min = 0.1,
-		},
+			min = 0.1
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -163,8 +163,8 @@ sway_trait_templates.default_sway_stat = {
 		"pitch",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -173,8 +173,8 @@ sway_trait_templates.default_sway_stat = {
 		"yaw",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -183,8 +183,8 @@ sway_trait_templates.default_sway_stat = {
 		"pitch",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -193,8 +193,8 @@ sway_trait_templates.default_sway_stat = {
 		"yaw",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -203,8 +203,8 @@ sway_trait_templates.default_sway_stat = {
 		"pitch",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -213,8 +213,8 @@ sway_trait_templates.default_sway_stat = {
 		"yaw",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -222,8 +222,8 @@ sway_trait_templates.default_sway_stat = {
 		"enter_alternate_fire_grace_time",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -231,9 +231,9 @@ sway_trait_templates.default_sway_stat = {
 		"from_shooting_grace_time",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
-	},
+			min = 0.25
+		}
+	}
 }
 sway_trait_templates.default_sway_perk = {
 	{
@@ -242,7 +242,7 @@ sway_trait_templates.default_sway_perk = {
 		"shooting",
 		1,
 		"pitch",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -250,7 +250,7 @@ sway_trait_templates.default_sway_perk = {
 		"shooting",
 		2,
 		"pitch",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -258,7 +258,7 @@ sway_trait_templates.default_sway_perk = {
 		"shooting",
 		3,
 		"pitch",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -266,7 +266,7 @@ sway_trait_templates.default_sway_perk = {
 		"shooting",
 		4,
 		"pitch",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -274,7 +274,7 @@ sway_trait_templates.default_sway_perk = {
 		"shooting",
 		1,
 		"yaw",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -282,7 +282,7 @@ sway_trait_templates.default_sway_perk = {
 		"shooting",
 		2,
 		"yaw",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -290,7 +290,7 @@ sway_trait_templates.default_sway_perk = {
 		"shooting",
 		3,
 		"yaw",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -298,7 +298,7 @@ sway_trait_templates.default_sway_perk = {
 		"shooting",
 		4,
 		"yaw",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -306,7 +306,7 @@ sway_trait_templates.default_sway_perk = {
 		"alternate_fire_start",
 		1,
 		"pitch",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -314,7 +314,7 @@ sway_trait_templates.default_sway_perk = {
 		"alternate_fire_start",
 		1,
 		"yaw",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -322,7 +322,7 @@ sway_trait_templates.default_sway_perk = {
 		"crouch_transition",
 		1,
 		"pitch",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -330,74 +330,74 @@ sway_trait_templates.default_sway_perk = {
 		"crouch_transition",
 		1,
 		"yaw",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
 		"continuous_sway",
 		"pitch",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
 		"continuous_sway",
 		"yaw",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
 		"decay",
 		"player_event",
 		"pitch",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
 		"decay",
 		"player_event",
 		"yaw",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
 		"decay",
 		"idle",
 		"pitch",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
 		"decay",
 		"idle",
 		"yaw",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
 		"decay",
 		"shooting",
 		"pitch",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
 		"decay",
 		"shooting",
 		"yaw",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
 		"decay",
 		"enter_alternate_fire_grace_time",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
 		"decay",
 		"from_shooting_grace_time",
-		0.05,
-	},
+		0.05
+	}
 }
 sway_trait_templates.sway_killshot_trait_01_a = {
 	{
@@ -406,7 +406,7 @@ sway_trait_templates.sway_killshot_trait_01_a = {
 		"shooting",
 		1,
 		"pitch",
-		1,
+		1
 	},
 	{
 		"still",
@@ -414,7 +414,7 @@ sway_trait_templates.sway_killshot_trait_01_a = {
 		"shooting",
 		2,
 		"pitch",
-		0.75,
+		0.75
 	},
 	{
 		"still",
@@ -422,7 +422,7 @@ sway_trait_templates.sway_killshot_trait_01_a = {
 		"shooting",
 		3,
 		"pitch",
-		0.5,
+		0.5
 	},
 	{
 		"still",
@@ -430,7 +430,7 @@ sway_trait_templates.sway_killshot_trait_01_a = {
 		"shooting",
 		4,
 		"pitch",
-		0.25,
+		0.25
 	},
 	{
 		"still",
@@ -438,7 +438,7 @@ sway_trait_templates.sway_killshot_trait_01_a = {
 		"shooting",
 		1,
 		"yaw",
-		1,
+		1
 	},
 	{
 		"still",
@@ -446,7 +446,7 @@ sway_trait_templates.sway_killshot_trait_01_a = {
 		"shooting",
 		2,
 		"yaw",
-		0.75,
+		0.75
 	},
 	{
 		"still",
@@ -454,7 +454,7 @@ sway_trait_templates.sway_killshot_trait_01_a = {
 		"shooting",
 		3,
 		"yaw",
-		0.5,
+		0.5
 	},
 	{
 		"still",
@@ -462,75 +462,75 @@ sway_trait_templates.sway_killshot_trait_01_a = {
 		"shooting",
 		4,
 		"yaw",
-		0.25,
+		0.25
 	},
 	{
 		"still",
 		"immediate_sway",
 		"alternate_fire_start",
 		"pitch",
-		1,
+		1
 	},
 	{
 		"still",
 		"immediate_sway",
 		"alternate_fire_start",
 		"yaw",
-		1,
+		1
 	},
 	{
 		"still",
 		"immediate_sway",
 		"crouch_transition",
 		"pitch",
-		1,
+		1
 	},
 	{
 		"still",
 		"immediate_sway",
 		"crouch_transition",
 		"yaw",
-		1,
+		1
 	},
 	{
 		"still",
 		"continuous_sway",
 		"pitch",
-		1,
+		1
 	},
 	{
 		"still",
 		"continuous_sway",
 		"yaw",
-		1,
+		1
 	},
 	{
 		"still",
 		"decay",
 		"player_event",
 		"pitch",
-		1,
+		1
 	},
 	{
 		"still",
 		"decay",
 		"player_event",
 		"yaw",
-		1,
+		1
 	},
 	{
 		"moving",
 		"continuous_sway",
 		"pitch",
-		0.75,
+		0.75
 	},
 	{
 		"moving",
 		"continuous_sway",
 		"yaw",
-		0.75,
+		0.75
 	},
-	[DEFAULT_LERP_VALUE] = 0.1,
+	[DEFAULT_LERP_VALUE] = 0.1
 }
 sway_trait_templates.sway_killshot_trait_01_b = {
 	{
@@ -539,7 +539,7 @@ sway_trait_templates.sway_killshot_trait_01_b = {
 		"shooting",
 		1,
 		"pitch",
-		1,
+		1
 	},
 	{
 		"still",
@@ -547,7 +547,7 @@ sway_trait_templates.sway_killshot_trait_01_b = {
 		"shooting",
 		2,
 		"pitch",
-		0.75,
+		0.75
 	},
 	{
 		"still",
@@ -555,7 +555,7 @@ sway_trait_templates.sway_killshot_trait_01_b = {
 		"shooting",
 		3,
 		"pitch",
-		0.5,
+		0.5
 	},
 	{
 		"still",
@@ -563,7 +563,7 @@ sway_trait_templates.sway_killshot_trait_01_b = {
 		"shooting",
 		4,
 		"pitch",
-		0.25,
+		0.25
 	},
 	{
 		"still",
@@ -571,7 +571,7 @@ sway_trait_templates.sway_killshot_trait_01_b = {
 		"shooting",
 		1,
 		"yaw",
-		1,
+		1
 	},
 	{
 		"still",
@@ -579,7 +579,7 @@ sway_trait_templates.sway_killshot_trait_01_b = {
 		"shooting",
 		2,
 		"yaw",
-		0.75,
+		0.75
 	},
 	{
 		"still",
@@ -587,7 +587,7 @@ sway_trait_templates.sway_killshot_trait_01_b = {
 		"shooting",
 		3,
 		"yaw",
-		0.5,
+		0.5
 	},
 	{
 		"still",
@@ -595,75 +595,75 @@ sway_trait_templates.sway_killshot_trait_01_b = {
 		"shooting",
 		4,
 		"yaw",
-		0.25,
+		0.25
 	},
 	{
 		"still",
 		"immediate_sway",
 		"alternate_fire_start",
 		"pitch",
-		1,
+		1
 	},
 	{
 		"still",
 		"immediate_sway",
 		"alternate_fire_start",
 		"yaw",
-		1,
+		1
 	},
 	{
 		"still",
 		"immediate_sway",
 		"crouch_transition",
 		"pitch",
-		1,
+		1
 	},
 	{
 		"still",
 		"immediate_sway",
 		"crouch_transition",
 		"yaw",
-		1,
+		1
 	},
 	{
 		"still",
 		"continuous_sway",
 		"pitch",
-		1,
+		1
 	},
 	{
 		"still",
 		"continuous_sway",
 		"yaw",
-		1,
+		1
 	},
 	{
 		"still",
 		"decay",
 		"player_event",
 		"pitch",
-		1,
+		1
 	},
 	{
 		"still",
 		"decay",
 		"player_event",
 		"yaw",
-		1,
+		1
 	},
 	{
 		"moving",
 		"continuous_sway",
 		"pitch",
-		0.75,
+		0.75
 	},
 	{
 		"moving",
 		"continuous_sway",
 		"yaw",
-		0.75,
+		0.75
 	},
-	[DEFAULT_LERP_VALUE] = 0.2,
+	[DEFAULT_LERP_VALUE] = 0.2
 }
 sway_trait_templates.sway_killshot_trait_01_c = {
 	{
@@ -672,7 +672,7 @@ sway_trait_templates.sway_killshot_trait_01_c = {
 		"shooting",
 		1,
 		"pitch",
-		1,
+		1
 	},
 	{
 		"still",
@@ -680,7 +680,7 @@ sway_trait_templates.sway_killshot_trait_01_c = {
 		"shooting",
 		2,
 		"pitch",
-		0.75,
+		0.75
 	},
 	{
 		"still",
@@ -688,7 +688,7 @@ sway_trait_templates.sway_killshot_trait_01_c = {
 		"shooting",
 		3,
 		"pitch",
-		0.5,
+		0.5
 	},
 	{
 		"still",
@@ -696,7 +696,7 @@ sway_trait_templates.sway_killshot_trait_01_c = {
 		"shooting",
 		4,
 		"pitch",
-		0.25,
+		0.25
 	},
 	{
 		"still",
@@ -704,7 +704,7 @@ sway_trait_templates.sway_killshot_trait_01_c = {
 		"shooting",
 		1,
 		"yaw",
-		1,
+		1
 	},
 	{
 		"still",
@@ -712,7 +712,7 @@ sway_trait_templates.sway_killshot_trait_01_c = {
 		"shooting",
 		2,
 		"yaw",
-		0.75,
+		0.75
 	},
 	{
 		"still",
@@ -720,7 +720,7 @@ sway_trait_templates.sway_killshot_trait_01_c = {
 		"shooting",
 		3,
 		"yaw",
-		0.5,
+		0.5
 	},
 	{
 		"still",
@@ -728,75 +728,75 @@ sway_trait_templates.sway_killshot_trait_01_c = {
 		"shooting",
 		4,
 		"yaw",
-		0.25,
+		0.25
 	},
 	{
 		"still",
 		"immediate_sway",
 		"alternate_fire_start",
 		"pitch",
-		1,
+		1
 	},
 	{
 		"still",
 		"immediate_sway",
 		"alternate_fire_start",
 		"yaw",
-		1,
+		1
 	},
 	{
 		"still",
 		"immediate_sway",
 		"crouch_transition",
 		"pitch",
-		1,
+		1
 	},
 	{
 		"still",
 		"immediate_sway",
 		"crouch_transition",
 		"yaw",
-		1,
+		1
 	},
 	{
 		"still",
 		"continuous_sway",
 		"pitch",
-		1,
+		1
 	},
 	{
 		"still",
 		"continuous_sway",
 		"yaw",
-		1,
+		1
 	},
 	{
 		"still",
 		"decay",
 		"player_event",
 		"pitch",
-		1,
+		1
 	},
 	{
 		"still",
 		"decay",
 		"player_event",
 		"yaw",
-		1,
+		1
 	},
 	{
 		"moving",
 		"continuous_sway",
 		"pitch",
-		0.75,
+		0.75
 	},
 	{
 		"moving",
 		"continuous_sway",
 		"yaw",
-		0.75,
+		0.75
 	},
-	[DEFAULT_LERP_VALUE] = 0.3,
+	[DEFAULT_LERP_VALUE] = 0.3
 }
 sway_trait_templates.sway_spraynpray_trait_01_a = {
 	{
@@ -805,7 +805,7 @@ sway_trait_templates.sway_spraynpray_trait_01_a = {
 		"shooting",
 		1,
 		"pitch",
-		0.75,
+		0.75
 	},
 	{
 		"still",
@@ -813,7 +813,7 @@ sway_trait_templates.sway_spraynpray_trait_01_a = {
 		"shooting",
 		2,
 		"pitch",
-		0.7,
+		0.7
 	},
 	{
 		"still",
@@ -821,7 +821,7 @@ sway_trait_templates.sway_spraynpray_trait_01_a = {
 		"shooting",
 		3,
 		"pitch",
-		0.65,
+		0.65
 	},
 	{
 		"still",
@@ -829,7 +829,7 @@ sway_trait_templates.sway_spraynpray_trait_01_a = {
 		"shooting",
 		4,
 		"pitch",
-		0.6,
+		0.6
 	},
 	{
 		"still",
@@ -837,7 +837,7 @@ sway_trait_templates.sway_spraynpray_trait_01_a = {
 		"shooting",
 		5,
 		"pitch",
-		0.55,
+		0.55
 	},
 	{
 		"still",
@@ -845,7 +845,7 @@ sway_trait_templates.sway_spraynpray_trait_01_a = {
 		"shooting",
 		6,
 		"pitch",
-		0.5,
+		0.5
 	},
 	{
 		"still",
@@ -853,7 +853,7 @@ sway_trait_templates.sway_spraynpray_trait_01_a = {
 		"shooting",
 		7,
 		"pitch",
-		0.45,
+		0.45
 	},
 	{
 		"still",
@@ -861,7 +861,7 @@ sway_trait_templates.sway_spraynpray_trait_01_a = {
 		"shooting",
 		8,
 		"pitch",
-		0.4,
+		0.4
 	},
 	{
 		"still",
@@ -869,7 +869,7 @@ sway_trait_templates.sway_spraynpray_trait_01_a = {
 		"shooting",
 		9,
 		"pitch",
-		0.35,
+		0.35
 	},
 	{
 		"still",
@@ -877,7 +877,7 @@ sway_trait_templates.sway_spraynpray_trait_01_a = {
 		"shooting",
 		10,
 		"pitch",
-		0.3,
+		0.3
 	},
 	{
 		"still",
@@ -885,7 +885,7 @@ sway_trait_templates.sway_spraynpray_trait_01_a = {
 		"shooting",
 		1,
 		"yaw",
-		0.75,
+		0.75
 	},
 	{
 		"still",
@@ -893,7 +893,7 @@ sway_trait_templates.sway_spraynpray_trait_01_a = {
 		"shooting",
 		2,
 		"yaw",
-		0.7,
+		0.7
 	},
 	{
 		"still",
@@ -901,7 +901,7 @@ sway_trait_templates.sway_spraynpray_trait_01_a = {
 		"shooting",
 		3,
 		"yaw",
-		0.65,
+		0.65
 	},
 	{
 		"still",
@@ -909,7 +909,7 @@ sway_trait_templates.sway_spraynpray_trait_01_a = {
 		"shooting",
 		4,
 		"yaw",
-		0.6,
+		0.6
 	},
 	{
 		"still",
@@ -917,7 +917,7 @@ sway_trait_templates.sway_spraynpray_trait_01_a = {
 		"shooting",
 		5,
 		"yaw",
-		0.55,
+		0.55
 	},
 	{
 		"still",
@@ -925,7 +925,7 @@ sway_trait_templates.sway_spraynpray_trait_01_a = {
 		"shooting",
 		6,
 		"yaw",
-		0.5,
+		0.5
 	},
 	{
 		"still",
@@ -933,7 +933,7 @@ sway_trait_templates.sway_spraynpray_trait_01_a = {
 		"shooting",
 		7,
 		"yaw",
-		0.45,
+		0.45
 	},
 	{
 		"still",
@@ -941,7 +941,7 @@ sway_trait_templates.sway_spraynpray_trait_01_a = {
 		"shooting",
 		8,
 		"yaw",
-		0.4,
+		0.4
 	},
 	{
 		"still",
@@ -949,7 +949,7 @@ sway_trait_templates.sway_spraynpray_trait_01_a = {
 		"shooting",
 		9,
 		"yaw",
-		0.35,
+		0.35
 	},
 	{
 		"still",
@@ -957,9 +957,9 @@ sway_trait_templates.sway_spraynpray_trait_01_a = {
 		"shooting",
 		10,
 		"yaw",
-		0.3,
+		0.3
 	},
-	[DEFAULT_LERP_VALUE] = 0.1,
+	[DEFAULT_LERP_VALUE] = 0.1
 }
 sway_trait_templates.sway_spraynpray_trait_01_b = {
 	{
@@ -968,7 +968,7 @@ sway_trait_templates.sway_spraynpray_trait_01_b = {
 		"shooting",
 		1,
 		"pitch",
-		0.75,
+		0.75
 	},
 	{
 		"still",
@@ -976,7 +976,7 @@ sway_trait_templates.sway_spraynpray_trait_01_b = {
 		"shooting",
 		2,
 		"pitch",
-		0.7,
+		0.7
 	},
 	{
 		"still",
@@ -984,7 +984,7 @@ sway_trait_templates.sway_spraynpray_trait_01_b = {
 		"shooting",
 		3,
 		"pitch",
-		0.65,
+		0.65
 	},
 	{
 		"still",
@@ -992,7 +992,7 @@ sway_trait_templates.sway_spraynpray_trait_01_b = {
 		"shooting",
 		4,
 		"pitch",
-		0.6,
+		0.6
 	},
 	{
 		"still",
@@ -1000,7 +1000,7 @@ sway_trait_templates.sway_spraynpray_trait_01_b = {
 		"shooting",
 		5,
 		"pitch",
-		0.55,
+		0.55
 	},
 	{
 		"still",
@@ -1008,7 +1008,7 @@ sway_trait_templates.sway_spraynpray_trait_01_b = {
 		"shooting",
 		6,
 		"pitch",
-		0.5,
+		0.5
 	},
 	{
 		"still",
@@ -1016,7 +1016,7 @@ sway_trait_templates.sway_spraynpray_trait_01_b = {
 		"shooting",
 		7,
 		"pitch",
-		0.45,
+		0.45
 	},
 	{
 		"still",
@@ -1024,7 +1024,7 @@ sway_trait_templates.sway_spraynpray_trait_01_b = {
 		"shooting",
 		8,
 		"pitch",
-		0.4,
+		0.4
 	},
 	{
 		"still",
@@ -1032,7 +1032,7 @@ sway_trait_templates.sway_spraynpray_trait_01_b = {
 		"shooting",
 		9,
 		"pitch",
-		0.35,
+		0.35
 	},
 	{
 		"still",
@@ -1040,7 +1040,7 @@ sway_trait_templates.sway_spraynpray_trait_01_b = {
 		"shooting",
 		10,
 		"pitch",
-		0.3,
+		0.3
 	},
 	{
 		"still",
@@ -1048,7 +1048,7 @@ sway_trait_templates.sway_spraynpray_trait_01_b = {
 		"shooting",
 		1,
 		"yaw",
-		0.75,
+		0.75
 	},
 	{
 		"still",
@@ -1056,7 +1056,7 @@ sway_trait_templates.sway_spraynpray_trait_01_b = {
 		"shooting",
 		2,
 		"yaw",
-		0.7,
+		0.7
 	},
 	{
 		"still",
@@ -1064,7 +1064,7 @@ sway_trait_templates.sway_spraynpray_trait_01_b = {
 		"shooting",
 		3,
 		"yaw",
-		0.65,
+		0.65
 	},
 	{
 		"still",
@@ -1072,7 +1072,7 @@ sway_trait_templates.sway_spraynpray_trait_01_b = {
 		"shooting",
 		4,
 		"yaw",
-		0.6,
+		0.6
 	},
 	{
 		"still",
@@ -1080,7 +1080,7 @@ sway_trait_templates.sway_spraynpray_trait_01_b = {
 		"shooting",
 		5,
 		"yaw",
-		0.55,
+		0.55
 	},
 	{
 		"still",
@@ -1088,7 +1088,7 @@ sway_trait_templates.sway_spraynpray_trait_01_b = {
 		"shooting",
 		6,
 		"yaw",
-		0.5,
+		0.5
 	},
 	{
 		"still",
@@ -1096,7 +1096,7 @@ sway_trait_templates.sway_spraynpray_trait_01_b = {
 		"shooting",
 		7,
 		"yaw",
-		0.45,
+		0.45
 	},
 	{
 		"still",
@@ -1104,7 +1104,7 @@ sway_trait_templates.sway_spraynpray_trait_01_b = {
 		"shooting",
 		8,
 		"yaw",
-		0.4,
+		0.4
 	},
 	{
 		"still",
@@ -1112,7 +1112,7 @@ sway_trait_templates.sway_spraynpray_trait_01_b = {
 		"shooting",
 		9,
 		"yaw",
-		0.35,
+		0.35
 	},
 	{
 		"still",
@@ -1120,9 +1120,9 @@ sway_trait_templates.sway_spraynpray_trait_01_b = {
 		"shooting",
 		10,
 		"yaw",
-		0.3,
+		0.3
 	},
-	[DEFAULT_LERP_VALUE] = 0.2,
+	[DEFAULT_LERP_VALUE] = 0.2
 }
 sway_trait_templates.sway_spraynpray_trait_01_c = {
 	{
@@ -1131,7 +1131,7 @@ sway_trait_templates.sway_spraynpray_trait_01_c = {
 		"shooting",
 		1,
 		"pitch",
-		0.75,
+		0.75
 	},
 	{
 		"still",
@@ -1139,7 +1139,7 @@ sway_trait_templates.sway_spraynpray_trait_01_c = {
 		"shooting",
 		2,
 		"pitch",
-		0.7,
+		0.7
 	},
 	{
 		"still",
@@ -1147,7 +1147,7 @@ sway_trait_templates.sway_spraynpray_trait_01_c = {
 		"shooting",
 		3,
 		"pitch",
-		0.65,
+		0.65
 	},
 	{
 		"still",
@@ -1155,7 +1155,7 @@ sway_trait_templates.sway_spraynpray_trait_01_c = {
 		"shooting",
 		4,
 		"pitch",
-		0.6,
+		0.6
 	},
 	{
 		"still",
@@ -1163,7 +1163,7 @@ sway_trait_templates.sway_spraynpray_trait_01_c = {
 		"shooting",
 		5,
 		"pitch",
-		0.55,
+		0.55
 	},
 	{
 		"still",
@@ -1171,7 +1171,7 @@ sway_trait_templates.sway_spraynpray_trait_01_c = {
 		"shooting",
 		6,
 		"pitch",
-		0.5,
+		0.5
 	},
 	{
 		"still",
@@ -1179,7 +1179,7 @@ sway_trait_templates.sway_spraynpray_trait_01_c = {
 		"shooting",
 		7,
 		"pitch",
-		0.45,
+		0.45
 	},
 	{
 		"still",
@@ -1187,7 +1187,7 @@ sway_trait_templates.sway_spraynpray_trait_01_c = {
 		"shooting",
 		8,
 		"pitch",
-		0.4,
+		0.4
 	},
 	{
 		"still",
@@ -1195,7 +1195,7 @@ sway_trait_templates.sway_spraynpray_trait_01_c = {
 		"shooting",
 		9,
 		"pitch",
-		0.35,
+		0.35
 	},
 	{
 		"still",
@@ -1203,7 +1203,7 @@ sway_trait_templates.sway_spraynpray_trait_01_c = {
 		"shooting",
 		10,
 		"pitch",
-		0.3,
+		0.3
 	},
 	{
 		"still",
@@ -1211,7 +1211,7 @@ sway_trait_templates.sway_spraynpray_trait_01_c = {
 		"shooting",
 		1,
 		"yaw",
-		0.75,
+		0.75
 	},
 	{
 		"still",
@@ -1219,7 +1219,7 @@ sway_trait_templates.sway_spraynpray_trait_01_c = {
 		"shooting",
 		2,
 		"yaw",
-		0.7,
+		0.7
 	},
 	{
 		"still",
@@ -1227,7 +1227,7 @@ sway_trait_templates.sway_spraynpray_trait_01_c = {
 		"shooting",
 		3,
 		"yaw",
-		0.65,
+		0.65
 	},
 	{
 		"still",
@@ -1235,7 +1235,7 @@ sway_trait_templates.sway_spraynpray_trait_01_c = {
 		"shooting",
 		4,
 		"yaw",
-		0.6,
+		0.6
 	},
 	{
 		"still",
@@ -1243,7 +1243,7 @@ sway_trait_templates.sway_spraynpray_trait_01_c = {
 		"shooting",
 		5,
 		"yaw",
-		0.55,
+		0.55
 	},
 	{
 		"still",
@@ -1251,7 +1251,7 @@ sway_trait_templates.sway_spraynpray_trait_01_c = {
 		"shooting",
 		6,
 		"yaw",
-		0.5,
+		0.5
 	},
 	{
 		"still",
@@ -1259,7 +1259,7 @@ sway_trait_templates.sway_spraynpray_trait_01_c = {
 		"shooting",
 		7,
 		"yaw",
-		0.45,
+		0.45
 	},
 	{
 		"still",
@@ -1267,7 +1267,7 @@ sway_trait_templates.sway_spraynpray_trait_01_c = {
 		"shooting",
 		8,
 		"yaw",
-		0.4,
+		0.4
 	},
 	{
 		"still",
@@ -1275,7 +1275,7 @@ sway_trait_templates.sway_spraynpray_trait_01_c = {
 		"shooting",
 		9,
 		"yaw",
-		0.35,
+		0.35
 	},
 	{
 		"still",
@@ -1283,9 +1283,9 @@ sway_trait_templates.sway_spraynpray_trait_01_c = {
 		"shooting",
 		10,
 		"yaw",
-		0.3,
+		0.3
 	},
-	[DEFAULT_LERP_VALUE] = 0.3,
+	[DEFAULT_LERP_VALUE] = 0.3
 }
 sway_trait_templates.sway_assault_trait_01_a = {
 	{
@@ -1294,7 +1294,7 @@ sway_trait_templates.sway_assault_trait_01_a = {
 		"shooting",
 		1,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1302,7 +1302,7 @@ sway_trait_templates.sway_assault_trait_01_a = {
 		"shooting",
 		2,
 		"pitch",
-		0.75,
+		0.75
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1310,7 +1310,7 @@ sway_trait_templates.sway_assault_trait_01_a = {
 		"shooting",
 		3,
 		"pitch",
-		0.5,
+		0.5
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1318,7 +1318,7 @@ sway_trait_templates.sway_assault_trait_01_a = {
 		"shooting",
 		4,
 		"pitch",
-		0.25,
+		0.25
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1326,7 +1326,7 @@ sway_trait_templates.sway_assault_trait_01_a = {
 		"shooting",
 		1,
 		"yaw",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1334,7 +1334,7 @@ sway_trait_templates.sway_assault_trait_01_a = {
 		"shooting",
 		2,
 		"yaw",
-		0.75,
+		0.75
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1342,7 +1342,7 @@ sway_trait_templates.sway_assault_trait_01_a = {
 		"shooting",
 		3,
 		"yaw",
-		0.5,
+		0.5
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1350,9 +1350,9 @@ sway_trait_templates.sway_assault_trait_01_a = {
 		"shooting",
 		4,
 		"yaw",
-		0.25,
+		0.25
 	},
-	[DEFAULT_LERP_VALUE] = 0.1,
+	[DEFAULT_LERP_VALUE] = 0.1
 }
 sway_trait_templates.sway_assault_trait_01_b = {
 	{
@@ -1361,7 +1361,7 @@ sway_trait_templates.sway_assault_trait_01_b = {
 		"shooting",
 		1,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1369,7 +1369,7 @@ sway_trait_templates.sway_assault_trait_01_b = {
 		"shooting",
 		2,
 		"pitch",
-		0.75,
+		0.75
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1377,7 +1377,7 @@ sway_trait_templates.sway_assault_trait_01_b = {
 		"shooting",
 		3,
 		"pitch",
-		0.5,
+		0.5
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1385,7 +1385,7 @@ sway_trait_templates.sway_assault_trait_01_b = {
 		"shooting",
 		4,
 		"pitch",
-		0.25,
+		0.25
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1393,7 +1393,7 @@ sway_trait_templates.sway_assault_trait_01_b = {
 		"shooting",
 		1,
 		"yaw",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1401,7 +1401,7 @@ sway_trait_templates.sway_assault_trait_01_b = {
 		"shooting",
 		2,
 		"yaw",
-		0.75,
+		0.75
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1409,7 +1409,7 @@ sway_trait_templates.sway_assault_trait_01_b = {
 		"shooting",
 		3,
 		"yaw",
-		0.5,
+		0.5
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1417,9 +1417,9 @@ sway_trait_templates.sway_assault_trait_01_b = {
 		"shooting",
 		4,
 		"yaw",
-		0.25,
+		0.25
 	},
-	[DEFAULT_LERP_VALUE] = 0.2,
+	[DEFAULT_LERP_VALUE] = 0.2
 }
 sway_trait_templates.sway_assault_trait_01_c = {
 	{
@@ -1428,7 +1428,7 @@ sway_trait_templates.sway_assault_trait_01_c = {
 		"shooting",
 		1,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1436,7 +1436,7 @@ sway_trait_templates.sway_assault_trait_01_c = {
 		"shooting",
 		2,
 		"pitch",
-		0.75,
+		0.75
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1444,7 +1444,7 @@ sway_trait_templates.sway_assault_trait_01_c = {
 		"shooting",
 		3,
 		"pitch",
-		0.5,
+		0.5
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1452,7 +1452,7 @@ sway_trait_templates.sway_assault_trait_01_c = {
 		"shooting",
 		4,
 		"pitch",
-		0.25,
+		0.25
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1460,7 +1460,7 @@ sway_trait_templates.sway_assault_trait_01_c = {
 		"shooting",
 		1,
 		"yaw",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1468,7 +1468,7 @@ sway_trait_templates.sway_assault_trait_01_c = {
 		"shooting",
 		2,
 		"yaw",
-		0.75,
+		0.75
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1476,7 +1476,7 @@ sway_trait_templates.sway_assault_trait_01_c = {
 		"shooting",
 		3,
 		"yaw",
-		0.5,
+		0.5
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1484,9 +1484,9 @@ sway_trait_templates.sway_assault_trait_01_c = {
 		"shooting",
 		4,
 		"yaw",
-		0.25,
+		0.25
 	},
-	[DEFAULT_LERP_VALUE] = 0.3,
+	[DEFAULT_LERP_VALUE] = 0.3
 }
 sway_trait_templates.sway_immediate_sway_01 = {
 	{
@@ -1495,7 +1495,7 @@ sway_trait_templates.sway_immediate_sway_01 = {
 		"shooting",
 		1,
 		"pitch",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1503,7 +1503,7 @@ sway_trait_templates.sway_immediate_sway_01 = {
 		"shooting",
 		2,
 		"pitch",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1511,7 +1511,7 @@ sway_trait_templates.sway_immediate_sway_01 = {
 		"shooting",
 		3,
 		"pitch",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1519,7 +1519,7 @@ sway_trait_templates.sway_immediate_sway_01 = {
 		"shooting",
 		4,
 		"pitch",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1527,7 +1527,7 @@ sway_trait_templates.sway_immediate_sway_01 = {
 		"shooting",
 		5,
 		"pitch",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1535,7 +1535,7 @@ sway_trait_templates.sway_immediate_sway_01 = {
 		"shooting",
 		6,
 		"pitch",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1543,7 +1543,7 @@ sway_trait_templates.sway_immediate_sway_01 = {
 		"shooting",
 		7,
 		"pitch",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1551,7 +1551,7 @@ sway_trait_templates.sway_immediate_sway_01 = {
 		"shooting",
 		8,
 		"pitch",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1559,7 +1559,7 @@ sway_trait_templates.sway_immediate_sway_01 = {
 		"shooting",
 		9,
 		"pitch",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1567,7 +1567,7 @@ sway_trait_templates.sway_immediate_sway_01 = {
 		"shooting",
 		10,
 		"pitch",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1575,7 +1575,7 @@ sway_trait_templates.sway_immediate_sway_01 = {
 		"shooting",
 		1,
 		"yaw",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1583,7 +1583,7 @@ sway_trait_templates.sway_immediate_sway_01 = {
 		"shooting",
 		2,
 		"yaw",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1591,7 +1591,7 @@ sway_trait_templates.sway_immediate_sway_01 = {
 		"shooting",
 		3,
 		"yaw",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1599,7 +1599,7 @@ sway_trait_templates.sway_immediate_sway_01 = {
 		"shooting",
 		4,
 		"yaw",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1607,7 +1607,7 @@ sway_trait_templates.sway_immediate_sway_01 = {
 		"shooting",
 		5,
 		"yaw",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1615,7 +1615,7 @@ sway_trait_templates.sway_immediate_sway_01 = {
 		"shooting",
 		6,
 		"yaw",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1623,7 +1623,7 @@ sway_trait_templates.sway_immediate_sway_01 = {
 		"shooting",
 		7,
 		"yaw",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1631,7 +1631,7 @@ sway_trait_templates.sway_immediate_sway_01 = {
 		"shooting",
 		8,
 		"yaw",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1639,7 +1639,7 @@ sway_trait_templates.sway_immediate_sway_01 = {
 		"shooting",
 		9,
 		"yaw",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1647,8 +1647,8 @@ sway_trait_templates.sway_immediate_sway_01 = {
 		"shooting",
 		10,
 		"yaw",
-		0.33,
-	},
+		0.33
+	}
 }
 sway_trait_templates.sway_immediate_sway_02 = {
 	{
@@ -1657,7 +1657,7 @@ sway_trait_templates.sway_immediate_sway_02 = {
 		"shooting",
 		1,
 		"pitch",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1665,7 +1665,7 @@ sway_trait_templates.sway_immediate_sway_02 = {
 		"shooting",
 		2,
 		"pitch",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1673,7 +1673,7 @@ sway_trait_templates.sway_immediate_sway_02 = {
 		"shooting",
 		3,
 		"pitch",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1681,7 +1681,7 @@ sway_trait_templates.sway_immediate_sway_02 = {
 		"shooting",
 		4,
 		"pitch",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1689,7 +1689,7 @@ sway_trait_templates.sway_immediate_sway_02 = {
 		"shooting",
 		5,
 		"pitch",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1697,7 +1697,7 @@ sway_trait_templates.sway_immediate_sway_02 = {
 		"shooting",
 		6,
 		"pitch",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1705,7 +1705,7 @@ sway_trait_templates.sway_immediate_sway_02 = {
 		"shooting",
 		7,
 		"pitch",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1713,7 +1713,7 @@ sway_trait_templates.sway_immediate_sway_02 = {
 		"shooting",
 		8,
 		"pitch",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1721,7 +1721,7 @@ sway_trait_templates.sway_immediate_sway_02 = {
 		"shooting",
 		9,
 		"pitch",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1729,7 +1729,7 @@ sway_trait_templates.sway_immediate_sway_02 = {
 		"shooting",
 		10,
 		"pitch",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1737,7 +1737,7 @@ sway_trait_templates.sway_immediate_sway_02 = {
 		"shooting",
 		1,
 		"yaw",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1745,7 +1745,7 @@ sway_trait_templates.sway_immediate_sway_02 = {
 		"shooting",
 		2,
 		"yaw",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1753,7 +1753,7 @@ sway_trait_templates.sway_immediate_sway_02 = {
 		"shooting",
 		3,
 		"yaw",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1761,7 +1761,7 @@ sway_trait_templates.sway_immediate_sway_02 = {
 		"shooting",
 		4,
 		"yaw",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1769,7 +1769,7 @@ sway_trait_templates.sway_immediate_sway_02 = {
 		"shooting",
 		5,
 		"yaw",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1777,7 +1777,7 @@ sway_trait_templates.sway_immediate_sway_02 = {
 		"shooting",
 		6,
 		"yaw",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1785,7 +1785,7 @@ sway_trait_templates.sway_immediate_sway_02 = {
 		"shooting",
 		7,
 		"yaw",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1793,7 +1793,7 @@ sway_trait_templates.sway_immediate_sway_02 = {
 		"shooting",
 		8,
 		"yaw",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1801,7 +1801,7 @@ sway_trait_templates.sway_immediate_sway_02 = {
 		"shooting",
 		9,
 		"yaw",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1809,8 +1809,8 @@ sway_trait_templates.sway_immediate_sway_02 = {
 		"shooting",
 		10,
 		"yaw",
-		0.66,
-	},
+		0.66
+	}
 }
 sway_trait_templates.sway_immediate_sway_03 = {
 	{
@@ -1819,7 +1819,7 @@ sway_trait_templates.sway_immediate_sway_03 = {
 		"shooting",
 		1,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1827,7 +1827,7 @@ sway_trait_templates.sway_immediate_sway_03 = {
 		"shooting",
 		2,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1835,7 +1835,7 @@ sway_trait_templates.sway_immediate_sway_03 = {
 		"shooting",
 		3,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1843,7 +1843,7 @@ sway_trait_templates.sway_immediate_sway_03 = {
 		"shooting",
 		4,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1851,7 +1851,7 @@ sway_trait_templates.sway_immediate_sway_03 = {
 		"shooting",
 		5,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1859,7 +1859,7 @@ sway_trait_templates.sway_immediate_sway_03 = {
 		"shooting",
 		6,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1867,7 +1867,7 @@ sway_trait_templates.sway_immediate_sway_03 = {
 		"shooting",
 		7,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1875,7 +1875,7 @@ sway_trait_templates.sway_immediate_sway_03 = {
 		"shooting",
 		8,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1883,7 +1883,7 @@ sway_trait_templates.sway_immediate_sway_03 = {
 		"shooting",
 		9,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1891,7 +1891,7 @@ sway_trait_templates.sway_immediate_sway_03 = {
 		"shooting",
 		10,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1899,7 +1899,7 @@ sway_trait_templates.sway_immediate_sway_03 = {
 		"shooting",
 		1,
 		"yaw",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1907,7 +1907,7 @@ sway_trait_templates.sway_immediate_sway_03 = {
 		"shooting",
 		2,
 		"yaw",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1915,7 +1915,7 @@ sway_trait_templates.sway_immediate_sway_03 = {
 		"shooting",
 		3,
 		"yaw",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1923,7 +1923,7 @@ sway_trait_templates.sway_immediate_sway_03 = {
 		"shooting",
 		4,
 		"yaw",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1931,7 +1931,7 @@ sway_trait_templates.sway_immediate_sway_03 = {
 		"shooting",
 		5,
 		"yaw",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1939,7 +1939,7 @@ sway_trait_templates.sway_immediate_sway_03 = {
 		"shooting",
 		6,
 		"yaw",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1947,7 +1947,7 @@ sway_trait_templates.sway_immediate_sway_03 = {
 		"shooting",
 		7,
 		"yaw",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1955,7 +1955,7 @@ sway_trait_templates.sway_immediate_sway_03 = {
 		"shooting",
 		8,
 		"yaw",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1963,7 +1963,7 @@ sway_trait_templates.sway_immediate_sway_03 = {
 		"shooting",
 		9,
 		"yaw",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1971,8 +1971,8 @@ sway_trait_templates.sway_immediate_sway_03 = {
 		"shooting",
 		10,
 		"yaw",
-		1,
-	},
+		1
+	}
 }
 
 return sway_trait_templates

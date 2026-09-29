@@ -20,8 +20,8 @@ local scenegraph_definition = {
 		position = {
 			-50,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	background = {
 		horizontal_alignment = "right",
@@ -31,22 +31,22 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			0,
-		},
-	},
+			0
+		}
+	}
 }
 local ammo_text_style = {
 	drop_shadow = false,
 	font_type = "machine_medium",
 	line_spacing = 0.9,
 	font_size = HudElementPlayerWeaponSettings.ammo_font_size_default,
-	text_color = UIHudSettings.color_tint_main_1,
+	text_color = UIHudSettings.color_tint_main_1
 }
 
 ammo_text_style.offset = {
 	0,
 	0,
-	6,
+	6
 }
 ammo_text_style.default_font_size = HudElementPlayerWeaponSettings.ammo_font_size_default
 ammo_text_style.focused_font_size = HudElementPlayerWeaponSettings.ammo_font_size_focused
@@ -61,7 +61,7 @@ local ammo_spare_text_style = table.clone(ammo_text_style)
 ammo_spare_text_style.offset = {
 	0,
 	0,
-	7,
+	7
 }
 ammo_spare_text_style.text_horizontal_alignment = "right"
 ammo_spare_text_style.text_vertical_alignment = "top"
@@ -82,7 +82,7 @@ input_text_style.font_size = 20
 input_text_style.offset = {
 	10,
 	0,
-	8,
+	8
 }
 input_text_style.drop_shadow = false
 input_text_style.text_color = UIHudSettings.color_tint_main_1
@@ -95,13 +95,13 @@ local divider_style = {
 	highlight_color = Color.terminal_corner_hover(nil, true),
 	size = {
 		HudElementPlayerWeaponSettings.divider_width,
-		HudElementPlayerWeaponSettings.ammo_font_size_focused,
+		HudElementPlayerWeaponSettings.ammo_font_size_focused
 	},
 	offset = {
 		0,
 		0,
-		2,
-	},
+		2
+	}
 }
 
 local function _create_ammo_counter_pass_definitions(clip_index)
@@ -115,8 +115,8 @@ local function _create_ammo_counter_pass_definitions(clip_index)
 			value = string.format("<ammo_amount_%d>", ii),
 			style = table.merge({
 				primary_counter = true,
-				index = ii,
-			}, ammo_text_style),
+				index = ii
+			}, ammo_text_style)
 		}
 
 		if clip_index == 1 then
@@ -126,14 +126,14 @@ local function _create_ammo_counter_pass_definitions(clip_index)
 				value_id = string.format("ammo_spare_%d", ii),
 				style_id = string.format("ammo_spare_%d", ii),
 				style = table.merge({
-					index = ii,
-				}, ammo_spare_text_style),
+					index = ii
+				}, ammo_spare_text_style)
 			}
 		else
 			pass_definitions[#pass_definitions + 1] = {
 				pass_type = "rect",
 				style_id = "divider",
-				style = divider_style,
+				style = divider_style
 			}
 		end
 	end
@@ -156,13 +156,13 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				color = UIHudSettings.color_tint_main_2,
 				default_color = Color.terminal_corner_hover(nil, true),
 				highlight_color = Color.terminal_icon(nil, true),
-				material_values = {},
-			},
+				material_values = {}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -178,14 +178,14 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				color = UIHudSettings.get_hud_color("color_tint_main_2", 0),
 				default_color = Color.terminal_corner_hover(0, true),
 				highlight_color = Color.terminal_icon(nil, true),
-				material_values = {},
-			},
-		},
+				material_values = {}
+			}
+		}
 	}, "background"),
 	input_text = UIWidget.create_definition({
 		{
@@ -198,8 +198,8 @@ local widget_definitions = {
 				local text = content.text
 
 				return text ~= nil
-			end,
-		},
+			end
+		}
 	}, "background"),
 	infinite_symbol = UIWidget.create_definition({
 		{
@@ -213,11 +213,11 @@ local widget_definitions = {
 				offset = {
 					20,
 					0,
-					10,
+					10
 				},
-				color = UIHudSettings.color_tint_main_2,
-			},
-		},
+				color = UIHudSettings.color_tint_main_2
+			}
+		}
 	}, "background"),
 	background = UIWidget.create_definition({
 		{
@@ -225,8 +225,8 @@ local widget_definitions = {
 			style_id = "background",
 			value = "content/ui/materials/hud/backgrounds/terminal_background_weapon",
 			style = {
-				color = Color.terminal_background_gradient(255, true),
-			},
+				color = Color.terminal_background_gradient(255, true)
+			}
 		},
 		{
 			pass_type = "rect",
@@ -237,14 +237,14 @@ local widget_definitions = {
 				default_color = Color.terminal_corner(nil, true),
 				highlight_color = Color.terminal_corner_hover(nil, true),
 				size = {
-					4,
+					4
 				},
 				offset = {
 					0,
 					0,
-					2,
-				},
-			},
+					2
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -256,29 +256,29 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
 				color = {
 					127,
 					0,
 					0,
-					0,
+					0
 				},
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						0,
-					},
+						0
+					}
 				},
 				scale = {
 					1,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -290,15 +290,15 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
 				color = {
 					0,
 					255,
 					255,
-					255,
-				},
-			},
+					255
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -312,24 +312,24 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
 				offset_scale = {
-					0,
+					0
 				},
 				active_color = {
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				color = {
 					0,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -344,24 +344,24 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				active_color = {
 					127,
 					80,
 					80,
-					80,
+					80
 				},
 				color = {
 					0,
 					0,
 					0,
-					0,
+					0
 				},
 				offset_scale = {
-					0.325,
-				},
-			},
+					0.325
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -376,25 +376,25 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				active_color = {
 					127,
 					150,
 					150,
-					150,
+					150
 				},
 				color = {
 					0,
 					0,
 					0,
-					0,
+					0
 				},
 				offset_scale = {
-					0.65,
-				},
-			},
-		},
+					0.65
+				}
+			}
+		}
 	}, "background"),
 	hud_ammo_icon = UIWidget.create_definition({
 		{
@@ -407,14 +407,14 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					7,
+					7
 				},
 				default_font_size = HudElementPlayerWeaponSettings.ammo_font_size_default * 0.5,
-				focused_font_size = HudElementPlayerWeaponSettings.ammo_font_size_focused * 0.5,
+				focused_font_size = HudElementPlayerWeaponSettings.ammo_font_size_focused * 0.5
 			}),
 			visibility_function = function (content, style)
 				return content.hud_ammo_icon and content.hud_ammo_icon ~= "content/ui/materials/base/ui_default_base"
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -429,27 +429,27 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					7,
+					7
 				},
 				size = {
-					[2] = HudElementPlayerWeaponSettings.ammo_font_size_default,
+					[2] = HudElementPlayerWeaponSettings.ammo_font_size_default
 				},
 				scale = {
 					nil,
-					1.25,
+					1.25
 				},
 				pivot_scale = {
 					nil,
-					-0.19999999999999996,
+					-0.19999999999999996
 				},
 				default_font_size = HudElementPlayerWeaponSettings.ammo_font_size_default,
-				focused_font_size = HudElementPlayerWeaponSettings.ammo_font_size_focused,
+				focused_font_size = HudElementPlayerWeaponSettings.ammo_font_size_focused
 			},
 			visibility_function = function (content, style)
 				return content.hud_ammo_icon and content.hud_ammo_icon ~= "content/ui/materials/base/ui_default_base"
-			end,
-		},
-	}, "background"),
+			end
+		}
+	}, "background")
 }
 
 for i = 1, NetworkConstants.clips_in_use.max_size do
@@ -458,5 +458,5 @@ end
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

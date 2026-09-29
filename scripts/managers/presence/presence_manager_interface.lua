@@ -8,7 +8,7 @@ local PresenceManagerInterface = {
 	"update",
 	"set_party",
 	"get_requested_platform_username",
-	"reset",
+	"reset"
 }
 
 return PresenceManagerInterface

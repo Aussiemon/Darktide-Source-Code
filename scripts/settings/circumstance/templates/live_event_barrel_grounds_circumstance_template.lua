@@ -11,16 +11,16 @@ circumstance_templates.barrel_grounds = {
 		description = "loc_circumstance_barrel_grounds_description",
 		display_name = "loc_circumstance_barrel_grounds_title",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
-		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
+		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01"
 	},
 	mutators = {
 		"mutator_extra_shocktrooper",
 		"mutator_extra_grenadiers",
 		"mutator_poxwalker_bombers",
 		"mutator_headshot_parasite_enemies",
-		"mutator_drop_shocktrooper_grenade_on_death",
+		"mutator_drop_shocktrooper_grenade_on_death"
 	},
-	mission_overrides = MissionOverrides.all_explosive_barrels,
+	mission_overrides = MissionOverrides.all_explosive_barrels
 }
 circumstance_templates.barrel_grounds_hunt_grou = {
 	dialogue_id = "circumstance_vo_hunting_grounds",
@@ -34,15 +34,15 @@ circumstance_templates.barrel_grounds_hunt_grou = {
 		"mutator_extra_grenadiers",
 		"mutator_poxwalker_bombers",
 		"mutator_headshot_parasite_enemies",
-		"mutator_drop_shocktrooper_grenade_on_death",
+		"mutator_drop_shocktrooper_grenade_on_death"
 	},
 	mission_overrides = MissionOverrides.all_explosive_barrels,
 	ui = {
 		description = "loc_circumstance_barrel_grounds_hunt_grou_description",
 		display_name = "loc_circumstance_barrel_grounds_hunt_grou_title",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
-		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
-	},
+		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01"
+	}
 }
 circumstance_templates.barrel_grounds_more_res = {
 	theme_tag = "default",
@@ -51,7 +51,7 @@ circumstance_templates.barrel_grounds_more_res = {
 		description = "loc_circumstance_barrel_grounds_more_res_description",
 		display_name = "loc_circumstance_barrel_grounds_more_res_title",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
-		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
+		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01"
 	},
 	mutators = {
 		"mutator_add_resistance",
@@ -59,9 +59,9 @@ circumstance_templates.barrel_grounds_more_res = {
 		"mutator_extra_grenadiers",
 		"mutator_poxwalker_bombers",
 		"mutator_headshot_parasite_enemies",
-		"mutator_drop_shocktrooper_grenade_on_death",
+		"mutator_drop_shocktrooper_grenade_on_death"
 	},
-	mission_overrides = MissionOverrides.all_explosive_barrels,
+	mission_overrides = MissionOverrides.all_explosive_barrels
 }
 circumstance_templates.barrel_grounds_darkness = {
 	dialogue_id = "circumstance_vo_darkness",
@@ -71,7 +71,7 @@ circumstance_templates.barrel_grounds_darkness = {
 		description = "loc_circumstance_barrel_grounds_darkness_description",
 		display_name = "loc_circumstance_barrel_grounds_darkness_title",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
-		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
+		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01"
 	},
 	mutators = {
 		"mutator_more_witches",
@@ -82,9 +82,9 @@ circumstance_templates.barrel_grounds_darkness = {
 		"mutator_extra_grenadiers",
 		"mutator_poxwalker_bombers",
 		"mutator_headshot_parasite_enemies",
-		"mutator_drop_shocktrooper_grenade_on_death",
+		"mutator_drop_shocktrooper_grenade_on_death"
 	},
-	mission_overrides = MissionOverrides.all_explosive_barrels,
+	mission_overrides = MissionOverrides.all_explosive_barrels
 }
 circumstance_templates.barrel_grounds_gas = {
 	dialogue_id = "circumstance_vo_toxic_gas",
@@ -96,15 +96,15 @@ circumstance_templates.barrel_grounds_gas = {
 		"mutator_extra_grenadiers",
 		"mutator_poxwalker_bombers",
 		"mutator_headshot_parasite_enemies",
-		"mutator_drop_shocktrooper_grenade_on_death",
+		"mutator_drop_shocktrooper_grenade_on_death"
 	},
 	ui = {
 		description = "loc_circumstance_barrel_grounds_gas_description",
 		display_name = "loc_circumstance_barrel_grounds_gas_title",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
-		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
+		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01"
 	},
-	mission_overrides = MissionOverrides.merge("all_explosive_barrels", "more_corruption_syringes"),
+	mission_overrides = MissionOverrides.merge("all_explosive_barrels", "more_corruption_syringes")
 }
 circumstance_templates.barrel_grounds_waves_spec = {
 	theme_tag = "default",
@@ -113,7 +113,7 @@ circumstance_templates.barrel_grounds_waves_spec = {
 		description = "loc_circumstance_barrel_grounds_waves_spec_description",
 		display_name = "loc_circumstance_barrel_grounds_waves_spec_title",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
-		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
+		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01"
 	},
 	mutators = {
 		"mutator_waves_of_specials",
@@ -124,9 +124,9 @@ circumstance_templates.barrel_grounds_waves_spec = {
 		"mutator_extra_grenadiers",
 		"mutator_poxwalker_bombers",
 		"mutator_headshot_parasite_enemies",
-		"mutator_drop_shocktrooper_grenade_on_death",
+		"mutator_drop_shocktrooper_grenade_on_death"
 	},
-	mission_overrides = MissionOverrides.all_explosive_barrels,
+	mission_overrides = MissionOverrides.all_explosive_barrels
 }
 circumstance_templates.barrel_grounds_ventilation = {
 	dialogue_id = "circumstance_vo_ventilation_purge",
@@ -136,7 +136,7 @@ circumstance_templates.barrel_grounds_ventilation = {
 		description = "loc_circumstance_barrel_grounds_ventilation_description",
 		display_name = "loc_circumstance_barrel_grounds_ventilation_title",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
-		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
+		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01"
 	},
 	mutators = {
 		"mutator_snipers",
@@ -145,9 +145,9 @@ circumstance_templates.barrel_grounds_ventilation = {
 		"mutator_extra_grenadiers",
 		"mutator_poxwalker_bombers",
 		"mutator_headshot_parasite_enemies",
-		"mutator_drop_shocktrooper_grenade_on_death",
+		"mutator_drop_shocktrooper_grenade_on_death"
 	},
-	mission_overrides = MissionOverrides.all_explosive_barrels,
+	mission_overrides = MissionOverrides.all_explosive_barrels
 }
 
 return circumstance_templates

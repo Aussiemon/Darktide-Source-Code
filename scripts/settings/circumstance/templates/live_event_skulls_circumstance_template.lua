@@ -10,14 +10,14 @@ circumstance_templates.skulls_event_01 = {
 		"mutator_nurgle_totem",
 		"mutator_live_event_skulls_drop_single_skull_pickup_on_death",
 		"mutator_live_event_skulls_drop_many_skull_pickups_on_death",
-		"mutator_live_event_skulls_notification_feed",
+		"mutator_live_event_skulls_notification_feed"
 	},
 	ui = {
 		description = "loc_circumstance_skulls_event_01_01_description",
 		display_name = "loc_circumstance_skulls_event_01_01_title",
-		icon = "content/ui/materials/icons/circumstances/live_event_01",
+		icon = "content/ui/materials/icons/circumstances/live_event_01"
 	},
-	mission_overrides = MissionOverrides.add_skulls_pickup,
+	mission_overrides = MissionOverrides.add_skulls_pickup
 }
 circumstance_templates.skulls_event_01_02 = {
 	dialogue_id = "circumstance_vo_hunting_grounds",
@@ -31,15 +31,15 @@ circumstance_templates.skulls_event_01_02 = {
 		"mutator_nurgle_totem",
 		"mutator_live_event_skulls_drop_single_skull_pickup_on_death",
 		"mutator_live_event_skulls_drop_many_skull_pickups_on_death",
-		"mutator_live_event_skulls_notification_feed",
+		"mutator_live_event_skulls_notification_feed"
 	},
 	ui = {
 		description = "loc_circumstance_skulls_event_01_02_description",
 		display_name = "loc_circumstance_skulls_event_01_02_title",
 		happening_display_name = "loc_happening_hunting_grounds",
-		icon = "content/ui/materials/icons/circumstances/live_event_01",
+		icon = "content/ui/materials/icons/circumstances/live_event_01"
 	},
-	mission_overrides = MissionOverrides.add_skulls_pickup,
+	mission_overrides = MissionOverrides.add_skulls_pickup
 }
 circumstance_templates.skulls_event_01_03 = {
 	theme_tag = "default",
@@ -49,14 +49,14 @@ circumstance_templates.skulls_event_01_03 = {
 		"mutator_nurgle_totem",
 		"mutator_live_event_skulls_drop_single_skull_pickup_on_death",
 		"mutator_live_event_skulls_drop_many_skull_pickups_on_death",
-		"mutator_live_event_skulls_notification_feed",
+		"mutator_live_event_skulls_notification_feed"
 	},
 	ui = {
 		description = "loc_circumstance_skulls_event_01_03_description",
 		display_name = "loc_circumstance_skulls_event_01_03_title",
-		icon = "content/ui/materials/icons/circumstances/live_event_01",
+		icon = "content/ui/materials/icons/circumstances/live_event_01"
 	},
-	mission_overrides = MissionOverrides.add_skulls_pickup,
+	mission_overrides = MissionOverrides.add_skulls_pickup
 }
 circumstance_templates.skulls_event_01_04 = {
 	dialogue_id = "circumstance_vo_darkness",
@@ -70,15 +70,15 @@ circumstance_templates.skulls_event_01_04 = {
 		"mutator_nurgle_totem",
 		"mutator_live_event_skulls_drop_single_skull_pickup_on_death",
 		"mutator_live_event_skulls_drop_many_skull_pickups_on_death",
-		"mutator_live_event_skulls_notification_feed",
+		"mutator_live_event_skulls_notification_feed"
 	},
 	ui = {
 		description = "loc_circumstance_skulls_event_01_04_description",
 		display_name = "loc_circumstance_skulls_event_01_04_title",
 		happening_display_name = "loc_happening_darkness",
-		icon = "content/ui/materials/icons/circumstances/live_event_01",
+		icon = "content/ui/materials/icons/circumstances/live_event_01"
 	},
-	mission_overrides = MissionOverrides.add_skulls_pickup,
+	mission_overrides = MissionOverrides.add_skulls_pickup
 }
 circumstance_templates.skulls_event_01_05 = {
 	dialogue_id = "circumstance_vo_toxic_gas",
@@ -90,15 +90,15 @@ circumstance_templates.skulls_event_01_05 = {
 		"mutator_nurgle_totem",
 		"mutator_live_event_skulls_drop_single_skull_pickup_on_death",
 		"mutator_live_event_skulls_drop_many_skull_pickups_on_death",
-		"mutator_live_event_skulls_notification_feed",
+		"mutator_live_event_skulls_notification_feed"
 	},
 	ui = {
 		description = "loc_circumstance_skulls_event_01_05_description",
 		display_name = "loc_circumstance_skulls_event_01_05_title",
 		happening_display_name = "loc_happening_ventilation_purge",
-		icon = "content/ui/materials/icons/circumstances/live_event_01",
+		icon = "content/ui/materials/icons/circumstances/live_event_01"
 	},
-	mission_overrides = MissionOverrides.merge("add_skulls_pickup", "more_corruption_syringes"),
+	mission_overrides = MissionOverrides.merge("add_skulls_pickup", "more_corruption_syringes")
 }
 circumstance_templates.skulls_event_01_06 = {
 	dialogue_id = "circumstance_vo_ventilation_purge",
@@ -111,15 +111,15 @@ circumstance_templates.skulls_event_01_06 = {
 		"mutator_nurgle_totem",
 		"mutator_live_event_skulls_drop_single_skull_pickup_on_death",
 		"mutator_live_event_skulls_drop_many_skull_pickups_on_death",
-		"mutator_live_event_skulls_notification_feed",
+		"mutator_live_event_skulls_notification_feed"
 	},
 	ui = {
 		description = "loc_circumstance_skulls_event_01_06_description",
 		display_name = "loc_circumstance_skulls_event_01_06_title",
 		happening_display_name = "loc_happening_ventilation_purge",
-		icon = "content/ui/materials/icons/circumstances/live_event_01",
+		icon = "content/ui/materials/icons/circumstances/live_event_01"
 	},
-	mission_overrides = MissionOverrides.add_skulls_pickup,
+	mission_overrides = MissionOverrides.add_skulls_pickup
 }
 circumstance_templates.skulls_event_01_07 = {
 	theme_tag = "default",
@@ -133,14 +133,14 @@ circumstance_templates.skulls_event_01_07 = {
 		"mutator_nurgle_totem",
 		"mutator_live_event_skulls_drop_single_skull_pickup_on_death",
 		"mutator_live_event_skulls_drop_many_skull_pickups_on_death",
-		"mutator_live_event_skulls_notification_feed",
+		"mutator_live_event_skulls_notification_feed"
 	},
 	ui = {
 		description = "loc_circumstance_skulls_event_01_07_description",
 		display_name = "loc_circumstance_skulls_event_01_07_title",
-		icon = "content/ui/materials/icons/circumstances/live_event_01",
+		icon = "content/ui/materials/icons/circumstances/live_event_01"
 	},
-	mission_overrides = MissionOverrides.add_skulls_pickup,
+	mission_overrides = MissionOverrides.add_skulls_pickup
 }
 
 return circumstance_templates

@@ -25,8 +25,8 @@ local hud_element_world_markers_settings = {
 		"scripts/ui/hud/elements/world_markers/templates/world_marker_template_training_grounds",
 		"scripts/ui/hud/elements/world_markers/templates/world_marker_template_unit_threat_companion",
 		"scripts/ui/hud/elements/world_markers/templates/world_marker_template_unit_threat_veteran",
-		"scripts/ui/hud/elements/world_markers/templates/world_marker_template_unit_threat",
-	},
+		"scripts/ui/hud/elements/world_markers/templates/world_marker_template_unit_threat"
+	}
 }
 
 return settings("HudElementWorldMarkersSettings", hud_element_world_markers_settings)

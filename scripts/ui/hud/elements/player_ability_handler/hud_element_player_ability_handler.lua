@@ -53,8 +53,9 @@ HudElementPlayerAbilityHandler._player_scan = function (self, ui_renderer)
 			local slot_id = ability_configuration[ability_id]
 			local setup_settings = setup_settings_by_slot[slot_id]
 			local has_scenegraph = setup_settings ~= nil
+			local should_show = has_scenegraph
 
-			if has_scenegraph then
+			if should_show then
 				local hud_icon = ability_settings.hud_icon
 				local hud_icon_ramp = ability_settings.hud_icon_ramp
 				local hud_icon_mask = ability_settings.hud_icon_mask
@@ -85,7 +86,7 @@ HudElementPlayerAbilityHandler._player_scan = function (self, ui_renderer)
 							frame = hud_icon_frame,
 							frame_glow = hud_icon_frame_glow,
 							frame_glow_spin = hud_icon_frame_glow_spin,
-							definition_path = definition_path,
+							definition_path = definition_path
 						}
 
 						instance_data_tables[ability_id] = data
@@ -129,7 +130,7 @@ HudElementPlayerAbilityHandler._player_scan = function (self, ui_renderer)
 								weapon_template = weapon_template,
 								slot_id = slot_id,
 								icon = hud_icon,
-								definition_path = definition_path,
+								definition_path = definition_path
 							}
 
 							instance_data_tables[weapon_name] = data

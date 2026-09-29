@@ -18,7 +18,7 @@ WeaponIconUI.init = function (self, render_settings)
 		viewport_type = render_settings and render_settings.viewport_type or "default_with_alpha",
 		viewport_name = render_settings and render_settings.viewport_name or "weapon_viewport",
 		level_name = render_settings and render_settings.level_name or "content/levels/ui/weapon_icon/weapon_icon",
-		shading_environment = render_settings and render_settings.shading_environment or "content/shading_environments/ui/weapon_icons",
+		shading_environment = render_settings and render_settings.shading_environment or "content/shading_environments/ui/weapon_icons"
 	}
 
 	WeaponIconUI.super.init(self, new_render_settings)
@@ -157,7 +157,7 @@ WeaponIconUI._event_register_weapon_camera = function (self, camera_unit)
 	self._camera_settings = {
 		camera_unit = camera_unit,
 		boxed_camera_start_position = Vector3.to_array(camera_position),
-		boxed_camera_start_rotation = QuaternionBox(camera_rotation),
+		boxed_camera_start_rotation = QuaternionBox(camera_rotation)
 	}
 end
 

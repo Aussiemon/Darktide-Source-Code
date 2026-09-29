@@ -17,15 +17,15 @@ mastery_pattern_display_name_text_style.text_vertical_alignment = "bottom"
 mastery_pattern_display_name_text_style.vertical_alignment = "top"
 mastery_pattern_display_name_text_style.size = {
 	nil,
-	40,
+	40
 }
 mastery_pattern_display_name_text_style.size_addition = {
-	-20,
+	-20
 }
 mastery_pattern_display_name_text_style.offset = {
 	10,
 	-40,
-	6,
+	6
 }
 mastery_pattern_display_name_text_style.font_size = 40
 
@@ -36,21 +36,21 @@ mastery_pattern_mastery_level_text_style.text_horizontal_alignment = "center"
 mastery_pattern_mastery_level_text_style.text_vertical_alignment = "top"
 mastery_pattern_mastery_level_text_style.size = {
 	nil,
-	40,
+	40
 }
 mastery_pattern_mastery_level_text_style.size_addition = {
-	-20,
+	-20
 }
 mastery_pattern_mastery_level_text_style.offset = {
 	10,
 	20,
-	6,
+	6
 }
 mastery_pattern_mastery_level_text_style.font_size = 24
 
 local area_size = {
 	470,
-	250,
+	250
 }
 local bar_offset = 20
 local mastery_pattern_mastery_experience_text_style = table.clone(UIFontSettings.header_4)
@@ -61,15 +61,15 @@ mastery_pattern_mastery_experience_text_style.text_vertical_alignment = "top"
 mastery_pattern_mastery_experience_text_style.vertical_alignment = "bottom"
 mastery_pattern_mastery_experience_text_style.size = {
 	nil,
-	40,
+	40
 }
 mastery_pattern_mastery_experience_text_style.size_addition = {
-	-20,
+	-20
 }
 mastery_pattern_mastery_experience_text_style.offset = {
 	-bar_offset,
 	-30,
-	6,
+	6
 }
 mastery_pattern_mastery_experience_text_style.font_size = 24
 
@@ -81,7 +81,7 @@ mastery_added_experience_text_style.text_horizontal_alignment = "left"
 mastery_added_experience_text_style.offset = {
 	bar_offset,
 	-30,
-	6,
+	6
 }
 
 local pattern_title_text_style = table.clone(UIFontSettings.terminal_header_3)
@@ -93,11 +93,11 @@ pattern_title_text_style.vertical_alignment = "top"
 pattern_title_text_style.offset = {
 	0,
 	50,
-	20,
+	20
 }
 
 local weapon_stats_grid_settings = {
-	use_parent_ui_renderer = true,
+	use_parent_ui_renderer = true
 }
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
@@ -107,13 +107,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	patterns_grid_pivot = {
 		horizontal_alignment = "left",
@@ -121,13 +121,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			640,
-			850,
+			850
 		},
 		position = {
 			100,
 			100,
-			1,
-		},
+			1
+		}
 	},
 	patterns_grid_tab_panel = {
 		horizontal_alignment = "center",
@@ -135,13 +135,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			-42,
-			2,
-		},
+			2
+		}
 	},
 	item_grid_pivot = {
 		horizontal_alignment = "left",
@@ -149,13 +149,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			518,
-			920,
+			920
 		},
 		position = {
 			100,
 			50,
-			1,
-		},
+			1
+		}
 	},
 	selection_count = {
 		horizontal_alignment = "center",
@@ -163,13 +163,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			518,
-			100,
+			100
 		},
 		position = {
 			0,
 			-50,
-			1,
-		},
+			1
+		}
 	},
 	crafting_recipe_pivot = {
 		horizontal_alignment = "right",
@@ -177,13 +177,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			430,
-			400,
+			400
 		},
 		position = {
 			-150,
 			-102,
-			3,
-		},
+			3
+		}
 	},
 	weapon_stats_pivot = {
 		horizontal_alignment = "left",
@@ -191,13 +191,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			765,
 			60,
-			1,
-		},
+			1
+		}
 	},
 	weapon_discard_pivot = {
 		horizontal_alignment = "left",
@@ -205,13 +205,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			1320,
 			320,
-			1,
-		},
+			1
+		}
 	},
 	mastery_info = {
 		horizontal_alignment = "left",
@@ -219,13 +219,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			650,
-			280,
+			280
 		},
 		position = {
 			790,
 			315,
-			1,
-		},
+			1
+		}
 	},
 	mastery_info_details = {
 		horizontal_alignment = "left",
@@ -233,13 +233,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			650,
-			250,
+			250
 		},
 		position = {
 			790,
 			-200,
-			1,
-		},
+			1
+		}
 	},
 	confirm_button = {
 		horizontal_alignment = "left",
@@ -249,9 +249,9 @@ local scenegraph_definition = {
 		position = {
 			900,
 			920,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local widget_definitions = {
 	patterns_grid_panels = UIWidget.create_definition({
@@ -264,13 +264,13 @@ local widget_definitions = {
 				offset = {
 					-55,
 					-149,
-					21,
+					21
 				},
 				size = {
 					750,
-					200,
-				},
-			},
+					200
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -282,13 +282,13 @@ local widget_definitions = {
 				offset = {
 					0,
 					-54,
-					20,
+					20
 				},
 				size = {
 					656,
-					90,
-				},
-			},
+					90
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -301,13 +301,13 @@ local widget_definitions = {
 				offset = {
 					0,
 					67,
-					21,
+					21
 				},
 				size = {
 					750,
-					200,
-				},
-			},
+					200
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -320,20 +320,20 @@ local widget_definitions = {
 				offset = {
 					0,
 					40,
-					20,
+					20
 				},
 				size = {
 					656,
-					66,
-				},
-			},
+					66
+				}
+			}
 		},
 		{
 			pass_type = "text",
 			style_id = "display_name",
 			value = "Ranged",
 			value_id = "display_name",
-			style = pattern_title_text_style,
+			style = pattern_title_text_style
 		},
 		{
 			pass_type = "texture",
@@ -345,26 +345,26 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					468,
-					22,
+					22
 				},
 				offset = {
 					0,
 					90,
-					20,
+					20
 				},
-				color = Color.terminal_text_body_sub_header(255, true),
-			},
-		},
+				color = Color.terminal_text_body_sub_header(255, true)
+			}
+		}
 	}, "patterns_grid_pivot", {
-		visible = false,
+		visible = false
 	}),
 	confirm_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "confirm_button", {
 		gamepad_action = "secondary_action_pressed",
 		visible = false,
 		original_text = Utf8.upper(Localize("loc_continue")),
 		hotspot = {
-			on_pressed_sound = UISoundEvents.crafting_view_sacrifice_weapon,
-		},
+			on_pressed_sound = UISoundEvents.crafting_view_sacrifice_weapon
+		}
 	}),
 	mastery_info = UIWidget.create_definition({
 		{
@@ -372,14 +372,14 @@ local widget_definitions = {
 			style_id = "display_name",
 			value = "",
 			value_id = "display_name",
-			style = mastery_pattern_display_name_text_style,
+			style = mastery_pattern_display_name_text_style
 		},
 		{
 			pass_type = "text",
 			style_id = "mastery_level",
 			value = "",
 			value_id = "mastery_level",
-			style = mastery_pattern_mastery_level_text_style,
+			style = mastery_pattern_mastery_level_text_style
 		},
 		{
 			pass_type = "texture",
@@ -395,29 +395,29 @@ local widget_definitions = {
 				original_offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				original_size = {
 					358.4,
-					134.39999999999998,
+					134.39999999999998
 				},
 				size = {
 					358.4,
-					134.39999999999998,
-				},
-			},
+					134.39999999999998
+				}
+			}
 		},
 		{
 			pass_type = "text",
 			style_id = "mastery_experience",
 			value = "",
 			value_id = "mastery_experience",
-			style = mastery_pattern_mastery_experience_text_style,
+			style = mastery_pattern_mastery_experience_text_style
 		},
 		{
 			pass_type = "rect",
@@ -428,18 +428,18 @@ local widget_definitions = {
 				color = Color.terminal_icon(255, true),
 				size = {
 					nil,
-					10,
+					10
 				},
 				offset = {
 					bar_offset,
 					-20,
-					5,
+					5
 				},
 				size_addition = {
 					-(bar_offset * 2),
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -450,24 +450,24 @@ local widget_definitions = {
 				color = Color.ui_blue_light(255, true),
 				size = {
 					nil,
-					10,
+					10
 				},
 				offset = {
 					bar_offset,
 					-20,
-					4,
+					4
 				},
 				size_addition = {
 					-(bar_offset * 2),
-					0,
-				},
+					0
+				}
 			},
 			change_function = function (content, style, animations, dt)
 				local pulse_frequency = 5
 				local pulse = 0.5 * (1 + math.sin(Application.time_since_launch() * pulse_frequency))
 
 				style.color[1] = pulse * 255
-			end,
+			end
 		},
 		{
 			pass_type = "rect",
@@ -478,18 +478,18 @@ local widget_definitions = {
 				color = Color.black(255, true),
 				size = {
 					nil,
-					10,
+					10
 				},
 				offset = {
 					bar_offset,
 					-20,
-					3,
+					3
 				},
 				size_addition = {
 					-(bar_offset * 2),
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -500,25 +500,25 @@ local widget_definitions = {
 				color = Color.terminal_text_body(255, true),
 				size = {
 					nil,
-					10,
+					10
 				},
 				offset = {
 					bar_offset - 2,
 					-18,
-					2,
+					2
 				},
 				size_addition = {
 					-(bar_offset * 2) + 4,
-					4,
-				},
-			},
+					4
+				}
+			}
 		},
 		{
 			pass_type = "text",
 			style_id = "added_exp",
 			value = "",
 			value_id = "added_exp",
-			style = mastery_added_experience_text_style,
+			style = mastery_added_experience_text_style
 		},
 		{
 			pass_type = "texture",
@@ -529,13 +529,13 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					18,
-					16,
+					16
 				},
-				color = Color.terminal_grid_background(255, true),
-			},
-		},
+				color = Color.terminal_grid_background(255, true)
+			}
+		}
 	}, "mastery_info", {
-		visible = false,
+		visible = false
 	}),
 	sacrifice_intro = UIWidget.create_definition({
 		{
@@ -547,10 +547,10 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					18,
-					16,
+					16
 				},
-				color = Color.terminal_grid_background(255, true),
-			},
+				color = Color.terminal_grid_background(255, true)
+			}
 		},
 		{
 			pass_type = "text",
@@ -562,9 +562,9 @@ local widget_definitions = {
 				offset = {
 					mastery_pattern_display_name_text_style.offset[1],
 					20,
-					mastery_pattern_display_name_text_style.offset[3],
-				},
-			}),
+					mastery_pattern_display_name_text_style.offset[3]
+				}
+			})
 		},
 		{
 			pass_type = "text",
@@ -578,16 +578,16 @@ local widget_definitions = {
 				offset = {
 					0,
 					-20,
-					mastery_pattern_mastery_experience_text_style.offset[3],
-				},
-			}),
-		},
+					mastery_pattern_mastery_experience_text_style.offset[3]
+				}
+			})
+		}
 	}, "mastery_info_details", {
-		visible = false,
-	}),
+		visible = false
+	})
 }
 
 return {
 	scenegraph_definition = scenegraph_definition,
-	widget_definitions = widget_definitions,
+	widget_definitions = widget_definitions
 }

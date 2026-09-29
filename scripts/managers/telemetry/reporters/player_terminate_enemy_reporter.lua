@@ -7,10 +7,6 @@ PlayerTerminateEnemyReporter.init = function (self)
 	self._reports = {}
 end
 
-PlayerTerminateEnemyReporter.update = function (self, dt, t)
-	return
-end
-
 PlayerTerminateEnemyReporter.report = function (self)
 	if table.is_empty(self._reports) then
 		return
@@ -34,7 +30,7 @@ local function extract_data(entry)
 		damage = entry.damage,
 		permanent_damage = entry.permanent_damage,
 		actual_damage = entry.actual_damage,
-		damage_absorbed = entry.damage_absorbed,
+		damage_absorbed = entry.damage_absorbed
 	}
 end
 
@@ -61,14 +57,14 @@ PlayerTerminateEnemyReporter.register_event = function (self, player, data)
 		local player_data = {
 			telemetry_subject = subject,
 			telemetry_game_session = player:telemetry_game_session(),
-			telemetry_current_instance = player:telemetry_current_instance(),
+			telemetry_current_instance = player:telemetry_current_instance()
 		}
 
 		self._reports[player_key] = {
 			player_data = player_data,
 			entries = {
-				extract_data(data),
-			},
+				extract_data(data)
+			}
 		}
 	end
 end

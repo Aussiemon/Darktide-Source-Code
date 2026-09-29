@@ -7,8 +7,8 @@ local elements = {
 		visibility_groups = {
 			"in_hub_view",
 			"alive",
-			"emote_wheel",
-		},
+			"emote_wheel"
+		}
 	},
 	{
 		class_name = "HudElementTeamPanelHandler",
@@ -19,8 +19,8 @@ local elements = {
 		visibility_groups = {
 			"dead",
 			"alive",
-			"emote_wheel",
-		},
+			"emote_wheel"
+		}
 	},
 	{
 		class_name = "HudElementCrosshair",
@@ -28,8 +28,8 @@ local elements = {
 		package = "packages/ui/hud/crosshair/crosshair",
 		use_hud_scale = true,
 		visibility_groups = {
-			"alive",
-		},
+			"alive"
+		}
 	},
 	{
 		class_name = "HudElementTacticalOverlay",
@@ -39,11 +39,11 @@ local elements = {
 		visibility_groups = {
 			"tactical_overlay",
 			"alive",
-			"emote_wheel",
+			"emote_wheel"
 		},
 		context = {
-			show_left_side_details = false,
-		},
+			show_left_side_details = false
+		}
 	},
 	{
 		class_name = "HudElementMissionObjectiveFeed",
@@ -53,8 +53,8 @@ local elements = {
 		visibility_groups = {
 			"dead",
 			"alive",
-			"emote_wheel",
-		},
+			"emote_wheel"
+		}
 	},
 	{
 		class_name = "HudElementMissionObjectivePopup",
@@ -64,8 +64,8 @@ local elements = {
 		visibility_groups = {
 			"dead",
 			"alive",
-			"emote_wheel",
-		},
+			"emote_wheel"
+		}
 	},
 	{
 		class_name = "HudElementObjectiveProgressBar",
@@ -75,8 +75,8 @@ local elements = {
 		visibility_groups = {
 			"dead",
 			"alive",
-			"communication_wheel",
-		},
+			"communication_wheel"
+		}
 	},
 	{
 		class_name = "HudElementOnboardingPopup",
@@ -86,8 +86,8 @@ local elements = {
 		visibility_groups = {
 			"alive",
 			"dead",
-			"emote_wheel",
-		},
+			"emote_wheel"
+		}
 	},
 	{
 		class_name = "HudElementAreaNotificationPopup",
@@ -97,8 +97,8 @@ local elements = {
 		visibility_groups = {
 			"dead",
 			"alive",
-			"emote_wheel",
-		},
+			"emote_wheel"
+		}
 	},
 	{
 		class_name = "HudElementMissionSpeakerPopup",
@@ -109,8 +109,8 @@ local elements = {
 			"dead",
 			"alive",
 			"cutscene",
-			"emote_wheel",
-		},
+			"emote_wheel"
+		}
 	},
 	{
 		class_name = "HudElementWorldMarkers",
@@ -119,8 +119,8 @@ local elements = {
 		use_hud_scale = false,
 		visibility_groups = {
 			"alive",
-			"emote_wheel",
-		},
+			"emote_wheel"
+		}
 	},
 	{
 		class_name = "HudElementInteraction",
@@ -128,8 +128,8 @@ local elements = {
 		package = "packages/ui/hud/interaction/interaction",
 		visibility_groups = {
 			"alive",
-			"emote_wheel",
-		},
+			"emote_wheel"
+		}
 	},
 	{
 		class_name = "HudElementEmoteWheel",
@@ -138,24 +138,24 @@ local elements = {
 		use_hud_scale = false,
 		visibility_groups = {
 			"alive",
-			"emote_wheel",
-		},
+			"emote_wheel"
+		}
 	},
 	{
 		class_name = "HudElementNameplates",
 		filename = "scripts/ui/hud/elements/nameplates/hud_element_nameplates",
 		visibility_groups = {
 			"alive",
-			"emote_wheel",
-		},
+			"emote_wheel"
+		}
 	},
 	{
 		class_name = "HudElementCutsceneOverlay",
 		filename = "scripts/ui/hud/elements/cutscene_overlay/hud_element_cutscene_overlay",
 		visibility_groups = {
 			"prologue_cutscene",
-			"cutscene",
-		},
+			"cutscene"
+		}
 	},
 	{
 		class_name = "HudElementCutsceneFading",
@@ -169,9 +169,9 @@ local elements = {
 			"emote_wheel",
 			"testify",
 			"dead",
-			"alive",
-		},
-	},
+			"alive"
+		}
+	}
 }
 
 return elements

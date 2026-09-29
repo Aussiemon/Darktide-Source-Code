@@ -17,7 +17,7 @@ local RIGHT_SEGMENT_INDEX = 3
 local VECTOR_TYPES = {
 	"main",
 	"left_flank",
-	"right_flank",
+	"right_flank"
 }
 
 CombatVectorSystem.init = function (self, ...)
@@ -32,7 +32,7 @@ CombatVectorSystem.init = function (self, ...)
 		self._astar_data = {
 			astar_finished = true,
 			astar_timer = 0,
-			astar = astar,
+			astar = astar
 		}
 		self._current_from_position = Vector3Box()
 		self._current_to_position = Vector3Box()
@@ -53,7 +53,7 @@ CombatVectorSystem.init = function (self, ...)
 				vector_segments[j] = {
 					Vector3Box(),
 					Vector3Box(),
-					Vector3Box(),
+					Vector3Box()
 				}
 			end
 
@@ -67,7 +67,7 @@ CombatVectorSystem.init = function (self, ...)
 
 				locations[location_type] = {
 					close = {},
-					far = {},
+					far = {}
 				}
 				location_counters[location_type] = 0
 			end
@@ -100,12 +100,12 @@ CombatVectorSystem.init = function (self, ...)
 		self._flank_astar_data = {
 			left_flank = {
 				finished = true,
-				astar = left_flank_astar,
+				astar = left_flank_astar
 			},
 			right_flank = {
 				finished = true,
-				astar = right_flank_astar,
-			},
+				astar = right_flank_astar
+			}
 		}
 		self._next_update_at = 0
 		self._current_update_unit = nil
@@ -122,10 +122,10 @@ local NAV_TAG_LAYER_COSTS = {
 	ledges = 10,
 	ledges_with_fence = 10,
 	monster_walls = 0,
-	teleporters = 100,
+	teleporters = 100
 }
 local FORBIDDEN_NAV_TAG_VOLUME_TYPES = {
-	"content/volume_types/nav_tag_volumes/minion_no_destination",
+	"content/volume_types/nav_tag_volumes/minion_no_destination"
 }
 
 CombatVectorSystem.on_gameplay_post_init = function (self, level)
@@ -589,7 +589,7 @@ function _calculate_nav_mesh_locations(nav_world, traverse_logic, segments, segm
 						range_nav_mesh_locations[#range_nav_mesh_locations + 1] = {
 							claimed = false,
 							position = Vector3Box(pos_on_nav_mesh),
-							location_type = location_type,
+							location_type = location_type
 						}
 					end
 				end

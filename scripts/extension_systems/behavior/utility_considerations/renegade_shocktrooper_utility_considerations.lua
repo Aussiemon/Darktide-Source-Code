@@ -14,13 +14,13 @@ local considerations = {
 				0.900001,
 				0.25,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
+			is_condition = true
 		},
 		last_time = {
 			component_field = "last_time",
@@ -34,9 +34,9 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	renegade_shocktrooper_shoot = {
 		distance_to_target = {
@@ -51,14 +51,14 @@ local considerations = {
 				0.900001,
 				0.25,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	renegade_shocktrooper_frag_grenade = {
 		distance_to_target = {
@@ -73,15 +73,15 @@ local considerations = {
 				0.351,
 				1,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
-	},
+			is_condition = true
+		}
+	}
 }
 
 return considerations

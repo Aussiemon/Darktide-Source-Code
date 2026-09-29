@@ -27,7 +27,7 @@ AreaOfEffectUnitSpawnerExtension.init = function (self, extension_init_context, 
 			salvo = salvo,
 			seed = extension_init_data.salvo_seed,
 			source_position = Vector3Box(),
-			next_salvo_time = salvo.initial_salvo_delay or 0,
+			next_salvo_time = salvo.initial_salvo_delay or 0
 		}
 	end
 
@@ -36,7 +36,7 @@ AreaOfEffectUnitSpawnerExtension.init = function (self, extension_init_context, 
 	self._queued_explosions = {}
 	self._local_units = {}
 	self._cb_cancellation_token = {
-		cancelled = false,
+		cancelled = false
 	}
 	self._safe_raycast_cb = callback(self, "_async_raycast_result_cb", self._cb_cancellation_token)
 	self._raycast_object = Managers.state.game_mode:create_safe_raycast_object("closest", "types", "statics", "collision_filter", "filter_player_character_shooting_raycast_statics")
@@ -338,7 +338,7 @@ AreaOfEffectUnitSpawnerExtension._queue_sfx = function (self, sfx_name, delay, p
 		delay = delay,
 		x = position[1],
 		y = position[2],
-		z = position[3],
+		z = position[3]
 	}
 end
 
@@ -354,7 +354,7 @@ AreaOfEffectUnitSpawnerExtension._queue_vfx = function (self, vfx, delay, positi
 		delay = delay,
 		x = position[1],
 		y = position[2],
-		z = position[3],
+		z = position[3]
 	}
 end
 
@@ -383,7 +383,7 @@ AreaOfEffectUnitSpawnerExtension._spawn_local_unit = function (self, unit_name, 
 		arrival_angle = arrival_angle,
 		target_position = Vector3Box(target_position),
 		origin = origin,
-		initial_path_progress = initial_path_progress,
+		initial_path_progress = initial_path_progress
 	}
 end
 
@@ -399,7 +399,7 @@ AreaOfEffectUnitSpawnerExtension._queue_explosion = function (self, explosion_te
 		qx = qx,
 		qy = qy,
 		qz = qz,
-		qw = qw,
+		qw = qw
 	}
 end
 

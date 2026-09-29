@@ -17,8 +17,8 @@ LocalConnectChannelState.enter = function (self)
 		name = "connecting",
 		parameters = {
 			peer_id = host_peer_id,
-			channel_id = channel_id,
-		},
+			channel_id = channel_id
+		}
 	}
 end
 
@@ -30,7 +30,7 @@ LocalConnectChannelState.update = function (self, dt)
 		Log.info("LocalConnectChannelState", "Denied connection channel")
 
 		return "disconnected", {
-			engine_reason = reason,
+			engine_reason = reason
 		}
 	elseif state == "connected" then
 		return "channel connected"

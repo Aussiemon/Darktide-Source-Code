@@ -8,10 +8,10 @@ local FAR_COMBAT = {
 	name = "follow",
 	condition_args = {
 		combat_ranges = {
-			far = true,
-		},
+			far = true
+		}
 	},
-	action_data = action_data.follow,
+	action_data = action_data.follow
 }
 local MELEE_COMBAT = {
 	"BtRandomUtilityNode",
@@ -20,14 +20,14 @@ local MELEE_COMBAT = {
 		condition = "attack_allowed",
 		name = "melee_attack",
 		condition_args = {
-			attack_type = "melee",
+			attack_type = "melee"
 		},
-		action_data = action_data.melee_attack,
+		action_data = action_data.melee_attack
 	},
 	{
 		"BtMeleeFollowTargetAction",
 		name = "follow",
-		action_data = action_data.follow,
+		action_data = action_data.follow
 	},
 	{
 		"BtChargeAction",
@@ -37,42 +37,42 @@ local MELEE_COMBAT = {
 		condition_args = {
 			combat_ranges = {
 				close = true,
-				melee = true,
-			},
-		},
+				melee = true
+			}
+		}
 	},
 	{
 		"BtMeleeAttackAction",
 		condition = "attack_allowed",
 		name = "far_moving_attack",
 		condition_args = {
-			attack_type = "moving_melee",
+			attack_type = "moving_melee"
 		},
-		action_data = action_data.far_moving_attack,
+		action_data = action_data.far_moving_attack
 	},
 	{
 		"BtMeleeAttackAction",
 		condition = "attack_allowed",
 		name = "moving_melee_attack_cleave",
 		condition_args = {
-			attack_type = "moving_melee",
+			attack_type = "moving_melee"
 		},
-		action_data = action_data.moving_melee_attack_cleave,
+		action_data = action_data.moving_melee_attack_cleave
 	},
 	condition = "is_aggroed",
-	name = "melee_combat",
+	name = "melee_combat"
 }
 local CLIMB_ENTER_HOOK = {
 	hook = "unwield_slot",
 	args = {
-		slot_name = "slot_melee_weapon",
-	},
+		slot_name = "slot_melee_weapon"
+	}
 }
 local CLIMB_LEAVE_HOOK = {
 	hook = "wield_slot",
 	args = {
-		slot_name = "slot_melee_weapon",
-	},
+		slot_name = "slot_melee_weapon"
+	}
 }
 local behavior_tree = {
 	"BtSelectorNode",
@@ -80,7 +80,7 @@ local behavior_tree = {
 		"BtDieAction",
 		name = "death",
 		state = "dead",
-		action_data = action_data.death,
+		action_data = action_data.death
 	},
 	{
 		"BtDisableAction",
@@ -88,7 +88,7 @@ local behavior_tree = {
 		exit_state = "base",
 		name = "disable",
 		state = "disabled",
-		action_data = action_data.disable,
+		action_data = action_data.disable
 	},
 	{
 		"BtExitSpawnerAction",
@@ -96,14 +96,14 @@ local behavior_tree = {
 		exit_state = "base",
 		name = "exit_spawner",
 		state = "exiting_spawner",
-		action_data = action_data.exit_spawner,
+		action_data = action_data.exit_spawner
 	},
 	{
 		"BtSelectorNode",
 		{
 			"BtTeleportAction",
 			condition = "at_teleport_smart_object",
-			name = "teleport",
+			name = "teleport"
 		},
 		{
 			"BtClimbAction",
@@ -111,46 +111,46 @@ local behavior_tree = {
 			name = "climb",
 			action_data = action_data.climb,
 			enter_hook = CLIMB_ENTER_HOOK,
-			leave_hook = CLIMB_LEAVE_HOOK,
+			leave_hook = CLIMB_LEAVE_HOOK
 		},
 		{
 			"BtJumpAcrossAction",
 			condition = "at_jump_smart_object",
 			name = "jump_across",
-			action_data = action_data.jump_across,
+			action_data = action_data.jump_across
 		},
 		{
 			"BtOpenDoorAction",
 			condition = "at_door_smart_object",
 			name = "open_door",
-			action_data = action_data.open_door,
+			action_data = action_data.open_door
 		},
 		{
 			"BtSmashObstacleAction",
 			condition = "at_smashable_obstacle_smart_object",
 			name = "smash_obstacle",
-			action_data = action_data.smash_obstacle,
+			action_data = action_data.smash_obstacle
 		},
 		condition = "at_smart_object",
-		name = "smart_object",
+		name = "smart_object"
 	},
 	{
 		"BtStaggerAction",
 		condition = "is_staggered",
 		name = "stagger",
-		action_data = action_data.stagger,
+		action_data = action_data.stagger
 	},
 	{
 		"BtBlockedAction",
 		condition = "is_blocked",
 		name = "blocked",
-		action_data = action_data.blocked,
+		action_data = action_data.blocked
 	},
 	{
 		"BtSummonMinionsAction",
 		condition = "can_summon_minions",
 		name = "summon",
-		action_data = action_data.summon,
+		action_data = action_data.summon
 	},
 	FAR_COMBAT,
 	MELEE_COMBAT,
@@ -158,20 +158,20 @@ local behavior_tree = {
 		"BtAlertedAction",
 		condition = "is_alerted",
 		name = "alerted",
-		action_data = action_data.alerted,
+		action_data = action_data.alerted
 	},
 	{
 		"BtPatrolAction",
 		condition = "should_patrol",
 		name = "patrol",
-		action_data = action_data.patrol,
+		action_data = action_data.patrol
 	},
 	{
 		"BtIdleAction",
 		name = "idle",
-		action_data = action_data.idle,
+		action_data = action_data.idle
 	},
-	name = "chaos_ogryn_houndmaster",
+	name = "chaos_ogryn_houndmaster"
 }
 
 return behavior_tree

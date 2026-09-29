@@ -82,7 +82,7 @@ MinigameDrill.setup_game = function (self)
 
 	self._cursor_position = {
 		x = 0,
-		y = 0,
+		y = 0
 	}
 	self._selected_index = nil
 
@@ -157,7 +157,7 @@ MinigameDrill.generate_targets = function (self, seed)
 
 			stage_targets[target] = {
 				x = x,
-				y = y,
+				y = y
 			}
 		end
 	end

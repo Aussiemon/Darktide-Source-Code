@@ -14,73 +14,73 @@ suppression_templates.stub_pistol_p1_m1_suppression_killshot = {
 			{
 				pitch = {
 					lerp_basic = 0.25,
-					lerp_perfect = 0.1,
+					lerp_perfect = 0.1
 				},
 				yaw = {
 					lerp_basic = 0.25,
-					lerp_perfect = 0.1,
-				},
+					lerp_perfect = 0.1
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 0.5,
-					lerp_perfect = 0.25,
+					lerp_perfect = 0.25
 				},
 				yaw = {
 					lerp_basic = 0.5,
-					lerp_perfect = 0.25,
-				},
+					lerp_perfect = 0.25
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 2,
-					lerp_perfect = 1.5,
+					lerp_perfect = 1.5
 				},
 				yaw = {
 					lerp_basic = 2,
-					lerp_perfect = 1.5,
-				},
+					lerp_perfect = 1.5
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 3,
-					lerp_perfect = 2.5,
+					lerp_perfect = 2.5
 				},
 				yaw = {
 					lerp_basic = 3,
-					lerp_perfect = 2.5,
-				},
+					lerp_perfect = 2.5
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 4,
-					lerp_perfect = 3.5,
+					lerp_perfect = 3.5
 				},
 				yaw = {
 					lerp_basic = 4,
-					lerp_perfect = 3.5,
-				},
-			},
-		},
+					lerp_perfect = 3.5
+				}
+			}
+		}
 	},
 	moving = {
 		inherits = {
 			"stub_pistol_p1_m1_suppression_killshot",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"stub_pistol_p1_m1_suppression_killshot",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"stub_pistol_p1_m1_suppression_killshot",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 suppression_templates.stub_pistol_p1_m1_suppression_assault = {
 	still = {
@@ -90,76 +90,76 @@ suppression_templates.stub_pistol_p1_m1_suppression_assault = {
 			{
 				pitch = {
 					lerp_basic = 6,
-					lerp_perfect = 3,
+					lerp_perfect = 3
 				},
 				yaw = {
 					lerp_basic = 6,
-					lerp_perfect = 3,
-				},
+					lerp_perfect = 3
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 5.5,
-					lerp_perfect = 2.5,
+					lerp_perfect = 2.5
 				},
 				yaw = {
 					lerp_basic = 5.5,
-					lerp_perfect = 2.5,
-				},
+					lerp_perfect = 2.5
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 5,
-					lerp_perfect = 2,
+					lerp_perfect = 2
 				},
 				yaw = {
 					lerp_basic = 5,
-					lerp_perfect = 2,
-				},
+					lerp_perfect = 2
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 4.5,
-					lerp_perfect = 1.5,
+					lerp_perfect = 1.5
 				},
 				yaw = {
 					lerp_basic = 4.5,
-					lerp_perfect = 1.5,
-				},
+					lerp_perfect = 1.5
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 4,
-					lerp_perfect = 1,
+					lerp_perfect = 1
 				},
 				yaw = {
 					lerp_basic = 4,
-					lerp_perfect = 1,
-				},
-			},
-		},
+					lerp_perfect = 1
+				}
+			}
+		}
 	},
 	moving = {
 		inherits = {
 			"stub_pistol_p1_m1_suppression_assault",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"stub_pistol_p1_m1_suppression_assault",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"stub_pistol_p1_m1_suppression_assault",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 
 return {
 	base_templates = suppression_templates,
-	overrides = overrides,
+	overrides = overrides
 }

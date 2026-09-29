@@ -13,7 +13,7 @@ local WalletSettings = require("scripts/settings/wallet_settings")
 local header_size = HudElementMissionObjectiveFeedSettings.header_size
 local icon_size = {
 	32,
-	32,
+	32
 }
 local live_event_text_width = header_size[1] - icon_size[1] - 20 - 18
 local scenegraph_definition = {
@@ -24,13 +24,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			header_size[1],
-			200,
+			200
 		},
 		position = {
 			-50,
 			50,
-			1,
-		},
+			1
+		}
 	},
 	background = {
 		horizontal_alignment = "right",
@@ -38,13 +38,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			header_size[1],
-			50,
+			50
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	pivot = {
 		horizontal_alignment = "right",
@@ -52,13 +52,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			header_size[1],
-			50,
+			50
 		},
 		position = {
 			10,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	live_event_background = {
 		horizontal_alignment = "center",
@@ -66,13 +66,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			header_size[1],
-			200,
+			200
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	live_event_text_area = {
 		horizontal_alignment = "right",
@@ -80,18 +80,18 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			live_event_text_width,
-			200,
+			200
 		},
 		position = {
 			-8,
 			4,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local alert_size = {
 	header_size[1] - 10,
-	30,
+	30
 }
 local alert_text_style = table.clone(UIFontSettings.hud_body)
 
@@ -103,14 +103,14 @@ alert_text_style.font_size = 20
 alert_text_style.offset = {
 	0,
 	-1,
-	7,
+	7
 }
 alert_text_style.size = alert_size
 alert_text_style.text_color = {
 	255,
 	70,
 	38,
-	0,
+	0
 }
 alert_text_style.drop_shadow = true
 
@@ -120,18 +120,18 @@ local function create_mission_objective(scenegraph_id)
 	local header_font_color = HudElementMissionObjectiveFeedSettings.base_color
 	local bar_icon_size = {
 		24,
-		24,
+		24
 	}
 	local icon_offset = 10
 	local side_offset = 10
 	local bar_offset = {
 		icon_size[1] + side_offset + icon_offset,
 		1,
-		0,
+		0
 	}
 	local bar_size = {
 		header_size[1] - (bar_offset[1] + icon_offset + side_offset * 2),
-		10,
+		10
 	}
 	local pass_definitions = {
 		{
@@ -146,12 +146,12 @@ local function create_mission_objective(scenegraph_id)
 				offset = {
 					icon_offset,
 					0,
-					6,
+					6
 				},
 				color = UIHudSettings.color_tint_main_1,
 				default_color = UIHudSettings.color_tint_main_1,
-				alert_color = HudElementMissionObjectiveFeedSettings.alert_color,
-			},
+				alert_color = HudElementMissionObjectiveFeedSettings.alert_color
+			}
 		},
 		{
 			pass_type = "text",
@@ -165,12 +165,12 @@ local function create_mission_objective(scenegraph_id)
 				offset = {
 					bar_offset[1],
 					0,
-					6,
+					6
 				},
 				default_offset = {
 					bar_offset[1],
 					0,
-					6,
+					6
 				},
 				font_type = header_font_settings.font_type,
 				font_size = header_font_settings.font_size,
@@ -179,9 +179,9 @@ local function create_mission_objective(scenegraph_id)
 				alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color,
 				drop_shadow = drop_shadow,
 				size = {
-					header_size[1] - (side_offset * 2 + icon_size[2] * 2),
-				},
-			},
+					header_size[1] - (side_offset * 2 + icon_size[2] * 2)
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -192,24 +192,24 @@ local function create_mission_objective(scenegraph_id)
 				offset = {
 					bar_offset[1],
 					bar_offset[2],
-					6,
+					6
 				},
 				default_offset = {
 					bar_offset[1],
 					bar_offset[2],
-					6,
+					6
 				},
 				size = bar_size,
 				color = {
 					150,
 					0,
 					0,
-					0,
-				},
+					0
+				}
 			},
 			visibility_function = function (content)
 				return content.show_bar
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -220,19 +220,19 @@ local function create_mission_objective(scenegraph_id)
 				offset = {
 					bar_offset[1],
 					bar_offset[2],
-					7,
+					7
 				},
 				default_offset = {
 					bar_offset[1],
 					bar_offset[2],
-					7,
+					7
 				},
 				size = bar_size,
-				default_length = bar_size[1],
+				default_length = bar_size[1]
 			},
 			visibility_function = function (content)
 				return content.show_bar
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -245,21 +245,21 @@ local function create_mission_objective(scenegraph_id)
 				offset = {
 					bar_offset[1],
 					bar_offset[2],
-					8,
+					8
 				},
 				default_offset = {
 					bar_offset[1],
 					bar_offset[2],
-					8,
+					8
 				},
 				size = bar_icon_size,
 				color = UIHudSettings.color_tint_main_1,
 				default_color = UIHudSettings.color_tint_main_1,
-				alert_color = HudElementMissionObjectiveFeedSettings.alert_color,
+				alert_color = HudElementMissionObjectiveFeedSettings.alert_color
 			},
 			visibility_function = function (content)
 				return content.bar_icon and content.show_bar
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -274,7 +274,7 @@ local function create_mission_objective(scenegraph_id)
 				offset = {
 					-(side_offset * 2),
 					0,
-					6,
+					6
 				},
 				font_type = header_font_settings.font_type,
 				font_size = header_font_settings.font_size,
@@ -283,9 +283,9 @@ local function create_mission_objective(scenegraph_id)
 				alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color,
 				drop_shadow = drop_shadow,
 				size = {
-					bar_size[1],
-				},
-			},
+					bar_size[1]
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -300,12 +300,12 @@ local function create_mission_objective(scenegraph_id)
 				offset = {
 					0,
 					0,
-					6,
+					6
 				},
 				default_offset = {
 					header_size[1] - side_offset * 2,
 					0,
-					6,
+					6
 				},
 				font_type = header_font_settings.font_type,
 				text_color = header_font_color,
@@ -313,9 +313,9 @@ local function create_mission_objective(scenegraph_id)
 				alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color,
 				drop_shadow = drop_shadow,
 				size = {
-					header_size[1],
-				},
-			},
+					header_size[1]
+				}
+			}
 		},
 		{
 			pass_type = "multi_texture",
@@ -330,24 +330,24 @@ local function create_mission_objective(scenegraph_id)
 				offset = {
 					-(icon_size[1] * 4 + -32),
 					0,
-					7,
+					7
 				},
 				size = {
 					icon_size[1],
-					icon_size[2],
+					icon_size[2]
 				},
 				color = {
 					165,
 					0,
 					0,
-					0,
+					0
 				},
 				default_color = ColorUtilities.clone(UIHudSettings.color_tint_main_1),
-				alert_color = HudElementMissionObjectiveFeedSettings.alert_color,
+				alert_color = HudElementMissionObjectiveFeedSettings.alert_color
 			},
 			visibility_function = function (content)
 				return content.objective_require_players
-			end,
+			end
 		},
 		{
 			pass_type = "multi_texture",
@@ -362,22 +362,22 @@ local function create_mission_objective(scenegraph_id)
 				offset = {
 					-(icon_size[1] * 4 + -32),
 					0,
-					8,
+					8
 				},
 				size = {
 					icon_size[1],
-					icon_size[2],
+					icon_size[2]
 				},
 				color = Color.terminal_text_header(185, true),
 				default_color = ColorUtilities.clone(UIHudSettings.color_tint_main_1),
-				alert_color = HudElementMissionObjectiveFeedSettings.alert_color,
+				alert_color = HudElementMissionObjectiveFeedSettings.alert_color
 			},
 			change_function = function (content, style, _, dt)
 				style.amount = content.required_players or 0
 			end,
 			visibility_function = function (content)
 				return content.objective_require_players
-			end,
+			end
 		},
 		{
 			pass_type = "multi_texture",
@@ -392,15 +392,15 @@ local function create_mission_objective(scenegraph_id)
 				offset = {
 					-(icon_size[1] * 4 + -32),
 					0,
-					9,
+					9
 				},
 				size = {
 					icon_size[1],
-					icon_size[2],
+					icon_size[2]
 				},
 				color = Color.terminal_text_header(255, true),
 				default_color = ColorUtilities.clone(UIHudSettings.color_tint_main_1),
-				alert_color = HudElementMissionObjectiveFeedSettings.alert_color,
+				alert_color = HudElementMissionObjectiveFeedSettings.alert_color
 			},
 			visibility_function = function (content)
 				return content.objective_require_players
@@ -412,7 +412,7 @@ local function create_mission_objective(scenegraph_id)
 				local color = state == "alert" and style.alert_color or style.default_color
 
 				style.color = ColorUtilities.color_copy(color, style.color, true)
-			end,
+			end
 		},
 		{
 			pass_type = "multi_texture",
@@ -427,24 +427,24 @@ local function create_mission_objective(scenegraph_id)
 				offset = {
 					bar_offset[1],
 					0,
-					7,
+					7
 				},
 				size = {
 					10,
-					10,
+					10
 				},
 				color = {
 					165,
 					0,
 					0,
-					0,
+					0
 				},
 				default_color = ColorUtilities.clone(UIHudSettings.color_tint_main_1),
-				alert_color = HudElementMissionObjectiveFeedSettings.alert_color,
+				alert_color = HudElementMissionObjectiveFeedSettings.alert_color
 			},
 			visibility_function = function (content)
 				return content.ui_state ~= "alert" and content.objective_require_players and content.show_bar
-			end,
+			end
 		},
 		{
 			pass_type = "multi_texture",
@@ -459,15 +459,15 @@ local function create_mission_objective(scenegraph_id)
 				offset = {
 					bar_offset[1],
 					0,
-					8,
+					8
 				},
 				size = {
 					10,
-					10,
+					10
 				},
 				color = Color.terminal_text_header(255, true),
 				default_color = ColorUtilities.clone(UIHudSettings.color_tint_main_1),
-				alert_color = HudElementMissionObjectiveFeedSettings.alert_color,
+				alert_color = HudElementMissionObjectiveFeedSettings.alert_color
 			},
 			visibility_function = function (content)
 				return content.ui_state ~= "alert" and content.objective_require_players and content.show_bar
@@ -482,9 +482,9 @@ local function create_mission_objective(scenegraph_id)
 					255,
 					color[2],
 					color[3],
-					color[4],
+					color[4]
 				}
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -498,12 +498,12 @@ local function create_mission_objective(scenegraph_id)
 				offset = {
 					bar_offset[1],
 					-2,
-					6,
+					6
 				},
 				default_offset = {
 					bar_offset[1],
 					-2,
-					6,
+					6
 				},
 				font_type = header_font_settings.font_type,
 				font_size = header_font_settings.font_size - 2,
@@ -512,13 +512,13 @@ local function create_mission_objective(scenegraph_id)
 				alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color,
 				drop_shadow = drop_shadow,
 				size = {
-					header_size[1] - (side_offset * 2 + icon_size[2] * 2),
-				},
+					header_size[1] - (side_offset * 2 + icon_size[2] * 2)
+				}
 			},
 			visibility_function = function (content, style)
 				return content.ui_state == "alert" and content.alert_text and content.alert_text ~= ""
-			end,
-		},
+			end
+		}
 	}
 
 	return UIWidget.create_definition(pass_definitions, scenegraph_id, nil, header_size)
@@ -530,18 +530,18 @@ local function create_mission_objective_overarching(scenegraph_id)
 	local header_font_color = HudElementMissionObjectiveFeedSettings.base_color
 	local bar_icon_size = {
 		24,
-		24,
+		24
 	}
 	local icon_offset = 10
 	local side_offset = 10
 	local bar_offset = {
 		icon_size[1] + side_offset + icon_offset,
 		1,
-		0,
+		0
 	}
 	local bar_size = {
 		header_size[1] - (bar_offset[1] + icon_offset + side_offset * 2),
-		10,
+		10
 	}
 	local pass_definitions = {
 		{
@@ -556,17 +556,17 @@ local function create_mission_objective_overarching(scenegraph_id)
 				offset = {
 					icon_offset,
 					0,
-					6,
+					6
 				},
 				default_offset = {
 					icon_offset,
 					0,
-					6,
+					6
 				},
 				color = UIHudSettings.color_tint_main_1,
 				default_color = UIHudSettings.color_tint_main_1,
-				alert_color = HudElementMissionObjectiveFeedSettings.alert_color,
-			},
+				alert_color = HudElementMissionObjectiveFeedSettings.alert_color
+			}
 		},
 		{
 			pass_type = "text",
@@ -580,12 +580,12 @@ local function create_mission_objective_overarching(scenegraph_id)
 				offset = {
 					bar_offset[1],
 					0,
-					6,
+					6
 				},
 				default_offset = {
 					bar_offset[1],
 					0,
-					6,
+					6
 				},
 				font_type = header_font_settings.font_type,
 				font_size = header_font_settings.font_size,
@@ -594,9 +594,9 @@ local function create_mission_objective_overarching(scenegraph_id)
 				alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color,
 				drop_shadow = drop_shadow,
 				size = {
-					header_size[1] - (side_offset * 2 + icon_size[2] * 2),
-				},
-			},
+					header_size[1] - (side_offset * 2 + icon_size[2] * 2)
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -607,24 +607,24 @@ local function create_mission_objective_overarching(scenegraph_id)
 				offset = {
 					bar_offset[1],
 					bar_offset[2],
-					6,
+					6
 				},
 				default_offset = {
 					bar_offset[1],
 					bar_offset[2],
-					6,
+					6
 				},
 				size = bar_size,
 				color = {
 					150,
 					0,
 					0,
-					0,
-				},
+					0
+				}
 			},
 			visibility_function = function (content)
 				return content.show_bar
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -635,19 +635,19 @@ local function create_mission_objective_overarching(scenegraph_id)
 				offset = {
 					bar_offset[1],
 					bar_offset[2],
-					7,
+					7
 				},
 				default_offset = {
 					bar_offset[1],
 					bar_offset[2],
-					7,
+					7
 				},
 				size = bar_size,
-				default_length = bar_size[1],
+				default_length = bar_size[1]
 			},
 			visibility_function = function (content)
 				return content.show_bar
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -660,21 +660,21 @@ local function create_mission_objective_overarching(scenegraph_id)
 				offset = {
 					bar_offset[1],
 					bar_offset[2],
-					8,
+					8
 				},
 				default_offset = {
 					bar_offset[1],
 					bar_offset[2],
-					8,
+					8
 				},
 				size = bar_icon_size,
 				color = UIHudSettings.color_tint_main_1,
 				default_color = UIHudSettings.color_tint_main_1,
-				alert_color = HudElementMissionObjectiveFeedSettings.alert_color,
+				alert_color = HudElementMissionObjectiveFeedSettings.alert_color
 			},
 			visibility_function = function (content)
 				return content.bar_icon and content.show_bar
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -688,7 +688,7 @@ local function create_mission_objective_overarching(scenegraph_id)
 				offset = {
 					bar_offset[1],
 					0,
-					6,
+					6
 				},
 				font_type = header_font_settings.font_type,
 				font_size = header_font_settings.font_size,
@@ -697,9 +697,9 @@ local function create_mission_objective_overarching(scenegraph_id)
 				alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color,
 				drop_shadow = drop_shadow,
 				size = {
-					bar_size[1],
-				},
-			},
+					bar_size[1]
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -714,12 +714,12 @@ local function create_mission_objective_overarching(scenegraph_id)
 				offset = {
 					0,
 					0,
-					6,
+					6
 				},
 				default_offset = {
 					header_size[1] - side_offset * 2,
 					0,
-					6,
+					6
 				},
 				font_type = header_font_settings.font_type,
 				text_color = header_font_color,
@@ -727,10 +727,10 @@ local function create_mission_objective_overarching(scenegraph_id)
 				default_text_color = header_font_color,
 				drop_shadow = drop_shadow,
 				size = {
-					bar_size[1],
-				},
-			},
-		},
+					bar_size[1]
+				}
+			}
+		}
 	}
 
 	return UIWidget.create_definition(pass_definitions, scenegraph_id, nil, header_size)
@@ -746,22 +746,22 @@ local function create_mission_objective_warning(scenegraph_id)
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size = {
-					alert_size[1],
+					alert_size[1]
 				},
 				alert_color = HudElementMissionObjectiveFeedSettings.alert_color,
 				material_values = {
-					speed = 0,
-				},
-			},
-		},
+					speed = 0
+				}
+			}
+		}
 	}
 
 	return UIWidget.create_definition(pass_definitions, scenegraph_id, nil, {
 		header_size[1],
-		15,
+		15
 	})
 end
 
@@ -772,7 +772,7 @@ local function create_mission_objective_alert_info(scenegraph_id)
 			style_id = "warning_text",
 			value_id = "warning_text",
 			value = Utf8.upper(Localize("loc_objective_op_train_alert_header")),
-			style = alert_text_style,
+			style = alert_text_style
 		},
 		{
 			pass_type = "rect",
@@ -783,17 +783,17 @@ local function create_mission_objective_alert_info(scenegraph_id)
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size = alert_size,
 				color = {
 					230,
 					255,
 					151,
-					29,
-				},
-			},
-		},
+					29
+				}
+			}
+		}
 	}
 
 	return UIWidget.create_definition(pass_definitions, scenegraph_id, nil, alert_size)
@@ -813,26 +813,26 @@ local live_event_sub_header = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				6,
+				6
 			},
 			font_type = UIFontSettings.hud_body.font_type,
 			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar,
-			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color,
-		},
-	},
+			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color
+		}
+	}
 }, "live_event_text_area", nil, {
 	live_event_text_width,
-	18,
+	18
 }, nil, {
 	init = function (self, context, ui_renderer)
 		self.content.text = Localize(context.text)
 		self.content.size[2] = 4 + Text.text_height(ui_renderer, self.content.text, self.style.text, {
-			live_event_text_width,
+			live_event_text_width
 		})
 	end,
 	destroy = function (self)
 		return
-	end,
+	end
 })
 local live_event_title = UIWidget.create_definition({
 	{
@@ -848,12 +848,12 @@ local live_event_title = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				6,
+				6
 			},
 			font_type = UIFontSettings.hud_body.font_type,
 			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text,
-			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color,
-		},
+			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color
+		}
 	},
 	{
 		pass_type = "text",
@@ -868,21 +868,21 @@ local live_event_title = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				6,
+				6
 			},
 			font_type = UIFontSettings.hud_body.font_type,
 			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text,
-			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color,
-		},
-	},
+			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color
+		}
+	}
 }, "live_event_text_area", nil, {
 	live_event_text_width,
-	32,
+	32
 }, nil, {
 	init = function (self, context, ui_renderer)
 		self.content.text = Localize(context.text)
 		self.content.size[2] = 8 + Text.text_height(ui_renderer, self.content.text, self.style.text, {
-			live_event_text_width,
+			live_event_text_width
 		})
 		self._resets_at = context.resets_at or {}
 
@@ -909,7 +909,7 @@ local live_event_title = UIWidget.create_definition({
 		if self._hearthbeat then
 			self._hearthbeat:cancel()
 		end
-	end,
+	end
 })
 local live_event_dynamic_description = UIWidget.create_definition({
 	{
@@ -925,16 +925,16 @@ local live_event_dynamic_description = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				6,
+				6
 			},
 			font_type = UIFontSettings.hud_body.font_type,
 			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar,
-			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color,
-		},
-	},
+			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color
+		}
+	}
 }, "live_event_text_area", nil, {
 	live_event_text_width,
-	32,
+	32
 }, nil, {
 	init = function (self, context, ui_renderer)
 		local context_count = #context
@@ -993,13 +993,13 @@ local live_event_dynamic_description = UIWidget.create_definition({
 			if not condition or self:_evaluate(condition) then
 				self.content.text = Localize(entry.text)
 				self.content.size[2] = Text.text_height(self._ui_renderer, self.content.text, self.style.text, {
-					live_event_text_width,
+					live_event_text_width
 				})
 
 				return
 			end
 		end
-	end,
+	end
 })
 local live_event_counter = UIWidget.create_definition({
 	{
@@ -1011,19 +1011,19 @@ local live_event_counter = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				6,
+				6
 			},
 			default_offset = {
 				0,
 				0,
-				6,
+				6
 			},
 			size = {
 				nil,
-				10,
+				10
 			},
-			color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar_background,
-		},
+			color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar_background
+		}
 	},
 	{
 		pass_type = "texture",
@@ -1034,19 +1034,19 @@ local live_event_counter = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				7,
+				7
 			},
 			default_offset = {
 				0,
 				0,
-				7,
+				7
 			},
 			size = {
 				nil,
-				10,
+				10
 			},
-			color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar,
-		},
+			color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar
+		}
 	},
 	{
 		pass_type = "text",
@@ -1061,12 +1061,12 @@ local live_event_counter = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				6,
+				6
 			},
 			font_type = UIFontSettings.hud_body.font_type,
 			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text,
-			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color,
-		},
+			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color
+		}
 	},
 	{
 		pass_type = "text",
@@ -1081,16 +1081,16 @@ local live_event_counter = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				6,
+				6
 			},
 			font_type = UIFontSettings.hud_body.font_type,
 			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar,
-			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color,
-		},
-	},
+			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color
+		}
+	}
 }, "live_event_text_area", nil, {
 	nil,
-	34,
+	34
 }, nil, {
 	init = function (self, context)
 		self.content.stat_name = context.stat_name
@@ -1133,14 +1133,14 @@ local live_event_counter = UIWidget.create_definition({
 
 		self.style.bar.scale = {
 			percentage,
-			1,
+			1
 		}
 		self.content.counter = ""
 
 		if my_value == largest then
 			self.content.counter = string.format("(+%d)", largest - second_largest)
 		end
-	end,
+	end
 })
 local _global_reward_counter_currency_text_width = 140
 local _global_reward_counter_default_height = 50
@@ -1155,22 +1155,23 @@ local live_event_global_reward_counter = UIWidget.create_definition({
 			drop_shadow = true,
 			font_size = 20,
 			horizontal_alignment = "left",
+			text_fit_with = true,
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "top",
 			vertical_alignment = "top",
 			offset = {
 				0,
 				0,
-				6,
+				6
 			},
 			size = {
 				live_event_text_width - (_global_reward_counter_currency_text_width + 8),
-				20,
+				20
 			},
 			font_type = UIFontSettings.hud_body.font_type,
 			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text,
-			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color,
-		},
+			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color
+		}
 	},
 	{
 		pass_type = "text",
@@ -1187,19 +1188,19 @@ local live_event_global_reward_counter = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				6,
+				6
 			},
 			size = {
 				_global_reward_counter_currency_text_width,
-				20,
+				20
 			},
 			font_type = UIFontSettings.hud_body.font_type,
 			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text,
-			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color,
+			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color
 		},
 		visibility_function = function (content)
 			return content.has_currency_reward
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -1211,22 +1212,22 @@ local live_event_global_reward_counter = UIWidget.create_definition({
 			offset = {
 				0,
 				24,
-				6,
+				6
 			},
 			default_offset = {
 				0,
 				24,
-				6,
+				6
 			},
 			size = {
 				nil,
-				10,
+				10
 			},
-			color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar_background,
+			color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar_background
 		},
 		visibility_function = function (content)
 			return not content.all_claimed
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -1238,26 +1239,26 @@ local live_event_global_reward_counter = UIWidget.create_definition({
 			offset = {
 				0,
 				24,
-				7,
+				7
 			},
 			default_offset = {
 				0,
 				24,
-				7,
+				7
 			},
 			size = {
 				nil,
-				10,
+				10
 			},
 			color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar,
 			scale = {
 				0,
-				1,
-			},
+				1
+			}
 		},
 		visibility_function = function (content)
 			return not content.all_claimed
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -1274,15 +1275,15 @@ local live_event_global_reward_counter = UIWidget.create_definition({
 			offset = {
 				0,
 				36,
-				6,
+				6
 			},
 			size = {
 				live_event_text_width,
-				14,
+				14
 			},
 			font_type = UIFontSettings.hud_body.font_type,
 			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text,
-			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color,
+			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color
 		},
 		visibility_function = function (content)
 			return not content.show_claim_prompt
@@ -1302,7 +1303,7 @@ local live_event_global_reward_counter = UIWidget.create_definition({
 
 				widget:_update_display()
 			end
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -1319,23 +1320,23 @@ local live_event_global_reward_counter = UIWidget.create_definition({
 			offset = {
 				0,
 				36,
-				6,
+				6
 			},
 			size = {
 				live_event_text_width,
-				14,
+				14
 			},
 			font_type = UIFontSettings.hud_body.font_type,
 			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar,
-			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color,
+			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color
 		},
 		visibility_function = function (content)
 			return content.show_claim_prompt
-		end,
-	},
+		end
+	}
 }, "live_event_text_area", nil, {
 	live_event_text_width,
-	_global_reward_counter_default_height,
+	_global_reward_counter_default_height
 }, nil, {
 	init = function (self, context, ui_renderer)
 		self._track_name = context.track_name
@@ -1579,21 +1580,21 @@ local live_event_global_reward_counter = UIWidget.create_definition({
 
 			style.bar.scale = {
 				percent,
-				1,
+				1
 			}
 			content.progress_text = string.format("%s / %s", Text.format_currency(current), Text.format_currency(required))
 			self._can_claim = required <= current
 		else
 			style.bar.scale = {
 				0,
-				1,
+				1
 			}
 			content.progress_text = ""
 			self._can_claim = false
 		end
 
 		content.show_claim_prompt = self._can_claim
-	end,
+	end
 })
 local tug_o_war = UIWidget.create_definition({
 	{
@@ -1605,19 +1606,19 @@ local tug_o_war = UIWidget.create_definition({
 			offset = {
 				0,
 				-24,
-				6,
+				6
 			},
 			default_offset = {
 				0,
 				0,
-				6,
+				6
 			},
 			size = {
 				nil,
-				10,
+				10
 			},
-			color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar_background,
-		},
+			color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar_background
+		}
 	},
 	{
 		pass_type = "texture",
@@ -1628,19 +1629,19 @@ local tug_o_war = UIWidget.create_definition({
 			offset = {
 				0,
 				-24,
-				7,
+				7
 			},
 			default_offset = {
 				0,
 				0,
-				7,
+				7
 			},
 			size = {
 				nil,
-				10,
+				10
 			},
-			color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar,
-		},
+			color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar
+		}
 	},
 	{
 		pass_type = "texture",
@@ -1652,14 +1653,14 @@ local tug_o_war = UIWidget.create_definition({
 			offset = {
 				-1,
 				-21,
-				8,
+				8
 			},
 			size = {
 				2,
-				16,
+				16
 			},
-			color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text,
-		},
+			color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text
+		}
 	},
 	{
 		pass_type = "texture",
@@ -1671,14 +1672,14 @@ local tug_o_war = UIWidget.create_definition({
 			offset = {
 				0,
 				-23,
-				8,
+				8
 			},
 			size = {
 				4,
-				12,
+				12
 			},
-			color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text,
-		},
+			color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text
+		}
 	},
 	{
 		pass_type = "text",
@@ -1693,11 +1694,11 @@ local tug_o_war = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				6,
+				6
 			},
 			font_type = UIFontSettings.hud_body.font_type,
-			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text,
-		},
+			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text
+		}
 	},
 	{
 		pass_type = "text",
@@ -1712,11 +1713,11 @@ local tug_o_war = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				6,
+				6
 			},
 			font_type = UIFontSettings.hud_body.font_type,
-			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text,
-		},
+			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text
+		}
 	},
 	{
 		pass_type = "text",
@@ -1731,11 +1732,11 @@ local tug_o_war = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				6,
+				6
 			},
 			font_type = UIFontSettings.hud_body.font_type,
-			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text,
-		},
+			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text
+		}
 	},
 	{
 		pass_type = "text",
@@ -1750,15 +1751,15 @@ local tug_o_war = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				6,
+				6
 			},
 			font_type = UIFontSettings.hud_body.font_type,
-			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text,
-		},
-	},
+			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text
+		}
+	}
 }, "live_event_text_area", nil, {
 	nil,
-	58,
+	58
 }, nil, {
 	init = function (self, context, ui_renderer)
 		local _MAX_TEAM_LABEL_CHARS = 18
@@ -1810,7 +1811,7 @@ local tug_o_war = UIWidget.create_definition({
 
 		style.bar.scale = {
 			percent,
-			1,
+			1
 		}
 
 		local cap_width = style.bar_cap.size[1]
@@ -1832,7 +1833,7 @@ local tug_o_war = UIWidget.create_definition({
 			style.right_number.text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text
 			style.bar_background.color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar
 		end
-	end,
+	end
 })
 local widget_definitions = {
 	background = UIWidget.create_definition({
@@ -1844,8 +1845,8 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				color = Color.terminal_background_gradient(255, true),
 				default_color = Color.terminal_background_gradient(255, true),
-				alert_color = HudElementMissionObjectiveFeedSettings.alert_color,
-			},
+				alert_color = HudElementMissionObjectiveFeedSettings.alert_color
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1855,18 +1856,18 @@ local widget_definitions = {
 				horizontal_alignment = "right",
 				vertical_alignment = "top",
 				size = {
-					4,
+					4
 				},
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				color = Color.terminal_corner_hover(nil, true),
 				default_color = Color.terminal_corner_hover(nil, true),
-				alert_color = HudElementMissionObjectiveFeedSettings.alert_color,
-			},
-		},
+				alert_color = HudElementMissionObjectiveFeedSettings.alert_color
+			}
+		}
 	}, "background"),
 	live_event_background = UIWidget.create_definition({
 		{
@@ -1875,8 +1876,8 @@ local widget_definitions = {
 			value = "content/ui/materials/hud/backgrounds/terminal_background_weapon",
 			style = {
 				vertical_alignment = "top",
-				color = Color.terminal_background_gradient(255, true),
-			},
+				color = Color.terminal_background_gradient(255, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1886,16 +1887,16 @@ local widget_definitions = {
 				horizontal_alignment = "right",
 				vertical_alignment = "top",
 				size = {
-					4,
+					4
 				},
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
-				color = Color.terminal_corner_hover(nil, true),
-			},
-		},
+				color = Color.terminal_corner_hover(nil, true)
+			}
+		}
 	}, "live_event_background"),
 	live_event_icon = UIWidget.create_definition({
 		{
@@ -1906,17 +1907,17 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					32,
-					32,
+					32
 				},
 				offset = {
 					20,
 					0,
-					6,
+					6
 				},
-				color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text,
-			},
-		},
-	}, "live_event_background"),
+				color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text
+			}
+		}
+	}, "live_event_background")
 }
 local animations = {}
 local objective_definition_default = create_mission_objective("pivot")
@@ -1931,7 +1932,7 @@ return {
 		side_mission = objective_definition_default,
 		overarching = objective_definition_overarching,
 		warning = objective_definition_warning,
-		alert_info = objective_definition_alert_info,
+		alert_info = objective_definition_alert_info
 	},
 	live_event_definition = {
 		counter = live_event_counter,
@@ -1939,8 +1940,8 @@ return {
 		live_event_global_reward_counter = live_event_global_reward_counter,
 		sub_header = live_event_sub_header,
 		title = live_event_title,
-		tug_o_war = tug_o_war,
+		tug_o_war = tug_o_war
 	},
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

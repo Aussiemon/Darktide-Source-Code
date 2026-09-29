@@ -26,9 +26,9 @@ PlayerCharacterStateLedgeHangingFalling.on_exit = function (self, unit, t, next_
 	PlayerCharacterStateLedgeHangingFalling.super.on_exit(self, unit, t, next_state)
 
 	local first_person_mode_component = self._first_person_mode_component
-	local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player)
+	local rewind_seconds = LagCompensation.rewind_seconds(self._is_server, self._is_local_unit, self._player)
 
-	FirstPersonView.enter(t, first_person_mode_component, rewind_ms)
+	FirstPersonView.enter(t, first_person_mode_component, rewind_seconds)
 end
 
 PlayerCharacterStateLedgeHangingFalling.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)

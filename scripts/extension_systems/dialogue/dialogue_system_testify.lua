@@ -51,7 +51,7 @@ local DialogueSystemTestify = {
 		local voice = vo_settings.voice
 
 		dialogue_extension:set_vo_profile(voice)
-	end,
+	end
 }
 
 return DialogueSystemTestify

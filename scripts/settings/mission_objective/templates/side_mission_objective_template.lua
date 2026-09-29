@@ -15,7 +15,7 @@ local mission_objective_templates = {
 				mission_objective_type = "side",
 				objective_category = "side_mission",
 				side_objective_type = "collect",
-				unit_name = "consumable",
+				unit_name = "consumable"
 			},
 			side_mission_consumable = {
 				collect_amount = 6,
@@ -28,7 +28,7 @@ local mission_objective_templates = {
 				mission_objective_type = "side",
 				objective_category = "side_mission",
 				side_objective_type = "collect",
-				unit_name = "consumable",
+				unit_name = "consumable"
 			},
 			side_mission_grimoire = {
 				collect_amount = 2,
@@ -42,7 +42,7 @@ local mission_objective_templates = {
 				objective_category = "side_mission",
 				side_objective_type = "collect",
 				unit_name = "grimoire",
-				proc_event_at_max_progression = proc_events.on_all_grimoires_picked_up,
+				proc_event_at_max_progression = proc_events.on_all_grimoires_picked_up
 			},
 			side_mission_tome = {
 				collect_amount = 3,
@@ -55,7 +55,7 @@ local mission_objective_templates = {
 				mission_objective_type = "side",
 				objective_category = "side_mission",
 				side_objective_type = "collect",
-				unit_name = "tome",
+				unit_name = "tome"
 			},
 			side_mission_luggables = {
 				description = "loc_objective_side_mission_luggables_desc",
@@ -66,7 +66,7 @@ local mission_objective_templates = {
 				mission_objective_type = "side",
 				objective_category = "side_mission",
 				side_objective_type = "luggable",
-				unit_name = "battery_01_luggable",
+				unit_name = "battery_01_luggable"
 			},
 			side_mission_hack_communications = {
 				collect_amount = 3,
@@ -79,10 +79,10 @@ local mission_objective_templates = {
 				mission_objective_type = "side",
 				objective_category = "side_mission",
 				side_objective_type = "collect",
-				unit_name = "communications_hack_device",
-			},
-		},
-	},
+				unit_name = "communications_hack_device"
+			}
+		}
+	}
 }
 
 return mission_objective_templates

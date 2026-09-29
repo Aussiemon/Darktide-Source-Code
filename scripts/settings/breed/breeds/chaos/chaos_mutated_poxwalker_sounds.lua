@@ -17,13 +17,13 @@ local sound_data = {
 		vce_grunt = "wwise/events/minions/play_enemy_poxwalker_mutated_vce_grunt",
 		vce_hurt = "wwise/events/minions/play_enemy_poxwalker_mutated_vce_hurt",
 		vce_special_attack = "wwise/events/minions/play_enemy_poxwalker_mutated_vce_special_attack",
-		vce_stop_all = "wwise/events/minions/stop_all_enemy_poxwalker_vce",
+		vce_stop_all = "wwise/events/minions/stop_all_enemy_poxwalker_vce"
 	},
 	use_proximity_culling = {
 		vce_attack = false,
 		vce_special_attack = false,
-		vce_stop_all = false,
-	},
+		vce_stop_all = false
+	}
 }
 
 return sound_data

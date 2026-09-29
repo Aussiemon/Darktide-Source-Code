@@ -13,7 +13,7 @@ EventManager.register = function (self, object, ...)
 		local callback_name = select(i + 1, ...)
 
 		self._events[event_name] = self._events[event_name] or setmetatable({}, {
-			__mode = "v",
+			__mode = "v"
 		})
 		self._events[event_name][object] = callback_name
 	end
@@ -54,7 +54,7 @@ local WARNING_SUPPRESSED = {
 	event_player_buff_proc_stop = true,
 	event_player_buff_removed = true,
 	event_player_buff_stack_added = true,
-	voip_manager_updated_channel_state = true,
+	voip_manager_updated_channel_state = true
 }
 
 EventManager.trigger = function (self, event_name, ...)

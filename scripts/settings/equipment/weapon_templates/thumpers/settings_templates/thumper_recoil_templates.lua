@@ -12,50 +12,50 @@ recoil_templates.default_thumper_assault = {
 		new_influence_percent = 0.75,
 		rise_duration = 0.12,
 		rise = {
-			0.75,
+			0.75
 		},
 		decay = {
 			idle = 0.5,
-			shooting = 1.4,
+			shooting = 1.4
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.15,
-					0.2,
+					0.2
 				},
 				yaw = {
 					-0.09,
-					-0.03,
-				},
-			},
+					-0.03
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 3,
-			yaw = 3,
-		},
+			yaw = 3
+		}
 	},
 	moving = {
 		inherits = {
 			"default_thumper_assault",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"default_thumper_assault",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"default_thumper_assault",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 
 return {
 	base_templates = recoil_templates,
-	overrides = overrides,
+	overrides = overrides
 }

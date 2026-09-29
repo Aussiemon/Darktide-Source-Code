@@ -20,7 +20,7 @@ local BuffExtensionInterface = {
 	"rpc_buff_set_start_time",
 	"rpc_buff_set_extra_duration",
 	"rpc_remove_buff",
-	"rpc_remove_buff_stacks",
+	"rpc_remove_buff_stacks"
 }
 
 return BuffExtensionInterface

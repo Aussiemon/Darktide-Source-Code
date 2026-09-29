@@ -13,28 +13,28 @@ suppression_templates.plasmarifle_p1_m1_suppression_bfg = {
 		immediate_spread = {
 			{
 				pitch = 0.5,
-				yaw = 0.5,
-			},
-		},
+				yaw = 0.5
+			}
+		}
 	},
 	moving = {
 		inherits = {
 			"plasmarifle_p1_m1_suppression_bfg",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"plasmarifle_p1_m1_suppression_bfg",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"plasmarifle_p1_m1_suppression_bfg",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 suppression_templates.plasmarifle_p1_m1_suppression_demolitions = {
 	still = {
@@ -43,31 +43,31 @@ suppression_templates.plasmarifle_p1_m1_suppression_demolitions = {
 		immediate_spread = {
 			{
 				pitch = 0.15,
-				yaw = 0.15,
-			},
-		},
+				yaw = 0.15
+			}
+		}
 	},
 	moving = {
 		inherits = {
 			"plasmarifle_p1_m1_suppression_demolitions",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"plasmarifle_p1_m1_suppression_demolitions",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"plasmarifle_p1_m1_suppression_demolitions",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 
 return {
 	base_templates = suppression_templates,
-	overrides = overrides,
+	overrides = overrides
 }

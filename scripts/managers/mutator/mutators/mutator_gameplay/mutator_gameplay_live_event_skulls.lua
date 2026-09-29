@@ -102,16 +102,16 @@ MutatorGameplayLiveEventSkulls.get_side_notification_data_formatter = function (
 			amount = pickup_name,
 			player_name = player_name,
 			amount_value = data.amount_value,
-			pickup_name = pickup_name,
+			pickup_name = pickup_name
 		})
 		local enter_sound_event = notification_settings.notification_sound_event
 		local texts = {}
 
 		texts[#texts + 1] = reason and {
-			display_name = reason,
+			display_name = reason
 		}
 		texts[#texts + 1] = {
-			display_name = text,
+			display_name = text
 		}
 
 		return {
@@ -119,7 +119,7 @@ MutatorGameplayLiveEventSkulls.get_side_notification_data_formatter = function (
 			texts = texts,
 			icon = icon_texture_large,
 			color = Color.terminal_grid_background(100, true),
-			enter_sound_event = enter_sound_event,
+			enter_sound_event = enter_sound_event
 		}
 	end
 end

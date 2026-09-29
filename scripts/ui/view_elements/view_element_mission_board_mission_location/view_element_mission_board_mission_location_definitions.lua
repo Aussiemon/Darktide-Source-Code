@@ -20,13 +20,13 @@ local scenegraph_definition = {
 	screen = {
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			200,
-		},
+			200
+		}
 	},
 	canvas = {
 		horizontal_alignment = "center",
@@ -34,13 +34,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	_sidebar = {
 		horizontal_alignment = "right",
@@ -48,13 +48,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			details_width,
-			mission_area_height - 200,
+			mission_area_height - 200
 		},
 		position = {
 			-side_buffer,
 			top_buffer,
-			0,
-		},
+			0
+		}
 	},
 	_sidebar_content = {
 		horizontal_alignment = "center",
@@ -62,13 +62,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			details_width - 2 * sidebar_buffer,
-			mission_area_height - 200,
+			mission_area_height - 200
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	_mission_area_info = {
 		horizontal_alignment = "center",
@@ -76,13 +76,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			details_width,
-			360,
+			360
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	_mission_area_timer = {
 		horizontal_alignment = "center",
@@ -90,13 +90,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			details_width,
-			20,
+			20
 		},
 		position = {
 			0,
 			92,
-			10,
-		},
+			10
+		}
 	},
 	_mission_area_circumstance = {
 		horizontal_alignment = "center",
@@ -104,13 +104,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			details_width - 2,
-			100,
+			100
 		},
 		position = {
 			0,
 			-2,
-			20,
-		},
+			20
+		}
 	},
 	_mission_objective_info = {
 		horizontal_alignment = "center",
@@ -118,13 +118,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			details_width,
-			250,
+			250
 		},
 		position = {
 			0,
 			275,
-			2,
-		},
+			2
+		}
 	},
 	_mission_objectives_panel = {
 		horizontal_alignment = "center",
@@ -132,13 +132,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			details_width,
-			80,
+			80
 		},
 		position = {
 			0,
 			0,
-			10,
-		},
+			10
+		}
 	},
 	_mission_rewards_panel = {
 		horizontal_alignment = "center",
@@ -146,14 +146,14 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			details_width,
-			Dimensions.rewards_height,
+			Dimensions.rewards_height
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
-	},
+			2
+		}
+	}
 }
 local widget_definitions = {}
 
@@ -163,20 +163,20 @@ widget_definitions.mission_area_info = UIWidget.create_definition({
 		style_id = "image",
 		value = "content/ui/materials/mission_board/texture_with_grid_effect",
 		value_id = "image",
-		style = Styles.mission_area_info.image,
+		style = Styles.mission_area_info.image
 	},
 	{
 		pass_type = "texture",
 		style_id = "inner_shadow",
 		value = "content/ui/materials/frames/inner_shadow_medium",
-		style = Styles.mission_area_info.inner_shadow,
+		style = Styles.mission_area_info.inner_shadow
 	},
 	{
 		pass_type = "texture",
 		style_id = "outer_frame",
 		value = "content/ui/materials/frames/frame_tile_2px",
 		value_id = "outer_frame",
-		style = Styles.mission_area_info.outer_frame,
+		style = Styles.mission_area_info.outer_frame
 	},
 	{
 		pass_type = "texture",
@@ -186,34 +186,34 @@ widget_definitions.mission_area_info = UIWidget.create_definition({
 		style = Styles.mission_area_info.lock,
 		visibility_function = function (content, style)
 			return content.is_locked
-		end,
+		end
 	},
 	{
 		pass_type = "rect",
 		style_id = "title_background",
-		style = Styles.mission_area_info.title_background,
+		style = Styles.mission_area_info.title_background
 	},
 	{
 		pass_type = "texture",
 		style_id = "title_frame",
 		value = "content/ui/materials/frames/frame_tile_2px",
 		value_id = "title_frame",
-		style = Styles.mission_area_info.title_frame,
+		style = Styles.mission_area_info.title_frame
 	},
 	{
 		pass_type = "text",
 		style_id = "mission_title",
 		value = "Mission Title",
 		value_id = "mission_title",
-		style = Styles.mission_area_info.mission_title,
+		style = Styles.mission_area_info.mission_title
 	},
 	{
 		pass_type = "text",
 		style_id = "mission_sub_title",
 		value = "Mission Sub Title",
 		value_id = "mission_sub_title",
-		style = Styles.mission_area_info.mission_sub_title,
-	},
+		style = Styles.mission_area_info.mission_sub_title
+	}
 }, "_mission_area_info")
 
 local function timer_logic(pass, ui_renderer, logic_style, content, position, size)
@@ -240,31 +240,31 @@ local large_mission_vertical_spacing = Dimensions.sidebar_small_buffer - 8
 widget_definitions.large_timer_bar = UIWidget.create_definition({
 	{
 		pass_type = "logic",
-		value = timer_logic,
+		value = timer_logic
 	},
 	{
 		pass_type = "texture",
 		style_id = "timer_bar_frame",
 		value = "content/ui/materials/frames/frame_tile_2px",
-		style = Styles.mission_area_info.timer.timer_bar_frame,
+		style = Styles.mission_area_info.timer.timer_bar_frame
 	},
 	{
 		pass_type = "texture",
 		style_id = "timer_frame",
 		value = "content/ui/materials/frames/frame_tile_2px",
-		style = Styles.mission_area_info.timer.timer_frame,
+		style = Styles.mission_area_info.timer.timer_frame
 	},
 	{
 		pass_type = "texture",
 		style_id = "timer_bar",
 		value = "content/ui/materials/mission_board/timer",
-		style = Styles.mission_area_info.timer.timer_bar,
+		style = Styles.mission_area_info.timer.timer_bar
 	},
 	{
 		pass_type = "texture",
 		style_id = "timer_text_frame",
 		value = "content/ui/materials/frames/frame_tile_2px",
-		style = Styles.mission_area_info.timer.timer_text_frame,
+		style = Styles.mission_area_info.timer.timer_text_frame
 	},
 	{
 		pass_type = "texture",
@@ -273,7 +273,7 @@ widget_definitions.large_timer_bar = UIWidget.create_definition({
 		style = Styles.mission_area_info.timer.timer_icon,
 		visibility_function = function (content, style)
 			return not content.is_quickplay
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -283,7 +283,7 @@ widget_definitions.large_timer_bar = UIWidget.create_definition({
 		style = Styles.mission_area_info.timer.timer_text,
 		visibility_function = function (content, style)
 			return not content.is_quickplay
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -292,8 +292,8 @@ widget_definitions.large_timer_bar = UIWidget.create_definition({
 		style = Styles.mission_area_info.timer.infinite_symbol,
 		visibility_function = function (content, style)
 			return content.is_quickplay
-		end,
-	},
+		end
+	}
 }, "_mission_area_timer")
 
 local animations = {}
@@ -327,8 +327,8 @@ animations.mission_area_info_enter = {
 		end,
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 			parent._mission_area_enter_anim_id = nil
-		end,
-	},
+		end
+	}
 }
 Definitions.scenegraph_definition = scenegraph_definition
 Definitions.widget_definitions = widget_definitions

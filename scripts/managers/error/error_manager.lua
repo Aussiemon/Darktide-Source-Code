@@ -10,7 +10,7 @@ local ERROR_LEVEL = {
 	fatal = 5,
 	log = 1,
 	warning = 2,
-	warning_popup = 3,
+	warning_popup = 3
 }
 
 ErrorManager.ERROR_LEVEL = ERROR_LEVEL
@@ -57,7 +57,7 @@ local function _notify_error(error_object)
 	local sound_event = error_object.sound_event and error_object:sound_event()
 
 	Managers.event:trigger("event_add_notification_message", "alert", {
-		text = notification_text,
+		text = notification_text
 	}, nil, sound_event)
 end
 
@@ -68,14 +68,14 @@ local function _notify_popup(error_object)
 
 	options[#options + 1] = {
 		close_on_pressed = true,
-		text = "loc_popup_button_close",
+		text = "loc_popup_button_close"
 	}
 
 	Managers.event:trigger("event_show_ui_popup", {
 		title_text = loc_title,
 		description_text = loc_description,
 		description_text_params = loc_description_params,
-		options = options,
+		options = options
 	})
 end
 
@@ -115,7 +115,7 @@ local function _dequeue_error(queue, queue_empty_promise)
 				text = "loc_popup_button_quit_game",
 				callback = function ()
 					Application.quit()
-				end,
+				end
 			}
 		end
 	else
@@ -124,7 +124,7 @@ local function _dequeue_error(queue, queue_empty_promise)
 			text = "loc_popup_button_close",
 			callback = function ()
 				_dequeue_error(queue, queue_empty_promise)
-			end,
+			end
 		}
 	end
 
@@ -133,7 +133,7 @@ local function _dequeue_error(queue, queue_empty_promise)
 		description_text = loc_description,
 		description_text_params = loc_description_params,
 		options = options,
-		priority_order = math.huge,
+		priority_order = math.huge
 	})
 end
 

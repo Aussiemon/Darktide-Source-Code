@@ -20,14 +20,15 @@ HudElementPlayerWeapon.init = function (self, parent, draw_layer, start_scale, d
 	self._data = data
 	self._inventory_component = data.inventory_component
 	self._slot_component = data.slot_component
-	self._slot_name = self._slot_component.__name
+	self._slot_name = data.slot_id
 	self._slot_index = data.index
-	self._ability = data.ability
-	self._ability_extension = data.ability_extension
 
 	local slot_settings = self._slot_name and ItemSlotSettings[self._slot_name]
 
-	self._wield_input = slot_settings.wield_input or self._ability and self._ability.ability_type
+	self._ability_extension = data.ability_extension
+	self._ability_type = slot_settings.ability_type
+	self._ability = self._ability_extension:ability_is_equipped(self._ability_type)
+	self._wield_input = slot_settings.wield_input or self._ability_type
 	self._gamepad_wield_input = slot_settings and slot_settings.gamepad_wield_input or self._wield_input
 	self._hide_input_on_gamepad_wielded = slot_settings and slot_settings.hide_input_on_gamepad_wielded
 
@@ -75,16 +76,16 @@ HudElementPlayerWeapon.init = function (self, parent, draw_layer, start_scale, d
 		local item = data.item
 		local hud_icon = item.hud_icon
 
-		hud_icon = hud_icon or self._slot_name == "slot_primary" and "content/ui/materials/icons/weapons/hud/combat_blade_01" or "content/ui/materials/icons/weapons/hud/autogun_01"
+		hud_icon = hud_icon or self._slot_name == "slot_primary" and "content/ui/materials/icons/weapons/hud/debug_primary" or "content/ui/materials/icons/weapons/hud/debug_secondary"
 
 		self:set_icon(hud_icon, is_weapon)
 	end
 
 	local hud_configuration = weapon_template and weapon_template.hud_configuration or self._ability.hud_configuration
-	local uses_ammo = hud_configuration and hud_configuration.uses_ammunition
-	local hud_ammo_icon = hud_configuration and hud_configuration.hud_ammo_icon
-	local uses_overheat = hud_configuration and hud_configuration.uses_overheat
-	local uses_weapon_special_charges = hud_configuration and hud_configuration.uses_weapon_special_charges
+	local uses_ammo = hud_configuration and hud_configuration.uses_ammunition or false
+	local hud_ammo_icon = hud_configuration and hud_configuration.hud_ammo_icon or false
+	local uses_overheat = hud_configuration and hud_configuration.uses_overheat or false
+	local uses_weapon_special_charges = hud_configuration and hud_configuration.uses_weapon_special_charges or false
 	local infinite_ammo = not uses_ammo and uses_overheat
 
 	self._infinite_ammo = infinite_ammo
@@ -229,20 +230,18 @@ HudElementPlayerWeapon.update = function (self, dt, t, ui_renderer, render_setti
 			total_max_ammo_amount = false
 		elseif self._ability then
 			local ability_extension = self._ability_extension
-			local ability_type = self._ability.ability_type
+			local ability_type = self._ability_type
 			local max_ability_charges = self._ability_extension:max_ability_charges(ability_type)
 
 			remaining_ability_charges = self._ability_extension:remaining_ability_charges(ability_type)
 			clip_total = max_ability_charges
 			total_max_ammo_amount = max_ability_charges
 
-			local max_ability_cooldown = ability_extension:max_ability_cooldown(ability_type)
-			local remaining_ability_cooldown = ability_extension:remaining_ability_cooldown(ability_type)
-			local cooldown_progress = max_ability_cooldown > 0 and remaining_ability_cooldown / max_ability_cooldown or 0
+			local charge_regen_progress = 1 - ability_extension:get_ability_resource_regen_progress(ability_type)
 			local is_ability_disabled = not ability_extension:ability_enabled(ability_type)
 
 			if is_ability_disabled then
-				cooldown_progress = 1
+				charge_regen_progress = 1
 			end
 
 			if remaining_ability_charges ~= self._remaining_ability_charges then
@@ -268,17 +267,17 @@ HudElementPlayerWeapon.update = function (self, dt, t, ui_renderer, render_setti
 				self._remaining_ability_charges = remaining_ability_charges
 			end
 
-			if cooldown_progress ~= self._cooldown_progress then
-				if self._cooldown_progress ~= nil then
+			if charge_regen_progress ~= self._charge_regen_progress then
+				if self._charge_regen_progress ~= nil then
 					local background_widget = self._widgets_by_name.background
 					local background_glow_style = background_widget.style.background_glow
 
-					background_glow_style.uvs[2][2] = cooldown_progress
-					background_glow_style.scale[2] = cooldown_progress
+					background_glow_style.uvs[2][2] = charge_regen_progress
+					background_glow_style.scale[2] = charge_regen_progress
 					background_widget.dirty = true
 				end
 
-				self._cooldown_progress = cooldown_progress
+				self._charge_regen_progress = charge_regen_progress
 			end
 		end
 

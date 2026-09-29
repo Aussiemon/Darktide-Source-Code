@@ -8,21 +8,21 @@ local adamant_ogryn_a = {
 			"loc_ogryn_a__found_ammo_adamant_low_on_ammo_01",
 			"loc_ogryn_a__found_ammo_adamant_low_on_ammo_02",
 			"loc_ogryn_a__found_ammo_adamant_low_on_ammo_03",
-			"loc_ogryn_a__found_ammo_adamant_low_on_ammo_04",
+			"loc_ogryn_a__found_ammo_adamant_low_on_ammo_04"
 		},
 		sound_events_duration = {
 			1.712583,
 			1.730813,
 			2.21576,
-			2.186104,
+			2.186104
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25,
+			0.25
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	found_ammo_adamant_low_on_ammo = {
 		randomize_indexes_n = 0,
@@ -31,15 +31,15 @@ local adamant_ogryn_a = {
 			"loc_ogryn_a__found_ammo_adamant_low_on_ammo_01",
 			"loc_ogryn_a__found_ammo_adamant_low_on_ammo_02",
 			"loc_ogryn_a__found_ammo_adamant_low_on_ammo_03",
-			"loc_ogryn_a__found_ammo_adamant_low_on_ammo_04",
+			"loc_ogryn_a__found_ammo_adamant_low_on_ammo_04"
 		},
 		sound_events_duration = {
 			1.712583,
 			1.730813,
 			2.21576,
-			2.186104,
+			2.186104
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	found_health_booster_adamant_low_on_health = {
 		randomize_indexes_n = 0,
@@ -48,15 +48,15 @@ local adamant_ogryn_a = {
 			"loc_ogryn_a__found_health_booster_adamant_low_on_health_01",
 			"loc_ogryn_a__found_health_booster_adamant_low_on_health_02",
 			"loc_ogryn_a__found_health_booster_adamant_low_on_health_03",
-			"loc_ogryn_a__found_health_booster_adamant_low_on_health_04",
+			"loc_ogryn_a__found_health_booster_adamant_low_on_health_04"
 		},
 		sound_events_duration = {
 			1.520323,
 			3.058813,
 			4.677531,
-			2.905104,
+			2.905104
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	found_health_station_adamant_low_on_health = {
 		randomize_indexes_n = 0,
@@ -65,21 +65,21 @@ local adamant_ogryn_a = {
 			"loc_ogryn_a__found_health_booster_adamant_low_on_health_01",
 			"loc_ogryn_a__found_health_booster_adamant_low_on_health_02",
 			"loc_ogryn_a__found_health_booster_adamant_low_on_health_03",
-			"loc_ogryn_a__found_health_booster_adamant_low_on_health_04",
+			"loc_ogryn_a__found_health_booster_adamant_low_on_health_04"
 		},
 		sound_events_duration = {
 			1.520323,
 			3.058813,
 			4.677531,
-			2.905104,
+			2.905104
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25,
+			0.25
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	friendly_fire_from_adamant_to_ogryn = {
 		randomize_indexes_n = 0,
@@ -90,7 +90,7 @@ local adamant_ogryn_a = {
 			"loc_ogryn_a__friendly_fire_from_adamant_to_ogryn_03",
 			"loc_ogryn_a__friendly_fire_from_adamant_to_ogryn_04",
 			"loc_ogryn_a__friendly_fire_from_adamant_to_ogryn_05",
-			"loc_ogryn_a__friendly_fire_from_adamant_to_ogryn_06",
+			"loc_ogryn_a__friendly_fire_from_adamant_to_ogryn_06"
 		},
 		sound_events_duration = {
 			2.447271,
@@ -98,9 +98,9 @@ local adamant_ogryn_a = {
 			2.628885,
 			2.399781,
 			3.527135,
-			3.15324,
+			3.15324
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	knocked_down_multiple_times_adamant = {
 		randomize_indexes_n = 0,
@@ -109,15 +109,15 @@ local adamant_ogryn_a = {
 			"loc_ogryn_a__knocked_down_multiple_times_adamant_01",
 			"loc_ogryn_a__knocked_down_multiple_times_adamant_02",
 			"loc_ogryn_a__knocked_down_multiple_times_adamant_03",
-			"loc_ogryn_a__knocked_down_multiple_times_adamant_04",
+			"loc_ogryn_a__knocked_down_multiple_times_adamant_04"
 		},
 		sound_events_duration = {
 			2.79649,
 			2.712625,
 			3.386896,
-			2.981771,
+			2.981771
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	ogryn_seen_killstreak_adamant = {
 		randomize_indexes_n = 0,
@@ -126,15 +126,15 @@ local adamant_ogryn_a = {
 			"loc_ogryn_a__ogryn_seen_killstreak_adamant_01",
 			"loc_ogryn_a__ogryn_seen_killstreak_adamant_02",
 			"loc_ogryn_a__ogryn_seen_killstreak_adamant_03",
-			"loc_ogryn_a__ogryn_seen_killstreak_adamant_04",
+			"loc_ogryn_a__ogryn_seen_killstreak_adamant_04"
 		},
 		sound_events_duration = {
 			2.851771,
 			2.293354,
 			3.374052,
-			4.707469,
+			4.707469
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	ogryn_start_revive_adamant = {
 		randomize_indexes_n = 0,
@@ -145,7 +145,7 @@ local adamant_ogryn_a = {
 			"loc_ogryn_a__ogryn_start_revive_adamant_03",
 			"loc_ogryn_a__ogryn_start_revive_adamant_04",
 			"loc_ogryn_a__ogryn_start_revive_adamant_05",
-			"loc_ogryn_a__ogryn_start_revive_adamant_06",
+			"loc_ogryn_a__ogryn_start_revive_adamant_06"
 		},
 		sound_events_duration = {
 			2.63399,
@@ -153,9 +153,9 @@ local adamant_ogryn_a = {
 			2.286063,
 			3.220542,
 			2.559646,
-			2.422271,
+			2.422271
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	player_death_adamant = {
 		randomize_indexes_n = 0,
@@ -164,15 +164,15 @@ local adamant_ogryn_a = {
 			"loc_ogryn_a__player_death_adamant_01",
 			"loc_ogryn_a__player_death_adamant_02",
 			"loc_ogryn_a__player_death_adamant_03",
-			"loc_ogryn_a__player_death_adamant_04",
+			"loc_ogryn_a__player_death_adamant_04"
 		},
 		sound_events_duration = {
 			2.113469,
 			2.651927,
 			2.588531,
-			3.344115,
+			3.344115
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_adamant_cover_me = {
 		randomize_indexes_n = 0,
@@ -181,15 +181,15 @@ local adamant_ogryn_a = {
 			"loc_ogryn_a__response_for_adamant_cover_me_01",
 			"loc_ogryn_a__response_for_adamant_cover_me_02",
 			"loc_ogryn_a__response_for_adamant_cover_me_03",
-			"loc_ogryn_a__response_for_adamant_cover_me_04",
+			"loc_ogryn_a__response_for_adamant_cover_me_04"
 		},
 		sound_events_duration = {
 			1.869583,
 			1.483938,
 			1.788302,
-			2.737052,
+			2.737052
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_adamant_critical_health = {
 		randomize_indexes_n = 0,
@@ -198,15 +198,15 @@ local adamant_ogryn_a = {
 			"loc_ogryn_a__response_for_adamant_critical_health_01",
 			"loc_ogryn_a__response_for_adamant_critical_health_02",
 			"loc_ogryn_a__response_for_adamant_critical_health_03",
-			"loc_ogryn_a__response_for_adamant_critical_health_04",
+			"loc_ogryn_a__response_for_adamant_critical_health_04"
 		},
 		sound_events_duration = {
 			2.441448,
 			2.793458,
 			3.82649,
-			2.283281,
+			2.283281
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_adamant_disabled_by_chaos_hound = {
 		randomize_indexes_n = 0,
@@ -215,15 +215,15 @@ local adamant_ogryn_a = {
 			"loc_ogryn_a__response_for_adamant_disabled_by_chaos_hound_01",
 			"loc_ogryn_a__response_for_adamant_disabled_by_chaos_hound_02",
 			"loc_ogryn_a__response_for_adamant_disabled_by_chaos_hound_03",
-			"loc_ogryn_a__response_for_adamant_disabled_by_chaos_hound_04",
+			"loc_ogryn_a__response_for_adamant_disabled_by_chaos_hound_04"
 		},
 		sound_events_duration = {
 			2.270063,
 			2.416271,
 			3.08274,
-			2.156104,
+			2.156104
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_adamant_disabled_by_enemy = {
 		randomize_indexes_n = 0,
@@ -234,7 +234,7 @@ local adamant_ogryn_a = {
 			"loc_ogryn_a__response_for_adamant_disabled_by_enemy_03",
 			"loc_ogryn_a__response_for_adamant_disabled_by_enemy_04",
 			"loc_ogryn_a__response_for_adamant_disabled_by_enemy_05",
-			"loc_ogryn_a__response_for_adamant_disabled_by_enemy_06",
+			"loc_ogryn_a__response_for_adamant_disabled_by_enemy_06"
 		},
 		sound_events_duration = {
 			3.606198,
@@ -242,9 +242,9 @@ local adamant_ogryn_a = {
 			1.521229,
 			2.16549,
 			2.321719,
-			1.696302,
+			1.696302
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_adamant_enemy_kill_monster = {
 		randomize_indexes_n = 0,
@@ -253,15 +253,15 @@ local adamant_ogryn_a = {
 			"loc_ogryn_a__response_for_adamant_enemy_kill_monster_01",
 			"loc_ogryn_a__response_for_adamant_enemy_kill_monster_02",
 			"loc_ogryn_a__response_for_adamant_enemy_kill_monster_03",
-			"loc_ogryn_a__response_for_adamant_enemy_kill_monster_04",
+			"loc_ogryn_a__response_for_adamant_enemy_kill_monster_04"
 		},
 		sound_events_duration = {
 			2.794479,
 			2.656073,
 			2.796031,
-			2.871865,
+			2.871865
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_adamant_knocked_down_3 = {
 		randomize_indexes_n = 0,
@@ -270,15 +270,15 @@ local adamant_ogryn_a = {
 			"loc_ogryn_a__response_for_adamant_knocked_down_3_01",
 			"loc_ogryn_a__response_for_adamant_knocked_down_3_02",
 			"loc_ogryn_a__response_for_adamant_knocked_down_3_03",
-			"loc_ogryn_a__response_for_adamant_knocked_down_3_04",
+			"loc_ogryn_a__response_for_adamant_knocked_down_3_04"
 		},
 		sound_events_duration = {
 			2.524448,
 			1.771719,
 			3.03774,
-			6.512146,
+			6.512146
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_adamant_ledge_hanging = {
 		randomize_indexes_n = 0,
@@ -289,7 +289,7 @@ local adamant_ogryn_a = {
 			"loc_ogryn_a__response_for_adamant_ledge_hanging_03",
 			"loc_ogryn_a__response_for_adamant_ledge_hanging_04",
 			"loc_ogryn_a__response_for_adamant_ledge_hanging_05",
-			"loc_ogryn_a__response_for_adamant_ledge_hanging_06",
+			"loc_ogryn_a__response_for_adamant_ledge_hanging_06"
 		},
 		sound_events_duration = {
 			2.729625,
@@ -297,9 +297,9 @@ local adamant_ogryn_a = {
 			1.670385,
 			2.357563,
 			3.554406,
-			2.917031,
+			2.917031
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_adamant_seen_killstreak_ogryn = {
 		randomize_indexes_n = 0,
@@ -308,15 +308,15 @@ local adamant_ogryn_a = {
 			"loc_ogryn_a__response_for_adamant_seen_killstreak_ogryn_01",
 			"loc_ogryn_a__response_for_adamant_seen_killstreak_ogryn_02",
 			"loc_ogryn_a__response_for_adamant_seen_killstreak_ogryn_03",
-			"loc_ogryn_a__response_for_adamant_seen_killstreak_ogryn_04",
+			"loc_ogryn_a__response_for_adamant_seen_killstreak_ogryn_04"
 		},
 		sound_events_duration = {
 			2.348042,
 			4.32725,
 			3.947938,
-			5.494656,
+			5.494656
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_adamant_start_revive_ogryn = {
 		randomize_indexes_n = 0,
@@ -325,15 +325,15 @@ local adamant_ogryn_a = {
 			"loc_ogryn_a__response_for_adamant_start_revive_ogryn_01",
 			"loc_ogryn_a__response_for_adamant_start_revive_ogryn_02",
 			"loc_ogryn_a__response_for_adamant_start_revive_ogryn_03",
-			"loc_ogryn_a__response_for_adamant_start_revive_ogryn_04",
+			"loc_ogryn_a__response_for_adamant_start_revive_ogryn_04"
 		},
 		sound_events_duration = {
 			3.746292,
 			3.3595,
 			3.05001,
-			5.069052,
+			5.069052
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_friendly_fire_from_ogryn_to_adamant = {
 		randomize_indexes_n = 0,
@@ -342,15 +342,15 @@ local adamant_ogryn_a = {
 			"loc_ogryn_a__response_for_friendly_fire_from_ogryn_to_adamant_01",
 			"loc_ogryn_a__response_for_friendly_fire_from_ogryn_to_adamant_02",
 			"loc_ogryn_a__response_for_friendly_fire_from_ogryn_to_adamant_03",
-			"loc_ogryn_a__response_for_friendly_fire_from_ogryn_to_adamant_04",
+			"loc_ogryn_a__response_for_friendly_fire_from_ogryn_to_adamant_04"
 		},
 		sound_events_duration = {
 			2.357729,
 			3.16875,
 			2.383792,
-			2.636438,
+			2.636438
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_pinned_by_enemies_adamant = {
 		randomize_indexes_n = 0,
@@ -361,7 +361,7 @@ local adamant_ogryn_a = {
 			"loc_ogryn_a__response_for_pinned_by_enemies_adamant_03",
 			"loc_ogryn_a__response_for_pinned_by_enemies_adamant_04",
 			"loc_ogryn_a__response_for_pinned_by_enemies_adamant_05",
-			"loc_ogryn_a__response_for_pinned_by_enemies_adamant_06",
+			"loc_ogryn_a__response_for_pinned_by_enemies_adamant_06"
 		},
 		sound_events_duration = {
 			2.441031,
@@ -369,10 +369,10 @@ local adamant_ogryn_a = {
 			2.580885,
 			2.110875,
 			1.923833,
-			2.86399,
+			2.86399
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("adamant_ogryn_a", adamant_ogryn_a)

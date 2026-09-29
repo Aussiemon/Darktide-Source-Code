@@ -100,7 +100,7 @@ local settings = {}
 settings[#settings + 1] = {
 	display_name = "loc_settings_menu_group_volume",
 	group_name = "sound_volume",
-	widget_type = "group_header",
+	widget_type = "group_header"
 }
 
 local default_sound_volume = 100
@@ -122,7 +122,7 @@ local master_volume_slider_params = {
 	id = master_volume_value_name,
 	commit = function (value)
 		Wwise.set_parameter(master_volume_value_name, value)
-	end,
+	end
 }
 
 settings[#settings + 1] = Options.create_percent_slider_template(master_volume_slider_params)
@@ -144,7 +144,7 @@ local sfx_volume_slider_params = {
 	id = sfx_volume_value_name,
 	commit = function (value)
 		Wwise.set_parameter(sfx_volume_value_name, value)
-	end,
+	end
 }
 
 settings[#settings + 1] = Options.create_percent_slider_template(sfx_volume_slider_params)
@@ -166,14 +166,14 @@ local music_volume_slider_params = {
 	id = music_volume_value_name,
 	commit = function (value)
 		Wwise.set_parameter(music_volume_value_name, value)
-	end,
+	end
 }
 
 settings[#settings + 1] = Options.create_percent_slider_template(music_volume_slider_params)
 settings[#settings + 1] = {
 	display_name = "loc_settings_menu_group_audio_settings",
 	group_name = "audio_settings",
-	widget_type = "group_header",
+	widget_type = "group_header"
 }
 
 local sound_device = {
@@ -184,8 +184,8 @@ local sound_device = {
 	options = {
 		{
 			display_name = "loc_setting_default_device",
-			id = 0,
-		},
+			id = 0
+		}
 	},
 	commit = function (value, template)
 		if value == 0 then
@@ -210,7 +210,7 @@ local sound_device = {
 
 		template.options[1] = {
 			display_name = "loc_setting_default_device",
-			id = 0,
+			id = 0
 		}
 
 		for i, device in ipairs(Wwise.get_device_list()) do
@@ -218,7 +218,7 @@ local sound_device = {
 				ignore_localization = true,
 				id = i,
 				display_name = device.device_name,
-				device_id = device.device_id,
+				device_id = device.device_id
 			}
 		end
 
@@ -227,7 +227,7 @@ local sound_device = {
 		if not template.options[value + 1] then
 			template.on_activated(template.default_value)
 		end
-	end,
+	end
 }
 
 settings[#settings + 1] = construct_audio_settings_dropdown(sound_device)
@@ -243,46 +243,46 @@ local speaker_settings = {
 			id = 0,
 			values = {
 				audio_settings = {
-					speaker_settings = 0,
-				},
-			},
+					speaker_settings = 0
+				}
+			}
 		},
 		{
 			display_name = "loc_setting_speaker_five_one",
 			id = 1,
 			values = {
 				audio_settings = {
-					speaker_settings = 1,
-				},
-			},
+					speaker_settings = 1
+				}
+			}
 		},
 		{
 			display_name = "loc_setting_speaker_stereo",
 			id = 2,
 			values = {
 				audio_settings = {
-					speaker_settings = 2,
-				},
-			},
+					speaker_settings = 2
+				}
+			}
 		},
 		{
 			display_name = "loc_setting_speaker_stereo_headphones",
 			id = 3,
 			values = {
 				audio_settings = {
-					speaker_settings = 3,
-				},
-			},
+					speaker_settings = 3
+				}
+			}
 		},
 		{
 			display_name = "loc_setting_speaker_mono",
 			id = 4,
 			values = {
 				audio_settings = {
-					speaker_settings = 4,
-				},
-			},
-		},
+					speaker_settings = 4
+				}
+			}
+		}
 	},
 	commit = function (value)
 		local PANNING_RULE_SPEAKERS = 0
@@ -305,7 +305,7 @@ local speaker_settings = {
 			Wwise.set_panning_rule(PANNING_RULE_SPEAKERS)
 			Wwise.set_bus_config(mastering_bus_name, Wwise.AK_SPEAKER_SETUP_MONO)
 		end
-	end,
+	end
 }
 
 settings[#settings + 1] = construct_audio_settings_dropdown(speaker_settings)
@@ -321,43 +321,43 @@ local mix_presets_settings = {
 			id = 0,
 			values = {
 				sound_settings = {
-					mix_preset = 0,
-				},
-			},
+					mix_preset = 0
+				}
+			}
 		},
 		{
 			display_name = "loc_setting_mix_preset_flat",
 			id = 1,
 			values = {
 				sound_settings = {
-					mix_preset = 1,
-				},
-			},
+					mix_preset = 1
+				}
+			}
 		},
 		{
 			display_name = "loc_setting_mix_preset_nightmode",
 			id = 2,
 			values = {
 				sound_settings = {
-					mix_preset = 2,
-				},
-			},
+					mix_preset = 2
+				}
+			}
 		},
 		{
 			display_name = "loc_setting_mix_preset_dakka_dakka",
 			id = 3,
 			values = {
 				sound_settings = {
-					mix_preset = 3,
-				},
-			},
-		},
+					mix_preset = 3
+				}
+			}
+		}
 	},
 	commit = function (value)
 		local parameter_name = "dynamic_range"
 
 		Wwise.set_parameter(parameter_name, value)
-	end,
+	end
 }
 
 settings[#settings + 1] = construct_audio_settings_dropdown(mix_presets_settings)
@@ -401,7 +401,7 @@ local dialogue_volume_slider_params = {
 		local setting_value = get_dialogue_wwise_value(value)
 
 		Wwise.set_state(dialogue_volume_value_name, setting_value)
-	end,
+	end
 }
 
 settings[#settings + 1] = Options.create_value_slider_template(dialogue_volume_slider_params)
@@ -414,7 +414,7 @@ local mute_in_background_setting = {
 	tooltip_text = "loc_settings_audio_mute_in_background_mouseover",
 	commit = function (value)
 		return
-	end,
+	end
 }
 
 settings[#settings + 1] = construct_audio_settings_boolean(mute_in_background_setting)
@@ -432,7 +432,7 @@ local game_interface_setting = {
 		else
 			Wwise.set_state(options_audio_parameter_name, "off")
 		end
-	end,
+	end
 }
 
 settings[#settings + 1] = construct_audio_settings_boolean(game_interface_setting)
@@ -450,7 +450,7 @@ local audio_backstab_sound_setting = {
 		else
 			Wwise.set_state(options_audio_parameter_name, "off")
 		end
-	end,
+	end
 }
 
 settings[#settings + 1] = construct_audio_settings_boolean(audio_backstab_sound_setting)
@@ -468,7 +468,7 @@ local audio_teammate_ping_setting = {
 		else
 			Wwise.set_state(options_audio_parameter_name, "off")
 		end
-	end,
+	end
 }
 
 settings[#settings + 1] = construct_audio_settings_boolean(audio_teammate_ping_setting)
@@ -486,7 +486,7 @@ local audio_voice_fx_setting = {
 		else
 			Wwise.set_state(options_audio_parameter_name, "off")
 		end
-	end,
+	end
 }
 
 settings[#settings + 1] = construct_audio_settings_boolean(audio_voice_fx_setting)
@@ -504,14 +504,14 @@ local audio_cryptic_fx_setting = {
 		else
 			Wwise.set_state(options_audio_parameter_name, "off")
 		end
-	end,
+	end
 }
 
 settings[#settings + 1] = construct_audio_settings_boolean(audio_cryptic_fx_setting)
 settings[#settings + 1] = {
 	display_name = "loc_settings_menu_group_voice_chat_settings",
 	group_name = "voice_chat_settings",
-	widget_type = "group_header",
+	widget_type = "group_header"
 }
 
 local chat_volume_value_name = "options_voip_volume_slider_v2"
@@ -546,7 +546,7 @@ local chat_volume_slider_params = {
 		if Managers.chat then
 			Managers.chat:mic_volume_changed()
 		end
-	end,
+	end
 }
 
 settings[#settings + 1] = Options.create_percent_slider_template(chat_volume_slider_params)
@@ -569,7 +569,7 @@ capture_device = {
 
 		template.options[1] = {
 			display_name = "loc_setting_default_device",
-			id = "Default System Device",
+			id = "Default System Device"
 		}
 
 		for _, device in ipairs(Managers.chat:get_capture_devices()) do
@@ -577,7 +577,7 @@ capture_device = {
 				template.options[#template.options + 1] = {
 					ignore_localization = true,
 					id = device.device,
-					display_name = device.display_name,
+					display_name = device.display_name
 				}
 			end
 		end
@@ -602,7 +602,7 @@ capture_device = {
 	end,
 	validation_function = function ()
 		return not not IS_WINDOWS and not not rawget(_G, "Managers") and not not Managers.chat and not not Managers.chat.get_capture_devices
-	end,
+	end
 }
 settings[#settings + 1] = construct_audio_settings_dropdown(capture_device)
 
@@ -612,19 +612,19 @@ local voice_chat_options = {
 		id = 0,
 		values = {
 			sound_settings = {
-				voice_chat_preset = 0,
-			},
-		},
+				voice_chat_preset = 0
+			}
+		}
 	},
 	{
 		display_name = "loc_setting_voice_chat_presets_mic_voice_activated",
 		id = 1,
 		values = {
 			sound_settings = {
-				voice_chat_preset = 1,
-			},
-		},
-	},
+				voice_chat_preset = 1
+			}
+		}
+	}
 }
 local voice_chat_settings = {
 	default_value = 2,
@@ -654,12 +654,12 @@ local voice_chat_settings = {
 				id = 2,
 				values = {
 					sound_settings = {
-						voice_chat_preset = 2,
-					},
-				},
+						voice_chat_preset = 2
+					}
+				}
 			}
 		end
-	end,
+	end
 }
 
 settings[#settings + 1] = construct_audio_settings_dropdown(voice_chat_settings)
@@ -670,5 +670,5 @@ return {
 	icon = "content/ui/materials/icons/system/settings/category_audio",
 	settings_utilities = SettingsUtilities,
 	settings_by_id = SettingsUtilities.settings_by_id,
-	settings = settings,
+	settings = settings
 }

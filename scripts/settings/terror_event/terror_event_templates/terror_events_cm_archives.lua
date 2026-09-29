@@ -7,19 +7,19 @@ local template = {
 			"event_archives_basement_a",
 			1,
 			"event_archives_basement_b",
-			1,
+			1
 		},
 		cm_archives_basement_wave_2 = {
 			"event_archives_basement_c",
 			1,
 			"event_archives_basement_d",
-			1,
+			1
 		},
 		cm_archives_basement_wave_3 = {
 			"event_archives_basement_e",
 			1,
 			"event_archives_basement_f",
-			1,
+			1
 		},
 		cm_archives_absconditum_wave_1 = {
 			"event_scan_absconditum_a",
@@ -29,36 +29,36 @@ local template = {
 			"event_scan_absconditum_c",
 			1,
 			"event_scan_absconditum_d",
-			1,
+			1
 		},
 		cm_archives_absconditum_wave_2 = {
 			"event_scan_absconditum_final_a",
 			1,
 			"event_scan_absconditum_final_b",
-			1,
-		},
+			1
+		}
 	},
 	events = {
 		event_pacing_off = {
 			{
 				"set_pacing_enabled",
-				enabled = false,
-			},
+				enabled = false
+			}
 		},
 		event_pacing_on = {
 			{
 				"set_pacing_enabled",
-				enabled = true,
-			},
+				enabled = true
+			}
 		},
 		event_hordes_off = {
 			{
 				"control_pacing_spawns",
 				enabled = false,
 				spawn_types = {
-					"hordes",
-				},
-			},
+					"hordes"
+				}
+			}
 		},
 		event_only_specials_enabled = {
 			{
@@ -67,9 +67,9 @@ local template = {
 				spawn_types = {
 					"hordes",
 					"roamers",
-					"trickle_hordes",
-				},
-			},
+					"trickle_hordes"
+				}
+			}
 		},
 		event_pacing_on_stop_trickle = {
 			{
@@ -78,16 +78,16 @@ local template = {
 				spawn_types = {
 					"hordes",
 					"roamers",
-					"trickle_hordes",
-				},
+					"trickle_hordes"
+				}
 			},
 			{
 				"set_pacing_enabled",
-				enabled = true,
+				enabled = true
 			},
 			{
-				"stop_terror_trickle",
-			},
+				"stop_terror_trickle"
+			}
 		},
 		event_archives_basement_guards_a = {
 			{
@@ -99,9 +99,9 @@ local template = {
 				spawner_group = "spawner_archives_basement_horde_a",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -113,9 +113,9 @@ local template = {
 				breed_tags = {
 					{
 						"close",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -127,9 +127,9 @@ local template = {
 				breed_tags = {
 					{
 						"melee",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -141,9 +141,9 @@ local template = {
 				breed_tags = {
 					{
 						"far",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -155,10 +155,10 @@ local template = {
 				breed_tags = {
 					{
 						"far",
-						"elite",
-					},
-				},
-			},
+						"elite"
+					}
+				}
+			}
 		},
 		event_archives_basement_guards_b = {
 			{
@@ -170,9 +170,9 @@ local template = {
 				spawner_group = "spawner_archives_basement_horde_b",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -184,9 +184,9 @@ local template = {
 				breed_tags = {
 					{
 						"close",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -198,9 +198,9 @@ local template = {
 				breed_tags = {
 					{
 						"melee",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -212,9 +212,9 @@ local template = {
 				breed_tags = {
 					{
 						"far",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -226,10 +226,10 @@ local template = {
 				breed_tags = {
 					{
 						"far",
-						"elite",
-					},
-				},
-			},
+						"elite"
+					}
+				}
+			}
 		},
 		event_archives_basement_guards_c = {
 			{
@@ -241,9 +241,9 @@ local template = {
 				spawner_group = "spawner_archives_basement_horde_c",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -255,9 +255,9 @@ local template = {
 				breed_tags = {
 					{
 						"close",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -269,26 +269,26 @@ local template = {
 				breed_tags = {
 					{
 						"melee",
-						"elite",
-					},
-				},
-			},
+						"elite"
+					}
+				}
+			}
 		},
 		event_archives_basement_trickle_a = {
 			{
 				"start_terror_trickle",
 				delay = 4,
 				spawner_group = "spawner_basement_trickle_a",
-				template_name = "standard_melee",
-			},
+				template_name = "standard_melee"
+			}
 		},
 		event_archives_basement_trickle_b = {
 			{
 				"start_terror_trickle",
 				delay = 4,
 				spawner_group = "spawner_basement_trickle_b",
-				template_name = "standard_melee",
-			},
+				template_name = "standard_melee"
+			}
 		},
 		event_archives_basement_a = {
 			{
@@ -298,9 +298,9 @@ local template = {
 				spawner_group = "spawner_basement_first_segment",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -309,9 +309,9 @@ local template = {
 				spawner_group = "spawner_basement_first_segment",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"try_inject_special_minion",
@@ -321,13 +321,13 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 3,
+				duration = 3
 			},
 			{
 				"try_inject_special_minion",
@@ -337,30 +337,30 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"start_terror_trickle",
 				delay = 4,
 				spawner_group = "spawner_basement_first_segment",
-				template_name = "standard_melee",
+				template_name = "standard_melee"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 5
-				end,
+				end
 			},
 			{
 				"delay",
-				duration = 5,
+				duration = 5
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "cm_archives_basement_wave_1",
-			},
+				start_event_name = "cm_archives_basement_wave_1"
+			}
 		},
 		event_archives_basement_b = {
 			{
@@ -370,9 +370,9 @@ local template = {
 				spawner_group = "spawner_basement_first_segment",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -381,9 +381,9 @@ local template = {
 				spawner_group = "spawner_basement_first_segment",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"try_inject_special_minion",
@@ -393,13 +393,13 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 3,
+				duration = 3
 			},
 			{
 				"try_inject_special_minion",
@@ -409,30 +409,30 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"start_terror_trickle",
 				delay = 4,
 				spawner_group = "spawner_basement_first_segment",
-				template_name = "standard_melee",
+				template_name = "standard_melee"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 5
-				end,
+				end
 			},
 			{
 				"delay",
-				duration = 5,
+				duration = 5
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "cm_archives_basement_wave_1",
-			},
+				start_event_name = "cm_archives_basement_wave_1"
+			}
 		},
 		event_archives_basement_c = {
 			{
@@ -442,9 +442,9 @@ local template = {
 				spawner_group = "spawner_basement_second_segment",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -453,9 +453,9 @@ local template = {
 				spawner_group = "spawner_basement_second_segment",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"try_inject_special_minion",
@@ -465,13 +465,13 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 3,
+				duration = 3
 			},
 			{
 				"try_inject_special_minion",
@@ -481,30 +481,30 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"start_terror_trickle",
 				delay = 4,
 				spawner_group = "spawner_basement_second_segment",
-				template_name = "standard_melee",
+				template_name = "standard_melee"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 5
-				end,
+				end
 			},
 			{
 				"delay",
-				duration = 5,
+				duration = 5
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "cm_archives_basement_wave_2",
-			},
+				start_event_name = "cm_archives_basement_wave_2"
+			}
 		},
 		event_archives_basement_d = {
 			{
@@ -514,9 +514,9 @@ local template = {
 				spawner_group = "spawner_basement_second_segment",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -525,9 +525,9 @@ local template = {
 				spawner_group = "spawner_basement_second_segment",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"try_inject_special_minion",
@@ -537,13 +537,13 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 3,
+				duration = 3
 			},
 			{
 				"try_inject_special_minion",
@@ -553,30 +553,30 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"start_terror_trickle",
 				delay = 4,
 				spawner_group = "spawner_basement_second_segment",
-				template_name = "standard_melee",
+				template_name = "standard_melee"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 5
-				end,
+				end
 			},
 			{
 				"delay",
-				duration = 5,
+				duration = 5
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "cm_archives_basement_wave_2",
-			},
+				start_event_name = "cm_archives_basement_wave_2"
+			}
 		},
 		event_archives_basement_e = {
 			{
@@ -586,9 +586,9 @@ local template = {
 				spawner_group = "spawner_basement_third_segment",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -597,9 +597,9 @@ local template = {
 				spawner_group = "spawner_basement_third_segment",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"try_inject_special_minion",
@@ -609,13 +609,13 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 3,
+				duration = 3
 			},
 			{
 				"try_inject_special_minion",
@@ -625,30 +625,30 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"start_terror_trickle",
 				delay = 4,
 				spawner_group = "spawner_basement_third_segment",
-				template_name = "standard_melee",
+				template_name = "standard_melee"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 5
-				end,
+				end
 			},
 			{
 				"delay",
-				duration = 5,
+				duration = 5
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "cm_archives_basement_wave_3",
-			},
+				start_event_name = "cm_archives_basement_wave_3"
+			}
 		},
 		event_archives_basement_f = {
 			{
@@ -658,9 +658,9 @@ local template = {
 				spawner_group = "spawner_basement_third_segment",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -669,9 +669,9 @@ local template = {
 				spawner_group = "spawner_basement_third_segment",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"try_inject_special_minion",
@@ -681,13 +681,13 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 3,
+				duration = 3
 			},
 			{
 				"try_inject_special_minion",
@@ -697,30 +697,30 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"start_terror_trickle",
 				delay = 4,
 				spawner_group = "spawner_basement_third_segment",
-				template_name = "standard_melee",
+				template_name = "standard_melee"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 5
-				end,
+				end
 			},
 			{
 				"delay",
-				duration = 5,
+				duration = 5
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "cm_archives_basement_wave_3",
-			},
+				start_event_name = "cm_archives_basement_wave_3"
+			}
 		},
 		event_scan_absconditum_a = {
 			{
@@ -731,13 +731,13 @@ local template = {
 				spawner_group = "spawner_absconditum_west",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 6,
+				duration = 6
 			},
 			{
 				"spawn_by_points",
@@ -747,9 +747,9 @@ local template = {
 				breed_tags = {
 					{
 						"melee",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"try_inject_special_minion",
@@ -759,35 +759,35 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"sniper",
-					},
-				},
+						"sniper"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 2,
+				duration = 2
 			},
 			{
 				"start_terror_trickle",
 				delay = 1,
 				spawner_group = "spawner_absconditum_west",
-				template_name = "standard_melee",
+				template_name = "standard_melee"
 			},
 			{
 				"continue_when",
 				duration = 70,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 4
-				end,
+				end
 			},
 			{
 				"delay",
-				duration = 12,
+				duration = 12
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "cm_archives_absconditum_wave_1",
-			},
+				start_event_name = "cm_archives_absconditum_wave_1"
+			}
 		},
 		event_scan_absconditum_b = {
 			{
@@ -799,13 +799,13 @@ local template = {
 				breed_tags = {
 					{
 						"melee",
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 6,
+				duration = 6
 			},
 			{
 				"spawn_by_points",
@@ -814,9 +814,9 @@ local template = {
 				spawner_group = "spawner_absconditum_east",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"try_inject_special_minion",
@@ -826,35 +826,35 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 2,
+				duration = 2
 			},
 			{
 				"start_terror_trickle",
 				delay = 1,
 				spawner_group = "spawner_absconditum_east",
-				template_name = "standard_melee",
+				template_name = "standard_melee"
 			},
 			{
 				"continue_when",
 				duration = 70,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 4
-				end,
+				end
 			},
 			{
 				"delay",
-				duration = 12,
+				duration = 12
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "cm_archives_absconditum_wave_1",
-			},
+				start_event_name = "cm_archives_absconditum_wave_1"
+			}
 		},
 		event_scan_absconditum_c = {
 			{
@@ -865,13 +865,13 @@ local template = {
 				spawner_group = "spawner_absconditum_west",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 6,
+				duration = 6
 			},
 			{
 				"spawn_by_points",
@@ -880,9 +880,9 @@ local template = {
 				spawner_group = "spawner_absconditum_west",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"try_inject_special_minion",
@@ -892,35 +892,35 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 2,
+				duration = 2
 			},
 			{
 				"start_terror_trickle",
 				delay = 1,
 				spawner_group = "spawner_absconditum_west",
-				template_name = "standard_melee",
+				template_name = "standard_melee"
 			},
 			{
 				"continue_when",
 				duration = 70,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 4
-				end,
+				end
 			},
 			{
 				"delay",
-				duration = 12,
+				duration = 12
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "cm_archives_absconditum_wave_1",
-			},
+				start_event_name = "cm_archives_absconditum_wave_1"
+			}
 		},
 		event_scan_absconditum_d = {
 			{
@@ -931,13 +931,13 @@ local template = {
 				spawner_group = "spawner_absconditum_east",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 6,
+				duration = 6
 			},
 			{
 				"spawn_by_points",
@@ -947,9 +947,9 @@ local template = {
 				breed_tags = {
 					{
 						"melee",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"try_inject_special_minion",
@@ -959,35 +959,35 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"sniper",
-					},
-				},
+						"sniper"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 2,
+				duration = 2
 			},
 			{
 				"start_terror_trickle",
 				delay = 1,
 				spawner_group = "spawner_absconditum_east",
-				template_name = "standard_melee",
+				template_name = "standard_melee"
 			},
 			{
 				"continue_when",
 				duration = 70,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 4
-				end,
+				end
 			},
 			{
 				"delay",
-				duration = 12,
+				duration = 12
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "cm_archives_absconditum_wave_1",
-			},
+				start_event_name = "cm_archives_absconditum_wave_1"
+			}
 		},
 		event_scan_absconditum_final_a = {
 			{
@@ -998,13 +998,13 @@ local template = {
 				spawner_group = "spawner_absconditum_west",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 6,
+				duration = 6
 			},
 			{
 				"spawn_by_points",
@@ -1013,9 +1013,9 @@ local template = {
 				spawner_group = "spawner_absconditum_west",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"try_inject_special_minion",
@@ -1025,35 +1025,35 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 4,
+				duration = 4
 			},
 			{
 				"start_terror_trickle",
 				delay = 1,
 				spawner_group = "spawner_absconditum_west",
-				template_name = "standard_melee",
+				template_name = "standard_melee"
 			},
 			{
 				"continue_when",
 				duration = 70,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 4
-				end,
+				end
 			},
 			{
 				"delay",
-				duration = 10,
+				duration = 10
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "cm_archives_absconditum_wave_2",
-			},
+				start_event_name = "cm_archives_absconditum_wave_2"
+			}
 		},
 		event_scan_absconditum_final_b = {
 			{
@@ -1064,13 +1064,13 @@ local template = {
 				spawner_group = "spawner_absconditum_east",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 6,
+				duration = 6
 			},
 			{
 				"spawn_by_points",
@@ -1080,9 +1080,9 @@ local template = {
 				breed_tags = {
 					{
 						"close",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"try_inject_special_minion",
@@ -1092,35 +1092,35 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 4,
+				duration = 4
 			},
 			{
 				"start_terror_trickle",
 				delay = 1,
 				spawner_group = "spawner_absconditum_east",
-				template_name = "standard_melee",
+				template_name = "standard_melee"
 			},
 			{
 				"continue_when",
 				duration = 70,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 4
-				end,
+				end
 			},
 			{
 				"delay",
-				duration = 10,
+				duration = 10
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "cm_archives_absconditum_wave_2",
-			},
+				start_event_name = "cm_archives_absconditum_wave_2"
+			}
 		},
 		event_scan_absconditum_final_escape = {
 			{
@@ -1131,9 +1131,9 @@ local template = {
 				spawner_group = "spawner_absconditum_escape",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1143,13 +1143,13 @@ local template = {
 				breed_tags = {
 					{
 						"close",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 8,
+				duration = 8
 			},
 			{
 				"spawn_by_points",
@@ -1158,18 +1158,18 @@ local template = {
 				spawner_group = "spawner_absconditum_escape",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"start_terror_trickle",
 				delay = 1,
 				spawner_group = "spawner_absconditum_escape",
-				template_name = "standard_melee",
-			},
-		},
-	},
+				template_name = "standard_melee"
+			}
+		}
+	}
 }
 
 return template

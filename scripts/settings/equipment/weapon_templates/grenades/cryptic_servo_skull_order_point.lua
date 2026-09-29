@@ -14,23 +14,14 @@ local weapon_template = {}
 
 weapon_template.not_scroll_wieldable = true
 weapon_template.action_inputs = {
-	grenade_ability = {
-		buffer_time = 0,
-		clear_input_queue = true,
-		input_sequence = nil,
-	},
-	combat_ability = {
-		buffer_time = 0,
-		input_sequence = nil,
-	},
 	aim_servo_skull = {
 		buffer_time = 0,
 		input_sequence = {
 			{
 				input = "grenade_ability_hold",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	aim_servo_skull_on_release = {
 		buffer_time = 0.1,
@@ -38,9 +29,9 @@ weapon_template.action_inputs = {
 			{
 				input = "grenade_ability_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				time_window = math.huge
+			}
+		}
 	},
 	order_servo_skull = {
 		buffer_time = 0.6,
@@ -48,9 +39,9 @@ weapon_template.action_inputs = {
 			{
 				input = "grenade_ability_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				time_window = math.huge
+			}
+		}
 	},
 	cancel = {
 		buffer_time = 0,
@@ -58,23 +49,23 @@ weapon_template.action_inputs = {
 		input_sequence = {
 			{
 				input = "action_two_pressed",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	wield = {
 		buffer_time = 0,
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				inputs = wield_inputs,
-			},
-		},
+				inputs = wield_inputs
+			}
+		}
 	},
 	unwield_to_previous = {
 		buffer_time = 0,
-		input_sequence = nil,
-	},
+		input_sequence = nil
+	}
 }
 
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
@@ -85,68 +76,55 @@ weapon_template.action_input_hierarchy = {
 		transition = {
 			{
 				input = "order_servo_skull",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "wield",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "cancel",
-				transition = "base",
-			},
-		},
+				transition = "base"
+			}
+		}
 	},
 	{
 		input = "aim_servo_skull_on_release",
 		transition = {
 			{
 				input = "order_servo_skull",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "wield",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "cancel",
-				transition = "base",
-			},
-		},
+				transition = "base"
+			}
+		}
 	},
 	{
 		input = "wield",
-		transition = "base",
+		transition = "base"
 	},
 	{
 		input = "cancel",
-		transition = "stay",
+		transition = "stay"
 	},
 	{
 		input = "unwield_to_previous",
-		transition = "stay",
-	},
-	{
-		input = "grenade_ability",
-		transition = "stay",
-	},
+		transition = "stay"
+	}
 }
 weapon_template.actions = {
-	action_unwield = {
-		allowed_during_sprint = true,
-		kind = "unwield",
-		start_input = "wield",
-		total_time = 0,
-		uninterruptible = true,
-		allowed_chain_actions = {},
-	},
 	action_unwield_to_previous = {
 		allowed_during_sprint = true,
 		kind = "unwield_to_previous",
 		total_time = 0,
 		uninterruptible = true,
-		unwield_to_weapon = true,
-		allowed_chain_actions = {},
+		allowed_chain_actions = {}
 	},
 	action_wield = {
 		allowed_during_sprint = true,
@@ -186,19 +164,19 @@ weapon_template.actions = {
 		end,
 		conditional_state_to_action_input = {
 			action_end = {
-				input_name = "aim_servo_skull",
-			},
+				input_name = "aim_servo_skull"
+			}
 		},
 		allowed_chain_actions = {
 			aim_servo_skull = {
 				action_name = "action_aim_servo_skull",
-				chain_time = 0.1,
+				chain_time = 0.1
 			},
 			aim_servo_skull_on_release = {
 				action_name = "action_aim_servo_skull",
-				chain_time = 0.1,
-			},
-		},
+				chain_time = 0.1
+			}
+		}
 	},
 	action_aim_servo_skull = {
 		abort_sprint = true,
@@ -210,20 +188,18 @@ weapon_template.actions = {
 		order_effects = {
 			is_2d = true,
 			looping_sound_alias = "ability_aiming",
-			sfx_source_name = "_charge",
+			sfx_source_name = "_charge"
 		},
 		allowed_chain_actions = {
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			order_servo_skull = {
 				action_name = "action_order_servo_skull",
-				chain_time = 0.1,
+				chain_time = 0.1
 			},
 			cancel = {
-				action_name = "action_cancel",
-			},
-		},
+				action_name = "action_cancel"
+			}
+		}
 	},
 	action_order_servo_skull = {
 		abort_sprint = true,
@@ -237,32 +213,32 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 0.4,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.6,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.8,
-				t = 0.3,
+				t = 0.3
 			},
 			{
 				modifier = 1,
-				t = 0.4,
+				t = 0.4
 			},
-			start_modifier = 0.3,
+			start_modifier = 0.3
 		},
 		conditional_state_to_action_input = {
 			action_end = {
-				input_name = "unwield_to_previous",
-			},
+				input_name = "unwield_to_previous"
+			}
 		},
 		allowed_chain_actions = {
 			unwield_to_previous = {
-				action_name = "action_unwield_to_previous",
-			},
-		},
+				action_name = "action_unwield_to_previous"
+			}
+		}
 	},
 	action_cancel = {
 		allowed_during_sprint = true,
@@ -276,41 +252,41 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 0.5,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.4,
-				t = 0.3,
+				t = 0.3
 			},
 			{
 				modifier = 1,
-				t = 0.5,
+				t = 0.5
 			},
-			start_modifier = 0.8,
+			start_modifier = 0.8
 		},
 		conditional_state_to_action_input = {
 			action_end = {
-				input_name = "unwield_to_previous",
-			},
+				input_name = "unwield_to_previous"
+			}
 		},
 		allowed_chain_actions = {
 			unwield_to_previous = {
-				action_name = "action_unwield_to_previous",
-			},
-		},
-	},
+				action_name = "action_unwield_to_previous"
+			}
+		}
+	}
 }
 
 table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
 
 weapon_template.keywords = {
-	"cryptic",
+	"cryptic"
 }
 weapon_template.conditional_state_to_action_input = {
 	{
 		conditional_state = "no_running_action",
-		input_name = "cancel",
-	},
+		input_name = "cancel"
+	}
 }
 weapon_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/psyker_smite"
 weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/cryptic_skull_order_point"
@@ -319,16 +295,16 @@ weapon_template.spread_template = "no_spread"
 weapon_template.ammo_template = "no_ammo"
 weapon_template.hud_configuration = {
 	uses_ammunition = true,
-	uses_overheat = false,
+	uses_overheat = false
 }
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.crosshair = {
-	crosshair_type = "dot",
+	crosshair_type = "dot"
 }
 weapon_template.hit_marker_type = "center"
 weapon_template.fx_sources = {
-	_muzzle = "fx_right",
+	_muzzle = "fx_right"
 }
 weapon_template.dodge_template = "default"
 weapon_template.sprint_template = "default"

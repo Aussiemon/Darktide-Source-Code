@@ -162,7 +162,7 @@ ImguiWidgetUtilities.filter_functions = {
 		end
 
 		table.clear(TEMP_FOUND_ENTRIES)
-	end,
+	end
 }
 
 ImguiWidgetUtilities.filter_array = function (source_table, result_table, filter_string, filter_function)

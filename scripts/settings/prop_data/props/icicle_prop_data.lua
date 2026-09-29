@@ -17,16 +17,16 @@ local prop_data = {
 		{
 			name = hit_zone_names.center_mass,
 			actors = {
-				"c_destructible",
-			},
-		},
+				"c_destructible"
+			}
+		}
 	},
 	hitzone_damage_multiplier = {
 		ranged = {
-			[hit_zone_names.center_mass] = 0.5,
-		},
+			[hit_zone_names.center_mass] = 0.5
+		}
 	},
-	tags = {},
+	tags = {}
 }
 
 return prop_data

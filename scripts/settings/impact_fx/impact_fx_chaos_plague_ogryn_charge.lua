@@ -17,15 +17,15 @@ local player = {
 		damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_player_impact",
-			},
+				event = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_player_impact"
+			}
 		},
 		damage_negated = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_player_impact",
-			},
-		},
+				event = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_player_impact"
+			}
+		}
 	},
 	vfx = {
 		blocked = nil,
@@ -37,7 +37,7 @@ local player = {
 		shield_blocked = nil,
 		shove = nil,
 		weakspot_damage = nil,
-		weakspot_died = nil,
+		weakspot_died = nil
 	},
 	blood_ball = {
 		blocked = nil,
@@ -49,8 +49,8 @@ local player = {
 		shield_blocked = nil,
 		shove = nil,
 		weakspot_damage = nil,
-		weakspot_died = nil,
-	},
+		weakspot_died = nil
+	}
 }
 
 return {
@@ -61,6 +61,6 @@ return {
 		[armor_types.player] = player,
 		[armor_types.resistant] = resistant,
 		[armor_types.super_armor] = super_armor,
-		[armor_types.unarmored] = unarmored,
-	},
+		[armor_types.unarmored] = unarmored
+	}
 }

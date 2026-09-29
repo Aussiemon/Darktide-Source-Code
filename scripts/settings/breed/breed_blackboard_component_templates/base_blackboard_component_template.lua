@@ -11,17 +11,17 @@ local base_template = {
 		spawner_spawn_index = "number",
 		spawner_unit = "Unit",
 		unit = "Unit",
-		world = "World",
+		world = "World"
 	},
 	group_data = {
 		group_target = "Unit",
-		owning_auto_event_id = "string",
+		owning_auto_event_id = "string"
 	},
 	weapon_malfunction = {
 		is_malfunctioning = "boolean",
 		malfunction_buff_id = "number",
 		malfunctioning_time = "number",
-		refresh_malfunctioning_time = "boolean",
+		refresh_malfunctioning_time = "boolean"
 	},
 	death = {
 		attack_direction = "Vector3Box",
@@ -31,7 +31,7 @@ local base_template = {
 		hit_during_death = "boolean",
 		hit_zone_name = "string",
 		is_dead = "boolean",
-		killing_damage_type = "string",
+		killing_damage_type = "string"
 	},
 	stagger = {
 		attacker_unit = "Unit",
@@ -47,7 +47,7 @@ local base_template = {
 		stagger_strength_multiplier = "number",
 		stagger_strength_pool = "number",
 		staggered_by_melee_push = "boolean",
-		type = "string",
+		type = "string"
 	},
 	perception = {
 		aggro_state = "string",
@@ -64,7 +64,7 @@ local base_template = {
 		target_distance_z = "number",
 		target_position = "Vector3Box",
 		target_speed_away = "number",
-		target_unit = "Unit",
+		target_unit = "Unit"
 	},
 	nav_smart_object = {
 		entrance_is_at_bot_progress_on_path = "boolean",
@@ -73,8 +73,8 @@ local base_template = {
 		exit_position = "Vector3Box",
 		id = "number",
 		type = "string",
-		unit = "Unit",
-	},
+		unit = "Unit"
+	}
 }
 
 return base_template

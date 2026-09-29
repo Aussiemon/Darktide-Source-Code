@@ -27,7 +27,7 @@ local expedition_view_settings = {
 	unlockable_anim_duration = 0.5,
 	loot_icon_size = {
 		30,
-		30,
+		30
 	},
 	popup_pages = {
 		{
@@ -38,33 +38,33 @@ local expedition_view_settings = {
 			text_3 = "loc_expeditions_onboarding_03_desc",
 			title_1 = "loc_expeditions_onboarding_01_title",
 			title_2 = "loc_expeditions_onboarding_02_title",
-			title_3 = "loc_expeditions_onboarding_03_title",
+			title_3 = "loc_expeditions_onboarding_03_title"
 		},
 		{
 			header = "loc_expeditions_onboarding_04_title",
 			image = "content/ui/materials/backgrounds/expedition/onboarding/expedition_menu_onboarding_05",
 			template = "single_text_bottom",
-			text = "loc_expeditions_onboarding_04_desc",
+			text = "loc_expeditions_onboarding_04_desc"
 		},
 		{
 			header = "loc_expeditions_onboarding_05_title",
 			image = "content/ui/materials/backgrounds/expedition/onboarding/expedition_menu_onboarding_06",
 			template = "single_text_bottom",
-			text = "loc_expeditions_onboarding_05_desc",
+			text = "loc_expeditions_onboarding_05_desc"
 		},
 		{
 			header = "loc_expeditions_onboarding_06_title",
 			image = "content/ui/materials/backgrounds/expedition/onboarding/expedition_menu_onboarding_07",
 			template = "single_text_bottom",
-			text = "loc_expeditions_onboarding_06_desc",
+			text = "loc_expeditions_onboarding_06_desc"
 		},
 		{
 			header = "loc_expeditions_onboarding_07_title",
 			image = "content/ui/materials/backgrounds/expedition/onboarding/expedition_menu_onboarding_08",
 			template = "single_text_bottom",
-			text = "loc_expeditions_onboarding_07_desc",
-		},
-	},
+			text = "loc_expeditions_onboarding_07_desc"
+		}
+	}
 }
 
 expedition_view_settings.colors = {
@@ -72,44 +72,44 @@ expedition_view_settings.colors = {
 		255,
 		167,
 		190,
-		151,
+		151
 	},
 	text_dark = {
 		255,
 		101,
 		145,
-		102,
+		102
 	},
 	terminal = {
 		255,
 		167,
 		190,
-		151,
+		151
 	},
 	terminal_frame = {
 		255,
 		101,
 		145,
-		102,
+		102
 	},
 	tab_unselected = {
 		255,
 		0,
 		0,
-		0,
+		0
 	},
 	tab_selected = {
 		255,
 		50,
 		72,
-		51,
-	},
+		51
+	}
 }
 expedition_view_settings.dimensions = {
 	sidebar_size = {
 		483,
-		960,
-	},
+		960
+	}
 }
 
 return settings("ExpeditionViewSettings", expedition_view_settings)

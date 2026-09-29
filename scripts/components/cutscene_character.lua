@@ -158,7 +158,7 @@ end
 
 local DEFAULT_HEIGHTS = {
 	human_sized = 1.85,
-	ogryn_sized = 2.8,
+	ogryn_sized = 2.8
 }
 local EXTRA_SIZE_SCALE = 1.3
 
@@ -227,7 +227,7 @@ CutsceneCharacter.start_materialize = function (self)
 		wielded_set = false,
 		wielded_vis = true,
 		from = _materialize_min_value(unit),
-		to = _materialize_max_value(unit, self._body_size),
+		to = _materialize_max_value(unit, self._body_size)
 	}
 	self._should_update = true
 
@@ -260,7 +260,7 @@ CutsceneCharacter.start_dematerialize = function (self)
 		wielded_vis = false,
 		from = _materialize_max_value(unit, self._body_size),
 		to = _materialize_min_value(unit),
-		eyes_per = eyes_percentage,
+		eyes_per = eyes_percentage
 	}
 	self._should_update = true
 
@@ -298,12 +298,13 @@ CutsceneCharacter.component_data = {
 			"Path of Trust 08",
 			"Path of Trust 09",
 			"Traitor Captain Intro",
+			"Spillway Wizard Intro",
 			"Hub Location Intro Barber",
 			"Hub Location Intro Mission Board",
 			"Hub Location Intro Training Grounds",
 			"Hub Location Intro Contracts",
 			"Hub Location Intro Crafting",
-			"Hub Location Intro Gun Shop",
+			"Hub Location Intro Gun Shop"
 		},
 		options_values = {
 			"none",
@@ -331,13 +332,14 @@ CutsceneCharacter.component_data = {
 			"path_of_trust_08",
 			"path_of_trust_09",
 			"traitor_captain_intro",
+			"spillway_wizard_intro",
 			"hub_location_intro_barber",
 			"hub_location_intro_mission_board",
 			"hub_location_intro_training_grounds",
 			"hub_location_intro_contracts",
 			"hub_location_intro_crafting",
-			"hub_location_intro_gun_shop",
-		},
+			"hub_location_intro_gun_shop"
+		}
 	},
 	character_type = {
 		ui_name = "Character Type",
@@ -346,13 +348,13 @@ CutsceneCharacter.component_data = {
 		options_keys = {
 			"None",
 			"Player",
-			"NPC",
+			"NPC"
 		},
 		options_values = {
 			"none",
 			"player",
-			"npc",
-		},
+			"npc"
+		}
 	},
 	body_size = {
 		ui_name = "Body Size",
@@ -361,13 +363,13 @@ CutsceneCharacter.component_data = {
 		options_keys = {
 			"None",
 			"Human Sized",
-			"Ogryn Sized",
+			"Ogryn Sized"
 		},
 		options_values = {
 			"none",
 			"human_sized",
-			"ogryn_sized",
-		},
+			"ogryn_sized"
+		}
 	},
 	companion_inclusion_setting = {
 		ui_name = "Companion Inclusion",
@@ -376,20 +378,20 @@ CutsceneCharacter.component_data = {
 		options_keys = {
 			"Any",
 			"With Companion Only",
-			"Without Companion Only",
+			"Without Companion Only"
 		},
 		options_values = {
 			"any",
 			"with_companion",
-			"without_companion",
-		},
+			"without_companion"
+		}
 	},
 	prop_items = {
 		category = "Attachments",
 		ui_name = "Prop Items",
 		ui_type = "text_box_array",
 		validator = "contentpathsallowed",
-		values = {},
+		values = {}
 	},
 	cinematic_slot = {
 		ui_name = "Slot",
@@ -400,15 +402,15 @@ CutsceneCharacter.component_data = {
 			"1",
 			"2",
 			"3",
-			"4",
+			"4"
 		},
 		options_values = {
 			"none",
 			1,
 			2,
 			3,
-			4,
-		},
+			4
+		}
 	},
 	animation_event = {
 		ui_name = "Animation Inventory Event",
@@ -418,20 +420,20 @@ CutsceneCharacter.component_data = {
 			"None",
 			"ready_idle",
 			"unready_idle",
-			"to_ready",
+			"to_ready"
 		},
 		options_values = {
 			"none",
 			"cin_ready",
 			"unready_idle",
-			"ready",
-		},
+			"ready"
+		}
 	},
 	equip_slot_on_loadout_assign = {
 		category = "Attachments",
 		ui_name = "Equip Slot on Loadout Assignment",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	materialize = {
 		category = "Materialize",
@@ -441,35 +443,35 @@ CutsceneCharacter.component_data = {
 		options_keys = {
 			"Disabled",
 			"Enabled (Start Visible)",
-			"Enabled (Start Hidden)",
+			"Enabled (Start Hidden)"
 		},
 		options_values = {
 			"disabled",
 			"enabled_visible",
-			"enabled_hidden",
-		},
+			"enabled_hidden"
+		}
 	},
 	inputs = {
 		start_weapon_specific_walk_animation = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		start_inventory_specific_walk_animation = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		start_materialize = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		start_dematerialize = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"CutsceneCharacterExtension",
-	},
+		"CutsceneCharacterExtension"
+	}
 }
 
 return CutsceneCharacter

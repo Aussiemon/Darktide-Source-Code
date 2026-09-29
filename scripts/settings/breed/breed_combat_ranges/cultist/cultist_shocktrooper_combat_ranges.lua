@@ -15,8 +15,8 @@ local combat_ranges = {
 				switch_combat_range = "melee",
 				target_weapon_type_distance = {
 					melee = 6,
-					ranged = 4,
-				},
+					ranged = 4
+				}
 			},
 			{
 				distance = 22,
@@ -24,8 +24,8 @@ local combat_ranges = {
 				enter_combat_range_flag = true,
 				require_line_of_sight = true,
 				sticky_time = 0,
-				switch_combat_range = "close",
-			},
+				switch_combat_range = "close"
+			}
 		},
 		close = {
 			{
@@ -38,22 +38,22 @@ local combat_ranges = {
 				switch_combat_range = "melee",
 				target_weapon_type_distance = {
 					melee = 6,
-					ranged = 4,
-				},
+					ranged = 4
+				}
 			},
 			{
 				distance = 28,
 				distance_operator = "greater",
 				sticky_time = 0,
-				switch_combat_range = "far",
-			},
+				switch_combat_range = "far"
+			}
 		},
 		melee = {
 			{
 				distance = 28,
 				distance_operator = "greater",
 				sticky_time = 0,
-				switch_combat_range = "far",
+				switch_combat_range = "far"
 			},
 			{
 				distance = 7,
@@ -64,11 +64,11 @@ local combat_ranges = {
 				z_distance = 1.9,
 				target_weapon_type_distance = {
 					melee = 6,
-					ranged = 1,
-				},
-			},
-		},
-	},
+					ranged = 1
+				}
+			}
+		}
+	}
 }
 
 return combat_ranges

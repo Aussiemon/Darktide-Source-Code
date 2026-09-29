@@ -9,7 +9,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local default_button_content = {
 	on_released_sound = nil,
 	on_hover_sound = UISoundEvents.default_mouse_hover,
-	on_pressed_sound = UISoundEvents.default_click,
+	on_pressed_sound = UISoundEvents.default_click
 }
 local title_height = 0
 local edge_padding = 100
@@ -18,16 +18,16 @@ local grid_height = 900
 local bottom_chin = 100
 local grid_size = {
 	grid_width - edge_padding,
-	grid_height,
+	grid_height
 }
 local grid_spacing = {
 	10,
-	10,
+	10
 }
 local mask_width = grid_width + 44
 local mask_size = {
 	mask_width,
-	grid_height,
+	grid_height
 }
 local service_type = "View"
 local gamepad_action_navigate_primary_left = "navigate_primary_left_pressed"
@@ -50,13 +50,13 @@ local menu_settings = {
 	edge_padding = edge_padding,
 	scrollbar_position = {
 		0,
-		0,
+		0
 	},
-	bottom_chin = bottom_chin,
+	bottom_chin = bottom_chin
 }
 local background_size = {
 	grid_size[1] + edge_padding,
-	grid_size[2],
+	grid_size[2]
 }
 local use_horizontal_scrollbar = menu_settings.use_horizontal_scrollbar
 local scrollbar_width = menu_settings.scrollbar_width
@@ -64,12 +64,12 @@ local scrollbar_vertical_margin = menu_settings.scrollbar_vertical_margin or 0
 local scrollbar_height = use_horizontal_scrollbar and scrollbar_width or background_size[2] - scrollbar_vertical_margin - 20
 local scrollbar_size = {
 	scrollbar_width,
-	scrollbar_height,
+	scrollbar_height
 }
 local scrollbar_position = {
 	menu_settings.scrollbar_position and menu_settings.scrollbar_position[1] or 0,
 	menu_settings.scrollbar_position and menu_settings.scrollbar_position[2] or 0,
-	13,
+	13
 }
 local scenegraph_definition = {
 	trait_info_box = {
@@ -78,13 +78,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			grid_width,
-			bottom_chin,
+			bottom_chin
 		},
 		position = {
 			0,
 			0,
-			20,
-		},
+			20
+		}
 	},
 	trait_info_box_contents = {
 		horizontal_alignment = "center",
@@ -92,13 +92,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			grid_width,
-			bottom_chin,
+			bottom_chin
 		},
 		position = {
 			0,
 			-30,
-			1,
-		},
+			1
+		}
 	},
 	grid_divider_middle = {
 		horizontal_alignment = "center",
@@ -106,13 +106,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			430,
-			44,
+			44
 		},
 		position = {
 			0,
 			-22,
-			1,
-		},
+			1
+		}
 	},
 	grid_mask = {
 		horizontal_alignment = "center",
@@ -122,15 +122,15 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			10,
-		},
+			10
+		}
 	},
 	grid_scrollbar = {
 		parent = "grid_background",
 		size = scrollbar_size,
 		position = scrollbar_position,
 		horizontal_alignment = menu_settings.scrollbar_horizontal_alignment or "right",
-		vertical_alignment = menu_settings.scrollbar_vertical_alignment or "top",
+		vertical_alignment = menu_settings.scrollbar_vertical_alignment or "top"
 	},
 	tab_pivot = {
 		horizontal_alignment = "center",
@@ -138,24 +138,24 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			grid_width,
-			50,
+			50
 		},
 		position = {
 			0,
 			130,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local weapon_traits_style = table.clone(UIFontSettings.header_3)
 
 weapon_traits_style.offset = {
 	98,
 	0,
-	3,
+	3
 }
 weapon_traits_style.size = {
-	324,
+	324
 }
 weapon_traits_style.font_size = 18
 weapon_traits_style.text_horizontal_alignment = "left"
@@ -167,11 +167,11 @@ local weapon_traits_description_style = table.clone(UIFontSettings.body)
 weapon_traits_description_style.offset = {
 	98,
 	20,
-	3,
+	3
 }
 weapon_traits_description_style.size = {
 	324,
-	500,
+	500
 }
 weapon_traits_description_style.font_size = 18
 weapon_traits_description_style.text_horizontal_alignment = "left"
@@ -184,7 +184,7 @@ header_style.font_size = 24
 header_style.offset = {
 	0,
 	5,
-	3,
+	3
 }
 header_style.text_horizontal_alignment = "center"
 header_style.text_vertical_alignment = "top"
@@ -196,7 +196,7 @@ left_trigger_style.font_size = 30
 left_trigger_style.offset = {
 	20,
 	82,
-	3,
+	3
 }
 left_trigger_style.text_horizontal_alignment = "left"
 left_trigger_style.text_vertical_alignment = "top"
@@ -204,7 +204,7 @@ left_trigger_style.text_color = {
 	255,
 	226,
 	199,
-	126,
+	126
 }
 
 local right_trigger_style = table.clone(UIFontSettings.header_3)
@@ -213,7 +213,7 @@ right_trigger_style.font_size = 30
 right_trigger_style.offset = {
 	-20,
 	82,
-	3,
+	3
 }
 right_trigger_style.text_horizontal_alignment = "right"
 right_trigger_style.text_vertical_alignment = "top"
@@ -221,7 +221,7 @@ right_trigger_style.text_color = {
 	255,
 	226,
 	199,
-	126,
+	126
 }
 
 local widget_definitions = {
@@ -235,10 +235,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					40,
-					0,
-				},
-			}),
-		},
+					0
+				}
+			})
+		}
 	}, "grid_divider_top"),
 	grid_divider_top = UIWidget.create_definition({
 		{
@@ -252,10 +252,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "grid_divider_top"),
 	grid_divider_bottom = UIWidget.create_definition({
 		{
@@ -265,9 +265,9 @@ local widget_definitions = {
 			value_id = "texture",
 			style = {
 				horizontal_alignment = "center",
-				vertical_alignment = "center",
-			},
-		},
+				vertical_alignment = "center"
+			}
+		}
 	}, "grid_divider_bottom"),
 	overlay = UIWidget.create_definition({
 		{
@@ -279,20 +279,20 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				size_addition = {
 					-4,
-					0,
+					0
 				},
 				color = {
 					0,
 					0,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "screen"),
 	trait_info_box_contents = UIWidget.create_definition({
 		{
@@ -304,30 +304,30 @@ local widget_definitions = {
 				material_values = {},
 				size = {
 					64,
-					64,
+					64
 				},
 				offset = {
 					20,
 					0,
-					10,
+					10
 				},
-				color = Color.terminal_icon(255, true),
-			},
+				color = Color.terminal_icon(255, true)
+			}
 		},
 		{
 			pass_type = "text",
 			style_id = "display_name",
 			value = "",
 			value_id = "display_name",
-			style = weapon_traits_style,
+			style = weapon_traits_style
 		},
 		{
 			pass_type = "text",
 			style_id = "description",
 			value = "",
 			value_id = "description",
-			style = weapon_traits_description_style,
-		},
+			style = weapon_traits_description_style
+		}
 	}, "trait_info_box_contents"),
 	left_trigger = UIWidget.create_definition({
 		{
@@ -338,8 +338,8 @@ local widget_definitions = {
 			style = left_trigger_style,
 			visibility_function = function ()
 				return InputDevice.gamepad_active
-			end,
-		},
+			end
+		}
 	}, "grid_divider_top"),
 	right_trigger = UIWidget.create_definition({
 		{
@@ -350,9 +350,9 @@ local widget_definitions = {
 			style = right_trigger_style,
 			visibility_function = function ()
 				return InputDevice.gamepad_active
-			end,
-		},
-	}, "grid_divider_top"),
+			end
+		}
+	}, "grid_divider_top")
 }
 local EMPTY_TABLE = {}
 
@@ -362,7 +362,7 @@ local function create_tab_widgets(tab_settings)
 	local num_blessings = tab_settings.num_blessings or EMPTY_TABLE
 	local tab_size = tab_settings.size or {
 		60,
-		40,
+		40
 	}
 	local spacing = tab_settings.spacing or 20
 	local offset_x = ((tab_settings.num_tabs - 1) * tab_size[1] + (tab_settings.num_tabs - 1) * spacing) * 0.5 * -1
@@ -381,15 +381,15 @@ local function create_tab_widgets(tab_settings)
 					offset = {
 						offset_x,
 						-50,
-						0,
+						0
 					},
-					size = tab_size,
+					size = tab_size
 				},
 				change_function = function (content, style, animations, dt)
 					local lerp_direction = content.is_hover and 1 or -1
 
 					content.parent.progress = math.clamp((content.parent.progress or 0) + dt * lerp_direction * 4, 0, 1)
-				end,
+				end
 			},
 			{
 				pass_type = "rect",
@@ -402,10 +402,10 @@ local function create_tab_widgets(tab_settings)
 					offset = {
 						offset_x,
 						-50,
-						1,
+						1
 					},
-					color = Color.terminal_frame(50, true),
-				},
+					color = Color.terminal_frame(50, true)
+				}
 			},
 			{
 				pass_type = "texture",
@@ -419,10 +419,10 @@ local function create_tab_widgets(tab_settings)
 					offset = {
 						offset_x,
 						-50,
-						1,
+						1
 					},
-					color = Color.terminal_frame(192, true),
-				},
+					color = Color.terminal_frame(192, true)
+				}
 			},
 			{
 				pass_type = "text",
@@ -434,9 +434,9 @@ local function create_tab_widgets(tab_settings)
 					offset = {
 						offset_x,
 						-45,
-						5,
-					},
-				}),
+						5
+					}
+				})
 			},
 			{
 				pass_type = "text",
@@ -448,9 +448,9 @@ local function create_tab_widgets(tab_settings)
 					offset = {
 						offset_x,
 						-30,
-						5,
-					},
-				}),
+						5
+					}
+				})
 			},
 			{
 				pass_type = "texture",
@@ -463,21 +463,21 @@ local function create_tab_widgets(tab_settings)
 					offset = {
 						offset_x,
 						-50,
-						0,
+						0
 					},
 					size = tab_size,
 					color = Color.ui_terminal(0, true),
 					size_addition = {
 						0,
-						0,
-					},
+						0
+					}
 				},
 				change_function = function (content, style)
 					local progress = content.selected and 1 or content.progress
 					local t = math.easeOutCubic(progress)
 
 					style.color[1] = t * 128
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -490,12 +490,12 @@ local function create_tab_widgets(tab_settings)
 					offset = {
 						offset_x,
 						-50,
-						1,
+						1
 					},
 					size = tab_size,
 					color = Color.terminal_grid_background(128, true),
 					base_color = Color.terminal_grid_background(128, true),
-					selected_color = Color.ui_terminal(128, true),
+					selected_color = Color.ui_terminal(128, true)
 				},
 				change_function = function (content, style)
 					local progress = content.selected and 1 or content.progress
@@ -504,7 +504,7 @@ local function create_tab_widgets(tab_settings)
 					style.color[2] = math.lerp(style.base_color[2], style.selected_color[2], t)
 					style.color[3] = math.lerp(style.base_color[3], style.selected_color[3], t)
 					style.color[4] = math.lerp(style.base_color[4], style.selected_color[4], t)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -517,12 +517,12 @@ local function create_tab_widgets(tab_settings)
 					offset = {
 						offset_x,
 						-50,
-						2,
+						2
 					},
 					size = tab_size,
 					color = Color.terminal_grid_background(255, true),
 					base_color = Color.terminal_grid_background(255, true),
-					selected_color = Color.ui_terminal(255, true),
+					selected_color = Color.ui_terminal(255, true)
 				},
 				change_function = function (content, style)
 					local progress = content.selected and 1 or content.progress
@@ -531,7 +531,7 @@ local function create_tab_widgets(tab_settings)
 					style.color[2] = math.lerp(style.base_color[2], style.selected_color[2], t)
 					style.color[3] = math.lerp(style.base_color[3], style.selected_color[3], t)
 					style.color[4] = math.lerp(style.base_color[4], style.selected_color[4], t)
-				end,
+				end
 			},
 			{
 				pass_type = "triangle",
@@ -542,28 +542,28 @@ local function create_tab_widgets(tab_settings)
 					offset = {
 						background_size[1] * 0.5 + offset_x,
 						-5,
-						100,
+						100
 					},
 					color = Color.ui_terminal(255, true),
 					triangle_corners = {
 						{
 							-20,
-							0,
+							0
 						},
 						{
 							20,
-							0,
+							0
 						},
 						{
 							0,
-							15,
-						},
-					},
+							15
+						}
+					}
 				},
 				visibility_function = function (content, style)
 					return content.selected
-				end,
-			},
+				end
+			}
 		}, "tab_pivot")
 
 		offset_x = offset_x + tab_size[1] + spacing
@@ -577,5 +577,5 @@ return {
 	menu_settings = menu_settings,
 	scenegraph_definition = scenegraph_definition,
 	widget_definitions = widget_definitions,
-	create_tab_widgets = create_tab_widgets,
+	create_tab_widgets = create_tab_widgets
 }

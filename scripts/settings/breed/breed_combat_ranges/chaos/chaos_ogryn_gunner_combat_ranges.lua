@@ -10,18 +10,18 @@ local combat_ranges = {
 				distance_operator = "lesser",
 				require_line_of_sight = true,
 				sticky_time = 1,
-				switch_combat_range = "melee",
-			},
+				switch_combat_range = "melee"
+			}
 		},
 		melee = {
 			{
 				distance = 7,
 				distance_operator = "greater",
 				sticky_time = 0,
-				switch_combat_range = "far",
-			},
-		},
-	},
+				switch_combat_range = "far"
+			}
+		}
+	}
 }
 
 return combat_ranges

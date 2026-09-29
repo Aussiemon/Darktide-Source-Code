@@ -27,7 +27,7 @@ PlayerSpawnerSystem.init = function (self, extension_init_context, system_init_d
 	self._in_safe_volume = true
 	self._backup_progression_cooldown = 40
 	self._backup_progression_spawn_point = {
-		found = false,
+		found = false
 	}
 end
 
@@ -87,23 +87,15 @@ local function _sort_spawn_priority_func(a, b)
 end
 
 PlayerSpawnerSystem.add_spawn_point = function (self, unit, side, spawn_identifier, spawn_priority, parent_spawned)
-	local position, rotation
-
-	if Unit.has_node(unit, "spawn_location") then
-		local node = Unit.node(unit, "spawn_location")
-
-		position, rotation = Unit.world_position(unit, node), Unit.world_rotation(unit, node)
-	else
-		position, rotation = POSITION_LOOKUP[unit], Unit.local_rotation(unit, 1)
-	end
-
+	local node = Unit.has_node(unit, "spawn_location") and Unit.node(unit, "spawn_location") or 1
+	local position, rotation = Unit.world_position(unit, node), Unit.world_rotation(unit, node)
 	local spawn_point_data = {
 		unit = unit,
 		position = Vector3Box(position),
 		rotation = QuaternionBox(rotation),
 		parent = parent_spawned and unit or nil,
 		spawn_priority = spawn_priority,
-		side = side,
+		side = side
 	}
 	local spawn_points = self._spawn_points_by_identifier[spawn_identifier]
 
@@ -114,7 +106,7 @@ PlayerSpawnerSystem.add_spawn_point = function (self, unit, side, spawn_identifi
 	else
 		self._next_spawn_point_index_by_identifier[spawn_identifier] = 1
 		self._spawn_points_by_identifier[spawn_identifier] = {
-			spawn_point_data,
+			spawn_point_data
 		}
 	end
 end
@@ -365,7 +357,7 @@ PlayerSpawnerSystem._add_progression_player = function (self, player, bot)
 					unit = player_unit,
 					distance = travel_distance,
 					disabled = PlayerUnitStatus.requires_help(character_state_component),
-					bot = bot,
+					bot = bot
 				})
 			end
 		end

@@ -22,6 +22,10 @@ HordeManager.init = function (self, nav_world, physics_world)
 	self._physics_world = physics_world
 end
 
+HordeManager.destroy = function (self)
+	return
+end
+
 HordeManager.horde = function (self, horde_type, horde_template_name, side_id, target_side_id, composition, ...)
 	local side_system = Managers.state.extension:system("side_system")
 	local side, target_side = side_system:get_side(side_id), side_system:get_side(target_side_id)

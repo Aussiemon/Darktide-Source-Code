@@ -15,7 +15,7 @@ look_delta_templates.default = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.9
-		end,
+		end
 	},
 	idle = {
 		deadzone_x = 0.025,
@@ -29,7 +29,7 @@ look_delta_templates.default = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.05
-		end,
+		end
 	},
 	inspect = {
 		deadzone_x = 0,
@@ -43,8 +43,8 @@ look_delta_templates.default = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.1
-		end,
-	},
+		end
+	}
 }
 look_delta_templates.lasgun_rifle = {
 	shooting = {
@@ -61,7 +61,7 @@ look_delta_templates.lasgun_rifle = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.75
-		end,
+		end
 	},
 	idle = {
 		deadzone_x = 0.025,
@@ -75,7 +75,7 @@ look_delta_templates.lasgun_rifle = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.05
-		end,
+		end
 	},
 	inspect = {
 		deadzone_x = 0,
@@ -89,8 +89,8 @@ look_delta_templates.lasgun_rifle = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.1
-		end,
-	},
+		end
+	}
 }
 look_delta_templates.lasgun_p3_rifle = {
 	shooting = {
@@ -107,7 +107,7 @@ look_delta_templates.lasgun_p3_rifle = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.75
-		end,
+		end
 	},
 	idle = {
 		deadzone_x = 0.025,
@@ -121,7 +121,7 @@ look_delta_templates.lasgun_p3_rifle = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.05
-		end,
+		end
 	},
 	inspect = {
 		deadzone_x = 0,
@@ -135,8 +135,8 @@ look_delta_templates.lasgun_p3_rifle = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.1
-		end,
-	},
+		end
+	}
 }
 look_delta_templates.laspistol = {
 	shooting = {
@@ -153,7 +153,7 @@ look_delta_templates.laspistol = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.2
-		end,
+		end
 	},
 	idle = {
 		deadzone_x = 0.025,
@@ -167,7 +167,7 @@ look_delta_templates.laspistol = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.1 * (0.25 + 0.75 * (1 - math.min(math.abs(look_delta_y * look_delta_y), 1)))
-		end,
+		end
 	},
 	inspect = {
 		deadzone_x = 0,
@@ -181,8 +181,8 @@ look_delta_templates.laspistol = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.1
-		end,
-	},
+		end
+	}
 }
 look_delta_templates.bolter = {
 	shooting = {
@@ -199,7 +199,7 @@ look_delta_templates.bolter = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.85
-		end,
+		end
 	},
 	idle = {
 		deadzone_x = 0.025,
@@ -213,7 +213,7 @@ look_delta_templates.bolter = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.05
-		end,
+		end
 	},
 	inspect = {
 		deadzone_x = 0,
@@ -227,8 +227,8 @@ look_delta_templates.bolter = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.1
-		end,
-	},
+		end
+	}
 }
 look_delta_templates.autogun = {
 	shooting = {
@@ -243,7 +243,7 @@ look_delta_templates.autogun = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.65
-		end,
+		end
 	},
 	idle = {
 		deadzone_x = 0.025,
@@ -257,7 +257,7 @@ look_delta_templates.autogun = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.05
-		end,
+		end
 	},
 	inspect = {
 		deadzone_x = 0,
@@ -271,8 +271,8 @@ look_delta_templates.autogun = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.1
-		end,
-	},
+		end
+	}
 }
 look_delta_templates.autopistol = {
 	shooting = {
@@ -287,7 +287,7 @@ look_delta_templates.autopistol = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.9
-		end,
+		end
 	},
 	idle = {
 		deadzone_x = 0.025,
@@ -301,7 +301,7 @@ look_delta_templates.autopistol = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.05
-		end,
+		end
 	},
 	inspect = {
 		deadzone_x = 0,
@@ -315,8 +315,8 @@ look_delta_templates.autopistol = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.1
-		end,
-	},
+		end
+	}
 }
 look_delta_templates.stub_pistol = {
 	shooting = {
@@ -331,7 +331,7 @@ look_delta_templates.stub_pistol = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.9
-		end,
+		end
 	},
 	idle = {
 		deadzone_x = 0.025,
@@ -345,7 +345,7 @@ look_delta_templates.stub_pistol = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.05
-		end,
+		end
 	},
 	inspect = {
 		deadzone_x = 0,
@@ -359,8 +359,8 @@ look_delta_templates.stub_pistol = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.1
-		end,
-	},
+		end
+	}
 }
 look_delta_templates.stub_pistol_aiming = {
 	shooting = {
@@ -375,7 +375,7 @@ look_delta_templates.stub_pistol_aiming = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.5
-		end,
+		end
 	},
 	idle = {
 		deadzone_x = 0.05,
@@ -389,7 +389,7 @@ look_delta_templates.stub_pistol_aiming = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.05
-		end,
+		end
 	},
 	inspect = {
 		deadzone_x = 0,
@@ -403,8 +403,8 @@ look_delta_templates.stub_pistol_aiming = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.1
-		end,
-	},
+		end
+	}
 }
 look_delta_templates.default_aiming = {
 	shooting = {
@@ -419,7 +419,7 @@ look_delta_templates.default_aiming = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.5
-		end,
+		end
 	},
 	idle = {
 		deadzone_x = 0.05,
@@ -433,7 +433,7 @@ look_delta_templates.default_aiming = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.05
-		end,
+		end
 	},
 	inspect = {
 		deadzone_x = 0,
@@ -447,8 +447,8 @@ look_delta_templates.default_aiming = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.1
-		end,
-	},
+		end
+	}
 }
 look_delta_templates.laspistol_holo_aiming = {
 	shooting = {
@@ -465,7 +465,7 @@ look_delta_templates.laspistol_holo_aiming = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.5
-		end,
+		end
 	},
 	idle = {
 		deadzone_x = 0.2,
@@ -481,7 +481,7 @@ look_delta_templates.laspistol_holo_aiming = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.5
-		end,
+		end
 	},
 	inspect = {
 		deadzone_x = 0,
@@ -495,8 +495,8 @@ look_delta_templates.laspistol_holo_aiming = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.1
-		end,
-	},
+		end
+	}
 }
 look_delta_templates.lasgun_holo_aiming = {
 	shooting = {
@@ -513,7 +513,7 @@ look_delta_templates.lasgun_holo_aiming = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.5
-		end,
+		end
 	},
 	idle = {
 		deadzone_x = 0.05,
@@ -529,7 +529,7 @@ look_delta_templates.lasgun_holo_aiming = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.05
-		end,
+		end
 	},
 	inspect = {
 		deadzone_x = 0,
@@ -543,8 +543,8 @@ look_delta_templates.lasgun_holo_aiming = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.1
-		end,
-	},
+		end
+	}
 }
 look_delta_templates.lasgun_brace_light = {
 	shooting = {
@@ -559,7 +559,7 @@ look_delta_templates.lasgun_brace_light = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.5
-		end,
+		end
 	},
 	idle = {
 		deadzone_x = 0.05,
@@ -573,7 +573,7 @@ look_delta_templates.lasgun_brace_light = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.05
-		end,
+		end
 	},
 	inspect = {
 		deadzone_x = 0,
@@ -587,8 +587,8 @@ look_delta_templates.lasgun_brace_light = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.1
-		end,
-	},
+		end
+	}
 }
 look_delta_templates.default_lasgun_spraynpray = table.clone(look_delta_templates.lasgun_brace_light)
 look_delta_templates.auspex_scanner = {
@@ -604,7 +604,7 @@ look_delta_templates.auspex_scanner = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.9
-		end,
+		end
 	},
 	idle = {
 		deadzone_x = 0.025,
@@ -618,7 +618,7 @@ look_delta_templates.auspex_scanner = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.05
-		end,
+		end
 	},
 	inspect = {
 		deadzone_x = 0,
@@ -633,8 +633,8 @@ look_delta_templates.auspex_scanner = {
 		end,
 		lerp_constant_y_func = function (look_delta_y)
 			return 0.1
-		end,
-	},
+		end
+	}
 }
 
 for name, template in pairs(look_delta_templates) do

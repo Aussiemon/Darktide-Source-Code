@@ -14,7 +14,7 @@ local PlayerVoiceGrunts = require("scripts/utilities/player_voice_grunts")
 local SFX_SOURCE = "head"
 local STINGER_ALIAS = "disabled_enter"
 local STINGER_PROPERTIES = {
-	stinger_type = "mutant_charge",
+	stinger_type = "mutant_charge"
 }
 local VCE = "scream_long_vce"
 local PlayerCharacterStateGrabbed = class("PlayerCharacterStateGrabbed", "PlayerCharacterStateBase")
@@ -39,7 +39,7 @@ local DISABLED_UNIT_LINK_NODE = "j_hips"
 local START_EAT_TIMING = {
 	cryptic = 1.5666666666666667,
 	human = 1.2,
-	ogryn = 1.5666666666666667,
+	ogryn = 1.5666666666666667
 }
 
 PlayerCharacterStateGrabbed.on_enter = function (self, unit, dt, t, previous_state, params)
@@ -136,9 +136,9 @@ PlayerCharacterStateGrabbed.on_exit = function (self, unit, t, next_state)
 	end
 
 	local first_person_mode_component = self._first_person_mode_component
-	local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player)
+	local rewind_seconds = LagCompensation.rewind_seconds(self._is_server, self._is_local_unit, self._player)
 
-	FirstPersonView.enter(t, first_person_mode_component, rewind_ms)
+	FirstPersonView.enter(t, first_person_mode_component, rewind_seconds)
 
 	if next_state ~= "dead" and next_state ~= "catapulted" then
 		local inventory_component = self._inventory_component

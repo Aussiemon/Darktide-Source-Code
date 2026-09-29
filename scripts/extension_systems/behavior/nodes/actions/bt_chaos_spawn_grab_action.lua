@@ -262,14 +262,14 @@ BtChaosSpawnGrabAction._update_grabbing = function (self, unit, scratchpad, acti
 			local grab_target_node = Unit.node(target_unit, grab_target_node_name)
 			local grab_target_position = Unit.world_position(target_unit, grab_target_node)
 			local distance = Vector3.distance(grab_position, grab_target_position)
-			local is_dodging = scratchpad.successful_dodge or Dodge.is_dodging(target_unit, attack_types.melee)
+			local is_dodging = scratchpad.successful_dodge or Dodge.is_dodging(target_unit, attack_types.incapacitating_grab)
 			local check_radius = is_dodging and action_data.dodge_grab_check_radius or action_data.grab_check_radius
 
 			if check_radius < distance then
 				if is_dodging and not scratchpad.successful_dodge then
 					local breed = ScriptUnit.extension(unit, "unit_data_system"):breed()
 
-					Dodge.sucessful_dodge(target_unit, unit, attack_types.melee, nil, breed)
+					Dodge.sucessful_dodge(target_unit, unit, attack_types.incapacitating_grab, nil, breed)
 
 					scratchpad.successful_dodge = true
 				end
@@ -499,7 +499,7 @@ end
 
 local HUMANOID_BREEDS = {
 	cryptic = true,
-	human = true,
+	human = true
 }
 
 BtChaosSpawnGrabAction._start_throwing_target = function (self, unit, scratchpad, action_data, t)
@@ -706,17 +706,17 @@ local MAX_STEPS, MAX_TIME = 20, 1.25
 local THROW_TELEPORT_UP_OFFSET = {
 	cryptic = 2.7,
 	human = 2.7,
-	ogryn = 2.15,
+	ogryn = 2.15
 }
 local THROW_LEFT_OFFSET = {
 	cryptic = 1.65,
 	human = 1.65,
-	ogryn = 2,
+	ogryn = 2
 }
 local THROW_FWD_OFFSET = {
 	cryptic = 2,
 	human = 2,
-	ogryn = 2,
+	ogryn = 2
 }
 
 BtChaosSpawnGrabAction._test_throw_trajectory = function (self, unit, scratchpad, action_data, test_direction, to)

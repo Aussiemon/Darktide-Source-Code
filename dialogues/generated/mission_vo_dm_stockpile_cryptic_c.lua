@@ -9,24 +9,24 @@ local mission_vo_dm_stockpile_cryptic_c = {
 			"loc_cryptic_c__guidance_starting_area_02",
 			"loc_cryptic_c__guidance_starting_area_03",
 			"loc_cryptic_c__guidance_starting_area_04",
-			"loc_cryptic_c__guidance_starting_area_05",
+			"loc_cryptic_c__guidance_starting_area_05"
 		},
 		sound_events_duration = {
 			3.623542,
 			3.451458,
 			2.55001,
 			3.043302,
-			5.726906,
+			5.726906
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_dm_stockpile_cryptic_c", mission_vo_dm_stockpile_cryptic_c)

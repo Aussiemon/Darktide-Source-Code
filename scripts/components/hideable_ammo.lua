@@ -48,13 +48,13 @@ HideableAmmo.component_data = {
 	start_hidden = {
 		ui_name = "Start Hidden",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	use_random_rotation = {
 		ui_name = "Use Random Rotation",
 		ui_type = "check_box",
-		value = true,
-	},
+		value = true
+	}
 }
 
 return HideableAmmo

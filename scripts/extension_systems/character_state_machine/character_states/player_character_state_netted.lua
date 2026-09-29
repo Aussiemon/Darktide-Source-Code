@@ -25,7 +25,7 @@ local STINGER_ENTER_ALIAS = "disabled_enter"
 local STINGER_EXIT_ALIAS = "disabled_exit"
 local LOOPING_SOUND_ALIAS = "netted"
 local STINGER_PROPERTIES = {
-	stinger_type = "netted",
+	stinger_type = "netted"
 }
 local VCE_ALIAS = "scream_long_vce"
 
@@ -171,9 +171,10 @@ PlayerCharacterStateNetted.on_exit = function (self, unit, t, next_state)
 
 	locomotion_steering_component.disable_minion_collision = false
 
-	local rewind_ms = LagCompensation.rewind_ms(is_server, self._is_local_unit, self._player)
+	local first_person_mode_component = self._first_person_mode_component
+	local rewind_seconds = LagCompensation.rewind_seconds(self._is_server, self._is_local_unit, self._player)
 
-	FirstPersonView.enter(t, self._first_person_mode_component, rewind_ms)
+	FirstPersonView.enter(t, first_person_mode_component, rewind_seconds)
 	self._assist:stop()
 
 	if is_server and next_state == "walking" then
@@ -331,7 +332,7 @@ PlayerCharacterStateNetted._add_buffs = function (self, t)
 
 		self._damage_tick_buff_indexes = {
 			local_index = local_index,
-			component_index = component_index,
+			component_index = component_index
 		}
 	end
 end

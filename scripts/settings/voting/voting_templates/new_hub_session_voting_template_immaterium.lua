@@ -29,7 +29,7 @@ local new_hub_session_voting_template_immaterium = {
 	end,
 	on_vote_casted = function (voting_id, template, voter_peer_id, vote_option)
 		return
-	end,
+	end
 }
 
 return new_hub_session_voting_template_immaterium

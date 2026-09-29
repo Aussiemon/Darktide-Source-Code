@@ -32,11 +32,24 @@ local ROSTER_GRID_SCENEGRAPH_ID = "roster_grid_content"
 local PARTY_GRID_SCENEGRAPH_ID = "party_grid"
 local PARTY_GRID_ID = 1
 local ROSTER_GRID_ID = 2
+local UNKNOWN_PLATFORM = "Unknown"
+local AVATAR_LOAD_MARGIN_ROWS = 3
+
+local function _avatar_load_margin()
+	local row_height = RosterViewStyles.player_panel_size[2] + RosterViewStyles.grid_spacing[2]
+
+	return AVATAR_LOAD_MARGIN_ROWS * row_height
+end
+
+local function _portrait_owns_frame(widget_content)
+	return widget_content.portrait_load_id ~= nil
+end
+
 local last_tab_index = -1
 local current_time = 0
 local _SCENEGRAPH_IDS = {
 	[PARTY_GRID_ID] = PARTY_GRID_SCENEGRAPH_ID,
-	[ROSTER_GRID_ID] = ROSTER_GRID_SCENEGRAPH_ID,
+	[ROSTER_GRID_ID] = ROSTER_GRID_SCENEGRAPH_ID
 }
 
 local function _debug_warning(function_name, format, ...)
@@ -140,22 +153,22 @@ local _groups_by_online_status = {
 		group_name = "in_game",
 		header = "loc_social_menu_friend_list_group_header_in_game",
 		item_blueprint = "player_plaque",
-		members = {},
+		members = {}
 	},
 	{
 		blueprint = "group_header",
 		group_name = "platform_online",
 		header = "loc_social_menu_friend_list_group_header_online",
 		item_blueprint = "player_plaque_platform_online",
-		members = {},
+		members = {}
 	},
 	{
 		blueprint = "group_header",
 		group_name = "offline",
 		header = "loc_social_menu_friend_list_group_header_offline",
 		item_blueprint = "player_plaque_offline",
-		members = {},
-	},
+		members = {}
+	}
 }
 
 SocialMenuRosterView.init = function (self, settings, context)
@@ -174,7 +187,7 @@ SocialMenuRosterView.init = function (self, settings, context)
 				group_name = "in_game - same platform",
 				header = "loc_social_menu_list_group_header_in_game_platform",
 				item_blueprint = "player_plaque",
-				members = {},
+				members = {}
 			},
 			{
 				blueprint = "group_header",
@@ -182,21 +195,21 @@ SocialMenuRosterView.init = function (self, settings, context)
 				header = "loc_social_menu_friend_list_group_header_in_game",
 				item_blueprint = "player_plaque",
 				no_divider = true,
-				members = {},
+				members = {}
 			},
 			{
 				blueprint = "group_header",
 				group_name = "platform_online",
 				header = "loc_social_menu_list_header_online",
 				item_blueprint = "player_plaque_platform_online",
-				members = {},
+				members = {}
 			},
 			{
 				blueprint = "group_header",
 				group_name = "offline - same platform",
 				header = "loc_social_menu_list_header_offline_platform",
 				item_blueprint = "player_plaque_offline",
-				members = {},
+				members = {}
 			},
 			{
 				blueprint = "group_header",
@@ -204,16 +217,16 @@ SocialMenuRosterView.init = function (self, settings, context)
 				header = "loc_social_menu_friend_list_group_header_offline",
 				item_blueprint = "player_plaque_offline",
 				no_divider = true,
-				members = {},
-			},
+				members = {}
+			}
 		},
-		sorted_list = {},
+		sorted_list = {}
 	}
 	roster_lists[PREVIOUS_MISSION_COMPANIONS_LIST] = {
 		group_select_function = _default_group_selection_function,
 		primary_sort_function = _sort_by_recency,
 		groups = _groups_by_online_status,
-		sorted_list = {},
+		sorted_list = {}
 	}
 	roster_lists[HUB_PLAYERS_LIST] = {
 		group_select_function = _mono_group,
@@ -224,17 +237,17 @@ SocialMenuRosterView.init = function (self, settings, context)
 				group_name = "in_hub",
 				header = "loc_social_menu_friend_list_group_header_in_game",
 				item_blueprint = "player_plaque",
-				members = {},
+				members = {}
 			},
 			{
 				blueprint = "group_header",
 				group_name = "not_in_hub",
 				header = "loc_social_menu_friend_list_group_header_not_in_hub",
 				item_blueprint = "player_plaque_offline",
-				members = {},
-			},
+				members = {}
+			}
 		},
-		sorted_list = {},
+		sorted_list = {}
 	}
 	roster_lists[FRIEND_INVITES_LIST] = {
 		group_select_function = _group_by_invite,
@@ -245,48 +258,48 @@ SocialMenuRosterView.init = function (self, settings, context)
 				group_name = "received_invites",
 				header = "loc_social_menu_friend_list_group_header_received_invites",
 				item_blueprint = "player_plaque",
-				members = {},
+				members = {}
 			},
 			{
 				group_name = "received_invites_platform_online",
 				item_blueprint = "player_plaque_platform_online",
 				no_divider = true,
-				members = {},
+				members = {}
 			},
 			{
 				group_name = "received_invites_offline",
 				item_blueprint = "player_plaque_offline",
 				no_divider = true,
-				members = {},
+				members = {}
 			},
 			{
 				blueprint = "group_header",
 				group_name = "sent_invites",
 				header = "loc_social_menu_friend_list_group_header_sent_invites",
 				item_blueprint = "player_plaque",
-				members = {},
+				members = {}
 			},
 			{
 				group_name = "sent_invites_platform_online",
 				item_blueprint = "player_plaque_platform_online",
 				no_divider = true,
-				members = {},
+				members = {}
 			},
 			{
 				group_name = "sent_invites_offline",
 				item_blueprint = "player_plaque_offline",
 				no_divider = true,
-				members = {},
+				members = {}
 			},
 			{
 				blueprint = "group_header",
 				group_name = "no_invites",
 				header = "loc_social_menu_friend_list_group_header_no_invites",
 				item_blueprint = "player_plaque_offline",
-				members = {},
-			},
+				members = {}
+			}
 		},
-		sorted_list = {},
+		sorted_list = {}
 	}
 	roster_lists[BLOCKED_PLAYERS_LIST] = {
 		group_select_function = function (player_info)
@@ -299,10 +312,10 @@ SocialMenuRosterView.init = function (self, settings, context)
 				group_name = "blocked",
 				header = "loc_social_menu_friend_list_group_header_blocked",
 				item_blueprint = "player_plaque_blocked",
-				members = {},
-			},
+				members = {}
+			}
 		},
-		sorted_list = {},
+		sorted_list = {}
 	}
 	self._party_promise = Promise.resolved()
 	self._roster_lists_promise = Promise.resolved()
@@ -310,11 +323,11 @@ SocialMenuRosterView.init = function (self, settings, context)
 	self._tab_ids = {}
 	self._grids = {
 		[PARTY_GRID_ID] = nil,
-		[ROSTER_GRID_ID] = nil,
+		[ROSTER_GRID_ID] = nil
 	}
 	self._grid_widget_definitions = {
 		[PARTY_GRID_ID] = {},
-		[ROSTER_GRID_ID] = {},
+		[ROSTER_GRID_ID] = {}
 	}
 	self._focused_grid_id = nil
 	self._new_party_members = nil
@@ -324,6 +337,7 @@ SocialMenuRosterView.init = function (self, settings, context)
 	self._roster_widgets = {}
 	self._party_widgets = {}
 	self._widgets_with_portraits = {}
+	self._widgets_with_avatars = {}
 	self._num_pending_invites = 0
 	self._platform_id_to_display_name_lut = {}
 	self._widgets_are_fading = nil
@@ -383,6 +397,12 @@ SocialMenuRosterView.on_exit = function (self)
 
 	while #widgets_with_portraits > 0 do
 		self:_unload_widget_portrait(widgets_with_portraits[#widgets_with_portraits])
+	end
+
+	local widgets_with_avatars = self._widgets_with_avatars
+
+	while #widgets_with_avatars > 0 do
+		self:_unload_widget_avatar(widgets_with_avatars[#widgets_with_avatars])
 	end
 
 	self:_unload_icons(true)
@@ -459,6 +479,7 @@ SocialMenuRosterView.update = function (self, dt, t, input_service)
 	end
 
 	self:_update_portraits()
+	self:_update_avatars()
 	self:_update_view_visibility(dt, t, input_service)
 
 	local grid_input_service = self._popup_menu and input_service:null_service() or input_service
@@ -676,6 +697,14 @@ SocialMenuRosterView.cb_show_psn_profile = function (self, player_info)
 	NpProfileDialog.open_with_account_id(user_id, account_id_hex)
 end
 
+SocialMenuRosterView.cb_show_steam_overlay = function (self, player_info, dialog)
+	self:_close_popup_menu()
+
+	if Steam.open_overlay_to_user then
+		Steam.open_overlay_to_user(player_info:platform_user_id(), dialog)
+	end
+end
+
 SocialMenuRosterView.cb_invite_player_to_guild = function (self, player_info)
 	self:_close_popup_menu()
 end
@@ -781,7 +810,7 @@ SocialMenuRosterView.cb_report_player = function (self, player_info)
 	local account_id = player_info:account_id()
 	local context = {
 		reportee_display_name = user_display_name,
-		reportee_account_id = account_id,
+		reportee_account_id = account_id
 	}
 
 	Managers.ui:open_view("report_player_view", nil, nil, nil, nil, context)
@@ -908,6 +937,8 @@ SocialMenuRosterView._cb_unset_player_icon = function (self, widget, ui_renderer
 	material_values.grid_index = nil
 	material_values.texture_icon = nil
 	widget.content.portrait = "content/ui/materials/base/ui_portrait_frame_base_no_render"
+
+	self:_apply_widget_avatar(widget)
 end
 
 SocialMenuRosterView._get_player_portrait_frame_material = function (self, profile)
@@ -1147,7 +1178,7 @@ SocialMenuRosterView._create_offscreen_renderer = function (self)
 		world = world,
 		viewport = viewport,
 		viewport_name = viewport_name,
-		renderer_name = renderer_name,
+		renderer_name = renderer_name
 	}
 end
 
@@ -1308,6 +1339,8 @@ SocialMenuRosterView._unload_widget_portrait = function (self, widget)
 		widget_content.portrait_load_id = nil
 	end
 
+	self:_apply_widget_avatar(widget)
+
 	local widgets_with_portraits = self._widgets_with_portraits
 
 	for i = #widgets_with_portraits, 1, -1 do
@@ -1315,6 +1348,174 @@ SocialMenuRosterView._unload_widget_portrait = function (self, widget)
 			table.remove(widgets_with_portraits, i)
 
 			break
+		end
+	end
+end
+
+SocialMenuRosterView._load_widget_avatar = function (self, widget, player_info)
+	local widget_content = widget.content
+	local avatar_style = widget.style.portrait
+
+	if not widget_content.player_info or not avatar_style or not avatar_style.material_values or not Managers.social then
+		return
+	end
+
+	if player_info:profile() or _portrait_owns_frame(widget_content) then
+		if widget_content.avatar_platform_user_id then
+			self:_unload_widget_avatar(widget)
+		end
+
+		return
+	end
+
+	if widget_content.avatar_platform_user_id or widget_content.avatar_unavailable then
+		return
+	end
+
+	local platform = player_info:platform()
+	local platform_user_id = player_info:platform_user_id()
+
+	if not platform or platform == "" or platform == UNKNOWN_PLATFORM or not platform_user_id or platform_user_id == "" then
+		widget_content.avatar_unavailable = true
+
+		return
+	end
+
+	local promise = Managers.social:load_avatar(platform, platform_user_id)
+
+	if promise:is_rejected() then
+		promise:catch(function (error_data)
+			return
+		end)
+
+		widget_content.avatar_unavailable = true
+
+		Managers.social:unload_avatar(platform, platform_user_id)
+
+		return
+	end
+
+	widget_content.avatar_platform = platform
+	widget_content.avatar_platform_user_id = platform_user_id
+
+	local generation = (widget_content.avatar_generation or 0) + 1
+
+	widget_content.avatar_generation = generation
+
+	local widgets_with_avatars = self._widgets_with_avatars
+
+	widgets_with_avatars[#widgets_with_avatars + 1] = widget
+
+	promise:next(function (data)
+		if self._destroyed or widget_content.avatar_generation ~= generation then
+			return
+		end
+
+		local texture = data and data.texture
+
+		if not texture then
+			return
+		end
+
+		widget_content.avatar_texture = texture
+
+		self:_apply_widget_avatar(widget)
+	end):catch(function (error_data)
+		if not self._destroyed and widget_content.avatar_generation == generation then
+			widget_content.avatar_unavailable = true
+		end
+	end)
+end
+
+SocialMenuRosterView._apply_widget_avatar = function (self, widget)
+	local widget_content = widget.content
+	local texture = widget_content.avatar_texture
+
+	if not texture or _portrait_owns_frame(widget_content) then
+		return
+	end
+
+	local avatar_style = widget.style.portrait
+	local material_values = avatar_style and avatar_style.material_values
+
+	if not material_values then
+		return
+	end
+
+	widget_content.portrait = "content/ui/materials/base/ui_portrait_frame_base"
+	material_values.use_placeholder_texture = 0
+	material_values.rows = 1
+	material_values.columns = 1
+	material_values.grid_index = 0
+	material_values.texture_icon = texture
+	widget_content.has_avatar = true
+end
+
+SocialMenuRosterView._unload_widget_avatar = function (self, widget)
+	local widget_content = widget.content
+	local platform_user_id = widget_content.avatar_platform_user_id
+
+	if not platform_user_id then
+		return
+	end
+
+	widget_content.avatar_generation = (widget_content.avatar_generation or 0) + 1
+
+	local avatar_texture = widget_content.avatar_texture
+	local avatar_style = widget.style.portrait
+	local material_values = avatar_style and avatar_style.material_values
+
+	if avatar_texture and material_values and material_values.texture_icon == avatar_texture then
+		material_values.use_placeholder_texture = 1
+		material_values.grid_index = 1
+		material_values.texture_icon = nil
+		widget_content.portrait = "content/ui/materials/base/ui_portrait_frame_base_no_render"
+	end
+
+	widget_content.has_avatar = nil
+	widget_content.avatar_texture = nil
+
+	if Managers.social then
+		Managers.social:unload_avatar(widget_content.avatar_platform, platform_user_id)
+	end
+
+	widget_content.avatar_platform = nil
+	widget_content.avatar_platform_user_id = nil
+
+	local widgets_with_avatars = self._widgets_with_avatars
+
+	for i = #widgets_with_avatars, 1, -1 do
+		if widgets_with_avatars[i] == widget then
+			table.remove(widgets_with_avatars, i)
+
+			break
+		end
+	end
+end
+
+SocialMenuRosterView._update_avatars = function (self)
+	local grid = self._grids[ROSTER_GRID_ID]
+
+	if not grid then
+		return
+	end
+
+	local margin = _avatar_load_margin()
+	local widgets = self._roster_widgets
+
+	for i = 1, #widgets do
+		local widget = widgets[i]
+		local content = widget.content
+		local player_info = content.player_info
+
+		if player_info then
+			if grid:is_widget_visible(widget, margin) then
+				if not content.avatar_platform_user_id and not content.avatar_unavailable then
+					self:_load_widget_avatar(widget, player_info)
+				end
+			elseif content.avatar_platform_user_id then
+				self:_unload_widget_avatar(widget)
+			end
 		end
 	end
 end
@@ -1328,7 +1529,7 @@ SocialMenuRosterView._queue_icons_for_unload = function (self, widget)
 		icon_unload_queue[#icon_unload_queue + 1] = {
 			delay = ViewSettings.icon_unload_frame_delay,
 			load_id = widget_content.frame_load_id,
-			widget = widget,
+			widget = widget
 		}
 		widget_content.frame_load_id = nil
 	end
@@ -1340,7 +1541,7 @@ SocialMenuRosterView._queue_icons_for_unload = function (self, widget)
 		icon_unload_queue[#icon_unload_queue + 1] = {
 			delay = ViewSettings.icon_unload_frame_delay,
 			load_id = widget_content.insignia_load_id,
-			widget = widget,
+			widget = widget
 		}
 		widget_content.insignia_load_id = nil
 	end
@@ -1431,8 +1632,8 @@ SocialMenuRosterView._create_roster_widgets = function (self, widget_data)
 	widget_alignments[#widget_alignments + 1] = {
 		size = {
 			RosterViewStyles.player_panel_size[1] * 2,
-			0,
-		},
+			0
+		}
 	}
 
 	return widgets, widget_alignments
@@ -1459,9 +1660,14 @@ SocialMenuRosterView._get_roster_widget = function (self, context, blueprint_nam
 				widget_blueprint.init(self, widget, context, callback(self, "cb_show_popup_menu_for_player", context), ui_renderer)
 			end
 
+			if grid_id == PARTY_GRID_ID then
+				self:_load_widget_avatar(widget, context)
+			end
+
 			return widget
 		else
 			self:_unregister_widget_name(widget.name)
+			self:_unload_widget_avatar(widget)
 
 			if content.portrait_load_id then
 				self:_unload_widget_portrait(widget)
@@ -1474,7 +1680,7 @@ SocialMenuRosterView._get_roster_widget = function (self, context, blueprint_nam
 
 	if not widget_definition then
 		widget_definition = UIWidget.create_definition(widget_blueprint.pass_template, scenegraph_id, {
-			blueprint_name = blueprint_name,
+			blueprint_name = blueprint_name
 		}, widget_blueprint.size, widget_blueprint.style)
 		grid_widget_definitions[blueprint_name] = widget_definition
 	end
@@ -1485,6 +1691,10 @@ SocialMenuRosterView._get_roster_widget = function (self, context, blueprint_nam
 		local ui_renderer = self._offscreen_renderer or self._ui_renderer
 
 		widget_blueprint.init(self, widget, context, callback(self, "cb_show_popup_menu_for_player", context), ui_renderer)
+	end
+
+	if grid_id == PARTY_GRID_ID then
+		self:_load_widget_avatar(widget, context)
 	end
 
 	return widget
@@ -1681,7 +1891,7 @@ SocialMenuRosterView._prepare_list = function (self, roster_list_data, roster_li
 				if not divider then
 					divider = {
 						blueprint = "list_divider",
-						name = group_id,
+						name = group_id
 					}
 					_list_dividers[divider] = divider
 				end
@@ -1790,6 +2000,7 @@ SocialMenuRosterView._update_party_list = function (self, party_members, force_u
 		local unique_id = party_member_content.unique_id
 
 		if not party_members[unique_id] then
+			self:_unload_widget_avatar(party_widget)
 			self:_unload_widget_portrait(party_widget)
 			table.remove(current_party_widgets, i)
 
@@ -1957,7 +2168,7 @@ SocialMenuRosterView._refresh_roster_lists = function (self, force_refresh, dt)
 		return lists[1]
 	end):next(callback(self, "cb_update_roster")):catch(function (e)
 		if type(e) == "table" then
-			Log.error("SocialMenuRosterView", "Failed fetching social players: %s", table.tostring(e, 2))
+			Log.error("SocialMenuRosterView", "Failed fetching social players: %s", table.tostring(e, 3))
 		else
 			Log.error("SocialMenuRosterView", "Failed fetching social players: %s", e)
 		end
@@ -1975,15 +2186,15 @@ SocialMenuRosterView._show_confirmation_popup = function (self, player_info, com
 			options = {
 				{
 					close_on_pressed = true,
-					text = "loc_social_menu_confirmation_popup_confirm_button",
+					text = "loc_social_menu_confirmation_popup_confirm_button"
 				},
 				{
 					close_on_pressed = true,
 					hotkey = "back",
 					template_type = "terminal_button_small",
-					text = "loc_social_menu_confirmation_popup_decline_button",
-				},
-			},
+					text = "loc_social_menu_confirmation_popup_decline_button"
+				}
+			}
 		}
 		context.title_text_params = context.description_text_params
 		_show_confirmation_popup_context = context

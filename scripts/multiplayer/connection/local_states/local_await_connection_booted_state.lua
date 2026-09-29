@@ -2,7 +2,7 @@
 
 local LocalAwaitConnectionBootedState = class("LocalAwaitConnectionBootedState")
 local RPCS = {
-	"rpc_connection_booted_reply",
+	"rpc_connection_booted_reply"
 }
 local TIMEOUT = 60
 
@@ -29,7 +29,7 @@ LocalAwaitConnectionBootedState.update = function (self, dt)
 		Log.info("LocalAwaitConnectionBootedState", "Connection channel disconnected")
 
 		return "disconnected", {
-			engine_reason = reason,
+			engine_reason = reason
 		}
 	end
 
@@ -52,7 +52,7 @@ LocalAwaitConnectionBootedState.update = function (self, dt)
 		Log.info("LocalAwaitConnectionBootedState", "Timeout waiting for connection boot to complete")
 
 		return "timeout", {
-			game_reason = "timeout",
+			game_reason = "timeout"
 		}
 	end
 end

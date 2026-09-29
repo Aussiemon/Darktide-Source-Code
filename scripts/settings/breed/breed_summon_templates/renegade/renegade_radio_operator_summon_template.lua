@@ -5,13 +5,13 @@ local summon_templates = {
 		requires_owner = false,
 		wwise_event_probability = 0.25,
 		wwise_on_death_events = {
-			"wwise/events/minions/play_minion_captain__force_field_overload_vce",
+			"wwise/events/minions/play_minion_captain__force_field_overload_vce"
 		},
 		interval_til_next_summon = {
 			10,
-			20,
-		},
-	},
+			20
+		}
+	}
 }
 
 return summon_templates

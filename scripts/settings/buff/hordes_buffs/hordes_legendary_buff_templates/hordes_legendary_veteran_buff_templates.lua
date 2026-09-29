@@ -34,7 +34,7 @@ templates.hordes_buff_veteran_shock_units_in_smoke_grenade = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_unit_enter_fog] = 1,
+		[proc_events.on_unit_enter_fog] = 1
 	},
 	start_func = function (template_data, template_context)
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -71,7 +71,7 @@ templates.hordes_buff_veteran_shock_units_in_smoke_grenade = {
 			fx_system:trigger_wwise_event(SFX_NAMES.shock_proc, enemy_position)
 			fx_system:trigger_vfx(VFX_NAMES.single_target_shock, enemy_position)
 		end
-	end,
+	end
 }
 
 local veteran_sticky_grenade_pull_radius = HordesBuffsData.hordes_buff_veteran_sticky_grenade_pulls_enemies.buff_stats.radius.value
@@ -92,7 +92,7 @@ templates.hordes_buff_veteran_sticky_grenade_pulls_enemies = {
 		template_data.broadphase, template_data.enemy_side_names = SharedBuffFunctions.get_broadphase_and_enemy_side_names(unit)
 	end,
 	proc_events = {
-		[proc_events.on_projectile_stick] = 1,
+		[proc_events.on_projectile_stick] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		if not template_context.is_server then
@@ -110,7 +110,7 @@ templates.hordes_buff_veteran_sticky_grenade_pulls_enemies = {
 		local fx_system = Managers.state.extension:system("fx_system")
 
 		fx_system:trigger_wwise_event(SFX_NAMES.gravity_pull, nil, target_unit)
-	end,
+	end
 }
 templates.hordes_buff_veteran_infinite_ammo_during_stance = {
 	class_name = "buff",
@@ -119,7 +119,7 @@ templates.hordes_buff_veteran_infinite_ammo_during_stance = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	conditional_keywords = {
-		buff_keywords.no_ammo_consumption,
+		buff_keywords.no_ammo_consumption
 	},
 	start_func = function (template_data, template_context)
 		template_data.is_active = false
@@ -129,7 +129,7 @@ templates.hordes_buff_veteran_infinite_ammo_during_stance = {
 	end,
 	update_func = function (template_data, template_context)
 		template_data.is_active = template_context.buff_extension and template_context.buff_extension:has_keyword(buff_keywords.veteran_combat_ability_stance)
-	end,
+	end
 }
 templates.hordes_buff_veteran_apply_infinite_bleed_on_shout = {
 	class_name = "server_only_proc_buff",
@@ -138,7 +138,7 @@ templates.hordes_buff_veteran_apply_infinite_bleed_on_shout = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.hit_units = {}
@@ -160,7 +160,7 @@ templates.hordes_buff_veteran_apply_infinite_bleed_on_shout = {
 				buff_extension:add_internally_controlled_buff_with_stacks("hordes_ailment_infinite_minion_bleed", 20, t, "owner_unit", player_unit)
 			end
 		end
-	end,
+	end
 }
 
 local veteran_duration_damage_increase_after_stealth = HordesBuffsData.hordes_buff_veteran_increased_damage_after_stealth.buff_stats.time.value
@@ -173,7 +173,7 @@ templates.hordes_buff_veteran_increased_damage_after_stealth = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_combat_ability] = 1,
+		[proc_events.on_combat_ability] = 1
 	},
 	proc_func = function (params, template_data, template_context, t)
 		if not template_context.is_server then
@@ -183,7 +183,7 @@ templates.hordes_buff_veteran_increased_damage_after_stealth = {
 		local buff_extension = template_context.buff_extension
 
 		buff_extension:add_internally_controlled_buff("hordes_buff_veteran_increased_damage_after_stealth_effect", t)
-	end,
+	end
 }
 templates.hordes_buff_veteran_increased_damage_after_stealth_effect = {
 	class_name = "veteran_stealth_bonuses_buff",
@@ -193,8 +193,8 @@ templates.hordes_buff_veteran_increased_damage_after_stealth_effect = {
 	buff_category = buff_categories.hordes_sub_buff,
 	duration = veteran_duration_damage_increase_after_stealth,
 	stat_buffs = {
-		[stat_buffs.damage] = veteran_percent_damage_increase_after_stealth,
-	},
+		[stat_buffs.damage] = veteran_percent_damage_increase_after_stealth
+	}
 }
 templates.hordes_buff_veteran_grouped_upgraded_stealth = {
 	class_name = "proc_buff",
@@ -203,10 +203,10 @@ templates.hordes_buff_veteran_grouped_upgraded_stealth = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	keywords = {
-		buff_keywords.can_attack_during_invisibility,
+		buff_keywords.can_attack_during_invisibility
 	},
 	proc_events = {
-		[proc_events.on_combat_ability] = 1,
+		[proc_events.on_combat_ability] = 1
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -246,7 +246,7 @@ templates.hordes_buff_veteran_grouped_upgraded_stealth = {
 				end
 			end
 		end
-	end,
+	end
 }
 templates.hordes_buff_veteran_upgraded_stealth_effect = {
 	class_name = "veteran_stealth_bonuses_buff",
@@ -257,8 +257,8 @@ templates.hordes_buff_veteran_upgraded_stealth_effect = {
 	buff_category = buff_categories.hordes_sub_buff,
 	keywords = {
 		buff_keywords.invulnerable,
-		buff_keywords.can_attack_during_invisibility,
-	},
+		buff_keywords.can_attack_during_invisibility
+	}
 }
 templates.hordes_buff_veteran_stealth_group_allies_effect = {
 	class_name = "buff",
@@ -271,8 +271,8 @@ templates.hordes_buff_veteran_stealth_group_allies_effect = {
 	keywords = {
 		buff_keywords.invisible,
 		buff_keywords.invulnerable,
-		buff_keywords.can_attack_during_invisibility,
-	},
+		buff_keywords.can_attack_during_invisibility
+	}
 }
 
 return templates

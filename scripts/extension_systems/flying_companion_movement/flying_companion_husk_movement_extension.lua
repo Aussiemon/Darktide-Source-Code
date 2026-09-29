@@ -8,7 +8,6 @@ local SpecialRulesSettings = require("scripts/settings/ability/special_rules_set
 local special_rules = SpecialRulesSettings.special_rules
 local FlyingCompanionHuskMovementExtension = class("FlyingCompanionHuskMovementExtension")
 local servo_skull_states = CompanionServoSkullSettings.STATES
-local servo_skull_flamethrower_types = CompanionServoSkullSettings.FLAMETHROWER_TYPES
 local servo_skull_movement_state = CompanionServoSkullSettings.MOVEMENT_STATE
 local companion_servo_skull_movement_settings = CompanionServoSkullSettings.movement_settings
 local companion_servo_skull_hub_movement_settings = CompanionServoSkullSettings.hub_movement_settings

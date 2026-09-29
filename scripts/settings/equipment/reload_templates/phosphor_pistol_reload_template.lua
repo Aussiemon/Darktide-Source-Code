@@ -6,7 +6,7 @@ local reload_template = {
 	states = {
 		"eject_mag",
 		"fit_new_mag",
-		"cock_weapon",
+		"cock_weapon"
 	},
 	eject_mag = {
 		anim_1p = "reload",
@@ -15,30 +15,30 @@ local reload_template = {
 		abort_anims = {
 			{
 				anim_1p = "reload_cancel",
-				t = 0,
+				t = 0
 			},
 			{
 				anim_1p = "reload_cancel_empty",
-				t = 0.3 - ONE_FRAME,
+				t = 0.3 - ONE_FRAME
 			},
 			{
 				anim_1p = "reload_cancel_full",
-				t = 1.46 - ONE_FRAME,
+				t = 1.46 - ONE_FRAME
 			},
 			{
 				anim_1p = "reload_finished",
-				t = 2.2 - ONE_FRAME,
-			},
+				t = 2.2 - ONE_FRAME
+			}
 		},
 		state_transitions = {
 			cock_weapon = 1.46,
 			eject_mag = 2.2,
-			fit_new_mag = 0.3,
+			fit_new_mag = 0.3
 		},
 		functionality = {
 			refill_ammunition = 2.2,
-			remove_ammunition = 0.3,
-		},
+			remove_ammunition = 0.3
+		}
 	},
 	fit_new_mag = {
 		anim_1p = "reload_middle_speedloader",
@@ -47,24 +47,24 @@ local reload_template = {
 		abort_anims = {
 			{
 				anim_1p = "reload_cancel_empty",
-				t = 0,
+				t = 0
 			},
 			{
 				anim_1p = "reload_cancel_full",
-				t = 0.83 - ONE_FRAME,
+				t = 0.83 - ONE_FRAME
 			},
 			{
 				anim_1p = "reload_finished",
-				t = 1.66 - ONE_FRAME,
-			},
+				t = 1.66 - ONE_FRAME
+			}
 		},
 		state_transitions = {
 			cock_weapon = 0.83,
-			eject_mag = 1.66,
+			eject_mag = 1.66
 		},
 		functionality = {
-			refill_ammunition = 1.66,
-		},
+			refill_ammunition = 1.66
+		}
 	},
 	cock_weapon = {
 		anim_1p = "reload_end",
@@ -73,20 +73,20 @@ local reload_template = {
 		abort_anims = {
 			{
 				anim_1p = "reload_cancel_full",
-				t = 0,
+				t = 0
 			},
 			{
 				anim_1p = "reload_finished",
-				t = 0.36 - ONE_FRAME,
-			},
+				t = 0.36 - ONE_FRAME
+			}
 		},
 		state_transitions = {
-			eject_mag = 0.36,
+			eject_mag = 0.36
 		},
 		functionality = {
-			refill_ammunition = 0.36,
-		},
-	},
+			refill_ammunition = 0.36
+		}
+	}
 }
 
 return reload_template

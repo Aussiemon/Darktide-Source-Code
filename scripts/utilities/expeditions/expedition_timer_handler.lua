@@ -15,7 +15,7 @@ local _time_left_events = {
 	[150] = {
 		description = "loc_game_mode_expedition_timer_popup_warning_desc_first",
 		header = "loc_game_mode_expedition_timer_popup_warning_title_first",
-		sound_event = UISoundEvents.mission_objective_popup_new_expeditions,
+		sound_event = UISoundEvents.mission_objective_popup_new_expeditions
 	},
 	[60] = {
 		alert_objective = true,
@@ -23,8 +23,8 @@ local _time_left_events = {
 		header = "loc_game_mode_expedition_timer_popup_warning_title_final",
 		type = "alert",
 		sound_event = UISoundEvents.mission_objective_popup_new_expeditions,
-		auspex_sound = last_minute_sound,
-	},
+		auspex_sound = last_minute_sound
+	}
 }
 local ExpeditionTimerHandler = class("ExpeditionTimerHandler")
 
@@ -123,8 +123,6 @@ ExpeditionTimerHandler.set_active = function (self, active)
 		return
 	end
 
-	self._pacing_timer_started = true
-
 	local was_running = self._is_running
 
 	self._is_running = active
@@ -152,9 +150,11 @@ ExpeditionTimerHandler.set_active = function (self, active)
 
 			self._play_last_minute = true
 		end
-	elseif not was_running then
+	elseif not was_running and self._pacing_timer_started then
 		self:_play_sound(timer_paused_sound)
 	end
+
+	self._pacing_timer_started = true
 end
 
 ExpeditionTimerHandler.get_remaining_duration = function (self)

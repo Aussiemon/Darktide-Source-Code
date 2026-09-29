@@ -17,7 +17,7 @@ return function ()
 			date = os.date,
 			difftime = os.difftime,
 			time = os.time,
-			getenv = os.getenv,
+			getenv = os.getenv
 		}
 		package.loadlib = nil
 		package.loaders[3] = nil

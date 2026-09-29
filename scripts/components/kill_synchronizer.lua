@@ -45,22 +45,22 @@ KillSynchronizer.component_data = {
 	objective_name = {
 		ui_name = "Objective name",
 		ui_type = "text_box",
-		value = "default",
+		value = "default"
 	},
 	automatic_start = {
 		ui_name = "Automatic Start On Mission Start",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	inputs = {
 		start_kill_event = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"KillSynchronizerExtension",
-	},
+		"KillSynchronizerExtension"
+	}
 }
 
 return KillSynchronizer

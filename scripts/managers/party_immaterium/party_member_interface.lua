@@ -9,7 +9,7 @@ local party_member_interface = {
 	"presence_hud_text",
 	"account_id",
 	"profile",
-	"is_human_controlled",
+	"is_human_controlled"
 }
 
 return party_member_interface

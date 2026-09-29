@@ -304,26 +304,26 @@ RespawnBeacon.component_data = {
 		value = "heroes",
 		options_keys = {
 			"Heroes",
-			"Villains",
+			"Villains"
 		},
 		options_values = {
 			"heroes",
-			"villains",
-		},
+			"villains"
+		}
 	},
 	safe_zone = {
 		ui_name = "Safe Zone",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	debug_ignore_check_distances = {
 		ui_name = "Ignore Debug Check Distances",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	extensions = {
-		"RespawnBeaconExtension",
-	},
+		"RespawnBeaconExtension"
+	}
 }
 
 return RespawnBeacon

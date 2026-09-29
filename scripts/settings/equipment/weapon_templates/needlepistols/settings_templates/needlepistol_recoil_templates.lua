@@ -20,55 +20,55 @@ recoil_templates.needlepistol_p1_m1_recoil_assault = {
 			0.23,
 			0.35,
 			0.3,
-			0.34,
+			0.34
 		},
 		decay = {
 			idle = 2,
-			shooting = 1.3,
+			shooting = 1.3
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.0375,
-					0.04375,
+					0.04375
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
-			},
+					0.02
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 2,
-			yaw = 2,
+			yaw = 2
 		},
 		visual_recoil_settings = {
 			intensity = 1.5,
 			lerp_scalar = 0.5,
-			yaw_intensity = 1,
-		},
+			yaw_intensity = 1
+		}
 	},
 	moving = {
 		new_influence_percent = 1,
 		inherits = {
 			"needlepistol_p1_m1_recoil_assault",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		new_influence_percent = 0.6,
 		inherits = {
 			"needlepistol_p1_m1_recoil_assault",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		new_influence_percent = 0.8,
 		inherits = {
 			"needlepistol_p1_m1_recoil_assault",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 recoil_templates.needlepistol_p1_m1_recoil_killshot = {
 	still = {
@@ -82,58 +82,58 @@ recoil_templates.needlepistol_p1_m1_recoil_killshot = {
 			0.24,
 			0.25,
 			0.3,
-			0.25,
+			0.25
 		},
 		decay = {
 			idle = 2,
-			shooting = 1.1,
+			shooting = 1.1
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.0375,
-					0.04375,
+					0.04375
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
-			},
+					0.02
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 2.1,
-			yaw = 2.1,
+			yaw = 2.1
 		},
 		visual_recoil_settings = {
 			intensity = 1.9,
 			lerp_scalar = 1,
-			yaw_intensity = 1.3,
-		},
+			yaw_intensity = 1.3
+		}
 	},
 	moving = {
 		new_influence_percent = 1.1,
 		inherits = {
 			"needlepistol_p1_m1_recoil_killshot",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		new_influence_percent = 0.6,
 		inherits = {
 			"needlepistol_p1_m1_recoil_killshot",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		new_influence_percent = 0.8,
 		inherits = {
 			"needlepistol_p1_m1_recoil_killshot",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 
 return {
 	base_templates = recoil_templates,
-	overrides = overrides,
+	overrides = overrides
 }

@@ -24,9 +24,10 @@ Door.init = function (self, unit, is_server)
 		local open_type = self:get_data(unit, "open_type")
 		local control_panel_props = self:_get_non_empty_control_panels(unit)
 		local control_panels_active = self:get_data(unit, "control_panels_active")
+		local control_panels_display_start_event = self:get_data(unit, "control_panels_display_start_event")
 		local ignore_broadphase = self:get_data(unit, "ignore_broadphase")
 
-		door_extension:setup_from_component(door_type, start_state, open_time, close_time, allow_closing, self_closing_time, blocked_time, use_advanced_blocking, advanced_blocking_time, advanced_unblocking_time, open_type, control_panel_props, control_panels_active, ignore_broadphase)
+		door_extension:setup_from_component(door_type, start_state, open_time, close_time, allow_closing, self_closing_time, blocked_time, use_advanced_blocking, advanced_blocking_time, advanced_unblocking_time, open_type, control_panel_props, control_panels_active, control_panels_display_start_event, ignore_broadphase)
 
 		self._door_extension = door_extension
 	end
@@ -288,12 +289,12 @@ Door.component_data = {
 		value = "two_states",
 		options_keys = {
 			"2 States ('Open, Close')",
-			"3 States (Open Forward/Backward, Close)",
+			"3 States (Open Forward/Backward, Close)"
 		},
 		options_values = {
 			"two_states",
-			"three_states",
-		},
+			"three_states"
+		}
 	},
 	open_type = {
 		ui_name = "Open Type",
@@ -302,13 +303,13 @@ Door.component_data = {
 		options_keys = {
 			"Normal",
 			"Open Only",
-			"Close Only",
+			"Close Only"
 		},
 		options_values = {
 			"none",
 			"open_only",
-			"close_only",
-		},
+			"close_only"
+		}
 	},
 	start_state = {
 		ui_name = "Start State",
@@ -318,14 +319,14 @@ Door.component_data = {
 			"Open",
 			"Open Forward",
 			"Open Backwards",
-			"Closed",
+			"Closed"
 		},
 		options_values = {
 			"open",
 			"open_fwd",
 			"open_bwd",
-			"closed",
-		},
+			"closed"
+		}
 	},
 	open_time = {
 		category = "Animation",
@@ -334,7 +335,7 @@ Door.component_data = {
 		step = 0.01,
 		ui_name = "Open Animation Time (in sec.)",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	close_time = {
 		category = "Animation",
@@ -343,12 +344,12 @@ Door.component_data = {
 		step = 0.01,
 		ui_name = "Close Animation Time (in sec.)",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	allow_closing = {
 		ui_name = "Allow closing",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	self_closing_time = {
 		decimals = 2,
@@ -356,7 +357,7 @@ Door.component_data = {
 		step = 0.01,
 		ui_name = "Time for door to self close (in sec.)",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	blocked_time = {
 		category = "Nav",
@@ -366,13 +367,13 @@ Door.component_data = {
 		step = 0.01,
 		ui_name = "Blocked Time (in %)",
 		ui_type = "slider",
-		value = 0.5,
+		value = 0.5
 	},
 	advanced_blocking = {
 		category = "Nav",
 		ui_name = "Use Advanced blocking",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	advanced_blocking_time = {
 		category = "Nav",
@@ -382,7 +383,7 @@ Door.component_data = {
 		step = 0.01,
 		ui_name = "Time for when to block nav (in %)",
 		ui_type = "slider",
-		value = 0.5,
+		value = 0.5
 	},
 	advanced_unblocking_time = {
 		category = "Nav",
@@ -392,7 +393,7 @@ Door.component_data = {
 		step = 0.01,
 		ui_name = "Time for when to unblock nav (in %)",
 		ui_type = "slider",
-		value = 0.5,
+		value = 0.5
 	},
 	control_panel_props = {
 		category = "Control Panels",
@@ -403,74 +404,80 @@ Door.component_data = {
 		options_keys = {
 			"Empty",
 			"Control Panel 01",
-			"Control Panel scan airlock 01",
+			"Control Panel scan airlock 01"
 		},
 		options_values = {
 			"empty",
 			"door_controlpanel_01",
-			"control_panel_scan_airlock_01",
-		},
+			"control_panel_scan_airlock_01"
+		}
 	},
 	control_panels_active = {
 		category = "Control Panels",
 		ui_name = "Control Panels Active",
 		ui_type = "check_box",
-		value = true,
+		value = true
+	},
+	control_panels_display_start_event = {
+		category = "Control Panels",
+		ui_name = "Control Panels Show 'Start Event'",
+		ui_type = "check_box",
+		value = false
 	},
 	ignore_broadphase = {
 		ui_name = "Ignore Broadphase System",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	inputs = {
 		instantiate_state = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		open = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		toggle_open = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		open_fwd = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		toggle_fwd = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		open_bwd = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		toggle_bwd = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		close = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		activate_control_panels = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		deactivate_control_panels = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		teleport_bots = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"DoorExtension",
-	},
+		"DoorExtension"
+	}
 }
 
 return Door

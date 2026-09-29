@@ -11,11 +11,11 @@ local view_settings = {
 	preload_in_hub = "not_ps5_nor_lockhart",
 	state_bound = true,
 	enter_sound_events = {
-		UISoundEvents.default_menu_enter,
+		UISoundEvents.default_menu_enter
 	},
 	exit_sound_events = {
-		UISoundEvents.default_menu_exit,
-	},
+		UISoundEvents.default_menu_exit
+	}
 }
 
 return settings("ReportPlayerViewDeclarationSettings", view_settings)

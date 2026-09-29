@@ -23,10 +23,10 @@ local widget_definitions = {
 					255,
 					0,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "center_pivot", nil, ScannerDisplayViewDrillSettings.target_widget_size),
 	search_fade = UIWidget.create_definition({
 		{
@@ -39,10 +39,10 @@ local widget_definitions = {
 					0,
 					0,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "center_pivot", nil, ScannerDisplayViewDrillSettings.target_widget_size),
 	edge_fade = UIWidget.create_definition({
 		{
@@ -55,21 +55,21 @@ local widget_definitions = {
 					255,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					-edge_fade_widget_size[1] * 0.5,
 					-edge_fade_widget_size[2] * 0.5,
-					2,
-				},
-			},
-		},
-	}, "center_pivot", nil, edge_fade_widget_size),
+					2
+				}
+			}
+		}
+	}, "center_pivot", nil, edge_fade_widget_size)
 }
 
 return {
 	drill = {
 		widget_definitions = widget_definitions,
-		scenegraph_definition = scenegraph_definition,
-	},
+		scenegraph_definition = scenegraph_definition
+	}
 }

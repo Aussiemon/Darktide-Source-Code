@@ -16,13 +16,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	change_info_grid = {
 		horizontal_alignment = "center",
@@ -30,13 +30,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			800,
-			600,
+			600
 		},
 		position = {
 			0,
 			0,
-			200,
-		},
+			200
+		}
 	},
 	change_info_grid_content_pivot = {
 		horizontal_alignment = "left",
@@ -44,13 +44,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	change_info_grid_scrollbar = {
 		horizontal_alignment = "right",
@@ -58,13 +58,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			8,
-			600,
+			600
 		},
 		position = {
 			13,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	change_info_grid_interaction = {
 		horizontal_alignment = "left",
@@ -72,13 +72,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			800,
-			600,
+			600
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	change_info_grid_mask = {
 		horizontal_alignment = "center",
@@ -86,13 +86,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			820,
-			610,
+			610
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	wallet_grid_1 = {
 		horizontal_alignment = "center",
@@ -100,13 +100,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			400,
-			600,
+			600
 		},
 		position = {
 			-220,
 			0,
-			200,
-		},
+			200
+		}
 	},
 	wallet_grid_1_content_pivot = {
 		horizontal_alignment = "left",
@@ -114,13 +114,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	wallet_grid_1_scrollbar = {
 		horizontal_alignment = "right",
@@ -128,13 +128,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			8,
-			600,
+			600
 		},
 		position = {
 			13,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	wallet_grid_1_interaction = {
 		horizontal_alignment = "left",
@@ -142,13 +142,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			400,
-			600,
+			600
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	wallet_grid_1_mask = {
 		horizontal_alignment = "center",
@@ -156,13 +156,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			420,
-			610,
+			610
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	wallet_grid_2 = {
 		horizontal_alignment = "center",
@@ -170,13 +170,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			400,
-			600,
+			600
 		},
 		position = {
 			220,
 			0,
-			200,
-		},
+			200
+		}
 	},
 	wallet_grid_2_content_pivot = {
 		horizontal_alignment = "left",
@@ -184,13 +184,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	wallet_grid_2_scrollbar = {
 		horizontal_alignment = "right",
@@ -198,13 +198,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			8,
-			600,
+			600
 		},
 		position = {
 			13,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	wallet_grid_2_interaction = {
 		horizontal_alignment = "left",
@@ -212,13 +212,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			400,
-			600,
+			600
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	wallet_grid_2_mask = {
 		horizontal_alignment = "center",
@@ -226,13 +226,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			420,
-			610,
+			610
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	wallet_grid_3 = {
 		horizontal_alignment = "center",
@@ -240,13 +240,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			800,
-			100,
+			100
 		},
 		position = {
 			0,
 			0,
-			200,
-		},
+			200
+		}
 	},
 	wallet_grid_3_content_pivot = {
 		horizontal_alignment = "left",
@@ -254,13 +254,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	wallet_grid_3_scrollbar = {
 		horizontal_alignment = "right",
@@ -268,13 +268,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			8,
-			100,
+			100
 		},
 		position = {
 			13,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	wallet_grid_3_interaction = {
 		horizontal_alignment = "left",
@@ -282,13 +282,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			800,
-			100,
+			100
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	wallet_grid_3_mask = {
 		horizontal_alignment = "center",
@@ -296,13 +296,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			820,
-			110,
+			110
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	title_pivot = {
 		horizontal_alignment = "center",
@@ -310,13 +310,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			50,
+			50
 		},
 		position = {
 			0,
 			0,
-			5,
-		},
+			5
+		}
 	},
 	slider_pivot = {
 		horizontal_alignment = "center",
@@ -324,13 +324,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			5,
-		},
+			5
+		}
 	},
 	button_pivot = {
 		horizontal_alignment = "center",
@@ -340,60 +340,60 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			5,
-		},
-	},
+			5
+		}
+	}
 }
 local popup_type_style = {
 	warning = {
 		icon = "content/ui/materials/symbols/warning",
 		icon_size = {
 			92,
-			72,
+			72
 		},
 		icon_color = {
 			255,
 			162,
 			6,
-			6,
+			6
 		},
 		background_color = {
 			50,
 			100,
 			0,
-			0,
+			0
 		},
 		terminal_background_color = {
 			255,
 			100,
 			6,
-			6,
+			6
 		},
 		title_text_color = {
 			255,
 			162,
 			6,
-			6,
+			6
 		},
 		description_text_color = {
 			255,
 			212,
 			194,
-			194,
-		},
+			194
+		}
 	},
 	default = {
 		icon = "content/ui/materials/symbols/warning",
 		icon_size = {
 			0,
-			0,
+			0
 		},
 		icon_color = Color.blue(127.5, true),
 		background_color = Color.terminal_grid_background(50, true),
 		terminal_background_color = Color.terminal_grid_background(255, true),
 		title_text_color = Color.terminal_text_header(255, true),
-		description_text_color = Color.terminal_text_body(255, true),
-	},
+		description_text_color = Color.terminal_text_body(255, true)
+	}
 }
 local title_style = table.clone(UIFontSettings.header_1)
 
@@ -404,8 +404,8 @@ local widget_definitions = {
 	change_info_grid_interaction = UIWidget.create_definition({
 		{
 			content_id = "hotspot",
-			pass_type = "hotspot",
-		},
+			pass_type = "hotspot"
+		}
 	}, "change_info_grid_interaction"),
 	change_info_grid_mask = UIWidget.create_definition({
 		{
@@ -416,17 +416,17 @@ local widget_definitions = {
 					255,
 					255,
 					255,
-					255,
-				},
-			},
-		},
+					255
+				}
+			}
+		}
 	}, "change_info_grid_mask"),
 	wallet_grid_1_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "wallet_grid_1_scrollbar"),
 	wallet_grid_1_interaction = UIWidget.create_definition({
 		{
 			content_id = "hotspot",
-			pass_type = "hotspot",
-		},
+			pass_type = "hotspot"
+		}
 	}, "wallet_grid_1_interaction"),
 	wallet_grid_1_mask = UIWidget.create_definition({
 		{
@@ -437,17 +437,17 @@ local widget_definitions = {
 					255,
 					255,
 					255,
-					255,
-				},
-			},
-		},
+					255
+				}
+			}
+		}
 	}, "wallet_grid_1_mask"),
 	wallet_grid_2_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "wallet_grid_2_scrollbar"),
 	wallet_grid_2_interaction = UIWidget.create_definition({
 		{
 			content_id = "hotspot",
-			pass_type = "hotspot",
-		},
+			pass_type = "hotspot"
+		}
 	}, "wallet_grid_2_interaction"),
 	wallet_grid_2_mask = UIWidget.create_definition({
 		{
@@ -458,17 +458,17 @@ local widget_definitions = {
 					255,
 					255,
 					255,
-					255,
-				},
-			},
-		},
+					255
+				}
+			}
+		}
 	}, "wallet_grid_2_mask"),
 	wallet_grid_3_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "wallet_grid_3_scrollbar"),
 	wallet_grid_3_interaction = UIWidget.create_definition({
 		{
 			content_id = "hotspot",
-			pass_type = "hotspot",
-		},
+			pass_type = "hotspot"
+		}
 	}, "wallet_grid_3_interaction"),
 	wallet_grid_3_mask = UIWidget.create_definition({
 		{
@@ -479,10 +479,10 @@ local widget_definitions = {
 					255,
 					255,
 					255,
-					255,
-				},
-			},
-		},
+					255
+				}
+			}
+		}
 	}, "wallet_grid_3_mask"),
 	popup_background = UIWidget.create_definition({
 		{
@@ -496,28 +496,28 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				size = {
 					nil,
-					0,
+					0
 				},
 				size_addition = {
 					40,
-					150,
+					150
 				},
 				uvs = {
 					{
 						0,
-						0,
+						0
 					},
 					{
 						1,
-						1,
-					},
+						1
+					}
 				},
-				color = Color.terminal_grid_background(255, true),
-			},
+				color = Color.terminal_grid_background(255, true)
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -529,29 +529,29 @@ local widget_definitions = {
 				color = Color.terminal_background(255, true),
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size = {
 					1822,
-					430,
+					430
 				},
 				uvs = {
 					{
 						0,
-						0,
+						0
 					},
 					{
 						1,
-						1,
-					},
-				},
-			},
-		},
+						1
+					}
+				}
+			}
+		}
 	}, "screen"),
 	edge_top = UIWidget.create_definition({
 		{
@@ -564,18 +564,18 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					50,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				size = {
 					252,
-					10,
-				},
-			},
+					10
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -587,19 +587,19 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
 				size = {
 					140,
-					18,
-				},
-			},
-		},
+					18
+				}
+			}
+		}
 	}, "screen"),
 	edge_bottom = UIWidget.create_definition({
 		{
@@ -612,18 +612,18 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					50,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				size = {
 					252,
-					10,
-				},
-			},
+					10
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -635,30 +635,30 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					10,
-					3,
+					3
 				},
 				size = {
 					306,
-					48,
-				},
-			},
-		},
+					48
+				}
+			}
+		}
 	}, "screen"),
 	next_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "button_pivot", {
 		alpha_multiplier = 0,
 		gamepad_action = "confirm_pressed",
 		original_text = Localize("loc_confirm"),
 		hotspot = {
-			use_is_focused = true,
-		},
+			use_is_focused = true
+		}
 	}),
 	close_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button_hold_small, "button_pivot", {
-		alpha_multiplier = 0,
+		alpha_multiplier = 0
 	}, ButtonPassTemplates.terminal_button.size),
 	title = UIWidget.create_definition({
 		{
@@ -666,9 +666,9 @@ local widget_definitions = {
 			style_id = "title",
 			value = "",
 			value_id = "title",
-			style = title_style,
-		},
-	}, "title_pivot"),
+			style = title_style
+		}
+	}, "title_pivot")
 }
 local slide_selector = {
 	margin = 5,
@@ -681,7 +681,7 @@ local slide_selector = {
 				content = {
 					on_hover_sound = UISoundEvents.default_mouse_hover,
 					on_pressed_sound = UISoundEvents.default_click,
-					on_select_sound = UISoundEvents.default_click,
+					on_select_sound = UISoundEvents.default_click
 				},
 				style = {
 					horizontal_alignment = "left",
@@ -690,9 +690,9 @@ local slide_selector = {
 					offset = {
 						0,
 						0,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "rect",
@@ -703,7 +703,7 @@ local slide_selector = {
 					default_color = Color.terminal_text_body_dark(255, true),
 					selected_color = Color.terminal_text_header_selected(255, true),
 					hover_color = Color.terminal_text_body(255, true),
-					size = template.size,
+					size = template.size
 				},
 				change_function = function (content, style)
 					local hotspot = content.hotspot
@@ -726,17 +726,17 @@ local slide_selector = {
 					if color then
 						ColorUtilities.color_copy(color, style.color)
 					end
-				end,
-			},
+				end
+			}
 		}
 	end,
 	size = {
 		30,
-		10,
+		10
 	},
 	init = function (parent, widget, index)
 		return
-	end,
+	end
 }
 local anim_start_delay = 0
 local animations = {
@@ -777,7 +777,7 @@ local animations = {
 				widgets.popup_background.style.terminal.color = popup_type_style[popup_type].terminal_background_color
 				widgets.next_button.alpha_multiplier = 0
 				widgets.close_button.alpha_multiplier = 0
-			end,
+			end
 		},
 		{
 			name = "open",
@@ -801,7 +801,7 @@ local animations = {
 				widgets.popup_background.style.terminal.size_addition[2] = window_height + anim_progress * 26
 				widgets.edge_bottom.offset[2] = window_height * 0.5
 				widgets.edge_top.offset[2] = -window_height * 0.5
-			end,
+			end
 		},
 		{
 			name = "fade_in",
@@ -820,8 +820,8 @@ local animations = {
 
 				widgets.close_button.alpha_multiplier = anim_progress
 				widgets.next_button.alpha_multiplier = anim_progress
-			end,
-		},
+			end
+		}
 	},
 	on_exit = {
 		{
@@ -841,7 +841,7 @@ local animations = {
 
 				widgets.close_button.alpha_multiplier = anim_progress
 				widgets.next_button.alpha_multiplier = anim_progress
-			end,
+			end
 		},
 		{
 			name = "close",
@@ -865,14 +865,14 @@ local animations = {
 				widgets.popup_background.style.terminal.size_addition[2] = window_height + anim_progress * 26
 				widgets.edge_bottom.offset[2] = window_height * 0.5
 				widgets.edge_top.offset[2] = -window_height * 0.5
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
 	animations = animations,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
-	slide_selector = slide_selector,
+	slide_selector = slide_selector
 }

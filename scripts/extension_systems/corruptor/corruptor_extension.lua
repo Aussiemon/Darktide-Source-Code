@@ -30,12 +30,12 @@ CorruptorExtension.init = function (self, extension_init_context, unit, extensio
 	self._effect_template_data = {
 		awake = {
 			global_effect_id = nil,
-			template = EffectTemplates.corruptor_ambience_burrowed,
+			template = EffectTemplates.corruptor_ambience_burrowed
 		},
 		emerge = {
 			global_effect_id = nil,
-			template = EffectTemplates.corruptor_ambience,
-		},
+			template = EffectTemplates.corruptor_ambience
+		}
 	}
 
 	local unit_level_index = Managers.state.unit_spawner:level_index(unit)

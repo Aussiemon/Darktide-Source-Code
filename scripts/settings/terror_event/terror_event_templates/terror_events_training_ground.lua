@@ -6,10 +6,10 @@ local template = {
 		event_pacing_off = {
 			{
 				"set_pacing_enabled",
-				enabled = false,
-			},
-		},
-	},
+				enabled = false
+			}
+		}
+	}
 }
 
 return template

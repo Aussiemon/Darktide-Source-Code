@@ -228,7 +228,7 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 	local target_is_wielding_ranged_weapon
 	local visual_loadout_extension = ScriptUnit.has_extension(lunge_target, "visual_loadout_system")
 
-	if visual_loadout_extension then
+	if visual_loadout_extension and visual_loadout_extension.wielded_slot_name then
 		local wielded_slot_name = visual_loadout_extension:wielded_slot_name()
 
 		target_is_wielding_ranged_weapon = visual_loadout_extension:is_inventory_slot_ranged(wielded_slot_name)
@@ -684,7 +684,7 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 	local lunge_target = lunge_character_state_component.lunge_target
 	local t = Managers.time:time("gameplay")
 	local use_armor_type = not not lunge_template.stop_armor_types
-	local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player)
+	local rewind_ms = LagCompensation.rewind_miliseconds(self._is_server, self._is_local_unit, self._player)
 	local radius = damage_settings.radius
 	local actors, num_actors = PhysicsWorld.immediate_overlap(self._physics_world, "shape", "sphere", "position", locomotion_position, "size", radius, "collision_filter", DAMAGE_COLLISION_FILTER, "rewind_ms", rewind_ms)
 	local character_state_hit_mass_component = self._character_state_hit_mass_component

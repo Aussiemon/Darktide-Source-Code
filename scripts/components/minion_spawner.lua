@@ -52,7 +52,7 @@ MinionSpawner._get_data = function (self, unit)
 		spawning_done_anim.speed = (spawning_done_anim.time_to - spawning_done_anim.time_from) / anim_duration
 		anim_data = {
 			spawning_started = spawning_started_anim,
-			spawning_done = spawning_done_anim,
+			spawning_done = spawning_done_anim
 		}
 	end
 
@@ -264,14 +264,14 @@ MinionSpawner.component_data = {
 		step = 0.5,
 		ui_name = "Spawn Position Offset",
 		ui_type = "vector",
-		value = Vector3Box(0, 0, 0),
+		value = Vector3Box(0, 0, 0)
 	},
 	exit_offset = {
 		category = "Position Offset",
 		step = 0.5,
 		ui_name = "Exit Position Offset",
 		ui_type = "vector",
-		value = Vector3Box(0, 1, 0),
+		value = Vector3Box(0, 1, 0)
 	},
 	spawning_started_time_from = {
 		category = "Spawning Started",
@@ -281,7 +281,7 @@ MinionSpawner.component_data = {
 		step = 0.1,
 		ui_name = "Time From (Normalized)",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	spawning_started_time_to = {
 		category = "Spawning Started",
@@ -291,7 +291,7 @@ MinionSpawner.component_data = {
 		step = 0.1,
 		ui_name = "Time To (Normalized)",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	spawning_done_time_from = {
 		category = "Spawning Done",
@@ -301,7 +301,7 @@ MinionSpawner.component_data = {
 		step = 0.1,
 		ui_name = "Time From (Normalized)",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	spawning_done_time_to = {
 		category = "Spawning Done",
@@ -311,7 +311,7 @@ MinionSpawner.component_data = {
 		step = 0.1,
 		ui_name = "Time To (Normalized)",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	duration = {
 		decimals = 1,
@@ -319,52 +319,52 @@ MinionSpawner.component_data = {
 		step = 0.1,
 		ui_name = "Duration (0 if no animation)",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	spawner_groups = {
 		category = "Spawner Groups",
 		size = 0,
 		ui_name = "Spawner Groups",
-		ui_type = "text_box_array",
+		ui_type = "text_box_array"
 	},
 	exclude_from_pacing = {
 		ui_name = "Exclude From Pacing",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	exclude_from_specials_pacing = {
 		ui_name = "Exclude From Specials Pacing",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	spawn_type = {
 		ui_name = "Spawn Type(default, from_ground)",
 		ui_type = "text_box",
-		value = "default",
+		value = "default"
 	},
 	exit_rotation_random_degree_range = {
 		ui_name = "Exit Rotation Degree Range",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	exit_rotation_num_directions = {
 		ui_name = "Exit Rotation Num Directions",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	inputs = {
 		debug_started_animation = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		debug_done_animation = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"MinionSpawnerExtension",
-	},
+		"MinionSpawnerExtension"
+	}
 }
 
 return MinionSpawner

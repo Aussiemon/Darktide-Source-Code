@@ -53,18 +53,18 @@ ViewElementWeaponActionsExtended.present_item = function (self, item)
 	local layout = {
 		{
 			widget_type = "header",
-			header = Localize("loc_item_information_actions"),
+			header = Localize("loc_item_information_actions")
 		},
 		{
-			widget_type = "divider",
+			widget_type = "divider"
 		},
 		{
 			widget_type = "dynamic_spacing",
 			size = {
 				grid_size[1],
-				10,
-			},
-		},
+				10
+			}
+		}
 	}
 	local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 	local displayed_attacks = weapon_template.displayed_attacks
@@ -85,8 +85,8 @@ ViewElementWeaponActionsExtended.present_item = function (self, item)
 						widget_type = "dynamic_spacing",
 						size = {
 							grid_size[1],
-							30,
-						},
+							30
+						}
 					}
 				end
 
@@ -95,73 +95,73 @@ ViewElementWeaponActionsExtended.present_item = function (self, item)
 				layout[#layout + 1] = {
 					widget_type = "weapon_attack_header",
 					display_name = title_loc_key,
-					text_color = key ~= "special" and Color.terminal_text_body_dark(255, true),
+					text_color = key ~= "special" and Color.terminal_text_body_dark(255, true)
 				}
 
 				if is_ranged_weapon then
 					layout[#layout + 1] = {
 						widget_type = "weapon_attack_info_ranged",
-						data = data,
+						data = data
 					}
 					layout[#layout + 1] = {
 						widget_type = "dynamic_spacing",
 						size = {
 							grid_size[1],
-							10,
-						},
+							10
+						}
 					}
 
 					if key == "special" then
 						layout[#layout + 1] = {
 							widget_type = "special_description",
 							data = data,
-							item = item,
+							item = item
 						}
 						layout[#layout + 1] = {
 							widget_type = "dynamic_spacing",
 							size = {
 								grid_size[1],
-								20,
-							},
+								20
+							}
 						}
 						layout[#layout + 1] = {
-							widget_type = "divider",
+							widget_type = "divider"
 						}
 						layout[#layout + 1] = {
 							display_name = "loc_weapon_stats_display_attack_chains",
-							widget_type = "weapon_attack_header",
+							widget_type = "weapon_attack_header"
 						}
 					end
 				elseif key == "special" then
 					layout[#layout + 1] = {
 						widget_type = "weapon_attack_info",
-						data = data,
+						data = data
 					}
 					layout[#layout + 1] = {
 						widget_type = "special_description",
 						data = data,
-						item = item,
+						item = item
 					}
 					layout[#layout + 1] = {
 						widget_type = "dynamic_spacing",
 						size = {
 							grid_size[1],
-							20,
-						},
+							20
+						}
 					}
 					layout[#layout + 1] = {
-						widget_type = "divider",
+						widget_type = "divider"
 					}
 					layout[#layout + 1] = {
 						widget_type = "dynamic_spacing",
 						size = {
 							grid_size[1],
-							10,
-						},
+							10
+						}
 					}
 					layout[#layout + 1] = {
 						display_name = "loc_weapon_stats_display_attack_chains",
-						widget_type = "weapon_attack_header",
+						widget_type = "weapon_attack_header"
 					}
 				end
 
@@ -170,12 +170,12 @@ ViewElementWeaponActionsExtended.present_item = function (self, item)
 						widget_type = "dynamic_spacing",
 						size = {
 							grid_size[1],
-							10,
-						},
+							10
+						}
 					}
 					layout[#layout + 1] = {
 						widget_type = "weapon_attack_chain",
-						attack_chain = data.attack_chain,
+						attack_chain = data.attack_chain
 					}
 				end
 
@@ -187,25 +187,25 @@ ViewElementWeaponActionsExtended.present_item = function (self, item)
 	end
 
 	layout[#layout + 1] = {
-		widget_type = "divider",
+		widget_type = "divider"
 	}
 	layout[#layout + 1] = {
 		widget_type = "dynamic_spacing",
 		size = {
 			grid_size[1],
-			10,
-		},
+			10
+		}
 	}
 	layout[#layout + 1] = {
 		display_name = "loc_item_weapon_description_additional_data_name",
-		widget_type = "weapon_attack_header",
+		widget_type = "weapon_attack_header"
 	}
 	layout[#layout + 1] = {
 		widget_type = "dynamic_spacing",
 		size = {
 			grid_size[1],
-			10,
-		},
+			10
+		}
 	}
 
 	local weapon_stats = WeaponStats:new(item)
@@ -218,7 +218,7 @@ ViewElementWeaponActionsExtended.present_item = function (self, item)
 		if stat.value ~= 0 then
 			layout[#layout + 1] = {
 				widget_type = "weapon_stat",
-				stat = stat,
+				stat = stat
 			}
 		end
 	end
@@ -227,8 +227,8 @@ ViewElementWeaponActionsExtended.present_item = function (self, item)
 		widget_type = "dynamic_spacing",
 		size = {
 			grid_size[1],
-			10,
-		},
+			10
+		}
 	}
 
 	self:present_grid_layout(layout)
@@ -248,7 +248,7 @@ ViewElementWeaponActionsExtended.present_grid_layout = function (self, layout)
 	local grid_size = menu_settings.grid_size
 	local ContentBlueprints = generate_blueprints_function(grid_size)
 	local spacing_entry = {
-		widget_type = "spacing_vertical_small",
+		widget_type = "spacing_vertical_small"
 	}
 	local menu_settings = self._menu_settings
 	local grid_size = menu_settings.grid_size

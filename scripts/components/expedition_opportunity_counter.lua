@@ -24,7 +24,7 @@ ExpeditionOpportunityCounter.init = function (self, unit, is_server, nav_world)
 
 		self._trigger_points[#self._trigger_points + 1] = {
 			triggered = false,
-			value = value,
+			value = value
 		}
 	end
 
@@ -141,9 +141,9 @@ ExpeditionOpportunityCounter.component_data = {
 		ui_name = "trigger points",
 		ui_type = "text_box_array",
 		values = {
-			"",
-		},
-	},
+			""
+		}
+	}
 }
 
 return ExpeditionOpportunityCounter

@@ -5,11 +5,11 @@ require("scripts/managers/mutator/mutators/mutator_gameplay/mutator_gameplay_bas
 local MutatorGameplayBarrenLua = class("MutatorGameplayBarrenLua", "MutatorGameplayBase")
 local REMOVE_SYSTEMS = {
 	"chest_system",
-	"health_station_system",
+	"health_station_system"
 }
 local _DESPAWN_RPC_BY_SYSTEM = {
 	chest_system = "rpc_chest_despawn",
-	health_station_system = "rpc_health_station_despawn",
+	health_station_system = "rpc_health_station_despawn"
 }
 
 MutatorGameplayBarrenLua.init = function (self, owner, settings, triggered_by_level)

@@ -18,7 +18,7 @@ local SHOOTING_ACTIONS = {
 	flamer_gas_burst = true,
 	shoot_hit_scan = true,
 	shoot_pellets = true,
-	shoot_projectile = true,
+	shoot_projectile = true
 }
 local CHARGE_ACTIONS = {
 	chain_lightning = true,
@@ -26,7 +26,7 @@ local CHARGE_ACTIONS = {
 	charge_ammo = true,
 	overload_charge = true,
 	overload_charge_position_finder = true,
-	overload_charge_target_finder = true,
+	overload_charge_target_finder = true
 }
 local _external_properties = {}
 

@@ -14,7 +14,7 @@ local mission_vo_op_no_mans_land_zealot_female_c = {
 			"loc_zealot_female_c__guidance_starting_area_07",
 			"loc_zealot_female_c__guidance_starting_area_08",
 			"loc_zealot_female_c__guidance_starting_area_09",
-			"loc_zealot_female_c__guidance_starting_area_10",
+			"loc_zealot_female_c__guidance_starting_area_10"
 		},
 		sound_events_duration = {
 			2.013073,
@@ -26,7 +26,7 @@ local mission_vo_op_no_mans_land_zealot_female_c = {
 			2.604698,
 			4.724615,
 			5.153125,
-			3.011281,
+			3.011281
 		},
 		sound_event_weights = {
 			0.1,
@@ -38,10 +38,10 @@ local mission_vo_op_no_mans_land_zealot_female_c = {
 			0.1,
 			0.1,
 			0.1,
-			0.1,
+			0.1
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_op_no_mans_land_zealot_female_c", mission_vo_op_no_mans_land_zealot_female_c)

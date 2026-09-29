@@ -19,7 +19,7 @@ local conversations_hub_commissar_a = {
 			"loc_commissar_a__hub_greeting_a_12",
 			"loc_commissar_a__hub_greeting_a_13",
 			"loc_commissar_a__hub_greeting_a_14",
-			"loc_commissar_a__hub_greeting_a_15",
+			"loc_commissar_a__hub_greeting_a_15"
 		},
 		sound_events_duration = {
 			1.522438,
@@ -36,53 +36,53 @@ local conversations_hub_commissar_a = {
 			0.490875,
 			0.986875,
 			2.110854,
-			0.652667,
+			0.652667
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_greeting_first_interaction_commissar_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__hub_greeting_first_interaction_a_01",
+			[1] = "loc_commissar_a__hub_greeting_first_interaction_a_01"
 		},
 		sound_events_duration = {
-			[1] = 6.333354,
+			[1] = 6.333354
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_greeting_first_interaction_commissar_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__hub_greeting_first_interaction_b_01",
+			[1] = "loc_commissar_a__hub_greeting_first_interaction_b_01"
 		},
 		sound_events_duration = {
-			[1] = 9.537854,
+			[1] = 9.537854
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_greeting_first_interaction_commissar_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__hub_greeting_first_interaction_c_01",
+			[1] = "loc_commissar_a__hub_greeting_first_interaction_c_01"
 		},
 		sound_events_duration = {
-			[1] = 7.172292,
+			[1] = 7.172292
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_greeting_first_interaction_commissar_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__hub_greeting_first_interaction_d_01",
+			[1] = "loc_commissar_a__hub_greeting_first_interaction_d_01"
 		},
 		sound_events_duration = {
-			[1] = 7.2445,
+			[1] = 7.2445
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_greeting_mission_failure_a = {
 		randomize_indexes_n = 0,
@@ -102,7 +102,7 @@ local conversations_hub_commissar_a = {
 			"loc_commissar_a__hub_greeting_mission_failure_a_12",
 			"loc_commissar_a__hub_greeting_mission_failure_a_13",
 			"loc_commissar_a__hub_greeting_mission_failure_a_14",
-			"loc_commissar_a__hub_greeting_mission_failure_a_15",
+			"loc_commissar_a__hub_greeting_mission_failure_a_15"
 		},
 		sound_events_duration = {
 			1.403688,
@@ -119,9 +119,9 @@ local conversations_hub_commissar_a = {
 			2.081583,
 			2.292521,
 			4.781938,
-			2.963125,
+			2.963125
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_greeting_mission_success_a = {
 		randomize_indexes_n = 0,
@@ -141,7 +141,7 @@ local conversations_hub_commissar_a = {
 			"loc_commissar_a__hub_greeting_mission_success_a_12",
 			"loc_commissar_a__hub_greeting_mission_success_a_13",
 			"loc_commissar_a__hub_greeting_mission_success_a_14",
-			"loc_commissar_a__hub_greeting_mission_success_a_15",
+			"loc_commissar_a__hub_greeting_mission_success_a_15"
 		},
 		sound_events_duration = {
 			2.064771,
@@ -158,9 +158,9 @@ local conversations_hub_commissar_a = {
 			2.029854,
 			2.031042,
 			2.495188,
-			1.907417,
+			1.907417
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_greeting_reward_a = {
 		randomize_indexes_n = 0,
@@ -180,7 +180,7 @@ local conversations_hub_commissar_a = {
 			"loc_commissar_a__hub_greeting_reward_a_12",
 			"loc_commissar_a__hub_greeting_reward_a_13",
 			"loc_commissar_a__hub_greeting_reward_a_14",
-			"loc_commissar_a__hub_greeting_reward_a_15",
+			"loc_commissar_a__hub_greeting_reward_a_15"
 		},
 		sound_events_duration = {
 			1.667667,
@@ -197,108 +197,108 @@ local conversations_hub_commissar_a = {
 			2.507563,
 			2.045521,
 			3.996833,
-			1.59875,
+			1.59875
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_map_table_call_and_response_01_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__hub_map_table_call_and_response_01_c_01",
+			[1] = "loc_commissar_a__hub_map_table_call_and_response_01_c_01"
 		},
 		sound_events_duration = {
-			[1] = 1.039083,
+			[1] = 1.039083
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_map_table_conversation_01_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__hub_map_table_conversation_01_c_01",
+			[1] = "loc_commissar_a__hub_map_table_conversation_01_c_01"
 		},
 		sound_events_duration = {
-			[1] = 6.230729,
+			[1] = 6.230729
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_map_table_conversation_02_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__hub_map_table_conversation_02_c_01",
+			[1] = "loc_commissar_a__hub_map_table_conversation_02_c_01"
 		},
 		sound_events_duration = {
-			[1] = 1.7475,
+			[1] = 1.7475
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_map_table_conversation_03_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__hub_map_table_conversation_03_c_01",
+			[1] = "loc_commissar_a__hub_map_table_conversation_03_c_01"
 		},
 		sound_events_duration = {
-			[1] = 5.482146,
+			[1] = 5.482146
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_map_table_conversation_04_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__hub_map_table_conversation_04_c_01",
+			[1] = "loc_commissar_a__hub_map_table_conversation_04_c_01"
 		},
 		sound_events_duration = {
-			[1] = 2.954854,
+			[1] = 2.954854
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_map_table_conversation_05_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__hub_map_table_conversation_05_c_01",
+			[1] = "loc_commissar_a__hub_map_table_conversation_05_c_01"
 		},
 		sound_events_duration = {
-			[1] = 2.188,
+			[1] = 2.188
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_map_table_conversation_06_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__hub_map_table_conversation_06_b_01",
+			[1] = "loc_commissar_a__hub_map_table_conversation_06_b_01"
 		},
 		sound_events_duration = {
-			[1] = 5.868,
+			[1] = 5.868
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_map_table_conversation_06_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__hub_map_table_conversation_06_d_01",
+			[1] = "loc_commissar_a__hub_map_table_conversation_06_d_01"
 		},
 		sound_events_duration = {
-			[1] = 8.984375,
+			[1] = 8.984375
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_map_table_conversation_08_e = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__hub_map_table_conversation_08_e_01",
+			[1] = "loc_commissar_a__hub_map_table_conversation_08_e_01"
 		},
 		sound_events_duration = {
-			[1] = 4.794292,
+			[1] = 4.794292
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_map_table_conversation_commissar = {
 		randomize_indexes_n = 0,
@@ -310,7 +310,7 @@ local conversations_hub_commissar_a = {
 			"loc_commissar_a__hub_map_table_conversation_02_a_01",
 			"loc_commissar_a__hub_map_table_conversation_03_a_01",
 			"loc_commissar_a__hub_map_table_conversation_04_a_01",
-			"loc_commissar_a__hub_map_table_conversation_05_a_01",
+			"loc_commissar_a__hub_map_table_conversation_05_a_01"
 		},
 		sound_events_duration = {
 			1.358354,
@@ -319,186 +319,186 @@ local conversations_hub_commissar_a = {
 			3.251083,
 			2.694396,
 			2.615104,
-			3.340875,
+			3.340875
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	southwark_hub_conversation_01_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__southwark_hub_conversation_01_a_01",
+			[1] = "loc_commissar_a__southwark_hub_conversation_01_a_01"
 		},
 		sound_events_duration = {
-			[1] = 6.611833,
+			[1] = 6.611833
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	southwark_hub_conversation_01_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__southwark_hub_conversation_01_c_01",
+			[1] = "loc_commissar_a__southwark_hub_conversation_01_c_01"
 		},
 		sound_events_duration = {
-			[1] = 1.996313,
+			[1] = 1.996313
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	southwark_hub_conversation_02_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__southwark_hub_conversation_02_a_01",
+			[1] = "loc_commissar_a__southwark_hub_conversation_02_a_01"
 		},
 		sound_events_duration = {
-			[1] = 8.758917,
+			[1] = 8.758917
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	southwark_hub_conversation_02_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__southwark_hub_conversation_02_c_01",
+			[1] = "loc_commissar_a__southwark_hub_conversation_02_c_01"
 		},
 		sound_events_duration = {
-			[1] = 4.338729,
+			[1] = 4.338729
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	southwark_hub_conversation_03_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__southwark_hub_conversation_03_b_01",
+			[1] = "loc_commissar_a__southwark_hub_conversation_03_b_01"
 		},
 		sound_events_duration = {
-			[1] = 9.107062,
+			[1] = 9.107062
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	southwark_hub_conversation_05_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__southwark_hub_conversation_05_b_01",
+			[1] = "loc_commissar_a__southwark_hub_conversation_05_b_01"
 		},
 		sound_events_duration = {
-			[1] = 2.904292,
+			[1] = 2.904292
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	southwark_hub_conversation_05_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__southwark_hub_conversation_05_d_01",
+			[1] = "loc_commissar_a__southwark_hub_conversation_05_d_01"
 		},
 		sound_events_duration = {
-			[1] = 3.475792,
+			[1] = 3.475792
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	southwark_hub_conversation_08_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__southwark_hub_conversation_08_a_01",
+			[1] = "loc_commissar_a__southwark_hub_conversation_08_a_01"
 		},
 		sound_events_duration = {
-			[1] = 3.732875,
+			[1] = 3.732875
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	southwark_hub_conversation_08_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__southwark_hub_conversation_08_c_01",
+			[1] = "loc_commissar_a__southwark_hub_conversation_08_c_01"
 		},
 		sound_events_duration = {
-			[1] = 6.934833,
+			[1] = 6.934833
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	southwark_hub_conversation_08_e = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__southwark_hub_conversation_08_e_01",
+			[1] = "loc_commissar_a__southwark_hub_conversation_08_e_01"
 		},
 		sound_events_duration = {
-			[1] = 3.86,
+			[1] = 3.86
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	southwark_hub_conversation_09_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__southwark_hub_conversation_09_a_01",
+			[1] = "loc_commissar_a__southwark_hub_conversation_09_a_01"
 		},
 		sound_events_duration = {
-			[1] = 7.578438,
+			[1] = 7.578438
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	southwark_hub_conversation_09_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__southwark_hub_conversation_09_c_01",
+			[1] = "loc_commissar_a__southwark_hub_conversation_09_c_01"
 		},
 		sound_events_duration = {
-			[1] = 2.998625,
+			[1] = 2.998625
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	southwark_hub_conversation_10_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__southwark_hub_conversation_10_a_01",
+			[1] = "loc_commissar_a__southwark_hub_conversation_10_a_01"
 		},
 		sound_events_duration = {
-			[1] = 5.387438,
+			[1] = 5.387438
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	southwark_hub_conversation_10_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__southwark_hub_conversation_10_c_01",
+			[1] = "loc_commissar_a__southwark_hub_conversation_10_c_01"
 		},
 		sound_events_duration = {
-			[1] = 1.542292,
+			[1] = 1.542292
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	southwark_hub_conversation_11_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__southwark_hub_conversation_11_a_01",
+			[1] = "loc_commissar_a__southwark_hub_conversation_11_a_01"
 		},
 		sound_events_duration = {
-			[1] = 4.927583,
+			[1] = 4.927583
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	southwark_hub_conversation_11_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_commissar_a__southwark_hub_conversation_11_c_01",
+			[1] = "loc_commissar_a__southwark_hub_conversation_11_c_01"
 		},
 		sound_events_duration = {
-			[1] = 1.911458,
+			[1] = 1.911458
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("conversations_hub_commissar_a", conversations_hub_commissar_a)

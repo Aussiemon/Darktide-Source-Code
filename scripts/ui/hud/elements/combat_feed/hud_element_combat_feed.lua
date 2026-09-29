@@ -42,8 +42,8 @@ HudElementCombatFeed.init = function (self, parent, draw_layer, start_scale)
 		default = {
 			fade_in = 0.5,
 			fade_out = 1,
-			widget_definition = Definitions.notification_message_default,
-		},
+			widget_definition = Definitions.notification_message_default
+		}
 	}
 
 	local event_manager = Managers.event
@@ -61,7 +61,7 @@ end
 local kill_message_localization_key = "loc_hud_combat_feed_kill_message"
 local temp_kill_message_localization_params = {
 	killer = "n/a",
-	victim = "n/a",
+	victim = "n/a"
 }
 local player_default_color = Color.ui_hud_green_light(255, true)
 local enemy_default_color = Color.red(255, true)
@@ -89,6 +89,18 @@ HudElementCombatFeed._get_unit_presentation_name = function (self, unit)
 			return display_name and Text.apply_color_to_text(Localize(display_name), color)
 		end
 	end
+end
+
+HudElementCombatFeed._get_unit_combat_feed_message = function (self, unit)
+	local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
+	local breed_or_nil = unit_data_extension and unit_data_extension:breed()
+	local target_is_minion = breed_or_nil and Breed.is_minion(breed_or_nil)
+
+	if not target_is_minion then
+		return nil
+	end
+
+	return breed_or_nil.combat_feed_message
 end
 
 HudElementCombatFeed._color_by_enemy_tags = function (self, tags)
@@ -154,7 +166,7 @@ HudElementCombatFeed.event_add_notification_message = function (self, message_ty
 
 			local text = Localize(optional_localization_key or "loc_notification_feed_currency_acquired", true, {
 				amount = amount,
-				player_name = player_name,
+				player_name = player_name
 			})
 
 			self:_add_combat_feed_message(text)
@@ -186,11 +198,12 @@ end
 HudElementCombatFeed.event_combat_feed_kill = function (self, attacking_unit, attacked_unit)
 	local killer = self:_get_unit_presentation_name(attacking_unit)
 	local victim = self:_get_unit_presentation_name(attacked_unit)
+	local combat_feed_message = self:_get_unit_combat_feed_message(attacked_unit) or kill_message_localization_key
 
 	temp_kill_message_localization_params.killer = killer
 	temp_kill_message_localization_params.victim = victim
 
-	local text = self:_localize(kill_message_localization_key, true, temp_kill_message_localization_params)
+	local text = self:_localize(combat_feed_message, true, temp_kill_message_localization_params)
 
 	self:_add_combat_feed_message(text)
 end

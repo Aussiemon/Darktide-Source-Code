@@ -12,7 +12,7 @@ local mission_vo_dm_rise_adamant_female_c = {
 			"loc_adamant_female_c__guidance_starting_area_05",
 			"loc_adamant_female_c__guidance_starting_area_06",
 			"loc_adamant_female_c__guidance_starting_area_07",
-			"loc_adamant_female_c__guidance_starting_area_08",
+			"loc_adamant_female_c__guidance_starting_area_08"
 		},
 		sound_events_duration = {
 			2.282708,
@@ -22,7 +22,7 @@ local mission_vo_dm_rise_adamant_female_c = {
 			2.132865,
 			2.604115,
 			2.831365,
-			2.629792,
+			2.629792
 		},
 		sound_event_weights = {
 			0.125,
@@ -32,9 +32,9 @@ local mission_vo_dm_rise_adamant_female_c = {
 			0.125,
 			0.125,
 			0.125,
-			0.125,
+			0.125
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	mission_rise_start_b_sergeant_branch = {
 		randomize_indexes_n = 0,
@@ -42,19 +42,19 @@ local mission_vo_dm_rise_adamant_female_c = {
 		sound_events = {
 			"loc_adamant_female_c__region_habculum_01",
 			"loc_adamant_female_c__region_habculum_02",
-			"loc_adamant_female_c__region_habculum_03",
+			"loc_adamant_female_c__region_habculum_03"
 		},
 		sound_events_duration = {
 			4.67876,
 			3.265594,
-			3.567938,
+			3.567938
 		},
 		sound_event_weights = {
 			0.3333333,
 			0.3333333,
-			0.3333333,
+			0.3333333
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	mission_rise_start_b_sergeant_branch_response = {
 		randomize_indexes_n = 0,
@@ -62,20 +62,20 @@ local mission_vo_dm_rise_adamant_female_c = {
 		sound_events = {
 			"loc_adamant_female_c__zone_transit_01",
 			"loc_adamant_female_c__zone_transit_02",
-			"loc_adamant_female_c__zone_transit_03",
+			"loc_adamant_female_c__zone_transit_03"
 		},
 		sound_events_duration = {
 			3.439479,
 			4.728438,
-			4.889583,
+			4.889583
 		},
 		sound_event_weights = {
 			0.3333333,
 			0.3333333,
-			0.3333333,
+			0.3333333
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_dm_rise_adamant_female_c", mission_vo_dm_rise_adamant_female_c)

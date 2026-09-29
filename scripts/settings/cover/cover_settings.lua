@@ -7,7 +7,7 @@ cover_settings.peek_types = table.enum("right", "left", "both", "blocked")
 cover_settings.user_search_sources = table.enum("from_self", "from_target", "from_combat_vector_start")
 cover_settings.peek_z_offsets = {
 	high = 1,
-	low = 0.5,
+	low = 0.5
 }
 cover_settings.slot_width = 0.75
 cover_settings.slot_navmesh_outside_search_distance = 0.75

@@ -6,7 +6,7 @@ local ReloadStates = {}
 
 ReloadStates.reload_kinds = {
 	reload_shotgun = true,
-	reload_state = true,
+	reload_state = true
 }
 
 ReloadStates.reset = function (reload_template, inventory_slot_component)

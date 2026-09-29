@@ -10,6 +10,12 @@ local end_view_settings = {
 	max_duration = 120,
 	min_delay_before_summary = 2,
 	overlay_draw_layer = 300,
+	rate_match_negative_button = "rate_match_negative",
+	rate_match_positive_button = "rate_match_positive",
+	rate_match_title_text = "loc_eor_rate_match_title",
+	session_stats_collapse_text = "loc_end_view_leaderboard_collapse",
+	session_stats_expand_text = "loc_end_view_leaderboard_expand",
+	session_stats_toggle_button = "cycle_list_primary",
 	skip_grace_time = 0.5,
 	stay_in_party_vote_button = "hotkey_menu_special_1",
 	stay_in_party_vote_text = "loc_eor_stay_in_party_vote_text",
@@ -23,23 +29,23 @@ local end_view_settings = {
 	levels_by_id = {
 		default = {
 			level_name = "content/levels/ui/end_of_round/ui_eor_background",
-			shading_environment = "content/shading_environments/ui/ui_eor_background",
+			shading_environment = "content/shading_environments/ui/ui_eor_background"
 		},
 		horde = {
 			level_name = "content/levels/ui/horde_end_of_round/horde_end_of_round",
-			shading_environment = "content/shading_environments/ui/ui_eor_background",
+			shading_environment = "content/shading_environments/ui/ui_eor_background"
 		},
 		expeditions = {
 			level_name = "content/levels/ui/expeditions_end_of_round/expeditions_end_of_round",
-			shading_environment = "content/shading_environments/ui/ui_eor_background",
-		},
+			shading_environment = "content/shading_environments/ui/ui_eor_background"
+		}
 	},
 	ignored_slots = {
 		"slot_pocketable",
 		"slot_pocketable_small",
 		"slot_luggable",
 		"slot_combat_ability",
-		"slot_grenade_ability",
+		"slot_grenade_ability"
 	},
 	animations_per_archetype = {
 		psyker = {
@@ -47,29 +53,29 @@ local end_view_settings = {
 			"eor_psyker_002",
 			"eor_psyker_003",
 			"eor_psyker_004",
-			"eor_psyker_005",
+			"eor_psyker_005"
 		},
 		veteran = {
 			"eor_veteran_001",
 			"eor_veteran_002",
 			"eor_veteran_003",
 			"eor_veteran_004",
-			"eor_veteran_005",
+			"eor_veteran_005"
 		},
 		zealot = {
 			"eor_zealot_001",
 			"eor_zealot_002",
 			"eor_zealot_003",
 			"eor_zealot_004",
-			"eor_zealot_005",
+			"eor_zealot_005"
 		},
 		ogryn = {
 			"eor_ogryn_001",
 			"eor_ogryn_002",
 			"eor_ogryn_003",
 			"eor_ogryn_004",
-			"eor_ogryn_005",
-		},
+			"eor_ogryn_005"
+		}
 	},
 	debrief_videos = {
 		player_journey_01 = "debriefing_01",
@@ -92,7 +98,10 @@ local end_view_settings = {
 		story_nomansland_01 = "debriefing_nml_01",
 		story_nomansland_02 = "debriefing_nml_02",
 		story_nomansland_03 = "debriefing_nml_03",
-	},
+		story_spillway_01 = "debriefing_spillway_01",
+		story_spillway_02 = "debriefing_spillway_02",
+		story_spillway_03 = "debriefing_spillway_03"
+	}
 }
 
 return settings("EndViewSettings", end_view_settings)

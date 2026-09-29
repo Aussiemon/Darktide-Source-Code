@@ -21,13 +21,13 @@ local scenegraph_definitions = {
 		vertical_alignment = "center",
 		size = {
 			1250,
-			1250,
+			1250
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	button_pivot = {
 		horizontal_alignment = "center",
@@ -35,13 +35,13 @@ local scenegraph_definitions = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			470,
-			1,
-		},
+			1
+		}
 	},
 	window = {
 		horizontal_alignment = "center",
@@ -51,8 +51,8 @@ local scenegraph_definitions = {
 		position = {
 			0,
 			0,
-			20,
-		},
+			20
+		}
 	},
 	window_content = {
 		horizontal_alignment = "center",
@@ -62,8 +62,8 @@ local scenegraph_definitions = {
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	title_icon = {
 		horizontal_alignment = "center",
@@ -71,13 +71,13 @@ local scenegraph_definitions = {
 		vertical_alignment = "top",
 		size = {
 			92,
-			72,
+			72
 		},
 		position = {
 			0,
 			30,
-			1,
-		},
+			1
+		}
 	},
 	window_title = {
 		horizontal_alignment = "center",
@@ -85,13 +85,13 @@ local scenegraph_definitions = {
 		vertical_alignment = "bottom",
 		size = {
 			content_size[1],
-			50,
+			50
 		},
 		position = {
 			0,
 			60,
-			2,
-		},
+			2
+		}
 	},
 	player_title = {
 		horizontal_alignment = "center",
@@ -99,13 +99,13 @@ local scenegraph_definitions = {
 		vertical_alignment = "bottom",
 		size = {
 			content_size[1],
-			50,
+			50
 		},
 		position = {
 			0,
 			20,
-			1,
-		},
+			1
+		}
 	},
 	title_divider = {
 		horizontal_alignment = "center",
@@ -113,13 +113,13 @@ local scenegraph_definitions = {
 		vertical_alignment = "bottom",
 		size = {
 			468,
-			22,
+			22
 		},
 		position = {
 			0,
 			35,
-			1,
-		},
+			1
+		}
 	},
 	option_dropdown_report_type = {
 		horizontal_alignment = "center",
@@ -129,8 +129,8 @@ local scenegraph_definitions = {
 		position = {
 			0,
 			dropdown_size[2] + 10,
-			0,
-		},
+			0
+		}
 	},
 	report_details_title = {
 		horizontal_alignment = "center",
@@ -138,13 +138,13 @@ local scenegraph_definitions = {
 		vertical_alignment = "bottom",
 		size = {
 			content_size[1],
-			50,
+			50
 		},
 		position = {
 			0,
 			60,
-			2,
-		},
+			2
+		}
 	},
 	input_text_report_details = {
 		horizontal_alignment = "center",
@@ -154,8 +154,8 @@ local scenegraph_definitions = {
 		position = {
 			0,
 			comment_input_text_size[2] + 10,
-			0,
-		},
+			0
+		}
 	},
 	description = {
 		horizontal_alignment = "center",
@@ -163,13 +163,13 @@ local scenegraph_definitions = {
 		vertical_alignment = "bottom",
 		size = {
 			content_size[1],
-			30,
+			30
 		},
 		position = {
 			0,
 			30,
-			1,
-		},
+			1
+		}
 	},
 	report_button = {
 		horizontal_alignment = "center",
@@ -179,8 +179,8 @@ local scenegraph_definitions = {
 		position = {
 			0,
 			report_button_size[2] + 10,
-			0,
-		},
+			0
+		}
 	},
 	close_button = {
 		horizontal_alignment = "center",
@@ -190,9 +190,9 @@ local scenegraph_definitions = {
 		position = {
 			0,
 			report_button_size[2] + 10,
-			2,
-		},
-	},
+			2
+		}
+	}
 }
 local widget_definitions = {
 	title_icon = UIWidget.create_definition({
@@ -200,18 +200,18 @@ local widget_definitions = {
 			pass_type = "texture",
 			value = "content/ui/materials/symbols/warning",
 			style = {
-				color = Color.terminal_frame(255, true),
-			},
-		},
+				color = Color.terminal_frame(255, true)
+			}
+		}
 	}, "title_icon"),
 	title_divider = UIWidget.create_definition({
 		{
 			pass_type = "texture",
 			value = "content/ui/materials/dividers/skull_center_02",
 			style = {
-				color = Color.terminal_frame(255, true),
-			},
-		},
+				color = Color.terminal_frame(255, true)
+			}
+		}
 	}, "title_divider"),
 	window_title = UIWidget.create_definition({
 		{
@@ -230,10 +230,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "window_title"),
 	report_details_title = UIWidget.create_definition({
 		{
@@ -252,10 +252,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "report_details_title"),
 	player_title = UIWidget.create_definition({
 		{
@@ -274,10 +274,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "player_title"),
 	description = UIWidget.create_definition({
 		{
@@ -296,10 +296,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "description"),
 	window = UIWidget.create_definition({
 		{
@@ -310,14 +310,14 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					10,
-				},
-			},
+					10
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -330,18 +330,18 @@ local widget_definitions = {
 					100,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				size_addition = {
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -353,10 +353,10 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					24,
-					24,
+					24
 				},
-				color = Color.terminal_grid_background(nil, true),
-			},
+				color = Color.terminal_grid_background(nil, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -369,9 +369,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -384,14 +384,14 @@ local widget_definitions = {
 				color = Color.black(200, true),
 				size_addition = {
 					96,
-					96,
+					96
 				},
 				offset = {
 					0,
 					0,
-					5,
-				},
-			},
+					5
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -404,9 +404,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					4,
-				},
-			},
+					4
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -419,9 +419,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
-				},
-			},
+					5
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -432,19 +432,19 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					nil,
-					10,
+					10
 				},
 				size_addition = {
 					10,
-					0,
+					0
 				},
 				color = Color.terminal_text_header(255, true),
 				offset = {
 					0,
 					-4,
-					14,
-				},
-			},
+					14
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -455,19 +455,19 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					nil,
-					10,
+					10
 				},
 				size_addition = {
 					10,
-					0,
+					0
 				},
 				color = Color.terminal_text_header(255, true),
 				offset = {
 					0,
 					4,
-					14,
-				},
-			},
+					14
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -479,14 +479,14 @@ local widget_definitions = {
 					100,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -498,28 +498,28 @@ local widget_definitions = {
 					100,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					-1,
+					-1
 				},
 				size_addition = {
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "window"),
 	report_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button_hold_small, "report_button", {
 		visible = true,
-		original_text = Localize("loc_alias_view_hotkey_item_discard"),
+		original_text = Localize("loc_alias_view_hotkey_item_discard")
 	}),
 	close_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "close_button", {
 		visible = true,
-		original_text = Localize("loc_action_interaction_close"),
-	}),
+		original_text = Localize("loc_action_interaction_close")
+	})
 }
 local animation_definitions = {
 	on_enter = {
@@ -549,7 +549,7 @@ local animation_definitions = {
 				widgets.report_details_title.alpha_multiplier = 0
 				widgets.player_title.alpha_multiplier = 0
 				parent._content_alpha_multiplier = 0
-			end,
+			end
 		},
 		{
 			end_time = 1.2,
@@ -562,7 +562,7 @@ local animation_definitions = {
 
 				window.style.screen_background.color[1] = alpha
 				window.style.screen_background_vignette.color[1] = alpha
-			end,
+			end
 		},
 		{
 			end_time = 0.2,
@@ -582,7 +582,7 @@ local animation_definitions = {
 				window_style.edge_top.color[1] = alpha
 				window_style.edge_bottom.color[1] = alpha
 				window_style.window_background.color[1] = 200 * anim_progress
-			end,
+			end
 		},
 		{
 			end_time = 0.7,
@@ -602,7 +602,7 @@ local animation_definitions = {
 				widgets.window_title.alpha_multiplier = anim_progress
 				widgets.report_details_title.alpha_multiplier = anim_progress
 				widgets.player_title.alpha_multiplier = anim_progress
-			end,
+			end
 		},
 		{
 			end_time = 0.4,
@@ -615,8 +615,8 @@ local animation_definitions = {
 				local anim_progress = math.easeCubic(progress)
 
 				parent:_set_scenegraph_size("window", nil, 100 + (scenegraph_definition.window.size[2] - 100) * anim_progress)
-			end,
-		},
+			end
+		}
 	},
 	on_exit = {
 		{
@@ -637,7 +637,7 @@ local animation_definitions = {
 				widgets.window_title.alpha_multiplier = anim_progress
 				widgets.report_details_title.alpha_multiplier = anim_progress
 				widgets.player_title.alpha_multiplier = anim_progress
-			end,
+			end
 		},
 		{
 			end_time = 0.7,
@@ -650,7 +650,7 @@ local animation_definitions = {
 				local anim_progress = math.easeCubic(1 - progress)
 
 				parent:_set_scenegraph_size("window", nil, 100 + (scenegraph_definition.window.size[2] - 100) * anim_progress)
-			end,
+			end
 		},
 		{
 			end_time = 0.5,
@@ -670,18 +670,18 @@ local animation_definitions = {
 				window_style.edge_top.color[1] = alpha
 				window_style.edge_bottom.color[1] = alpha
 				window_style.window_background.color[1] = 200 * anim_progress
-			end,
+			end
 		},
 		{
 			end_time = 0.6,
 			name = "delay",
-			start_time = 0.5,
-		},
-	},
+			start_time = 0.5
+		}
+	}
 }
 
 return {
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definitions,
-	animations = animation_definitions,
+	animations = animation_definitions
 }

@@ -12,17 +12,17 @@ local view_settings = {
 	state_bound = true,
 	use_transition_ui = true,
 	levels = {
-		"content/levels/ui/credits_cosmetics_vendor/credits_cosmetics_vendor",
+		"content/levels/ui/credits_cosmetics_vendor/credits_cosmetics_vendor"
 	},
 	enter_sound_events = {
-		UISoundEvents.cosmetics_vendor_on_enter,
+		UISoundEvents.cosmetics_vendor_on_enter
 	},
 	exit_sound_events = {
-		UISoundEvents.cosmetics_vendor_on_exit,
+		UISoundEvents.cosmetics_vendor_on_exit
 	},
 	wwise_states = {
-		options = WwiseGameSyncSettings.state_groups.options.vendor_menu,
-	},
+		options = WwiseGameSyncSettings.state_groups.options.vendor_menu
+	}
 }
 
 return settings("CosmeticsVendorBackgroundViewDeclarationSettings", view_settings)

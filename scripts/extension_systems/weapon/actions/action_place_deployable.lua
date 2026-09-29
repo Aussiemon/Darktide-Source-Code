@@ -31,11 +31,10 @@ ActionPlaceDeployable._place_unit = function (self, action_settings, position, r
 		Managers.event:trigger("tg_on_pickup_placed", placed_unit)
 	end
 
-	if action_settings.use_ability_charge then
-		local ability_type = action_settings.ability_type
+	if action_settings.consume_ability_usage_cost then
 		local ability_extension = ScriptUnit.extension(player_unit, "ability_system")
 
-		ability_extension:use_ability_charge(ability_type)
+		ability_extension:consume_ability_usage_cost(self._ability_type)
 
 		local vo_tag = action_settings.vo_tag
 
@@ -45,10 +44,9 @@ ActionPlaceDeployable._place_unit = function (self, action_settings, position, r
 	end
 
 	if action_settings.pause_ability_cooldown then
-		local ability_type = action_settings.ability_type
 		local ability_extension = ScriptUnit.extension(player_unit, "ability_system")
 
-		ability_extension:pause_cooldown(ability_type)
+		ability_extension:pause_ability_resource_regen(self._ability_type)
 	end
 
 	local buff_extension = ScriptUnit.has_extension(player_unit, "buff_system")

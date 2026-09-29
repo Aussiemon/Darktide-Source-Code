@@ -14,14 +14,14 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			header_size[1],
-			250,
+			250
 		},
 		position = {
 			0,
 			50,
-			0,
-		},
-	},
+			0
+		}
+	}
 }
 
 local function create_notification_message_default(scenegraph_id)
@@ -30,7 +30,7 @@ local function create_notification_message_default(scenegraph_id)
 	local side_offset = 10
 	local icon_size = {
 		40,
-		40,
+		40
 	}
 
 	return UIWidget.create_definition({
@@ -46,7 +46,7 @@ local function create_notification_message_default(scenegraph_id)
 				offset = {
 					icon_size[1] + side_offset,
 					0,
-					2,
+					2
 				},
 				font_type = description_font_settings.font_type,
 				font_size = description_font_settings.font_size,
@@ -54,10 +54,10 @@ local function create_notification_message_default(scenegraph_id)
 				default_text_color = description_font_color,
 				size = {
 					header_size[1] - (icon_size[1] + side_offset * 2),
-					header_size[2],
-				},
-			},
-		},
+					header_size[2]
+				}
+			}
+		}
 	}, scenegraph_id)
 end
 
@@ -66,5 +66,5 @@ local widget_definitions = {}
 return {
 	notification_message_default = create_notification_message_default("background"),
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

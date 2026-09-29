@@ -31,7 +31,7 @@ local galvanic_rifle_crit_mod = {
 		[armor_types.berserker] = 0.1,
 		[armor_types.super_armor] = 0.1,
 		[armor_types.disgustingly_resilient] = 0.1,
-		[armor_types.void_shield] = 0,
+		[armor_types.void_shield] = 0
 	},
 	impact = {
 		[armor_types.unarmored] = 1,
@@ -41,8 +41,8 @@ local galvanic_rifle_crit_mod = {
 		[armor_types.berserker] = 1,
 		[armor_types.super_armor] = 1,
 		[armor_types.disgustingly_resilient] = 0.75,
-		[armor_types.void_shield] = 0.75,
-	},
+		[armor_types.void_shield] = 0.75
+	}
 }
 
 damage_templates.galvanic_rifle_p1_m1 = {
@@ -53,12 +53,12 @@ damage_templates.galvanic_rifle_p1_m1 = {
 	ranges = {
 		min = {
 			10,
-			20,
+			20
 		},
 		max = {
 			25,
-			40,
-		},
+			40
+		}
 	},
 	armor_damage_modifier_ranged = {
 		near = {
@@ -70,7 +70,7 @@ damage_templates.galvanic_rifle_p1_m1 = {
 				[armor_types.berserker] = damage_lerp_values.lerp_0_7,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_2,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_7,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_5
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -80,8 +80,8 @@ damage_templates.galvanic_rifle_p1_m1 = {
 				[armor_types.berserker] = damage_lerp_values.lerp_0_6,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-			},
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_75
+			}
 		},
 		far = {
 			attack = {
@@ -92,7 +92,7 @@ damage_templates.galvanic_rifle_p1_m1 = {
 				[armor_types.berserker] = damage_lerp_values.lerp_0_6,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_6,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_4,
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_4
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -102,23 +102,23 @@ damage_templates.galvanic_rifle_p1_m1 = {
 				[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
-			},
-		},
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_5
+			}
+		}
 	},
 	critical_strike = {
 		gibbing_power = GibbingPower.light,
-		gibbing_type = gibbing_types.ballistic,
+		gibbing_type = gibbing_types.ballistic
 	},
 	power_distribution = {
 		attack = {
 			540,
-			750,
+			750
 		},
 		impact = {
 			6,
-			12,
-		},
+			12
+		}
 	},
 	shield_override_stagger_strength = default_shield_override_stagger_strength,
 	damage_type = damage_types.auto_bullet,
@@ -127,7 +127,7 @@ damage_templates.galvanic_rifle_p1_m1 = {
 	wounds_template = WoundsTemplates.ballistic,
 	on_kill_area_suppression = {
 		distance = 3,
-		suppression_value = 5,
+		suppression_value = 5
 	},
 	gib_push_force = GibbingSettings.gib_push_force.ranged_light,
 	targets = {
@@ -142,15 +142,15 @@ damage_templates.galvanic_rifle_p1_m1 = {
 				[armor_types.berserker] = 0.65,
 				[armor_types.super_armor] = 0.75,
 				[armor_types.disgustingly_resilient] = 0.55,
-				[armor_types.void_shield] = 0.5,
+				[armor_types.void_shield] = 0.5
 			},
 			boost_curve_multiplier_finesse = {
 				1.5,
-				2,
-			},
+				2
+			}
 		},
-		crit_mod = galvanic_rifle_crit_mod,
-	},
+		crit_mod = galvanic_rifle_crit_mod
+	}
 }
 damage_templates.galvanic_rifle_weapon_special_bash = {
 	is_push = true,
@@ -164,7 +164,7 @@ damage_templates.galvanic_rifle_weapon_special_bash = {
 			[armor_types.berserker] = 0.6,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0.1,
+			[armor_types.void_shield] = 0.1
 		},
 		impact = {
 			[armor_types.unarmored] = 1.25,
@@ -174,8 +174,8 @@ damage_templates.galvanic_rifle_weapon_special_bash = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.5,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
-		},
+			[armor_types.void_shield] = 0
+		}
 	},
 	gibbing_power = GibbingPower.always,
 	gibbing_type = gibbing_types.default,
@@ -184,15 +184,15 @@ damage_templates.galvanic_rifle_weapon_special_bash = {
 			power_distribution = {
 				attack = {
 					55,
-					75,
+					75
 				},
 				impact = {
 					10,
-					20,
-				},
-			},
-		},
-	},
+					20
+				}
+			}
+		}
+	}
 }
 damage_templates.galvanic_rifle_weapon_special_push = {
 	ignore_stagger_reduction = true,
@@ -209,7 +209,7 @@ damage_templates.galvanic_rifle_weapon_special_push = {
 			[armor_types.berserker] = 0.6,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0.1,
+			[armor_types.void_shield] = 0.1
 		},
 		impact = {
 			[armor_types.unarmored] = 1.25,
@@ -219,8 +219,8 @@ damage_templates.galvanic_rifle_weapon_special_push = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.5,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
-		},
+			[armor_types.void_shield] = 0
+		}
 	},
 	gibbing_power = GibbingPower.always,
 	gibbing_type = gibbing_types.default,
@@ -229,15 +229,15 @@ damage_templates.galvanic_rifle_weapon_special_push = {
 			power_distribution = {
 				attack = {
 					25,
-					75,
+					75
 				},
 				impact = {
 					5,
-					10,
-				},
-			},
-		},
-	},
+					10
+				}
+			}
+		}
+	}
 }
 overrides.galvanic_weapon_special_bash_heavy = {
 	parent_template_name = "galvanic_rifle_weapon_special_bash",
@@ -249,8 +249,8 @@ overrides.galvanic_weapon_special_bash_heavy = {
 			"attack",
 			{
 				50,
-				150,
-			},
+				150
+			}
 		},
 		{
 			"targets",
@@ -259,21 +259,21 @@ overrides.galvanic_weapon_special_bash_heavy = {
 			"impact",
 			{
 				5,
-				10,
-			},
+				10
+			}
 		},
 		{
 			"weakspot_stagger_resistance_modifier",
-			0.1,
+			0.1
 		},
 		{
 			"ragdoll_push_force",
-			400,
-		},
-	},
+			400
+		}
+	}
 }
 
 return {
 	base_templates = damage_templates,
-	overrides = overrides,
+	overrides = overrides
 }

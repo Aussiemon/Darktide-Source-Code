@@ -47,6 +47,70 @@ MainPathQueries.position_from_distance = function (wanted_distance)
 	return EngineOptimized.point_on_mainpath(wanted_distance)
 end
 
+MainPathQueries.closest_travel_distance_vertical_aware = function (main_path_segments, position, max_z_diff)
+	local best_distance_sq = math.huge
+	local best_segment, best_node_index
+
+	for i = 1, #main_path_segments do
+		local segment = main_path_segments[i]
+		local nodes = segment.nodes
+
+		for j = 1, #nodes do
+			local node_position = nodes[j]:unbox()
+
+			if max_z_diff >= math.abs(node_position.z - position.z) then
+				local to_node = node_position - position
+				local distance_sq = to_node.x * to_node.x + to_node.y * to_node.y
+
+				if distance_sq < best_distance_sq then
+					best_distance_sq = distance_sq
+					best_segment = segment
+					best_node_index = j
+				end
+			end
+		end
+	end
+
+	if not best_segment then
+		return nil
+	end
+
+	local nodes = best_segment.nodes
+	local travel_distances = best_segment.travel_distances
+	local best_travel_distance = travel_distances[best_node_index]
+	local node_position = nodes[best_node_index]:unbox()
+
+	for neighbor_index = best_node_index - 1, best_node_index + 1, 2 do
+		local neighbor_node = nodes[neighbor_index]
+
+		if neighbor_node then
+			local neighbor_position = neighbor_node:unbox()
+
+			if max_z_diff >= math.abs(neighbor_position.z - position.z) then
+				local edge = neighbor_position - node_position
+				local edge_length_sq = Vector3.dot(edge, edge)
+
+				if edge_length_sq > 0.001 then
+					local t = math.clamp(Vector3.dot(position - node_position, edge) / edge_length_sq, 0, 1)
+					local projected = node_position + edge * t
+					local to_projected = projected - position
+					local distance_sq = to_projected.x * to_projected.x + to_projected.y * to_projected.y
+
+					if distance_sq < best_distance_sq then
+						best_distance_sq = distance_sq
+
+						local neighbor_travel_distance = travel_distances[neighbor_index]
+
+						best_travel_distance = math.lerp(travel_distances[best_node_index], neighbor_travel_distance, t)
+					end
+				end
+			end
+		end
+	end
+
+	return best_travel_distance
+end
+
 MainPathQueries.total_path_distance = function ()
 	return EngineOptimized.main_path_total_length()
 end

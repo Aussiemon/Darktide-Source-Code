@@ -81,29 +81,29 @@ Explosive.component_data = {
 	explosion_template_name = {
 		ui_name = "Explosion Template Name",
 		ui_type = "text_box",
-		value = "explosive_barrel",
+		value = "explosive_barrel"
 	},
 	power_level = {
 		decimals = 0,
 		step = 1,
 		ui_name = "Power Level",
 		ui_type = "number",
-		value = 1000,
+		value = 1000
 	},
 	charge_level = {
 		decimals = 0,
 		step = 1,
 		ui_name = "Charge Level",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	inputs = {
 		explosive_trigger = {
 			accessibility = "private",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
-	extensions = {},
+	extensions = {}
 }
 
 return Explosive

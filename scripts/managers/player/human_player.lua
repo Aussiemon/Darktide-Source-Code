@@ -26,7 +26,7 @@ HumanPlayer.init = function (self, unique_id, session_id, channel_id, peer_id, l
 	self._orientation = {
 		pitch = 0,
 		roll = 0,
-		yaw = 0,
+		yaw = 0
 	}
 	self._game_state_object = nil
 	self._slot = slot
@@ -118,7 +118,7 @@ HumanPlayer.set_profile = function (self, profile)
 	self._profile = profile
 	self._telemetry_subject = {
 		account_id = self._account_id,
-		character_id = self:character_id(),
+		character_id = self:character_id()
 	}
 
 	Managers.event:trigger("event_player_set_profile", self, profile)

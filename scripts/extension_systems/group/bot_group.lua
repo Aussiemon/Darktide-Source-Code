@@ -9,7 +9,10 @@ local NavQueries = require("scripts/utilities/nav_queries")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local Pickups = require("scripts/settings/pickup/pickups")
 local BLACKBOARDS = BLACKBOARDS
+local _adjust_sideways_hover_target, _adjust_behind_hover_target
 local BotGroup = class("BotGroup")
+
+BotGroup.AVOIDANCE_TYPES = table.enum("none", "any", "reposition_sideways", "reposition_behind")
 
 BotGroup.init = function (self, side, nav_world, traverse_logic, extension_manager)
 	self._nav_world = nav_world
@@ -38,6 +41,7 @@ BotGroup.init = function (self, side, nav_world, traverse_logic, extension_manag
 	self.priority_targets_duration = Script.new_map(4)
 	self._urgent_targets = {}
 	self._ally_needs_aid_priority = {}
+	self._incoming_projectiles = {}
 	self._disallowed_nav_tag_layer_ids = {}
 	self._t = 0
 	self._in_carry_event = false
@@ -52,7 +56,7 @@ BotGroup.init = function (self, side, nav_world, traverse_logic, extension_manag
 		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 5 / 8))),
 		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 6 / 8))),
 		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 7 / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 0 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 0 / 8)))
 	}
 	self._right_vectors_outside_volume = {
 		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 1 / 8))),
@@ -61,7 +65,7 @@ BotGroup.init = function (self, side, nav_world, traverse_logic, extension_manag
 		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 4 / 8))),
 		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 5 / 8))),
 		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 6 / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 7 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 7 / 8)))
 	}
 	self._left_vectors = {
 		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 0.5))),
@@ -70,7 +74,7 @@ BotGroup.init = function (self, side, nav_world, traverse_logic, extension_manag
 		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 6 / 8))),
 		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 2 / 8))),
 		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 7 / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 1 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 1 / 8)))
 	}
 	self._right_vectors = {
 		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 0.5))),
@@ -79,7 +83,7 @@ BotGroup.init = function (self, side, nav_world, traverse_logic, extension_manag
 		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 6 / 8))),
 		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 2 / 8))),
 		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 7 / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 1 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 1 / 8)))
 	}
 	self._previous_available_pickups_player_unit_index = 0
 	self._update_pickups_at = -math.huge
@@ -96,14 +100,14 @@ BotGroup.add_bot_unit = function (self, unit)
 		nav_point_utility = {},
 		aoe_threat = {
 			expires = -math.huge,
-			escape_direction = Vector3Box(),
+			escape_direction = Vector3Box()
 		},
 		hover_target = {
 			rotation = nil,
 			tolerance = 1,
 			wanted_distance_from_target_pos = 1,
 			expires = -math.huge,
-			hover_target_pos = Vector3Box(),
+			hover_target_pos = Vector3Box()
 		},
 		pickup_orders = {},
 		behavior_component = Blackboard.write_component(blackboard, "behavior"),
@@ -111,7 +115,7 @@ BotGroup.add_bot_unit = function (self, unit)
 		pickup_component = Blackboard.write_component(blackboard, "pickup"),
 		behavior_extension = ScriptUnit.extension(unit, "behavior_system"),
 		navigation_extension = ScriptUnit.extension(unit, "navigation_system"),
-		character_state_component = unit_data_extension:read_component("character_state"),
+		character_state_component = unit_data_extension:read_component("character_state")
 	}
 
 	self._bot_data[unit] = data
@@ -175,6 +179,109 @@ BotGroup.aoe_threat_created = function (self, position, shape, size, rotation, d
 			end
 		end
 	end
+end
+
+BotGroup.set_position_to_hover = function (self, bot_data, position, wanted_distance_from_position, tolerance, should_dodge, duration, rotation, avoidance_type)
+	local hover_target_data = bot_data.hover_target
+
+	hover_target_data.expires = self._t + duration
+
+	hover_target_data.hover_target_pos:store(position)
+
+	hover_target_data.wanted_distance_from_target_pos = wanted_distance_from_position
+	hover_target_data.tolerance = tolerance
+	hover_target_data.should_dodge = should_dodge
+	hover_target_data.rotation = rotation and QuaternionBox(rotation)
+
+	if avoidance_type then
+		self:_adjust_hover_target(hover_target_data, self._bot_data, avoidance_type, position, rotation, wanted_distance_from_position)
+	end
+end
+
+BotGroup.set_positions_to_hover = function (self, position, wanted_distance_from_position, tolerance, should_dodge, duration, rotation, avoidance_type)
+	for _, bot_data in pairs(self._bot_data) do
+		self:set_position_to_hover(bot_data, position, wanted_distance_from_position, tolerance, should_dodge, duration, rotation, avoidance_type)
+	end
+end
+
+BotGroup.clear_hover_target = function (self, bot_data)
+	local hover_target_data = bot_data.hover_target
+
+	hover_target_data.expires = -math.huge
+
+	hover_target_data.hover_target_pos:store(Vector3.zero())
+
+	hover_target_data.wanted_distance_from_target_pos = 0
+	hover_target_data.should_dodge = false
+	hover_target_data.tolerance = 1
+	hover_target_data.rotation = nil
+end
+
+BotGroup.clear_hover_targets = function (self)
+	for _, bot_data in pairs(self._bot_data) do
+		self:clear_hover_target(bot_data)
+	end
+end
+
+local BOT_AVOIDANCE_RADIUS = 1
+
+BotGroup._adjust_hover_target = function (self, hover_target_data, bot_data, avoidance_type, position, rotation, wanted_distance_from_position)
+	local avoidance_types = BotGroup.AVOIDANCE_TYPES
+
+	if avoidance_type == avoidance_types.reposition_sideways then
+		-- Nothing
+	elseif avoidance_type == avoidance_types.reposition_behind then
+		hover_target_data.wanted_distance_from_target_pos = _adjust_behind_hover_target(hover_target_data, bot_data, position, rotation, wanted_distance_from_position, self._t)
+	elseif avoidance_type == avoidance_types.prefer_any then
+		-- Nothing
+	end
+
+	return position
+end
+
+local function _hover_target_position(unit, hover_target_data)
+	local center = hover_target_data.hover_target_pos:unbox()
+	local distance = hover_target_data.wanted_distance_from_target_pos
+	local rotation_box = hover_target_data.rotation
+
+	if rotation_box then
+		local forward = Quaternion.forward(rotation_box:unbox())
+
+		return center + forward * distance
+	end
+
+	local direction = Vector3.normalize(POSITION_LOOKUP[unit] - center)
+
+	return center + direction * distance
+end
+
+function _adjust_behind_hover_target(hover_target_data, bot_data, position, rotation, wanted_distance_from_position, t)
+	if not rotation then
+		return wanted_distance_from_position
+	end
+
+	local forward = Quaternion.forward(rotation)
+
+	for unit, data in pairs(bot_data) do
+		local other_hover_target_data = data.hover_target
+		local is_other_bot = other_hover_target_data ~= hover_target_data
+		local is_hovering = t < other_hover_target_data.expires
+
+		if is_other_bot and is_hovering then
+			local other_target_pos = _hover_target_position(unit, other_hover_target_data)
+			local offset = other_target_pos - position
+			local other_distance = Vector3.dot(offset, forward)
+			local overlaps = BOT_AVOIDANCE_RADIUS > Vector3.length(offset - forward * other_distance)
+
+			if overlaps then
+				local behind_other_distance = other_distance + BOT_AVOIDANCE_RADIUS
+
+				wanted_distance_from_position = math.max(wanted_distance_from_position, behind_other_distance)
+			end
+		end
+	end
+
+	return wanted_distance_from_position
 end
 
 BotGroup.set_in_cover = function (self, bot_unit, cover_hash)
@@ -263,6 +370,7 @@ BotGroup.update = function (self, side, dt, t)
 
 	self:_update_move_targets(bot_data, num_bots, nav_world, side)
 	self:_update_priority_targets(bot_data, side, dt)
+	self:_prune_incoming_projectiles()
 	self:_update_ally_needs_aid_priority(bot_data)
 	self:_update_pickups(bot_data, side, dt, t)
 end
@@ -921,6 +1029,65 @@ end
 
 local PRIORITY_TARGETS_TEMP, PRIORITY_TARGETS_DURATION_TEMP = Script.new_map(4), Script.new_map(4)
 
+BotGroup.register_incoming_projectile = function (self, projectile_unit, target_unit)
+	if not projectile_unit or not target_unit then
+		return
+	end
+
+	self._incoming_projectiles[projectile_unit] = target_unit
+end
+
+BotGroup.unregister_incoming_projectile = function (self, projectile_unit)
+	self._incoming_projectiles[projectile_unit] = nil
+end
+
+BotGroup.incoming_projectile_for = function (self, player_unit)
+	local incoming_projectiles = self._incoming_projectiles
+
+	if not next(incoming_projectiles) then
+		return nil
+	end
+
+	local self_position = POSITION_LOOKUP[player_unit]
+	local closest_projectile, closest_distance_sq = nil, math.huge
+	local ALIVE = ALIVE
+	local vector3_distance_squared = Vector3.distance_squared
+
+	for projectile_unit, target_unit in pairs(incoming_projectiles) do
+		if ALIVE[projectile_unit] and target_unit == player_unit then
+			local projectile_position = POSITION_LOOKUP[projectile_unit]
+			local distance_sq = vector3_distance_squared(self_position, projectile_position)
+
+			if distance_sq < closest_distance_sq then
+				closest_projectile, closest_distance_sq = projectile_unit, distance_sq
+			end
+		end
+	end
+
+	return closest_projectile, closest_projectile and math.sqrt(closest_distance_sq) or nil
+end
+
+BotGroup._prune_incoming_projectiles = function (self)
+	local incoming_projectiles = self._incoming_projectiles
+	local ALIVE = ALIVE
+
+	for projectile_unit, target_unit in pairs(incoming_projectiles) do
+		local remove = not ALIVE[projectile_unit]
+
+		if not remove then
+			local locomotion_extension = ScriptUnit.has_extension(projectile_unit, "locomotion_system")
+
+			if not locomotion_extension or locomotion_extension:target_unit() ~= target_unit then
+				remove = true
+			end
+		end
+
+		if remove then
+			incoming_projectiles[projectile_unit] = nil
+		end
+	end
+end
+
 BotGroup._update_priority_targets = function (self, bot_data, side, dt)
 	local priority_targets, priority_targets_duration = self.priority_targets, self.priority_targets_duration
 	local player_units = side.valid_player_units
@@ -1054,10 +1221,10 @@ BotGroup._update_pickups = function (self, bot_data, side, dt, t)
 end
 
 local PICKUP_BROADPHASE_CATEGORY = {
-	"pickups",
+	"pickups"
 }
 local DEPLOYABLE_BROADPHASE_CATEGORY = {
-	"deployable",
+	"deployable"
 }
 local UNIT_CHECK_RANGE = 15
 local UNIT_CHECK_RESULTS = {}

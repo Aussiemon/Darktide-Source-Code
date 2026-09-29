@@ -13,14 +13,14 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			button_size[2],
+			button_size[2]
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local widget_definitions = {
 	bottom_panel = UIWidget.create_definition({
@@ -30,20 +30,20 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				color = {
 					100,
 					0,
 					0,
-					0,
-				},
-			},
-		},
-	}, "bottom_panel"),
+					0
+				}
+			}
+		}
+	}, "bottom_panel")
 }
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

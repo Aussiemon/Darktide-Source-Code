@@ -15,14 +15,14 @@ local max_width = grid_size[1] - grid_content_edge_margin * 2
 local stats_size = InventoryWeaponDetailsViewSettings.stats_size
 local stats_horizontal_spacing_size = {
 	(grid_size[1] - stats_size[1]) * 0.5,
-	InventoryWeaponDetailsViewSettings.stats_size[2],
+	InventoryWeaponDetailsViewSettings.stats_size[2]
 }
 local item_header_display_name_font_style = table.clone(UIFontSettings.header_3)
 
 item_header_display_name_font_style.offset = {
 	0,
 	-75,
-	3,
+	3
 }
 item_header_display_name_font_style.text_horizontal_alignment = "center"
 item_header_display_name_font_style.text_vertical_alignment = "bottom"
@@ -32,7 +32,7 @@ local item_header_sub_display_name_font_style = table.clone(UIFontSettings.body_
 item_header_sub_display_name_font_style.offset = {
 	0,
 	-55,
-	3,
+	3
 }
 item_header_sub_display_name_font_style.text_horizontal_alignment = "center"
 item_header_sub_display_name_font_style.text_vertical_alignment = "bottom"
@@ -42,7 +42,7 @@ local item_description_font_style = table.clone(UIFontSettings.body_small)
 item_description_font_style.offset = {
 	0,
 	0,
-	3,
+	3
 }
 item_description_font_style.text_horizontal_alignment = "center"
 item_description_font_style.text_vertical_alignment = "center"
@@ -52,7 +52,7 @@ local item_category_header_font_style = table.clone(UIFontSettings.header_3)
 item_category_header_font_style.offset = {
 	0,
 	0,
-	3,
+	3
 }
 item_category_header_font_style.text_horizontal_alignment = "left"
 item_category_header_font_style.text_vertical_alignment = "bottom"
@@ -63,7 +63,7 @@ local item_property_value_font_style = table.clone(UIFontSettings.body_small)
 item_property_value_font_style.offset = {
 	50,
 	0,
-	3,
+	3
 }
 item_property_value_font_style.text_horizontal_alignment = "left"
 item_property_value_font_style.text_vertical_alignment = "center"
@@ -73,28 +73,28 @@ local blueprints = {
 	spacing_vertical_edge_margin = {
 		size = {
 			max_width,
-			5,
-		},
+			5
+		}
 	},
 	spacing_vertical = {
 		size = {
 			max_width,
-			10,
-		},
+			10
+		}
 	},
 	stats_meter_spacing_horizontal = {
-		size = stats_horizontal_spacing_size,
+		size = stats_horizontal_spacing_size
 	},
 	stats_meter_spacing_vertical = {
 		size = {
 			max_width,
-			10,
-		},
+			10
+		}
 	},
 	item_description = {
 		size = {
 			max_width,
-			100,
+			100
 		},
 		pass_template = {
 			{
@@ -102,8 +102,8 @@ local blueprints = {
 				style_id = "text",
 				value = "n/a",
 				value_id = "text",
-				style = item_description_font_style,
-			},
+				style = item_description_font_style
+			}
 		},
 		init = function (parent, widget, element, callback_name)
 			local content = widget.content
@@ -119,12 +119,12 @@ local blueprints = {
 			local height = Text.text_height(ui_renderer, localized_text, text_style, size)
 
 			widget.content.size[2] = height
-		end,
+		end
 	},
 	item_header = {
 		size = {
 			max_width,
-			100,
+			100
 		},
 		pass_template = {
 			{
@@ -135,15 +135,15 @@ local blueprints = {
 					vertical_alignment = "bottom",
 					size = {
 						306,
-						48,
+						48
 					},
 					offset = {
 						0,
 						0,
-						2,
+						2
 					},
-					color = Color.white(255, true),
-				},
+					color = Color.white(255, true)
+				}
 			},
 			{
 				pass_type = "texture",
@@ -154,28 +154,28 @@ local blueprints = {
 					vertical_alignment = "bottom",
 					size = {
 						306,
-						48,
+						48
 					},
 					offset = {
 						0,
 						-37,
-						1,
+						1
 					},
-					color = Color.white(255, true),
-				},
+					color = Color.white(255, true)
+				}
 			},
 			{
 				pass_type = "text",
 				value = "n/a",
 				value_id = "display_name",
-				style = item_header_display_name_font_style,
+				style = item_header_display_name_font_style
 			},
 			{
 				pass_type = "text",
 				value = "n/a",
 				value_id = "sub_display_name",
-				style = item_header_sub_display_name_font_style,
-			},
+				style = item_header_sub_display_name_font_style
+			}
 		},
 		init = function (parent, widget, element, callback_name)
 			local content = widget.content
@@ -189,7 +189,7 @@ local blueprints = {
 			content.sub_display_name = item_sub_display_name
 			content.sub_display_name = item_sub_display_name
 			style.glow.color = table.clone(rarity_color)
-		end,
+		end
 	},
 	stats_meter = {
 		size = InventoryWeaponDetailsViewSettings.stats_size,
@@ -225,19 +225,19 @@ local blueprints = {
 					content.anim_time = nil
 				end
 			end
-		end,
+		end
 	},
 	item_category_header = {
 		size = {
 			max_width,
-			30,
+			30
 		},
 		pass_template = {
 			{
 				pass_type = "text",
 				value = "n/a",
 				value_id = "text",
-				style = item_category_header_font_style,
+				style = item_category_header_font_style
 			},
 			{
 				pass_type = "texture",
@@ -245,16 +245,16 @@ local blueprints = {
 				style = {
 					size = {
 						nil,
-						1,
+						1
 					},
 					offset = {
 						0,
 						30,
-						0,
+						0
 					},
-					color = Color.ui_grey_light(255, true),
-				},
-			},
+					color = Color.ui_grey_light(255, true)
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name)
 			local content = widget.content
@@ -263,35 +263,35 @@ local blueprints = {
 			local localized_text = Utf8.upper(Localize(text))
 
 			content.text = localized_text
-		end,
+		end
 	},
 	item_property_value = {
 		size = {
 			max_width,
-			30,
+			30
 		},
 		pass_template = {
 			{
 				pass_type = "text",
 				value = "n/a",
 				value_id = "text",
-				style = item_property_value_font_style,
+				style = item_property_value_font_style
 			},
 			{
 				pass_type = "texture",
 				style = {
 					size = {
 						30,
-						30,
+						30
 					},
 					offset = {
 						0,
 						0,
-						0,
+						0
 					},
-					color = Color.ui_grey_light(255, true),
-				},
-			},
+					color = Color.ui_grey_light(255, true)
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name)
 			local content = widget.content
@@ -300,8 +300,8 @@ local blueprints = {
 			local localized_text = Utf8.upper(Localize(text))
 
 			content.text = localized_text
-		end,
-	},
+		end
+	}
 }
 
 return blueprints

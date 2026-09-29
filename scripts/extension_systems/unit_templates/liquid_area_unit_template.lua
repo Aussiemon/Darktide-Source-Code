@@ -28,7 +28,7 @@ local liquid_area_unit_template = {
 			optional_max_liquid = optional_max_liquid,
 			optional_liquid_paint_id = optional_liquid_paint_id,
 			optional_source_item = optional_source_item,
-			optional_source_side = optional_source_side,
+			optional_source_side = optional_source_side
 		})
 
 		local liquid_area_template_name = liquid_area_template.name
@@ -42,9 +42,9 @@ local liquid_area_unit_template = {
 		local liquid_area_template = LiquidAreaTemplates[liquid_area_template_name]
 
 		config:add("HuskLiquidAreaExtension", {
-			template = liquid_area_template,
+			template = liquid_area_template
 		})
-	end,
+	end
 }
 
 return liquid_area_unit_template

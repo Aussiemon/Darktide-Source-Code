@@ -19,7 +19,7 @@ local item_names = {
 	powermaul_p3_m1 = "content/items/weapons/player/melee/powermaul_p3_m1",
 	shotgun_p4_m1 = "content/items/weapons/player/ranged/shotgun_p4_m1",
 	thunderhammer_p1_m1 = "content/items/weapons/player/melee/thunderhammer_2h_p1_m1",
-	unarmed_training_grounds = "content/items/weapons/player/melee/unarmed_training_grounds",
+	unarmed_training_grounds = "content/items/weapons/player/melee/unarmed_training_grounds"
 }
 
 return item_names

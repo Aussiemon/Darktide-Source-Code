@@ -19,7 +19,7 @@ local ContentBlueprints = require("scripts/ui/views/masteries_overview_view/mast
 local InventoryWeaponMarksView = class("InventoryWeaponMarksView", "ItemGridViewBase")
 local trinket_slot_order = {
 	"slot_trinket_1",
-	"slot_trinket_2",
+	"slot_trinket_2"
 }
 local remove_attachment_item_slot_path
 
@@ -208,7 +208,7 @@ InventoryWeaponMarksView.on_enter = function (self)
 				if item then
 					items_data[#items_data + 1] = {
 						comparison_text = nil,
-						item = item,
+						item = item
 					}
 				end
 			end
@@ -224,7 +224,7 @@ InventoryWeaponMarksView.on_enter = function (self)
 					icon = item.hud_icon,
 					display_name = Items.weapon_card_sub_display_name(item),
 					comparison_text = comparison_text,
-					item = item,
+					item = item
 				}
 			end
 		end
@@ -232,7 +232,7 @@ InventoryWeaponMarksView.on_enter = function (self)
 		local mastery_name = pattern_data and pattern_data.display_name and Localize(pattern_data.display_name)
 
 		self._widgets_by_name.display_name.content.text = mastery_name and Utf8.upper(Localize("loc_inventory_weapon_marks_title", true, {
-			pattern_name = mastery_name,
+			pattern_name = mastery_name
 		})) or ""
 
 		for i = 1, #marks do
@@ -250,7 +250,7 @@ InventoryWeaponMarksView.on_enter = function (self)
 
 			if not mark.unlocked then
 				display_name = Localize("loc_inventory_mark_locked", true, {
-					mastery_level = mark.level,
+					mastery_level = mark.level
 				})
 			end
 
@@ -264,7 +264,7 @@ InventoryWeaponMarksView.on_enter = function (self)
 					mastery_name = mastery_name,
 					comparison_text = mark.comparison_text,
 					preview_item = preview_item,
-					equipped = preview_item.name == self._presentation_item.name,
+					equipped = preview_item.name == self._presentation_item.name
 				}
 			end
 		end
@@ -327,7 +327,7 @@ InventoryWeaponMarksView._generate_fake_mark_item = function (self, mark, marks)
 			display_name = stat_name,
 			name = key,
 			key = order,
-			index = index,
+			index = index
 		}
 
 		if order then
@@ -406,7 +406,7 @@ InventoryWeaponMarksView.present_grid_layout = function (self, layout)
 	local used_layout = table.clone_instance(layout)
 	local mark_size = ContentBlueprints.weapon_mark and ContentBlueprints.weapon_mark.size or {
 		0,
-		0,
+		0
 	}
 	local spacing = grid_settings.grid_spacing
 	local top_padding = grid_settings.grid_spacing
@@ -421,7 +421,7 @@ InventoryWeaponMarksView.present_grid_layout = function (self, layout)
 	self._item_grid:update_grid_height(new_grid_height, new_mask_height)
 
 	local spacing_entry = {
-		widget_type = "spacing_vertical",
+		widget_type = "spacing_vertical"
 	}
 
 	table.insert(used_layout, 1, spacing_entry)
@@ -489,7 +489,7 @@ InventoryWeaponMarksView._setup_weapon_preview = function (self)
 		local layer = 10
 		local context = {
 			draw_background = true,
-			ignore_blur = true,
+			ignore_blur = true
 		}
 
 		self._weapon_preview = self:_add_element(ViewElementInventoryWeaponPreview, reference_name, layer, context)
@@ -497,7 +497,7 @@ InventoryWeaponMarksView._setup_weapon_preview = function (self)
 		self._weapon_preview:center_align(0, {
 			0,
 			0,
-			-0.1,
+			-0.1
 		})
 		self:_update_weapon_preview_viewport()
 	end
@@ -528,7 +528,7 @@ InventoryWeaponMarksView._fetch_marks = function (self)
 
 		return {
 			mastery_data = mastery_data,
-			marks = mark_milestones,
+			marks = mark_milestones
 		}
 	end)
 end
@@ -671,7 +671,7 @@ InventoryWeaponMarksView._draw_render_target = function (self)
 	local position = self:_scenegraph_world_position("canvas")
 	local size = {
 		width,
-		height,
+		height
 	}
 	local gui_position = Vector3(position[1] * scale, position[2] * scale, position[3] or 0)
 	local gui_size = Vector3(size[1] * scale, size[2] * scale, size[3] or 0)

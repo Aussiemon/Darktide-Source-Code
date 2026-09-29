@@ -17,13 +17,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	tooltip = {
 		horizontal_alignment = "left",
@@ -31,13 +31,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			300,
-			400,
+			400
 		},
 		position = {
 			-5,
 			-5,
-			1,
-		},
+			1
+		}
 	},
 	tooltip_grid = {
 		horizontal_alignment = "center",
@@ -45,14 +45,14 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			225,
-			100,
+			100
 		},
 		position = {
 			37.5,
 			0,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local widget_definitions = {
 	tooltip = UIWidget.create_definition({
@@ -64,9 +64,9 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					-20,
-					-20,
-				},
-			},
+					-20
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -76,9 +76,9 @@ local widget_definitions = {
 				color = Color.terminal_grid_background_icon(255, true),
 				size_addition = {
 					-24,
-					-24,
-				},
-			},
+					-24
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -92,15 +92,15 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size_addition = {
 					0,
-					0,
-				},
-			},
-		},
-	}, "tooltip"),
+					0
+				}
+			}
+		}
+	}, "tooltip")
 }
 
 local function icon_change_function(content, style)
@@ -129,27 +129,27 @@ local grid_blueprints = {
 
 			return size and {
 				size[1],
-				size[2],
+				size[2]
 			} or {
 				20,
-				20,
+				20
 			}
-		end,
+		end
 	},
 	texture = {
 		size = {
 			64,
-			64,
+			64
 		},
 		size_function = function (parent, element, ui_renderer)
 			local size = element.size
 
 			return size and {
 				size[1],
-				size[2],
+				size[2]
 			} or {
 				64,
-				64,
+				64
 			}
 		end,
 		pass_template = {
@@ -162,10 +162,10 @@ local grid_blueprints = {
 						255,
 						255,
 						255,
-						255,
-					},
-				},
-			},
+						255
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -188,12 +188,12 @@ local grid_blueprints = {
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end,
+		end
 	},
 	dynamic_button = {
 		size = {
 			225,
-			100,
+			100
 		},
 		pass_template = {
 			{
@@ -202,8 +202,8 @@ local grid_blueprints = {
 				content = {
 					on_pressed_sound = nil,
 					on_released_sound = nil,
-					on_hover_sound = UISoundEvents.default_mouse_hover,
-				},
+					on_hover_sound = UISoundEvents.default_mouse_hover
+				}
 			},
 			{
 				pass_type = "texture",
@@ -215,20 +215,20 @@ local grid_blueprints = {
 					vertical_alignment = "center",
 					size_addition = {
 						0,
-						0,
+						0
 					},
 					default_color = Color.terminal_frame(nil, true),
 					hover_color = Color.terminal_frame_hover(nil, true),
 					offset = {
 						0,
 						0,
-						3,
-					},
+						3
+					}
 				},
 				change_function = ButtonPassTemplates.default_button_hover_change_function,
 				visibility_function = function (content, style)
 					return not content.hotspot.disabled
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -240,20 +240,20 @@ local grid_blueprints = {
 					vertical_alignment = "center",
 					size_addition = {
 						0,
-						0,
+						0
 					},
 					default_color = Color.terminal_corner(nil, true),
 					hover_color = Color.terminal_corner_hover(nil, true),
 					offset = {
 						0,
 						0,
-						4,
-					},
+						4
+					}
 				},
 				change_function = ButtonPassTemplates.default_button_hover_change_function,
 				visibility_function = function (content, style)
 					return not content.hotspot.disabled
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -265,15 +265,15 @@ local grid_blueprints = {
 					vertical_alignment = "center",
 					size_addition = {
 						0,
-						0,
+						0
 					},
 					default_color = Color.terminal_background_gradient(nil, true),
 					selected_color = Color.terminal_frame_selected(nil, true),
 					offset = {
 						0,
 						0,
-						2,
-					},
+						2
+					}
 				},
 				change_function = function (content, style)
 					ButtonPassTemplates.terminal_button_change_function(content, style)
@@ -281,7 +281,7 @@ local grid_blueprints = {
 				end,
 				visibility_function = function (content, style)
 					return not content.hotspot.disabled
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -297,10 +297,10 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						3,
-					},
-				},
-			},
+						3
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -332,12 +332,12 @@ local grid_blueprints = {
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end,
+		end
 	},
 	text = {
 		size = {
 			225,
-			100,
+			100
 		},
 		size_function = function (parent, element, ui_renderer)
 			local menu_settings = parent._menu_settings
@@ -345,7 +345,7 @@ local grid_blueprints = {
 
 			return {
 				grid_size[1] or 0,
-				100,
+				100
 			}
 		end,
 		pass_template = {
@@ -363,10 +363,10 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						3,
-					},
-				},
-			},
+						3
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -400,12 +400,12 @@ local grid_blueprints = {
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end,
+		end
 	},
 	icon = {
 		size = {
 			45,
-			45,
+			45
 		},
 		pass_template = {
 			{
@@ -414,8 +414,8 @@ local grid_blueprints = {
 				content = {
 					on_released_sound = nil,
 					on_hover_sound = UISoundEvents.default_mouse_hover,
-					on_pressed_sound = UISoundEvents.default_click,
-				},
+					on_pressed_sound = UISoundEvents.default_click
+				}
 			},
 			{
 				pass_type = "rect",
@@ -424,9 +424,9 @@ local grid_blueprints = {
 						100,
 						0,
 						0,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -437,12 +437,12 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						1,
-					},
+						1
+					}
 				},
 				visibility_function = function (content, style)
 					return content.equipped
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -454,14 +454,14 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						6,
+						6
 					},
 					color = Color.terminal_frame(nil, true),
 					default_color = Color.terminal_frame(nil, true),
 					selected_color = Color.terminal_frame_selected(nil, true),
-					hover_color = Color.terminal_frame_hover(nil, true),
+					hover_color = Color.terminal_frame_hover(nil, true)
 				},
-				change_function = icon_change_function,
+				change_function = icon_change_function
 			},
 			{
 				pass_type = "texture",
@@ -473,14 +473,14 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						7,
+						7
 					},
 					color = Color.terminal_corner(nil, true),
 					default_color = Color.terminal_corner(nil, true),
 					selected_color = Color.terminal_corner_selected(nil, true),
-					hover_color = Color.terminal_corner_hover(nil, true),
+					hover_color = Color.terminal_corner_hover(nil, true)
 				},
-				change_function = icon_change_function,
+				change_function = icon_change_function
 			},
 			{
 				pass_type = "texture",
@@ -490,14 +490,14 @@ local grid_blueprints = {
 						255,
 						0,
 						0,
-						0,
+						0
 					},
 					offset = {
 						0,
 						0,
-						3,
-					},
-				},
+						3
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -510,15 +510,15 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						2,
+						2
 					},
 					size = {
 						32,
-						32,
+						32
 					},
-					color = Color.terminal_icon(255, true),
-				},
-			},
+					color = Color.terminal_icon(255, true)
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name)
 			local style = widget.style
@@ -536,8 +536,8 @@ local grid_blueprints = {
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			return
-		end,
-	},
+		end
+	}
 }
 local tooltip_window_open_delay = 0.25
 local animations = {
@@ -557,7 +557,7 @@ local animations = {
 						grid_widgets[i].alpha_multiplier = 0
 					end
 				end
-			end,
+			end
 		},
 		{
 			name = "fade_in_window",
@@ -567,7 +567,7 @@ local animations = {
 				local anim_progress = math.easeOutCubic(progress)
 
 				widgets.tooltip.alpha_multiplier = anim_progress
-			end,
+			end
 		},
 		{
 			name = "fade_in_content",
@@ -583,7 +583,7 @@ local animations = {
 						grid_widgets[i].alpha_multiplier = anim_progress
 					end
 				end
-			end,
+			end
 		},
 		{
 			name = "move",
@@ -607,14 +607,14 @@ local animations = {
 				if parent.grow_from_center then
 					widgets.tooltip.offset[2] = window_height * 0.25 * (1 - anim_progress)
 				end
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
 	animations = animations,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
-	grid_blueprints = grid_blueprints,
+	grid_blueprints = grid_blueprints
 }

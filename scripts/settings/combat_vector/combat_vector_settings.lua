@@ -6,12 +6,12 @@ combat_vector_settings.vector_types = table.enum("main", "left_flank", "right_fl
 combat_vector_settings.location_types = {
 	"left",
 	"mid",
-	"right",
+	"right"
 }
 combat_vector_settings.main_vector_type = "main"
 combat_vector_settings.flank_vector_types = {
 	"left_flank",
-	"right_flank",
+	"right_flank"
 }
 combat_vector_settings.range_types = table.enum("close", "far")
 combat_vector_settings.main_aggro_target_event_types = table.enum("killed_unit", "suppression")

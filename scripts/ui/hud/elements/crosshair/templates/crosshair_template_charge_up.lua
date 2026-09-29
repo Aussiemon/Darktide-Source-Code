@@ -8,21 +8,21 @@ local length = 24
 local thickness = 56
 local size = {
 	length,
-	thickness,
+	thickness
 }
 local mask_size = {
 	length,
-	thickness - 4,
+	thickness - 4
 }
 local center_size = {
 	4,
-	4,
+	4
 }
 local spread_distance = 10
 local hit_default_distance = 10
 local hit_size = {
 	14,
-	4,
+	4
 }
 
 template.name = "charge_up"
@@ -38,22 +38,22 @@ template.create_widget_defintion = function (template, scenegraph_id)
 	local offset_charge_right = {
 		offset_charge + center_half_width,
 		0,
-		1,
+		1
 	}
 	local offset_charge_mask_right = {
 		offset_charge + center_half_width,
 		0,
-		2,
+		2
 	}
 	local offset_charge_left = {
 		-(offset_charge + center_half_width),
 		0,
-		1,
+		1
 	}
 	local offset_charge_mask_left = {
 		-(offset_charge + center_half_width),
 		0,
-		2,
+		2
 	}
 
 	return UIWidget.create_definition({
@@ -76,20 +76,20 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
+						1
+					}
 				},
 				offset = offset_charge_left,
 				size = {
 					size[1],
-					size[2],
+					size[2]
 				},
-				color = UIHudSettings.color_tint_main_1,
-			},
+				color = UIHudSettings.color_tint_main_1
+			}
 		},
 		{
 			pass_type = "texture",
@@ -101,10 +101,10 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = offset_charge_right,
 				size = {
 					size[1],
-					size[2],
+					size[2]
 				},
-				color = UIHudSettings.color_tint_main_1,
-			},
+				color = UIHudSettings.color_tint_main_1
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -116,17 +116,17 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
+						1
+					}
 				},
 				offset = offset_charge_mask_left,
 				size = mask_size,
-				color = UIHudSettings.color_tint_main_1,
-			},
+				color = UIHudSettings.color_tint_main_1
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -138,18 +138,18 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				uvs = {
 					{
 						0,
-						1,
+						1
 					},
 					{
 						1,
-						0,
-					},
+						0
+					}
 				},
 				offset = offset_charge_mask_right,
 				size = mask_size,
-				color = UIHudSettings.color_tint_main_1,
-			},
-		},
+				color = UIHudSettings.color_tint_main_1
+			}
+		}
 	}, scenegraph_id)
 end
 
@@ -160,7 +160,7 @@ end
 template.update_function = function (parent, ui_renderer, widget, template, crosshair_settings, dt, t, draw_hit_indicator)
 	local style = widget.style
 	local hit_progress, hit_color, hit_weakspot = parent:hit_indicator()
-	local yaw, pitch = parent:_spread_yaw_pitch(dt)
+	local yaw, pitch = parent:_spread_yaw_pitch()
 	local charge_level = parent:_get_current_charge_level() or 0
 
 	if yaw and pitch then

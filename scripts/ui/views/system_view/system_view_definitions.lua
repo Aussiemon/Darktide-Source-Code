@@ -15,13 +15,13 @@ local scenegraph_definition = {
 		scale = "fit",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	grid = {
 		horizontal_alignment = "center",
@@ -29,13 +29,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			grid_width,
-			grid_height,
+			grid_height
 		},
 		position = {
 			grid_x_offset - background_icon_size / 2,
 			-legend_height / 2,
-			1,
-		},
+			1
+		}
 	},
 	background_icon = {
 		horizontal_alignment = "center",
@@ -43,13 +43,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			background_icon_size,
-			background_icon_size,
+			background_icon_size
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	grid_start = {
 		horizontal_alignment = "left",
@@ -57,13 +57,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	grid_content_pivot = {
 		horizontal_alignment = "left",
@@ -71,13 +71,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			10,
-		},
+			10
+		}
 	},
 	scrollbar = {
 		horizontal_alignment = "right",
@@ -85,14 +85,14 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			10,
-			grid_height,
+			grid_height
 		},
 		position = {
 			25,
 			0,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local widget_definitions = {
 	background = UIWidget.create_definition({
@@ -105,16 +105,16 @@ local widget_definitions = {
 				vertical_alignemnt = "center",
 				size_addition = {
 					40,
-					40,
+					40
 				},
 				offset = {
 					-20,
 					-20,
-					0,
+					0
 				},
-				color = Color.terminal_grid_background_gradient(255, true),
-			},
-		},
+				color = Color.terminal_grid_background_gradient(255, true)
+			}
+		}
 	}, "screen"),
 	background_icon = UIWidget.create_definition({
 		{
@@ -124,18 +124,18 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				color = {
 					40,
 					0,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "background_icon"),
-	scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.default_scrollbar, "scrollbar"),
+	scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.default_scrollbar, "scrollbar")
 }
 local legend_inputs = {
 	{
@@ -146,15 +146,15 @@ local legend_inputs = {
 		visibility_function = nil,
 		extra_input_actions = {
 			gamepad = {
-				"hotkey_system",
+				"hotkey_system"
 			},
-			keyboard = {},
-		},
-	},
+			keyboard = {}
+		}
+	}
 }
 
 return {
 	legend_inputs = legend_inputs,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

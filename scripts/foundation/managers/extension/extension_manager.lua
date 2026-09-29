@@ -10,7 +10,7 @@ local ExtensionManager = class("ExtensionManager")
 
 ExtensionManager.init = function (self, world, physics_world, wwise_world, nav_world, has_navmesh, level_name, circumstance_name, havoc_data, is_server, unit_templates, system_configuration, system_init_data, unit_category_list, network_event_delegate, fixed_time_step, game_session, optional_soft_cap_out_of_bounds_units, use_time_slice)
 	self._ignore_extensions_list = {
-		[""] = true,
+		[""] = true
 	}
 	self._units = {}
 	self._unit_extensions_list = {}
@@ -32,7 +32,7 @@ ExtensionManager.init = function (self, world, physics_world, wwise_world, nav_w
 		network_event_delegate = network_event_delegate,
 		extension_manager = self,
 		game_session = game_session,
-		soft_cap_out_of_bounds_units = optional_soft_cap_out_of_bounds_units,
+		soft_cap_out_of_bounds_units = optional_soft_cap_out_of_bounds_units
 	}
 
 	self._extension_system_holder = ExtensionSystemHolder:new(extension_system_creation_context, system_configuration, system_init_data, fixed_time_step, use_time_slice)
@@ -181,12 +181,12 @@ ExtensionManager.add_unit_extensions_from_template = function (self, world, unit
 	return extensions
 end
 
-ExtensionManager.add_unit_extensions_from_script_data = function (self, world, unit)
+ExtensionManager.add_unit_extensions_from_script_data = function (self, world, unit, ...)
 	local extension_config = ExtensionConfig:new()
 
 	extension_config:parse_unit(unit)
 
-	return self:add_unit_extensions(world, unit, extension_config, nil)
+	return self:add_unit_extensions(world, unit, extension_config, nil, ...)
 end
 
 ExtensionManager.add_unit_extensions = function (self, world, unit, extension_config, game_object_data_or_session, ...)
@@ -474,7 +474,7 @@ ExtensionManager._add_and_register_units = function (self, world, unit_list, fro
 			local unit_spawned_function_or_nil = unit_template.local_unit_spawned
 
 			added = self:add_unit_extensions_from_template(world, unit, init_function, unit_spawned_function_or_nil, nil, nil, {
-				breed_name = breed_name,
+				breed_name = breed_name
 			})
 		else
 			added = self:add_unit_extensions_from_script_data(world, unit)

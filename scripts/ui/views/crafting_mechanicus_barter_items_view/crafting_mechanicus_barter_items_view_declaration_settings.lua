@@ -11,17 +11,17 @@ local view_settings = {
 	state_bound = true,
 	use_transition_ui = true,
 	levels = {
-		"content/levels/ui/crafting_view_sacrifice/world",
+		"content/levels/ui/crafting_view_sacrifice/world"
 	},
 	enter_sound_events = {
-		UISoundEvents.default_menu_enter,
+		UISoundEvents.default_menu_enter
 	},
 	exit_sound_events = {
-		UISoundEvents.default_menu_exit,
+		UISoundEvents.default_menu_exit
 	},
 	testify_flags = {
-		ui_views = false,
-	},
+		ui_views = false
+	}
 }
 
 return settings("CraftingMechanicusBarterItemsViewDeclarationSettings", view_settings)

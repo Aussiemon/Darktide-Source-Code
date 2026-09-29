@@ -16,13 +16,13 @@ hordes_legendary_broker_buffs_data.hordes_buff_broker_damage_increase_over_time_
 		damage_increase = {
 			format_type = "percentage",
 			prefix = "+",
-			value = 2,
+			value = 2
 		},
 		time = {
 			format_type = "number",
-			value = 5,
-		},
-	},
+			value = 5
+		}
+	}
 }
 hordes_legendary_broker_buffs_data.hordes_buff_broker_bleedfire_on_melee_hits_during_punk_rage = {
 	description = "Melee attacks during *Punk Rage apply {bleed:%s} stacks of bleeding and {burn:%s} stacks of burning to enemies.",
@@ -30,7 +30,7 @@ hordes_legendary_broker_buffs_data.hordes_buff_broker_bleedfire_on_melee_hits_du
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/big_buffs/hordes_buff_adamant_stance_immunity",
 	title = "Fiery Bloodthirst",
 	filter_category = filtering_categories.regular,
-	buff_stats = {},
+	buff_stats = {}
 }
 hordes_legendary_broker_buffs_data.hordes_buff_broker_health_regen_during_punk_rage = {
 	description = "While in *Punk Rage, regenerate {hp_regen:%s} HP every {time} seconds. This includes Corruption",
@@ -41,13 +41,13 @@ hordes_legendary_broker_buffs_data.hordes_buff_broker_health_regen_during_punk_r
 	buff_stats = {
 		hp_regen = {
 			format_type = "percentage",
-			value = 0.015,
+			value = 0.015
 		},
 		time = {
 			format_type = "number",
-			value = 0.5,
-		},
-	},
+			value = 0.5
+		}
+	}
 }
 hordes_legendary_broker_buffs_data.hordes_buff_broker_stimm_field_shock_on_interval = {
 	description = "*Stimm Field shocks enemies in range every {time:%s} seconds.",
@@ -58,9 +58,9 @@ hordes_legendary_broker_buffs_data.hordes_buff_broker_stimm_field_shock_on_inter
 	buff_stats = {
 		time = {
 			format_type = "number",
-			value = 4,
-		},
-	},
+			value = 4
+		}
+	}
 }
 hordes_legendary_broker_buffs_data.hordes_buff_broker_missile_launcher_special_kill_restores_grenade = {
 	description = "Killing a Special with the Missile Launcher restores a charge. Only once per use.",
@@ -68,7 +68,7 @@ hordes_legendary_broker_buffs_data.hordes_buff_broker_missile_launcher_special_k
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/big_buffs/hordes_buff_broker_missile_launcher_special_kill_restores_grenade",
 	title = "Infinite Rocket Glitch",
 	filter_category = filtering_categories.regular,
-	buff_stats = {},
+	buff_stats = {}
 }
 hordes_legendary_broker_buffs_data.hordes_buff_broker_tox_grenade_applies_self_propagating_toxin = {
 	description = "*Tox Grenade explosion applies a toxin that lasts {time:%s}s and propagates to nearby enemies upon the enemy's death.",
@@ -79,9 +79,9 @@ hordes_legendary_broker_buffs_data.hordes_buff_broker_tox_grenade_applies_self_p
 	buff_stats = {
 		time = {
 			format_type = "number",
-			value = 3,
-		},
-	},
+			value = 3
+		}
+	}
 }
 hordes_legendary_broker_buffs_data.hordes_buff_broker_flash_grenade_increase_damage_taken = {
 	description = "Enemies hit by a *Flash Grenade will take {damage_taken:%s} more damage for {time:%s} seconds.",
@@ -92,13 +92,13 @@ hordes_legendary_broker_buffs_data.hordes_buff_broker_flash_grenade_increase_dam
 	buff_stats = {
 		damage_taken = {
 			format_type = "percentage",
-			value = 2,
+			value = 2
 		},
 		time = {
 			format_type = "number",
-			value = 30,
-		},
-	},
+			value = 30
+		}
+	}
 }
 
 return hordes_legendary_broker_buffs_data

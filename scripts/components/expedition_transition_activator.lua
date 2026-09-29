@@ -46,9 +46,9 @@ ExpeditionTransitionActivator.component_data = {
 	inputs = {
 		started = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return ExpeditionTransitionActivator

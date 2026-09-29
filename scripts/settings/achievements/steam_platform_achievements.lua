@@ -38,7 +38,7 @@ SteamPlatformAchievements.backend_to_platform = {
 	veteran_2_weakspot_hits_during_volley_fire_alternate_fire = "veteran_2_weakspot_hits_during_volley_fire_alternate_fire",
 	zealot_2_kills_of_shocked_enemies_last_15 = "zealot_2_kills_of_shocked_enemies_last_15",
 	zealot_2_stagger_sniper_with_grenade_distance = "zealot_2_stagger_sniper_with_grenade_distance",
-	zelot_2_kill_mutant_charger_with_melee_while_dashing = "zelot_2_kill_mutant_charger_with_melee_while_dashing",
+	zelot_2_kill_mutant_charger_with_melee_while_dashing = "zelot_2_kill_mutant_charger_with_melee_while_dashing"
 }
 SteamPlatformAchievements.platform_to_stat = {
 	assists_3 = "total_player_assists",
@@ -54,7 +54,7 @@ SteamPlatformAchievements.platform_to_stat = {
 	ogryn_2_bull_rushed_100_enemies = "max_ogryn_2_lunge_number_of_enemies_hit",
 	psyker_2_edge_kills_last_2_sec = "max_psyker_2_edge_kills_last_2_sec",
 	zealot_2_kills_of_shocked_enemies_last_15 = "max_zealot_2_kills_of_shocked_enemies_last_15",
-	zealot_2_stagger_sniper_with_grenade_distance = "max_zealot_2_stagger_sniper_with_grenade_distance",
+	zealot_2_stagger_sniper_with_grenade_distance = "max_zealot_2_stagger_sniper_with_grenade_distance"
 }
 SteamPlatformAchievements.platform_to_backend = {}
 

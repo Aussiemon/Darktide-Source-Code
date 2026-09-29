@@ -25,7 +25,7 @@ local generate_blueprints_function = require("scripts/ui/view_content_blueprints
 local PENANCE_TRACK_ID = "dec942ce-b6ba-439c-95e2-022c5d71394d"
 local trinket_slot_order = {
 	"slot_trinket_1",
-	"slot_trinket_2",
+	"slot_trinket_2"
 }
 local find_link_attachment_item_slot_path
 
@@ -79,6 +79,7 @@ InventoryWeaponCosmeticsView.init = function (self, settings, context)
 	self._preview_player = context.player or Managers.player:local_player(1)
 	self._selected_item = context.preview_item
 	self._is_loading = false
+	self._can_purchase_premium_items = not Managers.ui:view_active("lobby_view")
 
 	local selected_item = self._selected_item
 
@@ -362,7 +363,7 @@ InventoryWeaponCosmeticsView._setup_sort_options = function (self, has_rarity)
 	if has_rarity then
 		self._sort_options[#self._sort_options + 1] = {
 			display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
-				sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
+				sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
 			}),
 			sort_function = sort_function_generator(Items.sort_comparator({
 				"<",
@@ -370,12 +371,12 @@ InventoryWeaponCosmeticsView._setup_sort_options = function (self, has_rarity)
 				">",
 				Items.compare_item_rarity,
 				"<",
-				Items.compare_item_name,
-			})),
+				Items.compare_item_name
+			}))
 		}
 		self._sort_options[#self._sort_options + 1] = {
 			display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
-				sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
+				sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
 			}),
 			sort_function = sort_function_generator(Items.sort_comparator({
 				"<",
@@ -383,32 +384,32 @@ InventoryWeaponCosmeticsView._setup_sort_options = function (self, has_rarity)
 				"<",
 				Items.compare_item_rarity,
 				"<",
-				Items.compare_item_name,
-			})),
+				Items.compare_item_name
+			}))
 		}
 	end
 
 	self._sort_options[#self._sort_options + 1] = {
 		display_name = Localize("loc_inventory_item_grid_sort_title_format_increasing_letters", true, {
-			sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+			sort_name = Localize("loc_inventory_item_grid_sort_title_name")
 		}),
 		sort_function = sort_function_generator(Items.sort_comparator({
 			"<",
 			Items.compare_item_sort_order,
 			"<",
-			Items.compare_item_name,
-		})),
+			Items.compare_item_name
+		}))
 	}
 	self._sort_options[#self._sort_options + 1] = {
 		display_name = Localize("loc_inventory_item_grid_sort_title_format_decreasing_letters", true, {
-			sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+			sort_name = Localize("loc_inventory_item_grid_sort_title_name")
 		}),
 		sort_function = sort_function_generator(Items.sort_comparator({
 			"<",
 			Items.compare_item_sort_order,
 			">",
-			Items.compare_item_name,
-		})),
+			Items.compare_item_name
+		}))
 	}
 
 	local sort_callback = callback(self, "cb_on_sort_button_pressed")
@@ -422,7 +423,7 @@ InventoryWeaponCosmeticsView._setup_weapon_preview = function (self)
 		local layer = 10
 		local context = {
 			draw_background = true,
-			ignore_blur = true,
+			ignore_blur = true
 		}
 
 		self._weapon_preview = self:_add_element(ViewElementInventoryWeaponPreview, reference_name, layer, context)
@@ -433,7 +434,7 @@ InventoryWeaponCosmeticsView._setup_weapon_preview = function (self)
 		self._weapon_preview:center_align(0, {
 			-0.2,
 			-0.3,
-			-0.25,
+			-0.25
 		})
 	end
 end
@@ -448,7 +449,7 @@ InventoryWeaponCosmeticsView._setup_menu_tabs = function (self)
 			slot_name = "slot_weapon_skin",
 			get_item_filters = function (slot_name, item_type)
 				local item_type_filter = item_type and {
-					item_type,
+					item_type
 				}
 
 				return nil, item_type_filter
@@ -536,7 +537,7 @@ InventoryWeaponCosmeticsView._setup_menu_tabs = function (self)
 
 				self._selected_weapon_skin = real_item
 				self._selected_weapon_skin_name = real_item and real_item.name
-			end,
+			end
 		},
 		{
 			display_name = "loc_weapon_cosmetics_title_trinkets",
@@ -545,7 +546,7 @@ InventoryWeaponCosmeticsView._setup_menu_tabs = function (self)
 			slot_name = "slot_trinket_1",
 			get_item_filters = function (slot_name, item_type)
 				local slot_filter = slot_name and {
-					slot_name,
+					slot_name
 				}
 
 				return slot_filter, nil
@@ -611,8 +612,8 @@ InventoryWeaponCosmeticsView._setup_menu_tabs = function (self)
 
 				self._selected_weapon_trinket_name = real_item and real_item.name
 				self._selected_weapon_trinket = real_item
-			end,
-		},
+			end
+		}
 	}
 
 	local grid_size = Definitions.grid_settings.grid_size
@@ -620,7 +621,7 @@ InventoryWeaponCosmeticsView._setup_menu_tabs = function (self)
 	local layer = 10
 	local button_size = {
 		80,
-		80,
+		80
 	}
 	local button_spacing = 10
 	local tab_menu_settings = {
@@ -630,8 +631,8 @@ InventoryWeaponCosmeticsView._setup_menu_tabs = function (self)
 		button_spacing = button_spacing,
 		input_label_offset = {
 			25,
-			30,
-		},
+			30
+		}
 	}
 	local tab_menu_element = self:_add_element(ViewElementTabMenu, id, layer, tab_menu_settings)
 
@@ -646,7 +647,7 @@ InventoryWeaponCosmeticsView._setup_menu_tabs = function (self)
 	local tab_button_template = table.clone(ButtonPassTemplates.item_category_sort_button)
 
 	tab_button_template[1].style = {
-		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
+		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed
 	}
 
 	local tab_ids = {}
@@ -740,8 +741,7 @@ InventoryWeaponCosmeticsView.set_loading_state = function (self, is_loading)
 end
 
 InventoryWeaponCosmeticsView._fetch_inventory_items = function (self)
-	local local_player_id = 1
-	local player = Managers.player:local_player(local_player_id)
+	local player = self._preview_player or Managers.player:local_player(1)
 	local character_id = player:character_id()
 	local selected_item = self._selected_item
 	local promises = Promise.resolved({})
@@ -772,7 +772,7 @@ InventoryWeaponCosmeticsView._fetch_inventory_items = function (self)
 
 			if get_empty_item_function then
 				items_data[#items_data + 1] = {
-					empty_item = true,
+					empty_item = true
 				}
 			end
 
@@ -800,7 +800,7 @@ InventoryWeaponCosmeticsView._fetch_inventory_items = function (self)
 
 				if valid then
 					items_data[#items_data + 1] = {
-						item = item,
+						item = item
 					}
 				end
 			end
@@ -832,7 +832,7 @@ InventoryWeaponCosmeticsView._fetch_inventory_items = function (self)
 									if valid then
 										penance_track_items[#penance_track_items + 1] = {
 											item = generate_preview_item(reward_item),
-											label = Localize("loc_item_source_penance_track"),
+											label = Localize("loc_item_source_penance_track")
 										}
 									end
 								end
@@ -883,7 +883,7 @@ InventoryWeaponCosmeticsView._fetch_inventory_items = function (self)
 				items = items[1],
 				store_items = items[2],
 				penance_track_items = items[3],
-				premium_items = items[4],
+				premium_items = items[4]
 			}
 		end)
 	end
@@ -929,7 +929,7 @@ InventoryWeaponCosmeticsView._parse_store_items = function (self, selected_slot_
 				if valid then
 					items[#items + 1] = {
 						item = generate_preview_item(item),
-						offer = offer,
+						offer = offer
 					}
 				end
 			end
@@ -1060,7 +1060,7 @@ InventoryWeaponCosmeticsView._update_equip_button_status = function (self)
 		end
 
 		local is_locked = previewed_element and not not previewed_element.locked
-		local is_premium = previewed_element and previewed_element.premium_offer ~= nil
+		local is_premium = self._can_purchase_premium_items and previewed_element and previewed_element.premium_offer ~= nil
 		local is_equipped = false
 
 		if is_disabled then
@@ -1127,7 +1127,7 @@ InventoryWeaponCosmeticsView._preview_element = function (self, element)
 
 	local item_size = {
 		700,
-		60,
+		60
 	}
 	local ui_renderer = self._ui_default_renderer
 	local scenegraph_id = "item_name_pivot"
@@ -1140,7 +1140,7 @@ InventoryWeaponCosmeticsView._preview_element = function (self, element)
 		vertical_alignment = "bottom",
 		size = item_size,
 		real_item = real_item,
-		item = item,
+		item = item
 	}
 	local size = template.size_function and template.size_function(self, config, ui_renderer) or template.size
 	local pass_template = template.pass_template_function and template.pass_template_function(self, config, ui_renderer) or template.pass_template
@@ -1316,7 +1316,7 @@ InventoryWeaponCosmeticsView._draw_render_target = function (self)
 	local position = self:_scenegraph_world_position("canvas")
 	local size = {
 		width,
-		height,
+		height
 	}
 	local gui_position = Vector3(position[1] * scale, position[2] * scale, position[3] or 0)
 	local gui_size = Vector3(size[1] * scale, size[2] * scale, size[3] or 0)
@@ -1455,7 +1455,7 @@ InventoryWeaponCosmeticsView._achievement_items = function (self, selected_slot_
 					local sub_penances_count = table.size(achievement.achievements)
 
 					description_text = Localize("loc_inventory_cosmetic_item_acquisition_penance_description_multiple_requirement", true, {
-						penance_amount = sub_penances_count,
+						penance_amount = sub_penances_count
 					})
 				else
 					description_text = AchievementUIHelper.localized_description(achievement)
@@ -1468,7 +1468,7 @@ InventoryWeaponCosmeticsView._achievement_items = function (self, selected_slot_
 					achievement_items[#achievement_items + 1] = {
 						item = generate_preview_item(reward_item),
 						label = AchievementUIHelper.localized_title(achievement),
-						description = description_text,
+						description = description_text
 					}
 				end
 			end
@@ -1571,8 +1571,8 @@ InventoryWeaponCosmeticsView._prepare_layout_data = function (self)
 						sort_group = is_empty and 0 or 1,
 						render_size = {
 							256,
-							128,
-						},
+							128
+						}
 					}
 				end
 			end
@@ -1586,7 +1586,7 @@ InventoryWeaponCosmeticsView._prepare_layout_data = function (self)
 			layout_count = layout_count + 1
 			layout[layout_count] = {
 				sort_group = 4,
-				widget_type = "divider",
+				widget_type = "divider"
 			}
 		end
 
@@ -1607,8 +1607,8 @@ InventoryWeaponCosmeticsView._prepare_layout_data = function (self)
 					achievement = achievement_item,
 					render_size = {
 						256,
-						128,
-					},
+						128
+					}
 				}
 			end
 		end
@@ -1630,8 +1630,8 @@ InventoryWeaponCosmeticsView._prepare_layout_data = function (self)
 					penance_track = penance_track_item,
 					render_size = {
 						256,
-						128,
-					},
+						128
+					}
 				}
 			end
 		end
@@ -1653,8 +1653,8 @@ InventoryWeaponCosmeticsView._prepare_layout_data = function (self)
 					store = store_item.item,
 					render_size = {
 						256,
-						128,
-					},
+						128
+					}
 				}
 			end
 		end
@@ -1665,7 +1665,7 @@ InventoryWeaponCosmeticsView._prepare_layout_data = function (self)
 			layout_count = layout_count + 1
 			layout[layout_count] = {
 				sort_group = 2,
-				widget_type = "divider",
+				widget_type = "divider"
 			}
 		end
 
@@ -1687,8 +1687,8 @@ InventoryWeaponCosmeticsView._prepare_layout_data = function (self)
 					premium_offer = premium_item.offer,
 					render_size = {
 						256,
-						128,
-					},
+						128
+					}
 				}
 			end
 		end
@@ -1716,7 +1716,7 @@ InventoryWeaponCosmeticsView._setup_side_panel = function (self, item, is_locked
 	local function _add_text_widget(pass_template, text)
 		local widget_definition = UIWidget.create_definition(pass_template, scenegraph_id, nil, {
 			max_width,
-			0,
+			0
 		})
 		local widget = self:_create_widget(string.format("side_panel_widget_%d", #widgets), widget_definition)
 
@@ -1726,7 +1726,7 @@ InventoryWeaponCosmeticsView._setup_side_panel = function (self, item, is_locked
 		local widget_text_style = widget.style.text
 		local _, text_height = self:_text_size(text, widget_text_style, {
 			max_width,
-			1080,
+			1080
 		})
 
 		y_offset = y_offset + text_height
@@ -1809,15 +1809,15 @@ InventoryWeaponCosmeticsView.cb_on_purchase_pressed = function (self)
 	local element = self._previewed_element
 	local premium_offer = element and element.premium_offer
 
-	if not premium_offer then
+	if not premium_offer or not self._can_purchase_premium_items then
 		return
 	end
 
 	Managers.ui:open_view("store_item_detail_view", nil, nil, nil, nil, {
 		store_item = {
-			offer = premium_offer,
+			offer = premium_offer
 		},
-		parent = self,
+		parent = self
 	})
 end
 
@@ -1888,7 +1888,7 @@ InventoryWeaponCosmeticsView.play_vo_events = function (self, events, voice_prof
 			voice_profile = voice_profile,
 			optional_route_key = optional_route_key,
 			delay = optional_delay,
-			is_opinion_vo = is_opinion_vo,
+			is_opinion_vo = is_opinion_vo
 		}
 	else
 		local wwise_route_key = optional_route_key or 40

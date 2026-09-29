@@ -9,18 +9,18 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
-	},
+			0
+		}
+	}
 }
 local widget_definitions = {}
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

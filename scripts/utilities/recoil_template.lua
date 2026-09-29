@@ -15,12 +15,12 @@ RecoilTemplate.generate_offset_range = function (num_shots, offset_pitch, offset
 		offset_range[ii] = {
 			pitch = {
 				lerp_basic = this_pitch * (1 + lerp_distance),
-				lerp_perfect = this_pitch * (1 - lerp_distance),
+				lerp_perfect = this_pitch * (1 - lerp_distance)
 			},
 			yaw = {
 				lerp_basic = this_yaw * (1 + lerp_distance),
-				lerp_perfect = this_yaw * (1 - lerp_distance),
-			},
+				lerp_perfect = this_yaw * (1 - lerp_distance)
+			}
 		}
 	end
 
@@ -30,7 +30,7 @@ end
 RecoilTemplate.create_scale = function (scale_values)
 	local scale_list = {
 		pitch = {},
-		yaw = {},
+		yaw = {}
 	}
 	local current_index = 0
 	local current_pitch = 0
@@ -65,7 +65,7 @@ RecoilTemplate.AIM_ASSIST_MULTIPLIER_FUNCTIONS = {
 	end,
 	unmodified_inverted_unsteadiness = function (self, recoil_control_component, recoil_component)
 		return 1 - recoil_component.unsteadiness
-	end,
+	end
 }
 
 return RecoilTemplate

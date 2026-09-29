@@ -6,22 +6,22 @@ local template = {
 		event_pacing_off = {
 			{
 				"set_pacing_enabled",
-				enabled = false,
-			},
+				enabled = false
+			}
 		},
 		event_pacing_on = {
 			{
 				"set_pacing_enabled",
-				enabled = true,
-			},
+				enabled = true
+			}
 		},
 		event_pacing_on_stop_trickle = {
 			{
-				"stop_terror_trickle",
+				"stop_terror_trickle"
 			},
 			{
 				"set_pacing_enabled",
-				enabled = true,
+				enabled = true
 			},
 			{
 				"control_pacing_spawns",
@@ -31,14 +31,14 @@ local template = {
 					"roamers",
 					"trickle_hordes",
 					"specials",
-					"monsters",
-				},
-			},
+					"monsters"
+				}
+			}
 		},
 		event_stop_trickle = {
 			{
-				"stop_terror_trickle",
-			},
+				"stop_terror_trickle"
+			}
 		},
 		event_trickle = {
 			{
@@ -46,7 +46,7 @@ local template = {
 				delay = 8,
 				proximity_spawners = true,
 				spawner_group = "trickle_spawner",
-				template_name = "high_mixed",
+				template_name = "high_mixed"
 			},
 			{
 				"spawn_by_points",
@@ -57,13 +57,13 @@ local template = {
 				breed_tags = {
 					{
 						"melee",
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 4,
+				duration = 4
 			},
 			{
 				"try_inject_special_minion",
@@ -72,21 +72,21 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 50,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 4
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "trickle_end_first",
-			},
+				flow_event_name = "trickle_end_first"
+			}
 		},
 		trickle_ship_1_test = {
 			{
@@ -97,9 +97,9 @@ local template = {
 				breed_tags = {
 					{
 						"melee",
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -109,13 +109,13 @@ local template = {
 				breed_tags = {
 					{
 						"melee",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 5,
+				duration = 5
 			},
 			{
 				"try_inject_special_minion",
@@ -124,9 +124,9 @@ local template = {
 				spawner_group = "trickle_spawner",
 				breed_tags = {
 					{
-						"special",
-					},
-				},
+						"special"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -136,9 +136,9 @@ local template = {
 				breed_tags = {
 					{
 						"far",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"start_terror_trickle",
@@ -146,30 +146,30 @@ local template = {
 				limit_spawners = 2,
 				proximity_spawners = true,
 				spawner_group = "trickle_spawner",
-				template_name = "standard_melee",
+				template_name = "standard_melee"
 			},
 			{
 				"delay",
-				duration = 36,
+				duration = 36
 			},
 			{
 				"continue_when",
 				duration = 35,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 120,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 10
-				end,
+				end
 			},
 			{
 				"start_terror_event",
-				start_event_name = "trickle_ship_1_test",
-			},
+				start_event_name = "trickle_ship_1_test"
+			}
 		},
 		trickle_ship_2_test = {
 			{
@@ -180,28 +180,28 @@ local template = {
 				breed_tags = {
 					{
 						"far",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 35,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 120,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 10
-				end,
+				end
 			},
 			{
 				"start_terror_event",
-				start_event_name = "trickle_ship_2_test",
-			},
+				start_event_name = "trickle_ship_2_test"
+			}
 		},
 		locomotive_kill_target = {
 			{
@@ -210,28 +210,28 @@ local template = {
 				breed_name = "cultist_captain",
 				limit_spawners = 1,
 				mission_objective_id = "objective_flash_train_eliminate_target",
-				spawner_group = "spawner_boss",
+				spawner_group = "spawner_boss"
 			},
 			{
 				"debug_print",
 				duration = 3,
-				text = "Kill event: Target spawned",
+				text = "Kill event: Target spawned"
 			},
 			{
 				"delay",
-				duration = 5,
+				duration = 5
 			},
 			{
 				"continue_when",
 				duration = 150,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "platform_kill_target_dead",
-			},
+				flow_event_name = "platform_kill_target_dead"
+			}
 		},
 		trickle_end = {
 			{
@@ -242,16 +242,16 @@ local template = {
 				breed_tags = {
 					{
 						"melee",
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 35,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -261,21 +261,21 @@ local template = {
 				breed_tags = {
 					{
 						"far",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 35,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "trickle_end_complete",
-			},
+				flow_event_name = "trickle_end_complete"
+			}
 		},
 		last_trickle = {
 			{
@@ -286,23 +286,23 @@ local template = {
 				breed_tags = {
 					{
 						"far",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 35,
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "extract",
-			},
-		},
-	},
+				flow_event_name = "extract"
+			}
+		}
+	}
 }
 
 return template

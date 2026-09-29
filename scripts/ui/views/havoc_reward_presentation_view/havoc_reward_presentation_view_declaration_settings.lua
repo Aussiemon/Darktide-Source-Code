@@ -12,11 +12,11 @@ local view_settings = {
 	state_bound = true,
 	use_transition_ui = false,
 	testify_flags = {
-		ui_views = false,
+		ui_views = false
 	},
 	wwise_states = {
-		music_game_state = WwiseGameSyncSettings.state_groups.music_game_state.loadout,
-	},
+		music_game_state = WwiseGameSyncSettings.state_groups.music_game_state.loadout
+	}
 }
 
 return settings("HavocRewardPresentationViewDeclarationSettings", view_settings)

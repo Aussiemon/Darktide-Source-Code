@@ -12,34 +12,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_com_wheel",
+				"on_demand_com_wheel"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"location_enemy_there",
+				"location_enemy_there"
 			},
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_enemy_over_here",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_enemy_over_here",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -52,34 +52,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_com_wheel",
+				"on_demand_com_wheel"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"answer_following",
+				"answer_following"
 			},
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_follow_you",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_follow_you",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -92,34 +92,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_com_wheel",
+				"on_demand_com_wheel"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"com_cheer",
+				"com_cheer"
 			},
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_for_the_emperor",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_for_the_emperor",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -132,34 +132,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_com_wheel",
+				"on_demand_com_wheel"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"location_over_here",
+				"location_over_here"
 			},
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_over_here",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_over_here",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -172,34 +172,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_com_wheel",
+				"on_demand_com_wheel"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"location_this_way",
+				"location_this_way"
 			},
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_lets_go_this_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_lets_go_this_way",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -212,34 +212,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_com_wheel",
+				"on_demand_com_wheel"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"com_my_pleasure",
+				"com_my_pleasure"
 			},
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_my_pleasure",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_my_pleasure",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -252,34 +252,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_com_wheel",
+				"on_demand_com_wheel"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"com_need_ammo",
+				"com_need_ammo"
 			},
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_need_ammo",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_need_ammo",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -292,34 +292,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_com_wheel",
+				"on_demand_com_wheel"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"com_need_health",
+				"com_need_health"
 			},
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_need_health",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_need_health",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -332,34 +332,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_com_wheel",
+				"on_demand_com_wheel"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"answer_need",
+				"answer_need"
 			},
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_need_health",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_need_health",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -372,34 +372,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_com_wheel",
+				"on_demand_com_wheel"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"answer_no",
+				"answer_no"
 			},
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_no",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_no",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -412,34 +412,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_com_wheel",
+				"on_demand_com_wheel"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"com_take_this",
+				"com_take_this"
 			},
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_take_this",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_take_this",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -452,34 +452,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_com_wheel",
+				"on_demand_com_wheel"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"com_thank_you",
+				"com_thank_you"
 			},
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_over_here",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_over_here",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -492,34 +492,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_com_wheel",
+				"on_demand_com_wheel"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"answer_yes",
+				"answer_yes"
 			},
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_yes",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_com_wheel_vo_yes",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_1",
@@ -532,47 +532,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"seen_netgunner_flee",
-				},
+					"seen_netgunner_flee"
+				}
 			},
 			{
 				"faction_memory",
 				"seen_netgunner_flee_response",
 				OP.TIMEDIFF,
 				OP.GT,
-				60,
-			},
+				60
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"seen_netgunner_flee_response",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -585,54 +585,54 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"seen_netgunner_flee",
+				"seen_netgunner_flee"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
+				5
 			},
 			{
 				"faction_memory",
 				"seen_netgunner_flee",
 				OP.TIMEDIFF,
 				OP.GT,
-				30,
-			},
+				30
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_renegade_netgunner",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"seen_netgunner_flee",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -645,34 +645,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_item",
+				"on_demand_vo_tag_item"
 			},
 			{
 				"query_context",
 				"item_tag",
 				OP.EQ,
-				"pup_stimm_concentration",
+				"pup_stimm_concentration"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -685,34 +685,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_item",
+				"on_demand_vo_tag_item"
 			},
 			{
 				"query_context",
 				"item_tag",
 				OP.EQ,
-				"pup_stimm_health",
+				"pup_stimm_health"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -725,34 +725,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_item",
+				"on_demand_vo_tag_item"
 			},
 			{
 				"query_context",
 				"item_tag",
 				OP.EQ,
-				"pup_stimm_power",
+				"pup_stimm_power"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -765,34 +765,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_item",
+				"on_demand_vo_tag_item"
 			},
 			{
 				"query_context",
 				"item_tag",
 				OP.EQ,
-				"pup_stimm_speed",
+				"pup_stimm_speed"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -805,7 +805,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
@@ -813,37 +813,37 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"renegade_berzerker",
-					"cultist_berzerker",
-				},
+					"cultist_berzerker"
+				}
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_berserker",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -856,42 +856,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_captain",
+				"renegade_captain"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_renegade_captain",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -904,42 +904,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_hound",
+				"chaos_hound"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_chaos_hound",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -952,42 +952,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_mutant",
+				"cultist_mutant"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_cultist_mutant",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -1000,42 +1000,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_ogryn_executor",
+				"chaos_ogryn_executor"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_chaos_ogryn_executor",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -1048,49 +1048,49 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
+				5
 			},
 			{
 				"faction_memory",
 				"enemy_chaos_ogryn_bulwark",
 				OP.TIMEDIFF,
 				OP.GT,
-				2,
-			},
+				2
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_chaos_ogryn_bulwark",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -1103,42 +1103,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_heavy_gunner",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -1151,42 +1151,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_poxwalker_bomber",
+				"chaos_poxwalker_bomber"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_chaos_poxwalker_bomber",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -1199,42 +1199,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_spawn",
+				"chaos_spawn"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_renegade_sniper",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -1247,42 +1247,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_flamer",
+				"cultist_flamer"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_cultist_flamer",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -1295,42 +1295,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_grenadier",
+				"cultist_grenadier"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_grenadier",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -1343,42 +1343,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_gunner",
+				"cultist_gunner"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_heavy_gunner",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -1391,49 +1391,49 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_shocktrooper",
+				"cultist_shocktrooper"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
+				5
 			},
 			{
 				"faction_memory",
 				"enemy_shocktrooper",
 				OP.TIMEDIFF,
 				OP.GT,
-				2,
-			},
+				2
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_shocktrooper",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -1446,42 +1446,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"aggroed",
+				"aggroed"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_chaos_daemonhost",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -1494,42 +1494,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_daemonhost",
+				"chaos_daemonhost"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_chaos_daemonhost",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -1542,7 +1542,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
@@ -1550,8 +1550,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"renegade_flamer",
-					"cultist_flamer",
-				},
+					"cultist_flamer"
+				}
 			},
 			{
 				"user_context",
@@ -1562,42 +1562,42 @@ return function ()
 					"psyker",
 					"veteran",
 					"zealot",
-					"adamant",
-				},
+					"adamant"
+				}
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_cultist_flamer",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_renegade_flamer",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -1610,7 +1610,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
@@ -1618,8 +1618,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"renegade_grenadier",
-					"cultist_grenadier",
-				},
+					"cultist_grenadier"
+				}
 			},
 			{
 				"user_context",
@@ -1630,42 +1630,42 @@ return function ()
 					"psyker",
 					"veteran",
 					"zealot",
-					"adamant",
-				},
+					"adamant"
+				}
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_cultist_grenadier",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_renegade_grenadier",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -1678,7 +1678,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
@@ -1686,8 +1686,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"renegade_gunner",
-					"cultist_gunner",
-				},
+					"cultist_gunner"
+				}
 			},
 			{
 				"user_context",
@@ -1698,37 +1698,37 @@ return function ()
 					"psyker",
 					"veteran",
 					"zealot",
-					"adamant",
-				},
+					"adamant"
+				}
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_heavy_gunner",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -1741,42 +1741,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_ogryn_houndmaster",
+				"chaos_ogryn_houndmaster"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_houndmaster",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -1789,42 +1789,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_netgunner",
+				"renegade_netgunner"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_renegade_netgunner",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -1837,42 +1837,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_plague_ogryn",
+				"chaos_plague_ogryn"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_chaos_plague_ogryn",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -1885,44 +1885,44 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.SET_INCLUDES,
 				args = {
-					"renegade_plasma_gunner",
-				},
+					"renegade_plasma_gunner"
+				}
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_heavy_gunner",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -1935,42 +1935,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_flamer",
+				"renegade_flamer"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_renegade_flamer",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -1983,7 +1983,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
@@ -1991,8 +1991,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"renegade_shocktrooper",
-					"cultist_shocktrooper",
-				},
+					"cultist_shocktrooper"
+				}
 			},
 			{
 				"user_context",
@@ -2003,37 +2003,37 @@ return function ()
 					"psyker",
 					"veteran",
 					"zealot",
-					"adamant",
-				},
+					"adamant"
+				}
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_shocktrooper",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -2046,42 +2046,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_executor",
+				"renegade_executor"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_renegade_executor",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -2094,42 +2094,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_grenadier",
+				"renegade_grenadier"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_grenadier",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -2142,44 +2142,44 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.SET_INCLUDES,
 				args = {
-					"renegade_gunner",
-				},
+					"renegade_gunner"
+				}
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_heavy_gunner",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -2192,49 +2192,49 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_shocktrooper",
+				"renegade_shocktrooper"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
+				5
 			},
 			{
 				"faction_memory",
 				"enemy_shocktrooper",
 				OP.TIMEDIFF,
 				OP.GT,
-				2,
-			},
+				2
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_shocktrooper",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -2247,42 +2247,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_enemy",
+				"on_demand_vo_tag_enemy"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_sniper",
+				"renegade_sniper"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"enemy_renegade_sniper",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -2295,39 +2295,39 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_item",
+				"on_demand_vo_tag_item"
 			},
 			{
 				"query_context",
 				"item_tag",
 				OP.EQ,
-				"pup_ammo",
+				"pup_ammo"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"user_memory",
 				"last_saw_ammo",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -2340,39 +2340,39 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_item",
+				"on_demand_vo_tag_item"
 			},
 			{
 				"query_context",
 				"item_tag",
 				OP.EQ,
-				"pup_battery",
+				"pup_battery"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"user_memory",
 				"last_saw_battery",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -2385,39 +2385,39 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_item",
+				"on_demand_vo_tag_item"
 			},
 			{
 				"query_context",
 				"item_tag",
 				OP.EQ,
-				"pup_container",
+				"pup_container"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"user_memory",
 				"last_saw_container",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -2430,39 +2430,39 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_item",
+				"on_demand_vo_tag_item"
 			},
 			{
 				"query_context",
 				"item_tag",
 				OP.EQ,
-				"pup_control_rod",
+				"pup_control_rod"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"user_memory",
 				"last_saw_control_rod",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -2475,39 +2475,39 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_item",
+				"on_demand_vo_tag_item"
 			},
 			{
 				"query_context",
 				"item_tag",
 				OP.EQ,
-				"pup_deployed_ammo_crate",
+				"pup_deployed_ammo_crate"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"user_memory",
 				"last_saw_deployed_ammo_crate",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -2520,39 +2520,39 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_item",
+				"on_demand_vo_tag_item"
 			},
 			{
 				"query_context",
 				"item_tag",
 				OP.EQ,
-				"pup_deployed_medical_crate",
+				"pup_deployed_medical_crate"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"user_memory",
 				"last_saw_deployed_medical_crate",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -2565,39 +2565,39 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_item",
+				"on_demand_vo_tag_item"
 			},
 			{
 				"query_context",
 				"item_tag",
 				OP.EQ,
-				"pup_forge_metal",
+				"pup_forge_metal"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"user_memory",
 				"last_saw_forge_metal",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -2610,39 +2610,39 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_item",
+				"on_demand_vo_tag_item"
 			},
 			{
 				"query_context",
 				"item_tag",
 				OP.EQ,
-				"pup_medical_crate",
+				"pup_medical_crate"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"user_memory",
 				"last_saw_medical_crate",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -2655,39 +2655,39 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_item",
+				"on_demand_vo_tag_item"
 			},
 			{
 				"query_context",
 				"item_tag",
 				OP.EQ,
-				"pup_platinum",
+				"pup_platinum"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"user_memory",
 				"last_saw_platinum",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -2700,39 +2700,39 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_item",
+				"on_demand_vo_tag_item"
 			},
 			{
 				"query_context",
 				"item_tag",
 				OP.EQ,
-				"pup_side_mission_consumable",
+				"pup_side_mission_consumable"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"user_memory",
 				"last_saw_side_mission_consumable",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -2745,39 +2745,39 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_item",
+				"on_demand_vo_tag_item"
 			},
 			{
 				"query_context",
 				"item_tag",
 				OP.EQ,
-				"pup_side_mission_grimoire",
+				"pup_side_mission_grimoire"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"user_memory",
 				"last_saw_side_mission_grimoire",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -2790,39 +2790,39 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_item",
+				"on_demand_vo_tag_item"
 			},
 			{
 				"query_context",
 				"item_tag",
 				OP.EQ,
-				"pup_side_mission_tome",
+				"pup_side_mission_tome"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"user_memory",
 				"last_saw_side_mission_tome",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -2835,39 +2835,39 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_item",
+				"on_demand_vo_tag_item"
 			},
 			{
 				"query_context",
 				"item_tag",
 				OP.EQ,
-				"pup_small_grenade",
+				"pup_small_grenade"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"user_memory",
 				"last_saw_small_grenade",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -2880,46 +2880,46 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_item",
+				"on_demand_vo_tag_item"
 			},
 			{
 				"query_context",
 				"item_tag",
 				OP.EQ,
-				"station_health",
+				"station_health"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
+				5
 			},
 			{
 				"user_memory",
 				"last_saw_health",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"user_memory",
 				"last_saw_health_station",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 	define_rule({
 		category = "player_on_demand_vo",
@@ -2932,38 +2932,38 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"on_demand_vo_tag_item",
+				"on_demand_vo_tag_item"
 			},
 			{
 				"query_context",
 				"item_tag",
 				OP.EQ,
-				"station_health_without_battery",
+				"station_health_without_battery"
 			},
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"time_since_smart_tag_item",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"user_memory",
 				"last_saw_station_health_without_battery",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.15,
-			},
-		},
+				duration = 0.15
+			}
+		}
 	})
 end

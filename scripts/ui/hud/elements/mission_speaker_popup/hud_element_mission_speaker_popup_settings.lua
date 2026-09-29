@@ -7,17 +7,17 @@ local hud_element_mission_speaker_popup_settings = {
 	bar_spacing = 10,
 	bar_size = {
 		12,
-		30,
+		30
 	},
 	bar_offset = {
 		-65,
 		0,
-		0,
+		0
 	},
 	portrait_size = {
 		80,
-		90,
-	},
+		90
+	}
 }
 
 return settings("HudElementMissionSpeakerPopupSettings", hud_element_mission_speaker_popup_settings)

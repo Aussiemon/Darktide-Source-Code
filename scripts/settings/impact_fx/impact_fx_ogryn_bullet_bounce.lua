@@ -7,10 +7,10 @@ local NO_SURFACE_DECAL = false
 local armor_types = ArmorSettings.types
 local hit_types = SurfaceMaterialSettings.hit_types
 local blood_ball = {
-	"content/decals/blood_ball/blood_ball",
+	"content/decals/blood_ball/blood_ball"
 }
 local disgusting_blood_ball = {
-	"content/decals/blood_ball/blood_ball_poxwalker",
+	"content/decals/blood_ball/blood_ball_poxwalker"
 }
 local unarmored = {
 	sfx = {
@@ -19,49 +19,49 @@ local unarmored = {
 		died = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_heavy",
-			},
+				event = "wwise/events/weapon/melee_hits_blunt_heavy"
+			}
 		},
 		weakspot_damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_heavy",
+				event = "wwise/events/weapon/melee_hits_blunt_heavy"
 			},
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_sharp",
-				only_1p = true,
-			},
+				only_1p = true
+			}
 		},
 		damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_gen",
-			},
+				event = "wwise/events/weapon/melee_hits_blunt_gen"
+			}
 		},
 		damage_reduced = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_reduced_damage",
-			},
+				event = "wwise/events/weapon/melee_hits_blunt_reduced_damage"
+			}
 		},
 		damage_negated = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
-			},
+				event = "wwise/events/weapon/melee_hits_blunt_no_damage"
+			}
 		},
 		shield_blocked = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_shield",
-			},
+				event = "wwise/events/weapon/melee_hits_blunt_shield"
+			}
 		},
 		dead = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
-			},
-		},
+				event = "wwise/events/weapon/melee_hits_blunt_no_damage"
+			}
+		}
 	},
 	vfx = {
 		blocked = nil,
@@ -70,45 +70,45 @@ local unarmored = {
 		died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_01",
-				},
-			},
+					"content/fx/particles/impacts/flesh/blood_splatter_01"
+				}
+			}
 		},
 		weakspot_damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01",
-				},
-			},
+					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01"
+				}
+			}
 		},
 		damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_01",
-				},
-			},
+					"content/fx/particles/impacts/flesh/blood_splatter_01"
+				}
+			}
 		},
 		damage_reduced = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_01",
-				},
-			},
+					"content/fx/particles/impacts/flesh/blood_splatter_01"
+				}
+			}
 		},
 		damage_negated = {
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_ricochet",
-				},
-			},
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			}
 		},
 		shield_blocked = {
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_ricochet",
-				},
-			},
-		},
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			}
+		}
 	},
 	blood_ball = {
 		blocked = nil,
@@ -119,8 +119,8 @@ local unarmored = {
 		weakspot_damage = blood_ball,
 		damage = blood_ball,
 		damage_reduced = blood_ball,
-		dead = blood_ball,
-	},
+		dead = blood_ball
+	}
 }
 local armored = {
 	sfx = {
@@ -129,65 +129,65 @@ local armored = {
 		died = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_heavy",
+				event = "wwise/events/weapon/melee_hits_blunt_heavy"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_armor_break",
-			},
+				event = "wwise/events/weapon/melee_hits_blunt_armor_break"
+			}
 		},
 		weakspot_damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_heavy",
+				event = "wwise/events/weapon/melee_hits_blunt_heavy"
 			},
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_sharp",
-				only_1p = true,
+				only_1p = true
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_armor",
-			},
+				event = "wwise/events/weapon/melee_hits_blunt_armor"
+			}
 		},
 		damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_gen",
+				event = "wwise/events/weapon/melee_hits_blunt_gen"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_armor",
-			},
+				event = "wwise/events/weapon/melee_hits_blunt_armor"
+			}
 		},
 		damage_reduced = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_reduced_damage",
+				event = "wwise/events/weapon/melee_hits_blunt_reduced_damage"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_armor",
-			},
+				event = "wwise/events/weapon/melee_hits_blunt_armor"
+			}
 		},
 		damage_negated = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
-			},
+				event = "wwise/events/weapon/melee_hits_blunt_no_damage"
+			}
 		},
 		shield_blocked = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_shield",
-			},
+				event = "wwise/events/weapon/melee_hits_blunt_shield"
+			}
 		},
 		dead = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
-			},
-		},
+				event = "wwise/events/weapon/melee_hits_blunt_no_damage"
+			}
+		}
 	},
 	vfx = {
 		blocked = nil,
@@ -196,45 +196,45 @@ local armored = {
 		died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_01",
-				},
-			},
+					"content/fx/particles/impacts/flesh/blood_splatter_01"
+				}
+			}
 		},
 		weakspot_damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01",
-				},
-			},
+					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01"
+				}
+			}
 		},
 		damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_01",
-				},
-			},
+					"content/fx/particles/impacts/flesh/blood_splatter_01"
+				}
+			}
 		},
 		damage_reduced = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_01",
-				},
-			},
+					"content/fx/particles/impacts/flesh/blood_splatter_01"
+				}
+			}
 		},
 		damage_negated = {
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_ricochet",
-				},
-			},
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			}
 		},
 		shield_blocked = {
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_ricochet",
-				},
-			},
-		},
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			}
+		}
 	},
 	blood_ball = {
 		blocked = nil,
@@ -245,8 +245,8 @@ local armored = {
 		weakspot_damage = blood_ball,
 		damage = blood_ball,
 		damage_reduced = blood_ball,
-		dead = blood_ball,
-	},
+		dead = blood_ball
+	}
 }
 local super_armor = table.clone(armored)
 local disgustingly_resilient = {
@@ -256,65 +256,65 @@ local disgustingly_resilient = {
 		died = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_heavy",
+				event = "wwise/events/weapon/melee_hits_blunt_heavy"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_resilient",
+				event = "wwise/events/weapon/melee_hits_blunt_resilient"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_combat_weapon_hit_addon_bone",
-			},
+				event = "wwise/events/weapon/play_combat_weapon_hit_addon_bone"
+			}
 		},
 		weakspot_damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_heavy",
+				event = "wwise/events/weapon/melee_hits_blunt_heavy"
 			},
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_sharp",
-				only_1p = true,
-			},
+				only_1p = true
+			}
 		},
 		damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_gen",
+				event = "wwise/events/weapon/melee_hits_blunt_gen"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_resilient",
-			},
+				event = "wwise/events/weapon/melee_hits_blunt_resilient"
+			}
 		},
 		damage_reduced = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_reduced_damage",
+				event = "wwise/events/weapon/melee_hits_blunt_reduced_damage"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_resilient",
-			},
+				event = "wwise/events/weapon/melee_hits_blunt_resilient"
+			}
 		},
 		damage_negated = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
-			},
+				event = "wwise/events/weapon/melee_hits_blunt_no_damage"
+			}
 		},
 		shield_blocked = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_shield",
-			},
+				event = "wwise/events/weapon/melee_hits_blunt_shield"
+			}
 		},
 		dead = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
-			},
-		},
+				event = "wwise/events/weapon/melee_hits_blunt_no_damage"
+			}
+		}
 	},
 	vfx = {
 		blocked = nil,
@@ -323,70 +323,70 @@ local disgustingly_resilient = {
 		died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_01",
-				},
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01",
-				},
-			},
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
+			}
 		},
 		weakspot_damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_weakspot_01",
-				},
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_weakspot_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01",
-				},
-			},
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
+			}
 		},
 		damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_01",
-				},
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01",
-				},
-			},
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
+			}
 		},
 		damage_reduced = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_01",
-				},
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01",
-				},
-			},
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
+			}
 		},
 		damage_negated = {
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_ricochet",
-				},
+					"content/fx/particles/impacts/armor_ricochet"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01",
-				},
-			},
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
+			}
 		},
 		shield_blocked = {
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_ricochet",
-				},
-			},
-		},
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			}
+		}
 	},
 	blood_ball = {
 		blocked = nil,
@@ -397,8 +397,8 @@ local disgustingly_resilient = {
 		died = disgusting_blood_ball,
 		weakspot_damage = disgusting_blood_ball,
 		damage = disgusting_blood_ball,
-		damage_reduced = disgusting_blood_ball,
-	},
+		damage_reduced = disgusting_blood_ball
+	}
 }
 local resistant = table.clone(unarmored)
 local berserker = table.clone(unarmored)
@@ -411,17 +411,17 @@ local default_surface_fx = {
 				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_thumper_bounce",
 				group = "surface_material",
-				normal_rotation = true,
-			},
+				normal_rotation = true
+			}
 		},
 		vfx = {
 			{
 				normal_rotation = true,
 				effects = {
-					"content/fx/particles/impacts/weapons/autogun/autogun_impact_wall",
-				},
-			},
-		},
+					"content/fx/particles/impacts/weapons/autogun/autogun_impact_wall"
+				}
+			}
+		}
 	},
 	[hit_types.penetration_entry] = {
 		sfx = {
@@ -429,19 +429,19 @@ local default_surface_fx = {
 				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_thumper_bounce",
 				group = "surface_material",
-				normal_rotation = true,
-			},
+				normal_rotation = true
+			}
 		},
 		vfx = {
 			{
 				normal_rotation = true,
 				effects = {
-					"content/fx/particles/impacts/weapons/autogun/autogun_impact_wall",
-				},
-			},
-		},
+					"content/fx/particles/impacts/weapons/autogun/autogun_impact_wall"
+				}
+			}
+		}
 	},
-	[hit_types.penetration_exit] = nil,
+	[hit_types.penetration_exit] = nil
 }
 
 ImpactFxHelper.create_missing_surface_fx(surface_fx, default_surface_fx)
@@ -457,8 +457,8 @@ return {
 		[armor_types.player] = player,
 		[armor_types.resistant] = resistant,
 		[armor_types.super_armor] = super_armor,
-		[armor_types.unarmored] = unarmored,
+		[armor_types.unarmored] = unarmored
 	},
 	surface = surface_fx,
-	surface_decal = surface_decal,
+	surface_decal = surface_decal
 }

@@ -15,9 +15,9 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			0,
-		},
-	},
+			0
+		}
+	}
 }
 local counter_text_style = table.clone(UIFontSettings.hud_body)
 
@@ -27,13 +27,13 @@ counter_text_style.text_horizontal_alignment = "center"
 counter_text_style.text_vertical_alignment = "center"
 counter_text_style.size = {
 	50,
-	50,
+	50
 }
 counter_text_style.font_size = 24
 counter_text_style.offset = {
 	-(ability_size[1] * 0.5 + 15),
 	0,
-	2,
+	2
 }
 counter_text_style.drop_shadow = false
 
@@ -45,13 +45,13 @@ input_text_style.text_horizontal_alignment = "left"
 input_text_style.text_vertical_alignment = "center"
 input_text_style.size = {
 	60,
-	50,
+	50
 }
 input_text_style.font_size = 20
 input_text_style.offset = {
 	ability_size[1] + 5,
 	0,
-	2,
+	2
 }
 input_text_style.drop_shadow = false
 input_text_style.text_color = Color.ui_grey_light(255, true)
@@ -68,7 +68,7 @@ local widget_definitions = {
 				local text = content.text
 
 				return text ~= nil
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -80,7 +80,7 @@ local widget_definitions = {
 				local input_text = content.input_text
 
 				return input_text ~= nil
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -91,20 +91,20 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					64,
-					64,
+					64
 				},
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				color = {
 					150,
 					102,
 					102,
-					102,
-				},
-			},
+					102
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -114,23 +114,23 @@ local widget_definitions = {
 				horizontal_alignment = "center",
 				vertical_alignment = "center",
 				material_values = {
-					progress = 1,
+					progress = 1
 				},
 				size = {
 					64,
-					64,
+					64
 				},
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				color = {
 					150,
 					102,
 					102,
-					102,
-				},
+					102
+				}
 			},
 			change_function = function (content, style)
 				local duration_progress = content.duration_progress
@@ -141,7 +141,7 @@ local widget_definitions = {
 				local duration_progress = content.duration_progress
 
 				return duration_progress ~= nil
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -153,20 +153,20 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					48,
-					48,
+					48
 				},
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
 				color = {
 					255,
 					255,
 					255,
-					255,
-				},
-			},
+					255
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -176,23 +176,23 @@ local widget_definitions = {
 				horizontal_alignment = "center",
 				vertical_alignment = "center",
 				material_values = {
-					progress = 1,
+					progress = 1
 				},
 				size = {
 					64,
-					64,
+					64
 				},
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				color = {
 					255,
 					255,
 					255,
-					255,
-				},
+					255
+				}
 			},
 			change_function = function (content, style)
 				local duration_progress = content.duration_progress
@@ -203,7 +203,7 @@ local widget_definitions = {
 				local duration_progress = content.duration_progress
 
 				return duration_progress ~= nil
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -214,25 +214,25 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					64,
-					64,
+					64
 				},
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				color = {
 					255,
 					255,
 					255,
-					255,
-				},
+					255
+				}
 			},
 			visibility_function = function (content, style)
 				local duration_progress = content.duration_progress
 
 				return not duration_progress or duration_progress <= 0
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -242,29 +242,29 @@ local widget_definitions = {
 				horizontal_alignment = "center",
 				vertical_alignment = "center",
 				material_values = {
-					progress = 1,
+					progress = 1
 				},
 				size = {
 					64,
-					64,
+					64
 				},
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				color = {
 					255,
 					255,
 					255,
-					255,
-				},
+					255
+				}
 			},
 			change_function = function (content, style)
 				local duration_progress = content.duration_progress or 1
 
 				style.material_values.progress = duration_progress
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -275,19 +275,19 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					24,
-					24,
+					24
 				},
 				offset = {
 					0,
 					-45,
-					0,
+					0
 				},
 				color = {
 					255,
 					255,
 					255,
-					255,
-				},
+					255
+				}
 			},
 			visibility_function = function (content, style)
 				local duration_progress = content.duration_progress
@@ -300,12 +300,12 @@ local widget_definitions = {
 				local visible = previous_duration_progress < duration_progress
 
 				return visible
-			end,
-		},
-	}, "slot"),
+			end
+		}
+	}, "slot")
 }
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

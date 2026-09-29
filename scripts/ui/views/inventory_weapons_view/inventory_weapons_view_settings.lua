@@ -2,17 +2,17 @@
 
 local grid_size = {
 	640,
-	750,
+	750
 }
 local grid_width = grid_size[1]
 local grid_height = grid_size[2]
 local grid_blur_edge_size = {
 	80,
-	0,
+	0
 }
 local mask_size = {
 	grid_width + grid_blur_edge_size[1] * 2,
-	grid_height + grid_blur_edge_size[2] * 2,
+	grid_height + grid_blur_edge_size[2] * 2
 }
 local inventory_weapons_view = {
 	item_discard_anim_duration = 0.3,
@@ -30,18 +30,18 @@ local inventory_weapons_view = {
 	world_name = "ui_weapon_preview",
 	grid_spacing = {
 		32,
-		10,
+		10
 	},
 	grid_size = grid_size,
 	mask_size = mask_size,
 	stats_size = {
 		500,
-		6,
+		6
 	},
 	info_box_size = {
 		1040,
-		235,
-	},
+		235
+	}
 }
 
 return settings("InventoryWeaponsViewSettings", inventory_weapons_view)

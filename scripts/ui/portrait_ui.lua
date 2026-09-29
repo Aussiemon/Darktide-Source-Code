@@ -145,7 +145,7 @@ PortraitUI._spawn_profile = function (self, profile, render_context)
 		rotation = nil,
 		state_machine = optional_companion_state_machine,
 		animation_event = optional_companion_animation_event,
-		ignore = ignore_companion,
+		ignore = ignore_companion
 	}
 
 	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, nil, optional_state_machine, optional_animation_event, nil, optional_face_animation_event, force_highest_mip, disable_hair_state_machine, nil, nil, companion_data)
@@ -186,7 +186,7 @@ PortraitUI._spawn_profile = function (self, profile, render_context)
 
 	local icon_camera_adjustment = profile.loadout.slot_animation_end_of_round
 
-	if render_context and icon_camera_adjustment then
+	if render_context and render_context.use_end_of_round_camera and icon_camera_adjustment then
 		local position_offset = icon_camera_adjustment.icon_render_camera_position_offset
 
 		if position_offset then
@@ -295,7 +295,7 @@ PortraitUI._store_camera_settings_by_body_size = function (self, body_size, came
 				slot_name = slot_name,
 				camera_unit = slot_camera_unit,
 				boxed_camera_start_position = Vector3.to_array(slot_camera_position),
-				boxed_camera_start_rotation = QuaternionBox(slot_camera_rotation),
+				boxed_camera_start_rotation = QuaternionBox(slot_camera_rotation)
 			}
 		end
 	end
@@ -308,7 +308,7 @@ PortraitUI._store_camera_settings_by_body_size = function (self, body_size, came
 		camera_unit = camera_unit,
 		boxed_camera_start_position = Vector3.to_array(camera_position),
 		boxed_camera_start_rotation = QuaternionBox(camera_rotation),
-		camera_settings_by_item_slot = camera_settings_by_item_slot,
+		camera_settings_by_item_slot = camera_settings_by_item_slot
 	}
 end
 

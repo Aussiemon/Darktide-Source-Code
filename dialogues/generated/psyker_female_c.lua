@@ -12,93 +12,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"adamant_female_b",
-				},
+					"adamant_female_b"
+				}
 			},
 			{
 				"faction_memory",
 				"adamant_female_b_psyker_bonding_conversation_59_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"adamant_female_b_psyker_bonding_conversation_59_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"adamant_female_b_psyker_bonding_conversation_59_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -111,41 +111,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_female_b_psyker_bonding_conversation_59_a",
-				},
+					"adamant_female_b_psyker_bonding_conversation_59_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_female_b",
-				},
-			},
+					"adamant_female_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"adamant_female_b_psyker_bonding_conversation_59_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -158,40 +158,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_female_b_psyker_bonding_conversation_59_b",
-				},
+					"adamant_female_b_psyker_bonding_conversation_59_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"adamant_female_b_psyker_bonding_conversation_59_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -204,40 +204,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_female_b_psyker_bonding_conversation_59_c",
-				},
+					"adamant_female_b_psyker_bonding_conversation_59_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_female_b",
-				},
+					"adamant_female_b"
+				}
 			},
 			{
 				"user_memory",
 				"adamant_female_b_psyker_bonding_conversation_59_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -250,92 +250,92 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.EQ,
-				"true",
+				"true"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"adamant_female_b",
-				},
+					"adamant_female_b"
+				}
 			},
 			{
 				"faction_memory",
 				"adamant_female_b_psyker_bonding_conversation_60_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				100,
+				100
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"adamant_female_b_psyker_bonding_conversation_60_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"adamant_female_b_psyker_bonding_conversation_60_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -348,41 +348,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_female_b_psyker_bonding_conversation_60_a",
-				},
+					"adamant_female_b_psyker_bonding_conversation_60_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_female_b",
-				},
-			},
+					"adamant_female_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"adamant_female_b_psyker_bonding_conversation_60_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -395,40 +395,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_female_b_psyker_bonding_conversation_60_b",
-				},
+					"adamant_female_b_psyker_bonding_conversation_60_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"adamant_female_b_psyker_bonding_conversation_60_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -441,40 +441,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_female_b_psyker_bonding_conversation_60_c",
-				},
+					"adamant_female_b_psyker_bonding_conversation_60_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_female_b",
-				},
+					"adamant_female_b"
+				}
 			},
 			{
 				"user_memory",
 				"adamant_female_b_psyker_bonding_conversation_60_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -487,93 +487,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"adamant_female_c",
-				},
+					"adamant_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"adamant_female_c_psyker_bonding_conversation_51_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"adamant_female_c_psyker_bonding_conversation_51_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"adamant_female_c_psyker_bonding_conversation_51_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -586,41 +586,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_female_c_psyker_bonding_conversation_51_a",
-				},
+					"adamant_female_c_psyker_bonding_conversation_51_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_female_c",
-				},
-			},
+					"adamant_female_c"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"adamant_female_c_psyker_bonding_conversation_51_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -633,40 +633,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_female_c_psyker_bonding_conversation_51_b",
-				},
+					"adamant_female_c_psyker_bonding_conversation_51_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"adamant_female_c_psyker_bonding_conversation_51_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -679,40 +679,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_female_c_psyker_bonding_conversation_51_c",
-				},
+					"adamant_female_c_psyker_bonding_conversation_51_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_female_c",
-				},
+					"adamant_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"adamant_female_c_psyker_bonding_conversation_51_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -725,93 +725,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"adamant_female_c",
-				},
+					"adamant_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"adamant_female_c_psyker_bonding_conversation_53_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"adamant_female_c_psyker_bonding_conversation_53_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"adamant_female_c_psyker_bonding_conversation_53_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -824,41 +824,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_female_c_psyker_bonding_conversation_53_a",
-				},
+					"adamant_female_c_psyker_bonding_conversation_53_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_female_c",
-				},
-			},
+					"adamant_female_c"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"adamant_female_c_psyker_bonding_conversation_53_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -871,40 +871,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_female_c_psyker_bonding_conversation_53_b",
-				},
+					"adamant_female_c_psyker_bonding_conversation_53_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"adamant_female_c_psyker_bonding_conversation_53_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -917,40 +917,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_female_c_psyker_bonding_conversation_53_c",
-				},
+					"adamant_female_c_psyker_bonding_conversation_53_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_female_c",
-				},
+					"adamant_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"adamant_female_c_psyker_bonding_conversation_53_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -963,93 +963,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"adamant_female_c",
-				},
+					"adamant_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"adamant_female_c_psyker_bonding_conversation_54_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"adamant_female_c_psyker_bonding_conversation_54_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"adamant_female_c_psyker_bonding_conversation_54_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -1062,41 +1062,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_female_c_psyker_bonding_conversation_54_a",
-				},
+					"adamant_female_c_psyker_bonding_conversation_54_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_female_c",
-				},
-			},
+					"adamant_female_c"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"adamant_female_c_psyker_bonding_conversation_54_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -1109,40 +1109,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_female_c_psyker_bonding_conversation_54_b",
-				},
+					"adamant_female_c_psyker_bonding_conversation_54_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"adamant_female_c_psyker_bonding_conversation_54_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -1155,40 +1155,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_female_c_psyker_bonding_conversation_54_c",
-				},
+					"adamant_female_c_psyker_bonding_conversation_54_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_female_c",
-				},
+					"adamant_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"adamant_female_c_psyker_bonding_conversation_54_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -1201,93 +1201,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"adamant_male_a",
-				},
+					"adamant_male_a"
+				}
 			},
 			{
 				"faction_memory",
 				"adamant_male_a_psyker_bonding_conversation_56_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"adamant_male_a_psyker_bonding_conversation_56_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"adamant_male_a_psyker_bonding_conversation_56_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -1300,41 +1300,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_a_psyker_bonding_conversation_56_a",
-				},
+					"adamant_male_a_psyker_bonding_conversation_56_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_a",
-				},
-			},
+					"adamant_male_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"adamant_male_a_psyker_bonding_conversation_56_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -1347,40 +1347,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_a_psyker_bonding_conversation_56_b",
-				},
+					"adamant_male_a_psyker_bonding_conversation_56_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"adamant_male_a_psyker_bonding_conversation_56_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -1393,40 +1393,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_a_psyker_bonding_conversation_56_c",
-				},
+					"adamant_male_a_psyker_bonding_conversation_56_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_a",
-				},
+					"adamant_male_a"
+				}
 			},
 			{
 				"user_memory",
 				"adamant_male_a_psyker_bonding_conversation_56_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -1439,92 +1439,92 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.EQ,
-				"true",
+				"true"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"adamant_male_a",
-				},
+					"adamant_male_a"
+				}
 			},
 			{
 				"faction_memory",
 				"adamant_male_a_psyker_bonding_conversation_60_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				100,
+				100
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"adamant_male_a_psyker_bonding_conversation_60_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"adamant_male_a_psyker_bonding_conversation_60_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -1537,41 +1537,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_a_psyker_bonding_conversation_60_a",
-				},
+					"adamant_male_a_psyker_bonding_conversation_60_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_a",
-				},
-			},
+					"adamant_male_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"adamant_male_a_psyker_bonding_conversation_60_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -1584,40 +1584,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_a_psyker_bonding_conversation_60_b",
-				},
+					"adamant_male_a_psyker_bonding_conversation_60_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"adamant_male_a_psyker_bonding_conversation_60_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -1630,40 +1630,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_a_psyker_bonding_conversation_60_c",
-				},
+					"adamant_male_a_psyker_bonding_conversation_60_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_a",
-				},
+					"adamant_male_a"
+				}
 			},
 			{
 				"user_memory",
 				"adamant_male_a_psyker_bonding_conversation_60_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -1676,93 +1676,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"adamant_male_b",
-				},
+					"adamant_male_b"
+				}
 			},
 			{
 				"faction_memory",
 				"adamant_male_b_psyker_bonding_conversation_56_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"adamant_male_b_psyker_bonding_conversation_56_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"adamant_male_b_psyker_bonding_conversation_56_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -1775,41 +1775,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_b_psyker_bonding_conversation_56_a",
-				},
+					"adamant_male_b_psyker_bonding_conversation_56_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_b",
-				},
-			},
+					"adamant_male_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"adamant_male_b_psyker_bonding_conversation_56_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -1822,40 +1822,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_b_psyker_bonding_conversation_56_b",
-				},
+					"adamant_male_b_psyker_bonding_conversation_56_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"adamant_male_b_psyker_bonding_conversation_56_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -1868,40 +1868,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_b_psyker_bonding_conversation_56_c",
-				},
+					"adamant_male_b_psyker_bonding_conversation_56_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_b",
-				},
+					"adamant_male_b"
+				}
 			},
 			{
 				"user_memory",
 				"adamant_male_b_psyker_bonding_conversation_56_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -1914,93 +1914,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"adamant_male_b",
-				},
+					"adamant_male_b"
+				}
 			},
 			{
 				"faction_memory",
 				"adamant_male_b_psyker_bonding_conversation_57_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"adamant_male_b_psyker_bonding_conversation_57_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"adamant_male_b_psyker_bonding_conversation_57_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -2013,41 +2013,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_b_psyker_bonding_conversation_57_a",
-				},
+					"adamant_male_b_psyker_bonding_conversation_57_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_b",
-				},
-			},
+					"adamant_male_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"adamant_male_b_psyker_bonding_conversation_57_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -2060,40 +2060,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_b_psyker_bonding_conversation_57_b",
-				},
+					"adamant_male_b_psyker_bonding_conversation_57_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"adamant_male_b_psyker_bonding_conversation_57_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -2106,40 +2106,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_b_psyker_bonding_conversation_57_c",
-				},
+					"adamant_male_b_psyker_bonding_conversation_57_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_b",
-				},
+					"adamant_male_b"
+				}
 			},
 			{
 				"user_memory",
 				"adamant_male_b_psyker_bonding_conversation_57_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -2152,93 +2152,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"adamant_male_b",
-				},
+					"adamant_male_b"
+				}
 			},
 			{
 				"faction_memory",
 				"adamant_male_b_psyker_bonding_conversation_58_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"adamant_male_b_psyker_bonding_conversation_58_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"adamant_male_b_psyker_bonding_conversation_58_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -2251,41 +2251,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_b_psyker_bonding_conversation_58_a",
-				},
+					"adamant_male_b_psyker_bonding_conversation_58_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_b",
-				},
-			},
+					"adamant_male_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"adamant_male_b_psyker_bonding_conversation_58_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -2298,40 +2298,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_b_psyker_bonding_conversation_58_b",
-				},
+					"adamant_male_b_psyker_bonding_conversation_58_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"adamant_male_b_psyker_bonding_conversation_58_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -2344,40 +2344,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_b_psyker_bonding_conversation_58_c",
-				},
+					"adamant_male_b_psyker_bonding_conversation_58_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_b",
-				},
+					"adamant_male_b"
+				}
 			},
 			{
 				"user_memory",
 				"adamant_male_b_psyker_bonding_conversation_58_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -2390,93 +2390,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"adamant_male_b",
-				},
+					"adamant_male_b"
+				}
 			},
 			{
 				"faction_memory",
 				"adamant_male_b_psyker_bonding_conversation_59_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"adamant_male_b_psyker_bonding_conversation_59_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"adamant_male_b_psyker_bonding_conversation_59_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -2489,41 +2489,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_b_psyker_bonding_conversation_59_a",
-				},
+					"adamant_male_b_psyker_bonding_conversation_59_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_b",
-				},
-			},
+					"adamant_male_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"adamant_male_b_psyker_bonding_conversation_59_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -2536,40 +2536,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_b_psyker_bonding_conversation_59_b",
-				},
+					"adamant_male_b_psyker_bonding_conversation_59_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"adamant_male_b_psyker_bonding_conversation_59_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -2582,40 +2582,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_b_psyker_bonding_conversation_59_c",
-				},
+					"adamant_male_b_psyker_bonding_conversation_59_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_b",
-				},
+					"adamant_male_b"
+				}
 			},
 			{
 				"user_memory",
 				"adamant_male_b_psyker_bonding_conversation_59_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -2628,93 +2628,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"adamant_male_b",
-				},
+					"adamant_male_b"
+				}
 			},
 			{
 				"faction_memory",
 				"adamant_male_b_psyker_bonding_conversation_60_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"adamant_male_b_psyker_bonding_conversation_60_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"adamant_male_b_psyker_bonding_conversation_60_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -2727,41 +2727,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_b_psyker_bonding_conversation_60_a",
-				},
+					"adamant_male_b_psyker_bonding_conversation_60_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_b",
-				},
-			},
+					"adamant_male_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"adamant_male_b_psyker_bonding_conversation_60_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -2774,40 +2774,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_b_psyker_bonding_conversation_60_b",
-				},
+					"adamant_male_b_psyker_bonding_conversation_60_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"adamant_male_b_psyker_bonding_conversation_60_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -2820,40 +2820,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_b_psyker_bonding_conversation_60_c",
-				},
+					"adamant_male_b_psyker_bonding_conversation_60_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"adamant_male_b",
-				},
+					"adamant_male_b"
+				}
 			},
 			{
 				"user_memory",
 				"adamant_male_b_psyker_bonding_conversation_60_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -2866,93 +2866,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"psyker_female_b",
-				},
+					"psyker_female_b"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_certainty_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_certainty_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_certainty_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -2965,41 +2965,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_certainty_a",
-				},
+					"bonding_conversation_hammersmith_certainty_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_b",
-				},
-			},
+					"psyker_female_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_certainty_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -3012,40 +3012,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_certainty_b",
-				},
+					"bonding_conversation_hammersmith_certainty_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_certainty_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -3058,40 +3058,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_certainty_c",
-				},
+					"bonding_conversation_hammersmith_certainty_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_b",
-				},
+					"psyker_female_b"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_certainty_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -3104,92 +3104,92 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.EQ,
-				"true",
+				"true"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"psyker_male_b",
-				},
+					"psyker_male_b"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_discipline_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				100,
+				100
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_discipline_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_discipline_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -3202,41 +3202,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_discipline_a",
-				},
+					"bonding_conversation_hammersmith_discipline_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_b",
-				},
-			},
+					"psyker_male_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_discipline_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -3249,40 +3249,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_discipline_b",
-				},
+					"bonding_conversation_hammersmith_discipline_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_discipline_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -3295,40 +3295,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_discipline_c",
-				},
+					"bonding_conversation_hammersmith_discipline_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_b",
-				},
+					"psyker_male_b"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_discipline_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -3341,93 +3341,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"psyker_male_c",
-				},
+					"psyker_male_c"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_enginseer_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_enginseer_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_enginseer_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -3440,41 +3440,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_enginseer_a",
-				},
+					"bonding_conversation_hammersmith_enginseer_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_c",
-				},
-			},
+					"psyker_male_c"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_enginseer_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -3487,40 +3487,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_enginseer_b",
-				},
+					"bonding_conversation_hammersmith_enginseer_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_enginseer_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -3533,40 +3533,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_enginseer_c",
-				},
+					"bonding_conversation_hammersmith_enginseer_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_c",
-				},
+					"psyker_male_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_enginseer_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -3579,93 +3579,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"psyker_male_b",
-				},
+					"psyker_male_b"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_even_more_zola_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_even_more_zola_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_even_more_zola_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -3678,41 +3678,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_even_more_zola_a",
-				},
+					"bonding_conversation_hammersmith_even_more_zola_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_b",
-				},
-			},
+					"psyker_male_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_even_more_zola_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -3725,40 +3725,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_even_more_zola_b",
-				},
+					"bonding_conversation_hammersmith_even_more_zola_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_even_more_zola_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -3771,40 +3771,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_even_more_zola_c",
-				},
+					"bonding_conversation_hammersmith_even_more_zola_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_b",
-				},
+					"psyker_male_b"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_even_more_zola_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -3817,93 +3817,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"psyker_female_b",
-				},
+					"psyker_female_b"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_history_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_history_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_history_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -3916,41 +3916,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_history_a",
-				},
+					"bonding_conversation_hammersmith_history_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_b",
-				},
-			},
+					"psyker_female_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_history_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -3963,40 +3963,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_history_b",
-				},
+					"bonding_conversation_hammersmith_history_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_history_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4009,40 +4009,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_history_c",
-				},
+					"bonding_conversation_hammersmith_history_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_b",
-				},
+					"psyker_female_b"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_history_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4055,93 +4055,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.LT,
-				360,
+				360
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"psyker_male_c",
-				},
+					"psyker_male_c"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_intel_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_intel_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_intel_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4154,41 +4154,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_intel_a",
-				},
+					"bonding_conversation_hammersmith_intel_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_c",
-				},
-			},
+					"psyker_male_c"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_intel_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4201,40 +4201,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_intel_b",
-				},
+					"bonding_conversation_hammersmith_intel_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_intel_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4247,40 +4247,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_intel_c",
-				},
+					"bonding_conversation_hammersmith_intel_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_c",
-				},
+					"psyker_male_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_intel_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4293,92 +4293,92 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.EQ,
-				"true",
+				"true"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"psyker_male_c",
-				},
+					"psyker_male_c"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_meatgrinder_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				100,
+				100
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_meatgrinder_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_meatgrinder_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4391,41 +4391,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_meatgrinder_a",
-				},
+					"bonding_conversation_hammersmith_meatgrinder_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_c",
-				},
-			},
+					"psyker_male_c"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_meatgrinder_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4438,40 +4438,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_meatgrinder_b",
-				},
+					"bonding_conversation_hammersmith_meatgrinder_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_meatgrinder_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4484,40 +4484,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_meatgrinder_c",
-				},
+					"bonding_conversation_hammersmith_meatgrinder_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_c",
-				},
+					"psyker_male_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_meatgrinder_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4530,93 +4530,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"psyker_male_b",
-				},
+					"psyker_male_b"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_more_zola_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_more_zola_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_more_zola_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4629,41 +4629,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_more_zola_a",
-				},
+					"bonding_conversation_hammersmith_more_zola_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_b",
-				},
-			},
+					"psyker_male_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_more_zola_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4676,40 +4676,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_more_zola_b",
-				},
+					"bonding_conversation_hammersmith_more_zola_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_more_zola_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4722,40 +4722,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_more_zola_c",
-				},
+					"bonding_conversation_hammersmith_more_zola_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_b",
-				},
+					"psyker_male_b"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_more_zola_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4768,92 +4768,92 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.EQ,
-				"true",
+				"true"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"psyker_male_b",
-				},
+					"psyker_male_b"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_perfection_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				100,
+				100
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_perfection_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_perfection_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4866,41 +4866,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_perfection_a",
-				},
+					"bonding_conversation_hammersmith_perfection_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_b",
-				},
-			},
+					"psyker_male_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_perfection_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4913,40 +4913,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_perfection_b",
-				},
+					"bonding_conversation_hammersmith_perfection_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_perfection_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4959,40 +4959,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_perfection_c",
-				},
+					"bonding_conversation_hammersmith_perfection_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_b",
-				},
+					"psyker_male_b"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_perfection_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5005,7 +5005,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -5016,41 +5016,41 @@ return function ()
 					"loc_psyker_male_c__seen_psychic_power_ultimate_a_02",
 					"loc_psyker_male_c__seen_psychic_power_ultimate_a_04",
 					"loc_psyker_male_c__seen_psychic_power_ultimate_a_03",
-					"loc_psyker_male_c__seen_psychic_power_ultimate_a_05",
-				},
+					"loc_psyker_male_c__seen_psychic_power_ultimate_a_05"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_precipitate_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_precipitate_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_precipitate_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5063,41 +5063,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_precipitate_a",
-				},
+					"bonding_conversation_hammersmith_precipitate_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_c",
-				},
-			},
+					"psyker_male_c"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_precipitate_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5110,40 +5110,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_precipitate_b",
-				},
+					"bonding_conversation_hammersmith_precipitate_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_precipitate_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5156,40 +5156,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_precipitate_c",
-				},
+					"bonding_conversation_hammersmith_precipitate_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_c",
-				},
+					"psyker_male_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_precipitate_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5202,93 +5202,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"psyker_male_c",
-				},
+					"psyker_male_c"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_scales_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_scales_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_scales_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5301,41 +5301,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_scales_a",
-				},
+					"bonding_conversation_hammersmith_scales_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_c",
-				},
-			},
+					"psyker_male_c"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_scales_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5348,40 +5348,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_scales_b",
-				},
+					"bonding_conversation_hammersmith_scales_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_scales_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5394,40 +5394,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_scales_c",
-				},
+					"bonding_conversation_hammersmith_scales_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_c",
-				},
+					"psyker_male_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_scales_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5440,92 +5440,92 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.EQ,
-				"true",
+				"true"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"psyker_female_b",
-				},
+					"psyker_female_b"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_triumph_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				100,
+				100
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_triumph_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_triumph_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5538,41 +5538,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_triumph_a",
-				},
+					"bonding_conversation_hammersmith_triumph_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_b",
-				},
-			},
+					"psyker_female_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_triumph_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5585,40 +5585,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_triumph_b",
-				},
+					"bonding_conversation_hammersmith_triumph_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_triumph_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5631,40 +5631,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_triumph_c",
-				},
+					"bonding_conversation_hammersmith_triumph_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_b",
-				},
+					"psyker_female_b"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_triumph_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5677,93 +5677,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"psyker_female_b",
-				},
+					"psyker_female_b"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_unique_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_unique_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_unique_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5776,41 +5776,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_unique_a",
-				},
+					"bonding_conversation_hammersmith_unique_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_b",
-				},
-			},
+					"psyker_female_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_unique_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5823,40 +5823,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_unique_b",
-				},
+					"bonding_conversation_hammersmith_unique_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_unique_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5869,40 +5869,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_unique_c",
-				},
+					"bonding_conversation_hammersmith_unique_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_b",
-				},
+					"psyker_female_b"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_unique_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5915,93 +5915,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.LT,
-				360,
+				360
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"psyker_female_b",
-				},
+					"psyker_female_b"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_valkyrie_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_valkyrie_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_valkyrie_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6014,41 +6014,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_valkyrie_a",
-				},
+					"bonding_conversation_hammersmith_valkyrie_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_b",
-				},
-			},
+					"psyker_female_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_valkyrie_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6061,40 +6061,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_valkyrie_b",
-				},
+					"bonding_conversation_hammersmith_valkyrie_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_valkyrie_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6107,40 +6107,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_valkyrie_c",
-				},
+					"bonding_conversation_hammersmith_valkyrie_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_b",
-				},
+					"psyker_female_b"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_valkyrie_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6153,93 +6153,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"psyker_male_b",
-				},
+					"psyker_male_b"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_zola_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_zola_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_hammersmith_zola_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6252,41 +6252,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_zola_a",
-				},
+					"bonding_conversation_hammersmith_zola_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_b",
-				},
-			},
+					"psyker_male_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_zola_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6299,40 +6299,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_zola_b",
-				},
+					"bonding_conversation_hammersmith_zola_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_zola_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6345,40 +6345,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_hammersmith_zola_c",
-				},
+					"bonding_conversation_hammersmith_zola_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_b",
-				},
+					"psyker_male_b"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_hammersmith_zola_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6391,92 +6391,92 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.EQ,
-				"true",
+				"true"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"zealot_male_a",
-				},
+					"zealot_male_a"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_lex_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				100,
+				100
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_lex_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
+				"0"
 			},
 			{
 				"user_memory",
 				"bonding_conversation_lex_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6489,41 +6489,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_lex_a",
-				},
+					"bonding_conversation_lex_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_male_a",
-				},
-			},
+					"zealot_male_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_lex_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6536,40 +6536,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_lex_b",
-				},
+					"bonding_conversation_lex_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_lex_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6582,40 +6582,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_lex_c",
-				},
+					"bonding_conversation_lex_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_male_a",
-				},
+					"zealot_male_a"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_lex_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6628,7 +6628,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -6640,46 +6640,46 @@ return function ()
 					"loc_ogryn_a__combat_pause_quirk_prayer_b_02",
 					"loc_ogryn_a__combat_pause_quirk_health_hog_b_01",
 					"loc_ogryn_a__combat_pause_quirk_health_hog_b_02",
-					"loc_ogryn_a__combat_pause_quirk_ammo_hog_b_01",
-				},
+					"loc_ogryn_a__combat_pause_quirk_ammo_hog_b_01"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_alert_psy_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_alert_psy_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_alert_psy_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6692,41 +6692,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_alert_psy_a",
-				},
+					"bonding_conversation_metropolitan_alert_psy_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_a",
-				},
-			},
+					"ogryn_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_alert_psy_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6739,40 +6739,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_alert_psy_b",
-				},
+					"bonding_conversation_metropolitan_alert_psy_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_alert_psy_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6785,40 +6785,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_alert_psy_c",
-				},
+					"bonding_conversation_metropolitan_alert_psy_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_a",
-				},
+					"ogryn_a"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_alert_psy_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6831,93 +6831,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"zealot_female_a",
-				},
+					"zealot_female_a"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_art_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_art_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_art_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6930,41 +6930,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_art_a",
-				},
+					"bonding_conversation_metropolitan_art_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_a",
-				},
-			},
+					"zealot_female_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_art_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6977,40 +6977,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_art_b",
-				},
+					"bonding_conversation_metropolitan_art_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_art_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7023,40 +7023,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_art_c",
-				},
+					"bonding_conversation_metropolitan_art_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_a",
-				},
+					"zealot_female_a"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_art_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7069,7 +7069,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -7081,46 +7081,46 @@ return function ()
 					"loc_zealot_female_a__combat_pause_limited_ogryn_b_08_b_01",
 					"loc_zealot_female_a__combat_pause_quirk_nicer_b_02",
 					"loc_zealot_female_a__combat_pause_quirk_concerning_enforcers_b_01",
-					"loc_zealot_female_a__combat_pause_quirk_concerning_enforcers_b_02",
-				},
+					"loc_zealot_female_a__combat_pause_quirk_concerning_enforcers_b_02"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_callous_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_callous_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_callous_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7133,41 +7133,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_callous_a",
-				},
+					"bonding_conversation_metropolitan_callous_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_a",
-				},
-			},
+					"zealot_female_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_callous_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7180,40 +7180,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_callous_b",
-				},
+					"bonding_conversation_metropolitan_callous_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_callous_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7226,40 +7226,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_callous_c",
-				},
+					"bonding_conversation_metropolitan_callous_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_a",
-				},
+					"zealot_female_a"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_callous_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7272,40 +7272,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_callous_d",
-				},
+					"bonding_conversation_metropolitan_callous_d"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_callous_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7318,40 +7318,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_callous_e",
-				},
+					"bonding_conversation_metropolitan_callous_e"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_a",
-				},
+					"zealot_female_a"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_callous_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7364,7 +7364,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -7376,46 +7376,46 @@ return function ()
 					"loc_ogryn_a__combat_pause_one_liner_10",
 					"loc_ogryn_a__combat_pause_quirk_turncoat_b_02",
 					"loc_ogryn_a__combat_pause_quirk_dead_already_b_02",
-					"loc_ogryn_a__combat_pause_quirk_trinket_b_02",
-				},
+					"loc_ogryn_a__combat_pause_quirk_trinket_b_02"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_change_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_change_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_change_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7428,41 +7428,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_change_a",
-				},
+					"bonding_conversation_metropolitan_change_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_a",
-				},
-			},
+					"ogryn_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_change_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7475,40 +7475,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_change_b",
-				},
+					"bonding_conversation_metropolitan_change_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_change_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7521,40 +7521,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_change_c",
-				},
+					"bonding_conversation_metropolitan_change_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_a",
-				},
+					"ogryn_a"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_change_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7567,40 +7567,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_change_d",
-				},
+					"bonding_conversation_metropolitan_change_d"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_change_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7613,7 +7613,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -7624,46 +7624,46 @@ return function ()
 					"loc_veteran_male_b__combat_pause_quirk_prayer_b_02",
 					"loc_veteran_male_b__combat_pause_quirk_stealth_b_02",
 					"loc_veteran_male_b__combat_pause_quirk_end_b_02",
-					"loc_veteran_male_b__combat_pause_quirk_competence_b_02",
-				},
+					"loc_veteran_male_b__combat_pause_quirk_competence_b_02"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_complex_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_complex_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_complex_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7676,41 +7676,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_complex_a",
-				},
+					"bonding_conversation_metropolitan_complex_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_b",
-				},
-			},
+					"veteran_male_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_complex_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7723,40 +7723,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_complex_b",
-				},
+					"bonding_conversation_metropolitan_complex_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_complex_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7769,40 +7769,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_complex_c",
-				},
+					"bonding_conversation_metropolitan_complex_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_b",
-				},
+					"veteran_male_b"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_complex_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7815,40 +7815,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_complex_d",
-				},
+					"bonding_conversation_metropolitan_complex_d"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_complex_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7861,40 +7861,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_complex_e",
-				},
+					"bonding_conversation_metropolitan_complex_e"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_b",
-				},
+					"veteran_male_b"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_complex_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7907,92 +7907,92 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.EQ,
-				"true",
+				"true"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"zealot_female_a",
-				},
+					"zealot_female_a"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_dedication_psy_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				100,
+				100
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_dedication_psy_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
+				"0"
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_dedication_psy_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8005,41 +8005,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_dedication_psy_a",
-				},
+					"bonding_conversation_metropolitan_dedication_psy_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_a",
-				},
-			},
+					"zealot_female_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_dedication_psy_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8052,40 +8052,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_dedication_psy_b",
-				},
+					"bonding_conversation_metropolitan_dedication_psy_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_dedication_psy_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8098,40 +8098,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_dedication_psy_c",
-				},
+					"bonding_conversation_metropolitan_dedication_psy_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_a",
-				},
+					"zealot_female_a"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_dedication_psy_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8144,92 +8144,92 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.EQ,
-				"true",
+				"true"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"veteran_male_b",
-				},
+					"veteran_male_b"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_goals_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				100,
+				100
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_goals_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
+				"0"
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_goals_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8242,41 +8242,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_goals_a",
-				},
+					"bonding_conversation_metropolitan_goals_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_b",
-				},
-			},
+					"veteran_male_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_goals_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8289,40 +8289,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_goals_b",
-				},
+					"bonding_conversation_metropolitan_goals_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_goals_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8335,40 +8335,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_goals_c",
-				},
+					"bonding_conversation_metropolitan_goals_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_b",
-				},
+					"veteran_male_b"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_goals_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8381,7 +8381,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -8393,46 +8393,46 @@ return function ()
 					"loc_ogryn_a__combat_pause_limited_zealot_a_10_b_02",
 					"loc_ogryn_a__combat_pause_quirk_zealot_a_emperor_b_01",
 					"loc_ogryn_a__combat_pause_quirk_impatient_b_01",
-					"loc_ogryn_a__combat_pause_quirk_killing_stopped_b_02",
-				},
+					"loc_ogryn_a__combat_pause_quirk_killing_stopped_b_02"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_grand_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_grand_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_grand_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8445,41 +8445,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_grand_a",
-				},
+					"bonding_conversation_metropolitan_grand_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_a",
-				},
-			},
+					"ogryn_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_grand_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8492,40 +8492,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_grand_b",
-				},
+					"bonding_conversation_metropolitan_grand_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_grand_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8538,40 +8538,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_grand_c",
-				},
+					"bonding_conversation_metropolitan_grand_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_a",
-				},
+					"ogryn_a"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_grand_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8584,92 +8584,92 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.EQ,
-				"true",
+				"true"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"zealot_female_a",
-				},
+					"zealot_female_a"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_heretics_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				100,
+				100
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_heretics_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
+				"0"
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_heretics_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8682,41 +8682,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_heretics_a",
-				},
+					"bonding_conversation_metropolitan_heretics_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_a",
-				},
-			},
+					"zealot_female_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_heretics_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8729,40 +8729,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_heretics_b",
-				},
+					"bonding_conversation_metropolitan_heretics_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_heretics_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8775,40 +8775,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_heretics_c",
-				},
+					"bonding_conversation_metropolitan_heretics_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_a",
-				},
+					"zealot_female_a"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_heretics_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8821,92 +8821,92 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.EQ,
-				"true",
+				"true"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"zealot_female_b",
-				},
+					"zealot_female_b"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_humour_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				100,
+				100
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_humour_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
+				"0"
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_humour_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8919,41 +8919,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_humour_a",
-				},
+					"bonding_conversation_metropolitan_humour_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_b",
-				},
-			},
+					"zealot_female_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_humour_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8966,40 +8966,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_humour_b",
-				},
+					"bonding_conversation_metropolitan_humour_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_humour_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9012,40 +9012,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_humour_c",
-				},
+					"bonding_conversation_metropolitan_humour_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_b",
-				},
+					"zealot_female_b"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_humour_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9058,100 +9058,100 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"ogryn_a",
-				},
+					"ogryn_a"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_krall_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_krall_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_krall_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			random_ignore_vo = {
 				chance = 0.2,
 				hold_for = 0,
-				max_failed_tries = 0,
-			},
-		},
+				max_failed_tries = 0
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9164,41 +9164,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_krall_a",
-				},
+					"bonding_conversation_metropolitan_krall_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_a",
-				},
-			},
+					"ogryn_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_krall_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9211,40 +9211,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_krall_b",
-				},
+					"bonding_conversation_metropolitan_krall_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_krall_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9257,40 +9257,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_krall_c",
-				},
+					"bonding_conversation_metropolitan_krall_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_a",
-				},
+					"ogryn_a"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_krall_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9303,92 +9303,92 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.EQ,
-				"true",
+				"true"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"zealot_female_b",
-				},
+					"zealot_female_b"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_light_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				100,
+				100
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_light_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
+				"0"
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_light_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9401,41 +9401,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_light_a",
-				},
+					"bonding_conversation_metropolitan_light_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_b",
-				},
-			},
+					"zealot_female_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_light_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9448,40 +9448,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_light_b",
-				},
+					"bonding_conversation_metropolitan_light_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_light_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9494,40 +9494,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_light_c",
-				},
+					"bonding_conversation_metropolitan_light_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_b",
-				},
+					"zealot_female_b"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_light_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9540,7 +9540,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -9550,46 +9550,46 @@ return function ()
 					"loc_veteran_male_b__combat_pause_quirk_trinket_b_01",
 					"loc_veteran_male_b__combat_pause_quirk_trinket_b_02",
 					"loc_veteran_male_b__combat_pause_quirk_ammo_hog_b_01",
-					"loc_veteran_male_b__combat_pause_quirk_ammo_hog_b_02",
-				},
+					"loc_veteran_male_b__combat_pause_quirk_ammo_hog_b_02"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_loot_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_loot_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_loot_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9602,41 +9602,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_loot_a",
-				},
+					"bonding_conversation_metropolitan_loot_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_b",
-				},
-			},
+					"veteran_male_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_loot_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9649,40 +9649,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_loot_b",
-				},
+					"bonding_conversation_metropolitan_loot_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_loot_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9695,40 +9695,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_loot_c",
-				},
+					"bonding_conversation_metropolitan_loot_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_b",
-				},
+					"veteran_male_b"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_loot_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9741,40 +9741,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_loot_d",
-				},
+					"bonding_conversation_metropolitan_loot_d"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_loot_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9787,7 +9787,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -9798,46 +9798,46 @@ return function ()
 					"loc_zealot_female_b__combat_pause_quirk_prayer_b_01",
 					"loc_zealot_female_b__combat_pause_quirk_friends_b_01",
 					"loc_zealot_female_b__combat_pause_one_liner_07",
-					"loc_zealot_female_b__combat_pause_one_liner_09",
-				},
+					"loc_zealot_female_b__combat_pause_one_liner_09"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_praise_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_praise_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_praise_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9850,41 +9850,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_praise_a",
-				},
+					"bonding_conversation_metropolitan_praise_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_b",
-				},
-			},
+					"zealot_female_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_praise_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9897,40 +9897,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_praise_b",
-				},
+					"bonding_conversation_metropolitan_praise_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_praise_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9943,40 +9943,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_praise_c",
-				},
+					"bonding_conversation_metropolitan_praise_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_b",
-				},
+					"zealot_female_b"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_praise_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9989,7 +9989,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -10002,46 +10002,46 @@ return function ()
 					"loc_zealot_female_a__combat_pause_quirk_rations_b_01",
 					"loc_zealot_female_a__combat_pause_limited_zealot_b_13_b_01",
 					"loc_zealot_female_a__combat_pause_one_liner_06",
-					"loc_zealot_female_a__combat_pause_one_liner_02",
-				},
+					"loc_zealot_female_a__combat_pause_one_liner_02"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_precision_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_precision_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_precision_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10054,41 +10054,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_precision_a",
-				},
+					"bonding_conversation_metropolitan_precision_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_a",
-				},
-			},
+					"zealot_female_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_precision_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10101,40 +10101,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_precision_b",
-				},
+					"bonding_conversation_metropolitan_precision_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_precision_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10147,40 +10147,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_precision_c",
-				},
+					"bonding_conversation_metropolitan_precision_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_a",
-				},
+					"zealot_female_a"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_precision_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10193,7 +10193,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -10205,46 +10205,46 @@ return function ()
 					"loc_zealot_female_a__combat_pause_quirk_nicer_b_01",
 					"loc_zealot_female_a__combat_pause_quirk_togetherness_b_02",
 					"loc_zealot_female_a__combat_pause_quirk_concerning_enforcers_b_01",
-					"loc_zealot_female_a__combat_pause_quirk_concerning_enforcers_b_02",
-				},
+					"loc_zealot_female_a__combat_pause_quirk_concerning_enforcers_b_02"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_punishment_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_punishment_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_punishment_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10257,41 +10257,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_punishment_a",
-				},
+					"bonding_conversation_metropolitan_punishment_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_a",
-				},
-			},
+					"zealot_female_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_punishment_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10304,35 +10304,35 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_punishment_b",
-				},
+					"bonding_conversation_metropolitan_punishment_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_punishment_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10345,40 +10345,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_punishment_c",
-				},
+					"bonding_conversation_metropolitan_punishment_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_a",
-				},
+					"zealot_female_a"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_punishment_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10391,40 +10391,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_punishment_d",
-				},
+					"bonding_conversation_metropolitan_punishment_d"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_punishment_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10437,40 +10437,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_punishment_e",
-				},
+					"bonding_conversation_metropolitan_punishment_e"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_a",
-				},
+					"zealot_female_a"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_punishment_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10483,93 +10483,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"zealot_female_a",
-				},
+					"zealot_female_a"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_reverence_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_reverence_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_reverence_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10582,41 +10582,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_reverence_a",
-				},
+					"bonding_conversation_metropolitan_reverence_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_a",
-				},
-			},
+					"zealot_female_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_reverence_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10629,40 +10629,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_reverence_b",
-				},
+					"bonding_conversation_metropolitan_reverence_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_reverence_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10675,40 +10675,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_reverence_c",
-				},
+					"bonding_conversation_metropolitan_reverence_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_a",
-				},
+					"zealot_female_a"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_reverence_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10721,40 +10721,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_reverence_d",
-				},
+					"bonding_conversation_metropolitan_reverence_d"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_reverence_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10767,7 +10767,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -10777,46 +10777,46 @@ return function ()
 					"loc_zealot_female_a__combat_pause_one_liner_01",
 					"loc_zealot_female_a__combat_pause_one_liner_03",
 					"loc_zealot_female_a__combat_pause_one_liner_07",
-					"loc_zealot_female_a__combat_pause_one_liner_09",
-				},
+					"loc_zealot_female_a__combat_pause_one_liner_09"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_rigor_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_rigor_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_rigor_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10829,41 +10829,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_rigor_a",
-				},
+					"bonding_conversation_metropolitan_rigor_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_a",
-				},
-			},
+					"zealot_female_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_rigor_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10876,40 +10876,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_rigor_b",
-				},
+					"bonding_conversation_metropolitan_rigor_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_rigor_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10922,40 +10922,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_rigor_c",
-				},
+					"bonding_conversation_metropolitan_rigor_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_a",
-				},
+					"zealot_female_a"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_rigor_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10968,7 +10968,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -10979,46 +10979,46 @@ return function ()
 					"loc_ogryn_a__combat_pause_quirk_endless_b_02",
 					"loc_ogryn_a__combat_pause_quirk_competence_b_01",
 					"loc_ogryn_a__combat_pause_quirk_stealth_b_02",
-					"",
-				},
+					""
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_serious_thought_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_serious_thought_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_serious_thought_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11031,41 +11031,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_serious_thought_a",
-				},
+					"bonding_conversation_metropolitan_serious_thought_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_a",
-				},
-			},
+					"ogryn_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_serious_thought_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11078,40 +11078,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_serious_thought_b",
-				},
+					"bonding_conversation_metropolitan_serious_thought_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_serious_thought_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11124,40 +11124,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_serious_thought_c",
-				},
+					"bonding_conversation_metropolitan_serious_thought_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_a",
-				},
+					"ogryn_a"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_serious_thought_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11170,7 +11170,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -11181,46 +11181,46 @@ return function ()
 					"loc_zealot_female_b__combat_pause_one_liner_04",
 					"loc_zealot_female_b__combat_pause_quirk_speed_b_01",
 					"loc_zealot_female_b__combat_pause_quirk_flame_b_01",
-					"loc_zealot_female_b__combat_pause_quirk_endless_war_b_02",
-				},
+					"loc_zealot_female_b__combat_pause_quirk_endless_war_b_02"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_solace_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_solace_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_solace_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11233,41 +11233,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_solace_a",
-				},
+					"bonding_conversation_metropolitan_solace_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_b",
-				},
-			},
+					"zealot_female_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_solace_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11280,40 +11280,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_solace_b",
-				},
+					"bonding_conversation_metropolitan_solace_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_solace_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11326,40 +11326,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_solace_c",
-				},
+					"bonding_conversation_metropolitan_solace_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_b",
-				},
+					"zealot_female_b"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_solace_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11372,40 +11372,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_solace_d",
-				},
+					"bonding_conversation_metropolitan_solace_d"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_solace_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11418,7 +11418,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -11429,46 +11429,46 @@ return function ()
 					"loc_zealot_female_b__combat_pause_limited_zealot_a_14_b_01",
 					"loc_zealot_female_b__combat_pause_quirk_nicer_b_01",
 					"loc_zealot_female_b__lore_enemy_within_three_c_01",
-					"loc_zealot_female_b__combat_pause_quirk_messelina_b_02",
-				},
+					"loc_zealot_female_b__combat_pause_quirk_messelina_b_02"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_understanding_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_understanding_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_understanding_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11481,41 +11481,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_understanding_a",
-				},
+					"bonding_conversation_metropolitan_understanding_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_b",
-				},
-			},
+					"zealot_female_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_understanding_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11528,40 +11528,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_understanding_b",
-				},
+					"bonding_conversation_metropolitan_understanding_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_understanding_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11574,40 +11574,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_understanding_c",
-				},
+					"bonding_conversation_metropolitan_understanding_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_b",
-				},
+					"zealot_female_b"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_understanding_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11620,7 +11620,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -11631,46 +11631,46 @@ return function ()
 					"loc_veteran_male_b__combat_pause_limited_psyker_a_04_b_01",
 					"loc_veteran_male_b__combat_pause_quirk_dead_b_01",
 					"loc_veteran_male_b__combat_pause_quirk_killing_stopped_b_01",
-					"loc_veteran_male_b__combat_pause_quirk_killing_stopped_b_02",
-				},
+					"loc_veteran_male_b__combat_pause_quirk_killing_stopped_b_02"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_unsettled_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_unsettled_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_unsettled_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11683,41 +11683,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_unsettled_a",
-				},
+					"bonding_conversation_metropolitan_unsettled_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_b",
-				},
-			},
+					"veteran_male_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_unsettled_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11730,40 +11730,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_unsettled_b",
-				},
+					"bonding_conversation_metropolitan_unsettled_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_unsettled_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11776,40 +11776,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_unsettled_c",
-				},
+					"bonding_conversation_metropolitan_unsettled_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_b",
-				},
+					"veteran_male_b"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_unsettled_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11822,100 +11822,100 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"veteran_male_b",
-				},
+					"veteran_male_b"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_zola_dream_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_metropolitan_zola_dream_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_zola_dream_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			random_ignore_vo = {
 				chance = 0.15,
 				hold_for = 0,
-				max_failed_tries = 0,
-			},
-		},
+				max_failed_tries = 0
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11928,41 +11928,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_zola_dream_a",
-				},
+					"bonding_conversation_metropolitan_zola_dream_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_b",
-				},
-			},
+					"veteran_male_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_zola_dream_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11975,40 +11975,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_zola_dream_b",
-				},
+					"bonding_conversation_metropolitan_zola_dream_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_zola_dream_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12021,40 +12021,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_metropolitan_zola_dream_c",
-				},
+					"bonding_conversation_metropolitan_zola_dream_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_b",
-				},
+					"veteran_male_b"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_metropolitan_zola_dream_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12067,7 +12067,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -12081,46 +12081,46 @@ return function ()
 					"loc_zealot_female_b__combat_pause_quirk_nostalgia_b_02",
 					"loc_zealot_female_b__combat_pause_quirk_restore_b_02",
 					"loc_zealot_female_b__combat_pause_quirk_your_sins_b_02",
-					"loc_zealot_female_b__combat_pause_quirk_speed_b_01",
-				},
+					"loc_zealot_female_b__combat_pause_quirk_speed_b_01"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_raucous_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_raucous_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"user_memory",
 				"bonding_conversation_raucous_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12133,41 +12133,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_raucous_a",
-				},
+					"bonding_conversation_raucous_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_b",
-				},
-			},
+					"zealot_female_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_raucous_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12180,40 +12180,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_raucous_b",
-				},
+					"bonding_conversation_raucous_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_raucous_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12226,40 +12226,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_raucous_c",
-				},
+					"bonding_conversation_raucous_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_b",
-				},
+					"zealot_female_b"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_raucous_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12272,40 +12272,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_raucous_d",
-				},
+					"bonding_conversation_raucous_d"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_raucous_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12318,92 +12318,92 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.EQ,
-				"true",
+				"true"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"zealot_female_a",
-				},
+					"zealot_female_a"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_reclaimed_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				100,
+				100
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_reclaimed_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
+				"0"
 			},
 			{
 				"user_memory",
 				"bonding_conversation_reclaimed_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12416,41 +12416,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_reclaimed_a",
-				},
+					"bonding_conversation_reclaimed_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_a",
-				},
-			},
+					"zealot_female_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_reclaimed_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12463,40 +12463,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_reclaimed_b",
-				},
+					"bonding_conversation_reclaimed_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_reclaimed_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12509,40 +12509,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_reclaimed_c",
-				},
+					"bonding_conversation_reclaimed_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_a",
-				},
+					"zealot_female_a"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_reclaimed_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12555,92 +12555,92 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				450,
+				450
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.EQ,
-				"true",
+				"true"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"psyker_female_a",
-				},
+					"psyker_female_a"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_round_three_aura_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				100,
+				100
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_round_three_aura_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
+				"0"
 			},
 			{
 				"user_memory",
 				"bonding_conversation_round_three_aura_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12653,41 +12653,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_round_three_aura_a",
-				},
+					"bonding_conversation_round_three_aura_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_a",
-				},
-			},
+					"psyker_female_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_round_three_aura_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12700,40 +12700,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_round_three_aura_b",
-				},
+					"bonding_conversation_round_three_aura_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_round_three_aura_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12746,40 +12746,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_round_three_aura_c",
-				},
+					"bonding_conversation_round_three_aura_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_a",
-				},
+					"psyker_female_a"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_round_three_aura_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12792,105 +12792,105 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				3,
+				3
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.EQ,
-				"true",
+				"true"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"ogryn_a",
-				},
+					"ogryn_a"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_round_three_bulk_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				100,
+				100
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
+				20
 			},
 			{
 				"user_memory",
 				"time_since_friendly_fire_ps_og",
 				OP.GT,
-				1,
+				1
 			},
 			{
 				"user_memory",
 				"time_since_friendly_fire_ps_og",
 				OP.TIMEDIFF,
 				OP.LT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_round_three_bulk_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
+				"0"
 			},
 			{
 				"user_memory",
 				"bonding_conversation_round_three_bulk_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12903,49 +12903,49 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_round_three_bulk_a",
-				},
+					"bonding_conversation_round_three_bulk_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_a",
-				},
+					"ogryn_a"
+				}
 			},
 			{
 				"user_memory",
 				"time_since_friendly_fire",
 				OP.GT,
-				1,
+				1
 			},
 			{
 				"user_memory",
 				"time_since_friendly_fire",
 				OP.TIMEDIFF,
 				OP.LT,
-				80,
-			},
+				80
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_round_three_bulk_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12958,40 +12958,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_round_three_bulk_b",
-				},
+					"bonding_conversation_round_three_bulk_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_round_three_bulk_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13004,40 +13004,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_round_three_bulk_c",
-				},
+					"bonding_conversation_round_three_bulk_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_a",
-				},
+					"ogryn_a"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_round_three_bulk_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13050,92 +13050,92 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.EQ,
-				"true",
+				"true"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"psyker_female_a",
-				},
+					"psyker_female_a"
+				}
 			},
 			{
 				"faction_memory",
 				"bonding_conversation_round_three_team_protocol_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				100,
+				100
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"bonding_conversation_round_three_team_protocol_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
+				"0"
 			},
 			{
 				"user_memory",
 				"bonding_conversation_round_three_team_protocol_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13148,41 +13148,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_round_three_team_protocol_a",
-				},
+					"bonding_conversation_round_three_team_protocol_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_a",
-				},
-			},
+					"psyker_female_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"bonding_conversation_round_three_team_protocol_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13195,40 +13195,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_round_three_team_protocol_b",
-				},
+					"bonding_conversation_round_three_team_protocol_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_round_three_team_protocol_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13241,40 +13241,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_round_three_team_protocol_c",
-				},
+					"bonding_conversation_round_three_team_protocol_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_a",
-				},
+					"psyker_female_a"
+				}
 			},
 			{
 				"user_memory",
 				"bonding_conversation_round_three_team_protocol_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13287,7 +13287,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -13296,41 +13296,41 @@ return function ()
 				args = {
 					"loc_zealot_male_a__combat_pause_one_liner_02",
 					"loc_zealot_male_a__combat_pause_one_liner_05",
-					"loc_zealot_male_a__combat_pause_one_liner_06",
-				},
+					"loc_zealot_male_a__combat_pause_one_liner_06"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"oval_bonding_conversation_blaze_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"oval_bonding_conversation_blaze_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"oval_bonding_conversation_blaze_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13343,41 +13343,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_bonding_conversation_blaze_a",
-				},
+					"oval_bonding_conversation_blaze_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_male_a",
-				},
-			},
+					"zealot_male_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"oval_bonding_conversation_blaze_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13390,40 +13390,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_bonding_conversation_blaze_b",
-				},
+					"oval_bonding_conversation_blaze_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"oval_bonding_conversation_blaze_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13436,40 +13436,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_bonding_conversation_blaze_c",
-				},
+					"oval_bonding_conversation_blaze_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_male_a",
-				},
+					"zealot_male_a"
+				}
 			},
 			{
 				"user_memory",
 				"oval_bonding_conversation_blaze_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13482,92 +13482,92 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.EQ,
-				"true",
+				"true"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"zealot_male_b",
-				},
+					"zealot_male_b"
+				}
 			},
 			{
 				"faction_memory",
 				"oval_bonding_conversation_delusion_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				100,
+				100
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"oval_bonding_conversation_delusion_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"oval_bonding_conversation_delusion_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13580,41 +13580,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_bonding_conversation_delusion_a",
-				},
+					"oval_bonding_conversation_delusion_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_male_b",
-				},
-			},
+					"zealot_male_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"oval_bonding_conversation_delusion_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13627,40 +13627,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_bonding_conversation_delusion_b",
-				},
+					"oval_bonding_conversation_delusion_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"oval_bonding_conversation_delusion_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13673,40 +13673,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_bonding_conversation_delusion_c",
-				},
+					"oval_bonding_conversation_delusion_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_male_b",
-				},
+					"zealot_male_b"
+				}
 			},
 			{
 				"user_memory",
 				"oval_bonding_conversation_delusion_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13719,92 +13719,92 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.EQ,
-				"true",
+				"true"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"psyker_male_a",
-				},
+					"psyker_male_a"
+				}
 			},
 			{
 				"faction_memory",
 				"oval_bonding_conversation_heart_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				100,
+				100
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"oval_bonding_conversation_heart_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"oval_bonding_conversation_heart_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13817,41 +13817,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_bonding_conversation_heart_a",
-				},
+					"oval_bonding_conversation_heart_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_a",
-				},
-			},
+					"psyker_male_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"oval_bonding_conversation_heart_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13864,40 +13864,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_bonding_conversation_heart_b",
-				},
+					"oval_bonding_conversation_heart_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"oval_bonding_conversation_heart_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13910,40 +13910,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_bonding_conversation_heart_c",
-				},
+					"oval_bonding_conversation_heart_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_a",
-				},
+					"psyker_male_a"
+				}
 			},
 			{
 				"user_memory",
 				"oval_bonding_conversation_heart_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13956,93 +13956,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"veteran_female_a",
-				},
+					"veteran_female_a"
+				}
 			},
 			{
 				"faction_memory",
 				"oval_bonding_conversation_lost_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"oval_bonding_conversation_lost_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"oval_bonding_conversation_lost_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14055,41 +14055,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_bonding_conversation_lost_a",
-				},
+					"oval_bonding_conversation_lost_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_female_a",
-				},
-			},
+					"veteran_female_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"oval_bonding_conversation_lost_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14102,40 +14102,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_bonding_conversation_lost_b",
-				},
+					"oval_bonding_conversation_lost_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"oval_bonding_conversation_lost_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14148,40 +14148,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_bonding_conversation_lost_c",
-				},
+					"oval_bonding_conversation_lost_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_female_a",
-				},
+					"veteran_female_a"
+				}
 			},
 			{
 				"user_memory",
 				"oval_bonding_conversation_lost_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14194,93 +14194,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.LT,
-				360,
+				360
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"veteran_male_a",
-				},
+					"veteran_male_a"
+				}
 			},
 			{
 				"faction_memory",
 				"oval_bonding_conversation_slaughter_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"oval_bonding_conversation_slaughter_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"oval_bonding_conversation_slaughter_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14293,41 +14293,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_bonding_conversation_slaughter_a",
-				},
+					"oval_bonding_conversation_slaughter_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_a",
-				},
-			},
+					"veteran_male_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"oval_bonding_conversation_slaughter_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14340,40 +14340,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_bonding_conversation_slaughter_b",
-				},
+					"oval_bonding_conversation_slaughter_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"oval_bonding_conversation_slaughter_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14386,40 +14386,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_bonding_conversation_slaughter_c",
-				},
+					"oval_bonding_conversation_slaughter_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_a",
-				},
+					"veteran_male_a"
+				}
 			},
 			{
 				"user_memory",
 				"oval_bonding_conversation_slaughter_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14432,93 +14432,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"psyker_male_a",
-				},
+					"psyker_male_a"
+				}
 			},
 			{
 				"faction_memory",
 				"oval_world_conversation_elvanfoot_hestia_thirteen_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"oval_world_conversation_elvanfoot_hestia_thirteen_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"oval_world_conversation_elvanfoot_hestia_thirteen_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14531,41 +14531,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_world_conversation_elvanfoot_hestia_thirteen_a",
-				},
+					"oval_world_conversation_elvanfoot_hestia_thirteen_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_a",
-				},
-			},
+					"psyker_male_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"oval_world_conversation_elvanfoot_hestia_thirteen_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14578,40 +14578,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_world_conversation_elvanfoot_hestia_thirteen_b",
-				},
+					"oval_world_conversation_elvanfoot_hestia_thirteen_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"oval_world_conversation_elvanfoot_hestia_thirteen_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14624,40 +14624,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_world_conversation_elvanfoot_hestia_thirteen_c",
-				},
+					"oval_world_conversation_elvanfoot_hestia_thirteen_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_a",
-				},
+					"psyker_male_a"
+				}
 			},
 			{
 				"user_memory",
 				"oval_world_conversation_elvanfoot_hestia_thirteen_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14670,93 +14670,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"zealot_male_b",
-				},
+					"zealot_male_b"
+				}
 			},
 			{
 				"faction_memory",
 				"oval_world_conversation_fingal_swagger_fifteen_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"oval_world_conversation_fingal_swagger_fifteen_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"oval_world_conversation_fingal_swagger_fifteen_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14769,41 +14769,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_world_conversation_fingal_swagger_fifteen_a",
-				},
+					"oval_world_conversation_fingal_swagger_fifteen_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_male_b",
-				},
-			},
+					"zealot_male_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"oval_world_conversation_fingal_swagger_fifteen_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14816,40 +14816,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_world_conversation_fingal_swagger_fifteen_b",
-				},
+					"oval_world_conversation_fingal_swagger_fifteen_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"oval_world_conversation_fingal_swagger_fifteen_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14862,40 +14862,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_world_conversation_fingal_swagger_fifteen_c",
-				},
+					"oval_world_conversation_fingal_swagger_fifteen_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_male_b",
-				},
+					"zealot_male_b"
+				}
 			},
 			{
 				"user_memory",
 				"oval_world_conversation_fingal_swagger_fifteen_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14908,93 +14908,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"psyker_male_a",
-				},
+					"psyker_male_a"
+				}
 			},
 			{
 				"faction_memory",
 				"oval_world_conversation_fingal_swagger_seventeen_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"oval_world_conversation_fingal_swagger_seventeen_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"oval_world_conversation_fingal_swagger_seventeen_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15007,41 +15007,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_world_conversation_fingal_swagger_seventeen_a",
-				},
+					"oval_world_conversation_fingal_swagger_seventeen_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_a",
-				},
-			},
+					"psyker_male_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"oval_world_conversation_fingal_swagger_seventeen_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15054,40 +15054,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_world_conversation_fingal_swagger_seventeen_b",
-				},
+					"oval_world_conversation_fingal_swagger_seventeen_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"oval_world_conversation_fingal_swagger_seventeen_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15100,40 +15100,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_world_conversation_fingal_swagger_seventeen_c",
-				},
+					"oval_world_conversation_fingal_swagger_seventeen_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_male_a",
-				},
+					"psyker_male_a"
+				}
 			},
 			{
 				"user_memory",
 				"oval_world_conversation_fingal_swagger_seventeen_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15146,93 +15146,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"veteran_male_a",
-				},
+					"veteran_male_a"
+				}
 			},
 			{
 				"faction_memory",
 				"oval_world_conversation_gareloch_two_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"oval_world_conversation_gareloch_two_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"oval_world_conversation_gareloch_two_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15245,41 +15245,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_world_conversation_gareloch_two_a",
-				},
+					"oval_world_conversation_gareloch_two_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_a",
-				},
-			},
+					"veteran_male_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"oval_world_conversation_gareloch_two_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15292,40 +15292,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_world_conversation_gareloch_two_b",
-				},
+					"oval_world_conversation_gareloch_two_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"oval_world_conversation_gareloch_two_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15338,40 +15338,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"oval_world_conversation_gareloch_two_c",
-				},
+					"oval_world_conversation_gareloch_two_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_a",
-				},
+					"veteran_male_a"
+				}
 			},
 			{
 				"user_memory",
 				"oval_world_conversation_gareloch_two_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15384,92 +15384,92 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.EQ,
-				"true",
+				"true"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"veteran_male_c",
-				},
+					"veteran_male_c"
+				}
 			},
 			{
 				"faction_memory",
 				"pimlico_bonding_conversation_brittle_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				100,
+				100
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_brittle_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"pimlico_bonding_conversation_brittle_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15482,41 +15482,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_brittle_a",
-				},
+					"pimlico_bonding_conversation_brittle_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_c",
-				},
-			},
+					"veteran_male_c"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_brittle_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15529,40 +15529,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_brittle_b",
-				},
+					"pimlico_bonding_conversation_brittle_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_brittle_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15575,40 +15575,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_brittle_c",
-				},
+					"pimlico_bonding_conversation_brittle_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_c",
-				},
+					"veteran_male_c"
+				}
 			},
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_brittle_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15621,92 +15621,92 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.EQ,
-				"true",
+				"true"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"veteran_female_b",
-				},
+					"veteran_female_b"
+				}
 			},
 			{
 				"faction_memory",
 				"pimlico_bonding_conversation_change_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				100,
+				100
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_change_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"pimlico_bonding_conversation_change_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15719,41 +15719,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_change_a",
-				},
+					"pimlico_bonding_conversation_change_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_female_b",
-				},
-			},
+					"veteran_female_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_change_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15766,40 +15766,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_change_b",
-				},
+					"pimlico_bonding_conversation_change_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_change_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15812,40 +15812,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_change_c",
-				},
+					"pimlico_bonding_conversation_change_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_female_b",
-				},
+					"veteran_female_b"
+				}
 			},
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_change_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15858,40 +15858,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_change_d",
-				},
+					"pimlico_bonding_conversation_change_d"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_change_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15904,93 +15904,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"veteran_female_c",
-				},
+					"veteran_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"pimlico_bonding_conversation_damned_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_damned_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"pimlico_bonding_conversation_damned_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16003,41 +16003,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_damned_a",
-				},
+					"pimlico_bonding_conversation_damned_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_female_c",
-				},
-			},
+					"veteran_female_c"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_damned_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16050,40 +16050,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_damned_b",
-				},
+					"pimlico_bonding_conversation_damned_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_damned_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16096,40 +16096,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_damned_c",
-				},
+					"pimlico_bonding_conversation_damned_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_female_c",
-				},
+					"veteran_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_damned_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16142,7 +16142,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -16152,41 +16152,41 @@ return function ()
 					"loc_veteran_female_b__combat_pause_one_liner_01",
 					"loc_veteran_female_b__combat_pause_one_liner_04",
 					"loc_veteran_female_b__combat_pause_one_liner_09",
-					"loc_veteran_female_b__combat_pause_limited_psyker_c_07_b_01",
-				},
+					"loc_veteran_female_b__combat_pause_limited_psyker_c_07_b_01"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"pimlico_bonding_conversation_discipline_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_discipline_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"pimlico_bonding_conversation_discipline_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16199,41 +16199,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_discipline_a",
-				},
+					"pimlico_bonding_conversation_discipline_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_female_b",
-				},
-			},
+					"veteran_female_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_discipline_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16246,40 +16246,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_discipline_b",
-				},
+					"pimlico_bonding_conversation_discipline_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_discipline_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16292,40 +16292,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_discipline_c",
-				},
+					"pimlico_bonding_conversation_discipline_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_female_b",
-				},
+					"veteran_female_b"
+				}
 			},
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_discipline_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16338,93 +16338,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"veteran_female_c",
-				},
+					"veteran_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"pimlico_bonding_conversation_enemy_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_enemy_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"pimlico_bonding_conversation_enemy_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16437,41 +16437,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_enemy_a",
-				},
+					"pimlico_bonding_conversation_enemy_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_female_c",
-				},
-			},
+					"veteran_female_c"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_enemy_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16484,40 +16484,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_enemy_b",
-				},
+					"pimlico_bonding_conversation_enemy_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_enemy_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16530,40 +16530,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_enemy_c",
-				},
+					"pimlico_bonding_conversation_enemy_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_female_c",
-				},
+					"veteran_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_enemy_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16576,92 +16576,92 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.EQ,
-				"true",
+				"true"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"veteran_female_b",
-				},
+					"veteran_female_b"
+				}
 			},
 			{
 				"faction_memory",
 				"pimlico_bonding_conversation_forever_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				100,
+				100
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_forever_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"pimlico_bonding_conversation_forever_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16674,41 +16674,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_forever_a",
-				},
+					"pimlico_bonding_conversation_forever_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_female_b",
-				},
-			},
+					"veteran_female_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_forever_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16721,40 +16721,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_forever_b",
-				},
+					"pimlico_bonding_conversation_forever_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_forever_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16767,40 +16767,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_forever_c",
-				},
+					"pimlico_bonding_conversation_forever_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_female_b",
-				},
+					"veteran_female_b"
+				}
 			},
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_forever_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16813,7 +16813,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -16823,41 +16823,41 @@ return function ()
 					"loc_veteran_male_c__combat_pause_limited_psyker_c_04_b_01",
 					"loc_veteran_male_c__combat_pause_limited_psyker_c_12_b_01",
 					"loc_veteran_male_c__combat_pause_limited_psyker_c_16_b_01",
-					"loc_veteran_male_c__combat_pause_limited_psyker_c_20_b_01",
-				},
+					"loc_veteran_male_c__combat_pause_limited_psyker_c_20_b_01"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"pimlico_bonding_conversation_honour_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_honour_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"pimlico_bonding_conversation_honour_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16870,41 +16870,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_honour_a",
-				},
+					"pimlico_bonding_conversation_honour_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_c",
-				},
-			},
+					"veteran_male_c"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_honour_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16917,40 +16917,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_honour_b",
-				},
+					"pimlico_bonding_conversation_honour_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_honour_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16963,40 +16963,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_honour_c",
-				},
+					"pimlico_bonding_conversation_honour_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_c",
-				},
+					"veteran_male_c"
+				}
 			},
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_honour_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17009,92 +17009,92 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.EQ,
-				"true",
+				"true"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"ogryn_c",
-				},
+					"ogryn_c"
+				}
 			},
 			{
 				"faction_memory",
 				"pimlico_bonding_conversation_marvel_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				100,
+				100
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_marvel_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"pimlico_bonding_conversation_marvel_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17107,41 +17107,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_marvel_a",
-				},
+					"pimlico_bonding_conversation_marvel_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_c",
-				},
-			},
+					"ogryn_c"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_marvel_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17154,40 +17154,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_marvel_b",
-				},
+					"pimlico_bonding_conversation_marvel_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_marvel_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17200,40 +17200,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_marvel_c",
-				},
+					"pimlico_bonding_conversation_marvel_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_c",
-				},
+					"ogryn_c"
+				}
 			},
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_marvel_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17246,93 +17246,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"veteran_female_b",
-				},
+					"veteran_female_b"
+				}
 			},
 			{
 				"faction_memory",
 				"pimlico_bonding_conversation_shiver_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_shiver_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"pimlico_bonding_conversation_shiver_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17345,41 +17345,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_shiver_a",
-				},
+					"pimlico_bonding_conversation_shiver_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_female_b",
-				},
-			},
+					"veteran_female_b"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_shiver_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17392,40 +17392,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_shiver_b",
-				},
+					"pimlico_bonding_conversation_shiver_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_shiver_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17438,40 +17438,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_shiver_c",
-				},
+					"pimlico_bonding_conversation_shiver_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_female_b",
-				},
+					"veteran_female_b"
+				}
 			},
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_shiver_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17484,93 +17484,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"ogryn_c",
-				},
+					"ogryn_c"
+				}
 			},
 			{
 				"faction_memory",
 				"pimlico_bonding_conversation_stomping_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_stomping_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"pimlico_bonding_conversation_stomping_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17583,41 +17583,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_stomping_a",
-				},
+					"pimlico_bonding_conversation_stomping_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_c",
-				},
-			},
+					"ogryn_c"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_stomping_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17630,40 +17630,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_stomping_b",
-				},
+					"pimlico_bonding_conversation_stomping_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_stomping_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17676,40 +17676,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_stomping_c",
-				},
+					"pimlico_bonding_conversation_stomping_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_c",
-				},
+					"ogryn_c"
+				}
 			},
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_stomping_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17722,40 +17722,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_stomping_d",
-				},
+					"pimlico_bonding_conversation_stomping_d"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_stomping_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17768,93 +17768,93 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"team_threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"veteran_female_c",
-				},
+					"veteran_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"pimlico_bonding_conversation_truth_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				220,
+				220
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_truth_a_user",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"pimlico_bonding_conversation_truth_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17867,41 +17867,41 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_truth_a",
-				},
+					"pimlico_bonding_conversation_truth_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_female_c",
-				},
-			},
+					"veteran_female_c"
+				}
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_truth_b_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17914,40 +17914,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_truth_b",
-				},
+					"pimlico_bonding_conversation_truth_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"psyker_female_c",
-				},
+					"psyker_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_truth_a_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17960,39 +17960,39 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pimlico_bonding_conversation_truth_c",
-				},
+					"pimlico_bonding_conversation_truth_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_female_c",
-				},
+					"veteran_female_c"
+				}
 			},
 			{
 				"user_memory",
 				"pimlico_bonding_conversation_truth_b_user",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 end

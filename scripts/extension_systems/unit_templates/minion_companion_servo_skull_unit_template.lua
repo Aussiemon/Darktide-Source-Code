@@ -56,48 +56,48 @@ local minion_companion_servo_skull_unit_template = {
 		local behavior_extension_init_data = {
 			breed = breed,
 			behavior_tree_name = behavior_tree_name,
-			owner_unit = init_data.optional_owner_player_unit,
+			owner_unit = init_data.optional_owner_player_unit
 		}
 
 		config:add("BlackboardExtension", {
-			component_config = blackboard_component_config,
+			component_config = blackboard_component_config
 		})
 		config:add("CompanionBehaviorExtension", behavior_extension_init_data)
 
 		if init_data.optional_companion_tag_extension then
 			config:add("CompanionTagManagerServoSkullExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
 		config:add("MinionUnitDataExtension", {
-			breed = breed,
+			breed = breed
 		})
 		config:add("SideExtension", {
 			side_id = side_id,
-			breed = breed,
+			breed = breed
 		})
 		config:add("MinionBuffExtension", {
 			buff_seed = buff_seed,
-			breed = breed,
+			breed = breed
 		})
 		config:add("MinionAnimationExtension", {
 			breed = breed,
-			random_seed = animation_seed,
+			random_seed = animation_seed
 		})
 		config:add("MinionLocomotionExtension", {
-			breed = breed,
+			breed = breed
 		})
 		config:add("MinionPerceptionExtension", {
-			breed = breed,
+			breed = breed
 		})
 		config:add("MinionFxExtension", {
-			breed = breed,
+			breed = breed
 		})
 
 		if breed.aim_config then
 			config:add("MinionRangedAimExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
@@ -108,7 +108,7 @@ local minion_companion_servo_skull_unit_template = {
 			breed = breed,
 			owner_player = owner_player,
 			random_seed = inventory_seed,
-			inventory = inventory,
+			inventory = inventory
 		})
 		config:add("FadeExtension")
 
@@ -133,7 +133,7 @@ local minion_companion_servo_skull_unit_template = {
 			owner_unit_companion_spawner_extension:register_spawned_companion_unit(unit)
 			config:add("FlyingCompanionMovementExtension", {
 				breed = breed,
-				random_seed = movement_seed,
+				random_seed = movement_seed
 			})
 		end
 
@@ -170,26 +170,26 @@ local minion_companion_servo_skull_unit_template = {
 		_, movement_seed = math.random_seed(next_seed)
 
 		config:add("MinionUnitDataExtension", {
-			breed = breed,
+			breed = breed
 		})
 		config:add("SideExtension", {
 			side_id = side_id,
-			breed = breed,
+			breed = breed
 		})
 		config:add("MinionBuffExtension", {
 			buff_seed = buff_seed,
-			breed = breed,
+			breed = breed
 		})
 		config:add("MinionAnimationExtension", {
 			breed = breed,
-			random_seed = animation_seed,
+			random_seed = animation_seed
 		})
 		config:add("MinionHuskLocomotionExtension", {
-			breed = breed,
+			breed = breed
 		})
 		config:add("MinionHuskNavigationExtension")
 		config:add("MinionFxExtension", {
-			breed = breed,
+			breed = breed
 		})
 
 		local companion_variant_special_rule = NetworkLookup.companion_variant_special_rules[companion_variant_special_rule_id]
@@ -200,7 +200,7 @@ local minion_companion_servo_skull_unit_template = {
 				breed = breed,
 				owner_player = owner_player,
 				random_seed = inventory_seed,
-				inventory = inventory,
+				inventory = inventory
 			})
 		end
 
@@ -208,7 +208,7 @@ local minion_companion_servo_skull_unit_template = {
 
 		if breed.aim_config then
 			config:add("MinionRangedHuskAimExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
@@ -220,7 +220,7 @@ local minion_companion_servo_skull_unit_template = {
 			owner_unit_companion_spawner_extension:register_spawned_companion_unit(unit)
 			config:add("FlyingCompanionHuskMovementExtension", {
 				breed = breed,
-				random_seed = movement_seed,
+				random_seed = movement_seed
 			})
 		end
 	end,
@@ -231,7 +231,7 @@ local minion_companion_servo_skull_unit_template = {
 		if has_owner then
 			player_unit_spawn_manager:relinquish_unit_ownership(unit)
 		end
-	end,
+	end
 }
 
 return minion_companion_servo_skull_unit_template

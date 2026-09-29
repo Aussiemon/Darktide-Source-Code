@@ -27,7 +27,7 @@ DynamicFXTemplates.flow_velocity_parameter = {
 			Unit.set_flow_variable(unit, "lua_percentage_velocity_fwd", percentage_fwd)
 			Unit.flow_event(unit, "lua_on_velocity_change")
 		end
-	end,
+	end
 }
 
 return DynamicFXTemplates

@@ -12,13 +12,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	perks_item_pivot = {
 		horizontal_alignment = "left",
@@ -26,13 +26,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			0,
-			650,
+			650
 		},
 		position = {
 			620,
 			-110,
-			1,
-		},
+			1
+		}
 	},
 	weapon_stats_pivot = {
 		horizontal_alignment = "right",
@@ -40,13 +40,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			-(weapon_stats_grid_size[1] + 110),
 			-110,
-			3,
-		},
+			3
+		}
 	},
 	crafting_recipe_pivot = {
 		horizontal_alignment = "left",
@@ -54,14 +54,14 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			430,
-			400,
+			400
 		},
 		position = {
 			110,
 			-195,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local widget_definitions = {}
 local animations = {
@@ -78,7 +78,7 @@ local animations = {
 
 					widget.alpha_multiplier = 0
 				end
-			end,
+			end
 		},
 		{
 			end_time = 0.8,
@@ -104,13 +104,13 @@ local animations = {
 				parent:_set_scenegraph_position("crafting_recipe_pivot", scenegraph_definition.crafting_recipe_pivot.position[1] - x_anim_distance)
 				parent:_set_scenegraph_position("weapon_stats_pivot", scenegraph_definition.weapon_stats_pivot.position[1] + x_anim_distance)
 				parent:_force_update_scenegraph()
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
 	animations = animations,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

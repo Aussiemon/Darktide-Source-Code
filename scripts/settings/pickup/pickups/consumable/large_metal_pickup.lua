@@ -13,7 +13,7 @@ local pickup_data = {
 		local pickup_system = Managers.state.extension:system("pickup_system")
 
 		pickup_system:register_material_collected(pickup_unit, interactor_unit, "plasteel", "large")
-	end,
+	end
 }
 
 return pickup_data

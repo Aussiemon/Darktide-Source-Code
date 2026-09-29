@@ -14,7 +14,7 @@ local chaos_hound_settings = {
 	leap_target_z_offset = -0.1,
 	long_leap_min_speed = 6,
 	long_leap_start_offset_distance = 8,
-	short_distance = 14,
+	short_distance = 14
 }
 
 return settings("ChaosHoundSettings", chaos_hound_settings)

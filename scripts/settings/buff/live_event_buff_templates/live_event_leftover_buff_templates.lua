@@ -59,14 +59,14 @@ templates.live_event_leftover_buff_faction_a = {
 	stat_buffs = {
 		[stat_buffs.coherency_radius_modifier] = 0.25,
 		[stat_buffs.attack_speed] = 0.15,
-		[stat_buffs.movement_speed] = 0.15,
+		[stat_buffs.movement_speed] = 0.15
 	},
 	keywords = {},
 	start_func = function (template_data, template_context)
 		local buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
 
 		template_data.buff_extension = buff_extension
-	end,
+	end
 }
 templates.live_event_leftover_buff_faction_b = {
 	always_show_in_hud = true,
@@ -86,16 +86,16 @@ templates.live_event_leftover_buff_faction_b = {
 	stat_buffs = {
 		[stat_buffs.damage] = 0.07,
 		[stat_buffs.burning_damage] = 0.05,
-		[stat_buffs.burning_duration] = 0.15,
+		[stat_buffs.burning_duration] = 0.15
 	},
 	keywords = {
-		buff_keywords.burning,
+		buff_keywords.burning
 	},
 	start_func = function (template_data, template_context)
 		local buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
 
 		template_data.buff_extension = buff_extension
-	end,
+	end
 }
 
 local fire_targets_hit = {}
@@ -117,7 +117,7 @@ templates.live_event_leftover_buff_faction_b_apply_burn_damage = {
 	title = "Faction B Apply Burn Damage",
 	buff_category = buff_categories.live_event,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	start_func = function (template_data, template_context)
 		local buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
@@ -159,8 +159,8 @@ templates.live_event_leftover_buff_faction_b_apply_burn_damage = {
 		end,
 		on_melee_kill = function (params, template_data, template_context, t)
 			table.clear(fire_targets_hit)
-		end,
-	},
+		end
+	}
 }
 
 local bleed_targets_hit = {}
@@ -182,7 +182,7 @@ templates.live_event_leftover_buff_faction_a_apply_bleed_damage = {
 	title = "Faction A Apply Bleed Damage",
 	buff_category = buff_categories.live_event,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	start_func = function (template_data, template_context)
 		local buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
@@ -224,8 +224,8 @@ templates.live_event_leftover_buff_faction_a_apply_bleed_damage = {
 		end,
 		on_ranged_kill = function (params, template_data, template_context, t)
 			table.clear(bleed_targets_hit)
-		end,
-	},
+		end
+	}
 }
 templates.drop_leftover_01_pickup_small_on_death = {
 	class_name = "buff",
@@ -248,7 +248,7 @@ templates.drop_leftover_01_pickup_small_on_death = {
 		if not HEALTH_ALIVE[unit] then
 			return true
 		end
-	end,
+	end
 }
 templates.drop_leftover_01_pickup_medium_on_death = {
 	class_name = "buff",
@@ -271,14 +271,14 @@ templates.drop_leftover_01_pickup_medium_on_death = {
 		if not HEALTH_ALIVE[unit] then
 			return true
 		end
-	end,
+	end
 }
 
 local drop_leftover_01_pickup_medium_many_on_death_placement_settings = {
 	circle_radius = 0.75,
 	num_slots = 2,
 	position_offset = 0.2,
-	randomize_rotation = true,
+	randomize_rotation = true
 }
 
 templates.drop_leftover_01_pickup_medium_many_on_death = {
@@ -321,7 +321,7 @@ templates.drop_leftover_01_pickup_medium_many_on_death = {
 		if not HEALTH_ALIVE[unit] then
 			return true
 		end
-	end,
+	end
 }
 templates.live_event_leftover_drop_many_large_pickups_on_death = table.add_missing({
 	pickup_name = "live_event_leftover_01_pickup_large",
@@ -329,8 +329,8 @@ templates.live_event_leftover_drop_many_large_pickups_on_death = table.add_missi
 		circle_radius = 1.25,
 		num_slots = 7,
 		position_offset = 0.5,
-		randomize_rotation = true,
-	},
+		randomize_rotation = true
+	}
 }, table.clone(BuffTemplates.drop_many_pickups_on_death))
 
 return templates

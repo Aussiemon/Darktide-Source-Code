@@ -12,7 +12,7 @@ local SIGNIN_STATES = {
 	fetching_privileges = "loc_signin_fetch_privileges",
 	fetching_sandbox_id = "loc_signin_fetch_sandbox_id",
 	idle = "",
-	signin_profile = "loc_signin_acquiring_user_profile",
+	signin_profile = "loc_signin_acquiring_user_profile"
 }
 
 AccountManagerWinGDK.init = function (self)
@@ -427,9 +427,9 @@ AccountManagerWinGDK._show_fatal_error = function (self, title_text, description
 			{
 				close_on_pressed = true,
 				text = "loc_popup_button_close",
-				callback = callback(self, "_return_to_title_screen"),
-			},
-		},
+				callback = callback(self, "_return_to_title_screen")
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -447,9 +447,9 @@ AccountManagerWinGDK._show_store_account_error = function (self, title_text, des
 				text = "loc_popup_button_close",
 				callback = optional_callback or function ()
 					return
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context)
@@ -481,7 +481,7 @@ AccountManagerWinGDK.open_to_store = function (self, product_id)
 
 	if not async_job then
 		return Promise.rejected({
-			message = string.format("show_product_page_ui_async returned error_code=0x%x", error_code),
+			message = string.format("show_product_page_ui_async returned error_code=0x%x", error_code)
 		})
 	end
 
@@ -510,11 +510,11 @@ AccountManagerWinGDK.open_to_store = function (self, product_id)
 
 		if result == 0 then
 			return {
-				success = true,
+				success = true
 			}
 		else
 			return {
-				success = false,
+				success = false
 			}
 		end
 	end)

@@ -14,53 +14,53 @@ suppression_templates.phosphor_pistol_p1_m1_suppression_hip = {
 			{
 				pitch = {
 					lerp_basic = 1,
-					lerp_perfect = 0.5,
+					lerp_perfect = 0.5
 				},
 				yaw = {
 					lerp_basic = 1,
-					lerp_perfect = 0.5,
-				},
+					lerp_perfect = 0.5
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 2,
-					lerp_perfect = 1,
+					lerp_perfect = 1
 				},
 				yaw = {
 					lerp_basic = 2,
-					lerp_perfect = 1,
-				},
+					lerp_perfect = 1
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 2,
-					lerp_perfect = 2,
+					lerp_perfect = 2
 				},
 				yaw = {
 					lerp_basic = 2,
-					lerp_perfect = 2,
-				},
-			},
-		},
+					lerp_perfect = 2
+				}
+			}
+		}
 	},
 	moving = {
 		inherits = {
 			"phosphor_pistol_p1_m1_suppression_hip",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"phosphor_pistol_p1_m1_suppression_hip",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"phosphor_pistol_p1_m1_suppression_hip",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 suppression_templates.phosphor_pistol_p1_m1_suppression_ads = {
 	still = {
@@ -70,56 +70,56 @@ suppression_templates.phosphor_pistol_p1_m1_suppression_ads = {
 			{
 				pitch = {
 					lerp_basic = 0.25,
-					lerp_perfect = 0.1,
+					lerp_perfect = 0.1
 				},
 				yaw = {
 					lerp_basic = 0.25,
-					lerp_perfect = 0.1,
-				},
+					lerp_perfect = 0.1
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 0.5,
-					lerp_perfect = 0.25,
+					lerp_perfect = 0.25
 				},
 				yaw = {
 					lerp_basic = 0.5,
-					lerp_perfect = 0.25,
-				},
+					lerp_perfect = 0.25
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 1,
-					lerp_perfect = 1.5,
+					lerp_perfect = 1.5
 				},
 				yaw = {
 					lerp_basic = 1,
-					lerp_perfect = 1,
-				},
-			},
-		},
+					lerp_perfect = 1
+				}
+			}
+		}
 	},
 	moving = {
 		inherits = {
 			"phosphor_pistol_p1_m1_suppression_ads",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"phosphor_pistol_p1_m1_suppression_ads",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"phosphor_pistol_p1_m1_suppression_ads",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 
 return {
 	base_templates = suppression_templates,
-	overrides = overrides,
+	overrides = overrides
 }

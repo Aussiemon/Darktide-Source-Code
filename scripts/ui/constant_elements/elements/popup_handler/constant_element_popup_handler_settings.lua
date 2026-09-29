@@ -12,7 +12,7 @@ local constant_element_popup_handler_settings = {
 	top_icon_offset_height = 20,
 	total_height_spacing = 10,
 	total_width_spacing = 8,
-	window_edge_margin_height = 40,
+	window_edge_margin_height = 40
 }
 
 return settings("ConstantElementPopupHandlerSettings", constant_element_popup_handler_settings)

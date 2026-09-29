@@ -80,26 +80,26 @@ HealthBarGauge.component_data = {
 	enabled = {
 		ui_name = "Enabled",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	needle_node_name = {
 		ui_name = "Needle Bone Name",
 		ui_type = "text_box",
-		value = "j_needle",
+		value = "j_needle"
 	},
 	offset_min = {
 		max = 90,
 		min = -90,
 		ui_name = "Offset Min",
 		ui_type = "slider",
-		value = 35,
+		value = 35
 	},
 	offset_max = {
 		max = 90,
 		min = -90,
 		ui_name = "Offset Max",
 		ui_type = "slider",
-		value = -35,
+		value = -35
 	},
 	offset_axis = {
 		ui_name = "Offset Axis",
@@ -111,7 +111,7 @@ HealthBarGauge.component_data = {
 			"rotation_z",
 			"position_x",
 			"position_y",
-			"position_z",
+			"position_z"
 		},
 		options_values = {
 			"rotation_x",
@@ -119,9 +119,9 @@ HealthBarGauge.component_data = {
 			"rotation_z",
 			"position_x",
 			"position_y",
-			"position_z",
-		},
-	},
+			"position_z"
+		}
+	}
 }
 
 return HealthBarGauge

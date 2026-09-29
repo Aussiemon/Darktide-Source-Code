@@ -7,7 +7,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local get_hud_color = UIHudSettings.get_hud_color
 local background_size = {
 	800,
-	120,
+	120
 }
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
@@ -19,8 +19,8 @@ local scenegraph_definition = {
 		position = {
 			-50,
 			-50,
-			1,
-		},
+			1
+		}
 	},
 	popup = {
 		horizontal_alignment = "right",
@@ -30,9 +30,9 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local text_style = table.clone(UIFontSettings.header_3)
 
@@ -43,7 +43,7 @@ text_style.text_vertical_alignment = "center"
 text_style.offset = {
 	0,
 	0,
-	2,
+	2
 }
 text_style.text_color = get_hud_color("color_tint_main_1", 255)
 
@@ -56,7 +56,7 @@ local input_text_style = {
 	text_horizontal_alignment = "center",
 	text_vertical_alignment = "bottom",
 	vertical_alignment = "bottom",
-	text_color = Color.ui_hud_green_super_light(255, true),
+	text_color = Color.ui_hud_green_super_light(255, true)
 }
 local widget_definitions = {
 	popup = UIWidget.create_definition({
@@ -65,7 +65,7 @@ local widget_definitions = {
 			style_id = "text",
 			value = "<text>",
 			value_id = "text",
-			style = text_style,
+			style = text_style
 		},
 		{
 			pass_type = "rect",
@@ -76,21 +76,21 @@ local widget_definitions = {
 				offset = {
 					-15,
 					-5,
-					1,
+					1
 				},
 				size = {
 					background_size[1] - 10,
-					10,
+					10
 				},
 				size_addition = {
 					40,
-					0,
+					0
 				},
-				color = Color.ui_hud_green_dark(180, true),
+				color = Color.ui_hud_green_dark(180, true)
 			},
 			visibility_function = function (content, style)
 				return content.duration ~= nil
-			end,
+			end
 		},
 		{
 			pass_type = "rect",
@@ -101,13 +101,13 @@ local widget_definitions = {
 				offset = {
 					-15,
 					-5,
-					2,
+					2
 				},
 				size = {
 					background_size[1] - 10,
-					10,
+					10
 				},
-				color = get_hud_color("color_tint_main_2", 180),
+				color = get_hud_color("color_tint_main_2", 180)
 			},
 			visibility_function = function (content, style)
 				return content.duration ~= nil
@@ -116,7 +116,7 @@ local widget_definitions = {
 				local progress = content.progress or 0
 
 				style.size[1] = (background_size[1] + 40) * progress
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -129,21 +129,21 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					background_size[1],
-					10,
+					10
 				},
 				size_addition = {
 					60,
-					20,
+					20
 				},
 				color = Color.terminal_grid_background(255, true),
 				offset = {
 					0,
 					0,
-					0,
-				},
-			},
-		},
-	}, "popup"),
+					0
+				}
+			}
+		}
+	}, "popup")
 }
 local animations = {
 	popup_enter = {
@@ -160,7 +160,7 @@ local animations = {
 				style.text.text_color[1] = alpha
 				style.timer_bg.color[1] = alpha
 				style.timer_fill.color[1] = alpha
-			end,
+			end
 		},
 		{
 			end_time = 0.8,
@@ -170,7 +170,7 @@ local animations = {
 				local anim_progress = math.easeOutCubic(progress)
 
 				widget.alpha_multiplier = anim_progress
-			end,
+			end
 		},
 		{
 			end_time = 0.8,
@@ -192,7 +192,7 @@ local animations = {
 
 				background_style_size[1] = width
 				background_style_size[2] = height
-			end,
+			end
 		},
 		{
 			end_time = 0.8,
@@ -206,7 +206,7 @@ local animations = {
 				style.text.text_color[1] = alpha
 				style.timer_bg.color[1] = alpha
 				style.timer_fill.color[1] = alpha
-			end,
+			end
 		},
 		{
 			end_time = 1.3,
@@ -214,8 +214,8 @@ local animations = {
 			start_time = 0.8,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress)
 				return
-			end,
-		},
+			end
+		}
 	},
 	popup_exit = {
 		{
@@ -238,7 +238,7 @@ local animations = {
 
 				background_style_size[1] = width
 				background_style_size[2] = height
-			end,
+			end
 		},
 		{
 			end_time = 0.3,
@@ -251,7 +251,7 @@ local animations = {
 
 				style.timer_bg.color[1] = alpha
 				style.timer_fill.color[1] = alpha
-			end,
+			end
 		},
 		{
 			end_time = 0.5,
@@ -263,7 +263,7 @@ local animations = {
 				local alpha = anim_progress * 255
 
 				style.text.text_color[1] = alpha
-			end,
+			end
 		},
 		{
 			end_time = 0.5,
@@ -273,7 +273,7 @@ local animations = {
 				local anim_progress = math.easeOutCubic(1 - progress)
 
 				widget.alpha_multiplier = anim_progress
-			end,
+			end
 		},
 		{
 			end_time = 1.5,
@@ -281,13 +281,13 @@ local animations = {
 			start_time = 0.5,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress)
 				return
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
 	animations = animations,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

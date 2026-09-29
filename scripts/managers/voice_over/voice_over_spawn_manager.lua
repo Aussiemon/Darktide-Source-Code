@@ -49,7 +49,7 @@ VoiceOverSpawnManager.on_gameplay_post_init = function (self, level)
 		local vo_class = vo_classes_2d[i]
 		local breed_dialogue_settings = DialogueBreedSettings[vo_class]
 
-		self:create_units(breed_dialogue_settings)
+		self:create_units(breed_dialogue_settings, vo_classes_2d.skip_voices)
 	end
 
 	Vo.mission_giver_check_event()
@@ -65,15 +65,25 @@ VoiceOverSpawnManager.delete_units = function (self)
 	end
 end
 
-VoiceOverSpawnManager.create_units = function (self, dialogue_breed_settings)
+VoiceOverSpawnManager.create_units = function (self, dialogue_breed_settings, optional_voices_to_skip)
 	local voice_profiles = dialogue_breed_settings.wwise_voices
 
 	for _, voice_profile in pairs(voice_profiles) do
-		self:create_unit(dialogue_breed_settings, voice_profile)
+		local skip = optional_voices_to_skip and optional_voices_to_skip[voice_profile] or false
+
+		if not skip then
+			self:create_unit(dialogue_breed_settings, voice_profile)
+		end
 	end
 end
 
 VoiceOverSpawnManager.create_unit = function (self, dialogue_breed_settings, voice_profile, optional_position)
+	local voice_over_units = self._voice_over_units
+
+	if voice_over_units[voice_profile] then
+		return
+	end
+
 	local unit_spawner_manager = self._unit_spawner_manager
 	local props_settings = LevelProps[dialogue_breed_settings.prop_name]
 	local voice_over_settings = table.clone(props_settings)
@@ -86,9 +96,6 @@ VoiceOverSpawnManager.create_unit = function (self, dialogue_breed_settings, voi
 	dialogue_extension:init_faction_memory(dialogue_breed_settings.dialogue_memory_faction_name)
 
 	dialogue_extension._is_network_synced = dialogue_breed_settings.is_network_synced
-
-	local voice_over_units = self._voice_over_units
-
 	voice_over_units[voice_profile] = vo_unit
 
 	if optional_position then

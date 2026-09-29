@@ -6,13 +6,13 @@ local default_ui = {
 	description = false,
 	display_name = false,
 	icon = "content/ui/materials/icons/mission_types/mission_type_event",
-	mission_board_icon = "content/ui/materials/icons/mission_types_pj/mission_type_event",
+	mission_board_icon = "content/ui/materials/icons/mission_types_pj/mission_type_event"
 }
 local default_circumstance = {
 	theme_tag = "default",
 	wwise_state = "None",
 	mutators = {},
-	ui = default_ui,
+	ui = default_ui
 }
 
 BaseExpeditionsLiveEventTemplate["<ID>"] = table.clone(default_circumstance)

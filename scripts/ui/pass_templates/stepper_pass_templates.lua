@@ -1,15 +1,16 @@
 ﻿-- chunkname: @scripts/ui/pass_templates/stepper_pass_templates.lua
 
-local ColorUtilities = require("scripts/utilities/ui/colors")
+local Colors = require("scripts/utilities/ui/colors")
 local DangerSettings = require("scripts/settings/difficulty/danger_settings")
 local InputDevice = require("scripts/managers/input/input_device")
 local InputUtils = require("scripts/managers/input/input_utils")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local color_terminal_icon = Color.terminal_text_header(255, true)
-local color_terminal_text_header = Color.terminal_text_header(255, true)
+local COLOR_TERMINAL_ICON = Color.terminal_text_header(255, true)
+local COLOR_TERMINAL_TEXT_HEADER = Color.terminal_text_header(255, true)
+local DANGER_LEVELS = DangerSettings.danger_levels
 local StepperPassTemplates = {}
-local color_copy = ColorUtilities.color_copy
+local color_copy = Colors.color_copy
 
 local function _get_input_text(action)
 	local service_type = "View"
@@ -63,7 +64,7 @@ StepperPassTemplates.terminal_button_hover_change_function = terminal_button_hov
 
 local difficulty_picker_stepper_hotspot_content = {
 	on_hover_sound = UISoundEvents.default_mouse_hover,
-	on_pressed_sound = UISoundEvents.default_select,
+	on_pressed_sound = UISoundEvents.default_select
 }
 local MIN_DANGER = 1
 local MAX_DANGER = 5
@@ -72,7 +73,7 @@ local difficulty_picker_hotspot_ids = {
 	"hotspot_2",
 	"hotspot_3",
 	"hotspot_4",
-	"hotspot_5",
+	"hotspot_5"
 }
 
 local function _make_difficulty_picker_rect_change_function(index)
@@ -80,9 +81,9 @@ local function _make_difficulty_picker_rect_change_function(index)
 		local min_danger = content.min_danger or MIN_DANGER
 		local max_danger = content.max_danger or MAX_DANGER
 		local current_danger = content.hover_danger or content.danger
-		local danger_color = DangerSettings[current_danger] and DangerSettings[current_danger].color or DangerSettings[1].color
+		local danger_color = DANGER_LEVELS[current_danger] and DANGER_LEVELS[current_danger].color or DANGER_LEVELS[1].color
 
-		ColorUtilities.color_copy(danger_color, style.color, true)
+		Colors.color_copy(danger_color, style.color, true)
 
 		if min_danger > index or max_danger < index then
 			style.color[1] = 127
@@ -141,7 +142,7 @@ StepperPassTemplates.difficulty_stepper = {
 				end
 
 				if content.last_danger ~= danger then
-					local danger_settings = DangerSettings[danger]
+					local danger_settings = DANGER_LEVELS[danger]
 
 					content.difficulty_text = Localize(danger_settings.display_name)
 					content.last_danger = danger
@@ -166,7 +167,7 @@ StepperPassTemplates.difficulty_stepper = {
 					content.stepper_right_text = gamepad_active and _get_input_text("navigate_primary_right_pressed") or ">"
 				end
 			end
-		end,
+		end
 	},
 	{
 		pass_type = "texture_uv",
@@ -177,28 +178,28 @@ StepperPassTemplates.difficulty_stepper = {
 			vertical_alignment = "center",
 			size = {
 				32,
-				32,
+				32
 			},
-			color = color_terminal_text_header,
+			color = COLOR_TERMINAL_TEXT_HEADER,
 			offset = {
 				-120,
 				15,
-				2,
+				2
 			},
 			uvs = {
 				{
 					1,
-					0,
+					0
 				},
 				{
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		visibility_function = function (parent, content)
 			return Managers.ui:using_cursor_navigation()
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -209,18 +210,18 @@ StepperPassTemplates.difficulty_stepper = {
 			vertical_alignment = "center",
 			size = {
 				32,
-				32,
+				32
 			},
-			color = color_terminal_text_header,
+			color = COLOR_TERMINAL_TEXT_HEADER,
 			offset = {
 				115,
 				15,
-				2,
-			},
+				2
+			}
 		},
 		visibility_function = function (parent, content)
 			return Managers.ui:using_cursor_navigation()
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -232,20 +233,20 @@ StepperPassTemplates.difficulty_stepper = {
 			text_horizontal_alignment = "center",
 			text_vertical_alignment = "center",
 			vertical_alignment = "center",
-			text_color = color_terminal_text_header,
+			text_color = COLOR_TERMINAL_TEXT_HEADER,
 			size = {
 				75,
-				75,
+				75
 			},
 			offset = {
 				-120,
 				15,
-				1,
-			},
+				1
+			}
 		},
 		visibility_function = function (parent, content)
 			return not Managers.ui:using_cursor_navigation()
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -257,20 +258,20 @@ StepperPassTemplates.difficulty_stepper = {
 			text_horizontal_alignment = "center",
 			text_vertical_alignment = "center",
 			vertical_alignment = "center",
-			text_color = color_terminal_text_header,
+			text_color = COLOR_TERMINAL_TEXT_HEADER,
 			size = {
 				75,
-				75,
+				75
 			},
 			offset = {
 				115,
 				15,
-				1,
-			},
+				1
+			}
 		},
 		visibility_function = function (parent, content)
 			return not Managers.ui:using_cursor_navigation()
-		end,
+		end
 	},
 	{
 		content_id = "hotspot_left",
@@ -281,14 +282,14 @@ StepperPassTemplates.difficulty_stepper = {
 			vertical_alignment = "center",
 			size = {
 				75,
-				75,
+				75
 			},
 			offset = {
 				-140,
 				15,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	{
 		content_id = "hotspot_right",
@@ -299,14 +300,14 @@ StepperPassTemplates.difficulty_stepper = {
 			vertical_alignment = "center",
 			size = {
 				75,
-				75,
+				75
 			},
 			offset = {
 				140,
 				15,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	{
 		pass_type = "texture",
@@ -315,17 +316,17 @@ StepperPassTemplates.difficulty_stepper = {
 		style = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
-			color = color_terminal_icon,
+			color = COLOR_TERMINAL_ICON,
 			size = {
 				46,
-				46,
+				46
 			},
 			offset = {
 				-65,
 				15,
-				2,
-			},
-		},
+				2
+			}
+		}
 	},
 	{
 		content_id = "hotspot_1",
@@ -335,14 +336,14 @@ StepperPassTemplates.difficulty_stepper = {
 			vertical_alignment = "center",
 			size = {
 				24,
-				36,
+				36
 			},
 			offset = {
 				-22,
 				15,
-				2,
-			},
-		},
+				2
+			}
+		}
 	},
 	{
 		content_id = "hotspot_2",
@@ -352,14 +353,14 @@ StepperPassTemplates.difficulty_stepper = {
 			vertical_alignment = "center",
 			size = {
 				24,
-				36,
+				36
 			},
 			offset = {
 				2,
 				15,
-				2,
-			},
-		},
+				2
+			}
+		}
 	},
 	{
 		content_id = "hotspot_3",
@@ -369,14 +370,14 @@ StepperPassTemplates.difficulty_stepper = {
 			vertical_alignment = "center",
 			size = {
 				24,
-				36,
+				36
 			},
 			offset = {
 				26,
 				15,
-				2,
-			},
-		},
+				2
+			}
+		}
 	},
 	{
 		content_id = "hotspot_4",
@@ -386,14 +387,14 @@ StepperPassTemplates.difficulty_stepper = {
 			vertical_alignment = "center",
 			size = {
 				24,
-				36,
+				36
 			},
 			offset = {
 				50,
 				15,
-				2,
-			},
-		},
+				2
+			}
+		}
 	},
 	{
 		content_id = "hotspot_5",
@@ -403,14 +404,14 @@ StepperPassTemplates.difficulty_stepper = {
 			vertical_alignment = "center",
 			size = {
 				24,
-				36,
+				36
 			},
 			offset = {
 				74,
 				15,
-				2,
-			},
-		},
+				2
+			}
+		}
 	},
 	{
 		pass_type = "rect",
@@ -419,17 +420,17 @@ StepperPassTemplates.difficulty_stepper = {
 		style = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
-			color = color_terminal_icon,
+			color = COLOR_TERMINAL_ICON,
 			size = {
 				18,
-				36,
+				36
 			},
 			offset = {
 				-22,
 				15,
-				2,
-			},
-		},
+				2
+			}
+		}
 	},
 	{
 		pass_type = "rect",
@@ -438,17 +439,17 @@ StepperPassTemplates.difficulty_stepper = {
 		style = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
-			color = color_terminal_icon,
+			color = COLOR_TERMINAL_ICON,
 			size = {
 				18,
-				36,
+				36
 			},
 			offset = {
 				2,
 				15,
-				2,
-			},
-		},
+				2
+			}
+		}
 	},
 	{
 		pass_type = "rect",
@@ -457,17 +458,17 @@ StepperPassTemplates.difficulty_stepper = {
 		style = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
-			color = color_terminal_icon,
+			color = COLOR_TERMINAL_ICON,
 			size = {
 				18,
-				36,
+				36
 			},
 			offset = {
 				26,
 				15,
-				2,
-			},
-		},
+				2
+			}
+		}
 	},
 	{
 		pass_type = "rect",
@@ -476,17 +477,17 @@ StepperPassTemplates.difficulty_stepper = {
 		style = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
-			color = color_terminal_icon,
+			color = COLOR_TERMINAL_ICON,
 			size = {
 				18,
-				36,
+				36
 			},
 			offset = {
 				50,
 				15,
-				2,
-			},
-		},
+				2
+			}
+		}
 	},
 	{
 		pass_type = "rect",
@@ -495,17 +496,17 @@ StepperPassTemplates.difficulty_stepper = {
 		style = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
-			color = color_terminal_icon,
+			color = COLOR_TERMINAL_ICON,
 			size = {
 				18,
-				36,
+				36
 			},
 			offset = {
 				74,
 				15,
-				2,
-			},
-		},
+				2
+			}
+		}
 	},
 	{
 		pass_type = "text",
@@ -516,14 +517,14 @@ StepperPassTemplates.difficulty_stepper = {
 			font_type = "proxima_nova_bold",
 			text_horizontal_alignment = "center",
 			text_vertical_alignment = "center",
-			text_color = color_terminal_text_header,
+			text_color = COLOR_TERMINAL_TEXT_HEADER,
 			offset = {
 				0,
 				-25,
-				3,
-			},
-		},
-	},
+				3
+			}
+		}
+	}
 }
 
 local MIN_HAVOC_RANK = 1
@@ -576,7 +577,7 @@ StepperPassTemplates.havoc_stepper = {
 					content.stepper_right = gamepad_active and _get_input_text("navigate_primary_right_pressed") or ">"
 				end
 			end
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -589,17 +590,17 @@ StepperPassTemplates.havoc_stepper = {
 			text_horizontal_alignment = "center",
 			text_vertical_alignment = "center",
 			vertical_alignment = "center",
-			text_color = color_terminal_text_header,
+			text_color = COLOR_TERMINAL_TEXT_HEADER,
 			size = {
 				75,
-				75,
+				75
 			},
 			offset = {
 				-120,
 				30,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	{
 		pass_type = "text",
@@ -612,17 +613,17 @@ StepperPassTemplates.havoc_stepper = {
 			text_horizontal_alignment = "center",
 			text_vertical_alignment = "center",
 			vertical_alignment = "center",
-			text_color = color_terminal_text_header,
+			text_color = COLOR_TERMINAL_TEXT_HEADER,
 			size = {
 				75,
-				75,
+				75
 			},
 			offset = {
 				120,
 				30,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	{
 		content_id = "hotspot_left",
@@ -633,14 +634,14 @@ StepperPassTemplates.havoc_stepper = {
 			vertical_alignment = "center",
 			size = {
 				75,
-				75,
+				75
 			},
 			offset = {
 				-140,
 				30,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	{
 		content_id = "hotspot_right",
@@ -651,14 +652,14 @@ StepperPassTemplates.havoc_stepper = {
 			vertical_alignment = "center",
 			size = {
 				75,
-				75,
+				75
 			},
 			offset = {
 				140,
 				30,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	{
 		pass_type = "text",
@@ -669,14 +670,14 @@ StepperPassTemplates.havoc_stepper = {
 			font_type = "proxima_nova_bold",
 			text_horizontal_alignment = "center",
 			text_vertical_alignment = "center",
-			text_color = color_terminal_text_header,
+			text_color = COLOR_TERMINAL_TEXT_HEADER,
 			offset = {
 				0,
 				20,
-				3,
-			},
-		},
-	},
+				3
+			}
+		}
+	}
 }
 
 local terminal_button_text_style = table.clone(UIFontSettings.button_primary)
@@ -684,11 +685,11 @@ local terminal_button_text_style = table.clone(UIFontSettings.button_primary)
 terminal_button_text_style.offset = {
 	0,
 	0,
-	6,
+	6
 }
 terminal_button_text_style.size_addition = {
 	-100,
-	0,
+	0
 }
 terminal_button_text_style.horizontal_alignment = "center"
 terminal_button_text_style.text_horizontal_alignment = "center"
@@ -697,13 +698,13 @@ terminal_button_text_style.text_color = {
 	255,
 	216,
 	229,
-	207,
+	207
 }
 terminal_button_text_style.default_color = {
 	255,
 	216,
 	229,
-	207,
+	207
 }
 StepperPassTemplates.terminal_stepper = {
 	{
@@ -714,14 +715,14 @@ StepperPassTemplates.terminal_stepper = {
 			horizontal_alignment = "left",
 			vertical_alignment = "center",
 			size = {
-				50,
+				50
 			},
 			offset = {
 				0,
 				0,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	{
 		content_id = "hotspot_right",
@@ -731,14 +732,14 @@ StepperPassTemplates.terminal_stepper = {
 			horizontal_alignment = "right",
 			vertical_alignment = "center",
 			size = {
-				50,
+				50
 			},
 			offset = {
 				0,
 				0,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	{
 		content_id = "hotspot",
@@ -746,8 +747,8 @@ StepperPassTemplates.terminal_stepper = {
 		content = {
 			on_released_sound = nil,
 			on_hover_sound = UISoundEvents.default_mouse_hover,
-			on_pressed_sound = UISoundEvents.default_select,
-		},
+			on_pressed_sound = UISoundEvents.default_select
+		}
 	},
 	{
 		pass_type = "texture_uv",
@@ -758,28 +759,28 @@ StepperPassTemplates.terminal_stepper = {
 			vertical_alignment = "center",
 			size = {
 				16,
-				16,
+				16
 			},
-			color = color_terminal_text_header,
+			color = COLOR_TERMINAL_TEXT_HEADER,
 			offset = {
 				17,
 				0,
-				4,
+				4
 			},
 			uvs = {
 				{
 					1,
-					0,
+					0
 				},
 				{
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		visibility_function = function (content, style)
 			return Managers.ui:using_cursor_navigation()
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -790,20 +791,20 @@ StepperPassTemplates.terminal_stepper = {
 			vertical_alignment = "center",
 			size = {
 				16,
-				16,
+				16
 			},
-			color = color_terminal_text_header,
+			color = COLOR_TERMINAL_TEXT_HEADER,
 			offset = {
 				-17,
 				0,
-				4,
-			},
+				4
+			}
 		},
 		visibility_function = function (content, style)
 			local hotspot = content.hotspot
 
 			return Managers.ui:using_cursor_navigation()
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -815,20 +816,20 @@ StepperPassTemplates.terminal_stepper = {
 			text_horizontal_alignment = "center",
 			text_vertical_alignment = "center",
 			vertical_alignment = "center",
-			text_color = color_terminal_text_header,
+			text_color = COLOR_TERMINAL_TEXT_HEADER,
 			size = {
 				75,
-				75,
+				75
 			},
 			offset = {
 				-195,
 				2,
-				5,
-			},
+				5
+			}
 		},
 		visibility_function = function (content, style)
 			return not Managers.ui:using_cursor_navigation() and content.hotspot and content.hotspot.is_selected
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -840,20 +841,20 @@ StepperPassTemplates.terminal_stepper = {
 			text_horizontal_alignment = "center",
 			text_vertical_alignment = "center",
 			vertical_alignment = "center",
-			text_color = color_terminal_text_header,
+			text_color = COLOR_TERMINAL_TEXT_HEADER,
 			size = {
 				75,
-				75,
+				75
 			},
 			offset = {
 				195,
 				2,
-				5,
-			},
+				5
+			}
 		},
 		visibility_function = function (content, style)
 			return not Managers.ui:using_cursor_navigation() and content.hotspot and content.hotspot.is_selected
-		end,
+		end
 	},
 	{
 		pass_type = "rect",
@@ -865,22 +866,22 @@ StepperPassTemplates.terminal_stepper = {
 				180,
 				28,
 				31,
-				28,
+				28
 			},
 			size = {
-				50,
+				50
 			},
 			offset = {
 				0,
 				0,
-				2,
-			},
+				2
+			}
 		},
 		visibility_function = function (content, style)
 			local hotspot = content.hotspot
 
 			return Managers.ui:using_cursor_navigation()
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -892,23 +893,23 @@ StepperPassTemplates.terminal_stepper = {
 			vertical_alignment = "center",
 			color = Color.black(200, true),
 			size = {
-				50,
+				50
 			},
 			size_addition = {
 				20,
-				20,
+				20
 			},
 			offset = {
 				-10,
 				0,
-				3,
-			},
+				3
+			}
 		},
 		visibility_function = function (content, style)
 			local hotspot = content.hotspot
 
 			return Managers.ui:using_cursor_navigation()
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -921,13 +922,13 @@ StepperPassTemplates.terminal_stepper = {
 			selected_color = Color.terminal_frame_selected(nil, true),
 			disabled_color = Color.ui_grey_medium(255, true),
 			size = {
-				50,
+				50
 			},
 			offset = {
 				0,
 				0,
-				3,
-			},
+				3
+			}
 		},
 		change_function = function (content, style)
 			terminal_button_change_function(content, style, "hotspot_left")
@@ -937,7 +938,7 @@ StepperPassTemplates.terminal_stepper = {
 			local hotspot = content.hotspot
 
 			return Managers.ui:using_cursor_navigation()
-		end,
+		end
 	},
 	{
 		pass_type = "rect",
@@ -949,22 +950,22 @@ StepperPassTemplates.terminal_stepper = {
 				180,
 				28,
 				31,
-				28,
+				28
 			},
 			size = {
-				50,
+				50
 			},
 			offset = {
 				0,
 				0,
-				2,
-			},
+				2
+			}
 		},
 		visibility_function = function (content, style)
 			local hotspot = content.hotspot
 
 			return Managers.ui:using_cursor_navigation()
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -976,23 +977,23 @@ StepperPassTemplates.terminal_stepper = {
 			vertical_alignment = "center",
 			color = Color.black(200, true),
 			size = {
-				50,
+				50
 			},
 			size_addition = {
 				20,
-				20,
+				20
 			},
 			offset = {
 				10,
 				0,
-				3,
-			},
+				3
+			}
 		},
 		visibility_function = function (content, style)
 			local hotspot = content.hotspot
 
 			return Managers.ui:using_cursor_navigation()
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -1005,13 +1006,13 @@ StepperPassTemplates.terminal_stepper = {
 			selected_color = Color.terminal_frame_selected(nil, true),
 			disabled_color = Color.ui_grey_medium(255, true),
 			size = {
-				50,
+				50
 			},
 			offset = {
 				0,
 				0,
-				3,
-			},
+				3
+			}
 		},
 		change_function = function (content, style)
 			terminal_button_change_function(content, style, "hotspot_right")
@@ -1021,7 +1022,7 @@ StepperPassTemplates.terminal_stepper = {
 			local hotspot = content.hotspot
 
 			return Managers.ui:using_cursor_navigation()
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -1037,12 +1038,12 @@ StepperPassTemplates.terminal_stepper = {
 			offset = {
 				0,
 				0,
-				1,
-			},
+				1
+			}
 		},
 		change_function = function (content, style)
 			terminal_button_change_function(content, style)
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -1055,14 +1056,14 @@ StepperPassTemplates.terminal_stepper = {
 			color = Color.black(200, true),
 			size_addition = {
 				20,
-				20,
+				20
 			},
 			offset = {
 				0,
 				0,
-				3,
-			},
-		},
+				3
+			}
+		}
 	},
 	{
 		pass_type = "texture",
@@ -1078,10 +1079,10 @@ StepperPassTemplates.terminal_stepper = {
 			offset = {
 				0,
 				0,
-				5,
-			},
+				5
+			}
 		},
-		change_function = terminal_button_change_function,
+		change_function = terminal_button_change_function
 	},
 	{
 		pass_type = "texture",
@@ -1097,10 +1098,10 @@ StepperPassTemplates.terminal_stepper = {
 			offset = {
 				0,
 				0,
-				6,
-			},
+				6
+			}
 		},
-		change_function = terminal_button_change_function,
+		change_function = terminal_button_change_function
 	},
 	{
 		pass_type = "text",
@@ -1114,8 +1115,8 @@ StepperPassTemplates.terminal_stepper = {
 			local button_text = content.original_text or ""
 
 			content.text = button_text
-		end,
-	},
+		end
+	}
 }
 
 StepperPassTemplates.terminal_stepper.update = function (widget, renderer, dt, t, input_service)
@@ -1182,17 +1183,17 @@ MissionBoardStepperStyles.frame_top = {
 	color = Color.white(nil, true),
 	size = {
 		374.40000000000003,
-		62.400000000000006,
+		62.400000000000006
 	},
 	offset = {
 		0,
 		-20,
-		0,
+		0
 	},
 	size_addition = {
 		0,
-		0,
-	},
+		0
+	}
 }
 MissionBoardStepperStyles.frame_bottom = {
 	horizontal_alignment = "center",
@@ -1201,27 +1202,27 @@ MissionBoardStepperStyles.frame_bottom = {
 	color = Color.white(nil, true),
 	size = {
 		374.40000000000003,
-		62.400000000000006,
+		62.400000000000006
 	},
 	offset = {
 		0,
 		20,
-		0,
+		0
 	},
 	uvs = {
 		{
 			0,
-			1,
+			1
 		},
 		{
 			1,
-			0,
-		},
+			0
+		}
 	},
 	size_addition = {
 		0,
-		0,
-	},
+		0
+	}
 }
 MissionBoardStepperStyles.difficulty_text = {
 	font_size = 34,
@@ -1233,13 +1234,13 @@ MissionBoardStepperStyles.difficulty_text = {
 	offset = {
 		0,
 		0,
-		2,
+		2
 	},
 	size_addition = {
 		0,
-		0,
+		0
 	},
-	text_color = Color.golden_rod(nil, true),
+	text_color = Color.golden_rod(nil, true)
 }
 MissionBoardStepperStyles.left_button = {
 	horizontal_alignment = "left",
@@ -1247,14 +1248,14 @@ MissionBoardStepperStyles.left_button = {
 	vertical_alignment = "center",
 	size = {
 		84,
-		74,
+		74
 	},
 	offset = {
 		-42,
 		0,
-		6,
+		6
 	},
-	color = Color.golden_rod(nil, true),
+	color = Color.golden_rod(nil, true)
 }
 MissionBoardStepperStyles.left_button_glow = table.clone(MissionBoardStepperStyles.left_button)
 MissionBoardStepperStyles.left_button_glow.offset[3] = 5
@@ -1265,23 +1266,23 @@ MissionBoardStepperStyles.right_button = {
 	uvs = {
 		{
 			1,
-			0,
+			0
 		},
 		{
 			0,
-			1,
-		},
+			1
+		}
 	},
 	size = {
 		90,
-		74,
+		74
 	},
 	offset = {
 		45,
 		0,
-		6,
+		6
 	},
-	color = Color.golden_rod(nil, true),
+	color = Color.golden_rod(nil, true)
 }
 MissionBoardStepperStyles.right_button_glow = table.clone(MissionBoardStepperStyles.right_button)
 MissionBoardStepperStyles.right_button_glow.offset[3] = 5
@@ -1290,15 +1291,15 @@ MissionBoardStepperStyles.left_hotspot = {
 	vertical_alignment = "center",
 	size = {
 		74,
-		60,
+		60
 	},
 	offset = {
 		-37,
 		0,
-		5,
+		5
 	},
 	on_hover_sound = UISoundEvents.default_mouse_hover,
-	on_pressed_sound = UISoundEvents.default_click,
+	on_pressed_sound = UISoundEvents.default_click
 }
 MissionBoardStepperStyles.right_hotspot = table.clone(MissionBoardStepperStyles.left_hotspot)
 MissionBoardStepperStyles.right_hotspot.offset[1] = 37
@@ -1310,13 +1311,13 @@ MissionBoardStepperStyles.left_input_text = {
 	vertical_alignment = "center",
 	size = {
 		64,
-		54,
+		54
 	},
 	offset = {
 		-32,
 		0,
-		5,
-	},
+		5
+	}
 }
 MissionBoardStepperStyles.right_input_text = table.clone(MissionBoardStepperStyles.left_input_text)
 MissionBoardStepperStyles.right_input_text.offset[1] = 32
@@ -1325,49 +1326,49 @@ MissionBoardStepperStyles.right_input_text.text_color = {
 	255,
 	255,
 	255,
-	255,
+	255
 }
 MissionBoardStepperStyles.difficulty_indicator = {}
 MissionBoardStepperStyles.difficulty_indicator.frame = {
 	size = {
 		28,
-		28,
+		28
 	},
 	offset = {
 		0,
 		0,
-		50,
+		50
 	},
 	default_size = {
 		28,
-		28,
+		28
 	},
 	active_size = {
 		84,
-		84,
+		84
 	},
 	active_color = Color.white(255, true),
-	inactive_color = Color.gray(255, true),
+	inactive_color = Color.gray(255, true)
 }
 MissionBoardStepperStyles.difficulty_indicator.background = {
 	size = {
 		26,
-		26,
+		26
 	},
 	offset = {
 		0,
 		0,
-		49,
+		49
 	},
 	default_size = {
 		26,
-		26,
+		26
 	},
 	active_size = {
 		78,
-		78,
+		78
 	},
-	color = Color.black(255, true),
+	color = Color.black(255, true)
 }
 MissionBoardStepperStyles.difficulty_indicator.hotspot = table.clone(MissionBoardStepperStyles.difficulty_indicator.frame)
 MissionBoardStepperStyles.difficulty_indicator.frame_fill = table.clone(MissionBoardStepperStyles.difficulty_indicator.frame)
@@ -1375,72 +1376,72 @@ MissionBoardStepperStyles.difficulty_indicator.frame_fill.offset[3] = 52
 MissionBoardStepperStyles.difficulty_indicator.icon = {
 	size = {
 		22,
-		22,
+		22
 	},
 	default_size = {
 		22,
-		22,
+		22
 	},
 	active_size = {
 		48,
-		48,
+		48
 	},
 	offset = {
 		0,
 		0,
-		51,
-	},
+		51
+	}
 }
 MissionBoardStepperStyles.difficulty_indicator.indicator_locked = {
 	size = {
 		22,
-		22,
+		22
 	},
 	offset = {
 		0,
 		0,
-		53,
+		53
 	},
 	default_size = {
 		22,
-		22,
+		22
 	},
 	active_size = {
 		58,
-		58,
+		58
 	},
-	color = Color.white(255, true),
+	color = Color.white(255, true)
 }
 MissionBoardStepperStyles.difficulty_progress_bar = {}
 MissionBoardStepperStyles.difficulty_progress_bar.frame = {
 	scale_to_material = true,
 	size = {
 		276,
-		8,
+		8
 	},
 	offset = {
 		30,
 		76,
-		5,
+		5
 	},
-	color = Color.white(nil, true),
+	color = Color.white(nil, true)
 }
 MissionBoardStepperStyles.difficulty_progress_bar.progress_bar = {
 	scale_to_material = true,
 	size = {
 		276,
-		8,
+		8
 	},
 	default_size = {
 		276,
-		8,
+		8
 	},
 	offset = {
 		30,
 		76,
-		4,
+		4
 	},
-	color = Color.white(nil, true),
+	color = Color.white(nil, true)
 }
 MissionBoardStepperStyles.difficulty_progress_tooltip = {}
 MissionBoardStepperStyles.difficulty_progress_tooltip.background = {
@@ -1448,33 +1449,33 @@ MissionBoardStepperStyles.difficulty_progress_tooltip.background = {
 	scale_to_material = true,
 	size = {
 		400,
-		90,
+		90
 	},
 	offset = {
 		0,
 		-110,
-		103,
+		103
 	},
-	color = Color.black(255, true),
+	color = Color.black(255, true)
 }
 MissionBoardStepperStyles.difficulty_progress_tooltip.frame = {
 	horizontal_alignment = "center",
 	scale_to_material = true,
 	size = {
 		400,
-		90,
+		90
 	},
 	offset = {
 		0,
 		-110,
-		104,
+		104
 	},
 	color = {
 		255,
 		169,
 		211,
-		158,
-	},
+		158
+	}
 }
 MissionBoardStepperStyles.difficulty_progress_tooltip.text = {
 	font_size = 14,
@@ -1485,19 +1486,19 @@ MissionBoardStepperStyles.difficulty_progress_tooltip.text = {
 	vertical_alignment = "center",
 	size = {
 		380,
-		80,
+		80
 	},
 	text_color = {
 		255,
 		0,
 		162,
-		70,
+		70
 	},
 	offset = {
 		0,
 		-110,
-		105,
-	},
+		105
+	}
 }
 
 local function _stepper_static_elements_update(content, style, animations, dt)
@@ -1506,7 +1507,7 @@ local function _stepper_static_elements_update(content, style, animations, dt)
 	local to_color = content.target_color
 
 	if to_color then
-		ColorUtilities.color_lerp(from_color, to_color, 0.1, color, false)
+		Colors.color_lerp(from_color, to_color, 0.1, color, false)
 	end
 end
 
@@ -1516,7 +1517,7 @@ local function _left_stepper_button_change_function(hotspot_data, content, style
 	local to_color = content.target_color
 
 	if from_color and to_color then
-		ColorUtilities.color_lerp(from_color, to_color, 0.1, color, true)
+		Colors.color_lerp(from_color, to_color, 0.1, color, true)
 	end
 
 	style.size[1] = 90 + 14 * hotspot_data.anim_hover_progress
@@ -1529,7 +1530,7 @@ local function _right_stepper_button_change_function(hotspot_data, content, styl
 	local to_color = content.target_color
 
 	if from_color and to_color then
-		ColorUtilities.color_lerp(from_color, to_color, 0.1, color, true)
+		Colors.color_lerp(from_color, to_color, 0.1, color, true)
 	end
 
 	style.size[1] = 90 + 14 * hotspot_data.anim_hover_progress
@@ -1550,7 +1551,7 @@ local function _progress_bar_change_function(content, style, animations, dt)
 	local to_color = content.target_color
 
 	if from_color and to_color then
-		ColorUtilities.color_lerp(from_color, to_color, 0.1, color, false)
+		Colors.color_lerp(from_color, to_color, 0.1, color, false)
 	end
 end
 
@@ -1611,21 +1612,21 @@ StepperPassTemplates.mission_board_stepper = {
 				style.tooltip_background.color[1] = 255 * hover_progress
 				style.tooltip_frame.color[1] = 255 * hover_progress
 			end
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
 		style_id = "stepper_frame_top",
 		value = "content/ui/materials/frames/difficulty_stepper_frame",
 		style = MissionBoardStepperStyles.frame_top,
-		change_function = _stepper_static_elements_update,
+		change_function = _stepper_static_elements_update
 	},
 	{
 		pass_type = "texture_uv",
 		style_id = "stepper_frame_bottom",
 		value = "content/ui/materials/frames/difficulty_stepper_frame",
 		style = MissionBoardStepperStyles.frame_bottom,
-		change_function = _stepper_static_elements_update,
+		change_function = _stepper_static_elements_update
 	},
 	{
 		pass_type = "text",
@@ -1633,14 +1634,14 @@ StepperPassTemplates.mission_board_stepper = {
 		value = "DIFFICULTY",
 		value_id = "difficulty_text",
 		style = MissionBoardStepperStyles.difficulty_text,
-		change_function = _stepper_static_elements_update,
+		change_function = _stepper_static_elements_update
 	},
 	{
 		content_id = "left_hotspot",
 		pass_type = "hotspot",
 		style_id = "left_hotspot",
 		style = MissionBoardStepperStyles.left_hotspot,
-		visibility_function = _arrows_visibilit_function,
+		visibility_function = _arrows_visibilit_function
 	},
 	{
 		pass_type = "texture",
@@ -1655,7 +1656,7 @@ StepperPassTemplates.mission_board_stepper = {
 
 			style.offset[1] = -(51 + 7 * hotspot_data.anim_hover_progress)
 			style.color[1] = 255 * (1 - hotspot_data.anim_input_progress)
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -1664,7 +1665,7 @@ StepperPassTemplates.mission_board_stepper = {
 		value_id = "gamepad_left_input_text",
 		style = MissionBoardStepperStyles.left_input_text,
 		change_function = _stepper_static_elements_update,
-		visibility_function = _gamepad_input_visibilit_function,
+		visibility_function = _gamepad_input_visibilit_function
 	},
 	{
 		pass_type = "texture",
@@ -1679,14 +1680,14 @@ StepperPassTemplates.mission_board_stepper = {
 
 			style.offset[1] = -(51 + 7 * hotspot_data.anim_hover_progress)
 			style.color[1] = 255 * hotspot_data.anim_input_progress
-		end,
+		end
 	},
 	{
 		content_id = "right_hotspot",
 		pass_type = "hotspot",
 		style_id = "right_hotspot",
 		style = MissionBoardStepperStyles.right_hotspot,
-		visibility_function = _arrows_visibilit_function,
+		visibility_function = _arrows_visibilit_function
 	},
 	{
 		pass_type = "text",
@@ -1695,7 +1696,7 @@ StepperPassTemplates.mission_board_stepper = {
 		value_id = "gamepad_right_input_text",
 		style = MissionBoardStepperStyles.right_input_text,
 		visibility_function = _gamepad_input_visibilit_function,
-		change_function = _stepper_static_elements_update,
+		change_function = _stepper_static_elements_update
 	},
 	{
 		pass_type = "texture_uv",
@@ -1712,7 +1713,7 @@ StepperPassTemplates.mission_board_stepper = {
 
 			style.color[1] = base_alpha * (1 - hotspot_data.anim_input_progress)
 			style.offset[1] = 51 + 7 * hotspot_data.anim_hover_progress
-		end,
+		end
 	},
 	{
 		pass_type = "texture_uv",
@@ -1727,7 +1728,7 @@ StepperPassTemplates.mission_board_stepper = {
 
 			style.color[1] = 255 * hotspot_data.anim_input_progress
 			style.offset[1] = 51 + 7 * hotspot_data.anim_hover_progress
-		end,
+		end
 	},
 	{
 		content_id = "tooltip_hotspot",
@@ -1739,14 +1740,14 @@ StepperPassTemplates.mission_board_stepper = {
 			vertical_alignment = "center",
 			size = {
 				260,
-				70,
+				70
 			},
 			offset = {
 				0,
 				15,
-				4,
-			},
-		},
+				4
+			}
+		}
 	},
 	{
 		pass_type = "texture",
@@ -1757,7 +1758,7 @@ StepperPassTemplates.mission_board_stepper = {
 		change_function = _progress_bar_change_function,
 		visibility_function = function (content, style)
 			return content.show_progress and content.progress ~= 1
-		end,
+		end
 	},
 	{
 		pass_type = "rect",
@@ -1772,7 +1773,7 @@ StepperPassTemplates.mission_board_stepper = {
 		end,
 		visibility_function = function (content, style)
 			return content.show_progress and content.progress ~= 1
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -1781,7 +1782,7 @@ StepperPassTemplates.mission_board_stepper = {
 		style = MissionBoardStepperStyles.difficulty_progress_tooltip.frame,
 		visibility_function = function (content, style)
 			return content.show_progress and content.progress ~= 1
-		end,
+		end
 	},
 	{
 		pass_type = "rect",
@@ -1790,7 +1791,7 @@ StepperPassTemplates.mission_board_stepper = {
 		style = MissionBoardStepperStyles.difficulty_progress_tooltip.background,
 		visibility_function = function (content, style)
 			return content.show_progress and content.progress ~= 1
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -1800,8 +1801,8 @@ StepperPassTemplates.mission_board_stepper = {
 		style = MissionBoardStepperStyles.difficulty_progress_tooltip.text,
 		visibility_function = function (content, style)
 			return content.show_progress and content.progress ~= 1
-		end,
-	},
+		end
+	}
 }
 
 local function _stepper_indicator_change_function(content, style, dt, ignore_color)
@@ -1835,7 +1836,7 @@ local function _stepper_indicator_change_function(content, style, dt, ignore_col
 		local to_color = content.target_color
 
 		if from_color then
-			ColorUtilities.color_lerp(from_color, to_color, 0.1, color, false)
+			Colors.color_lerp(from_color, to_color, 0.1, color, false)
 		else
 			style.color = style.inactive_color
 		end
@@ -1853,7 +1854,7 @@ StepperPassTemplates.difficulty_stepper_indicator.passes = {
 		style = MissionBoardStepperStyles.difficulty_indicator.hotspot,
 		change_function = function (content, style, animations, dt)
 			_stepper_indicator_change_function(content, style, dt, true)
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -1865,7 +1866,7 @@ StepperPassTemplates.difficulty_stepper_indicator.passes = {
 		end,
 		visibility_function = function (content, style)
 			return content.active
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -1877,7 +1878,7 @@ StepperPassTemplates.difficulty_stepper_indicator.passes = {
 		end,
 		visibility_function = function (content, style)
 			return not content.active
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -1886,7 +1887,7 @@ StepperPassTemplates.difficulty_stepper_indicator.passes = {
 		style = MissionBoardStepperStyles.difficulty_indicator.background,
 		change_function = function (content, style, animations, dt)
 			_stepper_indicator_change_function(content, style, dt, true)
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -1899,7 +1900,7 @@ StepperPassTemplates.difficulty_stepper_indicator.passes = {
 		end,
 		change_function = function (content, style, animations, dt)
 			_stepper_indicator_change_function(content, style, dt)
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -1911,8 +1912,8 @@ StepperPassTemplates.difficulty_stepper_indicator.passes = {
 		end,
 		visibility_function = function (content, style)
 			return not content.active and content.is_unlocked
-		end,
-	},
+		end
+	}
 }
 
 return settings("StepperPassTemplates", StepperPassTemplates)

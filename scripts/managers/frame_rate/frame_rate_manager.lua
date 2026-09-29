@@ -61,7 +61,7 @@ FrameRateManager._add_reason = function (self, reason, priority, throttled)
 
 	self._reasons[reason] = {
 		priority = priority,
-		throttled = throttled,
+		throttled = throttled
 	}
 
 	self:refresh()

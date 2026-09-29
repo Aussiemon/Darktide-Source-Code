@@ -3,6 +3,7 @@
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local BarPassTemplates = require("scripts/ui/pass_templates/bar_pass_templates")
@@ -33,10 +34,11 @@ entry_title_style.text_vertical_alignment = "top"
 
 local entry_subtitle_style = table.clone(UIFontSettings.body_medium)
 
-entry_subtitle_style.text_color = Color.white(255, true)
+entry_subtitle_style.text_color = Color.terminal_text_body(255, true)
 entry_subtitle_style.text_horizontal_alignment = "left"
 entry_subtitle_style.text_vertical_alignment = "top"
-entry_subtitle_style.font_size = 26
+entry_subtitle_style.font_size = 24
+entry_subtitle_style.drop_shadow = true
 
 local entry_body_style = table.clone(UIFontSettings.body_medium)
 
@@ -53,13 +55,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			84,
-			224,
+			224
 		},
 		position = {
 			0,
 			0,
-			4,
-		},
+			4
+		}
 	},
 	corner_top_right = {
 		horizontal_alignment = "right",
@@ -67,13 +69,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			120,
-			224,
+			224
 		},
 		position = {
 			0,
 			0,
-			4,
-		},
+			4
+		}
 	},
 	corner_bottom_left = {
 		horizontal_alignment = "left",
@@ -81,13 +83,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			84,
-			224,
+			224
 		},
 		position = {
 			0,
 			0,
-			4,
-		},
+			4
+		}
 	},
 	corner_bottom_right = {
 		horizontal_alignment = "right",
@@ -95,13 +97,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			84,
-			224,
+			224
 		},
 		position = {
 			0,
 			0,
-			4,
-		},
+			4
+		}
 	},
 	canvas_bottom = {
 		horizontal_alignment = "center",
@@ -109,14 +111,14 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
-	},
+			0
+		}
+	}
 }
 
 scenegraph_definition.canvas = {
@@ -125,13 +127,13 @@ scenegraph_definition.canvas = {
 	vertical_alignment = "center",
 	size = {
 		1824,
-		918,
+		918
 	},
 	position = {
 		0,
 		0,
-		1,
-	},
+		1
+	}
 }
 scenegraph_definition.left_column = {
 	horizontal_alignment = "left",
@@ -139,13 +141,13 @@ scenegraph_definition.left_column = {
 	vertical_alignment = "center",
 	size = {
 		scenegraph_definition.canvas.size[1] * 0.63,
-		scenegraph_definition.canvas.size[2],
+		scenegraph_definition.canvas.size[2]
 	},
 	position = {
 		5,
 		0,
-		1,
-	},
+		1
+	}
 }
 scenegraph_definition.right_column = {
 	horizontal_alignment = "right",
@@ -153,13 +155,13 @@ scenegraph_definition.right_column = {
 	vertical_alignment = "center",
 	size = {
 		scenegraph_definition.canvas.size[1] * 0.33,
-		scenegraph_definition.canvas.size[2],
+		scenegraph_definition.canvas.size[2]
 	},
 	position = {
 		-5,
 		0,
-		1,
-	},
+		1
+	}
 }
 scenegraph_definition.content_pivot = {
 	horizontal_alignment = "left",
@@ -168,12 +170,12 @@ scenegraph_definition.content_pivot = {
 	offset = {
 		100,
 		125,
-		1,
+		1
 	},
 	size = {
 		scenegraph_definition.left_column.size[1],
-		scenegraph_definition.left_column.size[2],
-	},
+		scenegraph_definition.left_column.size[2]
+	}
 }
 scenegraph_definition.right_column_first_row = {
 	horizontal_alignment = "center",
@@ -181,13 +183,13 @@ scenegraph_definition.right_column_first_row = {
 	vertical_alignment = "top",
 	size = {
 		scenegraph_definition.right_column.size[1],
-		scenegraph_definition.right_column.size[2] * 0.33,
+		scenegraph_definition.right_column.size[2] * 0.33
 	},
 	offset = {
 		0,
 		25,
-		1,
-	},
+		1
+	}
 }
 scenegraph_definition.right_column_second_row = {
 	horizontal_alignment = "center",
@@ -196,12 +198,40 @@ scenegraph_definition.right_column_second_row = {
 	offset = {
 		5,
 		25,
-		1,
+		1
 	},
 	size = {
 		scenegraph_definition.right_column.size[1] * 0.95,
-		scenegraph_definition.right_column.size[2] * 0.6,
+		scenegraph_definition.right_column.size[2] * 0.6
+	}
+}
+scenegraph_definition.entry_text_area = {
+	horizontal_alignment = "center",
+	parent = "right_column_second_row",
+	vertical_alignment = "top",
+	size = {
+		scenegraph_definition.right_column_second_row.size[1],
+		scenegraph_definition.right_column_second_row.size[2] - 75
 	},
+	offset = {
+		0,
+		0,
+		1
+	}
+}
+scenegraph_definition.entry_text_scrollbar = {
+	horizontal_alignment = "right",
+	parent = "entry_text_area",
+	vertical_alignment = "bottom",
+	size = {
+		8,
+		scenegraph_definition.entry_text_area.size[2] - 20
+	},
+	offset = {
+		-12,
+		10,
+		20
+	}
 }
 
 local widget_definitions = {
@@ -209,16 +239,16 @@ local widget_definitions = {
 		{
 			pass_type = "rect",
 			style = {
-				color = Color.black(191.25, true),
-			},
+				color = Color.black(191.25, true)
+			}
 		},
 		{
 			pass_type = "texture",
 			value = "content/ui/materials/backgrounds/terminal_basic",
 			style = {
-				color = Color.ui_red_medium(127.5, true),
-			},
-		},
+				color = Color.ui_red_medium(127.5, true)
+			}
+		}
 	}, "screen"),
 	background_column_left = UIWidget.create_definition({
 		{
@@ -231,14 +261,14 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					100,
-					100,
+					100
 				},
 				offset = {
 					25,
 					-100,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -250,14 +280,14 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					100,
-					100,
+					100
 				},
 				offset = {
 					-18,
 					-100,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -269,17 +299,17 @@ local widget_definitions = {
 				offset = {
 					0,
 					-64,
-					2,
+					2
 				},
 				size = {
 					scenegraph_definition.left_column.size[1],
-					76,
+					76
 				},
 				size_addition = {
 					50,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -289,19 +319,19 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					scenegraph_definition.left_column.size[1],
-					1,
+					1
 				},
 				color = Color.black(200, true),
 				size_addition = {
 					10,
-					19,
+					19
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -314,14 +344,14 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					100,
-					100,
+					100
 				},
 				offset = {
 					-22,
 					-15,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -334,14 +364,14 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					100,
-					100,
+					100
 				},
 				offset = {
 					20,
 					-13,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -354,17 +384,17 @@ local widget_definitions = {
 				offset = {
 					0,
 					10,
-					2,
+					2
 				},
 				size = {
 					scenegraph_definition.left_column.size[1],
-					84,
+					84
 				},
 				size_addition = {
 					50,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -374,19 +404,19 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					scenegraph_definition.left_column.size[1],
-					1,
+					1
 				},
 				color = Color.black(200, true),
 				size_addition = {
 					0,
-					32,
+					32
 				},
 				offset = {
 					0,
 					-15,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -394,22 +424,22 @@ local widget_definitions = {
 			style = {
 				size_addition = {
 					60,
-					60,
+					60
 				},
 				offset = {
 					-28,
 					-50,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "left_column"),
 	background_column_right = UIWidget.create_definition({
 		{
 			pass_type = "rect",
 			style = {
-				color = Color.black(229.5, true),
-			},
+				color = Color.black(229.5, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -421,21 +451,21 @@ local widget_definitions = {
 				color = Color.terminal_grid_background(200, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
 			value = "content/ui/materials/backgrounds/terminal_basic",
 			style = {
-				color = Color.terminal_grid_background(255, true),
-			},
+				color = Color.terminal_grid_background(255, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -448,17 +478,17 @@ local widget_definitions = {
 				offset = {
 					0,
 					-10,
-					2,
+					2
 				},
 				size = {
 					scenegraph_definition.right_column.size[1],
-					36,
+					36
 				},
 				size_addition = {
 					25,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -468,19 +498,19 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					scenegraph_definition.right_column.size[1],
-					1,
+					1
 				},
 				color = Color.black(200, true),
 				size_addition = {
 					0,
-					22,
+					22
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -493,17 +523,17 @@ local widget_definitions = {
 				offset = {
 					0,
 					10,
-					2,
+					2
 				},
 				size = {
 					scenegraph_definition.right_column.size[1],
-					36,
+					36
 				},
 				size_addition = {
 					25,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -513,19 +543,19 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					scenegraph_definition.right_column.size[1],
-					5,
+					5
 				},
 				color = Color.black(200, true),
 				size_addition = {
 					5,
-					30,
+					30
 				},
 				offset = {
 					0,
 					17,
-					2,
-				},
-			},
+					2
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -536,16 +566,16 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					scenegraph_definition.right_column.size[1],
-					scenegraph_definition.right_column.size[2],
+					scenegraph_definition.right_column.size[2]
 				},
 				color = Color.terminal_grid_background(255, true),
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "right_column"),
 	title_text = UIWidget.create_definition({
 		{
@@ -556,11 +586,11 @@ local widget_definitions = {
 				offset = {
 					0,
 					40,
-					1,
-				},
+					1
+				}
 			}, item_header_premium_text_style),
-			value = Localize("loc_skulls_guns_01_name"),
-		},
+			value = Localize("loc_skulls_guns_01_name")
+		}
 	}, "left_column"),
 	instruction_text = UIWidget.create_definition({
 		{
@@ -571,11 +601,11 @@ local widget_definitions = {
 				offset = {
 					0,
 					100,
-					1,
-				},
+					1
+				}
 			}, instruction_text_style),
-			value = Localize("loc_skulls_guns_progress_view_instruction_text"),
-		},
+			value = Localize("loc_skulls_guns_progress_view_instruction_text")
+		}
 	}, "left_column"),
 	entry_title_text = UIWidget.create_definition({
 		{
@@ -586,11 +616,11 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					3,
-				},
+					3
+				}
 			}, entry_title_style),
-			value = Localize("loc_skulls_guns_progress_view_entry_locked"),
-		},
+			value = Localize("loc_skulls_guns_progress_view_entry_locked")
+		}
 	}, "right_column_first_row"),
 	entry_image = UIWidget.create_definition({
 		{
@@ -600,9 +630,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					50,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -615,17 +645,17 @@ local widget_definitions = {
 				offset = {
 					0,
 					25,
-					1,
+					1
 				},
 				size = {
 					scenegraph_definition.right_column_first_row.size[1],
-					scenegraph_definition.right_column_first_row.size[2],
+					scenegraph_definition.right_column_first_row.size[2]
 				},
-				color = Color.ui_hud_green_light(255, true),
+				color = Color.ui_hud_green_light(255, true)
 			},
 			visibility_function = function (content, style)
 				return not style.parent.image.material_values.texture_map
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -638,17 +668,17 @@ local widget_definitions = {
 				offset = {
 					0,
 					50,
-					1,
+					1
 				},
 				size = {
 					scenegraph_definition.right_column_first_row.size[1],
-					scenegraph_definition.right_column_first_row.size[2],
+					scenegraph_definition.right_column_first_row.size[2]
 				},
-				color = Color.ui_hud_green_light(63.75, true),
+				color = Color.ui_hud_green_light(63.75, true)
 			},
 			visibility_function = function (content, style)
 				return not style.parent.image.material_values.texture_map
-			end,
+			end
 		},
 		{
 			pass_type = "rotated_texture",
@@ -660,19 +690,19 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					200,
-					200,
+					200
 				},
 				color = {
 					255,
 					224,
 					224,
-					224,
+					224
 				},
 				offset = {
 					0,
 					50,
-					2,
-				},
+					2
+				}
 			},
 			visibility_function = function (content, style)
 				return content.has_image and not style.parent.image.material_values.texture_map
@@ -682,7 +712,7 @@ local widget_definitions = {
 
 				style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
 				style.angle = style.rotation_progress * math.pi * 2
-			end,
+			end
 		},
 		{
 			pass_type = "texture_uv",
@@ -695,31 +725,31 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					scenegraph_definition.right_column_first_row.size[1],
-					scenegraph_definition.right_column_first_row.size[2],
+					scenegraph_definition.right_column_first_row.size[2]
 				},
 				color = Color.white(255, true),
 				offset = {
 					0,
 					50,
-					3,
+					3
 				},
 				material_values = {
-					texture_map = nil,
+					texture_map = nil
 				},
 				uvs = {
 					{
 						0,
-						0,
+						0
 					},
 					{
 						1,
-						1,
-					},
-				},
+						1
+					}
+				}
 			},
 			visibility_function = function (content, style)
 				return not not style.material_values.texture_map
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -731,15 +761,15 @@ local widget_definitions = {
 				offset = {
 					0,
 					50,
-					4,
+					4
 				},
 				size = {
 					scenegraph_definition.right_column_first_row.size[1],
-					scenegraph_definition.right_column_first_row.size[2],
+					scenegraph_definition.right_column_first_row.size[2]
 				},
-				color = Color.terminal_corner_hover(255, true),
-			},
-		},
+				color = Color.terminal_corner_hover(255, true)
+			}
+		}
 	}, "right_column_first_row"),
 	entry_subtitle_text = UIWidget.create_definition({
 		{
@@ -751,17 +781,20 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size = {
 					scenegraph_definition.right_column_second_row.size[1],
-					25,
+					25
 				},
 				size_addition = {
-					-25,
-				},
+					-25
+				}
 			}, entry_subtitle_style),
-		},
+			visibility_function = function (_content, _style)
+				return false
+			end
+		}
 	}, "right_column_second_row"),
 	entry_body_text = UIWidget.create_definition({
 		{
@@ -772,20 +805,56 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size = {
 					scenegraph_definition.right_column_second_row.size[1],
-					scenegraph_definition.right_column_second_row.size[2],
+					scenegraph_definition.right_column_second_row.size[2]
 				},
 				size_addition = {
 					-25,
-					-25,
-				},
+					-25
+				}
 			}, entry_body_style),
-			value = Localize("loc_skulls_guns_progress_view_entry_locked"),
-		},
+			value = Localize("loc_skulls_guns_progress_view_entry_locked")
+		}
 	}, "right_column_second_row"),
+	entry_text_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "entry_text_scrollbar", {
+		axis = 2,
+		enable_gamepad_scrolling = true,
+		focused = true,
+		gamepad_axis_name = "navigate_controller_right",
+		hotspot = {
+			is_focused = true
+		}
+	}, nil, {
+		mouse_scroll = {
+			scenegraph_id = "entry_text_area"
+		}
+	}),
+	entry_text_mask = UIWidget.create_definition({
+		{
+			pass_type = "texture",
+			value = "content/ui/materials/offscreen_masks/ui_overlay_offscreen_straight_blur_viewport_2",
+			style = {
+				color = {
+					255,
+					255,
+					255,
+					255
+				},
+				offset = {
+					-15,
+					0,
+					1
+				},
+				size_addition = {
+					15,
+					0
+				}
+			}
+		}
+	}, "entry_text_area")
 }
 local legend_inputs = {
 	{
@@ -793,8 +862,8 @@ local legend_inputs = {
 		display_name = "loc_settings_menu_close_menu",
 		input_action = "back",
 		on_pressed_callback = "_cb_on_back_pressed",
-		visibility_function = nil,
-	},
+		visibility_function = nil
+	}
 }
 local animations = {}
 
@@ -802,5 +871,5 @@ return {
 	animations = animations,
 	legend_inputs = legend_inputs,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

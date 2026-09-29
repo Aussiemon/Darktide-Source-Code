@@ -7,7 +7,7 @@ local views_to_load = {
 	"class_selection_view",
 	"options_view",
 	"news_view",
-	"system_view",
+	"system_view"
 }
 local MainMenuLoader = class("MainMenuLoader")
 

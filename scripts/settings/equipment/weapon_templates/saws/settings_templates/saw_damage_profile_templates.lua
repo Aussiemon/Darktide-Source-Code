@@ -37,7 +37,7 @@ local cutting_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_075,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -47,8 +47,8 @@ local cutting_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-	},
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
+	}
 }
 local smiter_am = {
 	attack = {
@@ -59,7 +59,7 @@ local smiter_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -69,8 +69,8 @@ local smiter_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-	},
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
+	}
 }
 local cutting_ap_am = {
 	attack = {
@@ -81,7 +81,7 @@ local cutting_ap_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_0_7,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_35,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -91,8 +91,8 @@ local cutting_ap_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-	},
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
+	}
 }
 local smiter_ap_am = {
 	attack = {
@@ -103,7 +103,7 @@ local smiter_ap_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_0_75,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_6,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -113,8 +113,8 @@ local smiter_ap_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-	},
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
+	}
 }
 
 damage_templates.saw_light_linesman = {
@@ -134,64 +134,64 @@ damage_templates.saw_light_linesman = {
 			power_distribution = {
 				attack = {
 					50,
-					100,
+					100
 				},
 				impact = {
 					4,
-					8,
-				},
+					8
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				0.5,
-				1.5,
+				1.5
 			},
 			power_level_multiplier = {
 				0.5,
-				1.5,
-			},
+				1.5
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					40,
-					75,
+					75
 				},
 				impact = {
 					3,
-					6,
-				},
+					6
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				0.4,
-				1.2,
-			},
+				1.2
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					25,
-					55,
+					55
 				},
 				impact = {
 					2,
-					4,
-				},
-			},
+					4
+				}
+			}
 		},
 		default_target = {
 			power_distribution = {
 				attack = {
 					10,
-					30,
+					30
 				},
 				impact = {
 					2,
-					4,
-				},
+					4
+				}
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.saw_light_smiter = {
 	stagger_category = "melee",
@@ -200,7 +200,7 @@ damage_templates.saw_light_smiter = {
 	damage_type = damage_types.sawing,
 	critical_strike = {
 		gibbing_power = gibbing_power.light,
-		gibbing_type = gibbing_types.sawing,
+		gibbing_type = gibbing_types.sawing
 	},
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.sawing,
@@ -213,52 +213,52 @@ damage_templates.saw_light_smiter = {
 			power_distribution = {
 				attack = {
 					100,
-					200,
+					200
 				},
 				impact = {
 					6,
-					12,
-				},
+					12
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				0.5,
-				1.5,
+				1.5
 			},
 			power_level_multiplier = {
 				0.5,
-				1.5,
-			},
+				1.5
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					40,
-					80,
+					80
 				},
 				impact = {
 					3,
-					6,
-				},
+					6
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				0.4,
-				1.2,
-			},
+				1.2
+			}
 		},
 		default_target = {
 			power_distribution = {
 				attack = {
 					10,
-					20,
+					20
 				},
 				impact = {
 					2,
-					4,
-				},
+					4
+				}
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.saw_heavy_linesman = {
 	ignore_gib_push = true,
@@ -278,92 +278,92 @@ damage_templates.saw_heavy_linesman = {
 			power_distribution = {
 				attack = {
 					90,
-					180,
+					180
 				},
 				impact = {
 					6,
-					12,
-				},
+					12
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				1,
-				2,
+				2
 			},
 			power_level_multiplier = {
 				0.5,
-				1.5,
-			},
+				1.5
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					70,
-					140,
+					140
 				},
 				impact = {
 					5,
-					8,
-				},
+					8
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				0.5,
-				1.5,
-			},
+				1.5
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					50,
-					100,
+					100
 				},
 				impact = {
 					4,
-					8,
-				},
+					8
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				0.2,
-				1,
-			},
+				1
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					35,
-					75,
+					75
 				},
 				impact = {
 					4,
-					8,
-				},
-			},
+					8
+				}
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					25,
-					50,
+					50
 				},
 				impact = {
 					3,
-					6,
-				},
-			},
+					6
+				}
+			}
 		},
 		default_target = {
 			power_distribution = {
 				attack = {
 					20,
-					30,
+					30
 				},
 				impact = {
 					2,
-					5,
-				},
+					5
+				}
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.saw_heavy_smiter = {
 	ignore_gib_push = true,
@@ -384,64 +384,64 @@ damage_templates.saw_heavy_smiter = {
 			power_distribution = {
 				attack = {
 					165,
-					330,
+					330
 				},
 				impact = {
 					8,
-					16,
-				},
+					16
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				1,
-				2,
+				2
 			},
 			power_level_multiplier = {
 				0.5,
-				1.5,
-			},
+				1.5
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					60,
-					120,
+					120
 				},
 				impact = {
 					5,
-					8,
-				},
+					8
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				0.5,
-				1.5,
-			},
+				1.5
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					30,
-					60,
+					60
 				},
 				impact = {
 					4,
-					8,
-				},
-			},
+					8
+				}
+			}
 		},
 		default_target = {
 			power_distribution = {
 				attack = {
 					20,
-					40,
+					40
 				},
 				impact = {
 					2,
-					5,
-				},
+					5
+				}
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.saw_light_linesman_ap = {
 	ragdoll_push_force = 100,
@@ -460,64 +460,64 @@ damage_templates.saw_light_linesman_ap = {
 			power_distribution = {
 				attack = {
 					60,
-					110,
+					110
 				},
 				impact = {
 					4,
-					8,
-				},
+					8
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				0.5,
-				1.5,
+				1.5
 			},
 			power_level_multiplier = {
 				0.5,
-				1.5,
-			},
+				1.5
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					40,
-					85,
+					85
 				},
 				impact = {
 					3,
-					6,
-				},
+					6
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				0.4,
-				1.2,
-			},
+				1.2
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					25,
-					55,
+					55
 				},
 				impact = {
 					2,
-					4,
-				},
-			},
+					4
+				}
+			}
 		},
 		default_target = {
 			power_distribution = {
 				attack = {
 					10,
-					30,
+					30
 				},
 				impact = {
 					2,
-					4,
-				},
+					4
+				}
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.saw_light_smiter_ap = {
 	stagger_category = "melee",
@@ -525,7 +525,7 @@ damage_templates.saw_light_smiter_ap = {
 	damage_type = damage_types.sawing,
 	critical_strike = {
 		gibbing_power = gibbing_power.light,
-		gibbing_type = gibbing_types.sawing,
+		gibbing_type = gibbing_types.sawing
 	},
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.sawing,
@@ -538,52 +538,52 @@ damage_templates.saw_light_smiter_ap = {
 			power_distribution = {
 				attack = {
 					105,
-					210,
+					210
 				},
 				impact = {
 					6,
-					12,
-				},
+					12
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				0.5,
-				1.5,
+				1.5
 			},
 			power_level_multiplier = {
 				0.5,
-				1.5,
-			},
+				1.5
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					45,
-					90,
+					90
 				},
 				impact = {
 					3,
-					6,
-				},
+					6
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				0.2,
-				1,
-			},
+				1
+			}
 		},
 		default_target = {
 			power_distribution = {
 				attack = {
 					10,
-					20,
+					20
 				},
 				impact = {
 					2,
-					4,
-				},
+					4
+				}
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.saw_heavy_linesman_ap = {
 	ignore_gib_push = true,
@@ -603,92 +603,92 @@ damage_templates.saw_heavy_linesman_ap = {
 			power_distribution = {
 				attack = {
 					100,
-					200,
+					200
 				},
 				impact = {
 					6,
-					12,
-				},
+					12
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				1,
-				2,
+				2
 			},
 			power_level_multiplier = {
 				0.5,
-				1.5,
-			},
+				1.5
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					70,
-					140,
+					140
 				},
 				impact = {
 					5,
-					8,
-				},
+					8
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				0.5,
-				1.5,
-			},
+				1.5
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					50,
-					100,
+					100
 				},
 				impact = {
 					4,
-					8,
-				},
+					8
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				0.2,
-				1,
-			},
+				1
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					35,
-					75,
+					75
 				},
 				impact = {
 					4,
-					8,
-				},
-			},
+					8
+				}
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					25,
-					50,
+					50
 				},
 				impact = {
 					3,
-					6,
-				},
-			},
+					6
+				}
+			}
 		},
 		default_target = {
 			power_distribution = {
 				attack = {
 					20,
-					30,
+					30
 				},
 				impact = {
 					2,
-					5,
-				},
+					5
+				}
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.saw_heavy_smiter_ap = {
 	ignore_gib_push = true,
@@ -708,149 +708,149 @@ damage_templates.saw_heavy_smiter_ap = {
 			power_distribution = {
 				attack = {
 					170,
-					340,
+					340
 				},
 				impact = {
 					8,
-					16,
-				},
+					16
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				1,
-				2,
+				2
 			},
 			power_level_multiplier = {
 				0.5,
-				1.5,
-			},
+				1.5
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					65,
-					130,
+					130
 				},
 				impact = {
 					5,
-					8,
-				},
+					8
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				0.5,
-				1.5,
-			},
+				1.5
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					30,
-					60,
+					60
 				},
 				impact = {
 					4,
-					8,
-				},
-			},
+					8
+				}
+			}
 		},
 		default_target = {
 			power_distribution = {
 				attack = {
 					20,
-					40,
+					40
 				},
 				impact = {
 					2,
-					5,
-				},
+					5
+				}
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 overrides.saw_light_sticky = {
 	parent_template_name = "saw_light_smiter",
 	overrides = {
 		{
 			"stagger_category",
-			"sticky",
+			"sticky"
 		},
 		{
 			"stagger_override",
-			"sticky",
+			"sticky"
 		},
 		{
 			"shield_stagger_category",
-			"melee",
+			"melee"
 		},
 		{
 			"cleave_distribution",
-			no_cleave,
-		},
-	},
+			no_cleave
+		}
+	}
 }
 overrides.saw_light_sticky_ap = {
 	parent_template_name = "saw_light_smiter_ap",
 	overrides = {
 		{
 			"stagger_category",
-			"sticky",
+			"sticky"
 		},
 		{
 			"stagger_override",
-			"sticky",
+			"sticky"
 		},
 		{
 			"shield_stagger_category",
-			"melee",
+			"melee"
 		},
 		{
 			"cleave_distribution",
-			no_cleave,
-		},
-	},
+			no_cleave
+		}
+	}
 }
 overrides.saw_light_sticky_rip = {
 	parent_template_name = "saw_light_smiter",
 	overrides = {
 		{
 			"stagger_category",
-			"sticky",
+			"sticky"
 		},
 		{
 			"shield_stagger_category",
-			"melee",
+			"melee"
 		},
 		{
 			"damage_type",
-			damage_types.sawing,
+			damage_types.sawing
 		},
 		{
 			"ignore_stagger_reduction",
-			true,
+			true
 		},
 		{
 			"ignore_shield",
-			true,
+			true
 		},
 		{
 			"ragdoll_only",
-			true,
+			true
 		},
 		{
 			"gibbing_power",
-			gibbing_power.medium,
+			gibbing_power.medium
 		},
 		{
 			"sticky_attack",
-			true,
+			true
 		},
 		{
 			"gibbing_type",
-			gibbing_types.sawing,
+			gibbing_types.sawing
 		},
 		{
 			"melee_attack_strength",
-			melee_attack_strengths.light,
+			melee_attack_strengths.light
 		},
 		{
 			"targets",
@@ -859,8 +859,8 @@ overrides.saw_light_sticky_rip = {
 			"attack",
 			{
 				70,
-				140,
-			},
+				140
+			}
 		},
 		{
 			"targets",
@@ -869,57 +869,57 @@ overrides.saw_light_sticky_rip = {
 			"impact",
 			{
 				5,
-				10,
-			},
+				10
+			}
 		},
 		{
 			"skip_on_hit_proc",
-			true,
-		},
-	},
+			true
+		}
+	}
 }
 overrides.saw_light_sticky_ap_rip = {
 	parent_template_name = "saw_light_smiter_ap",
 	overrides = {
 		{
 			"stagger_category",
-			"sticky",
+			"sticky"
 		},
 		{
 			"shield_stagger_category",
-			"melee",
+			"melee"
 		},
 		{
 			"damage_type",
-			damage_types.sawing,
+			damage_types.sawing
 		},
 		{
 			"ignore_stagger_reduction",
-			true,
+			true
 		},
 		{
 			"ignore_shield",
-			true,
+			true
 		},
 		{
 			"ragdoll_only",
-			true,
+			true
 		},
 		{
 			"gibbing_power",
-			gibbing_power.medium,
+			gibbing_power.medium
 		},
 		{
 			"sticky_attack",
-			true,
+			true
 		},
 		{
 			"gibbing_type",
-			gibbing_types.sawing,
+			gibbing_types.sawing
 		},
 		{
 			"melee_attack_strength",
-			melee_attack_strengths.light,
+			melee_attack_strengths.light
 		},
 		{
 			"targets",
@@ -928,8 +928,8 @@ overrides.saw_light_sticky_ap_rip = {
 			"attack",
 			{
 				90,
-				180,
-			},
+				180
+			}
 		},
 		{
 			"targets",
@@ -938,87 +938,87 @@ overrides.saw_light_sticky_ap_rip = {
 			"impact",
 			{
 				5,
-				10,
-			},
+				10
+			}
 		},
 		{
 			"skip_on_hit_proc",
-			true,
-		},
-	},
+			true
+		}
+	}
 }
 overrides.saw_heavy_sticky = {
 	parent_template_name = "saw_heavy_smiter",
 	overrides = {
 		{
 			"stagger_category",
-			"sticky",
+			"sticky"
 		},
 		{
 			"shield_stagger_category",
-			"melee",
+			"melee"
 		},
 		{
 			"cleave_distribution",
-			no_cleave,
-		},
-	},
+			no_cleave
+		}
+	}
 }
 overrides.saw_heavy_sticky_ap = {
 	parent_template_name = "saw_heavy_smiter_ap",
 	overrides = {
 		{
 			"stagger_category",
-			"sticky",
+			"sticky"
 		},
 		{
 			"shield_stagger_category",
-			"melee",
+			"melee"
 		},
 		{
 			"cleave_distribution",
-			no_cleave,
-		},
-	},
+			no_cleave
+		}
+	}
 }
 overrides.saw_heavy_sticky_rip = {
 	parent_template_name = "saw_heavy_smiter",
 	overrides = {
 		{
 			"stagger_category",
-			"melee",
+			"melee"
 		},
 		{
 			"shield_stagger_category",
-			"melee",
+			"melee"
 		},
 		{
 			"ignore_shield",
-			true,
+			true
 		},
 		{
 			"damage_type",
-			damage_types.sawing,
+			damage_types.sawing
 		},
 		{
 			"sticky_attack",
-			true,
+			true
 		},
 		{
 			"ignore_instant_ragdoll_chance",
-			true,
+			true
 		},
 		{
 			"ignore_stagger_reduction",
-			true,
+			true
 		},
 		{
 			"gibbing_power",
-			gibbing_power.heavy,
+			gibbing_power.heavy
 		},
 		{
 			"gibbing_type",
-			gibbing_types.sawing,
+			gibbing_types.sawing
 		},
 		{
 			"targets",
@@ -1027,53 +1027,53 @@ overrides.saw_heavy_sticky_rip = {
 			"attack",
 			{
 				150,
-				300,
-			},
+				300
+			}
 		},
 		{
 			"skip_on_hit_proc",
-			true,
-		},
-	},
+			true
+		}
+	}
 }
 overrides.saw_heavy_sticky_ap_rip = {
 	parent_template_name = "saw_heavy_smiter_ap",
 	overrides = {
 		{
 			"stagger_category",
-			"melee",
+			"melee"
 		},
 		{
 			"shield_stagger_category",
-			"melee",
+			"melee"
 		},
 		{
 			"ignore_shield",
-			true,
+			true
 		},
 		{
 			"damage_type",
-			damage_types.sawing,
+			damage_types.sawing
 		},
 		{
 			"sticky_attack",
-			true,
+			true
 		},
 		{
 			"ignore_instant_ragdoll_chance",
-			true,
+			true
 		},
 		{
 			"ignore_stagger_reduction",
-			true,
+			true
 		},
 		{
 			"gibbing_power",
-			gibbing_power.heavy,
+			gibbing_power.heavy
 		},
 		{
 			"gibbing_type",
-			gibbing_types.sawing,
+			gibbing_types.sawing
 		},
 		{
 			"targets",
@@ -1082,17 +1082,17 @@ overrides.saw_heavy_sticky_ap_rip = {
 			"attack",
 			{
 				160,
-				320,
-			},
+				320
+			}
 		},
 		{
 			"skip_on_hit_proc",
-			true,
-		},
-	},
+			true
+		}
+	}
 }
 
 return {
 	base_templates = damage_templates,
-	overrides = overrides,
+	overrides = overrides
 }

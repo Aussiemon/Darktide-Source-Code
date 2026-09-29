@@ -12,7 +12,7 @@ local sound_data = {
 		vce_death_long = "wwise/events/minions/play_traitor_guard_grenadier__death_long_vce",
 		vce_grunt = "wwise/events/minions/play_traitor_guard_grenadier__grunt_vce",
 		vce_hurt = "wwise/events/minions/play_traitor_guard_grenadier__hurt_vce",
-		vce_stop = "wwise/events/minions/stop_all_traitor_grenadier_vce",
+		vce_stop = "wwise/events/minions/stop_all_traitor_grenadier_vce"
 	},
 	use_proximity_culling = {
 		footstep = false,
@@ -21,8 +21,8 @@ local sound_data = {
 		run_foley_special = false,
 		vce_death = false,
 		vce_death_long = false,
-		vce_hurt = false,
-	},
+		vce_hurt = false
+	}
 }
 
 table.add_missing(sound_data.events, RenegadeCommonSounds.events)

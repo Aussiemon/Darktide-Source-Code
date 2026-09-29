@@ -15,7 +15,7 @@ ActionInputHierarchy.update_hierarchy_entry = function (hierarchy, target_input,
 
 	local new_entry = {
 		input = target_input,
-		transition = new_transition,
+		transition = new_transition
 	}
 
 	if target_index then

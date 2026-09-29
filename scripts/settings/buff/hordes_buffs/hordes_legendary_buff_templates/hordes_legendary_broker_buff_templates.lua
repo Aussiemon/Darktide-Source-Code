@@ -45,8 +45,8 @@ templates.hordes_buff_broker_damage_increase_over_time_during_focus_stance = {
 	lerped_stat_buffs = {
 		[stat_buffs.ranged_damage] = {
 			min = 0,
-			max = max_damage_gained_over_time_during_focus,
-		},
+			max = max_damage_gained_over_time_during_focus
+		}
 	},
 	start_func = function (template_data, template_context)
 		template_data.lerp_t = 0
@@ -78,7 +78,7 @@ templates.hordes_buff_broker_damage_increase_over_time_during_focus_stance = {
 		local lerp_t = math.clamp01(time_in_stance / time_needed_for_max_damage_during_focus)
 
 		template_data.lerp_t = lerp_t
-	end,
+	end
 }
 templates.hordes_buff_broker_bleedfire_on_melee_hits_during_punk_rage = {
 	class_name = "server_only_proc_buff",
@@ -87,7 +87,7 @@ templates.hordes_buff_broker_bleedfire_on_melee_hits_during_punk_rage = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	conditional_proc_func = function (template_data, template_context)
 		local buff_extension = template_context.buff_extension
@@ -113,7 +113,7 @@ templates.hordes_buff_broker_bleedfire_on_melee_hits_during_punk_rage = {
 				attacked_unit_buff_extension:add_internally_controlled_buff("hordes_buff_bleeding_and_burning_on_melee_hit_ailment", t, "owner_unit", player_unit)
 			end
 		end
-	end,
+	end
 }
 
 local percentage_health_regen_on_interval = HordesBuffsData.hordes_buff_broker_health_regen_during_punk_rage.buff_stats.hp_regen.value
@@ -126,7 +126,7 @@ templates.hordes_buff_broker_health_regen_during_punk_rage = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		local buff_extension = template_context.buff_extension
@@ -149,7 +149,7 @@ templates.hordes_buff_broker_health_regen_during_punk_rage = {
 				health_extension:add_heal(healing_remaining, DamageSettings.heal_types.buff)
 			end
 		end
-	end,
+	end
 }
 templates.hordes_buff_broker_stimm_field_shock_on_interval = {
 	class_name = "buff",
@@ -158,8 +158,8 @@ templates.hordes_buff_broker_stimm_field_shock_on_interval = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	keywords = {
-		buff_keywords.broker_stimm_field_shocks_enemies_in_range,
-	},
+		buff_keywords.broker_stimm_field_shocks_enemies_in_range
+	}
 }
 templates.hordes_buff_broker_missile_launcher_special_kill_restores_grenade = {
 	active_duration = 3,
@@ -169,12 +169,12 @@ templates.hordes_buff_broker_missile_launcher_special_kill_restores_grenade = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	proc_effects = {
 		player_effects = {
-			on_screen_effect = "content/fx/particles/screenspace/screen_buff_horde_broker_boom_bringer_restore_charge",
-		},
+			on_screen_effect = "content/fx/particles/screenspace/screen_buff_horde_broker_boom_bringer_restore_charge"
+		}
 	},
 	start_func = function (template_data, template_context)
 		template_data.last_grenade_kill_t = 0
@@ -207,7 +207,7 @@ templates.hordes_buff_broker_missile_launcher_special_kill_restores_grenade = {
 		end
 
 		template_data.grenade_restored = true
-	end,
+	end
 }
 
 local self_propagating_toxin_duration = HordesBuffsData.hordes_buff_broker_tox_grenade_applies_self_propagating_toxin.buff_stats.time.value
@@ -232,7 +232,7 @@ templates.hordes_buff_broker_tox_grenade_applies_self_propagating_toxin = {
 		HordesBuffsUtilities.give_passive_grenade_replenishment_buff(player_unit)
 	end,
 	proc_events = {
-		[proc_events.on_player_grenade_exploded] = 1,
+		[proc_events.on_player_grenade_exploded] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		if not template_context.is_server then
@@ -255,7 +255,7 @@ templates.hordes_buff_broker_tox_grenade_applies_self_propagating_toxin = {
 				victim_buff_extension:add_internally_controlled_buff("hordes_buff_broker_self_propagating_toxin_debuff", t, "owner_unit", player_unit)
 			end
 		end
-	end,
+	end
 }
 templates.hordes_buff_broker_self_propagating_toxin_debuff = {
 	class_name = "server_only_proc_buff",
@@ -265,7 +265,7 @@ templates.hordes_buff_broker_self_propagating_toxin_debuff = {
 	buff_category = buff_categories.hordes_sub_buff,
 	duration = self_propagating_toxin_duration,
 	keywords = {
-		buff_keywords.toxin,
+		buff_keywords.toxin
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -278,7 +278,7 @@ templates.hordes_buff_broker_self_propagating_toxin_debuff = {
 		template_data.next_damage_t = FixedFrame.get_latest_fixed_time() + self_propagating_toxin_damage_interval
 	end,
 	proc_events = {
-		[proc_events.on_death] = 1,
+		[proc_events.on_death] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		if not template_context.is_server then
@@ -320,7 +320,7 @@ templates.hordes_buff_broker_self_propagating_toxin_debuff = {
 			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.burning, "attacking_unit", owner_unit, "item", source_item, "attack_type", attack_types.buff)
 		end
 	end,
-	minion_effects = minion_burning_buff_effects.chemfire,
+	minion_effects = minion_burning_buff_effects.chemfire
 }
 
 local percent_damage_taken_increase_after_flash_grenade = HordesBuffsData.hordes_buff_broker_flash_grenade_increase_damage_taken.buff_stats.damage_taken.value
@@ -333,7 +333,7 @@ templates.hordes_buff_broker_flash_grenade_increase_damage_taken = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		return params.attack_type == attack_types.explosion and (params.damage_profile and params.damage_profile.name == "broker_flash_grenade" or params.damage_profile.name == "broker_flash_grenade_close")
@@ -348,7 +348,7 @@ templates.hordes_buff_broker_flash_grenade_increase_damage_taken = {
 
 			victim_buff_extension:add_internally_controlled_buff("hordes_buff_broker_flash_grenade_increase_damage_taken_effect", t, "owner_unit", player_unit)
 		end
-	end,
+	end
 }
 templates.hordes_buff_broker_flash_grenade_increase_damage_taken_effect = {
 	class_name = "buff",
@@ -359,10 +359,10 @@ templates.hordes_buff_broker_flash_grenade_increase_damage_taken_effect = {
 	buff_category = buff_categories.hordes_sub_buff,
 	duration = duration_damage_taken_increase_after_flash_grenade,
 	stat_buffs = {
-		[stat_buffs.damage_taken_modifier] = percent_damage_taken_increase_after_flash_grenade,
+		[stat_buffs.damage_taken_modifier] = percent_damage_taken_increase_after_flash_grenade
 	},
 	minion_effects = {
-		node_effects_priotity = minion_effects_priorities.player_effects,
+		node_effects_priority = minion_effects_priorities.player_effects,
 		node_effects = {
 			{
 				node_name = "j_head",
@@ -370,15 +370,15 @@ templates.hordes_buff_broker_flash_grenade_increase_damage_taken_effect = {
 					material_emission = false,
 					orphaned_policy = "destroy",
 					particle_effect = "content/fx/particles/enemies/buff_horde_broker_flash_grenade",
-					stop_type = "stop",
+					stop_type = "stop"
 				},
 				sfx = {
 					looping_wwise_start_event = "wwise/events/player/play_horde_mode_buff_enemy_blind_loop",
-					looping_wwise_stop_event = "wwise/events/player/stop_horde_mode_buff_enemy_blind_loop",
-				},
-			},
-		},
-	},
+					looping_wwise_stop_event = "wwise/events/player/stop_horde_mode_buff_enemy_blind_loop"
+				}
+			}
+		}
+	}
 }
 
 return templates

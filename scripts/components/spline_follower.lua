@@ -24,8 +24,8 @@ end
 
 SplineFollower.component_data = {
 	extensions = {
-		"SplineFollowerExtension",
-	},
+		"SplineFollowerExtension"
+	}
 }
 
 return SplineFollower

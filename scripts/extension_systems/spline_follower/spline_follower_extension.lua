@@ -38,7 +38,7 @@ SplineFollowerExtension.init = function (self, extension_init_context, unit, ext
 		last_sync_time = 0,
 		spline_index = 0,
 		spline_t = 0,
-		subdivision_index = 0,
+		subdivision_index = 0
 	}
 end
 

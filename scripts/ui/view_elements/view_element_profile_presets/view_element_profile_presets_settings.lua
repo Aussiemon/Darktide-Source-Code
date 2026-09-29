@@ -27,7 +27,7 @@ local view_element_profile_presets_settings = {
 		"icon_22",
 		"icon_23",
 		"icon_24",
-		"icon_25",
+		"icon_25"
 	},
 	optional_preset_icons_lookup = {
 		icon_01 = "content/ui/materials/icons/presets/preset_21",
@@ -54,8 +54,8 @@ local view_element_profile_presets_settings = {
 		icon_22 = "content/ui/materials/icons/presets/preset_17",
 		icon_23 = "content/ui/materials/icons/presets/preset_18",
 		icon_24 = "content/ui/materials/icons/presets/preset_19",
-		icon_25 = "content/ui/materials/icons/presets/preset_20",
-	},
+		icon_25 = "content/ui/materials/icons/presets/preset_20"
+	}
 }
 
 return settings("ViewElementProfilePresetsSettings", view_element_profile_presets_settings)

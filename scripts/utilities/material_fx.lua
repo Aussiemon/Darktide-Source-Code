@@ -9,12 +9,12 @@ local FOOTSTEP_EFFECTS = MaterialQuerySettings.footstep_effects
 local FOOT_TO_SOURCE_NAME_LOOKUP = {
 	right = {
 		foot = "right_foot",
-		toe = "right_toe",
+		toe = "right_toe"
 	},
 	left = {
 		foot = "left_foot",
-		toe = "left_toe",
-	},
+		toe = "left_toe"
+	}
 }
 local _external_properties = {}
 local _place_flow_player_3p_cb_footstep, _trigger_player_footstep_and_foley
@@ -39,7 +39,7 @@ end
 local DEFAULT_EXTENTS = {
 	1,
 	1,
-	1,
+	1
 }
 
 MaterialFx.trigger_material_fx = function (unit, world, wwise_world, physics_world, sound_alias, source_id, query_from, query_to, optional_set_speed_parameter, optional_set_first_person_parameter, optional_decal_alias, optional_decal_direction, use_cached_material_hit)

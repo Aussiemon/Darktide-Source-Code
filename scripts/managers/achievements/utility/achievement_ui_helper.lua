@@ -51,7 +51,7 @@ AchievementUIHelper.get_all_reward_items = function (achievement_definition)
 
 			rewards_data[#rewards_data + 1] = {
 				reward_item = reward_item,
-				item_type = item_type,
+				item_type = item_type
 			}
 		end
 	end
@@ -59,7 +59,7 @@ AchievementUIHelper.get_all_reward_items = function (achievement_definition)
 	return rewards_data
 end
 
-AchievementUIHelper.get_acheivement_by_reward_item = function (item)
+AchievementUIHelper.get_achievement_by_reward_item = function (item)
 	local achievements = Managers.achievements:achievement_definitions()
 
 	for _, achievement in pairs(achievements) do

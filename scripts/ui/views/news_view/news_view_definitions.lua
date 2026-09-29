@@ -17,13 +17,13 @@ local scenegraph_definitions = {
 		vertical_alignment = "center",
 		size = {
 			1250,
-			1250,
+			1250
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	button_pivot = {
 		horizontal_alignment = "center",
@@ -31,26 +31,26 @@ local scenegraph_definitions = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			470,
-			1,
-		},
+			1
+		}
 	},
 	window = {
 		scale = "fit_width",
 		vertical_alignment = "center",
 		size = {
 			1920,
-			window_size[2],
+			window_size[2]
 		},
 		position = {
 			0,
 			30,
-			20,
-		},
+			20
+		}
 	},
 	window_content = {
 		horizontal_alignment = "center",
@@ -60,8 +60,8 @@ local scenegraph_definitions = {
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	window_center_pivot = {
 		horizontal_alignment = "center",
@@ -69,13 +69,13 @@ local scenegraph_definitions = {
 		vertical_alignment = "bottom",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	slide_content_grid = {
 		horizontal_alignment = "left",
@@ -85,8 +85,8 @@ local scenegraph_definitions = {
 		position = {
 			0,
 			-170,
-			2,
-		},
+			2
+		}
 	},
 	previous_button = {
 		horizontal_alignment = "center",
@@ -94,13 +94,13 @@ local scenegraph_definitions = {
 		vertical_alignment = "bottom",
 		size = {
 			300,
-			40,
+			40
 		},
 		position = {
 			-170,
 			-60,
-			13,
-		},
+			13
+		}
 	},
 	next_button = {
 		horizontal_alignment = "center",
@@ -108,13 +108,13 @@ local scenegraph_definitions = {
 		vertical_alignment = "bottom",
 		size = {
 			300,
-			40,
+			40
 		},
 		position = {
 			170,
 			-60,
-			13,
-		},
+			13
+		}
 	},
 	center_button = {
 		horizontal_alignment = "center",
@@ -122,13 +122,13 @@ local scenegraph_definitions = {
 		vertical_alignment = "bottom",
 		size = {
 			300,
-			40,
+			40
 		},
 		position = {
 			0,
 			-60,
-			13,
-		},
+			13
+		}
 	},
 	slide_page_indicator = {
 		horizontal_alignment = "center",
@@ -136,14 +136,14 @@ local scenegraph_definitions = {
 		vertical_alignment = "bottom",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			-30,
-			15,
-		},
-	},
+			15
+		}
+	}
 }
 local widget_definitions = {
 	window_image = UIWidget.create_definition({
@@ -159,29 +159,29 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					image_size[1],
-					image_size[2],
+					image_size[2]
 				},
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				uvs = {
 					{
 						0,
-						0,
+						0
 					},
 					{
 						1,
-						1,
-					},
+						1
+					}
 				},
-				material_values = {},
+				material_values = {}
 			},
 			visibility_function = function (content, style)
 				return style.material_values and not not style.material_values.texture or style.force_view
-			end,
-		},
+			end
+		}
 	}, "window_content"),
 	window = UIWidget.create_definition({
 		{
@@ -192,14 +192,14 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					10,
-				},
-			},
+					10
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -212,18 +212,18 @@ local widget_definitions = {
 					100,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				size_addition = {
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -235,14 +235,14 @@ local widget_definitions = {
 					100,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -254,18 +254,18 @@ local widget_definitions = {
 					100,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					-1,
+					-1
 				},
 				size_addition = {
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -277,10 +277,10 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					64,
-					24,
+					24
 				},
-				color = Color.terminal_grid_background(nil, true),
-			},
+				color = Color.terminal_grid_background(nil, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -293,13 +293,13 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
 				size_addition = {
 					40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -312,14 +312,14 @@ local widget_definitions = {
 				color = Color.black(200, true),
 				size_addition = {
 					96,
-					96,
+					96
 				},
 				offset = {
 					0,
 					0,
-					5,
-				},
-			},
+					5
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -332,13 +332,13 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				size_addition = {
 					40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -351,13 +351,13 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				size_addition = {
 					40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -368,19 +368,19 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					nil,
-					10,
+					10
 				},
 				size_addition = {
 					80,
-					0,
+					0
 				},
 				color = Color.terminal_text_header(255, true),
 				offset = {
 					0,
 					-4,
-					14,
-				},
-			},
+					14
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -391,29 +391,29 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					nil,
-					10,
+					10
 				},
 				size_addition = {
 					80,
-					0,
+					0
 				},
 				color = Color.terminal_text_header(255, true),
 				offset = {
 					0,
 					4,
-					14,
-				},
-			},
-		},
+					14
+				}
+			}
+		}
 	}, "window"),
 	previous_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "previous_button", {
 		visible = true,
-		original_text = Localize("loc_news_view_previous"),
+		original_text = Localize("loc_news_view_previous")
 	}),
 	next_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "next_button", {
 		original_text = "next_button",
-		visible = true,
-	}),
+		visible = true
+	})
 }
 local animation_definitions = {
 	on_enter = {
@@ -463,7 +463,7 @@ local animation_definitions = {
 						grid_scrollbar.alpha_multiplier = 0
 					end
 				end
-			end,
+			end
 		},
 		{
 			end_time = 1.2,
@@ -476,7 +476,7 @@ local animation_definitions = {
 
 				window.style.screen_background.color[1] = alpha
 				window.style.screen_background_vignette.color[1] = alpha
-			end,
+			end
 		},
 		{
 			end_time = 0.2,
@@ -496,7 +496,7 @@ local animation_definitions = {
 				window_style.edge_top.color[1] = alpha
 				window_style.edge_bottom.color[1] = alpha
 				window_style.window_background.color[1] = alpha
-			end,
+			end
 		},
 		{
 			end_time = 0.7,
@@ -535,7 +535,7 @@ local animation_definitions = {
 						end
 					end
 				end
-			end,
+			end
 		},
 		{
 			end_time = 0.4,
@@ -550,8 +550,8 @@ local animation_definitions = {
 				local y_anim_distance = y_anim_distance_max - y_anim_distance_max * anim_progress
 
 				parent:_set_scenegraph_size("window", nil, 100 + (scenegraph_definition.window.size[2] - 100) * anim_progress)
-			end,
-		},
+			end
+		}
 	},
 	on_exit = {
 		{
@@ -585,7 +585,7 @@ local animation_definitions = {
 				for i = 1, circle_count do
 					widgets["slide_circ_" .. i].alpha_multiplier = anim_progress
 				end
-			end,
+			end
 		},
 		{
 			end_time = 0.7,
@@ -600,7 +600,7 @@ local animation_definitions = {
 				local y_anim_distance = y_anim_distance_max - y_anim_distance_max * anim_progress
 
 				parent:_set_scenegraph_size("window", nil, 100 + (scenegraph_definition.window.size[2] - 100) * anim_progress)
-			end,
+			end
 		},
 		{
 			end_time = 0.5,
@@ -620,13 +620,13 @@ local animation_definitions = {
 				window_style.edge_top.color[1] = alpha
 				window_style.edge_bottom.color[1] = alpha
 				window_style.window_background.color[1] = alpha
-			end,
+			end
 		},
 		{
 			end_time = 0.6,
 			name = "delay",
-			start_time = 0.5,
-		},
+			start_time = 0.5
+		}
 	},
 	change_content_in = {
 		{
@@ -643,7 +643,7 @@ local animation_definitions = {
 				end
 
 				parent._content_alpha_multiplier = 0
-			end,
+			end
 		},
 		{
 			name = "fade_in",
@@ -657,8 +657,8 @@ local animation_definitions = {
 				end
 
 				parent._content_alpha_multiplier = anim_progress
-			end,
-		},
+			end
+		}
 	},
 	change_content_out = {
 		{
@@ -675,7 +675,7 @@ local animation_definitions = {
 				end
 
 				parent._content_alpha_multiplier = 0
-			end,
+			end
 		},
 		{
 			name = "fade_out",
@@ -689,9 +689,9 @@ local animation_definitions = {
 				end
 
 				parent._content_alpha_multiplier = anim_progress
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 local slide_thumb_size = NewsViewSettings.slide_thumb_size
 local slide_circle_widget_definition = UIWidget.create_definition({
@@ -701,8 +701,8 @@ local slide_circle_widget_definition = UIWidget.create_definition({
 		style = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
-			size = slide_thumb_size,
-		},
+			size = slide_thumb_size
+		}
 	},
 	{
 		pass_type = "rect",
@@ -714,9 +714,9 @@ local slide_circle_widget_definition = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				0,
-			},
-		},
+				0
+			}
+		}
 	},
 	{
 		pass_type = "rect",
@@ -728,12 +728,12 @@ local slide_circle_widget_definition = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				1,
-			},
+				1
+			}
 		},
 		visibility_function = function (content, style)
 			return content.active
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -747,22 +747,22 @@ local slide_circle_widget_definition = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				1,
+				1
 			},
 			size_addition = {
 				24,
-				24,
-			},
+				24
+			}
 		},
 		visibility_function = function (content, style)
 			return content.active
-		end,
-	},
+		end
+	}
 }, "slide_page_indicator")
 
 return {
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definitions,
 	animations = animation_definitions,
-	slide_circle_widget_definition = slide_circle_widget_definition,
+	slide_circle_widget_definition = slide_circle_widget_definition
 }

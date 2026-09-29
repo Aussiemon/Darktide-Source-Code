@@ -23,7 +23,7 @@ local TRAP_BASE_ADM = {
 		[armor_types.berserker] = 2,
 		[armor_types.super_armor] = 1.2,
 		[armor_types.disgustingly_resilient] = 1.75,
-		[armor_types.void_shield] = 1.75,
+		[armor_types.void_shield] = 1.75
 	},
 	impact = {
 		[armor_types.unarmored] = 2,
@@ -33,8 +33,8 @@ local TRAP_BASE_ADM = {
 		[armor_types.berserker] = 2,
 		[armor_types.super_armor] = 1.2,
 		[armor_types.disgustingly_resilient] = 1.75,
-		[armor_types.void_shield] = 1.75,
-	},
+		[armor_types.void_shield] = 1.75
+	}
 }
 local TRAP_EXPLOSIVE_ATTACK = 2400
 local TRAP_EXPLOSIVE_IMPACT = 480
@@ -46,24 +46,24 @@ damage_templates.expedition_trap_explosive_close = {
 	stagger_category = "explosion",
 	cleave_distribution = {
 		attack = 0.1,
-		impact = 0.15,
+		impact = 0.15
 	},
 	armor_damage_modifier = TRAP_BASE_ADM,
 	power_distribution = {
 		attack = TRAP_EXPLOSIVE_ATTACK,
-		impact = TRAP_EXPLOSIVE_IMPACT,
+		impact = TRAP_EXPLOSIVE_IMPACT
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	suppression_value = TRAP_EXPLOSIVE_SURPRESSION_VALUE,
 	damage_type = damage_types.grenade_frag,
 	gibbing_type = GibbingTypes.explosion,
 	gibbing_power = GibbingPower.infinite,
 	gib_push_force = GibbingSettings.gib_push_force.explosive_heavy,
-	ragdoll_push_force = TRAP_EXPLOSIVE_RAGDOLL_PUSH_FORCE,
+	ragdoll_push_force = TRAP_EXPLOSIVE_RAGDOLL_PUSH_FORCE
 }
 overrides.expedition_trap_explosive = {
 	parent_template_name = "expedition_trap_explosive_close",
@@ -71,30 +71,30 @@ overrides.expedition_trap_explosive = {
 		{
 			"power_distribution",
 			"attack",
-			TRAP_EXPLOSIVE_ATTACK / 2,
+			TRAP_EXPLOSIVE_ATTACK / 2
 		},
 		{
 			"power_distribution",
 			"impact",
-			TRAP_EXPLOSIVE_IMPACT / 4,
+			TRAP_EXPLOSIVE_IMPACT / 4
 		},
 		{
 			"suppression_value",
-			TRAP_EXPLOSIVE_SURPRESSION_VALUE / 2,
+			TRAP_EXPLOSIVE_SURPRESSION_VALUE / 2
 		},
 		{
 			"gibbing_power",
-			GibbingPower.heavy,
+			GibbingPower.heavy
 		},
 		{
 			"gib_push_force",
-			GibbingSettings.gib_push_force.explosive,
+			GibbingSettings.gib_push_force.explosive
 		},
 		{
 			"ragdoll_push_force",
-			TRAP_EXPLOSIVE_RAGDOLL_PUSH_FORCE / 2,
-		},
-	},
+			TRAP_EXPLOSIVE_RAGDOLL_PUSH_FORCE / 2
+		}
+	}
 }
 
 local TRAP_FIRE_ATTACK = 10
@@ -106,26 +106,26 @@ overrides.expedition_trap_fire = {
 		{
 			"power_distribution",
 			"attack",
-			TRAP_FIRE_ATTACK,
+			TRAP_FIRE_ATTACK
 		},
 		{
 			"power_distribution",
 			"impact",
-			TRAP_FIRE_IMPACT,
+			TRAP_FIRE_IMPACT
 		},
 		{
 			"gibbing_power",
-			GibbingPower.always,
+			GibbingPower.always
 		},
 		{
 			"gib_push_force",
-			GibbingSettings.gib_push_force.explosive,
+			GibbingSettings.gib_push_force.explosive
 		},
 		{
 			"ragdoll_push_force",
-			0,
-		},
-	},
+			0
+		}
+	}
 }
 
 local TRAP_SHOCK_ATTACK = 10
@@ -137,33 +137,33 @@ overrides.expedition_trap_shock = {
 		{
 			"power_distribution",
 			"attack",
-			TRAP_SHOCK_ATTACK,
+			TRAP_SHOCK_ATTACK
 		},
 		{
 			"power_distribution",
 			"impact",
-			TRAP_SHOCK_IMPACT,
+			TRAP_SHOCK_IMPACT
 		},
 		{
 			"stagger_category",
-			"electrocuted",
+			"electrocuted"
 		},
 		{
 			"gibbing_power",
-			GibbingPower.always,
+			GibbingPower.always
 		},
 		{
 			"gib_push_force",
-			GibbingSettings.gib_push_force.explosive,
+			GibbingSettings.gib_push_force.explosive
 		},
 		{
 			"ragdoll_push_force",
-			0,
-		},
-	},
+			0
+		}
+	}
 }
 
 return {
 	base_templates = damage_templates,
-	overrides = overrides,
+	overrides = overrides
 }

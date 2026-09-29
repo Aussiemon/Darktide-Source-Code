@@ -3,7 +3,7 @@
 local PlayerBehaviorExtensionInterface = {
 	"brain",
 	"running_action",
-	"clear_failed_paths",
+	"clear_failed_paths"
 }
 
 return PlayerBehaviorExtensionInterface

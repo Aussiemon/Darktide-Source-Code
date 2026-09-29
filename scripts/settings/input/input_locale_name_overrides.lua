@@ -25,7 +25,7 @@ local input_locale_name_overrides = {
 		left = Localize("loc_keyboard_input_arrow_left"),
 		right = Localize("loc_keyboard_input_arrow_right"),
 		up = Localize("loc_keyboard_input_arrow_up"),
-		down = Localize("loc_keyboard_input_arrow_down"),
+		down = Localize("loc_keyboard_input_arrow_down")
 	},
 	mouse = {
 		extra_1 = "",
@@ -35,7 +35,7 @@ local input_locale_name_overrides = {
 		right = "",
 		wheel = "",
 		wheel_down = "",
-		wheel_up = "",
+		wheel_up = ""
 	},
 	xbox_controller = {
 		a = "",
@@ -55,7 +55,7 @@ local input_locale_name_overrides = {
 		right_trigger = "",
 		start = "",
 		x = "",
-		y = "",
+		y = ""
 	},
 	ps4_controller = {
 		circle = "",
@@ -75,8 +75,8 @@ local input_locale_name_overrides = {
 		right = "",
 		square = "",
 		touch = "",
-		triangle = "",
-	},
+		triangle = ""
+	}
 }
 
 return settings("InputLocaleNameOverrides", input_locale_name_overrides)

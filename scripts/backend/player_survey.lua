@@ -8,7 +8,7 @@ PlayerSurvey.get_account_surveys = function (self)
 		local builder = BackendUtilities.url_builder():path("/data/"):path(account.sub):path("/surveys/")
 
 		return Managers.backend:title_request(builder:to_string(), {
-			method = "GET",
+			method = "GET"
 		})
 	end)
 end
@@ -18,7 +18,7 @@ PlayerSurvey.get_survey = function (self, survey_id)
 		local builder = BackendUtilities.url_builder():path("/data/"):path(account.sub):path("/surveys/"):path(survey_id)
 
 		return Managers.backend:title_request(builder:to_string(), {
-			method = "GET",
+			method = "GET"
 		})
 	end)
 end
@@ -29,7 +29,7 @@ PlayerSurvey.submit_survey = function (self, survey_id, survey_result)
 
 		return Managers.backend:title_request(builder:to_string(), {
 			method = "POST",
-			body = survey_result,
+			body = survey_result
 		})
 	end)
 end

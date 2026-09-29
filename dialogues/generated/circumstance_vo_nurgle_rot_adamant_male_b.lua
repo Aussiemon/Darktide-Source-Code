@@ -8,16 +8,16 @@ local circumstance_vo_nurgle_rot_adamant_male_b = {
 			"loc_adamant_male_b__nurgle_circumstance_start_b_01",
 			"loc_adamant_male_b__nurgle_circumstance_start_b_02",
 			"loc_adamant_male_b__nurgle_circumstance_start_b_03",
-			"loc_adamant_male_b__nurgle_circumstance_start_b_04",
+			"loc_adamant_male_b__nurgle_circumstance_start_b_04"
 		},
 		sound_events_duration = {
 			1.698656,
 			2.821094,
 			3.954302,
-			3.776135,
+			3.776135
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("circumstance_vo_nurgle_rot_adamant_male_b", circumstance_vo_nurgle_rot_adamant_male_b)

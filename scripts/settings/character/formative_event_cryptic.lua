@@ -8,9 +8,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_first_conflict_01_description_snippet",
 		visibility = {
 			archetypes = {
-				"cryptic",
-			},
-		},
+				"cryptic"
+			}
+		}
 	},
 	{
 		description = "loc_character_first_conflict_02_description",
@@ -19,9 +19,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_first_conflict_02_description_snippet",
 		visibility = {
 			archetypes = {
-				"cryptic",
-			},
-		},
+				"cryptic"
+			}
+		}
 	},
 	{
 		description = "loc_character_first_conflict_03_description",
@@ -30,9 +30,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_first_conflict_03_description_snippet",
 		visibility = {
 			archetypes = {
-				"cryptic",
-			},
-		},
+				"cryptic"
+			}
+		}
 	},
 	{
 		description = "loc_character_first_conflict_04_description",
@@ -41,9 +41,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_first_conflict_04_description_snippet",
 		visibility = {
 			archetypes = {
-				"cryptic",
-			},
-		},
+				"cryptic"
+			}
+		}
 	},
 	{
 		description = "loc_character_first_conflict_05_description",
@@ -52,9 +52,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_first_conflict_05_description_snippet",
 		visibility = {
 			archetypes = {
-				"cryptic",
-			},
-		},
+				"cryptic"
+			}
+		}
 	},
 	{
 		description = "loc_character_first_conflict_06_description",
@@ -63,9 +63,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_first_conflict_06_description_snippet",
 		visibility = {
 			archetypes = {
-				"cryptic",
-			},
-		},
+				"cryptic"
+			}
+		}
 	},
 	{
 		description = "loc_character_first_conflict_07_description",
@@ -74,10 +74,10 @@ local formative_event_options = {
 		story_snippet = "loc_character_first_conflict_07_description_snippet",
 		visibility = {
 			archetypes = {
-				"cryptic",
-			},
-		},
-	},
+				"cryptic"
+			}
+		}
+	}
 }
 
 return formative_event_options

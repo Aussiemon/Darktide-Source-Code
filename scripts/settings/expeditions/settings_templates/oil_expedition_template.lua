@@ -6,15 +6,15 @@ local overrides = {
 	name = "oil",
 	events = {},
 	theme_tags = {
-		"default",
+		"default"
 	},
 	location_levels = {
-		"content/levels/expeditions/locations/oil/location_256m_oil_002/missions/mission_location_256m_oil_002",
+		"content/levels/expeditions/locations/oil/location_256m_oil_002/missions/mission_location_256m_oil_002"
 	},
 	safe_zone_levels = {
 		"content/levels/expeditions/safe_zones/wastes/sz_cave_tunnels_001/missions/mission_sz_cave_tunnels_001",
 		"content/levels/expeditions/safe_zones/wastes/sz_cave_tunnels_002/missions/mission_sz_cave_tunnels_002",
-		"content/levels/expeditions/safe_zones/wastes/sz_stronghold_ruin_002/missions/mission_sz_stronghold_ruin_002",
+		"content/levels/expeditions/safe_zones/wastes/sz_stronghold_ruin_002/missions/mission_sz_stronghold_ruin_002"
 	},
 	allowed_dsl_levels = {
 		"content/levels/expeditions/opportunities/oil/op_16m_pressure_001/world",
@@ -49,8 +49,8 @@ local overrides = {
 		"content/levels/expeditions/arrivals/wastes/arr_32m_valkyrie_rocks_001/world",
 		"content/levels/expeditions/extractions/wastes/ext_32m_valkyrie_rocks_001/world",
 		"content/levels/expeditions/extractions/wastes/ext_48m_valkyrie_pad_001/world",
-		"content/levels/expeditions/interactables/secondary_pickup_spawner_01/world",
-	},
+		"content/levels/expeditions/interactables/secondary_pickup_spawner_01/world"
+	}
 }
 
 return table.merge(base_settings, overrides)

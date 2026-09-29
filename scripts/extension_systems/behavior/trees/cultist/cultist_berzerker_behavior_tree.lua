@@ -8,77 +8,77 @@ local FAR_COMBAT = {
 	name = "follow",
 	condition_args = {
 		combat_ranges = {
-			far = true,
-		},
+			far = true
+		}
 	},
-	action_data = action_data.follow,
+	action_data = action_data.follow
 }
 local CLOSE_COMBAT = {
 	"BtRandomUtilityNode",
 	condition_args = {
 		combat_ranges = {
-			close = true,
-		},
+			close = true
+		}
 	},
 	{
 		"BtMeleeFollowTargetAction",
 		name = "assault_follow",
-		action_data = action_data.assault_follow,
+		action_data = action_data.assault_follow
 	},
 	condition = "is_aggroed_in_combat_range",
-	name = "close_melee_combat",
+	name = "close_melee_combat"
 }
 local MELEE_COMBAT = {
 	"BtRandomUtilityNode",
 	condition_args = {
 		combat_ranges = {
-			melee = true,
-		},
+			melee = true
+		}
 	},
 	{
 		"BtMeleeFollowTargetAction",
 		name = "follow",
-		action_data = action_data.follow,
+		action_data = action_data.follow
 	},
 	{
 		"BtMeleeAttackAction",
 		condition = "attack_allowed",
 		name = "leap_attack",
 		condition_args = {
-			attack_type = "melee",
+			attack_type = "melee"
 		},
-		action_data = action_data.leap_attack,
+		action_data = action_data.leap_attack
 	},
 	{
 		"BtMeleeAttackAction",
 		condition = "attack_allowed",
 		name = "combo_attack",
 		condition_args = {
-			attack_type = "melee",
+			attack_type = "melee"
 		},
-		action_data = action_data.combo_attack,
+		action_data = action_data.combo_attack
 	},
 	{
 		"BtMeleeAttackAction",
 		condition = "attack_allowed",
 		name = "melee_attack",
 		condition_args = {
-			attack_type = "melee",
+			attack_type = "melee"
 		},
-		action_data = action_data.melee_attack,
+		action_data = action_data.melee_attack
 	},
 	condition = "is_aggroed_in_combat_range",
-	name = "melee_combat",
+	name = "melee_combat"
 }
 local SPECIAL_ACTION = {
 	"BtSelectorNode",
 	{
 		"BtUseStimAction",
 		name = "use_stim",
-		action_data = action_data.use_stim,
+		action_data = action_data.use_stim
 	},
 	condition = "minion_can_use_special_action",
-	name = "use_special_action",
+	name = "use_special_action"
 }
 local DISABLE = {
 	"BtSelectorNode",
@@ -86,7 +86,7 @@ local DISABLE = {
 		"BtMinionVortexGrabbedAction",
 		condition = "vortex_grabbed",
 		name = "vortex_grabbed",
-		action_data = action_data.vortex_grabbed,
+		action_data = action_data.vortex_grabbed
 	},
 	{
 		"BtDisableAction",
@@ -94,9 +94,9 @@ local DISABLE = {
 		exit_state = "base",
 		name = "disable",
 		state = "disabled",
-		action_data = action_data.disable,
+		action_data = action_data.disable
 	},
-	name = "disable_actions",
+	name = "disable_actions"
 }
 local behavior_tree = {
 	"BtSelectorNode",
@@ -104,7 +104,7 @@ local behavior_tree = {
 		"BtDieAction",
 		name = "death",
 		state = "dead",
-		action_data = action_data.death,
+		action_data = action_data.death
 	},
 	DISABLE,
 	{
@@ -113,54 +113,54 @@ local behavior_tree = {
 		exit_state = "base",
 		name = "exit_spawner",
 		state = "exiting_spawner",
-		action_data = action_data.exit_spawner,
+		action_data = action_data.exit_spawner
 	},
 	{
 		"BtSelectorNode",
 		{
 			"BtTeleportAction",
 			condition = "at_teleport_smart_object",
-			name = "teleport",
+			name = "teleport"
 		},
 		{
 			"BtClimbAction",
 			condition = "at_climb_smart_object",
 			name = "climb",
-			action_data = action_data.climb,
+			action_data = action_data.climb
 		},
 		{
 			"BtJumpAcrossAction",
 			condition = "at_jump_smart_object",
 			name = "jump_across",
-			action_data = action_data.jump_across,
+			action_data = action_data.jump_across
 		},
 		{
 			"BtOpenDoorAction",
 			condition = "at_door_smart_object",
 			name = "open_door",
-			action_data = action_data.open_door,
+			action_data = action_data.open_door
 		},
 		{
 			"BtSmashObstacleAction",
 			condition = "at_smashable_obstacle_smart_object",
 			name = "smash_obstacle",
-			action_data = action_data.smash_obstacle,
+			action_data = action_data.smash_obstacle
 		},
 		condition = "at_smart_object",
-		name = "smart_object",
+		name = "smart_object"
 	},
 	SPECIAL_ACTION,
 	{
 		"BtStaggerAction",
 		condition = "is_staggered",
 		name = "stagger",
-		action_data = action_data.stagger,
+		action_data = action_data.stagger
 	},
 	{
 		"BtBlockedAction",
 		condition = "is_blocked",
 		name = "blocked",
-		action_data = action_data.blocked,
+		action_data = action_data.blocked
 	},
 	FAR_COMBAT,
 	CLOSE_COMBAT,
@@ -169,20 +169,20 @@ local behavior_tree = {
 		"BtAlertedAction",
 		condition = "is_alerted",
 		name = "alerted",
-		action_data = action_data.alerted,
+		action_data = action_data.alerted
 	},
 	{
 		"BtPatrolAction",
 		condition = "should_patrol",
 		name = "patrol",
-		action_data = action_data.patrol,
+		action_data = action_data.patrol
 	},
 	{
 		"BtIdleAction",
 		name = "idle",
-		action_data = action_data.idle,
+		action_data = action_data.idle
 	},
-	name = "cultist_berzerker",
+	name = "cultist_berzerker"
 }
 
 return behavior_tree

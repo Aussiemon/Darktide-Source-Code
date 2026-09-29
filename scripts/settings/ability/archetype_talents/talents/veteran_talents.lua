@@ -37,9 +37,8 @@ local archetype_talents = {
 			icon = "content/ui/textures/icons/talents/veteran/veteran_blitz_frag_grenade",
 			name = "BASE: Frag Grenade",
 			player_ability = {
-				ability_type = "grenade_ability",
-				ability = PlayerAbilities.veteran_frag_grenade,
-			},
+				ability = PlayerAbilities.veteran_frag_grenade
+			}
 		},
 		veteran_krak_grenade = {
 			description = "loc_talent_ability_krak_grenade_desc",
@@ -50,19 +49,18 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_ability_krak_grenade",
-				},
+					value = "loc_talent_ability_krak_grenade"
+				}
 			},
 			player_ability = {
-				ability_type = "grenade_ability",
-				ability = PlayerAbilities.veteran_krak_grenade,
+				ability = PlayerAbilities.veteran_krak_grenade
 			},
 			dev_info = {
 				{
 					damage_profile_name = "close_krak_grenade",
-					info_func = "damage_profile",
-				},
-			},
+					info_func = "damage_profile"
+				}
+			}
 		},
 		veteran_smoke_grenade = {
 			description = "loc_ability_smoke_grenade_description",
@@ -73,17 +71,16 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_ability_smoke_grenade",
+					value = "loc_ability_smoke_grenade"
 				},
 				duration = {
 					format_type = "number",
-					value = smoke_grenade.damage.fuse.spawn_unit.unit_template_parameters.duration,
-				},
+					value = smoke_grenade.damage.fuse.spawn_unit.unit_template_parameters.duration
+				}
 			},
 			player_ability = {
-				ability_type = "grenade_ability",
-				ability = PlayerAbilities.veteran_smoke_grenade,
-			},
+				ability = PlayerAbilities.veteran_smoke_grenade
+			}
 		},
 		veteran_extra_grenade = {
 			description = "loc_talent_veteran_extra_grenade_and_throw_chance_description",
@@ -98,9 +95,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.extra_max_amount_of_grenades,
-						},
-					},
+							stat_buffs.extra_max_amount_of_grenades
+						}
+					}
 				},
 				chance = {
 					format_type = "percentage",
@@ -109,24 +106,24 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.extra_grenade_throw_chance,
-						},
+							stat_buffs.extra_grenade_throw_chance
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				identifier = {
 					"veteran_extra_grenade",
-					"veteran_extra_grenade_throw_chance",
+					"veteran_extra_grenade_throw_chance"
 				},
 				buff_template_name = {
 					"veteran_extra_grenade",
-					"veteran_extra_grenade_throw_chance",
-				},
-			},
+					"veteran_extra_grenade_throw_chance"
+				}
+			}
 		},
 		veteran_improved_grenades = {
 			description = "loc_talent_veteran_improved_grenades_desc",
@@ -136,15 +133,15 @@ local archetype_talents = {
 			format_values = {
 				krak_grenade = {
 					format_type = "loc_string",
-					value = "loc_ability_krak_grenade",
+					value = "loc_ability_krak_grenade"
 				},
 				frag_grenade = {
 					format_type = "loc_string",
-					value = "loc_ability_frag_grenade",
+					value = "loc_ability_frag_grenade"
 				},
 				smoke_grenade = {
 					format_type = "loc_string",
-					value = "loc_ability_smoke_grenade",
+					value = "loc_ability_smoke_grenade"
 				},
 				frag_damage = {
 					format_type = "percentage",
@@ -154,12 +151,12 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.frag_damage,
-						},
+							stat_buffs.frag_damage
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
+					end
 				},
 				frag_radius = {
 					format_type = "percentage",
@@ -169,12 +166,12 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.explosion_radius_modifier_frag,
-						},
+							stat_buffs.explosion_radius_modifier_frag
+						}
 					},
 					value_manipulation = function (value)
 						return (value - 1) * 100
-					end,
+					end
 				},
 				krak = {
 					format_type = "percentage",
@@ -184,9 +181,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.krak_damage,
-						},
-					},
+							stat_buffs.krak_damage
+						}
+					}
 				},
 				smoke = {
 					format_type = "percentage",
@@ -196,15 +193,15 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.smoke_fog_duration_modifier,
-						},
-					},
-				},
+							stat_buffs.smoke_fog_duration_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_improved_grenades",
-				identifier = "veteran_improved_grenades",
-			},
+				identifier = "veteran_improved_grenades"
+			}
 		},
 		veteran_combat_ability_stance = {
 			description = "loc_ability_veteran_base_ability_desc",
@@ -216,38 +213,37 @@ local archetype_talents = {
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings_2.combat_ability.ranged_damage,
+					value = talent_settings_2.combat_ability.ranged_damage
 				},
 				weakspot_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings_2.combat_ability.ranged_weakspot_damage,
+					value = talent_settings_2.combat_ability.ranged_weakspot_damage
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings_2.combat_ability.duration,
+					value = talent_settings_2.combat_ability.duration
 				},
 				cooldown = {
 					format_type = "number",
-					value = PlayerAbilities.veteran_combat_ability_stance.cooldown,
-				},
+					value = PlayerAbilities.veteran_combat_ability_stance.cooldown
+				}
 			},
 			player_ability = {
-				ability_type = "combat_ability",
-				ability = PlayerAbilities.veteran_combat_ability_stance,
+				ability = PlayerAbilities.veteran_combat_ability_stance
 			},
 			special_rule = {
 				identifier = {
-					"veteran_combat_ability_stance",
+					"veteran_combat_ability_stance"
 				},
 				special_rule_name = {
-					special_rules.veteran_combat_ability_stance,
-				},
+					special_rules.veteran_combat_ability_stance
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_combat_ability_increased_ranged_and_weakspot_damage_base",
-				identifier = "veteran_combat_ability_increased_ranged_and_weakspot_damage_base",
-			},
+				identifier = "veteran_combat_ability_increased_ranged_and_weakspot_damage_base"
+			}
 		},
 		veteran_ads_drain_stamina = {
 			description = "loc_talent_veteran_ads_drains_stamina_boost_desc",
@@ -258,27 +254,27 @@ local archetype_talents = {
 				crit_chance = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings_2.offensive_2_2.critical_strike_chance,
+					value = talent_settings_2.offensive_2_2.critical_strike_chance
 				},
 				sway_reduction = {
 					format_type = "percentage",
 					prefix = "+",
-					value = 1 - talent_settings_2.offensive_2_2.sway_modifier,
+					value = 1 - talent_settings_2.offensive_2_2.sway_modifier
 				},
 				stamina = {
 					format_type = "number",
-					value = talent_settings_2.offensive_2_2.stamina_per_second,
+					value = talent_settings_2.offensive_2_2.stamina_per_second
 				},
 				stamina_per_shot = {
 					format_type = "number",
 					num_decimals = 1,
-					value = talent_settings_2.offensive_2_2.shot_stamina,
-				},
+					value = talent_settings_2.offensive_2_2.shot_stamina
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_ads_stamina_boost",
-				identifier = "veteran_ads_stamina_boost",
-			},
+				identifier = "veteran_ads_stamina_boost"
+			}
 		},
 		veteran_combat_ability_reloads_secondary_weapon = {
 			description = "loc_talent_veteran_combat_ability_wields_and_reloads_secondary_weapon_description",
@@ -288,8 +284,8 @@ local archetype_talents = {
 			format_values = {},
 			special_rule = {
 				identifier = "veteran_combat_ability_reloads_secondary_weapon",
-				special_rule_name = special_rules.veteran_combat_ability_reloads_secondary_weapon,
-			},
+				special_rule_name = special_rules.veteran_combat_ability_reloads_secondary_weapon
+			}
 		},
 		veteran_combat_ability_elite_and_special_outlines = {
 			description = "loc_talent_veteran_ranged_stance_toughness_description",
@@ -299,61 +295,60 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_veteran_combat_ability_elite_and_special_outlines",
+					value = "loc_talent_veteran_combat_ability_elite_and_special_outlines"
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings_2.combat_ability.duration,
+					value = talent_settings_2.combat_ability.duration
 				},
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings_2.combat_ability.ranged_damage,
+					value = talent_settings_2.combat_ability.ranged_damage
 				},
 				weakspot_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings_2.combat_ability.ranged_weakspot_damage,
+					value = talent_settings_2.combat_ability.ranged_weakspot_damage
 				},
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings_2.combat_ability.toughness,
+					value = talent_settings_2.combat_ability.toughness
 				},
 				cooldown = {
 					format_type = "number",
-					value = PlayerAbilities.veteran_combat_ability_stance.cooldown,
+					value = PlayerAbilities.veteran_combat_ability_stance.cooldown
 				},
 				old_talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_veteran_2_combat_ability",
+					value = "loc_talent_veteran_2_combat_ability"
 				},
 				refresh_duration = {
 					format_type = "number",
-					value = talent_settings_2.combat_ability.duration,
-				},
+					value = talent_settings_2.combat_ability.duration
+				}
 			},
 			special_rule = {
 				identifier = {
 					"veteran_combat_ability_stance",
 					"veteran_combat_ability_outlines",
 					"veteran_combat_ability_elite_and_special_outlines",
-					"veteran_combat_ability_outlined_kills_extends_duration",
+					"veteran_combat_ability_outlined_kills_extends_duration"
 				},
 				special_rule_name = {
 					special_rules.veteran_combat_ability_stance,
 					special_rules.veteran_combat_ability_outlines,
 					special_rules.veteran_combat_ability_elite_and_special_outlines,
-					special_rules.veteran_combat_ability_outlined_kills_extends_duration,
-				},
+					special_rules.veteran_combat_ability_outlined_kills_extends_duration
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_combat_ability_increased_ranged_and_weakspot_damage_outlines",
-				identifier = "veteran_combat_ability_increased_ranged_and_weakspot_damage_outlines",
+				identifier = "veteran_combat_ability_increased_ranged_and_weakspot_damage_outlines"
 			},
 			player_ability = {
-				ability_type = "combat_ability",
-				ability = PlayerAbilities.veteran_combat_ability_stance_improved,
-			},
+				ability = PlayerAbilities.veteran_combat_ability_stance_improved
+			}
 		},
 		veteran_combat_ability_ranged_roamer_outlines = {
 			description = "loc_talent_veteran_combat_ability_ranged_enemies_outlines_description",
@@ -363,17 +358,17 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_veteran_combat_ability_elite_and_special_outlines",
-				},
+					value = "loc_talent_veteran_combat_ability_elite_and_special_outlines"
+				}
 			},
 			special_rule = {
 				identifier = {
-					"veteran_combat_ability_ranged_roamer_outlines",
+					"veteran_combat_ability_ranged_roamer_outlines"
 				},
 				special_rule_name = {
-					special_rules.veteran_combat_ability_ranged_roamer_outlines,
-				},
-			},
+					special_rules.veteran_combat_ability_ranged_roamer_outlines
+				}
+			}
 		},
 		veteran_combat_ability_ogryn_outlines = {
 			description = "loc_talent_veteran_combat_ability_ogryn_outlines_damage_description",
@@ -383,30 +378,30 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_veteran_combat_ability_elite_and_special_outlines",
+					value = "loc_talent_veteran_combat_ability_elite_and_special_outlines"
 				},
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings_2.combat_ability.damage_vs_ogryn_and_monsters,
+					value = talent_settings_2.combat_ability.damage_vs_ogryn_and_monsters
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings_2.combat_ability.duration_increased,
-				},
+					value = talent_settings_2.combat_ability.duration_increased
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_combat_ability_increased_damage_vs_ogryn_and_monsters",
-				identifier = "veteran_combat_ability_increased_damage_vs_ogryn_and_monsters",
+				identifier = "veteran_combat_ability_increased_damage_vs_ogryn_and_monsters"
 			},
 			special_rule = {
 				identifier = {
-					"veteran_combat_ability_ogryn_outlines",
+					"veteran_combat_ability_ogryn_outlines"
 				},
 				special_rule_name = {
-					special_rules.veteran_combat_ability_ogryn_outlines,
-				},
-			},
+					special_rules.veteran_combat_ability_ogryn_outlines
+				}
+			}
 		},
 		veteran_combat_ability_coherency_outlines = {
 			description = "loc_talent_veteran_combat_ability_coherency_outlines_description",
@@ -416,21 +411,21 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_veteran_combat_ability_elite_and_special_outlines",
+					value = "loc_talent_veteran_combat_ability_elite_and_special_outlines"
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings_2.combat_ability.outline_duration,
-				},
+					value = talent_settings_2.combat_ability.outline_duration
+				}
 			},
 			special_rule = {
 				identifier = {
-					"veteran_combat_ability_coherency_outlines",
+					"veteran_combat_ability_coherency_outlines"
 				},
 				special_rule_name = {
-					special_rules.veteran_combat_ability_coherency_outlines,
-				},
-			},
+					special_rules.veteran_combat_ability_coherency_outlines
+				}
+			}
 		},
 		veteran_combat_ability_melee_and_ranged_damage_to_coherency = {
 			description = "loc_talent_veteran_combat_ability_melee_and_ranged_damage_to_coherency_description",
@@ -440,7 +435,7 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_ability_veteran_base_ability",
+					value = "loc_ability_veteran_base_ability"
 				},
 				melee_damage = {
 					format_type = "percentage",
@@ -450,9 +445,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_damage,
-						},
-					},
+							stat_buffs.melee_damage
+						}
+					}
 				},
 				ranged_damage = {
 					format_type = "percentage",
@@ -462,9 +457,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.ranged_damage,
-						},
-					},
+							stat_buffs.ranged_damage
+						}
+					}
 				},
 				duration = {
 					format_type = "number",
@@ -472,15 +467,15 @@ local archetype_talents = {
 						buff_template_name = "veteran_combat_ability_increased_melee_and_ranged_damage",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
-				},
+							"duration"
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_combat_ability_melee_and_ranged_damage_to_coherency",
-				identifier = "veteran_combat_ability_melee_and_ranged_damage_to_coherency",
-			},
+				identifier = "veteran_combat_ability_melee_and_ranged_damage_to_coherency"
+			}
 		},
 		veteran_combat_ability_increase_and_restore_toughness_to_coherency = {
 			description = "loc_talent_veteran_combat_ability_increase_and_restore_toughness_to_coherency_description",
@@ -490,7 +485,7 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_veteran_combat_ability_stagger_nearby_enemies",
+					value = "loc_talent_veteran_combat_ability_stagger_nearby_enemies"
 				},
 				toughness = {
 					format_type = "number",
@@ -500,9 +495,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness_bonus_flat,
-						},
-					},
+							stat_buffs.toughness_bonus_flat
+						}
+					}
 				},
 				duration = {
 					format_type = "number",
@@ -510,15 +505,15 @@ local archetype_talents = {
 						buff_template_name = "veteran_combat_ability_increase_toughness_to_coherency",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
-				},
+							"duration"
+						}
+					}
+				}
 			},
 			special_rule = {
 				identifier = "veteran_combat_ability_increase_and_restore_toughness_to_coherency",
-				special_rule_name = special_rules.veteran_combat_ability_increase_and_restore_toughness_to_coherency,
-			},
+				special_rule_name = special_rules.veteran_combat_ability_increase_and_restore_toughness_to_coherency
+			}
 		},
 		veteran_combat_ability_outlined_kills_extends_duration = {
 			description = "loc_talent_veteran_combat_ability_outlined_kills_extends_duration_description",
@@ -528,17 +523,17 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_veteran_combat_ability_elite_and_special_outlines",
+					value = "loc_talent_veteran_combat_ability_elite_and_special_outlines"
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings_2.combat_ability.duration,
-				},
+					value = talent_settings_2.combat_ability.duration
+				}
 			},
 			special_rule = {
 				identifier = "veteran_combat_ability_outlined_kills_extends_duration",
-				special_rule_name = special_rules.veteran_combat_ability_outlined_kills_extends_duration,
-			},
+				special_rule_name = special_rules.veteran_combat_ability_outlined_kills_extends_duration
+			}
 		},
 		veteran_combat_ability_stagger_nearby_enemies = {
 			description = "loc_talent_veteran_combat_ability_stagger_nearby_enemies_description",
@@ -548,25 +543,24 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_veteran_combat_ability_stagger_nearby_enemies",
+					value = "loc_talent_veteran_combat_ability_stagger_nearby_enemies"
 				},
 				range = {
 					format_type = "number",
-					value = talent_settings_3.combat_ability.radius,
+					value = talent_settings_3.combat_ability.radius
 				},
 				cooldown = {
 					format_type = "number",
-					value = PlayerAbilities.veteran_combat_ability_shout.cooldown,
-				},
+					value = PlayerAbilities.veteran_combat_ability_shout.cooldown
+				}
 			},
 			player_ability = {
-				ability_type = "combat_ability",
-				ability = PlayerAbilities.veteran_combat_ability_shout,
+				ability = PlayerAbilities.veteran_combat_ability_shout
 			},
 			special_rule = {
 				identifier = "veteran_combat_ability_stagger_nearby_enemies",
-				special_rule_name = special_rules.veteran_combat_ability_stagger_nearby_enemies,
-			},
+				special_rule_name = special_rules.veteran_combat_ability_stagger_nearby_enemies
+			}
 		},
 		veteran_combat_ability_revive_nearby_allies = {
 			description = "loc_talent_veteran_combat_ability_revives_new_description",
@@ -576,7 +570,7 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_veteran_combat_ability_stagger_nearby_enemies",
+					value = "loc_talent_veteran_combat_ability_stagger_nearby_enemies"
 				},
 				ability_cooldown = {
 					format_type = "percentage",
@@ -585,9 +579,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.combat_ability_cooldown_modifier,
-						},
-					},
+							stat_buffs.combat_ability_resource_cost_per_use_modifier
+						}
+					}
 				},
 				range = {
 					format_type = "percentage",
@@ -596,18 +590,18 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.shout_radius_modifier,
-						},
+							stat_buffs.shout_radius_modifier
+						}
 					},
 					value_manipulation = function (value)
 						return math_round(math.abs(value) * 100)
-					end,
-				},
+					end
+				}
 			},
 			special_rule = {
 				identifier = "squad_leader_shout_special_rule",
-				special_rule_name = special_rules.shout_revives_allies,
-			},
+				special_rule_name = special_rules.shout_revives_allies
+			}
 		},
 		veteran_combat_ability_extra_charge = {
 			description = "loc_talent_veteran_combat_ability_extra_charge_description",
@@ -617,7 +611,7 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_ability_veteran_base_ability",
+					value = "loc_ability_veteran_base_ability"
 				},
 				charges = {
 					format_type = "number",
@@ -627,9 +621,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.ability_extra_charges,
-						},
-					},
+							stat_buffs.ability_extra_charges
+						}
+					}
 				},
 				ability_cooldown = {
 					format_type = "percentage",
@@ -639,15 +633,15 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.combat_ability_cooldown_modifier,
-						},
-					},
-				},
+							stat_buffs.combat_ability_resource_cost_per_use_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_combat_ability_extra_charge",
-				identifier = "veteran_combat_ability_extra_charge",
-			},
+				identifier = "veteran_combat_ability_extra_charge"
+			}
 		},
 		veteran_aura_gain_ammo_on_elite_kill = {
 			description = "loc_talent_veteran_elite_kills_grant_ammo_coop_cd_desc",
@@ -657,18 +651,18 @@ local archetype_talents = {
 			format_values = {
 				ammo = {
 					format_type = "percentage",
-					value = talent_settings_2.coherency.ammo_replenishment_percent,
+					value = talent_settings_2.coherency.ammo_replenishment_percent
 				},
 				cooldown = {
 					format_type = "number",
-					value = talent_settings_2.coherency.cooldown,
-				},
+					value = talent_settings_2.coherency.cooldown
+				}
 			},
 			coherency = {
 				buff_template_name = "veteran_aura_gain_ammo_on_elite_kill",
 				identifier = "veteran_aura",
-				priority = 1,
-			},
+				priority = 1
+			}
 		},
 		veteran_aura_gain_ammo_on_elite_kill_improved = {
 			description = "loc_talent_veteran_elite_kills_grant_ammo_coop_improved_cd_desc",
@@ -678,26 +672,26 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_veteran_elite_kills_grant_ammo_coop",
+					value = "loc_talent_veteran_elite_kills_grant_ammo_coop"
 				},
 				ammo_1 = {
 					format_type = "percentage",
-					value = talent_settings_2.coherency.ammo_replenishment_percent,
+					value = talent_settings_2.coherency.ammo_replenishment_percent
 				},
 				ammo_2 = {
 					format_type = "percentage",
-					value = talent_settings_2.coherency.ammo_replenishment_percent_improved,
+					value = talent_settings_2.coherency.ammo_replenishment_percent_improved
 				},
 				cooldown = {
 					format_type = "number",
-					value = talent_settings_2.coherency.cooldown,
-				},
+					value = talent_settings_2.coherency.cooldown
+				}
 			},
 			coherency = {
 				buff_template_name = "veteran_aura_gain_ammo_on_elite_kill_improved",
 				identifier = "veteran_aura",
-				priority = 2,
-			},
+				priority = 2
+			}
 		},
 		veteran_increased_damage_coherency = {
 			description = "loc_talent_veteran_damage_coherency_desc",
@@ -713,16 +707,16 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.damage,
-						},
-					},
-				},
+							stat_buffs.damage
+						}
+					}
+				}
 			},
 			coherency = {
 				buff_template_name = "veteran_damage_coherency",
 				identifier = "veteran_aura",
-				priority = 2,
-			},
+				priority = 2
+			}
 		},
 		veteran_movement_speed_coherency = {
 			description = "loc_talent_veteran_movement_speed_coherency_desc",
@@ -738,16 +732,16 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.movement_speed,
-						},
-					},
-				},
+							stat_buffs.movement_speed
+						}
+					}
+				}
 			},
 			coherency = {
 				buff_template_name = "veteran_movement_speed_coherency",
 				identifier = "veteran_aura",
-				priority = 2,
-			},
+				priority = 2
+			}
 		},
 		veteran_elite_kills_reduce_cooldown = {
 			description = "loc_talent_veteran_elite_kills_reduce_cooldown_alt_desc",
@@ -757,26 +751,26 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_ability_veteran_base_ability",
+					value = "loc_ability_veteran_base_ability"
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings_3.passive_1.cooldown_reduction,
+					value = talent_settings_3.passive_1.cooldown_reduction
 				},
 				regen = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.veteran_combat_ability_cooldown_reduction_on_elite_kills.cdr,
+					value = talent_settings.veteran_combat_ability_cooldown_reduction_on_elite_kills.cdr
 				},
 				time = {
 					format_type = "number",
-					value = talent_settings.veteran_combat_ability_cooldown_reduction_on_elite_kills.duration,
-				},
+					value = talent_settings.veteran_combat_ability_cooldown_reduction_on_elite_kills.duration
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_combat_ability_cooldown_reduction_on_elite_kills",
-				identifier = "veteran_combat_ability_cooldown_reduction_on_elite_kills",
-			},
+				identifier = "veteran_combat_ability_cooldown_reduction_on_elite_kills"
+			}
 		},
 		veteran_ally_kills_increase_damage = {
 			description = "loc_talent_veteran_ally_kills_increase_damage_description",
@@ -786,7 +780,7 @@ local archetype_talents = {
 			format_values = {
 				proc_chance = {
 					format_type = "percentage",
-					value = talent_settings_3.offensive_3.on_minion_death_proc_chance,
+					value = talent_settings_3.offensive_3.on_minion_death_proc_chance
 				},
 				damage = {
 					format_type = "percentage",
@@ -796,9 +790,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.damage,
-						},
-					},
+							stat_buffs.damage
+						}
+					}
 				},
 				melee_impact = {
 					format_type = "percentage",
@@ -808,9 +802,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_impact_modifier,
-						},
-					},
+							stat_buffs.melee_impact_modifier
+						}
+					}
 				},
 				suppression = {
 					format_type = "percentage",
@@ -820,19 +814,19 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.suppression_dealt,
-						},
-					},
+							stat_buffs.suppression_dealt
+						}
+					}
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings_3.offensive_3.active_duration,
-				},
+					value = talent_settings_3.offensive_3.active_duration
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_allies_kills_chance_to_trigger_increased_damage",
-				identifier = "veteran_squad_leader_offensive_passive",
-			},
+				identifier = "veteran_squad_leader_offensive_passive"
+			}
 		},
 		veteran_increased_damage_based_on_range = {
 			description = "loc_talent_veteran_increased_damage_based_on_range_new_desc",
@@ -843,31 +837,31 @@ local archetype_talents = {
 				max_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings_2.offensive_1_1.damage_far,
+					value = talent_settings_2.offensive_1_1.damage_far
 				},
 				ranged_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings_2.offensive_1_1.ranged_damage_min,
+					value = talent_settings_2.offensive_1_1.ranged_damage_min
 				},
 				max_ranged_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings_2.offensive_1_1.ranged_damage_min + talent_settings_2.offensive_1_1.ranged_damage_max,
+					value = talent_settings_2.offensive_1_1.ranged_damage_min + talent_settings_2.offensive_1_1.ranged_damage_max
 				},
 				ranged_close = {
 					format_type = "number",
-					value = DamageSettings.ranged_close,
+					value = DamageSettings.ranged_close
 				},
 				ranged_far = {
 					format_type = "number",
-					value = DamageSettings.ranged_far,
-				},
+					value = DamageSettings.ranged_far
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_increase_ranged_far_damage",
-				identifier = "veteran_increase_ranged_far_damage",
-			},
+				identifier = "veteran_increase_ranged_far_damage"
+			}
 		},
 		veteran_increase_suppression = {
 			description = "loc_talent_veteran_increase_suppression_desc",
@@ -883,18 +877,18 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.suppression_dealt,
-						},
+							stat_buffs.suppression_dealt
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_increase_suppression",
-				identifier = "veteran_increase_suppression",
-			},
+				identifier = "veteran_increase_suppression"
+			}
 		},
 		veteran_increase_damage_vs_elites = {
 			description = "loc_talent_veteran_increase_damage_vs_elites_desc",
@@ -910,15 +904,15 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.damage_vs_elites,
-						},
-					},
-				},
+							stat_buffs.damage_vs_elites
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_increase_elite_damage",
-				identifier = "veteran_increase_elite_damage",
-			},
+				identifier = "veteran_increase_elite_damage"
+			}
 		},
 		veteran_increase_crit_chance = {
 			description = "loc_talent_veteran_damage_increase_crit_chance_desc",
@@ -933,18 +927,18 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.critical_strike_chance,
-						},
+							stat_buffs.critical_strike_chance
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_increase_crit_chance",
-				identifier = "veteran_increase_crit_chance",
-			},
+				identifier = "veteran_increase_crit_chance"
+			}
 		},
 		veteran_increase_damage_after_sprinting = {
 			description = "loc_talent_veteran_damage_damage_after_sprinting_or_sliding_desc",
@@ -960,9 +954,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.damage,
-						},
-					},
+							stat_buffs.damage
+						}
+					}
 				},
 				duration = {
 					format_type = "number",
@@ -970,9 +964,9 @@ local archetype_talents = {
 						buff_template_name = "veteran_damage_after_sprinting_buff",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
+							"duration"
+						}
+					}
 				},
 				stacks = {
 					format_type = "number",
@@ -980,15 +974,15 @@ local archetype_talents = {
 						buff_template_name = "veteran_damage_after_sprinting_buff",
 						find_value_type = "buff_template",
 						path = {
-							"max_stacks",
-						},
-					},
-				},
+							"max_stacks"
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_damage_after_sprinting",
-				identifier = "veteran_damage_after_sprinting",
-			},
+				identifier = "veteran_damage_after_sprinting"
+			}
 		},
 		veteran_reload_speed_on_elite_kill = {
 			description = "loc_talent_veteran_reload_speed_on_elite_kill_desc",
@@ -999,13 +993,13 @@ local archetype_talents = {
 				reload_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings_2.offensive_2_3.reload_speed,
-				},
+					value = talent_settings_2.offensive_2_3.reload_speed
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_reload_speed_on_elite_kill",
-				identifier = "veteran_reload_speed_on_elite_kill",
-			},
+				identifier = "veteran_reload_speed_on_elite_kill"
+			}
 		},
 		veteran_increased_weakspot_damage = {
 			description = "loc_talent_veteran_increased_weakspot_damage_desc",
@@ -1016,13 +1010,13 @@ local archetype_talents = {
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings_2.passive_1.weakspot_damage,
-				},
+					value = talent_settings_2.passive_1.weakspot_damage
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_increased_weakspot_damage",
-				identifier = "veteran_base_passive_1",
-			},
+				identifier = "veteran_base_passive_1"
+			}
 		},
 		veteran_grenade_apply_bleed = {
 			description = "loc_talent_veteran_grenade_apply_bleed_desc",
@@ -1032,21 +1026,21 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_ability_frag_grenade",
+					value = "loc_ability_frag_grenade"
 				},
 				stacks = {
 					format_type = "number",
-					value = talent_settings_2.offensive_2_1.stacks,
-				},
+					value = talent_settings_2.offensive_2_1.stacks
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_frag_grenade_bleed",
-				identifier = "veteran_frag_grenade_bleed",
+				identifier = "veteran_frag_grenade_bleed"
 			},
 			dev_info = {
 				{
 					info_func = "text",
-					value = "Bleed: damage is at max stacks",
+					value = "Bleed: damage is at max stacks"
 				},
 				{
 					buff_template_name = "bleed",
@@ -1055,28 +1049,28 @@ local archetype_talents = {
 						{
 							format_type = "number",
 							path = {
-								"duration",
-							},
+								"duration"
+							}
 						},
 						{
 							format_type = "number",
 							path = {
-								"interval",
-							},
+								"interval"
+							}
 						},
 						{
 							format_type = "number",
 							path = {
-								"max_stacks",
-							},
-						},
-					},
+								"max_stacks"
+							}
+						}
+					}
 				},
 				{
 					damage_profile_name = "bleeding",
-					info_func = "damage_profile",
-				},
-			},
+					info_func = "damage_profile"
+				}
+			}
 		},
 		veteran_big_game_hunter = {
 			description = "loc_talent_veteran_big_game_hunter_description",
@@ -1092,18 +1086,18 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.damage_vs_ogryn_and_monsters,
-						},
+							stat_buffs.damage_vs_ogryn_and_monsters
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_big_game_hunter",
-				identifier = "veteran_big_game_hunter",
-			},
+				identifier = "veteran_big_game_hunter"
+			}
 		},
 		veteran_crits_apply_rending = {
 			description = "loc_talent_veteran_crits_rend_alt_description",
@@ -1119,9 +1113,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"proc_stat_buffs",
-							stat_buffs.damage,
-						},
-					},
+							stat_buffs.damage
+						}
+					}
 				},
 				duration = {
 					format_type = "number",
@@ -1129,15 +1123,15 @@ local archetype_talents = {
 						buff_template_name = "veteran_melee_crits_increase_damage",
 						find_value_type = "buff_template",
 						path = {
-							"active_duration",
-						},
-					},
-				},
+							"active_duration"
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_melee_crits_increase_damage",
-				identifier = "veteran_melee_crits_increase_damage",
-			},
+				identifier = "veteran_melee_crits_increase_damage"
+			}
 		},
 		veteran_continous_hits_apply_rending = {
 			description = "loc_talent_veteran_continous_hits_apply_rending_description",
@@ -1153,9 +1147,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.rending_multiplier,
-						},
-					},
+							stat_buffs.rending_multiplier
+						}
+					}
 				},
 				duration = {
 					format_type = "number",
@@ -1163,9 +1157,9 @@ local archetype_talents = {
 						buff_template_name = "rending_debuff",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
+							"duration"
+						}
+					}
 				},
 				max_stacks = {
 					format_type = "number",
@@ -1173,15 +1167,15 @@ local archetype_talents = {
 						buff_template_name = "rending_debuff",
 						find_value_type = "buff_template",
 						path = {
-							"max_stacks",
-						},
-					},
-				},
+							"max_stacks"
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_consecutive_hits_apply_rending",
-				identifier = "veteran_consecutive_hits_apply_rending",
-			},
+				identifier = "veteran_consecutive_hits_apply_rending"
+			}
 		},
 		veteran_dodging_grants_crit = {
 			description = "loc_talent_veteran_dodging_grants_crit_description",
@@ -1198,9 +1192,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.critical_strike_chance,
-						},
-					},
+							stat_buffs.critical_strike_chance
+						}
+					}
 				},
 				duration = {
 					format_type = "number",
@@ -1208,9 +1202,9 @@ local archetype_talents = {
 						buff_template_name = "veteran_dodging_crit_buff",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
+							"duration"
+						}
+					}
 				},
 				stacks = {
 					format_type = "number",
@@ -1218,15 +1212,15 @@ local archetype_talents = {
 						buff_template_name = "veteran_dodging_crit_buff",
 						find_value_type = "buff_template",
 						path = {
-							"max_stacks",
-						},
-					},
-				},
+							"max_stacks"
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_dodging_grants_crit",
-				identifier = "veteran_dodging_grants_crit",
-			},
+				identifier = "veteran_dodging_grants_crit"
+			}
 		},
 		veteran_coherency_aura_size_increase = {
 			description = "loc_talent_veteran_increased_aura_radius_description",
@@ -1242,18 +1236,18 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.coherency_radius_modifier,
-						},
+							stat_buffs.coherency_radius_modifier
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_coherency_aura_size_increase",
-				identifier = "veteran_coherency_aura_size_increase",
-			},
+				identifier = "veteran_coherency_aura_size_increase"
+			}
 		},
 		veteran_reduced_threat_when_still = {
 			description = "loc_talent_veteran_reduced_threat_when_still_desc",
@@ -1263,13 +1257,13 @@ local archetype_talents = {
 			format_values = {
 				threat_multiplier = {
 					format_type = "percentage",
-					value = 1 - talent_settings_2.defensive_3.threat_weight_multiplier,
-				},
+					value = 1 - talent_settings_2.defensive_3.threat_weight_multiplier
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_reduced_threat_gain",
-				identifier = "mixed",
-			},
+				identifier = "mixed"
+			}
 		},
 		veteran_reduced_threat_after_combat_ability = {
 			description = "loc_talent_veteran_reduced_threat_after_stealth_desc",
@@ -1280,7 +1274,7 @@ local archetype_talents = {
 				threat_multiplier = {
 					format_type = "percentage",
 					prefix = "-",
-					value = 1 - talent_settings_2.defensive_3.threat_weight_multiplier,
+					value = 1 - talent_settings_2.defensive_3.threat_weight_multiplier
 				},
 				duration = {
 					format_type = "number",
@@ -1288,23 +1282,23 @@ local archetype_talents = {
 						buff_template_name = "veteran_reduced_threat_generation",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
+							"duration"
+						}
+					}
 				},
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_veteran_invisibility_on_combat_ability",
-				},
+					value = "loc_talent_veteran_invisibility_on_combat_ability"
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_buffs_after_combat_ability",
-				identifier = "veteran_buffs_after_combat_ability",
+				identifier = "veteran_buffs_after_combat_ability"
 			},
 			special_rule = {
 				identifier = "veteran_reduced_threat_after_combat_ability",
-				special_rule_name = special_rules.veteran_reduced_threat_after_combat_ability,
-			},
+				special_rule_name = special_rules.veteran_reduced_threat_after_combat_ability
+			}
 		},
 		veteran_increased_close_damage_after_combat_ability = {
 			description = "loc_talent_veteran_ability_assault_desc",
@@ -1320,9 +1314,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.damage_near,
-						},
-					},
+							stat_buffs.damage_near
+						}
+					}
 				},
 				duration = {
 					format_type = "number",
@@ -1330,23 +1324,23 @@ local archetype_talents = {
 						buff_template_name = "veteran_increased_close_damage_after_combat_ability",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
+							"duration"
+						}
+					}
 				},
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_veteran_invisibility_on_combat_ability",
-				},
+					value = "loc_talent_veteran_invisibility_on_combat_ability"
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_buffs_after_combat_ability",
-				identifier = "veteran_buffs_after_combat_ability",
+				identifier = "veteran_buffs_after_combat_ability"
 			},
 			special_rule = {
 				identifier = "veteran_increased_close_damage_after_combat_ability",
-				special_rule_name = special_rules.veteran_increased_close_damage_after_combat_ability,
-			},
+				special_rule_name = special_rules.veteran_increased_close_damage_after_combat_ability
+			}
 		},
 		veteran_increased_weakspot_power_after_combat_ability = {
 			description = "loc_talent_veteran_ability_marksman_desc",
@@ -1362,12 +1356,12 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.weakspot_power_level_modifier,
+							stat_buffs.weakspot_power_level_modifier
 						},
 						value_manipulation = function (value)
 							return value - 1
-						end,
-					},
+						end
+					}
 				},
 				duration = {
 					format_type = "number",
@@ -1375,23 +1369,23 @@ local archetype_talents = {
 						buff_template_name = "veteran_increased_weakspot_power_after_combat_ability",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
+							"duration"
+						}
+					}
 				},
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_veteran_invisibility_on_combat_ability",
-				},
+					value = "loc_talent_veteran_invisibility_on_combat_ability"
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_buffs_after_combat_ability",
-				identifier = "veteran_buffs_after_combat_ability",
+				identifier = "veteran_buffs_after_combat_ability"
 			},
 			special_rule = {
 				identifier = "veteran_increased_weakspot_power_after_combat_ability",
-				special_rule_name = special_rules.veteran_increased_weakspot_power_after_combat_ability,
-			},
+				special_rule_name = special_rules.veteran_increased_weakspot_power_after_combat_ability
+			}
 		},
 		veteran_supression_immunity = {
 			description = "loc_talent_veteran_supression_immunity_desc",
@@ -1400,8 +1394,45 @@ local archetype_talents = {
 			name = "Suppression Immunity",
 			passive = {
 				buff_template_name = "veteran_suppression_immunity",
-				identifier = "veteran_suppression_immunity",
+				identifier = "veteran_suppression_immunity"
+			}
+		},
+		veteran_base_ranged_damage = {
+			description = "loc_talent_veteran_base_ranged_damage_desc",
+			display_name = "loc_talent_veteran_base_ranged_damage",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_base_1",
+			name = "Increased Ranged Damage",
+			format_values = {
+				ranged_damage = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.veteran_base_ranged_damage.ranged_damage
+				}
 			},
+			passive = {
+				buff_template_name = "veteran_base_ranged_damage",
+				identifier = "veteran_base_ranged_damage"
+			}
+		},
+		veteran_survivalist_passive = {
+			description = "loc_talent_veteran_survivalist_passive_desc",
+			display_name = "loc_talent_veteran_survivalist_passive",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_base_1",
+			name = "Increased Ranged Damage",
+			format_values = {
+				ammo = {
+					format_type = "percentage",
+					value = talent_settings.veteran_survivalist_passive.ammo
+				},
+				cooldown = {
+					format_type = "number",
+					value = talent_settings.veteran_survivalist_passive.cooldown
+				}
+			},
+			passive = {
+				buff_template_name = "veteran_survivalist_passive",
+				identifier = "veteran_survivalist_passive"
+			}
 		},
 		veteran_reduced_toughness_damage_in_coherency = {
 			description = "loc_talent_veteran_toughness_damage_reduction_per_ally_description",
@@ -1415,13 +1446,13 @@ local archetype_talents = {
 					value = talent_settings_3.toughness_1.max,
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_toughness_damage_reduction_per_ally_in_coherency",
-				identifier = "veteran_toughness_damage_reduction_per_ally_in_coherency",
-			},
+				identifier = "veteran_toughness_damage_reduction_per_ally_in_coherency"
+			}
 		},
 		veteran_all_kills_replenish_toughness = {
 			description = "loc_talent_veteran_all_kills_replenish_toughness_description",
@@ -1436,15 +1467,15 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						tier = true,
 						path = {
-							"toughness_percentage",
-						},
-					},
-				},
+							"toughness_percentage"
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_all_kills_replenish_bonus_toughness",
-				identifier = "veteran_all_kills_replenish_bonus_toughness",
-			},
+				identifier = "veteran_all_kills_replenish_bonus_toughness"
+			}
 		},
 		veteran_elite_kills_replenish_toughness = {
 			description = "loc_talent_veteran_toughness_on_elite_kill_desc",
@@ -1454,21 +1485,21 @@ local archetype_talents = {
 			format_values = {
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings_2.toughness_1.instant_toughness,
+					value = talent_settings_2.toughness_1.instant_toughness
 				},
 				toughness_over_time = {
 					format_type = "percentage",
-					value = talent_settings_2.toughness_1.toughness * talent_settings_2.toughness_1.duration,
+					value = talent_settings_2.toughness_1.toughness * talent_settings_2.toughness_1.duration
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings_2.toughness_1.duration,
-				},
+					value = talent_settings_2.toughness_1.duration
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_toughness_on_elite_kill",
-				identifier = "veteran_toughness_on_elite_kill",
-			},
+				identifier = "veteran_toughness_on_elite_kill"
+			}
 		},
 		veteran_increased_explosion_radius = {
 			description = "loc_talent_veteran_increased_explosion_radius_desc",
@@ -1483,18 +1514,18 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.explosion_radius_modifier,
-						},
+							stat_buffs.explosion_radius_modifier
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_increased_explosion_radius",
-				identifier = "explosion_radius",
-			},
+				identifier = "explosion_radius"
+			}
 		},
 		veteran_ranged_power_out_of_melee = {
 			description = "loc_talent_veteran_ranged_power_out_of_melee_new_desc",
@@ -1510,23 +1541,23 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"conditional_stat_buffs",
-							stat_buffs.ranged_damage,
-						},
-					},
+							stat_buffs.ranged_damage
+						}
+					}
 				},
 				radius = {
 					format_type = "number",
-					value = DamageSettings.in_melee_range,
+					value = DamageSettings.in_melee_range
 				},
 				cooldown = {
 					format_type = "number",
-					value = talent_settings_2.veteran_ranged_power_out_of_melee.cooldown,
-				},
+					value = talent_settings_2.veteran_ranged_power_out_of_melee.cooldown
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_ranged_power_out_of_melee",
-				identifier = "veteran_ranged_power_out_of_melee",
-			},
+				identifier = "veteran_ranged_power_out_of_melee"
+			}
 		},
 		veteran_extra_grenade_throw_chance = {
 			description = "loc_talent_veteran_extra_grenade_throw_chance_desc",
@@ -1541,18 +1572,18 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.extra_grenade_throw_chance,
-						},
+							stat_buffs.extra_grenade_throw_chance
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_extra_grenade_throw_chance",
-				identifier = "extra_grenade_throw_chance",
-			},
+				identifier = "extra_grenade_throw_chance"
+			}
 		},
 		veteran_bonus_crit_chance_on_ammo = {
 			description = "loc_talent_veteran_bonus_crit_chance_on_ammo_desc",
@@ -1568,12 +1599,12 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"conditional_stat_buffs",
-							stat_buffs.ranged_critical_strike_chance,
-						},
+							stat_buffs.ranged_critical_strike_chance
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
+					end
 				},
 				ammo = {
 					format_type = "percentage",
@@ -1581,18 +1612,18 @@ local archetype_talents = {
 						buff_template_name = "veteran_bonus_crit_chance_on_ammo",
 						find_value_type = "buff_template",
 						path = {
-							"ammunition_percentage",
-						},
+							"ammunition_percentage"
+						}
 					},
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_bonus_crit_chance_on_ammo",
-				identifier = "veteran_bonus_crit_chance_on_ammo",
-			},
+				identifier = "veteran_bonus_crit_chance_on_ammo"
+			}
 		},
 		veteran_no_ammo_consumption_on_lasweapon_crit = {
 			description = "loc_talent_veteran_no_ammo_consumption_on_lasweapon_crit_desc",
@@ -1601,8 +1632,8 @@ local archetype_talents = {
 			name = "Las weapons: Crits cost no ammo",
 			passive = {
 				buff_template_name = "veteran_no_ammo_consumption_on_lasweapon_crit",
-				identifier = "veteran_no_ammo_consumption_on_lasweapon_crit",
-			},
+				identifier = "veteran_no_ammo_consumption_on_lasweapon_crit"
+			}
 		},
 		veteran_movement_speed_on_toughness_broken = {
 			description = "loc_talent_veteran_movement_speed_on_toughness_broken_desc",
@@ -1618,9 +1649,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"proc_stat_buffs",
-							stat_buffs.movement_speed,
-						},
-					},
+							stat_buffs.movement_speed
+						}
+					}
 				},
 				duration = {
 					format_type = "value",
@@ -1628,15 +1659,15 @@ local archetype_talents = {
 						buff_template_name = "veteran_movement_speed_on_toughness_broken",
 						find_value_type = "buff_template",
 						path = {
-							"active_duration",
-						},
-					},
-				},
+							"active_duration"
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_movement_speed_on_toughness_broken",
-				identifier = "veteran_movement_speed_on_toughness_broken",
-			},
+				identifier = "veteran_movement_speed_on_toughness_broken"
+			}
 		},
 		veteran_movement_bonuses_on_toughness_broken = {
 			description = "loc_talent_veteran_movement_bonus_on_toughness_broken_desc",
@@ -1650,9 +1681,9 @@ local archetype_talents = {
 						buff_template_name = "veteran_movement_bonuses_on_toughness_broken",
 						find_value_type = "buff_template",
 						path = {
-							"active_duration",
-						},
-					},
+							"active_duration"
+						}
+					}
 				},
 				cooldown = {
 					format_type = "value",
@@ -1660,20 +1691,20 @@ local archetype_talents = {
 						buff_template_name = "veteran_movement_bonuses_on_toughness_broken",
 						find_value_type = "buff_template",
 						path = {
-							"cooldown_duration",
-						},
-					},
+							"cooldown_duration"
+						}
+					}
 				},
 				stamina_percent = {
 					format_type = "percentage",
 					prefix = "+",
-					value = 0.5,
-				},
+					value = 0.5
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_movement_bonuses_on_toughness_broken",
-				identifier = "veteran_movement_bonuses_on_toughness_broken",
-			},
+				identifier = "veteran_movement_bonuses_on_toughness_broken"
+			}
 		},
 		veteran_movement_speed_towards_downed = {
 			description = "loc_talent_veteran_movement_speed_towards_downed_description",
@@ -1684,7 +1715,7 @@ local archetype_talents = {
 				movement_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings_3.defensive_1.movement_speed,
+					value = talent_settings_3.defensive_1.movement_speed
 				},
 				damage_reduction = {
 					format_type = "percentage",
@@ -1692,11 +1723,11 @@ local archetype_talents = {
 					value = talent_settings_3.defensive_1.damage_taken_multiplier,
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
-					end,
+					end
 				},
 				duration = {
 					format_type = "value",
-					value = talent_settings_3.defensive_1.duration,
+					value = talent_settings_3.defensive_1.duration
 				},
 				revive_speed = {
 					format_type = "percentage",
@@ -1706,18 +1737,18 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.revive_speed_modifier,
-						},
-					},
-				},
+							stat_buffs.revive_speed_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_increased_move_speed_when_moving_towards_disabled_allies",
-				identifier = "veteran_increased_move_speed_when_moving_towards_disabled_allies",
-			},
+				identifier = "veteran_increased_move_speed_when_moving_towards_disabled_allies"
+			}
 		},
 		veteran_dodging_grants_stamina = {
-			description = "loc_talent_veteran_stamina_on_ranged_dodge_desc",
+			description = "loc_talent_veteran_stamina_on_ranged_dodge_movement_speed_desc",
 			display_name = "loc_talent_ranger_stamina_on_ranged_dodge",
 			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_3_2",
 			name = "Dodging Shots grants stamina - Dodging, Sprinting or Sliding to avoid ranged attacks grants stamina.",
@@ -1725,13 +1756,18 @@ local archetype_talents = {
 				stamina = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings_2.defensive_2.stamina_percent,
+					value = talent_settings_2.defensive_2.stamina_percent
 				},
+				movement_speed = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings_2.defensive_2.movement_speed
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_stamina_on_ranged_dodges",
-				identifier = "veteran_stamina_on_ranged_dodges",
-			},
+				identifier = "veteran_stamina_on_ranged_dodges"
+			}
 		},
 		veteran_hits_cause_bleed = {
 			description = "loc_talent_veteran_hits_cause_bleed_desc",
@@ -1745,19 +1781,19 @@ local archetype_talents = {
 						buff_template_name = "veteran_hits_cause_bleed",
 						find_value_type = "buff_template",
 						path = {
-							"num_stacks_on_hit",
-						},
-					},
-				},
+							"num_stacks_on_hit"
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_hits_cause_bleed",
-				identifier = "hits_cause_bleed",
+				identifier = "hits_cause_bleed"
 			},
 			dev_info = {
 				{
 					info_func = "text",
-					value = "Bleed: damage is at max stacks",
+					value = "Bleed: damage is at max stacks"
 				},
 				{
 					buff_template_name = "bleed",
@@ -1766,28 +1802,28 @@ local archetype_talents = {
 						{
 							format_type = "number",
 							path = {
-								"duration",
-							},
+								"duration"
+							}
 						},
 						{
 							format_type = "number",
 							path = {
-								"interval",
-							},
+								"interval"
+							}
 						},
 						{
 							format_type = "number",
 							path = {
-								"max_stacks",
-							},
-						},
-					},
+								"max_stacks"
+							}
+						}
+					}
 				},
 				{
 					damage_profile_name = "bleeding",
-					info_func = "damage_profile",
-				},
-			},
+					info_func = "damage_profile"
+				}
+			}
 		},
 		veteran_kill_grants_damage_to_other_slot = {
 			description = "loc_talent_veteran_kill_grants_damage_to_other_slot_desc",
@@ -1803,12 +1839,12 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"proc_stat_buffs",
-							stat_buffs.ranged_damage,
-						},
+							stat_buffs.ranged_damage
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
+					end
 				},
 				duration = {
 					format_type = "value",
@@ -1816,21 +1852,21 @@ local archetype_talents = {
 						buff_template_name = "veteran_melee_kills_grant_range_damage",
 						find_value_type = "buff_template",
 						path = {
-							"active_duration",
-						},
-					},
-				},
+							"active_duration"
+						}
+					}
+				}
 			},
 			passive = {
 				identifier = {
 					"melee_kills_grant_range_damage",
-					"ranged_kills_grant_melee_damage",
+					"ranged_kills_grant_melee_damage"
 				},
 				buff_template_name = {
 					"veteran_melee_kills_grant_range_damage",
-					"veteran_ranged_kills_grant_melee_damage",
-				},
-			},
+					"veteran_ranged_kills_grant_melee_damage"
+				}
+			}
 		},
 		veteran_reduce_sprinting_cost = {
 			description = "loc_talent_veteran_reduce_sprinting_cost_desc",
@@ -1846,18 +1882,18 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.sprinting_cost_multiplier,
-						},
+							stat_buffs.sprinting_cost_multiplier
+						}
 					},
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_reduce_sprinting_cost",
-				identifier = "reduce_sprinting_cost",
-			},
+				identifier = "reduce_sprinting_cost"
+			}
 		},
 		veteran_reduce_swap_time = {
 			description = "loc_talent_veteran_reduce_swap_time_desc",
@@ -1873,18 +1909,18 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.wield_speed,
-						},
+							stat_buffs.wield_speed
+						}
 					},
 					value_manipulation = function (value)
 						return math_round(value * 100)
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_reduce_swap_time",
-				identifier = "veteran_reduce_swap_time",
-			},
+				identifier = "veteran_reduce_swap_time"
+			}
 		},
 		veteran_increased_melee_crit_chance_and_melee_finesse = {
 			description = "loc_talent_veteran_increased_melee_crit_chance_and_melee_finesse_desc",
@@ -1900,12 +1936,12 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_critical_strike_chance,
-						},
+							stat_buffs.melee_critical_strike_chance
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
+					end
 				},
 				finesse = {
 					format_type = "percentage",
@@ -1915,18 +1951,18 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_finesse_modifier_bonus,
-						},
+							stat_buffs.melee_finesse_modifier_bonus
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_increased_melee_crit_chance_and_melee_finesse",
-				identifier = "melee_crit_chance_and_melee_finesse",
-			},
+				identifier = "melee_crit_chance_and_melee_finesse"
+			}
 		},
 		veteran_better_deployables = {
 			description = "loc_talent_veteran_better_deployables_description",
@@ -1937,17 +1973,17 @@ local archetype_talents = {
 				damage_heal = {
 					format_type = "percentage",
 					prefix = "+",
-					value = improved_medical_crate.heal_multiplier - 1,
+					value = improved_medical_crate.heal_multiplier - 1
 				},
 				toughness = {
 					format_type = "percentage",
-					value = improved_medical_crate.toughness_percentage_per_second,
-				},
+					value = improved_medical_crate.toughness_percentage_per_second
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_better_deployables",
-				identifier = "veteran_better_deployables",
-			},
+				identifier = "veteran_better_deployables"
+			}
 		},
 		veteran_replenish_grenades = {
 			description = "loc_talent_veteran_grenade_regeneration_per_grenade_desc",
@@ -1957,41 +1993,41 @@ local archetype_talents = {
 			format_values = {
 				amount = {
 					format_type = "value",
-					value = talent_settings_2.offensive_1_3.grenade_restored,
+					value = talent_settings_2.offensive_1_3.grenade_restored
 				},
 				time = {
 					format_type = "value",
-					value = talent_settings_2.offensive_1_3.grenade_replenishment_cooldown,
+					value = talent_settings_2.offensive_1_3.grenade_replenishment_cooldown
 				},
 				krak_time = {
 					format_type = "value",
-					value = talent_settings_2.offensive_1_3.krak_time,
+					value = talent_settings_2.offensive_1_3.krak_time
 				},
 				krak_grenade = {
 					format_type = "loc_string",
-					value = "loc_talent_ability_krak_grenade",
+					value = "loc_talent_ability_krak_grenade"
 				},
 				frag_time = {
 					format_type = "value",
-					value = talent_settings_2.offensive_1_3.frag_time,
+					value = talent_settings_2.offensive_1_3.frag_time
 				},
 				frag_grenade = {
 					format_type = "loc_string",
-					value = "loc_talent_veteran_grenade_apply_bleed",
+					value = "loc_talent_veteran_grenade_apply_bleed"
 				},
 				smoke_time = {
 					format_type = "value",
-					value = talent_settings_2.offensive_1_3.smoke_time,
+					value = talent_settings_2.offensive_1_3.smoke_time
 				},
 				smoke_grenade = {
 					format_type = "loc_string",
-					value = "loc_ability_smoke_grenade",
-				},
+					value = "loc_ability_smoke_grenade"
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_grenade_replenishment",
-				identifier = "veteran_grenade_replenishment",
-			},
+				identifier = "veteran_grenade_replenishment"
+			}
 		},
 		veteran_invisibility_on_combat_ability = {
 			description = "loc_talent_veteran_invisibility_on_combat_ability_damage_desc",
@@ -2001,7 +2037,7 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_veteran_invisibility_on_combat_ability",
+					value = "loc_talent_veteran_invisibility_on_combat_ability"
 				},
 				duration = {
 					format_type = "number",
@@ -2009,13 +2045,13 @@ local archetype_talents = {
 						buff_template_name = "veteran_invisibility",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
+							"duration"
+						}
+					}
 				},
 				cooldown = {
 					format_type = "number",
-					value = PlayerAbilities.veteran_combat_ability_stealth.cooldown,
+					value = PlayerAbilities.veteran_combat_ability_stealth.cooldown
 				},
 				movement_speed = {
 					format_type = "percentage",
@@ -2025,9 +2061,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.movement_speed,
-						},
-					},
+							stat_buffs.movement_speed
+						}
+					}
 				},
 				damage_duration = {
 					format_type = "number",
@@ -2035,9 +2071,9 @@ local archetype_talents = {
 						buff_template_name = "veteran_damage_bonus_leaving_invisibility",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
+							"duration"
+						}
+					}
 				},
 				damage = {
 					format_type = "percentage",
@@ -2047,34 +2083,33 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.damage,
-						},
+							stat_buffs.damage
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			player_ability = {
-				ability_type = "combat_ability",
-				ability = PlayerAbilities.veteran_combat_ability_stealth,
+				ability = PlayerAbilities.veteran_combat_ability_stealth
 			},
 			passive = {
 				identifier = {
-					"veteran_invisibility_on_combat_ability",
+					"veteran_invisibility_on_combat_ability"
 				},
 				buff_template_name = {
-					"veteran_invisibility_on_combat_ability",
-				},
+					"veteran_invisibility_on_combat_ability"
+				}
 			},
 			special_rule = {
 				identifier = {
-					"veteran_combat_ability_stealth",
+					"veteran_combat_ability_stealth"
 				},
 				special_rule_name = {
-					special_rules.veteran_combat_ability_stealth,
-				},
-			},
+					special_rules.veteran_combat_ability_stealth
+				}
+			}
 		},
 		veteran_damage_bonus_leaving_invisibility = {
 			description = "loc_talent_veteran_damage_bonus_leaving_invisibility_desc",
@@ -2084,7 +2119,7 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_veteran_invisibility_on_combat_ability",
+					value = "loc_talent_veteran_invisibility_on_combat_ability"
 				},
 				damage = {
 					format_type = "percentage",
@@ -2094,12 +2129,12 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.damage,
-						},
+							stat_buffs.damage
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
+					end
 				},
 				duration = {
 					format_type = "value",
@@ -2107,15 +2142,15 @@ local archetype_talents = {
 						buff_template_name = "veteran_damage_bonus_leaving_invisibility",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
-				},
+							"duration"
+						}
+					}
+				}
 			},
 			special_rule = {
 				identifier = "damage_bonyus_leaving_invisibility",
-				special_rule_name = special_rules.veteran_damage_bonus_leaving_invisibility,
-			},
+				special_rule_name = special_rules.veteran_damage_bonus_leaving_invisibility
+			}
 		},
 		veteran_toughness_bonus_leaving_invisibility = {
 			description = "loc_talent_veteran_toughness_bonus_leaving_invisibility_desc",
@@ -2125,7 +2160,7 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_veteran_invisibility_on_combat_ability",
+					value = "loc_talent_veteran_invisibility_on_combat_ability"
 				},
 				tdr = {
 					format_type = "percentage",
@@ -2135,12 +2170,12 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness_damage_taken_multiplier,
-						},
+							stat_buffs.toughness_damage_taken_multiplier
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(1 - value) * 100
-					end,
+					end
 				},
 				duration = {
 					format_type = "value",
@@ -2148,15 +2183,15 @@ local archetype_talents = {
 						buff_template_name = "veteran_toughness_bonus_leaving_invisibility",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
-				},
+							"duration"
+						}
+					}
+				}
 			},
 			special_rule = {
 				identifier = "toughness_bonyus_leaving_invisibility",
-				special_rule_name = special_rules.veteran_toughness_bonus_leaving_invisibility,
-			},
+				special_rule_name = special_rules.veteran_toughness_bonus_leaving_invisibility
+			}
 		},
 		veteran_aura_elite_kills_restore_grenade = {
 			description = "loc_talent_veteran_grenade_on_elite_kills_coop_desc",
@@ -2166,13 +2201,13 @@ local archetype_talents = {
 			format_values = {
 				chance = {
 					format_type = "percentage",
-					value = talent_settings_2.coop_2.proc_chance,
-				},
+					value = talent_settings_2.coop_2.proc_chance
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_aura_gain_grenade_on_elite_kill",
-				identifier = "veteran_aura_gain_grenade_on_elite_kill",
-			},
+				identifier = "veteran_aura_gain_grenade_on_elite_kill"
+			}
 		},
 		veteran_block_break_gives_tdr = {
 			description = "loc_talent_veteran_block_break_gives_tdr_description",
@@ -2186,26 +2221,26 @@ local archetype_talents = {
 					value = talent_settings_3.defensive_3.toughness_damage_taken_multiplier,
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
-					end,
+					end
 				},
 				toughness_duration = {
 					format_type = "value",
-					value = talent_settings_3.defensive_3.toughness_duration,
+					value = talent_settings_3.defensive_3.toughness_duration
 				},
 				block_cost_multiplier = {
 					format_type = "percentage",
 					prefix = "+",
-					value = 1 - talent_settings_3.defensive_3.block_cost_multiplier,
+					value = 1 - talent_settings_3.defensive_3.block_cost_multiplier
 				},
 				stamina_duration = {
 					format_type = "value",
-					value = talent_settings_3.defensive_3.stamina_duration,
-				},
+					value = talent_settings_3.defensive_3.stamina_duration
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_improved_toughness_stamina",
-				identifier = "veteran_improved_toughness_stamina",
-			},
+				identifier = "veteran_improved_toughness_stamina"
+			}
 		},
 		veteran_tdr_on_high_toughness = {
 			description = "loc_talent_veteran_tdr_on_high_toughness_desc",
@@ -2215,7 +2250,7 @@ local archetype_talents = {
 			format_values = {
 				toughness_percent = {
 					format_type = "percentage",
-					value = 0.75,
+					value = 0.75
 				},
 				toughness_damage_reduction = {
 					format_type = "percentage",
@@ -2225,15 +2260,15 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"conditional_stat_buffs",
-							stat_buffs.toughness_damage_taken_multiplier,
-						},
-					},
-				},
+							stat_buffs.toughness_damage_taken_multiplier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_tdr_on_high_toughness",
-				identifier = "veteran_tdr_on_high_toughness",
-			},
+				identifier = "veteran_tdr_on_high_toughness"
+			}
 		},
 		veteran_replenish_toughness_and_boost_allies = {
 			description = "loc_talent_veteran_replenish_toughness_and_boost_allies_desc",
@@ -2243,26 +2278,26 @@ local archetype_talents = {
 			format_values = {
 				radius = {
 					format_type = "number",
-					value = talent_settings_2.coop_3.range,
+					value = talent_settings_2.coop_3.range
 				},
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings_2.coop_3.toughness_percent,
+					value = talent_settings_2.coop_3.toughness_percent
 				},
 				base_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings_2.coop_3.damage,
+					value = talent_settings_2.coop_3.damage
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings_2.coop_3.duration,
-				},
+					value = talent_settings_2.coop_3.duration
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_replenish_toughness_of_ally_close_to_victim",
-				identifier = "veteran_replenish_toughness_of_ally_close_to_victim",
-			},
+				identifier = "veteran_replenish_toughness_of_ally_close_to_victim"
+			}
 		},
 		veteran_replenish_toughness_on_weakspot_kill = {
 			description = "loc_talent_veteran_toughness_on_weakspot_kill_alt_desc",
@@ -2272,7 +2307,7 @@ local archetype_talents = {
 			format_values = {
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings_2.toughness_2.toughness,
+					value = talent_settings_2.toughness_2.toughness
 				},
 				toughness_damage_reduction = {
 					format_type = "percentage",
@@ -2282,26 +2317,26 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness_damage_taken_multiplier,
-						},
+							stat_buffs.toughness_damage_taken_multiplier
+						}
 					},
 					value_manipulation = function (value)
 						return 100 - value * 100
-					end,
+					end
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings_2.toughness_2.duration,
+					value = talent_settings_2.toughness_2.duration
 				},
 				stacks = {
 					format_type = "number",
-					value = talent_settings_2.toughness_2.max_stacks,
-				},
+					value = talent_settings_2.toughness_2.max_stacks
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_ranged_weakspot_toughness_recovery",
-				identifier = "veteran_ranged_weakspot_toughness_recovery",
-			},
+				identifier = "veteran_ranged_weakspot_toughness_recovery"
+			}
 		},
 		veteran_allies_in_coherency_share_toughness_gain = {
 			description = "loc_talent_veteran_allies_share_toughness_coherency_increase_description",
@@ -2311,18 +2346,18 @@ local archetype_talents = {
 			format_values = {
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings_3.coop_3.percent,
+					value = talent_settings_3.coop_3.percent
 				},
 				radius = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings_3.coop_3.radius,
-				},
+					value = talent_settings_3.coop_3.radius
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_share_toughness_gained",
-				identifier = "veteran_share_toughness_gained",
-			},
+				identifier = "veteran_share_toughness_gained"
+			}
 		},
 		veteran_faster_reload_on_non_empty_clips = {
 			description = "loc_talent_veteran_reload_speed_non_empty_mag_desc",
@@ -2333,13 +2368,13 @@ local archetype_talents = {
 				reload_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings_2.offensive_1_2.reload_speed,
-				},
+					value = talent_settings_2.offensive_1_2.reload_speed
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_reload_speed_on_non_empty_clip",
-				identifier = "veteran_reload_speed_on_non_empty_clip",
-			},
+				identifier = "veteran_reload_speed_on_non_empty_clip"
+			}
 		},
 		veteran_replenish_toughness_outside_melee = {
 			description = "loc_talent_veteran_replenish_toughness_outside_melee_hit_desc",
@@ -2349,21 +2384,21 @@ local archetype_talents = {
 			format_values = {
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings_2.toughness_3.toughness,
+					value = talent_settings_2.toughness_3.toughness
 				},
 				range = {
 					format_type = "number",
-					value = talent_settings_2.toughness_3.range,
+					value = talent_settings_2.toughness_3.range
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings_2.toughness_3.cooldown,
-				},
+					value = talent_settings_2.toughness_3.cooldown
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_toughness_regen_out_of_melee",
-				identifier = "veteran_toughness_regen_out_of_melee",
-			},
+				identifier = "veteran_toughness_regen_out_of_melee"
+			}
 		},
 		veteran_plasma_proficiency = {
 			description = "loc_talent_veteran_plasma_proficency_desc",
@@ -2377,8 +2412,8 @@ local archetype_talents = {
 						damage_profile_name = "plasma_vent_damage",
 						find_value_type = "damage",
 						armor_type = armor_types.player,
-						power_level = plasmagun_p1_m1.overheat_configuration.vent_power_level[2],
-					},
+						power_level = plasmagun_p1_m1.overheat_configuration.vent_power_level[2]
+					}
 				},
 				vent_damage_2 = {
 					format_type = "number",
@@ -2386,14 +2421,14 @@ local archetype_talents = {
 						damage_profile_name = "plasma_vent_damage_proficiency",
 						find_value_type = "damage",
 						armor_type = armor_types.player,
-						power_level = plasmagun_p1_m1.overheat_configuration.proficiency_vent_power_level[2],
-					},
-				},
+						power_level = plasmagun_p1_m1.overheat_configuration.proficiency_vent_power_level[2]
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_plasma_proficiency",
-				identifier = "veteran_plasma_proficiency",
-			},
+				identifier = "veteran_plasma_proficiency"
+			}
 		},
 		veteran_rending_bonus = {
 			description = "loc_talent_veteran_rending_bonus_desc",
@@ -2409,15 +2444,15 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.rending_multiplier,
-						},
-					},
-				},
+							stat_buffs.rending_multiplier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_rending_bonus",
-				identifier = "veteran_rending_bonus",
-			},
+				identifier = "veteran_rending_bonus"
+			}
 		},
 		veteran_bolter_proficiency = {
 			description = "loc_talent_veteran_bolter_proficency_desc",
@@ -2432,9 +2467,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"conditional_stat_buffs",
-							stat_buffs.spread_modifier,
-						},
-					},
+							stat_buffs.spread_modifier
+						}
+					}
 				},
 				recoil = {
 					format_type = "percentage",
@@ -2443,9 +2478,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"conditional_stat_buffs",
-							stat_buffs.recoil_modifier,
-						},
-					},
+							stat_buffs.recoil_modifier
+						}
+					}
 				},
 				sway = {
 					format_type = "percentage",
@@ -2455,15 +2490,15 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"conditional_stat_buffs",
-							stat_buffs.sway_modifier,
-						},
-					},
-				},
+							stat_buffs.sway_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_bolter_proficiency",
-				identifier = "veteran_bolter_proficiency",
-			},
+				identifier = "veteran_bolter_proficiency"
+			}
 		},
 		veteran_ammo_increase = {
 			description = "loc_talent_veteran_ammo_increase_desc",
@@ -2479,15 +2514,15 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.ammo_reserve_capacity,
-						},
-					},
-				},
+							stat_buffs.ammo_reserve_capacity
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_ammo_increase",
-				identifier = "veteran_ammo_increase",
-			},
+				identifier = "veteran_ammo_increase"
+			}
 		},
 		veteran_power_proficiency = {
 			description = "loc_talent_veteran_power_proficency_description",
@@ -2503,15 +2538,15 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.weapon_special_max_activations,
-						},
-					},
-				},
+							stat_buffs.weapon_special_max_activations
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_power_proficiency",
-				identifier = "veteran_power_proficiency",
-			},
+				identifier = "veteran_power_proficiency"
+			}
 		},
 		veteran_attack_speed = {
 			description = "loc_talent_veteran_attack_speed_description",
@@ -2527,15 +2562,15 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_attack_speed,
-						},
-					},
-				},
+							stat_buffs.melee_attack_speed
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_attack_speed",
-				identifier = "veteran_attack_speed",
-			},
+				identifier = "veteran_attack_speed"
+			}
 		},
 		veteran_cover_peeking = {
 			description = "loc_talent_veteran_cover_peeking_description",
@@ -2544,8 +2579,8 @@ local archetype_talents = {
 			name = "Cover peeking",
 			special_rule = {
 				identifier = "veteran_cover_peeking",
-				special_rule_name = special_rules.veteran_cover_peeking,
-			},
+				special_rule_name = special_rules.veteran_cover_peeking
+			}
 		},
 		veteran_snipers_focus = {
 			description = "loc_talent_veteran_snipers_focus_duration_desc",
@@ -2556,38 +2591,38 @@ local archetype_talents = {
 				power = {
 					format_type = "percentage",
 					prefix = "+",
-					value = 0.075,
+					value = 0.075
 				},
 				reload_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = 0.01,
+					value = 0.01
 				},
 				grace_time = {
 					format_type = "number",
-					value = 6,
+					value = 6
 				},
 				grace_time_hit = {
 					format_type = "number",
-					value = 3,
+					value = 3
 				},
 				stacks = {
 					format_type = "number",
-					value = 3,
+					value = 3
 				},
 				max_stacks = {
 					format_type = "number",
-					value = talent_settings.veteran_snipers_focus.max_stacks,
+					value = talent_settings.veteran_snipers_focus.max_stacks
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.veteran_snipers_focus.duration,
-				},
+					value = talent_settings.veteran_snipers_focus.duration
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_snipers_focus",
-				identifier = "veteran_snipers_focus",
-			},
+				identifier = "veteran_snipers_focus"
+			}
 		},
 		veteran_snipers_focus_rending_bonus = {
 			description = "loc_talent_veteran_snipers_focus_rending_bonus_description",
@@ -2604,19 +2639,19 @@ local archetype_talents = {
 						format_type = "percentage",
 						path = {
 							"stat_buffs",
-							stat_buffs.rending_multiplier,
-						},
-					},
+							stat_buffs.rending_multiplier
+						}
+					}
 				},
 				stacks = {
 					format_type = "number",
-					value = 10,
-				},
+					value = 10
+				}
 			},
 			special_rule = {
 				identifier = "veteran_snipers_focus_rending_bonus",
-				special_rule_name = "veteran_snipers_focus_rending_bonus",
-			},
+				special_rule_name = "veteran_snipers_focus_rending_bonus"
+			}
 		},
 		veteran_snipers_focus_toughness_bonus = {
 			description = "loc_talent_veteran_snipers_focus_stamina_bonus_desc",
@@ -2627,17 +2662,17 @@ local archetype_talents = {
 				toughness_replenish_multiplier = {
 					format_type = "percentage",
 					prefix = "+",
-					value = 0.04,
+					value = 0.04
 				},
 				stamina = {
 					format_type = "percentage",
-					value = 0.1,
-				},
+					value = 0.1
+				}
 			},
 			special_rule = {
 				identifier = "veteran_snipers_focus_toughness_bonus",
-				special_rule_name = "veteran_snipers_focus_toughness_bonus",
-			},
+				special_rule_name = "veteran_snipers_focus_toughness_bonus"
+			}
 		},
 		veteran_snipers_focus_stacks_on_still = {
 			description = "loc_talent_veteran_snipers_focus_stacks_on_still_description",
@@ -2647,17 +2682,17 @@ local archetype_talents = {
 			format_values = {
 				stack = {
 					format_type = "number",
-					value = 1,
+					value = 1
 				},
 				time = {
 					format_type = "number",
-					value = 0.75,
-				},
+					value = 0.75
+				}
 			},
 			special_rule = {
 				identifier = "veteran_snipers_focus_stacks_on_still",
-				special_rule_name = "veteran_snipers_focus_stacks_on_still",
-			},
+				special_rule_name = "veteran_snipers_focus_stacks_on_still"
+			}
 		},
 		veteran_snipers_focus_increased_stacks = {
 			description = "loc_talent_veteran_snipers_focus_increased_stacks_description",
@@ -2667,17 +2702,17 @@ local archetype_talents = {
 			format_values = {
 				stacks = {
 					format_type = "number",
-					value = talent_settings.veteran_snipers_focus.max_stacks,
+					value = talent_settings.veteran_snipers_focus.max_stacks
 				},
 				new_stacks = {
 					format_type = "number",
-					value = talent_settings.veteran_snipers_focus.max_stacks_talent,
-				},
+					value = talent_settings.veteran_snipers_focus.max_stacks_talent
+				}
 			},
 			special_rule = {
 				identifier = "veteran_snipers_focus_increased_stacks",
-				special_rule_name = "veteran_snipers_focus_increased_stacks",
-			},
+				special_rule_name = "veteran_snipers_focus_increased_stacks"
+			}
 		},
 		veteran_weapon_switch_passive = {
 			description = "loc_talent_veteran_weapon_switch_new_description",
@@ -2693,9 +2728,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.ranged_attack_speed,
-						},
-					},
+							stat_buffs.ranged_attack_speed
+						}
+					}
 				},
 				ranged_stacks = {
 					format_type = "number",
@@ -2703,9 +2738,9 @@ local archetype_talents = {
 						buff_template_name = "veteran_weapon_switch_ranged_buff",
 						find_value_type = "buff_template",
 						path = {
-							"max_stacks",
-						},
-					},
+							"max_stacks"
+						}
+					}
 				},
 				ranged_crit_chance = {
 					format_type = "percentage",
@@ -2715,9 +2750,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"conditional_stat_buffs",
-							stat_buffs.ranged_critical_strike_chance,
-						},
-					},
+							stat_buffs.ranged_critical_strike_chance
+						}
+					}
 				},
 				ranged_duration = {
 					format_type = "number",
@@ -2725,9 +2760,9 @@ local archetype_talents = {
 						buff_template_name = "veteran_weapon_switch_ranged_buff",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
+							"duration"
+						}
+					}
 				},
 				melee_attack_speed = {
 					format_type = "percentage",
@@ -2737,9 +2772,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_attack_speed,
-						},
-					},
+							stat_buffs.melee_attack_speed
+						}
+					}
 				},
 				melee_stacks = {
 					format_type = "number",
@@ -2747,9 +2782,9 @@ local archetype_talents = {
 						buff_template_name = "veteran_weapon_switch_melee_buff",
 						find_value_type = "buff_template",
 						path = {
-							"max_stacks",
-						},
-					},
+							"max_stacks"
+						}
+					}
 				},
 				dodge_modifier = {
 					format_type = "percentage",
@@ -2758,9 +2793,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.dodge_distance_modifier,
-						},
-					},
+							stat_buffs.dodge_distance_modifier
+						}
+					}
 				},
 				melee_duration = {
 					format_type = "number",
@@ -2768,9 +2803,9 @@ local archetype_talents = {
 						buff_template_name = "veteran_weapon_switch_melee_buff",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
+							"duration"
+						}
+					}
 				},
 				reload_speed = {
 					format_type = "percentage",
@@ -2779,15 +2814,15 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.reload_speed,
-						},
-					},
-				},
+							stat_buffs.reload_speed
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_weapon_switch_passive_buff",
-				identifier = "veteran_weapon_switch_passive_buff",
-			},
+				identifier = "veteran_weapon_switch_passive_buff"
+			}
 		},
 		veteran_weapon_switch_replenish_stamina = {
 			description = "loc_talent_veteran_weapon_switch_replenish_stamina_new_description",
@@ -2797,7 +2832,7 @@ local archetype_talents = {
 			format_values = {
 				stamina = {
 					format_type = "percentage",
-					value = 0.2,
+					value = 0.2
 				},
 				stamina_reduction = {
 					format_type = "percentage",
@@ -2806,12 +2841,12 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.stamina_cost_multiplier,
-						},
+							stat_buffs.stamina_cost_multiplier
+						}
 					},
 					value_manipulation = function (value)
 						return (1 - value) * 100
-					end,
+					end
 				},
 				duration = {
 					format_type = "number",
@@ -2819,21 +2854,21 @@ local archetype_talents = {
 						buff_template_name = "veteran_weapon_switch_melee_stamina_reduction",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
-				},
+							"duration"
+						}
+					}
+				}
 			},
 			special_rule = {
 				identifier = {
 					"veteran_weapon_switch_replenish_stamina",
-					"veteran_weapon_switch_stamina_reduction",
+					"veteran_weapon_switch_stamina_reduction"
 				},
 				special_rule_name = {
 					"veteran_weapon_switch_replenish_stamina",
-					"veteran_weapon_switch_stamina_reduction",
-				},
-			},
+					"veteran_weapon_switch_stamina_reduction"
+				}
+			}
 		},
 		veteran_weapon_switch_replenish_ammo = {
 			description = "loc_talent_veteran_weapon_switch_replenish_ammo_description",
@@ -2843,13 +2878,13 @@ local archetype_talents = {
 			format_values = {
 				ammo = {
 					format_type = "percentage",
-					value = 0.033,
-				},
+					value = 0.033
+				}
 			},
 			special_rule = {
 				identifier = "veteran_weapon_switch_replenish_ammo",
-				special_rule_name = "veteran_weapon_switch_replenish_ammo",
-			},
+				special_rule_name = "veteran_weapon_switch_replenish_ammo"
+			}
 		},
 		veteran_weapon_switch_reload_speed = {
 			description = "loc_talent_veteran_weapon_switch_reload_speed_description",
@@ -2864,9 +2899,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.reload_speed,
-						},
-					},
+							stat_buffs.reload_speed
+						}
+					}
 				},
 				duration = {
 					format_type = "number",
@@ -2874,15 +2909,15 @@ local archetype_talents = {
 						buff_template_name = "veteran_weapon_switch_reload_speed",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
-				},
+							"duration"
+						}
+					}
+				}
 			},
 			special_rule = {
 				identifier = "veteran_weapon_switch_reload_speed",
-				special_rule_name = "veteran_weapon_switch_reload_speed",
-			},
+				special_rule_name = "veteran_weapon_switch_reload_speed"
+			}
 		},
 		veteran_weapon_switch_stamina_reduction = {
 			description = "loc_talent_veteran_weapon_switch_stamina_reduction_description",
@@ -2897,12 +2932,12 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.stamina_cost_multiplier,
-						},
+							stat_buffs.stamina_cost_multiplier
+						}
 					},
 					value_manipulation = function (value)
 						return (1 - value) * 100
-					end,
+					end
 				},
 				duration = {
 					format_type = "number",
@@ -2910,15 +2945,15 @@ local archetype_talents = {
 						buff_template_name = "veteran_weapon_switch_melee_stamina_reduction",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
-				},
+							"duration"
+						}
+					}
+				}
 			},
 			special_rule = {
 				identifier = "veteran_weapon_switch_stamina_reduction",
-				special_rule_name = "veteran_weapon_switch_stamina_reduction",
-			},
+				special_rule_name = "veteran_weapon_switch_stamina_reduction"
+			}
 		},
 		veteran_weapon_switch_replenish_toughness = {
 			description = "loc_talent_veteran_weapon_switch_replenish_toughness_description",
@@ -2928,17 +2963,17 @@ local archetype_talents = {
 			format_values = {
 				toughness = {
 					format_type = "percentage",
-					value = 0.2,
+					value = 0.2
 				},
 				cooldown = {
 					format_type = "number",
-					value = 3,
-				},
+					value = 3
+				}
 			},
 			special_rule = {
 				identifier = "veteran_weapon_switch_replenish_toughness",
-				special_rule_name = "veteran_weapon_switch_replenish_toughness",
-			},
+				special_rule_name = "veteran_weapon_switch_replenish_toughness"
+			}
 		},
 		veteran_improved_tag = {
 			description = "loc_talent_veteran_improved_tag_description",
@@ -2954,34 +2989,34 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.damage_taken_multiplier,
-						},
+							stat_buffs.damage_taken_multiplier
+						}
 					},
 					value_manipulation = function (value)
 						return (value - 1) * 100
-					end,
+					end
 				},
 				time = {
 					format_type = "number",
-					value = talent_settings.veteran_tag.stack_time,
+					value = talent_settings.veteran_tag.stack_time
 				},
 				max_stacks = {
 					format_type = "number",
-					value = talent_settings.veteran_tag.max_stacks,
-				},
+					value = talent_settings.veteran_tag.max_stacks
+				}
 			},
 			passive = {
 				identifier = {
-					"veteran_improved_tag",
+					"veteran_improved_tag"
 				},
 				buff_template_name = {
-					"veteran_improved_tag",
-				},
+					"veteran_improved_tag"
+				}
 			},
 			special_rule = {
 				identifier = "veteran_improved_tag",
-				special_rule_name = "veteran_improved_tag",
-			},
+				special_rule_name = "veteran_improved_tag"
+			}
 		},
 		veteran_improved_tag_dead_bonus = {
 			description = "loc_talent_veteran_improved_tag_dead_bonus_description",
@@ -2991,17 +3026,17 @@ local archetype_talents = {
 			format_values = {
 				toughness = {
 					format_type = "percentage",
-					value = 0.05,
+					value = 0.05
 				},
 				stamina = {
 					format_type = "percentage",
-					value = 0.05,
-				},
+					value = 0.05
+				}
 			},
 			special_rule = {
 				identifier = "veteran_improved_tag_dead_bonus",
-				special_rule_name = "veteran_improved_tag_dead_bonus",
-			},
+				special_rule_name = "veteran_improved_tag_dead_bonus"
+			}
 		},
 		veteran_improved_tag_dead_coherency_bonus = {
 			description = "loc_talent_veteran_improved_tag_dead_coherency_bonus_description",
@@ -3017,9 +3052,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.damage,
-						},
-					},
+							stat_buffs.damage
+						}
+					}
 				},
 				duration = {
 					format_type = "number",
@@ -3027,15 +3062,15 @@ local archetype_talents = {
 						buff_template_name = "veteran_improved_tag_allied_buff",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
-				},
+							"duration"
+						}
+					}
+				}
 			},
 			special_rule = {
 				identifier = "veteran_improved_tag_dead_coherency_bonus",
-				special_rule_name = "veteran_improved_tag_dead_coherency_bonus",
-			},
+				special_rule_name = "veteran_improved_tag_dead_coherency_bonus"
+			}
 		},
 		veteran_improved_tag_more_damage = {
 			description = "loc_talent_veteran_improved_tag_more_damage_description",
@@ -3049,15 +3084,15 @@ local archetype_talents = {
 						buff_template_name = "veteran_improved_tag_debuff",
 						find_value_type = "buff_template",
 						path = {
-							"max_stacks",
-						},
-					},
-				},
+							"max_stacks"
+						}
+					}
+				}
 			},
 			special_rule = {
 				identifier = "veteran_improved_tag_more_damage",
-				special_rule_name = "veteran_improved_tag_more_damage",
-			},
+				special_rule_name = "veteran_improved_tag_more_damage"
+			}
 		},
 		veteran_clip_size = {
 			description = "loc_talent_adamant_clip_size_alt_desc",
@@ -3067,13 +3102,13 @@ local archetype_talents = {
 				clip_size = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.clip_size.clip_size_modifier,
-				},
+					value = talent_settings.clip_size.clip_size_modifier
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_clip_size",
-				identifier = "veteran_clip_size",
-			},
+				identifier = "veteran_clip_size"
+			}
 		},
 		veteran_increased_damage_when_flanking = {
 			description = "loc_talent_zealot_increased_flanking_damage_description",
@@ -3088,15 +3123,15 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.flanking_damage,
-						},
-					},
-				},
+							stat_buffs.flanking_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_flanking_damage",
-				identifier = "veteran_flanking_damage",
-			},
+				identifier = "veteran_flanking_damage"
+			}
 		},
 		veteran_increased_ranged_cleave = {
 			description = "loc_talent_veteran_increased_ranged_cleave_desc",
@@ -3106,15 +3141,15 @@ local archetype_talents = {
 				cleave = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.veteran_increased_ranged_cleave.cleave,
-				},
+					value = talent_settings.veteran_increased_ranged_cleave.cleave
+				}
 			},
 			passive = {
 				buff_template_name = "veteran_increased_ranged_cleave",
-				identifier = "veteran_increased_ranged_cleave",
-			},
-		},
-	},
+				identifier = "veteran_increased_ranged_cleave"
+			}
+		}
+	}
 }
 
 return archetype_talents

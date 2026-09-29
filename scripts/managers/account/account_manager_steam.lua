@@ -39,7 +39,7 @@ AccountManagerSteam.open_to_store = function (self, to_target)
 		pcall(Application.open_url_in_browser, "https://store.steampowered.com/app/" .. to_target)
 
 		return Promise.resolved({
-			success = false,
+			success = false
 		})
 	end
 
@@ -63,14 +63,14 @@ AccountManagerSteam.open_to_store = function (self, to_target)
 		end
 
 		return {
-			success = type(to_target) == "number" and Steam.is_subscribed(to_target) or false,
+			success = type(to_target) == "number" and Steam.is_subscribed(to_target) or false
 		}
 	end)
 end
 
 AccountManagerSteam.is_owner_of = function (self, app_id)
 	return Promise.resolved({
-		is_owner = Steam.is_subscribed(app_id),
+		is_owner = Steam.is_subscribed(app_id)
 	})
 end
 

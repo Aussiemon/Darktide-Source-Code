@@ -9,8 +9,8 @@ MutatorSpawnerNode.SINGLE_PLACEMENT = function (nav_world, spawn_position_boxed,
 	return {
 		{
 			position = Vector3Box(NavQueries.position_on_mesh_guaranteed(nav_world, spawn_position_boxed:unbox(), ABOVE, BELOW, traverse_logic)),
-			rotation = QuaternionBox(placement_settings.randomize_rotation and Quaternion.axis_angle(Vector3.up(), math.random() * (math.pi * 2)) or Quaternion.identity()),
-		},
+			rotation = QuaternionBox(placement_settings.randomize_rotation and Quaternion.axis_angle(Vector3.up(), math.random() * (math.pi * 2)) or Quaternion.identity())
+		}
 	}
 end
 
@@ -41,7 +41,7 @@ MutatorSpawnerNode.placement_logic_functions = function (self)
 			local _, value = math.next_random(Managers.state.pacing:level_seed(), ...)
 
 			return value
-		end,
+		end
 	}
 
 	return placement_logic_functions
@@ -68,7 +68,7 @@ MutatorSpawnerNode.trigger_spawn = function (self, raycast_object, spawn_positio
 		num_slots = self._spawn_settings.count or 1,
 		position_offset = self._spawn_settings.position_offset or 0,
 		circle_radius = self._spawn_settings.radius or 1,
-		randomize_rotation = self._spawn_settings.randomize_rotation or false,
+		randomize_rotation = self._spawn_settings.randomize_rotation or false
 	}
 	local spawn_locations = self._placement_method(nav_world, Vector3Box(spawn_position), placement_settings, nil)
 	local did_hit

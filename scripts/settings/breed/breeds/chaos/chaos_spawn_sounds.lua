@@ -18,7 +18,7 @@ local sound_data = {
 		vce_hurt = "wwise/events/minions/play_chaos_spawn_vce_hurt",
 		vce_leap = "wwise/events/minions/play_chaos_spawn_vce_leap",
 		vce_leap_short = "wwise/events/minions/play_chaos_spawn_vce_leap_short",
-		vce_stop = "wwise/events/minions/stop_chaos_spawn_vce",
+		vce_stop = "wwise/events/minions/stop_chaos_spawn_vce"
 	},
 	use_proximity_culling = {
 		footstep = false,
@@ -37,8 +37,8 @@ local sound_data = {
 		vce_hurt = false,
 		vce_leap = false,
 		vce_leap_short = false,
-		vce_stop = false,
-	},
+		vce_stop = false
+	}
 }
 
 return sound_data

@@ -5,7 +5,7 @@ local hud_element_emote_wheel_settings = {
 	max_radius = 190,
 	min_radius = 185,
 	scan_delay = 0.2,
-	wheel_slots = 8,
+	wheel_slots = 8
 }
 
 return settings("HudElementEmoteWheelSettings", hud_element_emote_wheel_settings)

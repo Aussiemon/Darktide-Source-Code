@@ -6,7 +6,7 @@ local ThemeStateTestify = {
 		if not ThemePackage.disabled_levels[level_name] and table.is_empty(theme_packages) then
 			ferror("No theme created for level: %q circumstance: %q", level_name, circumstance_name)
 		end
-	end,
+	end
 }
 
 return ThemeStateTestify

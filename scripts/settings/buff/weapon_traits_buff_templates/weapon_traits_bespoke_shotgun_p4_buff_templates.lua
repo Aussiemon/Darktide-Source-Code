@@ -26,7 +26,7 @@ templates.weapon_trait_bespoke_shotgun_p4_stagger_count_bonus_damage = table.clo
 templates.weapon_trait_bespoke_shotgun_p4_cleave_on_crit = table.clone(BaseWeaponTraitBuffTemplates.infinite_cleave_on_crit)
 templates.weapon_trait_bespoke_shotgun_p4_toughness_on_continuous_fire = table.merge({
 	toughness_fixed_percentage = 0.1,
-	continuous_fire_step_func = FireStepFunctions.toughness_regen_continuous_fire_step_func,
+	continuous_fire_step_func = FireStepFunctions.toughness_regen_continuous_fire_step_func
 }, BaseWeaponTraitBuffTemplates.toughness_on_continuous_fire)
 templates.weapon_trait_bespoke_shotgun_p4_reload_speed_on_slide_parent = table.clone(BaseWeaponTraitBuffTemplates.reload_speed_on_close_kill_parent)
 templates.weapon_trait_bespoke_shotgun_p4_reload_speed_on_slide_child = table.clone(BaseWeaponTraitBuffTemplates.reload_speed_on_close_kill_child)
@@ -39,9 +39,9 @@ templates.weapon_trait_bespoke_shotgun_p4_damage_bonus_vs_electrocuted = {
 	hide_icon_in_hud = true,
 	predicted = false,
 	conditional_stat_buffs = {
-		[stat_buffs.damage_vs_electrocuted] = 0.5,
+		[stat_buffs.damage_vs_electrocuted] = 0.5
 	},
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 templates.weapon_trait_bespoke_shotgun_p4_recoil_reduction_and_suppression_increase_on_close_kills = table.clone(BaseWeaponTraitBuffTemplates.recoil_reduction_and_suppression_increase_on_close_kills)
 templates.weapon_trait_bespoke_shotgun_p4_followup_shots_ranged_weakspot_damage = table.clone(BaseWeaponTraitBuffTemplates.followup_shots_ranged_weakspot_damage)

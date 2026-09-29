@@ -32,7 +32,7 @@ local effect_template = {
 				Managers.state.minion_spawn:despawn_minion(template_data.target_unit)
 			end
 		end
-	end,
+	end
 }
 
 function _link_unit(template_data, template_context, unit, target_unit)

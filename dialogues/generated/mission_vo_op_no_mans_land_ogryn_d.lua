@@ -14,7 +14,7 @@ local mission_vo_op_no_mans_land_ogryn_d = {
 			"loc_ogryn_d__guidance_starting_area_07",
 			"loc_ogryn_d__guidance_starting_area_08",
 			"loc_ogryn_d__guidance_starting_area_09",
-			"loc_ogryn_d__guidance_starting_area_10",
+			"loc_ogryn_d__guidance_starting_area_10"
 		},
 		sound_events_duration = {
 			3.414156,
@@ -26,7 +26,7 @@ local mission_vo_op_no_mans_land_ogryn_d = {
 			3.712104,
 			4.885927,
 			3.494604,
-			4.877969,
+			4.877969
 		},
 		sound_event_weights = {
 			0.1,
@@ -38,10 +38,10 @@ local mission_vo_op_no_mans_land_ogryn_d = {
 			0.1,
 			0.1,
 			0.1,
-			0.1,
+			0.1
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_op_no_mans_land_ogryn_d", mission_vo_op_no_mans_land_ogryn_d)

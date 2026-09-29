@@ -14,7 +14,7 @@ local mission_vo_op_no_mans_land_psyker_female_c = {
 			"loc_psyker_female_c__guidance_starting_area_07",
 			"loc_psyker_female_c__guidance_starting_area_08",
 			"loc_psyker_female_c__guidance_starting_area_09",
-			"loc_psyker_female_c__guidance_starting_area_10",
+			"loc_psyker_female_c__guidance_starting_area_10"
 		},
 		sound_events_duration = {
 			4.751448,
@@ -26,7 +26,7 @@ local mission_vo_op_no_mans_land_psyker_female_c = {
 			3.539146,
 			3.860083,
 			3.383646,
-			4.094688,
+			4.094688
 		},
 		sound_event_weights = {
 			0.1,
@@ -38,10 +38,10 @@ local mission_vo_op_no_mans_land_psyker_female_c = {
 			0.1,
 			0.1,
 			0.1,
-			0.1,
+			0.1
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_op_no_mans_land_psyker_female_c", mission_vo_op_no_mans_land_psyker_female_c)

@@ -148,7 +148,7 @@ MagazineAmmo.component_data = {
 	top_bullet_visibility_group_name = {
 		ui_name = "Top Bullet Visibility Group Name",
 		ui_type = "text_box",
-		value = "bullet",
+		value = "bullet"
 	},
 	ammo_in_unit = {
 		decimals = 0,
@@ -157,7 +157,7 @@ MagazineAmmo.component_data = {
 		step = 1,
 		ui_name = "Ammo in Unit",
 		ui_type = "slider",
-		value = 30,
+		value = 30
 	},
 	max_ammo = {
 		decimals = 0,
@@ -166,7 +166,7 @@ MagazineAmmo.component_data = {
 		step = 1,
 		ui_name = "Max Ammo",
 		ui_type = "slider",
-		value = 30,
+		value = 30
 	},
 	ammo = {
 		decimals = 0,
@@ -175,14 +175,14 @@ MagazineAmmo.component_data = {
 		step = 1,
 		ui_name = "Ammo",
 		ui_type = "slider",
-		value = 30,
+		value = 30
 	},
 	ammo_offset = {
 		decimals = 0,
 		step = 1,
 		ui_name = "Ammo Offset",
 		ui_type = "slider",
-		value = 2,
+		value = 2
 	},
 	anim_speed = {
 		decimals = 1,
@@ -191,22 +191,22 @@ MagazineAmmo.component_data = {
 		step = 0.1,
 		ui_name = "Animation Speed",
 		ui_type = "slider",
-		value = 1,
+		value = 1
 	},
 	use_simple_animation_length = {
 		ui_name = "Use Anim Length",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	is_animated = {
 		ui_name = "Is Animatable",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	dismantled = {
 		ui_name = "Dismantled",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	dismantled_ammo_mask = {
 		decimals = 3,
@@ -215,8 +215,8 @@ MagazineAmmo.component_data = {
 		step = 0.001,
 		ui_name = "Dismantled Mask",
 		ui_type = "slider",
-		value = 1,
-	},
+		value = 1
+	}
 }
 
 return MagazineAmmo

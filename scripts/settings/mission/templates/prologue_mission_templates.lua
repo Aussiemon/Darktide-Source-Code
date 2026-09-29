@@ -15,37 +15,40 @@ local mission_templates = {
 		zone_id = "prologue",
 		gameplay_modifiers = {
 			"unkillable",
-			"infinite_ammo_reserve",
+			"infinite_ammo_reserve"
 		},
 		terror_event_templates = {
-			"terror_events_prologue",
+			"terror_events_prologue"
 		},
 		testify_flags = {
 			mission_server = false,
 			run_through_mission = false,
-			validate_minion_pathing_on_mission = false,
+			validate_minion_pathing_on_mission = false
 		},
 		cinematics = {
 			cutscene_1 = {
-				"cs_intro",
+				"cs_intro"
 			},
 			cutscene_2 = {
 				"cs_02_part_1",
 				"cs_02_part_2",
-				"cs_02_part_3",
+				"cs_02_part_3"
 			},
 			cutscene_3 = {
-				"cs_03",
+				"cs_03"
 			},
 			cutscene_4 = {
-				"cs_04",
+				"cs_04"
 			},
 			cutscene_5 = {
 				"cs_05",
-				"cs_05_exterior",
-			},
+				"cs_05_exterior"
+			}
 		},
-	},
+		controllable_object_set_prefixes = {
+			"flow"
+		}
+	}
 }
 
 return mission_templates

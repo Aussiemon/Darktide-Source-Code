@@ -64,7 +64,7 @@ local player_character_states = {
 	stunned = PlayerCharacterStateStunned,
 	walking = PlayerCharacterStateWalking,
 	warp_grabbed = PlayerCharacterStateWarpGrabbed,
-	vortex_grabbed = PlayerCharacterStateVortexGrabbed,
+	vortex_grabbed = PlayerCharacterStateVortexGrabbed
 }
 
 return settings("PlayerCharacterStates", player_character_states)

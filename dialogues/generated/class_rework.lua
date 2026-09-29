@@ -12,25 +12,25 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"combat_ability",
+				"combat_ability"
 			},
 			{
 				"query_context",
 				"ability_name",
 				OP.EQ,
-				"ability_banisher",
+				"ability_banisher"
 			},
 			{
 				"user_context",
 				"enemies_distant",
 				OP.GT,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "player_prio_1",
@@ -43,25 +43,25 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"combat_ability",
+				"combat_ability"
 			},
 			{
 				"query_context",
 				"ability_name",
 				OP.EQ,
-				"ability_banisher_impact",
+				"ability_banisher_impact"
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.GT,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "player_prio_1",
@@ -74,25 +74,25 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"combat_ability",
+				"combat_ability"
 			},
 			{
 				"query_context",
 				"ability_name",
 				OP.EQ,
-				"ability_buff_stance",
+				"ability_buff_stance"
 			},
 			{
 				"user_context",
 				"enemies_distant",
 				OP.GT,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "player_prio_1",
@@ -105,25 +105,25 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"combat_ability",
+				"combat_ability"
 			},
 			{
 				"query_context",
 				"ability_name",
 				OP.EQ,
-				"ability_bullgryn",
+				"ability_bullgryn"
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.GT,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "player_prio_1",
@@ -136,25 +136,25 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"combat_ability",
+				"combat_ability"
 			},
 			{
 				"query_context",
 				"ability_name",
 				OP.EQ,
-				"ability_gun_lugger",
+				"ability_gun_lugger"
 			},
 			{
 				"user_context",
 				"enemies_distant",
 				OP.GT,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "player_prio_1",
@@ -167,54 +167,54 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"combat_ability",
+				"combat_ability"
 			},
 			{
 				"query_context",
 				"ability_name",
 				OP.EQ,
-				"ability_gunslinger",
+				"ability_gunslinger"
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_distant",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_memory",
 				"ability_gunslinger",
 				OP.TIMEDIFF,
 				OP.GT,
-				45,
-			},
+				45
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"ability_gunslinger",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
+				duration = 0.2
 			},
 			random_ignore_vo = {
 				chance = 0.2,
 				hold_for = 0,
-				max_failed_tries = 0,
-			},
-		},
+				max_failed_tries = 0
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_1",
@@ -227,22 +227,22 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"combat_ability",
+				"combat_ability"
 			},
 			{
 				"query_context",
 				"ability_name",
 				OP.EQ,
-				"ability_pious_stabber",
+				"ability_pious_stabber"
 			},
 			{
 				"user_context",
 				"enemies_distant",
 				OP.GT,
-				0,
-			},
+				0
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "player_prio_1",
@@ -255,25 +255,25 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"combat_ability",
+				"combat_ability"
 			},
 			{
 				"query_context",
 				"ability_name",
 				OP.EQ,
-				"ability_protectorate_start",
+				"ability_protectorate_start"
 			},
 			{
 				"user_context",
 				"enemies_distant",
 				OP.GT,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "player_prio_1",
@@ -286,25 +286,25 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"combat_ability",
+				"combat_ability"
 			},
 			{
 				"query_context",
 				"ability_name",
 				OP.EQ,
-				"ability_protectorate_stop",
+				"ability_protectorate_stop"
 			},
 			{
 				"user_context",
 				"enemies_distant",
 				OP.GT,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "player_prio_1",
@@ -317,25 +317,25 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"combat_ability",
+				"combat_ability"
 			},
 			{
 				"query_context",
 				"ability_name",
 				OP.EQ,
-				"ability_litany",
+				"ability_litany"
 			},
 			{
 				"user_context",
 				"enemies_distant",
 				OP.GT,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "player_prio_1",
@@ -348,22 +348,22 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"combat_ability",
+				"combat_ability"
 			},
 			{
 				"query_context",
 				"ability_name",
 				OP.EQ,
-				"ability_shock_trooper",
+				"ability_shock_trooper"
 			},
 			{
 				"user_context",
 				"enemies_distant",
 				OP.GT,
-				0,
-			},
+				0
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "player_ability_vo",
@@ -376,18 +376,18 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"combat_ability",
+				"combat_ability"
 			},
 			{
 				"query_context",
 				"ability_name",
 				OP.EQ,
-				"ability_squad_leader",
-			},
+				"ability_squad_leader"
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 end

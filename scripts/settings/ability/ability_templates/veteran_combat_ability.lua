@@ -10,31 +10,31 @@ ability_template.action_inputs = {
 		buffer_time = 0.2,
 		input_sequence = {
 			{
-				input = "combat_ability_pressed",
-				value = true,
-			},
-		},
+				input_alias = "wielded_input_pressed",
+				value = true
+			}
+		}
 	},
 	combat_ability_released = {
 		buffer_time = 0.1,
 		input_sequence = {
 			{
-				input = "combat_ability_hold",
+				input_alias = "wielded_input_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				time_window = math.huge
+			}
+		}
 	},
 	block_cancel = {
 		buffer_time = 0,
 		input_sequence = {
 			{
-				hold_input = "combat_ability_hold",
+				hold_input_alias = "wielded_input_hold",
 				input = "action_two_pressed",
-				value = true,
-			},
-		},
-	},
+				value = true
+			}
+		}
+	}
 }
 ability_template.action_input_hierarchy = {
 	{
@@ -42,18 +42,17 @@ ability_template.action_input_hierarchy = {
 		transition = {
 			{
 				input = "combat_ability_released",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "block_cancel",
-				transition = "base",
-			},
-		},
-	},
+				transition = "base"
+			}
+		}
+	}
 }
 ability_template.actions = {
 	action_aim = {
-		ability_type = "combat_ability",
 		allowed_during_lunge = true,
 		allowed_during_sprint = true,
 		kind = "veteran_shout_aim",
@@ -66,12 +65,11 @@ ability_template.actions = {
 		radius = RADIUS,
 		allowed_chain_actions = {
 			combat_ability_released = {
-				action_name = "action_veteran_combat_ability",
-			},
-		},
+				action_name = "action_veteran_combat_ability"
+			}
+		}
 	},
 	action_immediate_use = {
-		ability_type = "combat_ability",
 		allowed_during_lunge = true,
 		allowed_during_sprint = true,
 		kind = "veteran_immediate_use",
@@ -80,50 +78,49 @@ ability_template.actions = {
 		total_time = 0,
 		conditional_state_to_action_input = {
 			action_end = {
-				input_name = "combat_ability_released",
-			},
+				input_name = "combat_ability_released"
+			}
 		},
 		allowed_chain_actions = {
 			combat_ability_released = {
-				action_name = "action_veteran_combat_ability",
-			},
-		},
+				action_name = "action_veteran_combat_ability"
+			}
+		}
 	},
 	action_veteran_combat_ability = {
-		ability_type = "combat_ability",
 		allowed_during_sprint = true,
+		consume_ability_usage_cost = true,
+		consume_usage_cost_at_start = true,
 		has_husk_sound = true,
 		kind = "veteran_combat_ability",
 		shout_target_template = "veteran_shout",
 		sprint_ready_up_time = 0,
 		total_time = 1,
 		uninterruptible = true,
-		use_ability_charge = true,
-		use_charge_at_start = true,
 		radius = RADIUS,
 		vo_tags = {
 			base = "ability_ranger",
 			ranger = "ability_ranger",
 			shock_trooper = "ability_shock_trooper",
-			squad_leader = "ability_squad_leader",
-		},
-	},
+			squad_leader = "ability_squad_leader"
+		}
+	}
 }
 ability_template.fx_sources = {}
 ability_template.equipped_ability_effect_scripts = {
 	"ShoutEffects",
-	"StealthEffects",
+	"StealthEffects"
 }
 ability_template.equipped_ability_effect_scripts_tweak_data = {
 	vfx = {
 		delay = 0.2,
-		name = "content/fx/particles/abilities/squad_leader_ability_shout_activate",
-	},
+		name = "content/fx/particles/abilities/squad_leader_ability_shout_activate"
+	}
 }
 ability_template.ability_meta_data = {
 	activation = {
-		action_input = "stance_pressed",
-	},
+		action_input = "stance_pressed"
+	}
 }
 
 return ability_template

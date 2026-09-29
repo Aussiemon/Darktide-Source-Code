@@ -8,21 +8,21 @@ local adamant_psyker_male_a = {
 			"loc_psyker_male_a__found_ammo_adamant_low_on_ammo_01",
 			"loc_psyker_male_a__found_ammo_adamant_low_on_ammo_02",
 			"loc_psyker_male_a__found_ammo_adamant_low_on_ammo_03",
-			"loc_psyker_male_a__found_ammo_adamant_low_on_ammo_04",
+			"loc_psyker_male_a__found_ammo_adamant_low_on_ammo_04"
 		},
 		sound_events_duration = {
 			2.790417,
 			2.042813,
 			5.344563,
-			2.314333,
+			2.314333
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25,
+			0.25
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	found_ammo_adamant_low_on_ammo = {
 		randomize_indexes_n = 0,
@@ -31,15 +31,15 @@ local adamant_psyker_male_a = {
 			"loc_psyker_male_a__found_ammo_adamant_low_on_ammo_01",
 			"loc_psyker_male_a__found_ammo_adamant_low_on_ammo_02",
 			"loc_psyker_male_a__found_ammo_adamant_low_on_ammo_03",
-			"loc_psyker_male_a__found_ammo_adamant_low_on_ammo_04",
+			"loc_psyker_male_a__found_ammo_adamant_low_on_ammo_04"
 		},
 		sound_events_duration = {
 			2.790417,
 			2.042813,
 			5.344563,
-			2.314333,
+			2.314333
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	found_health_booster_adamant_low_on_health = {
 		randomize_indexes_n = 0,
@@ -48,15 +48,15 @@ local adamant_psyker_male_a = {
 			"loc_psyker_male_a__found_health_booster_adamant_low_on_health_01",
 			"loc_psyker_male_a__found_health_booster_adamant_low_on_health_02",
 			"loc_psyker_male_a__found_health_booster_adamant_low_on_health_03",
-			"loc_psyker_male_a__found_health_booster_adamant_low_on_health_04",
+			"loc_psyker_male_a__found_health_booster_adamant_low_on_health_04"
 		},
 		sound_events_duration = {
 			2.406313,
 			4.570083,
 			3.969313,
-			4.433875,
+			4.433875
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	found_health_station_adamant_low_on_health = {
 		randomize_indexes_n = 0,
@@ -65,21 +65,21 @@ local adamant_psyker_male_a = {
 			"loc_psyker_male_a__found_health_booster_adamant_low_on_health_01",
 			"loc_psyker_male_a__found_health_booster_adamant_low_on_health_02",
 			"loc_psyker_male_a__found_health_booster_adamant_low_on_health_03",
-			"loc_psyker_male_a__found_health_booster_adamant_low_on_health_04",
+			"loc_psyker_male_a__found_health_booster_adamant_low_on_health_04"
 		},
 		sound_events_duration = {
 			2.406313,
 			4.570083,
 			3.969313,
-			4.433875,
+			4.433875
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25,
+			0.25
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	friendly_fire_from_adamant_to_psyker = {
 		randomize_indexes_n = 0,
@@ -90,7 +90,7 @@ local adamant_psyker_male_a = {
 			"loc_psyker_male_a__friendly_fire_from_adamant_to_psyker_03",
 			"loc_psyker_male_a__friendly_fire_from_adamant_to_psyker_04",
 			"loc_psyker_male_a__friendly_fire_from_adamant_to_psyker_05",
-			"loc_psyker_male_a__friendly_fire_from_adamant_to_psyker_06",
+			"loc_psyker_male_a__friendly_fire_from_adamant_to_psyker_06"
 		},
 		sound_events_duration = {
 			3.107417,
@@ -98,9 +98,9 @@ local adamant_psyker_male_a = {
 			2.799875,
 			2.369917,
 			3.658667,
-			2.933625,
+			2.933625
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	knocked_down_multiple_times_adamant = {
 		randomize_indexes_n = 0,
@@ -109,15 +109,15 @@ local adamant_psyker_male_a = {
 			"loc_psyker_male_a__knocked_down_multiple_times_adamant_01",
 			"loc_psyker_male_a__knocked_down_multiple_times_adamant_02",
 			"loc_psyker_male_a__knocked_down_multiple_times_adamant_03",
-			"loc_psyker_male_a__knocked_down_multiple_times_adamant_04",
+			"loc_psyker_male_a__knocked_down_multiple_times_adamant_04"
 		},
 		sound_events_duration = {
 			2.576313,
 			2.780229,
 			2.102271,
-			3.448271,
+			3.448271
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	player_death_adamant = {
 		randomize_indexes_n = 0,
@@ -126,15 +126,15 @@ local adamant_psyker_male_a = {
 			"loc_psyker_male_a__player_death_adamant_01",
 			"loc_psyker_male_a__player_death_adamant_02",
 			"loc_psyker_male_a__player_death_adamant_03",
-			"loc_psyker_male_a__player_death_adamant_04",
+			"loc_psyker_male_a__player_death_adamant_04"
 		},
 		sound_events_duration = {
 			3.171479,
 			3.82825,
 			2.483333,
-			4.952188,
+			4.952188
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	psyker_seen_killstreak_adamant = {
 		randomize_indexes_n = 0,
@@ -143,15 +143,15 @@ local adamant_psyker_male_a = {
 			"loc_psyker_male_a__psyker_seen_killstreak_adamant_01",
 			"loc_psyker_male_a__psyker_seen_killstreak_adamant_02",
 			"loc_psyker_male_a__psyker_seen_killstreak_adamant_03",
-			"loc_psyker_male_a__psyker_seen_killstreak_adamant_04",
+			"loc_psyker_male_a__psyker_seen_killstreak_adamant_04"
 		},
 		sound_events_duration = {
 			4.005625,
 			3.239229,
 			3.436167,
-			5.066917,
+			5.066917
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	psyker_start_revive_adamant = {
 		randomize_indexes_n = 0,
@@ -162,7 +162,7 @@ local adamant_psyker_male_a = {
 			"loc_psyker_male_a__psyker_start_revive_adamant_03",
 			"loc_psyker_male_a__psyker_start_revive_adamant_04",
 			"loc_psyker_male_a__psyker_start_revive_adamant_05",
-			"loc_psyker_male_a__psyker_start_revive_adamant_06",
+			"loc_psyker_male_a__psyker_start_revive_adamant_06"
 		},
 		sound_events_duration = {
 			3.182625,
@@ -170,9 +170,9 @@ local adamant_psyker_male_a = {
 			2.89775,
 			3.758063,
 			3.492313,
-			3.683729,
+			3.683729
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_adamant_cover_me = {
 		randomize_indexes_n = 0,
@@ -181,15 +181,15 @@ local adamant_psyker_male_a = {
 			"loc_psyker_male_a__response_for_adamant_cover_me_01",
 			"loc_psyker_male_a__response_for_adamant_cover_me_02",
 			"loc_psyker_male_a__response_for_adamant_cover_me_03",
-			"loc_psyker_male_a__response_for_adamant_cover_me_04",
+			"loc_psyker_male_a__response_for_adamant_cover_me_04"
 		},
 		sound_events_duration = {
 			2.941208,
 			3.955083,
 			2.956167,
-			3.657208,
+			3.657208
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_adamant_critical_health = {
 		randomize_indexes_n = 0,
@@ -198,15 +198,15 @@ local adamant_psyker_male_a = {
 			"loc_psyker_male_a__response_for_adamant_critical_health_01",
 			"loc_psyker_male_a__response_for_adamant_critical_health_02",
 			"loc_psyker_male_a__response_for_adamant_critical_health_03",
-			"loc_psyker_male_a__response_for_adamant_critical_health_04",
+			"loc_psyker_male_a__response_for_adamant_critical_health_04"
 		},
 		sound_events_duration = {
 			2.774729,
 			2.418771,
 			4.722792,
-			3.2875,
+			3.2875
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_adamant_disabled_by_chaos_hound = {
 		randomize_indexes_n = 0,
@@ -215,15 +215,15 @@ local adamant_psyker_male_a = {
 			"loc_psyker_male_a__response_for_adamant_disabled_by_chaos_hound_01",
 			"loc_psyker_male_a__response_for_adamant_disabled_by_chaos_hound_02",
 			"loc_psyker_male_a__response_for_adamant_disabled_by_chaos_hound_03",
-			"loc_psyker_male_a__response_for_adamant_disabled_by_chaos_hound_04",
+			"loc_psyker_male_a__response_for_adamant_disabled_by_chaos_hound_04"
 		},
 		sound_events_duration = {
 			2.853708,
 			5.574083,
 			2.543063,
-			3.287458,
+			3.287458
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_adamant_disabled_by_enemy = {
 		randomize_indexes_n = 0,
@@ -234,7 +234,7 @@ local adamant_psyker_male_a = {
 			"loc_psyker_male_a__response_for_adamant_disabled_by_enemy_03",
 			"loc_psyker_male_a__response_for_adamant_disabled_by_enemy_04",
 			"loc_psyker_male_a__response_for_adamant_disabled_by_enemy_05",
-			"loc_psyker_male_a__response_for_adamant_disabled_by_enemy_06",
+			"loc_psyker_male_a__response_for_adamant_disabled_by_enemy_06"
 		},
 		sound_events_duration = {
 			2.419188,
@@ -242,9 +242,9 @@ local adamant_psyker_male_a = {
 			3.448688,
 			3.115854,
 			3.617563,
-			2.614729,
+			2.614729
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_adamant_enemy_kill_monster = {
 		randomize_indexes_n = 0,
@@ -253,15 +253,15 @@ local adamant_psyker_male_a = {
 			"loc_psyker_male_a__response_for_adamant_enemy_kill_monster_01",
 			"loc_psyker_male_a__response_for_adamant_enemy_kill_monster_02",
 			"loc_psyker_male_a__response_for_adamant_enemy_kill_monster_03",
-			"loc_psyker_male_a__response_for_adamant_enemy_kill_monster_04",
+			"loc_psyker_male_a__response_for_adamant_enemy_kill_monster_04"
 		},
 		sound_events_duration = {
 			5.635167,
 			3.657521,
 			3.823479,
-			2.712063,
+			2.712063
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_adamant_knocked_down_3 = {
 		randomize_indexes_n = 0,
@@ -270,15 +270,15 @@ local adamant_psyker_male_a = {
 			"loc_psyker_male_a__response_for_adamant_knocked_down_3_01",
 			"loc_psyker_male_a__response_for_adamant_knocked_down_3_02",
 			"loc_psyker_male_a__response_for_adamant_knocked_down_3_03",
-			"loc_psyker_male_a__response_for_adamant_knocked_down_3_04",
+			"loc_psyker_male_a__response_for_adamant_knocked_down_3_04"
 		},
 		sound_events_duration = {
 			4.021292,
 			2.176646,
 			2.942854,
-			3.38875,
+			3.38875
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_adamant_ledge_hanging = {
 		randomize_indexes_n = 0,
@@ -289,7 +289,7 @@ local adamant_psyker_male_a = {
 			"loc_psyker_male_a__response_for_adamant_ledge_hanging_03",
 			"loc_psyker_male_a__response_for_adamant_ledge_hanging_04",
 			"loc_psyker_male_a__response_for_adamant_ledge_hanging_05",
-			"loc_psyker_male_a__response_for_adamant_ledge_hanging_06",
+			"loc_psyker_male_a__response_for_adamant_ledge_hanging_06"
 		},
 		sound_events_duration = {
 			3.345688,
@@ -297,9 +297,9 @@ local adamant_psyker_male_a = {
 			2.435771,
 			2.036375,
 			3.469833,
-			2.816188,
+			2.816188
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_adamant_seen_killstreak_psyker = {
 		randomize_indexes_n = 0,
@@ -308,15 +308,15 @@ local adamant_psyker_male_a = {
 			"loc_psyker_male_a__response_for_adamant_seen_killstreak_psyker_01",
 			"loc_psyker_male_a__response_for_adamant_seen_killstreak_psyker_02",
 			"loc_psyker_male_a__response_for_adamant_seen_killstreak_psyker_03",
-			"loc_psyker_male_a__response_for_adamant_seen_killstreak_psyker_04",
+			"loc_psyker_male_a__response_for_adamant_seen_killstreak_psyker_04"
 		},
 		sound_events_duration = {
 			4.344417,
 			4.642208,
 			4.380688,
-			4.504125,
+			4.504125
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_adamant_start_revive_psyker = {
 		randomize_indexes_n = 0,
@@ -325,15 +325,15 @@ local adamant_psyker_male_a = {
 			"loc_psyker_male_a__response_for_adamant_start_revive_psyker_01",
 			"loc_psyker_male_a__response_for_adamant_start_revive_psyker_02",
 			"loc_psyker_male_a__response_for_adamant_start_revive_psyker_03",
-			"loc_psyker_male_a__response_for_adamant_start_revive_psyker_04",
+			"loc_psyker_male_a__response_for_adamant_start_revive_psyker_04"
 		},
 		sound_events_duration = {
 			2.739854,
 			3.694708,
 			4.848833,
-			4.290542,
+			4.290542
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_friendly_fire_from_psyker_to_adamant = {
 		randomize_indexes_n = 0,
@@ -342,15 +342,15 @@ local adamant_psyker_male_a = {
 			"loc_psyker_male_a__response_for_friendly_fire_from_psyker_to_adamant_01",
 			"loc_psyker_male_a__response_for_friendly_fire_from_psyker_to_adamant_02",
 			"loc_psyker_male_a__response_for_friendly_fire_from_psyker_to_adamant_03",
-			"loc_psyker_male_a__response_for_friendly_fire_from_psyker_to_adamant_04",
+			"loc_psyker_male_a__response_for_friendly_fire_from_psyker_to_adamant_04"
 		},
 		sound_events_duration = {
 			2.575708,
 			4.985438,
 			3.449938,
-			4.363938,
+			4.363938
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_pinned_by_enemies_adamant = {
 		randomize_indexes_n = 0,
@@ -361,7 +361,7 @@ local adamant_psyker_male_a = {
 			"loc_psyker_male_a__response_for_pinned_by_enemies_adamant_03",
 			"loc_psyker_male_a__response_for_pinned_by_enemies_adamant_04",
 			"loc_psyker_male_a__response_for_pinned_by_enemies_adamant_05",
-			"loc_psyker_male_a__response_for_pinned_by_enemies_adamant_06",
+			"loc_psyker_male_a__response_for_pinned_by_enemies_adamant_06"
 		},
 		sound_events_duration = {
 			3.324854,
@@ -369,10 +369,10 @@ local adamant_psyker_male_a = {
 			2.432792,
 			4.398542,
 			2.999542,
-			3.003,
+			3.003
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("adamant_psyker_male_a", adamant_psyker_male_a)

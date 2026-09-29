@@ -19,10 +19,10 @@ local mutator_templates = {
 				buff_name = "common_minion_on_fire",
 				breed_allowed = {
 					chaos_newly_infected = true,
-					chaos_poxwalker = true,
-				},
-			},
-		},
+					chaos_poxwalker = true
+				}
+			}
+		}
 	},
 	mutator_corrupted_enemies = {
 		class = "scripts/managers/mutator/mutators/mutator_minion_nurgle_blessing",
@@ -30,73 +30,75 @@ local mutator_templates = {
 			category_name = "loc_expedition_map_heretic_intel",
 			description = "loc_expeditions_modifier_enemy_blight_spreads_description",
 			display_name = "loc_expeditions_modifier_enemy_blight_spreads",
-			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_nurgle",
+			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_nurgle"
 		},
 		random_spawn_buff_templates = {
 			buffs = {
-				"havoc_corrupted_enemies",
+				"havoc_corrupted_enemies"
 			},
-			breed_chances = mutator_havoc_enemies_corrupted_breed_chances,
-		},
+			breed_chances = mutator_havoc_enemies_corrupted_breed_chances
+		}
 	},
 	mutator_rotten_armor = {
+		activate_on_load = true,
 		class = "scripts/managers/mutator/mutators/mutator_minion_visual_override",
 		template_name = "rotten_armor",
 		ui = {
 			category_name = "loc_expedition_map_heretic_intel",
 			description = "loc_expeditions_modifier_enemy_rotten_armour_description",
 			display_name = "loc_expeditions_modifier_enemy_rotten_armour",
-			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_nurgle",
+			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_nurgle"
 		},
 		random_spawn_buff_templates = {
 			buffs = {
-				"mutator_rotten_armor",
+				"mutator_rotten_armor"
 			},
-			breed_chances = mutator_havoc_rotten_armor_breed_chances,
+			breed_chances = mutator_havoc_rotten_armor_breed_chances
 		},
 		fx_overrides = {
-			override_armor_type = "rotten_armor",
-		},
+			override_armor_type = "rotten_armor"
+		}
 	},
 	mutator_headshot_parasite_enemies = {
+		activate_on_load = true,
 		class = "scripts/managers/mutator/mutators/mutator_minion_visual_override",
 		template_name = "head_parasite",
 		random_spawn_buff_templates = {
 			buffs = {
-				"headshot_parasite_enemies",
+				"headshot_parasite_enemies"
 			},
-			breed_chances = mutator_havoc_enemies_parasite_headshot_breed_chances,
-		},
+			breed_chances = mutator_havoc_enemies_parasite_headshot_breed_chances
+		}
 	},
 	mutator_bolstering_minions = {
 		class = "scripts/managers/mutator/mutators/mutator_minion_nurgle_blessing",
 		random_spawn_buff_templates = {
 			buffs = {
-				"havoc_bolstering",
+				"havoc_bolstering"
 			},
 			ignored_buff_keyword = buff_keywords.stimmed,
-			breed_chances = bolstering_minions_01_breed_chances,
-		},
+			breed_chances = bolstering_minions_01_breed_chances
+		}
 	},
 	mutator_tough_skin_enemies = {
 		class = "scripts/managers/mutator/mutators/mutator_minion_nurgle_blessing",
 		random_spawn_buff_templates = {
 			buffs = {
-				"havoc_toughened_skin",
+				"havoc_toughened_skin"
 			},
-			breed_chances = mutator_havoc_tougher_skin_breed_chances,
-		},
+			breed_chances = mutator_havoc_tougher_skin_breed_chances
+		}
 	},
 	mutator_havoc_sticky_poxburster = {
 		class = "scripts/managers/mutator/mutators/mutator_nurgle_warp",
 		random_spawn_buff_templates = {
 			buffs = {
-				"havoc_sticky_poxburster",
+				"havoc_sticky_poxburster"
 			},
 			breed_chances = {
 				chaos_armored_bomber = 1,
-				chaos_poxwalker_bomber = 1,
-			},
+				chaos_poxwalker_bomber = 1
+			}
 		},
 		compositions = {
 			{
@@ -111,7 +113,7 @@ local mutator_templates = {
 				"chaos_mutated_poxwalker",
 				"chaos_mutated_poxwalker",
 				"chaos_mutated_poxwalker",
-				"chaos_mutated_poxwalker",
+				"chaos_mutated_poxwalker"
 			},
 			{
 				"chaos_lesser_mutated_poxwalker",
@@ -123,7 +125,7 @@ local mutator_templates = {
 				"chaos_mutated_poxwalker",
 				"chaos_mutated_poxwalker",
 				"chaos_mutated_poxwalker",
-				"chaos_mutated_poxwalker",
+				"chaos_mutated_poxwalker"
 			},
 			{
 				"chaos_lesser_mutated_poxwalker",
@@ -137,62 +139,62 @@ local mutator_templates = {
 				"chaos_mutated_poxwalker",
 				"chaos_mutated_poxwalker",
 				"chaos_mutated_poxwalker",
-				"chaos_mutated_poxwalker",
-			},
-		},
+				"chaos_mutated_poxwalker"
+			}
+		}
 	},
 	mutator_havoc_enraged = {
 		class = "scripts/managers/mutator/mutators/mutator_minion_nurgle_blessing",
 		random_spawn_buff_templates = {
 			buffs = {
-				"havoc_enraged_enemies_trigger",
+				"havoc_enraged_enemies_trigger"
 			},
-			breed_chances = mutator_havoc_enraged_breed_chances,
-		},
+			breed_chances = mutator_havoc_enraged_breed_chances
+		}
 	},
 	mutator_encroaching_garden = {
 		class = "scripts/managers/mutator/mutators/mutator_minion_nurgle_blessing",
 		random_spawn_buff_templates = {
 			buffs = {
-				"havoc_encroaching_garden",
+				"havoc_encroaching_garden"
 			},
-			breed_chances = mutator_encroaching_gardens_breed_chances,
-		},
+			breed_chances = mutator_encroaching_gardens_breed_chances
+		}
 	},
 	mutator_havoc_no_stagger_ritualist = {
 		class = "scripts/managers/mutator/mutators/mutator_minion_nurgle_blessing",
 		random_spawn_buff_templates = {
 			buffs = {
-				"havoc_no_stagger",
+				"havoc_no_stagger"
 			},
 			breed_chances = {
-				chaos_mutator_ritualist = 1,
-			},
-		},
+				chaos_mutator_ritualist = 1
+			}
+		}
 	},
 	mutator_enable_auric = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 		init_modify_pacing = {
-			is_auric = true,
-		},
+			is_auric = true
+		}
 	},
 	mutator_stimmed_minions = {
 		class = "scripts/managers/mutator/mutators/mutator_stimmed_minions",
-		breed_chances = mutator_stimmed_minions_breed_chances,
+		breed_chances = mutator_stimmed_minions_breed_chances
 	},
 	mutator_havoc_override_horde_pacing_01 = {
 		class = "scripts/managers/mutator/mutators/mutator_horde_pacing_overrides",
 		pacing_override = "havoc_01",
-		template_name = "mutator_horde",
+		template_name = "mutator_horde"
 	},
 	mutator_havoc_override_horde_pacing_02 = {
 		class = "scripts/managers/mutator/mutators/mutator_horde_pacing_overrides",
 		pacing_override = "havoc_02",
-		template_name = "mutator_horde",
+		template_name = "mutator_horde"
 	},
 	mutator_havoc_bauble = {
-		class = "scripts/managers/mutator/mutators/mutator_pestilent_bauble",
-	},
+		class = "scripts/managers/mutator/mutators/mutator_pestilent_bauble"
+	}
 }
 
 return mutator_templates

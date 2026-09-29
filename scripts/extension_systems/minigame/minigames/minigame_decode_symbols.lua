@@ -59,8 +59,8 @@ MinigameDecodeSymbols.start = function (self, player, send_to_self_client)
 		Unit.set_flow_variable(self._minigame_unit, "player_unit", player_unit)
 
 		local fixed_frame_t = FixedFrame.get_latest_fixed_time()
-		local rewind_ms = LagCompensation.rewind_ms(is_server, not player.remote, player)
-		local decode_start_time = fixed_frame_t + rewind_ms
+		local lag_compensation = LagCompensation.rewind_seconds(is_server, not player.remote, player)
+		local decode_start_time = fixed_frame_t + lag_compensation
 		local unit_spawner_manager = Managers.state.unit_spawner
 		local is_level_unit, minigame_unit_id = unit_spawner_manager:game_object_id_or_level_index(self._minigame_unit)
 		local game_session_manager = Managers.state.game_session

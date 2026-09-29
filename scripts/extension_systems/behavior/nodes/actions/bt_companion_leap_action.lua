@@ -321,7 +321,7 @@ end
 
 local LEAP_TARGET_NODES = {
 	"enemy_aim_target_03",
-	"enemy_aim_target_04",
+	"enemy_aim_target_04"
 }
 
 BtCompanionLeapAction._check_colliding_minions = function (self, unit, scratchpad, action_data, ignore_dot_check)

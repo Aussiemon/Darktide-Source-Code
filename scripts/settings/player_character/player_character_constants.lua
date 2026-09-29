@@ -9,7 +9,7 @@ local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_t
 local buff_target_component_lookups = WeaponTweakTemplateSettings.buff_target_component_lookups
 local damage_types = DamageSettings.damage_types
 local RELOAD_STATES = {
-	"none",
+	"none"
 }
 local sorted_reload_template_names = table.keys(ReloadTemplates)
 
@@ -30,53 +30,53 @@ end
 
 local SLIDE_TWEAK_VALUES = {
 	ninja_fencer = {},
-	no_tweak_values = {},
+	no_tweak_values = {}
 }
 local weapon_component_config = {
 	current_ammunition_clip = {
 		network_type = "ammunition_clip_array",
 		default_value = {
 			0,
-			0,
-		},
+			0
+		}
 	},
 	current_ammunition_reserve = {
 		default_value = 0,
-		network_type = "ammunition_large",
+		network_type = "ammunition_large"
 	},
 	current_ammunition_clips_in_use = {
 		network_type = "clips_in_use",
 		default_value = {
 			false,
-			false,
-		},
+			false
+		}
 	},
 	max_ammunition_clip = {
 		network_type = "ammunition_clip_array",
 		default_value = {
 			0,
-			0,
-		},
+			0
+		}
 	},
 	max_ammunition_reserve = {
 		default_value = 0,
-		network_type = "ammunition_large",
+		network_type = "ammunition_large"
 	},
 	free_ammunition_transfer = {
 		default_value = false,
-		network_type = "bool",
+		network_type = "bool"
 	},
 	ammunition_at_reload_start = {
 		default_value = 0,
-		network_type = "ammunition_small",
+		network_type = "ammunition_small"
 	},
 	last_ammunition_usage = {
 		default_value = 0,
-		network_type = "fixed_frame_offset_start_t_6bit",
+		network_type = "fixed_frame_offset_start_t_6bit"
 	},
 	reload_state = {
 		default_value = "none",
-		network_type = RELOAD_STATES,
+		network_type = RELOAD_STATES
 	},
 	overheat_state = {
 		default_value = "idle",
@@ -86,53 +86,61 @@ local weapon_component_config = {
 			"decreasing",
 			"exploding",
 			"soft_lockout",
-			"lockout",
-		},
+			"lockout"
+		}
 	},
 	overheat_last_charge_at_t = {
 		default_value = 0,
-		network_type = "fixed_frame_offset_start_t_6bit",
+		network_type = "fixed_frame_offset_start_t_6bit"
 	},
 	overheat_remove_at_t = {
 		default_value = 0,
-		network_type = "fixed_frame_offset_end_t_6bit",
+		network_type = "fixed_frame_offset_end_t_6bit"
 	},
 	overheat_current_percentage = {
 		default_value = 0,
-		network_type = "weapon_overheat",
+		network_type = "weapon_overheat"
 	},
 	overheat_starting_percentage = {
 		default_value = 0,
-		network_type = "weapon_overheat",
+		network_type = "weapon_overheat"
 	},
 	special_active = {
 		default_value = false,
-		network_type = "bool",
+		network_type = "bool"
 	},
 	num_special_charges = {
 		default_value = 0,
-		network_type = "num_special_charges",
+		network_type = "num_special_charges"
 	},
 	max_num_special_charges = {
 		default_value = 0,
-		network_type = "num_special_charges",
+		network_type = "num_special_charges"
 	},
 	special_active_start_t = {
 		default_value = 0,
-		network_type = "fixed_frame_offset_start_t_6bit",
+		network_type = "fixed_frame_offset_start_t_6bit"
 	},
 	special_charge_remove_at_t = {
 		default_value = 0,
-		network_type = "fixed_frame_offset_end_t_9bit",
+		network_type = "fixed_frame_offset_end_t_9bit"
+	},
+	last_wield_t = {
+		default_value = 0,
+		network_type = "fixed_frame_time"
+	},
+	last_unwield_t = {
+		default_value = 0,
+		network_type = "fixed_frame_time"
 	},
 	unequip_slot = {
 		default_value = false,
-		network_type = "bool",
+		network_type = "bool"
 	},
 	unwield_slot = {
 		default_value = false,
-		network_type = "bool",
-	},
+		network_type = "bool"
+	}
 }
 local constants = {
 	acceleration = 19,
@@ -199,7 +207,7 @@ local constants = {
 		movement_settings = {
 			cryptic = HubMovementSettingsTemplates.human,
 			human = HubMovementSettingsTemplates.human,
-			ogryn = HubMovementSettingsTemplates.ogryn,
+			ogryn = HubMovementSettingsTemplates.ogryn
 		},
 		move_method_anims = {
 			moving = {
@@ -212,7 +220,7 @@ local constants = {
 					right_135 = "start_135_rgt",
 					right_180 = "start_180_rgt",
 					right_45 = "start_45_rgt",
-					right_90 = "start_90_rgt",
+					right_90 = "start_90_rgt"
 				},
 				from_movement_turn_anims = {
 					forward = "start_0",
@@ -223,15 +231,15 @@ local constants = {
 					right_135 = "start_135_rgt",
 					right_180 = "start_180_rgt",
 					right_45 = "start_45_rgt",
-					right_90 = "start_90_rgt",
-				},
+					right_90 = "start_90_rgt"
+				}
 			},
 			idle = {
 				from_movement_stop_anims = {
 					jog = "idle_jog",
 					sprint = "idle_sprint",
-					walk = "idle_walk",
-				},
+					walk = "idle_walk"
+				}
 			},
 			turn_on_spot = {
 				from_still_turn_anims = {
@@ -243,7 +251,7 @@ local constants = {
 					right_135 = "idle_turn_135_rgt",
 					right_180 = "idle_turn_180_rgt",
 					right_45 = "idle_turn_45_rgt",
-					right_90 = "idle_turn_90_rgt",
+					right_90 = "idle_turn_90_rgt"
 				},
 				from_movement_turn_anims = {
 					forward = "start_0",
@@ -254,10 +262,10 @@ local constants = {
 					right_135 = "start_135_rgt",
 					right_180 = "start_180_rgt",
 					right_45 = "start_45_rgt",
-					right_90 = "start_90_rgt",
-				},
-			},
-		},
+					right_90 = "start_90_rgt"
+				}
+			}
+		}
 	},
 	climb_pitch_offset = math.pi / 8,
 	air_directional_speed_scale_angle = math.pi / 2,
@@ -332,8 +340,8 @@ local constants = {
 				"slot_body_skin_discoloration",
 				"slot_body_hair_color",
 				"slot_body_hair",
-				"slot_body_face_makeup",
-			},
+				"slot_body_face_makeup"
+			}
 		},
 		slot_body_face_hair = {
 			mispredict_packages = true,
@@ -343,15 +351,15 @@ local constants = {
 			wieldable = false,
 			slot_dependencies = {
 				"slot_body_hair_color",
-				"slot_body_face_hair_color",
-			},
+				"slot_body_face_hair_color"
+			}
 		},
 		slot_body_face_makeup = {
 			mispredict_packages = true,
 			priority = 33,
 			profile_field = true,
 			slot_type = "body",
-			wieldable = false,
+			wieldable = false
 		},
 		slot_body_face_scar = {
 			mispredict_packages = true,
@@ -362,63 +370,15 @@ local constants = {
 			slot_dependencies = {
 				"slot_body_skin_color",
 				"slot_body_skin_color_secondary",
-				"slot_body_skin_discoloration",
-			},
+				"slot_body_skin_discoloration"
+			}
 		},
 		slot_body_face_tattoo = {
 			mispredict_packages = true,
 			priority = 32,
 			profile_field = true,
 			slot_type = "body",
-			wieldable = false,
-		},
-		slot_body_arms = {
-			mispredict_packages = true,
-			priority = 10,
-			profile_field = true,
-			slot_type = "body",
-			wieldable = false,
-			slot_dependencies = {
-				"slot_body_tattoo",
-				"slot_body_face_tattoo",
-				"slot_body_skin_color",
-				"slot_body_skin_color_secondary",
-				"slot_body_skin_discoloration",
-			},
-		},
-		slot_body_hair = {
-			mispredict_packages = true,
-			priority = 12,
-			profile_field = true,
-			slot_type = "body",
-			wieldable = false,
-			slot_dependencies = {
-				"slot_body_hair_color",
-			},
-		},
-		slot_body_legs = {
-			mispredict_packages = true,
-			priority = 10,
-			profile_field = true,
-			slot_type = "body",
-			wieldable = false,
-			slot_dependencies = {
-				"slot_body_tattoo",
-				"slot_body_face_tattoo",
-				"slot_body_skin_color",
-				"slot_body_skin_color_secondary",
-				"slot_body_skin_discoloration",
-			},
-		},
-		slot_body_tattoo = {
-			mispredict_packages = true,
-			priority = 13,
-			profile_field = true,
-			slot_type = "body",
-			wieldable = false,
-			slot_dependencies = {
-				"slot_body_face_tattoo",
-			},
+			wieldable = false
 		},
 		slot_body_torso = {
 			mispredict_packages = true,
@@ -433,29 +393,77 @@ local constants = {
 				"slot_body_skin_color_secondary",
 				"slot_body_skin_discoloration",
 				"slot_body_eye_color",
-				"slot_body_eye_color_secondary",
-			},
+				"slot_body_eye_color_secondary"
+			}
+		},
+		slot_body_arms = {
+			mispredict_packages = true,
+			priority = 10,
+			profile_field = true,
+			slot_type = "body",
+			wieldable = false,
+			slot_dependencies = {
+				"slot_body_tattoo",
+				"slot_body_face_tattoo",
+				"slot_body_skin_color",
+				"slot_body_skin_color_secondary",
+				"slot_body_skin_discoloration"
+			}
+		},
+		slot_body_legs = {
+			mispredict_packages = true,
+			priority = 10,
+			profile_field = true,
+			slot_type = "body",
+			wieldable = false,
+			slot_dependencies = {
+				"slot_body_tattoo",
+				"slot_body_face_tattoo",
+				"slot_body_skin_color",
+				"slot_body_skin_color_secondary",
+				"slot_body_skin_discoloration"
+			}
+		},
+		slot_body_hair = {
+			mispredict_packages = true,
+			priority = 12,
+			profile_field = true,
+			slot_type = "body",
+			wieldable = false,
+			slot_dependencies = {
+				"slot_body_hair_color"
+			}
+		},
+		slot_body_tattoo = {
+			mispredict_packages = true,
+			priority = 13,
+			profile_field = true,
+			slot_type = "body",
+			wieldable = false,
+			slot_dependencies = {
+				"slot_body_face_tattoo"
+			}
 		},
 		slot_body_eye_color = {
 			mispredict_packages = true,
 			priority = 50,
 			profile_field = true,
 			slot_type = "body",
-			wieldable = false,
+			wieldable = false
 		},
 		slot_body_eye_color_secondary = {
 			mispredict_packages = true,
 			priority = 50,
 			profile_field = true,
 			slot_type = "body",
-			wieldable = false,
+			wieldable = false
 		},
 		slot_body_hair_color = {
 			mispredict_packages = true,
 			priority = 50,
 			profile_field = true,
 			slot_type = "body",
-			wieldable = false,
+			wieldable = false
 		},
 		slot_body_face_hair_color = {
 			mispredict_packages = true,
@@ -464,39 +472,50 @@ local constants = {
 			slot_type = "body",
 			wieldable = false,
 			slot_dependencies = {
-				"slot_body_hair_color",
-			},
+				"slot_body_hair_color"
+			}
 		},
 		slot_body_skin_color = {
 			mispredict_packages = true,
 			priority = 50,
 			profile_field = true,
 			slot_type = "body",
-			wieldable = false,
+			wieldable = false
 		},
 		slot_body_skin_color_secondary = {
 			mispredict_packages = true,
 			priority = 50,
 			profile_field = true,
 			slot_type = "body",
-			wieldable = false,
+			wieldable = false
 		},
 		slot_body_skin_discoloration = {
 			mispredict_packages = true,
 			priority = 50,
 			profile_field = true,
 			slot_type = "body",
-			wieldable = false,
+			wieldable = false
 		},
-		slot_gear_extra_cosmetic = {
+		slot_companion_body_skin_color = {
 			mispredict_packages = true,
-			priority = 30,
+			priority = 50,
 			profile_field = true,
-			slot_type = "gear",
-			wieldable = false,
-			slot_dependencies = {
-				"slot_gear_material_override_decal",
-			},
+			slot_type = "body",
+			wieldable = false
+		},
+		slot_companion_body_fur_color = {
+			mispredict_packages = true,
+			priority = 50,
+			profile_field = true,
+			slot_type = "body",
+			wieldable = false
+		},
+		slot_companion_body_coat_pattern = {
+			mispredict_packages = true,
+			priority = 50,
+			profile_field = true,
+			slot_type = "body",
+			wieldable = false
 		},
 		slot_gear_head = {
 			mispredict_packages = true,
@@ -509,8 +528,8 @@ local constants = {
 				"slot_body_skin_color_secondary",
 				"slot_body_eye_color",
 				"slot_body_eye_color_secondary",
-				"slot_gear_material_override_decal",
-			},
+				"slot_gear_material_override_decal"
+			}
 		},
 		slot_gear_upperbody = {
 			mispredict_packages = true,
@@ -523,8 +542,8 @@ local constants = {
 				"slot_body_skin_color",
 				"slot_body_skin_color_secondary",
 				"slot_body_skin_discoloration",
-				"slot_gear_material_override_decal",
-			},
+				"slot_gear_material_override_decal"
+			}
 		},
 		slot_gear_lowerbody = {
 			mispredict_packages = true,
@@ -536,36 +555,25 @@ local constants = {
 				"slot_body_skin_color",
 				"slot_body_skin_color_secondary",
 				"slot_body_skin_discoloration",
-				"slot_gear_material_override_decal",
-			},
+				"slot_gear_material_override_decal"
+			}
+		},
+		slot_gear_extra_cosmetic = {
+			mispredict_packages = true,
+			priority = 30,
+			profile_field = true,
+			slot_type = "gear",
+			wieldable = false,
+			slot_dependencies = {
+				"slot_gear_material_override_decal"
+			}
 		},
 		slot_gear_material_override_decal = {
 			mispredict_packages = true,
 			priority = 60,
 			profile_field = true,
 			slot_type = "gear",
-			wieldable = false,
-		},
-		slot_companion_body_skin_color = {
-			mispredict_packages = true,
-			priority = 50,
-			profile_field = true,
-			slot_type = "body",
-			wieldable = false,
-		},
-		slot_companion_body_fur_color = {
-			mispredict_packages = true,
-			priority = 50,
-			profile_field = true,
-			slot_type = "body",
-			wieldable = false,
-		},
-		slot_companion_body_coat_pattern = {
-			mispredict_packages = true,
-			priority = 50,
-			profile_field = true,
-			slot_type = "body",
-			wieldable = false,
+			wieldable = false
 		},
 		slot_companion_gear_full = {
 			mispredict_packages = true,
@@ -576,8 +584,8 @@ local constants = {
 			slot_dependencies = {
 				"slot_companion_body_skin_color",
 				"slot_companion_body_fur_color",
-				"slot_companion_body_coat_pattern",
-			},
+				"slot_companion_body_coat_pattern"
+			}
 		},
 		slot_attachment_1 = {
 			display_name = "loc_inventory_title_slot_attachment_1",
@@ -586,7 +594,7 @@ local constants = {
 			priority = 40,
 			profile_field = true,
 			slot_type = "gadget",
-			wieldable = false,
+			wieldable = false
 		},
 		slot_attachment_2 = {
 			display_name = "loc_inventory_title_slot_attachment_2",
@@ -595,7 +603,7 @@ local constants = {
 			priority = 40,
 			profile_field = true,
 			slot_type = "gadget",
-			wieldable = false,
+			wieldable = false
 		},
 		slot_attachment_3 = {
 			display_name = "loc_inventory_title_slot_attachment_3",
@@ -604,7 +612,7 @@ local constants = {
 			priority = 40,
 			profile_field = true,
 			slot_type = "gadget",
-			wieldable = false,
+			wieldable = false
 		},
 		slot_luggable = {
 			disallow_ladders_on_wield = true,
@@ -612,7 +620,7 @@ local constants = {
 			priority = 1,
 			slot_type = "luggable",
 			use_existing_unit_3p = true,
-			wieldable = true,
+			wieldable = true
 		},
 		slot_primary = {
 			buffable = true,
@@ -622,8 +630,10 @@ local constants = {
 			slot_type = "weapon",
 			wieldable = true,
 			wield_inputs = {
-				"wield_1",
-			},
+				pressed = {
+					"wield_1"
+				}
+			}
 		},
 		slot_secondary = {
 			buffable = true,
@@ -633,14 +643,16 @@ local constants = {
 			slot_type = "weapon",
 			wieldable = true,
 			wield_inputs = {
-				"wield_2",
-			},
+				pressed = {
+					"wield_2"
+				}
+			}
 		},
 		slot_timed = {
 			mispredict_packages = false,
 			priority = 1,
 			slot_type = "weapon",
-			wieldable = true,
+			wieldable = true
 		},
 		slot_pocketable = {
 			mispredict_packages = false,
@@ -648,9 +660,11 @@ local constants = {
 			slot_type = "pocketable",
 			wieldable = true,
 			wield_inputs = {
-				"wield_3",
-				"wield_3_gamepad",
-			},
+				pressed = {
+					"wield_3",
+					"wield_3_gamepad"
+				}
+			}
 		},
 		slot_pocketable_small = {
 			mispredict_packages = false,
@@ -658,53 +672,79 @@ local constants = {
 			slot_type = "pocketable",
 			wieldable = true,
 			wield_inputs = {
-				"wield_4",
-			},
+				pressed = {
+					"wield_4"
+				}
+			}
 		},
 		slot_device = {
 			priority = 1,
 			slot_type = "device",
 			wieldable = true,
 			wield_inputs = {
-				"wield_5",
-			},
+				pressed = {
+					"wield_5"
+				}
+			}
 		},
 		slot_unarmed = {
 			mispredict_packages = true,
 			priority = 1,
 			slot_type = "unarmed",
-			wieldable = true,
+			wieldable = true
 		},
 		slot_combat_ability = {
 			mispredict_packages = true,
 			priority = 1,
 			slot_type = "ability",
 			wieldable = true,
+			wield_inputs = {
+				pressed = {
+					"combat_ability_pressed"
+				},
+				hold = {
+					"combat_ability_hold"
+				},
+				released = {
+					"combat_ability_released"
+				}
+			}
 		},
 		slot_grenade_ability = {
 			mispredict_packages = true,
 			priority = 1,
 			slot_type = "ability",
 			wieldable = true,
+			wield_inputs = {
+				pressed = {
+					"grenade_ability_pressed"
+				},
+				hold = {
+					"grenade_ability_hold"
+				},
+				released = {
+					"grenade_ability_released"
+				}
+			}
 		},
 		slot_net = {
 			priority = 1,
 			slot_type = "vfx",
-			wieldable = false,
+			wieldable = false
 		},
 		slot_prop = {
 			priority = 1,
 			slot_type = "vfx",
-			wieldable = false,
-		},
+			wieldable = false
+		}
 	},
 	quick_wield_configuration = {
 		default = "slot_primary",
-		slot_primary = "slot_secondary",
+		slot_primary = "slot_secondary"
 	},
 	gamepad_pocketable_wield_configuration = {
 		slot_pocketable = "slot_pocketable_small",
-		slot_pocketable_small = "slot_pocketable",
+		slot_pocketable_small = "slot_pocketable"
 	},
 	scroll_wield_order = {
 		"slot_secondary",
@@ -712,81 +752,121 @@ local constants = {
 		"slot_grenade_ability",
 		slot_grenade_ability = 3,
 		slot_primary = 2,
-		slot_secondary = 1,
+		slot_secondary = 1
 	},
 	previously_wielded_slot_types = {
 		ability = true,
 		pocketable = true,
-		weapon = true,
+		weapon = true
 	},
 	ability_configuration = {
 		combat_ability = "slot_combat_ability",
 		grenade_ability = "slot_grenade_ability",
-		pocketable_ability = "slot_pocketable_small",
+		pocketable_ability = "slot_pocketable_small"
 	},
+	action_handler_component_names = table.set({
+		"combat_ability_action",
+		"grenade_ability_action",
+		"pocketable_ability_action",
+		"weapon_action"
+	}),
 	player_interactions = {
 		{
 			interaction_type = "pull_up",
-			override_context = {},
+			override_context = {}
 		},
 		{
 			interaction_type = "rescue",
-			override_context = {},
+			override_context = {}
 		},
 		{
 			interaction_type = "revive",
-			override_context = {},
+			override_context = {}
 		},
 		{
 			interaction_type = "remove_net",
-			override_context = {},
-		},
+			override_context = {}
+		}
 	},
 	player_interactions_hub = {
 		{
 			interaction_type = "player_hub_inspect",
-			override_context = {},
-		},
+			override_context = {}
+		}
 	},
 	companion_interactions_hub = {
 		{
 			interaction_type = "companion_hub_interact",
-			override_context = {},
-		},
+			override_context = {}
+		}
 	},
 	animation_rollback = {
 		num_layers_1p = 11,
-		num_layers_3p = 8,
+		num_layers_3p = 8
 	},
 	animation_variables_to_cache = {
 		third_person = {
 			"anim_move_speed",
 			"climb_time",
-			"aim",
+			"aim"
 		},
-		first_person = {},
+		first_person = {}
 	},
 	inventory_slot_component_data = {
 		weapon = table.clone(weapon_component_config),
 		luggable = {
+			last_wield_t = {
+				default_value = 0,
+				network_type = "fixed_frame_time"
+			},
+			last_unwield_t = {
+				default_value = 0,
+				network_type = "fixed_frame_time"
+			},
 			existing_unit_3p = {
 				default_value = nil,
-				network_type = "Unit",
-			},
+				network_type = "Unit"
+			}
 		},
-		unarmed = {},
+		unarmed = {
+			last_wield_t = {
+				default_value = 0,
+				network_type = "fixed_frame_time"
+			},
+			last_unwield_t = {
+				default_value = 0,
+				network_type = "fixed_frame_time"
+			}
+		},
 		pocketable = table.merge(table.clone(weapon_component_config), {
+			last_wield_t = {
+				default_value = 0,
+				network_type = "fixed_frame_time"
+			},
+			last_unwield_t = {
+				default_value = 0,
+				network_type = "fixed_frame_time"
+			},
 			unequip_slot = {
 				default_value = false,
-				network_type = "bool",
+				network_type = "bool"
 			},
 			unwield_slot = {
 				default_value = false,
-				network_type = "bool",
-			},
+				network_type = "bool"
+			}
 		}),
 		ability = table.clone(weapon_component_config),
-		device = {},
+		device = {
+			last_wield_t = {
+				default_value = 0,
+				network_type = "fixed_frame_time"
+			},
+			last_unwield_t = {
+				default_value = 0,
+				network_type = "fixed_frame_time"
+			}
+		}
 	},
 	fall_damage = {
 		heavy_damage_height = 13,
@@ -801,20 +881,20 @@ local constants = {
 		damage_profile_light = DamageProfileTemplates.falling_light,
 		damage_type_light = damage_types.kinetic,
 		damage_profile_heavy = DamageProfileTemplates.falling_heavy,
-		damage_type_heavy = damage_types.kinetic,
+		damage_type_heavy = damage_types.kinetic
 	},
 	critical_health = {
 		health_percent_limit = 0.25,
-		toughness_percent_limit = 0.3,
+		toughness_percent_limit = 0.3
 	},
 	coherency = {
 		radius = 8,
 		stickiness_limit = 20,
 		stickiness_time = 2,
 		buff_template_names = {
-			"coherency_toughness_regen",
-		},
-	},
+			"coherency_toughness_regen"
+		}
+	}
 }
 
 constants.move_speed_sq = constants.move_speed^2
@@ -831,7 +911,7 @@ for _, lookups in pairs(buff_target_component_lookups) do
 
 		weapon_component_data[key] = {
 			default_value = -1,
-			network_type = "buff_id",
+			network_type = "buff_id"
 		}
 	end
 end
@@ -839,22 +919,22 @@ end
 local wield_inputs = {
 	{
 		input = "quick_wield",
-		value = true,
+		value = true
 	},
 	{
 		input = "wield_scroll_down",
-		value = true,
+		value = true
 	},
 	{
 		input = "wield_scroll_up",
-		value = true,
-	},
+		value = true
+	}
 }
 
 local function _add_wield_input(wield_input)
 	wield_inputs[#wield_inputs + 1] = {
 		value = true,
-		input = wield_input,
+		input = wield_input
 	}
 end
 
@@ -863,11 +943,11 @@ local slot_configuration = constants.slot_configuration
 for slot_name, config in pairs(slot_configuration) do
 	config.name = slot_name
 
-	local config_wield_inputs = config.wield_inputs
+	local config_pressed_inputs = config.wield_inputs and config.wield_inputs.pressed
 
-	if config.wieldable and config_wield_inputs then
-		for ii = 1, #config_wield_inputs do
-			_add_wield_input(config_wield_inputs[ii])
+	if config.wieldable and config_pressed_inputs then
+		for ii = 1, #config_pressed_inputs do
+			_add_wield_input(config_pressed_inputs[ii])
 		end
 	end
 end
@@ -894,7 +974,7 @@ local slot_priorities = {}
 for slot_name, config in pairs(slot_configuration) do
 	slot_priorities[#slot_priorities + 1] = {
 		slot_name = slot_name,
-		priority = config.priority,
+		priority = config.priority
 	}
 end
 
@@ -935,7 +1015,7 @@ for ii = 1, constants.max_component_buffs do
 		active_start_time_key = "buff_" .. ii .. "_active_start_time",
 		stack_count_key = "buff_" .. ii .. "_stack_count",
 		proc_count_key = "buff_" .. ii .. "_proc_count",
-		extra_duration_key = "buff_" .. ii .. "_extra_duration",
+		extra_duration_key = "buff_" .. ii .. "_extra_duration"
 	}
 
 	for param_name in pairs(predictable_component_types) do

@@ -13,6 +13,7 @@ local CLIENT_RPCS = {
 	"rpc_expedition_on_location_setup",
 	"rpc_client_expedition_on_purchase_performed",
 	"rpc_expedition_navigation_complete_level",
+	"rpc_expedition_navigation_show_level",
 	"rpc_expedition_navigation_set_slot_mark",
 	"rpc_expedition_navigation_clear_slot_mark",
 	"rpc_expedition_timer_set_active",
@@ -24,17 +25,17 @@ local CLIENT_RPCS = {
 	"rpc_expedition_start_location_events",
 	"rpc_expedition_stop_all_events",
 	"rpc_expedition_set_navigation_active",
-	"rpc_expedition_navigation_remove_exit",
+	"rpc_expedition_navigation_remove_exit"
 }
 local SERVER_RPCS = {
 	"rpc_expedition_navigation_set_slot_mark",
 	"rpc_expedition_navigation_clear_slot_mark",
 	"rpc_server_location_loaded_and_spawned_by_player",
-	"rpc_server_expedition_levels_despawned_by_player",
+	"rpc_server_expedition_levels_despawned_by_player"
 }
 local expedition_logic_settings = {
 	client_rpcs = CLIENT_RPCS,
-	server_rpcs = SERVER_RPCS,
+	server_rpcs = SERVER_RPCS
 }
 
 return settings("ExpeditionLogicSettings", expedition_logic_settings)

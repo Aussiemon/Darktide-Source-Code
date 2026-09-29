@@ -29,7 +29,7 @@ end
 PlayerSurveyView.on_enter = function (self)
 	PlayerSurveyView.super.on_enter(self)
 	self:_add_element(ViewElementLoadingOverlay, "loading_overlay", 200, {
-		use_parent_renderer = true,
+		use_parent_renderer = true
 	})
 
 	self._content_container_size = table.clone(self._ui_scenegraph.content_pivot.size)
@@ -217,7 +217,7 @@ PlayerSurveyView._set_option_question_data = function (self, question)
 			column_count = grid_settings.column_count,
 			grid_spacing = grid_settings.grid_spacing,
 			grid_size = grid_size,
-			callback = callback(self, "_cb_on_option_pressed"),
+			callback = callback(self, "_cb_on_option_pressed")
 		}
 	end
 
@@ -275,7 +275,7 @@ PlayerSurveyView._set_current_question_answers = function (self, question, optio
 	if is_selected then
 		if question.max == 1 then
 			current_answers = {
-				option_id,
+				option_id
 			}
 		else
 			_add_option_to_answers(current_answers, option_id)
@@ -376,13 +376,13 @@ PlayerSurveyView._create_option_grid = function (self, question)
 		column_count = column_count,
 		grid_spacing = {
 			33,
-			25,
-		},
+			25
+		}
 	}
 	local original_size = self._content_container_size
 	local grid_size = {
 		original_size[1] - grid_settings.edge_padding + 25 * (1 + 1 / column_count),
-		grid_settings.top_padding + grid_settings.bottom_chin + grid_height + grid_settings.grid_spacing[2] * row_count + 10,
+		grid_settings.top_padding + grid_settings.bottom_chin + grid_height + grid_settings.grid_spacing[2] * row_count + 10
 	}
 
 	grid_settings.grid_size = grid_size
@@ -431,7 +431,7 @@ PlayerSurveyView._create_progress_indicator = function (self, question_count)
 	local indicator_size_width = PlayerSurveyViewDefinitions.progress_widget_full_size[1] / (question_count + 1)
 	local progress_widget_definition = PlayerSurveyViewDefinitions.progress_widget_definition_factory({
 		indicator_size_width,
-		PlayerSurveyViewDefinitions.progress_widget_full_size[2],
+		PlayerSurveyViewDefinitions.progress_widget_full_size[2]
 	})
 	local progress_widgets = {}
 	local indicator_offset = 10

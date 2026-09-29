@@ -82,7 +82,7 @@ HudElementInteraction._update_interactee_data = function (self, interactee_unit,
 			interaction_units[interactee_unit] = {
 				marker_id = nil,
 				requested = true,
-				extension = extension,
+				extension = extension
 			}
 
 			local marker_callback = callback(self, "_on_interaction_marker_spawned", interactee_unit)
@@ -203,7 +203,7 @@ HudElementInteraction._update_can_interact_target = function (self)
 				player_unit = player_unit,
 				marker_id = marker_id,
 				use_minimal_presentation = use_minimal_presentation,
-				background_size = use_minimal_presentation and HudElementInteractionSettings.background_size_small or HudElementInteractionSettings.background_size,
+				background_size = use_minimal_presentation and HudElementInteractionSettings.background_size_small or HudElementInteractionSettings.background_size
 			}
 
 			self:_setup_interaction_information(interactee_unit, interactee_extension, interactor_extension, use_minimal_presentation)
@@ -257,7 +257,7 @@ local function _get_input_text(alias_name, input_text_key, hold_required)
 	local input_display_text = Localize(input_text_key)
 	local input_action_localization_params = {
 		input = input_text,
-		action = input_display_text,
+		action = input_display_text
 	}
 	local input_type_string = hold_required and "loc_interaction_input_type_hold" or "loc_interaction_input_type"
 
@@ -288,7 +288,7 @@ HudElementInteraction._update_tag_input_information = function (self, interactee
 			end
 		end
 	else
-		local smart_tag_extension = ScriptUnit.has_extension(interactee_unit, "smart_tag_system")
+		local smart_tag_extension = interactee_unit and ScriptUnit.has_extension(interactee_unit, "smart_tag_system")
 
 		if smart_tag_extension and smart_tag_extension:can_tag(player_unit) then
 			input_text_tag = _get_input_text("smart_tag", "loc_tag_smart_tag")
@@ -404,11 +404,11 @@ HudElementInteraction._update_target_interaction_size = function (self, dt, t, u
 	local max_text_width = background_size[1] - edge_spacing[1] * 2
 	local tag_max_size = {
 		interaction_style.size[1],
-		1080,
+		1080
 	}
 	local description_max_size = {
 		max_text_width,
-		1080,
+		1080
 	}
 	local tag_text_width, tag_text_height = self:_text_size(ui_renderer, tag_text, tag_style, tag_max_size)
 
@@ -416,7 +416,7 @@ HudElementInteraction._update_target_interaction_size = function (self, dt, t, u
 
 	local interaction_max_size = {
 		max_text_width - tag_text_width,
-		1080,
+		1080
 	}
 	local interaction_width, interaction_height = self:_text_size(ui_renderer, interaction_text, interaction_style, interaction_max_size)
 	local description_width, description_height = self:_text_size(ui_renderer, description_text, description_style, description_max_size)
@@ -431,11 +431,11 @@ HudElementInteraction._update_target_interaction_size = function (self, dt, t, u
 
 	self._active_presentation_data.background_size = {
 		background_size[1],
-		background_height,
+		background_height
 	}
 	interaction_style.size = {
 		interaction_max_size[1],
-		interaction_height,
+		interaction_height
 	}
 	widgets_by_name.background.style.input_background.size[2] = interaction_height
 	widgets_by_name.background.style.input_background_slim.size[2] = interaction_height
@@ -599,7 +599,7 @@ HudElementInteraction._setup_interaction_information = function (self, interacte
 		input_block_text = input_block_text,
 		hud_description = hud_description,
 		is_event = is_event_interaction,
-		is_electrified = is_electrified,
+		is_electrified = is_electrified
 	}
 end
 

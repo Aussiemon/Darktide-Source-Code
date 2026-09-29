@@ -14,13 +14,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1740,
-			900,
+			900
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	grid_1_pivot = {
 		horizontal_alignment = "left",
@@ -28,13 +28,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			25,
 			200,
-			0,
-		},
+			0
+		}
 	},
 	grid_1_area = {
 		horizontal_alignment = "left",
@@ -42,13 +42,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	grid_1_content = {
 		horizontal_alignment = "left",
@@ -56,13 +56,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	grid_1_scrollbar = {
 		horizontal_alignment = "right",
@@ -70,13 +70,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			10,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	grid_2_pivot = {
 		horizontal_alignment = "left",
@@ -84,13 +84,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			25,
 			200,
-			0,
-		},
+			0
+		}
 	},
 	grid_2_area = {
 		horizontal_alignment = "left",
@@ -98,13 +98,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	grid_2_content = {
 		horizontal_alignment = "left",
@@ -112,13 +112,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	grid_2_scrollbar = {
 		horizontal_alignment = "right",
@@ -126,13 +126,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			10,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	grid_3_pivot = {
 		horizontal_alignment = "left",
@@ -140,13 +140,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			25,
 			200,
-			0,
-		},
+			0
+		}
 	},
 	grid_3_area = {
 		horizontal_alignment = "left",
@@ -154,13 +154,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	grid_3_content = {
 		horizontal_alignment = "left",
@@ -168,13 +168,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	grid_3_scrollbar = {
 		horizontal_alignment = "right",
@@ -182,13 +182,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	grid_4_pivot = {
 		horizontal_alignment = "left",
@@ -196,13 +196,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			25,
 			200,
-			0,
-		},
+			0
+		}
 	},
 	grid_4_area = {
 		horizontal_alignment = "left",
@@ -210,13 +210,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	grid_4_content = {
 		horizontal_alignment = "left",
@@ -224,13 +224,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	grid_4_scrollbar = {
 		horizontal_alignment = "right",
@@ -238,13 +238,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	grid_5_pivot = {
 		horizontal_alignment = "left",
@@ -252,13 +252,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			25,
 			200,
-			0,
-		},
+			0
+		}
 	},
 	grid_5_area = {
 		horizontal_alignment = "left",
@@ -266,13 +266,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	grid_5_content = {
 		horizontal_alignment = "left",
@@ -280,13 +280,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	grid_5_scrollbar = {
 		horizontal_alignment = "right",
@@ -294,13 +294,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	backstory_choices_warning = {
 		horizontal_alignment = "right",
@@ -308,13 +308,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			700,
-			76,
+			76
 		},
 		position = {
 			-390,
 			-40,
-			0,
-		},
+			0
+		}
 	},
 	continue_pivot = {
 		horizontal_alignment = "right",
@@ -322,13 +322,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			374,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	continue_button = {
 		horizontal_alignment = "center",
@@ -336,13 +336,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			374,
-			76,
+			76
 		},
 		position = {
 			0,
 			-40,
-			3,
-		},
+			3
+		}
 	},
 	page_indicator = {
 		horizontal_alignment = "center",
@@ -350,13 +350,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			0,
-			18,
+			18
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	choice_detail = {
 		horizontal_alignment = "left",
@@ -364,13 +364,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			800,
-			50,
+			50
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	backstory_pivot = {
 		horizontal_alignment = "right",
@@ -378,13 +378,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			760,
-			0,
+			0
 		},
 		position = {
 			-100,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	backstory_background = {
 		horizontal_alignment = "left",
@@ -392,28 +392,42 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	error_input = {
-		horizontal_alignment = "left",
+		horizontal_alignment = "right",
 		parent = "continue_pivot",
 		vertical_alignment = "bottom",
 		size = {
-			374,
-			0,
+			660,
+			0
 		},
 		position = {
 			0,
-			-120,
-			0,
-		},
+			-130,
+			0
+		}
 	},
+	error_input_content = {
+		horizontal_alignment = "right",
+		parent = "error_input",
+		vertical_alignment = "bottom",
+		size = {
+			0,
+			0
+		},
+		position = {
+			0,
+			0,
+			0
+		}
+	}
 }
 local widget_definitions = {
 	transition_fade = UIWidget.create_definition({
@@ -425,112 +439,114 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					100,
-				},
-			},
-		},
+					100
+				}
+			}
+		}
 	}, "screen"),
 	error_continue = UIWidget.create_definition({
+		{
+			pass_type = "rect",
+			style_id = "background",
+			value_id = "background",
+			style = {
+				horizontal_alignment = "right",
+				color = Color.black(178.5, true)
+			},
+			visibility_function = function (content, style)
+				return content.text and content.text ~= ""
+			end
+		},
 		{
 			pass_type = "text",
 			style_id = "text",
 			value = "",
 			value_id = "text",
-			style = CharacterAppearanceViewFontStyle.error_style,
-		},
-	}, "error_input"),
+			style = CharacterAppearanceViewFontStyle.error_style
+		}
+	}, "error_input_content"),
 	continue_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "continue_button", {
 		gamepad_action = "confirm_pressed",
 		original_text = Utf8.upper(Localize("loc_character_creator_continue")),
 		hotspot = {
-			on_pressed_sound = UISoundEvents.character_appearence_confirm,
-		},
+			on_pressed_sound = UISoundEvents.character_appearence_confirm
+		}
 	}),
 	corners = UIWidget.create_definition({
 		{
 			pass_type = "texture_uv",
-			value = "content/ui/materials/frames/screen/class_zealot_01_lower_left",
+			value = "content/ui/materials/frames/screen/class_veteran_01_lower_left",
 			value_id = "left_lower",
 			style = {
 				vertical_alignment = "bottom",
 				size = {
 					70,
-					202,
+					202
 				},
 				offset = {
 					0,
 					0,
-					62,
+					62
 				},
-				color = Color.white(255, true),
-			},
+				color = Color.white(255, true)
+			}
 		},
 		{
 			pass_type = "texture_uv",
-			value = "content/ui/materials/frames/screen/class_zealot_01_lower_right",
+			value = "content/ui/materials/frames/screen/class_veteran_01_lower_right",
 			value_id = "right_lower",
 			style = {
 				horizontal_alignment = "right",
 				vertical_alignment = "bottom",
 				size = {
 					70,
-					202,
+					202
 				},
 				offset = {
 					0,
 					0,
-					62,
+					62
 				},
-				color = Color.white(255, true),
-			},
+				color = Color.white(255, true)
+			}
 		},
 		{
 			pass_type = "texture_uv",
-			value = "content/ui/materials/frames/screen/class_zealot_01_upper_right",
+			value = "content/ui/materials/frames/screen/class_veteran_01_upper_left",
 			value_id = "left_upper",
 			style = {
 				vertical_alignment = "top",
 				size = {
 					130,
-					272,
+					272
 				},
 				offset = {
 					0,
 					0,
-					62,
+					62
 				},
-				color = Color.white(255, true),
-				uvs = {
-					{
-						1,
-						0,
-					},
-					{
-						0,
-						1,
-					},
-				},
-			},
+				color = Color.white(255, true)
+			}
 		},
 		{
 			pass_type = "texture_uv",
-			value = "content/ui/materials/frames/screen/class_zealot_01_upper_right",
+			value = "content/ui/materials/frames/screen/class_veteran_01_upper_right",
 			value_id = "right_upper",
 			style = {
 				horizontal_alignment = "right",
 				vertical_alignment = "top",
 				size = {
 					130,
-					272,
+					272
 				},
 				offset = {
 					0,
 					0,
-					62,
+					62
 				},
-				color = Color.white(255, true),
-			},
-		},
+				color = Color.white(255, true)
+			}
+		}
 	}, "screen"),
 	loading_overlay = UIWidget.create_definition({
 		{
@@ -539,17 +555,17 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					200,
+					200
 				},
-				color = Color.black(200, true),
-			},
+				color = Color.black(200, true)
+			}
 		},
 		{
 			pass_type = "text",
 			value = "",
 			value_id = "text",
-			style = CharacterAppearanceViewFontStyle.overlay_text_style,
-		},
+			style = CharacterAppearanceViewFontStyle.overlay_text_style
+		}
 	}, "screen"),
 	choice_detail = UIWidget.create_definition({
 		{
@@ -563,24 +579,24 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
 				color = Color.ui_terminal(255, true),
 				size = {
 					16,
-					16,
-				},
+					16
+				}
 			},
 			visibility_function = function (content)
 				return content.use_choice_icon
-			end,
+			end
 		},
 		{
 			pass_type = "text",
 			style_id = "text",
 			value = "",
 			value_id = "text",
-			style = CharacterAppearanceViewFontStyle.effect_description_style,
+			style = CharacterAppearanceViewFontStyle.effect_description_style
 		},
 		{
 			pass_type = "text",
@@ -590,9 +606,9 @@ local widget_definitions = {
 			style = CharacterAppearanceViewFontStyle.effect_description_not_selected_style,
 			visibility_function = function (content)
 				return content.available == false
-			end,
-		},
-	}, "choice_detail"),
+			end
+		}
+	}, "choice_detail")
 }
 
 local function _create_randomization_legend(required_page, callback_function_name)
@@ -603,7 +619,7 @@ local function _create_randomization_legend(required_page, callback_function_nam
 		visibility_function = function (parent)
 			return parent._is_character_showing and parent._active_page_name == required_page and not parent._is_barber_appearance and not parent._loading_overlay_visible
 		end,
-		on_pressed_callback = callback_function_name,
+		on_pressed_callback = callback_function_name
 	}
 end
 
@@ -614,14 +630,14 @@ local legend_inputs = {
 		input_action = "confirm_pressed",
 		visibility_function = function (parent)
 			return (IS_XBS or IS_PLAYSTATION) and parent._active_page_name == "final" and not parent._loading_overlay_visible
-		end,
+		end
 	},
 	{
 		alignment = "left_alignment",
 		display_name = "loc_settings_menu_close_menu",
 		input_action = "back",
 		on_pressed_callback = "_on_close_pressed",
-		visibility_function = nil,
+		visibility_function = nil
 	},
 	_create_randomization_legend("appearance", "_randomize_character_appearance_preset"),
 	_create_randomization_legend("voice", "_randomize_voice_effects"),
@@ -631,7 +647,7 @@ local legend_inputs = {
 		input_action = "navigate_controller_right",
 		visibility_function = function (parent)
 			return not parent._using_cursor_navigation and parent._is_character_showing and not parent._loading_overlay_visible and not parent._in_barber_chair and parent._active_page_name ~= "voice"
-		end,
+		end
 	},
 	{
 		alignment = "right_alignment",
@@ -639,7 +655,7 @@ local legend_inputs = {
 		input_action = "navigate_controller_right",
 		visibility_function = function (parent)
 			return not parent._using_cursor_navigation and parent._is_character_showing and not parent._loading_overlay_visible and parent._active_page_name == "voice"
-		end,
+		end
 	},
 	{
 		alignment = "right_alignment",
@@ -648,7 +664,7 @@ local legend_inputs = {
 		on_pressed_callback = "_zoom_camera",
 		visibility_function = function (parent)
 			return not parent._camera_zoomed and parent._is_character_showing and parent._active_page_name == "appearance" and not parent._disable_zoom and not parent._loading_overlay_visible
-		end,
+		end
 	},
 	{
 		alignment = "right_alignment",
@@ -657,8 +673,8 @@ local legend_inputs = {
 		on_pressed_callback = "_zoom_camera",
 		visibility_function = function (parent)
 			return parent._camera_zoomed and parent._is_character_showing and parent._active_page_name == "appearance" and not parent._disable_zoom and not parent._loading_overlay_visible
-		end,
-	},
+		end
+	}
 }
 local animations = {
 	transition_fade = {
@@ -670,8 +686,8 @@ local animations = {
 				local anim_progress = math.easeOutCubic(progress)
 
 				widgets.transition_fade.alpha_multiplier = 1 - anim_progress
-			end,
-		},
+			end
+		}
 	},
 	on_planet_select = {
 		{
@@ -689,7 +705,7 @@ local animations = {
 						255,
 						255,
 						255,
-						255,
+						255
 					}
 					params.in_focus_color = in_focus_color
 				end
@@ -701,7 +717,7 @@ local animations = {
 						255,
 						55,
 						55,
-						55,
+						55
 					}
 					params.out_of_focus_color = out_of_focus_color
 				end
@@ -781,7 +797,7 @@ local animations = {
 				end
 
 				planets_widget.content.current_planet = current_planet
-			end,
+			end
 		},
 		{
 			end_time = 1.5,
@@ -805,14 +821,14 @@ local animations = {
 						Colors.color_lerp(planet_params.start_color, planet_params.end_color, anim_progress, style.color)
 					end
 				end
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
 	legend_inputs = legend_inputs,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
-	animations = animations,
+	animations = animations
 }

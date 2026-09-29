@@ -8,31 +8,31 @@ Log.LOG_TYPE_DEBUG = {
 	external_func = "debug",
 	internal_func = "_debug",
 	tag = "DEBUG",
-	active_categories = {},
+	active_categories = {}
 }
 Log.LOG_TYPE_INFO = {
 	external_func = "info",
 	internal_func = "_info",
 	tag = "INFO",
-	active_categories = {},
+	active_categories = {}
 }
 Log.LOG_TYPE_WARNING = {
 	external_func = "warning",
 	internal_func = "_warning",
 	tag = "WARNING",
-	active_categories = {},
+	active_categories = {}
 }
 Log.LOG_TYPE_EXCEPTION = {
 	external_func = "exception",
 	internal_func = "_exception",
 	tag = "EXCEPTION",
-	active_categories = {},
+	active_categories = {}
 }
 Log.LOG_TYPE_ERROR = {
 	external_func = "error",
 	internal_func = "_error",
 	tag = "ERROR",
-	active_categories = {},
+	active_categories = {}
 }
 Log.DEFAULT_CATEGORY = "Uncategorized"
 Log.INTERNAL_CATEGORY = "Log Internal"
@@ -41,7 +41,7 @@ Log._types = {
 	Log.LOG_TYPE_INFO,
 	Log.LOG_TYPE_WARNING,
 	Log.LOG_TYPE_EXCEPTION,
-	Log.LOG_TYPE_ERROR,
+	Log.LOG_TYPE_ERROR
 }
 Log._lowest_category_level = #Log._types
 Log._category_levels = Log._category_levels or {}

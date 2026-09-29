@@ -4,8 +4,8 @@ local Ammo = require("scripts/utilities/ammo")
 local BotSpawning = require("scripts/managers/bot/bot_spawning")
 local CinematicSceneSettings = require("scripts/settings/cinematic_scene/cinematic_scene_settings")
 local GameModeBase = require("scripts/managers/game_mode/game_modes/game_mode_base")
-local HordesModeSettings = require("scripts/settings/hordes_mode_settings")
 local HordeMissionBuffsManager = require("scripts/managers/mission_buffs/horde_mission_buffs_manager")
+local HordesModeSettings = require("scripts/settings/hordes_mode_settings")
 local PickupSettings = require("scripts/settings/pickup/pickup_settings")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
@@ -21,7 +21,7 @@ local CLIENT_RPCS = {
 	"rpc_client_hordes_wave_completed",
 	"rpc_client_hordes_show_wave_completed_notification",
 	"rpc_client_hordes_tag_remaining_enemies",
-	"rpc_client_hordes_set_selected_island",
+	"rpc_client_hordes_set_selected_island"
 }
 
 local function _log(...)
@@ -34,85 +34,85 @@ local MINION_HEALTH_MODIFIER_PER_WAVE = {
 		default = 0,
 		elite = 0,
 		monster = 0,
-		special = 0,
+		special = 0
 	},
 	{
 		captain = 0,
 		default = 0,
 		elite = 0,
 		monster = 0,
-		special = 0,
+		special = 0
 	},
 	{
 		captain = 0,
 		default = 0,
 		elite = 0,
 		monster = 0,
-		special = 0,
+		special = 0
 	},
 	{
 		captain = 0,
 		default = 0.2,
 		elite = 0.2,
 		monster = 0.2,
-		special = 0.2,
+		special = 0.2
 	},
 	{
 		captain = 0,
 		default = 0.4,
 		elite = 0.3,
 		monster = 0.3,
-		special = 0.3,
+		special = 0.3
 	},
 	{
 		captain = 0,
 		default = 0.6,
 		elite = 0.4,
 		monster = 0.3,
-		special = 0.4,
+		special = 0.4
 	},
 	{
 		captain = 0,
 		default = 0.7,
 		elite = 0.5,
 		monster = 0.4,
-		special = 0.5,
+		special = 0.5
 	},
 	{
 		captain = 0.1,
 		default = 0.8,
 		elite = 0.6,
 		monster = 0.4,
-		special = 0.6,
+		special = 0.6
 	},
 	{
 		captain = 0.2,
 		default = 1.1,
 		elite = 0.7,
 		monster = 0.5,
-		special = 0.7,
+		special = 0.7
 	},
 	{
 		captain = 0.3,
 		default = 1.1,
 		elite = 0.8,
 		monster = 0.5,
-		special = 0.8,
+		special = 0.8
 	},
 	{
 		captain = 0.4,
 		default = 1.1,
 		elite = 0.9,
 		monster = 0.7,
-		special = 0.9,
+		special = 0.9
 	},
 	{
 		captain = 0.5,
 		default = 1.1,
 		elite = 1.1,
 		monster = 0.7,
-		special = 1.1,
-	},
+		special = 1.1
+	}
 }
 
 GameModeSurvival.init = function (self, game_mode_context, game_mode_name, network_event_delegate)
@@ -132,7 +132,7 @@ GameModeSurvival.init = function (self, game_mode_context, game_mode_name, netwo
 
 	if self._is_server then
 		self._backend_hordes_weighted_randomization = {
-			island_weights = {},
+			island_weights = {}
 		}
 
 		self:_fetch_hordes_backend_data()
@@ -297,7 +297,7 @@ GameModeSurvival._gamemode_complete = function (self, result, reason)
 		Managers.mission_server:on_gamemode_completed(result, reason, {
 			completion_time = self._completition_time,
 			current_island = self._current_island or "NONE",
-			waves_completed = total_waves_completed or 0,
+			waves_completed = total_waves_completed or 0
 		})
 	end
 end
@@ -451,7 +451,7 @@ GameModeSurvival.cb_get_horde_setting_from_the_backend_failed = function (self, 
 	Log.error("GameModeSurvival", string.format("Could not get backend list of hordes weighted randomization for Buff Family and Islands (will default to even weights). Error: %s", err.description))
 
 	self._backend_hordes_weighted_randomization = {
-		island_weights = {},
+		island_weights = {}
 	}
 end
 
@@ -667,7 +667,7 @@ end
 
 local TWIN_BREEDS = {
 	renegade_twin_captain = true,
-	renegade_twin_captain_two = true,
+	renegade_twin_captain_two = true
 }
 
 GameModeSurvival._on_minion_unit_spawned = function (self, unit)
@@ -779,7 +779,7 @@ GameModeSurvival._trigger_wave_started_ui_notification = function (self)
 	local wave_started_notification = {
 		state = "start",
 		timer = 5,
-		wave_num = self._current_wave,
+		wave_num = self._current_wave
 	}
 
 	Managers.event:trigger("event_mission_buffs_update_presentation", wave_started_notification)
@@ -998,9 +998,10 @@ GameModeSurvival._store_persistent_player_data = function (self, player)
 	local ability_extension = ScriptUnit.extension(unit, "ability_system")
 	local equipped_abilities = ability_extension:equipped_abilities()
 	local grenade_ability = equipped_abilities.grenade_ability
-	local grenades_percent
+	local uses_ability_charges = ability_extension:uses_ability_charges("grenade_ability")
+	local grenades_percent = 0
 
-	if grenade_ability and not grenade_ability.exclude_from_persistant_player_data then
+	if grenade_ability and not grenade_ability.exclude_from_persistant_player_data and uses_ability_charges then
 		local num_grenades = ability_extension:remaining_ability_charges("grenade_ability")
 		local max_grenades = ability_extension:max_ability_charges("grenade_ability")
 
@@ -1016,7 +1017,7 @@ GameModeSurvival._store_persistent_player_data = function (self, player)
 		permanent_damage_percent = permanent_damage_percent,
 		character_state_name = character_state_name,
 		weapon_slot_data = weapon_slot_data,
-		grenades_percent = grenades_percent,
+		grenades_percent = grenades_percent
 	}
 
 	if player:is_human_controlled() then
@@ -1089,8 +1090,9 @@ GameModeSurvival._apply_persistent_player_data = function (self, player)
 				local ability_extension = ScriptUnit.extension(player_unit, "ability_system")
 				local equipped_abilities = ability_extension:equipped_abilities()
 				local grenade_ability = equipped_abilities.grenade_ability
+				local uses_ability_charges = ability_extension:uses_ability_charges("grenade_ability")
 
-				if grenade_ability and not grenade_ability.exclude_from_persistant_player_data then
+				if grenade_ability and not grenade_ability.exclude_from_persistant_player_data and uses_ability_charges then
 					local max_grenades = ability_extension:max_ability_charges("grenade_ability")
 					local num_grenades = math.round(selected_data.grenades_percent * max_grenades)
 
@@ -1201,7 +1203,7 @@ function _fill_with_random_items_from_weighted_pool(items_pool, items_pool_weigh
 
 			local data = {
 				name = item_name,
-				weight = item_weight,
+				weight = item_weight
 			}
 
 			table.insert(weighted_pool_data, data)

@@ -34,7 +34,7 @@ local arc_damage_on_melee_hit_adm = {
 	[armor_types.berserker] = 1,
 	[armor_types.super_armor] = 1,
 	[armor_types.disgustingly_resilient] = 1,
-	[armor_types.void_shield] = 1,
+	[armor_types.void_shield] = 1
 }
 
 damage_templates.arc_damage_on_melee_hit = {
@@ -45,25 +45,25 @@ damage_templates.arc_damage_on_melee_hit = {
 	toughness_multiplier = 3,
 	armor_damage_modifier = {
 		attack = arc_damage_on_melee_hit_adm,
-		impact = arc_damage_on_melee_hit_adm,
+		impact = arc_damage_on_melee_hit_adm
 	},
 	power_distribution = {
 		attack = 50,
-		impact = 0,
+		impact = 0
 	},
 	cleave_distribution = {
 		attack = 0.125,
-		impact = 0,
+		impact = 0
 	},
 	damage_type = damage_types.arc_chain,
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	stat_buffs = {
-		"arc_chain_damage",
-	},
+		"arc_chain_damage"
+	}
 }
 damage_templates.cryptic_arc_chain_lightning_link_damage = {
 	ignore_hitzone_multiplier = true,
@@ -78,7 +78,7 @@ damage_templates.cryptic_arc_chain_lightning_link_damage = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_1,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1
 		},
 		impact = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_0_75,
@@ -88,34 +88,34 @@ damage_templates.cryptic_arc_chain_lightning_link_damage = {
 			[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 			[armor_types.super_armor] = damage_lerp_values.lerp_1,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-			[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
-		},
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_5
+		}
 	},
 	cleave_distribution = {
 		attack = 5,
-		impact = 5,
+		impact = 5
 	},
 	power_distribution = {
 		attack = 20,
-		impact = 20,
+		impact = 20
 	},
 	damage_type = damage_types.arc_chain,
 	gibbing_power = gibbing_power.light,
 	gibbing_type = gibbing_types.arc,
 	critical_strike = {
 		gibbing_power = gibbing_power.medium,
-		gibbing_type = gibbing_types.arc,
+		gibbing_type = gibbing_types.arc
 	},
 	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
+			boost_curve = PowerLevelSettings.boost_curves.default
 		},
-		boost_curve_multiplier_finesse = damage_lerp_values.lerp_1,
+		boost_curve_multiplier_finesse = damage_lerp_values.lerp_1
 	},
 	stat_buffs = {
-		"arc_chain_damage",
-	},
+		"arc_chain_damage"
+	}
 }
 damage_templates.chordclaw_main = {
 	ragdoll_only = true,
@@ -137,7 +137,7 @@ damage_templates.chordclaw_main = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_1,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1
 		},
 		impact = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -147,8 +147,8 @@ damage_templates.chordclaw_main = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_1,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		},
+			[armor_types.void_shield] = damage_lerp_values.lerp_1
+		}
 	},
 	crit_mod = crit_armor_mod,
 	targets = {
@@ -163,7 +163,7 @@ damage_templates.chordclaw_main = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_1,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -173,43 +173,43 @@ damage_templates.chordclaw_main = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_1,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
-				},
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
+				}
 			},
 			power_distribution = {
 				attack = 800,
-				impact = 30,
+				impact = 30
 			},
 			power_level_multiplier = {
 				0.5,
-				1.5,
-			},
+				1.5
+			}
 		},
 		{
 			power_distribution = {
 				attack = 400,
-				impact = 30,
+				impact = 30
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
+			boost_curve = PowerLevelSettings.boost_curves.default
 		},
 		{
 			power_distribution = {
 				attack = 250,
-				impact = 30,
+				impact = 30
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
+			boost_curve = PowerLevelSettings.boost_curves.default
 		},
 		default_target = {
 			power_distribution = {
 				attack = 25,
-				impact = 30,
+				impact = 30
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	stat_buffs = {
-		"cryptic_chordclaw_damage",
-	},
+		"cryptic_chordclaw_damage"
+	}
 }
 damage_templates.chordclaw_stab_bleed = {
 	ragdoll_only = true,
@@ -231,7 +231,7 @@ damage_templates.chordclaw_stab_bleed = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_9,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1
 		},
 		impact = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -241,8 +241,8 @@ damage_templates.chordclaw_stab_bleed = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_1,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		},
+			[armor_types.void_shield] = damage_lerp_values.lerp_1
+		}
 	},
 	crit_mod = crit_armor_mod,
 	targets = {
@@ -257,7 +257,7 @@ damage_templates.chordclaw_stab_bleed = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1_25,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_9,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1_25,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -267,17 +267,17 @@ damage_templates.chordclaw_stab_bleed = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_1,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
-				},
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
+				}
 			},
 			power_distribution = {
 				attack = 550,
-				impact = 30,
+				impact = 30
 			},
 			power_level_multiplier = {
 				0.5,
-				1.5,
-			},
+				1.5
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
@@ -290,7 +290,7 @@ damage_templates.chordclaw_stab_bleed = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_9,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -300,48 +300,48 @@ damage_templates.chordclaw_stab_bleed = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_1,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
-				},
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
+				}
 			},
 			power_distribution = {
 				attack = 350,
-				impact = 30,
+				impact = 30
 			},
 			power_level_multiplier = {
 				0.5,
-				1.5,
-			},
+				1.5
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = 200,
-				impact = 30,
+				impact = 30
 			},
 			power_level_multiplier = {
 				0.5,
-				1.5,
-			},
+				1.5
+			}
 		},
 		default_target = {
 			power_distribution = {
 				impact = 30,
 				attack = {
 					10,
-					25,
-				},
+					25
+				}
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	stat_buffs = {
-		"cryptic_chordclaw_damage",
+		"cryptic_chordclaw_damage"
 	},
 	buffs = {
 		on_damage_dealt = {
-			bleed_long = 6,
-		},
-	},
+			bleed_long = 6
+		}
+	}
 }
 overrides.chordclaw_light = {
 	parent_template_name = "chordclaw_main",
@@ -351,14 +351,14 @@ overrides.chordclaw_light = {
 			1,
 			"power_distribution",
 			"attack",
-			500,
+			500
 		},
 		{
 			"targets",
 			1,
 			"power_distribution",
 			"impact",
-			12,
+			12
 		},
 		{
 			"targets",
@@ -366,7 +366,7 @@ overrides.chordclaw_light = {
 			"armor_damage_modifier",
 			"attack",
 			"armored",
-			damage_lerp_values.lerp_0_9,
+			damage_lerp_values.lerp_0_9
 		},
 		{
 			"targets",
@@ -374,87 +374,87 @@ overrides.chordclaw_light = {
 			"armor_damage_modifier",
 			"attack",
 			"super_armor",
-			damage_lerp_values.lerp_0_4,
-		},
-	},
+			damage_lerp_values.lerp_0_4
+		}
+	}
 }
 overrides.chordclaw_sticky = {
 	parent_template_name = "chordclaw_main",
 	overrides = {
 		{
 			"damage_type",
-			damage_types.sawing_stuck,
+			damage_types.sawing_stuck
 		},
 		{
 			"stagger_category",
-			"melee",
+			"melee"
 		},
 		{
 			"stagger_override",
-			"medium",
+			"medium"
 		},
 		{
 			"ignore_instant_ragdoll_chance",
-			true,
+			true
 		},
 		{
 			"ignore_stagger_reduction",
-			true,
+			true
 		},
 		{
 			"targets",
 			1,
 			"power_distribution",
 			"attack",
-			1500,
+			1500
 		},
 		{
 			"targets",
 			1,
 			"power_distribution",
 			"impact",
-			500,
-		},
-	},
+			500
+		}
+	}
 }
 overrides.chordclaw_sticky_dodge = {
 	parent_template_name = "chordclaw_main",
 	overrides = {
 		{
 			"damage_type",
-			damage_types.sawing_stuck,
+			damage_types.sawing_stuck
 		},
 		{
 			"stagger_category",
-			"melee",
+			"melee"
 		},
 		{
 			"stagger_override",
-			"medium",
+			"medium"
 		},
 		{
 			"ignore_instant_ragdoll_chance",
-			true,
+			true
 		},
 		{
 			"ignore_stagger_reduction",
-			true,
+			true
 		},
 		{
 			"targets",
 			1,
 			"power_distribution",
 			"attack",
-			800,
+			800
 		},
 		{
 			"targets",
 			1,
 			"power_distribution",
 			"impact",
-			500,
-		},
-	},
+			500
+		}
+	}
 }
 damage_templates.chordclaw_horizontal = {
 	gibbing_power = 10,
@@ -465,12 +465,12 @@ damage_templates.chordclaw_horizontal = {
 	cleave_distribution = {
 		attack = {
 			18.5,
-			19.5,
+			19.5
 		},
 		impact = {
 			18.5,
-			19.5,
-		},
+			19.5
+		}
 	},
 	damage_type = damage_types.power_sword,
 	gibbing_type = gibbing_types.default,
@@ -486,7 +486,7 @@ damage_templates.chordclaw_horizontal = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_9,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_0_9,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_9
 		},
 		impact = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -496,22 +496,57 @@ damage_templates.chordclaw_horizontal = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_1,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		},
+			[armor_types.void_shield] = damage_lerp_values.lerp_1
+		}
 	},
 	crit_mod = crit_armor_mod,
 	targets = {
-		default_target = {
+		{
 			power_distribution = {
 				attack = 500,
-				impact = 100,
+				impact = 100
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
+			boost_curve = PowerLevelSettings.boost_curves.default
 		},
+		{
+			power_distribution = {
+				attack = 480,
+				impact = 90
+			},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		},
+		{
+			power_distribution = {
+				attack = 450,
+				impact = 80
+			},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		},
+		{
+			power_distribution = {
+				attack = 410,
+				impact = 70
+			},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		},
+		{
+			power_distribution = {
+				attack = 360,
+				impact = 60
+			},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		},
+		default_target = {
+			power_distribution = {
+				attack = 300,
+				impact = 50
+			},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	stat_buffs = {
-		"cryptic_chordclaw_damage",
-	},
+		"cryptic_chordclaw_damage"
+	}
 }
 damage_templates.cryptic_discharge_explosion = {
 	damage_type = "grenade",
@@ -522,7 +557,7 @@ damage_templates.cryptic_discharge_explosion = {
 	suppression_value = 10,
 	cleave_distribution = {
 		attack = 0.15,
-		impact = 0,
+		impact = 0
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -533,7 +568,7 @@ damage_templates.cryptic_discharge_explosion = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 0,
@@ -543,20 +578,20 @@ damage_templates.cryptic_discharge_explosion = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-		},
+			[armor_types.void_shield] = 0
+		}
 	},
 	power_distribution = {
 		attack = 0,
-		impact = 0,
+		impact = 0
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	gibbing_type = gibbing_types.explosion,
-	gibbing_power = gibbing_power.heavy,
+	gibbing_power = gibbing_power.heavy
 }
 damage_templates.cryptic_discharge_weapon_malfunction_explosion = {
 	damage_type = "grenade",
@@ -567,7 +602,7 @@ damage_templates.cryptic_discharge_weapon_malfunction_explosion = {
 	suppression_value = 10,
 	cleave_distribution = {
 		attack = 0,
-		impact = 0,
+		impact = 0
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -578,7 +613,7 @@ damage_templates.cryptic_discharge_weapon_malfunction_explosion = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 0,
@@ -588,20 +623,20 @@ damage_templates.cryptic_discharge_weapon_malfunction_explosion = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-		},
+			[armor_types.void_shield] = 0
+		}
 	},
 	power_distribution = {
 		attack = 0,
-		impact = 0,
+		impact = 0
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	gibbing_type = gibbing_types.explosion,
-	gibbing_power = gibbing_power.heavy,
+	gibbing_power = gibbing_power.heavy
 }
 damage_templates.companion_servo_skull_flamer = {
 	accumulative_stagger_strength_multiplier = 0.5,
@@ -612,11 +647,11 @@ damage_templates.companion_servo_skull_flamer = {
 	suppression_value = 20,
 	cleave_distribution = {
 		attack = 0.1,
-		impact = 0.1,
+		impact = 0.1
 	},
 	ranges = {
 		max = 15,
-		min = 5,
+		min = 5
 	},
 	armor_damage_modifier_ranged = {
 		near = {
@@ -628,7 +663,7 @@ damage_templates.companion_servo_skull_flamer = {
 				[armor_types.berserker] = 2.5,
 				[armor_types.super_armor] = 0.1,
 				[armor_types.disgustingly_resilient] = 1.5,
-				[armor_types.void_shield] = 1,
+				[armor_types.void_shield] = 1
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -638,8 +673,8 @@ damage_templates.companion_servo_skull_flamer = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 0.1,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-			},
+				[armor_types.void_shield] = 1
+			}
 		},
 		far = {
 			attack = {
@@ -650,7 +685,7 @@ damage_templates.companion_servo_skull_flamer = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.7,
-				[armor_types.void_shield] = 1,
+				[armor_types.void_shield] = 1
 			},
 			impact = {
 				[armor_types.unarmored] = 0.75,
@@ -660,9 +695,9 @@ damage_templates.companion_servo_skull_flamer = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0.01,
 				[armor_types.disgustingly_resilient] = 0.75,
-				[armor_types.void_shield] = 0.5,
-			},
-		},
+				[armor_types.void_shield] = 0.5
+			}
+		}
 	},
 	damage_type = damage_types.burning,
 	gibbing_type = gibbing_types.plasma,
@@ -671,87 +706,87 @@ damage_templates.companion_servo_skull_flamer = {
 			power_distribution = {
 				attack = {
 					16,
-					24,
+					24
 				},
 				impact = {
 					1,
-					2,
-				},
-			},
+					2
+				}
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					20,
-					32,
+					32
 				},
 				impact = {
 					2,
-					4,
-				},
-			},
+					4
+				}
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					24,
-					40,
+					40
 				},
 				impact = {
 					3,
-					6,
-				},
-			},
+					6
+				}
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					30,
-					60,
+					60
 				},
 				impact = {
 					4,
-					8,
-				},
-			},
+					8
+				}
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					35,
-					70,
+					70
 				},
 				impact = {
 					6,
-					12,
-				},
-			},
+					12
+				}
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					40,
-					80,
+					80
 				},
 				impact = {
 					10,
-					15,
-				},
-			},
+					15
+				}
+			}
 		},
 		default_target = {
 			power_distribution = {
 				attack = {
 					60,
-					100,
+					100
 				},
 				impact = {
 					10,
-					15,
-				},
-			},
-		},
-	},
+					15
+				}
+			}
+		}
+	}
 }
 damage_templates.cryptic_overload_keystone_debuff_explosion = {
 	damage_type = "grenade",
@@ -762,7 +797,7 @@ damage_templates.cryptic_overload_keystone_debuff_explosion = {
 	suppression_value = 0,
 	cleave_distribution = {
 		attack = 0,
-		impact = 0,
+		impact = 0
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -773,7 +808,7 @@ damage_templates.cryptic_overload_keystone_debuff_explosion = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 0,
@@ -783,20 +818,20 @@ damage_templates.cryptic_overload_keystone_debuff_explosion = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-		},
+			[armor_types.void_shield] = 0
+		}
 	},
 	power_distribution = {
 		attack = 0,
-		impact = 0,
+		impact = 0
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	gibbing_type = gibbing_types.warp_lightning,
-	gibbing_power = gibbing_power.light,
+	gibbing_power = gibbing_power.light
 }
 damage_templates.cryptic_corruption_resistance_doom_tick = {
 	ignore_shield = true,
@@ -813,7 +848,7 @@ damage_templates.cryptic_corruption_resistance_doom_tick = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
+			[armor_types.void_shield] = 1
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -823,26 +858,26 @@ damage_templates.cryptic_corruption_resistance_doom_tick = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-		},
+			[armor_types.void_shield] = 1
+		}
 	},
 	power_distribution = {
 		attack = 10,
-		impact = 0,
+		impact = 0
 	},
 	cleave_distribution = {
 		attack = 1,
-		impact = 0,
+		impact = 0
 	},
 	damage_type = damage_types.grimoire,
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 
 return {
 	base_templates = damage_templates,
-	overrides = overrides,
+	overrides = overrides
 }

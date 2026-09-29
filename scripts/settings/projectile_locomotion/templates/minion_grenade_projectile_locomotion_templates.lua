@@ -22,8 +22,8 @@ local minion_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi / 10,
 					y = math.pi,
-					z = math.pi / 2,
-				},
+					z = math.pi / 2
+				}
 			},
 			drop = {
 				inherit_owner_velocity_percentage = 1,
@@ -32,9 +32,9 @@ local minion_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi / 10,
 					y = math.pi,
-					z = math.pi / 2,
-				},
-			},
+					z = math.pi / 2
+				}
+			}
 		},
 		integrator_parameters = {
 			air_density = 0,
@@ -46,8 +46,59 @@ local minion_projectile_locomotion_templates = {
 			mass = 0.8,
 			max_hit_count = 1,
 			radius = 0.025,
-			use_actor_mass_radius = false,
+			use_actor_mass_radius = false
+		}
+	},
+	renegade_wizard_ball = {
+		trajectory_parameters = {
+			spawn = {
+				locomotion_state = locomotion_states.true_flight
+			}
 		},
+		spawn_projectile_parameters = {
+			initial_speed = 20,
+			spawn_offset = Vector3Box(0.1, 0.4, 0.12),
+			rotation = Vector3Box(-90, 0, 0),
+			has_target_yaw_offset = {
+				max = 1,
+				min = 0.5
+			},
+			has_target_pitch_offset = {
+				max = 0.8,
+				min = 0.25
+			},
+			pitch_offset = {
+				max = 0,
+				min = 0
+			}
+		},
+		integrator_parameters = {
+			coefficient_of_restitution = 1,
+			collision_filter = "filter_minion_melee_friendly_fire",
+			collision_types = "both",
+			mass = 0.8,
+			radius = 0.25,
+			statics_raycast = true,
+			use_actor_mass_radius = false,
+			true_flight_template = TrueFlightTemplates.magic_missile
+		}
+	},
+	minion_wizard_wave = {
+		trajectory_parameters = {
+			throw = {
+				locomotion_state = locomotion_states.true_flight
+			}
+		},
+		integrator_parameters = {
+			coefficient_of_restitution = 1,
+			collision_filter = "filter_minion_melee_friendly_fire",
+			collision_types = "both",
+			mass = 0.8,
+			radius = 0.1,
+			statics_raycast = true,
+			use_actor_mass_radius = false,
+			true_flight_template = TrueFlightTemplates.drone
+		}
 	},
 	minion_grenade_cultist_grenadier = {
 		trajectory_parameters = {
@@ -67,8 +118,8 @@ local minion_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi / 10,
 					y = math.pi,
-					z = math.pi / 2,
-				},
+					z = math.pi / 2
+				}
 			},
 			drop = {
 				inherit_owner_velocity_percentage = 1,
@@ -77,9 +128,9 @@ local minion_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi / 10,
 					y = math.pi,
-					z = math.pi / 2,
-				},
-			},
+					z = math.pi / 2
+				}
+			}
 		},
 		integrator_parameters = {
 			air_density = 0,
@@ -91,8 +142,8 @@ local minion_projectile_locomotion_templates = {
 			mass = 0.8,
 			max_hit_count = 1,
 			radius = 0.035,
-			use_actor_mass_radius = false,
-		},
+			use_actor_mass_radius = false
+		}
 	},
 	minion_grenade_twin = {
 		trajectory_parameters = {
@@ -112,8 +163,8 @@ local minion_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi / 10,
 					y = math.pi,
-					z = math.pi / 2,
-				},
+					z = math.pi / 2
+				}
 			},
 			drop = {
 				inherit_owner_velocity_percentage = 1,
@@ -122,9 +173,9 @@ local minion_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi / 10,
 					y = math.pi,
-					z = math.pi / 2,
-				},
-			},
+					z = math.pi / 2
+				}
+			}
 		},
 		integrator_parameters = {
 			air_density = 0,
@@ -136,8 +187,8 @@ local minion_projectile_locomotion_templates = {
 			mass = 0.8,
 			max_hit_count = 1,
 			radius = 0.025,
-			use_actor_mass_radius = false,
-		},
+			use_actor_mass_radius = false
+		}
 	},
 	mutator_pestilent_bauble = {
 		trajectory_parameters = {
@@ -157,8 +208,8 @@ local minion_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi / 10,
 					y = math.pi,
-					z = math.pi / 2,
-				},
+					z = math.pi / 2
+				}
 			},
 			drop = {
 				inherit_owner_velocity_percentage = 1,
@@ -167,9 +218,9 @@ local minion_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi / 10,
 					y = math.pi,
-					z = math.pi / 2,
-				},
-			},
+					z = math.pi / 2
+				}
+			}
 		},
 		integrator_parameters = {
 			air_density = 0,
@@ -181,9 +232,9 @@ local minion_projectile_locomotion_templates = {
 			mass = 0.8,
 			max_hit_count = 1,
 			radius = 0.025,
-			use_actor_mass_radius = false,
-		},
-	},
+			use_actor_mass_radius = false
+		}
+	}
 }
 
 return minion_projectile_locomotion_templates

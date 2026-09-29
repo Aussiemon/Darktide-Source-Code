@@ -21,19 +21,19 @@ local option_button_selected_icon_pass = {
 		offset = {
 			-10,
 			0,
-			7,
+			7
 		},
 		size = {
 			40,
-			40,
+			40
 		},
 		material_values = {
-			grunge_tint_intensity = 1,
-		},
+			grunge_tint_intensity = 1
+		}
 	},
 	visibility_function = function (content, style)
 		return content.is_selected
-	end,
+	end
 }
 local rating_button_description_label_pass = {
 	pass_type = "text",
@@ -46,16 +46,16 @@ local rating_button_description_label_pass = {
 		offset = {
 			0,
 			50,
-			0,
+			0
 		},
 		size = {
 			500,
-			40,
-		},
+			40
+		}
 	}),
 	visibility_function = function (content, style)
 		return content.description
-	end,
+	end
 }
 local blueprints = {
 	option_button = {
@@ -88,7 +88,7 @@ local blueprints = {
 			widget.style.text.offset[1] = 10
 			widget.style.text.size_addition = {
 				-60,
-				0,
+				0
 			}
 			content.original_text = element.text
 			content.hotspot.on_pressed_sound = UISoundEvents.default_click
@@ -96,7 +96,7 @@ local blueprints = {
 			content.hotspot.pressed_callback = function ()
 				element.callback(widget, not content.is_selected)
 			end
-		end,
+		end
 	},
 	rating_button = {
 		height = ButtonPassTemplates.terminal_button.size[2],
@@ -129,7 +129,7 @@ local blueprints = {
 			widget.style.text.offset[1] = 10
 			widget.style.text.size_addition = {
 				-60,
-				0,
+				0
 			}
 			content.description = element.description
 			content.original_text = element.text
@@ -138,8 +138,8 @@ local blueprints = {
 			content.hotspot.pressed_callback = function ()
 				element.callback(widget, not content.is_selected)
 			end
-		end,
-	},
+		end
+	}
 }
 
 return blueprints

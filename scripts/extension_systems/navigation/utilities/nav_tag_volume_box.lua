@@ -22,7 +22,7 @@ NavTagVolumeBox.create_from_pose = function (nav_world, tm, half_size)
 		p1,
 		p2,
 		p3,
-		p4,
+		p4
 	}, altitude_min, altitude_max
 end
 

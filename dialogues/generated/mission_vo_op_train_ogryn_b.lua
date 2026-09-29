@@ -14,7 +14,7 @@ local mission_vo_op_train_ogryn_b = {
 			"loc_ogryn_b__mission_train_ogryn_joy_a_07",
 			"loc_ogryn_b__mission_train_ogryn_joy_a_08",
 			"loc_ogryn_b__mission_train_ogryn_joy_a_09",
-			"loc_ogryn_b__mission_train_ogryn_joy_a_10",
+			"loc_ogryn_b__mission_train_ogryn_joy_a_10"
 		},
 		sound_events_duration = {
 			2.64824,
@@ -26,10 +26,10 @@ local mission_vo_op_train_ogryn_b = {
 			2.259719,
 			2.448375,
 			2.551979,
-			3.114573,
+			3.114573
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_op_train_ogryn_b", mission_vo_op_train_ogryn_b)

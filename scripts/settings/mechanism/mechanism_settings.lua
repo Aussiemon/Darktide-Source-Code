@@ -9,12 +9,12 @@ local mechanism_settings = {
 		states = {
 			"init",
 			"gameplay",
-			"game_mode_ended",
+			"game_mode_ended"
 		},
 		player_package_synchronization_settings = {
-			prioritization_template = "default",
+			prioritization_template = "default"
 		},
-		loader_paths = {},
+		loader_paths = {}
 	},
 	onboarding = {
 		class_file_name = "scripts/managers/mechanism/mechanisms/mechanism_onboarding",
@@ -26,12 +26,12 @@ local mechanism_settings = {
 			"joining_hub_server",
 			"joining_party_game_session",
 			"client_exit_gameplay",
-			"client_wait_for_server",
+			"client_wait_for_server"
 		},
 		player_package_synchronization_settings = {
-			prioritization_template = "default",
+			prioritization_template = "default"
 		},
-		loader_paths = {},
+		loader_paths = {}
 	},
 	hub = {
 		class_file_name = "scripts/managers/mechanism/mechanisms/mechanism_hub",
@@ -43,23 +43,23 @@ local mechanism_settings = {
 			"in_hub",
 			"joining_party_game_session",
 			"client_exit_gameplay",
-			"client_wait_for_server",
+			"client_wait_for_server"
 		},
 		player_package_synchronization_settings = {
-			prioritization_template = "hub",
+			prioritization_template = "hub"
 		},
-		loader_paths = {},
+		loader_paths = {}
 	},
 	idle = {
 		class_file_name = "scripts/managers/mechanism/mechanisms/mechanism_idle",
 		class_name = "MechanismIdle",
 		states = {
-			"idle",
+			"idle"
 		},
 		player_package_synchronization_settings = {
-			prioritization_template = "default",
+			prioritization_template = "default"
 		},
-		loader_paths = {},
+		loader_paths = {}
 	},
 	adventure = {
 		class_file_name = "scripts/managers/mechanism/mechanisms/mechanism_adventure",
@@ -71,17 +71,17 @@ local mechanism_settings = {
 			"client_wait_for_server",
 			"adventure",
 			"score",
-			"joining_party_game_session",
+			"joining_party_game_session"
 		},
 		game_states = {
 			score = StateGameScore,
-			mission_server_exit = StateMissionServerExit,
+			mission_server_exit = StateMissionServerExit
 		},
 		player_package_synchronization_settings = {
 			prioritization_template = "default",
-			required_index = nil,
+			required_index = nil
 		},
-		loader_paths = {},
+		loader_paths = {}
 	},
 	expedition = {
 		class_file_name = "scripts/managers/mechanism/mechanisms/mechanism_expedition",
@@ -93,19 +93,19 @@ local mechanism_settings = {
 			"client_wait_for_server",
 			"expedition",
 			"score",
-			"joining_party_game_session",
+			"joining_party_game_session"
 		},
 		game_states = {
 			score = StateGameScore,
-			mission_server_exit = StateMissionServerExit,
+			mission_server_exit = StateMissionServerExit
 		},
 		player_package_synchronization_settings = {
 			prioritization_template = "default",
-			required_index = nil,
+			required_index = nil
 		},
 		loader_paths = {
-			"scripts/loading/loaders/expedition_levels_loader",
-		},
+			"scripts/loading/loaders/expedition_levels_loader"
+		}
 	},
 	left_session = {
 		class_file_name = "scripts/managers/mechanism/mechanisms/mechanism_left_session",
@@ -113,14 +113,14 @@ local mechanism_settings = {
 		states = {
 			"init",
 			"search_for_session",
-			"wait_for_session",
+			"wait_for_session"
 		},
 		player_package_synchronization_settings = {
 			prioritization_template = "default",
-			required_index = nil,
+			required_index = nil
 		},
-		loader_paths = {},
-	},
+		loader_paths = {}
+	}
 }
 
 return settings("MechanismSettings", mechanism_settings)

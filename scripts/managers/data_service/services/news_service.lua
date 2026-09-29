@@ -16,7 +16,7 @@ local function to_news_item(mail)
 		mark_unread = mail.mark_unread,
 		is_read = function ()
 			return mail.isRead
-		end,
+		end
 	}
 	local properties = mail.properties
 

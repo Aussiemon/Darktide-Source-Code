@@ -64,17 +64,17 @@ templates.live_event_broker_stimms_toxic_gas_resistance = {
 		[stat_buffs.melee_damage] = 0.25 / live_event_broker_stimms_toxic_gas_resistance_max_stacks,
 		[stat_buffs.movement_speed] = 0.3 / live_event_broker_stimms_toxic_gas_resistance_max_stacks,
 		[stat_buffs.ranged_damage] = 0.25 / live_event_broker_stimms_toxic_gas_resistance_max_stacks,
-		[stat_buffs.reload_speed] = 0.3 / live_event_broker_stimms_toxic_gas_resistance_max_stacks,
+		[stat_buffs.reload_speed] = 0.3 / live_event_broker_stimms_toxic_gas_resistance_max_stacks
 	},
 	stat_buffs = {
-		[stat_buffs.syringe_duration] = 5 / live_event_broker_stimms_toxic_gas_resistance_max_stacks,
+		[stat_buffs.syringe_duration] = 5 / live_event_broker_stimms_toxic_gas_resistance_max_stacks
 	},
 	update_func = function (template_data, template_context, dt, t, template)
 		template_data.is_active = template_context.buff_extension:has_keyword(keywords.in_toxic_gas)
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.is_active
-	end,
+	end
 }
 templates.live_event_broker_stimms_perma_buff = {
 	always_show_in_hud = false,
@@ -93,8 +93,8 @@ templates.live_event_broker_stimms_perma_buff = {
 	title = "Broker Stimms Buff",
 	buff_category = buff_categories.live_event,
 	stat_buffs = {
-		[stat_buffs.syringe_duration] = 5,
-	},
+		[stat_buffs.syringe_duration] = 5
+	}
 }
 
 return templates

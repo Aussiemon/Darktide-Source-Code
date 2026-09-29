@@ -23,7 +23,7 @@ local smoke_fog_unit_template = {
 		local is_server = template_context.is_server
 
 		config:add("DeployableUnitLocomotionExtension", {
-			placed_on_unit = placed_on_unit,
+			placed_on_unit = placed_on_unit
 		})
 		config:add("SmokeFogExtension", {
 			owner_unit = owner_unit,
@@ -32,7 +32,7 @@ local smoke_fog_unit_template = {
 			outer_radius = smoke_fog_template.outer_radius,
 			block_line_of_sight = smoke_fog_template.block_line_of_sight,
 			in_fog_buff_template_name = smoke_fog_template.in_fog_buff_template_name,
-			leaving_fog_buff_template_name = smoke_fog_template.leaving_fog_buff_template_name,
+			leaving_fog_buff_template_name = smoke_fog_template.leaving_fog_buff_template_name
 		})
 
 		local rotation = Unit.local_rotation(unit, 1)
@@ -86,7 +86,7 @@ local smoke_fog_unit_template = {
 		if has_owner then
 			player_unit_spawn_manager:relinquish_unit_ownership(unit)
 		end
-	end,
+	end
 }
 
 return smoke_fog_unit_template

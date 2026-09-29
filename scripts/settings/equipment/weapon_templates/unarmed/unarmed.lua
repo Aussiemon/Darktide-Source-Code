@@ -10,27 +10,8 @@ local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
 local weapon_template = {}
 
-weapon_template.action_inputs = {
-	combat_ability = {
-		buffer_time = 0,
-		clear_input_queue = true,
-		input_sequence = {
-			{
-				input = "combat_ability_pressed",
-				value = true,
-			},
-		},
-	},
-}
-
-table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.combat_ability_action_inputs)
-
-weapon_template.action_input_hierarchy = {
-	{
-		input = "combat_ability",
-		transition = "base",
-	},
-}
+weapon_template.action_inputs = {}
+weapon_template.action_input_hierarchy = {}
 weapon_template.actions = {
 	action_wield = {
 		allowed_during_sprint = true,
@@ -38,11 +19,7 @@ weapon_template.actions = {
 		kind = "wield",
 		total_time = 0.5,
 		uninterruptible = true,
-		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-		},
+		allowed_chain_actions = {}
 	},
 	action_warp_charge_explode = {
 		anim_end_event = "explode_finished",
@@ -55,8 +32,8 @@ weapon_template.actions = {
 		timeline_anims = {
 			[0.933] = {
 				anim_event_1p = "explode_warp_end",
-				anim_event_3p = "explode_warp_end",
-			},
+				anim_event_3p = "explode_warp_end"
+			}
 		},
 		explosion_template = ExplosionTemplates.warp_charge_overload,
 		death_damage_profile = DamageProfileTemplates.warp_charge_exploding_tick,
@@ -65,45 +42,33 @@ weapon_template.actions = {
 			damage_frequency = 0.8,
 			power_level = 1000,
 			damage_profile = DamageProfileTemplates.warp_charge_exploding_tick,
-			damage_type = damage_types.warp_overload,
+			damage_type = damage_types.warp_overload
 		},
-		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-		},
-		time_scale_stat_buffs = {
-			buff_stat_buffs.overheat_explosion_speed_modifier,
-		},
-	},
-	combat_ability = {
-		kind = "unwield_to_specific",
-		slot_to_wield = "slot_combat_ability",
-		start_input = "combat_ability",
-		total_time = 0,
-		uninterruptible = true,
 		allowed_chain_actions = {},
-	},
+		time_scale_stat_buffs = {
+			buff_stat_buffs.overheat_explosion_speed_modifier
+		}
+	}
 }
 weapon_template.breed_anim_state_machine_3p = {
 	cryptic = "content/characters/player/human/third_person/animations/unarmed",
 	human = "content/characters/player/human/third_person/animations/unarmed",
-	ogryn = "content/characters/player/ogryn/third_person/animations/unarmed",
+	ogryn = "content/characters/player/ogryn/third_person/animations/unarmed"
 }
 weapon_template.breed_anim_state_machine_1p = {
 	cryptic = "content/characters/player/human/first_person/animations/unarmed",
 	human = "content/characters/player/human/first_person/animations/unarmed",
-	ogryn = "content/characters/player/ogryn/first_person/animations/unarmed",
+	ogryn = "content/characters/player/ogryn/first_person/animations/unarmed"
 }
 weapon_template.keywords = {
-	"unarmed",
+	"unarmed"
 }
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
-	uses_overheat = false,
+	uses_overheat = false
 }
 weapon_template.crosshair = {
-	crosshair_type = "ironsight",
+	crosshair_type = "ironsight"
 }
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
@@ -116,7 +81,7 @@ weapon_template.toughness_template = "default"
 weapon_template.breed_footstep_intervals = {
 	cryptic = FootstepIntervalsTemplates.unarmed_human,
 	human = FootstepIntervalsTemplates.unarmed_human,
-	ogryn = FootstepIntervalsTemplates.unarmed_ogryn,
+	ogryn = FootstepIntervalsTemplates.unarmed_ogryn
 }
 weapon_template.archetype_warp_explode_action_override = "action_warp_charge_explode"
 

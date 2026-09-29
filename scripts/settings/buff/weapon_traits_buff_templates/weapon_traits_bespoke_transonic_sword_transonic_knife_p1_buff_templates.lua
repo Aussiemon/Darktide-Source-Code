@@ -23,16 +23,16 @@ templates.weapon_trait_bespoke_transonic_sword_transonic_knife_p1_elite_kills_gr
 	predicted = false,
 	stacks_to_remove = 1,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	add_child_proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	specific_check_proc_funcs = {
-		[proc_events.on_kill] = CheckProcFunctions.on_elite_or_special_kill,
-	},
+		[proc_events.on_kill] = CheckProcFunctions.on_elite_or_special_kill
+	}
 }
 templates.weapon_trait_bespoke_transonic_sword_transonic_knife_p1_elite_kills_grants_stackable_melee_power_child = {
 	class_name = "buff",
@@ -41,9 +41,9 @@ templates.weapon_trait_bespoke_transonic_sword_transonic_knife_p1_elite_kills_gr
 	predicted = false,
 	stack_offset = -1,
 	conditional_stat_buffs = {
-		[stat_buffs.melee_power_level_modifier] = 0.125,
+		[stat_buffs.melee_power_level_modifier] = 0.125
 	},
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 templates.weapon_trait_bespoke_transonic_sword_transonic_knife_p1_increased_attack_cleave_on_multiple_hits = table.clone(BaseWeaponTraitBuffTemplates.increased_attack_cleave_on_multiple_hits)
 templates.weapon_trait_bespoke_transonic_sword_transonic_knife_p1_increased_melee_damage_on_multiple_hits = table.clone(BaseWeaponTraitBuffTemplates.increased_melee_damage_on_multiple_hits)
@@ -57,10 +57,10 @@ templates.weapon_trait_bespoke_transonic_sword_transonic_knife_p1_increased_powe
 	predicted = false,
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.melee_power_level_modifier] = 0.1,
+		[stat_buffs.melee_power_level_modifier] = 0.1
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return ConditionalFunctions.is_item_slot_wielded(template_data, template_context) and template_data.active
@@ -84,14 +84,14 @@ templates.weapon_trait_bespoke_transonic_sword_transonic_knife_p1_increased_powe
 					template_data.active = false
 				end
 			end
-		end,
+		end
 	},
 	check_active_func = function (template_data, template_context)
 		return ConditionalFunctions.is_item_slot_wielded(template_data, template_context) and template_data.active
 	end,
 	visual_stack_count = function (template_data, template_context)
 		return template_data.number_of_attacks_left or 1
-	end,
+	end
 }
 
 return templates

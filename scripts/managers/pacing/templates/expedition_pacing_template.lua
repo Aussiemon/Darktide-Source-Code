@@ -11,7 +11,7 @@ local function _multiplier_step(value)
 		value * 1.2,
 		value * 1.35,
 		value * 1.5,
-		value * 1.75,
+		value * 1.75
 	}
 
 	return multiplier_step
@@ -65,7 +65,7 @@ local function _multiplier_step_desc(value)
 		value * 1.5,
 		value * 1.35,
 		value * 1.2,
-		value * 1,
+		value * 1
 	}
 
 	return multiplier_step
@@ -77,7 +77,7 @@ local function _challenge_rating_multiplier_steps(value)
 		value * 1.25,
 		value * 1.5,
 		value * 1.75,
-		value * 2,
+		value * 2
 	}
 
 	return multiplier_step
@@ -89,7 +89,7 @@ local DECAY_TENSION_RATES = {
 	build_up_tension_high = _multiplier_step(2),
 	sustain_tension_peak = _multiplier_step(0),
 	tension_peak_fade = _multiplier_step(2),
-	relax = _multiplier_step(2),
+	relax = _multiplier_step(2)
 }
 local DEFAULT_ALLOWED_SPAWN_TYPES = {
 	build_up_tension_low = {
@@ -98,7 +98,7 @@ local DEFAULT_ALLOWED_SPAWN_TYPES = {
 		roamers = true,
 		specials = true,
 		terror_events = true,
-		trickle_hordes = true,
+		trickle_hordes = true
 	},
 	build_up_tension = {
 		hordes = true,
@@ -106,7 +106,7 @@ local DEFAULT_ALLOWED_SPAWN_TYPES = {
 		roamers = true,
 		specials = true,
 		terror_events = true,
-		trickle_hordes = true,
+		trickle_hordes = true
 	},
 	build_up_tension_high = {
 		hordes = true,
@@ -114,7 +114,7 @@ local DEFAULT_ALLOWED_SPAWN_TYPES = {
 		roamers = true,
 		specials = true,
 		terror_events = true,
-		trickle_hordes = true,
+		trickle_hordes = true
 	},
 	sustain_tension_peak = {
 		hordes = false,
@@ -122,7 +122,7 @@ local DEFAULT_ALLOWED_SPAWN_TYPES = {
 		roamers = false,
 		specials = false,
 		terror_events = true,
-		trickle_hordes = false,
+		trickle_hordes = false
 	},
 	tension_peak_fade = {
 		hordes = false,
@@ -130,7 +130,7 @@ local DEFAULT_ALLOWED_SPAWN_TYPES = {
 		roamers = false,
 		specials = false,
 		terror_events = true,
-		trickle_hordes = false,
+		trickle_hordes = false
 	},
 	relax = {
 		hordes = true,
@@ -138,8 +138,8 @@ local DEFAULT_ALLOWED_SPAWN_TYPES = {
 		roamers = true,
 		specials = true,
 		terror_events = true,
-		trickle_hordes = false,
-	},
+		trickle_hordes = false
+	}
 }
 local DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS = {
 	{
@@ -148,12 +148,12 @@ local DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS = {
 		travel_change_pause_time = 5,
 		ramp_up_states = {
 			build_up_tension = true,
-			build_up_tension_low = true,
+			build_up_tension_low = true
 		},
 		ramp_modifiers = {
 			hordes = 1.25,
-			specials = 2,
-		},
+			specials = 2
+		}
 	},
 	{
 		max_duration = 50,
@@ -161,13 +161,13 @@ local DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS = {
 		travel_change_pause_time = 7,
 		ramp_up_states = {
 			build_up_tension = true,
-			build_up_tension_low = true,
+			build_up_tension_low = true
 		},
 		ramp_modifiers = {
 			hordes = 1.25,
 			specials = 2,
-			terror_events = 1.25,
-		},
+			terror_events = 1.25
+		}
 	},
 	{
 		max_duration = 60,
@@ -176,18 +176,18 @@ local DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS = {
 		wait_for_ramp_clear = true,
 		ramp_up_states = {
 			build_up_tension = true,
-			build_up_tension_low = true,
+			build_up_tension_low = true
 		},
 		ramp_modifiers = {
 			hordes = 1.5,
 			specials = 2.5,
 			terror_events = 1.5,
-			trickle_hordes = 1.5,
+			trickle_hordes = 1.5
 		},
 		wait_for_ramp_clear_reset = {
 			80,
-			160,
-		},
+			160
+		}
 	},
 	{
 		max_duration = 80,
@@ -196,18 +196,18 @@ local DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS = {
 		wait_for_ramp_clear = true,
 		ramp_up_states = {
 			build_up_tension = true,
-			build_up_tension_low = true,
+			build_up_tension_low = true
 		},
 		ramp_modifiers = {
 			hordes = 1.5,
 			specials = 2.5,
 			terror_events = 1.75,
-			trickle_hordes = 1.5,
+			trickle_hordes = 1.5
 		},
 		wait_for_ramp_clear_reset = {
 			80,
-			160,
-		},
+			160
+		}
 	},
 	{
 		max_duration = 100,
@@ -216,33 +216,33 @@ local DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS = {
 		wait_for_ramp_clear = true,
 		ramp_up_states = {
 			build_up_tension = true,
-			build_up_tension_low = true,
+			build_up_tension_low = true
 		},
 		ramp_modifiers = {
 			hordes = 2,
 			specials = 3,
 			terror_events = 2,
-			trickle_hordes = 2,
+			trickle_hordes = 2
 		},
 		wait_for_ramp_clear_reset = {
 			120,
-			200,
-		},
-	},
+			200
+		}
+	}
 }
 local MAX_HEAT = {
 	100,
 	100,
 	100,
 	100,
-	100,
+	100
 }
 local HEAT_THRESHOLD_TYPES = {
 	"none",
 	"undetected",
 	"alert",
 	"detected",
-	"max",
+	"max"
 }
 local HEAT_ALLOWED_SPAWN_TYPES = {
 	none = {
@@ -252,7 +252,7 @@ local HEAT_ALLOWED_SPAWN_TYPES = {
 		roamers = true,
 		specials = true,
 		terror_events = true,
-		trickle_hordes = true,
+		trickle_hordes = true
 	},
 	undetected = {
 		auto_events = true,
@@ -261,7 +261,7 @@ local HEAT_ALLOWED_SPAWN_TYPES = {
 		roamers = true,
 		specials = true,
 		terror_events = true,
-		trickle_hordes = true,
+		trickle_hordes = true
 	},
 	alert = {
 		auto_events = true,
@@ -270,7 +270,7 @@ local HEAT_ALLOWED_SPAWN_TYPES = {
 		roamers = true,
 		specials = true,
 		terror_events = true,
-		trickle_hordes = true,
+		trickle_hordes = true
 	},
 	detected = {
 		auto_events = true,
@@ -279,7 +279,7 @@ local HEAT_ALLOWED_SPAWN_TYPES = {
 		roamers = true,
 		specials = true,
 		terror_events = true,
-		trickle_hordes = true,
+		trickle_hordes = true
 	},
 	max = {
 		auto_events = true,
@@ -288,8 +288,8 @@ local HEAT_ALLOWED_SPAWN_TYPES = {
 		roamers = true,
 		specials = true,
 		terror_events = true,
-		trickle_hordes = true,
-	},
+		trickle_hordes = true
+	}
 }
 local ALLOWED_TO_DROP_STAGE = {
 	none = {
@@ -297,36 +297,36 @@ local ALLOWED_TO_DROP_STAGE = {
 		true,
 		true,
 		true,
-		true,
+		true
 	},
 	undetected = {
 		false,
 		false,
 		false,
 		false,
-		false,
+		false
 	},
 	alert = {
 		true,
 		true,
 		true,
 		true,
-		true,
+		true
 	},
 	detected = {
 		true,
 		true,
 		true,
 		true,
-		true,
+		true
 	},
 	max = {
 		true,
 		true,
 		true,
 		true,
-		true,
-	},
+		true
+	}
 }
 local REQUIRED_TIME_AT_STAGE = {
 	none = {
@@ -334,43 +334,43 @@ local REQUIRED_TIME_AT_STAGE = {
 		0,
 		0,
 		0,
-		0,
+		0
 	},
 	undetected = {
 		5,
 		5,
 		5,
 		5,
-		5,
+		5
 	},
 	alert = {
 		10,
 		10,
 		10,
 		10,
-		10,
+		10
 	},
 	detected = {
 		20,
 		20,
 		20,
 		20,
-		20,
+		20
 	},
 	max = {
 		30,
 		30,
 		30,
 		30,
-		30,
-	},
+		30
+	}
 }
 local SPECIALS_ONLY_UPDATE_INJECTED_SLOTS = {
 	alert = false,
 	detected = false,
 	max = false,
 	none = true,
-	undetected = true,
+	undetected = true
 }
 local HORDE_TIMER_MULTIPLIER = {
 	none = {
@@ -378,36 +378,36 @@ local HORDE_TIMER_MULTIPLIER = {
 		1,
 		1,
 		1,
-		1,
+		1
 	},
 	undetected = {
 		1,
 		1,
 		1,
 		1,
-		1,
+		1
 	},
 	alert = {
 		1,
 		1,
 		1,
 		1,
-		1,
+		1
 	},
 	detected = {
 		1,
 		1,
 		1,
 		0.7,
-		0.6,
+		0.6
 	},
 	max = {
 		1,
 		1,
 		1,
 		0.8,
-		0.7,
-	},
+		0.7
+	}
 }
 local HORDE_RATE_MULTIPLIER = {
 	none = {
@@ -415,36 +415,36 @@ local HORDE_RATE_MULTIPLIER = {
 		1,
 		1,
 		1,
-		1,
+		1
 	},
 	undetected = {
 		1,
 		1.1,
 		1.1,
 		1.3,
-		1.5,
+		1.5
 	},
 	alert = {
 		1.2,
 		1.2,
 		1.2,
 		1.5,
-		2,
+		2
 	},
 	detected = {
 		1.2,
 		1.3,
 		1.3,
 		1.7,
-		2.5,
+		2.5
 	},
 	max = {
 		1.2,
 		1.5,
 		1.4,
 		2.2,
-		2.5,
-	},
+		2.5
+	}
 }
 local TRICKLE_HORDE_COOLDOWN_MODIFER = {
 	none = {
@@ -452,36 +452,36 @@ local TRICKLE_HORDE_COOLDOWN_MODIFER = {
 		1,
 		1,
 		1,
-		1,
+		1
 	},
 	undetected = {
 		1,
 		1,
 		0.8,
 		1,
-		0.9,
+		0.9
 	},
 	alert = {
 		1,
 		1,
 		0.6,
 		0.8,
-		0.8,
+		0.8
 	},
 	detected = {
 		1,
 		1,
 		1.2,
 		0.8,
-		0.8,
+		0.8
 	},
 	max = {
 		1,
 		1,
 		1.2,
 		0.8,
-		0.8,
-	},
+		0.8
+	}
 }
 local TRICKLE_HORDE_DISTANCE_MODIFER = {
 	none = {
@@ -489,36 +489,36 @@ local TRICKLE_HORDE_DISTANCE_MODIFER = {
 		1,
 		1,
 		1,
-		1,
+		1
 	},
 	undetected = {
 		1,
 		1,
 		1,
 		1,
-		0.8,
+		0.8
 	},
 	alert = {
 		1,
 		1,
 		0.8,
 		0.8,
-		0.8,
+		0.8
 	},
 	detected = {
 		1,
 		1,
 		0.8,
 		0.8,
-		0.8,
+		0.8
 	},
 	max = {
 		1,
 		1,
 		0.8,
 		0.8,
-		0.8,
-	},
+		0.8
+	}
 }
 local TRICKLE_HORDE_MAX_ALLOWED_BEFORE_COOLDOWN_MODIFER = {
 	none = {
@@ -526,104 +526,88 @@ local TRICKLE_HORDE_MAX_ALLOWED_BEFORE_COOLDOWN_MODIFER = {
 		0,
 		0,
 		0,
-		2,
+		2
 	},
 	undetected = {
 		0,
 		0,
 		1,
 		2,
-		3,
+		3
 	},
 	alert = {
 		0,
 		0,
 		2,
 		2,
-		4,
+		4
 	},
 	detected = {
 		0,
 		0,
 		1,
 		2,
-		4,
+		4
 	},
 	max = {
 		0,
 		0,
 		0,
 		0,
-		2,
-	},
+		2
+	}
 }
 local EXTRACTION_WAIT_TIMINGS = {
 	none = {
 		valkyrie = {
 			20,
-			20,
+			20
 		},
 		safe_zone = {
 			30,
-			30,
-		},
+			30
+		}
 	},
 	undetected = {
 		valkyrie = {
 			20,
-			20,
+			20
 		},
 		safe_zone = {
 			30,
-			30,
-		},
+			30
+		}
 	},
 	alert = {
 		valkyrie = {
 			20,
-			20,
+			20
 		},
 		safe_zone = {
 			30,
-			30,
-		},
+			30
+		}
 	},
 	detected = {
 		valkyrie = {
 			20,
-			20,
+			20
 		},
 		safe_zone = {
 			30,
-			30,
-		},
+			30
+		}
 	},
 	max = {
 		valkyrie = {
 			20,
-			20,
+			20
 		},
 		safe_zone = {
 			30,
-			30,
-		},
-	},
-}
-local ROAMER_MINIMUM_SETTINGS = {
-	multiplier_per_stage = {
-		alert = 1.5,
-		detected = 1.25,
-		max = 1,
-		none = 1,
-		undetected = 1.25,
-	},
-	base_value = {
-		20,
-		25,
-		30,
-		33,
-		38,
-	},
+			30
+		}
+	}
 }
 
 local function _get_threshold(index, split_max_heat)
@@ -659,8 +643,8 @@ local function _generate_heat_settings()
 				trickle_horde_overrides = {
 					trickle_horde_travel_distance_range = TRICKLE_HORDE_DISTANCE_MODIFER[stage_type][difficulty_index],
 					num_trickle_hordes_active_for_cooldown = TRICKLE_HORDE_MAX_ALLOWED_BEFORE_COOLDOWN_MODIFER[stage_type][difficulty_index],
-					trickle_horde_cooldown = TRICKLE_HORDE_COOLDOWN_MODIFER[stage_type][difficulty_index],
-				},
+					trickle_horde_cooldown = TRICKLE_HORDE_COOLDOWN_MODIFER[stage_type][difficulty_index]
+				}
 			}
 		end
 
@@ -687,7 +671,7 @@ local pacing_template = {
 		trickle_hordes = _challenge_rating_multiplier_steps(35),
 		roamers = _challenge_rating_multiplier_steps(90),
 		terror_events = _challenge_rating_multiplier_steps(100),
-		auto_events = _challenge_rating_multiplier_steps(100),
+		auto_events = _challenge_rating_multiplier_steps(100)
 	},
 	ramp_up_frequency_modifiers = DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS,
 	min_wound_tension_requirement = {
@@ -695,7 +679,7 @@ local pacing_template = {
 		false,
 		false,
 		true,
-		true,
+		true
 	},
 	heat_settings = {
 		decay_heat_delay = 3,
@@ -711,15 +695,15 @@ local pacing_template = {
 				"renegade_netgunner",
 				"flamer",
 				"cultist_mutant",
-				"renegade_sniper",
+				"renegade_sniper"
 			},
 			chance_for_special_injection = {
 				0,
 				0,
 				0.3,
 				0.5,
-				0.6,
-			},
+				0.6
+			}
 		},
 		trickle_patrol_settings = {
 			{
@@ -727,69 +711,69 @@ local pacing_template = {
 				detected = 0.5,
 				max = 1,
 				none = 0,
-				undetected = 0,
+				undetected = 0
 			},
 			{
 				alert = 0.3,
 				detected = 0.5,
 				max = 1,
 				none = 0,
-				undetected = 0,
+				undetected = 0
 			},
 			{
 				alert = 0.3,
 				detected = 0.5,
 				max = 1,
 				none = 0,
-				undetected = 0,
+				undetected = 0
 			},
 			{
 				alert = 0.3,
 				detected = 0.5,
 				max = 1,
 				none = 0,
-				undetected = 0,
+				undetected = 0
 			},
 			{
 				alert = 0.4,
 				detected = 0.5,
 				max = 1,
 				none = 0.2,
-				undetected = 0.3,
+				undetected = 0.3
 			},
 			{
 				alert = 0.6,
 				detected = 0.7,
 				max = 1,
 				none = 0.4,
-				undetected = 0.5,
-			},
+				undetected = 0.5
+			}
 		},
 		heat_multiplier = {
 			aggroed = _indexed_by_location({
 				1,
-				1,
+				1
 			}, {
 				2,
 				1,
-				true,
+				true
 			}),
 			pickups = _indexed_by_location({
 				1,
-				1,
+				1
 			}, {
 				2,
 				1,
-				true,
+				true
 			}),
 			oppertunity = _indexed_by_location({
 				1,
-				1,
+				1
 			}, {
 				2,
 				1,
-				true,
-			}),
+				true
+			})
 		},
 		heat_decay_rate = _multiplier_step_desc(0.05),
 		max_heat = MAX_HEAT,
@@ -800,7 +784,7 @@ local pacing_template = {
 		allowed_heat_generating_spawn_types = {
 			default = false,
 			roamer_pacing = true,
-			trickle_patrol = true,
+			trickle_patrol = true
 		},
 		heat_lookups = {
 			opportunities = {
@@ -808,13 +792,13 @@ local pacing_template = {
 				high = 15,
 				low = 5,
 				medium = 10,
-				traversal = 0,
+				traversal = 0
 			},
 			pickups = {
 				large = 0,
 				luggable = 0,
 				medium = 0,
-				small = 0,
+				small = 0
 			},
 			lower_heat = {
 				low = {
@@ -822,297 +806,296 @@ local pacing_template = {
 					4,
 					3,
 					2,
-					1,
+					1
 				},
 				medium = {
 					7,
 					5,
 					3,
 					2,
-					1,
+					1
 				},
 				high = {
 					15,
 					15,
 					10,
 					10,
-					5,
-				},
+					5
+				}
 			},
 			time_elapsed = {
-				timer = 0,
+				timer = 0
 			},
 			heat_stage_per_location = {
 				{
 					name = "none",
-					threshold = 0,
+					threshold = 0
 				},
 				{
 					name = "undetected",
-					threshold = 2,
+					threshold = 2
 				},
 				{
 					name = "alert",
-					threshold = 4,
+					threshold = 4
 				},
 				{
 					name = "detected",
-					threshold = 99,
+					threshold = 99
 				},
 				{
 					name = "max",
-					threshold = 99,
-				},
-			},
+					threshold = 99
+				}
+			}
 		},
 		heat_stage_orders = {
 			none = {
-				next_stage = "undetected",
+				next_stage = "undetected"
 			},
 			undetected = {
 				back_stage = "none",
-				next_stage = "alert",
+				next_stage = "alert"
 			},
 			alert = {
 				back_stage = "undetected",
-				next_stage = "detected",
+				next_stage = "detected"
 			},
 			detected = {
 				back_stage = "alert",
-				next_stage = "max",
+				next_stage = "max"
 			},
 			max = {
-				back_stage = "detected",
-			},
+				back_stage = "detected"
+			}
 		},
 		stage_heat_breed_multipliers = {
 			alert = 0.25,
 			detected = 0,
 			max = 0,
 			none = 1,
-			undetected = 0.5,
+			undetected = 0.5
 		},
 		stage_index = {
 			alert = 3,
 			detected = 4,
 			max = 5,
 			none = 1,
-			undetected = 2,
-		},
-		roamer_minimum_settings = ROAMER_MINIMUM_SETTINGS,
+			undetected = 2
+		}
 	},
 	state_settings = {
 		{
 			build_up_tension_low = {
 				decay_tension_delay = 3,
 				next_conditions = {
-					tension_threshold = 10,
+					tension_threshold = 10
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.build_up_tension_low,
-				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension_low[1],
+				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension_low[1]
 			},
 			build_up_tension = {
 				decay_tension_delay = 1,
 				back_conditions = {
-					tension_min_threshold = 5,
+					tension_min_threshold = 5
 				},
 				next_conditions = {
-					tension_threshold = 60,
+					tension_threshold = 60
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.build_up_tension,
-				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension[1],
+				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension[1]
 			},
 			build_up_tension_high = {
 				decay_tension_delay = 1,
 				back_conditions = {
-					tension_min_threshold = 5,
+					tension_min_threshold = 5
 				},
 				next_conditions = {
-					tension_threshold = 90,
+					tension_threshold = 90
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.build_up_tension_high,
-				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension_high[1],
+				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension_high[1]
 			},
 			sustain_tension_peak = {
 				next_conditions = {
 					duration = {
 						12,
-						15,
-					},
+						15
+					}
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.sustain_tension_peak,
-				decay_tension_rate = DECAY_TENSION_RATES.sustain_tension_peak[1],
+				decay_tension_rate = DECAY_TENSION_RATES.sustain_tension_peak[1]
 			},
 			tension_peak_fade = {
 				next_conditions = {
 					tension_min_threshold = 60,
 					duration = {
 						30,
-						35,
-					},
+						35
+					}
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.tension_peak_fade,
-				decay_tension_rate = DECAY_TENSION_RATES.tension_peak_fade[1],
+				decay_tension_rate = DECAY_TENSION_RATES.tension_peak_fade[1]
 			},
 			relax = {
 				next_conditions = {
 					tension_min_threshold = 5,
 					duration = {
 						65,
-						100,
-					},
+						100
+					}
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.relax,
-				decay_tension_rate = DECAY_TENSION_RATES.tension_peak_fade[1],
-			},
+				decay_tension_rate = DECAY_TENSION_RATES.tension_peak_fade[1]
+			}
 		},
 		{
 			build_up_tension_low = {
 				decay_tension_delay = 3,
 				next_conditions = {
-					tension_threshold = 12,
+					tension_threshold = 12
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.build_up_tension_low,
-				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension_low[2],
+				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension_low[2]
 			},
 			build_up_tension = {
 				decay_tension_delay = 1.5,
 				back_conditions = {
-					tension_min_threshold = 6,
+					tension_min_threshold = 6
 				},
 				next_conditions = {
-					tension_threshold = 72,
+					tension_threshold = 72
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.build_up_tension,
-				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension[2],
+				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension[2]
 			},
 			build_up_tension_high = {
 				decay_tension_delay = 1.5,
 				back_conditions = {
-					tension_min_threshold = 60,
+					tension_min_threshold = 60
 				},
 				next_conditions = {
-					tension_threshold = 108,
+					tension_threshold = 108
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.build_up_tension_high,
-				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension_high[2],
+				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension_high[2]
 			},
 			sustain_tension_peak = {
 				next_conditions = {
 					duration = {
 						13,
-						17,
-					},
+						17
+					}
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.sustain_tension_peak,
-				decay_tension_rate = DECAY_TENSION_RATES.sustain_tension_peak[2],
+				decay_tension_rate = DECAY_TENSION_RATES.sustain_tension_peak[2]
 			},
 			tension_peak_fade = {
 				next_conditions = {
 					tension_min_threshold = 84,
 					duration = {
 						30,
-						35,
-					},
+						35
+					}
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.tension_peak_fade,
-				decay_tension_rate = DECAY_TENSION_RATES.tension_peak_fade[2],
+				decay_tension_rate = DECAY_TENSION_RATES.tension_peak_fade[2]
 			},
 			relax = {
 				next_conditions = {
 					tension_min_threshold = 0,
 					duration = {
 						30,
-						55,
-					},
+						55
+					}
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.relax,
-				decay_tension_rate = DECAY_TENSION_RATES.relax[3],
-			},
+				decay_tension_rate = DECAY_TENSION_RATES.relax[3]
+			}
 		},
 		{
 			build_up_tension_low = {
 				decay_tension_delay = 3,
 				next_conditions = {
-					tension_threshold = 13.5,
+					tension_threshold = 13.5
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.build_up_tension_low,
-				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension_low[3],
+				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension_low[3]
 			},
 			build_up_tension = {
 				decay_tension_delay = 1,
 				back_conditions = {
-					tension_min_threshold = 6.75,
+					tension_min_threshold = 6.75
 				},
 				next_conditions = {
-					tension_threshold = 94.5,
+					tension_threshold = 94.5
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.build_up_tension,
-				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension[3],
+				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension[3]
 			},
 			build_up_tension_high = {
 				decay_tension_delay = 1,
 				back_conditions = {
-					tension_min_threshold = 67.5,
+					tension_min_threshold = 67.5
 				},
 				next_conditions = {
-					tension_threshold = 121.50000000000001,
+					tension_threshold = 121.50000000000001
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.build_up_tension_high,
-				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension_high[3],
+				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension_high[3]
 			},
 			sustain_tension_peak = {
 				next_conditions = {
 					duration = {
 						13,
-						17,
-					},
+						17
+					}
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.sustain_tension_peak,
-				decay_tension_rate = DECAY_TENSION_RATES.sustain_tension_peak[3],
+				decay_tension_rate = DECAY_TENSION_RATES.sustain_tension_peak[3]
 			},
 			tension_peak_fade = {
 				next_conditions = {
 					tension_min_threshold = 94.5,
 					duration = {
 						30,
-						35,
-					},
+						35
+					}
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.tension_peak_fade,
-				decay_tension_rate = DECAY_TENSION_RATES.tension_peak_fade[3],
+				decay_tension_rate = DECAY_TENSION_RATES.tension_peak_fade[3]
 			},
 			relax = {
 				next_conditions = {
 					tension_min_threshold = 0,
 					duration = {
 						30,
-						55,
-					},
+						55
+					}
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.relax,
-				decay_tension_rate = DECAY_TENSION_RATES.relax[3],
-			},
+				decay_tension_rate = DECAY_TENSION_RATES.relax[3]
+			}
 		},
 		{
 			build_up_tension_low = {
 				decay_tension_delay = 3,
 				next_conditions = {
-					tension_threshold = 15,
+					tension_threshold = 15
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.build_up_tension_low,
-				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension_low[4],
+				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension_low[4]
 			},
 			build_up_tension = {
 				decay_tension_delay = 1,
 				back_conditions = {
-					tension_min_threshold = 7.5,
+					tension_min_threshold = 7.5
 				},
 				next_conditions = {
-					tension_threshold = 105,
+					tension_threshold = 105
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.build_up_tension,
-				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension[4],
+				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension[4]
 			},
 			build_up_tension_high = {
 				decay_tension_delay = 1,
@@ -1120,134 +1103,134 @@ local pacing_template = {
 					tension_min_threshold = 75,
 					duration = {
 						30,
-						45,
-					},
+						45
+					}
 				},
 				next_conditions = {
-					tension_threshold = 135,
+					tension_threshold = 135
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.build_up_tension_high,
-				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension_high[4],
+				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension_high[4]
 			},
 			sustain_tension_peak = {
 				next_conditions = {
 					duration = {
 						13,
-						17,
-					},
+						17
+					}
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.sustain_tension_peak,
-				decay_tension_rate = DECAY_TENSION_RATES.sustain_tension_peak[4],
+				decay_tension_rate = DECAY_TENSION_RATES.sustain_tension_peak[4]
 			},
 			tension_peak_fade = {
 				next_conditions = {
 					tension_min_threshold = 105,
 					duration = {
 						30,
-						35,
-					},
+						35
+					}
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.tension_peak_fade,
-				decay_tension_rate = DECAY_TENSION_RATES.tension_peak_fade[4],
+				decay_tension_rate = DECAY_TENSION_RATES.tension_peak_fade[4]
 			},
 			relax = {
 				next_conditions = {
 					tension_min_threshold = 0,
 					duration = {
 						30,
-						55,
-					},
+						55
+					}
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.relax,
-				decay_tension_rate = DECAY_TENSION_RATES.relax[4],
-			},
+				decay_tension_rate = DECAY_TENSION_RATES.relax[4]
+			}
 		},
 		{
 			build_up_tension_low = {
 				decay_tension_delay = 3,
 				next_conditions = {
-					tension_threshold = 26.25,
+					tension_threshold = 26.25
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.build_up_tension_low,
-				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension_low[5],
+				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension_low[5]
 			},
 			build_up_tension = {
 				decay_tension_delay = 1,
 				back_conditions = {
-					tension_min_threshold = 8.75,
+					tension_min_threshold = 8.75
 				},
 				next_conditions = {
-					tension_threshold = 122.5,
+					tension_threshold = 122.5
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.build_up_tension,
-				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension[5],
+				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension[5]
 			},
 			build_up_tension_high = {
 				decay_tension_delay = 1,
 				back_conditions = {
-					tension_min_threshold = 87.5,
+					tension_min_threshold = 87.5
 				},
 				next_conditions = {
-					tension_threshold = 157.5,
+					tension_threshold = 157.5
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.build_up_tension_high,
-				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension_high[5],
+				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension_high[5]
 			},
 			sustain_tension_peak = {
 				next_conditions = {
 					duration = {
 						13,
-						17,
-					},
+						17
+					}
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.sustain_tension_peak,
-				decay_tension_rate = DECAY_TENSION_RATES.sustain_tension_peak[5],
+				decay_tension_rate = DECAY_TENSION_RATES.sustain_tension_peak[5]
 			},
 			tension_peak_fade = {
 				next_conditions = {
 					tension_min_threshold = 122.5,
 					duration = {
 						30,
-						35,
-					},
+						35
+					}
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.tension_peak_fade,
-				decay_tension_rate = DECAY_TENSION_RATES.tension_peak_fade[5],
+				decay_tension_rate = DECAY_TENSION_RATES.tension_peak_fade[5]
 			},
 			relax = {
 				next_conditions = {
 					tension_min_threshold = 0,
 					duration = {
 						30,
-						55,
-					},
+						55
+					}
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.relax,
-				decay_tension_rate = DECAY_TENSION_RATES.relax[5],
-			},
-		},
+				decay_tension_rate = DECAY_TENSION_RATES.relax[5]
+			}
+		}
 	},
 	state_orders = {
 		build_up_tension_low = {
-			next_state = "build_up_tension",
+			next_state = "build_up_tension"
 		},
 		build_up_tension = {
 			back_state = "build_up_tension_low",
-			next_state = "build_up_tension_high",
+			next_state = "build_up_tension_high"
 		},
 		build_up_tension_high = {
 			back_state = "build_up_tension",
-			next_state = "sustain_tension_peak",
+			next_state = "sustain_tension_peak"
 		},
 		sustain_tension_peak = {
-			next_state = "tension_peak_fade",
+			next_state = "tension_peak_fade"
 		},
 		tension_peak_fade = {
-			next_state = "relax",
+			next_state = "relax"
 		},
 		relax = {
-			next_state = "build_up_tension_low",
-		},
+			next_state = "build_up_tension_low"
+		}
 	},
 	combat_state_settings = {
 		{
@@ -1260,8 +1243,8 @@ local pacing_template = {
 			combat_states = {
 				high = "high",
 				low = "low",
-				medium = "medium",
-			},
+				medium = "medium"
+			}
 		},
 		{
 			base_decay_rate = 0.8,
@@ -1273,8 +1256,8 @@ local pacing_template = {
 			combat_states = {
 				high = "high",
 				low = "low",
-				medium = "medium",
-			},
+				medium = "medium"
+			}
 		},
 		{
 			base_decay_rate = 0.8,
@@ -1286,8 +1269,8 @@ local pacing_template = {
 			combat_states = {
 				high = "high",
 				low = "low",
-				medium = "medium",
-			},
+				medium = "medium"
+			}
 		},
 		{
 			base_decay_rate = 0.8,
@@ -1299,8 +1282,8 @@ local pacing_template = {
 			combat_states = {
 				high = "high",
 				low = "low",
-				medium = "medium",
-			},
+				medium = "medium"
+			}
 		},
 		{
 			base_decay_rate = 0.8,
@@ -1312,10 +1295,10 @@ local pacing_template = {
 			combat_states = {
 				high = "high",
 				low = "low",
-				medium = "medium",
-			},
-		},
-	},
+				medium = "medium"
+			}
+		}
+	}
 }
 
 return pacing_template

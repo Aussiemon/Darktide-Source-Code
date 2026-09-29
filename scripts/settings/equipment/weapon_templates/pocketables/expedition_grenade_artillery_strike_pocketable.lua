@@ -23,7 +23,7 @@ weapon_template.hud_icon = "content/ui/materials/icons/throwables/hud/artillery_
 weapon_template.hud_icon_small = "content/ui/materials/icons/throwables/hud/artillery_strike"
 weapon_template.hud_configuration = {
 	uses_ammunition = true,
-	uses_overheat = false,
+	uses_overheat = false
 }
 weapon_template.anim_state_machine_3p = nil
 weapon_template.anim_state_machine_1p = nil
@@ -52,158 +52,118 @@ weapon_template.action_input_hierarchy = {
 		transition = {
 			{
 				input = "aim_released",
-				transition = "previous",
+				transition = "previous"
 			},
 			{
 				input = "block_cancel",
 				transition = {
 					{
 						input = "block_cancel_release",
-						transition = "base",
+						transition = "base"
 					},
 					{
 						input = "wield",
-						transition = "base",
+						transition = "base"
 					},
 					{
 						input = "unwield_to_previous",
-						transition = "base",
-					},
-					{
-						input = "combat_ability",
-						transition = "base",
-					},
-					{
-						input = "grenade_ability",
-						transition = "base",
-					},
-				},
+						transition = "base"
+					}
+				}
 			},
 			{
 				input = "wield",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "unwield_to_previous",
-				transition = "base",
-			},
-			{
-				input = "combat_ability",
-				transition = "base",
-			},
-			{
-				input = "grenade_ability",
-				transition = "base",
-			},
-		},
+				transition = "base"
+			}
+		}
 	},
 	{
 		input = "short_hand_aim_hold",
 		transition = {
 			{
 				input = "short_hand_aim_released",
-				transition = "previous",
+				transition = "previous"
 			},
 			{
 				input = "short_hand_throw",
 				transition = {
 					{
 						input = "short_hand_throw_release",
-						transition = "base",
+						transition = "base"
 					},
 					{
 						input = "wield",
-						transition = "base",
+						transition = "base"
 					},
 					{
 						input = "unwield_to_previous",
-						transition = "base",
-					},
-					{
-						input = "combat_ability",
-						transition = "base",
-					},
-					{
-						input = "grenade_ability",
-						transition = "base",
-					},
-				},
+						transition = "base"
+					}
+				}
 			},
 			{
 				input = "wield",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "unwield_to_previous",
-				transition = "base",
-			},
-			{
-				input = "combat_ability",
-				transition = "base",
-			},
-			{
-				input = "grenade_ability",
-				transition = "base",
-			},
-		},
+				transition = "base"
+			}
+		}
 	},
 	{
 		input = "block_cancel",
-		transition = "stay",
+		transition = "stay"
 	},
 	{
 		input = "wield",
-		transition = "stay",
+		transition = "stay"
 	},
 	{
 		input = "unwield_to_previous",
-		transition = "base",
-	},
-	{
-		input = "combat_ability",
-		transition = "base",
-	},
-	{
-		input = "grenade_ability",
-		transition = "base",
+		transition = "base"
 	},
 	{
 		input = "inspect_start",
 		transition = {
 			{
 				input = "inspect_stop",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "inspect_3p_start",
 				transition = {
 					{
 						input = "inspect_3p_stop",
-						transition = "previous",
+						transition = "previous"
 					},
 					{
 						input = "inspect_stop",
-						transition = "base",
-					},
-				},
-			},
-		},
-	},
+						transition = "base"
+					}
+				}
+			}
+		}
+	}
 }
 weapon_template.breed_anim_state_machine_3p = {
 	cryptic = "content/characters/player/human/third_person/animations/grenade",
 	human = "content/characters/player/human/third_person/animations/grenade",
-	ogryn = "content/characters/player/ogryn/third_person/animations/grenade",
+	ogryn = "content/characters/player/ogryn/third_person/animations/grenade"
 }
 weapon_template.breed_anim_state_machine_1p = {
 	cryptic = "content/characters/player/human/first_person/animations/artillery_strike",
 	human = "content/characters/player/human/first_person/animations/artillery_strike",
-	ogryn = "content/characters/player/ogryn/first_person/animations/artillery_strike",
+	ogryn = "content/characters/player/ogryn/first_person/animations/artillery_strike"
 }
 weapon_template.breed_footstep_intervals = {
 	cryptic = FootstepIntervalsTemplates.pocketable_human,
 	human = FootstepIntervalsTemplates.pocketable_human,
-	ogryn = FootstepIntervalsTemplates.pocketable_ogryn,
+	ogryn = FootstepIntervalsTemplates.pocketable_ogryn
 }
 
 local AMMUNITION_USAGE = 1

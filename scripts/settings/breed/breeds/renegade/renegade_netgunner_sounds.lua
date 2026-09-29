@@ -15,7 +15,7 @@ local sound_data = {
 		vce_grunt = "wwise/events/minions/play_traitor_guard_netgunner_grunt_vce",
 		vce_hurt = "wwise/events/minions/play_traitor_guard_netgunner_hurt_vce",
 		vce_laugh = "wwise/events/minions/play_traitor_guard_netgunner_laugh_vce",
-		vce_stop = "wwise/events/minions/stop_all_traitor_netgunner",
+		vce_stop = "wwise/events/minions/stop_all_traitor_netgunner"
 	},
 	use_proximity_culling = {
 		foley_drastic_short = false,
@@ -25,8 +25,8 @@ local sound_data = {
 		vce_death = false,
 		vce_death_long = false,
 		vce_hurt = false,
-		vce_laugh = false,
-	},
+		vce_laugh = false
+	}
 }
 
 table.add_missing(sound_data.events, RenegadeCommonSounds.events)

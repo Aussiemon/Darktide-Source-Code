@@ -6,13 +6,13 @@ local core_mutators = {
 	"mutator_no_hordes",
 	"mutator_live_event_endless_hordes",
 	"mutator_no_witches",
-	"mutator_no_boss_patrols",
+	"mutator_no_boss_patrols"
 }
 local base_templates = CircumstanceUtils.inherit(BaseLiveEventTemplate, core_mutators, {
-	"stats_live_event_endless_hordes",
+	"stats_live_event_endless_hordes"
 }, "endless_hordes")
 local circumstance_templates = table.reduce({
-	base_templates,
+	base_templates
 }, table.merge, {})
 
 circumstance_templates.endless_hordes.ui.display_name = "loc_circumstance_endless_hordes_default_title"

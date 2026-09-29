@@ -10,20 +10,20 @@ local Text = require("scripts/utilities/ui/text")
 local debug_subtitles = {
 	{
 		duration = 2,
-		text = "{#color(255,0,0)}Sgt.Morrow:{#color(255,242,230)} This is a placeholder subtitle line 1 This is a placeholder subtitle line 1",
+		text = "{#color(255,0,0)}Sgt.Morrow:{#color(255,242,230)} This is a placeholder subtitle line 1 This is a placeholder subtitle line 1"
 	},
 	{
 		duration = 2,
-		text = "{#color(255,0,0)}Sgt.Morrow:{#color(255,242,230)} This is a placeholder subtitle line 2 This is a placeholder subtitle line 2",
+		text = "{#color(255,0,0)}Sgt.Morrow:{#color(255,242,230)} This is a placeholder subtitle line 2 This is a placeholder subtitle line 2"
 	},
 	{
 		duration = 2,
-		text = "{#color(255,0,0)}Sgt.Morrow:{#color(255,242,230)} This is a placeholder subtitle line 3 This is a placeholder subtitle line 3",
+		text = "{#color(255,0,0)}Sgt.Morrow:{#color(255,242,230)} This is a placeholder subtitle line 3 This is a placeholder subtitle line 3"
 	},
 	{
 		duration = 2,
-		text = "{#color(255,0,0)}Sgt.Morrow:{#color(255,242,230)} This is a placeholder subtitle line 4 This is a placeholder subtitle line 4",
-	},
+		text = "{#color(255,0,0)}Sgt.Morrow:{#color(255,242,230)} This is a placeholder subtitle line 4 This is a placeholder subtitle line 4"
+	}
 }
 local DUMMY_MEASURE_TEXT_LINE = "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
 local ConstantElementSubtitles = class("ConstantElementSubtitles", "ConstantElementBase")
@@ -224,7 +224,7 @@ end
 
 local subtitle_format_context = {
 	speaker = "n/a",
-	subtitle = "n/a",
+	subtitle = "n/a"
 }
 
 ConstantElementSubtitles._stop_world_vo = function (self, view_dialogue_system)
@@ -238,6 +238,8 @@ ConstantElementSubtitles._stop_world_vo = function (self, view_dialogue_system)
 		if world_dialogue_system and world_dialogue_system ~= view_dialogue_system then
 			world_dialogue_system:force_stop_all()
 		end
+
+		return world_dialogue_system == view_dialogue_system
 	end
 end
 
@@ -251,10 +253,9 @@ ConstantElementSubtitles._get_active_dialogue_system = function (self)
 			local view_name = active_views[i]
 			local view = ui_manager:view_instance(view_name)
 			local view_dialogue_system = view and view:dialogue_system()
+			local same_as_world = self:_stop_world_vo(view_dialogue_system)
 
-			self:_stop_world_vo(view_dialogue_system)
-
-			if view_dialogue_system then
+			if view_dialogue_system and not same_as_world then
 				return view_dialogue_system
 			end
 		end
@@ -376,9 +377,13 @@ ConstantElementSubtitles._add_subtitle = function (self, currently_playing, seco
 		if player and player:is_human_controlled() then
 			speaker_display_name = player:name()
 		else
+			local cutscene_character_extension = ScriptUnit.has_extension(currently_playing_unit, "cutscene_character_system")
+			local cutscene_player_profile = cutscene_character_extension and cutscene_character_extension:player_profile()
 			local speaker_name = currently_playing.speaker_name
 
-			if speaker_name then
+			if cutscene_player_profile then
+				speaker_display_name = cutscene_player_profile.name
+			elseif speaker_name then
 				local speaker_voice_settings = DialogueSpeakerVoiceSettings[speaker_name]
 				local character_short_name = speaker_voice_settings.short_name
 
@@ -431,7 +436,7 @@ ConstantElementSubtitles._debug_trigger_subtitle = function (self, text, duratio
 	if self._line_duration then
 		table.insert(self._line_queue, 1, {
 			text = text,
-			duration = duration,
+			duration = duration
 		})
 	else
 		self:_display_text_line(text, duration)
@@ -441,7 +446,7 @@ end
 
 local dummy_text_size = {
 	2000,
-	20,
+	20
 }
 
 ConstantElementSubtitles._set_font_size = function (self, new_size)

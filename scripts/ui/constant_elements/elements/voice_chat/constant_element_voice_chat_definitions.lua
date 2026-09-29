@@ -8,21 +8,21 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local max_panels = 4
 local panel_size = {
 	1000,
-	30,
+	30
 }
 local panel_offset = {
 	0,
 	-35,
-	0,
+	0
 }
 local panel_spacing = {
 	0,
-	16,
+	16
 }
 local start_offset = {
 	17,
 	-20,
-	0,
+	0
 }
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
@@ -31,8 +31,8 @@ local scenegraph_definition = {
 		parent = "screen",
 		vertical_alignment = "bottom",
 		position = start_offset,
-		size = panel_size,
-	},
+		size = panel_size
+	}
 }
 local widget_definitions = {}
 local position_x = start_offset[1] + panel_offset[1]
@@ -43,7 +43,7 @@ for i = 1, max_panels do
 	local position = {
 		position_x,
 		position_y,
-		panel_offset[3],
+		panel_offset[3]
 	}
 
 	scenegraph_definition[scenegraph_id] = {
@@ -51,7 +51,7 @@ for i = 1, max_panels do
 		parent = "screen",
 		vertical_alignment = "bottom",
 		size = panel_size,
-		position = position,
+		position = position
 	}
 	position_x = position_x + panel_spacing[1]
 	position_y = position_y - (panel_size[2] + panel_spacing[2])
@@ -67,20 +67,20 @@ for i = 1, max_panels do
 				vertical_alignment = "center",
 				size_addition = {
 					0,
-					20,
+					20
 				},
 				material_values = {},
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
-				},
-			},
+						1
+					}
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -91,15 +91,15 @@ for i = 1, max_panels do
 				vertical_alignment = "center",
 				size = {
 					32,
-					32,
+					32
 				},
 				offset = {
 					10,
 					0,
-					6,
+					6
 				},
-				color = Color.terminal_text_header(255, true),
-			},
+				color = Color.terminal_text_header(255, true)
+			}
 		},
 		{
 			pass_type = "text",
@@ -113,16 +113,16 @@ for i = 1, max_panels do
 				offset = {
 					40,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, scenegraph_id, {
-		visible = false,
+		visible = false
 	})
 end
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

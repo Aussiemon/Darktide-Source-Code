@@ -5,7 +5,7 @@ local ability_template = {}
 
 ability_template.allowed_inputs_in_sprint = {
 	grenade_ability = true,
-	wield = true,
+	wield = true
 }
 ability_template.action_inputs = {
 	aim_pressed = {
@@ -13,30 +13,29 @@ ability_template.action_inputs = {
 		input_sequence = {
 			{
 				input = "grenade_ability_pressed",
-				value = true,
-			},
-		},
-	},
+				value = true
+			}
+		}
+	}
 }
 ability_template.action_input_hierarchy = {
 	{
 		input = "aim_pressed",
-		transition = "base",
-	},
+		transition = "base"
+	}
 }
 ability_template.actions = {
 	action_companion_start_ability = {
-		ability_type = "grenade_ability",
 		allowed_during_sprint = true,
+		consume_ability_usage_cost = true,
+		consume_usage_cost_at_start = true,
 		kind = "companion_start_ability",
 		sprint_ready_up_time = 0,
 		start_input = "aim_pressed",
 		total_time = 0.1,
 		uninterruptible = true,
-		use_ability_charge = true,
-		use_charge_at_start = true,
-		ability_function = CompanionServoSkullAbility.start_order_ability_base,
-	},
+		ability_function = CompanionServoSkullAbility.start_order_ability_base
+	}
 }
 ability_template.module_target_component_name = "action_module_ability_target_finder"
 

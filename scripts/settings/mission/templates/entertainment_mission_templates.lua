@@ -2,7 +2,6 @@
 
 local mission_templates = {
 	cm_raid = {
-		coordinates = "loc_mission_coordinates_cm_raid",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/entertainment/missions/mission_cm_raid",
@@ -21,23 +20,23 @@ local mission_templates = {
 		testify_flags = {},
 		cinematics = {
 			intro_abc = {
-				"c_cam",
+				"c_cam"
 			},
 			outro_fail = {
-				"outro_fail",
+				"outro_fail"
 			},
 			outro_win = {
-				"outro_win",
-			},
+				"outro_win"
+			}
 		},
 		hazard_prop_settings = {
 			explosion = 0.3,
 			fire = 0.2,
-			none = 0.4,
+			none = 0.4
 		},
 		pickup_settings = {},
 		terror_event_templates = {
-			"terror_events_cm_raid",
+			"terror_events_cm_raid"
 		},
 		health_station = {},
 		mission_brief_vo = {
@@ -46,33 +45,35 @@ local mission_templates = {
 			vo_events = {
 				"mission_raid_briefing_a",
 				"mission_raid_briefing_b",
-				"mission_raid_briefing_c",
+				"mission_raid_briefing_c"
 			},
 			mission_giver_packs = {
 				sergeant_a = {
 					"sergeant",
-					"interrogator",
+					"interrogator"
 				},
 				explicator_a = {
 					"explicator",
-					"barber",
+					"barber"
 				},
 				tech_priest_a = {
 					"tech_priest",
-					"enginseer",
-				},
-			},
+					"enginseer"
+				}
+			}
 		},
 		dialogue_settings = {
 			short_story_ticker_enabled = true,
-			story_ticker_enabled = true,
+			story_ticker_enabled = true
 		},
 		spawn_settings = {
-			next_mission = "recent_mission",
+			next_mission = "recent_mission"
 		},
+		controllable_object_set_prefixes = {
+			"flow"
+		}
 	},
 	fm_armoury = {
-		coordinates = "loc_mission_coordinates_fm_armoury",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/entertainment/missions/mission_fm_armoury",
@@ -91,23 +92,23 @@ local mission_templates = {
 		testify_flags = {},
 		cinematics = {
 			intro_abc = {
-				"c_cam",
+				"c_cam"
 			},
 			outro_fail = {
-				"outro_fail",
+				"outro_fail"
 			},
 			outro_win = {
-				"outro_win",
-			},
+				"outro_win"
+			}
 		},
 		pickup_settings = {},
 		hazard_prop_settings = {
 			explosion = 0.3,
 			fire = 0.2,
-			none = 0.4,
+			none = 0.4
 		},
 		terror_event_templates = {
-			"terror_events_fm_armoury",
+			"terror_events_fm_armoury"
 		},
 		health_station = {},
 		mission_brief_vo = {
@@ -116,35 +117,37 @@ local mission_templates = {
 			vo_events = {
 				"mission_armoury_briefing_a",
 				"mission_armoury_briefing_b",
-				"mission_armoury_briefing_c",
+				"mission_armoury_briefing_c"
 			},
 			mission_giver_packs = {
 				sergeant_b = {
 					"sergeant",
 					"enemy_nemesis_wolfer",
-					"enemy_wolfer_adjutant",
+					"enemy_wolfer_adjutant"
 				},
 				explicator_a = {
 					"explicator",
 					"purser",
-					"contract_vendor",
+					"contract_vendor"
 				},
 				tech_priest_a = {
 					"tech_priest",
-					"shipmistress",
-				},
-			},
+					"shipmistress"
+				}
+			}
 		},
 		dialogue_settings = {
 			short_story_ticker_enabled = true,
-			story_ticker_enabled = true,
+			story_ticker_enabled = true
 		},
 		spawn_settings = {
-			next_mission = "recent_mission",
+			next_mission = "recent_mission"
 		},
+		controllable_object_set_prefixes = {
+			"flow"
+		}
 	},
 	km_heresy = {
-		coordinates = "loc_mission_coordinates_km_heresy",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/entertainment/missions/mission_km_heresy",
@@ -163,26 +166,26 @@ local mission_templates = {
 		testify_flags = {},
 		cinematics = {
 			intro_abc = {
-				"c_cam",
+				"c_cam"
 			},
 			outro_fail = {
-				"outro_fail",
+				"outro_fail"
 			},
 			outro_win = {
-				"outro_win",
+				"outro_win"
 			},
 			traitor_captain_intro = {
-				"traitor_captain_intro",
-			},
+				"traitor_captain_intro"
+			}
 		},
 		pickup_settings = {},
 		hazard_prop_settings = {
 			explosion = 0.3,
 			fire = 0.2,
-			none = 0.4,
+			none = 0.4
 		},
 		terror_event_templates = {
-			"terror_events_km_heresy",
+			"terror_events_km_heresy"
 		},
 		health_station = {},
 		mission_brief_vo = {
@@ -191,25 +194,28 @@ local mission_templates = {
 			vo_events = {
 				"mission_heresy_briefing_a",
 				"mission_heresy_briefing_b",
-				"mission_heresy_briefing_c",
+				"mission_heresy_briefing_c"
 			},
 			mission_giver_packs = {
 				interrogator_a = {
 					"enemy_nemesis_wolfer",
 					"enemy_ritualist",
 					"explicator",
-					"interrogator",
-				},
-			},
+					"interrogator"
+				}
+			}
 		},
 		dialogue_settings = {
 			short_story_ticker_enabled = true,
-			story_ticker_enabled = true,
+			story_ticker_enabled = true
 		},
 		spawn_settings = {
-			next_mission = "recent_mission",
+			next_mission = "recent_mission"
 		},
-	},
+		controllable_object_set_prefixes = {
+			"flow"
+		}
+	}
 }
 
 return mission_templates

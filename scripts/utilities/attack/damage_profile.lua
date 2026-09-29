@@ -9,13 +9,13 @@ local DamageProfileSettings = require("scripts/settings/damage/damage_profile_se
 local attack_types = AttackSettings.attack_types
 local buff_keywords = BuffSettings.keywords
 local DEFAULT_LERP_VALUE = WeaponTweakTemplateSettings.DEFAULT_LERP_VALUE
-local DEFALT_FALLBACK_LERP_VALUE = WeaponTweakTemplateSettings.DEFALT_FALLBACK_LERP_VALUE
+local DEFAULT_FALLBACK_LERP_VALUE = WeaponTweakTemplateSettings.DEFAULT_FALLBACK_LERP_VALUE
 local DEFAULT_CRIT_MOD = DamageProfileSettings.default_crit_mod
 local MIN_CRIT_MOD = DamageProfileSettings.min_crit_mod
 local _distribute_power_level_to_power_type, _max_hit_mass
 local armor_penetrating_conversion = {
 	armored = "unarmored",
-	super_armor = "armored",
+	super_armor = "armored"
 }
 local DamageProfile = {}
 
@@ -315,7 +315,7 @@ end
 
 local TARGET_SETTINGS_NO_LERP_VALUES = {}
 local DAMAGE_PROFILE_NO_LERP_VALUES = {
-	current_target_settings_lerp_values = TARGET_SETTINGS_NO_LERP_VALUES,
+	current_target_settings_lerp_values = TARGET_SETTINGS_NO_LERP_VALUES
 }
 
 DamageProfile.lerp_values = function (damage_profile, attacking_unit_or_nil, target_index_or_nil)
@@ -339,7 +339,7 @@ DamageProfile.lerp_values = function (damage_profile, attacking_unit_or_nil, tar
 end
 
 local EMPTY_PATH = {
-	[DEFAULT_LERP_VALUE] = 0,
+	[DEFAULT_LERP_VALUE] = 0
 }
 
 DamageProfile.lerp_value_from_path = function (lerp_values, ...)
@@ -354,7 +354,7 @@ DamageProfile.lerp_value_from_path = function (lerp_values, ...)
 	end
 
 	local last_id = select(depth, ...)
-	local lerp_value = local_lerp_values[last_id] or default_lerp_value_or_nil or DEFALT_FALLBACK_LERP_VALUE
+	local lerp_value = local_lerp_values[last_id] or default_lerp_value_or_nil or DEFAULT_FALLBACK_LERP_VALUE
 
 	return lerp_value
 end

@@ -18,7 +18,7 @@ local CLIENT_RPCS = {
 	"rpc_player_anim_event_variable_float",
 	"rpc_player_anim_event_variable_floats",
 	"rpc_player_anim_event_variable_int",
-	"rpc_sync_anim_state",
+	"rpc_sync_anim_state"
 }
 
 AnimationSystem.init = function (self, ...)

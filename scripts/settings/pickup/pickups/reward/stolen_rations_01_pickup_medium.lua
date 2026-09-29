@@ -9,7 +9,7 @@ local pickup_data = {
 	unit_names = {
 		"content/pickups/collectibles/collectible_stolen_rations_02",
 		"content/pickups/collectibles/collectible_stolen_rations_03",
-		"content/pickups/collectibles/collectible_stolen_rations_04",
+		"content/pickups/collectibles/collectible_stolen_rations_04"
 	},
 	on_pickup_func = function (pickup_unit, interactor_unit, pickup_data, t)
 		local caused_by_player = Managers.state.player_unit_spawn:owner(interactor_unit)
@@ -21,8 +21,8 @@ local pickup_data = {
 	randomized_rotation = {
 		false,
 		false,
-		true,
-	},
+		true
+	}
 }
 
 return pickup_data

@@ -14,7 +14,7 @@ local FX_SOURCE_NAME = "_special_active"
 local STAGE_RANKING = {
 	high = 3,
 	low = 1,
-	middle = 2,
+	middle = 2
 }
 
 ForceWeaponWindSlashStageEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
@@ -235,7 +235,7 @@ end
 local _stage_to_intensity = {
 	high = 1,
 	low = 0,
-	middle = 0.3333333333333333,
+	middle = 0.3333333333333333
 }
 
 ForceWeaponWindSlashStageEffects._update_material_variables = function (self, wanted_stage)
@@ -272,7 +272,7 @@ function _unit_components(components, attachments)
 		for _, component in ipairs(unit_components) do
 			components[#components + 1] = {
 				unit = attachment_unit,
-				component = component,
+				component = component
 			}
 		end
 	end

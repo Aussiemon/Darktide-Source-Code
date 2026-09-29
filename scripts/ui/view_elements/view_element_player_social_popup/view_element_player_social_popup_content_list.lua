@@ -138,7 +138,7 @@ local function _add_friend_management_items(parent, player_info)
 		local can_accept, cannot_befriend_reason = Managers.data_service.social:can_befriend()
 		local user_display_name = player_info:user_display_name()
 		local request_header_params = {
-			player = user_display_name,
+			player = user_display_name
 		}
 		local list_item = _get_next_list_item(1)
 
@@ -264,6 +264,17 @@ view_element_player_social_popup_content_list.from_player_info = function (paren
 		psn_profile_item.label = Localize("loc_social_menu_psn_profile")
 		psn_profile_item.callback = callback(parent, "cb_show_psn_profile", player_info)
 		psn_profile_item.on_pressed_sound = UISoundEvents.social_menu_see_player_profile
+	end
+
+	local steam_platform = Platforms.steam
+
+	if social_service:platform() == steam_platform and player_info:platform() == steam_platform and Steam.is_overlay_enabled() then
+		local steam_profile_item = _get_next_list_item()
+
+		steam_profile_item.blueprint = "button"
+		steam_profile_item.label = Localize("loc_social_menu_steam_profile")
+		steam_profile_item.callback = callback(parent, "cb_show_steam_overlay", player_info, Steam.OVERLAY_USER_STEAMID)
+		steam_profile_item.on_pressed_sound = UISoundEvents.social_menu_see_player_profile
 	end
 
 	if not is_own_player then

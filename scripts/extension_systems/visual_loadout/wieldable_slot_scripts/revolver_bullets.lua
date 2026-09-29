@@ -31,7 +31,7 @@ RevolverBullets.init = function (self, context, slot, weapon_template, fx_source
 		self._bullets[ii] = {
 			visible = true,
 			bullet_attachment_name = string.format("bullet_%02d", ii),
-			casing_attachment_name = string.format("casing_%02d", ii),
+			casing_attachment_name = string.format("casing_%02d", ii)
 		}
 	end
 end
@@ -115,7 +115,7 @@ function _components(destination, destination_lookup, attachments, attachment_na
 			local data = {
 				unit = attachment_unit,
 				lookup_name = lookup_name,
-				component = component,
+				component = component
 			}
 
 			destination[#destination + 1] = data

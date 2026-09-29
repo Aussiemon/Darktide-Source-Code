@@ -27,7 +27,7 @@ end
 
 ExternalPaymentPlatformBase._is_platform_option_owned = function (self, offer)
 	return Promise.resolved({
-		is_owner = false,
+		is_owner = false
 	})
 end
 
@@ -51,18 +51,18 @@ ExternalPaymentPlatformBase.reconcile_dlc = function (self, store_ids)
 			return Managers.backend:title_request(builder:to_string(), {
 				method = "POST",
 				headers = {
-					["platform-token"] = token,
+					["platform-token"] = token
 				},
 				body = {
-					productIds = store_ids,
-				},
+					productIds = store_ids
+				}
 			}):next(function (response)
 				return response.body
 			end):catch(function (error)
 				Log.error("ExternalPayment", "Failed to reconcile dlc", tostring(error))
 
 				return Promise.rejected({
-					error = error,
+					error = error
 				})
 			end)
 		end)
@@ -73,7 +73,7 @@ ExternalPaymentPlatformBase.get_options = function (self)
 	return self:_get_entitlements():next(function (platform_entitlements)
 		if platform_entitlements.success == false then
 			return Promise.rejected({
-				error = "empty_store",
+				error = "empty_store"
 			})
 		end
 
@@ -92,14 +92,14 @@ ExternalPaymentPlatformBase.get_options = function (self)
 
 			local result = {
 				offers = self:_clean_options(options),
-				platform_offers = self:_clean_options(platform_options),
+				platform_offers = self:_clean_options(platform_options)
 			}
 
 			if data._links.layout then
 				return Managers.backend:title_request(data._links.layout.href):next(function (layout_data)
 					layout_data.body._links = nil
 					result.layout_config = {
-						layout = layout_data.body,
+						layout = layout_data.body
 					}
 
 					return result
@@ -114,7 +114,7 @@ end
 ExternalPaymentPlatformBase._get_entitlements = function (self)
 	return Promise.resolved({
 		success = false,
-		data = {},
+		data = {}
 	})
 end
 
@@ -140,7 +140,7 @@ end
 
 ExternalPaymentPlatformBase._decorate_platform_option = function (self, option, platform_entitlements)
 	option.description = {
-		type = "platform_option",
+		type = "platform_option"
 	}
 
 	local offer_id = self:_offer_id_from_option(option)
@@ -156,7 +156,7 @@ ExternalPaymentPlatformBase._decorate_platform_option = function (self, option, 
 	end
 
 	option.isOwned = option.isOwned and Promise.resolved({
-		is_owner = option.isOwned,
+		is_owner = option.isOwned
 	}) or self:_is_platform_option_owned(option, platform_entitlement)
 	option.raw = platform_entitlement and platform_entitlement.raw or platform_entitlement
 end

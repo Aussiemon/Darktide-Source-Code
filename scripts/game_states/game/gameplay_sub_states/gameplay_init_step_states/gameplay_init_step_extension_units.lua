@@ -2,6 +2,7 @@
 
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
 local GameplayInitStepStateNetworkEvents = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_network_events")
+local LevelObjectSets = require("scripts/utilities/levels/level_object_sets")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local GameplayInitStepExtensionUnits = class("GameplayInitStepExtensionUnits")
 
@@ -36,7 +37,7 @@ GameplayInitStepExtensionUnits.update = function (self, main_dt, main_t)
 	self._shared_state.initialized_steps.GameplayInitStepExtensionUnits = true
 
 	local next_step_params = {
-		shared_state = self._shared_state,
+		shared_state = self._shared_state
 	}
 	local next_step = GameplayInitStepStateNetworkEvents
 
@@ -53,6 +54,13 @@ GameplayInitStepExtensionUnits._init_extension_unit_registration = function (sel
 
 	Managers.state.unit_spawner:register_static_level_spawned_units(level, units)
 	Level.finish_spawn_time_sliced(level)
+
+	local level_name = shared_state.level_name
+	local mission_name = shared_state.mission_name
+	local level_object_set_manager = Managers.state.level_object_set
+	local level_object_sets = LevelObjectSets.object_sets_from_level(level_name, mission_name)
+
+	level_object_set_manager:register_object_sets(level_object_sets)
 	self:_optimize_world_units(world)
 
 	local extension_manager = Managers.state.extension

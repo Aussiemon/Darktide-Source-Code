@@ -41,6 +41,9 @@ MinionToughnessExtension.init = function (self, extension_init_context, unit, ex
 
 	self._health_extension = health_extension
 	self._is_invulnerable = false
+	self._uses_shield_toggle = toughness_template.uses_shield_toggle == true
+	self._shield_active = not self._uses_shield_toggle or not toughness_template.start_depleted
+	self._shield_hidden = false
 	self._stored_attacks = {}
 end
 
@@ -105,6 +108,29 @@ MinionToughnessExtension.game_object_initialized = function (self, session, obje
 	end
 end
 
+MinionToughnessExtension._start_shield_effect = function (self)
+	if self._global_effect_id then
+		return
+	end
+
+	local toughness_template = self._toughness_template
+	local effect_template = toughness_template.effect_template_name and EffectTemplates[toughness_template.effect_template_name]
+
+	if effect_template then
+		self._global_effect_id = self._fx_system:start_template_effect(effect_template, self._unit)
+	end
+end
+
+MinionToughnessExtension._stop_shield_effect = function (self)
+	if not self._global_effect_id then
+		return
+	end
+
+	self._fx_system:stop_template_effect(self._global_effect_id)
+
+	self._global_effect_id = nil
+end
+
 MinionToughnessExtension.destroy = function (self)
 	local toughness_template = self._toughness_template
 	local linked_actor_name = toughness_template.linked_actor
@@ -146,6 +172,12 @@ MinionToughnessExtension.current_toughness_percent = function (self)
 end
 
 MinionToughnessExtension._update_toughness = function (self, dt, t)
+	if self._shield_active == false then
+		self:_set_blackboard_values()
+
+		return
+	end
+
 	local toughness_template = self._toughness_template
 	local toughness_damage = self._toughness_damage
 	local max_toughness = self._max_toughness
@@ -224,7 +256,7 @@ MinionToughnessExtension._update_toughness = function (self, dt, t)
 		local linked_actor_name = toughness_template.linked_actor
 
 		if linked_actor_name then
-			self:_set_linked_actor_active(linked_actor_name, true)
+			self:_set_linked_actor_active(linked_actor_name, not self._shield_hidden)
 		end
 
 		self._should_explode = false
@@ -305,6 +337,64 @@ end
 
 MinionToughnessExtension.set_invulnerable = function (self, should_be_invulnerable)
 	self._is_invulnerable = should_be_invulnerable
+end
+
+MinionToughnessExtension.is_invulnerable = function (self)
+	return self._is_invulnerable
+end
+
+MinionToughnessExtension._refresh_shield_presence = function (self)
+	local should_show = self._shield_active and not self._shield_hidden
+	local linked_actor_name = self._toughness_template.linked_actor
+
+	if linked_actor_name then
+		local shield_up = should_show and self._toughness_damage < self._max_toughness
+
+		self:_set_linked_actor_active(linked_actor_name, shield_up)
+	end
+end
+
+MinionToughnessExtension.destroy_shield = function (self)
+	if not self._shield_active then
+		return
+	end
+
+	self._shield_active = false
+	self._toughness_damage = self._max_toughness
+
+	if self._game_session then
+		GameSession.set_game_object_field(self._game_session, self._game_object_id, "toughness_damage", self._max_toughness)
+	end
+
+	self:_refresh_shield_presence()
+
+	local depleted_settings = self._toughness_template.depleted_settings
+	local vfx = depleted_settings and depleted_settings.vfx
+
+	if vfx then
+		local position = POSITION_LOOKUP[self._unit]
+
+		self._fx_system:trigger_vfx(vfx, position, nil)
+	end
+
+	self:_set_blackboard_values()
+end
+
+MinionToughnessExtension.activate_shield = function (self)
+	if self._shield_active then
+		return
+	end
+
+	self._shield_active = true
+
+	local reactivation_override = true
+
+	if self._game_session then
+		GameSession.set_game_object_field(self._game_session, self._game_object_id, "toughness_damage", 0)
+	end
+
+	self:set_toughness_damage(0, reactivation_override)
+	self:_refresh_shield_presence()
 end
 
 MinionToughnessExtension.break_shield = function (self, attack_direction, optional_ignore_stagger, optional_regenerate_full_delay_t)
@@ -388,7 +478,7 @@ end
 MinionToughnessExtension._store_toughness_attack_absorbed = function (self, damage_amount, impact_world_position)
 	local attack = {
 		damage_amount = damage_amount,
-		impact_world_position = Vector3Box(impact_world_position),
+		impact_world_position = Vector3Box(impact_world_position)
 	}
 	local stored_attacks = self._stored_attacks
 

@@ -11,7 +11,7 @@ local sound_data = {
 		vce_awaken = "wwise/events/minions/play_enemy_daemonhost_alert_scream",
 		vce_awaken_short = "wwise/events/minions/play_enemy_daemonhost_alert_scream_short",
 		vce_lifted = "wwise/events/minions/play_enemy_daemonhost_lifted_vce",
-		vce_struggle = "wwise/events/minions/play_enemy_daemonhost_struggle_vce",
+		vce_struggle = "wwise/events/minions/play_enemy_daemonhost_struggle_vce"
 	},
 	use_proximity_culling = {
 		stop_vce = false,
@@ -20,8 +20,8 @@ local sound_data = {
 		vce_awaken = false,
 		vce_awaken_short = false,
 		vce_lifted = false,
-		vce_struggle = false,
-	},
+		vce_struggle = false
+	}
 }
 
 return sound_data

@@ -20,18 +20,18 @@ local prop_data = {
 				"c_destructible",
 				"c_intact_destructible",
 				"c_intact",
-				"c_broken",
-			},
-		},
+				"c_broken"
+			}
+		}
 	},
 	hitzone_damage_multiplier = {
 		ranged = {
-			[hit_zone_names.center_mass] = 0.5,
-		},
+			[hit_zone_names.center_mass] = 0.5
+		}
 	},
 	tags = {
-		objective = true,
-	},
+		objective = true
+	}
 }
 
 return prop_data

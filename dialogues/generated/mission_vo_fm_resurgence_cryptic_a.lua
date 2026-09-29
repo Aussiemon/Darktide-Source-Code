@@ -6,17 +6,17 @@ local mission_vo_fm_resurgence_cryptic_a = {
 		sound_events_n = 2,
 		sound_events = {
 			[1] = "loc_cryptic_a__luggable_mission_pick_up_01",
-			[2] = "loc_cryptic_a__luggable_mission_pick_up_02",
+			[2] = "loc_cryptic_a__luggable_mission_pick_up_02"
 		},
 		sound_events_duration = {
 			[1] = 4.238188,
-			[2] = 4.65,
+			[2] = 4.65
 		},
 		sound_event_weights = {
 			[1] = 0.5,
-			[2] = 0.5,
+			[2] = 0.5
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	mission_resurgence_first_objective_response = {
 		randomize_indexes_n = 0,
@@ -26,24 +26,24 @@ local mission_vo_fm_resurgence_cryptic_a = {
 			"loc_cryptic_a__guidance_starting_area_02",
 			"loc_cryptic_a__guidance_starting_area_03",
 			"loc_cryptic_a__guidance_starting_area_04",
-			"loc_cryptic_a__guidance_starting_area_05",
+			"loc_cryptic_a__guidance_starting_area_05"
 		},
 		sound_events_duration = {
 			3.090448,
 			5.155135,
 			4.769115,
 			4.514323,
-			3.760938,
+			3.760938
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_fm_resurgence_cryptic_a", mission_vo_fm_resurgence_cryptic_a)

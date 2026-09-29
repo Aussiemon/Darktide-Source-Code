@@ -7,12 +7,12 @@ local circumstance_templates = {
 			description = "loc_havoc_common_minion_on_fire_description",
 			display_name = "loc_havoc_common_minion_on_fire_name",
 			happening_display_name = "loc_happening_nurgle_manifestation",
-			icon = "content/ui/materials/icons/circumstances/nurgle_manifestation_01",
+			icon = "content/ui/materials/icons/circumstances/nurgle_manifestation_01"
 		},
 		mutators = {
-			"mutator_common_minions_on_fire",
+			"mutator_common_minions_on_fire"
 		},
-		mission_overrides = {},
+		mission_overrides = {}
 	},
 	mutator_havoc_enemies_corrupted = {
 		ui = {
@@ -20,12 +20,12 @@ local circumstance_templates = {
 			description = "loc_havoc_enemies_corrupted_description",
 			display_name = "loc_havoc_enemies_corrupted_name",
 			happening_display_name = "loc_happening_nurgle_manifestation",
-			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_nurgle",
+			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_nurgle"
 		},
 		mutators = {
-			"mutator_corrupted_enemies",
+			"mutator_corrupted_enemies"
 		},
-		mission_overrides = {},
+		mission_overrides = {}
 	},
 	mutator_havoc_rotten_armor = {
 		ui = {
@@ -33,14 +33,14 @@ local circumstance_templates = {
 			description = "loc_havoc_rotten_armor_description",
 			display_name = "loc_havoc_rotten_armor_name",
 			happening_display_name = "loc_happening_nurgle_manifestation",
-			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_rotten_armor",
+			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_rotten_armor"
 		},
 		mutators = {
 			"mutator_rotten_armor",
 			"mutator_live_rotten_armor_trickle_horde",
-			"mutator_only_traitor_guard_faction",
+			"mutator_only_traitor_guard_faction"
 		},
-		mission_overrides = {},
+		mission_overrides = {}
 	},
 	mutator_stimmed_minions = {
 		ui = {
@@ -48,12 +48,12 @@ local circumstance_templates = {
 			description = "loc_havoc_stimmed_minions_description",
 			display_name = "loc_havoc_stimmed_minions_name",
 			happening_display_name = "loc_happening_nurgle_manifestation",
-			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_stimmed_minions",
+			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_stimmed_minions"
 		},
 		mutators = {
-			"mutator_stimmed_minions",
+			"mutator_stimmed_minions"
 		},
-		mission_overrides = {},
+		mission_overrides = {}
 	},
 	mutator_havoc_enemies_parasite_headshot = {
 		ui = {
@@ -61,12 +61,12 @@ local circumstance_templates = {
 			description = "loc_havoc_enemies_parasite_headshot_description",
 			display_name = "loc_havoc_enemies_parasite_headshot_name",
 			happening_display_name = "loc_happening_nurgle_manifestation",
-			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_parasite",
+			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_parasite"
 		},
 		mutators = {
-			"mutator_headshot_parasite_enemies",
+			"mutator_headshot_parasite_enemies"
 		},
-		mission_overrides = {},
+		mission_overrides = {}
 	},
 	mutator_havoc_duplicating_enemies = {
 		ui = {
@@ -74,12 +74,12 @@ local circumstance_templates = {
 			description = "loc_circumstance_nurgle_manifestation_description",
 			display_name = "loc_circumstance_nurgle_manifestation_title",
 			happening_display_name = "loc_happening_nurgle_manifestation",
-			icon = "content/ui/materials/icons/circumstances/nurgle_manifestation_01",
+			icon = "content/ui/materials/icons/circumstances/nurgle_manifestation_01"
 		},
 		mutators = {
-			"mutator_duplicating_enemies",
+			"mutator_duplicating_enemies"
 		},
-		mission_overrides = {},
+		mission_overrides = {}
 	},
 	bolstering_minions_01 = {
 		ui = {
@@ -87,12 +87,12 @@ local circumstance_templates = {
 			description = "loc_havoc_bolstering_enemies_description",
 			display_name = "loc_havoc_bolstering_enemies_name",
 			happening_display_name = "loc_happening_nurgle_manifestation",
-			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_rampaging_enemies",
+			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_rampaging_enemies"
 		},
 		mutators = {
-			"mutator_bolstering_minions",
+			"mutator_bolstering_minions"
 		},
-		mission_overrides = {},
+		mission_overrides = {}
 	},
 	mutator_havoc_armored_infected = {
 		ui = {
@@ -100,12 +100,12 @@ local circumstance_templates = {
 			description = "loc_havoc_armored_infected_description",
 			display_name = "loc_havoc_armored_infected_name",
 			happening_display_name = "loc_happening_nurgle_manifestation",
-			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_moebian21st",
+			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_moebian21st"
 		},
 		mutators = {
-			"mutator_havoc_armored_infected",
+			"mutator_havoc_armored_infected"
 		},
-		mission_overrides = {},
+		mission_overrides = {}
 	},
 	mutator_havoc_tougher_skin = {
 		ui = {
@@ -113,12 +113,12 @@ local circumstance_templates = {
 			description = "loc_havoc_tougher_skin_description",
 			display_name = "loc_havoc_tougher_skin_name",
 			happening_display_name = "loc_happening_nurgle_manifestation",
-			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_skin",
+			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_skin"
 		},
 		mutators = {
-			"mutator_tough_skin_enemies",
+			"mutator_tough_skin_enemies"
 		},
-		mission_overrides = {},
+		mission_overrides = {}
 	},
 	mutator_havoc_sticky_poxbursters = {
 		ui = {
@@ -126,13 +126,13 @@ local circumstance_templates = {
 			description = "loc_havoc_sticky_poxbursters_description",
 			display_name = "loc_havoc_sticky_poxbursters_name",
 			happening_display_name = "loc_happening_nurgle_manifestation",
-			icon = "content/ui/materials/icons/circumstances/nurgle_manifestation_01",
+			icon = "content/ui/materials/icons/circumstances/nurgle_manifestation_01"
 		},
 		mutators = {
 			"mutator_havoc_sticky_poxburster",
-			"mutator_armored_bombers",
+			"mutator_armored_bombers"
 		},
-		mission_overrides = {},
+		mission_overrides = {}
 	},
 	mutator_havoc_thorny_armor = {
 		ui = {
@@ -140,24 +140,24 @@ local circumstance_templates = {
 			description = "loc_havoc_thorny_armor_description",
 			display_name = "loc_havoc_thorny_armor_name",
 			happening_display_name = "loc_happening_nurgle_manifestation",
-			icon = "content/ui/materials/icons/circumstances/nurgle_manifestation_01",
+			icon = "content/ui/materials/icons/circumstances/nurgle_manifestation_01"
 		},
 		mutators = {
-			"mutator_havoc_thorny_armor",
+			"mutator_havoc_thorny_armor"
 		},
-		mission_overrides = {},
+		mission_overrides = {}
 	},
 	mutator_havoc_enraged = {
 		ui = {
 			description = "loc_havoc_mutator_enraged_description",
 			display_name = "loc_havoc_mutator_enraged_name",
 			happening_display_name = "loc_happening_nurgle_manifestation",
-			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_final_toll",
+			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_final_toll"
 		},
 		mutators = {
-			"mutator_havoc_enraged",
+			"mutator_havoc_enraged"
 		},
-		mission_overrides = {},
+		mission_overrides = {}
 	},
 	mutator_havoc_chaos_rituals = {
 		ui = {
@@ -165,14 +165,14 @@ local circumstance_templates = {
 			description = "loc_havoc_chaos_ritual_desc",
 			display_name = "loc_havoc_chaos_ritual_name",
 			happening_display_name = "loc_happening_nurgle_manifestation",
-			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_heinous_rituals",
+			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_heinous_rituals"
 		},
 		mutators = {
 			"mutator_monster_spawner",
 			"mutator_no_witches",
-			"mutator_havoc_no_stagger_ritualist",
+			"mutator_havoc_no_stagger_ritualist"
 		},
-		mission_overrides = {},
+		mission_overrides = {}
 	},
 	mutator_encroaching_garden = {
 		ui = {
@@ -180,12 +180,12 @@ local circumstance_templates = {
 			description = "loc_havoc_encroaching_garden_description",
 			display_name = "loc_havoc_encroaching_garden_name",
 			happening_display_name = "loc_happening_nurgle_manifestation",
-			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_encroaching_garden",
+			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_encroaching_garden"
 		},
 		mutators = {
-			"mutator_encroaching_garden",
+			"mutator_encroaching_garden"
 		},
-		mission_overrides = {},
+		mission_overrides = {}
 	},
 	mutator_increased_difficulty = {
 		ui = {
@@ -193,7 +193,7 @@ local circumstance_templates = {
 			description = "loc_havoc_increased_difficulty_description",
 			display_name = "loc_havoc_increased_difficulty_name",
 			happening_display_name = "loc_happening_nurgle_manifestation",
-			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_fading_light_1",
+			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_fading_light_1"
 		},
 		mutators = {
 			"mutator_auric_tension_modifier",
@@ -204,9 +204,9 @@ local circumstance_templates = {
 			"mutator_monster_havoc_twins",
 			"havoc_mutator_monster_specials_01",
 			"mutator_always_allow_elites_in_terror_events",
-			"mutator_havoc_more_points_allowed_terror_event",
+			"mutator_havoc_more_points_allowed_terror_event"
 		},
-		mission_overrides = {},
+		mission_overrides = {}
 	},
 	mutator_highest_difficulty = {
 		ui = {
@@ -214,7 +214,7 @@ local circumstance_templates = {
 			description = "loc_havoc_highest_difficulty_description",
 			display_name = "loc_havoc_highest_difficulty_name",
 			happening_display_name = "loc_happening_nurgle_manifestation",
-			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_fading_light_2",
+			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_fading_light_2"
 		},
 		mutators = {
 			"mutator_always_allow_all_spawn_types",
@@ -227,10 +227,10 @@ local circumstance_templates = {
 			"mutator_monster_havoc_twins",
 			"havoc_mutator_monster_specials_02",
 			"mutator_always_allow_elites_in_terror_events",
-			"mutator_havoc_more_points_allowed_terror_event",
+			"mutator_havoc_more_points_allowed_terror_event"
 		},
-		mission_overrides = {},
-	},
+		mission_overrides = {}
+	}
 }
 
 return circumstance_templates

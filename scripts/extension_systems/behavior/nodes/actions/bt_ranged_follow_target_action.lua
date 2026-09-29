@@ -9,11 +9,11 @@ local BtRangedFollowTargetAction = class("BtRangedFollowTargetAction", "BtNode")
 
 BtRangedFollowTargetAction.TIME_TO_FIRST_EVALUATE = {
 	0.25,
-	0.75,
+	0.75
 }
 BtRangedFollowTargetAction.CONSECUTIVE_EVALUATE_INTERVAL = {
 	0.25,
-	0.75,
+	0.75
 }
 
 BtRangedFollowTargetAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)

@@ -9,7 +9,7 @@ local SCRIPT_INDEX = table.mirror_array({
 	"SCRIPT_NAME",
 	"UNIT_1P",
 	"UNIT_3P",
-	"STRIDE",
+	"STRIDE"
 })
 
 EquippedSlotScripts._register_script = function (script_name, unit_1p, unit_3p, num_scripts)

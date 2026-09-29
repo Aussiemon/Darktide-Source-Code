@@ -105,7 +105,7 @@ local DEFAULT_DEFENSE_META_DATA = {
 	push = "heavy",
 	push_action_input = "push",
 	start_action_input = "block",
-	stop_action_input = "block_release",
+	stop_action_input = "block_release"
 }
 
 BtBotMeleeAction._update_melee = function (self, unit, scratchpad, action_data, t)
@@ -255,7 +255,7 @@ BtBotMeleeAction._aim_position = function (self, target_unit, target_breed)
 
 	local aim_position
 
-	if Unit.has_node(target_unit, aim_node_name) then
+	if aim_node_name and Unit.has_node(target_unit, aim_node_name) then
 		local aim_node = Unit.node(target_unit, aim_node_name)
 
 		aim_position = Unit.world_position(target_unit, aim_node)
@@ -275,14 +275,14 @@ local DEFAULT_ATTACK_META_DATA = {
 		action_inputs = {
 			{
 				action_input = "start_attack",
-				timing = 0,
+				timing = 0
 			},
 			{
 				action_input = "light_attack",
-				timing = 0,
-			},
-		},
-	},
+				timing = 0
+			}
+		}
+	}
 }
 local ARMORED = ArmorSettings.types.armored
 
@@ -496,11 +496,11 @@ end
 
 local DODGE_CHECK_RANDOM_RANGE = {
 	0.5,
-	2,
+	2
 }
 local CANT_PUSH_DODGE_CHECK_RANDOM_RANGE = {
 	0.1,
-	0.2,
+	0.2
 }
 local DODGE_RANGE_TEST_DISTANCE = 2.25
 local DODGE_CHECK_FAIL_COOLDOWN = 0.1

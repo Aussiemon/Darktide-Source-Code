@@ -4,79 +4,79 @@ local DEFAULT_BLEND_TIME = 0.2
 local state_machine_settings = {}
 
 state_machine_settings["content/characters/player/ogryn/third_person/animations/skull_decoder"] = {
-	blend_time = DEFAULT_BLEND_TIME,
+	blend_time = DEFAULT_BLEND_TIME
 }
 state_machine_settings["content/characters/player/human/third_person/animations/skull_decoder"] = {
-	blend_time = DEFAULT_BLEND_TIME,
+	blend_time = DEFAULT_BLEND_TIME
 }
 state_machine_settings["content/characters/player/ogryn/third_person/animations/scanner"] = {
-	blend_time = DEFAULT_BLEND_TIME,
+	blend_time = DEFAULT_BLEND_TIME
 }
 state_machine_settings["content/characters/player/human/third_person/animations/scanner"] = {
-	blend_time = DEFAULT_BLEND_TIME,
+	blend_time = DEFAULT_BLEND_TIME
 }
 state_machine_settings["content/characters/player/ogryn/third_person/animations/scanner_equip"] = {
-	blend_time = DEFAULT_BLEND_TIME,
+	blend_time = DEFAULT_BLEND_TIME
 }
 state_machine_settings["content/characters/player/human/third_person/animations/scanner_equip"] = {
-	blend_time = DEFAULT_BLEND_TIME,
+	blend_time = DEFAULT_BLEND_TIME
 }
 state_machine_settings["content/characters/player/ogryn/third_person/animations/grenade"] = {
-	blend_time = DEFAULT_BLEND_TIME,
+	blend_time = DEFAULT_BLEND_TIME
 }
 state_machine_settings["content/characters/player/human/third_person/animations/grenade"] = {
-	blend_time = DEFAULT_BLEND_TIME,
+	blend_time = DEFAULT_BLEND_TIME
 }
 state_machine_settings["content/characters/player/human/third_person/animations/lugging"] = {
-	blend_time = DEFAULT_BLEND_TIME,
+	blend_time = DEFAULT_BLEND_TIME
 }
 state_machine_settings["content/characters/player/ogryn/third_person/animations/lugging"] = {
-	blend_time = DEFAULT_BLEND_TIME,
+	blend_time = DEFAULT_BLEND_TIME
 }
 state_machine_settings["content/characters/player/human/third_person/animations/psyker_smite"] = {
-	blend_time = DEFAULT_BLEND_TIME,
+	blend_time = DEFAULT_BLEND_TIME
 }
 state_machine_settings["content/characters/player/human/third_person/animations/unarmed"] = {
-	blend_time = DEFAULT_BLEND_TIME,
+	blend_time = DEFAULT_BLEND_TIME
 }
 state_machine_settings["content/characters/player/human/third_person/animations/pocketables"] = {
-	blend_time = 0,
+	blend_time = 0
 }
 state_machine_settings["content/characters/player/ogryn/third_person/animations/pocketables"] = {
-	blend_time = DEFAULT_BLEND_TIME,
+	blend_time = DEFAULT_BLEND_TIME
 }
 state_machine_settings["content/characters/player/human/third_person/animations/pocketables_2h"] = {
-	blend_time = DEFAULT_BLEND_TIME,
+	blend_time = DEFAULT_BLEND_TIME
 }
 state_machine_settings["content/characters/player/ogryn/third_person/animations/pocketables_2h"] = {
-	blend_time = DEFAULT_BLEND_TIME,
+	blend_time = DEFAULT_BLEND_TIME
 }
 state_machine_settings["content/characters/player/ogryn/third_person/animations/unarmed"] = {
-	blend_time = DEFAULT_BLEND_TIME,
+	blend_time = DEFAULT_BLEND_TIME
 }
 state_machine_settings["content/characters/player/human/third_person/animations/unarmed_hub"] = {
-	blend_time = DEFAULT_BLEND_TIME,
+	blend_time = DEFAULT_BLEND_TIME
 }
 state_machine_settings["content/characters/player/ogryn/third_person/animations/unarmed_hub"] = {
-	blend_time = DEFAULT_BLEND_TIME,
+	blend_time = DEFAULT_BLEND_TIME
 }
 state_machine_settings["content/characters/player/human/third_person/animations/shock_mine"] = {
-	blend_time = DEFAULT_BLEND_TIME,
+	blend_time = DEFAULT_BLEND_TIME
 }
 state_machine_settings["content/characters/player/human/third_person/animations/adamant_drone"] = {
-	blend_time = DEFAULT_BLEND_TIME,
+	blend_time = DEFAULT_BLEND_TIME
 }
 state_machine_settings["content/characters/player/human/third_person/animations/auspex_equip"] = {
-	blend_time = DEFAULT_BLEND_TIME,
+	blend_time = DEFAULT_BLEND_TIME
 }
 state_machine_settings["content/characters/player/ogryn/third_person/animations/auspex_equip"] = {
-	blend_time = DEFAULT_BLEND_TIME,
+	blend_time = DEFAULT_BLEND_TIME
 }
 state_machine_settings["content/characters/player/human/third_person/animations/traps"] = {
-	blend_time = DEFAULT_BLEND_TIME,
+	blend_time = DEFAULT_BLEND_TIME
 }
 state_machine_settings["content/characters/player/ogryn/third_person/animations/traps"] = {
-	blend_time = DEFAULT_BLEND_TIME,
+	blend_time = DEFAULT_BLEND_TIME
 }
 
 return state_machine_settings

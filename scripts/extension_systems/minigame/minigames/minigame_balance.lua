@@ -15,11 +15,11 @@ MinigameBalance.init = function (self, unit, is_server, seed)
 	self._manual_duration = nil
 	self._position = {
 		x = 0,
-		y = 0,
+		y = 0
 	}
 	self._speed = {
 		x = 0,
-		y = 0,
+		y = 0
 	}
 	self._last_axis_set = 0
 	self._disrupt_timer = 0

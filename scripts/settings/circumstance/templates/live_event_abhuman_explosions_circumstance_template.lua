@@ -10,13 +10,13 @@ local core_mutators = {
 	"mutator_drop_ogryn_grenade_on_death",
 	"mutator_poxwalker_bombers",
 	"mutator_extra_grenadiers",
-	"mutator_abhuman_explosions_grenade_regen_on_elite_kill",
+	"mutator_abhuman_explosions_grenade_regen_on_elite_kill"
 }
 local base_templates = CircumstanceUtils.inherit(BaseLiveEventTemplate, core_mutators, {
-	"all_explosive_barrels",
+	"all_explosive_barrels"
 }, "abhuman_explosions")
 local circumstance_templates = table.reduce({
-	base_templates,
+	base_templates
 }, table.merge, {})
 
 circumstance_templates.abhuman_explosions.ui.display_name = "loc_circumstance_abhuman_explosions_default_title"

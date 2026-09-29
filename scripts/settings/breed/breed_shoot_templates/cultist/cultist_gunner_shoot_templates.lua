@@ -14,8 +14,8 @@ local cultist_gunner_default = {
 	damage_falloff = {
 		falloff_range = 30,
 		max_power_reduction = 0.5,
-		max_range = 30,
-	},
+		max_range = 30
+	}
 }
 local cultist_gunner_sweep = table.clone(cultist_gunner_default)
 
@@ -42,7 +42,7 @@ local shoot_templates = {
 	cultist_gunner_sweep = cultist_gunner_sweep,
 	cultist_gunner_aimed = cultist_gunner_aimed,
 	cultist_gunner_shoot_close = cultist_gunner_shoot_close,
-	cultist_gunner_shoot_spray_n_pray = cultist_gunner_shoot_spray_n_pray,
+	cultist_gunner_shoot_spray_n_pray = cultist_gunner_shoot_spray_n_pray
 }
 
 return shoot_templates

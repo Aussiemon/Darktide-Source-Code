@@ -2,13 +2,12 @@
 
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local LevelGridUtilities = require("scripts/utilities/levels/level_grid")
-local Pickups = require("scripts/settings/pickup/pickups")
 local ExpeditionEventSettings = require("scripts/settings/expeditions/expedition_event_settings")
 local ENABLE_LOGS = true
 local Expedition = {}
-local SEED = 2023062419930608
+local SEED
 
-local function _random(...)
+Expedition.random = function (...)
 	local seed, value = math.next_random(SEED, ...)
 
 	SEED = seed
@@ -16,21 +15,43 @@ local function _random(...)
 	return value
 end
 
-local function get_masterdata_by_levels(raw_query)
-	local query_handle = Metadata.prepare_query({
-		type = "level",
+local function start_fetch_masterdata_by_levels(raw_query)
+	return Metadata.execute_query_deferred({
+		type = "level"
 	}, {
-		include_properties = true,
+		include_properties = true
 	}, {
-		raw_query = raw_query,
+		raw_query = raw_query
 	})
-	local resources = Metadata.execute_query(query_handle)
+end
+
+local location_masterdata_query_job, location_masterdata
+
+Expedition.start_fetch_slot_data_from_location = function ()
+	if location_masterdata_query_job or location_masterdata then
+		return
+	end
+
+	location_masterdata_query_job = start_fetch_masterdata_by_levels("AND json_extract(properties, '$.expedition') IS NOT NULL")
+end
+
+Expedition.is_slot_data_from_location_fetched = function ()
+	if location_masterdata then
+		return true
+	end
+
+	local results = Metadata.claim_results(location_masterdata_query_job)
+
+	if not results then
+		return false
+	end
+
 	local sorted_data = {}
 
-	for k, v in pairs(resources) do
+	for k, v in pairs(results) do
 		table.insert(sorted_data, {
 			k,
-			v,
+			v
 		})
 	end
 
@@ -52,15 +73,69 @@ local function get_masterdata_by_levels(raw_query)
 		end
 	end
 
-	return results_by_level
+	location_masterdata = results_by_level
+
+	return true
 end
 
-local function fetch_levels_tags_from_metadata(strip_debug)
-	local raw_query = "AND json_extract(properties, '$.tags.expedition') IS NOT NULL"
-	local masterdata_by_levels = get_masterdata_by_levels(raw_query)
+local dsl_masterdata_query_job, dsl_masterdata
+
+Expedition.start_fetch_dsl_data_from_levels = function ()
+	if dsl_masterdata_query_job or dsl_masterdata then
+		return
+	end
+
+	dsl_masterdata_query_job = start_fetch_masterdata_by_levels("AND json_extract(properties, '$.tags.expedition') IS NOT NULL")
+end
+
+Expedition.is_dsl_data_from_levels_fetched = function ()
+	if dsl_masterdata then
+		return true
+	end
+
+	local results = Metadata.claim_results(dsl_masterdata_query_job)
+
+	if not results then
+		return false
+	end
+
+	local sorted_data = {}
+
+	for k, v in pairs(results) do
+		table.insert(sorted_data, {
+			k,
+			v
+		})
+	end
+
+	table.sort(sorted_data, function (p1, p2)
+		return p1[1] < p2[1]
+	end)
+
+	local results_by_level = {}
+
+	for _, p in ipairs(sorted_data) do
+		local k, v = unpack(p)
+		local decode
+
+		if not v or v == "" then
+			-- Nothing
+		else
+			decode = cjson.decode(v)
+			results_by_level[k] = decode
+		end
+	end
+
+	dsl_masterdata = results_by_level
+
+	return true
+end
+
+local function get_tags_by_level_name_source(settings)
+	local strip_debug = not settings.debug_levels
 	local tags_by_level_name = {}
 
-	for level_name, data in pairs(masterdata_by_levels) do
+	for level_name, data in pairs(dsl_masterdata) do
 		repeat
 			local level_slot_tags = data.tags and data.tags.expedition
 
@@ -89,12 +164,35 @@ local function fetch_levels_tags_from_metadata(strip_debug)
 	return tags_by_level_name
 end
 
+local function get_available_dsls(settings, tags_by_level_name_source)
+	local available_dsls = table.clone(tags_by_level_name_source)
+	local allowed_dsl_levels = settings.allowed_dsl_levels
+
+	if allowed_dsl_levels and #allowed_dsl_levels > 0 then
+		for level_name, tags in pairs(available_dsls) do
+			if not table.contains(allowed_dsl_levels, level_name) then
+				available_dsls[level_name] = nil
+			end
+		end
+	end
+
+	local blocked_dsl_levels = settings.blocked_dsl_levels
+
+	if blocked_dsl_levels and #blocked_dsl_levels > 0 then
+		for level_name, tags in pairs(available_dsls) do
+			if table.contains(blocked_dsl_levels, level_name) then
+				available_dsls[level_name] = nil
+			end
+		end
+	end
+
+	return available_dsls
+end
+
 local function fetch_levels_slots_data_from_metadata(ignored_level_slot_tags)
-	local raw_query = "AND json_extract(properties, '$.expedition') IS NOT NULL"
-	local masterdata_by_levels = get_masterdata_by_levels(raw_query)
 	local slot_tags_by_level_name = {}
 
-	for level_name, data in pairs(masterdata_by_levels) do
+	for level_name, data in pairs(location_masterdata) do
 		local level_slots_tags = data.expedition
 
 		if level_slots_tags then
@@ -116,7 +214,7 @@ local function fetch_levels_slots_data_from_metadata(ignored_level_slot_tags)
 	return slot_tags_by_level_name
 end
 
-local function _get_level_data_by_reference_name(section, reference_name)
+Expedition.get_level_data_by_reference_name = function (section, reference_name)
 	local levels_data = section.levels_data
 
 	for i = 1, #levels_data do
@@ -125,17 +223,6 @@ local function _get_level_data_by_reference_name(section, reference_name)
 		if level_data.reference_name == reference_name then
 			return level_data
 		end
-	end
-end
-
-local function _on_register_world_marker_spawned(level_data, unit, id)
-	local world_markers = level_data.world_markers
-	local world_markers_by_unit = level_data.world_markers_by_unit
-
-	world_markers[#world_markers + 1] = id
-
-	if unit then
-		world_markers_by_unit[unit] = id
 	end
 end
 
@@ -153,18 +240,6 @@ local function _is_tags_included_in_array(tags, taget_tags)
 	end
 
 	return contains_all_tags
-end
-
-local function _special_tags_contains(special_tags, slot_id, tag)
-	if special_tags and special_tags[slot_id] ~= nil then
-		for i = 1, #special_tags[slot_id] do
-			if special_tags[slot_id][i] == tag then
-				return true
-			end
-		end
-	end
-
-	return false
 end
 
 local function get_levels_by_slot_distribution_config(settings, slot_distribution, level_slots, tags_by_level_name)
@@ -197,7 +272,7 @@ local function get_levels_by_slot_distribution_config(settings, slot_distributio
 	local complete_conditions = slot_distribution.complete_conditions
 	local min_spawn = complete_conditions.min
 	local max_spawn = complete_conditions.max
-	local wanted_spawn_amount = _random(min_spawn, max_spawn)
+	local wanted_spawn_amount = Expedition.random(min_spawn, max_spawn)
 	local level_slot_ids = table.keys(level_slots)
 
 	table.sort(level_slot_ids)
@@ -242,7 +317,7 @@ local function get_levels_by_slot_distribution_config(settings, slot_distributio
 			local current_order_index = 1
 
 			for k = 1, #phase_data do
-				local random_score = _random(1, total_order_score)
+				local random_score = Expedition.random(1, total_order_score)
 
 				total_order_score = 0
 
@@ -276,7 +351,7 @@ local function get_levels_by_slot_distribution_config(settings, slot_distributio
 				local consume_level_on_spawn_per_expedition = entry.consume_level_on_spawn_per_expedition or false
 				local consume_level_on_spawn_per_location = entry.consume_level_on_spawn_per_location or false
 				local tags_string = make_tag_array_string(tags)
-				local spawn_amount = _random(min, max)
+				local spawn_amount = Expedition.random(min, max)
 
 				spawn_amount = math.clamp(spawn_amount, 0, total_spawn_amount_left)
 
@@ -327,7 +402,7 @@ local function get_levels_by_slot_distribution_config(settings, slot_distributio
 									if _is_tags_included_in_array(optional_resource_tags or wanted_level_slot_tags, level_tags) then
 										matching_slot_levels[#matching_slot_levels + 1] = {
 											level_name = level_name,
-											level_tags = level_tags,
+											level_tags = level_tags
 										}
 									end
 								end
@@ -344,7 +419,7 @@ local function get_levels_by_slot_distribution_config(settings, slot_distributio
 							local wanted_level_name, wanted_level_name_tags
 
 							if #matching_slot_levels > 0 then
-								local random_level_index = _random(1, #matching_slot_levels)
+								local random_level_index = Expedition.random(1, #matching_slot_levels)
 								local matching_slot_level = matching_slot_levels[random_level_index]
 
 								wanted_level_name = matching_slot_level.level_name
@@ -375,7 +450,7 @@ local function get_levels_by_slot_distribution_config(settings, slot_distributio
 									level_name = wanted_level_name,
 									level_tags = wanted_level_name_tags,
 									consume_level_on_spawn_per_expedition = entry.consume_level_on_spawn_per_expedition or false,
-									consume_level_on_spawn_per_location = entry.consume_level_on_spawn_per_location or false,
+									consume_level_on_spawn_per_location = entry.consume_level_on_spawn_per_location or false
 								}
 							end
 						end
@@ -470,505 +545,10 @@ local function get_levels_by_slot_distribution_config(settings, slot_distributio
 	end
 
 	if ENABLE_LOGS then
-		Log.info("Expedition", "////////////////////////////////////////////////////////////////////////////")
 		Log.info("Expedition", "////////////////////////////////// DONE ////////////////////////////////////")
-		Log.info("Expedition", "////////////////////////////////////////////////////////////////////////////")
 	end
 
 	return return_data
-end
-
-local level_spawn_template = {
-	level = {
-		visibility_function = function (level_data, belongs_to_current_safe_zone_section, in_safe_zone)
-			return not in_safe_zone
-		end,
-	},
-	arrival_level = {
-		visibility_function = function (level_data, belongs_to_current_safe_zone_section, in_safe_zone)
-			return not in_safe_zone
-		end,
-		position_and_rotation_function = function (level_data, world)
-			local section = level_data.section
-			local parent_level_reference_name = level_data.parent_level_reference_name or "level"
-			local parent_level_data = _get_level_data_by_reference_name(section, parent_level_reference_name)
-			local parent_level = parent_level_data.level
-			local custom_data = level_data.custom_data
-			local level_slot_id = custom_data.level_slot_id
-			local level_slot_unit = Level.unit_by_id(parent_level, level_slot_id)
-			local position = Unit.world_position(level_slot_unit, 1)
-			local rotation = Unit.world_rotation(level_slot_unit, 1)
-
-			return position, rotation
-		end,
-		on_spawned_function = function (level_data, world, settings)
-			local section = level_data.section
-			local custom_data = level_data.custom_data
-			local parent_level_reference_name = level_data.parent_level_reference_name or "level"
-			local parent_level_data = _get_level_data_by_reference_name(section, parent_level_reference_name)
-			local parent_level = parent_level_data.level
-			local level_slot_id = custom_data.level_slot_id
-			local level_slot_unit = Level.unit_by_id(parent_level, level_slot_id)
-
-			section.arrival_unit = level_slot_unit
-		end,
-	},
-	safe_zone_connector_entrance_level = {
-		visibility_function = function (level_data, belongs_to_current_safe_zone_section, in_safe_zone)
-			return in_safe_zone and belongs_to_current_safe_zone_section
-		end,
-		on_gameplay_pause_function = function (level_data, belongs_to_current_safe_zone_section, is_hotjoin)
-			if belongs_to_current_safe_zone_section then
-				local level = level_data.level
-
-				if not is_hotjoin then
-					Level.trigger_event(level, "event_players_entered_safe_zone")
-				end
-			end
-		end,
-		on_registered_function = function (level_data, world)
-			local level = level_data.level
-
-			Level.trigger_event(level, "event_is_safe_zone_entrance")
-		end,
-		position_and_rotation_function = function (level_data, world)
-			local section = level_data.section
-			local safe_zone_level_data = _get_level_data_by_reference_name(section, "safe_zone_level")
-			local safe_zone_level = safe_zone_level_data.level
-			local custom_data = level_data.custom_data
-			local level_slot_id = custom_data.level_slot_id
-			local level_slot_unit = Level.unit_by_id(safe_zone_level, level_slot_id)
-			local position = Unit.world_position(level_slot_unit, 1)
-			local rotation = Unit.world_rotation(level_slot_unit, 1)
-
-			return position, rotation
-		end,
-	},
-	safe_zone_connector_exit_level = {
-		visibility_function = function (level_data, belongs_to_current_safe_zone_section, in_safe_zone)
-			return in_safe_zone and belongs_to_current_safe_zone_section
-		end,
-		on_registered_function = function (level_data, world)
-			local level = level_data.level
-
-			Level.trigger_event(level, "event_is_safe_zone_exit")
-
-			local section = level_data.section
-			local safe_zone_level_data = _get_level_data_by_reference_name(section, "safe_zone_level")
-			local safe_zone_level = safe_zone_level_data.level
-			local custom_data = level_data.custom_data
-			local level_slot_id = custom_data.level_slot_id
-			local level_slot_unit = Level.unit_by_id(safe_zone_level, level_slot_id)
-
-			Unit.flow_event(level_slot_unit, "lua_is_safe_zone_level_exit")
-		end,
-		on_spawned_function = function (level_data, world, settings)
-			local section = level_data.section
-
-			section.safe_zone_connector_exit_level = level_data.level
-
-			local level = level_data.level
-
-			Level.set_lod_level_type(level, LodLevelType.HIDE)
-		end,
-		position_and_rotation_function = function (level_data, world)
-			local section = level_data.section
-			local safe_zone_level_data = _get_level_data_by_reference_name(section, "safe_zone_level")
-			local safe_zone_level = safe_zone_level_data.level
-			local custom_data = level_data.custom_data
-			local level_slot_id = custom_data.level_slot_id
-			local level_slot_unit = Level.unit_by_id(safe_zone_level, level_slot_id)
-			local position = Unit.world_position(level_slot_unit, 1)
-			local rotation = Unit.world_rotation(level_slot_unit, 1)
-
-			return position, rotation
-		end,
-	},
-	connector_entrance_level = {
-		visibility_function = function (level_data, belongs_to_current_safe_zone_section, in_safe_zone)
-			return not in_safe_zone
-		end,
-		on_gameplay_resume_function = function (level_data, belongs_to_current_safe_zone_section)
-			local level = level_data.level
-
-			Level.trigger_event(level, "event_players_entered_location")
-		end,
-		on_registered_function = function (level_data, world)
-			local level = level_data.level
-
-			Level.trigger_event(level, "event_is_location_entrance")
-		end,
-		on_spawned_function = function (level_data, world, settings)
-			local section = level_data.section
-			local custom_data = level_data.custom_data
-			local parent_level_reference_name = level_data.parent_level_reference_name or "level"
-			local parent_level_data = _get_level_data_by_reference_name(section, parent_level_reference_name)
-			local parent_level = parent_level_data.level
-			local level_slot_id = custom_data.level_slot_id
-			local level_slot_unit = Level.unit_by_id(parent_level, level_slot_id)
-
-			section.connector_entrance_unit = level_slot_unit
-			section.connector_entrance_level = level_data.level
-		end,
-		position_and_rotation_function = function (level_data, world)
-			local section = level_data.section
-			local parent_level_reference_name = level_data.parent_level_reference_name or "level"
-			local parent_level_data = _get_level_data_by_reference_name(section, parent_level_reference_name)
-			local parent_level = parent_level_data.level
-			local custom_data = level_data.custom_data
-			local level_slot_id = custom_data.level_slot_id
-			local level_slot_unit = Level.unit_by_id(parent_level, level_slot_id)
-			local wanted_rotation = Quaternion.multiply(Unit.world_rotation(level_slot_unit, 1), Quaternion.from_euler_angles_xyz(0, 0, 180))
-
-			Unit.set_local_rotation(level_slot_unit, 1, wanted_rotation)
-			World.update_unit(world, level_slot_unit)
-
-			local position = Unit.world_position(level_slot_unit, 1)
-			local rotation = Unit.world_rotation(level_slot_unit, 1)
-
-			return position, rotation
-		end,
-	},
-	connector_exit_level = {
-		visibility_function = function (level_data, belongs_to_current_safe_zone_section, in_safe_zone)
-			return not in_safe_zone
-		end,
-		on_registered_function = function (level_data, world)
-			local level = level_data.level
-
-			Level.trigger_event(level, "event_is_location_exit")
-
-			local section = level_data.section
-			local parent_level_reference_name = level_data.parent_level_reference_name or "level"
-			local parent_level_data = _get_level_data_by_reference_name(section, parent_level_reference_name)
-			local parent_level = parent_level_data.level
-			local custom_data = level_data.custom_data
-			local level_slot_id = custom_data.level_slot_id
-			local level_slot_unit = Level.unit_by_id(parent_level, level_slot_id)
-			local position = Unit.world_position(level_slot_unit, 1)
-			local level_index = Managers.state.unit_spawner:index_by_level(level_data.level)
-
-			Managers.event:trigger("exit_level_spawned", level_index, position)
-			Unit.flow_event(level_slot_unit, "lua_is_level_exit")
-		end,
-		on_spawned_function = function (level_data, world, settings)
-			local section = level_data.section
-			local custom_data = level_data.custom_data
-			local parent_level_reference_name = level_data.parent_level_reference_name or "level"
-			local parent_level_data = _get_level_data_by_reference_name(section, parent_level_reference_name)
-			local parent_level = parent_level_data.level
-			local level_slot_id = custom_data.level_slot_id
-			local level_slot_unit = Level.unit_by_id(parent_level, level_slot_id)
-
-			section.connector_exit_unit = level_slot_unit
-			section.connector_exit_level = level_data.level
-		end,
-		position_and_rotation_function = function (level_data, world)
-			local section = level_data.section
-			local parent_level_reference_name = level_data.parent_level_reference_name or "level"
-			local parent_level_data = _get_level_data_by_reference_name(section, parent_level_reference_name)
-			local parent_level = parent_level_data.level
-			local custom_data = level_data.custom_data
-			local level_slot_id = custom_data.level_slot_id
-			local level_slot_unit = Level.unit_by_id(parent_level, level_slot_id)
-			local position = Unit.world_position(level_slot_unit, 1)
-			local rotation = Unit.world_rotation(level_slot_unit, 1)
-
-			return position, rotation
-		end,
-	},
-	extraction_level = {
-		visibility_function = function (level_data, belongs_to_current_safe_zone_section, in_safe_zone)
-			return not in_safe_zone
-		end,
-		position_and_rotation_function = function (level_data, world)
-			local section = level_data.section
-			local parent_level_reference_name = level_data.parent_level_reference_name or "level"
-			local parent_level_data = _get_level_data_by_reference_name(section, parent_level_reference_name)
-			local parent_level = parent_level_data.level
-			local custom_data = level_data.custom_data
-			local level_slot_id = custom_data.level_slot_id
-			local level_slot_unit = Level.unit_by_id(parent_level, level_slot_id)
-			local position = Unit.world_position(level_slot_unit, 1)
-			local rotation = Unit.world_rotation(level_slot_unit, 1)
-
-			return position, rotation
-		end,
-		on_spawned_function = function (level_data, world, settings)
-			local section = level_data.section
-			local custom_data = level_data.custom_data
-			local parent_level_reference_name = level_data.parent_level_reference_name or "level"
-			local parent_level_data = _get_level_data_by_reference_name(section, parent_level_reference_name)
-			local parent_level = parent_level_data.level
-			local level_slot_id = custom_data.level_slot_id
-			local level_slot_unit = Level.unit_by_id(parent_level, level_slot_id)
-
-			section.extraction_unit = level_slot_unit
-			section.extraction_level = level_data.level
-		end,
-		on_registered_function = function (level_data, world)
-			local section = level_data.section
-			local parent_level_reference_name = level_data.parent_level_reference_name or "level"
-			local parent_level_data = _get_level_data_by_reference_name(section, parent_level_reference_name)
-			local parent_level = parent_level_data.level
-			local custom_data = level_data.custom_data
-			local level_slot_id = custom_data.level_slot_id
-			local level_slot_unit = Level.unit_by_id(parent_level, level_slot_id)
-			local position = Unit.world_position(level_slot_unit, 1)
-			local level_index = Managers.state.unit_spawner:index_by_level(level_data.level)
-
-			Managers.event:trigger("extraction_level_spawned", level_index, position)
-		end,
-	},
-	main_objective_level = {
-		visibility_function = function (level_data, belongs_to_current_safe_zone_section, in_safe_zone)
-			return not in_safe_zone
-		end,
-		position_and_rotation_function = function (level_data, world)
-			local section = level_data.section
-			local parent_level_reference_name = level_data.parent_level_reference_name or "level"
-			local parent_level_data = _get_level_data_by_reference_name(section, parent_level_reference_name)
-			local parent_level = parent_level_data.level
-			local custom_data = level_data.custom_data
-			local level_slot_id = custom_data.level_slot_id
-			local level_slot_unit = Level.unit_by_id(parent_level, level_slot_id)
-			local position = Unit.world_position(level_slot_unit, 1)
-			local rotation = Unit.world_rotation(level_slot_unit, 1)
-
-			return position, rotation
-		end,
-		pre_spawn_function = function (level_data, world)
-			local level_name = level_data.level_name
-			local excluded_object_sets = level_data.excluded_object_sets
-			local object_set_names = LevelResource.object_set_names(level_name)
-
-			if object_set_names and #object_set_names > 0 then
-				local object_set_index_to_keep = _random(1, #object_set_names)
-
-				for i = 1, #object_set_names do
-					if i ~= object_set_index_to_keep then
-						local object_set_name = object_set_names[i]
-
-						excluded_object_sets[#excluded_object_sets + 1] = object_set_name
-					end
-				end
-			end
-		end,
-	},
-	opportunity_level = {
-		visibility_function = function (level_data, belongs_to_current_safe_zone_section, in_safe_zone)
-			return not in_safe_zone
-		end,
-		position_and_rotation_function = function (level_data, world)
-			local section = level_data.section
-			local parent_level_reference_name = level_data.parent_level_reference_name or "level"
-			local parent_level_data = _get_level_data_by_reference_name(section, parent_level_reference_name)
-			local parent_level = parent_level_data.level
-			local custom_data = level_data.custom_data
-			local level_slot_id = custom_data.level_slot_id
-			local level_slot_unit = Level.unit_by_id(parent_level, level_slot_id)
-			local position = Unit.world_position(level_slot_unit, 1)
-			local rotation = Unit.world_rotation(level_slot_unit, 1)
-
-			if level_data.tags and table.array_contains(level_data.tags, "rot_mode_random") and not _special_tags_contains(parent_level_data.special_tags, level_slot_id, "rot_mode_slot") then
-				local random_rotation_degree = level_data.random_rotation_degree
-				local random_rotation = Quaternion.from_euler_angles_xyz(0, 0, random_rotation_degree)
-
-				rotation = Quaternion.multiply(rotation, random_rotation)
-			end
-
-			return position, rotation
-		end,
-		pre_spawn_function = function (level_data, world)
-			local level_name = level_data.level_name
-			local excluded_object_sets = level_data.excluded_object_sets
-			local object_set_names = LevelResource.object_set_names(level_name)
-
-			if object_set_names and #object_set_names > 0 then
-				local object_set_index_to_keep = _random(1, #object_set_names)
-
-				for i = 1, #object_set_names do
-					if i ~= object_set_index_to_keep then
-						local object_set_name = object_set_names[i]
-
-						excluded_object_sets[#excluded_object_sets + 1] = object_set_name
-					end
-				end
-			end
-		end,
-		on_registered_function = function (level_data, world)
-			local section = level_data.section
-			local parent_level_reference_name = level_data.parent_level_reference_name or "level"
-			local parent_level_data = _get_level_data_by_reference_name(section, parent_level_reference_name)
-			local parent_level = parent_level_data.level
-			local custom_data = level_data.custom_data
-			local level_slot_id = custom_data.level_slot_id
-			local level_slot_unit = Level.unit_by_id(parent_level, level_slot_id)
-			local position = Unit.world_position(level_slot_unit, 1)
-			local level_index = Managers.state.unit_spawner:index_by_level(level_data.level)
-
-			Managers.event:trigger("opportunity_level_spawned", level_index, position)
-		end,
-	},
-	traversal_level = {
-		visibility_function = function (level_data, belongs_to_current_safe_zone_section, in_safe_zone)
-			return not in_safe_zone
-		end,
-		position_and_rotation_function = function (level_data, world)
-			local section = level_data.section
-			local parent_level_reference_name = level_data.parent_level_reference_name or "level"
-			local parent_level_data = _get_level_data_by_reference_name(section, parent_level_reference_name)
-			local parent_level = parent_level_data.level
-			local custom_data = level_data.custom_data
-			local level_slot_id = custom_data.level_slot_id
-			local level_slot_unit = Level.unit_by_id(parent_level, level_slot_id)
-			local position = Unit.world_position(level_slot_unit, 1)
-			local rotation = Unit.world_rotation(level_slot_unit, 1)
-
-			if level_data.tags and table.array_contains(level_data.tags, "rot_mode_random") and not _special_tags_contains(parent_level_data.special_tags, level_slot_id, "rot_mode_slot") then
-				local random_rotation_degree = level_data.random_rotation_degree
-				local random_rotation = Quaternion.from_euler_angles_xyz(0, 0, random_rotation_degree)
-
-				rotation = Quaternion.multiply(rotation, random_rotation)
-			end
-
-			return position, rotation
-		end,
-		pre_spawn_function = function (level_data, world)
-			local level_name = level_data.level_name
-			local excluded_object_sets = level_data.excluded_object_sets
-			local object_set_names = LevelResource.object_set_names(level_name)
-
-			if object_set_names and #object_set_names > 0 then
-				local object_set_index_to_keep = _random(1, #object_set_names)
-
-				for i = 1, #object_set_names do
-					if i ~= object_set_index_to_keep then
-						local object_set_name = object_set_names[i]
-
-						excluded_object_sets[#excluded_object_sets + 1] = object_set_name
-					end
-				end
-			end
-		end,
-	},
-	toxic_gas = {
-		visibility_function = function (level_data, belongs_to_current_safe_zone_section, in_safe_zone)
-			return not in_safe_zone
-		end,
-		position_and_rotation_function = function (level_data, world)
-			local section = level_data.section
-			local custom_data = level_data.custom_data
-			local position = Vector3.from_array(custom_data.position)
-			local rotation = Quaternion.identity()
-			local physics_world = World.physics_world(world)
-			local to = Vector3(position.x, position.y, -100)
-			local from = Vector3(position.x, position.y, 100)
-			local to_target = to - from
-			local direction, distance = Vector3.normalize(to_target), Vector3.length(to_target)
-			local result, hit_position, hit_distance, normal, _ = PhysicsWorld.raycast(physics_world, from, direction, distance, "closest", "collision_filter", "filter_player_mover")
-
-			if hit_position then
-				position = hit_position
-			end
-
-			return position, rotation
-		end,
-		pre_spawn_function = function (level_data, world)
-			local level_name = level_data.level_name
-			local excluded_object_sets = level_data.excluded_object_sets
-			local object_set_names = LevelResource.object_set_names(level_name)
-
-			if object_set_names and #object_set_names > 0 then
-				local object_set_index_to_keep = _random(1, #object_set_names)
-
-				for i = 1, #object_set_names do
-					if i ~= object_set_index_to_keep then
-						local object_set_name = object_set_names[i]
-
-						excluded_object_sets[#excluded_object_sets + 1] = object_set_name
-					end
-				end
-			end
-		end,
-	},
-	safe_zone_level = {
-		visibility_function = function (level_data, belongs_to_current_safe_zone_section, in_safe_zone)
-			return in_safe_zone and belongs_to_current_safe_zone_section
-		end,
-		on_spawned_function = function (level_data, world, settings)
-			local section = level_data.section
-			local level = level_data.level
-			local custom_data = level_data.custom_data
-			local entrance_level_slot_id = custom_data.entrance_level_slot_id
-			local exit_level_slot_id = custom_data.exit_level_slot_id
-
-			section.safe_zone_entrance_slot_unit = Level.unit_by_id(level, entrance_level_slot_id)
-			section.safe_zone_exit_slot_unit = Level.unit_by_id(level, exit_level_slot_id)
-		end,
-		position_and_rotation_function = function (level_data, world)
-			local section = level_data.section
-			local section_index = section.index
-			local spawn_height = 0
-			local position = section_index % 2 == 0 and Vector3(384, 384, spawn_height) or Vector3(-384, -384, spawn_height)
-			local rotation = Quaternion.identity()
-
-			return position, rotation
-		end,
-		on_registered_function = function (level_data, world)
-			local section = level_data.section
-			local level = level_data.level
-			local level_units = Level.units(level)
-			local custom_data = level_data.custom_data
-			local store_info = custom_data.store_info
-			local pickups = store_info.pickups
-			local store_units = {}
-			local safe_zone_respawn_beacons = {}
-
-			for i = 1, #level_units do
-				local unit = level_units[i]
-				local unit_pickup_extension = unit and ScriptUnit.has_extension(unit, "pickup_system")
-
-				if unit_pickup_extension and unit_pickup_extension:get_distribution_type() == "manual" then
-					store_units[#store_units + 1] = unit
-				else
-					local interactee_extension = ScriptUnit.has_extension(unit, "interactee_system")
-					local interaction_type = interactee_extension and interactee_extension:interaction_type()
-
-					if pickups[interaction_type] then
-						store_units[#store_units + 1] = unit
-					else
-						local pickup_type = Unit.get_data(unit, "pickup_type")
-
-						if pickups[pickup_type] then
-							store_units[#store_units + 1] = unit
-						end
-					end
-				end
-
-				local respawn_beacon_extension = unit and ScriptUnit.has_extension(unit, "respawn_beacon_system")
-
-				if respawn_beacon_extension then
-					safe_zone_respawn_beacons[unit] = respawn_beacon_extension
-				end
-			end
-
-			section.store_units = store_units
-			section.safe_zone_respawn_beacons = safe_zone_respawn_beacons
-		end,
-	},
-	airstrike_level = {
-		position_and_rotation_function = function (level_data, world)
-			local position = Vector3(0, 0, 0)
-			local rotation = Quaternion.identity()
-
-			return position, rotation
-		end,
-	},
-}
-
-Expedition.get_level_template_by_type = function (level_type)
-	return level_spawn_template[level_type]
 end
 
 Expedition.initialize_layout_instance = function (layout_config)
@@ -1007,9 +587,11 @@ Expedition.generate_expedition_layout = function (settings, seed, optional_secti
 
 	SEED = seed
 
-	local location_levels = table.clone_instance(settings.location_levels)
+	local default_location_levels = table.clone_instance(settings.location_levels)
+	local default_location_level_index = 1
+	local used_locations = {}
 
-	SEED = table.shuffle(location_levels, SEED)
+	SEED = table.shuffle(default_location_levels, SEED)
 
 	local circumstance_event_list, circumstance_theme_tag, circumstance_template
 
@@ -1022,36 +604,16 @@ Expedition.generate_expedition_layout = function (settings, seed, optional_secti
 	local theme_tags = settings.theme_tags
 	local template_events = settings.events
 	local store_info = settings.store_info
-	local strip_debug = not settings.debug_levels
-	local tags_by_level_name_source = fetch_levels_tags_from_metadata(strip_debug)
+	local tags_by_level_name_source = get_tags_by_level_name_source(settings)
+	local available_dsls = get_available_dsls(settings, tags_by_level_name_source)
 	local ignored_level_slot_tags = settings.ignored_level_slot_tags
-	local slot_tags_by_level_name = table.clone_instance(fetch_levels_slots_data_from_metadata(ignored_level_slot_tags))
+	local slot_tags_by_level_name = fetch_levels_slots_data_from_metadata(ignored_level_slot_tags)
 	local safe_zone_levels_lookup = settings.safe_zone_levels
 	local safe_zone_levels = table.clone_instance(safe_zone_levels_lookup)
 
 	table.sort(safe_zone_levels)
 
 	SEED = table.shuffle(safe_zone_levels, SEED)
-
-	local allowed_dsl_levels = settings.allowed_dsl_levels
-
-	if allowed_dsl_levels and #allowed_dsl_levels > 0 then
-		for level_name, tags in pairs(tags_by_level_name_source) do
-			if not table.contains(allowed_dsl_levels, level_name) then
-				tags_by_level_name_source[level_name] = nil
-			end
-		end
-	end
-
-	local blocked_dsl_levels = settings.blocked_dsl_levels
-
-	if blocked_dsl_levels and #blocked_dsl_levels > 0 then
-		for level_name, tags in pairs(tags_by_level_name_source) do
-			if table.contains(blocked_dsl_levels, level_name) then
-				tags_by_level_name_source[level_name] = nil
-			end
-		end
-	end
 
 	local special_tags_by_level_name = {}
 	local special_level_slot_tags = settings.special_level_slot_tags
@@ -1087,7 +649,7 @@ Expedition.generate_expedition_layout = function (settings, seed, optional_secti
 	local slot_distribution_by_level_tag = settings.slot_distribution_by_level_tag
 
 	if slot_distribution_by_level_tag then
-		for level_name, tags in pairs(tags_by_level_name_source) do
+		for level_name, tags in pairs(available_dsls) do
 			for slot_distribution_tag, _ in pairs(slot_distribution_by_level_tag) do
 				if table.contains(tags, slot_distribution_tag) then
 					if not spawn_tags_by_level_name[level_name] then
@@ -1112,18 +674,18 @@ Expedition.generate_expedition_layout = function (settings, seed, optional_secti
 
 	local num_sections = optional_section_amount or settings.default_session_location_amount
 	local expedition_level_id = 99
-	local connector_levels_by_chunk = {}
+	local connector_levels_by_section = {}
 
 	for i = 1, num_sections do
 		local levels = {}
-		local level_names = table.keys(tags_by_level_name_source)
+		local level_names = table.keys(available_dsls)
 
 		table.sort(level_names)
 
 		SEED = table.shuffle(level_names, SEED)
 
 		for _, level_name in ipairs(level_names) do
-			local level_tags = tags_by_level_name_source[level_name]
+			local level_tags = available_dsls[level_name]
 
 			if table.contains(level_tags, "type_transition") then
 				levels[#levels + 1] = level_name
@@ -1135,9 +697,9 @@ Expedition.generate_expedition_layout = function (settings, seed, optional_secti
 			end
 		end
 
-		connector_levels_by_chunk[#connector_levels_by_chunk + 1] = {
+		connector_levels_by_section[#connector_levels_by_section + 1] = {
 			entrance = i > 1 and table.remove(levels, 1),
-			exit = i < num_sections and table.remove(levels, 1),
+			exit = i < num_sections and table.remove(levels, 1)
 		}
 	end
 
@@ -1153,7 +715,7 @@ Expedition.generate_expedition_layout = function (settings, seed, optional_secti
 					break
 				end
 
-				local event_index = _random(1, #template_events_copy)
+				local event_index = Expedition.random(1, #template_events_copy)
 
 				events[#events + 1] = template_events_copy[event_index]
 
@@ -1161,14 +723,44 @@ Expedition.generate_expedition_layout = function (settings, seed, optional_secti
 			end
 		end
 
-		local tags_by_level_name = table.clone_instance(tags_by_level_name_source)
+		local is_procgen_section = settings.location_types and settings.location_types[i] == "procgen_level"
+
+		is_procgen_section = false
+
+		local available_dsls_for_section = table.clone_instance(available_dsls)
 		local section_slot_tags_by_level_name = table.clone_instance(slot_tags_by_level_name)
-		local location_index = (i - 1) % #location_levels + 1
-		local location_level_name = location_levels[location_index]
+		local location_level_name
+
+		if not location_level_name then
+			local section_location_levels = settings.section_location_levels and settings.section_location_levels[i]
+
+			if section_location_levels then
+				section_location_levels = table.clone_instance(section_location_levels)
+				SEED = table.shuffle(section_location_levels, SEED)
+
+				local section_level_count = #section_location_levels
+				local j = 1
+
+				repeat
+					location_level_name = section_location_levels[j]
+					j = j + 1
+				until not used_locations[location_level_name] or section_level_count < j
+			else
+				local location_index = (default_location_level_index - 1) % #default_location_levels + 1
+
+				location_level_name = default_location_levels[location_index]
+				default_location_level_index = default_location_level_index + 1
+			end
+		end
+
+		used_locations[location_level_name] = true
+
+		local location_tags = tags_by_level_name_source[location_level_name]
+		local path_type = location_tags and table.contains(location_tags, "path_type_linear") and "linear" or "open"
 		local theme_tag = circumstance_theme_tag
 
 		if not theme_tag then
-			local theme_index = theme_tags and #theme_tags > 0 and _random(1, #theme_tags)
+			local theme_index = theme_tags and #theme_tags > 0 and Expedition.random(1, #theme_tags)
 
 			theme_tag = theme_index and theme_tags[theme_index]
 		end
@@ -1196,11 +788,13 @@ Expedition.generate_expedition_layout = function (settings, seed, optional_secti
 		local section_instance = {
 			events = events,
 			location_level_name = location_level_name,
+			path_type = path_type,
 			index = i,
 			theme_tag = theme_tag,
 			levels_data = levels_data,
 			store_info = store_info,
 			random_store_products_to_spawn = random_store_products_to_spawn,
+			connector_levels = connector_levels_by_section[i]
 		}
 		local _add_level
 
@@ -1246,7 +840,7 @@ Expedition.generate_expedition_layout = function (settings, seed, optional_secti
 				Log.info("[Expedition] - Adding new level to expedition config: ", expedition_level_id .. ", " .. level_name .. ", <" .. template_type .. ">")
 			end
 
-			local is_location = template_type == "level"
+			local is_location = template_type == "level" or template_type == "procgen_level"
 			local reference_name
 
 			if level_slot_id then
@@ -1264,7 +858,7 @@ Expedition.generate_expedition_layout = function (settings, seed, optional_secti
 			local apply_random_rotation = tags and table.array_contains(tags, "rot_mode_random")
 
 			if apply_random_rotation then
-				random_rotation_degree = _random(0, 360)
+				random_rotation_degree = Expedition.random(0, 360)
 			end
 
 			local data = {
@@ -1278,7 +872,7 @@ Expedition.generate_expedition_layout = function (settings, seed, optional_secti
 				tags = tags,
 				special_tags = special_tags_by_level_name[level_name],
 				custom_data = {},
-				random_rotation_degree = random_rotation_degree,
+				random_rotation_degree = random_rotation_degree
 			}
 
 			expedition_level_id = expedition_level_id + 1
@@ -1290,11 +884,11 @@ Expedition.generate_expedition_layout = function (settings, seed, optional_secti
 			end
 
 			if remove_on_spawn_location or remove_on_spawn_expedition then
-				tags_by_level_name[level_name] = nil
+				available_dsls_for_section[level_name] = nil
 			end
 
 			if remove_on_spawn_expedition then
-				tags_by_level_name_source[level_name] = nil
+				available_dsls[level_name] = nil
 			end
 
 			local function _run_slot_distribution_for_level(slot_distribution, level_slots, optional_reference_name)
@@ -1305,7 +899,7 @@ Expedition.generate_expedition_layout = function (settings, seed, optional_secti
 				local is_valid = (not only_final_section or i == num_sections) and (not never_final_section or i ~= num_sections) and (not only_first_section or i == 1) and (not never_first_section or i ~= 1)
 
 				if is_valid then
-					local levels_to_spawn = get_levels_by_slot_distribution_config(settings, slot_distribution, level_slots, tags_by_level_name)
+					local levels_to_spawn = get_levels_by_slot_distribution_config(settings, slot_distribution, level_slots, available_dsls_for_section)
 
 					_add_levels_to_spawn(levels_to_spawn, delayed_despawn, optional_reference_name or reference_name)
 				end
@@ -1382,7 +976,7 @@ Expedition.generate_expedition_layout = function (settings, seed, optional_secti
 			end
 		end
 
-		local available_location_level_slots = section_slot_tags_by_level_name[location_level_name]
+		local available_location_level_slots = section_slot_tags_by_level_name[location_level_name] or {}
 		local available_location_level_slots_array = table.keys(available_location_level_slots)
 
 		table.sort(available_location_level_slots_array)
@@ -1391,17 +985,15 @@ Expedition.generate_expedition_layout = function (settings, seed, optional_secti
 
 		if ENABLE_LOGS then
 			Log.info("Expedition", "available_level_slots", table.dump(available_location_level_slots, "#####", 2))
-			Log.info("Expedition", "available_level_resources", table.dump(tags_by_level_name, "¤¤¤¤", 2))
-			Log.info("Expedition", "----------------------------------------------------------------------------")
+			Log.info("Expedition", "available_level_resources", table.dump(available_dsls_for_section, "¤¤¤¤", 2))
 			Log.info("Expedition", "-------------- SETTING UP DSL SPAWNING FOR LOCATION: " .. i .. " -------------")
-			Log.info("Expedition", "----------------------------------------------------------------------------")
 		end
 
-		local connector_levels = connector_levels_by_chunk[i]
+		local connector_levels = connector_levels_by_section[i]
 		local connector_level_entrance = connector_levels.entrance
 		local connector_level_exit = connector_levels.exit
 
-		if connector_level_entrance then
+		if connector_level_entrance and not is_procgen_section then
 			for j = #available_location_level_slots_array, 1, -1 do
 				local level_slot_id = available_location_level_slots_array[j]
 				local slot_tags = available_location_level_slots[level_slot_id]
@@ -1422,7 +1014,7 @@ Expedition.generate_expedition_layout = function (settings, seed, optional_secti
 			end
 		end
 
-		if connector_level_exit then
+		if connector_level_exit and not is_procgen_section then
 			for j = #available_location_level_slots_array, 1, -1 do
 				local level_slot_id = available_location_level_slots_array[j]
 				local slot_tags = available_location_level_slots[level_slot_id]
@@ -1437,7 +1029,7 @@ Expedition.generate_expedition_layout = function (settings, seed, optional_secti
 
 						table.remove(available_location_level_slots_array, j)
 
-						local safe_zone_level_data = _get_level_data_by_reference_name(section_instance, "safe_zone_level")
+						local safe_zone_level_data = Expedition.get_level_data_by_reference_name(section_instance, "safe_zone_level")
 
 						safe_zone_level_data.custom_data.connector_level_exit_slot_id = level_slot_id
 					end
@@ -1453,8 +1045,6 @@ Expedition.generate_expedition_layout = function (settings, seed, optional_secti
 
 						custom_data.level_slot_id = safe_zone_level_slot_id
 						available_location_level_slots[safe_zone_level_slot_id] = nil
-
-						table.remove(available_location_level_slots_array, j)
 					end
 
 					break
@@ -1462,7 +1052,7 @@ Expedition.generate_expedition_layout = function (settings, seed, optional_secti
 			end
 		end
 
-		local future_connector_levels = connector_levels_by_chunk[i + 1]
+		local future_connector_levels = connector_levels_by_section[i + 1]
 
 		if future_connector_levels then
 			local future_connector_level_entrance = future_connector_levels.entrance
@@ -1477,31 +1067,33 @@ Expedition.generate_expedition_layout = function (settings, seed, optional_secti
 			end
 		end
 
-		local exit_fillers_level_slot_distribution = {
-			complete_conditions = {
-				max = 10,
-				min = 10,
-			},
-			phases = {
-				{
-					{
-						max = 10,
-						min = 10,
-						order_score = 1,
-						tags = {
-							"type_transition",
-						},
-						optional_resource_tags = {
-							"transition_fake",
-						},
-					},
+		if not is_procgen_section then
+			local exit_fillers_level_slot_distribution = {
+				complete_conditions = {
+					max = 10,
+					min = 10
 				},
-			},
-		}
-		local exit_fillers_to_spawn = get_levels_by_slot_distribution_config(settings, exit_fillers_level_slot_distribution, available_location_level_slots, tags_by_level_name)
+				phases = {
+					{
+						{
+							max = 10,
+							min = 10,
+							order_score = 1,
+							tags = {
+								"type_transition"
+							},
+							optional_resource_tags = {
+								"transition_fake"
+							}
+						}
+					}
+				}
+			}
+			local exit_fillers_to_spawn = get_levels_by_slot_distribution_config(settings, exit_fillers_level_slot_distribution, available_location_level_slots, available_dsls_for_section)
 
-		if exit_fillers_to_spawn then
-			_add_levels_to_spawn(exit_fillers_to_spawn)
+			if exit_fillers_to_spawn then
+				_add_levels_to_spawn(exit_fillers_to_spawn)
+			end
 		end
 
 		if table.contains(events, "toxic_gas") then
@@ -1531,9 +1123,9 @@ Expedition.generate_expedition_layout = function (settings, seed, optional_secti
 						local custom_data = level_data.custom_data
 
 						custom_data.position = {
-							cell_position[1] + _random(-half_cell_width, half_cell_width),
-							cell_position[2] + _random(-half_cell_height, half_cell_height),
-							0,
+							cell_position[1] + Expedition.random(-half_cell_width, half_cell_width),
+							cell_position[2] + Expedition.random(-half_cell_height, half_cell_height),
+							0
 						}
 						custom_data.level_grid_cell = cell
 					end
@@ -1541,9 +1133,12 @@ Expedition.generate_expedition_layout = function (settings, seed, optional_secti
 			end
 		end
 
-		local locaction_level_data = _add_level("level", location_level_name)
+		if not is_procgen_section then
+			local locaction_level_data = _add_level("level", location_level_name)
 
-		locaction_level_data.is_location = true
+			locaction_level_data.is_location = true
+		end
+
 		generated_layout[#generated_layout + 1] = section_instance
 
 		if ENABLE_LOGS then
@@ -1595,7 +1190,7 @@ Expedition.parse_data = function (data)
 
 		modifiers_entry[#modifiers_entry + 1] = {
 			name = modifier_name,
-			level = modifier_level,
+			level = modifier_level
 		}
 	end
 

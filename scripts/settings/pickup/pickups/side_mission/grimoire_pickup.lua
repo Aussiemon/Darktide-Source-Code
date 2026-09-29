@@ -39,7 +39,7 @@ local pickup_data = {
 		end
 
 		Managers.state.unit_spawner:mark_for_deletion(unit)
-	end,
+	end
 }
 
 return pickup_data

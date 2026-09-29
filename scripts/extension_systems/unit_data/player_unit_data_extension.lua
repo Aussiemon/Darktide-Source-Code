@@ -51,13 +51,13 @@ local NUMBER_NETWORK_TYPE_TOLERANCES = {
 	weapon_spread = 0.01,
 	weapon_sway = 0.01,
 	weapon_sway_offset = 0.01,
-	weapon_view_lock = 0.01,
+	weapon_view_lock = 0.01
 }
 local VECTOR3_NETWORK_TYPE_TOLERANCES = {
 	Vector3 = 0.001,
 	high_precision_direction = 1e-05,
 	high_precision_velocity = 1e-05,
-	locomotion_position = 0.001,
+	locomotion_position = 0.001
 }
 local FIXED_FRAME_OFFSET_NETWORK_TYPES = {
 	fixed_frame_offset = true,
@@ -69,7 +69,7 @@ local FIXED_FRAME_OFFSET_NETWORK_TYPES = {
 	fixed_frame_offset_start_t_5bit = true,
 	fixed_frame_offset_start_t_6bit = true,
 	fixed_frame_offset_start_t_7bit = true,
-	fixed_frame_offset_start_t_9bit = true,
+	fixed_frame_offset_start_t_9bit = true
 }
 local FIXED_TIME_OFFSET_UNSET = NetworkConstants.fixed_time_offset_unset
 local script_id_string_32 = Script.id_string_32
@@ -133,7 +133,7 @@ local POST_UPDATE_FIELDS = {
 	end,
 	fixed_frame_time = function (value, fixed_time_step)
 		return math_round(value / fixed_time_step)
-	end,
+	end
 }
 local FRAME_INDEX_FIELD = "frame_index"
 local REMAINDER_TIME_FIELD = "remainder_time"
@@ -234,7 +234,7 @@ PlayerUnitDataExtension.init = function (self, extension_init_context, unit, ext
 	self._component_config = component_config
 	self._components.movement_settings[i].player_speed_scale = 1
 	self._component_blackboard = {
-		index = i,
+		index = i
 	}
 
 	local breed = extension_init_data.breed
@@ -427,7 +427,7 @@ PlayerUnitDataExtension._populate_component = function (self, fields, component,
 				component[field_name] = {
 					__data = field_data,
 					__read = read,
-					__write = write,
+					__write = write
 				}
 
 				setmetatable(read, {
@@ -436,7 +436,7 @@ PlayerUnitDataExtension._populate_component = function (self, fields, component,
 					end,
 					__newindex = function (t, k, v)
 						ferror("Trying to write %s to index %s in array field %s in component %q", v, k, field_name, component_name)
-					end,
+					end
 				})
 				setmetatable(write, {
 					__index = function (t, k)
@@ -448,7 +448,7 @@ PlayerUnitDataExtension._populate_component = function (self, fields, component,
 						local write_component = self:write_component(component_name)
 
 						write_component[field_name] = field_data
-					end,
+					end
 				})
 			end
 		end
@@ -522,7 +522,7 @@ local function _create_read_only_meta(as_write_component)
 		end,
 		__newindex = function (t, field_name, value)
 			ferror("Trying to write to %q in read only component %q", field_name, rawget(t, "__name"))
-		end,
+		end
 	}
 end
 
@@ -536,7 +536,7 @@ PlayerUnitDataExtension._create_read_component = function (self, component_name)
 		__data = self._components[component_name],
 		__blackboard = self._component_blackboard,
 		__config = config,
-		__name = component_name,
+		__name = component_name
 	}
 
 	setmetatable(component, READ_ONLY_META)
@@ -704,7 +704,7 @@ local WRITE_META = {
 				end
 			end
 		end
-	end,
+	end
 }
 
 PlayerUnitDataExtension.write_component = function (self, component_name)
@@ -720,7 +720,7 @@ PlayerUnitDataExtension._create_write_component = function (self, component_name
 		__config = config,
 		__name = component_name,
 		__data_ext = self,
-		__is_server = self._is_server,
+		__is_server = self._is_server
 	}
 
 	setmetatable(component, WRITE_META)
@@ -769,7 +769,7 @@ PlayerUnitDataExtension._setup_component_dependency = function (self, component_
 
 		field_additional_data = {
 			parent_read_component = parent_component,
-			parent_field_name = parent_field_name,
+			parent_field_name = parent_field_name
 		}
 	else
 		ferror("Don't know how to handle additional_data for this field_network_type:%q", field_network_type)

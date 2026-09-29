@@ -5,7 +5,7 @@ local RenderTargetIconGeneratorInterface = {
 	"_prepare_request_capture",
 	"_is_ready_to_capture_request",
 	"_on_capture_complete",
-	"_camera_unit",
+	"_camera_unit"
 }
 
 return RenderTargetIconGeneratorInterface

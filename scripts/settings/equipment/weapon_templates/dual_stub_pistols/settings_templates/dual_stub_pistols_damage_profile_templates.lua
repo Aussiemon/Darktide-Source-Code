@@ -31,7 +31,7 @@ local armor_modifiers = {
 				[armor_types.berserker] = damage_lerp_values.lerp_0_9,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_4,
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_4
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -41,8 +41,8 @@ local armor_modifiers = {
 				[armor_types.berserker] = damage_lerp_values.lerp_0_8,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_4,
-			},
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_4
+			}
 		},
 		far = {
 			attack = {
@@ -53,7 +53,7 @@ local armor_modifiers = {
 				[armor_types.berserker] = damage_lerp_values.lerp_0_8,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_01,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_7,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_4,
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_4
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
@@ -63,10 +63,10 @@ local armor_modifiers = {
 				[armor_types.berserker] = damage_lerp_values.lerp_0_7,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_7,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_4,
-			},
-		},
-	},
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_4
+			}
+		}
+	}
 }
 
 damage_templates.dual_stub_pistols_base = {
@@ -76,12 +76,12 @@ damage_templates.dual_stub_pistols_base = {
 	ranges = {
 		min = {
 			10,
-			20,
+			20
 		},
 		max = {
 			20,
-			30,
-		},
+			30
+		}
 	},
 	herding_template = HerdingTemplates.shot,
 	armor_damage_modifier_ranged = armor_modifiers.default,
@@ -91,64 +91,64 @@ damage_templates.dual_stub_pistols_base = {
 		cleave_distribution = {
 			attack = {
 				3,
-				5,
+				5
 			},
 			impact = {
 				0.1,
-				0.1,
-			},
-		},
+				0.1
+			}
+		}
 	},
 	crit_mod = {
 		attack = {
 			[armor_types.unarmored] = {
 				0,
-				0.25,
+				0.25
 			},
 			[armor_types.armored] = {
 				0,
-				0.25,
+				0.25
 			},
 			[armor_types.resistant] = {
 				0,
-				0.25,
+				0.25
 			},
 			[armor_types.player] = {
 				0,
-				0.25,
+				0.25
 			},
 			[armor_types.berserker] = {
 				0,
-				0.25,
+				0.25
 			},
 			[armor_types.super_armor] = {
 				0,
-				0.2,
+				0.2
 			},
 			[armor_types.disgustingly_resilient] = {
 				0,
-				0.25,
+				0.25
 			},
 			[armor_types.void_shield] = {
 				0,
-				0.1,
-			},
+				0.1
+			}
 		},
-		impact = crit_impact_armor_mod,
+		impact = crit_impact_armor_mod
 	},
 	power_distribution = {
 		attack = {
 			225,
-			345,
+			345
 		},
 		impact = {
 			3,
-			6,
-		},
+			6
+		}
 	},
 	accumulative_stagger_strength_multiplier = {
 		1,
-		1.5,
+		1.5
 	},
 	damage_type = damage_types.auto_bullet,
 	gibbing_power = gibbing_power.always,
@@ -156,21 +156,21 @@ damage_templates.dual_stub_pistols_base = {
 	wounds_template = WoundsTemplates.ballistic,
 	suppression_value = {
 		0.5,
-		1.5,
+		1.5
 	},
 	on_kill_area_suppression = {
 		suppression_value = {
 			1,
-			2,
+			2
 		},
 		distance = {
 			3,
-			5,
-		},
+			5
+		}
 	},
 	ragdoll_push_force = {
 		200,
-		300,
+		300
 	},
 	gib_push_force = GibbingSettings.gib_push_force.ranged_light,
 	targets = {
@@ -186,10 +186,10 @@ damage_templates.dual_stub_pistols_base = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.5,
-			},
-		},
-	},
+				[armor_types.void_shield] = 0.5
+			}
+		}
+	}
 }
 damage_templates.dual_stub_pistols_special = {
 	shield_override_stagger_strength = 4,
@@ -198,12 +198,12 @@ damage_templates.dual_stub_pistols_special = {
 	ranges = {
 		min = {
 			10,
-			20,
+			20
 		},
 		max = {
 			20,
-			30,
-		},
+			30
+		}
 	},
 	herding_template = HerdingTemplates.shot,
 	armor_damage_modifier_ranged = armor_modifiers.default,
@@ -213,64 +213,64 @@ damage_templates.dual_stub_pistols_special = {
 		cleave_distribution = {
 			attack = {
 				5,
-				7,
+				7
 			},
 			impact = {
 				0.1,
-				0.1,
-			},
-		},
+				0.1
+			}
+		}
 	},
 	crit_mod = {
 		attack = {
 			[armor_types.unarmored] = {
 				0,
-				0.3,
+				0.3
 			},
 			[armor_types.armored] = {
 				0,
-				0.3,
+				0.3
 			},
 			[armor_types.resistant] = {
 				0,
-				0.3,
+				0.3
 			},
 			[armor_types.player] = {
 				0,
-				0.3,
+				0.3
 			},
 			[armor_types.berserker] = {
 				0,
-				0.3,
+				0.3
 			},
 			[armor_types.super_armor] = {
 				0,
-				0.2,
+				0.2
 			},
 			[armor_types.disgustingly_resilient] = {
 				0,
-				0.3,
+				0.3
 			},
 			[armor_types.void_shield] = {
 				0,
-				0.1,
-			},
+				0.1
+			}
 		},
-		impact = crit_impact_armor_mod,
+		impact = crit_impact_armor_mod
 	},
 	power_distribution = {
 		attack = {
 			255,
-			355,
+			355
 		},
 		impact = {
 			25,
-			35,
-		},
+			35
+		}
 	},
 	accumulative_stagger_strength_multiplier = {
 		0.5,
-		1.5,
+		1.5
 	},
 	damage_type = damage_types.auto_bullet,
 	gibbing_power = gibbing_power.always,
@@ -278,21 +278,21 @@ damage_templates.dual_stub_pistols_special = {
 	wounds_template = WoundsTemplates.ballistic,
 	suppression_value = {
 		0.5,
-		1.5,
+		1.5
 	},
 	on_kill_area_suppression = {
 		suppression_value = {
 			1,
-			2,
+			2
 		},
 		distance = {
 			3,
-			5,
-		},
+			5
+		}
 	},
 	ragdoll_push_force = {
 		200,
-		300,
+		300
 	},
 	gib_push_force = GibbingSettings.gib_push_force.ranged_light,
 	targets = {
@@ -307,17 +307,17 @@ damage_templates.dual_stub_pistols_special = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.5,
+				[armor_types.void_shield] = 0.5
 			},
 			boost_curve_multiplier_finesse = {
 				2.5,
-				2.5,
-			},
-		},
-	},
+				2.5
+			}
+		}
+	}
 }
 
 return {
 	base_templates = damage_templates,
-	overrides = overrides,
+	overrides = overrides
 }

@@ -36,12 +36,9 @@ local player_character_social_hub_unit_template = {
 		local profile = player:profile()
 		local archetype = profile.archetype
 		local talents = profile.talents
+		local active_layouts = TalentLayoutParser.archetype_layouts(archetype)
 
-		if not profile.is_local_profile then
-			local active_layouts = TalentLayoutParser.archetype_layouts(archetype)
-
-			talents = TalentLayoutParser.validate_talent_layouts(talents, active_layouts, false)
-		end
+		talents = TalentLayoutParser.validate_talent_layouts(talents, active_layouts, false)
 
 		local game_mode_manager = Managers.state.game_mode
 		local initial_items = UnitTemplate.player_character_initial_items(game_mode_manager, profile, player)
@@ -67,44 +64,44 @@ local player_character_social_hub_unit_template = {
 		blackboard_component_config, behavior_tree_name = breed.blackboard_component_config, breed.behavior_tree_name
 
 		config:add("BlackboardExtension", {
-			component_config = blackboard_component_config,
+			component_config = blackboard_component_config
 		})
 		config:add("BroadphaseExtension", {
 			moving = true,
 			radius = broadphase_radius,
-			categories = broadphase_categories,
+			categories = broadphase_categories
 		})
 		config:add("PlayerUnitDataExtension", {
 			player = player,
 			breed = breed,
 			is_local_unit = is_local_unit,
-			archetype = archetype,
+			archetype = archetype
 		})
 		config:add("AuthoritativePlayerUnitAnimationExtension", {
 			player = player,
 			breed = breed,
-			is_local_unit = is_local_unit,
+			is_local_unit = is_local_unit
 		})
 		config:add("PlayerUnitInputExtension", {
 			player = player,
 			input_handler = input_handler,
-			is_local_unit = is_local_unit,
+			is_local_unit = is_local_unit
 		})
 		config:add("BotNavigationExtension", {
 			nav_tag_allowed_layers = breed.nav_tag_allowed_layers,
 			nav_cost_map_multipliers = breed.nav_cost_map_multipliers,
-			player = player,
+			player = player
 		})
 		config:add("PlayerUnitLocomotionExtension", {
 			player = player,
 			is_local_unit = is_local_unit,
 			player_character_constants = PlayerCharacterConstants,
-			breed = breed,
+			breed = breed
 		})
 		config:add("PlayerUnitFxExtension", {
 			is_local_unit = is_local_unit,
 			player = player,
-			breed = breed,
+			breed = breed
 		})
 		config:add("PlayerUnitFirstPersonExtension", {
 			player = player,
@@ -112,15 +109,15 @@ local player_character_social_hub_unit_template = {
 			unit_name = breed.first_person_unit,
 			heights = first_person_heights,
 			force_third_person_mode = force_third_person_mode,
-			breed = breed,
+			breed = breed
 		})
 		config:add("PlayerUnitCameraExtension", {
 			is_local_unit = is_local_unit,
 			breed = breed,
-			use_third_person_hub_camera = use_third_person_hub_camera,
+			use_third_person_hub_camera = use_third_person_hub_camera
 		})
 		config:add("PlayerUnitActionInputExtension", {
-			is_social_hub = true,
+			is_social_hub = true
 		})
 
 		local spawn_buffs = breed.spawn_buffs
@@ -130,36 +127,36 @@ local player_character_social_hub_unit_template = {
 			is_local_unit = is_local_unit,
 			buff_seed = buff_seed,
 			breed = breed,
-			initial_buffs = spawn_buffs,
+			initial_buffs = spawn_buffs
 		})
 		config:add("PlayerUnitWeaponExtension", {
 			player = player,
 			is_local_unit = is_local_unit,
 			is_human_unit = is_human_controlled,
 			is_server = is_server,
-			critical_strike_seed = critical_strike_seed,
+			critical_strike_seed = critical_strike_seed
 		})
 		config:add("PlayerUnitWeaponSpreadExtension", {
-			spread_seed = spread_seed,
+			spread_seed = spread_seed
 		})
 		config:add("PlayerUnitWeaponRecoilExtension", {
 			player = player,
 			recoil_seed = recoil_seed,
-			is_local_unit = is_local_unit,
+			is_local_unit = is_local_unit
 		})
 		config:add("PlayerUnitGadgetExtension", {
 			player = player,
 			is_local_unit = is_local_unit,
-			is_server = is_server,
+			is_server = is_server
 		})
 		config:add("DialogueExtension", {
 			breed = breed,
 			local_player = is_local_unit,
 			faction = breed.faction_name,
-			selected_voice = profile.selected_voice,
+			selected_voice = profile.selected_voice
 		})
 		config:add("DialogueContextExtension", {
-			breed = breed,
+			breed = breed
 		})
 		config:add("PlayerUnitVisualLoadoutExtension", {
 			player = player,
@@ -171,21 +168,21 @@ local player_character_social_hub_unit_template = {
 			initial_items = initial_items,
 			package_synchronizer_client = package_synchronizer_client,
 			mission = mission,
-			default_wielded_slot_name = default_wielded_slot_name,
+			default_wielded_slot_name = default_wielded_slot_name
 		})
 		config:add("PlayerUnitAbilityExtension", {
 			is_local_unit = is_local_unit,
 			is_server = is_server,
-			player = player,
+			player = player
 		})
 		config:add("PlayerSuppressionExtension", {
 			is_local_unit = is_local_unit,
-			player = player,
+			player = player
 		})
 
 		if game_mode_manager:is_vaulting_allowed() then
 			config:add("PlayerUnitLedgeFinderExtension", {
-				ledge_finder_tweak_data = breed.ledge_finder_tweak_data,
+				ledge_finder_tweak_data = breed.ledge_finder_tweak_data
 			})
 		end
 
@@ -196,28 +193,28 @@ local player_character_social_hub_unit_template = {
 			breed = breed,
 			player_character_constants = PlayerCharacterConstants,
 			is_local_unit = is_local_unit,
-			initial_seed = character_state_seed,
+			initial_seed = character_state_seed
 		})
 		config:add("SideExtension", {
 			is_player_unit = true,
 			side_id = side_id,
 			is_human_unit = is_human_controlled,
-			breed = breed,
+			breed = breed
 		})
 		config:add("BotPerceptionExtension", {
 			player = player,
-			breed = breed,
+			breed = breed
 		})
 		config:add("PlayerGroupExtension", {
 			side_id = side_id,
-			player = player,
+			player = player
 		})
 		config:add("PlayerUnitHubAimExtension", {
 			aim_constraint_target_name = "aim_constraint_target",
 			aim_constraint_target_torso_name = "aim_constraint_target_torso",
 			head_aim_weight_name = "head_aim_weight",
 			torso_aim_weight_name = "chest_aim_weight",
-			aim_constraint_distance = PLAYER_AIM_CONSTRAINT_DISTANCE,
+			aim_constraint_distance = PLAYER_AIM_CONSTRAINT_DISTANCE
 		})
 
 		local archetype_name = archetype.name
@@ -227,67 +224,67 @@ local player_character_social_hub_unit_template = {
 
 		config:add("PlayerHubHealthExtension", {
 			health = health,
-			wounds = wounds,
+			wounds = wounds
 		})
 		config:add("PlayerHubToughnessExtension", {
-			toughness_template = toughness_template,
+			toughness_template = toughness_template
 		})
 		config:add("InteractorExtension", {
-			player = player,
+			player = player
 		})
 		config:add("PlayerInteracteeExtension", {
 			interaction_contexts = PlayerCharacterConstants.player_interactions_hub,
-			is_local_unit = is_local_unit,
+			is_local_unit = is_local_unit
 		})
 		config:add("PlayerVolumeEventExtension")
 		config:add("PointOfInterestObserverExtension", {
-			view_angle = math.pi / 32,
+			view_angle = math.pi / 32
 		})
 		config:add("PlayerProximityExtension", {
 			side_id = side_id,
-			breed = breed,
+			breed = breed
 		})
 		config:add("ComponentExtension")
 		config:add("PlayerUnitDarknessExtension", {
-			intensity = 0.04,
+			intensity = 0.04
 		})
 		config:add("PhysicsUnitProximityObserverExtension", {
-			player = player,
+			player = player
 		})
 		config:add("PlayerUnitSmartTargetingExtension", {
 			is_social_hub = true,
 			player = player,
 			is_server = is_server,
-			is_local_unit = is_local_unit,
+			is_local_unit = is_local_unit
 		})
 		config:add("PlayerVisibilityExtension", {
-			player = player,
+			player = player
 		})
 		config:add("PlayerUnitOutlineExtension", {
 			is_local_unit = is_local_unit,
-			is_human_controlled = is_human_controlled,
+			is_human_controlled = is_human_controlled
 		})
 		config:add("FadeExtension")
 		config:add("UnitCoherencyExtension", {
 			player = player,
-			coherency_settings = PlayerCharacterConstants.coherency,
+			coherency_settings = PlayerCharacterConstants.coherency
 		})
 		config:add("PlayerUnitTalentExtension", {
 			player = player,
 			archetype = archetype,
 			talents = talents,
-			is_local_unit = is_local_unit,
+			is_local_unit = is_local_unit
 		})
 		config:add("CompanionSpawnerExtension", {
 			player = player,
 			archetype = archetype,
-			is_local_unit = is_local_unit,
+			is_local_unit = is_local_unit
 		})
 		config:add("BotBehaviorExtension", {
 			breed = breed,
 			player = player,
 			behavior_tree_name = behavior_tree_name,
-			optional_gestalts = profile.bot_gestalts,
+			optional_gestalts = profile.bot_gestalts
 		})
 
 		local breed_name = breed.name
@@ -331,37 +328,37 @@ local player_character_social_hub_unit_template = {
 			config:add("BroadphaseExtension", {
 				moving = true,
 				radius = broadphase_radius,
-				categories = broadphase_categories,
+				categories = broadphase_categories
 			})
 			config:add("PlayerHuskDataExtension", {
 				player = player,
 				breed = breed,
-				archetype = archetype,
+				archetype = archetype
 			})
 			config:add("PlayerUnitFxExtension", {
 				is_local_unit = false,
 				player = player,
-				breed = breed,
+				breed = breed
 			})
 			config:add("PlayerHuskFirstPersonExtension", {
 				player = player,
 				unit_name = breed.first_person_unit,
 				heights = first_person_heights,
-				breed = breed,
+				breed = breed
 			})
 			config:add("PlayerHuskAnimationExtension")
 			config:add("PlayerHuskLocomotionExtension", {
 				player = player,
-				breed = breed,
+				breed = breed
 			})
 			config:add("PlayerHuskCameraExtension", {
-				is_local_unit = false,
+				is_local_unit = false
 			})
 			config:add("DialogueExtension", {
 				local_player = false,
 				breed = breed,
 				faction = breed.faction_name,
-				selected_voice = profile.selected_voice,
+				selected_voice = profile.selected_voice
 			})
 			config:add("PlayerHuskVisualLoadoutExtension", {
 				player = player,
@@ -369,18 +366,18 @@ local player_character_social_hub_unit_template = {
 				archetype = archetype,
 				selected_voice = profile.selected_voice,
 				package_synchronizer_client = package_synchronizer_client,
-				mission = mission,
+				mission = mission
 			})
 			config:add("PlayerHuskAbilityExtension", {
 				is_local_unit = false,
-				is_server = is_server,
+				is_server = is_server
 			})
 			config:add("PlayerHuskHubAimExtension", {
 				aim_constraint_target_name = "aim_constraint_target",
 				aim_constraint_target_torso_name = "aim_constraint_target_torso",
 				head_aim_weight_name = "head_aim_weight",
 				torso_aim_weight_name = "chest_aim_weight",
-				aim_constraint_distance = PLAYER_AIM_CONSTRAINT_DISTANCE,
+				aim_constraint_distance = PLAYER_AIM_CONSTRAINT_DISTANCE
 			})
 
 			local archetype_name = archetype.name
@@ -389,41 +386,41 @@ local player_character_social_hub_unit_template = {
 
 			config:add("PlayerHubHealthExtension", {
 				health = health,
-				wounds = wounds,
+				wounds = wounds
 			})
 			config:add("PlayerSuppressionExtension", {
 				is_local_unit = false,
-				player = player,
+				player = player
 			})
 			config:add("PlayerHubToughnessExtension", {
-				toughness_template = toughness_template,
+				toughness_template = toughness_template
 			})
 			config:add("PlayerUnitDarknessExtension", {
-				intensity = 0.04,
+				intensity = 0.04
 			})
 			config:add("PhysicsUnitProximityObserverExtension", {
-				player = player,
+				player = player
 			})
 			config:add("PlayerInteracteeExtension", {
 				is_local_unit = false,
-				interaction_contexts = PlayerCharacterConstants.player_interactions_hub,
+				interaction_contexts = PlayerCharacterConstants.player_interactions_hub
 			})
 			config:add("SideExtension", {
 				is_human_unit = true,
 				is_player_unit = true,
 				side_id = side_id,
-				breed = breed,
+				breed = breed
 			})
 			config:add("PlayerHuskBuffExtension", {
 				is_local_unit = false,
-				player = player,
+				player = player
 			})
 			config:add("PlayerVisibilityExtension", {
-				player = player,
+				player = player
 			})
 			config:add("PlayerUnitOutlineExtension", {
 				is_human_controlled = true,
-				is_local_unit = false,
+				is_local_unit = false
 			})
 			config:add("HuskCoherencyExtension")
 			config:add("PlayerHuskTalentExtension", {
@@ -431,13 +428,13 @@ local player_character_social_hub_unit_template = {
 				player = player,
 				archetype = archetype,
 				talents = talents,
-				package_synchronizer_client = package_synchronizer_client,
+				package_synchronizer_client = package_synchronizer_client
 			})
 			config:add("FadeExtension")
 			config:add("CompanionSpawnerExtension", {
 				is_local_unit = false,
 				player = player,
-				archetype = archetype,
+				archetype = archetype
 			})
 
 			local player_unit_spawn_manager = Managers.state.player_unit_spawn
@@ -468,30 +465,30 @@ local player_character_social_hub_unit_template = {
 			config:add("BroadphaseExtension", {
 				moving = true,
 				radius = broadphase_radius,
-				categories = broadphase_categories,
+				categories = broadphase_categories
 			})
 			config:add("PlayerUnitDataExtension", {
 				player = player,
 				breed = breed,
 				is_local_unit = is_local_unit,
-				archetype = archetype,
+				archetype = archetype
 			})
 			config:add("PlayerUnitAnimationExtension")
 			config:add("PlayerUnitInputExtension", {
 				player = player,
 				input_handler = input_handler,
-				is_local_unit = is_local_unit,
+				is_local_unit = is_local_unit
 			})
 			config:add("PlayerUnitLocomotionExtension", {
 				player = player,
 				is_local_unit = is_local_unit,
 				player_character_constants = PlayerCharacterConstants,
-				breed = breed,
+				breed = breed
 			})
 			config:add("PlayerUnitFxExtension", {
 				is_local_unit = is_local_unit,
 				player = player,
-				breed = breed,
+				breed = breed
 			})
 			config:add("PlayerUnitFirstPersonExtension", {
 				player = player,
@@ -499,56 +496,56 @@ local player_character_social_hub_unit_template = {
 				unit_name = breed.first_person_unit,
 				heights = first_person_heights,
 				force_third_person_mode = force_third_person_mode,
-				breed = breed,
+				breed = breed
 			})
 			config:add("PlayerUnitCameraExtension", {
 				is_local_unit = is_local_unit,
 				breed = breed,
-				use_third_person_hub_camera = use_third_person_hub_camera,
+				use_third_person_hub_camera = use_third_person_hub_camera
 			})
 			config:add("SideExtension", {
 				is_human_unit = true,
 				is_player_unit = true,
 				side_id = side_id,
-				breed = breed,
+				breed = breed
 			})
 			config:add("PlayerUnitActionInputExtension", {
-				is_social_hub = true,
+				is_social_hub = true
 			})
 			config:add("PlayerUnitBuffExtension", {
 				player = player,
 				is_local_unit = is_local_unit,
 				buff_seed = buff_seed,
-				breed = breed,
+				breed = breed
 			})
 			config:add("PlayerUnitWeaponExtension", {
 				is_server = false,
 				player = player,
 				is_local_unit = is_local_unit,
 				is_human_unit = is_human_controlled,
-				critical_strike_seed = critical_strike_seed,
+				critical_strike_seed = critical_strike_seed
 			})
 			config:add("PlayerUnitWeaponSpreadExtension", {
-				spread_seed = spread_seed,
+				spread_seed = spread_seed
 			})
 			config:add("PlayerUnitWeaponRecoilExtension", {
 				player = player,
 				recoil_seed = recoil_seed,
-				is_local_unit = is_local_unit,
+				is_local_unit = is_local_unit
 			})
 			config:add("PlayerUnitGadgetExtension", {
 				player = player,
 				is_local_unit = is_local_unit,
-				is_server = is_server,
+				is_server = is_server
 			})
 			config:add("DialogueExtension", {
 				local_player = true,
 				breed = breed,
 				faction = breed.faction_name,
-				selected_voice = profile.selected_voice,
+				selected_voice = profile.selected_voice
 			})
 			config:add("DialogueContextExtension", {
-				breed = breed,
+				breed = breed
 			})
 			config:add("PlayerUnitVisualLoadoutExtension", {
 				is_server = false,
@@ -560,22 +557,22 @@ local player_character_social_hub_unit_template = {
 				initial_items = initial_items,
 				package_synchronizer_client = package_synchronizer_client,
 				mission = mission,
-				default_wielded_slot_name = default_wielded_slot_name,
+				default_wielded_slot_name = default_wielded_slot_name
 			})
 			config:add("PlayerUnitAbilityExtension", {
 				is_server = false,
 				is_local_unit = is_local_unit,
 				equipped_abilities = profile.abilities,
-				player = player,
+				player = player
 			})
 			config:add("PlayerSuppressionExtension", {
 				is_local_unit = is_local_unit,
-				player = player,
+				player = player
 			})
 
 			if game_mode_manager:is_vaulting_allowed() then
 				config:add("PlayerUnitLedgeFinderExtension", {
-					ledge_finder_tweak_data = breed.ledge_finder_tweak_data,
+					ledge_finder_tweak_data = breed.ledge_finder_tweak_data
 				})
 			end
 
@@ -586,14 +583,14 @@ local player_character_social_hub_unit_template = {
 				breed = breed,
 				player_character_constants = PlayerCharacterConstants,
 				is_local_unit = is_local_unit,
-				initial_seed = character_state_seed,
+				initial_seed = character_state_seed
 			})
 			config:add("PlayerUnitHubAimExtension", {
 				aim_constraint_target_name = "aim_constraint_target",
 				aim_constraint_target_torso_name = "aim_constraint_target_torso",
 				head_aim_weight_name = "head_aim_weight",
 				torso_aim_weight_name = "chest_aim_weight",
-				aim_constraint_distance = PLAYER_AIM_CONSTRAINT_DISTANCE,
+				aim_constraint_distance = PLAYER_AIM_CONSTRAINT_DISTANCE
 			})
 
 			local archetype_name = archetype.name
@@ -602,42 +599,42 @@ local player_character_social_hub_unit_template = {
 
 			config:add("PlayerHubHealthExtension", {
 				health = health,
-				wounds = wounds,
+				wounds = wounds
 			})
 			config:add("PlayerHubToughnessExtension", {
-				toughness_template = toughness_template,
+				toughness_template = toughness_template
 			})
 			config:add("InteractorExtension", {
-				player = player,
+				player = player
 			})
 			config:add("PlayerProximityExtension", {
 				side_id = side_id,
-				breed = breed,
+				breed = breed
 			})
 			config:add("ComponentExtension")
 			config:add("PlayerUnitDarknessExtension", {
-				intensity = 0.04,
+				intensity = 0.04
 			})
 			config:add("PhysicsUnitProximityObserverExtension", {
-				player = player,
+				player = player
 			})
 			config:add("PlayerInteracteeExtension", {
 				interaction_contexts = PlayerCharacterConstants.player_interactions_hub,
-				is_local_unit = is_local_unit,
+				is_local_unit = is_local_unit
 			})
 			config:add("PlayerUnitSmartTargetingExtension", {
 				is_social_hub = true,
 				player = player,
 				is_server = is_server,
-				is_local_unit = is_local_unit,
+				is_local_unit = is_local_unit
 			})
 			config:add("PlayerVisibilityExtension", {
-				player = player,
+				player = player
 			})
 			config:add("HuskCoherencyExtension")
 			config:add("PlayerUnitOutlineExtension", {
 				is_human_controlled = true,
-				is_local_unit = is_local_unit,
+				is_local_unit = is_local_unit
 			})
 			config:add("FadeExtension")
 			config:add("PlayerHuskTalentExtension", {
@@ -645,12 +642,12 @@ local player_character_social_hub_unit_template = {
 				archetype = archetype,
 				talents = talents,
 				is_local_unit = is_local_unit,
-				package_synchronizer_client = package_synchronizer_client,
+				package_synchronizer_client = package_synchronizer_client
 			})
 			config:add("CompanionSpawnerExtension", {
 				player = player,
 				archetype = archetype,
-				is_local_unit = is_local_unit,
+				is_local_unit = is_local_unit
 			})
 
 			local player_unit_spawn_manager = Managers.state.player_unit_spawn
@@ -669,7 +666,7 @@ local player_character_social_hub_unit_template = {
 		local player_unit_spawn_manager = Managers.state.player_unit_spawn
 
 		player_unit_spawn_manager:relinquish_unit_ownership(unit)
-	end,
+	end
 }
 
 return player_character_social_hub_unit_template

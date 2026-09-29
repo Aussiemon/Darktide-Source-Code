@@ -30,8 +30,8 @@ local expedition_airstrike_supply_unit_template = {
 			start_inactive = start_inactive,
 			override_context = {
 				description = description,
-				interaction_icon = interaction_icon,
-			},
+				interaction_icon = interaction_icon
+			}
 		})
 		config:add("ChestExtension")
 		config:add("ComponentExtension")
@@ -57,12 +57,12 @@ local expedition_airstrike_supply_unit_template = {
 			start_inactive = start_inactive,
 			override_context = {
 				description = description,
-				interaction_icon = interaction_icon,
-			},
+				interaction_icon = interaction_icon
+			}
 		})
 		config:add("ComponentExtension")
 		config:parse_unit(unit)
-	end,
+	end
 }
 
 return expedition_airstrike_supply_unit_template

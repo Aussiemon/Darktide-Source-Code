@@ -6,7 +6,7 @@ local RPCS = {
 	"rpc_add_buff",
 	"rpc_remove_buff",
 	"rpc_remove_buff_stacks",
-	"rpc_buff_set_start_time",
+	"rpc_buff_set_start_time"
 }
 local EMPTY_TABLE = {}
 

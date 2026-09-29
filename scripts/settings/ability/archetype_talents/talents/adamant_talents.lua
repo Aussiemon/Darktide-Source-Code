@@ -20,17 +20,17 @@ local archetype_talents = {
 	talents = {
 		adamant_companion_damage_per_level = {
 			description = "loc_talent_arbites_mastiff_description",
-			display_name = "-",
+			display_name = "loc_inventory_title_slot_companion_gear_full",
 			name = "Companion Damage per Level",
 			passive = {
 				buff_template_name = "adamant_companion_damage_per_level",
-				identifier = "adamant_companion_damage_per_level",
-			},
+				identifier = "adamant_companion_damage_per_level"
+			}
 		},
 		adamant_command_dog_with_tag = {
 			description = "loc_talent_arbites_mastiff_target_description",
-			display_name = "-",
-			name = "",
+			display_name = "loc_arbites_customization_dog_title",
+			name = ""
 		},
 		adamant_shout = {
 			description = "loc_talent_adamant_shout_ability_description",
@@ -40,21 +40,20 @@ local archetype_talents = {
 			format_values = {
 				cooldown = {
 					format_type = "number",
-					value = PlayerAbilities.adamant_shout.cooldown,
+					value = PlayerAbilities.adamant_shout.cooldown
 				},
 				range = {
 					format_type = "number",
-					value = talent_settings.combat_ability.shout.range,
+					value = talent_settings.combat_ability.shout.range
 				},
 				far_range = {
 					format_type = "number",
-					value = talent_settings.combat_ability.shout.far_range,
-				},
+					value = talent_settings.combat_ability.shout.far_range
+				}
 			},
 			player_ability = {
-				ability_type = "combat_ability",
-				ability = PlayerAbilities.adamant_shout,
-			},
+				ability = PlayerAbilities.adamant_shout
+			}
 		},
 		adamant_shout_improved = {
 			description = "loc_talent_adamant_shout_improved_ability_description",
@@ -64,29 +63,28 @@ local archetype_talents = {
 			format_values = {
 				cooldown = {
 					format_type = "number",
-					value = PlayerAbilities.adamant_shout_improved.cooldown,
+					value = PlayerAbilities.adamant_shout_improved.cooldown
 				},
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_adamant_shout_ability_name",
+					value = "loc_talent_adamant_shout_ability_name"
 				},
 				range = {
 					format_type = "number",
-					value = talent_settings.combat_ability.shout_improved.range,
+					value = talent_settings.combat_ability.shout_improved.range
 				},
 				far_range = {
 					format_type = "number",
-					value = talent_settings.combat_ability.shout_improved.far_range,
+					value = talent_settings.combat_ability.shout_improved.far_range
 				},
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings.combat_ability.shout_improved.toughness,
-				},
+					value = talent_settings.combat_ability.shout_improved.toughness
+				}
 			},
 			player_ability = {
-				ability_type = "combat_ability",
-				ability = PlayerAbilities.adamant_shout_improved,
-			},
+				ability = PlayerAbilities.adamant_shout_improved
+			}
 		},
 		adamant_charge = {
 			description = "loc_ability_adamant_charge_blocking_desc",
@@ -96,35 +94,34 @@ local archetype_talents = {
 			format_values = {
 				cooldown = {
 					format_type = "number",
-					value = PlayerAbilities.adamant_charge.cooldown,
+					value = PlayerAbilities.adamant_charge.cooldown
 				},
 				range = {
 					format_type = "number",
-					value = talent_settings.combat_ability.charge.range,
+					value = talent_settings.combat_ability.charge.range
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.combat_ability.charge.duration,
+					value = talent_settings.combat_ability.charge.duration
 				},
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.combat_ability.charge.damage,
+					value = talent_settings.combat_ability.charge.damage
 				},
 				stagger = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.combat_ability.charge.impact,
-				},
+					value = talent_settings.combat_ability.charge.impact
+				}
 			},
 			player_ability = {
-				ability_type = "combat_ability",
-				ability = PlayerAbilities.adamant_charge,
+				ability = PlayerAbilities.adamant_charge
 			},
 			passive = {
 				buff_template_name = "adamant_charge_passive_buff",
-				identifier = "adamant_charge_passive_buff",
-			},
+				identifier = "adamant_charge_passive_buff"
+			}
 		},
 		adamant_charge_cooldown_reduction = {
 			description = "loc_talent_adamant_charge_cooldown_alt_description",
@@ -133,21 +130,21 @@ local archetype_talents = {
 			format_values = {
 				cooldown = {
 					format_type = "number",
-					value = talent_settings.combat_ability.charge.cooldown_reduction,
+					value = talent_settings.combat_ability.charge.cooldown_reduction
 				},
 				cooldown_elite = {
 					format_type = "number",
-					value = talent_settings.combat_ability.charge.cooldown_elite,
+					value = talent_settings.combat_ability.charge.cooldown_elite
 				},
 				max_cooldown = {
 					format_type = "number",
-					value = talent_settings.combat_ability.charge.cooldown_max,
-				},
+					value = talent_settings.combat_ability.charge.cooldown_max
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_charge_cooldown_buff",
-				identifier = "adamant_charge_cooldown_buff",
-			},
+				identifier = "adamant_charge_cooldown_buff"
+			}
 		},
 		adamant_charge_toughness = {
 			description = "loc_talent_adamant_charge_toughness_alt_description",
@@ -156,25 +153,25 @@ local archetype_talents = {
 			format_values = {
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings.combat_ability.charge.toughness,
+					value = talent_settings.combat_ability.charge.toughness
 				},
 				stamina = {
 					format_type = "percentage",
-					value = talent_settings.combat_ability.charge.stamina,
+					value = talent_settings.combat_ability.charge.stamina
 				},
 				toughness_max = {
 					format_type = "percentage",
-					value = talent_settings.combat_ability.charge.toughness_max,
+					value = talent_settings.combat_ability.charge.toughness_max
 				},
 				stamina_max = {
 					format_type = "percentage",
-					value = talent_settings.combat_ability.charge.stamina_max,
-				},
+					value = talent_settings.combat_ability.charge.stamina_max
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_charge_toughness_buff",
-				identifier = "adamant_charge_toughness_buff",
-			},
+				identifier = "adamant_charge_toughness_buff"
+			}
 		},
 		adamant_charge_longer_distance = {
 			description = "loc_talent_adamant_charge_longer_distance_desc",
@@ -183,17 +180,17 @@ local archetype_talents = {
 			format_values = {
 				distance = {
 					format_type = "value",
-					value = talent_settings.combat_ability.charge.distance_increase + talent_settings.combat_ability.charge.range,
+					value = talent_settings.combat_ability.charge.distance_increase + talent_settings.combat_ability.charge.range
 				},
 				charge_ability_name = {
 					format_type = "loc_string",
-					value = "loc_talent_adamant_charge_ability_name",
-				},
+					value = "loc_talent_adamant_charge_ability_name"
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_charge_increased_distance",
-				identifier = "adamant_charge_increased_distance",
-			},
+				identifier = "adamant_charge_increased_distance"
+			}
 		},
 		adamant_stance = {
 			description = "loc_talent_adamant_stance_ability_power_description",
@@ -203,37 +200,37 @@ local archetype_talents = {
 			format_values = {
 				cooldown = {
 					format_type = "number",
-					value = talent_settings.combat_ability.stance.cooldown,
+					value = talent_settings.combat_ability.stance.cooldown
 				},
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_adamant_stance_ability_name",
+					value = "loc_talent_adamant_stance_ability_name"
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.combat_ability.stance.duration,
+					value = talent_settings.combat_ability.stance.duration
 				},
 				movement_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.combat_ability.stance.movement_speed,
+					value = talent_settings.combat_ability.stance.movement_speed
 				},
 				movement_reduction = {
 					format_type = "percentage",
 					value = talent_settings.combat_ability.stance.movement_speed_reduction_multiplier,
 					value_manipulation = function (value)
 						return 100 * (1 - value)
-					end,
+					end
 				},
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.combat_ability.stance.damage,
+					value = talent_settings.combat_ability.stance.damage
 				},
 				strength = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.combat_ability.stance.damage,
+					value = talent_settings.combat_ability.stance.damage
 				},
 				damage_taken = {
 					format_type = "percentage",
@@ -241,21 +238,20 @@ local archetype_talents = {
 					value = talent_settings.combat_ability.stance.damage_taken_multiplier,
 					value_manipulation = function (value)
 						return 100 * (1 - value)
-					end,
+					end
 				},
 				cooldown_percent = {
 					format_type = "percentage",
-					value = talent_settings.combat_ability.stance.cooldown_reduction,
+					value = talent_settings.combat_ability.stance.cooldown_reduction
 				},
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings.combat_ability.stance.cooldown_reduction,
-				},
+					value = talent_settings.combat_ability.stance.cooldown_reduction
+				}
 			},
 			player_ability = {
-				ability_type = "combat_ability",
-				ability = PlayerAbilities.adamant_stance,
-			},
+				ability = PlayerAbilities.adamant_stance
+			}
 		},
 		adamant_stance_dog_bloodlust = {
 			description = "loc_talent_adamant_stance_bloodlust_desc",
@@ -264,18 +260,18 @@ local archetype_talents = {
 			format_values = {
 				stance_name = {
 					format_type = "loc_string",
-					value = "loc_talent_adamant_stance_ability_name",
+					value = "loc_talent_adamant_stance_ability_name"
 				},
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.combat_ability.stance.companion_damage,
-				},
+					value = talent_settings.combat_ability.stance.companion_damage
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_hunt_stance_dog_bloodlust",
-				identifier = "adamant_hunt_stance_dog_bloodlust",
-			},
+				identifier = "adamant_hunt_stance_dog_bloodlust"
+			}
 		},
 		adamant_stance_damage = {
 			description = "loc_talent_adamant_stance_damage_desc",
@@ -284,14 +280,14 @@ local archetype_talents = {
 			format_values = {
 				stance_name = {
 					format_type = "loc_string",
-					value = "loc_talent_adamant_stance_ability_name",
+					value = "loc_talent_adamant_stance_ability_name"
 				},
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.combat_ability.stance.damage,
-				},
-			},
+					value = talent_settings.combat_ability.stance.damage
+				}
+			}
 		},
 		adamant_stance_elite_kills_stack_damage = {
 			description = "loc_talent_adamant_stance_elite_kills_stack_damage_desc",
@@ -300,26 +296,26 @@ local archetype_talents = {
 			format_values = {
 				stance_name = {
 					format_type = "loc_string",
-					value = "loc_talent_adamant_stance_ability_name",
+					value = "loc_talent_adamant_stance_ability_name"
 				},
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.combat_ability.stance.damage_talent_damage,
+					value = talent_settings.combat_ability.stance.damage_talent_damage
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.combat_ability.stance.damage_talent_duration,
+					value = talent_settings.combat_ability.stance.damage_talent_duration
 				},
 				stacks = {
 					format_type = "number",
-					value = talent_settings.combat_ability.stance.damage_talent_stacks,
-				},
+					value = talent_settings.combat_ability.stance.damage_talent_stacks
+				}
 			},
 			special_rule = {
 				identifier = "adamant_stance_elite_kills_stack_damage",
-				special_rule_name = special_rules.adamant_stance_elite_kills_stack_damage,
-			},
+				special_rule_name = special_rules.adamant_stance_elite_kills_stack_damage
+			}
 		},
 		adamant_stance_ranged_kills_transfer_ammo = {
 			description = "loc_talent_adamant_stance_ranged_kills_transfer_ammo_no_cd_desc",
@@ -328,21 +324,21 @@ local archetype_talents = {
 			format_values = {
 				ammo = {
 					format_type = "percentage",
-					value = talent_settings.combat_ability.stance.ammo_percent,
+					value = talent_settings.combat_ability.stance.ammo_percent
 				},
 				cooldown = {
 					format_type = "number",
-					value = talent_settings.combat_ability.stance.ammo_icd,
+					value = talent_settings.combat_ability.stance.ammo_icd
 				},
 				stance_name = {
 					format_type = "loc_string",
-					value = "loc_talent_adamant_stance_ability_name",
-				},
+					value = "loc_talent_adamant_stance_ability_name"
+				}
 			},
 			special_rule = {
 				identifier = "adamant_stance_ammo_from_reserve",
-				special_rule_name = special_rules.adamant_stance_ammo_from_reserve,
-			},
+				special_rule_name = special_rules.adamant_stance_ammo_from_reserve
+			}
 		},
 		adamant_whistle = {
 			description = "loc_talent_ability_detonate_description",
@@ -351,33 +347,32 @@ local archetype_talents = {
 			icon = "content/ui/textures/icons/talents/veteran/veteran_blitz_frag_grenade",
 			name = "Base Order",
 			player_ability = {
-				ability_type = "grenade_ability",
-				ability = PlayerAbilities.adamant_whistle,
+				ability = PlayerAbilities.adamant_whistle
 			},
 			format_values = {
 				cooldown = {
 					format_type = "number",
-					value = talent_settings.blitz_ability.whistle.cooldown,
+					value = talent_settings.blitz_ability.whistle.cooldown
 				},
 				max_charges = {
 					format_type = "number",
-					value = talent_settings.blitz_ability.whistle.charges,
-				},
+					value = talent_settings.blitz_ability.whistle.charges
+				}
 			},
 			special_rule = {
 				identifier = {
 					"no_grenades",
-					"adamant_whistle",
+					"adamant_whistle"
 				},
 				special_rule_name = {
 					special_rules.disable_grenade_pickups,
-					special_rules.adamant_whistle,
-				},
+					special_rules.adamant_whistle
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_whistle_replenishment",
-				identifier = "adamant_whistle_replenishment",
-			},
+				identifier = "adamant_whistle_replenishment"
+			}
 		},
 		adamant_grenade = {
 			description = "loc_talent_ability_adamant_grenade_description",
@@ -386,25 +381,24 @@ local archetype_talents = {
 			icon = "content/ui/textures/icons/talents/veteran/veteran_blitz_frag_grenade",
 			name = "Base adamant Grenade",
 			player_ability = {
-				ability_type = "grenade_ability",
-				ability = PlayerAbilities.adamant_grenade,
+				ability = PlayerAbilities.adamant_grenade
 			},
 			format_values = {
 				charges = {
 					format_type = "number",
-					value = talent_settings.blitz_ability.grenade.base_charges,
-				},
+					value = talent_settings.blitz_ability.grenade.base_charges
+				}
 			},
 			special_rule = {
 				identifier = {
 					"no_grenades",
-					"adamant_whistle",
+					"adamant_whistle"
 				},
 				special_rule_name = {
 					special_rules.hack_to_allow_grenades,
-					special_rules.hack_to_allow_grenades,
-				},
-			},
+					special_rules.hack_to_allow_grenades
+				}
+			}
 		},
 		adamant_grenade_improved = {
 			description = "loc_talent_ability_adamant_grenade_improved_description",
@@ -413,33 +407,32 @@ local archetype_talents = {
 			icon = "content/ui/textures/icons/talents/veteran/veteran_blitz_frag_grenade",
 			name = "Base adamant Grenade",
 			player_ability = {
-				ability_type = "grenade_ability",
-				ability = PlayerAbilities.adamant_grenade_improved,
+				ability = PlayerAbilities.adamant_grenade_improved
 			},
 			format_values = {
 				charges = {
 					format_type = "number",
-					value = talent_settings.blitz_ability.grenade.improved_charges,
+					value = talent_settings.blitz_ability.grenade.improved_charges
 				},
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_ability_adamant_grenade",
-				},
+					value = "loc_talent_ability_adamant_grenade"
+				}
 			},
 			special_rule = {
 				identifier = {
 					"no_grenades",
-					"adamant_whistle",
+					"adamant_whistle"
 				},
 				special_rule_name = {
 					special_rules.hack_to_allow_grenades,
-					special_rules.hack_to_allow_grenades,
-				},
+					special_rules.hack_to_allow_grenades
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_grenade_cluster_kills_tracking_buff",
-				identifier = "adamant_whistle_replenishment",
-			},
+				identifier = "adamant_whistle_replenishment"
+			}
 		},
 		adamant_grenade_increased_radius = {
 			description = "loc_talent_ability_adamant_grenade_radius_increase_description",
@@ -449,13 +442,13 @@ local archetype_talents = {
 				radius = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.blitz_ability.grenade.radius_increase,
-				},
+					value = talent_settings.blitz_ability.grenade.radius_increase
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_grenade_radius_increase",
-				identifier = "adamant_grenade_radius_increase",
-			},
+				identifier = "adamant_grenade_radius_increase"
+			}
 		},
 		adamant_grenade_increased_damage = {
 			description = "loc_talent_ability_adamant_grenade_damage_increase_description",
@@ -465,13 +458,13 @@ local archetype_talents = {
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.blitz_ability.grenade.damage_increase,
-				},
+					value = talent_settings.blitz_ability.grenade.damage_increase
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_grenade_damage_increase",
-				identifier = "adamant_grenade_damage_increase",
-			},
+				identifier = "adamant_grenade_damage_increase"
+			}
 		},
 		adamant_shock_mine = {
 			description = "loc_talent_ability_shock_mine_description",
@@ -480,55 +473,53 @@ local archetype_talents = {
 			icon = "content/ui/textures/icons/talents/veteran/veteran_blitz_frag_grenade",
 			name = "Shock Mine",
 			player_ability = {
-				ability_type = "grenade_ability",
-				ability = PlayerAbilities.adamant_shock_mine,
+				ability = PlayerAbilities.adamant_shock_mine
 			},
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_ability_shock_mine",
+					value = "loc_talent_ability_shock_mine"
 				},
 				range = {
 					format_type = "number",
-					value = talent_settings.blitz_ability.shock_mine.range,
+					value = talent_settings.blitz_ability.shock_mine.range
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.blitz_ability.shock_mine.duration,
-				},
+					value = talent_settings.blitz_ability.shock_mine.duration
+				}
 			},
 			special_rule = {
 				identifier = {
 					"no_grenades",
-					"adamant_whistle",
+					"adamant_whistle"
 				},
 				special_rule_name = {
 					special_rules.hack_to_allow_grenades,
-					special_rules.hack_to_allow_grenades,
-				},
-			},
+					special_rules.hack_to_allow_grenades
+				}
+			}
 		},
 		adamant_area_buff_drone = {
-			description = "loc_talent_adamant_ability_nuncio_base_desc",
+			description = "loc_talent_ability_area_buff_drone_new_description",
 			display_name = "loc_talent_ability_area_buff_drone",
 			large_icon = "content/ui/textures/icons/talents/adamant/adamant_ability_area_buff_drone",
 			name = "Nuncio-Aquila",
 			player_ability = {
-				ability_type = "combat_ability",
-				ability = PlayerAbilities.adamant_area_buff_drone,
+				ability = PlayerAbilities.adamant_area_buff_drone
 			},
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_ability_area_buff_drone",
+					value = "loc_talent_ability_area_buff_drone"
 				},
 				range = {
 					format_type = "number",
-					value = talent_settings.blitz_ability.drone.range,
+					value = talent_settings.blitz_ability.drone.range
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.blitz_ability.drone.duration,
+					value = talent_settings.blitz_ability.drone.duration
 				},
 				damage_taken = {
 					format_type = "percentage",
@@ -536,35 +527,35 @@ local archetype_talents = {
 					value = talent_settings.blitz_ability.drone.damage_taken,
 					value_manipulation = function (value)
 						return math_round((value - 1) * 100)
-					end,
+					end
 				},
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings.blitz_ability.drone.toughness,
+					value = talent_settings.blitz_ability.drone.toughness
 				},
 				cooldown = {
 					format_type = "number",
-					value = talent_settings.blitz_ability.drone.cooldown,
-				},
-			},
+					value = talent_settings.blitz_ability.drone.cooldown
+				}
+			}
 		},
 		adamant_area_buff_drone_improved = {
-			description = "loc_talent_ability_area_buff_drone_improved_description",
+			description = "loc_talent_ability_area_buff_drone_new_improved_description",
 			display_name = "loc_talent_ability_area_buff_drone",
 			large_icon = "content/ui/textures/icons/talents/adamant/adamant_ability_area_buff_drone",
 			name = "Nuncio-Aquila",
 			format_values = {
 				nuncio_name = {
 					format_type = "loc_string",
-					value = "loc_talent_ability_area_buff_drone",
+					value = "loc_talent_ability_area_buff_drone"
 				},
 				range = {
 					format_type = "number",
-					value = talent_settings.blitz_ability.drone.range,
+					value = talent_settings.blitz_ability.drone.range
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.blitz_ability.drone.duration,
+					value = talent_settings.blitz_ability.drone.duration
 				},
 				damage_taken = {
 					format_type = "percentage",
@@ -572,35 +563,35 @@ local archetype_talents = {
 					value = talent_settings.blitz_ability.drone.damage_taken,
 					value_manipulation = function (value)
 						return math_round((value - 1) * 100)
-					end,
+					end
 				},
 				suppression = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.blitz_ability.drone.suppression,
+					value = talent_settings.blitz_ability.drone.suppression
 				},
 				impact = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.blitz_ability.drone.impact,
+					value = talent_settings.blitz_ability.drone.impact
 				},
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings.blitz_ability.drone.toughness_improved,
+					value = talent_settings.blitz_ability.drone.toughness_improved
 				},
 				recoil = {
 					format_type = "percentage",
-					value = talent_settings.blitz_ability.drone.recoil_modifier,
+					value = talent_settings.blitz_ability.drone.recoil_modifier
 				},
 				cooldown = {
 					format_type = "number",
-					value = talent_settings.blitz_ability.drone.cooldown,
-				},
+					value = talent_settings.blitz_ability.drone.cooldown
+				}
 			},
 			special_rule = {
 				identifier = "adamant_buff_drone_improved",
-				special_rule_name = special_rules.adamant_buff_drone_improved,
-			},
+				special_rule_name = special_rules.adamant_buff_drone_improved
+			}
 		},
 		adamant_drone_buff_talent = {
 			description = "loc_talent_adamant_drone_buff_talent_alt_desc",
@@ -612,21 +603,21 @@ local archetype_talents = {
 					value = talent_settings.blitz_ability.drone.tdr,
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
-					end,
+					end
 				},
 				revive_speed = {
 					format_type = "percentage",
-					value = talent_settings.blitz_ability.drone.revive_speed_modifier,
+					value = talent_settings.blitz_ability.drone.revive_speed_modifier
 				},
 				attack_speed = {
 					format_type = "percentage",
-					value = talent_settings.blitz_ability.drone.attack_speed,
-				},
+					value = talent_settings.blitz_ability.drone.attack_speed
+				}
 			},
 			special_rule = {
 				identifier = "adamant_drone_buff_talent",
-				special_rule_name = special_rules.adamant_drone_buff_talent,
-			},
+				special_rule_name = special_rules.adamant_drone_buff_talent
+			}
 		},
 		adamant_drone_debuff_talent = {
 			description = "loc_talent_adamant_drone_debuff_talent_desc",
@@ -638,20 +629,20 @@ local archetype_talents = {
 					value = talent_settings.blitz_ability.drone.enemy_melee_attack_speed,
 					value_manipulation = function (value)
 						return 50
-					end,
+					end
 				},
 				damage_reduction = {
 					format_type = "percentage",
 					value = talent_settings.blitz_ability.drone.enemy_melee_damage,
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			special_rule = {
 				identifier = "adamant_drone_debuff_talent",
-				special_rule_name = special_rules.adamant_drone_debuff_talent,
-			},
+				special_rule_name = special_rules.adamant_drone_debuff_talent
+			}
 		},
 		adamant_wield_speed_aura = {
 			description = "loc_talent_adamant_wield_speed_aura_alt_desc",
@@ -661,22 +652,22 @@ local archetype_talents = {
 				wield_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.coherency.adamant_wield_speed_aura.wield_speed,
-				},
+					value = talent_settings.coherency.adamant_wield_speed_aura.wield_speed
+				}
 			},
 			special_rule = {
 				identifier = "adamant_dog_counts_towards_coherency",
-				special_rule_name = special_rules.adamant_no_companion_coherency,
+				special_rule_name = special_rules.adamant_no_companion_coherency
 			},
 			coherency = {
 				buff_template_name = "adamant_wield_speed_aura",
 				identifier = "adamant_aura",
-				priority = 1,
+				priority = 1
 			},
 			passive = {
 				buff_template_name = "adamant_no_companion_coherency",
-				identifier = "adamant_companion_counts_for_coherency",
-			},
+				identifier = "adamant_companion_counts_for_coherency"
+			}
 		},
 		adamant_reload_speed_aura = {
 			description = "loc_talent_adamant_reload_speed_aura_desc",
@@ -686,22 +677,22 @@ local archetype_talents = {
 				reload_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.coherency.reload_speed_aura.reload_speed,
-				},
+					value = talent_settings.coherency.reload_speed_aura.reload_speed
+				}
 			},
 			special_rule = {
 				identifier = "adamant_dog_counts_towards_coherency",
-				special_rule_name = special_rules.adamant_no_companion_coherency,
+				special_rule_name = special_rules.adamant_no_companion_coherency
 			},
 			coherency = {
 				buff_template_name = "adamant_reload_speed_aura",
 				identifier = "adamant_aura",
-				priority = 1,
+				priority = 1
 			},
 			passive = {
 				buff_template_name = "adamant_no_companion_coherency",
-				identifier = "adamant_companion_counts_for_coherency",
-			},
+				identifier = "adamant_companion_counts_for_coherency"
+			}
 		},
 		adamant_damage_vs_staggered_aura = {
 			description = "loc_talent_adamant_damage_vs_staggered_aura_alt_desc",
@@ -711,22 +702,22 @@ local archetype_talents = {
 				damage_vs_stagger = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.coherency.adamant_damage_vs_staggered_aura.damage_vs_staggered,
-				},
+					value = talent_settings.coherency.adamant_damage_vs_staggered_aura.damage_vs_staggered
+				}
 			},
 			special_rule = {
 				identifier = "adamant_dog_counts_towards_coherency",
-				special_rule_name = special_rules.adamant_no_companion_coherency,
+				special_rule_name = special_rules.adamant_no_companion_coherency
 			},
 			coherency = {
 				buff_template_name = "adamant_damage_vs_staggered_aura",
 				identifier = "adamant_aura",
-				priority = 1,
+				priority = 1
 			},
 			passive = {
 				buff_template_name = "adamant_no_companion_coherency",
-				identifier = "adamant_companion_counts_for_coherency",
-			},
+				identifier = "adamant_companion_counts_for_coherency"
+			}
 		},
 		adamant_companion_aura = {
 			description = "loc_talent_adamant_companion_coherency_desc",
@@ -737,17 +728,17 @@ local archetype_talents = {
 			format_values = {},
 			special_rule = {
 				identifier = "adamant_dog_counts_towards_coherency",
-				special_rule_name = special_rules.adamant_dog_counts_towards_coherency,
+				special_rule_name = special_rules.adamant_dog_counts_towards_coherency
 			},
 			passive = {
 				buff_template_name = "adamant_companion_counts_for_coherency",
-				identifier = "adamant_companion_counts_for_coherency",
+				identifier = "adamant_companion_counts_for_coherency"
 			},
 			coherency = {
 				buff_template_name = "adamant_companion_aura_base",
 				identifier = "adamant_aura",
-				priority = 1,
-			},
+				priority = 1
+			}
 		},
 		adamant_companion_coherency = {
 			description = "loc_talent_adamant_companion_coherency_alt_desc",
@@ -762,22 +753,22 @@ local archetype_talents = {
 					value = talent_settings.coherency.companion.tdr,
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			special_rule = {
 				identifier = "adamant_dog_counts_towards_coherency",
-				special_rule_name = special_rules.adamant_dog_counts_towards_coherency,
+				special_rule_name = special_rules.adamant_dog_counts_towards_coherency
 			},
 			passive = {
 				buff_template_name = "adamant_companion_counts_for_coherency",
-				identifier = "adamant_companion_counts_for_coherency",
+				identifier = "adamant_companion_counts_for_coherency"
 			},
 			coherency = {
 				buff_template_name = "adamant_companion_aura",
 				identifier = "adamant_aura",
-				priority = 1,
-			},
+				priority = 1
+			}
 		},
 		adamant_disable_companion = {
 			description = "loc_talent_adamant_disable_companion_replenish_split_desc",
@@ -787,7 +778,7 @@ local archetype_talents = {
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.disable_companion.damage,
+					value = talent_settings.disable_companion.damage
 				},
 				tdr = {
 					format_type = "percentage",
@@ -795,53 +786,53 @@ local archetype_talents = {
 					value = talent_settings.disable_companion.tdr,
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
+					end
 				},
 				attack_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.disable_companion.attack_speed,
+					value = talent_settings.disable_companion.attack_speed
 				},
 				charges = {
 					format_type = "number",
 					prefix = "+",
-					value = talent_settings.disable_companion.extra_max_amount_of_grenades,
+					value = talent_settings.disable_companion.extra_max_amount_of_grenades
 				},
 				time = {
 					format_type = "number",
-					value = talent_settings.disable_companion.blitz_replenish_time,
+					value = talent_settings.disable_companion.blitz_replenish_time
 				},
 				grenade_time = {
 					format_type = "number",
-					value = talent_settings.disable_companion.grenade_blitz_replenish_time,
+					value = talent_settings.disable_companion.grenade_blitz_replenish_time
 				},
 				time_shock_mine = {
 					format_type = "number",
-					value = talent_settings.disable_companion.mine_blitz_replenish_time,
+					value = talent_settings.disable_companion.mine_blitz_replenish_time
 				},
 				grenade_blitz_name = {
 					format_type = "loc_string",
-					value = "loc_talent_ability_adamant_grenade_improved",
+					value = "loc_talent_ability_adamant_grenade_improved"
 				},
 				shock_mine_name = {
 					format_type = "loc_string",
-					value = "loc_talent_ability_shock_mine",
-				},
+					value = "loc_talent_ability_shock_mine"
+				}
 			},
 			passive = {
 				identifier = {
 					"adamant_disable_companion_buff",
-					"adamant_grenade_replenishment",
+					"adamant_grenade_replenishment"
 				},
 				buff_template_name = {
 					"adamant_disable_companion_buff",
-					"adamant_grenade_replenishment",
-				},
+					"adamant_grenade_replenishment"
+				}
 			},
 			special_rule = {
 				identifier = "disable_companion",
-				special_rule_name = special_rules.disable_companion,
-			},
+				special_rule_name = special_rules.disable_companion
+			}
 		},
 		adamant_elite_special_kills_offensive_boost = {
 			description = "loc_talent_adamant_elite_special_kills_offensive_boost_alt_desc",
@@ -851,22 +842,22 @@ local archetype_talents = {
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.elite_special_kills_offensive_boost.damage,
+					value = talent_settings.elite_special_kills_offensive_boost.damage
 				},
 				movement_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.elite_special_kills_offensive_boost.movement_speed,
+					value = talent_settings.elite_special_kills_offensive_boost.movement_speed
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.elite_special_kills_offensive_boost.duration,
-				},
+					value = talent_settings.elite_special_kills_offensive_boost.duration
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_elite_special_kills_offensive_boost",
-				identifier = "adamant_elite_special_kills_offensive_boost",
-			},
+				identifier = "adamant_elite_special_kills_offensive_boost"
+			}
 		},
 		adamant_damage_reduction_after_elite_kill = {
 			description = "loc_talent_adamant_damage_reduction_after_elite_kill_desc",
@@ -879,17 +870,17 @@ local archetype_talents = {
 					value = talent_settings.damage_reduction_after_elite_kill.damage_taken_multiplier,
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
-					end,
+					end
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.damage_reduction_after_elite_kill.duration,
-				},
+					value = talent_settings.damage_reduction_after_elite_kill.duration
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_damage_reduction_after_elite_kill",
-				identifier = "adamant_damage_reduction_after_elite_kill",
-			},
+				identifier = "adamant_damage_reduction_after_elite_kill"
+			}
 		},
 		adamant_toughness_regen_near_companion = {
 			description = "loc_talent_adamant_toughness_regen_near_companion_desc",
@@ -898,17 +889,17 @@ local archetype_talents = {
 			format_values = {
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings.toughness_regen_near_companion.toughness_percentage_per_second,
+					value = talent_settings.toughness_regen_near_companion.toughness_percentage_per_second
 				},
 				range = {
 					format_type = "number",
-					value = talent_settings.toughness_regen_near_companion.range,
-				},
+					value = talent_settings.toughness_regen_near_companion.range
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_toughness_regen_near_companion",
-				identifier = "adamant_toughness_regen_near_companion",
-			},
+				identifier = "adamant_toughness_regen_near_companion"
+			}
 		},
 		adamant_perfect_block_damage_boost = {
 			description = "loc_talent_adamant_perfect_block_damage_boost_alt_desc",
@@ -918,29 +909,29 @@ local archetype_talents = {
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.perfect_block_damage_boost.damage,
+					value = talent_settings.perfect_block_damage_boost.damage
 				},
 				attack_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.perfect_block_damage_boost.attack_speed,
+					value = talent_settings.perfect_block_damage_boost.attack_speed
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.perfect_block_damage_boost.duration,
+					value = talent_settings.perfect_block_damage_boost.duration
 				},
 				block_cost = {
 					format_type = "percentage",
 					value = talent_settings.perfect_block_damage_boost.block_cost,
 					value_manipulation = function (value)
 						return (1 - value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_perfect_block_damage_boost",
-				identifier = "adamant_perfect_block_damage_boost",
-			},
+				identifier = "adamant_perfect_block_damage_boost"
+			}
 		},
 		adamant_staggers_reduce_damage_taken = {
 			description = "loc_talent_adamant_staggers_reduce_damage_taken_alt_desc",
@@ -949,15 +940,15 @@ local archetype_talents = {
 			format_values = {
 				ogryn_stacks = {
 					format_type = "number",
-					value = talent_settings.staggers_reduce_damage_taken.ogryn_stacks,
+					value = talent_settings.staggers_reduce_damage_taken.ogryn_stacks
 				},
 				normal_stacks = {
 					format_type = "number",
-					value = talent_settings.staggers_reduce_damage_taken.normal_stacks,
+					value = talent_settings.staggers_reduce_damage_taken.normal_stacks
 				},
 				max_stacks = {
 					format_type = "number",
-					value = talent_settings.staggers_reduce_damage_taken.max_stacks,
+					value = talent_settings.staggers_reduce_damage_taken.max_stacks
 				},
 				damage_taken_multiplier = {
 					format_type = "percentage",
@@ -965,17 +956,17 @@ local archetype_talents = {
 					value = talent_settings.staggers_reduce_damage_taken.damage_taken_multiplier,
 					value_manipulation = function (value)
 						return (1 - value) * 100
-					end,
+					end
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.staggers_reduce_damage_taken.duration,
-				},
+					value = talent_settings.staggers_reduce_damage_taken.duration
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_staggers_reduce_damage_taken",
-				identifier = "adamant_staggers_reduce_damage_taken",
-			},
+				identifier = "adamant_staggers_reduce_damage_taken"
+			}
 		},
 		adamant_damage_after_reloading = {
 			description = "loc_talent_adamant_damage_after_reloading_desc",
@@ -985,17 +976,17 @@ local archetype_talents = {
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.damage_after_reloading.ranged_damage,
+					value = talent_settings.damage_after_reloading.ranged_damage
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.damage_after_reloading.duration,
-				},
+					value = talent_settings.damage_after_reloading.duration
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_damage_after_reloading",
-				identifier = "adamant_damage_after_reloading",
-			},
+				identifier = "adamant_damage_after_reloading"
+			}
 		},
 		adamant_multiple_hits_attack_speed = {
 			description = "loc_talent_adamant_multiple_hits_attack_speed_desc",
@@ -1005,21 +996,21 @@ local archetype_talents = {
 				melee_attack_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.multiple_hits_attack_speed.melee_attack_speed,
+					value = talent_settings.multiple_hits_attack_speed.melee_attack_speed
 				},
 				hits = {
 					format_type = "number",
-					value = talent_settings.multiple_hits_attack_speed.num_hits,
+					value = talent_settings.multiple_hits_attack_speed.num_hits
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.multiple_hits_attack_speed.duration,
-				},
+					value = talent_settings.multiple_hits_attack_speed.duration
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_multiple_hits_attack_speed",
-				identifier = "adamant_multiple_hits_attack_speed",
-			},
+				identifier = "adamant_multiple_hits_attack_speed"
+			}
 		},
 		adamant_dog_kills_replenish_toughness = {
 			description = "loc_talent_adamant_dog_kills_replenish_toughness_desc",
@@ -1028,17 +1019,17 @@ local archetype_talents = {
 			format_values = {
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings.dog_kills_replenish_toughness.toughness * talent_settings.dog_kills_replenish_toughness.duration,
+					value = talent_settings.dog_kills_replenish_toughness.toughness * talent_settings.dog_kills_replenish_toughness.duration
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.dog_kills_replenish_toughness.duration,
-				},
+					value = talent_settings.dog_kills_replenish_toughness.duration
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_dog_kills_replenish_toughness",
-				identifier = "adamant_dog_kills_replenish_toughness",
-			},
+				identifier = "adamant_dog_kills_replenish_toughness"
+			}
 		},
 		adamant_elite_special_kills_replenish_toughness = {
 			description = "loc_talent_adamant_elite_special_kills_replenish_toughness_desc",
@@ -1047,21 +1038,21 @@ local archetype_talents = {
 			format_values = {
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings.elite_special_kills_replenish_toughness.toughness * talent_settings.elite_special_kills_replenish_toughness.duration,
+					value = talent_settings.elite_special_kills_replenish_toughness.toughness * talent_settings.elite_special_kills_replenish_toughness.duration
 				},
 				instant_toughness = {
 					format_type = "percentage",
-					value = talent_settings.elite_special_kills_replenish_toughness.instant_toughness,
+					value = talent_settings.elite_special_kills_replenish_toughness.instant_toughness
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.elite_special_kills_replenish_toughness.duration,
-				},
+					value = talent_settings.elite_special_kills_replenish_toughness.duration
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_elite_special_kills_replenish_toughness",
-				identifier = "adamant_elite_special_kills_replenish_toughness",
-			},
+				identifier = "adamant_elite_special_kills_replenish_toughness"
+			}
 		},
 		adamant_close_kills_restore_toughness = {
 			description = "loc_talent_adamant_close_kills_restore_toughness_desc",
@@ -1070,13 +1061,13 @@ local archetype_talents = {
 			format_values = {
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings.close_kills_restore_toughness.toughness,
-				},
+					value = talent_settings.close_kills_restore_toughness.toughness
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_close_kills_restore_toughness",
-				identifier = "adamant_close_kills_restore_toughness",
-			},
+				identifier = "adamant_close_kills_restore_toughness"
+			}
 		},
 		adamant_staggers_replenish_toughness = {
 			description = "loc_talent_adamant_staggers_replenish_toughness_melee_desc",
@@ -1085,13 +1076,13 @@ local archetype_talents = {
 			format_values = {
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings.staggers_replenish_toughness.toughness,
-				},
+					value = talent_settings.staggers_replenish_toughness.toughness
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_staggers_replenish_toughness",
-				identifier = "adamant_staggers_replenish_toughness",
-			},
+				identifier = "adamant_staggers_replenish_toughness"
+			}
 		},
 		adamant_dog_attacks_electrocute = {
 			description = "loc_talent_adamant_dog_attacks_electrocute_desc",
@@ -1100,13 +1091,13 @@ local archetype_talents = {
 			format_values = {
 				duration = {
 					format_type = "number",
-					value = talent_settings.dog_attacks_electrocute.duration,
-				},
+					value = talent_settings.dog_attacks_electrocute.duration
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_dog_attacks_electrocute",
-				identifier = "adamant_dog_attacks_electrocute",
-			},
+				identifier = "adamant_dog_attacks_electrocute"
+			}
 		},
 		adamant_increased_damage_vs_horde = {
 			description = "loc_talent_adamant_increased_damage_vs_horde_desc",
@@ -1116,13 +1107,13 @@ local archetype_talents = {
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.increased_damage_vs_horde.damage,
-				},
+					value = talent_settings.increased_damage_vs_horde.damage
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_increased_damage_vs_horde",
-				identifier = "adamant_increased_damage_vs_horde",
-			},
+				identifier = "adamant_increased_damage_vs_horde"
+			}
 		},
 		adamant_limit_dmg_taken_from_hits = {
 			description = "loc_talent_adamant_limit_dmg_taken_from_hits_desc",
@@ -1131,13 +1122,13 @@ local archetype_talents = {
 			format_values = {
 				limit = {
 					format_type = "number",
-					value = talent_settings.limit_dmg_taken_from_hits.limit,
-				},
+					value = talent_settings.limit_dmg_taken_from_hits.limit
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_limit_dmg_taken_from_hits",
-				identifier = "adamant_limit_dmg_taken_from_hits",
-			},
+				identifier = "adamant_limit_dmg_taken_from_hits"
+			}
 		},
 		adamant_armor = {
 			description = "loc_talent_adamant_armor_desc",
@@ -1147,13 +1138,13 @@ local archetype_talents = {
 				toughness = {
 					format_type = "number",
 					prefix = "+",
-					value = talent_settings.armor.toughness,
-				},
+					value = talent_settings.armor.toughness
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_armor",
-				identifier = "adamant_armor",
-			},
+				identifier = "adamant_armor"
+			}
 		},
 		adamant_mag_strips = {
 			description = "loc_talent_adamant_mag_strips_desc",
@@ -1163,13 +1154,13 @@ local archetype_talents = {
 				wield_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.mag_strips.wield_speed,
-				},
+					value = talent_settings.mag_strips.wield_speed
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_mag_strips",
-				identifier = "adamant_mag_strips",
-			},
+				identifier = "adamant_mag_strips"
+			}
 		},
 		adamant_plasteel_plates = {
 			description = "loc_talent_adamant_plasteel_plates_desc",
@@ -1179,13 +1170,13 @@ local archetype_talents = {
 				toughness = {
 					format_type = "number",
 					prefix = "+",
-					value = talent_settings.plasteel_plates.toughness,
-				},
+					value = talent_settings.plasteel_plates.toughness
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_plasteel_plates",
-				identifier = "adamant_plasteel_plates",
-			},
+				identifier = "adamant_plasteel_plates"
+			}
 		},
 		adamant_verispex = {
 			description = "loc_talent_adamant_verispex_desc",
@@ -1194,13 +1185,13 @@ local archetype_talents = {
 			format_values = {
 				range = {
 					format_type = "number",
-					value = talent_settings.verispex.range,
-				},
+					value = talent_settings.verispex.range
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_verispex",
-				identifier = "adamant_verispex",
-			},
+				identifier = "adamant_verispex"
+			}
 		},
 		adamant_ammo_belt = {
 			description = "loc_talent_adamant_ammo_belt_desc",
@@ -1210,13 +1201,13 @@ local archetype_talents = {
 				ammo = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.ammo_belt.ammo_reserve_capacity,
-				},
+					value = talent_settings.ammo_belt.ammo_reserve_capacity
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_ammo_belt",
-				identifier = "adamant_ammo_belt",
-			},
+				identifier = "adamant_ammo_belt"
+			}
 		},
 		adamant_rebreather = {
 			description = "loc_talent_adamant_rebreather_desc",
@@ -1229,7 +1220,7 @@ local archetype_talents = {
 					value = talent_settings.rebreather.corruption_taken_multiplier,
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
-					end,
+					end
 				},
 				toxic_reduction = {
 					format_type = "percentage",
@@ -1237,13 +1228,13 @@ local archetype_talents = {
 					value = talent_settings.rebreather.damage_taken_from_toxic_gas_multiplier,
 					value_manipulation = function (value)
 						return (1 - value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_rebreather",
-				identifier = "adamant_rebreather",
-			},
+				identifier = "adamant_rebreather"
+			}
 		},
 		adamant_riot_pads = {
 			description = "loc_talent_adamant_riot_pads_desc",
@@ -1252,17 +1243,17 @@ local archetype_talents = {
 			format_values = {
 				stacks = {
 					format_type = "number",
-					value = talent_settings.riot_pads.stacks,
+					value = talent_settings.riot_pads.stacks
 				},
 				cooldown = {
 					format_type = "number",
-					value = talent_settings.riot_pads.cooldown,
-				},
+					value = talent_settings.riot_pads.cooldown
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_riot_pads",
-				identifier = "adamant_riot_pads",
-			},
+				identifier = "adamant_riot_pads"
+			}
 		},
 		adamant_gutter_forged = {
 			description = "loc_talent_adamant_gutter_forged_desc",
@@ -1275,17 +1266,17 @@ local archetype_talents = {
 					value = talent_settings.gutter_forged.tdr,
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
+					end
 				},
 				movement_speed = {
 					format_type = "percentage",
-					value = talent_settings.gutter_forged.movement_speed,
-				},
+					value = talent_settings.gutter_forged.movement_speed
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_gutter_forged",
-				identifier = "adamant_gutter_forged",
-			},
+				identifier = "adamant_gutter_forged"
+			}
 		},
 		adamant_shield_plates = {
 			description = "loc_talent_adamant_shield_plates_alt_desc",
@@ -1294,25 +1285,25 @@ local archetype_talents = {
 			format_values = {
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings.shield_plates.toughness,
+					value = talent_settings.shield_plates.toughness
 				},
 				perfect_toughness = {
 					format_type = "percentage",
-					value = talent_settings.shield_plates.perfect_toughness,
+					value = talent_settings.shield_plates.perfect_toughness
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.shield_plates.duration,
+					value = talent_settings.shield_plates.duration
 				},
 				cooldown = {
 					format_type = "number",
-					value = talent_settings.shield_plates.icd,
-				},
+					value = talent_settings.shield_plates.icd
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_shield_plates",
-				identifier = "adamant_shield_plates",
-			},
+				identifier = "adamant_shield_plates"
+			}
 		},
 		adamant_cleave_after_push = {
 			description = "loc_talent_adamant_cleave_after_push_desc",
@@ -1321,17 +1312,17 @@ local archetype_talents = {
 			format_values = {
 				cleave = {
 					format_type = "percentage",
-					value = talent_settings.cleave_after_push.cleave,
+					value = talent_settings.cleave_after_push.cleave
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.cleave_after_push.duration,
-				},
+					value = talent_settings.cleave_after_push.duration
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_cleave_after_push",
-				identifier = "adamant_cleave_after_push",
-			},
+				identifier = "adamant_cleave_after_push"
+			}
 		},
 		adamant_melee_attacks_on_staggered_rend = {
 			description = "loc_talent_adamant_melee_attacks_on_staggered_rend_alt_desc",
@@ -1341,13 +1332,13 @@ local archetype_talents = {
 				rending = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.melee_attacks_on_staggered_rend.rending_multiplier,
-				},
+					value = talent_settings.melee_attacks_on_staggered_rend.rending_multiplier
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_melee_attacks_on_staggered_rend",
-				identifier = "adamant_melee_attacks_on_staggered_rend",
-			},
+				identifier = "adamant_melee_attacks_on_staggered_rend"
+			}
 		},
 		adamant_wield_speed_on_melee_kill = {
 			description = "loc_talent_adamant_wield_speed_on_melee_kill_desc",
@@ -1357,21 +1348,21 @@ local archetype_talents = {
 				wield_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.wield_speed_on_melee_kill.wield_speed_per_stack,
+					value = talent_settings.wield_speed_on_melee_kill.wield_speed_per_stack
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.wield_speed_on_melee_kill.duration,
+					value = talent_settings.wield_speed_on_melee_kill.duration
 				},
 				stacks = {
 					format_type = "number",
-					value = talent_settings.wield_speed_on_melee_kill.max_stacks,
-				},
+					value = talent_settings.wield_speed_on_melee_kill.max_stacks
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_wield_speed_on_melee_kill",
-				identifier = "adamant_wield_speed_on_melee_kill",
-			},
+				identifier = "adamant_wield_speed_on_melee_kill"
+			}
 		},
 		adamant_heavy_attacks_increase_damage = {
 			description = "loc_talent_adamant_heavy_attacks_increase_damage_desc",
@@ -1381,17 +1372,17 @@ local archetype_talents = {
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.heavy_attacks_increase_damage.damage,
+					value = talent_settings.heavy_attacks_increase_damage.damage
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.heavy_attacks_increase_damage.duration,
-				},
+					value = talent_settings.heavy_attacks_increase_damage.duration
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_heavy_attacks_increase_damage",
-				identifier = "adamant_heavy_attacks_increase_damage",
-			},
+				identifier = "adamant_heavy_attacks_increase_damage"
+			}
 		},
 		adamant_dog_damage_after_ability = {
 			description = "loc_talent_adamant_dog_damage_after_ability_desc",
@@ -1401,17 +1392,17 @@ local archetype_talents = {
 				companion_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.dog_damage_after_ability.damage,
+					value = talent_settings.dog_damage_after_ability.damage
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.dog_damage_after_ability.duration,
-				},
+					value = talent_settings.dog_damage_after_ability.duration
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_dog_damage_after_ability",
-				identifier = "adamant_dog_damage_after_ability",
-			},
+				identifier = "adamant_dog_damage_after_ability"
+			}
 		},
 		adamant_hitting_multiple_gives_tdr = {
 			description = "loc_talent_adamant_hitting_multiple_gives_tdr_desc",
@@ -1424,21 +1415,21 @@ local archetype_talents = {
 					value = talent_settings.hitting_multiple_gives_tdr.tdr,
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
-					end,
+					end
 				},
 				hits = {
 					format_type = "number",
-					value = talent_settings.hitting_multiple_gives_tdr.num_hits,
+					value = talent_settings.hitting_multiple_gives_tdr.num_hits
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.hitting_multiple_gives_tdr.duration,
-				},
+					value = talent_settings.hitting_multiple_gives_tdr.duration
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_hitting_multiple_gives_tdr",
-				identifier = "adamant_hitting_multiple_gives_tdr",
-			},
+				identifier = "adamant_hitting_multiple_gives_tdr"
+			}
 		},
 		adamant_restore_toughness_to_allies_on_combat_ability = {
 			description = "loc_talent_adamant_restore_toughness_to_allies_on_combat_ability_desc",
@@ -1447,13 +1438,13 @@ local archetype_talents = {
 			format_values = {
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings.restore_toughness_to_allies_on_combat_ability.toughness_percent,
-				},
+					value = talent_settings.restore_toughness_to_allies_on_combat_ability.toughness_percent
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_restore_toughness_to_allies_on_combat_ability",
-				identifier = "adamant_restore_toughness_to_allies_on_combat_ability",
-			},
+				identifier = "adamant_restore_toughness_to_allies_on_combat_ability"
+			}
 		},
 		adamant_dog_pounces_bleed_nearby = {
 			description = "loc_talent_adamant_dog_pounces_bleed_nearby_desc",
@@ -1462,13 +1453,13 @@ local archetype_talents = {
 			format_values = {
 				stacks = {
 					format_type = "number",
-					value = talent_settings.dog_pounces_bleed_nearby.bleed_stacks,
-				},
+					value = talent_settings.dog_pounces_bleed_nearby.bleed_stacks
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_dog_pounces_bleed_nearby",
-				identifier = "adamant_dog_pounces_bleed_nearby",
-			},
+				identifier = "adamant_dog_pounces_bleed_nearby"
+			}
 		},
 		adamant_dog_applies_brittleness = {
 			description = "loc_talent_adamant_dog_applies_brittleness_desc",
@@ -1477,13 +1468,13 @@ local archetype_talents = {
 			format_values = {
 				stacks = {
 					format_type = "number",
-					value = talent_settings.dog_applies_brittleness.stacks,
-				},
+					value = talent_settings.dog_applies_brittleness.stacks
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_dog_applies_brittleness",
-				identifier = "adamant_dog_applies_brittleness",
-			},
+				identifier = "adamant_dog_applies_brittleness"
+			}
 		},
 		adamant_no_movement_penalty = {
 			description = "loc_talent_adamant_no_movement_penalty_desc",
@@ -1493,13 +1484,13 @@ local archetype_talents = {
 				reduction = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.no_movement_penalty.reduced_move_penalty,
-				},
+					value = talent_settings.no_movement_penalty.reduced_move_penalty
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_no_movement_penalty",
-				identifier = "adamant_no_movement_penalty",
-			},
+				identifier = "adamant_no_movement_penalty"
+			}
 		},
 		adamant_forceful = {
 			description = "loc_talent_adamant_forceful_base_alt_desc",
@@ -1509,7 +1500,7 @@ local archetype_talents = {
 				impact = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.forceful.impact,
+					value = talent_settings.forceful.impact
 				},
 				dr = {
 					format_type = "percentage",
@@ -1517,25 +1508,25 @@ local archetype_talents = {
 					value = talent_settings.forceful.dr,
 					value_manipulation = function (value)
 						return (1 - value) * 100
-					end,
+					end
 				},
 				stacks = {
 					format_type = "number",
-					value = talent_settings.forceful.stacks,
+					value = talent_settings.forceful.stacks
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.forceful.stack_duration,
+					value = talent_settings.forceful.stack_duration
 				},
 				forceful_name = {
 					format_type = "loc_string",
-					value = "loc_talent_adamant_forceful",
-				},
+					value = "loc_talent_adamant_forceful"
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_forceful",
-				identifier = "adamant_forceful",
-			},
+				identifier = "adamant_forceful"
+			}
 		},
 		adamant_forceful_toughness_regen_per_stack = {
 			description = "loc_talent_adamant_forceful_toughness_regen_per_stack_desc",
@@ -1545,13 +1536,13 @@ local archetype_talents = {
 				toughness = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.forceful.toughness,
-				},
+					value = talent_settings.forceful.toughness
+				}
 			},
 			special_rule = {
 				identifier = "adamant_forceful_toughness_regen",
-				special_rule_name = special_rules.adamant_forceful_toughness_regen,
-			},
+				special_rule_name = special_rules.adamant_forceful_toughness_regen
+			}
 		},
 		adamant_forceful_stun_immune_and_block_all = {
 			description = "loc_talent_adamant_forceful_stun_immune_and_block_all_linger_desc",
@@ -1560,13 +1551,13 @@ local archetype_talents = {
 			format_values = {
 				duration = {
 					format_type = "number",
-					value = talent_settings.forceful.stun_immune_linger_time,
-				},
+					value = talent_settings.forceful.stun_immune_linger_time
+				}
 			},
 			special_rule = {
 				identifier = "adamant_forceful_stun_immune",
-				special_rule_name = special_rules.adamant_forceful_stun_immune,
-			},
+				special_rule_name = special_rules.adamant_forceful_stun_immune
+			}
 		},
 		adamant_forceful_ranged = {
 			description = "loc_talent_adamant_forceful_ranged_alt_desc",
@@ -1576,18 +1567,18 @@ local archetype_talents = {
 				ranged_attack_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.forceful.ranged_attack_speed,
+					value = talent_settings.forceful.ranged_attack_speed
 				},
 				reload_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.forceful.reload_speed,
-				},
+					value = talent_settings.forceful.reload_speed
+				}
 			},
 			special_rule = {
 				identifier = "adamant_forceful_ranged",
-				special_rule_name = special_rules.adamant_forceful_ranged,
-			},
+				special_rule_name = special_rules.adamant_forceful_ranged
+			}
 		},
 		adamant_forceful_ability_damage = {
 			description = "loc_talent_adamant_forceful_ability_damage",
@@ -1597,17 +1588,17 @@ local archetype_talents = {
 				strength = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.forceful.strength,
+					value = talent_settings.forceful.strength
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.forceful.strength_duration,
-				},
+					value = talent_settings.forceful.strength_duration
+				}
 			},
 			special_rule = {
 				identifier = "adamant_forceful_ability_strength",
-				special_rule_name = special_rules.adamant_forceful_ability_strength,
-			},
+				special_rule_name = special_rules.adamant_forceful_ability_strength
+			}
 		},
 		adamant_forceful_stagger_on_low_high = {
 			description = "loc_talent_adamant_forceful_stagger_on_low_high_desc",
@@ -1616,21 +1607,21 @@ local archetype_talents = {
 			format_values = {
 				low_stacks = {
 					format_type = "number",
-					value = talent_settings.forceful.low_stacks,
+					value = talent_settings.forceful.low_stacks
 				},
 				high_stacks = {
 					format_type = "number",
-					value = talent_settings.forceful.high_stacks,
+					value = talent_settings.forceful.high_stacks
 				},
 				cooldown = {
 					format_type = "number",
-					value = talent_settings.forceful.internal_cd,
-				},
+					value = talent_settings.forceful.internal_cd
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_forceful_stagger",
-				identifier = "adamant_forceful_stagger",
-			},
+				identifier = "adamant_forceful_stagger"
+			}
 		},
 		adamant_forceful_offensive = {
 			description = "loc_talent_adamant_forceful_melee_alt_desc",
@@ -1639,23 +1630,23 @@ local archetype_talents = {
 			format_values = {
 				duration = {
 					format_type = "number",
-					value = talent_settings.forceful.stun_immune_linger_time,
+					value = talent_settings.forceful.stun_immune_linger_time
 				},
 				attack_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.forceful.attack_speed,
+					value = talent_settings.forceful.attack_speed
 				},
 				cleave = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.forceful.cleave,
-				},
+					value = talent_settings.forceful.cleave
+				}
 			},
 			special_rule = {
 				identifier = "adamant_forceful_offensive",
-				special_rule_name = special_rules.adamant_forceful_offensive,
-			},
+				special_rule_name = special_rules.adamant_forceful_offensive
+			}
 		},
 		adamant_stance_dance = {
 			description = "loc_talent_stance_dance_description",
@@ -1665,32 +1656,32 @@ local archetype_talents = {
 				melee_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.stance_dance.melee_damage,
+					value = talent_settings.stance_dance.melee_damage
 				},
 				ranged_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.stance_dance.ranged_damage,
+					value = talent_settings.stance_dance.ranged_damage
 				},
 				melee_attack_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.stance_dance.melee_attack_speed,
+					value = talent_settings.stance_dance.melee_attack_speed
 				},
 				suppression = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.stance_dance.suppression_dealt,
+					value = talent_settings.stance_dance.suppression_dealt
 				},
 				t_p = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.stance_dance.toughness_share,
+					value = talent_settings.stance_dance.toughness_share
 				},
 				power = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.stance_dance.shared_power,
+					value = talent_settings.stance_dance.shared_power
 				},
 				sprint_cost = {
 					format_type = "percentage",
@@ -1698,23 +1689,23 @@ local archetype_talents = {
 					value = talent_settings.stance_dance.sprint_cost,
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
-					end,
+					end
 				},
 				time = {
 					format_type = "number",
-					value = talent_settings.stance_dance.time,
-				},
+					value = talent_settings.stance_dance.time
+				}
 			},
 			passive = {
 				identifier = {
 					"adamant_stance_dance_melee",
-					"adamant_stance_dance_ranged",
+					"adamant_stance_dance_ranged"
 				},
 				buff_template_name = {
 					"adamant_stance_dance_melee",
-					"adamant_stance_dance_ranged",
-				},
-			},
+					"adamant_stance_dance_ranged"
+				}
+			}
 		},
 		adamant_stance_dance_elite_kills = {
 			description = "loc_talent_stance_dance_elite_kills_description",
@@ -1726,22 +1717,22 @@ local archetype_talents = {
 					value = talent_settings.stance_dance.damage_reduction,
 					value_manipulation = function (value)
 						return (1 - value) * 100
-					end,
+					end
 				},
 				crit_chance = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.stance_dance.crit_chance,
+					value = talent_settings.stance_dance.crit_chance
 				},
 				time = {
 					format_type = "number",
-					value = talent_settings.stance_dance.time,
-				},
+					value = talent_settings.stance_dance.time
+				}
 			},
 			special_rule = {
 				identifier = "adamant_stance_dance_elite",
-				special_rule_name = special_rules.adamant_stance_dance_elite,
-			},
+				special_rule_name = special_rules.adamant_stance_dance_elite
+			}
 		},
 		adamant_stance_dance_reload_speed = {
 			description = "loc_talent_stance_dance_reload_speed_description",
@@ -1751,22 +1742,22 @@ local archetype_talents = {
 				fire_rate = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.stance_dance.fire_rate,
+					value = talent_settings.stance_dance.fire_rate
 				},
 				reload_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.stance_dance.reload_speed,
+					value = talent_settings.stance_dance.reload_speed
 				},
 				time = {
 					format_type = "number",
-					value = talent_settings.stance_dance.time,
-				},
+					value = talent_settings.stance_dance.time
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_stance_dance_reload_speed",
-				identifier = "adamant_stance_dance_reload_speed",
-			},
+				identifier = "adamant_stance_dance_reload_speed"
+			}
 		},
 		adamant_stance_dance_cleave = {
 			description = "loc_talent_stance_dance_cleave_description",
@@ -1775,22 +1766,22 @@ local archetype_talents = {
 			format_values = {
 				hits = {
 					format_type = "number",
-					value = talent_settings.stance_dance.hits,
+					value = talent_settings.stance_dance.hits
 				},
 				cleave = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.stance_dance.cleave,
+					value = talent_settings.stance_dance.cleave
 				},
 				time = {
 					format_type = "number",
-					value = talent_settings.stance_dance.time,
-				},
+					value = talent_settings.stance_dance.time
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_stance_dance_cleave",
-				identifier = "adamant_stance_dance_cleave",
-			},
+				identifier = "adamant_stance_dance_cleave"
+			}
 		},
 		adamant_stance_dance_weakspots = {
 			description = "loc_talent_stance_dance_weakspots_description",
@@ -1800,37 +1791,37 @@ local archetype_talents = {
 				power = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.stance_dance.power,
+					value = talent_settings.stance_dance.power
 				},
 				crit_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.stance_dance.crit_damage,
+					value = talent_settings.stance_dance.crit_damage
 				},
 				weakspot_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.stance_dance.weakspot_damage,
+					value = talent_settings.stance_dance.weakspot_damage
 				},
 				melee_time = {
 					format_type = "number",
-					value = talent_settings.stance_dance.time,
+					value = talent_settings.stance_dance.time
 				},
 				ranged_time = {
 					format_type = "number",
-					value = talent_settings.stance_dance.time,
-				},
+					value = talent_settings.stance_dance.time
+				}
 			},
 			passive = {
 				identifier = {
 					"adamant_stance_dance_weakspots_melee",
-					"adamant_stance_dance_weakspots_ranged",
+					"adamant_stance_dance_weakspots_ranged"
 				},
 				buff_template_name = {
 					"adamant_stance_dance_weakspots_melee",
-					"adamant_stance_dance_weakspots_ranged",
-				},
-			},
+					"adamant_stance_dance_weakspots_ranged"
+				}
+			}
 		},
 		adamant_terminus_warrant = {
 			description = "loc_talent_adamant_terminus_warrant_new_desc",
@@ -1839,26 +1830,26 @@ local archetype_talents = {
 			format_values = {
 				max_stacks = {
 					format_type = "number",
-					value = talent_settings.terminus_warrant.max_stacks,
+					value = talent_settings.terminus_warrant.max_stacks
 				},
 				weakspot_stacks = {
 					format_type = "number",
-					value = talent_settings.terminus_warrant.ranged_stacks_on_weakspot,
+					value = talent_settings.terminus_warrant.ranged_stacks_on_weakspot
 				},
 				melee_strength = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.terminus_warrant.melee_power_level_modifier,
+					value = talent_settings.terminus_warrant.melee_power_level_modifier
 				},
 				melee_impact = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.terminus_warrant.melee_impact,
+					value = talent_settings.terminus_warrant.melee_impact
 				},
 				ranged_strength = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.terminus_warrant.ranged_power_level_modifier,
+					value = talent_settings.terminus_warrant.ranged_power_level_modifier
 				},
 				tdr = {
 					format_type = "percentage",
@@ -1866,31 +1857,31 @@ local archetype_talents = {
 					value = talent_settings.terminus_warrant.toughness_damage_taken_multiplier,
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
-					end,
+					end
 				},
 				suppression = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.terminus_warrant.suppression_dealt,
+					value = talent_settings.terminus_warrant.suppression_dealt
 				},
 				ranged_cleave = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.terminus_warrant.ranged_max_hit_mass_attack_modifier,
+					value = talent_settings.terminus_warrant.ranged_max_hit_mass_attack_modifier
 				},
 				ranged_duration = {
 					format_type = "number",
-					value = talent_settings.terminus_warrant.ranged_duration,
+					value = talent_settings.terminus_warrant.ranged_duration
 				},
 				melee_duration = {
 					format_type = "number",
-					value = talent_settings.terminus_warrant.melee_duration,
-				},
+					value = talent_settings.terminus_warrant.melee_duration
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_terminus_warrant",
-				identifier = "adamant_terminus_warrant",
-			},
+				identifier = "adamant_terminus_warrant"
+			}
 		},
 		adamant_terminus_warrant_support = {
 			description = "loc_talent_adamant_terminus_warrant_support_desc",
@@ -1900,13 +1891,13 @@ local archetype_talents = {
 				toughness = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.terminus_warrant.toughness_replenish,
-				},
+					value = talent_settings.terminus_warrant.toughness_replenish
+				}
 			},
 			special_rule = {
 				identifier = "adamant_terminus_warrant_support_talent",
-				special_rule_name = special_rules.adamant_terminus_warrant_support_talent,
-			},
+				special_rule_name = special_rules.adamant_terminus_warrant_support_talent
+			}
 		},
 		adamant_terminus_warrant_cdr = {
 			description = "loc_talent_adamant_terminus_warrant_cdr_desc",
@@ -1916,21 +1907,21 @@ local archetype_talents = {
 				cdr = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.terminus_warrant.cdr,
+					value = talent_settings.terminus_warrant.cdr
 				},
 				stacks = {
 					format_type = "number",
-					value = talent_settings.terminus_warrant.max_stacks,
+					value = talent_settings.terminus_warrant.max_stacks
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.terminus_warrant.cdr_duration,
-				},
+					value = talent_settings.terminus_warrant.cdr_duration
+				}
 			},
 			special_rule = {
 				identifier = "adamant_terminus_warrant_cdr_talent",
-				special_rule_name = special_rules.adamant_terminus_warrant_cdr_talent,
-			},
+				special_rule_name = special_rules.adamant_terminus_warrant_cdr_talent
+			}
 		},
 		adamant_terminus_warrant_upgrade = {
 			description = "loc_talent_adamant_terminus_warrant_upgrade_alt_desc",
@@ -1940,26 +1931,26 @@ local archetype_talents = {
 				melee_attack_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.terminus_warrant.melee_attack_speed,
+					value = talent_settings.terminus_warrant.melee_attack_speed
 				},
 				fire_rate = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.terminus_warrant.fire_rate,
+					value = talent_settings.terminus_warrant.fire_rate
 				},
 				swap_stacks = {
 					format_type = "number",
-					value = talent_settings.terminus_warrant.swap_stacks,
+					value = talent_settings.terminus_warrant.swap_stacks
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.terminus_warrant.duration,
-				},
+					value = talent_settings.terminus_warrant.duration
+				}
 			},
 			special_rule = {
 				identifier = "adamant_terminus_warrant_upgrade_talent",
-				special_rule_name = special_rules.adamant_terminus_warrant_upgrade_talent,
-			},
+				special_rule_name = special_rules.adamant_terminus_warrant_upgrade_talent
+			}
 		},
 		adamant_terminus_warrant_ranged = {
 			description = "loc_talent_adamant_terminus_warrant_reload_fire_rate_desc",
@@ -1968,31 +1959,31 @@ local archetype_talents = {
 			format_values = {
 				ammo = {
 					format_type = "percentage",
-					value = talent_settings.terminus_warrant.reload_per_stack,
+					value = talent_settings.terminus_warrant.reload_per_stack
 				},
 				reload_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.terminus_warrant.reload_speed,
+					value = talent_settings.terminus_warrant.reload_speed
 				},
 				ranged_attack_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.terminus_warrant.ranged_attack_speed,
+					value = talent_settings.terminus_warrant.ranged_attack_speed
 				},
 				stacks = {
 					format_type = "number",
-					value = talent_settings.terminus_warrant.ranged_swap_stacks,
+					value = talent_settings.terminus_warrant.ranged_swap_stacks
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.terminus_warrant.ranged_duration,
-				},
+					value = talent_settings.terminus_warrant.ranged_duration
+				}
 			},
 			special_rule = {
 				identifier = "adamant_terminus_warrant_ranged_talent",
-				special_rule_name = special_rules.adamant_terminus_warrant_ranged_talent,
-			},
+				special_rule_name = special_rules.adamant_terminus_warrant_ranged_talent
+			}
 		},
 		adamant_terminus_warrant_melee = {
 			description = "loc_talent_adamant_terminus_warrant_toughness_alt_desc",
@@ -2002,21 +1993,21 @@ local archetype_talents = {
 				melee_toughness = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.terminus_warrant.melee_toughness,
+					value = talent_settings.terminus_warrant.melee_toughness
 				},
 				bonus_stacks = {
 					format_type = "number",
-					value = talent_settings.terminus_warrant.bonus_stacks,
+					value = talent_settings.terminus_warrant.bonus_stacks
 				},
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings.terminus_warrant.toughness_shared,
-				},
+					value = talent_settings.terminus_warrant.toughness_shared
+				}
 			},
 			special_rule = {
 				identifier = "adamant_terminus_warrant_melee_talent",
-				special_rule_name = special_rules.adamant_terminus_warrant_melee_talent,
-			},
+				special_rule_name = special_rules.adamant_terminus_warrant_melee_talent
+			}
 		},
 		adamant_terminus_warrant_improved = {
 			description = "loc_talent_adamant_terminus_warrant_improved_alt_desc",
@@ -2026,36 +2017,36 @@ local archetype_talents = {
 				melee_rending = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.terminus_warrant.melee_rending,
+					value = talent_settings.terminus_warrant.melee_rending
 				},
 				ranged_rending = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.terminus_warrant.ranged_rending,
+					value = talent_settings.terminus_warrant.ranged_rending
 				},
 				crit_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.terminus_warrant.crit_damage,
+					value = talent_settings.terminus_warrant.crit_damage
 				},
 				weakspot_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.terminus_warrant.weakspot_damage,
+					value = talent_settings.terminus_warrant.weakspot_damage
 				},
 				talent_max_stacks = {
 					format_type = "number",
-					value = talent_settings.terminus_warrant.swap_stacks_talent,
+					value = talent_settings.terminus_warrant.swap_stacks_talent
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.terminus_warrant.duration,
-				},
+					value = talent_settings.terminus_warrant.duration
+				}
 			},
 			special_rule = {
 				identifier = "adamant_terminus_warrant_improved_talent",
-				special_rule_name = special_rules.adamant_terminus_warrant_improved_talent,
-			},
+				special_rule_name = special_rules.adamant_terminus_warrant_improved_talent
+			}
 		},
 		adamant_terminus_warrant_improved_combined = {
 			description = "loc_talent_adamant_terminus_warrant_improved_combined_desc",
@@ -2065,45 +2056,45 @@ local archetype_talents = {
 				attack_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.terminus_warrant.melee_attack_speed,
+					value = talent_settings.terminus_warrant.melee_attack_speed
 				},
 				crit_chance = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.terminus_warrant.crit_chance,
+					value = talent_settings.terminus_warrant.crit_chance
 				},
 				rending = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.terminus_warrant.melee_rending,
+					value = talent_settings.terminus_warrant.melee_rending
 				},
 				crit_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.terminus_warrant.crit_damage,
+					value = talent_settings.terminus_warrant.crit_damage
 				},
 				weakspot_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.terminus_warrant.weakspot_damage,
+					value = talent_settings.terminus_warrant.weakspot_damage
 				},
 				melee_stacks = {
 					format_type = "number",
-					value = talent_settings.terminus_warrant.max_stacks,
+					value = talent_settings.terminus_warrant.max_stacks
 				},
 				ranged_stacks = {
 					format_type = "number",
-					value = talent_settings.terminus_warrant.max_stacks,
+					value = talent_settings.terminus_warrant.max_stacks
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.terminus_warrant.upgrade_duration,
-				},
+					value = talent_settings.terminus_warrant.upgrade_duration
+				}
 			},
 			special_rule = {
 				identifier = "adamant_terminus_warrant_upgrade_talent",
-				special_rule_name = special_rules.adamant_terminus_warrant_upgrade_talent,
-			},
+				special_rule_name = special_rules.adamant_terminus_warrant_upgrade_talent
+			}
 		},
 		adamant_exterminator = {
 			description = "loc_talent_adamant_exterminator_desc",
@@ -2112,31 +2103,31 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_adamant_exterminator",
+					value = "loc_talent_adamant_exterminator"
 				},
 				companion_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.exterminator.companion_damage,
+					value = talent_settings.exterminator.companion_damage
 				},
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.exterminator.damage,
+					value = talent_settings.exterminator.damage
 				},
 				max_stacks = {
 					format_type = "number",
-					value = talent_settings.exterminator.max_stacks,
+					value = talent_settings.exterminator.max_stacks
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.exterminator.duration,
-				},
+					value = talent_settings.exterminator.duration
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_mark_enemies_passive",
-				identifier = "adamant_mark_enemies_passive",
-			},
+				identifier = "adamant_mark_enemies_passive"
+			}
 		},
 		adamant_execution_order = {
 			description = "loc_talent_execution_order_description",
@@ -2145,32 +2136,32 @@ local archetype_talents = {
 			format_values = {
 				time = {
 					format_type = "number",
-					value = talent_settings.execution_order.time,
+					value = talent_settings.execution_order.time
 				},
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings.execution_order.toughness,
+					value = talent_settings.execution_order.toughness
 				},
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.execution_order.damage,
+					value = talent_settings.execution_order.damage
 				},
 				dog_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.execution_order.companion_damage,
+					value = talent_settings.execution_order.companion_damage
 				},
 				attack_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.execution_order.attack_speed,
-				},
+					value = talent_settings.execution_order.attack_speed
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_execution_order",
-				identifier = "adamant_execution_order",
-			},
+				identifier = "adamant_execution_order"
+			}
 		},
 		adamant_execution_order_crit = {
 			description = "loc_talent_execution_order_crit_description",
@@ -2179,23 +2170,23 @@ local archetype_talents = {
 			format_values = {
 				time = {
 					format_type = "number",
-					value = talent_settings.execution_order.time,
+					value = talent_settings.execution_order.time
 				},
 				crit_chance = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.execution_order.crit_chance,
+					value = talent_settings.execution_order.crit_chance
 				},
 				crit_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.execution_order.crit_damage,
-				},
+					value = talent_settings.execution_order.crit_damage
+				}
 			},
 			special_rule = {
 				identifier = "adamant_execution_order_crit",
-				special_rule_name = special_rules.adamant_execution_order_crit,
-			},
+				special_rule_name = special_rules.adamant_execution_order_crit
+			}
 		},
 		adamant_execution_order_rending = {
 			description = "loc_talent_execution_order_command_applies_brittleness_description",
@@ -2204,18 +2195,18 @@ local archetype_talents = {
 			format_values = {
 				time = {
 					format_type = "number",
-					value = talent_settings.execution_order.time,
+					value = talent_settings.execution_order.time
 				},
 				rending = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.execution_order.rending,
-				},
+					value = talent_settings.execution_order.rending
+				}
 			},
 			special_rule = {
 				identifier = "adamant_execution_order_rending",
-				special_rule_name = special_rules.adamant_execution_order_rending,
-			},
+				special_rule_name = special_rules.adamant_execution_order_rending
+			}
 		},
 		adamant_execution_order_permastack = {
 			description = "loc_talent_execution_order_perma_buff_new_description",
@@ -2224,12 +2215,12 @@ local archetype_talents = {
 			format_values = {
 				max_stacks = {
 					format_type = "number",
-					value = talent_settings.execution_order.perma_max_stack,
+					value = talent_settings.execution_order.perma_max_stack
 				},
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.execution_order.damage_vs_monsters,
+					value = talent_settings.execution_order.damage_vs_monsters
 				},
 				damage_red = {
 					format_type = "percentage",
@@ -2237,13 +2228,13 @@ local archetype_talents = {
 					value = talent_settings.execution_order.damage_taken_vs_monsters,
 					value_manipulation = function (value)
 						return (1 - value) * 100
-					end,
-				},
+					end
+				}
 			},
 			special_rule = {
 				identifier = "adamant_execution_order_permastack",
-				special_rule_name = special_rules.adamant_execution_order_permastack,
-			},
+				special_rule_name = special_rules.adamant_execution_order_permastack
+			}
 		},
 		adamant_execution_order_monster_debuff = {
 			description = "loc_talent_execution_order_monster_description",
@@ -2255,13 +2246,13 @@ local archetype_talents = {
 					value = talent_settings.execution_order.monster_damage,
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			special_rule = {
 				identifier = "adamant_execution_order_monster_debuff",
-				special_rule_name = special_rules.adamant_execution_order_monster_debuff,
-			},
+				special_rule_name = special_rules.adamant_execution_order_monster_debuff
+			}
 		},
 		adamant_execution_order_cdr = {
 			description = "loc_talent_execution_order_cdr_on_kill_description",
@@ -2270,18 +2261,18 @@ local archetype_talents = {
 			format_values = {
 				time = {
 					format_type = "number",
-					value = talent_settings.execution_order.time,
+					value = talent_settings.execution_order.time
 				},
 				regen = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.execution_order.cdr,
-				},
+					value = talent_settings.execution_order.cdr
+				}
 			},
 			special_rule = {
 				identifier = "adamant_execution_order_cdr",
-				special_rule_name = special_rules.adamant_execution_order_cdr,
-			},
+				special_rule_name = special_rules.adamant_execution_order_cdr
+			}
 		},
 		adamant_execution_order_ally_toughness = {
 			description = "loc_talent_adamant_execution_order_allied_kills_toughness_desc",
@@ -2290,17 +2281,17 @@ local archetype_talents = {
 			format_values = {
 				keystone_name = {
 					format_type = "loc_string",
-					value = "loc_talent_adamant_exterminator",
+					value = "loc_talent_adamant_exterminator"
 				},
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings.execution_order.ally_toughness,
-				},
+					value = talent_settings.execution_order.ally_toughness
+				}
 			},
 			special_rule = {
 				identifier = "adamant_execution_order_ally_toughness",
-				special_rule_name = special_rules.adamant_execution_order_ally_toughness,
-			},
+				special_rule_name = special_rules.adamant_execution_order_ally_toughness
+			}
 		},
 		adamant_exterminator_toughness = {
 			description = "loc_talent_adamant_exterminator_toughness_desc",
@@ -2309,17 +2300,17 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_adamant_exterminator",
+					value = "loc_talent_adamant_exterminator"
 				},
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings.exterminator.toughness,
-				},
+					value = talent_settings.exterminator.toughness
+				}
 			},
 			special_rule = {
 				identifier = "adamant_exterminator_toughness",
-				special_rule_name = special_rules.adamant_exterminator_toughness,
-			},
+				special_rule_name = special_rules.adamant_exterminator_toughness
+			}
 		},
 		adamant_exterminator_boss_damage = {
 			description = "loc_talent_adamant_exterminator_boss_damage_desc",
@@ -2328,17 +2319,17 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_adamant_exterminator",
+					value = "loc_talent_adamant_exterminator"
 				},
 				boss_damage = {
 					format_type = "percentage",
-					value = talent_settings.exterminator.boss_damage,
-				},
+					value = talent_settings.exterminator.boss_damage
+				}
 			},
 			special_rule = {
 				identifier = "adamant_exterminator_boss_damage",
-				special_rule_name = special_rules.adamant_exterminator_boss_damage,
-			},
+				special_rule_name = special_rules.adamant_exterminator_boss_damage
+			}
 		},
 		adamant_exterminator_ability_cooldown = {
 			description = "loc_talent_adamant_exterminator_ability_cooldown_desc",
@@ -2347,17 +2338,17 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_adamant_exterminator",
+					value = "loc_talent_adamant_exterminator"
 				},
 				cooldown = {
 					format_type = "percentage",
-					value = talent_settings.exterminator.cooldown,
-				},
+					value = talent_settings.exterminator.cooldown
+				}
 			},
 			special_rule = {
 				identifier = "adamant_exterminator_ability_cooldown",
-				special_rule_name = special_rules.adamant_exterminator_ability_cooldown,
-			},
+				special_rule_name = special_rules.adamant_exterminator_ability_cooldown
+			}
 		},
 		adamant_exterminator_stack_during_activation = {
 			description = "loc_talent_adamant_exterminator_stack_during_activation_desc",
@@ -2366,17 +2357,17 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_adamant_exterminator",
+					value = "loc_talent_adamant_exterminator"
 				},
 				stacks = {
 					format_type = "number",
-					value = talent_settings.exterminator.stacks,
-				},
+					value = talent_settings.exterminator.stacks
+				}
 			},
 			special_rule = {
 				identifier = "adamant_exterminator_stack_during_activation",
-				special_rule_name = special_rules.adamant_exterminator_stack_during_activation,
-			},
+				special_rule_name = special_rules.adamant_exterminator_stack_during_activation
+			}
 		},
 		adamant_exterminator_stamina_ammo = {
 			description = "loc_talent_adamant_exterminator_stamina_ammo_desc",
@@ -2385,21 +2376,21 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_adamant_exterminator",
+					value = "loc_talent_adamant_exterminator"
 				},
 				stamina = {
 					format_type = "percentage",
-					value = talent_settings.exterminator.stamina,
+					value = talent_settings.exterminator.stamina
 				},
 				ammo = {
 					format_type = "percentage",
-					value = talent_settings.exterminator.ammo,
-				},
+					value = talent_settings.exterminator.ammo
+				}
 			},
 			special_rule = {
 				identifier = "adamant_exterminator_stamina_ammo",
-				special_rule_name = special_rules.adamant_exterminator_stamina_ammo,
-			},
+				special_rule_name = special_rules.adamant_exterminator_stamina_ammo
+			}
 		},
 		adamant_crit_chance_on_kill = {
 			description = "loc_talent_adamant_crit_chance_on_kill_desc",
@@ -2408,21 +2399,21 @@ local archetype_talents = {
 			format_values = {
 				crit_chance = {
 					format_type = "percentage",
-					value = talent_settings.crit_chance_on_kill.crit_chance,
+					value = talent_settings.crit_chance_on_kill.crit_chance
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.crit_chance_on_kill.duration,
+					value = talent_settings.crit_chance_on_kill.duration
 				},
 				max_stacks = {
 					format_type = "number",
-					value = talent_settings.crit_chance_on_kill.max_stacks,
-				},
+					value = talent_settings.crit_chance_on_kill.max_stacks
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_crit_chance_on_kill",
-				identifier = "adamant_crit_chance_on_kill",
-			},
+				identifier = "adamant_crit_chance_on_kill"
+			}
 		},
 		adamant_crits_rend = {
 			description = "loc_talent_adamant_crits_rend_alt_desc",
@@ -2432,13 +2423,13 @@ local archetype_talents = {
 				rending = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.crits_rend.rending,
-				},
+					value = talent_settings.crits_rend.rending
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_crits_rend",
-				identifier = "adamant_crits_rend",
-			},
+				identifier = "adamant_crits_rend"
+			}
 		},
 		adamant_companion_focus_melee = {
 			description = "loc_talent_adamant_cyber_mastiff_melee_desc",
@@ -2448,17 +2439,17 @@ local archetype_talents = {
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.companion_focus_melee.damage,
-				},
+					value = talent_settings.companion_focus_melee.damage
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_companion_focus_melee",
-				identifier = "adamant_companion_focus_melee",
+				identifier = "adamant_companion_focus_melee"
 			},
 			special_rule = {
 				identifier = "adamant_companion_melee_focus",
-				special_rule_name = special_rules.adamant_companion_melee_focus,
-			},
+				special_rule_name = special_rules.adamant_companion_melee_focus
+			}
 		},
 		adamant_companion_focus_ranged = {
 			description = "loc_talent_adamant_cyber_mastiff_ranged_desc",
@@ -2468,17 +2459,17 @@ local archetype_talents = {
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.companion_focus_ranged.damage,
-				},
+					value = talent_settings.companion_focus_ranged.damage
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_companion_focus_ranged",
-				identifier = "adamant_companion_focus_ranged",
+				identifier = "adamant_companion_focus_ranged"
 			},
 			special_rule = {
 				identifier = "adamant_companion_ranged_focus",
-				special_rule_name = special_rules.adamant_companion_ranged_focus,
-			},
+				special_rule_name = special_rules.adamant_companion_ranged_focus
+			}
 		},
 		adamant_companion_focus_elite = {
 			description = "loc_talent_adamant_cyber_mastiff_elites_desc",
@@ -2488,17 +2479,17 @@ local archetype_talents = {
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.companion_focus_elite.damage,
-				},
+					value = talent_settings.companion_focus_elite.damage
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_companion_focus_elite",
-				identifier = "adamant_companion_focus_elite",
+				identifier = "adamant_companion_focus_elite"
 			},
 			special_rule = {
 				identifier = "adamant_companion_elite_focus",
-				special_rule_name = special_rules.adamant_companion_elite_focus,
-			},
+				special_rule_name = special_rules.adamant_companion_elite_focus
+			}
 		},
 		adamant_suppression_immunity = {
 			description = "loc_talent_adamant_suppression_immunity_desc",
@@ -2507,8 +2498,8 @@ local archetype_talents = {
 			format_values = {},
 			passive = {
 				buff_template_name = "adamant_suppression_immunity",
-				identifier = "adamant_suppression_immunity",
-			},
+				identifier = "adamant_suppression_immunity"
+			}
 		},
 		adamant_damage_vs_suppressed = {
 			description = "loc_talent_adamant_damage_vs_suppressed_desc",
@@ -2518,13 +2509,13 @@ local archetype_talents = {
 				damage_vs_suppressed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.damage_vs_suppressed.damage_vs_suppressed,
-				},
+					value = talent_settings.damage_vs_suppressed.damage_vs_suppressed
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_damage_vs_suppressed",
-				identifier = "adamant_damage_vs_suppressed",
-			},
+				identifier = "adamant_damage_vs_suppressed"
+			}
 		},
 		adamant_clip_size = {
 			description = "loc_talent_adamant_clip_size_alt_desc",
@@ -2534,13 +2525,13 @@ local archetype_talents = {
 				clip_size = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.clip_size.clip_size_modifier,
-				},
+					value = talent_settings.clip_size.clip_size_modifier
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_clip_size",
-				identifier = "adamant_clip_size",
-			},
+				identifier = "adamant_clip_size"
+			}
 		},
 		adamant_stacking_damage = {
 			description = "loc_talent_adamant_stacking_damage_desc",
@@ -2550,21 +2541,21 @@ local archetype_talents = {
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.stacking_damage.damage,
+					value = talent_settings.stacking_damage.damage
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.stacking_damage.duration,
+					value = talent_settings.stacking_damage.duration
 				},
 				stacks = {
 					format_type = "number",
-					value = talent_settings.stacking_damage.stacks,
-				},
+					value = talent_settings.stacking_damage.stacks
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_stacking_damage",
-				identifier = "adamant_stacking_damage",
-			},
+				identifier = "adamant_stacking_damage"
+			}
 		},
 		adamant_staggering_enemies_take_more_damage = {
 			description = "loc_talent_ogryn_big_bully_heavy_hits_new_desc",
@@ -2574,17 +2565,17 @@ local archetype_talents = {
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.staggering_enemies_take_more_damage.damage,
+					value = talent_settings.staggering_enemies_take_more_damage.damage
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.staggering_enemies_take_more_damage.duration,
-				},
+					value = talent_settings.staggering_enemies_take_more_damage.duration
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_staggering_increases_damage_taken",
-				identifier = "adamant_staggering_increases_damage_taken",
-			},
+				identifier = "adamant_staggering_increases_damage_taken"
+			}
 		},
 		adamant_staggered_enemies_deal_less_damage = {
 			description = "loc_talent_adamant_staggered_enemies_deal_less_damage_desc",
@@ -2593,17 +2584,17 @@ local archetype_talents = {
 			format_values = {
 				damage = {
 					format_type = "percentage",
-					value = talent_settings.staggered_enemies_deal_less_damage.damage,
+					value = talent_settings.staggered_enemies_deal_less_damage.damage
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.staggered_enemies_deal_less_damage.duration,
-				},
+					value = talent_settings.staggered_enemies_deal_less_damage.duration
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_staggered_enemies_deal_less_damage",
-				identifier = "adamant_staggered_enemies_deal_less_damage",
-			},
+				identifier = "adamant_staggered_enemies_deal_less_damage"
+			}
 		},
 		adamant_melee_weakspot_hits_count_as_stagger = {
 			description = "loc_talent_adamant_melee_weakspot_hits_count_as_stagger_desc",
@@ -2612,17 +2603,17 @@ local archetype_talents = {
 			format_values = {
 				duration = {
 					format_type = "number",
-					value = talent_settings.melee_weakspot_hits_count_as_stagger.duration,
-				},
+					value = talent_settings.melee_weakspot_hits_count_as_stagger.duration
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_melee_weakspot_hits_count_as_stagger",
-				identifier = "adamant_melee_weakspot_hits_count_as_stagger",
+				identifier = "adamant_melee_weakspot_hits_count_as_stagger"
 			},
 			special_rule = {
 				identifier = "adamant_melee_weakspots_count_as_staggered",
-				special_rule_name = special_rules.adamant_melee_weakspots_count_as_staggered,
-			},
+				special_rule_name = special_rules.adamant_melee_weakspots_count_as_staggered
+			}
 		},
 		adamant_weapon_handling = {
 			description = "loc_talent_adamant_weapon_handling_desc",
@@ -2631,26 +2622,26 @@ local archetype_talents = {
 			format_values = {
 				recoil = {
 					format_type = "percentage",
-					value = talent_settings.weapon_handling.recoil,
+					value = talent_settings.weapon_handling.recoil
 				},
 				spread = {
 					format_type = "percentage",
-					value = talent_settings.weapon_handling.spread,
+					value = talent_settings.weapon_handling.spread
 				},
 				time = {
 					format_type = "number",
 					num_decimals = 1,
-					value = talent_settings.weapon_handling.time,
+					value = talent_settings.weapon_handling.time
 				},
 				stacks = {
 					format_type = "number",
-					value = talent_settings.weapon_handling.stacks,
-				},
+					value = talent_settings.weapon_handling.stacks
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_weapon_handling",
-				identifier = "adamant_weapon_handling",
-			},
+				identifier = "adamant_weapon_handling"
+			}
 		},
 		adamant_increased_damage_to_high_health = {
 			description = "loc_talent_adamant_increased_damage_to_high_health_desc",
@@ -2659,17 +2650,17 @@ local archetype_talents = {
 			format_values = {
 				damage = {
 					format_type = "percentage",
-					value = talent_settings.increased_damage_to_high_health.damage,
+					value = talent_settings.increased_damage_to_high_health.damage
 				},
 				health = {
 					format_type = "percentage",
-					value = talent_settings.increased_damage_to_high_health.health,
-				},
+					value = talent_settings.increased_damage_to_high_health.health
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_increased_damage_to_high_health",
-				identifier = "adamant_increased_damage_to_high_health",
-			},
+				identifier = "adamant_increased_damage_to_high_health"
+			}
 		},
 		adamant_movement_speed_on_block = {
 			description = "loc_talent_adamant_movement_speed_on_block_alt_desc",
@@ -2679,17 +2670,17 @@ local archetype_talents = {
 				movement_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.movement_speed_on_block.movement_speed,
+					value = talent_settings.movement_speed_on_block.movement_speed
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.movement_speed_on_block.duration,
-				},
+					value = talent_settings.movement_speed_on_block.duration
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_movement_speed_on_block",
-				identifier = "adamant_movement_speed_on_block",
-			},
+				identifier = "adamant_movement_speed_on_block"
+			}
 		},
 		adamant_elite_special_kills_reload_speed = {
 			description = "loc_talent_adamant_elite_special_kills_reload_speed_desc",
@@ -2698,13 +2689,13 @@ local archetype_talents = {
 			format_values = {
 				reload_speed = {
 					format_type = "percentage",
-					value = talent_settings.elite_special_kills_reload_speed.reload_speed,
-				},
+					value = talent_settings.elite_special_kills_reload_speed.reload_speed
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_elite_special_kills_reload_speed",
-				identifier = "adamant_elite_special_kills_reload_speed",
-			},
+				identifier = "adamant_elite_special_kills_reload_speed"
+			}
 		},
 		adamant_dodge_grants_damage = {
 			description = "loc_talent_adamant_dodge_grants_damage_desc",
@@ -2713,17 +2704,17 @@ local archetype_talents = {
 			format_values = {
 				damage = {
 					format_type = "percentage",
-					value = talent_settings.dodge_grants_damage.damage,
+					value = talent_settings.dodge_grants_damage.damage
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.dodge_grants_damage.duration,
-				},
+					value = talent_settings.dodge_grants_damage.duration
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_dodge_grants_damage",
-				identifier = "adamant_dodge_grants_damage",
-			},
+				identifier = "adamant_dodge_grants_damage"
+			}
 		},
 		adamant_stacking_weakspot_strength = {
 			description = "loc_talent_adamant_stacking_weakspot_strength_duration_desc",
@@ -2732,21 +2723,21 @@ local archetype_talents = {
 			format_values = {
 				strength = {
 					format_type = "percentage",
-					value = talent_settings.stacking_weakspot_strength.strength,
+					value = talent_settings.stacking_weakspot_strength.strength
 				},
 				max_stacks = {
 					format_type = "number",
-					value = talent_settings.stacking_weakspot_strength.max_stacks,
+					value = talent_settings.stacking_weakspot_strength.max_stacks
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.stacking_weakspot_strength.duration,
-				},
+					value = talent_settings.stacking_weakspot_strength.duration
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_stacking_weakspot_strength",
-				identifier = "adamant_stacking_weakspot_strength",
-			},
+				identifier = "adamant_stacking_weakspot_strength"
+			}
 		},
 		adamant_ranged_damage_on_melee_stagger = {
 			description = "loc_talent_adamant_ranged_damage_on_melee_stagger_desc",
@@ -2755,17 +2746,17 @@ local archetype_talents = {
 			format_values = {
 				damage = {
 					format_type = "percentage",
-					value = talent_settings.ranged_damage_on_melee_stagger.ranged_damage,
+					value = talent_settings.ranged_damage_on_melee_stagger.ranged_damage
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.ranged_damage_on_melee_stagger.duration,
-				},
+					value = talent_settings.ranged_damage_on_melee_stagger.duration
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_ranged_damage_on_melee_stagger",
-				identifier = "adamant_ranged_damage_on_melee_stagger",
-			},
+				identifier = "adamant_ranged_damage_on_melee_stagger"
+			}
 		},
 		adamant_dodge_improvement = {
 			description = "loc_talent_adamant_dodge_improvement_desc",
@@ -2775,18 +2766,18 @@ local archetype_talents = {
 				dodge = {
 					format_type = "number",
 					prefix = "+",
-					value = talent_settings.dodge_improvement.dodge,
+					value = talent_settings.dodge_improvement.dodge
 				},
 				dodge_duration = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.dodge_improvement.dodge_duration,
-				},
+					value = talent_settings.dodge_improvement.dodge_duration
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_dodge_improvement",
-				identifier = "adamant_dodge_improvement",
-			},
+				identifier = "adamant_dodge_improvement"
+			}
 		},
 		adamant_stamina_spent_replenish_toughness = {
 			description = "loc_talent_adamant_stamina_spent_replenish_toughness_desc",
@@ -2795,21 +2786,21 @@ local archetype_talents = {
 			format_values = {
 				stamina = {
 					format_type = "number",
-					value = talent_settings.stamina_spent_replenish_toughness.stamina,
+					value = talent_settings.stamina_spent_replenish_toughness.stamina
 				},
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings.stamina_spent_replenish_toughness.toughness,
+					value = talent_settings.stamina_spent_replenish_toughness.toughness
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.stamina_spent_replenish_toughness.duration,
-				},
+					value = talent_settings.stamina_spent_replenish_toughness.duration
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_stamina_spent_replenish_toughness",
-				identifier = "adamant_stamina_spent_replenish_toughness",
-			},
+				identifier = "adamant_stamina_spent_replenish_toughness"
+			}
 		},
 		adamant_monster_hunter = {
 			description = "loc_talent_adamant_monster_hunter_desc",
@@ -2819,13 +2810,13 @@ local archetype_talents = {
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.monster_hunter.damage,
-				},
+					value = talent_settings.monster_hunter.damage
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_monster_hunter",
-				identifier = "adamant_monster_hunter",
-			},
+				identifier = "adamant_monster_hunter"
+			}
 		},
 		adamant_uninterruptible_heavies = {
 			description = "loc_talent_adamant_uninterruptible_heavies_desc",
@@ -2834,8 +2825,8 @@ local archetype_talents = {
 			format_values = {},
 			passive = {
 				buff_template_name = "adamant_uninterruptible_heavies",
-				identifier = "adamant_uninterruptible_heavies",
-			},
+				identifier = "adamant_uninterruptible_heavies"
+			}
 		},
 		adamant_first_melee_hit_increased_damage = {
 			description = "loc_talent_adamant_first_melee_hit_increased_damage_desc",
@@ -2845,18 +2836,18 @@ local archetype_talents = {
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.first_melee_hit_increased_damage.damage,
+					value = talent_settings.first_melee_hit_increased_damage.damage
 				},
 				impact = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.first_melee_hit_increased_damage.impact,
-				},
+					value = talent_settings.first_melee_hit_increased_damage.impact
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_first_melee_hit_increased_damage",
-				identifier = "adamant_first_melee_hit_increased_damage",
-			},
+				identifier = "adamant_first_melee_hit_increased_damage"
+			}
 		},
 		adamant_pinning_dog_bonus_moving_towards = {
 			description = "loc_talent_adamant_pinning_dog_bonus_moving_towards_description",
@@ -2866,22 +2857,22 @@ local archetype_talents = {
 				movement_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.pinning_dog_bonus_moving_towards.movement_speed,
+					value = talent_settings.pinning_dog_bonus_moving_towards.movement_speed
 				},
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.pinning_dog_bonus_moving_towards.damage,
+					value = talent_settings.pinning_dog_bonus_moving_towards.damage
 				},
 				time = {
 					format_type = "number",
-					value = talent_settings.pinning_dog_bonus_moving_towards.time,
-				},
+					value = talent_settings.pinning_dog_bonus_moving_towards.time
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_pinning_dog_bonus_moving_towards",
-				identifier = "adamant_pinning_dog_bonus_moving_towards",
-			},
+				identifier = "adamant_pinning_dog_bonus_moving_towards"
+			}
 		},
 		adamant_pinning_dog_cleave_bonus = {
 			description = "loc_talent_adamant_pinning_dog_cleave_bonus_description",
@@ -2891,13 +2882,13 @@ local archetype_talents = {
 				cleave = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.pinning_dog_cleave_bonus.cleave,
+					value = talent_settings.pinning_dog_cleave_bonus.cleave
 				},
 				time = {
 					format_type = "number",
-					value = talent_settings.pinning_dog_cleave_bonus.time,
-				},
-			},
+					value = talent_settings.pinning_dog_cleave_bonus.time
+				}
+			}
 		},
 		adamant_pinning_dog_elite_damage = {
 			description = "loc_talent_adamant_pinning_dog_elite_damage_description",
@@ -2907,17 +2898,17 @@ local archetype_talents = {
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.pinning_dog_elite_damage.damage,
+					value = talent_settings.pinning_dog_elite_damage.damage
 				},
 				time = {
 					format_type = "number",
-					value = talent_settings.pinning_dog_elite_damage.duration,
-				},
+					value = talent_settings.pinning_dog_elite_damage.duration
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_pinning_dog_elite_damage",
-				identifier = "adamant_pinning_dog_elite_damage",
-			},
+				identifier = "adamant_pinning_dog_elite_damage"
+			}
 		},
 		adamant_pinning_dog_permanent_stacks = {
 			description = "loc_talent_adamant_pinning_dog_permanent_stacks_description",
@@ -2927,17 +2918,17 @@ local archetype_talents = {
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.pinning_dog_permanent_stacks.damage,
+					value = talent_settings.pinning_dog_permanent_stacks.damage
 				},
 				stacks = {
 					format_type = "number",
-					value = talent_settings.pinning_dog_permanent_stacks.stacks,
-				},
+					value = talent_settings.pinning_dog_permanent_stacks.stacks
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_pinning_dog_permanent_stacks",
-				identifier = "adamant_pinning_dog_permanent_stacks",
-			},
+				identifier = "adamant_pinning_dog_permanent_stacks"
+			}
 		},
 		adamant_pinning_dog_kills_buff_allies = {
 			description = "loc_talent_adamant_pinning_dog_kills_buff_allies_description",
@@ -2950,22 +2941,22 @@ local archetype_talents = {
 					value = talent_settings.pinning_dog_kills_buff_allies.tdr,
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
-					end,
+					end
 				},
 				toughness = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.pinning_dog_kills_buff_allies.toughness,
+					value = talent_settings.pinning_dog_kills_buff_allies.toughness
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.pinning_dog_kills_buff_allies.duration,
-				},
+					value = talent_settings.pinning_dog_kills_buff_allies.duration
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_pinning_dog_kills_buff_allies",
-				identifier = "adamant_pinning_dog_kills_buff_allies",
-			},
+				identifier = "adamant_pinning_dog_kills_buff_allies"
+			}
 		},
 		adamant_pinning_dog_kills_cdr = {
 			description = "loc_talent_adamant_pinning_dog_kills_cdr_description",
@@ -2975,17 +2966,17 @@ local archetype_talents = {
 				regen = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.pinning_dog_kills_cdr.regen,
+					value = talent_settings.pinning_dog_kills_cdr.regen
 				},
 				time = {
 					format_type = "number",
-					value = talent_settings.pinning_dog_kills_cdr.time,
-				},
+					value = talent_settings.pinning_dog_kills_cdr.time
+				}
 			},
 			passive = {
 				buff_template_name = "adamant_pinning_dog_kills_cdr",
-				identifier = "adamant_pinning_dog_kills_cdr",
-			},
+				identifier = "adamant_pinning_dog_kills_cdr"
+			}
 		},
 		adamant_sprinting_sliding = {
 			description = "loc_talent_adamant_sprinting_sliding_description",
@@ -2995,34 +2986,34 @@ local archetype_talents = {
 				speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.sprinting_sliding.speed,
+					value = talent_settings.sprinting_sliding.speed
 				},
 				stamina = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.sprinting_sliding.stamina,
+					value = talent_settings.sprinting_sliding.stamina
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.sprinting_sliding.duration,
+					value = talent_settings.sprinting_sliding.duration
 				},
 				cd = {
 					format_type = "number",
-					value = talent_settings.sprinting_sliding.cd,
-				},
+					value = talent_settings.sprinting_sliding.cd
+				}
 			},
 			passive = {
 				identifier = {
 					"adamant_sprinting_sliding",
-					"adamant_sprinting_sliding_kills",
+					"adamant_sprinting_sliding_kills"
 				},
 				buff_template_name = {
 					"adamant_sprinting_sliding",
-					"adamant_sprinting_sliding_kills",
-				},
-			},
-		},
-	},
+					"adamant_sprinting_sliding_kills"
+				}
+			}
+		}
+	}
 }
 
 return archetype_talents

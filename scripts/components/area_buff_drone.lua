@@ -5,13 +5,13 @@ local RESOURCES = {
 	sfx = {
 		idle_loop = {
 			start = "wwise/events/player/play_buff_drone_engine_loop",
-			stop = "wwise/events/player/stop_buff_drone_engine_loop",
+			stop = "wwise/events/player/stop_buff_drone_engine_loop"
 		},
 		deployed_loop = {
 			start = "wwise/events/player/play_buff_drone_buff_loop",
-			stop = "wwise/events/player/stop_buff_drone_buff_loop",
-		},
-	},
+			stop = "wwise/events/player/stop_buff_drone_buff_loop"
+		}
+	}
 }
 local CENTER_NODE_NAME = "fx_center"
 local AreaBuffDrone = component("AreaBuffDrone")

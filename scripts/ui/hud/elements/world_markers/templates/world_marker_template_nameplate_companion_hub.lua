@@ -7,15 +7,15 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local template = {}
 local size = {
 	400,
-	20,
+	20
 }
 local arrow_size = {
 	60,
-	60,
+	60
 }
 local icon_size = {
 	128,
-	128,
+	128
 }
 local companion_glyph = ""
 
@@ -25,7 +25,7 @@ template.unit_node = "companion_name"
 template.position_offset = {
 	0,
 	0,
-	0,
+	0
 }
 template.check_line_of_sight = false
 template.max_distance = 15
@@ -34,13 +34,13 @@ template.screen_margins = {
 	down = 0.09259259259259259,
 	left = 0.052083333333333336,
 	right = 0.052083333333333336,
-	up = 0.09259259259259259,
+	up = 0.09259259259259259
 }
 template.scale_settings = {
 	distance_max = 100,
 	distance_min = 10,
 	scale_from = 0.8,
-	scale_to = 1,
+	scale_to = 1
 }
 template.fade_settings = {
 	default_fade = 1,
@@ -48,7 +48,7 @@ template.fade_settings = {
 	fade_to = 1,
 	distance_max = template.max_distance,
 	distance_min = template.max_distance * 0.5,
-	easing_function = math.ease_exp,
+	easing_function = math.ease_exp
 }
 
 template.create_widget_defintion = function (template, scenegraph_id)
@@ -71,18 +71,18 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				text_color = header_font_color,
 				font_type = header_font_settings.font_type,
 				font_size = header_font_settings.font_size,
 				default_font_size = header_font_settings.font_size,
 				default_text_color = header_font_color,
-				size = size,
+				size = size
 			},
 			visibility_function = function (content, style)
 				return not content.is_clamped
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -99,17 +99,17 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					0,
 					-3,
-					2,
+					2
 				},
 				font_type = header_font_settings.font_type,
 				default_font_size = header_font_settings.font_size,
 				text_color = header_font_color,
 				default_text_color = header_font_color,
-				size = icon_size,
+				size = icon_size
 			},
 			visibility_function = function (content, style)
 				return content.is_clamped
-			end,
+			end
 		},
 		{
 			pass_type = "rotated_texture",
@@ -123,17 +123,17 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
-				color = Color.ui_hud_green_super_light(255, true),
+				color = Color.ui_hud_green_super_light(255, true)
 			},
 			visibility_function = function (content, style)
 				return content.is_clamped
 			end,
 			change_function = function (content, style)
 				style.angle = content.angle
-			end,
-		},
+			end
+		}
 	}, scenegraph_id)
 end
 

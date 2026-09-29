@@ -13,7 +13,7 @@ local CutsceneCharacterExtension = class("CutsceneCharacterExtension")
 local STATE_MACHINE_TYPES = {
 	inventory = 1,
 	none = 0,
-	weapon = 2,
+	weapon = 2
 }
 
 CutsceneCharacterExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -205,7 +205,7 @@ CutsceneCharacterExtension.assign_player_loadout = function (self, player_unique
 	local profile_spawner_companion_data = {
 		attach_to_character = false,
 		optional_unit_3p = companion_unit,
-		ignore = cutscene_companion_extension == nil,
+		ignore = cutscene_companion_extension == nil
 	}
 	local profile = Managers.player:player_from_unique_id(player_unique_id):profile()
 	local unit = self._unit
@@ -297,6 +297,10 @@ CutsceneCharacterExtension.set_visibility = function (self, state)
 end
 
 CutsceneCharacterExtension.set_weapon_animation_event = function (self, animation_event)
+	if not self._equipped_weapon then
+		return
+	end
+
 	if self:_check_valid_animation(self._cinematic_name, animation_event, STATE_MACHINE_TYPES.weapon) then
 		self._weapon_animation_event = animation_event
 	end
@@ -317,12 +321,11 @@ CutsceneCharacterExtension.start_weapon_specific_walk_animation = function (self
 end
 
 CutsceneCharacterExtension._start_weapon_specific_walk_animation = function (self)
-	local unit = self._unit
-	local event = self._weapon_animation_event
-
 	if self._cutscene_companion_extension then
 		self._cutscene_companion_extension:trigger_walk_animation_event()
 	end
+
+	local unit = self._unit
 
 	if self._current_state_machine_type ~= STATE_MACHINE_TYPES.weapon then
 		local weapon_template = WeaponTemplates[self._equipped_weapon.weapon_template]
@@ -346,8 +349,10 @@ CutsceneCharacterExtension._start_weapon_specific_walk_animation = function (sel
 		self._current_state_machine_type = STATE_MACHINE_TYPES.weapon
 	end
 
-	if Unit.has_animation_event(unit, event) then
-		Unit.animation_event(unit, event)
+	local anim_event = self._weapon_animation_event
+
+	if Unit.has_animation_event(unit, anim_event) then
+		Unit.animation_event(unit, anim_event)
 	end
 end
 

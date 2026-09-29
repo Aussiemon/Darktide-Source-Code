@@ -5,8 +5,9 @@ require("scripts/ui/views/base_view")
 local Breeds = require("scripts/settings/breed/breeds")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local Definitions = require("scripts/ui/views/item_grid_view_base/item_grid_view_base_definitions")
-local ItemUtils = require("scripts/utilities/items")
+local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
+local ProfileUtils = require("scripts/utilities/profile_utils")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -89,82 +90,82 @@ ItemGridViewBase._setup_sort_options = function (self)
 		self._sort_options = {
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power")
 				}),
-				sort_function = ItemUtils.sort_comparator({
+				sort_function = Items.sort_comparator({
 					">",
-					ItemUtils.compare_item_level,
+					Items.compare_item_level,
 					"<",
-					ItemUtils.compare_item_name,
+					Items.compare_item_name,
 					"<",
-					ItemUtils.compare_item_rarity,
-				}),
+					Items.compare_item_rarity
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power")
 				}),
-				sort_function = ItemUtils.sort_comparator({
+				sort_function = Items.sort_comparator({
 					"<",
-					ItemUtils.compare_item_level,
+					Items.compare_item_level,
 					"<",
-					ItemUtils.compare_item_name,
+					Items.compare_item_name,
 					"<",
-					ItemUtils.compare_item_rarity,
-				}),
+					Items.compare_item_rarity
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
 				}),
-				sort_function = ItemUtils.sort_comparator({
+				sort_function = Items.sort_comparator({
 					">",
-					ItemUtils.compare_item_rarity,
+					Items.compare_item_rarity,
 					">",
-					ItemUtils.compare_item_level,
+					Items.compare_item_level,
 					"<",
-					ItemUtils.compare_item_name,
-				}),
+					Items.compare_item_name
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
 				}),
-				sort_function = ItemUtils.sort_comparator({
+				sort_function = Items.sort_comparator({
 					"<",
-					ItemUtils.compare_item_rarity,
+					Items.compare_item_rarity,
 					">",
-					ItemUtils.compare_item_level,
+					Items.compare_item_level,
 					"<",
-					ItemUtils.compare_item_name,
-				}),
+					Items.compare_item_name
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_increasing_letters", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
 				}),
-				sort_function = ItemUtils.sort_comparator({
+				sort_function = Items.sort_comparator({
 					"<",
-					ItemUtils.compare_item_name,
+					Items.compare_item_name,
 					"<",
-					ItemUtils.compare_item_level,
+					Items.compare_item_level,
 					"<",
-					ItemUtils.compare_item_rarity,
-				}),
+					Items.compare_item_rarity
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_decreasing_letters", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
 				}),
-				sort_function = ItemUtils.sort_comparator({
+				sort_function = Items.sort_comparator({
 					">",
-					ItemUtils.compare_item_name,
+					Items.compare_item_name,
 					"<",
-					ItemUtils.compare_item_level,
+					Items.compare_item_level,
 					"<",
-					ItemUtils.compare_item_rarity,
-				}),
-			},
+					Items.compare_item_rarity
+				})
+			}
 		}
 	end
 
@@ -212,7 +213,7 @@ ItemGridViewBase._setup_menu_tabs = function (self, content)
 	tab_button_template[1].style = {
 		on_released_sound = nil,
 		on_hover_sound = UISoundEvents.tab_secondary_button_hovered,
-		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
+		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed
 	}
 
 	local tab_ids = {}
@@ -361,12 +362,7 @@ ItemGridViewBase._update_tab_bar_position = function (self)
 end
 
 ItemGridViewBase._set_preview_widgets_visibility = function (self, visible)
-	local widgets_by_name = self._widgets_by_name
-
-	widgets_by_name.display_name.content.visible = visible
-	widgets_by_name.display_name_divider.content.visible = visible
-	widgets_by_name.display_name_divider_glow.content.visible = visible
-	widgets_by_name.sub_display_name.content.visible = visible
+	return
 end
 
 ItemGridViewBase._stop_previewing = function (self)
@@ -395,7 +391,7 @@ ItemGridViewBase._preview_item = function (self, item)
 	self:_stop_previewing()
 
 	local item_stats_context = {
-		hide_source = self._hide_item_source_in_tooltip,
+		hide_source = self._hide_item_source_in_tooltip
 	}
 
 	if item and item.display_name and string.match(item.display_name, "unarmed") then
@@ -450,7 +446,7 @@ ItemGridViewBase._preview_item = function (self, item)
 			end
 		end
 	elseif item_type == "WEAPON_SKIN" then
-		local visual_item = ItemUtils.weapon_skin_preview_item(item)
+		local visual_item = Items.weapon_skin_preview_item(item)
 
 		if visual_item then
 			if self._weapon_preview then
@@ -464,15 +460,6 @@ ItemGridViewBase._preview_item = function (self, item)
 	elseif (item_type == "GEAR_UPPERBODY" or item_type == "GEAR_LOWERBODY" or item_type == "GEAR_HEAD" or item_type == "GEAR_EXTRA_COSMETIC" or item_type == "END_OF_ROUND" or item_type == "COMPANION_GEAR_FULL") and self._weapon_stats then
 		self._weapon_stats:present_item(item, item_stats_context)
 	end
-
-	local display_name = ItemUtils.display_name(item)
-	local sub_display_name = ItemUtils.sub_display_name(item)
-	local rarity_color = ItemUtils.rarity_color(item)
-	local widgets_by_name = self._widgets_by_name
-
-	widgets_by_name.sub_display_name.content.text = sub_display_name
-	widgets_by_name.display_name.content.text = display_name
-	widgets_by_name.display_name_divider_glow.style.texture.color = table.clone(rarity_color)
 end
 
 ItemGridViewBase._fetch_item_compare_slot_name = function (self, item)
@@ -506,7 +493,7 @@ ItemGridViewBase._setup_weapon_preview = function (self)
 		local layer = 10
 		local context = {
 			draw_background = true,
-			ignore_blur = true,
+			ignore_blur = true
 		}
 
 		self._weapon_preview = self:_add_element(ViewElementInventoryWeaponPreview, reference_name, layer, context)
@@ -518,7 +505,7 @@ ItemGridViewBase._setup_weapon_preview = function (self)
 		self._weapon_preview:center_align(0, {
 			-0.6,
 			-2,
-			-0.2,
+			-0.2
 		})
 		self._weapon_preview:set_force_allow_rotation(true)
 		self:_update_weapon_preview_viewport()
@@ -821,7 +808,7 @@ ItemGridViewBase._sort_grid_layout = function (self, sort_function, optional_fil
 		else
 			external_layouts[#external_layouts + 1] = {
 				index = i,
-				layout = layout,
+				layout = layout
 			}
 		end
 	end
@@ -872,7 +859,7 @@ ItemGridViewBase._add_external_layout = function (self, layout)
 
 	local spacing_entry = {
 		is_external = true,
-		widget_type = "spacing_vertical",
+		widget_type = "spacing_vertical"
 	}
 
 	if not layout[1].is_external then
@@ -1181,6 +1168,7 @@ end
 
 ItemGridViewBase.cb_on_inspect_pressed = function (self)
 	local previewed_item = self._previewed_item
+	local previewed_element = self._previewed_element
 
 	if previewed_item then
 		local item_type = previewed_item.item_type
@@ -1196,7 +1184,7 @@ ItemGridViewBase.cb_on_inspect_pressed = function (self)
 
 			if item_type == "WEAPON_SKIN" then
 				local include_skin_item_texts = true
-				local visual_item = ItemUtils.weapon_skin_preview_item(previewed_item, include_skin_item_texts)
+				local visual_item = Items.weapon_skin_preview_item(previewed_item, include_skin_item_texts)
 				local player_profile = self._presentation_profile
 				local is_item_supported_on_played_character = false
 
@@ -1214,8 +1202,7 @@ ItemGridViewBase.cb_on_inspect_pressed = function (self)
 					is_item_supported_on_played_character = true
 				end
 
-				local preferred_gender = player_profile and player_profile.gender
-				local profile = is_item_supported_on_played_character and player_profile or ItemUtils.create_mannequin_profile_by_item(visual_item, preferred_gender)
+				local profile = is_item_supported_on_played_character and player_profile or ProfileUtils.create_mannequin_profile(visual_item, player_profile)
 				local slots = visual_item.slots
 				local slot_name = slots[1]
 
@@ -1232,7 +1219,7 @@ ItemGridViewBase.cb_on_inspect_pressed = function (self)
 					animation_event = animation_event,
 					wield_slot = slot_name,
 					preview_with_gear = is_item_supported_on_played_character,
-					preview_item = visual_item,
+					preview_item = visual_item
 				}
 			else
 				local profile = self._presentation_profile
@@ -1258,6 +1245,7 @@ ItemGridViewBase.cb_on_inspect_pressed = function (self)
 					profile = profile,
 					preview_with_gear = is_item_supported_on_played_character,
 					preview_item = previewed_item,
+					use_store_appearance = previewed_element and previewed_element.premium_offer
 				}
 			end
 

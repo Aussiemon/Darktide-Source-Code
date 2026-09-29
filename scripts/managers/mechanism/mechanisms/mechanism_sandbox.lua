@@ -80,8 +80,8 @@ MechanismSandbox.wanted_transition = function (self)
 			side_mission = side_mission,
 			next_state = StateGameplay,
 			next_state_params = {
-				mechanism_data = mechanism_data,
-			},
+				mechanism_data = mechanism_data
+			}
 		}
 	end
 

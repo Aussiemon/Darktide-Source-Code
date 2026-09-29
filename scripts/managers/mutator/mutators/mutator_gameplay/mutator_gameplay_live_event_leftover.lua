@@ -44,8 +44,8 @@ MutatorGameplayLiveEventLeftover.destroy = function (self)
 	local players = Managers.player:human_players()
 	local data = {
 		statistics = {
-			collected = self._collected_artefacts,
-		},
+			collected = self._collected_artefacts
+		}
 	}
 	local event_data = Managers.live_event:get_event_data_by_name("leftover")
 	local track_id = event_data and event_data.id
@@ -126,7 +126,7 @@ MutatorGameplayLiveEventLeftover._set_player_faction = function (self, player, f
 	if not entry then
 		entry = {
 			faction = nil,
-			indexes = {},
+			indexes = {}
 		}
 		self._player_faction_buffs[account_id] = entry
 	end
@@ -223,20 +223,20 @@ MutatorGameplayLiveEventLeftover.get_side_notification_data_formatter = function
 		local amount = string.format(" %s \n +%s", localized_amount, data.amount_value)
 		local for_amount = string.format("{#color(%d,%d,%d)}%s{#reset()}", selected_color[2], selected_color[3], selected_color[4], Localize("loc_player_leftover_pickup_notification", true, {
 			player_name = player_name,
-			amount = amount_value,
+			amount = amount_value
 		}))
 		local text = Localize(text_localization_key, true, {
 			amount = amount,
-			player_name = player_name,
+			player_name = player_name
 		})
 		local enter_sound_event = notification_settings.notification_sound_event
 		local texts = {}
 
 		texts[#texts + 1] = reason and {
-			display_name = reason,
+			display_name = reason
 		}
 		texts[#texts + 1] = {
-			display_name = text,
+			display_name = text
 		}
 
 		return {
@@ -244,7 +244,7 @@ MutatorGameplayLiveEventLeftover.get_side_notification_data_formatter = function
 			texts = texts,
 			icon = icon_texture_large,
 			color = Color.terminal_grid_background(100, true),
-			enter_sound_event = enter_sound_event,
+			enter_sound_event = enter_sound_event
 		}
 	end
 end

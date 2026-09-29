@@ -11,17 +11,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"male",
+				"male"
 			},
 			archetypes = {
-				"veteran",
-			},
-		},
+				"veteran"
+			}
+		}
 	},
 	{
 		character_voice = "veteran_male_b",
@@ -32,17 +32,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"male",
+				"male"
 			},
 			archetypes = {
-				"veteran",
-			},
-		},
+				"veteran"
+			}
+		}
 	},
 	{
 		character_voice = "veteran_male_c",
@@ -53,22 +53,22 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"male",
+				"male"
 			},
 			archetypes = {
-				"veteran",
-			},
+				"veteran"
+			}
 		},
 		restrictions = {
 			home_planets = {
-				"option_7",
-			},
-		},
+				"option_7"
+			}
+		}
 	},
 	{
 		character_voice = "veteran_female_a",
@@ -79,17 +79,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"female",
+				"female"
 			},
 			archetypes = {
-				"veteran",
-			},
-		},
+				"veteran"
+			}
+		}
 	},
 	{
 		character_voice = "veteran_female_b",
@@ -100,17 +100,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"female",
+				"female"
 			},
 			archetypes = {
-				"veteran",
-			},
-		},
+				"veteran"
+			}
+		}
 	},
 	{
 		character_voice = "veteran_female_c",
@@ -121,22 +121,22 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"female",
+				"female"
 			},
 			archetypes = {
-				"veteran",
-			},
+				"veteran"
+			}
 		},
 		restrictions = {
 			home_planets = {
-				"option_7",
-			},
-		},
+				"option_7"
+			}
+		}
 	},
 	{
 		character_voice = "zealot_male_a",
@@ -147,17 +147,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"male",
+				"male"
 			},
 			archetypes = {
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		character_voice = "zealot_male_b",
@@ -168,17 +168,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"male",
+				"male"
 			},
 			archetypes = {
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		character_voice = "zealot_male_c",
@@ -189,17 +189,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"male",
+				"male"
 			},
 			archetypes = {
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		character_voice = "zealot_female_a",
@@ -210,17 +210,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"female",
+				"female"
 			},
 			archetypes = {
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		character_voice = "zealot_female_b",
@@ -231,17 +231,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"female",
+				"female"
 			},
 			archetypes = {
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		character_voice = "zealot_female_c",
@@ -252,17 +252,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"female",
+				"female"
 			},
 			archetypes = {
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		character_voice = "psyker_male_a",
@@ -273,17 +273,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"male",
+				"male"
 			},
 			archetypes = {
-				"psyker",
-			},
-		},
+				"psyker"
+			}
+		}
 	},
 	{
 		character_voice = "psyker_male_b",
@@ -294,17 +294,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"male",
+				"male"
 			},
 			archetypes = {
-				"psyker",
-			},
-		},
+				"psyker"
+			}
+		}
 	},
 	{
 		character_voice = "psyker_male_c",
@@ -315,17 +315,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"male",
+				"male"
 			},
 			archetypes = {
-				"psyker",
-			},
-		},
+				"psyker"
+			}
+		}
 	},
 	{
 		character_voice = "psyker_female_a",
@@ -336,17 +336,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"female",
+				"female"
 			},
 			archetypes = {
-				"psyker",
-			},
-		},
+				"psyker"
+			}
+		}
 	},
 	{
 		character_voice = "psyker_female_b",
@@ -357,17 +357,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"female",
+				"female"
 			},
 			archetypes = {
-				"psyker",
-			},
-		},
+				"psyker"
+			}
+		}
 	},
 	{
 		character_voice = "psyker_female_c",
@@ -378,17 +378,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"female",
+				"female"
 			},
 			archetypes = {
-				"psyker",
-			},
-		},
+				"psyker"
+			}
+		}
 	},
 	{
 		character_voice = "ogryn_a",
@@ -399,14 +399,14 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			archetypes = {
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		character_voice = "ogryn_b",
@@ -417,14 +417,14 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			archetypes = {
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		character_voice = "ogryn_c",
@@ -435,14 +435,14 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			archetypes = {
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		character_voice = "adamant_male_a",
@@ -453,17 +453,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"male",
+				"male"
 			},
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		character_voice = "adamant_male_b",
@@ -474,17 +474,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"male",
+				"male"
 			},
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		character_voice = "adamant_male_c",
@@ -495,17 +495,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"male",
+				"male"
 			},
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		character_voice = "adamant_female_a",
@@ -516,17 +516,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"female",
+				"female"
 			},
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		character_voice = "adamant_female_b",
@@ -537,17 +537,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"female",
+				"female"
 			},
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		character_voice = "adamant_female_c",
@@ -558,17 +558,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"female",
+				"female"
 			},
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		character_voice = "broker_male_a",
@@ -579,17 +579,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"male",
+				"male"
 			},
 			archetypes = {
-				"broker",
-			},
-		},
+				"broker"
+			}
+		}
 	},
 	{
 		character_voice = "broker_male_b",
@@ -600,17 +600,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"male",
+				"male"
 			},
 			archetypes = {
-				"broker",
-			},
-		},
+				"broker"
+			}
+		}
 	},
 	{
 		character_voice = "broker_male_c",
@@ -621,17 +621,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"male",
+				"male"
 			},
 			archetypes = {
-				"broker",
-			},
-		},
+				"broker"
+			}
+		}
 	},
 	{
 		character_voice = "broker_female_a",
@@ -642,17 +642,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"female",
+				"female"
 			},
 			archetypes = {
-				"broker",
-			},
-		},
+				"broker"
+			}
+		}
 	},
 	{
 		character_voice = "broker_female_b",
@@ -663,17 +663,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"female",
+				"female"
 			},
 			archetypes = {
-				"broker",
-			},
-		},
+				"broker"
+			}
+		}
 	},
 	{
 		character_voice = "broker_female_c",
@@ -684,17 +684,17 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			genders = {
-				"female",
+				"female"
 			},
 			archetypes = {
-				"broker",
-			},
-		},
+				"broker"
+			}
+		}
 	},
 	{
 		character_voice = "ogryn_d",
@@ -705,15 +705,15 @@ local personality_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			archetypes = {
-				"ogryn",
-			},
-		},
-	},
+				"ogryn"
+			}
+		}
+	}
 }
 
 table.append(personality_options, PERSONALITIES_CRYPTIC)

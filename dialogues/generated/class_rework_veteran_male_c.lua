@@ -19,7 +19,7 @@ local class_rework_veteran_male_c = {
 			"loc_veteran_male_c__ability_shock_trooper_12",
 			"loc_veteran_male_c__ability_shock_trooper_13",
 			"loc_veteran_male_c__ability_shock_trooper_14",
-			"loc_veteran_male_c__ability_shock_trooper_15",
+			"loc_veteran_male_c__ability_shock_trooper_15"
 		},
 		sound_events_duration = {
 			1.679917,
@@ -36,9 +36,9 @@ local class_rework_veteran_male_c = {
 			1.712688,
 			2.021688,
 			2.871333,
-			1.556583,
+			1.556583
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	ability_squad_leader = {
 		randomize_indexes_n = 0,
@@ -58,7 +58,7 @@ local class_rework_veteran_male_c = {
 			"loc_veteran_male_c__ability_squad_leader_12",
 			"loc_veteran_male_c__ability_squad_leader_13",
 			"loc_veteran_male_c__ability_squad_leader_14",
-			"loc_veteran_male_c__ability_squad_leader_15",
+			"loc_veteran_male_c__ability_squad_leader_15"
 		},
 		sound_events_duration = {
 			2.177354,
@@ -75,10 +75,10 @@ local class_rework_veteran_male_c = {
 			3.262333,
 			4.01625,
 			2.730146,
-			3.943708,
+			3.943708
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("class_rework_veteran_male_c", class_rework_veteran_male_c)

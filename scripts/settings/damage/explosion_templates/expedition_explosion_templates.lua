@@ -43,7 +43,7 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		scalable_vfx = {},
 		sfx = {},
@@ -74,7 +74,7 @@ local explosion_templates = {
 
 				return false
 			end
-		end,
+		end
 	},
 	expedition_airstrike_nuke = {
 		always_disorient = true,
@@ -94,16 +94,16 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		target_validation_func = _expedition_airstrike_nuke_target_validation_func,
 		vfx = {
-			"content/fx/particles/explosions/expeditions_call_in_barrels_explosion",
+			"content/fx/particles/explosions/expeditions_call_in_barrels_explosion"
 		},
 		sfx = {
 			"wwise/events/weapon/play_airdrop_bomb_explosion",
-			"wwise/events/weapon/play_explosion_refl_gen",
-		},
+			"wwise/events/weapon/play_explosion_refl_gen"
+		}
 	},
 	expeditions_artillery_strike = {
 		charge_wwise_parameter_name = "charge_level",
@@ -123,11 +123,11 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/weapons/grenades/expeditions/artillery_strike_explosion",
-		},
+			"content/fx/particles/weapons/grenades/expeditions/artillery_strike_explosion"
+		}
 	},
 	expeditions_big_grenade = {
 		collision_filter = "filter_player_character_explosion",
@@ -146,34 +146,34 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		explosion_area_suppression = {
 			distance = 25,
 			instant_aggro = true,
 			suppression_falloff = true,
-			suppression_value = 25,
+			suppression_value = 25
 		},
 		scalable_vfx = {
 			{
 				min_radius = 10,
 				radius_variable_name = "radius",
 				effects = {
-					"content/fx/particles/explosions/frag_grenade_ogryn",
-				},
+					"content/fx/particles/explosions/frag_grenade_ogryn"
+				}
 			},
 			{
 				min_radius = 31,
 				radius_variable_name = "radius",
 				effects = {
-					"content/fx/particles/player_buffs/buff_ogryn_biggest_boom_grenade",
-				},
-			},
+					"content/fx/particles/player_buffs/buff_ogryn_biggest_boom_grenade"
+				}
+			}
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_expedition_big_grenade",
-			"wwise/events/weapon/play_explosion_refl_huge",
-		},
+			"wwise/events/weapon/play_explosion_refl_huge"
+		}
 	},
 	expedition_trap_explosive = {
 		collision_filter = "filter_player_character_explosion",
@@ -192,15 +192,15 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/explosions/expeditions_explosion_trap",
+			"content/fx/particles/explosions/expeditions_explosion_trap"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_explosive_mine",
-			"wwise/events/weapon/play_explosion_refl_gen",
-		},
+			"wwise/events/weapon/play_explosion_refl_gen"
+		}
 	},
 	expedition_trap_explosive_cluster = {
 		collision_filter = "filter_player_character_explosion",
@@ -219,24 +219,24 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		explosion_area_suppression = {
 			distance = 15,
 			instant_aggro = true,
 			suppression_falloff = true,
-			suppression_value = 20,
+			suppression_value = 20
 		},
 		radius_stat_buffs = {
-			"explosion_radius_modifier_frag",
+			"explosion_radius_modifier_frag"
 		},
 		vfx = {
-			"content/fx/particles/explosions/frag_grenade_01",
+			"content/fx/particles/explosions/frag_grenade_01"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_grenade_frag",
-			"wwise/events/weapon/play_explosion_refl_gen",
-		},
+			"wwise/events/weapon/play_explosion_refl_gen"
+		}
 	},
 	expedition_trap_fire = {
 		collision_filter = "filter_player_character_explosion",
@@ -251,15 +251,15 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/explosions/expeditions_fire_trap",
+			"content/fx/particles/explosions/expeditions_fire_trap"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_flame_mine",
-			"wwise/events/weapon/play_explosion_refl_small",
-		},
+			"wwise/events/weapon/play_explosion_refl_small"
+		}
 	},
 	expedition_trap_shock = {
 		collision_filter = "filter_player_character_explosion",
@@ -274,15 +274,15 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/weapons/grenades/expeditions_shocking_trap",
+			"content/fx/particles/weapons/grenades/expeditions_shocking_trap"
 		},
 		sfx = {
 			"wwise/events/player/play_explosion_shock_mine",
-			"wwise/events/weapon/play_explosion_refl_small",
-		},
+			"wwise/events/weapon/play_explosion_refl_small"
+		}
 	},
 	expeditions_explosive_barrel = {
 		close_damage_type = nil,
@@ -301,16 +301,16 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/destructibles/explosive_barrel_explosion",
+			"content/fx/particles/destructibles/explosive_barrel_explosion"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_barrel_explosion",
 			"wwise/events/weapon/play_explosion_barrel_flame",
-			"wwise/events/weapon/play_explosion_refl_gen",
-		},
+			"wwise/events/weapon/play_explosion_refl_gen"
+		}
 	},
 	attack_valkyrie_missile = {
 		collision_filter = "filter_player_character_explosion",
@@ -328,28 +328,28 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		explosion_area_suppression = {
 			distance = 25,
 			instant_aggro = true,
 			suppression_falloff = true,
-			suppression_value = 25,
+			suppression_value = 25
 		},
 		scalable_vfx = {
 			{
 				min_radius = 2.5,
 				radius_variable_name = "radius",
 				effects = {
-					"content/fx/particles/weapons/grenades/broker_boom_bringer_impact_explosion",
-				},
-			},
+					"content/fx/particles/weapons/grenades/broker_boom_bringer_impact_explosion"
+				}
+			}
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_grenade_frag",
-			"wwise/events/weapon/play_explosion_refl_gen",
-		},
-	},
+			"wwise/events/weapon/play_explosion_refl_gen"
+		}
+	}
 }
 
 return explosion_templates

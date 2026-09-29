@@ -6,13 +6,13 @@ local mission_vo_cm_habs_remake_adamant_female_a = {
 		sound_events_n = 2,
 		sound_events = {
 			[1] = "loc_adamant_female_a__info_extraction_response_01",
-			[2] = "loc_adamant_female_a__info_extraction_response_02",
+			[2] = "loc_adamant_female_a__info_extraction_response_02"
 		},
 		sound_events_duration = {
 			[1] = 2.773729,
-			[2] = 3.423844,
+			[2] = 3.423844
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	mission_habs_redux_start_zone_response = {
 		randomize_indexes_n = 0,
@@ -25,7 +25,7 @@ local mission_vo_cm_habs_remake_adamant_female_a = {
 			"loc_adamant_female_a__guidance_starting_area_05",
 			"loc_adamant_female_a__guidance_starting_area_06",
 			"loc_adamant_female_a__guidance_starting_area_07",
-			"loc_adamant_female_a__guidance_starting_area_08",
+			"loc_adamant_female_a__guidance_starting_area_08"
 		},
 		sound_events_duration = {
 			1.302021,
@@ -35,7 +35,7 @@ local mission_vo_cm_habs_remake_adamant_female_a = {
 			2.848792,
 			3.968281,
 			2.085708,
-			4.802833,
+			4.802833
 		},
 		sound_event_weights = {
 			0.125,
@@ -45,10 +45,10 @@ local mission_vo_cm_habs_remake_adamant_female_a = {
 			0.125,
 			0.125,
 			0.125,
-			0.125,
+			0.125
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_cm_habs_remake_adamant_female_a", mission_vo_cm_habs_remake_adamant_female_a)

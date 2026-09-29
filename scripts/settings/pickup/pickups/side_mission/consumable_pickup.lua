@@ -21,7 +21,7 @@ local pickup_data = {
 
 			synchronizer_extension:add_progression(1)
 		end
-	end,
+	end
 }
 
 return pickup_data

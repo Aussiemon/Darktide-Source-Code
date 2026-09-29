@@ -29,7 +29,7 @@ local TENSION_TYPE = "knocked_down"
 local STINGER_ENTER_ALIAS = "disabled_enter"
 local STINGER_EXIT_ALIAS = "disabled_exit"
 local STINGER_PROPERTIES = {
-	stinger_type = "teammate_knocked_down",
+	stinger_type = "teammate_knocked_down"
 }
 
 PlayerCharacterStateKnockedDown.init = function (self, character_state_init_context, ...)
@@ -271,9 +271,9 @@ PlayerCharacterStateKnockedDown._exit_third_person_mode = function (self, t)
 
 	Unit.set_local_rotation(unit, 1, look_rotation)
 
-	local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player)
+	local rewind_seconds = LagCompensation.rewind_seconds(self._is_server, self._is_local_unit, self._player)
 
-	FirstPersonView.enter(t, first_person_mode_component, rewind_ms)
+	FirstPersonView.enter(t, first_person_mode_component, rewind_seconds)
 end
 
 PlayerCharacterStateKnockedDown._handle_on_enter_buffs = function (self, t)
@@ -285,7 +285,7 @@ PlayerCharacterStateKnockedDown._handle_on_enter_buffs = function (self, t)
 
 		self._damage_reduction_buff_indexes = {
 			local_index = local_index,
-			component_index = component_index,
+			component_index = component_index
 		}
 	end
 
@@ -294,7 +294,7 @@ PlayerCharacterStateKnockedDown._handle_on_enter_buffs = function (self, t)
 
 		self._damage_tick_buff_indexes = {
 			local_index = local_index,
-			component_index = component_index,
+			component_index = component_index
 		}
 	end
 end

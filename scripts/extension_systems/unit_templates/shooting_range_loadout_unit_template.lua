@@ -24,7 +24,7 @@ local shooting_range_loadout_unit_template = {
 
 		config:add("InteracteeExtension", {
 			is_local_unit = false,
-			interaction_contexts = PlayerCharacterConstants.player_interactions,
+			interaction_contexts = PlayerCharacterConstants.player_interactions
 		})
 		config:add("ComponentExtension")
 
@@ -34,10 +34,10 @@ local shooting_range_loadout_unit_template = {
 	husk_init = function (unit, config, template_context, game_session, game_object_id, owner_id)
 		config:add("InteracteeExtension", {
 			is_local_unit = false,
-			interaction_contexts = PlayerCharacterConstants.player_interactions,
+			interaction_contexts = PlayerCharacterConstants.player_interactions
 		})
 		config:add("ComponentExtension")
-	end,
+	end
 }
 
 return shooting_range_loadout_unit_template

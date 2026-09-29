@@ -7,8 +7,8 @@ local barrel_grounds = {
 	name = "loc_barrel_grounds_event_name",
 	stat = "barrel_grounds_mission_won",
 	item_rewards = {
-		"content/items/2d/insignias/insignia_event_explosions",
-	},
+		"content/items/2d/insignias/insignia_event_explosions"
+	}
 }
 
 return barrel_grounds

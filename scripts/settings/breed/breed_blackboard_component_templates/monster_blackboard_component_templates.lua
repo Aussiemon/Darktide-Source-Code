@@ -4,15 +4,15 @@ local BaseBlackboardComponentTemplate = require("scripts/settings/breed/breed_bl
 local monster = {
 	behavior = {
 		move_medium = "string",
-		move_state = "string",
+		move_state = "string"
 	},
 	slot = {
 		has_ghost_slot = "boolean",
 		has_slot = "boolean",
 		is_waiting_on_slot = "boolean",
 		slot_distance = "number",
-		wait_slot_distance = "number",
-	},
+		wait_slot_distance = "number"
+	}
 }
 
 table.merge(monster, BaseBlackboardComponentTemplate)
@@ -25,10 +25,10 @@ chaos_spawn.behavior = {
 	move_medium = "string",
 	move_state = "string",
 	should_leap = "boolean",
-	wants_to_catapult_grabbed_unit = "boolean",
+	wants_to_catapult_grabbed_unit = "boolean"
 }
 chaos_spawn.statistics = {
-	num_grabs_done = "number",
+	num_grabs_done = "number"
 }
 chaos_spawn.patrol = {
 	auto_patrol = "boolean",
@@ -36,12 +36,12 @@ chaos_spawn.patrol = {
 	patrol_index = "number",
 	patrol_leader_unit = "Unit",
 	should_patrol = "boolean",
-	walk_position = "Vector3Box",
+	walk_position = "Vector3Box"
 }
 
 local templates = {
 	monster = monster,
-	chaos_spawn = chaos_spawn,
+	chaos_spawn = chaos_spawn
 }
 
 return templates

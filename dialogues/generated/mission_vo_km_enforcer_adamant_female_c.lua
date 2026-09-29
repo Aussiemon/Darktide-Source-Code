@@ -12,7 +12,7 @@ local mission_vo_km_enforcer_adamant_female_c = {
 			"loc_adamant_female_c__guidance_starting_area_05",
 			"loc_adamant_female_c__guidance_starting_area_06",
 			"loc_adamant_female_c__guidance_starting_area_07",
-			"loc_adamant_female_c__guidance_starting_area_08",
+			"loc_adamant_female_c__guidance_starting_area_08"
 		},
 		sound_events_duration = {
 			2.282708,
@@ -22,7 +22,7 @@ local mission_vo_km_enforcer_adamant_female_c = {
 			2.132865,
 			2.604115,
 			2.831365,
-			2.629792,
+			2.629792
 		},
 		sound_event_weights = {
 			0.125,
@@ -32,20 +32,20 @@ local mission_vo_km_enforcer_adamant_female_c = {
 			0.125,
 			0.125,
 			0.125,
-			0.125,
+			0.125
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	mission_enforcer_start_banter_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_female_c__mission_enforcer_start_banter_a_01",
+			[1] = "loc_adamant_female_c__mission_enforcer_start_banter_a_01"
 		},
 		sound_events_duration = {
-			[1] = 3.41374,
+			[1] = 3.41374
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	mission_enforcer_start_banter_c = {
 		randomize_indexes_n = 0,
@@ -56,7 +56,7 @@ local mission_vo_km_enforcer_adamant_female_c = {
 			"loc_adamant_female_c__region_habculum_03",
 			"loc_adamant_female_c__zone_watertown_01",
 			"loc_adamant_female_c__zone_watertown_02",
-			"loc_adamant_female_c__zone_watertown_03",
+			"loc_adamant_female_c__zone_watertown_03"
 		},
 		sound_events_duration = {
 			4.67876,
@@ -64,7 +64,7 @@ local mission_vo_km_enforcer_adamant_female_c = {
 			3.567938,
 			2.757531,
 			2.499698,
-			3.361615,
+			3.361615
 		},
 		sound_event_weights = {
 			0.1666667,
@@ -72,10 +72,10 @@ local mission_vo_km_enforcer_adamant_female_c = {
 			0.1666667,
 			0.1666667,
 			0.1666667,
-			0.1666667,
+			0.1666667
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_km_enforcer_adamant_female_c", mission_vo_km_enforcer_adamant_female_c)

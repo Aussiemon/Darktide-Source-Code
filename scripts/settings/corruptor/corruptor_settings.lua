@@ -42,10 +42,10 @@ local corruptor_settings = {
 			0.5,
 			0.75,
 			1,
-			1.5,
-		},
+			1.5
+		}
 	},
-	liquid_area_template = LiquidAreaTemplates.prop_corruptor,
+	liquid_area_template = LiquidAreaTemplates.prop_corruptor
 }
 
 for i = 1, corruptor_settings.destructible_count do

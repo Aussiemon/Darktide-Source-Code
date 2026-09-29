@@ -11,8 +11,8 @@ local path_markers = {
 		position = {
 			-12.659303665161133,
 			26.653987884521484,
-			0.12400099635124207,
-		},
+			0.12400099635124207
+		}
 	},
 	{
 		crossroads = "",
@@ -24,9 +24,9 @@ local path_markers = {
 		position = {
 			13.597223281860352,
 			0.4278300106525421,
-			0.12400099635124207,
-		},
-	},
+			0.12400099635124207
+		}
+	}
 }
 local main_path_segments = {
 	{
@@ -35,15 +35,15 @@ local main_path_segments = {
 			{
 				-12.659303665161133,
 				26.653987884521484,
-				0.12394531071186066,
+				0.12394531071186066
 			},
 			{
 				13.597223281860352,
 				0.4278300106525421,
-				0.12394531071186066,
-			},
-		},
-	},
+				0.12394531071186066
+			}
+		}
+	}
 }
 local crossroads = {}
 local main_path_version = "1.00"
@@ -52,5 +52,5 @@ return {
 	version = main_path_version,
 	path_markers = path_markers,
 	main_path_segments = main_path_segments,
-	crossroads = crossroads,
+	crossroads = crossroads
 }

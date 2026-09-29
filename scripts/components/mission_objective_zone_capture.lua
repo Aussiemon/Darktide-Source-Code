@@ -42,27 +42,27 @@ MissionObjectiveZoneCapture.component_data = {
 	return_to_skull = {
 		ui_name = "Return to servo skull",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	num_player_in_zone = {
 		ui_name = "Players in zone",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	require_half_playes = {
 		ui_name = "Require half players",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	time_in_zone = {
 		ui_name = "Time in zone",
 		ui_type = "number",
-		value = 60,
+		value = 60
 	},
 	show_border = {
 		ui_name = "Show Border",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	border_max_height_percentage = {
 		decimals = 2,
@@ -71,7 +71,7 @@ MissionObjectiveZoneCapture.component_data = {
 		step = 0.01,
 		ui_name = "Border Max Height %",
 		ui_type = "slider",
-		value = 1,
+		value = 1
 	},
 	border_offset = {
 		decimals = 2,
@@ -80,12 +80,12 @@ MissionObjectiveZoneCapture.component_data = {
 		step = 0.01,
 		ui_name = "Border Offset",
 		ui_type = "slider",
-		value = 0.5,
+		value = 0.5
 	},
 	extensions = {
 		"NetworkedTimerExtension",
-		"MissionObjectiveZoneCaptureExtension",
-	},
+		"MissionObjectiveZoneCaptureExtension"
+	}
 }
 
 return MissionObjectiveZoneCapture

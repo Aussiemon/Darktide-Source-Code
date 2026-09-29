@@ -3,8 +3,8 @@
 local circumstance_templates = {
 	noir_01 = {
 		theme_tag = "noir",
-		wwise_state = "noir_01",
-	},
+		wwise_state = "noir_01"
+	}
 }
 
 return circumstance_templates

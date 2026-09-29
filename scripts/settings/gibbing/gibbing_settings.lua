@@ -10,12 +10,12 @@ gibbing_settings.gibbing_thresholds = {
 	impossible = 4,
 	infinite = 10,
 	light = 1,
-	medium = 2,
+	medium = 2
 }
 gibbing_settings.character_size = {
 	large = 2,
 	medium = 1,
-	small = 0,
+	small = 0
 }
 gibbing_settings.gib_push_force = {
 	blunt_heavy = 1,
@@ -31,7 +31,7 @@ gibbing_settings.gib_push_force = {
 	ranged_medium = 1,
 	sawing_heavy = 1,
 	sawing_light = 0.6,
-	sawing_medium = 0.8,
+	sawing_medium = 0.8
 }
 gibbing_settings.gibbing_power = gibbing_settings.gibbing_thresholds
 gibbing_settings.max_extra_hit_zone_gibs = 3
@@ -48,7 +48,7 @@ gibbing_settings.gib_push_force_multipliers = {
 	[hit_zone_names.lower_right_leg] = 0.75,
 	[hit_zone_names.center_mass] = 1,
 	[hit_zone_names.torso] = 1,
-	[hit_zone_names.tongue] = 1,
+	[hit_zone_names.tongue] = 1
 }
 
 return settings("GibbingSettings", gibbing_settings)

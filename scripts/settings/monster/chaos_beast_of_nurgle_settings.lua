@@ -12,25 +12,25 @@ local chaos_beast_of_nurgle_settings = {
 		flamer_particle = "content/fx/particles/enemies/beast_of_nurgle/bon_vomit_projectile",
 		flamer_velocity_variable_name = "velocity",
 		ground_impact_particle = "content/fx/particles/enemies/beast_of_nurgle/bon_vomit_splatter",
-		num_parabola_control_points = 4,
+		num_parabola_control_points = 4
 	},
 	sfx = {
 		ground_impact_sfx_start_event = "wwise/events/minions/play_beast_of_nurgle_vomit_ground_impact",
 		looping_sfx_start_event = "wwise/events/minions/play_beast_of_nurgle_vce_vomit",
-		looping_sfx_stop_event = "wwise/events/minions/stop_beast_of_nurgle_vce_vomit",
+		looping_sfx_stop_event = "wwise/events/minions/stop_beast_of_nurgle_vce_vomit"
 	},
 	trajectory_config = {
 		acceptable_accuracy = 1,
 		gravity = 8.82,
-		initial_speed = 6,
+		initial_speed = 6
 	},
 	cooldowns = {
 		consume = 10,
 		consume_failed = 1,
 		melee = 1.5,
 		melee_aoe = 7,
-		vomit = 2,
-	},
+		vomit = 2
+	}
 }
 
 return settings("ChaosBeastOfNurgleSettings", chaos_beast_of_nurgle_settings)

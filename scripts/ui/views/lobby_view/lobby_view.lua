@@ -32,18 +32,18 @@ local DEFINITION_PATH = "scripts/ui/views/lobby_view/lobby_view_definitions"
 local loadout_presentation_order = {
 	"ability",
 	"blitz",
-	"aura",
+	"aura"
 }
 local class_loadout = {
 	ability = {},
 	blitz = {},
 	pocketable = {},
-	aura = {},
+	aura = {}
 }
 local loadout_to_type = {
 	ability = "ability",
 	aura = "aura",
-	blitz = "tactical",
+	blitz = "tactical"
 }
 local LobbyView = class("LobbyView", "BaseView")
 
@@ -164,7 +164,7 @@ LobbyView._setup_havoc_info = function (self)
 
 	local havoc_title_width = self:_scenegraph_size("havoc_title")
 	local havoc_title_text_width = self:_text_size(havoc_title_content.havoc_rank, havoc_title_style.havoc_rank, {
-		havoc_title_width,
+		havoc_title_width
 	})
 	local havoc_title_text_margin = 5
 	local havoc_title_full_width = havoc_title_style.havoc_icon.size[1] + havoc_title_text_margin + havoc_title_text_width
@@ -195,15 +195,15 @@ LobbyView._setup_havoc_info = function (self)
 
 		local icon_height = widget_style.icon.size[2]
 		local title_height = self:_get_text_height(widget_content.circumstance_name, widget_style.circumstance_name, {
-			widget_style.circumstance_name.size[1],
+			widget_style.circumstance_name.size[1]
 		})
 
 		title_height = math.max(icon_height, title_height)
 
 		local description_height = self:_get_text_height(widget_content.circumstance_description, widget_style.circumstance_description, {
-			widget_style.circumstance_description.size[1],
+			widget_style.circumstance_description.size[1]
 		})
-		local description_margin = 0
+		local description_margin = 10
 
 		widget_style.circumstance_description.offset[2] = title_height + description_margin
 
@@ -211,7 +211,7 @@ LobbyView._setup_havoc_info = function (self)
 
 		widget.content.size = {
 			havoc_title_width,
-			total_size,
+			total_size
 		}
 		offset = offset + total_size + margin
 	end
@@ -244,7 +244,7 @@ LobbyView.select_target_level = function (self)
 	local level = LobbyViewSettings.levels_by_id[level_name] or LobbyViewSettings.levels_by_id.default
 	local level_packages = {
 		is_level_package = true,
-		name = level.level_name,
+		name = level.level_name
 	}
 
 	return level, level_packages
@@ -375,7 +375,7 @@ LobbyView._setup_mission_descriptions = function (self)
 
 		local title_width = self:_text_size(widgets_by_name.mission_title.content.title, widgets_by_name.mission_title.style.title, {
 			1920,
-			1080,
+			1080
 		})
 		local end_margin = 10
 
@@ -420,7 +420,7 @@ LobbyView._setup_menu_list = function (self)
 			end
 
 			parent:_set_own_player_ready_status(not current_ready_status)
-		end,
+		end
 	}
 
 	self:_setup_menu_list_entries(menu_list_config)
@@ -618,7 +618,7 @@ LobbyView._setup_menu_list_entries = function (self, config)
 			display_name = display_name,
 			widget_type = entry_config.widget_type,
 			pressed_function = entry_config.pressed_function,
-			update_function = entry_config.update_function,
+			update_function = entry_config.update_function
 		}
 
 		entries[#entries + 1] = entry
@@ -673,7 +673,7 @@ LobbyView._setup_list_content_widgets = function (self, content, scenegraph_id, 
 		end
 
 		alignment_list[#alignment_list + 1] = widget or {
-			size = size,
+			size = size
 		}
 	end
 
@@ -734,7 +734,7 @@ LobbyView._setup_spawn_slots = function (self)
 			panel_widget = self:_create_widget(panel_widget_name, panel_definition),
 			loading_widget = self:_create_widget(loading_widget_name, loading_definition),
 			weapon_widgets = {},
-			talent_widgets = {},
+			talent_widgets = {}
 		}
 
 		spawn_slots[ii] = spawn_slot
@@ -1067,7 +1067,7 @@ LobbyView._assign_player_to_slot = function (self, player, slot)
 		ignore = false,
 		position = spawn_position,
 		rotation = spawn_rotation,
-		state_machine = companion_state_machine,
+		state_machine = companion_state_machine
 	}
 	local scale = PlayerHeight.player_character_third_person_scale(breed, profile, nil)
 	local spawn_scale = Vector3(scale, scale, scale)
@@ -1107,7 +1107,7 @@ LobbyView._assign_player_to_slot = function (self, player, slot)
 
 	local weapon_slots = {
 		"slot_primary",
-		"slot_secondary",
+		"slot_secondary"
 	}
 	local seed = _generate_seed(unique_id, self._mission_data.backend_mission_id)
 	local _, random_slot = math.next_random(seed, 1, #weapon_slots)
@@ -1342,6 +1342,11 @@ LobbyView._update_synced_slots = function (self)
 	end
 end
 
+LobbyView.draw_while_loading = function (self, dt, t)
+	Managers.ui:render_loading_icon()
+	Managers.ui:render_black_background()
+end
+
 LobbyView.draw = function (self, dt, t, input_service, layer)
 	self:_draw_menu_list_grid(dt, t, input_service)
 	LobbyView.super.draw(self, dt, t, input_service, layer)
@@ -1422,7 +1427,7 @@ LobbyView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 							hovered_talent = {
 								talent = loadout.talent,
 								loadout_id = loadout_id,
-								slot = ii,
+								slot = ii
 							}
 							self._hovered_tooltip_panel_widget = panel_widget
 						end
@@ -1625,7 +1630,7 @@ LobbyView._open_inventory_by_slot = function (self, slot)
 	local context = {
 		parent = self,
 		player = player,
-		is_readonly = slot.ready,
+		is_readonly = slot.ready
 	}
 
 	Managers.ui:open_view(INVENTORY_VIEW_NAME, nil, nil, nil, nil, context)
@@ -1646,12 +1651,12 @@ end
 
 local WEAPON_SLOTS = {
 	"slot_primary",
-	"slot_secondary",
+	"slot_secondary"
 }
 local COSMETIC_SLOTS = {
 	"slot_insignia",
 	"slot_gear_head",
-	"slot_portrait_frame",
+	"slot_portrait_frame"
 }
 
 LobbyView._check_loadout_changes = function (self)
@@ -1731,20 +1736,20 @@ LobbyView._setup_talents_widgets = function (self, spawn_slot)
 			id = "talent_1",
 			offset_height = 0,
 			size = ContentBlueprints.talent.size,
-			offset_width = start_margin,
+			offset_width = start_margin
 		},
 		{
 			id = "talent_2",
 			offset_height = 0,
 			size = ContentBlueprints.talent.size,
-			offset_width = start_margin + ContentBlueprints.talent.size[1] + margin,
+			offset_width = start_margin + ContentBlueprints.talent.size[1] + margin
 		},
 		{
 			id = "talent_3",
 			offset_height = 0,
 			size = ContentBlueprints.talent.size,
-			offset_width = start_margin + (ContentBlueprints.talent.size[1] + margin) * 2,
-		},
+			offset_width = start_margin + (ContentBlueprints.talent.size[1] + margin) * 2
+		}
 	}
 	local scenegraph_id = "loadout"
 
@@ -1766,7 +1771,7 @@ LobbyView._setup_talents_widgets = function (self, spawn_slot)
 		local config = {
 			loadout = loadout,
 			node_type_settings = node_type_settings,
-			loadout_id = loadout_id,
+			loadout_id = loadout_id
 		}
 		local size = template.size or data.size
 		local pass_template_function = template.pass_template_function
@@ -1789,12 +1794,12 @@ LobbyView._setup_talents_widgets = function (self, spawn_slot)
 			talent_widget.original_offset = {
 				offset_width,
 				offset_height,
-				0,
+				0
 			}
 			talent_widget.offset = {
 				offset_width,
 				offset_height,
-				0,
+				0
 			}
 			spawn_slot.talent_widgets[ii] = talent_widget
 		end
@@ -1809,14 +1814,14 @@ LobbyView._setup_weapon_widgets = function (self, spawn_slot)
 			id = "slot_primary",
 			offset_height = 0,
 			offset_width = 0,
-			size = ContentBlueprints.item_icon.size,
+			size = ContentBlueprints.item_icon.size
 		},
 		{
 			id = "slot_secondary",
 			offset_height = 0,
 			size = ContentBlueprints.item_icon.size,
-			offset_width = ContentBlueprints.item_icon.size[1] + margin,
-		},
+			offset_width = ContentBlueprints.item_icon.size[1] + margin
+		}
 	}
 	local scenegraph_id = "loadout"
 
@@ -1835,7 +1840,7 @@ LobbyView._setup_weapon_widgets = function (self, spawn_slot)
 		local template = ContentBlueprints.item_icon
 		local config = {
 			item = loadout,
-			slot = slot,
+			slot = slot
 		}
 		local size = data.size
 		local pass_template_function = template.pass_template_function
@@ -1858,12 +1863,12 @@ LobbyView._setup_weapon_widgets = function (self, spawn_slot)
 			weapon_widget.original_offset = {
 				offset_width,
 				offset_height,
-				0,
+				0
 			}
 			weapon_widget.offset = {
 				offset_width,
 				offset_height,
-				0,
+				0
 			}
 			spawn_slot.weapon_widgets[#spawn_slot.weapon_widgets + 1] = weapon_widget
 			spawn_slot[slot] = loadout
@@ -1896,7 +1901,7 @@ LobbyView._setup_weapon_widgets = function (self, spawn_slot)
 		ignore = false,
 		position = spawn_position,
 		rotation = spawn_rotation,
-		state_machine = companion_state_machine,
+		state_machine = companion_state_machine
 	}
 	local scale = PlayerHeight.player_character_third_person_scale(breed, profile, nil)
 	local spawn_scale = Vector3(scale, scale, scale)
@@ -2014,7 +2019,7 @@ end
 
 local dummy_tooltip_text_size = {
 	400,
-	20,
+	20
 }
 
 LobbyView._setup_tooltip_info = function (self, talent_hover_data)

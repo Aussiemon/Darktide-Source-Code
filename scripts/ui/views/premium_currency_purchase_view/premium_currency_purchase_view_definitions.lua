@@ -11,13 +11,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	grid_background = {
 		horizontal_alignment = "center",
@@ -25,13 +25,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1700,
-			800,
+			800
 		},
 		position = {
 			0,
 			30,
-			1,
-		},
+			1
+		}
 	},
 	grid_mask = {
 		horizontal_alignment = "center",
@@ -39,13 +39,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1700,
-			800,
+			800
 		},
 		position = {
 			0,
 			0,
-			10,
-		},
+			10
+		}
 	},
 	grid_interaction = {
 		horizontal_alignment = "center",
@@ -53,13 +53,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1700,
-			800,
+			800
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	grid_content_pivot = {
 		horizontal_alignment = "top",
@@ -67,13 +67,13 @@ local scenegraph_definition = {
 		vertical_alignment = "left",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	category_panel_pivot = {
 		horizontal_alignment = "center",
@@ -81,13 +81,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			-70,
-			1,
-		},
+			1
+		}
 	},
 	category_panel_background = {
 		horizontal_alignment = "center",
@@ -95,13 +95,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			500,
-			61,
+			61
 		},
 		position = {
 			0,
 			-12,
-			1,
-		},
+			1
+		}
 	},
 	page_panel_pivot = {
 		horizontal_alignment = "center",
@@ -109,13 +109,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	corner_top_left = {
 		horizontal_alignment = "left",
@@ -123,13 +123,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			84,
-			224,
+			224
 		},
 		position = {
 			0,
 			0,
-			12,
-		},
+			12
+		}
 	},
 	corner_top_right = {
 		horizontal_alignment = "right",
@@ -137,13 +137,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			120,
-			224,
+			224
 		},
 		position = {
 			0,
 			0,
-			12,
-		},
+			12
+		}
 	},
 	corner_bottom_left = {
 		horizontal_alignment = "left",
@@ -151,13 +151,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			84,
-			224,
+			224
 		},
 		position = {
 			0,
 			0,
-			12,
-		},
+			12
+		}
 	},
 	corner_bottom_right = {
 		horizontal_alignment = "right",
@@ -165,13 +165,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			84,
-			224,
+			224
 		},
 		position = {
 			0,
 			0,
-			12,
-		},
+			12
+		}
 	},
 	grid_aquilas_pivot = {
 		horizontal_alignment = "center",
@@ -179,13 +179,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			30,
-			1,
-		},
+			1
+		}
 	},
 	aquilas_background = {
 		horizontal_alignment = "center",
@@ -193,18 +193,18 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	aquilas_background_top = {
 		horizontal_alignment = "center",
 		parent = "aquilas_background",
-		vertical_alignment = "top",
+		vertical_alignment = "top"
 	},
 	grid_aquilas_content = {
 		horizontal_alignment = "center",
@@ -212,13 +212,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	loading = {
 		horizontal_alignment = "center",
@@ -227,13 +227,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			24,
-		},
+			24
+		}
 	},
 	wallet_element_pivot = {
 		horizontal_alignment = "right",
@@ -241,22 +241,22 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			-50,
 			105,
-			0,
-		},
+			0
+		}
 	},
 	special_offer_pivot = {
 		parent = "corner_bottom_left",
 		position = {
 			100,
 			-225,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local emporium_font_style = table.clone(UIFontSettings.header_1)
 
@@ -265,11 +265,11 @@ emporium_font_style.text_vertical_alignment = "center"
 emporium_font_style.offset = {
 	0,
 	0,
-	1,
+	1
 }
 emporium_font_style.size = {
 	nil,
-	85,
+	85
 }
 
 local required_aquilas_title_style = table.clone(UIFontSettings.header_1)
@@ -280,7 +280,7 @@ required_aquilas_title_style.text_vertical_alignment = "center"
 required_aquilas_title_style.offset = {
 	0,
 	-45,
-	2,
+	2
 }
 
 local wait_reason_style = table.clone(UIFontSettings.header_1)
@@ -291,7 +291,7 @@ wait_reason_style.text_vertical_alignment = "center"
 wait_reason_style.offset = {
 	0,
 	100,
-	0,
+	0
 }
 
 local required_aquilas_text_style = table.clone(UIFontSettings.terminal_header_3)
@@ -303,7 +303,7 @@ required_aquilas_text_style.vertical_alignment = "top"
 required_aquilas_text_style.offset = {
 	0,
 	25,
-	2,
+	2
 }
 required_aquilas_text_style.text_color = Color.terminal_text_body(255, true)
 
@@ -318,14 +318,14 @@ local widget_definitions = {
 				color = Color.terminal_frame(128, true),
 				size = {
 					500,
-					90,
+					90
 				},
 				offset = {
 					0,
 					-90,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -336,18 +336,18 @@ local widget_definitions = {
 					32,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					-90,
-					0,
+					0
 				},
 				size = {
 					500,
-					90,
-				},
-			},
+					90
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -359,14 +359,14 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					954,
-					152,
+					152
 				},
 				offset = {
 					0,
 					-152,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -378,17 +378,17 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					354,
-					78,
+					78
 				},
 				offset = {
 					0,
 					78,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "aquilas_background", {
-		visible = true,
+		visible = true
 	}),
 	page_title_text = UIWidget.create_definition({
 		{
@@ -396,47 +396,47 @@ local widget_definitions = {
 			style_id = "title",
 			value_id = "",
 			style = required_aquilas_title_style,
-			value = Utf8.upper(Localize("loc_premium_store_purchase_credits_storefront_button")),
-		},
+			value = Utf8.upper(Localize("loc_premium_store_purchase_credits_storefront_button"))
+		}
 	}, "aquilas_background_top", {
-		visible = true,
+		visible = true
 	}),
 	grid_interaction = UIWidget.create_definition({
 		{
 			content_id = "hotspot",
-			pass_type = "hotspot",
-		},
+			pass_type = "hotspot"
+		}
 	}, "grid_interaction"),
 	corner_top_left = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/premium_upper_left",
-		},
+			value = "content/ui/materials/frames/screen/premium_upper_left"
+		}
 	}, "corner_top_left"),
 	corner_top_right = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/premium_upper_right",
-		},
+			value = "content/ui/materials/frames/screen/premium_upper_right"
+		}
 	}, "corner_top_right"),
 	corner_bottom_left = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/premium_lower_left",
-		},
+			value = "content/ui/materials/frames/screen/premium_lower_left"
+		}
 	}, "corner_bottom_left"),
 	corner_bottom_right = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/premium_lower_right",
-		},
+			value = "content/ui/materials/frames/screen/premium_lower_right"
+		}
 	}, "corner_bottom_right"),
 	loading = UIWidget.create_definition({
 		{
 			pass_type = "rect",
 			style = {
-				color = Color.black(127.5, true),
-			},
+				color = Color.black(127.5, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -446,24 +446,24 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					256,
-					256,
+					256
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "text",
 			style_id = "text",
 			value = "",
 			value_id = "text",
-			style = wait_reason_style,
-		},
+			style = wait_reason_style
+		}
 	}, "loading", {
-		visible = false,
+		visible = false
 	}),
 	required_aquilas_text = UIWidget.create_definition({
 		{
@@ -471,11 +471,11 @@ local widget_definitions = {
 			style_id = "text",
 			value = "",
 			value_id = "text",
-			style = required_aquilas_text_style,
-		},
+			style = required_aquilas_text_style
+		}
 	}, "screen", {
-		visible = false,
-	}),
+		visible = false
+	})
 }
 local legend_inputs = {
 	{
@@ -483,8 +483,8 @@ local legend_inputs = {
 		display_name = "loc_settings_menu_close_menu",
 		input_action = "back",
 		on_pressed_callback = "cb_on_back_pressed",
-		visibility_function = nil,
-	},
+		visibility_function = nil
+	}
 }
 local animations = {
 	grid_entry = {
@@ -498,8 +498,8 @@ local animations = {
 				for i = 1, #widgets do
 					widgets[i].alpha_multiplier = anim_progress
 				end
-			end,
-		},
+			end
+		}
 	},
 	on_hover = {
 		{
@@ -508,7 +508,7 @@ local animations = {
 			start_time = 0,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				params.widget.style.texture.material_values.shine = 0
-			end,
+			end
 		},
 		{
 			end_time = 2,
@@ -518,14 +518,14 @@ local animations = {
 				local anim_progress = math.easeOutCubic(progress)
 
 				params.widget.style.texture.material_values.shine = anim_progress
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
 	animations = animations,
 	legend_inputs = legend_inputs,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

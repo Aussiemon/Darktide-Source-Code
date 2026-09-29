@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/ui/constant_elements/elements/onboarding_handler/onboarding_templates.lua
 
 local UI_POPUP_INFO_DURATION = 10
+local DifficultySettings = require("scripts/settings/difficulty/difficulty_settings")
 local InputUtils = require("scripts/managers/input/input_utils")
 local ItemUtils = require("scripts/utilities/items")
 local MissionObjectiveGoal = require("scripts/extension_systems/mission_objective/utilities/mission_objective_goal")
@@ -81,7 +82,7 @@ local function _create_objective(objective_name, localization_key, marker_units,
 		header = localization_key,
 		objective_category = is_side_mission and "side_mission" or "default",
 		icon = icon,
-		localized_header = localized_header,
+		localized_header = localized_header
 	}
 	local objective = MissionObjectiveGoal:new()
 
@@ -159,7 +160,7 @@ end
 local dlc_archetypes = {
 	"adamant",
 	"broker",
-	"cryptic",
+	"cryptic"
 }
 
 local function _is_dlc_archetype()
@@ -189,13 +190,7 @@ local function _has_new_difficulty()
 	return new_difficulty_unlocked
 end
 
-local difficulty_mappings = {
-	auric = 5,
-	damnation = 4,
-	heresy = 3,
-	malice = 2,
-	uprising = 1,
-}
+local difficulty_mappings = DifficultySettings.difficulty_mapping
 
 local function _highest_difficulty_num()
 	local player = _get_player()
@@ -230,7 +225,7 @@ local templates = {
 			local objective_name = self.name
 			local localization_key = "loc_objective_om_hub_01_goto_command_central_header"
 			local marker_units = {
-				interaction_unit,
+				interaction_unit
 			}
 			local objective = _create_objective(objective_name, localization_key, marker_units)
 
@@ -252,8 +247,8 @@ local templates = {
 			objective:delete()
 		end,
 		sync_on_events = {
-			"event_onboarding_step_speak_to_morrow",
-		},
+			"event_onboarding_step_speak_to_morrow"
+		}
 	},
 	{
 		name = "Training Ground Objective - visit training ground",
@@ -273,7 +268,7 @@ local templates = {
 			local objective_name = self.name
 			local localization_key = "loc_onboarding_hub_training_grounds"
 			local marker_units = {
-				interaction_unit,
+				interaction_unit
 			}
 			local objective = _create_objective(objective_name, localization_key, marker_units)
 
@@ -295,8 +290,8 @@ local templates = {
 			objective:delete()
 		end,
 		sync_on_events = {
-			"event_onboarding_step_go_to_training",
-		},
+			"event_onboarding_step_go_to_training"
+		}
 	},
 	{
 		name = "Training Ground Popup - Reward Popup",
@@ -309,7 +304,7 @@ local templates = {
 			local loadout = profile.loadout
 			local new_items = {
 				primary_item = loadout.slot_primary,
-				secondary_item = loadout.slot_secondary,
+				secondary_item = loadout.slot_secondary
 			}
 
 			for _, item in pairs(new_items) do
@@ -321,7 +316,7 @@ local templates = {
 		on_deactivation = function (self)
 			return
 		end,
-		sync_on_events = {},
+		sync_on_events = {}
 	},
 	{
 		name = "Training Ground Popup - Inventory",
@@ -333,7 +328,7 @@ local templates = {
 			local localization_key = "loc_onboarding_popup_inventory"
 			local no_cache = true
 			local param = {
-				input_key = "{#color(226, 199, 126)}" .. _get_view_input_text("hotkey_inventory") .. "{#reset()}",
+				input_key = "{#color(226, 199, 126)}" .. _get_view_input_text("hotkey_inventory") .. "{#reset()}"
 			}
 			local localized_text = Localize(localization_key, no_cache, param)
 			local duration = UI_POPUP_INFO_DURATION
@@ -362,7 +357,7 @@ local templates = {
 
 			Managers.event:trigger("event_player_hide_onboarding_message", player)
 		end,
-		sync_on_events = {},
+		sync_on_events = {}
 	},
 	{
 		name = "Training Ground Objective - Visit Chapel",
@@ -382,7 +377,7 @@ local templates = {
 			local objective_name = self.name
 			local localization_key = "loc_objective_om_hub_01_goto_cathedral_header"
 			local marker_units = {
-				interaction_unit,
+				interaction_unit
 			}
 			local objective = _create_objective(objective_name, localization_key, marker_units)
 
@@ -404,8 +399,8 @@ local templates = {
 			objective:delete()
 		end,
 		sync_on_events = {
-			"event_onboarding_step_visit_chapel",
-		},
+			"event_onboarding_step_visit_chapel"
+		}
 	},
 	{
 		enforce_close_condition = true,
@@ -449,7 +444,7 @@ local templates = {
 			local context = {
 				allow_skip_input = true,
 				template = template_name,
-				close_callback = close_callback,
+				close_callback = close_callback
 			}
 
 			ui_manager:open_view(view_name, nil, true, true, nil, context)
@@ -467,7 +462,7 @@ local templates = {
 		sync_on_events = {},
 		close_condition = function (self)
 			return Managers.ui:is_view_closing("cutscene_view") or _is_dlc_archetype()
-		end,
+		end
 	},
 	{
 		name = "Mission Terminal Objective - Access MT",
@@ -504,7 +499,7 @@ local templates = {
 
 			objective:delete()
 		end,
-		sync_on_events = {},
+		sync_on_events = {}
 	},
 	{
 		name = "Mission Terminal Popup - Access MT",
@@ -529,7 +524,7 @@ local templates = {
 
 			Managers.event:trigger("event_player_hide_onboarding_message", player)
 		end,
-		sync_on_events = {},
+		sync_on_events = {}
 	},
 	{
 		name = "Level 2 Unlocks Objective - Contracts Shop",
@@ -569,7 +564,7 @@ local templates = {
 		close_condition = function (self)
 			return Managers.ui:view_active("contracts_background_view")
 		end,
-		sync_on_events = {},
+		sync_on_events = {}
 	},
 	{
 		name = "Level 2 Unlocks Popup - Contracts Shop",
@@ -589,7 +584,7 @@ local templates = {
 
 			Managers.event:trigger("event_player_hide_onboarding_message", player)
 		end,
-		sync_on_events = {},
+		sync_on_events = {}
 	},
 	{
 		name = "Level 3 Unlocks Objective - Weapons Shop",
@@ -629,7 +624,7 @@ local templates = {
 		close_condition = function (self)
 			return Managers.ui:view_active("credits_view")
 		end,
-		sync_on_events = {},
+		sync_on_events = {}
 	},
 	{
 		name = "Level 3 Unlocks Popup - Weapons Shop",
@@ -655,7 +650,7 @@ local templates = {
 
 			Managers.event:trigger("event_player_hide_onboarding_message", player)
 		end,
-		sync_on_events = {},
+		sync_on_events = {}
 	},
 	{
 		name = "Level 3 Unlocks Objective - Cosmetics Shop",
@@ -695,7 +690,7 @@ local templates = {
 		close_condition = function (self)
 			return Managers.ui:view_active("cosmetics_vendor_background_view")
 		end,
-		sync_on_events = {},
+		sync_on_events = {}
 	},
 	{
 		name = "Level 3 Unlocks Popup - Cosmetics Shop",
@@ -715,7 +710,7 @@ local templates = {
 
 			Managers.event:trigger("event_player_hide_onboarding_message", player)
 		end,
-		sync_on_events = {},
+		sync_on_events = {}
 	},
 	{
 		name = "Level 4 Unlocks Objective - Forge / Crafting",
@@ -755,7 +750,7 @@ local templates = {
 		close_condition = function (self)
 			return Managers.ui:view_active("crafting_view")
 		end,
-		sync_on_events = {},
+		sync_on_events = {}
 	},
 	{
 		name = "Level 4 Unlocks Popup - Forge / Crafting",
@@ -781,7 +776,7 @@ local templates = {
 
 			Managers.event:trigger("event_player_hide_onboarding_message", player)
 		end,
-		sync_on_events = {},
+		sync_on_events = {}
 	},
 	{
 		name = "Level 5 Unlocks Popup - Mission Board Tier Up",
@@ -805,7 +800,7 @@ local templates = {
 		on_deactivation = function (self)
 			local player = _get_player()
 		end,
-		sync_on_events = {},
+		sync_on_events = {}
 	},
 	{
 		name = "Level 5/10/15/20/25/30 Unlocks Popup - Talent Tier Up",
@@ -814,7 +809,7 @@ local templates = {
 		end,
 		on_activation = function (self)
 			_complete_current_story_chapter("level_unlock_popups")
-		end,
+		end
 	},
 	{
 		name = "Level 7 Introduce Objective - Penances / Track",
@@ -859,7 +854,7 @@ local templates = {
 
 			objective:delete()
 		end,
-		sync_on_events = {},
+		sync_on_events = {}
 	},
 	{
 		name = "Level 8 / 15 / 23 Unlocks Popup - New Device Slot",
@@ -871,7 +866,7 @@ local templates = {
 			local localization_key = "loc_onboarding_popup_device_slot_01"
 			local no_cache = true
 			local param = {
-				input_key = "{#color(226, 199, 126)}" .. _get_view_input_text("hotkey_inventory") .. "{#reset()}",
+				input_key = "{#color(226, 199, 126)}" .. _get_view_input_text("hotkey_inventory") .. "{#reset()}"
 			}
 			local localized_text = Localize(localization_key, no_cache, param)
 			local duration = UI_POPUP_INFO_DURATION
@@ -889,7 +884,7 @@ local templates = {
 
 			Managers.event:trigger("event_player_hide_onboarding_message", player)
 		end,
-		sync_on_events = {},
+		sync_on_events = {}
 	},
 	{
 		name = "Level 30 Introduce Objective - Havoc Start Quest",
@@ -939,7 +934,7 @@ local templates = {
 		close_condition = function (self)
 			return Managers.ui:is_view_closing("havoc_background_view")
 		end,
-		sync_on_events = {},
+		sync_on_events = {}
 	},
 	{
 		name = "Level 30 Introduce Objective - Havoc Complete Maelstrom",
@@ -992,7 +987,7 @@ local templates = {
 		close_condition = function (self)
 			return Managers.data_service.havoc:get_ever_received_havoc_order()
 		end,
-		sync_on_events = {},
+		sync_on_events = {}
 	},
 	{
 		name = "Level 30 Introduce Objective - Havoc Complete Quest",
@@ -1045,7 +1040,7 @@ local templates = {
 		close_condition = function (self)
 			return Managers.ui:is_view_closing("havoc_background_view")
 		end,
-		sync_on_events = {},
+		sync_on_events = {}
 	},
 	{
 		name = "Expeditions Objective",
@@ -1082,13 +1077,13 @@ local templates = {
 
 			objective:delete()
 		end,
-		sync_on_events = {},
+		sync_on_events = {}
 	},
 	{
 		name = "Unspent Talent points available",
 		once_per_state = true,
 		valid_states = {
-			"GameplayStateRun",
+			"GameplayStateRun"
 		},
 		validation_func = function (self)
 			local has_hud = _has_hud()
@@ -1128,7 +1123,7 @@ local templates = {
 			local localization_key = "loc_onboarding_popup_talent_points_reminder"
 			local no_cache = true
 			local param = {
-				input_key = "{#color(226, 199, 126)}" .. _get_view_input_text("hotkey_inventory") .. "{#reset()}",
+				input_key = "{#color(226, 199, 126)}" .. _get_view_input_text("hotkey_inventory") .. "{#reset()}"
 			}
 			local localized_text = Localize(localization_key, no_cache, param)
 			local duration = UI_POPUP_INFO_DURATION
@@ -1145,7 +1140,7 @@ local templates = {
 
 			Managers.event:trigger("event_player_hide_onboarding_message", player)
 		end,
-		sync_on_events = {},
+		sync_on_events = {}
 	},
 	{
 		name = "Player Journey - Mission Board Tier Up",
@@ -1169,7 +1164,7 @@ local templates = {
 
 				Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration)
 			end
-		end,
+		end
 	},
 	{
 		name = "main_story_km_station",
@@ -1212,7 +1207,7 @@ local templates = {
 
 				Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration)
 			end
-		end,
+		end
 	},
 	{
 		name = "main_story_dm_stockpile",
@@ -1230,7 +1225,7 @@ local templates = {
 			end
 
 			Managers.narrative:complete_current_chapter("main_story")
-		end,
+		end
 	},
 	{
 		name = "main_story_hm_cartel",
@@ -1239,7 +1234,7 @@ local templates = {
 		end,
 		on_activation = function (self)
 			Managers.narrative:complete_current_chapter("main_story")
-		end,
+		end
 	},
 	{
 		name = "main_story_km_enforcer",
@@ -1255,7 +1250,7 @@ local templates = {
 			local duration = UI_POPUP_INFO_DURATION
 
 			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration)
-		end,
+		end
 	},
 	{
 		name = "main_story_cm_habs",
@@ -1279,7 +1274,7 @@ local templates = {
 			local localization_key = "loc_onboarding_popup_live_events_unlocked"
 			local localized_text = Localize(localization_key)
 			local duration = UI_POPUP_INFO_DURATION
-		end,
+		end
 	},
 	{
 		name = "main_story_dm_propaganda",
@@ -1308,7 +1303,7 @@ local templates = {
 			local duration = UI_POPUP_INFO_DURATION
 
 			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration)
-		end,
+		end
 	},
 	{
 		name = "main_story_fm_cargo",
@@ -1321,7 +1316,7 @@ local templates = {
 			local template_name = "core_research_intro"
 			local context = {
 				allow_skip_input = true,
-				template = template_name,
+				template = template_name
 			}
 
 			ui_manager:open_view(view_name, nil, true, true, nil, context)
@@ -1354,7 +1349,7 @@ local templates = {
 			local duration = UI_POPUP_INFO_DURATION
 
 			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration)
-		end,
+		end
 	},
 	{
 		name = "main_story_hm_strain",
@@ -1388,14 +1383,14 @@ local templates = {
 				local template_name = "s1_intro"
 				local context = {
 					allow_skip_input = true,
-					template = template_name,
+					template = template_name
 				}
 
 				ui_manager:open_view(view_name, nil, true, true, nil, context)
 			end
 
 			Managers.narrative:set_story_to_chapter("main_story", jump_to_chapter)
-		end,
+		end
 	},
 	{
 		name = "main_story_core_research",
@@ -1417,14 +1412,14 @@ local templates = {
 				local template_name = "s1_intro"
 				local context = {
 					allow_skip_input = true,
-					template = template_name,
+					template = template_name
 				}
 
 				ui_manager:open_view(view_name, nil, true, true, nil, context)
 			end
 
 			Managers.narrative:set_story_to_chapter("main_story", jump_to_chapter)
-		end,
+		end
 	},
 	{
 		name = "main_story_fm_armoury",
@@ -1442,7 +1437,7 @@ local templates = {
 
 				Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration)
 			end
-		end,
+		end
 	},
 	{
 		name = "main_story_cm_raid",
@@ -1451,7 +1446,7 @@ local templates = {
 		end,
 		on_activation = function (self)
 			Managers.narrative:complete_current_chapter("main_story")
-		end,
+		end
 	},
 	{
 		name = "main_story_km_enforcer_twins",
@@ -1466,11 +1461,11 @@ local templates = {
 			local template_name = "cin_nox_alpha"
 			local context = {
 				allow_skip_input = true,
-				template = template_name,
+				template = template_name
 			}
 
 			ui_manager:open_view(view_name, nil, true, true, nil, context)
-		end,
+		end
 	},
 	{
 		name = "main_story_fm_resurgence",
@@ -1487,7 +1482,7 @@ local templates = {
 			end
 
 			Managers.narrative:set_story_to_chapter("main_story", jump_to_chapter)
-		end,
+		end
 	},
 	{
 		name = "main_story_dm_rise",
@@ -1508,7 +1503,7 @@ local templates = {
 			end
 
 			Managers.narrative:set_story_to_chapter("main_story", jump_to_chapter)
-		end,
+		end
 	},
 	{
 		name = "main_story_cm_archives",
@@ -1525,7 +1520,7 @@ local templates = {
 			end
 
 			Managers.narrative:set_story_to_chapter("main_story", jump_to_chapter)
-		end,
+		end
 	},
 	{
 		name = "main_story_hm_complex",
@@ -1542,7 +1537,7 @@ local templates = {
 			end
 
 			Managers.narrative:set_story_to_chapter("main_story", jump_to_chapter)
-		end,
+		end
 	},
 	{
 		name = "main_story_km_heresy",
@@ -1568,8 +1563,8 @@ local templates = {
 			local duration = UI_POPUP_INFO_DURATION
 
 			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration)
-		end,
-	},
+		end
+	}
 }
 
 return templates

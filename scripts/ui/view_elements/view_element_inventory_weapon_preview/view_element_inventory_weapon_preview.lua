@@ -42,7 +42,7 @@ ViewElementInventoryWeaponPreview._setup_background_gui = function (self)
 	local flags = {
 		Application.DISABLE_PHYSICS,
 		Application.ENABLE_RAY_TRACING,
-		Application.ENABLE_VOLUMETRICS,
+		Application.ENABLE_VOLUMETRICS
 	}
 
 	self._background_world = ui_manager:create_world(world_name, world_layer, timer_name, view_name, flags)
@@ -162,7 +162,7 @@ ViewElementInventoryWeaponPreview.center_align = function (self, duration, addit
 	self._default_camera_position_offset = {
 		target_world_position.x - camera_world_position.x + extra_position_x,
 		target_world_position.y - camera_world_position.y + extra_position_y,
-		target_world_position.z - camera_world_position.z + extra_position_z,
+		target_world_position.z - camera_world_position.z + extra_position_z
 	}
 
 	world_spawner:set_target_camera_rotation(target_world_rotation, time, func_ptr)

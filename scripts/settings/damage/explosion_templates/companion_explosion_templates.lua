@@ -17,9 +17,9 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
-		},
-	},
+			"destructibles"
+		}
+	}
 }
 
 return explosion_templates

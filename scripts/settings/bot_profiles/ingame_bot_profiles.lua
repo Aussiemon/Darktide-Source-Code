@@ -6,9 +6,9 @@ local behavior_gestalts = BotSettings.behavior_gestalts
 local function ingame_bot_profiles(all_profiles)
 	all_profiles.bot_1 = {
 		archetype = "veteran",
+		character_height = 1.075,
 		current_level = 1,
 		gender = "male",
-		name_list_id = "male_names_1",
 		planet = "option_1",
 		selected_voice = "veteran_male_a",
 		loadout = {
@@ -28,22 +28,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_d",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_d",
 			slot_primary = "content/items/weapons/player/melee/bot_combatsword_linesman_p1",
-			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 1.075,
-		},
+		talents = {}
 	}
 	all_profiles.bot_2 = {
 		archetype = "veteran",
+		character_height = 1.04,
 		current_level = 1,
 		gender = "male",
-		name_list_id = "male_names_1",
 		planet = "option_2",
 		selected_voice = "veteran_male_b",
 		loadout = {
@@ -63,22 +60,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_c",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_c",
 			slot_primary = "content/items/weapons/player/melee/bot_combatsword_linesman_p1",
-			slot_secondary = "content/items/weapons/player/ranged/bot_autogun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_autogun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 1.04,
-		},
+		talents = {}
 	}
 	all_profiles.bot_3 = {
 		archetype = "veteran",
+		character_height = 1.02,
 		current_level = 1,
 		gender = "male",
-		name_list_id = "male_names_1",
 		planet = "option_3",
 		selected_voice = "veteran_male_c",
 		loadout = {
@@ -98,22 +92,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_c",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_c",
 			slot_primary = "content/items/weapons/player/melee/bot_combatsword_linesman_p2",
-			slot_secondary = "content/items/weapons/player/ranged/bot_autogun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_autogun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 1.02,
-		},
+		talents = {}
 	}
 	all_profiles.bot_4 = {
 		archetype = "veteran",
+		character_height = 0.97,
 		current_level = 1,
 		gender = "female",
-		name_list_id = "female_names_1",
 		planet = "option_4",
 		selected_voice = "veteran_female_a",
 		loadout = {
@@ -133,22 +124,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_d",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_d",
 			slot_primary = "content/items/weapons/player/melee/bot_combatsword_linesman_p2",
-			slot_secondary = "content/items/weapons/player/ranged/bot_laspistol_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_laspistol_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 0.97,
-		},
+		talents = {}
 	}
 	all_profiles.bot_5 = {
 		archetype = "veteran",
+		character_height = 0.95,
 		current_level = 1,
 		gender = "female",
-		name_list_id = "female_names_1",
 		planet = "option_5",
 		selected_voice = "veteran_female_b",
 		loadout = {
@@ -168,22 +156,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_d",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_d",
 			slot_primary = "content/items/weapons/player/melee/bot_combataxe_linesman",
-			slot_secondary = "content/items/weapons/player/ranged/bot_laspistol_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_laspistol_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 0.95,
-		},
+		talents = {}
 	}
 	all_profiles.bot_6 = {
 		archetype = "veteran",
+		character_height = 1.09,
 		current_level = 1,
 		gender = "female",
-		name_list_id = "female_names_1",
 		planet = "option_6",
 		selected_voice = "veteran_female_c",
 		loadout = {
@@ -203,22 +188,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_c",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_c",
 			slot_primary = "content/items/weapons/player/melee/bot_combataxe_linesman",
-			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 1.09,
-		},
+		talents = {}
 	}
 	all_profiles.low_bot_1 = {
 		archetype = "veteran",
+		character_height = 1.075,
 		current_level = 1,
 		gender = "male",
-		name_list_id = "male_names_1",
 		planet = "option_1",
 		selected_voice = "veteran_male_a",
 		loadout = {
@@ -238,22 +220,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_c",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_c",
 			slot_primary = "content/items/weapons/player/melee/bot_combatsword_linesman_p1",
-			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 1.075,
-		},
+		talents = {}
 	}
 	all_profiles.low_bot_2 = {
 		archetype = "veteran",
+		character_height = 1.04,
 		current_level = 1,
 		gender = "male",
-		name_list_id = "male_names_1",
 		planet = "option_2",
 		selected_voice = "veteran_male_b",
 		loadout = {
@@ -273,22 +252,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_c",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_c",
 			slot_primary = "content/items/weapons/player/melee/bot_combatsword_linesman_p1",
-			slot_secondary = "content/items/weapons/player/ranged/bot_autogun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_autogun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 1.04,
-		},
+		talents = {}
 	}
 	all_profiles.low_bot_3 = {
 		archetype = "veteran",
+		character_height = 1.02,
 		current_level = 1,
 		gender = "male",
-		name_list_id = "male_names_1",
 		planet = "option_3",
 		selected_voice = "veteran_male_c",
 		loadout = {
@@ -308,22 +284,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_c",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_c",
 			slot_primary = "content/items/weapons/player/melee/bot_combatsword_linesman_p2",
-			slot_secondary = "content/items/weapons/player/ranged/bot_autogun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_autogun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 1.02,
-		},
+		talents = {}
 	}
 	all_profiles.low_bot_4 = {
 		archetype = "veteran",
+		character_height = 0.97,
 		current_level = 1,
 		gender = "female",
-		name_list_id = "female_names_1",
 		planet = "option_4",
 		selected_voice = "veteran_female_a",
 		loadout = {
@@ -343,22 +316,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_d",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_d",
 			slot_primary = "content/items/weapons/player/melee/bot_combatsword_linesman_p2",
-			slot_secondary = "content/items/weapons/player/ranged/bot_laspistol_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_laspistol_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 0.97,
-		},
+		talents = {}
 	}
 	all_profiles.low_bot_5 = {
 		archetype = "veteran",
+		character_height = 0.95,
 		current_level = 1,
 		gender = "female",
-		name_list_id = "female_names_1",
 		planet = "option_5",
 		selected_voice = "veteran_female_b",
 		loadout = {
@@ -378,22 +348,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_d",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_d",
 			slot_primary = "content/items/weapons/player/melee/bot_combataxe_linesman",
-			slot_secondary = "content/items/weapons/player/ranged/bot_laspistol_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_laspistol_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 0.95,
-		},
+		talents = {}
 	}
 	all_profiles.low_bot_6 = {
 		archetype = "veteran",
+		character_height = 1.09,
 		current_level = 1,
 		gender = "female",
-		name_list_id = "female_names_1",
 		planet = "option_6",
 		selected_voice = "veteran_female_c",
 		loadout = {
@@ -413,22 +380,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_c",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_c",
 			slot_primary = "content/items/weapons/player/melee/bot_combataxe_linesman",
-			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 1.09,
-		},
+		talents = {}
 	}
 	all_profiles.medium_bot_1 = {
 		archetype = "veteran",
+		character_height = 1.075,
 		current_level = 1,
 		gender = "male",
-		name_list_id = "male_names_1",
 		planet = "option_1",
 		selected_voice = "veteran_male_a",
 		loadout = {
@@ -448,22 +412,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/veteran_lowerbody_career_01_lvl_01_set_01",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/veteran_upperbody_career_01_lvl_01_set_01",
 			slot_primary = "content/items/weapons/player/melee/bot_combatsword_linesman_p1",
-			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 1.075,
-		},
+		talents = {}
 	}
 	all_profiles.medium_bot_2 = {
 		archetype = "veteran",
+		character_height = 1.04,
 		current_level = 1,
 		gender = "male",
-		name_list_id = "male_names_1",
 		planet = "option_2",
 		selected_voice = "veteran_male_b",
 		loadout = {
@@ -483,22 +444,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/veteran_lowerbody_career_01_lvl_01_set_03",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/veteran_upperbody_career_01_lvl_01_set_03",
 			slot_primary = "content/items/weapons/player/melee/bot_combatsword_linesman_p1",
-			slot_secondary = "content/items/weapons/player/ranged/bot_autogun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_autogun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 1.04,
-		},
+		talents = {}
 	}
 	all_profiles.medium_bot_3 = {
 		archetype = "veteran",
+		character_height = 1.02,
 		current_level = 1,
 		gender = "male",
-		name_list_id = "male_names_1",
 		planet = "option_3",
 		selected_voice = "veteran_male_c",
 		loadout = {
@@ -518,22 +476,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/veteran_lowerbody_career_01_lvl_01_set_02",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/veteran_upperbody_career_01_lvl_01_set_02",
 			slot_primary = "content/items/weapons/player/melee/bot_combatsword_linesman_p2",
-			slot_secondary = "content/items/weapons/player/ranged/bot_autogun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_autogun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 1.02,
-		},
+		talents = {}
 	}
 	all_profiles.medium_bot_4 = {
 		archetype = "veteran",
+		character_height = 0.97,
 		current_level = 1,
 		gender = "female",
-		name_list_id = "female_names_1",
 		planet = "option_4",
 		selected_voice = "veteran_female_a",
 		loadout = {
@@ -553,22 +508,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/veteran_lowerbody_career_01_lvl_01_set_04",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/veteran_upperbody_career_01_lvl_01_set_04",
 			slot_primary = "content/items/weapons/player/melee/bot_combatsword_linesman_p2",
-			slot_secondary = "content/items/weapons/player/ranged/bot_laspistol_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_laspistol_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 0.97,
-		},
+		talents = {}
 	}
 	all_profiles.medium_bot_5 = {
 		archetype = "veteran",
+		character_height = 0.95,
 		current_level = 1,
 		gender = "female",
-		name_list_id = "female_names_1",
 		planet = "option_5",
 		selected_voice = "veteran_female_b",
 		loadout = {
@@ -588,22 +540,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/veteran_lowerbody_career_01_lvl_01_set_05",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/veteran_upperbody_career_01_lvl_01_set_05",
 			slot_primary = "content/items/weapons/player/melee/bot_combataxe_linesman",
-			slot_secondary = "content/items/weapons/player/ranged/bot_laspistol_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_laspistol_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 0.95,
-		},
+		talents = {}
 	}
 	all_profiles.medium_bot_6 = {
 		archetype = "veteran",
+		character_height = 1.09,
 		current_level = 1,
 		gender = "female",
-		name_list_id = "female_names_1",
 		planet = "option_6",
 		selected_voice = "veteran_female_c",
 		loadout = {
@@ -623,22 +572,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/veteran_lowerbody_career_01_lvl_01_set_01",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/veteran_upperbody_career_01_lvl_01_set_01",
 			slot_primary = "content/items/weapons/player/melee/bot_combataxe_linesman",
-			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 1.09,
-		},
+		talents = {}
 	}
 	all_profiles.high_bot_1 = {
 		archetype = "veteran",
+		character_height = 1.075,
 		current_level = 1,
 		gender = "male",
-		name_list_id = "male_names_1",
 		planet = "option_1",
 		selected_voice = "veteran_male_a",
 		loadout = {
@@ -658,22 +604,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/veteran_lowerbody_career_02_lvl_02_set_01",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/veteran_upperbody_career_02_lvl_02_set_01",
 			slot_primary = "content/items/weapons/player/melee/bot_combatsword_linesman_p1",
-			slot_secondary = "content/items/weapons/player/ranged/high_bot_lasgun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/high_bot_lasgun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 1.075,
-		},
+		talents = {}
 	}
 	all_profiles.high_bot_2 = {
 		archetype = "veteran",
+		character_height = 1.04,
 		current_level = 1,
 		gender = "male",
-		name_list_id = "male_names_1",
 		planet = "option_2",
 		selected_voice = "veteran_male_b",
 		loadout = {
@@ -693,22 +636,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/veteran_lowerbody_career_02_lvl_02_set_03",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/veteran_upperbody_career_02_lvl_02_set_03",
 			slot_primary = "content/items/weapons/player/melee/bot_combatsword_linesman_p1",
-			slot_secondary = "content/items/weapons/player/ranged/high_bot_autogun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/high_bot_autogun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 1.04,
-		},
+		talents = {}
 	}
 	all_profiles.high_bot_3 = {
 		archetype = "veteran",
+		character_height = 1.02,
 		current_level = 1,
 		gender = "male",
-		name_list_id = "male_names_1",
 		planet = "option_3",
 		selected_voice = "veteran_male_c",
 		loadout = {
@@ -728,22 +668,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/veteran_lowerbody_career_02_lvl_02_set_02",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/veteran_upperbody_career_02_lvl_02_set_02",
 			slot_primary = "content/items/weapons/player/melee/bot_combatsword_linesman_p2",
-			slot_secondary = "content/items/weapons/player/ranged/high_bot_autogun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/high_bot_autogun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 1.02,
-		},
+		talents = {}
 	}
 	all_profiles.high_bot_4 = {
 		archetype = "veteran",
+		character_height = 0.97,
 		current_level = 1,
 		gender = "female",
-		name_list_id = "female_names_1",
 		planet = "option_4",
 		selected_voice = "veteran_female_a",
 		loadout = {
@@ -763,22 +700,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/veteran_lowerbody_career_02_lvl_02_set_04",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/veteran_upperbody_career_02_lvl_02_set_04",
 			slot_primary = "content/items/weapons/player/melee/bot_combatsword_linesman_p2",
-			slot_secondary = "content/items/weapons/player/ranged/high_bot_lasgun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/high_bot_lasgun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 0.97,
-		},
+		talents = {}
 	}
 	all_profiles.high_bot_5 = {
 		archetype = "veteran",
+		character_height = 0.95,
 		current_level = 1,
 		gender = "female",
-		name_list_id = "female_names_1",
 		planet = "option_5",
 		selected_voice = "veteran_female_b",
 		loadout = {
@@ -798,22 +732,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/veteran_lowerbody_career_02_lvl_02_set_05",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/veteran_upperbody_career_02_lvl_02_set_05",
 			slot_primary = "content/items/weapons/player/melee/bot_combataxe_linesman",
-			slot_secondary = "content/items/weapons/player/ranged/high_bot_lasgun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/high_bot_lasgun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 0.95,
-		},
+		talents = {}
 	}
 	all_profiles.high_bot_6 = {
 		archetype = "veteran",
+		character_height = 1.09,
 		current_level = 1,
 		gender = "female",
-		name_list_id = "female_names_1",
 		planet = "option_6",
 		selected_voice = "veteran_female_c",
 		loadout = {
@@ -833,22 +764,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/veteran_lowerbody_career_02_lvl_02_set_01",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/veteran_upperbody_career_02_lvl_02_set_01",
 			slot_primary = "content/items/weapons/player/melee/bot_combataxe_linesman",
-			slot_secondary = "content/items/weapons/player/ranged/high_bot_autogun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/high_bot_autogun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 1.09,
-		},
+		talents = {}
 	}
 	all_profiles.bot_adamant_ma = {
 		archetype = "adamant",
+		character_height = 1.075,
 		current_level = 1,
 		gender = "male",
-		name_list_id = "male_names_1",
 		planet = "option_1",
 		selected_voice = "adamant_male_a",
 		loadout = {
@@ -868,22 +796,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_d",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_d",
 			slot_primary = "content/items/weapons/player/melee/bot_combatsword_linesman_p1",
-			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 1.075,
-		},
+		talents = {}
 	}
 	all_profiles.bot_adamant_mb = {
 		archetype = "adamant",
+		character_height = 1.04,
 		current_level = 1,
 		gender = "male",
-		name_list_id = "male_names_1",
 		planet = "option_2",
 		selected_voice = "adamant_male_b",
 		loadout = {
@@ -903,22 +828,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_c",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_c",
 			slot_primary = "content/items/weapons/player/melee/bot_combatsword_linesman_p1",
-			slot_secondary = "content/items/weapons/player/ranged/bot_autogun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_autogun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 1.04,
-		},
+		talents = {}
 	}
 	all_profiles.bot_adamant_mc = {
 		archetype = "adamant",
+		character_height = 1.02,
 		current_level = 1,
 		gender = "male",
-		name_list_id = "male_names_1",
 		planet = "option_3",
 		selected_voice = "adamant_male_c",
 		loadout = {
@@ -938,22 +860,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_c",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_c",
 			slot_primary = "content/items/weapons/player/melee/bot_combatsword_linesman_p2",
-			slot_secondary = "content/items/weapons/player/ranged/bot_autogun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_autogun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 1.02,
-		},
+		talents = {}
 	}
 	all_profiles.bot_adamant_fa = {
 		archetype = "adamant",
+		character_height = 0.97,
 		current_level = 1,
 		gender = "female",
-		name_list_id = "female_names_1",
 		planet = "option_4",
 		selected_voice = "adamant_female_a",
 		loadout = {
@@ -973,22 +892,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_d",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_d",
 			slot_primary = "content/items/weapons/player/melee/bot_combatsword_linesman_p2",
-			slot_secondary = "content/items/weapons/player/ranged/bot_laspistol_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_laspistol_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 0.97,
-		},
+		talents = {}
 	}
 	all_profiles.bot_adamant_fb = {
 		archetype = "adamant",
+		character_height = 0.95,
 		current_level = 1,
 		gender = "female",
-		name_list_id = "female_names_1",
 		planet = "option_5",
 		selected_voice = "adamant_female_b",
 		loadout = {
@@ -1008,22 +924,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_d",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_d",
 			slot_primary = "content/items/weapons/player/melee/bot_combataxe_linesman",
-			slot_secondary = "content/items/weapons/player/ranged/bot_laspistol_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_laspistol_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 0.95,
-		},
+		talents = {}
 	}
 	all_profiles.bot_adamant_fc = {
 		archetype = "adamant",
+		character_height = 1.09,
 		current_level = 1,
 		gender = "female",
-		name_list_id = "female_names_1",
 		planet = "option_6",
 		selected_voice = "adamant_female_c",
 		loadout = {
@@ -1043,22 +956,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_c",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_c",
 			slot_primary = "content/items/weapons/player/melee/bot_combataxe_linesman",
-			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 1.09,
-		},
+		talents = {}
 	}
 	all_profiles.bot_broker_ma = {
 		archetype = "broker",
+		character_height = 1.075,
 		current_level = 1,
 		gender = "male",
-		name_list_id = "male_names_1",
 		planet = "option_1",
 		selected_voice = "broker_male_a",
 		loadout = {
@@ -1078,22 +988,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_d",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_d",
 			slot_primary = "content/items/weapons/player/melee/bot_combatsword_linesman_p1",
-			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 1.075,
-		},
+		talents = {}
 	}
 	all_profiles.bot_broker_mb = {
 		archetype = "broker",
+		character_height = 1.04,
 		current_level = 1,
 		gender = "male",
-		name_list_id = "male_names_1",
 		planet = "option_2",
 		selected_voice = "broker_male_b",
 		loadout = {
@@ -1113,22 +1020,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_c",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_c",
 			slot_primary = "content/items/weapons/player/melee/bot_combatsword_linesman_p1",
-			slot_secondary = "content/items/weapons/player/ranged/bot_autogun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_autogun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 1.04,
-		},
+		talents = {}
 	}
 	all_profiles.bot_broker_mc = {
 		archetype = "broker",
+		character_height = 1.02,
 		current_level = 1,
 		gender = "male",
-		name_list_id = "male_names_1",
 		planet = "option_3",
 		selected_voice = "broker_male_c",
 		loadout = {
@@ -1148,22 +1052,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_c",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_c",
 			slot_primary = "content/items/weapons/player/melee/bot_combatsword_linesman_p2",
-			slot_secondary = "content/items/weapons/player/ranged/bot_autogun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_autogun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 1.02,
-		},
+		talents = {}
 	}
 	all_profiles.bot_broker_fa = {
 		archetype = "broker",
+		character_height = 0.97,
 		current_level = 1,
 		gender = "female",
-		name_list_id = "female_names_1",
 		planet = "option_4",
 		selected_voice = "broker_female_a",
 		loadout = {
@@ -1183,22 +1084,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_d",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_d",
 			slot_primary = "content/items/weapons/player/melee/bot_combatsword_linesman_p2",
-			slot_secondary = "content/items/weapons/player/ranged/bot_laspistol_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_laspistol_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 0.97,
-		},
+		talents = {}
 	}
 	all_profiles.bot_broker_fb = {
 		archetype = "broker",
+		character_height = 0.95,
 		current_level = 1,
 		gender = "female",
-		name_list_id = "female_names_1",
 		planet = "option_5",
 		selected_voice = "broker_female_b",
 		loadout = {
@@ -1218,22 +1116,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_d",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_d",
 			slot_primary = "content/items/weapons/player/melee/bot_combataxe_linesman",
-			slot_secondary = "content/items/weapons/player/ranged/bot_laspistol_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_laspistol_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 0.95,
-		},
+		talents = {}
 	}
 	all_profiles.bot_broker_fc = {
 		archetype = "broker",
+		character_height = 1.09,
 		current_level = 1,
 		gender = "female",
-		name_list_id = "female_names_1",
 		planet = "option_6",
 		selected_voice = "broker_female_c",
 		loadout = {
@@ -1253,22 +1148,19 @@ local function ingame_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_c",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_c",
 			slot_primary = "content/items/weapons/player/melee/bot_combataxe_linesman",
-			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
-		personal = {
-			character_height = 1.09,
-		},
+		talents = {}
 	}
 	all_profiles.bot_cryptic_a = {
 		archetype = "cryptic",
+		character_height = 1.09,
 		current_level = 1,
 		gender = "male",
-		name_list_id = "male_names_1",
 		planet = "option_6",
 		selected_voice = "cryptic_a",
 		loadout = {
@@ -1289,33 +1181,34 @@ local function ingame_bot_profiles(all_profiles)
 			slot_body_skin_discoloration = "content/items/characters/player/metal_oxidation_level/cryptic_metal_oxidation_level_01",
 			slot_body_tattoo = "content/items/characters/player/human/body_tattoo/empty_body_tattoo",
 			slot_body_torso = "content/items/characters/player/human/gear_torso/empty_torso",
+			slot_companion_body_coat_pattern = nil,
+			slot_companion_body_fur_color = nil,
+			slot_companion_body_skin_color = nil,
+			slot_companion_gear_full = "content/items/characters/companion/companion_servo_skull/gear_full/cryptic_servo_skull_deluxe_var_01",
 			slot_gear_extra_cosmetic = "content/items/characters/player/human/backpacks/cryptic_backpack_d_var_01",
 			slot_gear_head = "content/items/characters/player/human/gear_head/cryptic_headgear_01_var_01",
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/cryptic_lowerbody_a_var_01",
 			slot_gear_material_override_decal = "content/items/characters/player/human/gear_material_override_decal/empty_material_override_decal",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/cryptic_upperbody_a_var_01",
 			slot_primary = "content/items/weapons/player/melee/powersword_p3_m1",
-			slot_secondary = "content/items/weapons/player/ranged/galvanic_rifle_p1_m1",
+			slot_secondary = "content/items/weapons/player/ranged/galvanic_rifle_p1_m1"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
 		voice_effects = {
 			vox_effect_01 = math.random(1, 100),
 			vox_effect_02 = math.random(1, 100),
-			vox_effect_03 = math.random(1, 100),
+			vox_effect_03 = math.random(1, 100)
 		},
-		talents = {},
-		personal = {
-			character_height = 1.09,
-		},
+		talents = {}
 	}
 	all_profiles.bot_cryptic_b = {
 		archetype = "cryptic",
+		character_height = 1.09,
 		current_level = 1,
 		gender = "male",
-		name_list_id = "male_names_1",
 		planet = "option_6",
 		selected_voice = "cryptic_b",
 		loadout = {
@@ -1336,33 +1229,34 @@ local function ingame_bot_profiles(all_profiles)
 			slot_body_skin_discoloration = "content/items/characters/player/metal_oxidation_level/cryptic_metal_oxidation_level_01",
 			slot_body_tattoo = "content/items/characters/player/human/body_tattoo/empty_body_tattoo",
 			slot_body_torso = "content/items/characters/player/human/gear_torso/empty_torso",
+			slot_companion_body_coat_pattern = nil,
+			slot_companion_body_fur_color = nil,
+			slot_companion_body_skin_color = nil,
+			slot_companion_gear_full = "content/items/characters/companion/companion_servo_skull/gear_full/cryptic_servo_skull_deluxe_var_01",
 			slot_gear_extra_cosmetic = "content/items/characters/player/human/backpacks/cryptic_backpack_d_var_01",
 			slot_gear_head = "content/items/characters/player/human/gear_head/cryptic_headgear_01_var_01",
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/cryptic_lowerbody_a_var_01",
 			slot_gear_material_override_decal = "content/items/characters/player/human/gear_material_override_decal/empty_material_override_decal",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/cryptic_upperbody_a_var_01",
 			slot_primary = "content/items/weapons/player/melee/powersword_p3_m1",
-			slot_secondary = "content/items/weapons/player/ranged/galvanic_rifle_p1_m1",
+			slot_secondary = "content/items/weapons/player/ranged/galvanic_rifle_p1_m1"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
 		voice_effects = {
 			vox_effect_01 = math.random(1, 100),
 			vox_effect_02 = math.random(1, 100),
-			vox_effect_03 = math.random(1, 100),
+			vox_effect_03 = math.random(1, 100)
 		},
-		talents = {},
-		personal = {
-			character_height = 1.09,
-		},
+		talents = {}
 	}
 	all_profiles.bot_cryptic_c = {
 		archetype = "cryptic",
+		character_height = 1.09,
 		current_level = 1,
 		gender = "male",
-		name_list_id = "male_names_1",
 		planet = "option_6",
 		selected_voice = "cryptic_c",
 		loadout = {
@@ -1383,33 +1277,34 @@ local function ingame_bot_profiles(all_profiles)
 			slot_body_skin_discoloration = "content/items/characters/player/metal_oxidation_level/cryptic_metal_oxidation_level_01",
 			slot_body_tattoo = "content/items/characters/player/human/body_tattoo/empty_body_tattoo",
 			slot_body_torso = "content/items/characters/player/human/gear_torso/empty_torso",
+			slot_companion_body_coat_pattern = nil,
+			slot_companion_body_fur_color = nil,
+			slot_companion_body_skin_color = nil,
+			slot_companion_gear_full = "content/items/characters/companion/companion_servo_skull/gear_full/cryptic_servo_skull_deluxe_var_01",
 			slot_gear_extra_cosmetic = "content/items/characters/player/human/backpacks/cryptic_backpack_d_var_01",
 			slot_gear_head = "content/items/characters/player/human/gear_head/cryptic_headgear_01_var_01",
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/cryptic_lowerbody_a_var_01",
 			slot_gear_material_override_decal = "content/items/characters/player/human/gear_material_override_decal/empty_material_override_decal",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/cryptic_upperbody_a_var_01",
 			slot_primary = "content/items/weapons/player/melee/powersword_p3_m1",
-			slot_secondary = "content/items/weapons/player/ranged/galvanic_rifle_p1_m1",
+			slot_secondary = "content/items/weapons/player/ranged/galvanic_rifle_p1_m1"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
 		voice_effects = {
 			vox_effect_01 = math.random(1, 100),
 			vox_effect_02 = math.random(1, 100),
-			vox_effect_03 = math.random(1, 100),
+			vox_effect_03 = math.random(1, 100)
 		},
-		talents = {},
-		personal = {
-			character_height = 1.09,
-		},
+		talents = {}
 	}
 	all_profiles.bot_cryptic_d = {
 		archetype = "cryptic",
+		character_height = 1.09,
 		current_level = 1,
 		gender = "male",
-		name_list_id = "male_names_1",
 		planet = "option_6",
 		selected_voice = "cryptic_d",
 		loadout = {
@@ -1430,27 +1325,28 @@ local function ingame_bot_profiles(all_profiles)
 			slot_body_skin_discoloration = "content/items/characters/player/metal_oxidation_level/cryptic_metal_oxidation_level_01",
 			slot_body_tattoo = "content/items/characters/player/human/body_tattoo/empty_body_tattoo",
 			slot_body_torso = "content/items/characters/player/human/gear_torso/empty_torso",
+			slot_companion_body_coat_pattern = nil,
+			slot_companion_body_fur_color = nil,
+			slot_companion_body_skin_color = nil,
+			slot_companion_gear_full = "content/items/characters/companion/companion_servo_skull/gear_full/cryptic_servo_skull_deluxe_var_01",
 			slot_gear_extra_cosmetic = "content/items/characters/player/human/backpacks/cryptic_backpack_d_var_01",
 			slot_gear_head = "content/items/characters/player/human/gear_head/cryptic_headgear_01_var_01",
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/cryptic_lowerbody_a_var_01",
 			slot_gear_material_override_decal = "content/items/characters/player/human/gear_material_override_decal/empty_material_override_decal",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/cryptic_upperbody_a_var_01",
 			slot_primary = "content/items/weapons/player/melee/powersword_p3_m1",
-			slot_secondary = "content/items/weapons/player/ranged/galvanic_rifle_p1_m1",
+			slot_secondary = "content/items/weapons/player/ranged/galvanic_rifle_p1_m1"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
 		voice_effects = {
 			vox_effect_01 = math.random(1, 100),
 			vox_effect_02 = math.random(1, 100),
-			vox_effect_03 = math.random(1, 100),
+			vox_effect_03 = math.random(1, 100)
 		},
-		talents = {},
-		personal = {
-			character_height = 1.09,
-		},
+		talents = {}
 	}
 end
 

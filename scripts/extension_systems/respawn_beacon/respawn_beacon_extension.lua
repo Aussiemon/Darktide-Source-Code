@@ -28,14 +28,23 @@ RespawnBeaconExtension.setup_from_component = function (self, side, safe_zone, d
 	self._safe_zone = safe_zone
 
 	local max_player_radius, max_player_height = _player_max_radius_height()
-	local valid_spawn_positions, _, _, _ = RespawnBeaconQueries.spawn_locations(self._nav_world, self._physics_world, self._unit, max_player_radius, max_player_height)
-	local num_valid_spawn_positions = #valid_spawn_positions
+	local valid_spawn_positions
+
+	if Unit.get_data(self._unit, "procedurally_placed") then
+		local num_needed_spawn_locations = 4
+
+		valid_spawn_positions = RespawnBeaconQueries.procgen_spawn_locations(self._nav_world, self._physics_world, nil, self._unit, max_player_radius, max_player_height, num_needed_spawn_locations)
+	else
+		valid_spawn_positions = RespawnBeaconQueries.spawn_locations(self._nav_world, self._physics_world, self._unit, max_player_radius, max_player_height)
+	end
+
+	local num_valid_spawn_positions = valid_spawn_positions and #valid_spawn_positions or 0
 
 	self._valid_spawn_positions = Script.new_array(num_valid_spawn_positions)
 
 	for i = 1, num_valid_spawn_positions do
 		self._valid_spawn_positions[i] = {
-			position = Vector3Box(valid_spawn_positions[i]),
+			position = Vector3Box(valid_spawn_positions[i])
 		}
 	end
 end

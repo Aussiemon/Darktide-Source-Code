@@ -22,7 +22,7 @@ local CLIENT_RPCS = {
 	"rpc_event_synchronizer_distribute_seeds",
 	"rpc_event_synchronizer_luggable_hide_luggable",
 	"rpc_event_synchronizer_demolition_target_override",
-	"rpc_event_synchronizer_set_servo_skull",
+	"rpc_event_synchronizer_set_servo_skull"
 }
 local SERVER_RPCS = {}
 

@@ -58,6 +58,11 @@ BuffUtils.add_proc_debuff = function (t, params, template_data, template_context
 		local internal_buff_name = template_data.internal_buff_name
 		local num_stacks_on_proc_func = template_context.template.num_stacks_on_proc_func
 		local num_stacks_on_proc = num_stacks_on_proc_func and num_stacks_on_proc_func(t, params, template_data, template_context) or template_data.num_stacks_on_proc
+
+		if num_stacks_on_proc <= 0 then
+			return
+		end
+
 		local max_stacks = template_data.max_stacks
 		local current_stacks = attacked_unit_buff_extension:current_stacks(internal_buff_name)
 		local stacks_to_add = math.min(num_stacks_on_proc, math.max(max_stacks - current_stacks, 0))

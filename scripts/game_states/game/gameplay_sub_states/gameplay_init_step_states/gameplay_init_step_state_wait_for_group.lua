@@ -5,7 +5,7 @@ local GameplayInitStepStateLast = require("scripts/game_states/game/gameplay_sub
 local LoadingStateData = require("scripts/ui/loading_state_data")
 local GameplayInitStepStateWaitForGroup = class("GameplayInitStepStateWaitForGroup")
 local CLIENT_RPCS = {
-	"rpc_group_loaded",
+	"rpc_group_loaded"
 }
 
 GameplayInitStepStateWaitForGroup.on_enter = function (self, parent, params)
@@ -76,7 +76,7 @@ GameplayInitStepStateWaitForGroup.update = function (self, main_dt, main_t)
 			self._shared_state.initialized_steps.GameplayInitStepStateWaitForGroup = true
 
 			local next_step_params = {
-				shared_state = self._shared_state,
+				shared_state = self._shared_state
 			}
 
 			return GameplayInitStepStateLast, next_step_params
@@ -87,7 +87,7 @@ GameplayInitStepStateWaitForGroup.update = function (self, main_dt, main_t)
 		self._shared_state.initialized_steps.GameplayInitStepStateWaitForGroup = true
 
 		local next_step_params = {
-			shared_state = self._shared_state,
+			shared_state = self._shared_state
 		}
 
 		return GameplayInitStepStateLast, next_step_params

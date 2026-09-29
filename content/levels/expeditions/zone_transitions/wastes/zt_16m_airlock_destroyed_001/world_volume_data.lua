@@ -8,46 +8,46 @@ local volume_data = {
 		alt_max_vector = {
 			0,
 			0,
-			12,
+			12
 		},
 		alt_min_vector = {
 			0,
 			0,
-			-1,
+			-1
 		},
 		bottom_points = {
 			{
 				-6,
 				-7,
-				-1,
+				-1
 			},
 			{
 				6,
 				-7,
-				-1,
+				-1
 			},
 			{
 				6,
 				8,
-				-1,
+				-1
 			},
 			{
 				-6,
 				8,
-				-1,
-			},
+				-1
+			}
 		},
 		color = {
 			255,
 			255,
 			125,
-			0,
+			0
 		},
 		up_vector = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	{
 		height = 11,
@@ -56,49 +56,49 @@ local volume_data = {
 		alt_max_vector = {
 			0,
 			0,
-			10,
+			10
 		},
 		alt_min_vector = {
 			0,
 			0,
-			-1,
+			-1
 		},
 		bottom_points = {
 			{
 				-8,
 				-7,
-				-1,
+				-1
 			},
 			{
 				6,
 				-7,
-				-1,
+				-1
 			},
 			{
 				6,
 				8,
-				-1,
+				-1
 			},
 			{
 				-8,
 				8,
-				-1,
-			},
+				-1
+			}
 		},
 		color = {
 			255,
 			255,
 			0,
-			0,
+			0
 		},
 		up_vector = {
 			0,
 			0,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 
 return {
-	volume_data = volume_data,
+	volume_data = volume_data
 }

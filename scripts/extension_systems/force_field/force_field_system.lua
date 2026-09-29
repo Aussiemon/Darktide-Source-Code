@@ -64,7 +64,7 @@ ForceFieldSystem.on_add_extension = function (self, world, unit, extension_name,
 		num_results = 0,
 		remove_t = nil,
 		units_inside = {},
-		broadphase_results = {},
+		broadphase_results = {}
 	}
 
 	self._extension_data[unit] = extension_data

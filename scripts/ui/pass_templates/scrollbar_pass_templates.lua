@@ -31,21 +31,21 @@ local scrollbar_base = {
 			local hotspot_style = style_parent.hotspot
 
 			hotspot_style.size[axis] = thumb_length
-		end,
+		end
 	},
 	{
 		content_id = "hotspot",
 		pass_type = "hotspot",
 		style_id = "hotspot",
 		content = {
-			is_focused = true,
+			is_focused = true
 		},
 		style = {
 			size = {
 				nil,
-				100,
-			},
-		},
+				100
+			}
+		}
 	},
 	{
 		pass_type = "logic",
@@ -107,7 +107,7 @@ local scrollbar_base = {
 			local percentage = current_position / end_position
 
 			content.value = percentage
-		end,
+		end
 	},
 	{
 		pass_type = "logic",
@@ -180,7 +180,7 @@ local scrollbar_base = {
 				content.scroll_value = math.clamp(current_scroll_value + step * current_scroll_direction, 0, 1)
 				content.value = content.scroll_value
 			end
-		end,
+		end
 	},
 	{
 		pass_type = "logic",
@@ -202,8 +202,8 @@ local scrollbar_base = {
 			local current_position = end_position * value
 
 			hotspot_offset[2] = current_position
-		end,
-	},
+		end
+	}
 }
 
 ScrollbarPassTemplates.simple_scrollbar = table.clone(scrollbar_base)
@@ -216,9 +216,9 @@ table.append(ScrollbarPassTemplates.simple_scrollbar, {
 				255,
 				20,
 				20,
-				20,
-			},
-		},
+				20
+			}
+		}
 	},
 	{
 		pass_type = "rect",
@@ -228,12 +228,12 @@ table.append(ScrollbarPassTemplates.simple_scrollbar, {
 				255,
 				119,
 				78,
-				45,
+				45
 			},
 			size = {
 				nil,
-				100,
-			},
+				100
+			}
 		},
 		visibility_function = scrollbar_visibility_function,
 		change_function = function (content, style)
@@ -247,8 +247,8 @@ table.append(ScrollbarPassTemplates.simple_scrollbar, {
 
 			style.size[axis] = axis_length
 			style.offset[axis] = axis_offset
-		end,
-	},
+		end
+	}
 })
 
 ScrollbarPassTemplates.default_scrollbar = table.clone(scrollbar_base)
@@ -259,9 +259,9 @@ table.append(ScrollbarPassTemplates.default_scrollbar, {
 		style_id = "track_background",
 		value = "content/ui/materials/scrollbars/scrollbar_thumb_default",
 		style = {
-			color = Color.black(255, true),
+			color = Color.black(255, true)
 		},
-		visibility_function = scrollbar_visibility_function,
+		visibility_function = scrollbar_visibility_function
 	},
 	{
 		pass_type = "texture",
@@ -271,11 +271,11 @@ table.append(ScrollbarPassTemplates.default_scrollbar, {
 			offset = {
 				0,
 				0,
-				3,
+				3
 			},
-			color = Color.black(255, true),
+			color = Color.black(255, true)
 		},
-		visibility_function = scrollbar_visibility_function,
+		visibility_function = scrollbar_visibility_function
 	},
 	{
 		pass_type = "texture",
@@ -285,14 +285,14 @@ table.append(ScrollbarPassTemplates.default_scrollbar, {
 			offset = {
 				0,
 				0,
-				2,
+				2
 			},
 			idle_color = Color.ui_grey_medium(255, true),
 			highlight_color = Color.ui_brown_super_light(255, true),
 			size = {
 				nil,
-				100,
-			},
+				100
+			}
 		},
 		visibility_function = scrollbar_visibility_function,
 		change_function = function (content, style)
@@ -308,8 +308,8 @@ table.append(ScrollbarPassTemplates.default_scrollbar, {
 			local hover_progress = content.hotspot.anim_hover_progress
 
 			ColorUtilities.color_lerp(style.idle_color, style.highlight_color, hover_progress, style.color, true)
-		end,
-	},
+		end
+	}
 })
 
 ScrollbarPassTemplates.default_scrollbar.default_width = 10
@@ -320,7 +320,7 @@ table.append(ScrollbarPassTemplates.metal_scrollbar, {
 		pass_type = "texture",
 		style_id = "track_background",
 		value = "content/ui/materials/scrollbars/scrollbar_metal_background",
-		visibility_function = scrollbar_visibility_function,
+		visibility_function = scrollbar_visibility_function
 	},
 	{
 		pass_type = "texture",
@@ -330,12 +330,12 @@ table.append(ScrollbarPassTemplates.metal_scrollbar, {
 			offset = {
 				0,
 				0,
-				2,
+				2
 			},
 			size = {
 				nil,
-				100,
-			},
+				100
+			}
 		},
 		visibility_function = scrollbar_visibility_function,
 		change_function = function (content, style)
@@ -347,7 +347,7 @@ table.append(ScrollbarPassTemplates.metal_scrollbar, {
 
 			style.size[axis] = axis_length
 			style.offset[axis] = axis_offset
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -357,12 +357,12 @@ table.append(ScrollbarPassTemplates.metal_scrollbar, {
 			offset = {
 				0,
 				0,
-				2,
+				2
 			},
 			size = {
 				nil,
-				100,
-			},
+				100
+			}
 		},
 		visibility_function = scrollbar_visibility_function,
 		change_function = function (content, style)
@@ -378,8 +378,8 @@ table.append(ScrollbarPassTemplates.metal_scrollbar, {
 			local hover_progress = content.hotspot.anim_hover_progress
 
 			style.color[1] = 255 * hover_progress
-		end,
-	},
+		end
+	}
 })
 
 ScrollbarPassTemplates.metal_scrollbar.default_width = 8
@@ -391,9 +391,9 @@ table.append(ScrollbarPassTemplates.terminal_scrollbar, {
 		style_id = "track_background",
 		value = "content/ui/materials/scrollbars/scrollbar_thumb_default",
 		style = {
-			color = Color.black(255, true),
+			color = Color.black(255, true)
 		},
-		visibility_function = scrollbar_visibility_function,
+		visibility_function = scrollbar_visibility_function
 	},
 	{
 		pass_type = "texture",
@@ -403,11 +403,11 @@ table.append(ScrollbarPassTemplates.terminal_scrollbar, {
 			offset = {
 				0,
 				0,
-				3,
+				3
 			},
-			color = Color.terminal_frame(255, true),
+			color = Color.terminal_frame(255, true)
 		},
-		visibility_function = scrollbar_visibility_function,
+		visibility_function = scrollbar_visibility_function
 	},
 	{
 		pass_type = "texture",
@@ -417,14 +417,14 @@ table.append(ScrollbarPassTemplates.terminal_scrollbar, {
 			offset = {
 				0,
 				0,
-				2,
+				2
 			},
 			idle_color = Color.terminal_text_body(255, true),
 			highlight_color = Color.ui_brown_super_light(255, true),
 			size = {
 				nil,
-				100,
-			},
+				100
+			}
 		},
 		visibility_function = scrollbar_visibility_function,
 		change_function = function (content, style)
@@ -440,8 +440,8 @@ table.append(ScrollbarPassTemplates.terminal_scrollbar, {
 			local hover_progress = content.hotspot.anim_hover_progress
 
 			ColorUtilities.color_lerp(style.idle_color, style.highlight_color, hover_progress, style.color, true)
-		end,
-	},
+		end
+	}
 })
 
 ScrollbarPassTemplates.terminal_scrollbar.default_width = 8

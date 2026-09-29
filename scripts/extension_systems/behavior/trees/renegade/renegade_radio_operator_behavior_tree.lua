@@ -6,62 +6,62 @@ local COVER_COMBAT = {
 	"BtSequenceNode",
 	condition_args = {
 		combat_ranges = {
-			far = true,
-		},
+			far = true
+		}
 	},
 	{
 		"BtMoveToCoverAction",
 		name = "move_to_cover",
-		action_data = action_data.move_to_cover,
+		action_data = action_data.move_to_cover
 	},
 	{
 		"BtInCoverAction",
 		name = "in_cover",
-		action_data = action_data.in_cover,
+		action_data = action_data.in_cover
 	},
 	condition = "has_cover",
-	name = "has_cover",
+	name = "has_cover"
 }
 local SUPPRESSED = {
 	"BtSequenceNode",
 	{
 		"BtSuppressedAction",
 		name = "suppressed",
-		action_data = action_data.suppressed,
+		action_data = action_data.suppressed
 	},
 	{
 		"BtMoveToCombatVectorAction",
 		name = "move_to_combat_vector",
-		action_data = action_data.move_to_combat_vector,
+		action_data = action_data.move_to_combat_vector
 	},
 	condition = "is_suppressed",
-	name = "suppressed",
+	name = "suppressed"
 }
 local COMBAT = {
 	"BtRandomUtilityNode",
 	{
 		"BtMeleeAttackAction",
 		name = "melee_attack",
-		action_data = action_data.melee_attack,
+		action_data = action_data.melee_attack
 	},
 	{
 		"BtShootAction",
 		condition = "has_clear_shot",
 		name = "shoot_spray_n_pray",
-		action_data = action_data.shoot_spray_n_pray,
+		action_data = action_data.shoot_spray_n_pray
 	},
 	{
 		"BtMoveToCombatVectorAction",
 		name = "move_to_combat_vector",
-		action_data = action_data.move_to_combat_vector,
+		action_data = action_data.move_to_combat_vector
 	},
 	{
 		"BtMoveToCombatVectorAction",
 		name = "escape_to_combat_vector",
-		action_data = action_data.escape_to_combat_vector,
+		action_data = action_data.escape_to_combat_vector
 	},
 	condition = "is_aggroed",
-	name = "combat",
+	name = "combat"
 }
 local WEAPON_MALFUNCTION = {
 	"BtConditionalSequenceNode",
@@ -75,35 +75,35 @@ local WEAPON_MALFUNCTION = {
 				combat_ranges = {
 					close = true,
 					far = true,
-					melee = true,
-				},
+					melee = true
+				}
 			},
-			action_data = action_data.move_to_cover_weapon_malfunction,
+			action_data = action_data.move_to_cover_weapon_malfunction
 		},
 		{
 			"BtRunAwayAction",
 			condition = "has_combat_vector_position",
 			name = "run_away_weapon_malfunction",
-			action_data = action_data.run_away_weapon_malfunction,
+			action_data = action_data.run_away_weapon_malfunction
 		},
-		name = "weapon_malfunction_reaction",
+		name = "weapon_malfunction_reaction"
 	},
 	{
 		"BtWeaponMalfunctionAction",
 		name = "weapon_malfunction_loop",
 		action_data = action_data.weapon_malfunction_loop,
 		enter_hook = {
-			hook = "weapon_malfunction_enter",
+			hook = "weapon_malfunction_enter"
 		},
 		leave_hook = {
 			hook = "weapon_malfunction_leave",
 			args = {
-				reset_net_cooldown = false,
-			},
-		},
+				reset_net_cooldown = false
+			}
+		}
 	},
 	condition = "has_weapon_malfunction",
-	name = "weapon_malfunction",
+	name = "weapon_malfunction"
 }
 local behavior_tree = {
 	"BtSelectorNode",
@@ -111,7 +111,7 @@ local behavior_tree = {
 		"BtDieAction",
 		name = "death",
 		state = "dead",
-		action_data = action_data.death,
+		action_data = action_data.death
 	},
 	{
 		"BtDisableAction",
@@ -119,7 +119,7 @@ local behavior_tree = {
 		exit_state = "base",
 		name = "disable",
 		state = "disabled",
-		action_data = action_data.disable,
+		action_data = action_data.disable
 	},
 	{
 		"BtExitSpawnerAction",
@@ -127,54 +127,54 @@ local behavior_tree = {
 		exit_state = "base",
 		name = "exit_spawner",
 		state = "exiting_spawner",
-		action_data = action_data.exit_spawner,
+		action_data = action_data.exit_spawner
 	},
 	{
 		"BtSelectorNode",
 		{
 			"BtTeleportAction",
 			condition = "at_teleport_smart_object",
-			name = "teleport",
+			name = "teleport"
 		},
 		{
 			"BtClimbAction",
 			condition = "at_climb_smart_object",
 			name = "climb",
-			action_data = action_data.climb,
+			action_data = action_data.climb
 		},
 		{
 			"BtJumpAcrossAction",
 			condition = "at_jump_smart_object",
 			name = "jump_across",
-			action_data = action_data.jump_across,
+			action_data = action_data.jump_across
 		},
 		{
 			"BtOpenDoorAction",
 			condition = "at_door_smart_object",
 			name = "open_door",
-			action_data = action_data.open_door,
+			action_data = action_data.open_door
 		},
 		condition = "at_smart_object",
-		name = "smart_object",
+		name = "smart_object"
 	},
 	{
 		"BtStaggerAction",
 		condition = "is_staggered",
 		name = "stagger",
-		action_data = action_data.stagger,
+		action_data = action_data.stagger
 	},
 	{
 		"BtBlockedAction",
 		condition = "is_blocked",
 		name = "blocked",
-		action_data = action_data.blocked,
+		action_data = action_data.blocked
 	},
 	WEAPON_MALFUNCTION,
 	{
 		"BtSummonMinionsAction",
 		condition = "can_summon_timer_only",
 		name = "summon",
-		action_data = action_data.summon,
+		action_data = action_data.summon
 	},
 	COVER_COMBAT,
 	SUPPRESSED,
@@ -183,20 +183,20 @@ local behavior_tree = {
 		"BtAlertedAction",
 		condition = "is_alerted",
 		name = "alerted",
-		action_data = action_data.alerted,
+		action_data = action_data.alerted
 	},
 	{
 		"BtPatrolAction",
 		condition = "should_patrol",
 		name = "patrol",
-		action_data = action_data.patrol,
+		action_data = action_data.patrol
 	},
 	{
 		"BtIdleAction",
 		name = "idle",
-		action_data = action_data.idle,
+		action_data = action_data.idle
 	},
-	name = "renegade_radio_operator",
+	name = "renegade_radio_operator"
 }
 
 return behavior_tree

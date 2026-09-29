@@ -12,14 +12,14 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
-	},
+			0
+		}
+	}
 }
 local wallet_text_font_style = table.clone(UIFontSettings.currency_title)
 
@@ -28,7 +28,7 @@ wallet_text_font_style.text_vertical_alignment = "center"
 wallet_text_font_style.offset = {
 	ViewElementWalletSettings.icon_size[1] + ViewElementWalletSettings.text_margin,
 	0,
-	1,
+	1
 }
 wallet_text_font_style.font_size = 18
 
@@ -46,24 +46,24 @@ local wallet_definitions = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				1,
-			},
+				1
+			}
 		},
 		visibility_function = function (content, style)
 			return not not content.texture
-		end,
+		end
 	},
 	{
 		pass_type = "text",
 		style_id = "text",
 		value = "",
 		value_id = "text",
-		style = wallet_text_font_style,
-	},
+		style = wallet_text_font_style
+	}
 }, "wallet_area")
 
 return {
 	widget_definitions = widget_definitions,
 	wallet_definitions = wallet_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

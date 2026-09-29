@@ -7,13 +7,13 @@ local scenegraph_definition = {
 		vertical_alignment = "left",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	video_player_1 = {
 		horizontal_alignment = "left",
@@ -21,14 +21,14 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
-	},
+			0
+		}
+	}
 }
 local widget_definitions = {
 	display = UIWidget.create_definition({
@@ -41,9 +41,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -54,14 +54,14 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					50,
-				},
-			},
-		},
-	}, "canvas"),
+					50
+				}
+			}
+		}
+	}, "canvas")
 }
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

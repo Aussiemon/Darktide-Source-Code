@@ -62,7 +62,7 @@ dialogue_lookup_concept_names.all_concepts = {
 	"story_talk",
 	"throwing_item",
 	"throwing_net",
-	"warning",
+	"warning"
 }
 
 return settings("dialogue_lookup_concept_names", dialogue_lookup_concept_names)

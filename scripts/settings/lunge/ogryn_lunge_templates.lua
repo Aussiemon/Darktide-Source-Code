@@ -32,74 +32,74 @@ ogryn_lunge_templates.ogryn_charge = {
 	lunge_speed_at_times = {
 		{
 			speed = 0,
-			time_in_lunge = 0,
+			time_in_lunge = 0
 		},
 		{
 			speed = 4,
-			time_in_lunge = 0.2,
+			time_in_lunge = 0.2
 		},
 		{
 			speed = 6,
-			time_in_lunge = 0.3,
+			time_in_lunge = 0.3
 		},
 		{
 			speed = 8,
-			time_in_lunge = 0.4,
+			time_in_lunge = 0.4
 		},
 		{
 			speed = 10,
-			time_in_lunge = 0.5,
-		},
+			time_in_lunge = 0.5
+		}
 	},
 	distance = talent_settings.combat_ability.distance,
 	rotation_contraints = {
 		pitch = 0.25,
-		yaw = 0.35,
+		yaw = 0.35
 	},
 	damage_settings = {
 		damage_profile = DamageProfileTemplates.ogryn_charge_impact,
 		damage_type = damage_types.ogryn_lunge,
-		radius = talent_settings.combat_ability.radius,
+		radius = talent_settings.combat_ability.radius
 	},
 	anim_settings = {
 		on_enter = "ability_charge_in",
 		on_exit = "ability_charge_end",
 		timing_anims = {
-			[1.1] = "ability_charge_out",
-		},
+			[1.1] = "ability_charge_out"
+		}
 	},
 	wwise_state = {
 		group = "player_ability",
 		off_state = "none",
-		on_state = "ogryn_charge",
+		on_state = "ogryn_charge"
 	},
 	on_finish_explosion = {
 		forward_offset = 1.5,
-		explosion_template = ExplosionTemplates.ogryn_charge_impact,
+		explosion_template = ExplosionTemplates.ogryn_charge_impact
 	},
 	stop_armor_types = {
 		armor_types.super_armor,
 		armor_types.void_shield,
-		armor_types.resistant,
+		armor_types.resistant
 	},
-	mood = MoodSettings.mood_types.ogryn_combat_ability_charge,
+	mood = MoodSettings.mood_types.ogryn_combat_ability_charge
 }
 ogryn_lunge_templates.ogryn_charge_increased_distance = table.clone(ogryn_lunge_templates.ogryn_charge)
 ogryn_lunge_templates.ogryn_charge_increased_distance.distance = talent_settings.combat_ability_2.distance
 ogryn_lunge_templates.ogryn_charge_increased_distance.stop_tags = {
-	monster = true,
+	monster = true
 }
 ogryn_lunge_templates.ogryn_charge_increased_distance.stop_armor_types = nil
 ogryn_lunge_templates.ogryn_charge_increased_distance.force_stagger = true
 ogryn_lunge_templates.ogryn_charge_increased_distance.force_stagger_ignore_no_stagger = true
 ogryn_lunge_templates.ogryn_charge_increased_distance.anim_settings.timing_anims = {
-	[2.3] = "ability_charge_out",
+	[2.3] = "ability_charge_out"
 }
 ogryn_lunge_templates.ogryn_charge_damage = table.clone(ogryn_lunge_templates.ogryn_charge)
 ogryn_lunge_templates.ogryn_charge_damage.damage_settings = {
 	radius = 2,
 	damage_profile = DamageProfileTemplates.ogryn_charge_impact_damage,
-	damage_type = damage_types.ogryn_lunge,
+	damage_type = damage_types.ogryn_lunge
 }
 ogryn_lunge_templates.ogryn_charge_damage.on_finish_explosion.explosion_template = ExplosionTemplates.ogryn_charge_impact_damage
 ogryn_lunge_templates.ogryn_charge_bleed = table.clone(ogryn_lunge_templates.ogryn_charge)

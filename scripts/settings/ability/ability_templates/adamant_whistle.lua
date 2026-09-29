@@ -9,9 +9,9 @@ ability_template.action_inputs = {
 		input_sequence = {
 			{
 				input = "grenade_ability_pressed",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	aim_released = {
 		buffer_time = 0.1,
@@ -19,10 +19,10 @@ ability_template.action_inputs = {
 			{
 				input = "grenade_ability_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
-	},
+				time_window = math.huge
+			}
+		}
+	}
 }
 ability_template.action_input_hierarchy = {
 	{
@@ -30,14 +30,13 @@ ability_template.action_input_hierarchy = {
 		transition = {
 			{
 				input = "aim_released",
-				transition = "base",
-			},
-		},
-	},
+				transition = "base"
+			}
+		}
+	}
 }
 ability_template.actions = {
 	action_aim = {
-		ability_type = "grenade_ability",
 		allowed_during_lunge = true,
 		allowed_during_sprint = true,
 		kind = "shout_aim",
@@ -46,28 +45,27 @@ ability_template.actions = {
 		total_time = math.huge,
 		allowed_chain_actions = {
 			aim_released = {
-				action_name = "action_order_companion",
-			},
-		},
+				action_name = "action_order_companion"
+			}
+		}
 	},
 	action_order_companion = {
-		ability_type = "grenade_ability",
 		allowed_during_sprint = true,
+		consume_ability_usage_cost = true,
 		kind = "order_companion",
 		sprint_ready_up_time = 0,
 		total_time = 1,
 		trigger_time = 0.3,
-		uninterruptible = true,
-		use_ability_charge = true,
-	},
+		uninterruptible = true
+	}
 }
 ability_template.fx_sources = {}
 ability_template.hud_configuration = {
 	uses_ammunition = true,
-	uses_overheat = false,
+	uses_overheat = false
 }
 ability_template.keywords = {
-	"adamant",
+	"adamant"
 }
 ability_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/psyker_smite"
 ability_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/throwing_knives"

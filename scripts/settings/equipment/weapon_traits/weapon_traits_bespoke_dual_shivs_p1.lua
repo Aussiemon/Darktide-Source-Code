@@ -16,9 +16,9 @@ templates.weapon_trait_bespoke_dual_shivs_p1_stacking_rending_on_weakspot = {
 				find_value_type = "trait_override",
 				path = {
 					"target_buff_data",
-					"num_stacks_on_proc",
-				},
-			},
+					"num_stacks_on_proc"
+				}
+			}
 		},
 		rending = {
 			format_type = "percentage",
@@ -27,9 +27,9 @@ templates.weapon_trait_bespoke_dual_shivs_p1_stacking_rending_on_weakspot = {
 				find_value_type = "buff_template",
 				path = {
 					"stat_buffs",
-					stat_buffs.rending_multiplier,
-				},
-			},
+					stat_buffs.rending_multiplier
+				}
+			}
 		},
 		time = {
 			format_type = "number",
@@ -37,9 +37,9 @@ templates.weapon_trait_bespoke_dual_shivs_p1_stacking_rending_on_weakspot = {
 				buff_template_name = "rending_debuff",
 				find_value_type = "buff_template",
 				path = {
-					"duration",
-				},
-			},
+					"duration"
+				}
+			}
 		},
 		max_stacks = {
 			format_type = "number",
@@ -47,35 +47,35 @@ templates.weapon_trait_bespoke_dual_shivs_p1_stacking_rending_on_weakspot = {
 				buff_template_name = "rending_debuff",
 				find_value_type = "buff_template",
 				path = {
-					"max_stacks",
-				},
-			},
-		},
+					"max_stacks"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_dual_shivs_p1_stacking_rending_on_weakspot_parent = {
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 1,
-				},
+					num_stacks_on_proc = 1
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 2,
-				},
+					num_stacks_on_proc = 2
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 3,
-				},
+					num_stacks_on_proc = 3
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 4,
-				},
-			},
-		},
-	},
+					num_stacks_on_proc = 4
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_dual_shivs_p1_chained_weakspot_hits_increases_power = {
 	format_values = {
@@ -87,9 +87,9 @@ templates.weapon_trait_bespoke_dual_shivs_p1_chained_weakspot_hits_increases_pow
 				find_value_type = "trait_override",
 				path = {
 					"stat_buffs",
-					stat_buffs.power_level_modifier,
-				},
-			},
+					stat_buffs.power_level_modifier
+				}
+			}
 		},
 		stacks = {
 			format_type = "number",
@@ -97,9 +97,9 @@ templates.weapon_trait_bespoke_dual_shivs_p1_chained_weakspot_hits_increases_pow
 				buff_template_name = "weapon_trait_bespoke_dual_shivs_p1_chained_weakspot_hits_increases_power_child",
 				find_value_type = "buff_template",
 				path = {
-					"max_stacks",
-				},
-			},
+					"max_stacks"
+				}
+			}
 		},
 		time = {
 			format_type = "number",
@@ -107,35 +107,35 @@ templates.weapon_trait_bespoke_dual_shivs_p1_chained_weakspot_hits_increases_pow
 				buff_template_name = "weapon_trait_bespoke_dual_shivs_p1_chained_weakspot_hits_increases_power_parent",
 				find_value_type = "buff_template",
 				path = {
-					"child_duration",
-				},
-			},
-		},
+					"child_duration"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_dual_shivs_p1_chained_weakspot_hits_increases_power_parent = {
 			{
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.045,
-				},
+					[stat_buffs.power_level_modifier] = 0.045
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.05,
-				},
+					[stat_buffs.power_level_modifier] = 0.05
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.055,
-				},
+					[stat_buffs.power_level_modifier] = 0.055
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.06,
-				},
-			},
-		},
-	},
+					[stat_buffs.power_level_modifier] = 0.06
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_dual_shivs_p1_heavy_chained_hits_increases_killing_blow_chance = {
 	format_values = {
@@ -147,9 +147,9 @@ templates.weapon_trait_bespoke_dual_shivs_p1_heavy_chained_hits_increases_killin
 				find_value_type = "trait_override",
 				path = {
 					"target_buff_data",
-					"killing_blow_chance",
-				},
-			},
+					"killing_blow_chance"
+				}
+			}
 		},
 		stacks = {
 			format_type = "number",
@@ -157,35 +157,35 @@ templates.weapon_trait_bespoke_dual_shivs_p1_heavy_chained_hits_increases_killin
 				buff_template_name = "weapon_trait_bespoke_dual_shivs_p1_heavy_chained_hits_increases_killing_blow_chance_parent",
 				find_value_type = "buff_template",
 				path = {
-					"max_stacks",
-				},
-			},
-		},
+					"max_stacks"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_dual_shivs_p1_heavy_chained_hits_increases_killing_blow_chance_parent = {
 			{
 				target_buff_data = {
-					killing_blow_chance = 0.01,
-				},
+					killing_blow_chance = 0.01
+				}
 			},
 			{
 				target_buff_data = {
-					killing_blow_chance = 0.02,
-				},
+					killing_blow_chance = 0.02
+				}
 			},
 			{
 				target_buff_data = {
-					killing_blow_chance = 0.03,
-				},
+					killing_blow_chance = 0.03
+				}
 			},
 			{
 				target_buff_data = {
-					killing_blow_chance = 0.04,
-				},
-			},
-		},
-	},
+					killing_blow_chance = 0.04
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_dual_shivs_p1_dodge_grants_finesse_bonus = {
 	format_values = {
@@ -197,9 +197,9 @@ templates.weapon_trait_bespoke_dual_shivs_p1_dodge_grants_finesse_bonus = {
 				find_value_type = "trait_override",
 				path = {
 					"proc_stat_buffs",
-					stat_buffs.finesse_modifier_bonus,
-				},
-			},
+					stat_buffs.finesse_modifier_bonus
+				}
+			}
 		},
 		time = {
 			format_type = "number",
@@ -207,39 +207,39 @@ templates.weapon_trait_bespoke_dual_shivs_p1_dodge_grants_finesse_bonus = {
 				buff_template_name = "weapon_trait_bespoke_dual_shivs_p1_dodge_grants_finesse_bonus",
 				find_value_type = "trait_override",
 				path = {
-					"active_duration",
-				},
-			},
-		},
+					"active_duration"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_dual_shivs_p1_dodge_grants_finesse_bonus = {
 			{
 				active_duration = 2,
 				proc_stat_buffs = {
-					[stat_buffs.finesse_modifier_bonus] = 0.3,
-				},
+					[stat_buffs.finesse_modifier_bonus] = 0.3
+				}
 			},
 			{
 				active_duration = 2,
 				proc_stat_buffs = {
-					[stat_buffs.finesse_modifier_bonus] = 0.35,
-				},
+					[stat_buffs.finesse_modifier_bonus] = 0.35
+				}
 			},
 			{
 				active_duration = 2,
 				proc_stat_buffs = {
-					[stat_buffs.finesse_modifier_bonus] = 0.4,
-				},
+					[stat_buffs.finesse_modifier_bonus] = 0.4
+				}
 			},
 			{
 				active_duration = 2,
 				proc_stat_buffs = {
-					[stat_buffs.finesse_modifier_bonus] = 0.45,
-				},
-			},
-		},
-	},
+					[stat_buffs.finesse_modifier_bonus] = 0.45
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_dual_shivs_p1_dodge_grants_critical_strike_chance = {
 	format_values = {
@@ -251,9 +251,9 @@ templates.weapon_trait_bespoke_dual_shivs_p1_dodge_grants_critical_strike_chance
 				find_value_type = "trait_override",
 				path = {
 					"proc_stat_buffs",
-					stat_buffs.critical_strike_chance,
-				},
-			},
+					stat_buffs.critical_strike_chance
+				}
+			}
 		},
 		time = {
 			format_type = "number",
@@ -261,35 +261,35 @@ templates.weapon_trait_bespoke_dual_shivs_p1_dodge_grants_critical_strike_chance
 				buff_template_name = "weapon_trait_bespoke_dual_shivs_p1_dodge_grants_critical_strike_chance",
 				find_value_type = "buff_template",
 				path = {
-					"active_duration",
-				},
-			},
-		},
+					"active_duration"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_dual_shivs_p1_dodge_grants_critical_strike_chance = {
 			{
 				proc_stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.125,
-				},
+					[stat_buffs.critical_strike_chance] = 0.125
+				}
 			},
 			{
 				proc_stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.15,
-				},
+					[stat_buffs.critical_strike_chance] = 0.15
+				}
 			},
 			{
 				proc_stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.175,
-				},
+					[stat_buffs.critical_strike_chance] = 0.175
+				}
 			},
 			{
 				proc_stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.2,
-				},
-			},
-		},
-	},
+					[stat_buffs.critical_strike_chance] = 0.2
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_dual_shivs_p1_bleed_on_non_weakspot_hit = {
 	format_values = {
@@ -300,35 +300,35 @@ templates.weapon_trait_bespoke_dual_shivs_p1_bleed_on_non_weakspot_hit = {
 				find_value_type = "trait_override",
 				path = {
 					"target_buff_data",
-					"num_stacks_on_proc",
-				},
-			},
-		},
+					"num_stacks_on_proc"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_dual_shivs_p1_bleed_on_non_weakspot_hit = {
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 1,
-				},
+					num_stacks_on_proc = 1
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 2,
-				},
+					num_stacks_on_proc = 2
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 3,
-				},
+					num_stacks_on_proc = 3
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 4,
-				},
-			},
-		},
-	},
+					num_stacks_on_proc = 4
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_dual_shivs_p1_bleed_on_crit = {
 	format_values = {
@@ -339,35 +339,35 @@ templates.weapon_trait_bespoke_dual_shivs_p1_bleed_on_crit = {
 				find_value_type = "trait_override",
 				path = {
 					"target_buff_data",
-					"num_stacks_on_proc",
-				},
-			},
-		},
+					"num_stacks_on_proc"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_dual_shivs_p1_bleed_on_crit = {
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 5,
-				},
+					num_stacks_on_proc = 5
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 6,
-				},
+					num_stacks_on_proc = 6
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 7,
-				},
+					num_stacks_on_proc = 7
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 8,
-				},
-			},
-		},
-	},
+					num_stacks_on_proc = 8
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_dual_shivs_p1_rending_on_backstab = {
 	format_values = {
@@ -379,35 +379,35 @@ templates.weapon_trait_bespoke_dual_shivs_p1_rending_on_backstab = {
 				find_value_type = "trait_override",
 				path = {
 					"conditional_stat_buffs",
-					stat_buffs.backstab_rending_multiplier,
-				},
-			},
-		},
+					stat_buffs.backstab_rending_multiplier
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_dual_shivs_p1_rending_on_backstab = {
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.backstab_rending_multiplier] = 0.7,
-				},
+					[stat_buffs.backstab_rending_multiplier] = 0.7
+				}
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.backstab_rending_multiplier] = 0.8,
-				},
+					[stat_buffs.backstab_rending_multiplier] = 0.8
+				}
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.backstab_rending_multiplier] = 0.9,
-				},
+					[stat_buffs.backstab_rending_multiplier] = 0.9
+				}
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.backstab_rending_multiplier] = 1,
-				},
-			},
-		},
-	},
+					[stat_buffs.backstab_rending_multiplier] = 1
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_dual_shivs_p1_increased_weakspot_damage_against_bleeding = {
 	format_values = {
@@ -419,35 +419,35 @@ templates.weapon_trait_bespoke_dual_shivs_p1_increased_weakspot_damage_against_b
 				find_value_type = "trait_override",
 				path = {
 					"conditional_stat_buffs",
-					stat_buffs.melee_weakspot_damage_vs_bleeding,
-				},
-			},
-		},
+					stat_buffs.melee_weakspot_damage_vs_bleeding
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_dual_shivs_p1_increased_weakspot_damage_against_bleeding = {
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.melee_weakspot_damage_vs_bleeding] = 0.525,
-				},
+					[stat_buffs.melee_weakspot_damage_vs_bleeding] = 0.525
+				}
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.melee_weakspot_damage_vs_bleeding] = 0.55,
-				},
+					[stat_buffs.melee_weakspot_damage_vs_bleeding] = 0.55
+				}
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.melee_weakspot_damage_vs_bleeding] = 0.575,
-				},
+					[stat_buffs.melee_weakspot_damage_vs_bleeding] = 0.575
+				}
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.melee_weakspot_damage_vs_bleeding] = 0.6,
-				},
-			},
-		},
-	},
+					[stat_buffs.melee_weakspot_damage_vs_bleeding] = 0.6
+				}
+			}
+		}
+	}
 }
 
 return templates

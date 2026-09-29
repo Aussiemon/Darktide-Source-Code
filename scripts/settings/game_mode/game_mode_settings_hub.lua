@@ -20,7 +20,7 @@ local settings = {
 	states = {
 		"start_state",
 		"second_state",
-		"third_state",
+		"third_state"
 	},
 	side_compositions = {
 		{
@@ -28,61 +28,61 @@ local settings = {
 			name = "heroes",
 			relations = {
 				enemy = {
-					"villains",
-				},
-			},
+					"villains"
+				}
+			}
 		},
 		{
 			color_name = "red",
 			name = "villains",
 			relations = {
 				enemy = {
-					"heroes",
-				},
-			},
-		},
+					"heroes"
+				}
+			}
+		}
 	},
 	side_sub_faction_types = {
 		villains = {
 			"chaos",
 			"cultist",
-			"renegade",
-		},
+			"renegade"
+		}
 	},
 	hud_settings = {
-		player_composition = "party",
+		player_composition = "party"
 	},
 	hotkeys = {
 		hotkey_inventory = "inventory_background_view",
-		hotkey_system = "system_view",
+		hotkey_system = "system_view"
 	},
 	default_inventory = {
 		adamant = {
-			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human",
+			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human"
 		},
 		broker = {
-			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human",
+			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human"
 		},
 		cryptic = {
-			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human",
+			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human"
 		},
 		ogryn = {
-			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_ogryn",
+			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_ogryn"
 		},
 		psyker = {
-			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human",
+			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human"
 		},
 		veteran = {
-			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human",
+			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human"
 		},
 		zealot = {
-			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human",
-		},
+			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human"
+		}
 	},
 	afk_check = {
 		include_menu_activity = true,
-		location = "hub",
-	},
+		location = "hub"
+	}
 }
 
 return settings

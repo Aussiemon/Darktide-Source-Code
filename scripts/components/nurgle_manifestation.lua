@@ -27,18 +27,18 @@ NurgleManifestation.init = function (self, unit)
 		{
 			false,
 			self._stage_start_two,
-			"lua_stage_two",
+			"lua_stage_two"
 		},
 		{
 			false,
 			0.85,
-			"lua_stem_death",
+			"lua_stem_death"
 		},
 		{
 			false,
 			self._stage_start_three,
-			"lua_stage_three",
-		},
+			"lua_stage_three"
+		}
 	}
 	self._start_time = 0
 	self._stop_time = 0
@@ -54,7 +54,7 @@ NurgleManifestation.init = function (self, unit)
 		0.061,
 		0.045,
 		0.069,
-		0.073,
+		0.073
 	}
 	self._triggered_eyes = {}
 	self._timings_physics = {
@@ -74,7 +74,7 @@ NurgleManifestation.init = function (self, unit)
 		0.059,
 		0.1,
 		0.072,
-		0.115,
+		0.115
 	}
 	self._triggered_physics = {}
 	self._awake = false
@@ -303,36 +303,36 @@ NurgleManifestation.component_data = {
 		step = 1,
 		ui_name = "Duration",
 		ui_type = "number",
-		value = 20,
+		value = 20
 	},
 	eye_unit_resource = {
 		filter = "unit",
 		preview = true,
 		ui_name = "Resource",
 		ui_type = "resource",
-		value = "",
+		value = ""
 	},
 	inputs = {
 		start = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		stop = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		reset = {
 			accessibility = "private",
-			type = "event",
+			type = "event"
 		},
 		awake = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"NetworkedTimerExtension",
-	},
+		"NetworkedTimerExtension"
+	}
 }
 
 return NurgleManifestation

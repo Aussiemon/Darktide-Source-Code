@@ -8,15 +8,15 @@ circumstance_templates.nurgle_explosion_01 = {
 	wwise_state = "None",
 	mutators = {
 		"mutator_maelstrom_mutated_poxwalker",
-		"mutator_live_event_only_beast",
-		"mutator_headshot_parasite_enemies",
+		"mutator_live_event_extra_beast",
+		"mutator_headshot_parasite_enemies"
 	},
 	ui = {
 		description = "loc_circumstance_nurgle_explosion_01_description",
 		display_name = "loc_circumstance_nurgle_explosion_01_title",
 		happening_display_name = "loc_happening_assault",
-		icon = "content/ui/materials/icons/circumstances/live_event_01",
-	},
+		icon = "content/ui/materials/icons/circumstances/live_event_01"
+	}
 }
 circumstance_templates.nurgle_explosion_02 = {
 	dialogue_id = "circumstance_vo_hunting_grounds",
@@ -28,15 +28,15 @@ circumstance_templates.nurgle_explosion_02 = {
 		"mutator_chaos_hounds",
 		"mutator_add_resistance",
 		"mutator_maelstrom_mutated_poxwalker",
-		"mutator_live_event_only_beast",
-		"mutator_headshot_parasite_enemies",
+		"mutator_live_event_extra_beast",
+		"mutator_headshot_parasite_enemies"
 	},
 	ui = {
 		description = "loc_circumstance_nurgle_explosion_02_description",
 		display_name = "loc_circumstance_nurgle_explosion_02_title",
 		happening_display_name = "loc_happening_hunting_grounds",
-		icon = "content/ui/materials/icons/circumstances/live_event_01",
-	},
+		icon = "content/ui/materials/icons/circumstances/live_event_01"
+	}
 }
 circumstance_templates.nurgle_explosion_03 = {
 	theme_tag = "default",
@@ -44,14 +44,14 @@ circumstance_templates.nurgle_explosion_03 = {
 	ui = {
 		description = "loc_circumstance_nurgle_explosion_03_description",
 		display_name = "loc_circumstance_nurgle_explosion_03_title",
-		icon = "content/ui/materials/icons/circumstances/live_event_01",
+		icon = "content/ui/materials/icons/circumstances/live_event_01"
 	},
 	mutators = {
 		"mutator_add_resistance",
 		"mutator_maelstrom_mutated_poxwalker",
-		"mutator_live_event_only_beast",
-		"mutator_headshot_parasite_enemies",
-	},
+		"mutator_live_event_extra_beast",
+		"mutator_headshot_parasite_enemies"
+	}
 }
 circumstance_templates.nurgle_explosion_04 = {
 	dialogue_id = "circumstance_vo_darkness",
@@ -61,7 +61,7 @@ circumstance_templates.nurgle_explosion_04 = {
 		description = "loc_circumstance_nurgle_explosion_04_description",
 		display_name = "loc_circumstance_nurgle_explosion_04_title",
 		happening_display_name = "loc_happening_darkness",
-		icon = "content/ui/materials/icons/circumstances/live_event_01",
+		icon = "content/ui/materials/icons/circumstances/live_event_01"
 	},
 	mutators = {
 		"mutator_more_witches",
@@ -69,9 +69,9 @@ circumstance_templates.nurgle_explosion_04 = {
 		"mutator_add_resistance",
 		"mutator_darkness_los",
 		"mutator_maelstrom_mutated_poxwalker",
-		"mutator_live_event_only_beast",
-		"mutator_headshot_parasite_enemies",
-	},
+		"mutator_live_event_extra_beast",
+		"mutator_headshot_parasite_enemies"
+	}
 }
 circumstance_templates.nurgle_explosion_05 = {
 	dialogue_id = "circumstance_vo_toxic_gas",
@@ -81,16 +81,16 @@ circumstance_templates.nurgle_explosion_05 = {
 		"mutator_toxic_gas_volumes",
 		"mutator_add_resistance",
 		"mutator_maelstrom_mutated_poxwalker",
-		"mutator_live_event_only_beast",
-		"mutator_headshot_parasite_enemies",
+		"mutator_live_event_extra_beast",
+		"mutator_headshot_parasite_enemies"
 	},
 	ui = {
 		description = "loc_circumstance_nurgle_explosion_05_description",
 		display_name = "loc_circumstance_nurgle_explosion_05_title",
 		happening_display_name = "loc_happening_ventilation_purge",
-		icon = "content/ui/materials/icons/circumstances/live_event_01",
+		icon = "content/ui/materials/icons/circumstances/live_event_01"
 	},
-	mission_overrides = MissionOverrides.more_corruption_syringes,
+	mission_overrides = MissionOverrides.more_corruption_syringes
 }
 circumstance_templates.nurgle_explosion_06 = {
 	dialogue_id = "circumstance_vo_ventilation_purge",
@@ -101,15 +101,15 @@ circumstance_templates.nurgle_explosion_06 = {
 		"mutator_add_resistance",
 		"mutator_ventilation_purge_los",
 		"mutator_maelstrom_mutated_poxwalker",
-		"mutator_live_event_only_beast",
-		"mutator_headshot_parasite_enemies",
+		"mutator_live_event_extra_beast",
+		"mutator_headshot_parasite_enemies"
 	},
 	ui = {
 		description = "loc_circumstance_nurgle_explosion_06_description",
 		display_name = "loc_circumstance_nurgle_explosion_06_title",
 		happening_display_name = "loc_happening_ventilation_purge",
-		icon = "content/ui/materials/icons/circumstances/live_event_01",
-	},
+		icon = "content/ui/materials/icons/circumstances/live_event_01"
+	}
 }
 circumstance_templates.nurgle_explosion_07 = {
 	theme_tag = "default",
@@ -117,7 +117,7 @@ circumstance_templates.nurgle_explosion_07 = {
 	ui = {
 		description = "loc_circumstance_nurgle_explosion_07_description",
 		display_name = "loc_circumstance_nurgle_explosion_07_title",
-		icon = "content/ui/materials/icons/circumstances/live_event_01",
+		icon = "content/ui/materials/icons/circumstances/live_event_01"
 	},
 	mutators = {
 		"mutator_waves_of_specials",
@@ -126,9 +126,9 @@ circumstance_templates.nurgle_explosion_07 = {
 		"mutator_reduced_ramp_duration_low",
 		"mutator_auric_tension_modifier",
 		"mutator_maelstrom_mutated_poxwalker",
-		"mutator_live_event_only_beast",
-		"mutator_headshot_parasite_enemies",
-	},
+		"mutator_live_event_extra_beast",
+		"mutator_headshot_parasite_enemies"
+	}
 }
 
 return circumstance_templates

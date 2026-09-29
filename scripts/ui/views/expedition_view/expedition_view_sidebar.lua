@@ -33,7 +33,7 @@ Sidebar._setup_quickplay_button = function (self)
 		local internal_bonus_text = bonus_low == bonus_high and tostring(bonus_low) or string.format("+%s%% - %s%%", bonus_low, bonus_high)
 
 		bonus_text = Localize("loc_mission_board_card_bonus_text", true, {
-			bonus_text = internal_bonus_text,
+			bonus_text = internal_bonus_text
 		})
 	end
 
@@ -44,7 +44,7 @@ Sidebar._setup_quickplay_button = function (self)
 		icon = "content/ui/textures/icons/mission_types_pj/mission_type_quick",
 		is_locked = not is_unlocked,
 		sub_header_text = bonus_text,
-		header_text = Localize("loc_mission_board_quickplay_header"),
+		header_text = Localize("loc_mission_board_quickplay_header")
 	}
 	local widget = self:_widget_from_blueprint(widget_id, optional_blueprint_settings, nil, optional_creation_context)
 
@@ -79,8 +79,8 @@ Sidebar._widget_from_blueprint = function (self, widget_id, blueprint_setting_na
 		scenegraph_id = "quickplay_button",
 		size = {
 			280,
-			48,
-		},
+			48
+		}
 	}
 
 	if not blueprint_settings then
@@ -144,7 +144,7 @@ Sidebar._create_node_from_widget = function (self, widget, id, unlocked_status)
 	local widget_offset = widget.offset or {
 		0,
 		0,
-		1,
+		1
 	}
 	local scenegraph_position = scenegraph_node.world_position
 
@@ -163,8 +163,8 @@ Sidebar._setup_difficulty_selector = function (self)
 		callbacks = {
 			on_indicator_pressed = "request_page_at",
 			on_left_pressed = "request_prev_page",
-			on_right_pressed = "request_next_page",
-		},
+			on_right_pressed = "request_next_page"
+		}
 	}
 
 	self._owner:sidebar_add_element(DifficultySelector, "difficulty_selector", 20, context)
@@ -187,7 +187,7 @@ Sidebar.show_mission_info = function (self, node)
 	local context = {
 		node = node,
 		mission = mission_data,
-		all_nodes = nodes,
+		all_nodes = nodes
 	}
 
 	owner:sidebar_add_element(ViewElementExpeditionViewMissionInfo, "view_element_expedition_view_mission_info", 20, context)

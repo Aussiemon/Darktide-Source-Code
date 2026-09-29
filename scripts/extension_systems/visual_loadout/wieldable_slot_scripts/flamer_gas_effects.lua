@@ -40,7 +40,7 @@ FlamerGasEffects.init = function (self, context, slot, weapon_template, fx_sourc
 			effect_name = nil,
 			time = nil,
 			position = Vector3Box(),
-			normal = Vector3Box(),
+			normal = Vector3Box()
 		}
 	end
 end

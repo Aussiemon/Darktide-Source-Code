@@ -22,7 +22,7 @@ local TOUGHNESS_BROKEN_ATTACK_INTENSITIES = {
 	ranged = math.huge,
 	elite_ranged = math.huge,
 	elite_shotgun = math.huge,
-	ranged_close = math.huge,
+	ranged_close = math.huge
 }
 local Damage = {}
 local _trigger_player_hurt_vo
@@ -61,6 +61,19 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 		local damage_clamp = max_health * health_percent_clamp
 
 		damage = math.min(damage, damage_clamp)
+	end
+
+	local overdamage_params = health_extension.overdamage_protection and health_extension:overdamage_protection()
+
+	if overdamage_params and not instakill then
+		local current_health = health_extension:current_health()
+
+		if current_health - damage < overdamage_params.soft_start then
+			local full_portion = math.max(current_health - overdamage_params.soft_start, 0)
+
+			damage = full_portion + (damage - full_portion) * overdamage_params.multiplier
+			damage = math.min(damage, math.max(current_health - overdamage_params.floor, 0))
+		end
 	end
 
 	if attack_result == attack_results.toughness_broken then
@@ -110,7 +123,7 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 	local will_die = remaining_health <= 0
 
 	if will_die then
-		local has_resist_death_buff = attacked_unit_keywords and attacked_unit_keywords[buff_keywords.resist_death]
+		local has_resist_death_buff = attacked_unit_keywords and (attacked_unit_keywords[buff_keywords.resist_death] or attacked_unit_keywords[buff_keywords.unkillable])
 
 		if has_resist_death_buff and not instakill then
 			damage = math.max(0, max_health - current_health_damage - 1)

@@ -24,7 +24,7 @@ ActionTimedTrigger.start = function (self, action_settings, t, time_scale, actio
 
 			self._active_timed_templates[i] = {
 				template_name = template_name,
-				action_trigger_time = action_data.trigger_time or nil,
+				action_trigger_time = action_data.trigger_time or nil
 			}
 		end
 

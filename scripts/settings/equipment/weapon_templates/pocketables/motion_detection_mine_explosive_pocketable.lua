@@ -13,7 +13,7 @@ weapon_template.ammo_template = "motion_detection_mine"
 weapon_template.breed_footstep_intervals = {
 	cryptic = FootstepIntervalsTemplates.pocketable_human,
 	human = FootstepIntervalsTemplates.pocketable_human,
-	ogryn = FootstepIntervalsTemplates.pocketable_ogryn,
+	ogryn = FootstepIntervalsTemplates.pocketable_ogryn
 }
 
 return weapon_template

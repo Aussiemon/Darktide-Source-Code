@@ -24,14 +24,14 @@ NvidiaAIAgent.init = function (self)
 			position = {
 				x = 0,
 				y = 0,
-				z = 0,
+				z = 0
 			},
 			rotation = {
 				pitch = 0,
 				roll = 0,
-				yaw = 0,
-			},
-		},
+				yaw = 0
+			}
+		}
 	}
 end
 

@@ -34,7 +34,7 @@ local effect_template = {
 		local effect_id = template_data.effect_id
 
 		World.stop_spawning_particles(world, effect_id)
-	end,
+	end
 }
 
 return effect_template

@@ -22,7 +22,7 @@ local value_font_style = table.clone(UIFontSettings.list_button)
 value_font_style.offset = {
 	settings_grid_width - settings_value_width + 25,
 	0,
-	8,
+	8
 }
 
 local header_font_style = table.clone(UIFontSettings.header_2)
@@ -32,7 +32,7 @@ header_font_style.font_size = 28
 header_font_style.offset = {
 	30,
 	0,
-	0,
+	0
 }
 
 local sub_header_font_style = table.clone(UIFontSettings.header_4)
@@ -42,7 +42,7 @@ sub_header_font_style.font_size = 26
 sub_header_font_style.offset = {
 	30,
 	0,
-	0,
+	0
 }
 sub_header_font_style.drop_shadow = false
 
@@ -52,15 +52,15 @@ blueprints.spacing_vertical = {
 	size_function = function (parent, entry)
 		return {
 			entry.size and entry.size[1] or grid_width,
-			entry.size and entry.size[2] or 20,
+			entry.size and entry.size[2] or 20
 		}
-	end,
+	end
 }
 blueprints.settings_button = {
 	size_function = function (parent, entry)
 		return {
 			entry.size and entry.size[1] or grid_width,
-			entry.size and entry.size[2] or settings_value_height,
+			entry.size and entry.size[2] or settings_value_height
 		}
 	end,
 	pass_template = ButtonPassTemplates.list_button_with_icon,
@@ -83,13 +83,13 @@ blueprints.settings_button = {
 		content.text = Managers.localization:localize(display_name)
 		content.icon = entry.icon
 		content.entry = entry
-	end,
+	end
 }
 blueprints.button = {
 	size_function = function (parent, entry)
 		return {
 			entry.size and entry.size[1] or settings_grid_width,
-			entry.size and entry.size[2] or settings_value_height,
+			entry.size and entry.size[2] or settings_value_height
 		}
 	end,
 	pass_template_function = function (parent, entry, size)
@@ -118,13 +118,13 @@ blueprints.button = {
 		entry.changed_callback = function (changed_value)
 			callback(parent, changed_callback_name, widget, entry)()
 		end
-	end,
+	end
 }
 blueprints.group_header = {
 	size_function = function (parent, entry)
 		return {
 			entry.size and entry.size[1] or settings_grid_width,
-			entry.size and entry.size[2] or group_header_height,
+			entry.size and entry.size[2] or group_header_height
 		}
 	end,
 	pass_template = {
@@ -132,21 +132,21 @@ blueprints.group_header = {
 			pass_type = "text",
 			value_id = "text",
 			style = header_font_style,
-			value = Localize("loc_settings_option_unavailable"),
-		},
+			value = Localize("loc_settings_option_unavailable")
+		}
 	},
 	init = function (parent, widget, entry, callback_name, changed_callback_name)
 		local content = widget.content
 		local display_name = entry.display_name
 
 		content.text = Managers.localization:localize(display_name)
-	end,
+	end
 }
 blueprints.group_sub_header = {
 	size_function = function (parent, entry)
 		return {
 			entry.size and entry.size[1] or settings_grid_width,
-			entry.size and entry.size[2] or group_sub_header_height,
+			entry.size and entry.size[2] or group_sub_header_height
 		}
 	end,
 	pass_template = {
@@ -154,21 +154,21 @@ blueprints.group_sub_header = {
 			pass_type = "text",
 			value_id = "text",
 			style = sub_header_font_style,
-			value = Localize("loc_settings_option_unavailable"),
-		},
+			value = Localize("loc_settings_option_unavailable")
+		}
 	},
 	init = function (parent, widget, entry, callback_name, changed_callback_name)
 		local content = widget.content
 		local display_name = entry.display_name
 
 		content.text = Managers.localization:localize(display_name)
-	end,
+	end
 }
 blueprints.checkbox = {
 	size_function = function (parent, entry)
 		return {
 			entry.size and entry.size[1] or settings_grid_width,
-			entry.size and entry.size[2] or settings_value_height,
+			entry.size and entry.size[2] or settings_value_height
 		}
 	end,
 	pass_template_function = function (parent, entry, size)
@@ -221,7 +221,7 @@ blueprints.checkbox = {
 		if new_value ~= nil and new_value ~= value then
 			on_activated(new_value, entry)
 		end
-	end,
+	end
 }
 
 local function slider_init_function(parent, widget, entry, callback_name, changed_callback_name)
@@ -267,7 +267,7 @@ blueprints.percent_slider = {
 	size_function = function (parent, entry)
 		return {
 			entry.size and entry.size[1] or settings_grid_width,
-			entry.size and entry.size[2] or settings_value_height,
+			entry.size and entry.size[2] or settings_value_height
 		}
 	end,
 	pass_template_function = function (parent, entry, size)
@@ -357,13 +357,13 @@ blueprints.percent_slider = {
 		end
 
 		return pass_input
-	end,
+	end
 }
 blueprints.value_slider = {
 	size_function = function (parent, entry)
 		return {
 			entry.size and entry.size[1] or settings_grid_width,
-			entry.size and entry.size[2] or settings_value_height,
+			entry.size and entry.size[2] or settings_value_height
 		}
 	end,
 	pass_template_function = function (parent, entry, size)
@@ -460,13 +460,13 @@ blueprints.value_slider = {
 		end
 
 		return pass_input
-	end,
+	end
 }
 blueprints.slider = {
 	size_function = function (parent, entry)
 		return {
 			entry.size and entry.size[1] or settings_grid_width,
-			entry.size and entry.size[2] or settings_value_height,
+			entry.size and entry.size[2] or settings_value_height
 		}
 	end,
 	pass_template_function = function (parent, entry, size)
@@ -579,7 +579,7 @@ blueprints.slider = {
 		end
 
 		return pass_input
-	end,
+	end
 }
 
 local max_visible_options = OptionsViewSettings.max_visible_dropdown_options or 5
@@ -588,7 +588,7 @@ blueprints.dropdown = {
 	size_function = function (parent, entry)
 		return {
 			entry.size and entry.size[1] or settings_grid_width,
-			entry.size and entry.size[2] or settings_value_height,
+			entry.size and entry.size[2] or settings_value_height
 		}
 	end,
 	pass_template_function = function (parent, entry, size)
@@ -901,13 +901,13 @@ blueprints.dropdown = {
 		pass_input = using_gamepad or value_changed or not option_hovered and not scrollbar_hovered
 
 		return pass_input
-	end,
+	end
 }
 blueprints.keybind = {
 	size_function = function (parent, entry)
 		return {
 			entry.size and entry.size[1] or settings_grid_width,
-			entry.size and entry.size[2] or settings_value_height,
+			entry.size and entry.size[2] or settings_value_height
 		}
 	end,
 	pass_template_function = function (parent, entry, size)
@@ -917,7 +917,7 @@ blueprints.keybind = {
 		local content = widget.content
 		local display_name = entry.display_name or "loc_settings_option_unavailable"
 
-		content.text = parent:_localize(display_name)
+		content.text = entry.display_text or parent:_localize(display_name)
 		content.entry = entry
 		content.entry.value_width = content.entry.value_width or settings_value_width
 		content.key_unassigned_string = Managers.localization:localize("loc_keybind_unassigned")
@@ -935,7 +935,7 @@ blueprints.keybind = {
 		if hotspot.on_released then
 			parent:show_keybind_popup(widget, entry)
 		end
-	end,
+	end
 }
 
 local description_font_style = table.clone(UIFontSettings.body_small)
@@ -943,7 +943,7 @@ local description_font_style = table.clone(UIFontSettings.body_small)
 description_font_style.offset = {
 	25,
 	0,
-	3,
+	3
 }
 description_font_style.text_horizontal_alignment = "left"
 description_font_style.text_vertical_alignment = "center"
@@ -952,7 +952,7 @@ blueprints.description = {
 	size_function = function (parent, entry)
 		return {
 			entry.size and entry.size[1] or settings_grid_width - 225,
-			entry.size and entry.size[2] or settings_value_height,
+			entry.size and entry.size[2] or settings_value_height
 		}
 	end,
 	pass_template = {
@@ -961,8 +961,8 @@ blueprints.description = {
 			style_id = "text",
 			value_id = "text",
 			style = description_font_style,
-			value = Localize("loc_settings_option_unavailable"),
-		},
+			value = Localize("loc_settings_option_unavailable")
+		}
 	},
 	init = function (parent, widget, entry, callback_name)
 		local content = widget.content
@@ -985,25 +985,42 @@ blueprints.description = {
 	end,
 	update = function (parent, widget, input_service, dt, t)
 		return
-	end,
+	end
 }
 
 local controller_image_height = 594
 local controller_image_input_services = {
-	"Ingame",
+	"Ingame"
 }
-local controller_image_input_devices = {}
+local controller_image_input_devices = {
+	InputUtils.last_gamepad_device_type()
+}
 
-if IS_PLAYSTATION then
-	controller_image_input_devices[#controller_image_input_devices + 1] = "ps4_controller"
-else
-	controller_image_input_devices[#controller_image_input_devices + 1] = "xbox_controller"
+local function _sync_controller_image_device(widget)
+	local device_type = InputUtils.last_gamepad_device_type()
+	local content = widget.content
+	local show_ps = device_type == "ps4_controller"
+
+	content.show_ps_controller = show_ps
+	content.controller_image_device = device_type
+	controller_image_input_devices[1] = device_type
+
+	if IS_WINDOWS then
+		if show_ps then
+			content.image = "content/ui/materials/controller_image_ps5"
+		else
+			content.image = "content/ui/materials/controller_image_xbox"
+		end
+	end
 end
 
 local temp_input_display_values = {}
 
 local function controller_image_apply_text_function(widget)
+	_sync_controller_image_device(widget)
+
 	local content = widget.content
+	local save_manager = Managers.save
 	local style = widget.style
 
 	if IS_XBS or IS_PLAYSTATION or IS_WINDOWS then
@@ -1013,6 +1030,7 @@ local function controller_image_apply_text_function(widget)
 
 		table.clear(temp_input_display_values)
 
+		local entries_by_button = {}
 		local input_manager = Managers.input
 
 		for _, service_type in ipairs(controller_image_input_services) do
@@ -1084,10 +1102,18 @@ local function controller_image_apply_text_function(widget)
 end
 
 local controller_image_pass_template = {}
+local _controller_pass_visibility
 
 local function add_to_controller_template(entry)
+	if _controller_pass_visibility then
+		entry.visibility_function = _controller_pass_visibility
+	end
+
 	controller_image_pass_template[#controller_image_pass_template + 1] = entry
 end
+
+local controller_text_input_size = 220
+local controller_text_right_pos = 1000 - controller_text_input_size
 
 if IS_PLAYSTATION then
 	add_to_controller_template({
@@ -1100,16 +1126,46 @@ if IS_PLAYSTATION then
 			vertical_alignment = "top",
 			size = {
 				970,
-				controller_image_height,
+				controller_image_height
 			},
 			offset = {
 				30,
 				0,
-				0,
+				0
 			},
-			color = Color.terminal_text_body(255, true),
-		},
+			color = Color.terminal_text_body(255, true)
+		}
 	})
+elseif IS_WINDOWS then
+	add_to_controller_template({
+		pass_type = "texture",
+		style_id = "image",
+		value = "content/ui/materials/controller_image_xbox",
+		value_id = "image",
+		style = {
+			horizontal_alignment = "left",
+			vertical_alignment = "top",
+			size = {
+				970,
+				controller_image_height
+			},
+			offset = {
+				30,
+				0,
+				0
+			},
+			color = Color.terminal_text_body(255, true)
+		}
+	})
+end
+
+if IS_PLAYSTATION or IS_WINDOWS then
+	if IS_WINDOWS then
+		function _controller_pass_visibility(content)
+			return content.show_ps_controller
+		end
+	end
+
 	add_to_controller_template({
 		pass_type = "text",
 		style_id = "ps4_controller_touch",
@@ -1122,15 +1178,15 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 75,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1144,15 +1200,15 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
 				30,
 				-controller_image_height - 35 + 139,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1166,15 +1222,15 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
 				30,
 				-controller_image_height - 35 + 136 + 65,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1188,18 +1244,18 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			additional_inputs = {
-				"ps4_controller_l3",
+				"ps4_controller_l3"
 			},
 			offset = {
 				30,
 				-controller_image_height - 35 + 307 + 208,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1213,15 +1269,15 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
 				30,
 				-controller_image_height - 35 + 119 + 145,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1235,15 +1291,15 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
 				30,
 				-controller_image_height - 35 + 214 + 112,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1257,15 +1313,15 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
 				30,
 				-controller_image_height - 35 + 389,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1279,15 +1335,15 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
 				30,
 				-controller_image_height - 35 + 212 + 240,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1301,15 +1357,15 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 264,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1323,15 +1379,15 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 139,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1345,15 +1401,15 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 136 + 65,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1367,15 +1423,15 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 327,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1389,15 +1445,15 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 245 + 145,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1411,15 +1467,15 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 276 + 176,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1433,15 +1489,15 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 307 + 208,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1455,40 +1511,53 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			additional_inputs = {
-				"ps4_controller_r3",
+				"ps4_controller_r3"
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 338 + 240,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
-else
-	add_to_controller_template({
-		pass_type = "texture",
-		style_id = "image",
-		value = "content/ui/materials/controller_image_xbox",
-		value_id = "image",
-		style = {
-			horizontal_alignment = "left",
-			vertical_alignment = "top",
-			size = {
-				970,
-				controller_image_height,
-			},
-			offset = {
-				30,
-				0,
-				0,
-			},
-			color = Color.terminal_text_body(255, true),
-		},
-	})
+
+	_controller_pass_visibility = nil
+end
+
+if not IS_PLAYSTATION then
+	if IS_XBS then
+		add_to_controller_template({
+			pass_type = "texture",
+			style_id = "image",
+			value = "content/ui/materials/controller_image_xbox",
+			value_id = "image",
+			style = {
+				horizontal_alignment = "left",
+				vertical_alignment = "top",
+				size = {
+					970,
+					controller_image_height
+				},
+				offset = {
+					30,
+					0,
+					0
+				},
+				color = Color.terminal_text_body(255, true)
+			}
+		})
+	end
+
+	if IS_WINDOWS then
+		function _controller_pass_visibility(content)
+			return not content.show_ps_controller
+		end
+	end
+
 	add_to_controller_template({
 		pass_type = "text",
 		style_id = "xbox_controller_back",
@@ -1501,15 +1570,15 @@ else
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
 				30,
 				-controller_image_height - 35 + 110,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1523,15 +1592,15 @@ else
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
 				30,
 				-controller_image_height - 35 + 173,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1545,15 +1614,15 @@ else
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
 				30,
 				-controller_image_height - 35 + 172 + 65,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1567,18 +1636,18 @@ else
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			additional_inputs = {
-				"xbox_controller_left_thumb",
+				"xbox_controller_left_thumb"
 			},
 			offset = {
 				30,
 				-controller_image_height - 35 + 300,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1592,15 +1661,15 @@ else
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
 				30,
 				-controller_image_height - 35 + 244 + 145,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1614,15 +1683,15 @@ else
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
 				30,
 				-controller_image_height - 35 + 276 + 176,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1636,15 +1705,15 @@ else
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
 				30,
 				-controller_image_height - 35 + 307 + 208,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1658,15 +1727,15 @@ else
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
 				30,
 				-controller_image_height - 35 + 338 + 240,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1680,15 +1749,15 @@ else
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 110,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1702,15 +1771,15 @@ else
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 173,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1724,15 +1793,15 @@ else
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 172 + 65,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1746,15 +1815,15 @@ else
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 308,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1768,15 +1837,15 @@ else
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 195 + 177,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1790,15 +1859,15 @@ else
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 226 + 208,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1812,15 +1881,15 @@ else
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 257 + 240,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
 	add_to_controller_template({
 		pass_type = "text",
@@ -1834,26 +1903,28 @@ else
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size
 			},
 			additional_inputs = {
-				"xbox_controller_right_thumb",
+				"xbox_controller_right_thumb"
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 338 + 240,
-				3,
+				3
 			},
-			text_color = Color.text_default(255, true),
-		},
+			text_color = Color.text_default(255, true)
+		}
 	})
+
+	_controller_pass_visibility = nil
 end
 
 blueprints.controller_image = {
 	size_function = function (parent, entry)
 		return {
 			entry.size and entry.size[1] or settings_grid_width - 225,
-			entry.size and entry.size[2] or controller_image_height,
+			entry.size and entry.size[2] or controller_image_height
 		}
 	end,
 	pass_template = controller_image_pass_template,
@@ -1879,20 +1950,22 @@ blueprints.controller_image = {
 		if player and save_manager then
 			local account_data = save_manager:account_data()
 			local saved_layout_name = account_data.input_settings.controller_layout
+			local device_type = InputUtils.last_gamepad_device_type()
+			local device_changed = content.controller_image_device ~= device_type
 
-			if content.controller_layout ~= saved_layout_name then
+			if content.controller_layout ~= saved_layout_name or device_changed then
 				content.controller_layout = saved_layout_name
 
 				controller_image_apply_text_function(widget)
 			end
 		end
-	end,
+	end
 }
 blueprints.gamma_texture = {
 	size_function = function (parent, entry)
 		return {
 			entry.size and entry.size[1] or settings_grid_width,
-			entry.size and entry.size[2] or 250,
+			entry.size and entry.size[2] or 250
 		}
 	end,
 	pass_template = {
@@ -1900,8 +1973,8 @@ blueprints.gamma_texture = {
 			pass_type = "rect",
 			style_id = "background",
 			style = {
-				color = Color.black(255, true),
-			},
+				color = Color.black(255, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1912,16 +1985,16 @@ blueprints.gamma_texture = {
 				vertical_alignment = "center",
 				size = {
 					400,
-					200,
+					200
 				},
 				offset = {
 					25,
-					0,
+					0
 				},
 				material_values = {
-					tonemap = 0.5,
-				},
-			},
+					tonemap = 0.5
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1932,18 +2005,18 @@ blueprints.gamma_texture = {
 				vertical_alignment = "center",
 				size = {
 					400,
-					200,
+					200
 				},
 				offset = {
 					-25,
 					0,
-					0,
+					0
 				},
 				material_values = {
-					tonemap = 0.5,
-				},
-			},
-		},
+					tonemap = 0.5
+				}
+			}
+		}
 	},
 	init = function (parent, widget, entry, callback_name)
 		local template = entry
@@ -1956,13 +2029,13 @@ blueprints.gamma_texture = {
 
 		widget.style.texture_dark.material_values.tonemap = tonemap
 		widget.style.texture_light.material_values.tonemap = tonemap
-	end,
+	end
 }
 blueprints.large_value_slider = {
 	size_function = function (parent, entry)
 		return {
 			entry.size and entry.size[1] or settings_grid_width,
-			entry.size and entry.size[2] or settings_value_height,
+			entry.size and entry.size[2] or settings_value_height
 		}
 	end,
 	pass_template_function = function (parent, entry, size)
@@ -2065,7 +2138,7 @@ blueprints.large_value_slider = {
 		local pass_input = true
 
 		return pass_input
-	end,
+	end
 }
 
 return settings("OptionsViewContentBlueprints", blueprints)

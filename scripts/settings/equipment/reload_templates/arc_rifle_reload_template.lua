@@ -7,7 +7,7 @@ local reload_template = {
 		"lift_weapon",
 		"sever_connection",
 		"remove_magazine",
-		"replace_magazine",
+		"replace_magazine"
 	},
 	lift_weapon = {
 		anim_1p = "reload",
@@ -17,35 +17,35 @@ local reload_template = {
 		abort_anims = {
 			{
 				anim_1p = "reload_cancel",
-				t = 0,
+				t = 0
 			},
 			{
 				anim_1p = "reload_cancel_severed_connection",
-				t = 1.2 - ONE_FRAME,
+				t = 1.2 - ONE_FRAME
 			},
 			{
 				anim_1p = "reload_cancel_mag_removed",
-				t = 2.6 - ONE_FRAME,
+				t = 2.6 - ONE_FRAME
 			},
 			{
 				anim_1p = "reload_cancel",
-				t = 4.23 - ONE_FRAME,
+				t = 4.23 - ONE_FRAME
 			},
 			{
 				anim_1p = "reload_finished",
-				t = 5.1 - ONE_FRAME,
-			},
+				t = 5.1 - ONE_FRAME
+			}
 		},
 		state_transitions = {
 			lift_weapon = 5.1,
 			remove_magazine = 2.6,
 			replace_magazine = 4.23,
-			sever_connection = 1.2,
+			sever_connection = 1.2
 		},
 		functionality = {
 			refill_ammunition = 5.1,
-			remove_ammunition = 1.2,
-		},
+			remove_ammunition = 1.2
+		}
 	},
 	sever_connection = {
 		anim_1p = "reload_middle",
@@ -54,29 +54,29 @@ local reload_template = {
 		abort_anims = {
 			{
 				anim_1p = "reload_cancel_severed_connection",
-				t = 0,
+				t = 0
 			},
 			{
 				anim_1p = "reload_cancel_mag_removed",
-				t = 0.7 - ONE_FRAME,
+				t = 0.7 - ONE_FRAME
 			},
 			{
 				anim_1p = "reload_cancel",
-				t = 2.33 - ONE_FRAME,
+				t = 2.33 - ONE_FRAME
 			},
 			{
 				anim_1p = "reload_finished",
-				t = 3.16 - ONE_FRAME,
-			},
+				t = 3.16 - ONE_FRAME
+			}
 		},
 		state_transitions = {
 			lift_weapon = 3.16,
 			remove_magazine = 0.7,
-			replace_magazine = 2.33,
+			replace_magazine = 2.33
 		},
 		functionality = {
-			refill_ammunition = 3.16,
-		},
+			refill_ammunition = 3.16
+		}
 	},
 	remove_magazine = {
 		anim_1p = "reload_middle_mag_removed",
@@ -85,24 +85,24 @@ local reload_template = {
 		abort_anims = {
 			{
 				anim_1p = "reload_cancel_mag_removed",
-				t = 0,
+				t = 0
 			},
 			{
 				anim_1p = "reload_cancel",
-				t = 0.96 - ONE_FRAME,
+				t = 0.96 - ONE_FRAME
 			},
 			{
 				anim_1p = "reload_finished",
-				t = 1.76 - ONE_FRAME,
-			},
+				t = 1.76 - ONE_FRAME
+			}
 		},
 		state_transitions = {
 			lift_weapon = 1.76,
-			replace_magazine = 0.96,
+			replace_magazine = 0.96
 		},
 		functionality = {
-			refill_ammunition = 1.76,
-		},
+			refill_ammunition = 1.76
+		}
 	},
 	replace_magazine = {
 		anim_1p = "reload_end",
@@ -111,20 +111,20 @@ local reload_template = {
 		abort_anims = {
 			{
 				anim_1p = "reload_cancel",
-				t = 0,
+				t = 0
 			},
 			{
 				anim_1p = "reload_finished",
-				t = 1.783 - ONE_FRAME,
-			},
+				t = 1.783 - ONE_FRAME
+			}
 		},
 		state_transitions = {
-			lift_weapon = 0.56,
+			lift_weapon = 0.56
 		},
 		functionality = {
-			refill_ammunition = 0.56,
-		},
-	},
+			refill_ammunition = 0.56
+		}
+	}
 }
 
 return reload_template

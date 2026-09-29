@@ -9,8 +9,8 @@ local view_settings = {
 	state_bound = false,
 	use_transition_ui = false,
 	testify_flags = {
-		ui_views = false,
-	},
+		ui_views = false
+	}
 }
 
 return settings("PlayerSurveyViewDeclarationSettings", view_settings)

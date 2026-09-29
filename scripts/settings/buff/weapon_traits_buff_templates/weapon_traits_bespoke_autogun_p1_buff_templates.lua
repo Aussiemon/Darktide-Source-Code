@@ -29,13 +29,13 @@ templates.weapon_trait_bespoke_autogun_p1_reload_speed_on_dodge = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_dodge_start] = 1,
+		[proc_events.on_dodge_start] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.reload_speed] = 0.5,
+		[stat_buffs.reload_speed] = 0.5
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 templates.weapon_trait_bespoke_autogun_p1_reload_speed_on_slide_parent = table.clone(BaseWeaponTraitBuffTemplates.reload_speed_on_close_kill_parent)
 templates.weapon_trait_bespoke_autogun_p1_reload_speed_on_slide_child = table.clone(BaseWeaponTraitBuffTemplates.reload_speed_on_close_kill_child)
@@ -50,10 +50,10 @@ templates.weapon_trait_bespoke_autogun_p1_improved_sprint_dodge = {
 	class_name = "active_time_offset_proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_sprint_dodge] = 1,
+		[proc_events.on_sprint_dodge] = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 
 return templates

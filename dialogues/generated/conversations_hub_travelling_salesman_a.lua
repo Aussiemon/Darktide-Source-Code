@@ -14,7 +14,7 @@ local conversations_hub_travelling_salesman_a = {
 			"loc_travelling_salesman_a__hub_seasonal_juno_a_07",
 			"loc_travelling_salesman_a__hub_seasonal_juno_a_08",
 			"loc_travelling_salesman_a__hub_seasonal_juno_a_09",
-			"loc_travelling_salesman_a__hub_seasonal_juno_a_10",
+			"loc_travelling_salesman_a__hub_seasonal_juno_a_10"
 		},
 		sound_events_duration = {
 			12.12133,
@@ -26,64 +26,64 @@ local conversations_hub_travelling_salesman_a = {
 			6.5945,
 			11.07446,
 			7.898563,
-			10.10117,
+			10.10117
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	oval_hub_conversation_01_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_travelling_salesman_a__oval_hub_conversation_01_b_01",
+			[1] = "loc_travelling_salesman_a__oval_hub_conversation_01_b_01"
 		},
 		sound_events_duration = {
-			[1] = 5.244667,
+			[1] = 5.244667
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	oval_hub_conversation_04_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_travelling_salesman_a__oval_hub_conversation_04_b_01",
+			[1] = "loc_travelling_salesman_a__oval_hub_conversation_04_b_01"
 		},
 		sound_events_duration = {
-			[1] = 1.786646,
+			[1] = 1.786646
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	oval_hub_conversation_05_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_travelling_salesman_a__oval_hub_conversation_05_b_01",
+			[1] = "loc_travelling_salesman_a__oval_hub_conversation_05_b_01"
 		},
 		sound_events_duration = {
-			[1] = 5.192104,
+			[1] = 5.192104
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	oval_hub_conversation_22_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_travelling_salesman_a__oval_hub_conversation_23_b_01",
+			[1] = "loc_travelling_salesman_a__oval_hub_conversation_23_b_01"
 		},
 		sound_events_duration = {
-			[1] = 2.878563,
+			[1] = 2.878563
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	oval_hub_conversation_24_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_travelling_salesman_a__oval_hub_conversation_25_d_01",
+			[1] = "loc_travelling_salesman_a__oval_hub_conversation_25_d_01"
 		},
 		sound_events_duration = {
-			[1] = 1.659271,
+			[1] = 1.659271
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	oval_hub_conversation_swagger = {
 		randomize_indexes_n = 0,
@@ -92,16 +92,16 @@ local conversations_hub_travelling_salesman_a = {
 			"loc_travelling_salesman_a__oval_hub_conversation_02_a_01",
 			"loc_travelling_salesman_a__oval_hub_conversation_03_a_01",
 			"loc_travelling_salesman_a__oval_hub_conversation_21_a_01",
-			"loc_travelling_salesman_a__oval_hub_conversation_24_a_01",
+			"loc_travelling_salesman_a__oval_hub_conversation_24_a_01"
 		},
 		sound_events_duration = {
 			3.521979,
 			5.568917,
 			4.829208,
-			4.496229,
+			4.496229
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("conversations_hub_travelling_salesman_a", conversations_hub_travelling_salesman_a)

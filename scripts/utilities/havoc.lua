@@ -175,7 +175,7 @@ Havoc.parse_data = function (data)
 
 		modifiers_entry[#modifiers_entry + 1] = {
 			name = modifier_name,
-			level = modifier_level,
+			level = modifier_level
 		}
 	end
 

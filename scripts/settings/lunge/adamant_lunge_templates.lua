@@ -1,11 +1,11 @@
 ﻿-- chunkname: @scripts/settings/lunge/adamant_lunge_templates.lua
 
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local BreedSettings = require("scripts/settings/breed/breed_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local MoodSettings = require("scripts/settings/camera/mood/mood_settings")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
-local armor_types = ArmorSettings.types
+local breed_tags = BreedSettings.tags
 local damage_types = DamageSettings.damage_types
 local talent_settings = TalentSettings.adamant
 local adamant_lunge_templates = {}
@@ -34,38 +34,38 @@ adamant_lunge_templates.adamant_charge = {
 	lunge_speed_at_times = {
 		{
 			speed = 8,
-			time_in_lunge = 0,
+			time_in_lunge = 0
 		},
 		{
 			speed = 10,
-			time_in_lunge = 0.1,
+			time_in_lunge = 0.1
 		},
 		{
 			speed = 12,
-			time_in_lunge = 0.15,
+			time_in_lunge = 0.15
 		},
 		{
 			speed = 13,
-			time_in_lunge = 0.2,
+			time_in_lunge = 0.2
 		},
 		{
 			speed = 13,
-			time_in_lunge = 0.25,
+			time_in_lunge = 0.25
 		},
 		{
 			speed = 13,
-			time_in_lunge = 0.35,
+			time_in_lunge = 0.35
 		},
 		{
 			speed = 13,
-			time_in_lunge = 0.4,
-		},
+			time_in_lunge = 0.4
+		}
 	},
 	distance = talent_settings.combat_ability.charge.range,
 	damage_settings = {
 		radius = 1,
 		damage_profile = DamageProfileTemplates.adamant_charge_impact,
-		damage_type = damage_types.physical,
+		damage_type = damage_types.physical
 	},
 	on_finish_directional_shout = {
 		anim_event_1p = "shake_medium",
@@ -74,28 +74,28 @@ adamant_lunge_templates.adamant_charge = {
 		forward_range = 5,
 		power_level = 0,
 		shout_dot = -0.25,
-		damage_profile = DamageProfileTemplates.adamant_charge_impact,
+		damage_profile = DamageProfileTemplates.adamant_charge_impact
 	},
 	anim_settings = {
 		on_enter = {
 			"move_fwd",
 			"sprint",
-			"parry_pose",
+			"parry_pose"
 		},
 		on_exit = {
 			"parry_pose",
 			"parry_finished",
-			"attack_push",
-		},
+			"attack_push"
+		}
 	},
 	stop_tags = {
-		captain = true,
-		cultist_captain = true,
-		elite = true,
-		monster = true,
-		special = true,
+		[breed_tags.elite] = true,
+		[breed_tags.monster] = true,
+		[breed_tags.special] = true,
+		[breed_tags.captain] = true,
+		[breed_tags.cultist_captain] = true
 	},
-	mood = MoodSettings.mood_types.adamant_combat_ability_charge,
+	mood = MoodSettings.mood_types.adamant_combat_ability_charge
 }
 
 return adamant_lunge_templates

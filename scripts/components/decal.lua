@@ -33,8 +33,8 @@ Decal.component_data = {
 		min = 0,
 		ui_name = "Sort Order",
 		ui_type = "number",
-		value = 0,
-	},
+		value = 0
+	}
 }
 
 return Decal

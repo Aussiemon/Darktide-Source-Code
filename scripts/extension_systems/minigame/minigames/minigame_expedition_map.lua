@@ -139,7 +139,7 @@ MinigameExpeditionMap.on_axis_set = function (self, t, x, y)
 
 		current_position = {
 			x = player_position.x,
-			y = player_position.y,
+			y = player_position.y
 		}
 	end
 
@@ -148,7 +148,7 @@ MinigameExpeditionMap.on_axis_set = function (self, t, x, y)
 	for i = 1, #targets do
 		local level_index = targets[i]
 
-		if i ~= self._selected and not self._handler:is_level_completed(level_index) then
+		if i ~= self._selected and self._handler:is_level_visible(level_index) and not self._handler:is_level_completed(level_index) then
 			local target = self._selectable_position[i]:unbox()
 
 			target.x, target.y = self:world_pos_to_map_pos(target.x, target.y)

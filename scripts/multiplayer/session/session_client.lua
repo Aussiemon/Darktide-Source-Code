@@ -3,7 +3,7 @@
 local SessionLocalStateMachine = require("scripts/multiplayer/session/session_local_state_machine")
 local EVENTS = {
 	"rpc_peer_joined_session",
-	"rpc_peer_left_session",
+	"rpc_peer_left_session"
 }
 local SessionClient = class("SessionClient")
 
@@ -76,8 +76,8 @@ SessionClient.rpc_peer_joined_session = function (self, channel_id, peer_id)
 		return {
 			name = "session_joined",
 			parameters = {
-				peer_id = peer_id,
-			},
+				peer_id = peer_id
+			}
 		}
 	end
 end
@@ -91,8 +91,8 @@ SessionClient.rpc_peer_left_session = function (self, channel_id, peer_id)
 		return {
 			name = "session_left",
 			parameters = {
-				peer_id = peer_id,
-			},
+				peer_id = peer_id
+			}
 		}
 	end
 end

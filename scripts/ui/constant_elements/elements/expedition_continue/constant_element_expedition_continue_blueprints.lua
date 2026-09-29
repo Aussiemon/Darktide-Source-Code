@@ -3,7 +3,7 @@
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local card_size = {
 	450,
-	335,
+	335
 }
 
 local function bottom_particle_change_function(content, style, animations, dt)
@@ -47,8 +47,8 @@ blueprints.option_card = {
 			content = {
 				on_released_sound = nil,
 				on_hover_sound = UISoundEvents.expedition_menu_select,
-				on_pressed_sound = UISoundEvents.default_select,
-			},
+				on_pressed_sound = UISoundEvents.default_select
+			}
 		},
 		{
 			pass_type = "text",
@@ -65,13 +65,13 @@ blueprints.option_card = {
 				offset = {
 					20,
 					70,
-					6,
+					6
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -88,13 +88,13 @@ blueprints.option_card = {
 				offset = {
 					20,
 					100,
-					6,
+					6
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -111,13 +111,13 @@ blueprints.option_card = {
 				offset = {
 					20,
 					140,
-					6,
+					6
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -135,21 +135,21 @@ blueprints.option_card = {
 				offset = {
 					20,
 					-70,
-					6,
+					6
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture_uv",
 			value = "content/ui/materials/backgrounds/terminal_basic",
 			style = {
 				scale_to_material = true,
-				color = Color.terminal_grid_background(nil, true),
-			},
+				color = Color.terminal_grid_background(nil, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -158,14 +158,14 @@ blueprints.option_card = {
 				vertical_alignment = "top",
 				size = {
 					470,
-					37,
+					37
 				},
 				offset = {
 					-10,
 					-5,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -174,14 +174,14 @@ blueprints.option_card = {
 				vertical_alignment = "bottom",
 				size = {
 					470,
-					37,
+					37
 				},
 				offset = {
 					-10,
 					5,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -194,8 +194,8 @@ blueprints.option_card = {
 				vertical_alignment = "center",
 				size_addition = {
 					340,
-					350,
-				},
+					350
+				}
 			},
 			visibility_function = function (content, style)
 				local hotspot = content.hotspot
@@ -204,7 +204,7 @@ blueprints.option_card = {
 				local is_hover = hotspot and hotspot.is_hover
 
 				return is_selected or is_focused or is_hover
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -217,12 +217,12 @@ blueprints.option_card = {
 				vertical_alignment = "center",
 				size_addition = {
 					340,
-					350,
+					350
 				},
 				material_values = {
 					intensity = 0,
-					progress = 1,
-				},
+					progress = 1
+				}
 			},
 			change_function = bottom_particle_change_function,
 			visibility_function = function (content, style)
@@ -233,7 +233,7 @@ blueprints.option_card = {
 				local is_hover = hotspot and hotspot.is_hover
 
 				return not is_disabled and (is_selected or is_focused or is_hover)
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -245,12 +245,12 @@ blueprints.option_card = {
 				vertical_alignment = "center",
 				size_addition = {
 					340,
-					350,
+					350
 				},
 				material_values = {
 					intensity = 0,
-					progress = 1,
-				},
+					progress = 1
+				}
 			},
 			change_function = bottom_particle_change_function,
 			visibility_function = function (content, style)
@@ -261,7 +261,7 @@ blueprints.option_card = {
 				local is_hover = hotspot and hotspot.is_hover
 
 				return not is_disabled and (is_selected or is_focused or is_hover)
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -273,12 +273,12 @@ blueprints.option_card = {
 				vertical_alignment = "center",
 				size_addition = {
 					340,
-					350,
+					350
 				},
 				material_values = {
 					intensity = 0,
-					progress = 1,
-				},
+					progress = 1
+				}
 			},
 			change_function = bottom_particle_change_function,
 			visibility_function = function (content, style)
@@ -289,7 +289,7 @@ blueprints.option_card = {
 				local is_hover = hotspot and hotspot.is_hover
 
 				return not is_disabled and (is_selected or is_focused or is_hover)
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -301,12 +301,12 @@ blueprints.option_card = {
 				vertical_alignment = "center",
 				size_addition = {
 					340,
-					350,
+					350
 				},
 				material_values = {
 					intensity = 0,
-					progress = 1,
-				},
+					progress = 1
+				}
 			},
 			change_function = bottom_particle_change_function,
 			visibility_function = function (content, style)
@@ -317,7 +317,7 @@ blueprints.option_card = {
 				local is_hover = hotspot and hotspot.is_hover
 
 				return not is_disabled and (is_selected or is_focused or is_hover)
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -329,12 +329,12 @@ blueprints.option_card = {
 				vertical_alignment = "center",
 				size_addition = {
 					340,
-					350,
+					350
 				},
 				material_values = {
 					intensity = 0,
-					progress = 1,
-				},
+					progress = 1
+				}
 			},
 			change_function = top_particle_change_function,
 			visibility_function = function (content, style)
@@ -345,7 +345,7 @@ blueprints.option_card = {
 				local is_hover = hotspot and hotspot.is_hover
 
 				return not is_disabled and (is_selected or is_focused or is_hover)
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -357,12 +357,12 @@ blueprints.option_card = {
 				vertical_alignment = "center",
 				size_addition = {
 					340,
-					350,
+					350
 				},
 				material_values = {
 					intensity = 0,
-					progress = 1,
-				},
+					progress = 1
+				}
 			},
 			change_function = top_particle_change_function,
 			visibility_function = function (content, style)
@@ -373,7 +373,7 @@ blueprints.option_card = {
 				local is_hover = hotspot and hotspot.is_hover
 
 				return not is_disabled and (is_selected or is_focused or is_hover)
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -385,12 +385,12 @@ blueprints.option_card = {
 				vertical_alignment = "center",
 				size_addition = {
 					340,
-					350,
+					350
 				},
 				material_values = {
 					intensity = 0,
-					progress = 1,
-				},
+					progress = 1
+				}
 			},
 			change_function = top_particle_change_function,
 			visibility_function = function (content, style)
@@ -401,7 +401,7 @@ blueprints.option_card = {
 				local is_hover = hotspot and hotspot.is_hover
 
 				return not is_disabled and (is_selected or is_focused or is_hover)
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -413,12 +413,12 @@ blueprints.option_card = {
 				vertical_alignment = "center",
 				size_addition = {
 					340,
-					350,
+					350
 				},
 				material_values = {
 					intensity = 0,
-					progress = 1,
-				},
+					progress = 1
+				}
 			},
 			change_function = top_particle_change_function,
 			visibility_function = function (content, style)
@@ -429,8 +429,8 @@ blueprints.option_card = {
 				local is_hover = hotspot and hotspot.is_hover
 
 				return not is_disabled and (is_selected or is_focused or is_hover)
-			end,
-		},
+			end
+		}
 	},
 	init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 		local content = widget.content
@@ -467,7 +467,7 @@ blueprints.option_card = {
 		local vote_count = num_option_votes or 0
 
 		content.vote_count = tostring(vote_count) .. "/" .. tostring(num_total_votes)
-	end,
+	end
 }
 
 return blueprints

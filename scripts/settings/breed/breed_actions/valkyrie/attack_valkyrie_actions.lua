@@ -6,12 +6,12 @@ local action_data = {
 	idle = {
 		ignore_rotate_towards_target = true,
 		vo_event = nil,
-		anim_events = {},
+		anim_events = {}
 	},
 	death = {
 		instant_ragdoll_chance = 0,
 		death_animations = {},
-		ragdoll_timings = {},
+		ragdoll_timings = {}
 	},
 	rendezvous = {
 		rendezvous_radius = 50,
@@ -21,8 +21,8 @@ local action_data = {
 		rendezvous_offset = {
 			0,
 			0,
-			20,
-		},
+			20
+		}
 	},
 	shoot = {
 		projectile_item = "content/items/weapons/player/ranged/bullets/attack_valkyrie_missile",
@@ -38,9 +38,9 @@ local action_data = {
 			sfx = {
 				ready = "wwise/events/world/play_expeditions_attack_valkyrie_ready_missiles",
 				ready_delay = 1,
-				shoot = "wwise/events/world/play_expeditions_attack_valkyrie_shoot",
-			},
-		},
+				shoot = "wwise/events/world/play_expeditions_attack_valkyrie_shoot"
+			}
+		}
 	},
 	fallback_rendezvous = {
 		rendezvous_radius = 25,
@@ -50,13 +50,13 @@ local action_data = {
 		rendezvous_offset = {
 			0,
 			0,
-			20,
-		},
+			20
+		}
 	},
 	flee = {
 		rotation_speed = 0,
-		stop_distance = 30,
-	},
+		stop_distance = 30
+	}
 }
 
 return action_data

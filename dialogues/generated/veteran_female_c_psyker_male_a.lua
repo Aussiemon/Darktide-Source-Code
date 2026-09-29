@@ -5,46 +5,46 @@ local veteran_female_c_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_psyker_male_a__oval_bonding_conversation_cheer_b_01",
+			[1] = "loc_psyker_male_a__oval_bonding_conversation_cheer_b_01"
 		},
 		sound_events_duration = {
-			[1] = 4.284708,
+			[1] = 4.284708
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	oval_bonding_conversation_cheer_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_psyker_male_a__oval_bonding_conversation_cheer_d_01",
+			[1] = "loc_psyker_male_a__oval_bonding_conversation_cheer_d_01"
 		},
 		sound_events_duration = {
-			[1] = 6.91125,
+			[1] = 6.91125
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	oval_world_conversation_gareloch_ten_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_psyker_male_a__oval_world_conversation_gareloch_ten_b_01",
+			[1] = "loc_psyker_male_a__oval_world_conversation_gareloch_ten_b_01"
 		},
 		sound_events_duration = {
-			[1] = 6.749521,
+			[1] = 6.749521
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	oval_world_conversation_gareloch_ten_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_psyker_male_a__oval_world_conversation_gareloch_ten_d_01",
+			[1] = "loc_psyker_male_a__oval_world_conversation_gareloch_ten_d_01"
 		},
 		sound_events_duration = {
-			[1] = 3.265896,
+			[1] = 3.265896
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("veteran_female_c_psyker_male_a", veteran_female_c_psyker_male_a)

@@ -7,7 +7,7 @@ PlayerVisibilityExtension.init = function (self, extension_init_context, unit, e
 	self._unit = unit
 	self._first_person_unit = nil
 	self._unit_tbl = {
-		unit,
+		unit
 	}
 
 	local first_person_extension = ScriptUnit.has_extension(unit, "first_person_system")
@@ -15,7 +15,7 @@ PlayerVisibilityExtension.init = function (self, extension_init_context, unit, e
 	if first_person_extension then
 		self._first_person_unit = first_person_extension:first_person_unit()
 		self._first_person_unit_tbl = {
-			self._first_person_unit,
+			self._first_person_unit
 		}
 	end
 end

@@ -4,11 +4,11 @@ local Crosshair = require("scripts/ui/utilities/crosshair")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local template = {
-	name = "flamer",
+	name = "flamer"
 }
 local SIZE = {
 	32,
-	12,
+	12
 }
 local HALF_SIZE_X = SIZE[1] * 0.5
 local HALF_SIZE_Y = SIZE[2] * 0.5
@@ -27,14 +27,14 @@ local function _crosshair_segment(style_id, angle)
 			offset = {
 				0,
 				0,
-				1,
+				1
 			},
 			size = {
 				SIZE[1],
-				SIZE[2],
+				SIZE[2]
 			},
-			color = UIHudSettings.color_tint_main_1,
-		},
+			color = UIHudSettings.color_tint_main_1
+		}
 	})
 end
 
@@ -50,7 +50,7 @@ template.create_widget_defintion = function (template, scenegraph_id)
 		Crosshair.weakspot_hit_indicator_segment("top_right"),
 		Crosshair.weakspot_hit_indicator_segment("bottom_right"),
 		_crosshair_segment("left", math.rad(90)),
-		_crosshair_segment("right", math.rad(-90)),
+		_crosshair_segment("right", math.rad(-90))
 	}, scenegraph_id)
 end
 
@@ -61,7 +61,7 @@ end
 template.update_function = function (parent, ui_renderer, widget, template, crosshair_settings, dt, t, draw_hit_indicator)
 	local style = widget.style
 	local hit_progress, hit_color, hit_weakspot = parent:hit_indicator()
-	local yaw, pitch = parent:_spread_yaw_pitch(dt)
+	local yaw, pitch = parent:_spread_yaw_pitch()
 
 	if yaw and pitch then
 		local scalar_vertical = SPREAD_DISTANCE_VERTICAL * (crosshair_settings.spread_scalar_vertical or 1)

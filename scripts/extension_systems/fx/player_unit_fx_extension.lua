@@ -26,10 +26,10 @@ local CLIENT_RPCS = {
 	"rpc_spawn_player_particles",
 	"rpc_stop_looping_particles",
 	"rpc_stop_looping_player_sound",
-	"rpc_stop_player_particles",
+	"rpc_stop_player_particles"
 }
 local FLOW_CONTROLLED_WWISE_SOURCES = {
-	j_hips = true,
+	j_hips = true
 }
 local _closest_point_on_line
 
@@ -64,13 +64,13 @@ PlayerUnitFxExtension.init = function (self, extension_init_context, unit, exten
 			spawner_attach_name = nil,
 			spawner_name = nil,
 			variable_index = nil,
-			end_position = Vector3Box(),
+			end_position = Vector3Box()
 		}
 	end
 
 	self._aligned_vfx = {
 		size = 0,
-		buffer = aligned_vfx_buffer,
+		buffer = aligned_vfx_buffer
 	}
 
 	local moving_sfx_buffer = Script.new_array(MOVING_FX_RING_BUFFER_SIZE)
@@ -84,13 +84,13 @@ PlayerUnitFxExtension.init = function (self, extension_init_context, unit, exten
 			speed = nil,
 			wwise_stop_event = nil,
 			position = Vector3Box(),
-			direction = Vector3Box(),
+			direction = Vector3Box()
 		}
 	end
 
 	self._moving_sfx = {
 		size = 0,
-		buffer = moving_sfx_buffer,
+		buffer = moving_sfx_buffer
 	}
 
 	local moving_vfx_buffer = Script.new_array(MOVING_FX_RING_BUFFER_SIZE)
@@ -102,13 +102,13 @@ PlayerUnitFxExtension.init = function (self, extension_init_context, unit, exten
 			range = nil,
 			speed = nil,
 			position = Vector3Box(),
-			direction = Vector3Box(),
+			direction = Vector3Box()
 		}
 	end
 
 	self._moving_vfx = {
 		size = 0,
-		buffer = moving_vfx_buffer,
+		buffer = moving_vfx_buffer
 	}
 	self._wwise_source_node_cache = {}
 	self._sources = {}
@@ -157,7 +157,7 @@ PlayerUnitFxExtension.init = function (self, extension_init_context, unit, exten
 			looping_sound_trigger_data[alias_name] = {
 				should_trigger = false,
 				source_attach_name = nil,
-				source_name = nil,
+				source_name = nil
 			}
 			looping_sounds[alias_name] = {
 				event_alias = nil,
@@ -169,7 +169,7 @@ PlayerUnitFxExtension.init = function (self, extension_init_context, unit, exten
 				source_attach_name = nil,
 				source_name = nil,
 				stop_event_name = nil,
-				timestamp = -1,
+				timestamp = -1
 			}
 		end
 	end
@@ -197,7 +197,7 @@ PlayerUnitFxExtension.init = function (self, extension_init_context, unit, exten
 				particle_name = nil,
 				spawner_attach_name = "n/a",
 				spawner_name = "n/a",
-				external_properties = {},
+				external_properties = {}
 			}
 
 			if is_local_unit or is_server then
@@ -237,7 +237,7 @@ PlayerUnitFxExtension.extensions_ready = function (self, world, unit)
 		health_extension = ScriptUnit.extension(unit, "health_system"),
 		toughness_extension = ScriptUnit.extension(unit, "toughness_system"),
 		action_module_charge_component = unit_data_extension:read_component("action_module_charge"),
-		talent_resource_component = unit_data_extension:read_component("talent_resource"),
+		talent_resource_component = unit_data_extension:read_component("talent_resource")
 	}
 
 	local first_person_extension = ScriptUnit.extension(unit, "first_person_system")
@@ -803,7 +803,7 @@ local function _register_sound_source(wwise_source_node_cache, unit, node_name, 
 
 		unit_cache[node_name] = {
 			num_registered_sources = 0,
-			source = source,
+			source = source
 		}
 	end
 
@@ -813,7 +813,7 @@ local function _register_sound_source(wwise_source_node_cache, unit, node_name, 
 
 	local source_name_to_node_cache_lookup = {
 		unit = unit,
-		node_name = node_name,
+		node_name = node_name
 	}
 
 	wwise_source_node_cache[source_name] = source_name_to_node_cache_lookup
@@ -1972,7 +1972,7 @@ local function _register_vfx_spawner_from_attachments(parent_unit, attachments_b
 
 				spawners[attachment_name] = {
 					unit = attachment_unit,
-					node = node,
+					node = node
 				}
 
 				break
@@ -1986,7 +1986,7 @@ local function _register_vfx_spawner_from_attachments(parent_unit, attachments_b
 
 		spawners[parent_id_name] = {
 			unit = parent_unit,
-			node = node,
+			node = node
 		}
 	end
 
@@ -2007,7 +2007,7 @@ local function _register_vfx_spawner_from_attachments(parent_unit, attachments_b
 
 	spawners[VisualLoadoutExtractData.ROOT_ATTACH_NAME] = {
 		node = 1,
-		unit = parent_unit,
+		unit = parent_unit
 	}
 
 	return spawners
@@ -2037,7 +2037,7 @@ PlayerUnitFxExtension._register_vfx_spawner = function (self, spawners, spawner_
 		spawners[spawner_name][VisualLoadoutExtractData.ROOT_ATTACH_NAME] = {
 			unit = parent_unit,
 			node = node,
-			node_3p = node_3p,
+			node_3p = node_3p
 		}
 	end
 end

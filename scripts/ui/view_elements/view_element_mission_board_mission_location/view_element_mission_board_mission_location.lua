@@ -111,7 +111,7 @@ ViewElementMissionBoardMissionLocation._update_mission_location = function (self
 	content.banner_text = banner_text
 	style.image.material_values = {
 		texture_map = texture,
-		show_static = is_locked and 1 or 0,
+		show_static = is_locked and 1 or 0
 	}
 
 	if not mission_area_info.visible then
@@ -129,7 +129,7 @@ ViewElementMissionBoardMissionLocation._update_mission_location = function (self
 		timer_bar_content.expiry_game_time = nil
 		timer_bar_content.is_quickplay = true
 		mission_timer_bar.style.timer_bar.material_values = {
-			progress = 1,
+			progress = 1
 		}
 	end
 

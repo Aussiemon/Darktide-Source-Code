@@ -73,8 +73,8 @@ ActionSpawnProjectile.init = function (self, action_context, action_params, acti
 	end
 end
 
-ActionSpawnProjectile.start = function (self, action_settings, t, ...)
-	ActionSpawnProjectile.super.start(self, action_settings, t, ...)
+ActionSpawnProjectile.start = function (self, action_settings, t, time_scale, action_start_params, ...)
+	ActionSpawnProjectile.super.start(self, action_settings, t, time_scale, action_start_params, ...)
 
 	local should_crit = action_settings.should_crit
 
@@ -90,12 +90,11 @@ ActionSpawnProjectile.start = function (self, action_settings, t, ...)
 		end
 	end
 
-	local use_ability_charge = action_settings.use_ability_charge
+	local consume_ability_usage_cost = action_settings.consume_ability_usage_cost
 
-	if use_ability_charge then
-		local ability_type = action_settings.ability_type
+	if consume_ability_usage_cost then
 		local ability_extension = self._ability_extension
-		local remaining_charges = ability_extension:remaining_ability_charges(ability_type)
+		local remaining_charges = ability_extension:remaining_ability_charges(self._ability_type)
 		local anim_event_no_ammo = action_settings.anim_event_no_ammo
 		local is_going_to_run_out = remaining_charges <= 1
 
@@ -134,7 +133,7 @@ ActionSpawnProjectile.start = function (self, action_settings, t, ...)
 		end
 
 		for ii = 1, num_projectiles do
-			local projectile_unit = self:_spawn_projectile_unit(is_critical_strike)
+			local projectile_unit = self:_spawn_projectile_unit(action_start_params, is_critical_strike)
 			local projectile_locomotion_extension = ScriptUnit.extension(projectile_unit, "locomotion_system")
 
 			self._projectiles_fire_offsets[ii] = (ii - 1) * 0.1
@@ -150,14 +149,12 @@ ActionSpawnProjectile.start = function (self, action_settings, t, ...)
 		Vo.play_combat_ability_event(self._player_unit, vo_tag)
 	end
 
-	local ability_type = action_settings.ability_type
-
-	if ability_type == "combat_ability" then
+	if self._ability_type == "combat_ability" then
 		local param_table = self._buff_extension:request_proc_event_param_table()
 
 		if param_table then
 			param_table.unit = self._player_unit
-			param_table.ability_charges_used = self._ability_charges_used_at_start
+			param_table.ability_cost = self._ability_cost_at_start
 			param_table.remaining_ability_charges_before_use = self._remaining_ability_charges_before_use_at_start
 
 			self._buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
@@ -317,12 +314,11 @@ end
 
 ActionSpawnProjectile.running_action_state = function (self, t, time_in_action)
 	local action_settings = self._action_settings
-	local use_ability_charge = action_settings.use_ability_charge
+	local consume_ability_usage_cost = action_settings.consume_ability_usage_cost
 
-	if use_ability_charge then
+	if consume_ability_usage_cost then
 		local ability_extension = self._ability_extension
-		local ability_type = action_settings.ability_type
-		local remaining = ability_extension:remaining_ability_charges(ability_type)
+		local remaining = ability_extension:remaining_ability_charges(self._ability_type)
 
 		if remaining == 0 then
 			return "out_of_charges"
@@ -381,7 +377,7 @@ ActionSpawnProjectile._target_unit_and_position = function (self)
 	return target_unit, target_position
 end
 
-ActionSpawnProjectile._spawn_projectile_unit = function (self, is_critical_strike)
+ActionSpawnProjectile._spawn_projectile_unit = function (self, action_start_params, is_critical_strike)
 	local projectile_template = self:_projectile_template()
 	local first_person_component = self._first_person_component
 	local position, rotation = first_person_component.position, first_person_component.rotation
@@ -393,13 +389,13 @@ ActionSpawnProjectile._spawn_projectile_unit = function (self, is_critical_strik
 	if inventory_item_name then
 		item = self._item_definitions[inventory_item_name]
 	else
-		item = ActionUtility.ability_item(action_settings, self._ability_extension)
+		item = ActionUtility.ability_item(self._ability_type, self._ability_extension)
 	end
 
 	local starting_state = projectile_locomotion_states.sleep
 	local buff_extension = self._buff_extension
 	local stat_buffs = buff_extension:stat_buffs()
-	local override_origin_slot = action_settings.override_origin_slot
+	local override_origin_slot = action_settings.override_origin_slot_func and action_settings.override_origin_slot_func(action_start_params)
 	local direction, speed, momentum
 	local owner_unit = self._player_unit
 	local origin_item_slot = override_origin_slot or self._inventory_component.wielded_slot
@@ -480,13 +476,13 @@ ActionSpawnProjectile._pay_for_projectile = function (self, t)
 		charge_component.charge_level = 0
 	end
 
-	local use_ability_charge = action_settings.use_ability_charge
-	local should_use_charge = not action_settings.use_charge_at_start
+	local consume_ability_usage_cost = action_settings.consume_ability_usage_cost
+	local should_use_charge = not action_settings.consume_usage_cost_at_start
 
-	if use_ability_charge and should_use_charge then
+	if consume_ability_usage_cost and should_use_charge then
 		local num_charges = action_settings.num_projectiles or 1
 
-		self:_use_ability_charge(num_charges)
+		self:_consume_ability_usage_cost(nil, num_charges)
 	end
 
 	self:_proc_buffs()
@@ -615,6 +611,10 @@ ActionSpawnProjectile._fire_projectile = function (self, t, projectile_unit, tim
 
 	if Unit.alive(projectile_unit) then
 		Unit.set_unit_visibility(projectile_unit, true, true)
+	end
+
+	if action_settings.follow_owner then
+		projectile_locomotion_extension:set_follow_owner(true)
 	end
 
 	if starting_state == projectile_locomotion_states.manual_physics then

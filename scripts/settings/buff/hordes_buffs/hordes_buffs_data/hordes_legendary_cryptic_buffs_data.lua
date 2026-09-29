@@ -15,9 +15,9 @@ hordes_legendary_cryptic_buffs_data.hordes_buff_cryptic_discharge_ability_always
 	buff_stats = {
 		talent_name = {
 			format_type = "loc_string",
-			value = "loc_talent_cryptic_discharge",
-		},
-	},
+			value = "loc_talent_cryptic_discharge"
+		}
+	}
 }
 hordes_legendary_cryptic_buffs_data.hordes_buff_cryptic_chordclaw_kills_replenish_charge = {
 	description = "Kills with the Chordclaw restore an ability Charge",
@@ -28,9 +28,9 @@ hordes_legendary_cryptic_buffs_data.hordes_buff_cryptic_chordclaw_kills_replenis
 	buff_stats = {
 		talent_name = {
 			format_type = "loc_string",
-			value = "loc_talent_cryptic_chordclaw",
-		},
-	},
+			value = "loc_talent_cryptic_chordclaw"
+		}
+	}
 }
 hordes_legendary_cryptic_buffs_data.hordes_buff_cryptic_precision_stance_duration_extension_on_kill = {
 	description = "Arc Grenades spread X extra Arcs",
@@ -41,17 +41,17 @@ hordes_legendary_cryptic_buffs_data.hordes_buff_cryptic_precision_stance_duratio
 	buff_stats = {
 		capacitance = {
 			format_type = "percentage",
-			value = 0.05,
+			value = 0.05
 		},
 		talent_name = {
 			format_type = "loc_string",
-			value = "loc_talent_cryptic_precision_stance",
+			value = "loc_talent_cryptic_precision_stance"
 		},
 		capacitance_keyword = {
 			format_type = "loc_string",
-			value = "loc_talent_cryptic_power_keyword",
-		},
-	},
+			value = "loc_talent_cryptic_power_keyword"
+		}
+	}
 }
 hordes_legendary_cryptic_buffs_data.hordes_buff_cryptic_force_field_leaves_fire_liquid_area = {
 	description = "When the Force Shield expires, fire is spread underneath you.",
@@ -62,9 +62,9 @@ hordes_legendary_cryptic_buffs_data.hordes_buff_cryptic_force_field_leaves_fire_
 	buff_stats = {
 		talent_name = {
 			format_type = "loc_string",
-			value = "loc_talent_cryptic_grenade_ability_force_field",
-		},
-	},
+			value = "loc_talent_cryptic_grenade_ability_force_field"
+		}
+	}
 }
 hordes_legendary_cryptic_buffs_data.hordes_buff_cryptic_servo_skull_flamethrower_uses_no_charge = {
 	description = "The Flamethrower Servo Skull no longer uses charges.",
@@ -75,9 +75,9 @@ hordes_legendary_cryptic_buffs_data.hordes_buff_cryptic_servo_skull_flamethrower
 	buff_stats = {
 		talent_name = {
 			format_type = "loc_string",
-			value = "loc_talent_cryptic_servo_skull_flamethrower",
-		},
-	},
+			value = "loc_talent_cryptic_servo_skull_flamethrower"
+		}
+	}
 }
 hordes_legendary_cryptic_buffs_data.hordes_buff_cryptic_arc_grenade_extra_arcs = {
 	description = "Arc Grenades spread X extra Arcs",
@@ -88,13 +88,13 @@ hordes_legendary_cryptic_buffs_data.hordes_buff_cryptic_arc_grenade_extra_arcs =
 	buff_stats = {
 		extra_arcs = {
 			format_type = "number",
-			value = 2,
+			value = 2
 		},
 		talent_name = {
 			format_type = "loc_string",
-			value = "loc_talent_cryptic_arc_grenades",
-		},
-	},
+			value = "loc_talent_cryptic_arc_grenades"
+		}
+	}
 }
 hordes_legendary_cryptic_buffs_data.hordes_buff_cryptic_dodge_costs_cooldown = {
 	description = "You have infinite Dodges. Dodging cost 10% cooldown.",
@@ -105,9 +105,9 @@ hordes_legendary_cryptic_buffs_data.hordes_buff_cryptic_dodge_costs_cooldown = {
 	buff_stats = {
 		cooldown_percent_cost = {
 			format_type = "percentage",
-			value = 0.05,
-		},
-	},
+			value = 0.05
+		}
+	}
 }
 
 return hordes_legendary_cryptic_buffs_data

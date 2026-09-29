@@ -7,7 +7,7 @@ local DEFAULT_MAX_HEIGHT_DIFFERENCE = 1
 local DEFAULT_NODE_NAME = "j_spine"
 
 FadeSystem.system_extensions = {
-	"FadeExtension",
+	"FadeExtension"
 }
 
 FadeSystem.init = function (self, context, system_init_data, system_name, _, ...)

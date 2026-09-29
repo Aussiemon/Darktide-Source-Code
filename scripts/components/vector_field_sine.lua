@@ -26,7 +26,7 @@ VectorFieldSine.init = function (self, unit)
 	end
 
 	self._settings = {
-		duration = self._duration,
+		duration = self._duration
 	}
 
 	local world = Unit.world(unit)
@@ -125,7 +125,7 @@ VectorFieldSine.create_paramaters = function (self, unit)
 			phase = phase,
 			center = center,
 			rotation = rotation,
-			extents = half_extents,
+			extents = half_extents
 		}
 	elseif self._bounding_volume == "sphere" then
 		return {
@@ -134,7 +134,7 @@ VectorFieldSine.create_paramaters = function (self, unit)
 			frequency = frequency,
 			phase = phase,
 			center = center,
-			radius = scale.x,
+			radius = scale.x
 		}
 	elseif self._bounding_volume == "cylinder" then
 		return {
@@ -145,14 +145,14 @@ VectorFieldSine.create_paramaters = function (self, unit)
 			bottom = center - direction * scale.y,
 			top = center + direction * scale.y,
 			rotation = rotation,
-			radius = scale.x,
+			radius = scale.x
 		}
 	else
 		return {
 			amplitude = rotated_amplitude,
 			direction = direction,
 			frequency = frequency,
-			phase = phase,
+			phase = phase
 		}
 	end
 end
@@ -161,7 +161,7 @@ VectorFieldSine.component_data = {
 	vector_field_name = {
 		ui_name = "Vector Field Name",
 		ui_type = "text_box",
-		value = "wind",
+		value = "wind"
 	},
 	duration = {
 		decimals = 2,
@@ -169,26 +169,26 @@ VectorFieldSine.component_data = {
 		step = 0.01,
 		ui_name = "Duration",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	amplitude = {
 		ui_name = "Amplitude",
 		ui_type = "vector",
-		value = Vector3Box(0, 0, 1),
+		value = Vector3Box(0, 0, 1)
 	},
 	frequency = {
 		decimals = 2,
 		step = 0.01,
 		ui_name = "Frequency",
 		ui_type = "slider",
-		value = 5,
+		value = 5
 	},
 	phase = {
 		decimals = 2,
 		step = 0.01,
 		ui_name = "Phase",
 		ui_type = "slider",
-		value = 0,
+		value = 0
 	},
 	bounding_volume = {
 		ui_name = "Bounding Volume",
@@ -198,39 +198,39 @@ VectorFieldSine.component_data = {
 			"none",
 			"box",
 			"sphere",
-			"cylinder",
-		},
+			"cylinder"
+		}
 	},
 	effect_global = {
 		filter = "vector_field",
 		ui_name = "Effect Global Resource",
-		ui_type = "resource",
+		ui_type = "resource"
 	},
 	effect_box = {
 		filter = "vector_field",
 		ui_name = "Effect Box Resource",
-		ui_type = "resource",
+		ui_type = "resource"
 	},
 	effect_sphere = {
 		filter = "vector_field",
 		ui_name = "Effect Sphere Resource",
-		ui_type = "resource",
+		ui_type = "resource"
 	},
 	effect_cylinder = {
 		filter = "vector_field",
 		ui_name = "Effect Cylinder Resource",
-		ui_type = "resource",
+		ui_type = "resource"
 	},
 	inputs = {
 		start_effect = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		stop_effect = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return VectorFieldSine

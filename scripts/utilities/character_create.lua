@@ -12,7 +12,7 @@ local GrowingUp = require("scripts/settings/character/growing_up")
 local HomePlanets = require("scripts/settings/character/home_planets")
 local Items = require("scripts/utilities/items")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
-local ItemSourceSettings = require("scripts/settings/item/item_source_settings_new")
+local ItemSourceSettings = require("scripts/settings/item/item_source_settings")
 local ItemUtils = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local Personalities = require("scripts/settings/character/personalities")
@@ -28,7 +28,7 @@ local FALLBACK_SLOTS_TO_STRIP = {
 	"slot_body_face_scar",
 	"slot_body_face_hair",
 	"slot_body_hair",
-	"slot_body_tattoo",
+	"slot_body_tattoo"
 }
 local CAN_USE_EMPTY_ITEM = table.set({
 	"slot_companion_body_skin_color",
@@ -44,7 +44,7 @@ local CAN_USE_EMPTY_ITEM = table.set({
 	"slot_body_face_makeup",
 	"slot_body_skin_color_secondary",
 	"slot_body_skin_discoloration",
-	"slot_body_eye_color_secondary",
+	"slot_body_eye_color_secondary"
 })
 local BACKSTORY_FIELD_TO_OPTIONS = {
 	childhood = Childhood,
@@ -52,7 +52,7 @@ local BACKSTORY_FIELD_TO_OPTIONS = {
 	formative_event = FormativeEvent,
 	growing_up = GrowingUp,
 	personality = Personalities,
-	planet = HomePlanets,
+	planet = HomePlanets
 }
 local BACKSTORY_FIELD_TO_ITEM_FIELD = {
 	childhood = "childhoods",
@@ -60,76 +60,76 @@ local BACKSTORY_FIELD_TO_ITEM_FIELD = {
 	formative_event = "formative_events",
 	growing_up = "upbringings",
 	personality = nil,
-	planet = "home_planets",
+	planet = "home_planets"
 }
 local VALID_BACKENDS_BY_SLOT = {}
 local CHARACTER_CREATOR_ITEMS_BY_ARCHETYPE = {
 	adamant = {
 		slot_companion_body_skin_color = {
-			item_name = "content/items/characters/companion/companion_dog/body_skin_colors/dog_skin_color_tan_01",
+			item_name = "content/items/characters/companion/companion_dog/body_skin_colors/dog_skin_color_tan_01"
 		},
 		slot_companion_body_fur_color = {
-			item_name = "content/items/characters/companion/companion_dog/body_fur_colors/dog_fur_color_black_01",
+			item_name = "content/items/characters/companion/companion_dog/body_fur_colors/dog_fur_color_black_01"
 		},
 		slot_companion_body_coat_pattern = {
-			item_name = "content/items/characters/companion/companion_dog/body_coat_patterns/dog_coat_spots_01",
+			item_name = "content/items/characters/companion/companion_dog/body_coat_patterns/dog_coat_spots_01"
 		},
 		slot_companion_gear_full = {
-			item_name = "content/items/characters/companion/companion_dog/gear_full/companion_dog_set_03_var_01",
-		},
+			item_name = "content/items/characters/companion/companion_dog/gear_full/companion_dog_set_03_var_01"
+		}
 	},
 	cryptic = {
 		slot_prop = {
 			character_creator_only = true,
-			item_name = "content/items/characters/player/human/backpacks/cryptic_creator_arm_attachment",
+			item_name = "content/items/characters/player/human/backpacks/cryptic_creator_arm_attachment"
 		},
 		slot_companion_gear_full = {
 			character_creator_only = true,
-			item_name = "content/items/characters/companion/companion_servo_skull/gear_full/cryptic_servo_skull_scanning_var_01",
-		},
-	},
+			item_name = "content/items/characters/companion/companion_servo_skull/gear_full/cryptic_servo_skull_scanning_var_01"
+		}
+	}
 }
 local BARBER_ITEMS_BY_ARCHETYPE = {
 	cryptic = {
 		slot_prop = {
 			character_creator_only = true,
-			item_name = "content/items/characters/player/human/backpacks/cryptic_creator_arm_attachment",
-		},
-	},
+			item_name = "content/items/characters/player/human/backpacks/cryptic_creator_arm_attachment"
+		}
+	}
 }
 local DEFAULT_PROFILE_DATA_BY_ARCHETYPE = {
 	adamant = {
 		companion = {
-			name = "",
-		},
+			name = ""
+		}
 	},
 	cryptic = {
 		voice_effects = {
 			vox_effect_01 = 0,
 			vox_effect_02 = 0,
-			vox_effect_03 = 0,
-		},
-	},
+			vox_effect_03 = 0
+		}
+	}
 }
 
 if BUILD == "release" then
 	FALLBACK_SLOTS_TO_STRIP = {
-		"slot_body_face",
+		"slot_body_face"
 	}
 end
 
-local _is_fallback_item
+local _is_fallback_item, _random_except
 
 CharacterCreate.init = function (self, item_definitions, owned_gear, optional_real_profile)
 	self._stored_companion_items = {}
-	self._archetype_random_names = {}
-	self._companion_random_names = {}
+	self._archetype_random_names = nil
+	self._companion_random_names = nil
 	self._profile_value_versions = {
 		abilities = nil,
 		archetype = nil,
 		breed = nil,
 		gender = nil,
-		loadout = {},
+		loadout = {}
 	}
 
 	self:_setup_default_values()
@@ -149,21 +149,24 @@ CharacterCreate.init = function (self, item_definitions, owned_gear, optional_re
 		local breed = optional_real_profile.archetype.breed
 
 		self._profile = {
+			character_height = nil,
+			companion_name = nil,
 			name = "",
+			voice_effects = nil,
 			loadout = {},
 			selected_voice = selected_voice,
 			lore = {
-				backstory = backstory,
+				backstory = backstory
 			},
 			archetype = archetype,
 			gender = gender,
-			breed = breed,
+			breed = breed
 		}
 
 		local breed_height_range = self:get_height_values_range()
 		local min_height, max_height = breed_height_range.min, breed_height_range.max
 		local default_height = math.lerp(min_height, max_height, 0.5)
-		local height = optional_real_profile.personal and optional_real_profile.personal.character_height or default_height
+		local height = optional_real_profile.character_height or default_height
 
 		self._character_height = height
 
@@ -186,8 +189,8 @@ CharacterCreate.init = function (self, item_definitions, owned_gear, optional_re
 		if loadout then
 			self._saved_gender_loadout = {
 				[breed] = {
-					[gender] = {},
-				},
+					[gender] = {}
+				}
 			}
 
 			for slot_name, slot_settings in pairs(ItemSlotSettings) do
@@ -204,16 +207,22 @@ CharacterCreate.init = function (self, item_definitions, owned_gear, optional_re
 		end
 	else
 		self._profile = {
+			archetype = nil,
+			breed = nil,
+			character_height = nil,
+			companion_name = nil,
+			gender = nil,
 			name = "",
 			selected_voice = "ogryn_a",
+			voice_effects = nil,
 			loadout = {},
+			lore = {
+				backstory = {}
+			},
 			abilities = {
 				combat_ability = "dash",
-				support_ability = "grenade",
-			},
-			lore = {
-				backstory = {},
-			},
+				support_ability = "grenade"
+			}
 		}
 		self._character_height = 1
 
@@ -229,20 +238,15 @@ CharacterCreate.refresh_gear = function (self, owned_gear)
 
 	self._owned_gear = owned_gear
 
-	local item_categories = self:_setup_item_categories(relevant_items)
-
-	self._item_categories = item_categories
-
-	local appearance_presets = self:_setup_appearance_presets(relevant_items)
-
-	self._appearance_presets = appearance_presets
-	self._owned_dlcs = self:_prewarm_dlc_ownership(relevant_items)
+	self:_setup_item_categories(relevant_items)
+	self:_setup_appearance_presets(relevant_items)
+	self:_prewarm_dlc_ownership(relevant_items)
 end
 
 CharacterCreate.refresh_dlcs = function (self)
 	local relevant_items = self:_filter_relevant_items(self._item_definitions, self._owned_gear)
 
-	self._owned_dlcs = self:_prewarm_dlc_ownership(relevant_items)
+	self:_prewarm_dlc_ownership(relevant_items)
 end
 
 CharacterCreate.is_option_visible = function (self, option)
@@ -264,20 +268,20 @@ CharacterCreate.is_option_visible = function (self, option)
 		local validation_tables = {
 			{
 				value = breed,
-				validations = start_data_table_path.breeds,
+				validations = start_data_table_path.breeds
 			},
 			{
 				value = gender,
-				validations = start_data_table_path.genders,
+				validations = start_data_table_path.genders
 			},
 			{
 				value = archetype,
-				validations = start_data_table_path.archetypes,
+				validations = start_data_table_path.archetypes
 			},
 			{
 				value = planet and planet.id,
-				validations = start_data_table_path.home_planets,
-			},
+				validations = start_data_table_path.home_planets
+			}
 		}
 
 		for ii = 1, #validation_tables do
@@ -318,39 +322,39 @@ CharacterCreate.is_option_available = function (self, option)
 				reason = "home_planet",
 				value = planet,
 				validations = start_data_table_path.home_planets,
-				options_data = self._home_planets_array,
+				options_data = self._home_planets_array
 			},
 			{
 				reason = "childhood",
 				value = childhood,
 				validations = start_data_table_path.childhood,
-				options_data = self._childhood_array,
+				options_data = self._childhood_array
 			},
 			{
 				reason = "growing_up",
 				value = growing_up,
 				validations = start_data_table_path.growing_up,
-				options_data = self._growing_up_array,
+				options_data = self._growing_up_array
 			},
 			{
 				reason = "formative_event",
 				value = formative_event,
 				validations = start_data_table_path.formative_event,
-				options_data = self._formative_event_array,
-			},
+				options_data = self._formative_event_array
+			}
 		}
 
 		if source_settings then
 			table.insert(validation_tables, {
 				reason = "source",
 				value = {
-					id = start_data_table_path.source,
+					id = start_data_table_path.source
 				},
 				validations = {
-					start_data_table_path.source,
+					start_data_table_path.source
 				},
 				validation_function = self._is_gear_owned,
-				options_data = ItemSourceSettings,
+				options_data = ItemSourceSettings
 			})
 		end
 
@@ -554,14 +558,14 @@ CharacterCreate._setup_default_values = function (self)
 	local breeds_array = BreedQueries.player_breed_names_array()
 	local genders_array = {
 		"female",
-		"male",
+		"male"
 	}
 
 	self._default_table_arrays = {
 		archetypes = archetype_names_array,
 		breed = breeds_array,
 		genders = genders_array,
-		slots = inventory_slots_array,
+		slots = inventory_slots_array
 	}
 end
 
@@ -569,7 +573,7 @@ CharacterCreate.get_height_values_range = function (self)
 	local breed = self._profile.archetype.breed
 	local height_range = {
 		max = 1,
-		min = 1,
+		min = 1
 	}
 	local breed_height_values = Breeds[breed].size_variation_range
 
@@ -592,7 +596,7 @@ CharacterCreate._setup_appearance_presets = function (self, verified_items)
 
 			for preset_name, preset_slots in pairs(appearance_presets) do
 				local preset = {
-					body_parts = {},
+					body_parts = {}
 				}
 
 				for ii = 1, #self._inventory_slots_array do
@@ -611,7 +615,7 @@ CharacterCreate._setup_appearance_presets = function (self, verified_items)
 		presets[archetype] = archetype_presets
 	end
 
-	return presets
+	self._appearance_presets = presets
 end
 
 CharacterCreate._random_archetype_option = function (self)
@@ -628,7 +632,7 @@ CharacterCreate._random_gender_option = function (self)
 	return gender
 end
 
-CharacterCreate._presets_options = function (self)
+CharacterCreate._available_character_apperance_presets = function (self)
 	local profile = self._profile
 	local archetype_name = profile.archetype.name
 	local gender = profile.gender
@@ -688,18 +692,18 @@ CharacterCreate._prewarm_dlc_ownership = function (self, relevant_items)
 		end
 	end
 
-	return owned_dlcs
+	self._owned_dlcs = owned_dlcs
 end
 
 local LOOP_TABLE_ORDER = {
 	"archetypes",
 	"breeds",
 	"genders",
-	"slots",
+	"slots"
 }
 
 CharacterCreate._setup_item_categories = function (self, source_items)
-	local destination_table = {}
+	local item_categories = {}
 	local default_table_arrays = self._default_table_arrays
 
 	local function next_category(item, lookup_index, destination)
@@ -730,10 +734,10 @@ CharacterCreate._setup_item_categories = function (self, source_items)
 	for item_name, item in pairs(source_items) do
 		local table_index = 1
 
-		next_category(item, table_index, destination_table)
+		next_category(item, table_index, item_categories)
 	end
 
-	return destination_table
+	self._item_categories = item_categories
 end
 
 CharacterCreate.height = function (self)
@@ -759,11 +763,27 @@ CharacterCreate.gender = function (self)
 end
 
 CharacterCreate.randomize_character_apperance_preset = function (self)
-	local presets = self:_presets_options()
-	local preset_index = math.random(1, #presets) or 1
-	local random_preset = presets[preset_index]
+	local presets = self:_available_character_apperance_presets()
+	local num_presets = #presets
+	local preset_index
+
+	if num_presets > 1 then
+		preset_index = self._current_apperance_preset_index
+
+		if not preset_index then
+			preset_index = math.random(1, num_presets)
+		else
+			preset_index = _random_except(1, num_presets, preset_index)
+		end
+	else
+		preset_index = 1
+	end
+
+	self._current_apperance_preset_index = preset_index
 
 	self:_reset_loadout()
+
+	local random_preset = presets[preset_index]
 
 	for slot_name, body_part in pairs(random_preset.body_parts) do
 		if not self._profile.loadout[slot_name] then
@@ -891,9 +911,6 @@ CharacterCreate.reset_height = function (self)
 end
 
 CharacterCreate.fetch_suggested_names_by_profile = function (self)
-	self._archetype_random_names = {}
-	self._companion_random_names = {}
-
 	local archetype_name = self._profile.archetype.name
 	local gender = self:gender()
 	local planet_option = self:planet()
@@ -988,7 +1005,7 @@ CharacterCreate.set_item_per_slot = function (self, slot_name, item)
 
 	self:_increase_value_version({
 		"inventory",
-		slot_name,
+		slot_name
 	})
 end
 
@@ -999,7 +1016,7 @@ CharacterCreate.set_item_per_slot_preview = function (self, slot_name, item, pro
 
 	self:_increase_value_version({
 		"inventory",
-		slot_name,
+		slot_name
 	})
 end
 
@@ -1201,30 +1218,54 @@ CharacterCreate.set_crime = function (self, id)
 	self._profile.lore.backstory.crime = id
 end
 
-CharacterCreate.randomize_name = function (self)
-	local names = self._archetype_random_names
-	local num_names = self._archetype_random_names and #names or 0
+local function _random_name_index(names, current_index)
+	if not names then
+		return -1
+	end
+
+	local num_names = #names
 
 	if num_names == 0 then
+		return -1
+	elseif num_names == 1 then
+		return 1
+	end
+
+	local name_index = current_index
+
+	if not name_index then
+		name_index = math.random(1, num_names)
+	else
+		name_index = _random_except(1, num_names, name_index)
+	end
+
+	return name_index
+end
+
+CharacterCreate.randomize_name = function (self)
+	local names = self._archetype_random_names
+	local name_index = _random_name_index(names, self._current_random_name_index)
+
+	if name_index == -1 then
 		return ""
 	end
 
-	local random_name_index = math.random(1, #names)
+	self._current_random_name_index = name_index
 
-	return self._archetype_random_names[random_name_index]
+	return names[name_index]
 end
 
 CharacterCreate.randomize_companion_name = function (self)
 	local names = self._companion_random_names
-	local num_names = self._companion_random_names and #names or 0
+	local name_index = _random_name_index(names, self._current_random_companion_name_index)
 
-	if num_names == 0 then
+	if name_index == -1 then
 		return ""
 	end
 
-	local random_name_index = math.random(1, #names)
+	self._current_random_name_index = name_index
 
-	return self._companion_random_names[random_name_index]
+	return names[name_index]
 end
 
 CharacterCreate.set_name = function (self, name)
@@ -1366,7 +1407,7 @@ CharacterCreate._generate_backend_profile = function (self)
 	for slot_name, item in pairs(profile.loadout) do
 		if item and not table.is_empty(item) then
 			new_loadout[slot_name] = {
-				id = item.name,
+				id = item.name
 			}
 		end
 	end
@@ -1449,7 +1490,7 @@ CharacterCreate._add_backstory_items = function (self)
 				local item = item_definitions[item_name]
 
 				items[slot_name] = {
-					id = item.name,
+					id = item.name
 				}
 			end
 		end
@@ -1567,7 +1608,7 @@ CharacterCreate.has_modifications = function (self, real_profile, whitelist)
 
 	if use_height then
 		local height = self._character_height
-		local real_height = real_profile.personal.character_height
+		local real_height = real_profile.character_height
 
 		transformed_height = real_height < height - 0.001 or real_height > height + 0.001
 	end
@@ -1783,6 +1824,16 @@ function _is_fallback_item(slot, item_name)
 	end
 
 	return false
+end
+
+function _random_except(min, max, except)
+	local random_value = math.random(min, max - 1)
+
+	if except <= random_value then
+		return random_value + 1
+	end
+
+	return random_value
 end
 
 return CharacterCreate

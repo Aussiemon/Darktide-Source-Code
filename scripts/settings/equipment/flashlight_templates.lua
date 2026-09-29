@@ -9,12 +9,12 @@ local default_flicker = {
 	persistance = 3,
 	duration = {
 		max = 3,
-		min = 2,
+		min = 2
 	},
 	interval = {
 		max = 30,
-		min = 15,
-	},
+		min = 15
+	}
 }
 local led_flicker = {
 	chance = 0.35,
@@ -25,12 +25,12 @@ local led_flicker = {
 	persistance = 3,
 	duration = {
 		max = 3,
-		min = 2,
+		min = 2
 	},
 	interval = {
 		max = 30,
-		min = 15,
-	},
+		min = 15
+	}
 }
 local incandescent_flicker = {
 	chance = 0.45,
@@ -41,12 +41,12 @@ local incandescent_flicker = {
 	persistance = 12,
 	duration = {
 		max = 4,
-		min = 3,
+		min = 3
 	},
 	interval = {
 		max = 20,
-		min = 10,
-	},
+		min = 10
+	}
 }
 local worn_incandescent_flicker = {
 	chance = 0.5,
@@ -57,12 +57,12 @@ local worn_incandescent_flicker = {
 	persistance = 12,
 	duration = {
 		max = 4,
-		min = 2.5,
+		min = 2.5
 	},
 	interval = {
 		max = 20,
-		min = 10,
-	},
+		min = 10
+	}
 }
 local flashlight_templates = {}
 
@@ -77,12 +77,12 @@ flashlight_templates.default = {
 			volumetric_intensity = 0.1,
 			spot_angle = {
 				max = 1.1,
-				min = 0,
+				min = 0
 			},
 			falloff = {
 				far = 70,
-				near = 0,
-			},
+				near = 0
+			}
 		},
 		third_person = {
 			cast_shadows = true,
@@ -93,15 +93,15 @@ flashlight_templates.default = {
 			volumetric_intensity = 0.6,
 			spot_angle = {
 				max = 0.8,
-				min = 0,
+				min = 0
 			},
 			falloff = {
 				far = 30,
-				near = 0,
-			},
-		},
+				near = 0
+			}
+		}
 	},
-	flicker = default_flicker,
+	flicker = default_flicker
 }
 flashlight_templates.lasgun_p1 = {
 	light = {
@@ -114,12 +114,12 @@ flashlight_templates.lasgun_p1 = {
 			volumetric_intensity = 0.1,
 			spot_angle = {
 				max = 1.3,
-				min = 0,
+				min = 0
 			},
 			falloff = {
 				far = 70,
-				near = 0,
-			},
+				near = 0
+			}
 		},
 		third_person = {
 			cast_shadows = true,
@@ -130,15 +130,15 @@ flashlight_templates.lasgun_p1 = {
 			volumetric_intensity = 0.6,
 			spot_angle = {
 				max = 0.9,
-				min = 0,
+				min = 0
 			},
 			falloff = {
 				far = 30,
-				near = 0,
-			},
-		},
+				near = 0
+			}
+		}
 	},
-	flicker = led_flicker,
+	flicker = led_flicker
 }
 flashlight_templates.lasgun_p3 = {
 	light = {
@@ -151,12 +151,12 @@ flashlight_templates.lasgun_p3 = {
 			volumetric_intensity = 0.1,
 			spot_angle = {
 				max = 1.2,
-				min = 0,
+				min = 0
 			},
 			falloff = {
 				far = 70,
-				near = 0,
-			},
+				near = 0
+			}
 		},
 		third_person = {
 			cast_shadows = true,
@@ -167,15 +167,15 @@ flashlight_templates.lasgun_p3 = {
 			volumetric_intensity = 0.6,
 			spot_angle = {
 				max = 0.8,
-				min = 0,
+				min = 0
 			},
 			falloff = {
 				far = 30,
-				near = 0,
-			},
-		},
+				near = 0
+			}
+		}
 	},
-	flicker = led_flicker,
+	flicker = led_flicker
 }
 flashlight_templates.autogun_p1 = {
 	light = {
@@ -188,12 +188,12 @@ flashlight_templates.autogun_p1 = {
 			volumetric_intensity = 0.1,
 			spot_angle = {
 				max = 1.1,
-				min = 0,
+				min = 0
 			},
 			falloff = {
 				far = 45,
-				near = 0,
-			},
+				near = 0
+			}
 		},
 		third_person = {
 			cast_shadows = true,
@@ -204,15 +204,15 @@ flashlight_templates.autogun_p1 = {
 			volumetric_intensity = 0.6,
 			spot_angle = {
 				max = 0.8,
-				min = 0,
+				min = 0
 			},
 			falloff = {
 				far = 25,
-				near = 0,
-			},
-		},
+				near = 0
+			}
+		}
 	},
-	flicker = incandescent_flicker,
+	flicker = incandescent_flicker
 }
 flashlight_templates.autopistol_p1 = {
 	light = {
@@ -225,12 +225,12 @@ flashlight_templates.autopistol_p1 = {
 			volumetric_intensity = 0.1,
 			spot_angle = {
 				max = 0.8,
-				min = 0,
+				min = 0
 			},
 			falloff = {
 				far = 45,
-				near = 0,
-			},
+				near = 0
+			}
 		},
 		third_person = {
 			cast_shadows = true,
@@ -241,15 +241,15 @@ flashlight_templates.autopistol_p1 = {
 			volumetric_intensity = 0.6,
 			spot_angle = {
 				max = 0.6,
-				min = 0,
+				min = 0
 			},
 			falloff = {
 				far = 25,
-				near = 0,
-			},
-		},
+				near = 0
+			}
+		}
 	},
-	flicker = incandescent_flicker,
+	flicker = incandescent_flicker
 }
 flashlight_templates.ogryn_heavy_stubber_p2 = {
 	light = {
@@ -262,12 +262,12 @@ flashlight_templates.ogryn_heavy_stubber_p2 = {
 			volumetric_intensity = 0.1,
 			spot_angle = {
 				max = 1.2,
-				min = 0,
+				min = 0
 			},
 			falloff = {
 				far = 35,
-				near = 0,
-			},
+				near = 0
+			}
 		},
 		third_person = {
 			cast_shadows = true,
@@ -278,15 +278,15 @@ flashlight_templates.ogryn_heavy_stubber_p2 = {
 			volumetric_intensity = 0.6,
 			spot_angle = {
 				max = 0.9,
-				min = 0,
+				min = 0
 			},
 			falloff = {
 				far = 20,
-				near = 0,
-			},
-		},
+				near = 0
+			}
+		}
 	},
-	flicker = worn_incandescent_flicker,
+	flicker = worn_incandescent_flicker
 }
 
 return settings("FlashlightTemplates", flashlight_templates)

@@ -29,7 +29,7 @@ local buff_classes = {
 	zealot_passive_buff = _require_buff_class("zealot_passive_buff"),
 	parent_proc_buff = _require_buff_class("parent_proc_buff"),
 	server_only_proc_buff = _require_buff_class("server_only_proc_buff"),
-	veteran_stealth_bonuses_buff = _require_buff_class("veteran_stealth_bonuses_buff"),
+	veteran_stealth_bonuses_buff = _require_buff_class("veteran_stealth_bonuses_buff")
 }
 
 return buff_classes

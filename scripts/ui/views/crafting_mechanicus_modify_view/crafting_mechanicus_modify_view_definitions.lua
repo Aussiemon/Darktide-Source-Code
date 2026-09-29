@@ -11,15 +11,15 @@ local grid_width = 640
 local grid_height = 780
 local grid_size = {
 	grid_width - edge_padding,
-	grid_height,
+	grid_height
 }
 local grid_spacing = {
 	10,
-	10,
+	10
 }
 local mask_size = {
 	grid_width + 40,
-	grid_height,
+	grid_height
 }
 local grid_settings = {
 	scrollbar_width = 7,
@@ -28,10 +28,10 @@ local grid_settings = {
 	grid_size = grid_size,
 	mask_size = mask_size,
 	title_height = title_height,
-	edge_padding = edge_padding,
+	edge_padding = edge_padding
 }
 local weapon_stats_grid_settings = {
-	use_parent_ui_renderer = true,
+	use_parent_ui_renderer = true
 }
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
@@ -43,8 +43,8 @@ local scenegraph_definition = {
 		position = {
 			100,
 			-110,
-			1,
-		},
+			1
+		}
 	},
 	crafting_recipe_pivot = {
 		horizontal_alignment = "right",
@@ -52,13 +52,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			-500,
 			-102,
-			3,
-		},
+			3
+		}
 	},
 	weapon_stats_pivot = {
 		horizontal_alignment = "left",
@@ -66,13 +66,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			grid_size[1] + 150 + 20,
 			-110,
-			1,
-		},
+			1
+		}
 	},
 	grid_tab_panel = {
 		horizontal_alignment = "center",
@@ -80,13 +80,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0.5 * edge_padding,
 			-42,
-			1,
-		},
+			1
+		}
 	},
 	grid_tab_panel_background = {
 		horizontal_alignment = "center",
@@ -94,14 +94,14 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			640,
-			70,
+			70
 		},
 		position = {
 			22,
 			-57,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local widget_definitions = {
 	tabs_background = UIWidget.create_definition({
@@ -114,27 +114,27 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					18,
-					24,
+					24
 				},
-				color = Color.terminal_grid_background(nil, true),
-			},
-		},
-	}, "grid_tab_panel_background"),
+				color = Color.terminal_grid_background(nil, true)
+			}
+		}
+	}, "grid_tab_panel_background")
 }
 local item_category_tabs_content = {
 	{
 		hide_display_name = true,
 		icon = "content/ui/materials/icons/categories/melee",
 		slot_types = {
-			"slot_primary",
-		},
+			"slot_primary"
+		}
 	},
 	{
 		hide_display_name = true,
 		icon = "content/ui/materials/icons/categories/ranged",
 		slot_types = {
-			"slot_secondary",
-		},
+			"slot_secondary"
+		}
 	},
 	{
 		hide_display_name = true,
@@ -142,9 +142,9 @@ local item_category_tabs_content = {
 		slot_types = {
 			"slot_attachment_1",
 			"slot_attachment_2",
-			"slot_attachment_3",
-		},
-	},
+			"slot_attachment_3"
+		}
+	}
 }
 
 return {
@@ -152,5 +152,5 @@ return {
 	widget_definitions = widget_definitions,
 	grid_settings = grid_settings,
 	weapon_stats_grid_settings = weapon_stats_grid_settings,
-	item_category_tabs_content = item_category_tabs_content,
+	item_category_tabs_content = item_category_tabs_content
 }

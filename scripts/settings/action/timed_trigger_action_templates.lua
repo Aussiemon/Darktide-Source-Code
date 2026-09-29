@@ -11,7 +11,7 @@ TimedTriggerActionTemplates.expedition_time_syringe = {
 		end
 
 		Managers.event:trigger("event_add_expedition_time_bonus", 300)
-	end,
+	end
 }
 
 return TimedTriggerActionTemplates

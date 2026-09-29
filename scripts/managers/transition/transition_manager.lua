@@ -7,7 +7,7 @@ TransitionManager.init = function (self)
 		255,
 		0,
 		0,
-		0,
+		0
 	}
 	self._fade_speed = 0
 end

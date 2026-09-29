@@ -2,7 +2,6 @@
 
 local mission_templates = {
 	psykhanium = {
-		coordinates = "loc_mission_coordinates_psykhanium",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "survival",
 		level = "content/levels/horde/missions/mission_psykhanium",
@@ -24,23 +23,23 @@ local mission_templates = {
 		testify_flags = {},
 		cinematics = {
 			intro_abc = {
-				"c_cam",
+				"c_cam"
 			},
 			outro_fail = {
-				"outro_fail",
+				"outro_fail"
 			},
 			outro_win = {
-				"outro_win",
-			},
+				"outro_win"
+			}
 		},
 		hazard_prop_settings = {
 			explosion = 0.3,
 			fire = 0.2,
-			none = 0.4,
+			none = 0.4
 		},
 		pickup_settings = {},
 		terror_event_templates = {
-			"terror_events_psykhanium",
+			"terror_events_psykhanium"
 		},
 		health_station = {},
 		mission_brief_vo = {
@@ -49,23 +48,26 @@ local mission_templates = {
 			vo_events = {
 				"hub_horde_briefing_a",
 				"hub_horde_briefing_b",
-				"hub_horde_briefing_c",
+				"hub_horde_briefing_c"
 			},
 			mission_giver_packs = {
 				training_ground_psyker_a = {
 					"training_ground_psyker",
-					"past",
-				},
-			},
+					"past"
+				}
+			}
 		},
 		dialogue_settings = {
 			short_story_ticker_enabled = false,
-			story_ticker_enabled = false,
+			story_ticker_enabled = false
 		},
 		spawn_settings = {
-			next_mission = "tg_shooting_range",
+			next_mission = "tg_shooting_range"
 		},
-	},
+		controllable_object_set_prefixes = {
+			"flow"
+		}
+	}
 }
 
 return mission_templates

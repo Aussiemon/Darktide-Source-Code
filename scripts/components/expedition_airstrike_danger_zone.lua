@@ -56,14 +56,14 @@ ExpeditionAirstrikeDangerZone.component_data = {
 		step = 1,
 		ui_name = "Proximity Distance",
 		ui_type = "number",
-		value = 30,
+		value = 30
 	},
 	inputs = {
 		detonate = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return ExpeditionAirstrikeDangerZone

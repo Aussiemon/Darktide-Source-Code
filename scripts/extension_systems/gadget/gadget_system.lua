@@ -11,7 +11,7 @@ local GadgetSystem = class("GadgetSystem", "ExtensionSystemBase")
 local MAX_META_BUFFS = PlayerCharacterConstants.max_meta_buffs
 local RPCS_CLIENT = {
 	"rpc_add_meta_buff",
-	"rpc_remove_meta_buff",
+	"rpc_remove_meta_buff"
 }
 
 GadgetSystem.init = function (self, context, system_init_data, ...)
@@ -89,7 +89,7 @@ end
 GadgetSystem._add_meta_buff = function (self, player, buff_name, buff_instance_id, start_time, lerp_value, slot_name)
 	local template = BuffTemplates[buff_name]
 	local context = {
-		player = player,
+		player = player
 	}
 	local meta_buff
 
@@ -176,7 +176,7 @@ end
 
 GadgetSystem._init_stat_buffs = function (self, player)
 	local current_stat_buffs = {
-		_modified_stats = {},
+		_modified_stats = {}
 	}
 	local stat_buff_types = BuffSettings.meta_stat_buff_types
 	local stat_buff_base_values = BuffSettings.meta_stat_buff_type_base_values

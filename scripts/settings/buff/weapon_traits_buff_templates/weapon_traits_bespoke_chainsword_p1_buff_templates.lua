@@ -31,13 +31,13 @@ templates.weapon_trait_bespoke_chainsword_p1_movement_speed_on_activated_hit = {
 	force_predicted_proc = true,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.movement_speed] = 0.5,
+		[stat_buffs.movement_speed] = 0.5
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.on_melee_weapon_special_hit),
+	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.on_melee_weapon_special_hit)
 }
 
 return templates

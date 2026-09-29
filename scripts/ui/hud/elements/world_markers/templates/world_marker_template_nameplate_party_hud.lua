@@ -7,7 +7,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local template = {}
 local size = {
 	400,
-	20,
+	20
 }
 
 template.size = size
@@ -16,7 +16,7 @@ template.unit_node = "j_head"
 template.position_offset = {
 	0,
 	0,
-	0.4,
+	0.4
 }
 template.check_line_of_sight = false
 template.max_distance = 100
@@ -26,7 +26,7 @@ template.scale_settings = {
 	distance_max = 20,
 	distance_min = 10,
 	scale_from = 0.8,
-	scale_to = 1,
+	scale_to = 1
 }
 template.fade_settings = {
 	default_fade = 1,
@@ -34,7 +34,7 @@ template.fade_settings = {
 	fade_to = 1,
 	distance_max = template.max_distance,
 	distance_min = template.max_distance * 0.5,
-	easing_function = math.ease_exp,
+	easing_function = math.ease_exp
 }
 
 template.create_widget_defintion = function (template, scenegraph_id)
@@ -57,16 +57,16 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				font_type = header_font_settings.font_type,
 				font_size = header_font_settings.font_size,
 				default_font_size = header_font_settings.font_size,
 				text_color = header_font_color,
 				default_text_color = header_font_color,
-				size = size,
-			},
-		},
+				size = size
+			}
+		}
 	}, scenegraph_id)
 end
 

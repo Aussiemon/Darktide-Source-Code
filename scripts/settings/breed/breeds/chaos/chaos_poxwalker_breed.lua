@@ -18,6 +18,7 @@ local TargetSelectionTemplates = require("scripts/extension_systems/perception/t
 local TargetSelectionWeights = require("scripts/settings/minion_target_selection/minion_target_selection_weights")
 local WeakspotSettings = require("scripts/settings/damage/weakspot_settings")
 local armor_types = ArmorSettings.types
+local breed_tags = BreedSettings.tags
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
 local stagger_types = StaggerSettings.stagger_types
@@ -56,13 +57,13 @@ local breed_data = {
 	name = breed_name,
 	breed_type = breed_types.minion,
 	tags = {
-		horde = true,
-		melee = true,
-		minion = true,
-		poxwalker = true,
+		[breed_tags.horde] = true,
+		[breed_tags.melee] = true,
+		[breed_tags.minion] = true,
+		[breed_tags.poxwalker] = true
 	},
 	vortex_settings = {
-		die_on_vortex_land = true,
+		die_on_vortex_land = true
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.disgustingly_resilient,
@@ -76,7 +77,7 @@ local breed_data = {
 		[stagger_types.explosion] = 8.3,
 		[stagger_types.killshot] = 1,
 		[stagger_types.sticky] = 1,
-		[stagger_types.blinding] = 5,
+		[stagger_types.blinding] = 5
 	},
 	stagger_thresholds = {
 		[stagger_types.light] = 1,
@@ -84,7 +85,7 @@ local breed_data = {
 		[stagger_types.heavy] = 20,
 		[stagger_types.explosion] = 40,
 		[stagger_types.light_ranged] = 8,
-		[stagger_types.killshot] = 4,
+		[stagger_types.killshot] = 4
 	},
 	stagger_immune_times = {
 		[stagger_types.light] = 0.2,
@@ -92,7 +93,7 @@ local breed_data = {
 		[stagger_types.heavy] = 2.25,
 		[stagger_types.light_ranged] = 0.2,
 		[stagger_types.explosion] = 4,
-		[stagger_types.killshot] = 0.5,
+		[stagger_types.killshot] = 0.5
 	},
 	inventory = MinionVisualLoadoutTemplates.chaos_poxwalker,
 	sounds = require("scripts/settings/breed/breeds/chaos/chaos_poxwalker_sounds"),
@@ -100,52 +101,52 @@ local breed_data = {
 	behavior_tree_name = breed_name,
 	animation_variables = {
 		"moving_attack_fwd_speed",
-		"anim_move_speed",
+		"anim_move_speed"
 	},
 	animation_variable_bounds = {
 		anim_move_speed = {
 			1,
-			85,
-		},
+			85
+		}
 	},
 	animation_variable_init = {
-		anim_move_speed = 1,
+		anim_move_speed = 1
 	},
 	combat_range_data = BreedCombatRanges.chaos_poxwalker,
 	attack_intensity_cooldowns = {
 		melee = {
 			0.7,
-			1.25,
+			1.25
 		},
 		moving_melee = {
 			0.7,
-			0.8,
+			0.8
 		},
 		running_melee = {
 			1.7,
-			2.8,
-		},
+			2.8
+		}
 	},
 	line_of_sight_data = {
 		{
 			from_node = "j_head",
 			id = "eyes",
 			to_node = "enemy_aim_target_03",
-			offsets = PerceptionSettings.default_minion_line_of_sight_offsets,
-		},
+			offsets = PerceptionSettings.default_minion_line_of_sight_offsets
+		}
 	},
 	target_selection_template = TargetSelectionTemplates.melee,
 	target_selection_weights = TargetSelectionWeights.chaos_poxwalker,
 	threat_config = {
 		max_threat = 50,
 		threat_decay_per_second = 5,
-		threat_multiplier = 0.1,
+		threat_multiplier = 0.1
 	},
 	nav_cost_map_multipliers = {
-		fire = NavigationCostSettings.IGNORE_NAV_COST_MAP_LAYER,
+		fire = NavigationCostSettings.IGNORE_NAV_COST_MAP_LAYER
 	},
 	nav_tag_allowed_layers = {
-		cover_vaults = 0.9,
+		cover_vaults = 0.9
 	},
 	randomized_nav_tag_costs = {
 		{
@@ -153,51 +154,51 @@ local breed_data = {
 			layer_name = "teleporters",
 			costs = {
 				0.5,
-				2,
-			},
+				2
+			}
 		},
 		{
 			chance_to_pick_first_index = 0.1,
 			layer_name = "ledges",
 			costs = {
 				1,
-				10,
-			},
+				10
+			}
 		},
 		{
 			chance_to_pick_first_index = 0.1,
 			layer_name = "ledges_with_fence",
 			costs = {
 				1,
-				10,
-			},
+				10
+			}
 		},
 		{
 			chance_to_pick_first_index = 0.1,
 			layer_name = "cover_ledges",
 			costs = {
 				1,
-				10,
-			},
-		},
+				10
+			}
+		}
 	},
 	smart_object_template = SmartObjectSettings.templates.chaos_poxwalker,
 	size_variation_range = {
 		0.9,
-		1.1,
+		1.1
 	},
 	fade = {
 		max_distance = 0.7,
 		max_height_difference = 1,
-		min_distance = 0.2,
+		min_distance = 0.2
 	},
 	hit_zones = {
 		{
 			name = hit_zone_names.head,
 			actors = {
 				"c_head",
-				"c_neck",
-			},
+				"c_neck"
+			}
 		},
 		{
 			name = hit_zone_names.torso,
@@ -206,79 +207,79 @@ local breed_data = {
 				"c_spine1",
 				"c_spine2",
 				"c_leftshoulder",
-				"c_rightshoulder",
-			},
+				"c_rightshoulder"
+			}
 		},
 		{
 			name = hit_zone_names.upper_left_arm,
 			actors = {
-				"c_leftarm",
-			},
+				"c_leftarm"
+			}
 		},
 		{
 			name = hit_zone_names.lower_left_arm,
 			actors = {
 				"c_leftforearm",
-				"c_lefthand",
-			},
+				"c_lefthand"
+			}
 		},
 		{
 			name = hit_zone_names.upper_right_arm,
 			actors = {
-				"c_rightarm",
-			},
+				"c_rightarm"
+			}
 		},
 		{
 			name = hit_zone_names.lower_right_arm,
 			actors = {
 				"c_rightforearm",
-				"c_righthand",
-			},
+				"c_righthand"
+			}
 		},
 		{
 			name = hit_zone_names.upper_left_leg,
 			actors = {
-				"c_leftupleg",
-			},
+				"c_leftupleg"
+			}
 		},
 		{
 			name = hit_zone_names.lower_left_leg,
 			actors = {
 				"c_leftleg",
-				"c_leftfoot",
-			},
+				"c_leftfoot"
+			}
 		},
 		{
 			name = hit_zone_names.upper_right_leg,
 			actors = {
-				"c_rightupleg",
-			},
+				"c_rightupleg"
+			}
 		},
 		{
 			name = hit_zone_names.lower_right_leg,
 			actors = {
 				"c_rightleg",
-				"c_rightfoot",
-			},
+				"c_rightfoot"
+			}
 		},
 		{
 			name = hit_zone_names.afro,
 			actors = {
-				"r_afro",
-			},
+				"r_afro"
+			}
 		},
 		{
 			name = hit_zone_names.center_mass,
 			actors = {
 				"c_hips",
-				"c_spine1",
-			},
-		},
+				"c_spine1"
+			}
+		}
 	},
 	hit_zone_ragdoll_actors = {
 		[hit_zone_names.head] = {
 			"j_head",
-			"j_neck",
+			"j_neck"
 		},
 		[hit_zone_names.torso] = {
 			"j_head",
@@ -292,44 +293,44 @@ local breed_data = {
 			"j_lefthand",
 			"j_rightarm",
 			"j_rightforearm",
-			"j_righthand",
+			"j_righthand"
 		},
 		[hit_zone_names.upper_left_arm] = {
 			"j_leftarm",
 			"j_leftforearm",
-			"j_lefthand",
+			"j_lefthand"
 		},
 		[hit_zone_names.lower_left_arm] = {
 			"j_leftforearm",
-			"j_lefthand",
+			"j_lefthand"
 		},
 		[hit_zone_names.upper_right_arm] = {
 			"j_rightarm",
 			"j_rightforearm",
-			"j_righthand",
+			"j_righthand"
 		},
 		[hit_zone_names.lower_right_arm] = {
 			"j_rightforearm",
-			"j_righthand",
+			"j_righthand"
 		},
 		[hit_zone_names.upper_left_leg] = {
 			"j_leftupleg",
 			"j_leftleg",
-			"j_leftfoot",
+			"j_leftfoot"
 		},
 		[hit_zone_names.lower_left_leg] = {
 			"j_leftleg",
-			"j_leftfoot",
+			"j_leftfoot"
 		},
 		[hit_zone_names.upper_right_leg] = {
 			"j_rightupleg",
 			"j_rightleg",
-			"j_rightfoot",
+			"j_rightfoot"
 		},
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
-			"j_rightfoot",
-		},
+			"j_rightfoot"
+		}
 	},
 	hit_zone_ragdoll_pushes = {
 		[hit_zone_names.head] = {
@@ -338,7 +339,7 @@ local breed_data = {
 			j_neck = 0.5,
 			j_rightshoulder = 0.15,
 			j_spine = 0.3,
-			j_spine1 = 0.1,
+			j_spine1 = 0.1
 		},
 		[hit_zone_names.torso] = {
 			j_head = 0.1,
@@ -346,7 +347,7 @@ local breed_data = {
 			j_neck = 0.1,
 			j_rightshoulder = 0,
 			j_spine = 0.2,
-			j_spine1 = 0.7,
+			j_spine1 = 0.7
 		},
 		[hit_zone_names.upper_left_arm] = {
 			j_head = 0.05,
@@ -354,7 +355,7 @@ local breed_data = {
 			j_leftuparm = 0.8,
 			j_neck = 0.05,
 			j_spine = 0.15,
-			j_spine1 = 0.1,
+			j_spine1 = 0.1
 		},
 		[hit_zone_names.lower_left_arm] = {
 			j_head = 0.05,
@@ -362,7 +363,7 @@ local breed_data = {
 			j_leftuparm = 0.8,
 			j_neck = 0.05,
 			j_spine = 0.15,
-			j_spine1 = 0.1,
+			j_spine1 = 0.1
 		},
 		[hit_zone_names.upper_right_arm] = {
 			j_head = 0.05,
@@ -370,7 +371,7 @@ local breed_data = {
 			j_rightshoulder = 0.4,
 			j_rightuparm = 0.8,
 			j_spine = 0.15,
-			j_spine1 = 0.1,
+			j_spine1 = 0.1
 		},
 		[hit_zone_names.lower_right_arm] = {
 			j_head = 0.05,
@@ -378,7 +379,7 @@ local breed_data = {
 			j_rightshoulder = 0.4,
 			j_rightuparm = 0.8,
 			j_spine = 0.15,
-			j_spine1 = 0.1,
+			j_spine1 = 0.1
 		},
 		[hit_zone_names.upper_left_leg] = {
 			j_hips = 0.2,
@@ -386,7 +387,7 @@ local breed_data = {
 			j_leftleg = 0.35,
 			j_leftupleg = 0.35,
 			j_spine = 0,
-			j_spine1 = 0.1,
+			j_spine1 = 0.1
 		},
 		[hit_zone_names.lower_left_leg] = {
 			j_hips = 0.2,
@@ -394,7 +395,7 @@ local breed_data = {
 			j_leftleg = 0.35,
 			j_leftupleg = 0.35,
 			j_spine = 0,
-			j_spine1 = 0.1,
+			j_spine1 = 0.1
 		},
 		[hit_zone_names.upper_right_leg] = {
 			j_hips = 0.1,
@@ -402,7 +403,7 @@ local breed_data = {
 			j_rightleg = 0.25,
 			j_rightupleg = 0.4,
 			j_spine = 0,
-			j_spine1 = 0,
+			j_spine1 = 0
 		},
 		[hit_zone_names.lower_right_leg] = {
 			j_hips = 0.1,
@@ -410,29 +411,29 @@ local breed_data = {
 			j_rightleg = 0.25,
 			j_rightupleg = 0.4,
 			j_spine = 0,
-			j_spine1 = 0,
+			j_spine1 = 0
 		},
 		[hit_zone_names.center_mass] = {
 			j_hips = 0.5,
-			j_spine = 0.5,
-		},
+			j_spine = 0.5
+		}
 	},
 	hit_zone_weakspot_types = {
-		[hit_zone_names.head] = weakspot_types.headshot,
+		[hit_zone_names.head] = weakspot_types.headshot
 	},
 	hitzone_damage_multiplier = {
 		ranged = {
 			[hit_zone_names.lower_left_arm] = 0.5,
 			[hit_zone_names.lower_right_arm] = 0.5,
 			[hit_zone_names.lower_left_leg] = 0.5,
-			[hit_zone_names.lower_right_leg] = 0.5,
-		},
+			[hit_zone_names.lower_right_leg] = 0.5
+		}
 	},
 	slot_template = breed_name,
 	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.melee_base,
 	tokens = {
-		pounced = nil,
+		pounced = nil
 	},
 	companion_pounce_setting = {
 		companion_pounce_action = "human",
@@ -441,9 +442,9 @@ local breed_data = {
 		initial_damage_profile = DamageProfileTemplates.adamant_companion_initial_pounce,
 		required_token = {
 			free_target_on_assigned_token = true,
-			name = "pounced",
-		},
-	},
+			name = "pounced"
+		}
+	}
 }
 
 return breed_data

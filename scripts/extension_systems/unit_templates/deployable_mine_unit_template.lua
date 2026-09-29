@@ -28,10 +28,10 @@ local deployable_mine_unit_template = {
 		local mine_settings_id = game_object_data.mine_settings_id
 		local mine_settings_name = NetworkLookup.motion_triggered_explosives_settings[mine_settings_id]
 		local optional_component_data = {
-			setting_name = mine_settings_name,
+			setting_name = mine_settings_name
 		}
 		local component_init_data = {
-			owner_unit = owner_unit,
+			owner_unit = owner_unit
 		}
 		local starts_enabled = true
 		local component_ext = ScriptUnit.extension(unit, "component_system")
@@ -42,7 +42,7 @@ local deployable_mine_unit_template = {
 		local mine_settings_id = GameSession.game_object_field(game_session, game_object_id, "mine_settings_id")
 		local mine_settings_name = NetworkLookup.motion_triggered_explosives_settings[mine_settings_id]
 		local optional_component_data = {
-			setting_name = mine_settings_name,
+			setting_name = mine_settings_name
 		}
 		local owner_unit_id = GameSession.game_object_field(game_session, game_object_id, "owner_unit_id")
 		local owner_unit
@@ -52,7 +52,7 @@ local deployable_mine_unit_template = {
 		end
 
 		local component_init_data = {
-			owner_unit = owner_unit,
+			owner_unit = owner_unit
 		}
 		local starts_enabled = true
 		local component_ext = ScriptUnit.extension(unit, "component_system")
@@ -88,7 +88,7 @@ local deployable_mine_unit_template = {
 	husk_init = function (unit, config, template_context, game_session, game_object_id, owner_id)
 		config:add("ComponentExtension")
 		config:parse_unit(unit)
-	end,
+	end
 }
 
 return deployable_mine_unit_template

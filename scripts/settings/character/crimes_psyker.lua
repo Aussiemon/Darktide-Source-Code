@@ -9,18 +9,18 @@ local crime_options = {
 		unlocks = {
 			{
 				text = "loc_character_sentence_01_unlocks",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		slot_items = {
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_c",
-			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_psyker_c",
+			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_psyker_c"
 		},
 		visibility = {
 			archetypes = {
-				"psyker",
-			},
-		},
+				"psyker"
+			}
+		}
 	},
 	{
 		description = "loc_character_sentence_02_description",
@@ -30,18 +30,18 @@ local crime_options = {
 		unlocks = {
 			{
 				text = "loc_character_sentence_02_unlocks",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		slot_items = {
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_a",
-			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_psyker_a",
+			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_psyker_a"
 		},
 		visibility = {
 			archetypes = {
-				"psyker",
-			},
-		},
+				"psyker"
+			}
+		}
 	},
 	{
 		description = "loc_character_sentence_03_description",
@@ -51,18 +51,18 @@ local crime_options = {
 		unlocks = {
 			{
 				text = "loc_character_sentence_03_unlocks",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		slot_items = {
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_b",
-			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_psyker_b",
+			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_psyker_b"
 		},
 		visibility = {
 			archetypes = {
-				"psyker",
-			},
-		},
+				"psyker"
+			}
+		}
 	},
 	{
 		description = "loc_character_sentence_04_description",
@@ -72,19 +72,19 @@ local crime_options = {
 		unlocks = {
 			{
 				text = "loc_character_sentence_04_unlocks",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		slot_items = {
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/prisoner_lowerbody_d",
-			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_psyker_d",
+			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/prisoner_upperbody_psyker_d"
 		},
 		visibility = {
 			archetypes = {
-				"psyker",
-			},
-		},
-	},
+				"psyker"
+			}
+		}
+	}
 }
 
 return crime_options

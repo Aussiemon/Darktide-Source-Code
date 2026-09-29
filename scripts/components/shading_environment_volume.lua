@@ -47,7 +47,7 @@ ShadingEnvironmentVolume.editor_init = function (self, unit)
 					blend_layer = self:get_data(unit, "blend_layer") or 1,
 					override = self:get_data(unit, "override"),
 					shading_environment = self:get_data(unit, "shading_environment"),
-					shading_environment_slot = self:get_data(unit, "shading_environment_slot"),
+					shading_environment_slot = self:get_data(unit, "shading_environment_slot")
 				}
 
 				LevelEditor:register_shading_environment_volume(unit, volume_data)
@@ -57,7 +57,7 @@ ShadingEnvironmentVolume.editor_init = function (self, unit)
 				level = "error",
 				message = "You need to update your binaries, could not register shading environment volume with level editor!",
 				system = "Shading Environment Volume",
-				type = "message",
+				type = "message"
 			})
 		end
 	end
@@ -108,19 +108,19 @@ ShadingEnvironmentVolume.component_data = {
 		step = 1,
 		ui_name = "Fade in distance (m):",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	blend_layer = {
 		decimals = 0,
 		step = 1,
 		ui_name = "Layer:",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	override = {
 		ui_name = "Override: (Deprecated)",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	blend_mask = {
 		ui_name = "Blend Mask:",
@@ -128,49 +128,49 @@ ShadingEnvironmentVolume.component_data = {
 		value = "ALL",
 		options_keys = {
 			"ALL",
-			"OVERRIDES",
+			"OVERRIDES"
 		},
 		options_values = {
 			"ALL",
-			"OVERRIDES",
-		},
+			"OVERRIDES"
+		}
 	},
 	shading_environment = {
 		filter = "shading_environment",
 		preview = false,
 		ui_name = "Shading environment:",
 		ui_type = "resource",
-		value = "",
+		value = ""
 	},
 	shading_environment_slot = {
 		ui_name = "Shading environment Slot",
 		ui_type = "combo_box",
 		value = "-1",
 		options_keys = {
-			"-1 - None",
+			"-1 - None"
 		},
 		options_values = {
-			"-1",
-		},
+			"-1"
+		}
 	},
 	start_enabled = {
 		ui_name = "Start Enabled",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	extensions = {
-		"ShadingEnvironmentExtension",
+		"ShadingEnvironmentExtension"
 	},
 	inputs = {
 		enable_environment = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		disable_environment = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return ShadingEnvironmentVolume

@@ -7,13 +7,13 @@ local core_mutators = {
 	"mutator_nurgle_totem_more",
 	"mutator_live_event_skulls_drop_single_skull_pickup_on_death",
 	"mutator_live_event_skulls_drop_many_skull_pickups_on_death",
-	"mutator_live_event_skulls_guns_full",
+	"mutator_live_event_skulls_guns_full"
 }
 local base_templates = CircumstanceUtils.inherit(BaseLiveEventTemplate, core_mutators, {
-	"stats_live_event_skulls_guns",
+	"stats_live_event_skulls_guns"
 }, "skulls_guns")
 local circumstance_templates = table.reduce({
-	base_templates,
+	base_templates
 }, table.merge, {})
 
 circumstance_templates.skulls_guns.ui.display_name = "loc_circumstance_skulls_guns_default_title"

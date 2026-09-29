@@ -67,7 +67,7 @@ WwiseRoomVolume.component_data = {
 		step = 1,
 		ui_name = "Priority",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	wall_occlusion = {
 		decimals = 2,
@@ -76,7 +76,7 @@ WwiseRoomVolume.component_data = {
 		step = 1,
 		ui_name = "Wall Occlusion",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	aux_send_to_self = {
 		decimals = 2,
@@ -85,7 +85,7 @@ WwiseRoomVolume.component_data = {
 		step = 1,
 		ui_name = "Aux send to self",
 		ui_type = "number",
-		value = 0.25,
+		value = 0.25
 	},
 	reverb_aux_bus = {
 		ui_name = "Reverb aux bus",
@@ -105,8 +105,8 @@ WwiseRoomVolume.component_data = {
 			"indoor_huge_cylinder_3d",
 			"indoor_small_hallway_3d",
 			"outside_huge_canyon_3d",
-			"outside_cave_3d",
-		},
+			"outside_cave_3d"
+		}
 	},
 	ambient_event = {
 		filter = "wwise_event",
@@ -114,7 +114,7 @@ WwiseRoomVolume.component_data = {
 		thumbnails = false,
 		ui_name = "Ambient event",
 		ui_type = "resource",
-		value = "",
+		value = ""
 	},
 	environment_state = {
 		ui_name = "Environment state",
@@ -129,9 +129,9 @@ WwiseRoomVolume.component_data = {
 			"urban_huge",
 			"urban_large",
 			"urban_medium",
-			"urban_small",
-		},
-	},
+			"urban_small"
+		}
+	}
 }
 
 return WwiseRoomVolume

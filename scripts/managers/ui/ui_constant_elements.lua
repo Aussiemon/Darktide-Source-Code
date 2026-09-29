@@ -308,7 +308,7 @@ UIConstantElements.destroy = function (self)
 
 	for _, element in ipairs(elements_array) do
 		if element.destroy then
-			element:destroy()
+			element:destroy(self._ui_renderer)
 		end
 	end
 

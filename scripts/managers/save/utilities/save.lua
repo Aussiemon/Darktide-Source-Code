@@ -29,12 +29,12 @@ local SaveDummy = {
 	progress = function ()
 		return {
 			done = true,
-			data = {},
+			data = {}
 		}
 	end,
 	close = function ()
 		return
-	end,
+	end
 }
 
 Save.implementation = function (use_cloud)

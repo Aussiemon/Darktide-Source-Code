@@ -901,6 +901,14 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 				break
 			end
 
+			local t = Managers.time:time("gameplay")
+
+			if t < bot_group_data.hover_target.expires then
+				condition_result = false
+
+				break
+			end
+
 			local distance_squared = Vector3.distance_squared(latest_position_on_nav_mesh, follow_unit_latest_position_on_nav_mesh)
 
 			condition_result = distance_squared >= 1600

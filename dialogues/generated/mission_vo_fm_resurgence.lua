@@ -14,15 +14,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_resurgence_secure_the_aegis_disabled",
-				},
+					"mission_resurgence_secure_the_aegis_disabled"
+				}
 			},
 			{
 				"user_context",
@@ -32,19 +32,19 @@ return function ()
 					"pilot",
 					"explicator",
 					"sergeant",
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.24,
-			},
-		},
+				duration = 0.24
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -60,13 +60,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"info_get_out_resurgence",
+				"info_get_out_resurgence"
 			},
 			{
 				"user_context",
@@ -76,27 +76,27 @@ return function ()
 					"sergeant",
 					"explicator",
 					"tech_priest",
-					"pilot",
-				},
+					"pilot"
+				}
 			},
 			{
 				"user_memory",
 				"info_get_out",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"info_get_out",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "player_prio_0",
@@ -109,49 +109,49 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo",
+				"generic_mission_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"luggable_wield_battery",
+				"luggable_wield_battery"
 			},
 			{
 				"global_context",
 				"current_mission",
 				OP.EQ,
-				"fm_resurgence",
+				"fm_resurgence"
 			},
 			{
 				"faction_memory",
 				"luggable_mission_pick_up",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"mission_resurgence_bridges_up_b",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"luggable_mission_pick_up",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_giver_default_class",
+			target = "mission_giver_default_class"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -167,13 +167,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_resurgence_aegis_sighted_a",
+				"mission_resurgence_aegis_sighted_a"
 			},
 			{
 				"user_context",
@@ -183,27 +183,70 @@ return function ()
 					"explicator",
 					"pilot",
 					"sergeant",
-					"boon_vendor",
-				},
+					"boon_vendor"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_resurgence_aegis_sighted_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_resurgence_aegis_sighted_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "mission_givers"
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_aegis_sighted_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_resurgence_aegis_sighted_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_resurgence_aegis_sighted_a"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"shipmistress"
+				}
+			}
 		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -219,13 +262,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_resurgence_archive_a",
+				"mission_resurgence_archive_a"
 			},
 			{
 				"user_context",
@@ -236,26 +279,156 @@ return function ()
 					"pilot",
 					"sergeant",
 					"boon_vendor",
-				},
+					"tertium_noble"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_resurgence_archive_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_resurgence_archive_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "self"
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_archive_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_resurgence_archive_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_resurgence_archive_a"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"tertium_noble"
+				}
+			}
 		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_archive_c",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_resurgence_archive_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_resurgence_archive_b"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"shipmistress"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_archive_d",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_resurgence_archive_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_resurgence_archive_c"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"tertium_noble"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_0",
@@ -268,29 +441,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo",
+				"generic_mission_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_resurgence_boulevard",
+				"mission_resurgence_boulevard"
 			},
 			{
 				"faction_memory",
 				"mission_resurgence_boulevard",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_resurgence_boulevard",
 				OP.ADD,
-				1,
-			},
-		},
+				1
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -303,26 +476,26 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_resurgence_boulevard",
-				},
-			},
+					"mission_resurgence_boulevard"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -338,13 +511,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_resurgence_bridge_down",
+				"mission_resurgence_bridge_down"
 			},
 			{
 				"user_context",
@@ -355,26 +528,113 @@ return function ()
 					"pilot",
 					"sergeant",
 					"boon_vendor",
-				},
+					"shipmistress"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_resurgence_bridge_down",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_resurgence_bridge_down",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "mission_givers"
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_bridge_down_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_resurgence_bridge_down_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_resurgence_bridge_down"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"boon_vendor"
+				}
+			}
 		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_bridge_down_c",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_resurgence_bridge_down_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_resurgence_bridge_down_b"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"shipmistress"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_0",
@@ -387,29 +647,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo",
+				"generic_mission_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_resurgence_bridge_hurry_up",
+				"mission_resurgence_bridge_hurry_up"
 			},
 			{
 				"faction_memory",
 				"mission_resurgence_bridge_hurry_up",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_resurgence_bridge_hurry_up",
 				OP.ADD,
-				1,
-			},
-		},
+				1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -425,13 +685,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_resurgence_bridge_of_martyrs_a",
+				"mission_resurgence_bridge_of_martyrs_a"
 			},
 			{
 				"user_context",
@@ -441,27 +701,27 @@ return function ()
 					"explicator",
 					"pilot",
 					"sergeant",
-					"boon_vendor",
-				},
+					"boon_vendor"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_resurgence_bridge_of_martyrs_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_resurgence_bridge_of_martyrs_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -474,26 +734,26 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_resurgence_bridge_of_martyrs_a",
-				},
-			},
+					"mission_resurgence_bridge_of_martyrs_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -509,13 +769,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_resurgence_bridge_powered_a",
+				"mission_resurgence_bridge_powered_a"
 			},
 			{
 				"user_context",
@@ -525,27 +785,69 @@ return function ()
 					"explicator",
 					"pilot",
 					"sergeant",
-					"boon_vendor",
-				},
+					"boon_vendor"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_resurgence_bridge_powered_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_resurgence_bridge_powered_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "mission_givers"
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_bridge_powered_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "mission_resurgence_bridge_powered_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_resurgence_bridge_powered_a"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"tertium_noble"
+				}
+			}
 		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -561,13 +863,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_resurgence_bridges_up_a",
+				"mission_resurgence_bridges_up_a"
 			},
 			{
 				"user_context",
@@ -577,27 +879,27 @@ return function ()
 					"explicator",
 					"pilot",
 					"sergeant",
-					"boon_vendor",
-				},
+					"boon_vendor"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_resurgence_bridges_up_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_resurgence_bridges_up_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -610,30 +912,30 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_resurgence_bridges_up_a",
-				},
-			},
+					"mission_resurgence_bridges_up_a"
+				}
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_resurgence_bridges_up_b",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_0",
@@ -646,32 +948,32 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo",
+				"generic_mission_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_resurgence_defence_conversation_a",
+				"mission_resurgence_defence_conversation_a"
 			},
 			{
 				"faction_memory",
 				"mission_resurgence_defence_conversation_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_resurgence_defence_conversation_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -684,23 +986,23 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_resurgence_defence_conversation_a",
-				},
-			},
+					"mission_resurgence_defence_conversation_a"
+				}
+			}
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -716,7 +1018,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -724,8 +1026,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"mission_resurgence_start_banter_c",
-					"start_zone_direction_b",
-				},
+					"start_zone_direction_b"
+				}
 			},
 			{
 				"user_context",
@@ -735,19 +1037,19 @@ return function ()
 					"explicator",
 					"pilot",
 					"sergeant",
-					"boon_vendor",
-				},
-			},
+					"boon_vendor"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -760,29 +1062,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_resurgence_first_objective",
-				},
+					"mission_resurgence_first_objective"
+				}
 			},
 			{
 				"user_memory",
 				"mission_resurgence_start_banter_c_user",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3,
-			},
-		},
+				duration = 0.3
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -798,13 +1100,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_resurgence_keep_moving",
+				"mission_resurgence_keep_moving"
 			},
 			{
 				"user_context",
@@ -815,26 +1117,204 @@ return function ()
 					"pilot",
 					"sergeant",
 					"boon_vendor",
-				},
+					"tertium_noble"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_resurgence_keep_moving",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_resurgence_keep_moving",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "mission_givers"
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_keep_moving_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "mission_resurgence_keep_moving_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_resurgence_keep_moving"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"boon_vendor"
+				}
+			}
 		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1
+			}
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_mission_end_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_resurgence_mission_end_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_resurgence_mission_end_a"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"shipmistress"
+				}
+			},
+			{
+				"faction_memory",
+				"mission_resurgence_mission_end_a",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_resurgence_mission_end_a",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "mission_givers"
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_mission_end_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_resurgence_mission_end_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_resurgence_mission_end_a"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"boon_vendor"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_mission_end_c",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_resurgence_mission_end_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_resurgence_mission_end_b"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"shipmistress"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -850,13 +1330,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_resurgence_power_bridge",
+				"mission_resurgence_power_bridge"
 			},
 			{
 				"user_context",
@@ -867,26 +1347,69 @@ return function ()
 					"pilot",
 					"sergeant",
 					"boon_vendor",
-				},
+					"shipmistress"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_resurgence_power_bridge",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_resurgence_power_bridge",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "mission_givers"
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_power_bridge_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "mission_resurgence_power_bridge_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_resurgence_power_bridge"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"tertium_noble"
+				}
+			}
 		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_0",
@@ -899,44 +1422,44 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"mission_resurgence_pulpit_a",
+				"mission_resurgence_pulpit_a"
 			},
 			{
 				"query_context",
 				"distance",
 				OP.GT,
-				1,
+				1
 			},
 			{
 				"query_context",
 				"distance",
 				OP.LT,
-				25,
+				25
 			},
 			{
 				"faction_memory",
 				"mission_resurgence_pulpit_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_resurgence_pulpit_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -949,23 +1472,299 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_resurgence_pulpit_a",
-				},
-			},
+					"mission_resurgence_pulpit_a"
+				}
+			}
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_safe_zone_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_resurgence_safe_zone_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info"
 			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_resurgence_safe_zone_a"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"boon_vendor"
+				}
+			},
+			{
+				"faction_memory",
+				"mission_resurgence_safe_zone_a",
+				OP.EQ,
+				0
+			}
 		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_resurgence_safe_zone_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"mission_resurgence_statue_riga_consora_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"mission_resurgence_statue_baross",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "mission_givers"
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_safe_zone_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_resurgence_safe_zone_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_resurgence_safe_zone_a"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"tertium_noble"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_safe_zone_c",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_resurgence_safe_zone_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_resurgence_safe_zone_b"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"boon_vendor"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_safe_zone_d",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_resurgence_safe_zone_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_resurgence_safe_zone_c"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"tertium_noble"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_safe_zone_e",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_resurgence_safe_zone_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_resurgence_safe_zone_d"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"shipmistress"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_safe_zone_f",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_resurgence_safe_zone_f",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_resurgence_safe_zone_e"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"tertium_noble"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -981,13 +1780,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_resurgence_secure_the_aegis",
+				"mission_resurgence_secure_the_aegis"
 			},
 			{
 				"user_context",
@@ -998,26 +1797,27 @@ return function ()
 					"pilot",
 					"sergeant",
 					"boon_vendor",
-				},
+					"shipmistress"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_resurgence_secure_the_aegis",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_resurgence_secure_the_aegis",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
-		},
+			target = "self"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -1030,32 +1830,32 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"start_banter",
+				"start_banter"
 			},
 			{
 				"global_context",
 				"current_mission",
 				OP.EQ,
-				"fm_resurgence",
+				"fm_resurgence"
 			},
 			{
 				"global_context",
 				"circumstance_vo_id",
 				OP.NEQ,
-				"thischeckisdisabled",
-			},
+				"thischeckisdisabled"
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"mission_resurgence_start_banter_a_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_giver_default",
-		},
+			target = "mission_giver_default"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1071,15 +1871,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_resurgence_start_banter_a",
-				},
+					"mission_resurgence_start_banter_a"
+				}
 			},
 			{
 				"user_context",
@@ -1089,19 +1889,19 @@ return function ()
 					"explicator",
 					"pilot",
 					"sergeant",
-					"boon_vendor",
-				},
-			},
+					"boon_vendor"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -1114,39 +1914,39 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_resurgence_start_banter_b",
-				},
+					"mission_resurgence_start_banter_b"
+				}
 			},
 			{
 				"user_memory",
 				"mission_resurgence_start_banter_a_user",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"mission_resurgence_start_banter_c_user",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1162,25 +1962,25 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"mission_resurgence_statue_baross",
+				"mission_resurgence_statue_baross"
 			},
 			{
 				"query_context",
 				"distance",
 				OP.GT,
-				1,
+				1
 			},
 			{
 				"query_context",
 				"distance",
 				OP.LT,
-				26,
+				26
 			},
 			{
 				"user_context",
@@ -1190,27 +1990,27 @@ return function ()
 					"explicator",
 					"pilot",
 					"sergeant",
-					"boon_vendor",
-				},
+					"boon_vendor"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_resurgence_statue_baross",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_resurgence_statue_baross",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1226,25 +2026,25 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"mission_resurgence_statue_riga_consora_a",
+				"mission_resurgence_statue_riga_consora_a"
 			},
 			{
 				"query_context",
 				"distance",
 				OP.GT,
-				1,
+				1
 			},
 			{
 				"query_context",
 				"distance",
 				OP.LT,
-				26,
+				26
 			},
 			{
 				"user_context",
@@ -1254,27 +2054,205 @@ return function ()
 					"explicator",
 					"pilot",
 					"sergeant",
-					"boon_vendor",
-				},
+					"boon_vendor"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_resurgence_statue_riga_consora_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_resurgence_statue_riga_consora_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_statue_section_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_resurgence_statue_section_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_resurgence_statue_section_a"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"boon_vendor"
+				}
+			},
+			{
+				"faction_memory",
+				"mission_resurgence_statue_section_a",
+				OP.EQ,
+				0
+			}
 		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_resurgence_statue_section_a",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "mission_givers"
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_statue_section_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_resurgence_statue_section_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_resurgence_statue_section_a"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"shipmistress"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_statue_section_c",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_resurgence_statue_section_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_resurgence_statue_section_b"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"boon_vendor"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_statue_section_d",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_resurgence_statue_section_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_resurgence_statue_section_c"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"shipmistress"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1290,13 +2268,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_resurgence_streets_a",
+				"mission_resurgence_streets_a"
 			},
 			{
 				"user_context",
@@ -1307,25 +2285,293 @@ return function ()
 					"pilot",
 					"sergeant",
 					"boon_vendor",
-				},
+					"shipmistress"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_resurgence_streets_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_resurgence_streets_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "mission_givers"
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_streets_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_resurgence_streets_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_resurgence_streets_a"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"tertium_noble"
+				}
+			}
 		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "priority_mission_resurgence_bridge_of_martyrs_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "priority_mission_resurgence_bridge_of_martyrs_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"priority_mission_resurgence_bridge_of_martyrs_a"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"boon_vendor"
+				}
+			},
+			{
+				"faction_memory",
+				"priority_mission_resurgence_bridge_of_martyrs_a",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"priority_mission_resurgence_bridge_of_martyrs_a",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "mission_givers"
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "priority_mission_resurgence_bridge_of_martyrs_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "priority_mission_resurgence_bridge_of_martyrs_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"priority_mission_resurgence_bridge_of_martyrs_a"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"shipmistress"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1
+			}
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "priority_mission_resurgence_bridges_up_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "priority_mission_resurgence_bridges_up_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"priority_mission_resurgence_bridges_up_a"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"boon_vendor"
+				}
+			},
+			{
+				"faction_memory",
+				"priority_mission_resurgence_bridges_up_a",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"priority_mission_resurgence_bridges_up_a",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "mission_givers"
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "priority_mission_resurgence_bridges_up_b",
+		pre_wwise_event = "play_radio_static_start",
+		response = "priority_mission_resurgence_bridges_up_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"priority_mission_resurgence_bridges_up_a"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"tertium_noble"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "priority_mission_resurgence_bridges_up_c",
+		pre_wwise_event = "play_radio_static_start",
+		response = "priority_mission_resurgence_bridges_up_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"priority_mission_resurgence_bridges_up_b"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"tertium_noble"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
 	})
 end

@@ -9,8 +9,8 @@ local elements = {
 		visibility_groups = {
 			"in_hub_view",
 			"in_hub",
-			"default",
-		},
+			"default"
+		}
 	},
 	{
 		class_name = "ConstantElementTeamProfileLoader",
@@ -26,8 +26,8 @@ local elements = {
 			"in_loading",
 			"skippable_cinematic",
 			"in_mission",
-			"default",
-		},
+			"default"
+		}
 	},
 	{
 		class_name = "ConstantElementSubtitles",
@@ -44,8 +44,8 @@ local elements = {
 			"in_loading",
 			"skippable_cinematic",
 			"in_mission",
-			"default",
-		},
+			"default"
+		}
 	},
 	{
 		class_name = "ConstantElementPopupHandler",
@@ -62,8 +62,8 @@ local elements = {
 			"in_loading",
 			"skippable_cinematic",
 			"in_mission",
-			"default",
-		},
+			"default"
+		}
 	},
 	{
 		class_name = "ConstantElementNotificationFeed",
@@ -78,8 +78,8 @@ local elements = {
 			"in_hub_view",
 			"in_hub",
 			"in_mission",
-			"default",
-		},
+			"default"
+		}
 	},
 	{
 		class_name = "ConstantElementWatermark",
@@ -93,8 +93,8 @@ local elements = {
 			"in_hub_view",
 			"in_hub",
 			"in_mission",
-			"default",
-		},
+			"default"
+		}
 	},
 	{
 		class_name = "ConstantElementBetaLabel",
@@ -108,16 +108,16 @@ local elements = {
 			"in_hub_view",
 			"in_hub",
 			"in_mission",
-			"default",
-		},
+			"default"
+		}
 	},
 	{
 		class_name = "ConstantMissionLobbyStatus",
 		filename = "scripts/ui/constant_elements/elements/mission_lobby_status/constant_element_mission_lobby_status",
 		package = "packages/ui/constant_elements/mission_lobby_status/mission_lobby_status",
 		visibility_groups = {
-			"mission_lobby",
-		},
+			"mission_lobby"
+		}
 	},
 	{
 		class_name = "ConstantElementSoftwareCursor",
@@ -132,8 +132,8 @@ local elements = {
 			"in_hub_view",
 			"in_hub",
 			"in_mission",
-			"default",
-		},
+			"default"
+		}
 	},
 	{
 		class_name = "ConstantElementChat",
@@ -148,35 +148,35 @@ local elements = {
 			"in_hub_view",
 			"in_hub",
 			"in_mission",
-			"default",
+			"default"
 		},
 		visibility_group_parameters = {
 			default = {
 				horizontal_alignment = ChatElementSettings.horizontal_alignment,
 				vertical_alignment = ChatElementSettings.vertical_alignment,
 				chat_window_offset = ChatElementSettings.chat_window_offset,
-				chat_window_size = ChatElementSettings.chat_window_size,
+				chat_window_size = ChatElementSettings.chat_window_size
 			},
 			mission_lobby = {
 				horizontal_alignment = "right",
 				chat_window_offset = {
-					-ChatElementSettings.chat_window_offset[1],
-				},
+					-ChatElementSettings.chat_window_offset[1]
+				}
 			},
 			end_of_round = {
 				horizontal_alignment = "right",
 				chat_window_offset = {
-					-ChatElementSettings.chat_window_offset[1],
-				},
-			},
-		},
+					-ChatElementSettings.chat_window_offset[1]
+				}
+			}
+		}
 	},
 	{
 		class_name = "ConstantElementHavocStatus",
 		filename = "scripts/ui/constant_elements/elements/havoc/constant_element_havoc_status",
 		visibility_groups = {
-			"in_hub",
-		},
+			"in_hub"
+		}
 	},
 	{
 		class_name = "ConstantElementLoading",
@@ -189,8 +189,8 @@ local elements = {
 			"in_hub_view",
 			"in_hub",
 			"in_mission",
-			"default",
-		},
+			"default"
+		}
 	},
 	{
 		class_name = "ConstantElementOnboardingHandler",
@@ -203,8 +203,8 @@ local elements = {
 			"in_hub_view",
 			"in_hub",
 			"in_mission",
-			"default",
-		},
+			"default"
+		}
 	},
 	{
 		class_name = "ConstantElementVoiceChat",
@@ -219,8 +219,8 @@ local elements = {
 			"in_view",
 			"in_hub_view",
 			"in_loading",
-			"skippable_cinematic",
-		},
+			"skippable_cinematic"
+		}
 	},
 	{
 		class_name = "ConstantElementMissionBuffs",
@@ -228,8 +228,8 @@ local elements = {
 		package = "packages/ui/constant_elements/mission_buffs/mission_buffs",
 		use_hud_scale = true,
 		visibility_groups = {
-			"in_mission",
-		},
+			"in_mission"
+		}
 	},
 	{
 		class_name = "ConstantElementExpeditionContinue",
@@ -237,9 +237,9 @@ local elements = {
 		package = "packages/ui/constant_elements/expedition_continue/expedition_continue",
 		visibility_groups = {
 			"in_mission",
-			"default",
-		},
-	},
+			"default"
+		}
+	}
 }
 
 return elements

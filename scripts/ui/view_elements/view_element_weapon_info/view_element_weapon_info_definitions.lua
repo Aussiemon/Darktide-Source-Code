@@ -14,13 +14,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	bar_breakdown_slate = {
 		horizontal_alignment = "left",
@@ -28,19 +28,19 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			600,
-			100,
+			100
 		},
 		position = {
 			630,
 			950,
-			1,
-		},
+			1
+		}
 	},
 	entry = {
 		horizontal_alignment = "left",
 		parent = "bar_breakdown_slate",
-		vertical_alignment = "top",
-	},
+		vertical_alignment = "top"
+	}
 }
 local widget_definitions = {
 	grid_background = UIWidget.create_definition({
@@ -51,15 +51,15 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					-4,
-					0,
+					0
 				},
 				color = {
 					100,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -70,16 +70,16 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					16,
-					20,
+					20
 				},
 				color = {
 					100,
 					0,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "grid_background"),
 	overlay = UIWidget.create_definition({
 		{
@@ -89,27 +89,27 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					-4,
-					0,
+					0
 				},
 				color = {
 					128,
 					0,
 					0,
-					0,
-				},
+					0
+				}
 			},
 			visibility_function = function (content, style)
 				return content.disabled
-			end,
-		},
-	}, "screen"),
+			end
+		}
+	}, "screen")
 }
 local header_style = table.clone(UIFontSettings.header_2)
 
 header_style.font_size = 18
 header_style.size = {
 	600,
-	100,
+	100
 }
 header_style.text_horizontal_alignment = "left"
 header_style.text_vertical_alignment = "top"
@@ -120,7 +120,7 @@ local description_style = table.clone(UIFontSettings.body)
 description_style.font_size = 18
 description_style.size = {
 	600,
-	100,
+	100
 }
 description_style.text_horizontal_alignment = "left"
 description_style.text_vertical_alignment = "bottom"
@@ -131,11 +131,11 @@ local bar_breakdown_entry_style = table.clone(UIFontSettings.body)
 bar_breakdown_entry_style.offset = {
 	0,
 	0,
-	3,
+	3
 }
 bar_breakdown_entry_style.size = {
 	600,
-	100,
+	100
 }
 bar_breakdown_entry_style.font_size = 16
 bar_breakdown_entry_style.text_horizontal_alignment = "left"
@@ -151,15 +151,15 @@ local bar_breakdown_widgets_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					-4,
-					0,
+					0
 				},
 				color = {
 					100,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -170,15 +170,15 @@ local bar_breakdown_widgets_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					16,
-					20,
+					20
 				},
 				color = {
 					100,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -191,9 +191,9 @@ local bar_breakdown_widgets_definitions = {
 				offset = {
 					20,
 					10,
-					1,
-				},
-			}),
+					1
+				}
+			})
 		},
 		{
 			pass_type = "text",
@@ -205,15 +205,15 @@ local bar_breakdown_widgets_definitions = {
 				vertical_alignment = "bottom",
 				size_addition = {
 					-40,
-					0,
+					0
 				},
 				offset = {
 					20,
 					-10,
-					2,
-				},
-			}),
-		},
+					2
+				}
+			})
+		}
 	}, "bar_breakdown_slate"),
 	entry = UIWidget.create_definition({
 		{
@@ -224,15 +224,15 @@ local bar_breakdown_widgets_definitions = {
 				vertical_alignment = "top",
 				size = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					20,
 					10,
-					0,
+					0
 				},
-				color = Color.terminal_icon(255, true),
-			},
+				color = Color.terminal_icon(255, true)
+			}
 		},
 		{
 			pass_type = "text",
@@ -244,15 +244,15 @@ local bar_breakdown_widgets_definitions = {
 				offset = {
 					40,
 					10,
-					1,
-				},
-			}),
-		},
-	}, "entry"),
+					1
+				}
+			})
+		}
+	}, "entry")
 }
 
 return {
 	bar_breakdown_widgets_definitions = bar_breakdown_widgets_definitions,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

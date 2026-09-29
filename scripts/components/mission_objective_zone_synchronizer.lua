@@ -49,36 +49,36 @@ MissionObjectiveZoneSynchronizer.component_data = {
 	num_zones_in_mission_objective = {
 		ui_name = "Number of zones in mission objective",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	objective_name = {
 		ui_name = "Objective name",
 		ui_type = "text_box",
-		value = "default",
+		value = "default"
 	},
 	automatic_start = {
 		ui_name = "Auto start on mission start",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	register_on_spawn = {
 		ui_name = "Register on Spawn",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	inputs = {
 		start_mission_objective_zone_event = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		synchronizer_register = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"MissionObjectiveZoneSynchronizerExtension",
-	},
+		"MissionObjectiveZoneSynchronizerExtension"
+	}
 }
 
 return MissionObjectiveZoneSynchronizer

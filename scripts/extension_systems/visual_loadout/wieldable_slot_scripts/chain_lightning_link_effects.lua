@@ -30,12 +30,12 @@ local JUMP_VALIDATION = ChainLightning.jump_validation_functions
 local ACTION_MODULE_TARGET_FINDER_COMPONENT_KEYS = {
 	"target_unit_1",
 	"target_unit_2",
-	"target_unit_3",
+	"target_unit_3"
 }
 local ROOT_CHAIN_SETTINGS = {
 	max_targets = {
-		num_targets = #ACTION_MODULE_TARGET_FINDER_COMPONENT_KEYS,
-	},
+		num_targets = #ACTION_MODULE_TARGET_FINDER_COMPONENT_KEYS
+	}
 }
 local LOOPING_TO_TARGET_VFX_ALIAS = "chain_lightning_to_target"
 local LOOPING_LINK_VFX_ALIAS = "chain_lightning_link"
@@ -46,7 +46,7 @@ local DEFAULT_HAND = "both"
 local VISUAL_JUMP_TIME = 0.05
 local NO_TARGET_JUMP_TIME = 0.2
 local _vfx_external_properties = {
-	power = nil,
+	power = nil
 }
 local _on_add_func, _root_on_add_func, _on_remove_func, _link_effect_name
 local MAX_NUM_FX_DATA_TABLES = 128
@@ -301,7 +301,7 @@ ChainLightningLinkEffects.init = function (self, context, slot, weapon_template,
 		weapon_template = self._weapon_template,
 		weapon_actions = self._weapon_actions,
 		weapon_chain_settings = weapon_chain_settings,
-		particle_group = self._particle_group_id,
+		particle_group = self._particle_group_id
 	}
 
 	self:_create_chain_root_node()

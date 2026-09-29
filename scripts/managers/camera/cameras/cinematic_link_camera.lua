@@ -14,28 +14,28 @@ local DOF_PARAMETERS = {
 	{
 		environment_parameter = "dof_enabled",
 		unit_node_name = "Enabled",
-		use_ceil = true,
+		use_ceil = true
 	},
 	{
 		environment_parameter = "focal_distance",
 		unit_node_name = "Distance",
-		use_ceil = false,
+		use_ceil = false
 	},
 	{
 		environment_parameter = "focal_region",
 		unit_node_name = "Region",
-		use_ceil = false,
+		use_ceil = false
 	},
 	{
 		environment_parameter = "focal_padding",
 		unit_node_name = "Padding",
-		use_ceil = false,
+		use_ceil = false
 	},
 	{
 		environment_parameter = "focal_scale",
 		unit_node_name = "Scale",
-		use_ceil = false,
-	},
+		use_ceil = false
+	}
 }
 
 CinematicLinkCamera.update = function (self, dt, data)

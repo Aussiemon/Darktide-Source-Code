@@ -8,6 +8,7 @@ local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local Mastery = require("scripts/utilities/mastery")
 local RaritySettings = require("scripts/settings/item/rarity_settings")
+local Text = require("scripts/utilities/ui/text")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
@@ -16,7 +17,6 @@ local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view
 local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
 local ViewElementWeaponStats = require("scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats")
 local WeaponUnlockSettings = require("scripts/settings/weapon_unlock/weapon_unlock_settings")
-local Text = require("scripts/utilities/ui/text")
 local CraftingMechanicusBarterItemsView = class("CraftingMechanicusBarterItemsView", "BaseView")
 
 CraftingMechanicusBarterItemsView.init = function (self, settings, context)
@@ -36,11 +36,11 @@ CraftingMechanicusBarterItemsView.on_enter = function (self)
 	local character_id = self:_player():character_id()
 	local slot_filter_list = {
 		"slot_primary",
-		"slot_secondary",
+		"slot_secondary"
 	}
 	local item_type_filter_list = {
 		"WEAPON_MELEE",
-		"WEAPON_RANGED",
+		"WEAPON_RANGED"
 	}
 
 	self._inventory_promise = Managers.data_service.gear:fetch_inventory(character_id, slot_filter_list, item_type_filter_list)
@@ -100,12 +100,12 @@ CraftingMechanicusBarterItemsView._setup_description = function (self)
 		value = Localize(settings.display_name),
 		r = rarity_color[2],
 		g = rarity_color[3],
-		b = rarity_color[4],
+		b = rarity_color[4]
 	})
 	local intro_widget = self._widgets_by_name.sacrifice_intro
 
 	intro_widget.content.description = Localize("loc_mastery_crafting_sacrifice_weapon_select_description", true, {
-		rarity = rarity_text,
+		rarity = rarity_text
 	})
 end
 
@@ -142,7 +142,7 @@ CraftingMechanicusBarterItemsView._setup_masteries = function (self, available_m
 	local archetype_name = profile_archetype.name
 	local archetype_weapon_unlocks = WeaponUnlockSettings[archetype_name]
 
-	return Managers.data_service.mastery:get_all_masteries():next(function (masteries_data)
+	return Managers.data_service.mastery:get_all_masteries_by_archetype(archetype_name):next(function (masteries_data)
 		local masteries = {}
 		local weapon_patterns = UISettings.weapon_patterns
 
@@ -153,12 +153,6 @@ CraftingMechanicusBarterItemsView._setup_masteries = function (self, available_m
 				local master_item = master_item_name and MasterItems.get_item(master_item_name)
 
 				if master_item then
-					local allowed_archetypes = master_item.archetypes
-
-					if not table.contains(allowed_archetypes, archetype_name) then
-						break
-					end
-
 					local weapon_level_requirement
 
 					for weapon_level, weapon_list in ipairs(archetype_weapon_unlocks) do
@@ -175,7 +169,7 @@ CraftingMechanicusBarterItemsView._setup_masteries = function (self, available_m
 
 					local hud_icon = master_item.hud_icon
 
-					hud_icon = hud_icon or "content/ui/materials/icons/weapons/hud/combat_blade_01"
+					hud_icon = hud_icon or "content/ui/materials/icons/weapons/hud/debug_primary"
 
 					local mastery_level = mastery_data.mastery_level or 0
 					local mastery_xp = mastery_data.current_xp or 0
@@ -193,7 +187,7 @@ CraftingMechanicusBarterItemsView._setup_masteries = function (self, available_m
 						mastery_level = mastery_level,
 						mastery_max_level = mastery_max_level,
 						weapon_level_requirement = weapon_level_requirement,
-						expertise_level = expertise_level,
+						expertise_level = expertise_level
 					}
 
 					table.sort(layout, function (a, b)
@@ -221,7 +215,7 @@ CraftingMechanicusBarterItemsView._setup_masteries = function (self, available_m
 						start_xp = mastery_start_exp,
 						end_xp = mastery_end_exp,
 						mastery_id = id,
-						claimed_level = mastery_data.claimed_level,
+						claimed_level = mastery_data.claimed_level
 					}
 				end
 			until true
@@ -394,8 +388,8 @@ CraftingMechanicusBarterItemsView._cb_fetch_inventory_items = function (self, it
 					widget_type = "item",
 					item = item,
 					slot = {
-						name = slot_name,
-					},
+						name = slot_name
+					}
 				}
 			end
 		end
@@ -408,15 +402,15 @@ CraftingMechanicusBarterItemsView._cb_fetch_inventory_items = function (self, it
 	local grid_height = 850
 	local grid_size = {
 		grid_width - edge_padding,
-		grid_height,
+		grid_height
 	}
 	local grid_spacing = {
 		10,
-		10,
+		10
 	}
 	local mask_size = {
 		grid_width + 40,
-		grid_height,
+		grid_height
 	}
 	local grid_settings = {
 		scroll_start_margin = 0,
@@ -435,7 +429,7 @@ CraftingMechanicusBarterItemsView._cb_fetch_inventory_items = function (self, it
 		grid_spacing = grid_spacing,
 		grid_size = grid_size,
 		mask_size = mask_size,
-		edge_padding = edge_padding,
+		edge_padding = edge_padding
 	}
 
 	self._item_grid = self:_add_element(ViewElementGrid, "item_grid", 1, grid_settings)
@@ -459,17 +453,17 @@ CraftingMechanicusBarterItemsView._cb_fetch_inventory_items = function (self, it
 		using_custom_gamepad_navigation = false,
 		grid_spacing = {
 			0,
-			0,
+			0
 		},
 		grid_size = {
 			width - padding,
-			height,
+			height
 		},
 		mask_size = {
 			width + 40,
-			height,
+			height
 		},
-		edge_padding = padding,
+		edge_padding = padding
 	}
 
 	self._weapon_stats = self:_add_element(ViewElementWeaponStats, "weapon_stats", 1, weapon_stats_settings)
@@ -481,7 +475,7 @@ CraftingMechanicusBarterItemsView._cb_fetch_inventory_items = function (self, it
 	self._discard_items_element = self:_add_element(ViewElementDiscardItems, "discard_items", 1, {
 		items = filtered_items,
 		selection_callback = callback(self, "_mark_items_to_sell"),
-		unselection_callback = callback(self, "_unmark_items_to_sell"),
+		unselection_callback = callback(self, "_unmark_items_to_sell")
 	})
 
 	local discard_items_position = self:_scenegraph_world_position("weapon_discard_pivot")
@@ -498,15 +492,15 @@ CraftingMechanicusBarterItemsView._cb_fetch_inventory_items = function (self, it
 		local grid_height = 830
 		local grid_size = {
 			grid_width - edge_padding,
-			grid_height,
+			grid_height
 		}
 		local grid_spacing = {
 			10,
-			10,
+			10
 		}
 		local mask_size = {
 			grid_width + 40,
-			grid_height - 40,
+			grid_height - 40
 		}
 		local pattern_grid_settings = {
 			hide_dividers = true,
@@ -526,7 +520,7 @@ CraftingMechanicusBarterItemsView._cb_fetch_inventory_items = function (self, it
 			grid_spacing = grid_spacing,
 			grid_size = grid_size,
 			mask_size = mask_size,
-			edge_padding = edge_padding,
+			edge_padding = edge_padding
 		}
 
 		self._patterns_grid = self:_add_element(ViewElementGrid, "patterns_grid", 1, pattern_grid_settings)
@@ -543,17 +537,17 @@ CraftingMechanicusBarterItemsView._cb_fetch_inventory_items = function (self, it
 				icon = "content/ui/materials/icons/item_types/melee_weapons",
 				display_name = Localize("loc_glossary_term_melee_weapons"),
 				slot_types = {
-					"slot_primary",
-				},
+					"slot_primary"
+				}
 			},
 			{
 				hide_display_name = true,
 				icon = "content/ui/materials/icons/item_types/ranged_weapons",
 				display_name = Localize("loc_glossary_term_ranged_weapons"),
 				slot_types = {
-					"slot_secondary",
-				},
-			},
+					"slot_secondary"
+				}
+			}
 		}
 
 		self:_setup_menu_tabs(tabs_content)
@@ -568,7 +562,7 @@ CraftingMechanicusBarterItemsView._setup_sort_options = function (self)
 	self._sort_options = {
 		{
 			display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
-				sort_name = Localize("loc_inventory_item_grid_sort_title_item_power"),
+				sort_name = Localize("loc_inventory_item_grid_sort_title_item_power")
 			}),
 			sort_function = Items.sort_comparator({
 				">",
@@ -576,12 +570,12 @@ CraftingMechanicusBarterItemsView._setup_sort_options = function (self)
 				"<",
 				Items.compare_item_name,
 				"<",
-				Items.compare_item_rarity,
-			}),
+				Items.compare_item_rarity
+			})
 		},
 		{
 			display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
-				sort_name = Localize("loc_inventory_item_grid_sort_title_item_power"),
+				sort_name = Localize("loc_inventory_item_grid_sort_title_item_power")
 			}),
 			sort_function = Items.sort_comparator({
 				"<",
@@ -589,12 +583,12 @@ CraftingMechanicusBarterItemsView._setup_sort_options = function (self)
 				"<",
 				Items.compare_item_name,
 				"<",
-				Items.compare_item_rarity,
-			}),
+				Items.compare_item_rarity
+			})
 		},
 		{
 			display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
-				sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
+				sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
 			}),
 			sort_function = Items.sort_comparator({
 				">",
@@ -602,12 +596,12 @@ CraftingMechanicusBarterItemsView._setup_sort_options = function (self)
 				">",
 				Items.compare_item_level,
 				"<",
-				Items.compare_item_name,
-			}),
+				Items.compare_item_name
+			})
 		},
 		{
 			display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
-				sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
+				sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
 			}),
 			sort_function = Items.sort_comparator({
 				"<",
@@ -615,12 +609,12 @@ CraftingMechanicusBarterItemsView._setup_sort_options = function (self)
 				">",
 				Items.compare_item_level,
 				"<",
-				Items.compare_item_name,
-			}),
+				Items.compare_item_name
+			})
 		},
 		{
 			display_name = Localize("loc_inventory_item_grid_sort_title_format_increasing_letters", true, {
-				sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+				sort_name = Localize("loc_inventory_item_grid_sort_title_name")
 			}),
 			sort_function = Items.sort_comparator({
 				"<",
@@ -628,12 +622,12 @@ CraftingMechanicusBarterItemsView._setup_sort_options = function (self)
 				"<",
 				Items.compare_item_level,
 				"<",
-				Items.compare_item_rarity,
-			}),
+				Items.compare_item_rarity
+			})
 		},
 		{
 			display_name = Localize("loc_inventory_item_grid_sort_title_format_decreasing_letters", true, {
-				sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+				sort_name = Localize("loc_inventory_item_grid_sort_title_name")
 			}),
 			sort_function = Items.sort_comparator({
 				">",
@@ -641,9 +635,9 @@ CraftingMechanicusBarterItemsView._setup_sort_options = function (self)
 				"<",
 				Items.compare_item_level,
 				"<",
-				Items.compare_item_rarity,
-			}),
-		},
+				Items.compare_item_rarity
+			})
+		}
 	}
 
 	if self._sort_options and #self._sort_options > 0 then
@@ -694,7 +688,7 @@ CraftingMechanicusBarterItemsView._sort_grid_layout = function (self, sort_funct
 		else
 			external_layouts[#external_layouts + 1] = {
 				index = i,
-				layout = layout,
+				layout = layout
 			}
 		end
 	end
@@ -766,21 +760,21 @@ CraftingMechanicusBarterItemsView._setup_menu_tabs = function (self, content)
 		layer = 80,
 		button_size = {
 			70,
-			60,
+			60
 		},
 		button_offset = {
 			0,
-			2,
+			2
 		},
 		icon_size = {
 			60,
-			60,
+			60
 		},
 		button_template = ButtonPassTemplates.item_category_sort_button,
 		input_label_offset = {
 			50,
-			5,
-		},
+			5
+		}
 	}
 	local id = "pattern_tab_menu"
 	local layer = 20
@@ -798,7 +792,7 @@ CraftingMechanicusBarterItemsView._setup_menu_tabs = function (self, content)
 	tab_button_template[1].style = {
 		on_released_sound = nil,
 		on_hover_sound = UISoundEvents.tab_secondary_button_hovered,
-		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
+		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed
 	}
 
 	local tab_ids = {}
@@ -864,10 +858,10 @@ CraftingMechanicusBarterItemsView._present_pattern_layout = function (self, slot
 		local edge_padding = 44
 		local grid_size = {
 			grid_width - edge_padding,
-			grid_height,
+			grid_height
 		}
 		local spacing_entry = {
-			widget_type = "spacing_vertical",
+			widget_type = "spacing_vertical"
 		}
 
 		table.insert(filtered_layout, 1, spacing_entry)
@@ -881,7 +875,7 @@ end
 
 local ITEMS_LAYOUT_GRID_SIZE = {
 	640,
-	800,
+	800
 }
 
 CraftingMechanicusBarterItemsView._present_items_layout = function (self, layout, present_callback)
@@ -929,7 +923,7 @@ end
 CraftingMechanicusBarterItemsView._add_external_layout = function (self, layout)
 	local spacing_entry = {
 		is_external = true,
-		widget_type = "spacing_vertical",
+		widget_type = "spacing_vertical"
 	}
 
 	table.insert(layout, 1, spacing_entry)
@@ -938,7 +932,7 @@ end
 
 local SACRIFICE_LAYOUT_GRID_SIZE = {
 	640,
-	900,
+	900
 }
 
 CraftingMechanicusBarterItemsView._present_sacrifice_layout = function (self, layout)
@@ -1047,11 +1041,11 @@ CraftingMechanicusBarterItemsView._reset_master_xp_increase = function (self)
 	local mastery_current_level_text = string.format("{#color(%d,%d,%d)}%d{#reset()}", mastery_level_added_color[2], mastery_level_added_color[3], mastery_level_added_color[4], mastery_level)
 	local mastery_level_text = Localize("loc_mastery_level_current_max", true, {
 		current = mastery_current_level_text,
-		max = mastery_max_level,
+		max = mastery_max_level
 	})
 	local mastery_experience_text = Localize("loc_mastery_exp_current_next", true, {
 		current = mastery_current_experience_text,
-		next = mastery_next_experience_text,
+		next = mastery_next_experience_text
 	})
 
 	info_content.mastery_level = mastery_level_text
@@ -1133,17 +1127,17 @@ CraftingMechanicusBarterItemsView._update_mastery_xp_increase = function (self)
 	local mastery_current_level_text = string.format("{#color(%d,%d,%d)}%d{#reset()}", mastery_level_added_color[2], mastery_level_added_color[3], mastery_level_added_color[4], mastery_level)
 	local mastery_level_text = Localize("loc_mastery_level_current_max", true, {
 		current = mastery_current_level_text,
-		max = mastery_max_level,
+		max = mastery_max_level
 	})
 	local mastery_experience_text = Localize("loc_mastery_exp_current_next", true, {
 		current = mastery_current_experience_text,
-		next = mastery_next_experience_text,
+		next = mastery_next_experience_text
 	})
 
 	info_content.mastery_level = mastery_level_text
 	info_content.mastery_experience = mastery_experience_text
 	info_content.added_exp = added_xp > 0 and Localize("loc_eor_card_mastery_added_exp", true, {
-		exp = added_xp,
+		exp = added_xp
 	}) or ""
 
 	local mastery_info_width, mastery_info_height = self:_scenegraph_size("mastery_info")
@@ -1174,7 +1168,7 @@ CraftingMechanicusBarterItemsView._update_mastery_xp_increase = function (self)
 			mastery_level = mastery_level,
 			mastery_xp = mastery_current_xp,
 			mastery_start_exp = mastery_start_exp,
-			mastery_end_exp = mastery_start_exp,
+			mastery_end_exp = mastery_start_exp
 		}
 	end
 
@@ -1387,11 +1381,11 @@ CraftingMechanicusBarterItemsView._change_state = function (self, state_name)
 		local sacrifice_description_width = mastery_info_details_width + sacrifice_description_style.size_addition[1]
 		local sacrifice_intro_title_height = Text.text_height(self._ui_renderer, sacrifice_title_text, sacrifice_title_style, {
 			sacrifice_title_width,
-			2000,
+			2000
 		})
 		local sacrifice_description_text_height = Text.text_height(self._ui_renderer, sacrifice_description_text, sacrifice_description_style, {
 			sacrifice_description_width,
-			2000,
+			2000
 		})
 		local text_margin = 80
 		local mastery_info_height = sacrifice_intro_title_height + sacrifice_description_text_height + text_margin
@@ -1409,7 +1403,7 @@ CraftingMechanicusBarterItemsView._change_state = function (self, state_name)
 
 		self._widgets_by_name.mastery_info.style.icon.size = {
 			self._widgets_by_name.mastery_info.style.icon.original_size[1],
-			self._widgets_by_name.mastery_info.style.icon.original_size[2],
+			self._widgets_by_name.mastery_info.style.icon.original_size[2]
 		}
 		self._widgets_by_name.mastery_info.style.icon.offset[2] = self._widgets_by_name.mastery_info.style.icon.original_offset[2]
 		self._widgets_by_name.confirm_button.content.original_text = Utf8.upper(Localize("loc_continue"))
@@ -1434,7 +1428,7 @@ CraftingMechanicusBarterItemsView._change_state = function (self, state_name)
 
 		self._widgets_by_name.mastery_info.style.icon.size = {
 			self._widgets_by_name.mastery_info.style.icon.original_size[1] * 0.6,
-			self._widgets_by_name.mastery_info.style.icon.original_size[2] * 0.6,
+			self._widgets_by_name.mastery_info.style.icon.original_size[2] * 0.6
 		}
 		self._widgets_by_name.mastery_info.style.icon.offset[2] = self._widgets_by_name.mastery_info.style.icon.original_offset[2] - 10
 
@@ -1493,7 +1487,7 @@ CraftingMechanicusBarterItemsView._change_state = function (self, state_name)
 
 		self._widgets_by_name.mastery_info.style.icon.size = {
 			self._widgets_by_name.mastery_info.style.icon.original_size[1] * 0.6,
-			self._widgets_by_name.mastery_info.style.icon.original_size[2] * 0.6,
+			self._widgets_by_name.mastery_info.style.icon.original_size[2] * 0.6
 		}
 		self._widgets_by_name.mastery_info.style.icon.offset[2] = self._widgets_by_name.mastery_info.style.icon.original_offset[2] - 10
 		self._widgets_by_name.confirm_button.content.original_text = Utf8.upper(Localize("loc_mastery_button_sacrifice_weapon"))
@@ -1603,7 +1597,7 @@ CraftingMechanicusBarterItemsView._complete_purchase = function (self)
 		Managers.event:trigger("event_add_notification_message", "default", Localize("loc_notification_sacrifice_complete"))
 	end):catch(function ()
 		Managers.event:trigger("event_add_notification_message", "alert", {
-			text = Localize("loc_popup_description_backend_error"),
+			text = Localize("loc_popup_description_backend_error")
 		})
 	end)
 end

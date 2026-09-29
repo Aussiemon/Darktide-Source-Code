@@ -2,7 +2,6 @@
 
 local mission_templates = {
 	cm_archives = {
-		coordinates = "loc_mission_coordinates_cm_archives",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/throneside/missions/mission_cm_archives",
@@ -20,24 +19,24 @@ local mission_templates = {
 		zone_id = "throneside",
 		cinematics = {
 			intro_abc = {
-				"c_cam",
+				"c_cam"
 			},
 			outro_fail = {
-				"outro_fail",
+				"outro_fail"
 			},
 			outro_win = {
-				"outro_win",
-			},
+				"outro_win"
+			}
 		},
 		hazard_prop_settings = {
 			explosion = 0.2,
 			fire = 0.2,
-			none = 0.5,
+			none = 0.5
 		},
 		testify_flags = {},
 		pickup_settings = {},
 		terror_event_templates = {
-			"terror_events_cm_archives",
+			"terror_events_cm_archives"
 		},
 		health_station = {},
 		mission_brief_vo = {
@@ -46,19 +45,21 @@ local mission_templates = {
 			vo_events = {
 				"mission_archives_brief_a",
 				"mission_archives_brief_b",
-				"mission_archives_brief_c",
-			},
+				"mission_archives_brief_c"
+			}
 		},
 		dialogue_settings = {
 			short_story_ticker_enabled = true,
-			story_ticker_enabled = true,
+			story_ticker_enabled = true
 		},
 		spawn_settings = {
-			next_mission = "recent_mission",
+			next_mission = "recent_mission"
 		},
+		controllable_object_set_prefixes = {
+			"flow"
+		}
 	},
 	fm_resurgence = {
-		coordinates = "loc_mission_coordinates_fm_resurgence",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/throneside/missions/mission_fm_resurgence",
@@ -76,45 +77,70 @@ local mission_templates = {
 		zone_id = "throneside",
 		cinematics = {
 			intro_abc = {
-				"c_cam",
+				"c_cam"
 			},
 			outro_fail = {
-				"outro_fail",
+				"outro_fail"
 			},
 			outro_win = {
-				"outro_win",
-			},
+				"outro_win"
+			}
 		},
 		hazard_prop_settings = {
 			explosion = 0.2,
 			fire = 0.2,
-			none = 0.5,
+			none = 0.5
 		},
 		pickup_settings = {},
 		terror_event_templates = {
-			"terror_events_fm_resurgence",
+			"terror_events_fm_resurgence"
 		},
 		testify_flags = {},
 		health_station = {},
 		mission_brief_vo = {
-			vo_profile = "boon_vendor_a",
+			vo_profile = "boon_vendor_s",
 			wwise_route_key = 1,
+			mission_giver_packs = {
+				boon_vendor_s = {
+					"shipmistress",
+					"boon_vendor",
+					"tertium_noble",
+					briefing_voice_order = {
+						"boon_vendor_s",
+						"tertium_noble_male_s",
+						"shipmistress_s",
+						"tertium_noble_male_s",
+						"boon_vendor_s",
+						"tertium_noble_male_s"
+					},
+					skip_voices = {
+						boon_vendor_a = true,
+						tertium_noble_a = true,
+						tertium_noble_b = true
+					}
+				}
+			},
 			vo_events = {
+				"mission_resurgence_brief_pre_a",
+				"mission_resurgence_brief_pre_b",
+				"mission_resurgence_brief_pre_c",
 				"mission_resurgence_brief_a",
 				"mission_resurgence_brief_b",
-				"mission_resurgence_brief_c",
-			},
+				"mission_resurgence_brief_c"
+			}
 		},
 		dialogue_settings = {
 			short_story_ticker_enabled = true,
-			story_ticker_enabled = true,
+			story_ticker_enabled = true
 		},
 		spawn_settings = {
-			next_mission = "recent_mission",
+			next_mission = "recent_mission"
 		},
+		controllable_object_set_prefixes = {
+			"flow"
+		}
 	},
 	hm_complex = {
-		coordinates = "loc_mission_coordinates_hm_complex",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/throneside/missions/mission_hm_complex",
@@ -132,23 +158,23 @@ local mission_templates = {
 		zone_id = "throneside",
 		cinematics = {
 			intro_abc = {
-				"c_cam",
+				"c_cam"
 			},
 			outro_fail = {
-				"outro_fail",
+				"outro_fail"
 			},
 			outro_win = {
-				"outro_win",
-			},
+				"outro_win"
+			}
 		},
 		hazard_prop_settings = {
 			explosion = 0.2,
 			fire = 0.2,
-			none = 0.5,
+			none = 0.5
 		},
 		pickup_settings = {},
 		terror_event_templates = {
-			"terror_events_hm_complex",
+			"terror_events_hm_complex"
 		},
 		testify_flags = {},
 		health_station = {},
@@ -158,17 +184,20 @@ local mission_templates = {
 			vo_events = {
 				"mission_complex_brief_a",
 				"mission_complex_brief_b",
-				"mission_complex_brief_c",
-			},
+				"mission_complex_brief_c"
+			}
 		},
 		dialogue_settings = {
 			short_story_ticker_enabled = true,
-			story_ticker_enabled = true,
+			story_ticker_enabled = true
 		},
 		spawn_settings = {
-			next_mission = "recent_mission",
+			next_mission = "recent_mission"
 		},
-	},
+		controllable_object_set_prefixes = {
+			"flow"
+		}
+	}
 }
 
 return mission_templates

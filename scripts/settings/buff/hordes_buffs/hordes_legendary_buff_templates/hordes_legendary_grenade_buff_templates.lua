@@ -137,7 +137,7 @@ templates.hordes_buff_grenade_replenishment_over_time_passive = {
 
 			template_data.next_grenade_t = nil
 		end
-	end,
+	end
 }
 
 local percent_chance_extra_grenade_throw = HordesBuffsData.hordes_buff_extra_grenade_throw_chance.buff_stats.chance.value
@@ -147,7 +147,7 @@ templates.hordes_buff_extra_grenade_throw_chance = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	stat_buffs = {
-		[stat_buffs.extra_grenade_throw_chance] = percent_chance_extra_grenade_throw,
+		[stat_buffs.extra_grenade_throw_chance] = percent_chance_extra_grenade_throw
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -155,7 +155,7 @@ templates.hordes_buff_extra_grenade_throw_chance = {
 		end
 
 		HordesBuffsUtilities.give_passive_grenade_replenishment_buff(template_context.unit)
-	end,
+	end
 }
 
 local percent_chance_grenade_duplication_on_explosion = HordesBuffsData.hordes_buff_grenade_duplication_on_explosion.buff_stats.chance.value
@@ -174,7 +174,7 @@ templates.hordes_buff_grenade_duplication_on_explosion = {
 		HordesBuffsUtilities.give_passive_grenade_replenishment_buff(template_context.unit)
 	end,
 	proc_events = {
-		[proc_events.on_player_grenade_exploded] = percent_chance_grenade_duplication_on_explosion,
+		[proc_events.on_player_grenade_exploded] = percent_chance_grenade_duplication_on_explosion
 	},
 	proc_func = function (params, template_data, template_context)
 		if not template_context.is_server then
@@ -194,7 +194,7 @@ templates.hordes_buff_grenade_duplication_on_explosion = {
 		if player_fx_extension then
 			player_fx_extension:trigger_wwise_events_local_only(SFX_NAMES.duplication, nil, owner_unit)
 		end
-	end,
+	end
 }
 
 local percent_max_health_regen_on_grenade_explosion = HordesBuffsData.hordes_buff_grenade_heals_on_explosion.buff_stats.health.value
@@ -218,7 +218,7 @@ templates.hordes_buff_grenade_heals_on_explosion = {
 		HordesBuffsUtilities.give_passive_grenade_replenishment_buff(template_context.unit)
 	end,
 	proc_events = {
-		[proc_events.on_player_grenade_exploded] = 1,
+		[proc_events.on_player_grenade_exploded] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		if not template_context.is_server then
@@ -254,7 +254,7 @@ templates.hordes_buff_grenade_heals_on_explosion = {
 				end
 			end
 		end
-	end,
+	end
 }
 
 local percent_damage_taken_increase_for_elemental_weakness = HordesBuffsData.hordes_buff_grenade_explosion_applies_elemental_weakness.buff_stats.damage.value
@@ -274,7 +274,7 @@ templates.hordes_buff_grenade_explosion_applies_elemental_weakness = {
 		HordesBuffsUtilities.give_passive_grenade_replenishment_buff(template_context.unit)
 	end,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		return params.attack_type == attack_types.explosion and grenade_explosion_damage_types[params.damage_type]
@@ -289,7 +289,7 @@ templates.hordes_buff_grenade_explosion_applies_elemental_weakness = {
 
 			victim_buff_extension:add_internally_controlled_buff("hordes_buff_elemental_weakness", t, "owner_unit", player_unit)
 		end
-	end,
+	end
 }
 templates.hordes_buff_elemental_weakness = {
 	class_name = "buff",
@@ -302,8 +302,8 @@ templates.hordes_buff_elemental_weakness = {
 	stat_buffs = {
 		[stat_buffs.damage_taken_from_burning] = percent_damage_taken_increase_for_elemental_weakness,
 		[stat_buffs.damage_taken_from_bleeding] = percent_damage_taken_increase_for_elemental_weakness,
-		[stat_buffs.damage_taken_from_electrocution] = percent_damage_taken_increase_for_elemental_weakness,
-	},
+		[stat_buffs.damage_taken_from_electrocution] = percent_damage_taken_increase_for_elemental_weakness
+	}
 }
 
 local percent_rending_debuff_on_explosion = HordesBuffsData.hordes_buff_grenade_explosion_applies_rending_debuff.buff_stats.brittle.value
@@ -322,7 +322,7 @@ templates.hordes_buff_grenade_explosion_applies_rending_debuff = {
 		HordesBuffsUtilities.give_passive_grenade_replenishment_buff(template_context.unit)
 	end,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		return params.attack_type == attack_types.explosion and grenade_explosion_damage_types[params.damage_type]
@@ -337,7 +337,7 @@ templates.hordes_buff_grenade_explosion_applies_rending_debuff = {
 
 			victim_buff_extension:add_internally_controlled_buff("hordes_buff_grenade_explosion_applies_rending_debuff_effect", t, "owner_unit", player_unit)
 		end
-	end,
+	end
 }
 templates.hordes_buff_grenade_explosion_applies_rending_debuff_effect = {
 	class_name = "buff",
@@ -346,8 +346,8 @@ templates.hordes_buff_grenade_explosion_applies_rending_debuff_effect = {
 	predicted = false,
 	buff_category = buff_categories.hordes_sub_buff,
 	stat_buffs = {
-		[stat_buffs.rending_multiplier] = percent_rending_debuff_on_explosion,
-	},
+		[stat_buffs.rending_multiplier] = percent_rending_debuff_on_explosion
+	}
 }
 
 local grenade_replenishment_over_time_interval = HordesBuffsData.hordes_buff_grenade_replenishment_over_time.buff_stats.time.value
@@ -429,7 +429,7 @@ templates.hordes_buff_grenade_replenishment_over_time = {
 
 			template_data.next_grenade_t = nil
 		end
-	end,
+	end
 }
 templates.hordes_buff_spawn_dome_shield_on_grenade_explosion = {
 	class_name = "proc_buff",
@@ -445,7 +445,7 @@ templates.hordes_buff_spawn_dome_shield_on_grenade_explosion = {
 		HordesBuffsUtilities.give_passive_grenade_replenishment_buff(template_context.unit)
 	end,
 	proc_events = {
-		[proc_events.on_player_grenade_exploded] = 1,
+		[proc_events.on_player_grenade_exploded] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		if not template_context.is_server then
@@ -458,7 +458,7 @@ templates.hordes_buff_spawn_dome_shield_on_grenade_explosion = {
 		local physics_world = World.physics_world(world)
 
 		HordesBuffsUtilities.spawn_telekine_dome_at_position(physics_world, player_unit, grenade_position)
-	end,
+	end
 }
 
 local percent_chance_grenade_kill_replenishes_grenade = HordesBuffsData.hordes_buff_grenade_explosion_kill_replenish_grenades.buff_stats.chance.value
@@ -471,7 +471,7 @@ templates.hordes_buff_grenade_explosion_kill_replenish_grenades = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_kill] = percent_chance_grenade_kill_replenishes_grenade,
+		[proc_events.on_kill] = percent_chance_grenade_kill_replenishes_grenade
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		return params.attack_type == attack_types.explosion and grenade_explosion_damage_types[params.damage_type]
@@ -489,7 +489,7 @@ templates.hordes_buff_grenade_explosion_kill_replenish_grenades = {
 				player_fx_extension:trigger_wwise_events_local_only(SFX_NAMES.grenade_refil, nil, player_unit)
 			end
 		end
-	end,
+	end
 }
 templates.hordes_buff_shock_on_grenade_impact = {
 	class_name = "buff",
@@ -506,7 +506,7 @@ templates.hordes_buff_shock_on_grenade_impact = {
 		local coherency_system = Managers.state.extension:system("coherency_system")
 
 		coherency_system:add_external_buff(unit, "hordes_buff_coherency_shock_on_grenade_impact_effect")
-	end,
+	end
 }
 templates.hordes_buff_coherency_shock_on_grenade_impact_effect = {
 	class_name = "proc_buff",
@@ -517,7 +517,7 @@ templates.hordes_buff_coherency_shock_on_grenade_impact_effect = {
 	predicted = false,
 	buff_category = buff_categories.hordes_sub_buff,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		if not template_context.is_server or params.damage_profile == nil then
@@ -570,7 +570,7 @@ templates.hordes_buff_coherency_shock_on_grenade_impact_effect = {
 
 		fx_system:trigger_wwise_event(SFX_NAMES.shock_aoe_big, shock_area_position)
 		fx_system:trigger_vfx(VFX_NAMES.big_shock, shock_area_position)
-	end,
+	end
 }
 
 return templates

@@ -190,7 +190,7 @@ TimedExplosive.component_data = {
 	start_timer_on_spawn = {
 		ui_name = "Start timer on Spawn",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	setting_name = {
 		ui_name = "Setting Name",
@@ -198,40 +198,40 @@ TimedExplosive.component_data = {
 		value = "explosive_barrel",
 		options_keys = {
 			"explosive_barrel",
-			"explosive_luggable",
+			"explosive_luggable"
 		},
 		options_values = {
 			"explosive_barrel",
-			"explosive_luggable",
-		},
+			"explosive_luggable"
+		}
 	},
 	power_level = {
 		decimals = 0,
 		step = 1,
 		ui_name = "Power Level",
 		ui_type = "number",
-		value = 1000,
+		value = 1000
 	},
 	charge_level = {
 		decimals = 0,
 		step = 1,
 		ui_name = "Charge Level",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	fuse_time = {
 		decimals = 1,
 		step = 0.1,
 		ui_name = "Fuse Time (in sec.)",
 		ui_type = "number",
-		value = 5,
+		value = 5
 	},
 	inputs = {
 		start_timer = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return TimedExplosive

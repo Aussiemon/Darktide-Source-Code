@@ -11,8 +11,8 @@ local hud_element_objective_progress_bar_settings = {
 	health_animation_threshold = 0.05,
 	size = {
 		800,
-		12,
-	},
+		12
+	}
 }
 
 return settings("HudElementObjectiveProgressBarSettings", hud_element_objective_progress_bar_settings)

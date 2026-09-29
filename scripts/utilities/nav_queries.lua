@@ -102,6 +102,22 @@ NavQueries.ray_can_go = function (nav_world, position_start, position_end, trave
 	return raycango, projected_start_position, projected_end_position
 end
 
+NavQueries.ray_can_go_projected = function (nav_world, projected_start_position, projected_end_position, traverse_logic)
+	if not projected_start_position or not projected_end_position then
+		return nil
+	end
+
+	local raycango
+
+	if traverse_logic then
+		raycango = GwNavQueries.raycango(nav_world, projected_start_position, projected_end_position, traverse_logic)
+	else
+		raycango = GwNavQueries.raycango(nav_world, projected_start_position, projected_end_position)
+	end
+
+	return raycango
+end
+
 local FLAT_GROUND_UP_DOT_THRESHOLD = 0.9
 
 local function _is_on_flat_ground(physics_world, position)

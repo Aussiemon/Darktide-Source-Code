@@ -16,7 +16,6 @@ local archetype_data = {
 	archetype_icon_selection_large = "content/ui/materials/icons/classes/cryptic_terminal",
 	archetype_icon_selection_large_unselected = "content/ui/materials/icons/classes/cryptic_terminal_shadow",
 	archetype_name = "loc_class_cryptic_name",
-	archetype_selection_background = "content/ui/materials/backgrounds/info_panels/cryptic",
 	archetype_selection_highlight_icon = "content/ui/textures/frames/class_selection/windows/cryptic/class_selection_top_cryptic",
 	archetype_selection_icon = "content/ui/textures/frames/class_selection/windows/cryptic/class_selection_top_cryptic_unselected",
 	archetype_selection_level = "content/levels/ui/class_selection/class_selection_cryptic/class_selection_cryptic",
@@ -32,7 +31,6 @@ local archetype_data = {
 	companion_name_input = nil,
 	deluxe_dlc = "cryptic_deluxe",
 	disable_prologue_skip = true,
-	end_of_round_state_machine = "content/characters/player/human/third_person/animations/menu/state_machines/end_of_round/end_of_round_cryptic",
 	health = 150,
 	inventory_state_machine = "content/characters/player/human/third_person/animations/menu/state_machines/inventory/inventory_cryptic",
 	knocked_down_health = 1000,
@@ -43,6 +41,8 @@ local archetype_data = {
 	onboarding_intro_video_template_name = "cryptic_intro_part2",
 	portrait_state_machine = "content/characters/player/human/third_person/animations/menu/state_machines/portrait/portrait_cryptic",
 	requires_dlc = "cryptic",
+	specialization_talent_layout_file_path = nil,
+	specialization_talent_package_path = nil,
 	talent_layout_file_path = "scripts/ui/views/talent_builder_view/layouts/cryptic_tree",
 	talents_package_path = "packages/ui/views/talent_builder_view/cryptic",
 	spawn_companions_from_talent_func = SpawnCompanionsFromTalent.cryptic_spawn_companions_from_talent,
@@ -53,64 +53,74 @@ local archetype_data = {
 	warp_charge = ArchetypeWarpChargeTemplates.default,
 	talents = ArchetypeTalents.cryptic,
 	base_talents = {
-		cryptic_coherency_regen_aura = 1,
-		cryptic_discharge_base = 1,
-		cryptic_passive_cooldown_regen = 1,
-		cryptic_servo_skull_order = 1,
+		cryptic_servo_skull_order = {
+			target_slot = "slot_grenade_ability",
+			tier = 1
+		},
+		cryptic_discharge_base = {
+			target_slot = "slot_combat_ability",
+			tier = 1
+		},
+		cryptic_passive_cooldown_regen = {
+			tier = 1
+		},
+		cryptic_coherency_regen_aura = {
+			tier = 1
+		}
 	},
 	skip_onboarding_chapters = {
 		inventory_popup = true,
 		play_prologue = true,
 		speak_to_morrow = true,
 		training_reward = true,
-		visit_chapel = true,
+		visit_chapel = true
 	},
 	main_menu_camera_offsets = {
 		x = 0,
 		z = 0.1,
 		y = {
-			0.1,
-			-0.4,
-		},
+			0,
+			-0.5
+		}
 	},
 	selection_sound_event = UiSoundEvents.character_create_archetype_cryptic,
 	name_input = {
 		error_loc_key = "loc_character_create_name_validation_failed_message_alphanumerical",
 		max_length = 18,
 		error_loc_variables = {
-			max_digits = 3,
-		},
+			max_digits = 3
+		}
 	},
 	defining_weapons = {
 		{
 			display_name = "loc_weapon_family_powermaul_p3_m1",
-			item = "content/items/weapons/player/melee/powermaul_p3_m1",
+			item = "content/items/weapons/player/melee/powermaul_p3_m1"
 		},
 		{
 			display_name = "loc_weapon_family_powersword_p3_m1",
-			item = "content/items/weapons/player/melee/powersword_p3_m1",
+			item = "content/items/weapons/player/melee/powersword_p3_m1"
 		},
 		{
 			display_name = "loc_weapon_family_transonic_sword_transonic_knife_p1_m1",
-			item = "content/items/weapons/player/melee/transonic_sword_transonic_knife_p1_m1",
+			item = "content/items/weapons/player/melee/transonic_sword_transonic_knife_p1_m1"
 		},
 		{
 			display_name = "loc_weapon_family_arc_rifle_p1_m1",
-			item = "content/items/weapons/player/ranged/arc_rifle_p1_m1",
+			item = "content/items/weapons/player/ranged/arc_rifle_p1_m1"
 		},
 		{
 			display_name = "loc_weapon_family_galvanic_rifle_p1_m1",
-			item = "content/items/weapons/player/ranged/galvanic_rifle_p1_m1",
+			item = "content/items/weapons/player/ranged/galvanic_rifle_p1_m1"
 		},
 		{
 			display_name = "loc_weapon_family_phosphor_pistol_p1_m1",
-			item = "content/items/weapons/player/ranged/phosphor_pistol_p1_m1",
-		},
+			item = "content/items/weapons/player/ranged/phosphor_pistol_p1_m1"
+		}
 	},
 	requires_dlc_reconciliation = {
 		"cryptic_deluxe",
-		"cryptic_cosmetic",
-	},
+		"cryptic_cosmetic"
+	}
 }
 
 return archetype_data

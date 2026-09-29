@@ -4,75 +4,75 @@ local ALL_CATEGORIES = {
 	aoe = {
 		{
 			attack_names = {
-				"void_shield_explosion",
-			},
-		},
+				"void_shield_explosion"
+			}
+		}
 	},
 	charge = {
 		{
 			attack_names = {
-				"charge",
-			},
-		},
+				"charge"
+			}
+		}
 	},
 	disabling = {
 		{
 			required_weapon_slot_name = "slot_netgun",
 			attack_names = {
-				"shoot_net",
-			},
-		},
+				"shoot_net"
+			}
+		}
 	},
 	grenade = {
 		{
 			attack_names = {
 				"frag_grenade",
-				"fire_grenade",
-			},
-		},
+				"fire_grenade"
+			}
+		}
 	},
 	melee = {
 		{
 			required_weapon_slot_name = "slot_power_sword",
 			attack_names = {
-				"power_sword_melee_combo_attack",
-			},
+				"power_sword_melee_combo_attack"
+			}
 		},
 		{
 			required_weapon_slot_name = "slot_powermaul",
 			attack_names = {
-				"powermaul_ground_slam_attack",
-			},
-		},
+				"powermaul_ground_slam_attack"
+			}
+		}
 	},
 	punch = {
 		{
 			attack_names = {
-				"punch",
-			},
-		},
+				"punch"
+			}
+		}
 	},
 	kick = {
 		{
 			attack_names = {
-				"kick",
-			},
-		},
+				"kick"
+			}
+		}
 	},
 	ranged = {
 		{
 			required_weapon_slot_name = "slot_plasma_pistol",
 			attack_names = {
-				"plasma_pistol_shoot",
-			},
+				"plasma_pistol_shoot"
+			}
 		},
 		{
 			required_weapon_slot_name = "slot_shotgun",
 			attack_names = {
-				"shotgun_shoot",
-			},
-		},
-	},
+				"shotgun_shoot"
+			}
+		}
+	}
 }
 local ONLY_PLASMA = table.clone(ALL_CATEGORIES)
 
@@ -80,9 +80,9 @@ ONLY_PLASMA.ranged = {
 	{
 		required_weapon_slot_name = "slot_plasma_pistol",
 		attack_names = {
-			"plasma_pistol_shoot",
-		},
-	},
+			"plasma_pistol_shoot"
+		}
+	}
 }
 
 local ALL_AMOUNT_FROM_CATEGORY = {}
@@ -103,7 +103,7 @@ end
 local renegade_captain_all = {
 	combat_range_multi_config_key = "default",
 	categories = ALL_CATEGORIES,
-	amount_from_category = ALL_AMOUNT_FROM_CATEGORY,
+	amount_from_category = ALL_AMOUNT_FROM_CATEGORY
 }
 local renegade_captain_default = {
 	combat_range_multi_config_key = "default",
@@ -112,15 +112,15 @@ local renegade_captain_default = {
 	amount_from_category = {
 		aoe = 1,
 		melee = 1,
-		ranged = 1,
+		ranged = 1
 	},
 	multi_selection = {
 		amount = 2,
 		categories = {
 			"charge",
-			"kick",
-		},
-	},
+			"kick"
+		}
+	}
 }
 local renegade_captain_melee = {
 	combat_range_multi_config_key = "melee",
@@ -128,15 +128,15 @@ local renegade_captain_melee = {
 	categories = ALL_CATEGORIES,
 	amount_from_category = {
 		aoe = 1,
-		melee = 1,
+		melee = 1
 	},
 	multi_selection = {
 		amount = 2,
 		categories = {
 			"charge",
-			"kick",
-		},
-	},
+			"kick"
+		}
+	}
 }
 local renegade_captain_ranged = {
 	combat_range_multi_config_key = "ranged",
@@ -144,15 +144,15 @@ local renegade_captain_ranged = {
 	categories = ALL_CATEGORIES,
 	amount_from_category = {
 		aoe = 1,
-		ranged = 1,
+		ranged = 1
 	},
 	multi_selection = {
 		amount = 2,
 		categories = {
 			"grenade",
-			"kick",
-		},
-	},
+			"kick"
+		}
+	}
 }
 local renegade_captain_plasma_pistol = {
 	combat_range_multi_config_key = "default",
@@ -161,22 +161,22 @@ local renegade_captain_plasma_pistol = {
 	amount_from_category = {
 		aoe = 1,
 		melee = 1,
-		ranged = 1,
+		ranged = 1
 	},
 	multi_selection = {
 		amount = 2,
 		categories = {
 			"charge",
-			"kick",
-		},
-	},
+			"kick"
+		}
+	}
 }
 local templates = {
 	renegade_captain_all = renegade_captain_all,
 	renegade_captain_default = renegade_captain_default,
 	renegade_captain_melee = renegade_captain_melee,
 	renegade_captain_ranged = renegade_captain_ranged,
-	renegade_captain_plasma_pistol = renegade_captain_plasma_pistol,
+	renegade_captain_plasma_pistol = renegade_captain_plasma_pistol
 }
 
 return templates

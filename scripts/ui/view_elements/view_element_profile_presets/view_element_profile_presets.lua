@@ -26,7 +26,7 @@ ViewElementProfilePresets.init = function (self, parent, draw_layer, start_scale
 	self._is_handling_navigation_input = false
 	self._pivot_offset = {
 		0,
-		0,
+		0
 	}
 	self._costumization_open = false
 	self._tooltip_visibility = true
@@ -108,13 +108,13 @@ ViewElementProfilePresets._setup_tooltip_grid = function (self)
 		widget_icon_load_margin = 0,
 		grid_spacing = {
 			0,
-			0,
+			0
 		},
 		grid_size = grid_size,
 		mask_size = {
 			grid_size[1] + mask_padding_size,
-			grid_size[2] + mask_padding_size,
-		},
+			grid_size[2] + mask_padding_size
+		}
 	}
 	local reference_name = "profile_preset_tooltip_grid"
 	local layer = self._draw_layer + 10
@@ -130,54 +130,54 @@ ViewElementProfilePresets._setup_intro_grid = function (self)
 			widget_type = "dynamic_spacing",
 			size = {
 				225,
-				25,
-			},
+				25
+			}
 		},
 		{
 			widget_type = "header",
-			text = Localize("loc_inventory_menu_profile_preset_intro_text_1"),
+			text = Localize("loc_inventory_menu_profile_preset_intro_text_1")
 		},
 		{
 			widget_type = "dynamic_spacing",
 			size = {
 				225,
-				20,
-			},
+				20
+			}
 		},
 		{
 			widget_type = "header",
-			text = Localize("loc_inventory_menu_profile_preset_intro_text_2"),
+			text = Localize("loc_inventory_menu_profile_preset_intro_text_2")
 		},
 		{
 			widget_type = "dynamic_spacing",
 			size = {
 				225,
-				25,
-			},
+				25
+			}
 		},
 		{
 			widget_type = "dynamic_spacing",
 			size = {
 				86,
-				40,
-			},
+				40
+			}
 		},
 		{
 			texture = "content/ui/materials/icons/generic/aquila",
 			widget_type = "texture",
 			size = {
 				52,
-				20,
+				20
 			},
-			color = Color.terminal_icon(255, true),
+			color = Color.terminal_icon(255, true)
 		},
 		{
 			widget_type = "dynamic_spacing",
 			size = {
 				86,
-				40,
-			},
-		},
+				40
+			}
+		}
 	}
 
 	self:_present_tooltip_grid_layout(layout)
@@ -194,20 +194,20 @@ ViewElementProfilePresets._setup_custom_icons_grid = function (self)
 			widget_type = "dynamic_spacing",
 			size = {
 				225,
-				10,
-			},
+				10
+			}
 		},
 		{
 			widget_type = "header",
-			text = Localize("loc_inventory_menu_profile_preset_customize_text"),
+			text = Localize("loc_inventory_menu_profile_preset_customize_text")
 		},
 		{
 			widget_type = "dynamic_spacing",
 			size = {
 				225,
-				10,
-			},
-		},
+				10
+			}
+		}
 	}
 	local optional_preset_icon_reference_keys = ViewElementProfilePresetsSettings.optional_preset_icon_reference_keys
 	local optional_preset_icons_lookup = ViewElementProfilePresetsSettings.optional_preset_icons_lookup
@@ -219,7 +219,7 @@ ViewElementProfilePresets._setup_custom_icons_grid = function (self)
 		layout[#layout + 1] = {
 			widget_type = "icon",
 			icon = icon_texture,
-			icon_key = icon_key,
+			icon_key = icon_key
 		}
 	end
 
@@ -227,20 +227,20 @@ ViewElementProfilePresets._setup_custom_icons_grid = function (self)
 		widget_type = "dynamic_spacing",
 		size = {
 			225,
-			10,
-		},
+			10
+		}
 	}
 	layout[#layout + 1] = {
 		delete_button = true,
 		widget_type = "dynamic_button",
-		text = Localize("loc_inventory_menu_profile_preset_delete"),
+		text = Localize("loc_inventory_menu_profile_preset_delete")
 	}
 	layout[#layout + 1] = {
 		widget_type = "dynamic_spacing",
 		size = {
 			225,
-			10,
-		},
+			10
+		}
 	}
 
 	self:_present_tooltip_grid_layout(layout)
@@ -510,9 +510,30 @@ ViewElementProfilePresets.cb_on_profile_preset_icon_grid_layout_changed = functi
 	grid:force_update_list_size()
 end
 
+ViewElementProfilePresets._show_delete_preset_popup = function (self, widget, element)
+	local context = {
+		description_text = "loc_popup_description_delete_profile_preset",
+		title_text = "loc_popup_header_delete_profile_preset",
+		options = {
+			{
+				close_on_pressed = true,
+				text = "loc_inventory_menu_profile_preset_delete",
+				callback = callback(self, "_remove_profile_preset", widget, element)
+			},
+			{
+				close_on_pressed = true,
+				hotkey = "back",
+				text = "loc_popup_button_close"
+			}
+		}
+	}
+
+	Managers.event:trigger("event_show_ui_popup", context)
+end
+
 ViewElementProfilePresets.cb_on_profile_preset_icon_grid_left_pressed = function (self, widget, element)
 	if element.delete_button then
-		self:_remove_profile_preset(widget, element)
+		self:_show_delete_preset_popup(widget, element)
 
 		return
 	end
@@ -866,7 +887,7 @@ end
 local _device_list = {
 	Pad1,
 	Keyboard,
-	Mouse,
+	Mouse
 }
 
 ViewElementProfilePresets.update = function (self, dt, t, input_service)

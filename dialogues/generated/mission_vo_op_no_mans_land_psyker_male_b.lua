@@ -14,7 +14,7 @@ local mission_vo_op_no_mans_land_psyker_male_b = {
 			"loc_psyker_male_b__guidance_starting_area_07",
 			"loc_psyker_male_b__guidance_starting_area_08",
 			"loc_psyker_male_b__guidance_starting_area_09",
-			"loc_psyker_male_b__guidance_starting_area_10",
+			"loc_psyker_male_b__guidance_starting_area_10"
 		},
 		sound_events_duration = {
 			1.998167,
@@ -26,7 +26,7 @@ local mission_vo_op_no_mans_land_psyker_male_b = {
 			3.0755,
 			2.197708,
 			2.287354,
-			2.922938,
+			2.922938
 		},
 		sound_event_weights = {
 			0.1,
@@ -38,10 +38,10 @@ local mission_vo_op_no_mans_land_psyker_male_b = {
 			0.1,
 			0.1,
 			0.1,
-			0.1,
+			0.1
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_op_no_mans_land_psyker_male_b", mission_vo_op_no_mans_land_psyker_male_b)

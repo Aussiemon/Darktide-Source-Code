@@ -7,29 +7,29 @@ attack_intensity_settings.constants = {
 	low_intensity_grace_mod = 0.25,
 	low_intensity_threshold = 0.2,
 	sprint_decay_multiplier = 4,
-	zero_dogpile_decay_multiplier = 2,
+	zero_dogpile_decay_multiplier = 2
 }
 attack_intensity_settings.attacked_allowed_time_range = {
 	{
 		0.3,
-		0.4,
+		0.4
 	},
 	{
 		0.2,
-		0.3,
+		0.3
 	},
 	{
 		0.15,
-		0.2,
+		0.2
 	},
 	{
 		0.1,
-		0.15,
+		0.15
 	},
 	{
 		0.025,
-		0.05,
-	},
+		0.05
+	}
 }
 attack_intensity_settings.locked_in_melee_settings = {
 	delay = 0.5,
@@ -40,42 +40,42 @@ attack_intensity_settings.locked_in_melee_settings = {
 		1.25,
 		3,
 		4,
-		6,
+		6
 	},
 	default_melee_kill_delay = {
 		1,
 		0.75,
 		0.5,
 		0.4,
-		0.25,
-	},
+		0.25
+	}
 }
 attack_intensity_settings.toughness_broken_grace = {
 	{
 		duration = 2,
-		spread_multiplier = 3,
+		spread_multiplier = 3
 	},
 	{
 		duration = 2,
-		spread_multiplier = 3,
+		spread_multiplier = 3
 	},
 	{
 		duration = 1.5,
-		spread_multiplier = 2.5,
+		spread_multiplier = 2.5
 	},
 	{
 		duration = 1.25,
-		spread_multiplier = 2,
+		spread_multiplier = 2
 	},
 	{
 		duration = 1,
-		spread_multiplier = 2,
+		spread_multiplier = 2
 	},
 	{
 		dont_max_out_intensity = true,
 		duration = 1,
-		spread_multiplier = 4,
-	},
+		spread_multiplier = 4
+	}
 }
 attack_intensity_settings.toughness_broken_grace_cooldown = {
 	1.5,
@@ -83,7 +83,7 @@ attack_intensity_settings.toughness_broken_grace_cooldown = {
 	3,
 	5,
 	8,
-	20,
+	20
 }
 attack_intensity_settings.toughness_broken_grace_power_multiplier = {
 	0.15,
@@ -91,7 +91,7 @@ attack_intensity_settings.toughness_broken_grace_power_multiplier = {
 	0.3,
 	0.4,
 	0.5,
-	0.75,
+	0.75
 }
 attack_intensity_settings.attack_intensities = {
 	melee = {
@@ -103,8 +103,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 0.25,
 			threshold = 3,
 			ignored_movement_states = {
-				sprint = true,
-			},
+				sprint = true
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 0.25,
@@ -114,8 +114,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 0.25,
 			threshold = 6,
 			ignored_movement_states = {
-				sprint = true,
-			},
+				sprint = true
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 0.25,
@@ -125,8 +125,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 0.25,
 			threshold = 10,
 			ignored_movement_states = {
-				sprint = true,
-			},
+				sprint = true
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 0.25,
@@ -136,8 +136,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 0.25,
 			threshold = 16,
 			ignored_movement_states = {
-				sprint = true,
-			},
+				sprint = true
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 0.25,
@@ -147,8 +147,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 0.25,
 			threshold = 20,
 			ignored_movement_states = {
-				sprint = true,
-			},
+				sprint = true
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 0.25,
@@ -158,9 +158,9 @@ attack_intensity_settings.attack_intensities = {
 			reset = 0.25,
 			threshold = 40,
 			ignored_movement_states = {
-				sprint = true,
-			},
-		},
+				sprint = true
+			}
+		}
 	},
 	moving_melee = {
 		{
@@ -171,8 +171,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 0.25,
 			threshold = 3,
 			ignored_movement_states = {
-				sprint = true,
-			},
+				sprint = true
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 0.25,
@@ -182,8 +182,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 0.25,
 			threshold = 6,
 			ignored_movement_states = {
-				sprint = true,
-			},
+				sprint = true
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 0.25,
@@ -193,8 +193,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 0.25,
 			threshold = 12,
 			ignored_movement_states = {
-				sprint = true,
-			},
+				sprint = true
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 0.25,
@@ -204,8 +204,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 0.25,
 			threshold = 16,
 			ignored_movement_states = {
-				sprint = true,
-			},
+				sprint = true
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 0.25,
@@ -215,8 +215,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 0.25,
 			threshold = 24,
 			ignored_movement_states = {
-				sprint = true,
-			},
+				sprint = true
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 0.25,
@@ -226,9 +226,9 @@ attack_intensity_settings.attack_intensities = {
 			reset = 0.25,
 			threshold = 48,
 			ignored_movement_states = {
-				sprint = true,
-			},
-		},
+				sprint = true
+			}
+		}
 	},
 	running_melee = {
 		{
@@ -239,8 +239,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 0.25,
 			threshold = 2,
 			ignored_movement_states = {
-				sprint = true,
-			},
+				sprint = true
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 0.25,
@@ -250,8 +250,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 0.25,
 			threshold = 3,
 			ignored_movement_states = {
-				sprint = true,
-			},
+				sprint = true
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 0.25,
@@ -261,8 +261,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 0.25,
 			threshold = 5,
 			ignored_movement_states = {
-				sprint = true,
-			},
+				sprint = true
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 0.25,
@@ -272,8 +272,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 0.25,
 			threshold = 10,
 			ignored_movement_states = {
-				sprint = true,
-			},
+				sprint = true
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 0.25,
@@ -283,8 +283,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 0.25,
 			threshold = 15,
 			ignored_movement_states = {
-				sprint = true,
-			},
+				sprint = true
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 0.25,
@@ -294,9 +294,9 @@ attack_intensity_settings.attack_intensities = {
 			reset = 0.25,
 			threshold = 30,
 			ignored_movement_states = {
-				sprint = true,
-			},
-		},
+				sprint = true
+			}
+		}
 	},
 	elite_ranged = {
 		{
@@ -309,8 +309,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 1,
 			threshold = 8,
 			ignored_movement_states = {
-				sprint = false,
-			},
+				sprint = false
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 0.2,
@@ -322,8 +322,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 1,
 			threshold = 12,
 			ignored_movement_states = {
-				sprint = false,
-			},
+				sprint = false
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 1,
@@ -335,8 +335,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 2.5,
 			threshold = 14,
 			ignored_movement_states = {
-				sprint = false,
-			},
+				sprint = false
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 1.25,
@@ -348,8 +348,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 2.5,
 			threshold = 16,
 			ignored_movement_states = {
-				sprint = false,
-			},
+				sprint = false
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 1.5,
@@ -361,8 +361,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 2.5,
 			threshold = 20,
 			ignored_movement_states = {
-				sprint = false,
-			},
+				sprint = false
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 1.5,
@@ -374,9 +374,9 @@ attack_intensity_settings.attack_intensities = {
 			reset = 2.5,
 			threshold = 40,
 			ignored_movement_states = {
-				sprint = false,
-			},
-		},
+				sprint = false
+			}
+		}
 	},
 	elite_shotgun = {
 		{
@@ -389,8 +389,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 1,
 			threshold = 8,
 			ignored_movement_states = {
-				sprint = false,
-			},
+				sprint = false
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 0.2,
@@ -402,8 +402,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 1,
 			threshold = 12,
 			ignored_movement_states = {
-				sprint = false,
-			},
+				sprint = false
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 1,
@@ -415,8 +415,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 2.5,
 			threshold = 14,
 			ignored_movement_states = {
-				sprint = false,
-			},
+				sprint = false
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 1,
@@ -428,8 +428,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 2.5,
 			threshold = 16,
 			ignored_movement_states = {
-				sprint = false,
-			},
+				sprint = false
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 1,
@@ -441,8 +441,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 2.5,
 			threshold = 20,
 			ignored_movement_states = {
-				sprint = false,
-			},
+				sprint = false
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 1,
@@ -454,9 +454,9 @@ attack_intensity_settings.attack_intensities = {
 			reset = 2.5,
 			threshold = 40,
 			ignored_movement_states = {
-				sprint = false,
-			},
-		},
+				sprint = false
+			}
+		}
 	},
 	ranged = {
 		{
@@ -469,8 +469,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 1,
 			threshold = 6,
 			ignored_movement_states = {
-				sprint = false,
-			},
+				sprint = false
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 1,
@@ -482,8 +482,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 1,
 			threshold = 10,
 			ignored_movement_states = {
-				sprint = false,
-			},
+				sprint = false
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 1.25,
@@ -495,8 +495,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 2,
 			threshold = 14,
 			ignored_movement_states = {
-				sprint = false,
-			},
+				sprint = false
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 1.5,
@@ -508,8 +508,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 2,
 			threshold = 16,
 			ignored_movement_states = {
-				sprint = false,
-			},
+				sprint = false
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 2,
@@ -521,8 +521,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 2,
 			threshold = 22,
 			ignored_movement_states = {
-				sprint = false,
-			},
+				sprint = false
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 2,
@@ -534,9 +534,9 @@ attack_intensity_settings.attack_intensities = {
 			reset = 2,
 			threshold = 44,
 			ignored_movement_states = {
-				sprint = false,
-			},
-		},
+				sprint = false
+			}
+		}
 	},
 	ranged_close = {
 		{
@@ -549,8 +549,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 1,
 			threshold = 6,
 			ignored_movement_states = {
-				sprint = false,
-			},
+				sprint = false
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 1,
@@ -562,8 +562,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 1,
 			threshold = 10,
 			ignored_movement_states = {
-				sprint = false,
-			},
+				sprint = false
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 1.25,
@@ -575,8 +575,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 2,
 			threshold = 12,
 			ignored_movement_states = {
-				sprint = false,
-			},
+				sprint = false
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 1.5,
@@ -587,8 +587,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 2,
 			threshold = 14,
 			ignored_movement_states = {
-				sprint = false,
-			},
+				sprint = false
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 2,
@@ -599,8 +599,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 2,
 			threshold = 20,
 			ignored_movement_states = {
-				sprint = false,
-			},
+				sprint = false
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 2,
@@ -611,9 +611,9 @@ attack_intensity_settings.attack_intensities = {
 			reset = 2,
 			threshold = 40,
 			ignored_movement_states = {
-				sprint = false,
-			},
-		},
+				sprint = false
+			}
+		}
 	},
 	disabling = {
 		{
@@ -623,8 +623,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 0.25,
 			threshold = 1.5,
 			ignored_movement_states = {
-				sprint = false,
-			},
+				sprint = false
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 0.25,
@@ -633,8 +633,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 0.25,
 			threshold = 1.5,
 			ignored_movement_states = {
-				sprint = false,
-			},
+				sprint = false
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 0.25,
@@ -643,8 +643,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 0.25,
 			threshold = 1.5,
 			ignored_movement_states = {
-				sprint = false,
-			},
+				sprint = false
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 0.25,
@@ -653,8 +653,8 @@ attack_intensity_settings.attack_intensities = {
 			reset = 0.25,
 			threshold = 1.5,
 			ignored_movement_states = {
-				sprint = false,
-			},
+				sprint = false
+			}
 		},
 		{
 			attack_allowed_decay_multiplier = 0.25,
@@ -663,9 +663,9 @@ attack_intensity_settings.attack_intensities = {
 			reset = 0.25,
 			threshold = 1.5,
 			ignored_movement_states = {
-				sprint = false,
-			},
-		},
+				sprint = false
+			}
+		}
 	},
 	grenade = {
 		{
@@ -674,7 +674,7 @@ attack_intensity_settings.attack_intensities = {
 			decay = 1,
 			decay_grace = 1,
 			reset = 0.25,
-			threshold = 3,
+			threshold = 3
 		},
 		{
 			attack_allowed_decay_multiplier = 0.25,
@@ -682,7 +682,7 @@ attack_intensity_settings.attack_intensities = {
 			decay = 2,
 			decay_grace = 1,
 			reset = 0.25,
-			threshold = 6,
+			threshold = 6
 		},
 		{
 			attack_allowed_decay_multiplier = 0.25,
@@ -690,7 +690,7 @@ attack_intensity_settings.attack_intensities = {
 			decay = 2,
 			decay_grace = 1,
 			reset = 0.25,
-			threshold = 10,
+			threshold = 10
 		},
 		{
 			attack_allowed_decay_multiplier = 0.25,
@@ -698,7 +698,7 @@ attack_intensity_settings.attack_intensities = {
 			decay = 2,
 			decay_grace = 1,
 			reset = 0.25,
-			threshold = 10,
+			threshold = 10
 		},
 		{
 			attack_allowed_decay_multiplier = 0.25,
@@ -706,7 +706,7 @@ attack_intensity_settings.attack_intensities = {
 			decay = 2,
 			decay_grace = 1,
 			reset = 0.25,
-			threshold = 10,
+			threshold = 10
 		},
 		{
 			attack_allowed_decay_multiplier = 0.25,
@@ -714,9 +714,9 @@ attack_intensity_settings.attack_intensities = {
 			decay = 3,
 			decay_grace = 1,
 			reset = 0.25,
-			threshold = 10,
-		},
-	},
+			threshold = 10
+		}
+	}
 }
 
 return settings("AttackIntensitySettings", attack_intensity_settings)

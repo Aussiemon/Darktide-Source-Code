@@ -13,17 +13,17 @@ local companion_servo_skull = {
 		move_to_position = "Vector3Box",
 		owner_unit = "Unit",
 		target_rotation = "QuaternionBox",
-		target_unit = "Unit",
+		target_unit = "Unit"
 	},
 	aim = {
 		controlled_aim_position = "Vector3Box",
 		controlled_aiming = "boolean",
-		lean_dot = "number",
+		lean_dot = "number"
 	},
 	whistle = {
 		current_hack_target = "Unit",
-		current_target = "Unit",
-	},
+		current_target = "Unit"
+	}
 }
 
 table.merge(companion_servo_skull, base_template)
@@ -33,7 +33,7 @@ companion_servo_skull.death = nil
 companion_servo_skull.nav_smart_object = nil
 
 local templates = {
-	companion_servo_skull = companion_servo_skull,
+	companion_servo_skull = companion_servo_skull
 }
 
 return templates

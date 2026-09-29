@@ -9,15 +9,15 @@ local GRID_CELL_ID_FORMAT = "grid_cell_%i_%i"
 ViewElementUniformGrid.init = function (self, parent, draw_layer, start_scale)
 	self._num_cells = {
 		0,
-		0,
+		0
 	}
 	self._cell_size = {
 		0,
-		0,
+		0
 	}
 	self._grid_spacing = {
 		0,
-		0,
+		0
 	}
 	self._focused_widget = nil
 	self._last_navigation_direction = nil
@@ -492,7 +492,7 @@ ViewElementUniformGrid._recalculate_grid = function (self)
 	end
 
 	local new_definitions = {
-		scenegraph_definition = new_scenegraph_definition,
+		scenegraph_definition = new_scenegraph_definition
 	}
 
 	self._ui_scenegraph = self:_create_scenegraph(new_definitions)

@@ -9,24 +9,24 @@ local stolen_rations = {
 	stat = "stolen_rations_handled",
 	interaction_type_loc_strings = {
 		"loc_stolen_rations_recovered_notification",
-		"loc_stolen_rations_destroyed_notification",
+		"loc_stolen_rations_destroyed_notification"
 	},
 	item_rewards = {
 		"content/items/weapons/player/trinkets/trinket_21a",
 		"content/items/2d/portrait_frames/event_stolenrations_destroy",
-		"content/items/2d/portrait_frames/event_stolenrations_recover",
+		"content/items/2d/portrait_frames/event_stolenrations_recover"
 	},
 	notifications = {
 		notification_recover = {
 			subtitle = "loc_stolen_rations_event_stat_trigger_subtitle",
 			title = "loc_stolen_rations_event_stat_trigger_recover_title_01",
-			sound_event = UISoundEvents.notification_warning,
+			sound_event = UISoundEvents.notification_warning
 		},
 		notification_destroy = {
 			subtitle = "loc_stolen_rations_event_stat_trigger_subtitle",
 			title = "loc_stolen_rations_event_stat_trigger_destroy_title_01",
-			sound_event = UISoundEvents.notification_warning,
-		},
+			sound_event = UISoundEvents.notification_warning
+		}
 	},
 	event_material_wallet_settings = {
 		backend_index = 1,
@@ -38,28 +38,28 @@ local stolen_rations = {
 		pickup_localization_by_size = {
 			large = "loc_stolen_rations_pickup_large",
 			medium = "loc_stolen_rations_pickup_medium",
-			small = "loc_stolen_rations_pickup_small",
+			small = "loc_stolen_rations_pickup_small"
 		},
 		pickup_icon_by_size = {
 			medium = "content/ui/materials/icons/currencies/stolen_rations/rations_live_event_medium",
-			small = "content/ui/materials/icons/currencies/stolen_rations/rations_live_event_small",
-		},
+			small = "content/ui/materials/icons/currencies/stolen_rations/rations_live_event_small"
+		}
 	},
 	eor = {
 		{
 			loc_key = "loc_stolen_rations_recovered_stat_name",
 			path = {
 				"rations",
-				"recovered",
-			},
+				"recovered"
+			}
 		},
 		{
 			loc_key = "loc_stolen_rations_destroyed_stat_name",
 			path = {
 				"rations",
-				"destroyed",
-			},
-		},
+				"destroyed"
+			}
+		}
 	},
 	objective = {
 		widgets = {
@@ -71,21 +71,21 @@ local stolen_rations = {
 						condition = {
 							"rations_recovered_res",
 							">",
-							"rations_destroyed_res",
-						},
+							"rations_destroyed_res"
+						}
 					},
 					{
 						text = "loc_stolen_rations_destroyed_won",
 						condition = {
 							"rations_recovered_res",
 							"<",
-							"rations_destroyed_res",
-						},
+							"rations_destroyed_res"
+						}
 					},
 					{
-						text = "loc_stolen_rations_first_round",
-					},
-				},
+						text = "loc_stolen_rations_first_round"
+					}
+				}
 			},
 			{
 				template = "title",
@@ -93,10 +93,10 @@ local stolen_rations = {
 					text = "loc_stolen_rations_01_name",
 					resets_at = {
 						{
-							hour = 9,
-						},
-					},
-				},
+							hour = 9
+						}
+					}
+				}
 			},
 			{
 				template = "tug_o_war",
@@ -104,11 +104,11 @@ local stolen_rations = {
 					left_name = "loc_stolen_rations_recovered_team_name",
 					left_stat = "rations_recovered",
 					right_name = "loc_stolen_rations_destroyed_team_name",
-					right_stat = "rations_destroyed",
-				},
-			},
-		},
-	},
+					right_stat = "rations_destroyed"
+				}
+			}
+		}
+	}
 }
 
 return stolen_rations

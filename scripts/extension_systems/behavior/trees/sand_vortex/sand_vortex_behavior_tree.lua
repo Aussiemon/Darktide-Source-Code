@@ -8,19 +8,19 @@ local behavior_tree = {
 		"BtDieAction",
 		name = "death",
 		state = "dead",
-		action_data = action_data.death,
+		action_data = action_data.death
 	},
 	{
 		"BTVortexWanderAction",
 		name = "vortex_wander",
-		action_data = action_data.vortex_wander,
+		action_data = action_data.vortex_wander
 	},
 	{
 		"BtIdleAction",
 		name = "idle",
-		action_data = action_data.idle,
+		action_data = action_data.idle
 	},
-	name = "sand_vortex",
+	name = "sand_vortex"
 }
 
 return behavior_tree

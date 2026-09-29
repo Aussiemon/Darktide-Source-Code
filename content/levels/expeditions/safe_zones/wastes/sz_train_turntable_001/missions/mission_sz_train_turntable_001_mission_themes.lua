@@ -2,11 +2,11 @@
 
 local mission_themes = {
 	default = {
-		"content/levels/expeditions/safe_zones/wastes/sz_train_turntable_001/missions/themes/default/theme_default",
+		"content/levels/expeditions/safe_zones/wastes/sz_train_turntable_001/missions/themes/default/theme_default"
 	},
 	darkness = {
-		"content/levels/expeditions/safe_zones/wastes/sz_train_turntable_001/missions/themes/darkness/theme_darkness",
-	},
+		"content/levels/expeditions/safe_zones/wastes/sz_train_turntable_001/missions/themes/darkness/theme_darkness"
+	}
 }
 
 return mission_themes

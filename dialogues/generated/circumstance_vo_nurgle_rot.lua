@@ -12,31 +12,31 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GTEQ,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				30,
+				30
 			},
 			{
 				"global_context",
 				"circumstance_vo_id",
 				OP.EQ,
-				"circumstance_vo_nurgle_rot",
+				"circumstance_vo_nurgle_rot"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.EQ,
-				"low, medium",
+				"low, medium"
 			},
 			{
 				"user_context",
@@ -46,46 +46,46 @@ return function ()
 					"tension_peak_fade",
 					"relax",
 					"build_up_tension_low",
-					"build_up_tension_no_trickle",
-				},
+					"build_up_tension_no_trickle"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"nurgle_circumstance_conversation",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				60,
-			},
+				60
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"nurgle_circumstance_conversation",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -101,34 +101,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"nurgle_circumstance_conversation_five_a",
-				},
+					"nurgle_circumstance_conversation_five_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -141,18 +141,18 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"nurgle_circumstance_conversation_five_b",
-				},
-			},
+					"nurgle_circumstance_conversation_five_b"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -165,31 +165,31 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GTEQ,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				30,
+				30
 			},
 			{
 				"global_context",
 				"circumstance_vo_id",
 				OP.EQ,
-				"circumstance_vo_nurgle_rot",
+				"circumstance_vo_nurgle_rot"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.EQ,
-				"low, medium",
+				"low, medium"
 			},
 			{
 				"user_context",
@@ -199,46 +199,46 @@ return function ()
 					"tension_peak_fade",
 					"relax",
 					"build_up_tension_low",
-					"build_up_tension_no_trickle",
-				},
+					"build_up_tension_no_trickle"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"nurgle_circumstance_conversation",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				60,
-			},
+				60
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"nurgle_circumstance_conversation",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -254,34 +254,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"nurgle_circumstance_conversation_four_a",
-				},
+					"nurgle_circumstance_conversation_four_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -294,18 +294,18 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"nurgle_circumstance_conversation_four_b",
-				},
-			},
+					"nurgle_circumstance_conversation_four_b"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -318,31 +318,31 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GTEQ,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				30,
+				30
 			},
 			{
 				"global_context",
 				"circumstance_vo_id",
 				OP.EQ,
-				"circumstance_vo_nurgle_rot",
+				"circumstance_vo_nurgle_rot"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.EQ,
-				"low, medium",
+				"low, medium"
 			},
 			{
 				"user_context",
@@ -352,46 +352,46 @@ return function ()
 					"tension_peak_fade",
 					"relax",
 					"build_up_tension_low",
-					"build_up_tension_no_trickle",
-				},
+					"build_up_tension_no_trickle"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"nurgle_circumstance_conversation",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				60,
-			},
+				60
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"nurgle_circumstance_conversation",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -407,34 +407,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"nurgle_circumstance_conversation_one_a",
-				},
+					"nurgle_circumstance_conversation_one_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -447,18 +447,18 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"nurgle_circumstance_conversation_one_b",
-				},
-			},
+					"nurgle_circumstance_conversation_one_b"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -471,31 +471,31 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GTEQ,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				30,
+				30
 			},
 			{
 				"global_context",
 				"circumstance_vo_id",
 				OP.EQ,
-				"circumstance_vo_nurgle_rot",
+				"circumstance_vo_nurgle_rot"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.EQ,
-				"low",
+				"low"
 			},
 			{
 				"user_context",
@@ -505,46 +505,46 @@ return function ()
 					"tension_peak_fade",
 					"relax",
 					"build_up_tension_low",
-					"build_up_tension_no_trickle",
-				},
+					"build_up_tension_no_trickle"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"nurgle_circumstance_conversation",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				60,
-			},
+				60
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"nurgle_circumstance_conversation",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -560,34 +560,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"nurgle_circumstance_conversation_three_a",
-				},
+					"nurgle_circumstance_conversation_three_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -600,18 +600,18 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"nurgle_circumstance_conversation_three_b",
-				},
-			},
+					"nurgle_circumstance_conversation_three_b"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -624,31 +624,31 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"story_talk",
+				"story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GTEQ,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				30,
+				30
 			},
 			{
 				"global_context",
 				"circumstance_vo_id",
 				OP.EQ,
-				"circumstance_vo_nurgle_rot",
+				"circumstance_vo_nurgle_rot"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.EQ,
-				"low, medium",
+				"low, medium"
 			},
 			{
 				"user_context",
@@ -658,46 +658,46 @@ return function ()
 					"tension_peak_fade",
 					"relax",
 					"build_up_tension_low",
-					"build_up_tension_no_trickle",
-				},
+					"build_up_tension_no_trickle"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"nurgle_circumstance_conversation",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				60,
-			},
+				60
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"nurgle_circumstance_conversation",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -713,34 +713,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"nurgle_circumstance_conversation_two_a",
-				},
+					"nurgle_circumstance_conversation_two_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -753,18 +753,18 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"nurgle_circumstance_conversation_two_b",
-				},
-			},
+					"nurgle_circumstance_conversation_two_b"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -777,13 +777,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"nurgle_circumstance_prop_alive",
+				"nurgle_circumstance_prop_alive"
 			},
 			{
 				"user_context",
@@ -792,30 +792,30 @@ return function ()
 				args = {
 					"low",
 					"medium",
-					"high",
-				},
+					"high"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				40,
+				40
 			},
 			{
 				"faction_memory",
 				"nurgle_circumstance_prop",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"nurgle_circumstance_prop",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -828,13 +828,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"nurgle_circumstance_prop_growth",
+				"nurgle_circumstance_prop_growth"
 			},
 			{
 				"user_context",
@@ -843,30 +843,30 @@ return function ()
 				args = {
 					"low",
 					"medium",
-					"high",
-				},
+					"high"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				40,
+				40
 			},
 			{
 				"faction_memory",
 				"nurgle_circumstance_prop",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"nurgle_circumstance_prop",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -879,13 +879,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"nurgle_circumstance_prop_shrine",
+				"nurgle_circumstance_prop_shrine"
 			},
 			{
 				"user_context",
@@ -894,30 +894,30 @@ return function ()
 				args = {
 					"low",
 					"medium",
-					"high",
-				},
+					"high"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				40,
+				40
 			},
 			{
 				"faction_memory",
 				"nurgle_circumstance_prop",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"nurgle_circumstance_prop",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -931,13 +931,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"start_banter",
+				"start_banter"
 			},
 			{
 				"global_context",
 				"circumstance_vo_id",
 				OP.EQ,
-				"circumstance_vo_nurgle_rot",
+				"circumstance_vo_nurgle_rot"
 			},
 			{
 				"user_context",
@@ -947,27 +947,27 @@ return function ()
 					"sergeant",
 					"pilot",
 					"tech_priest",
-					"explicator",
-				},
+					"explicator"
+				}
 			},
 			{
 				"faction_memory",
 				"start_banter",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"start_banter",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -980,26 +980,26 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"nurgle_circumstance_start_a",
-				},
-			},
+					"nurgle_circumstance_start_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all",
+			target = "all"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1015,33 +1015,33 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"nurgle_circumstance_start_b",
-				},
+					"nurgle_circumstance_start_b"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 end

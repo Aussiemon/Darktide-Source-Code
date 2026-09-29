@@ -7,7 +7,7 @@ local ALLOWED_SPAWN_TYPES = {
 	roamers = false,
 	specials = false,
 	terror_events = true,
-	trickle_hordes = false,
+	trickle_hordes = false
 }
 local pacing_template = table.clone_instance(DefaultPacingTemplate)
 

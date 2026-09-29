@@ -11,7 +11,7 @@ table.make_unique(templates)
 local buff_categories = BuffSettings.buff_categories
 local proc_events = BuffSettings.proc_events
 local SFX_NAMES = {
-	grenade_refil = "wwise/events/player/play_horde_mode_buff_grenade_refill",
+	grenade_refil = "wwise/events/player/play_horde_mode_buff_grenade_refill"
 }
 
 templates.drop_ogryn_grenade_on_death = {
@@ -34,7 +34,7 @@ templates.drop_ogryn_grenade_on_death = {
 		if not HEALTH_ALIVE[unit] then
 			return true
 		end
-	end,
+	end
 }
 templates.live_event_abhuman_explosions_grenade_regen_on_elite_kill = {
 	always_show_in_hud = true,
@@ -52,7 +52,7 @@ templates.live_event_abhuman_explosions_grenade_regen_on_elite_kill = {
 	title = "Abhuman Explosions Grenade Regen on Elite Kill",
 	buff_category = buff_categories.live_event,
 	proc_events = {
-		[proc_events.on_minion_death] = 0.1,
+		[proc_events.on_minion_death] = 0.1
 	},
 	check_proc_func = CheckProcFunctions.on_elite_or_special_minion_death,
 	start_func = function (template_data, template_context)
@@ -101,7 +101,7 @@ templates.live_event_abhuman_explosions_grenade_regen_on_elite_kill = {
 				player_fx_extension:trigger_wwise_events_local_only(SFX_NAMES.grenade_refil, nil, unit)
 			end
 		end
-	end,
+	end
 }
 
 return templates

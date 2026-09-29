@@ -12,7 +12,7 @@ local damage_types = DamageSettings.damage_types
 local action_data = {
 	name = "chaos_beast_of_nurgle",
 	idle = {
-		anim_events = "idle",
+		anim_events = "idle"
 	},
 	death = {
 		explode_position_node = "j_spine",
@@ -23,11 +23,11 @@ local action_data = {
 		instant_ragdoll_chance = 0,
 		death_animations = {
 			default = {
-				"death_explode_01",
-			},
+				"death_explode_01"
+			}
 		},
 		death_timings = {
-			death_explode_01 = 3.3333333333333335,
+			death_explode_01 = 3.3333333333333335
 		},
 		specific_gib_settings = {
 			random_radius = 2,
@@ -36,11 +36,11 @@ local action_data = {
 				"head",
 				"tongue",
 				"lower_left_arm",
-				"lower_right_arm",
+				"lower_right_arm"
 			},
-			damage_profile = DamageProfileTemplates.beast_of_nurgle_self_gib,
+			damage_profile = DamageProfileTemplates.beast_of_nurgle_self_gib
 		},
-		explosion_template = ExplosionTemplates.beast_of_nurgle_death,
+		explosion_template = ExplosionTemplates.beast_of_nurgle_death
 	},
 	movement = {
 		degree_per_direction = 10,
@@ -61,39 +61,39 @@ local action_data = {
 			bwd = "move_start_bwd",
 			fwd = "move_start_fwd",
 			left = "move_start_left",
-			right = "move_start_right",
+			right = "move_start_right"
 		},
 		start_move_anim_data = {
 			move_start_fwd = {
 				rad = nil,
-				sign = nil,
+				sign = nil
 			},
 			move_start_bwd = {
 				sign = 1,
-				rad = math.pi,
+				rad = math.pi
 			},
 			move_start_left = {
 				sign = 1,
-				rad = math.pi / 2,
+				rad = math.pi / 2
 			},
 			move_start_right = {
 				sign = -1,
-				rad = math.pi / 2,
-			},
+				rad = math.pi / 2
+			}
 		},
 		start_move_rotation_timings = {
 			move_start_bwd = 0,
 			move_start_fwd = 0,
 			move_start_left = 0.16666666666666666,
-			move_start_right = 0.16666666666666666,
+			move_start_right = 0.16666666666666666
 		},
 		start_rotation_durations = {
 			move_start_bwd = 1.3333333333333333,
 			move_start_fwd = 0,
 			move_start_left = 0.4,
-			move_start_right = 0.4,
+			move_start_right = 0.4
 		},
-		push_enemies_damage_profile = DamageProfileTemplates.beast_of_nurgle_push_players,
+		push_enemies_damage_profile = DamageProfileTemplates.beast_of_nurgle_push_players
 	},
 	align = {
 		rotation_speed = 8,
@@ -101,38 +101,38 @@ local action_data = {
 			bwd = "turn_bwd",
 			fwd = "move_start_fwd",
 			left = "turn_left",
-			right = "turn_right",
+			right = "turn_right"
 		},
 		start_move_anim_data = {
 			move_start_fwd = {
 				rad = nil,
-				sign = nil,
+				sign = nil
 			},
 			turn_bwd = {
 				sign = 1,
-				rad = math.pi,
+				rad = math.pi
 			},
 			turn_left = {
 				sign = 1,
-				rad = math.pi / 2,
+				rad = math.pi / 2
 			},
 			turn_right = {
 				sign = -1,
-				rad = math.pi / 2,
-			},
+				rad = math.pi / 2
+			}
 		},
 		start_move_rotation_timings = {
 			move_start_fwd = 0,
 			turn_bwd = 0,
 			turn_left = 0,
-			turn_right = 0,
+			turn_right = 0
 		},
 		start_rotation_durations = {
 			move_start_fwd = 0,
 			turn_bwd = 1.3333333333333333,
 			turn_left = 1,
-			turn_right = 1,
-		},
+			turn_right = 1
+		}
 	},
 	change_target = {
 		dont_set_moving_move_state = true,
@@ -142,41 +142,41 @@ local action_data = {
 			bwd = "change_target_bwd",
 			fwd = "change_target_fwd",
 			left = "change_target_left",
-			right = "change_target_right",
+			right = "change_target_right"
 		},
 		change_target_anim_data = {
 			change_target_fwd = {
 				rad = nil,
-				sign = nil,
+				sign = nil
 			},
 			change_target_bwd = {
 				sign = -1,
-				rad = math.pi,
+				rad = math.pi
 			},
 			change_target_left = {
 				sign = 1,
-				rad = math.pi / 2,
+				rad = math.pi / 2
 			},
 			change_target_right = {
 				sign = -1,
-				rad = math.pi / 2,
-			},
+				rad = math.pi / 2
+			}
 		},
 		change_target_rotation_timings = {
 			change_target_bwd = 0,
 			change_target_fwd = 0,
 			change_target_left = 0,
-			change_target_right = 0,
+			change_target_right = 0
 		},
 		change_target_rotation_durations = {
 			change_target_bwd = 1.7666666666666666,
 			change_target_fwd = 1.7666666666666666,
 			change_target_left = 1.7666666666666666,
-			change_target_right = 1.7666666666666666,
+			change_target_right = 1.7666666666666666
 		},
 		change_target_event_anim_speed_durations = {
-			change_target_fwd = 1.7666666666666666,
-		},
+			change_target_fwd = 1.7666666666666666
+		}
 	},
 	alerted = {
 		dont_set_moving_move_state = true,
@@ -185,44 +185,44 @@ local action_data = {
 			bwd = "turn_bwd",
 			fwd = "alerted_fwd",
 			left = "turn_left",
-			right = "turn_right",
+			right = "turn_right"
 		},
 		start_move_anim_data = {
 			alerted_fwd = {
 				rad = nil,
-				sign = nil,
+				sign = nil
 			},
 			turn_bwd = {
 				sign = 1,
-				rad = math.pi,
+				rad = math.pi
 			},
 			turn_left = {
 				sign = 1,
-				rad = math.pi / 2,
+				rad = math.pi / 2
 			},
 			turn_right = {
 				sign = -1,
-				rad = math.pi / 2,
-			},
+				rad = math.pi / 2
+			}
 		},
 		start_move_rotation_timings = {
 			alerted_fwd = 0,
 			turn_bwd = 0,
 			turn_left = 0,
-			turn_right = 0,
+			turn_right = 0
 		},
 		start_rotation_durations = {
 			alerted_fwd = 0,
 			turn_bwd = 1.3333333333333333,
 			turn_left = 1,
-			turn_right = 1,
+			turn_right = 1
 		},
 		align_durations = {
-			alerted_fwd = 4,
+			alerted_fwd = 4
 		},
 		align_rotation_durations = {
-			alerted_fwd = 1.0666666666666667,
-		},
+			alerted_fwd = 1.0666666666666667
+		}
 	},
 	fast_movement = {
 		degree_per_direction = 10,
@@ -248,39 +248,39 @@ local action_data = {
 			bwd = "run_start_bwd",
 			fwd = "run_start_fwd",
 			left = "run_start_left",
-			right = "run_start_right",
+			right = "run_start_right"
 		},
 		start_move_anim_data = {
 			run_start_fwd = {
 				rad = nil,
-				sign = nil,
+				sign = nil
 			},
 			run_start_bwd = {
 				sign = 1,
-				rad = math.pi,
+				rad = math.pi
 			},
 			run_start_left = {
 				sign = 1,
-				rad = math.pi / 2,
+				rad = math.pi / 2
 			},
 			run_start_right = {
 				sign = -1,
-				rad = math.pi / 2,
-			},
+				rad = math.pi / 2
+			}
 		},
 		start_move_rotation_timings = {
 			run_start_bwd = 0,
 			run_start_fwd = 0,
 			run_start_left = 0.16666666666666666,
-			run_start_right = 0.16666666666666666,
+			run_start_right = 0.16666666666666666
 		},
 		start_rotation_durations = {
 			run_start_bwd = 1.3333333333333333,
 			run_start_fwd = 0,
 			run_start_left = 0.4,
-			run_start_right = 0.4,
+			run_start_right = 0.4
 		},
-		push_enemies_damage_profile = DamageProfileTemplates.beast_of_nurgle_push_players,
+		push_enemies_damage_profile = DamageProfileTemplates.beast_of_nurgle_push_players
 	},
 	vomit = {
 		aoe_bot_threat_duration = 1.5,
@@ -310,23 +310,23 @@ local action_data = {
 		sphere_cast_frequency = 0.2,
 		vo_event = "start_shooting",
 		aim_anim_events = {
-			"attack_vomit_start",
+			"attack_vomit_start"
 		},
 		aim_duration = {
-			attack_vomit_start = 0.5,
+			attack_vomit_start = 0.5
 		},
 		aim_stances = {
-			attack_vomit_start = "standing",
+			attack_vomit_start = "standing"
 		},
 		end_anim_events = {
-			"attack_vomit_end",
+			"attack_vomit_end"
 		},
 		end_durations = {
-			attack_vomit_end = 0.5,
+			attack_vomit_end = 0.5
 		},
 		attack_intensities = {
 			elite_ranged = 50,
-			ranged = 50,
+			ranged = 50
 		},
 		from_node = ChaosBeastOfNurgleSettings.from_node,
 		range = ChaosBeastOfNurgleSettings.range,
@@ -339,10 +339,10 @@ local action_data = {
 		damage_type = damage_types.minion_vomit,
 		stagger_type_reduction = {
 			killshot = 20,
-			ranged = 20,
+			ranged = 20
 		},
 		push_minions_damage_profile = DamageProfileTemplates.beast_of_nurgle_push_minion,
-		aoe_bot_threat_size = Vector3Box(2.5, 8, 3),
+		aoe_bot_threat_size = Vector3Box(2.5, 8, 3)
 	},
 	consume = {
 		after_throw_taunt_anim = "change_target_fwd",
@@ -360,125 +360,125 @@ local action_data = {
 		consume_anims = {
 			cryptic = "attack_grab_start",
 			human = "attack_grab_start",
-			ogryn = "attack_grab_start",
+			ogryn = "attack_grab_start"
 		},
 		consume_timing = {
 			cryptic = 0.43333333333333335,
 			human = 0.43333333333333335,
-			ogryn = 0.43333333333333335,
+			ogryn = 0.43333333333333335
 		},
 		drag_in_anims = {
 			cryptic = "attack_grab_eat_human",
 			human = "attack_grab_eat_human",
-			ogryn = "attack_grab_eat_ogryn",
+			ogryn = "attack_grab_eat_ogryn"
 		},
 		consume_durations = {
 			cryptic = 4.1,
 			human = 4.1,
-			ogryn = 4.766666666666667,
+			ogryn = 4.766666666666667
 		},
 		damage_timings = {
 			cryptic = {
 				1,
 				1.2,
-				1.4,
+				1.4
 			},
 			human = {
 				1,
 				1.2,
-				1.4,
+				1.4
 			},
 			ogryn = {
 				1,
 				1.3333333333333333,
 				1.5,
-				1.8666666666666667,
-			},
+				1.8666666666666667
+			}
 		},
 		anim_data = {
 			move_start_fwd = {
 				rad = nil,
-				sign = nil,
+				sign = nil
 			},
 			move_start_bwd = {
 				sign = -1,
-				rad = math.pi,
+				rad = math.pi
 			},
 			move_start_left = {
 				sign = 1,
-				rad = math.pi / 2,
+				rad = math.pi / 2
 			},
 			move_start_right = {
 				sign = -1,
-				rad = math.pi / 2,
-			},
+				rad = math.pi / 2
+			}
 		},
 		start_rotation_timings = {
 			move_start_bwd = 1.6666666666666667,
 			move_start_fwd = 0,
 			move_start_left = 1.3333333333333333,
-			move_start_right = 1.2666666666666666,
+			move_start_right = 1.2666666666666666
 		},
 		throw_anims = {
 			cryptic = {
 				bwd = "move_start_bwd",
 				fwd = "move_start_fwd",
 				left = "move_start_left",
-				right = "move_start_right",
+				right = "move_start_right"
 			},
 			human = {
 				bwd = "move_start_bwd",
 				fwd = "move_start_fwd",
 				left = "move_start_left",
-				right = "move_start_right",
+				right = "move_start_right"
 			},
 			ogryn = {
 				bwd = "move_start_bwd",
 				fwd = "move_start_fwd",
 				left = "move_start_left",
-				right = "move_start_right",
-			},
+				right = "move_start_right"
+			}
 		},
 		throw_timing = {
 			cryptic = 1.3333333333333333,
 			human = 1.3333333333333333,
-			ogryn = 1.3333333333333333,
+			ogryn = 1.3333333333333333
 		},
 		throw_duration = {
 			cryptic = 1.6666666666666667,
 			human = 1.6666666666666667,
-			ogryn = 2.3333333333333335,
+			ogryn = 2.3333333333333335
 		},
 		catapult_force = {
 			cryptic = 13,
 			human = 13,
-			ogryn = 10,
+			ogryn = 10
 		},
 		catapult_z_force = {
 			cryptic = 3,
 			human = 3,
-			ogryn = 4,
+			ogryn = 4
 		},
 		power_level = {
 			50,
 			75,
 			100,
 			125,
-			150,
+			150
 		},
 		damage_profile = DamageProfileTemplates.beast_of_nurgle_hit_by_vomit,
 		damage_type = {
 			cryptic = damage_types.minion_vomit,
 			human = damage_types.minion_vomit,
-			ogryn = damage_types.minion_vomit,
+			ogryn = damage_types.minion_vomit
 		},
 		attack_intensities = {
 			elite_ranged = 20,
 			melee = 20,
 			moving_melee = 20,
 			ranged = 20,
-			running_melee = 20,
-		},
+			running_melee = 20
+		}
 	},
 	consume_minion = {
 		consumed_minion_anim = "death_bon_eaten",
@@ -491,31 +491,31 @@ local action_data = {
 		tongue_length_variable_name = "tongue_length",
 		tongue_out_anim = "attack_grab_start_minion",
 		tongue_out_durations = {
-			attack_grab_start_minion = 0.4666666666666667,
+			attack_grab_start_minion = 0.4666666666666667
 		},
 		tongue_in_durations = {
-			attack_grab_eat_minion = 3,
+			attack_grab_eat_minion = 3
 		},
 		consume_durations = {
-			attack_grab_eat_minion = 2.5,
+			attack_grab_eat_minion = 2.5
 		},
 		heal_durations = {
-			attack_grab_eat_minion = 1.3333333333333333,
+			attack_grab_eat_minion = 1.3333333333333333
 		},
 		heal_amount = {
 			250,
 			400,
 			600,
 			800,
-			1000,
+			1000
 		},
 		cooldown = {
 			15,
 			10,
 			8,
 			6,
-			4,
-		},
+			4
+		}
 	},
 	spit_out = {
 		after_throw_taunt_anim = "change_target_fwd",
@@ -527,77 +527,77 @@ local action_data = {
 		anim_data = {
 			move_start_fwd = {
 				rad = nil,
-				sign = nil,
+				sign = nil
 			},
 			turn_bwd = {
 				sign = 1,
-				rad = math.pi,
+				rad = math.pi
 			},
 			turn_left = {
 				sign = 1,
-				rad = math.pi / 2,
+				rad = math.pi / 2
 			},
 			turn_right = {
 				sign = -1,
-				rad = math.pi / 2,
-			},
+				rad = math.pi / 2
+			}
 		},
 		start_rotation_timings = {
 			move_start_fwd = 0,
 			turn_bwd = 0,
 			turn_left = 0,
-			turn_right = 0,
+			turn_right = 0
 		},
 		start_rotation_durations = {
 			move_start_fwd = 0,
 			turn_bwd = 1.3333333333333333,
 			turn_left = 1,
-			turn_right = 1,
+			turn_right = 1
 		},
 		throw_anims = {
 			cryptic = "spit_out_player",
 			human = "spit_out_player",
-			ogryn = "spit_out_player",
+			ogryn = "spit_out_player"
 		},
 		align_anims = {
 			bwd = "turn_bwd",
 			fwd = "move_start_fwd",
 			left = "turn_left",
-			right = "turn_right",
+			right = "turn_right"
 		},
 		throw_timing = {
 			cryptic = 0.7,
 			human = 0.7,
-			ogryn = 0.7,
+			ogryn = 0.7
 		},
 		throw_duration = {
 			cryptic = 1.5666666666666667,
 			human = 1.5666666666666667,
-			ogryn = 1.5666666666666667,
+			ogryn = 1.5666666666666667
 		},
 		align_duration = {
 			move_start_fwd = 0.3333333333333333,
 			turn_bwd = 1.3333333333333333,
 			turn_left = 1,
-			turn_right = 1,
+			turn_right = 1
 		},
 		catapult_force = {
 			cryptic = 13,
 			human = 13,
-			ogryn = 12,
+			ogryn = 12
 		},
 		catapult_z_force = {
 			cryptic = 3,
 			human = 3,
-			ogryn = 4,
+			ogryn = 4
 		},
 		required_permanent_damage_taken_percent = {
 			0.25,
 			0.35,
 			0.5,
 			0.65,
-			0.75,
-		},
+			0.75
+		}
 	},
 	run_away = {
 		allow_fallback_movement = true,
@@ -620,55 +620,55 @@ local action_data = {
 			position_target_side_id = 1,
 			travel_distance_random_range = {
 				-20,
-				-10,
+				-10
 			},
 			fallback_distance_random_range = {
 				-10,
-				0,
-			},
+				0
+			}
 		},
 		disable_nav_tag_layers = {
 			"doors",
 			"teleporters",
 			"jumps",
 			"ledges",
-			"ledges_with_fence",
+			"ledges_with_fence"
 		},
 		start_move_anim_events = {
 			bwd = "move_start_bwd",
 			fwd = "move_start_fwd",
 			left = "move_start_left",
-			right = "move_start_right",
+			right = "move_start_right"
 		},
 		start_move_anim_data = {
 			move_start_fwd = {
 				rad = nil,
-				sign = nil,
+				sign = nil
 			},
 			move_start_bwd = {
 				sign = 1,
-				rad = math.pi,
+				rad = math.pi
 			},
 			move_start_left = {
 				sign = 1,
-				rad = math.pi / 2,
+				rad = math.pi / 2
 			},
 			move_start_right = {
 				sign = -1,
-				rad = math.pi / 2,
-			},
+				rad = math.pi / 2
+			}
 		},
 		start_move_rotation_timings = {
 			move_start_bwd = 0,
 			move_start_fwd = 0,
 			move_start_left = 0.16666666666666666,
-			move_start_right = 0.16666666666666666,
+			move_start_right = 0.16666666666666666
 		},
 		start_rotation_durations = {
 			move_start_bwd = 1.3333333333333333,
 			move_start_fwd = 0,
 			move_start_left = 0.4,
-			move_start_right = 0.4,
+			move_start_right = 0.4
 		},
 		push_enemies_damage_profile = DamageProfileTemplates.beast_of_nurgle_push_players,
 		required_permanent_damage_taken_percent = {
@@ -676,22 +676,22 @@ local action_data = {
 			0.35,
 			0.5,
 			0.65,
-			0.75,
+			0.75
 		},
 		heal_frequency = {
 			2,
 			1.5,
 			1.25,
 			1,
-			0.85,
+			0.85
 		},
 		heal_amount = {
 			50,
 			75,
 			100,
 			125,
-			150,
-		},
+			150
+		}
 	},
 	climb = {
 		rotation_duration = 0.1,
@@ -710,7 +710,7 @@ local action_data = {
 			jump_up_fence_1m = 0.7666666666666667,
 			jump_up_fence_2m = 0.7666666666666667,
 			jump_up_fence_3m = 0.7666666666666667,
-			jump_up_fence_5m = 0.8666666666666667,
+			jump_up_fence_5m = 0.8666666666666667
 		},
 		ending_move_states = {
 			jump_down_fence_land_1m = "jumping",
@@ -722,7 +722,7 @@ local action_data = {
 			jump_up_1m = "jumping",
 			jump_up_2m = "jumping",
 			jump_up_3m = "jumping",
-			jump_up_5m = "jumping",
+			jump_up_5m = "jumping"
 		},
 		blend_timings = {
 			jump_down_1m = 0.4,
@@ -740,29 +740,29 @@ local action_data = {
 			jump_up_fence_1m = 0.2,
 			jump_up_fence_2m = 0.2,
 			jump_up_fence_3m = 0.2,
-			jump_up_fence_5m = 0.2,
+			jump_up_fence_5m = 0.2
 		},
 		catapult_units = {
 			radius = 2,
 			speed = 7,
-			angle = math.pi / 6,
-		},
+			angle = math.pi / 6
+		}
 	},
 	jump_across = {
 		rotation_duration = 0.1,
 		stagger_immune = true,
 		anim_timings = {
 			jump_over_cover = 1.9333333333333333,
-			jump_over_gap_4m = 1.2666666666666666,
+			jump_over_gap_4m = 1.2666666666666666
 		},
 		ending_move_states = {
 			jump_over_cover = "moving",
-			jump_over_gap_4m = "jumping",
+			jump_over_gap_4m = "jumping"
 		},
 		blend_timings = {
 			jump_over_cover = 0.2,
-			jump_over_gap_4m = 0.2,
-		},
+			jump_over_gap_4m = 0.2
+		}
 	},
 	melee_attack_right = {
 		collision_filter = "filter_minion_melee_friendly_fire",
@@ -780,34 +780,34 @@ local action_data = {
 		utility_weight = 1,
 		considerations = UtilityConsiderations.chaos_plague_ogryn_slam_attack,
 		attack_anim_events = {
-			"attack_tail_whip_right",
+			"attack_tail_whip_right"
 		},
 		attack_sweep_damage_timings = {
 			attack_tail_whip_right = {
 				1.1388888888888888,
-				1.5277777777777777,
-			},
+				1.5277777777777777
+			}
 		},
 		attack_anim_durations = {
-			attack_tail_whip_right = 1.9444444444444444,
+			attack_tail_whip_right = 1.9444444444444444
 		},
 		attack_intensities = {
 			elite_ranged = 4,
 			melee = 0.25,
 			moving_melee = 0.1,
 			ranged = 5,
-			running_melee = 2,
+			running_melee = 2
 		},
 		damage_profile = DamageProfileTemplates.beast_of_nurgle_tail_whip,
 		friendly_fire_damage_profile = DamageProfileTemplates.beast_of_nurgle_melee_friendly_fire,
 		damage_type = damage_types.minion_ogryn_kick,
 		attack_type = {
-			attack_tail_whip_right = "sweep",
+			attack_tail_whip_right = "sweep"
 		},
 		weapon_reach = {
-			default = 2,
+			default = 2
 		},
-		ground_impact_fx_template = GroundImpactFxTemplates.beast_of_nurgle_tail_whip,
+		ground_impact_fx_template = GroundImpactFxTemplates.beast_of_nurgle_tail_whip
 	},
 	melee_attack_left = {
 		collision_filter = "filter_minion_melee_friendly_fire",
@@ -825,34 +825,34 @@ local action_data = {
 		utility_weight = 1,
 		considerations = UtilityConsiderations.chaos_plague_ogryn_slam_attack,
 		attack_anim_events = {
-			"attack_tail_whip_left",
+			"attack_tail_whip_left"
 		},
 		attack_sweep_damage_timings = {
 			attack_tail_whip_left = {
 				1.0277777777777777,
-				1.2777777777777777,
-			},
+				1.2777777777777777
+			}
 		},
 		attack_anim_durations = {
-			attack_tail_whip_left = 1.9444444444444444,
+			attack_tail_whip_left = 1.9444444444444444
 		},
 		attack_intensities = {
 			elite_ranged = 4,
 			melee = 0.25,
 			moving_melee = 0.1,
 			ranged = 5,
-			running_melee = 2,
+			running_melee = 2
 		},
 		damage_profile = DamageProfileTemplates.beast_of_nurgle_tail_whip,
 		friendly_fire_damage_profile = DamageProfileTemplates.beast_of_nurgle_melee_friendly_fire,
 		damage_type = damage_types.minion_ogryn_kick,
 		attack_type = {
-			attack_tail_whip_left = "sweep",
+			attack_tail_whip_left = "sweep"
 		},
 		weapon_reach = {
-			default = 2,
+			default = 2
 		},
-		ground_impact_fx_template = GroundImpactFxTemplates.beast_of_nurgle_tail_whip,
+		ground_impact_fx_template = GroundImpactFxTemplates.beast_of_nurgle_tail_whip
 	},
 	melee_attack_bwd = {
 		attack_type = "oobb",
@@ -866,25 +866,25 @@ local action_data = {
 		width = 4,
 		considerations = UtilityConsiderations.chaos_plague_ogryn_slam_attack,
 		attack_anim_events = {
-			"attack_tail_slam",
+			"attack_tail_slam"
 		},
 		attack_anim_damage_timings = {
-			attack_tail_slam = 0.8181818181818182,
+			attack_tail_slam = 0.8181818181818182
 		},
 		attack_anim_durations = {
-			attack_tail_slam = 1.5151515151515151,
+			attack_tail_slam = 1.5151515151515151
 		},
 		attack_intensities = {
 			elite_ranged = 4,
 			melee = 0.25,
 			moving_melee = 0.1,
 			ranged = 5,
-			running_melee = 2,
+			running_melee = 2
 		},
 		damage_profile = DamageProfileTemplates.beast_of_nurgle_tail_whip,
 		friendly_fire_damage_profile = DamageProfileTemplates.beast_of_nurgle_melee_friendly_fire,
 		damage_type = damage_types.minion_ogryn_kick,
-		ground_impact_fx_template = GroundImpactFxTemplates.beast_of_nurgle_tail_whip,
+		ground_impact_fx_template = GroundImpactFxTemplates.beast_of_nurgle_tail_whip
 	},
 	melee_attack_fwd_left = {
 		attack_type = "broadphase",
@@ -897,25 +897,25 @@ local action_data = {
 		weapon_reach = 2,
 		considerations = UtilityConsiderations.chaos_plague_ogryn_slam_attack,
 		attack_anim_events = {
-			"attack_slam_left",
+			"attack_slam_left"
 		},
 		attack_anim_damage_timings = {
-			attack_slam_left = 0.8787878787878788,
+			attack_slam_left = 0.8787878787878788
 		},
 		attack_anim_durations = {
-			attack_slam_left = 1.696969696969697,
+			attack_slam_left = 1.696969696969697
 		},
 		attack_intensities = {
 			elite_ranged = 4,
 			melee = 0.25,
 			moving_melee = 0.1,
 			ranged = 5,
-			running_melee = 2,
+			running_melee = 2
 		},
 		damage_profile = DamageProfileTemplates.beast_of_nurgle_tail_whip,
 		friendly_fire_damage_profile = DamageProfileTemplates.beast_of_nurgle_melee_friendly_fire,
 		damage_type = damage_types.minion_ogryn_kick,
-		ground_impact_fx_template = GroundImpactFxTemplates.beast_of_nurgle_slam_left,
+		ground_impact_fx_template = GroundImpactFxTemplates.beast_of_nurgle_slam_left
 	},
 	melee_attack_fwd_right = {
 		attack_type = "broadphase",
@@ -928,25 +928,25 @@ local action_data = {
 		weapon_reach = 2,
 		considerations = UtilityConsiderations.chaos_plague_ogryn_slam_attack,
 		attack_anim_events = {
-			"attack_slam_right",
+			"attack_slam_right"
 		},
 		attack_anim_damage_timings = {
-			attack_slam_right = 0.9696969696969697,
+			attack_slam_right = 0.9696969696969697
 		},
 		attack_anim_durations = {
-			attack_slam_right = 1.696969696969697,
+			attack_slam_right = 1.696969696969697
 		},
 		attack_intensities = {
 			elite_ranged = 4,
 			melee = 0.25,
 			moving_melee = 0.1,
 			ranged = 5,
-			running_melee = 2,
+			running_melee = 2
 		},
 		damage_profile = DamageProfileTemplates.beast_of_nurgle_tail_whip,
 		friendly_fire_damage_profile = DamageProfileTemplates.beast_of_nurgle_melee_friendly_fire,
 		damage_type = damage_types.minion_ogryn_kick,
-		ground_impact_fx_template = GroundImpactFxTemplates.beast_of_nurgle_slam_right,
+		ground_impact_fx_template = GroundImpactFxTemplates.beast_of_nurgle_slam_right
 	},
 	melee_attack_body_slam_aoe = {
 		attack_type = "broadphase",
@@ -959,211 +959,211 @@ local action_data = {
 		weapon_reach = 5.25,
 		considerations = UtilityConsiderations.chaos_plague_ogryn_slam_attack,
 		attack_anim_events = {
-			"attack_body_slam",
+			"attack_body_slam"
 		},
 		attack_anim_damage_timings = {
-			attack_body_slam = 0.9,
+			attack_body_slam = 0.9
 		},
 		attack_anim_durations = {
-			attack_body_slam = 1.5666666666666667,
+			attack_body_slam = 1.5666666666666667
 		},
 		attack_intensities = {
 			elite_ranged = 4,
 			melee = 0.25,
 			moving_melee = 0.1,
 			ranged = 5,
-			running_melee = 2,
+			running_melee = 2
 		},
 		damage_profile = DamageProfileTemplates.beast_of_nurgle_tail_whip,
 		friendly_fire_damage_profile = DamageProfileTemplates.beast_of_nurgle_melee_friendly_fire,
 		damage_type = damage_types.minion_ogryn_kick,
-		ground_impact_fx_template = GroundImpactFxTemplates.beast_of_nurgle_body_slam_aoe,
+		ground_impact_fx_template = GroundImpactFxTemplates.beast_of_nurgle_body_slam_aoe
 	},
 	stagger = {
 		stagger_anims = {
 			light = {
 				fwd = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				bwd = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				left = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				right = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				dwn = {
-					"stagger_fwd_heavy",
-				},
+					"stagger_fwd_heavy"
+				}
 			},
 			medium = {
 				fwd = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				bwd = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				left = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				right = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				dwn = {
-					"stagger_fwd_heavy",
-				},
+					"stagger_fwd_heavy"
+				}
 			},
 			heavy = {
 				fwd = {
-					"stagger_spit_out_player",
+					"stagger_spit_out_player"
 				},
 				bwd = {
-					"stagger_spit_out_player",
+					"stagger_spit_out_player"
 				},
 				left = {
-					"stagger_spit_out_player",
+					"stagger_spit_out_player"
 				},
 				right = {
-					"stagger_spit_out_player",
+					"stagger_spit_out_player"
 				},
 				dwn = {
-					"stagger_spit_out_player",
-				},
+					"stagger_spit_out_player"
+				}
 			},
 			light_ranged = {
 				fwd = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				bwd = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				left = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				right = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				dwn = {
-					"stagger_fwd_heavy",
-				},
+					"stagger_fwd_heavy"
+				}
 			},
 			explosion = {
 				fwd = {
-					"stagger_spit_out_player",
+					"stagger_spit_out_player"
 				},
 				bwd = {
-					"stagger_spit_out_player",
+					"stagger_spit_out_player"
 				},
 				left = {
-					"stagger_spit_out_player",
+					"stagger_spit_out_player"
 				},
 				right = {
-					"stagger_spit_out_player",
+					"stagger_spit_out_player"
 				},
 				dwn = {
-					"stagger_spit_out_player",
-				},
+					"stagger_spit_out_player"
+				}
 			},
 			killshot = {
 				fwd = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				bwd = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				left = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				right = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				dwn = {
-					"stagger_fwd_heavy",
-				},
+					"stagger_fwd_heavy"
+				}
 			},
 			sticky = {
 				fwd = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				bwd = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				left = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				right = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				dwn = {
-					"stagger_fwd_heavy",
-				},
+					"stagger_fwd_heavy"
+				}
 			},
 			electrocuted = {
 				fwd = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				bwd = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				left = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				right = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				dwn = {
-					"stagger_fwd_heavy",
-				},
+					"stagger_fwd_heavy"
+				}
 			},
 			blinding = {
 				fwd = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				bwd = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				left = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				right = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				dwn = {
-					"stagger_fwd_heavy",
-				},
-			},
-		},
+					"stagger_fwd_heavy"
+				}
+			}
+		}
 	},
 	open_door = {
 		rotation_duration = 0.1,
-		stagger_immune = true,
+		stagger_immune = true
 	},
 	smash_obstacle = {
 		damage_type = nil,
 		rotation_duration = 0,
 		attack_anim_events = {
-			"attack_sneeze",
+			"attack_sneeze"
 		},
 		attack_anim_damage_timings = {
-			attack_sneeze = 0.7333333333333333,
+			attack_sneeze = 0.7333333333333333
 		},
 		attack_anim_durations = {
-			attack_sneeze = 2,
+			attack_sneeze = 2
 		},
-		damage_profile = DamageProfileTemplates.default,
+		damage_profile = DamageProfileTemplates.default
 	},
 	exit_spawner = {
-		run_anim_event = "move_fwd",
+		run_anim_event = "move_fwd"
 	},
 	patrol = {
 		anim_events = {
-			"walk_fwd",
+			"walk_fwd"
 		},
 		speeds = {
-			walk_fwd = 1.8,
-		},
+			walk_fwd = 1.8
+		}
 	},
 	passive_alerted = {
 		instant_aggro_chance = 1,
@@ -1171,45 +1171,45 @@ local action_data = {
 			bwd = "turn_bwd",
 			fwd = "walk_fwd",
 			left = "turn_left",
-			right = "turn_right",
+			right = "turn_right"
 		},
 		start_move_anim_data = {
 			walk_fwd = {
 				rad = nil,
-				sign = nil,
+				sign = nil
 			},
 			turn_bwd = {
 				sign = -1,
-				rad = math.pi,
+				rad = math.pi
 			},
 			turn_left = {
 				sign = 1,
-				rad = math.pi / 2,
+				rad = math.pi / 2
 			},
 			turn_right = {
 				sign = -1,
-				rad = math.pi / 2,
-			},
+				rad = math.pi / 2
+			}
 		},
 		start_move_rotation_timings = {
 			turn_bwd = 0.13333333333333333,
 			turn_left = 0.1,
 			turn_right = 0.1,
-			walk_fwd = nil,
+			walk_fwd = nil
 		},
 		start_rotation_durations = {
 			turn_bwd = 0.4666666666666667,
 			turn_left = 0.5,
 			turn_right = 0.5,
-			walk_fwd = nil,
+			walk_fwd = nil
 		},
 		alerted_durations = {
 			turn_bwd = 0.6666666666666666,
 			turn_left = 0.6666666666666666,
 			turn_right = 0.6666666666666666,
-			walk_fwd = 0.6666666666666666,
-		},
-	},
+			walk_fwd = 0.6666666666666666
+		}
+	}
 }
 
 action_data.weakspot_stagger = table.clone(action_data.stagger)

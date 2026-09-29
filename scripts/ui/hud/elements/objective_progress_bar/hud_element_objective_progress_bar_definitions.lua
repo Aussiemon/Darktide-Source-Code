@@ -9,14 +9,14 @@ local health_bar_size = HudElementObjectiveProgressBarSettings.size
 local health_bar_position = {
 	0,
 	HudElementObjectiveProgressBarSettings.edge_offset,
-	0,
+	0
 }
 local name_text_style = table.clone(HudElementObjectiveTextSettings.style)
 
 name_text_style.offset = {
 	0,
 	15,
-	2,
+	2
 }
 
 local scenegraph_definition = {
@@ -27,9 +27,9 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			748,
-			130,
+			130
 		},
-		position = health_bar_position,
+		position = health_bar_position
 	},
 	health_bar = {
 		horizontal_alignment = "center",
@@ -39,9 +39,9 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local widget_definitions = {}
 local single_target_widget_definitions = {
@@ -56,11 +56,11 @@ local single_target_widget_definitions = {
 				offset = {
 					0,
 					-13,
-					4,
+					4
 				},
 				size = health_bar_size,
-				color = UIHudSettings.color_tint_main_1,
-			},
+				color = UIHudSettings.color_tint_main_1
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -72,16 +72,16 @@ local single_target_widget_definitions = {
 				offset = {
 					0,
 					-13,
-					3,
+					3
 				},
 				size = health_bar_size,
 				color = {
 					25,
 					255,
 					255,
-					255,
-				},
-			},
+					255
+				}
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -93,11 +93,11 @@ local single_target_widget_definitions = {
 				offset = {
 					0,
 					-13,
-					2,
+					2
 				},
 				size = health_bar_size,
-				color = UIHudSettings.color_tint_8,
-			},
+				color = UIHudSettings.color_tint_8
+			}
 		},
 		{
 			pass_type = "texture",
@@ -109,32 +109,32 @@ local single_target_widget_definitions = {
 				offset = {
 					0,
 					-13,
-					1,
+					1
 				},
 				size = {
 					health_bar_size[1] + 4,
-					health_bar_size[2] + 4,
+					health_bar_size[2] + 4
 				},
 				color = {
 					255,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
 			style_id = "text",
 			value = "<N/A>",
 			value_id = "text",
-			style = name_text_style,
-		},
-	}, "health_bar"),
+			style = name_text_style
+		}
+	}, "health_bar")
 }
 
 return {
 	single_target_widget_definitions = single_target_widget_definitions,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

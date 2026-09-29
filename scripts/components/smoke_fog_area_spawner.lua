@@ -49,7 +49,7 @@ SmokeFogAreaSpawner.spawn_smoke_fog = function (self)
 		leaving_fog_buff_template_name = "left_smoke_fog",
 		duration = math.huge,
 		inner_radius = self._inner_radius,
-		outer_radius = self._outer_radius,
+		outer_radius = self._outer_radius
 	}
 	local smoke_fog_unit = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template, position, rotation, material, husk_unit_name, placed_on_unit, owner_unit, unit_template_parameters)
 
@@ -180,7 +180,7 @@ SmokeFogAreaSpawner.component_data = {
 		step = 0.1,
 		ui_name = "Inner",
 		ui_type = "number",
-		value = 4.5,
+		value = 4.5
 	},
 	outer_radius = {
 		category = "Radius",
@@ -190,24 +190,24 @@ SmokeFogAreaSpawner.component_data = {
 		step = 0.1,
 		ui_name = "Outer",
 		ui_type = "number",
-		value = 5.5,
+		value = 5.5
 	},
 	draw_smoke_fog = {
 		category = "Debug",
 		ui_name = "Draw Smoke (Approx)",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	inputs = {
 		spawn_smoke_fog = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		despawn_smoke_fog = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return SmokeFogAreaSpawner

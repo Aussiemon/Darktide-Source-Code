@@ -11,12 +11,12 @@ local grid_blueprints = {
 
 			return size and {
 				size[1],
-				size[2],
+				size[2]
 			} or {
 				225,
-				20,
+				20
 			}
-		end,
+		end
 	},
 	texture = {
 		size_function = function (parent, element, ui_renderer)
@@ -24,10 +24,10 @@ local grid_blueprints = {
 
 			return size and {
 				size[1],
-				size[2],
+				size[2]
 			} or {
 				64,
-				64,
+				64
 			}
 		end,
 		pass_template = {
@@ -40,10 +40,10 @@ local grid_blueprints = {
 						255,
 						255,
 						255,
-						255,
-					},
-				},
-			},
+						255
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -62,7 +62,7 @@ local grid_blueprints = {
 				color[3] = texture_color[3]
 				color[4] = texture_color[4]
 			end
-		end,
+		end
 	},
 	header = {
 		size_function = function (parent, element, ui_renderer)
@@ -71,7 +71,7 @@ local grid_blueprints = {
 
 			return {
 				width,
-				100,
+				100
 			}
 		end,
 		pass_template_function = function (parent, element, ui_renderer)
@@ -80,7 +80,7 @@ local grid_blueprints = {
 			title_style.offset = {
 				element.x_offset or 0,
 				0,
-				8,
+				8
 			}
 			title_style.font_size = 18
 			title_style.text_horizontal_alignment = element.text_horizontal_alignment or "left"
@@ -93,8 +93,8 @@ local grid_blueprints = {
 					style_id = "text",
 					value = "n/a",
 					value_id = "text",
-					style = title_style,
-				},
+					style = title_style
+				}
 			}
 
 			return pass_templates
@@ -121,7 +121,7 @@ local grid_blueprints = {
 			local height = Text.text_height(ui_renderer, text, text_style, size)
 
 			size[2] = height + 0
-		end,
+		end
 	},
 	text = {
 		size_function = function (parent, element, ui_renderer)
@@ -130,7 +130,7 @@ local grid_blueprints = {
 
 			return {
 				width,
-				100,
+				100
 			}
 		end,
 		pass_template_function = function (parent, element, ui_renderer)
@@ -139,7 +139,7 @@ local grid_blueprints = {
 			description_style.offset = {
 				element.x_offset or 0,
 				0,
-				8,
+				8
 			}
 			description_style.font_size = 18
 			description_style.text_horizontal_alignment = element.text_horizontal_alignment or "left"
@@ -152,8 +152,8 @@ local grid_blueprints = {
 					style_id = "text",
 					value = "n/a",
 					value_id = "text",
-					style = description_style,
-				},
+					style = description_style
+				}
 			}
 
 			return pass_templates
@@ -180,7 +180,7 @@ local grid_blueprints = {
 			local height = Text.text_height(ui_renderer, text, text_style, size)
 
 			size[2] = height
-		end,
+		end
 	},
 	counter = {
 		size_function = function (parent, element, ui_renderer)
@@ -189,7 +189,7 @@ local grid_blueprints = {
 
 			return {
 				width,
-				100,
+				100
 			}
 		end,
 		pass_template_function = function (parent, element, ui_renderer)
@@ -206,11 +206,11 @@ local grid_blueprints = {
 						offset = {
 							element.x_offset or 0,
 							0,
-							7,
+							7
 						},
-						text_horizontal_alignment = element.text_horizontal_alignment or "left",
-					},
-				},
+						text_horizontal_alignment = element.text_horizontal_alignment or "left"
+					}
+				}
 			}
 
 			return pass_templates
@@ -228,7 +228,7 @@ local grid_blueprints = {
 			local height = Text.text_height(ui_renderer, text, text_style, size)
 
 			size[2] = height
-		end,
+		end
 	},
 	main_header = {
 		size_function = function (parent, element, ui_renderer)
@@ -237,7 +237,7 @@ local grid_blueprints = {
 
 			return {
 				width,
-				100,
+				100
 			}
 		end,
 		pass_template_function = function (parent, element, ui_renderer)
@@ -254,11 +254,11 @@ local grid_blueprints = {
 						offset = {
 							element.x_offset or 0,
 							0,
-							7,
+							7
 						},
-						text_horizontal_alignment = element.text_horizontal_alignment or "left",
-					},
-				},
+						text_horizontal_alignment = element.text_horizontal_alignment or "left"
+					}
+				}
 			}
 
 			return pass_templates
@@ -276,8 +276,8 @@ local grid_blueprints = {
 			local height = Text.text_height(ui_renderer, text, text_style, size)
 
 			size[2] = height
-		end,
-	},
+		end
+	}
 }
 
 return grid_blueprints

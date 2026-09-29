@@ -8,78 +8,78 @@ local auto_events = {
 		spawn_on_terror_events = true,
 		should_update_event_position = {
 			should_be_offset_from_main_path = 25,
-			wanted_direction = "fwd",
+			wanted_direction = "fwd"
 		},
 		inital_cooldown_types = {
-			default = 1,
+			default = 1
 		},
 		num_waves_by_resistance = {
 			1,
 			1,
 			2,
 			2,
-			2,
+			2
 		},
 		cooldown = {
 			{
 				10,
-				14,
+				14
 			},
 			{
 				8,
-				12,
+				12
 			},
 			{
 				6,
-				10,
+				10
 			},
 			{
 				4,
-				6,
+				6
 			},
 			{
 				2,
-				4,
-			},
+				4
+			}
 		},
 		waves_cooldown = {
 			{
 				10,
-				14,
+				14
 			},
 			{
 				8,
-				12,
+				12
 			},
 			{
 				6,
-				10,
+				10
 			},
 			{
 				5,
-				8,
+				8
 			},
 			{
 				3,
-				6,
-			},
+				6
+			}
 		},
 		resistance_multiplier = {
 			0.45,
 			0.5,
 			0.55,
 			0.6,
-			0.65,
+			0.65
 		},
 		points_base = {
 			22,
 			26,
 			30,
 			34,
-			38,
+			38
 		},
 		size_multipliers = {
-			default = 1,
+			default = 1
 		},
 		composition = {
 			default = {
@@ -88,8 +88,8 @@ local auto_events = {
 						points = 0,
 						breed_tags = {
 							{
-								"horde",
-							},
+								"horde"
+							}
 						},
 						weights = {
 							{
@@ -97,40 +97,40 @@ local auto_events = {
 								0.9,
 								1.1,
 								1.3,
-								1.5,
+								1.5
 							},
 							{
 								0.7,
 								0.9,
 								1.1,
 								1.3,
-								1.5,
+								1.5
 							},
 							{
 								0.7,
 								0.9,
 								1.1,
 								1.3,
-								1.5,
+								1.5
 							},
 							{
 								0.7,
 								0.9,
 								1.1,
 								1.3,
-								1.5,
+								1.5
 							},
 							{
 								0.7,
 								0.9,
 								1.1,
 								1.3,
-								1.5,
-							},
-						},
-					},
-				},
-			},
+								1.5
+							}
+						}
+					}
+				}
+			}
 		},
 		conditional_function = function (t)
 			if Managers.state.terror_event:num_active_events() > 0 then
@@ -143,8 +143,8 @@ local auto_events = {
 			local current_threat_by_path_completion = math.clamp(math.floor(path_completed / normalized_threat_progression) + 1, 1, max_threat)
 
 			return t[current_threat_by_path_completion]
-		end,
-	},
+		end
+	}
 }
 
 return auto_events

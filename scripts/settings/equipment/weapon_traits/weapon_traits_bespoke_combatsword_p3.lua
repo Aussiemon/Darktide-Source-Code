@@ -17,9 +17,9 @@ templates.weapon_trait_bespoke_combatsword_p3_chained_hits_increases_crit_chance
 				find_value_type = "trait_override",
 				path = {
 					"stat_buffs",
-					stat_buffs.critical_strike_chance,
-				},
-			},
+					stat_buffs.critical_strike_chance
+				}
+			}
 		},
 		stacks = {
 			format_type = "number",
@@ -27,35 +27,35 @@ templates.weapon_trait_bespoke_combatsword_p3_chained_hits_increases_crit_chance
 				buff_template_name = "weapon_trait_bespoke_combatsword_p3_chained_hits_increases_crit_chance_child",
 				find_value_type = "buff_template",
 				path = {
-					"max_stacks",
-				},
-			},
-		},
+					"max_stacks"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_combatsword_p3_chained_hits_increases_crit_chance_parent = {
 			{
 				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.025,
-				},
+					[stat_buffs.critical_strike_chance] = 0.025
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.03,
-				},
+					[stat_buffs.critical_strike_chance] = 0.03
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.035,
-				},
+					[stat_buffs.critical_strike_chance] = 0.035
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.04,
-				},
-			},
-		},
-	},
+					[stat_buffs.critical_strike_chance] = 0.04
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_combatsword_p3_stacking_rending_on_weakspot = {
 	format_values = {
@@ -66,9 +66,9 @@ templates.weapon_trait_bespoke_combatsword_p3_stacking_rending_on_weakspot = {
 				find_value_type = "trait_override",
 				path = {
 					"target_buff_data",
-					"num_stacks_on_proc",
-				},
-			},
+					"num_stacks_on_proc"
+				}
+			}
 		},
 		rending = {
 			format_type = "percentage",
@@ -77,9 +77,9 @@ templates.weapon_trait_bespoke_combatsword_p3_stacking_rending_on_weakspot = {
 				find_value_type = "buff_template",
 				path = {
 					"stat_buffs",
-					stat_buffs.rending_multiplier,
-				},
-			},
+					stat_buffs.rending_multiplier
+				}
+			}
 		},
 		time = {
 			format_type = "number",
@@ -87,9 +87,9 @@ templates.weapon_trait_bespoke_combatsword_p3_stacking_rending_on_weakspot = {
 				buff_template_name = "rending_debuff",
 				find_value_type = "buff_template",
 				path = {
-					"duration",
-				},
-			},
+					"duration"
+				}
+			}
 		},
 		max_stacks = {
 			format_type = "number",
@@ -97,35 +97,35 @@ templates.weapon_trait_bespoke_combatsword_p3_stacking_rending_on_weakspot = {
 				buff_template_name = "rending_debuff",
 				find_value_type = "buff_template",
 				path = {
-					"max_stacks",
-				},
-			},
-		},
+					"max_stacks"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_combatsword_p3_stacking_rending_on_weakspot_parent = {
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 2,
-				},
+					num_stacks_on_proc = 2
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 4,
-				},
+					num_stacks_on_proc = 4
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 6,
-				},
+					num_stacks_on_proc = 6
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 8,
-				},
-			},
-		},
-	},
+					num_stacks_on_proc = 8
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_combatsword_p3_dodge_grants_finesse_bonus = {
 	format_values = {
@@ -137,9 +137,9 @@ templates.weapon_trait_bespoke_combatsword_p3_dodge_grants_finesse_bonus = {
 				find_value_type = "trait_override",
 				path = {
 					"proc_stat_buffs",
-					stat_buffs.finesse_modifier_bonus,
-				},
-			},
+					stat_buffs.finesse_modifier_bonus
+				}
+			}
 		},
 		time = {
 			format_type = "number",
@@ -147,39 +147,39 @@ templates.weapon_trait_bespoke_combatsword_p3_dodge_grants_finesse_bonus = {
 				buff_template_name = "weapon_trait_bespoke_combatsword_p3_dodge_grants_finesse_bonus",
 				find_value_type = "trait_override",
 				path = {
-					"active_duration",
-				},
-			},
-		},
+					"active_duration"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_combatsword_p3_dodge_grants_finesse_bonus = {
 			{
 				active_duration = 2,
 				proc_stat_buffs = {
-					[stat_buffs.finesse_modifier_bonus] = 0.45,
-				},
+					[stat_buffs.finesse_modifier_bonus] = 0.45
+				}
 			},
 			{
 				active_duration = 2,
 				proc_stat_buffs = {
-					[stat_buffs.finesse_modifier_bonus] = 0.5,
-				},
+					[stat_buffs.finesse_modifier_bonus] = 0.5
+				}
 			},
 			{
 				active_duration = 2,
 				proc_stat_buffs = {
-					[stat_buffs.finesse_modifier_bonus] = 0.55,
-				},
+					[stat_buffs.finesse_modifier_bonus] = 0.55
+				}
 			},
 			{
 				active_duration = 2,
 				proc_stat_buffs = {
-					[stat_buffs.finesse_modifier_bonus] = 0.6,
-				},
-			},
-		},
-	},
+					[stat_buffs.finesse_modifier_bonus] = 0.6
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_combatsword_p3_dodge_grants_critical_strike_chance = {
 	format_values = {
@@ -191,9 +191,9 @@ templates.weapon_trait_bespoke_combatsword_p3_dodge_grants_critical_strike_chanc
 				find_value_type = "trait_override",
 				path = {
 					"proc_stat_buffs",
-					stat_buffs.critical_strike_chance,
-				},
-			},
+					stat_buffs.critical_strike_chance
+				}
+			}
 		},
 		time = {
 			format_type = "number",
@@ -201,35 +201,35 @@ templates.weapon_trait_bespoke_combatsword_p3_dodge_grants_critical_strike_chanc
 				buff_template_name = "weapon_trait_bespoke_combatsword_p3_dodge_grants_critical_strike_chance",
 				find_value_type = "buff_template",
 				path = {
-					"active_duration",
-				},
-			},
-		},
+					"active_duration"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_combatsword_p3_dodge_grants_critical_strike_chance = {
 			{
 				proc_stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.125,
-				},
+					[stat_buffs.critical_strike_chance] = 0.125
+				}
 			},
 			{
 				proc_stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.15,
-				},
+					[stat_buffs.critical_strike_chance] = 0.15
+				}
 			},
 			{
 				proc_stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.175,
-				},
+					[stat_buffs.critical_strike_chance] = 0.175
+				}
 			},
 			{
 				proc_stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.2,
-				},
-			},
-		},
-	},
+					[stat_buffs.critical_strike_chance] = 0.2
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_combatsword_p3_increased_melee_damage_on_multiple_hits = {
 	format_values = {
@@ -241,9 +241,9 @@ templates.weapon_trait_bespoke_combatsword_p3_increased_melee_damage_on_multiple
 				find_value_type = "trait_override",
 				path = {
 					"stat_buffs",
-					stat_buffs.melee_power_level_modifier,
-				},
-			},
+					stat_buffs.melee_power_level_modifier
+				}
+			}
 		},
 		multiple_hit = {
 			format_type = "number",
@@ -252,9 +252,9 @@ templates.weapon_trait_bespoke_combatsword_p3_increased_melee_damage_on_multiple
 				find_value_type = "buff_template",
 				path = {
 					"buff_data",
-					"required_num_hits",
-				},
-			},
+					"required_num_hits"
+				}
+			}
 		},
 		time = {
 			format_type = "number",
@@ -262,39 +262,39 @@ templates.weapon_trait_bespoke_combatsword_p3_increased_melee_damage_on_multiple
 				buff_template_name = "weapon_trait_bespoke_combatsword_p3_increased_melee_damage_on_multiple_hits",
 				find_value_type = "trait_override",
 				path = {
-					"active_duration",
-				},
-			},
-		},
+					"active_duration"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_combatsword_p3_increased_melee_damage_on_multiple_hits = {
 			{
 				active_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.24,
-				},
+					[stat_buffs.melee_power_level_modifier] = 0.24
+				}
 			},
 			{
 				active_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.28,
-				},
+					[stat_buffs.melee_power_level_modifier] = 0.28
+				}
 			},
 			{
 				active_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.32,
-				},
+					[stat_buffs.melee_power_level_modifier] = 0.32
+				}
 			},
 			{
 				active_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.36,
-				},
-			},
-		},
-	},
+					[stat_buffs.melee_power_level_modifier] = 0.36
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_combatsword_p3_windup_increases_power = {
 	format_values = {
@@ -306,9 +306,9 @@ templates.weapon_trait_bespoke_combatsword_p3_windup_increases_power = {
 				find_value_type = "trait_override",
 				path = {
 					"stat_buffs",
-					stat_buffs.melee_power_level_modifier,
-				},
-			},
+					stat_buffs.melee_power_level_modifier
+				}
+			}
 		},
 		stacks = {
 			format_type = "number",
@@ -316,35 +316,35 @@ templates.weapon_trait_bespoke_combatsword_p3_windup_increases_power = {
 				buff_template_name = "weapon_trait_bespoke_combatsword_p3_windup_increases_power_child",
 				find_value_type = "buff_template",
 				path = {
-					"max_stacks",
-				},
-			},
-		},
+					"max_stacks"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_combatsword_p3_windup_increases_power_parent = {
 			{
 				stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.05,
-				},
+					[stat_buffs.melee_power_level_modifier] = 0.05
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.1,
-				},
+					[stat_buffs.melee_power_level_modifier] = 0.1
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.15,
-				},
+					[stat_buffs.melee_power_level_modifier] = 0.15
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.2,
-				},
-			},
-		},
-	},
+					[stat_buffs.melee_power_level_modifier] = 0.2
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_combatsword_p3_consecutive_melee_hits_same_target_increases_melee_power = {
 	format_values = {
@@ -356,9 +356,9 @@ templates.weapon_trait_bespoke_combatsword_p3_consecutive_melee_hits_same_target
 				find_value_type = "trait_override",
 				path = {
 					"stat_buffs",
-					stat_buffs.melee_power_level_modifier,
-				},
-			},
+					stat_buffs.melee_power_level_modifier
+				}
+			}
 		},
 		time = {
 			format_type = "number",
@@ -366,9 +366,9 @@ templates.weapon_trait_bespoke_combatsword_p3_consecutive_melee_hits_same_target
 				buff_template_name = "weapon_trait_bespoke_combatsword_p3_consecutive_melee_hits_same_target_increases_melee_power_parent",
 				find_value_type = "trait_override",
 				path = {
-					"child_duration",
-				},
-			},
+					"child_duration"
+				}
+			}
 		},
 		stacks = {
 			format_type = "number",
@@ -376,39 +376,39 @@ templates.weapon_trait_bespoke_combatsword_p3_consecutive_melee_hits_same_target
 				buff_template_name = "weapon_trait_bespoke_combatsword_p3_consecutive_melee_hits_same_target_increases_melee_power_child",
 				find_value_type = "buff_template",
 				path = {
-					"max_stacks",
-				},
-			},
-		},
+					"max_stacks"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_combatsword_p3_consecutive_melee_hits_same_target_increases_melee_power_parent = {
 			{
 				child_duration = 2,
 				stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.04,
-				},
+					[stat_buffs.melee_power_level_modifier] = 0.04
+				}
 			},
 			{
 				child_duration = 2,
 				stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.06,
-				},
+					[stat_buffs.melee_power_level_modifier] = 0.06
+				}
 			},
 			{
 				child_duration = 2,
 				stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.08,
-				},
+					[stat_buffs.melee_power_level_modifier] = 0.08
+				}
 			},
 			{
 				child_duration = 2,
 				stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.1,
-				},
-			},
-		},
-	},
+					[stat_buffs.melee_power_level_modifier] = 0.1
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_combatsword_p3_weakspot_hit_resets_dodge_count = {
 	format_values = {
@@ -420,35 +420,35 @@ templates.weapon_trait_bespoke_combatsword_p3_weakspot_hit_resets_dodge_count = 
 				find_value_type = "trait_override",
 				path = {
 					"conditional_stat_buffs",
-					stat_buffs.melee_weakspot_damage,
-				},
-			},
-		},
+					stat_buffs.melee_weakspot_damage
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_combatsword_p3_weakspot_hit_resets_dodge_count = {
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.melee_weakspot_damage] = 0.025,
-				},
+					[stat_buffs.melee_weakspot_damage] = 0.025
+				}
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.melee_weakspot_damage] = 0.05,
-				},
+					[stat_buffs.melee_weakspot_damage] = 0.05
+				}
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.melee_weakspot_damage] = 0.075,
-				},
+					[stat_buffs.melee_weakspot_damage] = 0.075
+				}
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.melee_weakspot_damage] = 0.1,
-				},
-			},
-		},
-	},
+					[stat_buffs.melee_weakspot_damage] = 0.1
+				}
+			}
+		}
+	}
 }
 
 return templates

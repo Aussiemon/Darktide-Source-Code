@@ -34,7 +34,7 @@ ViewElementDiscardItems.init = function (self, parent, draw_layer, start_scale, 
 	self._current_rating_value = self._highest_item_level_cap
 	self._pivot_offset = {
 		0,
-		0,
+		0
 	}
 
 	self:_setup_buttons_interactions()
@@ -76,7 +76,7 @@ ViewElementDiscardItems._initialize_all = function (self, items, display_name, s
 	self._current_rating_value = self._highest_item_level_cap
 	self._pivot_offset = {
 		0,
-		0,
+		0
 	}
 
 	self:_setup_buttons_interactions()
@@ -173,7 +173,7 @@ ViewElementDiscardItems._setup_buttons_interactions = function (self)
 		widgets_by_name.rarity_checkbox_button_5,
 		widgets_by_name.rating_stepper,
 		widgets_by_name.select_button,
-		widgets_by_name.unselect_button,
+		widgets_by_name.unselect_button
 	}
 end
 
@@ -185,8 +185,8 @@ ViewElementDiscardItems._initialize_description_text = function (self)
 			value = "",
 			r = key_value_color[2],
 			g = key_value_color[3],
-			b = key_value_color[4],
-		}),
+			b = key_value_color[4]
+		})
 	})
 
 	widgets_by_name.description.content.text = text
@@ -276,7 +276,7 @@ ViewElementDiscardItems._update_items_to_discard = function (self)
 	local item_amount = self._items_to_discard and #self._items_to_discard or 0
 
 	self._widgets_by_name.selection_value.content.value = Localize("loc_premium_store_num_items", true, {
-		count = item_amount,
+		count = item_amount
 	})
 
 	self:_initialize_rarity_options()

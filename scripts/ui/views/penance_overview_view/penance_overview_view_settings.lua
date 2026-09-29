@@ -2,43 +2,43 @@
 
 local window_size = {
 	1400,
-	500,
+	500
 }
 local image_size = {
 	window_size[1] * 0.5,
-	window_size[2] + 200,
+	window_size[2] + 200
 }
 local carousel_penance_size = {
 	368,
-	582,
+	582
 }
 local penance_grid_background_size = {
 	1064,
-	558,
+	558
 }
 local penance_grid_side_margin = 22
 local penance_grid_size = {
 	penance_grid_background_size[1] - penance_grid_side_margin * 2,
-	penance_grid_background_size[2],
+	penance_grid_background_size[2]
 }
 local penance_grid_spacing = {
 	10,
-	10,
+	10
 }
 local num_small_penances_in_grid = 10
 local total_small_penances_spacing = penance_grid_spacing[1] * (num_small_penances_in_grid - 1)
 local penance_pixel_size = (penance_grid_size[1] - total_small_penances_spacing) / num_small_penances_in_grid
 local penance_size = {
 	penance_pixel_size,
-	penance_pixel_size,
+	penance_pixel_size
 }
 local penance_size_large = {
 	(penance_grid_size[1] - penance_grid_spacing[1]) * 0.5,
-	140,
+	140
 }
 local tooltip_grid_size = {
 	480,
-	578,
+	578
 }
 local tooltip_entries_width = tooltip_grid_size[1] - 0
 local background_world_params = {
@@ -51,7 +51,7 @@ local background_world_params = {
 	viewport_name = "ui_penances_world_viewport",
 	viewport_type = "default",
 	world_layer = 1,
-	world_name = "ui_penances_world",
+	world_name = "ui_penances_world"
 }
 local penance_overview_view_settings = {
 	carousel_acceleration = 0.3,
@@ -84,7 +84,7 @@ local penance_overview_view_settings = {
 		"content/ui/textures/icons/achievements/number_overlays/07",
 		"content/ui/textures/icons/achievements/number_overlays/08",
 		"content/ui/textures/icons/achievements/number_overlays/09",
-		"content/ui/textures/icons/achievements/number_overlays/10",
+		"content/ui/textures/icons/achievements/number_overlays/10"
 	},
 	carousel_entry_settings = {
 		{
@@ -92,73 +92,73 @@ local penance_overview_view_settings = {
 			color_intensity = 0.25,
 			position = {
 				-(carousel_penance_size[1] + 30 + 65),
-				-30,
-			},
+				-30
+			}
 		},
 		{
 			alpha = 0.5,
 			color_intensity = 0.3333333333333333,
 			position = {
 				-(carousel_penance_size[1] + 30 + 60),
-				-20,
-			},
+				-20
+			}
 		},
 		{
 			alpha = 0.8,
 			color_intensity = 0.5,
 			position = {
 				-(carousel_penance_size[1] + 30 + 40),
-				-10,
-			},
+				-10
+			}
 		},
 		{
 			alpha = 1,
 			color_intensity = 1,
 			position = {
 				-(carousel_penance_size[1] + 30),
-				0,
-			},
+				0
+			}
 		},
 		{
 			alpha = 1,
 			color_intensity = 1,
 			position = {
 				0,
-				0,
-			},
+				0
+			}
 		},
 		{
 			alpha = 1,
 			color_intensity = 1,
 			position = {
 				carousel_penance_size[1] + 30,
-				0,
-			},
+				0
+			}
 		},
 		{
 			alpha = 0.8,
 			color_intensity = 0.5,
 			position = {
 				carousel_penance_size[1] + 30 + 40,
-				-10,
-			},
+				-10
+			}
 		},
 		{
 			alpha = 0.5,
 			color_intensity = 0.3333333333333333,
 			position = {
 				carousel_penance_size[1] + 30 + 60,
-				-20,
-			},
+				-20
+			}
 		},
 		{
 			alpha = 0,
 			color_intensity = 0.25,
 			position = {
 				carousel_penance_size[1] + 30 + 65,
-				-30,
-			},
-		},
+				-30
+			}
+		}
 	},
 	category_icons = {
 		account = "content/ui/materials/icons/achievements/categories/category_account",
@@ -174,7 +174,7 @@ local penance_overview_view_settings = {
 		tactical = "content/ui/materials/icons/achievements/categories/category_tactical",
 		veteran_2 = "content/ui/materials/icons/achievements/categories/category_veteran",
 		weapons = "content/ui/materials/icons/achievements/categories/category_weapons",
-		zealot_2 = "content/ui/materials/icons/achievements/categories/category_zealot",
+		zealot_2 = "content/ui/materials/icons/achievements/categories/category_zealot"
 	},
 	default_highlight_penances = {
 		adamant = {
@@ -185,7 +185,7 @@ local penance_overview_view_settings = {
 			"enemies_1",
 			"kill_renegades_1",
 			"mission_circumstace_1",
-			"amount_of_chests_opened_1",
+			"amount_of_chests_opened_1"
 		},
 		broker = {
 			"basic_training",
@@ -195,7 +195,7 @@ local penance_overview_view_settings = {
 			"enemies_1",
 			"kill_renegades_1",
 			"mission_circumstace_1",
-			"amount_of_chests_opened_1",
+			"amount_of_chests_opened_1"
 		},
 		cryptic = {
 			"basic_training",
@@ -205,7 +205,7 @@ local penance_overview_view_settings = {
 			"enemies_1",
 			"kill_renegades_1",
 			"mission_circumstace_1",
-			"amount_of_chests_opened_1",
+			"amount_of_chests_opened_1"
 		},
 		ogryn = {
 			"basic_training",
@@ -218,7 +218,7 @@ local penance_overview_view_settings = {
 			"kill_renegades_1",
 			"mission_circumstace_1",
 			"ogryn_2_easy_2",
-			"amount_of_chests_opened_1",
+			"amount_of_chests_opened_1"
 		},
 		psyker = {
 			"basic_training",
@@ -231,7 +231,7 @@ local penance_overview_view_settings = {
 			"kill_renegades_1",
 			"mission_circumstace_1",
 			"psyker_2_easy_1",
-			"amount_of_chests_opened_1",
+			"amount_of_chests_opened_1"
 		},
 		veteran = {
 			"basic_training",
@@ -244,7 +244,7 @@ local penance_overview_view_settings = {
 			"kill_renegades_1",
 			"mission_circumstace_1",
 			"veteran_2_easy_1",
-			"amount_of_chests_opened_1",
+			"amount_of_chests_opened_1"
 		},
 		zealot = {
 			"basic_training",
@@ -257,8 +257,8 @@ local penance_overview_view_settings = {
 			"kill_renegades_1",
 			"mission_circumstace_1",
 			"zealot_2_easy_2",
-			"amount_of_chests_opened_1",
-		},
+			"amount_of_chests_opened_1"
+		}
 	},
 	blueprints_by_page = {
 		carousel = {
@@ -274,7 +274,7 @@ local penance_overview_view_settings = {
 			score = "carousel_penance_reward",
 			score_and_reward = "carousel_penance_score_and_reward",
 			stat = "carousel_penance_stat",
-			tracked = "carousel_penance_tracked",
+			tracked = "carousel_penance_tracked"
 		},
 		tooltip = {
 			body = "tooltip_penance_body",
@@ -289,9 +289,9 @@ local penance_overview_view_settings = {
 			score = "tooltip_penance_reward",
 			score_and_reward = "tooltip_penance_score_and_reward",
 			stat = "tooltip_penance_stat",
-			tracked = "tooltip_penance_tracked",
-		},
-	},
+			tracked = "tooltip_penance_tracked"
+		}
+	}
 }
 
 return settings("PenanceOverviewViewSettings", penance_overview_view_settings)

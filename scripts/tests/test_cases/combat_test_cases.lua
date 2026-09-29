@@ -1,6 +1,8 @@
 ﻿-- chunkname: @scripts/tests/test_cases/combat_test_cases.lua
 
 local TestifySnippets = require("scripts/tests/testify_snippets")
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local slot_configuration = PlayerCharacterConstants.slot_configuration
 
 CombatTestCases = {}
 
@@ -10,7 +12,7 @@ local base_talents = {
 		veteran_2_base_2 = 1,
 		veteran_2_base_3 = 1,
 		veteran_2_combat = 1,
-		veteran_2_frag_grenade = 1,
+		veteran_2_frag_grenade = 1
 	},
 	ogryn_2 = {
 		ogryn_2_base_1 = 1,
@@ -19,7 +21,7 @@ local base_talents = {
 		ogryn_2_base_4 = 1,
 		ogryn_2_charge_buff = 1,
 		ogryn_2_combat_ability = 1,
-		ogryn_2_grenade = 1,
+		ogryn_2_grenade = 1
 	},
 	zealot_2 = {
 		zealot_2_base_1 = 1,
@@ -27,15 +29,15 @@ local base_talents = {
 		zealot_2_base_3 = 1,
 		zealot_2_base_4 = 1,
 		zealot_2_combat = 1,
-		zealot_2_shock_grenade = 1,
+		zealot_2_shock_grenade = 1
 	},
 	psyker_2 = {
 		psyker_2_base_1 = 1,
 		psyker_2_base_2 = 1,
 		psyker_2_base_3 = 1,
 		psyker_2_combat = 1,
-		psyker_2_smite = 1,
-	},
+		psyker_2_smite = 1
+	}
 }
 
 local function _form_trait_list(traits, existing_traits)
@@ -45,7 +47,7 @@ local function _form_trait_list(traits, existing_traits)
 	for i = 1, #traits do
 		new_traits[num_existing_traits + i] = {
 			rarity = 1,
-			name = traits[i],
+			name = traits[i]
 		}
 	end
 
@@ -69,7 +71,7 @@ CombatTestCases.equip_all_gears = function (case_settings)
 		local local_player = Testify:make_request("local_player", 1)
 		local item_workflow_states = {
 			"SHIPPABLE",
-			"RELEASABLE",
+			"RELEASABLE"
 		}
 		local gears = Testify:make_request("all_gears", archetype, item_workflow_states)
 
@@ -83,7 +85,7 @@ CombatTestCases.equip_all_gears = function (case_settings)
 					local data = {
 						player = local_player,
 						slot = slot_name,
-						item = gear,
+						item = gear
 					}
 
 					Testify:make_request("equip_item_backend", data)
@@ -105,17 +107,18 @@ CombatTestCases.run_through_mission = function (case_settings)
 		local result = ""
 		local settings = cjson.decode(case_settings or "{}")
 		local flags = settings.flags or {
-			"run_through_mission",
+			"run_through_mission"
 		}
 		local memory_usage = settings.memory_usage
 		local lua_trace = settings.lua_trace and BUILD ~= "release"
 		local mission_key = settings.mission_key
 		local num_peers = settings.num_peers or 0
 		local max_time = settings.max_time
+		local player_teleportation_speed_factor = settings.player_teleportation_speed_factor or 2
 		local back_to_hub_after_runthrough = settings.back_to_hub_after_runthrough or false
 		local telemetry_events = {
 			lua_trace = "lua_trace_stats",
-			memory_usage = "perf_memory",
+			memory_usage = "perf_memory"
 		}
 
 		if lua_trace then
@@ -163,7 +166,6 @@ CombatTestCases.run_through_mission = function (case_settings)
 		local main_path_point = 0
 		local total_main_path_distance = Testify:make_request("total_main_path_distance")
 		local last_player_teleportation_time = os.clock()
-		local player_teleportation_speed_factor = 2
 		local memory_usage_measurement_count = 0
 		local num_memory_usage_measurements = 3
 		local memory_usage_main_path_increments = (total_main_path_distance - 10) / (num_memory_usage_measurements - 1)
@@ -177,7 +179,7 @@ CombatTestCases.run_through_mission = function (case_settings)
 		for i = 1, num_bots do
 			bots_stuck_data[i] = {
 				Vector3Box(Vector3(-999, -999, -999)),
-				os.time(),
+				os.time()
 			}
 		end
 
@@ -185,7 +187,7 @@ CombatTestCases.run_through_mission = function (case_settings)
 			bots_blocked_distance = 2,
 			bots_blocked_time_before_teleportation = 15,
 			main_path_point = 0,
-			bots_stuck_data = bots_stuck_data,
+			bots_stuck_data = bots_stuck_data
 		}
 		local start_time = os.clock()
 		local assert = "player_died_assert"
@@ -265,7 +267,7 @@ CombatTestCases.validate_minion_pathing_on_mission = function (case_settings)
 		local nav_mesh_above, nav_mesh_below = settings.nav_mesh_above or 0.5, settings.nav_mesh_below or 0.5
 		local specific_breed_names = settings.specific_breed_names
 		local flags = {
-			"validate_minion_pathing_on_mission",
+			"validate_minion_pathing_on_mission"
 		}
 		local output = TestifySnippets.check_flags_for_mission(flags, mission_name)
 
@@ -301,7 +303,7 @@ CombatTestCases.validate_minion_pathing_on_mission = function (case_settings)
 		local minion_spawn_data = {
 			breed_name = nil,
 			breed_side = 1,
-			spawn_position = spawn_position,
+			spawn_position = spawn_position
 		}
 
 		for i = 1, num_minion_breeds do
@@ -326,7 +328,7 @@ CombatTestCases.validate_minion_pathing_on_mission = function (case_settings)
 				start_positions = start_positions,
 				destinations = destinations,
 				num_start_positions = num_start_positions,
-				num_destinations = num_destinations,
+				num_destinations = num_destinations
 			}
 			total_path_queries = total_path_queries + num_destinations * num_start_positions
 		end
@@ -358,6 +360,8 @@ CombatTestCases.validate_minion_pathing_on_mission = function (case_settings)
 
 			num_remaining_path_queries = new_num_remaining_path_queries
 		end
+
+		TestifySnippets.exit_to_main_menu_and_wait()
 	end)
 end
 
@@ -372,7 +376,7 @@ CombatTestCases.spawn_all_enemies = function (case_settings)
 		local spawn_simultaneously = settings.spawn_simultaneously or true
 		local difficulty = settings.difficulty or {
 			challenge = 2,
-			resistance = 2,
+			resistance = 2
 		}
 
 		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
@@ -398,7 +402,7 @@ CombatTestCases.spawn_all_enemies = function (case_settings)
 		local player_spawn_position = {
 			x = player_current_position.x,
 			y = player_current_position.y,
-			z = player_current_position.z,
+			z = player_current_position.z
 		}
 		local num_breeds = table.size(breeds)
 		local angle_offset = 2 * math.pi / num_breeds
@@ -410,17 +414,17 @@ CombatTestCases.spawn_all_enemies = function (case_settings)
 			local spawn_position_offset = {
 				z = 0.2,
 				x = math.cos(angle) * distance,
-				y = math.sin(angle) * distance,
+				y = math.sin(angle) * distance
 			}
 			local spawn_position = {
 				x = player_spawn_position.x + spawn_position_offset.x,
 				y = player_spawn_position.y + spawn_position_offset.y,
-				z = player_spawn_position.z + spawn_position_offset.z,
+				z = player_spawn_position.z + spawn_position_offset.z
 			}
 			local minion = {
 				breed_name = breed_name,
 				breed_side = breed_side,
-				spawn_position = spawn_position,
+				spawn_position = spawn_position
 			}
 
 			Log.info("Testify", "Spawning " .. breed_name)
@@ -492,6 +496,8 @@ CombatTestCases.spawn_all_enemies = function (case_settings)
 
 		if not spawn_simultaneously and not table.is_empty(minions_auto_killed) then
 			result = result .. "-Bots were unable to kill: " .. table.concat(minions_auto_killed, ", ")
+
+			Testify.expect:fail("bots_unable_to_kill", result)
 		end
 
 		if result == "" then
@@ -508,23 +514,23 @@ CombatTestCases.spawn_breed = function (breed_name)
 		local player_spawn_position = {
 			x = player_current_position.x,
 			y = player_current_position.y,
-			z = player_current_position.z,
+			z = player_current_position.z
 		}
 		local distance = 5
 		local spawn_position_offset = {
 			z = 0.2,
 			x = distance,
-			y = distance,
+			y = distance
 		}
 		local spawn_position = {
 			x = player_spawn_position.x + spawn_position_offset.x,
 			y = player_spawn_position.y + spawn_position_offset.y,
-			z = player_spawn_position.z + spawn_position_offset.z,
+			z = player_spawn_position.z + spawn_position_offset.z
 		}
 		local minion = {
 			breed_side = 2,
 			breed_name = breed_name,
-			spawn_position = spawn_position,
+			spawn_position = spawn_position
 		}
 
 		Log.info("Testify", "Spawning " .. breed_name)
@@ -562,13 +568,13 @@ CombatTestCases.ensure_breed_ragdoll_actors = function (case_settings)
 			local spawn_position_offset = {
 				z = 0.2,
 				x = math.cos(angle) * distance,
-				y = math.sin(angle) * distance,
+				y = math.sin(angle) * distance
 			}
 
 			spawn_positions[i] = {
 				x = player_current_position.x + spawn_position_offset.x,
 				y = player_current_position.y + spawn_position_offset.y,
-				z = player_current_position.z + spawn_position_offset.z,
+				z = player_current_position.z + spawn_position_offset.z
 			}
 		end
 
@@ -586,7 +592,7 @@ CombatTestCases.ensure_breed_ragdoll_actors = function (case_settings)
 					local minion_data = {
 						breed = breed,
 						breed_name = breed_name,
-						breed_side = breed_side,
+						breed_side = breed_side
 					}
 
 					spawn_index = num_edges < spawn_index and 1 or spawn_index
@@ -634,6 +640,8 @@ CombatTestCases.ensure_breed_ragdoll_actors = function (case_settings)
 
 		if string.value_or_nil(result) == nil then
 			result = "Success"
+		else
+			Testify.expect:fail("missing_ragdoll_actors", result)
 		end
 
 		return result
@@ -685,13 +693,13 @@ CombatTestCases.gib_all_minions = function (case_settings)
 			local spawn_position_offset = {
 				z = 0.2,
 				x = math.cos(angle) * distance,
-				y = math.sin(angle) * distance,
+				y = math.sin(angle) * distance
 			}
 
 			spawn_positions[i] = {
 				x = player_current_position.x + spawn_position_offset.x,
 				y = player_current_position.y + spawn_position_offset.y,
-				z = player_current_position.z + spawn_position_offset.z,
+				z = player_current_position.z + spawn_position_offset.z
 			}
 		end
 
@@ -725,7 +733,7 @@ CombatTestCases.gib_all_minions = function (case_settings)
 					unit = minion_unit,
 					hit_zone_name = hit_zone_name,
 					gibbing_type = gibbing_type,
-					gib_settings = gib_settings,
+					gib_settings = gib_settings
 				}
 
 				Testify:make_request("gib_minion", parameters)
@@ -750,7 +758,7 @@ CombatTestCases.gib_all_minions = function (case_settings)
 					local minion_data = {
 						breed = breed,
 						breed_name = breed_name,
-						breed_side = breed_side,
+						breed_side = breed_side
 					}
 
 					for hit_zone_name, data in pairs(gib_template) do
@@ -778,6 +786,8 @@ CombatTestCases.gib_all_minions = function (case_settings)
 
 		if string.value_or_nil(result) == nil then
 			result = "Success"
+		else
+			Testify.expect:fail("gib_all_minions_failure", result)
 		end
 
 		return result

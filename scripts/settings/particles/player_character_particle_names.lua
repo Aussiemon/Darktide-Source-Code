@@ -197,6 +197,8 @@ local player_character_particle_names_lookup = {
 	["content/fx/particles/weapons/rifles/shotgun/shotgun_muzzle_slug"] = true,
 	["content/fx/particles/weapons/rifles/shotgun/shotgun_p2_m1/shotgun_p2_m1_muzzle_double"] = true,
 	["content/fx/particles/weapons/rifles/shotgun/shotgun_p2_m1/shotgun_p2_m1_muzzle_single"] = true,
+	["content/fx/particles/weapons/rifles/shotgun/shotgun_p2_m3/shotgun_p2_m1_muzzle_double"] = true,
+	["content/fx/particles/weapons/rifles/shotgun/shotgun_p2_m3/shotgun_p2_m1_muzzle_single"] = true,
 	["content/fx/particles/weapons/rifles/shotgun/shotgun_p4/shotgun_p4_weapon_special_impact_armor"] = true,
 	["content/fx/particles/weapons/rifles/shotgun/shotgun_p4/shotgun_p4_weapon_special_muzzle"] = true,
 	["content/fx/particles/weapons/rifles/shotgun/shotgun_rifle_muzzle"] = true,
@@ -216,7 +218,7 @@ local player_character_particle_names_lookup = {
 	["content/fx/particles/weapons/shields/arbites_shield_weapon_special_01"] = true,
 	["content/fx/particles/weapons/swords/forcesword/psyker_activate_forcesword"] = true,
 	["content/fx/particles/weapons/swords/forcesword/psyker_parry"] = true,
-	["content/fx/particles/weapons/swords/forcesword/psyker_push"] = true,
+	["content/fx/particles/weapons/swords/forcesword/psyker_push"] = true
 }
 local PlayerCharacterParticles = require("scripts/settings/particles/player_character_particles")
 

@@ -234,12 +234,12 @@ WwisePortalVolume.component_data = {
 	start_enabled = {
 		ui_name = "Start Enabled",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	register_portal = {
 		ui_name = "Register Portal",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	min_obstruction = {
 		decimals = 2,
@@ -248,7 +248,7 @@ WwisePortalVolume.component_data = {
 		step = 0.01,
 		ui_name = "Lowest Possible Obstruction & Occlusion Ratio",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	max_obstruction = {
 		decimals = 2,
@@ -257,18 +257,18 @@ WwisePortalVolume.component_data = {
 		step = 0.01,
 		ui_name = "Higest Possible Obstruction & Occlusion Ratio",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	volume_name = {
 		ui_name = "Volume Name",
 		ui_type = "text_box",
-		value = "portal_volume",
+		value = "portal_volume"
 	},
 	adjust_open_anim_time = {
 		category = "Adjust Open Anim",
 		ui_name = "Adjust Open Anim Time Calculation",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	actual_open_time = {
 		category = "Adjust Open Anim",
@@ -277,18 +277,18 @@ WwisePortalVolume.component_data = {
 		step = 0.01,
 		ui_name = "Actual Open Start Time (in sec.)",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	inputs = {
 		flow_enable = {
 			accessibility = "private",
-			type = "event",
+			type = "event"
 		},
 		flow_disable = {
 			accessibility = "private",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return WwisePortalVolume

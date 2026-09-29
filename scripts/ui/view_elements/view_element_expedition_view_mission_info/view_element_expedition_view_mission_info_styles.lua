@@ -14,9 +14,9 @@ Styles.mission_info_tab.frame = {
 	offset = {
 		0,
 		0,
-		11,
+		11
 	},
-	color = SettingsColors.terminal_frame,
+	color = SettingsColors.terminal_frame
 }
 Styles.mission_info_tab.background = {
 	horizontal_alignment = "left",
@@ -24,32 +24,32 @@ Styles.mission_info_tab.background = {
 	offset = {
 		0,
 		0,
-		0,
+		0
 	},
-	color = SettingsColors.tab_unselected,
+	color = SettingsColors.tab_unselected
 }
 Styles.mission_info_tab.background_bottom_edge = {
 	horizontal_alignment = "center",
 	vertical_alignment = "bottom",
 	size = {
 		nil,
-		2,
+		2
 	},
 	size_addition = {
 		-2,
-		0,
+		0
 	},
 	offset = {
 		0,
 		0,
-		12,
+		12
 	},
 	color = {
 		255,
 		0,
 		0,
-		0,
-	},
+		0
+	}
 }
 Styles.mission_info_tab.gradient = {
 	horizontal_alignment = "right",
@@ -57,9 +57,9 @@ Styles.mission_info_tab.gradient = {
 	offset = {
 		0,
 		0,
-		1,
+		1
 	},
-	color = SettingsColors.tab_selected,
+	color = SettingsColors.tab_selected
 }
 Styles.mission_info_tab.mission_info_tab = {
 	horizontal_alignment = "left",
@@ -67,9 +67,9 @@ Styles.mission_info_tab.mission_info_tab = {
 	offset = {
 		0,
 		0,
-		0,
+		0
 	},
-	color = SettingsColors.tab_unselected,
+	color = SettingsColors.tab_unselected
 }
 Styles.mission_info_tab.icon = {
 	horizontal_alignment = "center",
@@ -78,16 +78,16 @@ Styles.mission_info_tab.icon = {
 	offset = {
 		0,
 		0,
-		12,
+		12
 	},
 	size_addition = {
 		-4,
-		-4,
+		-4
 	},
 	color = SettingsColors.terminal,
 	material_values = {
-		gradient_map = "content/ui/textures/mission_board/gradient_digital_green",
-	},
+		gradient_map = "content/ui/textures/mission_board/gradient_digital_green"
+	}
 }
 Styles.mission_info_tab.hotspot = {
 	horizontal_alignment = "left",
@@ -95,10 +95,10 @@ Styles.mission_info_tab.hotspot = {
 	offset = {
 		0,
 		0,
-		0,
+		0
 	},
 	on_hover_sound = UISoundEvents.default_mouse_hover,
-	on_pressed_sound = UISoundEvents.default_click,
+	on_pressed_sound = UISoundEvents.default_click
 }
 Styles.mission_info_page = {}
 Styles.mission_info_page.frame = {
@@ -107,9 +107,9 @@ Styles.mission_info_page.frame = {
 	offset = {
 		0,
 		0,
-		10,
+		10
 	},
-	color = SettingsColors.terminal_frame,
+	color = SettingsColors.terminal_frame
 }
 Styles.mission_info_page.background = {
 	horizontal_alignment = "center",
@@ -118,14 +118,14 @@ Styles.mission_info_page.background = {
 	offset = {
 		0,
 		0,
-		1,
+		1
 	},
 	color = {
 		255,
 		0,
 		0,
-		0,
-	},
+		0
+	}
 }
 Styles.mission_info_page.background_fade = {
 	horizontal_alignment = "left",
@@ -134,62 +134,62 @@ Styles.mission_info_page.background_fade = {
 		100,
 		101,
 		145,
-		102,
+		102
 	},
 	uvs = {
 		{
 			0,
-			0,
+			0
 		},
 		{
 			1,
-			1,
-		},
+			1
+		}
 	},
 	pivot = {
 		0,
-		0,
+		0
 	},
 	offset = {
 		0,
 		Dimensions.page_min_size[2],
-		2,
+		2
 	},
 	size = {
 		Dimensions.page_min_size[2] / 3,
-		Dimensions.page_min_size[1],
+		Dimensions.page_min_size[1]
 	},
-	angle = math.degrees_to_radians(90),
+	angle = math.degrees_to_radians(90)
 }
 Styles.mission_info_page.icon = {
 	horizontal_alignment = "left",
 	vertical_alignment = "top",
 	size = {
 		50,
-		50,
+		50
 	},
 	offset = {
 		5,
 		5,
-		5,
+		5
 	},
 	color = SettingsColors.terminal,
 	material_values = {
-		symbol_atlas_index = 24,
-	},
+		symbol_atlas_index = 24
+	}
 }
 Styles.mission_info_page.icon_frame = {
 	scale_to_material = true,
 	size = {
 		32,
-		32,
+		32
 	},
 	offset = {
 		15,
 		15,
-		2,
+		2
 	},
-	color = SettingsColors.terminal_frame,
+	color = SettingsColors.terminal_frame
 }
 Styles.mission_info_page.title = {
 	font_size = 14,
@@ -202,12 +202,12 @@ Styles.mission_info_page.title = {
 	offset = {
 		65,
 		10,
-		5,
+		5
 	},
 	size = {
 		Dimensions.page_min_size[1] - 140,
-		20,
-	},
+		20
+	}
 }
 Styles.mission_info_page.subtitle = {
 	font_size = 20,
@@ -220,12 +220,12 @@ Styles.mission_info_page.subtitle = {
 	offset = {
 		65,
 		30,
-		5,
+		5
 	},
 	size = {
 		Dimensions.page_min_size[1] - 140,
-		20,
-	},
+		20
+	}
 }
 Styles.mission_info_page.footer_line = {
 	horizontal_alignment = "left",
@@ -233,18 +233,18 @@ Styles.mission_info_page.footer_line = {
 	vertical_alignment = "top",
 	size = {
 		Dimensions.page_min_size[1],
-		1,
+		1
 	},
 	color = SettingsColors.terminal_frame,
 	offset = {
 		0,
 		60,
-		1,
+		1
 	},
 	size_addition = {
 		0,
-		0,
-	},
+		0
+	}
 }
 Styles.mission_info_page.unlock_requirements = {}
 Styles.mission_info_page.unlock_requirements.checkbox = {
@@ -253,18 +253,18 @@ Styles.mission_info_page.unlock_requirements.checkbox = {
 	vertical_alignment = "top",
 	size = {
 		44,
-		44,
+		44
 	},
 	color = SettingsColors.terminal_frame,
 	offset = {
 		21,
 		0,
-		2,
+		2
 	},
 	size_addition = {
 		-22,
-		-22,
-	},
+		-22
+	}
 }
 Styles.mission_info_page.unlock_requirements.checkmark = {
 	horizontal_alignment = "left",
@@ -272,18 +272,18 @@ Styles.mission_info_page.unlock_requirements.checkmark = {
 	vertical_alignment = "top",
 	size = {
 		44,
-		44,
+		44
 	},
 	color = Color.white(255, true),
 	offset = {
 		10,
 		0,
-		2,
+		2
 	},
 	size_addition = {
 		0,
-		0,
-	},
+		0
+	}
 }
 Styles.mission_info_page.unlock_requirements.text = {
 	extra_y_margin = 20,
@@ -298,12 +298,12 @@ Styles.mission_info_page.unlock_requirements.text = {
 	offset = {
 		60,
 		0,
-		2,
+		2
 	},
 	size = {
 		Dimensions.page_min_size[1] - 80,
-		44,
-	},
+		44
+	}
 }
 Styles.mission_info_page.unlock_requirements.divider_left_line = {
 	horizontal_alignment = "left",
@@ -311,18 +311,18 @@ Styles.mission_info_page.unlock_requirements.divider_left_line = {
 	vertical_alignment = "top",
 	size = {
 		Dimensions.page_min_size[1] * Dimensions.divider_left_line_portion,
-		2,
+		2
 	},
 	color = SettingsColors.terminal_frame,
 	offset = {
 		0,
 		0,
-		2,
+		2
 	},
 	size_addition = {
 		0,
-		0,
-	},
+		0
+	}
 }
 Styles.mission_info_page.unlock_requirements.divider_center_text = {
 	font_size = 16,
@@ -335,12 +335,12 @@ Styles.mission_info_page.unlock_requirements.divider_center_text = {
 	offset = {
 		0,
 		0,
-		2,
+		2
 	},
 	size = {
 		Dimensions.page_min_size[1] * Dimensions.divider_center_text_portion,
-		20,
-	},
+		20
+	}
 }
 Styles.mission_info_page.unlock_requirements.divider_right_line = {
 	horizontal_alignment = "right",
@@ -348,18 +348,18 @@ Styles.mission_info_page.unlock_requirements.divider_right_line = {
 	vertical_alignment = "top",
 	size = {
 		Dimensions.page_min_size[1] * Dimensions.divider_right_line_portion,
-		2,
+		2
 	},
 	color = SettingsColors.terminal_frame,
 	offset = {
 		0,
 		0,
-		2,
+		2
 	},
 	size_addition = {
 		0,
-		0,
-	},
+		0
+	}
 }
 Styles.mission_info_page.unlock_requirements.unlock_status = {
 	font_size = 16,
@@ -372,12 +372,12 @@ Styles.mission_info_page.unlock_requirements.unlock_status = {
 	offset = {
 		-10,
 		30,
-		5,
+		5
 	},
 	size = {
 		Dimensions.page_min_size[1] - 140,
-		20,
-	},
+		20
+	}
 }
 Styles.mission_info_page.major_modifier = {}
 Styles.mission_info_page.major_modifier.description = {
@@ -392,12 +392,12 @@ Styles.mission_info_page.major_modifier.description = {
 	offset = {
 		20,
 		80,
-		2,
+		2
 	},
 	size = {
 		Dimensions.page_min_size[1] - 40,
-		Dimensions.page_min_size[2],
-	},
+		Dimensions.page_min_size[2]
+	}
 }
 Styles.mission_info_page.minor_modifiers = {}
 Styles.mission_info_page.minor_modifiers.modifiers = {
@@ -412,12 +412,12 @@ Styles.mission_info_page.minor_modifiers.modifiers = {
 	offset = {
 		20,
 		80,
-		2,
+		2
 	},
 	size = {
 		Dimensions.page_min_size[1] - 40,
-		Dimensions.page_min_size[2],
-	},
+		Dimensions.page_min_size[2]
+	}
 }
 Styles.mission_info_page.quickplay_page = {}
 Styles.mission_info_page.quickplay_page.icon = {
@@ -427,9 +427,9 @@ Styles.mission_info_page.quickplay_page.icon = {
 	offset = {
 		10,
 		6,
-		5,
+		5
 	},
-	color = SettingsColors.terminal_frame,
+	color = SettingsColors.terminal_frame
 }
 Styles.mission_info_page.quickplay_page.title = {
 	font_size = 16,
@@ -442,12 +442,12 @@ Styles.mission_info_page.quickplay_page.title = {
 	offset = {
 		60,
 		20,
-		5,
+		5
 	},
 	size = {
 		Dimensions.page_min_size[1] - 70,
-		20,
-	},
+		20
+	}
 }
 Styles.mission_info_page.quickplay_page.description = {
 	font_size = 16,
@@ -460,12 +460,12 @@ Styles.mission_info_page.quickplay_page.description = {
 	offset = {
 		20,
 		80,
-		2,
+		2
 	},
 	size = {
 		Dimensions.page_min_size[1] - 40,
-		Dimensions.page_min_size[2],
-	},
+		Dimensions.page_min_size[2]
+	}
 }
 Styles.mission_info_stats = {}
 Styles.mission_info_stats.frame = {
@@ -473,28 +473,28 @@ Styles.mission_info_stats.frame = {
 	offset = {
 		0,
 		0,
-		2,
+		2
 	},
-	color = SettingsColors.terminal_frame,
+	color = SettingsColors.terminal_frame
 }
 Styles.mission_info_stats.background = {
 	horizontal_alignment = "center",
 	vertical_alignment = "top",
 	size = {
 		Dimensions.page_min_size[1],
-		80,
+		80
 	},
 	offset = {
 		0,
 		0,
-		1,
+		1
 	},
 	color = {
 		255,
 		0,
 		0,
-		0,
-	},
+		0
+	}
 }
 Styles.mission_info_stats.personal_total_text = {
 	font_size = 16,
@@ -507,12 +507,12 @@ Styles.mission_info_stats.personal_total_text = {
 	offset = {
 		10,
 		10,
-		5,
+		5
 	},
 	size = {
 		Dimensions.page_min_size[1] - 20,
-		20,
-	},
+		20
+	}
 }
 Styles.mission_info_stats.personal_total_number = {
 	font_size = 16,
@@ -525,12 +525,12 @@ Styles.mission_info_stats.personal_total_number = {
 	offset = {
 		-55,
 		10,
-		5,
+		5
 	},
 	size = {
 		Dimensions.page_min_size[1] - 65,
-		20,
-	},
+		20
+	}
 }
 Styles.mission_info_stats.personal_total_icon = {
 	horizontal_alignment = "right",
@@ -539,27 +539,27 @@ Styles.mission_info_stats.personal_total_icon = {
 	offset = {
 		-10,
 		6,
-		5,
+		5
 	},
-	color = SettingsColors.text_dark,
+	color = SettingsColors.text_dark
 }
 Styles.mission_info_stats.divider_line = {
 	horizontal_alignment = "center",
 	vertical_alignment = "top",
 	size = {
 		Dimensions.page_min_size[1],
-		1,
+		1
 	},
 	color = SettingsColors.terminal_frame,
 	offset = {
 		0,
 		40,
-		5,
+		5
 	},
 	size_addition = {
 		0,
-		0,
-	},
+		0
+	}
 }
 Styles.mission_info_stats.personal_best_text = {
 	font_size = 16,
@@ -572,12 +572,12 @@ Styles.mission_info_stats.personal_best_text = {
 	offset = {
 		10,
 		50,
-		5,
+		5
 	},
 	size = {
 		Dimensions.page_min_size[1] - 20,
-		20,
-	},
+		20
+	}
 }
 Styles.mission_info_stats.personal_best_number = {
 	font_size = 16,
@@ -590,12 +590,12 @@ Styles.mission_info_stats.personal_best_number = {
 	offset = {
 		-55,
 		50,
-		5,
+		5
 	},
 	size = {
 		Dimensions.page_min_size[1] - 65,
-		20,
-	},
+		20
+	}
 }
 Styles.mission_info_stats.personal_best_icon = {
 	horizontal_alignment = "right",
@@ -604,9 +604,9 @@ Styles.mission_info_stats.personal_best_icon = {
 	offset = {
 		-10,
 		46,
-		5,
+		5
 	},
-	color = SettingsColors.text_dark,
+	color = SettingsColors.text_dark
 }
 
 return settings("ViewElementExpeditionViewMissionInfoStyles", Styles)

@@ -10,44 +10,44 @@ local chaos_daemonhost = {
 		move_medium = "string",
 		move_state = "string",
 		restricted_combat_range = "string",
-		warp_sweep_cooldown = "number",
+		warp_sweep_cooldown = "number"
 	},
 	slot = {
 		has_ghost_slot = "boolean",
 		has_slot = "boolean",
 		is_waiting_on_slot = "boolean",
 		slot_distance = "number",
-		wait_slot_distance = "number",
+		wait_slot_distance = "number"
 	},
 	weapon_switch = {
 		is_switching_weapons = "boolean",
 		last_weapon_switch_t = "number",
 		wanted_combat_range = "string",
-		wanted_weapon_slot = "string",
+		wanted_weapon_slot = "string"
 	},
 	aim = {
 		controlled_aim_position = "Vector3Box",
 		controlled_aiming = "boolean",
-		lean_dot = "number",
+		lean_dot = "number"
 	},
 	suppression = {
 		direction = "Vector3Box",
 		is_suppressed = "boolean",
-		suppress_value = "number",
+		suppress_value = "number"
 	},
 	nearby_units_broadphase = {
 		next_broadphase_t = "number",
-		num_units = "number",
+		num_units = "number"
 	},
 	statistics = {
-		player_deaths = "number",
-	},
+		player_deaths = "number"
+	}
 }
 
 table.merge(chaos_daemonhost, base_template)
 
 local templates = {
-	chaos_daemonhost = chaos_daemonhost,
+	chaos_daemonhost = chaos_daemonhost
 }
 
 return templates

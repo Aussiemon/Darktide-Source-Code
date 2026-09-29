@@ -12,6 +12,11 @@ local EndViewTestify = {
 			return
 		end
 	end,
+	rate_match = function (end_view, rating)
+		end_view:rate_match(rating)
+
+		return end_view:match_rating() or false
+	end
 }
 
 return EndViewTestify

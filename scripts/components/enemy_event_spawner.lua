@@ -67,19 +67,19 @@ EnemyEventSpawner.component_data = {
 	inputs = {
 		spawn_event_enemies = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	compositions = {
 		ui_name = "Compositions",
 		ui_type = "combo_box",
 		value = "nurgle_totem",
 		options_keys = {
-			"nurgle_totem",
+			"nurgle_totem"
 		},
 		options_values = {
-			"nurgle_totem",
-		},
+			"nurgle_totem"
+		}
 	},
 	horde_template = {
 		ui_name = "Horde Template",
@@ -88,14 +88,14 @@ EnemyEventSpawner.component_data = {
 		options_keys = {
 			"ambush_horde",
 			"flood_horde",
-			"trickle_horde",
+			"trickle_horde"
 		},
 		options_values = {
 			"ambush_horde",
 			"flood_horde",
-			"trickle_horde",
-		},
-	},
+			"trickle_horde"
+		}
+	}
 }
 
 return EnemyEventSpawner

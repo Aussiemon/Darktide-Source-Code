@@ -36,68 +36,68 @@ function _inject_armor_impact_fx(damage_type, armor_config)
 				damage = {
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_melee_hits_axe_light",
+						event = "wwise/events/weapon/play_melee_hits_axe_light"
 					},
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_melee_hits_axe_armor",
-					},
+						event = "wwise/events/weapon/play_melee_hits_axe_armor"
+					}
 				},
 				damage_reduced = {
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_melee_hits_axe_light",
+						event = "wwise/events/weapon/play_melee_hits_axe_light"
 					},
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_melee_hits_axe_armor",
-					},
+						event = "wwise/events/weapon/play_melee_hits_axe_armor"
+					}
 				},
 				damage_negated = {
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/melee_hits_blunt_no_damage",
-					},
-				},
+						event = "wwise/events/weapon/melee_hits_blunt_no_damage"
+					}
+				}
 			},
 			vfx = {
 				damage = {
 					{
 						effects = {
-							"content/fx/particles/impacts/armor_penetrate",
-						},
+							"content/fx/particles/impacts/armor_penetrate"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01",
-						},
-					},
+							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01"
+						}
+					}
 				},
 				damage_reduced = {
 					{
 						effects = {
-							"content/fx/particles/impacts/armor_penetrate",
-						},
+							"content/fx/particles/impacts/armor_penetrate"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01",
-						},
-					},
+							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01"
+						}
+					}
 				},
 				damage_negated = {
 					{
 						effects = {
-							"content/fx/particles/impacts/damage_blocked",
-						},
+							"content/fx/particles/impacts/damage_blocked"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/impacts/armor_ricochet",
-						},
-					},
-				},
-			},
+							"content/fx/particles/impacts/armor_ricochet"
+						}
+					}
+				}
+			}
 		}
 	else
 		Log.info("ImpactFxInjector", "Found override for \"prop_armored\" impact fx on damage_type: %s", damage_type)
@@ -110,79 +110,79 @@ function _inject_armor_impact_fx(damage_type, armor_config)
 			sfx = {
 				damage = {
 					{
-						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_melee_hits_axe_light",
+						append_husk_to_event_name = false,
+						event = "wwise/events/weapon/play_event_raid_tank_damage"
 					},
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_melee_hits_axe_armor",
-					},
+						event = "wwise/events/weapon/play_melee_hits_axe_light"
+					}
 				},
 				damage_reduced = {
 					{
-						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_melee_hits_axe_light",
+						append_husk_to_event_name = false,
+						event = "wwise/events/weapon/play_event_raid_tank_damage"
 					},
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_melee_hits_axe_armor",
-					},
+						event = "wwise/events/weapon/play_melee_hits_axe_light"
+					}
 				},
 				damage_negated = {
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/melee_hits_blunt_no_damage",
-					},
-				},
+						event = "wwise/events/weapon/melee_hits_blunt_no_damage"
+					}
+				}
 			},
 			vfx = {
 				damage = {
 					{
 						effects = {
-							"content/fx/particles/impacts/armor_penetrate",
-						},
+							"content/fx/particles/impacts/armor_penetrate"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01",
-						},
+							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/impacts/surfaces/impact_glass",
-						},
-					},
+							"content/fx/particles/impacts/surfaces/impact_glass"
+						}
+					}
 				},
 				damage_reduced = {
 					{
 						effects = {
-							"content/fx/particles/impacts/armor_penetrate",
-						},
+							"content/fx/particles/impacts/armor_penetrate"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01",
-						},
+							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/impacts/surfaces/impact_glass",
-						},
-					},
+							"content/fx/particles/impacts/surfaces/impact_glass"
+						}
+					}
 				},
 				damage_negated = {
 					{
 						effects = {
-							"content/fx/particles/impacts/damage_blocked",
-						},
+							"content/fx/particles/impacts/damage_blocked"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/impacts/armor_ricochet",
-						},
-					},
-				},
-			},
+							"content/fx/particles/impacts/armor_ricochet"
+						}
+					}
+				}
+			}
 		}
 	else
 		Log.info("ImpactFxInjector", "Found override for \"prop_druglab_tank\" impact fx on damage_type: %s", damage_type)
@@ -196,70 +196,70 @@ function _inject_armor_impact_fx(damage_type, armor_config)
 				damage = {
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_material_hit_ice",
-					},
+						event = "wwise/events/weapon/play_material_hit_ice"
+					}
 				},
 				damage_reduced = {
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_material_hit_ice",
-					},
+						event = "wwise/events/weapon/play_material_hit_ice"
+					}
 				},
 				damage_negated = {
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/melee_hits_blunt_no_damage",
-					},
-				},
+						event = "wwise/events/weapon/melee_hits_blunt_no_damage"
+					}
+				}
 			},
 			vfx = {
 				damage = {
 					{
 						effects = {
-							"content/fx/particles/impacts/armor_penetrate",
-						},
+							"content/fx/particles/impacts/armor_penetrate"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01",
-						},
+							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/impacts/surfaces/impact_ice_01",
-						},
-					},
+							"content/fx/particles/impacts/surfaces/impact_ice_01"
+						}
+					}
 				},
 				damage_reduced = {
 					{
 						effects = {
-							"content/fx/particles/impacts/armor_penetrate",
-						},
+							"content/fx/particles/impacts/armor_penetrate"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01",
-						},
+							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/impacts/surfaces/impact_ice_01",
-						},
-					},
+							"content/fx/particles/impacts/surfaces/impact_ice_01"
+						}
+					}
 				},
 				damage_negated = {
 					{
 						effects = {
-							"content/fx/particles/impacts/damage_blocked",
-						},
+							"content/fx/particles/impacts/damage_blocked"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/impacts/armor_ricochet",
-						},
-					},
-				},
-			},
+							"content/fx/particles/impacts/armor_ricochet"
+						}
+					}
+				}
+			}
 		}
 	else
 		Log.info("ImpactFxInjector", "Found override for \"prop_ice_chunk\" impact fx on damage_type: %s", damage_type)
@@ -273,70 +273,70 @@ function _inject_armor_impact_fx(damage_type, armor_config)
 				damage = {
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_cogitator_impact",
-					},
+						event = "wwise/events/weapon/play_cogitator_impact"
+					}
 				},
 				damage_reduced = {
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_cogitator_impact",
-					},
+						event = "wwise/events/weapon/play_cogitator_impact"
+					}
 				},
 				damage_negated = {
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_cogitator_impact",
-					},
-				},
+						event = "wwise/events/weapon/play_cogitator_impact"
+					}
+				}
 			},
 			vfx = {
 				damage = {
 					{
 						effects = {
-							"content/fx/particles/impacts/armor_penetrate",
-						},
+							"content/fx/particles/impacts/armor_penetrate"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01",
-						},
+							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/impacts/surfaces/impact_metal",
-						},
-					},
+							"content/fx/particles/impacts/surfaces/impact_metal"
+						}
+					}
 				},
 				damage_reduced = {
 					{
 						effects = {
-							"content/fx/particles/impacts/armor_penetrate",
-						},
+							"content/fx/particles/impacts/armor_penetrate"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01",
-						},
+							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/impacts/surfaces/impact_metal",
-						},
-					},
+							"content/fx/particles/impacts/surfaces/impact_metal"
+						}
+					}
 				},
 				damage_negated = {
 					{
 						effects = {
-							"content/fx/particles/impacts/damage_blocked",
-						},
+							"content/fx/particles/impacts/damage_blocked"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/impacts/armor_ricochet",
-						},
-					},
-				},
-			},
+							"content/fx/particles/impacts/armor_ricochet"
+						}
+					}
+				}
+			}
 		}
 	else
 		Log.info("ImpactFxInjector", "Found override for \"prop_train_cogitator\" impact fx on damage_type: %s", damage_type)
@@ -350,37 +350,78 @@ function _inject_armor_impact_fx(damage_type, armor_config)
 				[armor_hit_types.damage] = {
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/minions/play_traitor_captain_shield_bullet_hits",
-					},
+						event = "wwise/events/minions/play_traitor_captain_shield_bullet_hits"
+					}
 				},
 				[armor_hit_types.damage_negated] = {
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/minions/play_traitor_captain_shield_bullet_hits",
-					},
-				},
+						event = "wwise/events/minions/play_traitor_captain_shield_bullet_hits"
+					}
+				}
 			},
 			vfx = {
 				[armor_hit_types.damage] = {
 					{
 						normal_rotation = true,
 						effects = {
-							"content/fx/particles/impacts/enemies/renegade_captain/renegade_captain_shield_impact",
-						},
-					},
+							"content/fx/particles/impacts/enemies/renegade_captain/renegade_captain_shield_impact"
+						}
+					}
 				},
 				[armor_hit_types.damage_negated] = {
 					{
 						normal_rotation = true,
 						effects = {
-							"content/fx/particles/impacts/enemies/renegade_captain/renegade_captain_shield_impact",
-						},
-					},
-				},
-			},
+							"content/fx/particles/impacts/enemies/renegade_captain/renegade_captain_shield_impact"
+						}
+					}
+				}
+			}
 		}
 	else
 		Log.info("ImpactFxInjector", "Found override for \"void_shield\" impact fx on damage_type: %s", damage_type)
+	end
+
+	local has_warp_shield_overrides = armor_config[hit_effect_armor_type.warp_shield] ~= nil
+
+	if not has_warp_shield_overrides then
+		armor_config[hit_effect_armor_type.warp_shield] = {
+			sfx = {
+				[armor_hit_types.damage] = {
+					{
+						append_husk_to_event_name = true,
+						event = "wwise/events/minions/play_traitor_captain_shield_bullet_hits"
+					}
+				},
+				[armor_hit_types.damage_negated] = {
+					{
+						append_husk_to_event_name = true,
+						event = "wwise/events/minions/play_traitor_captain_shield_bullet_hits"
+					}
+				}
+			},
+			vfx = {
+				[armor_hit_types.damage] = {
+					{
+						normal_rotation = true,
+						effects = {
+							"content/fx/particles/abilities/psyker_shield_block"
+						}
+					}
+				},
+				[armor_hit_types.damage_negated] = {
+					{
+						normal_rotation = true,
+						effects = {
+							"content/fx/particles/abilities/psyker_shield_block"
+						}
+					}
+				}
+			}
+		}
+	else
+		Log.info("ImpactFxInjector", "Found override for \"warp_shield\" impact fx on damage_type: %s", damage_type)
 	end
 
 	local has_nurgle_totem_overrides = armor_config[hit_effect_armor_type.nurgle_totem] ~= nil
@@ -391,78 +432,78 @@ function _inject_armor_impact_fx(damage_type, armor_config)
 				damage = {
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_event_skull_totem_hit",
+						event = "wwise/events/weapon/play_event_skull_totem_hit"
 					},
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_melee_hits_axe_light",
-					},
+						event = "wwise/events/weapon/play_melee_hits_axe_light"
+					}
 				},
 				damage_reduced = {
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_event_skull_totem_hit",
+						event = "wwise/events/weapon/play_event_skull_totem_hit"
 					},
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_melee_hits_axe_light",
-					},
+						event = "wwise/events/weapon/play_melee_hits_axe_light"
+					}
 				},
 				damage_negated = {
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_melee_hits_axe_light",
-					},
-				},
+						event = "wwise/events/weapon/play_melee_hits_axe_light"
+					}
+				}
 			},
 			vfx = {
 				damage = {
 					{
 						effects = {
-							"content/fx/particles/impacts/armor_penetrate",
-						},
+							"content/fx/particles/impacts/armor_penetrate"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01",
-						},
+							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/impacts/surfaces/impact_metal",
-						},
-					},
+							"content/fx/particles/impacts/surfaces/impact_metal"
+						}
+					}
 				},
 				damage_reduced = {
 					{
 						effects = {
-							"content/fx/particles/impacts/armor_penetrate",
-						},
+							"content/fx/particles/impacts/armor_penetrate"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01",
-						},
+							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/impacts/surfaces/impact_metal",
-						},
-					},
+							"content/fx/particles/impacts/surfaces/impact_metal"
+						}
+					}
 				},
 				damage_negated = {
 					{
 						effects = {
-							"content/fx/particles/impacts/damage_blocked",
-						},
+							"content/fx/particles/impacts/damage_blocked"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/impacts/armor_ricochet",
-						},
-					},
-				},
-			},
+							"content/fx/particles/impacts/armor_ricochet"
+						}
+					}
+				}
+			}
 		}
 	else
 		Log.info("ImpactFxInjector", "Found override for \"nurgle_totem\" impact fx on damage_type: %s", damage_type)
@@ -476,93 +517,93 @@ function _inject_armor_impact_fx(damage_type, armor_config)
 				damage = {
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_event_skull_totem_hit",
+						event = "wwise/events/weapon/play_event_skull_totem_hit"
 					},
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_melee_hits_axe_light",
-					},
+						event = "wwise/events/weapon/play_melee_hits_axe_light"
+					}
 				},
 				damage_reduced = {
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_event_skull_totem_hit",
+						event = "wwise/events/weapon/play_event_skull_totem_hit"
 					},
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_melee_hits_axe_light",
-					},
+						event = "wwise/events/weapon/play_melee_hits_axe_light"
+					}
 				},
 				damage_negated = {
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_melee_hits_axe_light",
-					},
-				},
+						event = "wwise/events/weapon/play_melee_hits_axe_light"
+					}
+				}
 			},
 			vfx = {
 				damage = {
 					{
 						effects = {
-							"content/fx/particles/impacts/armor_penetrate",
-						},
+							"content/fx/particles/impacts/armor_penetrate"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01",
-						},
+							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/impacts/surfaces/impact_metal",
-						},
+							"content/fx/particles/impacts/surfaces/impact_metal"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/enemies/rotten_armor_leak",
-						},
-					},
+							"content/fx/particles/enemies/rotten_armor_leak"
+						}
+					}
 				},
 				damage_reduced = {
 					{
 						effects = {
-							"content/fx/particles/impacts/armor_penetrate",
-						},
+							"content/fx/particles/impacts/armor_penetrate"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01",
-						},
+							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/impacts/surfaces/impact_metal",
-						},
+							"content/fx/particles/impacts/surfaces/impact_metal"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/enemies/rotten_armor_leak",
-						},
-					},
+							"content/fx/particles/enemies/rotten_armor_leak"
+						}
+					}
 				},
 				damage_negated = {
 					{
 						effects = {
-							"content/fx/particles/impacts/damage_blocked",
-						},
+							"content/fx/particles/impacts/damage_blocked"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/impacts/armor_ricochet",
-						},
+							"content/fx/particles/impacts/armor_ricochet"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/enemies/rotten_armor_leak",
-						},
-					},
-				},
-			},
+							"content/fx/particles/enemies/rotten_armor_leak"
+						}
+					}
+				}
+			}
 		}
 	else
 		Log.info("ImpactFxInjector", "Found override for \"nurgle_totem\" impact fx on damage_type: %s", damage_type)
@@ -576,47 +617,47 @@ function _inject_armor_impact_fx(damage_type, armor_config)
 				damage = {
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_fusebox_damage_impact",
-					},
+						event = "wwise/events/weapon/play_fusebox_damage_impact"
+					}
 				},
 				damage_negated = {
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_fusebox_damage_negated",
-					},
-				},
+						event = "wwise/events/weapon/play_fusebox_damage_negated"
+					}
+				}
 			},
 			vfx = {
 				damage = {
 					{
 						effects = {
-							"content/fx/particles/impacts/armor_penetrate",
-						},
+							"content/fx/particles/impacts/armor_penetrate"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01",
-						},
+							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/impacts/armor_ricochet",
-						},
-					},
+							"content/fx/particles/impacts/armor_ricochet"
+						}
+					}
 				},
 				damage_negated = {
 					{
 						effects = {
-							"content/fx/particles/impacts/damage_blocked",
-						},
+							"content/fx/particles/impacts/damage_blocked"
+						}
 					},
 					{
 						effects = {
-							"content/fx/particles/impacts/surfaces/impact_metal",
-						},
-					},
-				},
-			},
+							"content/fx/particles/impacts/surfaces/impact_metal"
+						}
+					}
+				}
+			}
 		}
 	else
 		Log.info("ImpactFxInjector", "Found override for \"prop_electrical_fusebox_01\" impact fx on damage_type: %s", damage_type)

@@ -14,7 +14,7 @@ local renegade_captain_hellgun_default = {
 	hit_scan_template = HitScanTemplates.gunner_bullet_sweep,
 	spread = math.degrees_to_radians(1.5),
 	damage_type = damage_types.minion_laser,
-	line_effect = LineEffects.renegade_gunner_lasbeam,
+	line_effect = LineEffects.renegade_gunner_lasbeam
 }
 local renegade_captain_hellgun_spray_and_pray = table.clone(renegade_captain_hellgun_default)
 
@@ -53,7 +53,7 @@ local renegade_captain_shotgun = {
 	hit_scan_template = HitScanTemplates.renegade_captain_shotgun_bullet,
 	spread = math.degrees_to_radians(2),
 	damage_type = damage_types.minion_pellet_captain,
-	line_effect = LineEffects.renegade_captain_pellet,
+	line_effect = LineEffects.renegade_captain_pellet
 }
 local renegade_twin_captain_las_pistol = {
 	collision_filter = "filter_minion_shooting",
@@ -69,8 +69,8 @@ local renegade_twin_captain_las_pistol = {
 	damage_falloff = {
 		falloff_range = 15,
 		max_power_reduction = 0.6,
-		max_range = 15,
-	},
+		max_range = 15
+	}
 }
 local shoot_templates = {
 	renegade_captain_plasma_pistol = renegade_captain_plasma_pistol,
@@ -78,7 +78,7 @@ local shoot_templates = {
 	renegade_captain_hellgun_default = renegade_captain_hellgun_default,
 	renegade_captain_hellgun_spray_and_pray = renegade_captain_hellgun_spray_and_pray,
 	renegade_captain_shotgun = renegade_captain_shotgun,
-	renegade_twin_captain_las_pistol = renegade_twin_captain_las_pistol,
+	renegade_twin_captain_las_pistol = renegade_twin_captain_las_pistol
 }
 
 return shoot_templates

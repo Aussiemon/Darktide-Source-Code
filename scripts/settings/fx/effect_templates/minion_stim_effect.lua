@@ -4,7 +4,7 @@ local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local GRENADE_ITEM_NAME = "content/items/weapons/minions/ranged/minion_stim"
 local resources = {
-	grenade_item_name = GRENADE_ITEM_NAME,
+	grenade_item_name = GRENADE_ITEM_NAME
 }
 local sound_event = "wwise/events/player/play_syringe_heal_husk_confirm"
 local sound_event_delay = 0.3
@@ -58,7 +58,7 @@ local effect_template = {
 		local grenade_unit = template_data.grenade_unit
 
 		Managers.state.unit_spawner:mark_for_deletion(grenade_unit)
-	end,
+	end
 }
 
 return effect_template

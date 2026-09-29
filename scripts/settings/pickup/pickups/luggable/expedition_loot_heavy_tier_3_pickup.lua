@@ -4,7 +4,7 @@ local ProjectileTemplates = require("scripts/settings/projectile/projectile_temp
 local loot_data = {
 	is_expedition_loot = true,
 	tier = 3,
-	type = "heavy",
+	type = "heavy"
 }
 local pickup_data = {
 	description = "loc_expeditions_pickup_loot_luggable_quality_high",
@@ -34,7 +34,7 @@ local pickup_data = {
 		local show_notification = false
 
 		Managers.event:trigger("event_expedition_pocketable_dropped", interactor_unit, pickup_unit, loot_type, loot_tier, show_notification)
-	end,
+	end
 }
 
 return pickup_data

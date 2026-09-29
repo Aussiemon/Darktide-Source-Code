@@ -9,17 +9,17 @@ local BtMoveToPositionAction = class("BtMoveToPositionAction", "BtNode")
 
 BtMoveToPositionAction.TIME_TO_FIRST_EVALUATE = {
 	0.8,
-	1.5,
+	1.5
 }
 BtMoveToPositionAction.CONSECUTIVE_EVALUATE_INTERVAL = {
 	1,
-	2,
+	2
 }
 
 local minion_spawner_radius_checks = {
 	20,
 	40,
-	50,
+	50
 }
 local _spawner = Script.new_array(8)
 

@@ -20,7 +20,7 @@ local pickup_data = {
 		local amount = math.ceil((max_ammunition_reserve + max_ammo_clip) * modifier)
 
 		return amount
-	end,
+	end
 }
 
 return pickup_data

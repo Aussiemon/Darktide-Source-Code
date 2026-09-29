@@ -23,8 +23,8 @@ RuleOverrides.override_rules = {
 			"response_for_info_incoming_enemies",
 			"response_for_seen_netgunner_flee",
 			"seen_enemy_group_assaulting",
-			"surrounded_response",
-		},
+			"surrounded_response"
+		}
 	},
 	{
 		chance_modifier = "binharic",
@@ -41,9 +41,9 @@ RuleOverrides.override_rules = {
 			"pinned_by_enemies",
 			"response_for_acryptic_start_revive_cryptic",
 			"response_for_cryptic_start_revive_cryptic",
-			"surrounded",
-		},
-	},
+			"surrounded"
+		}
+	}
 }
 
 RuleOverrides.override_chance = function (chosen_override_rule, user_contexts)

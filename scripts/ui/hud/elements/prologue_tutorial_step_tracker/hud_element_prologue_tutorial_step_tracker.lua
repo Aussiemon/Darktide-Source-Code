@@ -50,7 +50,7 @@ HudElementPrologueStepTracker.event_player_add_step_tracker = function (self, st
 		end
 
 		table.insert(self._popup_queue, 1, {
-			step_description = step_description,
+			step_description = step_description
 		})
 	else
 		self:_set_step_tracker_text(step_description)

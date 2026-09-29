@@ -14,7 +14,7 @@ local _attach_settings = {
 	lod_shadow_group = nil,
 	spawn_with_extensions = nil,
 	unit_spawner = nil,
-	world = nil,
+	world = nil
 }
 
 MinionVisualLoadout.create_visual_loadout_slot_entry = function (unit, lod_group, lod_shadow_group, world, item_slot_data, random_seed, item_definitions)
@@ -84,7 +84,7 @@ MinionVisualLoadout.create_visual_loadout_slot_entry = function (unit, lod_group
 		item_data = item_data,
 		drop_on_death = drop_on_death,
 		starts_invisible = item_slot_data.starts_invisible,
-		shield_settings = shield_settings,
+		shield_settings = shield_settings
 	}
 
 	return slot_entry, new_seed

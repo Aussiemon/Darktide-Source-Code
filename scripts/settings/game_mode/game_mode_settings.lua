@@ -47,7 +47,7 @@ local function _add_game_mode_settings(file_name)
 		local hotkey_settings = {
 			hotkeys = hotkeys,
 			lookup = hotkey_lookup,
-			hotkeys_disabled_on_gamepad = hotkeys_disabled_on_gamepad,
+			hotkeys_disabled_on_gamepad = hotkeys_disabled_on_gamepad
 		}
 
 		settings.hotkeys = hotkey_settings

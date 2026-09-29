@@ -63,9 +63,9 @@ function _ast_to_ui_table(ast_node)
 				{
 					node = ast_node.node,
 					operator = ast_node.operator,
-					value = ast_node.value,
-				},
-			},
+					value = ast_node.value
+				}
+			}
 		}
 	end
 
@@ -167,7 +167,7 @@ function _stats_from_token(token, node_personal_guards, node_global_guards)
 			guards = {
 				guard_type = "personal",
 				key = ref_key,
-				progress = total,
+				progress = total
 			}
 		end
 	end
@@ -201,7 +201,7 @@ function _process_ui_table(expression_table, node_personal_guards, node_global_g
 
 	return {
 		stat_data = stat_data,
-		is_completed = is_completed,
+		is_completed = is_completed
 	}
 end
 
@@ -215,7 +215,7 @@ ExpeditionService._prepare_guards_data = function (self, node_expression_string,
 			goal_amount = stat_data.limit,
 			node = stat_data.node,
 			type = _get_stat_unlock_type(stat_data.key, guard_type, not not stat_data.node),
-			requirements_met = is_completed,
+			requirements_met = is_completed
 		}
 	end
 
@@ -225,7 +225,7 @@ ExpeditionService._prepare_guards_data = function (self, node_expression_string,
 	if (not node_global_stats or table.is_empty(node_global_stats)) and (not node_personal_stats or table.is_empty(node_personal_stats)) then
 		to_unlock[1] = to_unlock[1] or {}
 		to_unlock[1][1] = {
-			type = ExpeditionService.UNLOCK_TYPE.unlocked_by_default,
+			type = ExpeditionService.UNLOCK_TYPE.unlocked_by_default
 		}
 		node_claimable = true
 	elseif not node_expression_string or node_expression_string == "" then
@@ -335,7 +335,7 @@ ExpeditionService.fetch_personal_guards = function (self, nodes_by_id)
 						paths_count[start_path][iii] = paths_count[start_path][iii] or {}
 						paths_count[start_path][iii][name] = paths_count[start_path][iii][name] or {
 							count = 0,
-							nodes = {},
+							nodes = {}
 						}
 						paths_count[start_path][iii][name].nodes[node_id] = paths_count[start_path][iii][name].nodes[node_id] or {}
 						paths_count[start_path][iii][name].nodes[node_id][ii] = personal_stat
@@ -411,7 +411,7 @@ ExpeditionService.fetch_personal_guards = function (self, nodes_by_id)
 				return Promise.resolved({
 					data = data,
 					path = path_table,
-					nodes = affected_nodes,
+					nodes = affected_nodes
 				})
 			end)
 			max_path = nil
@@ -518,7 +518,7 @@ ExpeditionService.fetch_personal_guards = function (self, nodes_by_id)
 							limit = limit,
 							progress = progress_value,
 							key = key,
-							node = from_node,
+							node = from_node
 						}
 					end
 				end
@@ -554,7 +554,7 @@ ExpeditionService.fetch_global_guards = function (self, nodes_by_id)
 						nodes_by_global_category[unique_time_category_name][node_id] = nodes_by_global_category[unique_time_category_name][node_id] or {}
 						nodes_by_global_category[unique_time_category_name][node_id][ii] = {
 							name = "server_time",
-							limit = global_stat.date,
+							limit = global_stat.date
 						}
 					elseif type == "stat" then
 						local category = global_stat.category
@@ -566,7 +566,7 @@ ExpeditionService.fetch_global_guards = function (self, nodes_by_id)
 						nodes_by_global_category[category][node_id] = nodes_by_global_category[category][node_id] or {}
 						nodes_by_global_category[category][node_id][ii] = {
 							name = global_stat.name,
-							limit = global_stat.limit,
+							limit = global_stat.limit
 						}
 					end
 				end
@@ -581,15 +581,15 @@ ExpeditionService.fetch_global_guards = function (self, nodes_by_id)
 
 			global_stats_promises[#global_stats_promises + 1] = Promise.resolved({
 				stats = {
-					server_time = server_time,
+					server_time = server_time
 				},
-				nodes = nodes,
+				nodes = nodes
 			})
 		else
 			global_stats_promises[#global_stats_promises + 1] = self._backend_interface.global_stats:get_category(category_name):next(function (data)
 				return Promise.resolved({
 					stats = data.stats,
-					nodes = nodes,
+					nodes = nodes
 				})
 			end)
 		end
@@ -609,7 +609,7 @@ ExpeditionService.fetch_global_guards = function (self, nodes_by_id)
 					global_stats_progress[node_name][index] = {
 						key = "stat",
 						limit = stat_data.limit,
-						progress = global_stat.stats[stat_data.name],
+						progress = global_stat.stats[stat_data.name]
 					}
 				end
 			end
@@ -650,6 +650,8 @@ ExpeditionService.update_node_personal_progress = function (self, node_id_played
 	return self:fetch_nodes():next(function ()
 		local personal_guards_progress = {}
 		local personal_stats = self._cached_data.personal_stats
+		local result = self._cached_data.result
+		local personal_guards_paths_by_node_id = self._cached_data.personal_guards_paths_by_node_id or {}
 
 		for i = 1, #all_updated_progress do
 			local updated_progress = all_updated_progress[i]
@@ -657,7 +659,7 @@ ExpeditionService.update_node_personal_progress = function (self, node_id_played
 			local last_path = updated_progress.path and updated_progress.path[#updated_progress.path]
 			local progress_node_id = last_path and string.find(last_path, "node_") and last_path
 
-			for node_id, personal_guard_indexes in pairs(self._cached_data.personal_guards_paths_by_node_id) do
+			for node_id, personal_guard_indexes in pairs(personal_guards_paths_by_node_id) do
 				for personal_guard_index, personal_path_string in pairs(personal_guard_indexes) do
 					if personal_path_string == path_string then
 						local personal_stat = personal_stats[node_id] and personal_stats[node_id][personal_guard_index]
@@ -676,11 +678,11 @@ ExpeditionService.update_node_personal_progress = function (self, node_id_played
 									progress = end_progress,
 									previous_progress = previous_progress_value,
 									progress_node = progress_node_id,
-									progress_node_name = progress_node_id and self._cached_data.result[progress_node_id].ui.display_name or "",
+									progress_node_name = progress_node_id and result[progress_node_id] and result[progress_node_id].ui.display_name or "",
 									affected_node = node_id,
-									affected_node_name = self._cached_data.result[node_id].ui.display_name or "",
+									affected_node_name = result[node_id] and result[node_id].ui.display_name or "",
 									key = personal_stat_key,
-									type = _get_stat_unlock_type(personal_stat_key, "personal", not not progress_node_id),
+									type = _get_stat_unlock_type(personal_stat_key, "personal", not not progress_node_id)
 								}
 								personal_stat.progress = progress_value
 							end
@@ -692,15 +694,15 @@ ExpeditionService.update_node_personal_progress = function (self, node_id_played
 			if last_path and string.find(last_path, "node_") and not table.is_empty(updated_progress.stats) then
 				self._cached_data.stats[last_path] = self._cached_data.stats[last_path] or {}
 
-				if self._cached_data.result and self._cached_data.result[last_path] then
-					self._cached_data.result[last_path].stats = self._cached_data.result[last_path].stats or {}
+				if result and result[last_path] then
+					result[last_path].stats = result[last_path].stats or {}
 				end
 
 				for key, stat in pairs(updated_progress.stats) do
 					self._cached_data.stats[last_path][key] = stat.toValue
 
-					if self._cached_data.result[last_path] then
-						self._cached_data.result[last_path].stats[key] = stat.toValue
+					if result[last_path] then
+						result[last_path].stats[key] = stat.toValue
 					end
 				end
 			end
@@ -719,11 +721,11 @@ ExpeditionService.update_node_personal_progress = function (self, node_id_played
 
 		self:_update_cache_result_guards()
 
-		local node_name_played = self._cached_data.result[node_id_played].ui.display_name
+		local node_name_played = result[node_id_played] and result[node_id_played].ui.display_name
 
 		return Promise.resolved({
 			node_name_played = node_name_played,
-			all_unlock_progress = personal_guards_progress,
+			all_unlock_progress = personal_guards_progress
 		})
 	end)
 end
@@ -885,7 +887,7 @@ ExpeditionService.fetch_nodes = function (self)
 				return {
 					nodes_by_id = nodes_by_id,
 					nodes_by_index = nodes_by_index,
-					personal_stats = self._cached_data.stats.personal,
+					personal_stats = self._cached_data.stats.personal
 				}
 			end)
 		end)
@@ -999,27 +1001,20 @@ end
 ExpeditionService._prepare_node_missions_data = function (self, node, missions)
 	local id = node.nodeId
 	local node_flag = string.format("exped-node-%s", id)
-	local node_misisons = {}
+	local node_missions = {}
 
 	for ii = 1, #missions do
 		local mission = missions[ii]
 		local flags = mission.flags
 
 		if flags[node_flag] then
-			node_misisons[#node_misisons + 1] = mission
+			node_missions[#node_missions + 1] = mission
 		end
 	end
 
-	local function sort_func(a, b)
-		local a_danger_level = Danger.calculate_danger(a.challenge, a.resistance)
-		local b_danger_level = Danger.calculate_danger(b.challenge, b.resistance)
+	Danger.sort_missions_by_danger(node_missions)
 
-		return a_danger_level < b_danger_level
-	end
-
-	table.sort(node_misisons, sort_func)
-
-	return node_misisons
+	return node_missions
 end
 
 ExpeditionService._prepare_node_layout_data = function (self, node, track_layout)
@@ -1043,7 +1038,7 @@ ExpeditionService._prepare_node_layout_data = function (self, node, track_layout
 	local y_normalized = node_layout and track_layout and track_layout.presentation and (node_layout.position[2] - track_layout.presentation.offset[2]) / track_layout.presentation.size[2] or 0
 	local position = {
 		x = x_normalized,
-		y = y_normalized,
+		y = y_normalized
 	}
 	local next_node_ids = {}
 	local previous_node_ids = {}
@@ -1096,7 +1091,7 @@ ExpeditionService._prepare_result_data = function (self)
 				previous = previous_node_ids,
 				next = next_node_ids,
 				missions = node_missions,
-				stats = stats and stats[id] or {},
+				stats = stats and stats[id] or {}
 			}
 		end
 	end
@@ -1157,12 +1152,12 @@ ExpeditionService._prepare_result_data = function (self)
 
 		if table.is_empty(node.previous) then
 			count = traverse({
-				node.id,
+				node.id
 			}, count, visited_nodes, "count")
 			nodes_order[#nodes_order + 1] = {
 				count = count,
 				start_node_id = node.id,
-				is_default = node.to_unlock[1][1].type == ExpeditionService.UNLOCK_TYPE.unlocked_by_default,
+				is_default = node.to_unlock[1][1].type == ExpeditionService.UNLOCK_TYPE.unlocked_by_default
 			}
 		end
 	end
@@ -1189,7 +1184,7 @@ ExpeditionService._prepare_result_data = function (self)
 		local node = result[node_order.start_node_id]
 
 		index = traverse({
-			node.id,
+			node.id
 		}, index, visited_nodes)
 	end
 
@@ -1200,7 +1195,7 @@ ExpeditionService._prepare_result_data = function (self)
 	return {
 		nodes_by_id = nodes_by_id,
 		nodes_by_index = nodes_by_index,
-		personal_stats = self._cached_data.stats.personal,
+		personal_stats = self._cached_data.stats.personal
 	}
 end
 
@@ -1319,7 +1314,7 @@ ExpeditionService.get_quickplay_bonus = function (self)
 
 		return {
 			lo,
-			hi,
+			hi
 		}
 	end)
 end

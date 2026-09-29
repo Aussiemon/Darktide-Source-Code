@@ -34,7 +34,7 @@ UIHud.init = function (self, elements, visibility_groups, params)
 
 	self._unique_id = self.__class_name .. "_" .. uniq_id:gsub("[%p%c%s]", "") .. "_"
 	self._render_settings = {
-		force_retained_mode = false,
+		force_retained_mode = false
 	}
 	self._ui_renderer_name = self._unique_id .. (params.renderer_name or self.__class_name .. "_ui_renderer")
 	self._ui_renderer = Managers.ui:create_renderer(self._ui_renderer_name, world)
@@ -127,7 +127,7 @@ UIHud.get_all_player_extensions = function (self, player, output)
 end
 
 UIHud.using_input = function (self)
-	return self._using_cursor or self._element_using_input
+	return not not self._using_cursor or not not self._element_using_input
 end
 
 UIHud.player = function (self)
@@ -470,7 +470,7 @@ UIHud._draw_render_target = function (self, render_settings)
 	local position = {
 		0,
 		0,
-		0,
+		0
 	}
 	local start_layer = render_settings.start_layer or 0
 	local gui_position = Vector3(position[1] * scale, position[2] * scale, (position[3] or 0) + start_layer)

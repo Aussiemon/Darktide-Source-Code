@@ -9,7 +9,7 @@ local GameModeManagerTestify = {
 	end,
 	end_conditions_met_outcome = function (game_mode_manager)
 		return game_mode_manager:end_conditions_met_outcome()
-	end,
+	end
 }
 
 return GameModeManagerTestify

@@ -9,11 +9,11 @@ local view_settings = {
 	preload_in_hub = "not_ps5_nor_lockhart",
 	state_bound = true,
 	levels = {
-		"content/levels/ui/crafting_view_itemization/crafting_view_itemization",
+		"content/levels/ui/crafting_view_itemization/crafting_view_itemization"
 	},
 	testify_flags = {
-		ui_views = false,
-	},
+		ui_views = false
+	}
 }
 
 return settings("CraftingMechanicusUpgradeExpertiseViewDeclarationSettings", view_settings)

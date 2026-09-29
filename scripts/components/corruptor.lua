@@ -76,17 +76,17 @@ Corruptor.component_data = {
 	use_trigger = {
 		ui_name = "Use Trigger",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	inputs = {
 		activate_segment_units = {
 			accessibility = "private",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"CorruptorExtension",
-	},
+		"CorruptorExtension"
+	}
 }
 
 return Corruptor

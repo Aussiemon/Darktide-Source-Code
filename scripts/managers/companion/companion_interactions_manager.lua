@@ -9,7 +9,7 @@ local CLIENT_RPCS = {
 	"rpc_client_start_companion_interaction",
 	"rpc_client_stop_companion_interaction",
 	"rpc_client_start_companion_interaction_anim_event",
-	"rpc_client_interrupt_companion_interaction_anim_event",
+	"rpc_client_interrupt_companion_interaction_anim_event"
 }
 
 CompanionInteractionsManager.init = function (self, is_host, network_event_delegate)
@@ -70,7 +70,7 @@ end
 
 local function _get_target_distance_from_player_based_on_height(player, base_distance)
 	local profile = player:profile()
-	local profile_size = profile.personal and profile.personal.character_height or 1
+	local profile_size = profile.character_height or 1
 
 	return base_distance * profile_size
 end
@@ -129,7 +129,7 @@ CompanionInteractionsManager._start_interaction = function (self, player_unit, c
 		has_animation_started = false,
 		time_remaining = 15,
 		player_unit = player_unit,
-		companion_unit = companion_unit,
+		companion_unit = companion_unit
 	}
 
 	active_interactions[player_unit] = interaction

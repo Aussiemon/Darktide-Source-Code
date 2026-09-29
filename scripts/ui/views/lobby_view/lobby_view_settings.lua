@@ -23,79 +23,79 @@ local lobby_view_settings = {
 	world_name = "ui_lobby_view_world",
 	grid_size = {
 		ButtonPassTemplates.ready_button.size[1],
-		400,
+		400
 	},
 	grid_spacing = {
 		0,
-		0,
+		0
 	},
 	panel_size = {
 		350,
-		200,
+		200
 	},
 	loading_size = {
 		80,
-		80,
+		80
 	},
 	inspect_button_size = {
 		250,
-		64,
+		64
 	},
 	loadout_size = {
 		270,
-		200,
+		200
 	},
 	levels_by_id = {
 		default = {
 			level_name = "content/levels/ui/lobby/lobby",
-			shading_environment = "content/shading_environments/ui/lobby",
+			shading_environment = "content/shading_environments/ui/lobby"
 		},
 		havoc = {
 			level_name = "content/levels/ui/havoc_lobby/havoc_lobby",
-			shading_environment = "content/shading_environments/ui/lobby",
+			shading_environment = "content/shading_environments/ui/lobby"
 		},
 		horde = {
 			level_name = "content/levels/ui/horde_lobby/horde_lobby",
-			shading_environment = "content/shading_environments/ui/lobby",
+			shading_environment = "content/shading_environments/ui/lobby"
 		},
 		expeditions = {
 			level_name = "content/levels/ui/expeditions_lobby/expeditions_lobby",
-			shading_environment = "content/shading_environments/ui/lobby",
-		},
+			shading_environment = "content/shading_environments/ui/lobby"
+		}
 	},
 	ignored_slots = {
 		"slot_pocketable",
 		"slot_pocketable_small",
 		"slot_luggable",
 		"slot_combat_ability",
-		"slot_grenade_ability",
+		"slot_grenade_ability"
 	},
 	animations_per_archetype = {
 		psyker = {
 			initial_event = "lobby_wait_psyker_01",
 			events = {
-				"to_ready",
-			},
+				"to_ready"
+			}
 		},
 		veteran = {
 			initial_event = "lobby_wait_veteran_01",
 			events = {
-				"to_ready",
-			},
+				"to_ready"
+			}
 		},
 		zealot = {
 			initial_event = "lobby_wait_zealot_01",
 			events = {
-				"to_ready",
-			},
+				"to_ready"
+			}
 		},
 		ogryn = {
 			initial_event = "lobby_wait_ogryn_01",
 			events = {
-				"to_ready",
-			},
-		},
-	},
+				"to_ready"
+			}
+		}
+	}
 }
 
 return settings("LobbyViewSettings", lobby_view_settings)

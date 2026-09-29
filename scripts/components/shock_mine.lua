@@ -2,28 +2,27 @@
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local MinionState = require("scripts/utilities/minion_state")
-local buff_keywords = BuffSettings.keywords
 local group_keywords = BuffSettings.group_keywords
 local RESOURCES = {
 	vfx = {
 		idle = "content/fx/particles/weapons/grenades/shock_mine/shock_mine_idle_01",
-		to_target = "content/fx/particles/weapons/grenades/shock_mine/shock_mine_link_01",
+		to_target = "content/fx/particles/weapons/grenades/shock_mine/shock_mine_link_01"
 	},
 	sfx = {
 		on_target = "wwise/events/weapon/play_adamant_shockmine_electric_hit",
 		target_loop = {
 			start = "wwise/events/weapon/play_adamant_shockmine_electric_loop",
-			stop = "wwise/events/weapon/stop_adamant_shockmine_electric_loop",
+			stop = "wwise/events/weapon/stop_adamant_shockmine_electric_loop"
 		},
 		idle_loop = {
 			start = "wwise/events/weapon/play_adamant_shockmine_idle_loop",
-			stop = "wwise/events/weapon/stop_adamant_shockmine_idle_loop",
+			stop = "wwise/events/weapon/stop_adamant_shockmine_idle_loop"
 		},
 		arming_loop = {
 			start = "wwise/events/weapon/play_adamant_shockmine_charge_loop",
-			stop = "wwise/events/weapon/stop_adamant_shockmine_charge_loop",
-		},
-	},
+			stop = "wwise/events/weapon/stop_adamant_shockmine_charge_loop"
+		}
+	}
 }
 local WWISE_PARAMETER_MAX_TARGETS = 30
 local WWISE_PARAMETER_NAME = "shockmine_targets"
@@ -33,7 +32,7 @@ local CENTER_NODE_NAME = "fx_center"
 local TINE_NODE_NAMES = {
 	"fx_tine_01",
 	"fx_tine_02",
-	"fx_tine_03",
+	"fx_tine_03"
 }
 local ShockMine = component("ShockMine")
 

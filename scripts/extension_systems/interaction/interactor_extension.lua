@@ -245,7 +245,7 @@ end
 
 local ACTION_KINDS_TO_CONSUME = {
 	reload_shotgun = true,
-	reload_state = true,
+	reload_state = true
 }
 
 InteractorExtension._consume_conflicting_gamepad_inputs = function (self, t)
@@ -256,6 +256,11 @@ InteractorExtension._consume_conflicting_gamepad_inputs = function (self, t)
 	local action_input_extension = self._action_input_extension
 	local weapon_extension = self._weapon_extension
 	local peek_input = action_input_extension:peek_next_input("weapon_action")
+
+	if peek_input == nil then
+		return
+	end
+
 	local action_settings = weapon_extension:action_settings_from_action_input(peek_input)
 
 	if not action_settings then
@@ -278,7 +283,7 @@ local ELECTRIFIED_DAMAGE_PER_DIFFICULTY = {
 	14400,
 	18000,
 	20400,
-	24000,
+	24000
 }
 local ELECTRIFIED_DAMAGE_TEMPLATE = DamageProfileTemplates.shock_grenade_stun_interval
 
@@ -309,10 +314,10 @@ InteractorExtension._check_current_state = function (self, unit, dt, t, chosen_t
 				if fx_extension then
 					fx_extension:trigger_wwise_event(ELECTRIFIED_SOUND_EVENT_NAME, nil, unit)
 
-					if fx_extension.spawn_particles then
+					if fx_extension.spawn_exclusive_particle then
 						local position = Vector3(0, 0, 1)
 
-						fx_extension:spawn_particles(ELECTRIFIED_VFX_EVENT_NAME, position)
+						fx_extension:spawn_exclusive_particle(ELECTRIFIED_VFX_EVENT_NAME, position)
 					end
 				end
 			end

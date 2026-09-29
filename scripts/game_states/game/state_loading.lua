@@ -55,7 +55,7 @@ StateLoading.on_enter = function (self, parent, params, creation_context)
 	local game_state_context = {
 		mission_name = params.mission_name,
 		mission_giver_vo = params.mission_giver_vo or "none",
-		circumstance_name = params.circumstance_name,
+		circumstance_name = params.circumstance_name
 	}
 
 	Managers.player:on_game_state_enter(self, player_game_state_mapping, game_state_context)
@@ -109,7 +109,7 @@ StateLoading._reset_player_game_state = function (self, mission_name, mission_gi
 	local game_state_context = {
 		mission_name = mission_name,
 		mission_giver_vo = mission_giver_vo or "none",
-		circumstance_name = circumstance_name,
+		circumstance_name = circumstance_name
 	}
 
 	Managers.player:on_game_state_enter(self, player_game_state_mapping, game_state_context)

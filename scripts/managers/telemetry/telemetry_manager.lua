@@ -10,7 +10,7 @@ local BATCH_SIZE = TelemetrySettings.batch.size
 local ENABLED = TelemetrySettings.enabled
 local TelemetryManager = class("TelemetryManager")
 local RPCS_HOST = {
-	"rpc_failed_sending_telemetry",
+	"rpc_failed_sending_telemetry"
 }
 
 TelemetryManager.init = function (self)
@@ -122,7 +122,7 @@ TelemetryManager._convert_userdata = function (self, data)
 				data[key] = {
 					x = value.x,
 					y = value.y,
-					z = value.z,
+					z = value.z
 				}
 			elseif type(value) == "function" then
 				data[key] = nil
@@ -170,7 +170,7 @@ TelemetryManager.post_batch = function (self, shutdown)
 	self._batch_post_time = math.floor(self._t)
 
 	local headers = {
-		["x-reference-time"] = tostring(self._t),
+		["x-reference-time"] = tostring(self._t)
 	}
 	local compress = true
 

@@ -195,7 +195,7 @@ CutsceneCompanion.start_materialize = function (self)
 		wielded_set = false,
 		wielded_vis = true,
 		from = _materialize_min_value(unit),
-		to = _materialize_max_value(unit, self._breed_name),
+		to = _materialize_max_value(unit, self._breed_name)
 	}
 	self._should_update = true
 
@@ -232,7 +232,7 @@ CutsceneCompanion.start_dematerialize = function (self)
 		wielded_vis = false,
 		from = _materialize_max_value(unit),
 		to = _materialize_min_value(unit),
-		eyes_per = eyes_percentage,
+		eyes_per = eyes_percentage
 	}
 	self._should_update = true
 
@@ -270,12 +270,13 @@ CutsceneCompanion.component_data = {
 			"Path of Trust 08",
 			"Path of Trust 09",
 			"Traitor Captain Intro",
+			"Spillway Wizard Intro",
 			"Hub Location Intro Barber",
 			"Hub Location Intro Mission Board",
 			"Hub Location Intro Training Grounds",
 			"Hub Location Intro Contracts",
 			"Hub Location Intro Crafting",
-			"Hub Location Intro Gun Shop",
+			"Hub Location Intro Gun Shop"
 		},
 		options_values = {
 			"none",
@@ -303,13 +304,14 @@ CutsceneCompanion.component_data = {
 			"path_of_trust_08",
 			"path_of_trust_09",
 			"traitor_captain_intro",
+			"spillway_wizard_intro",
 			"hub_location_intro_barber",
 			"hub_location_intro_mission_board",
 			"hub_location_intro_training_grounds",
 			"hub_location_intro_contracts",
 			"hub_location_intro_crafting",
-			"hub_location_intro_gun_shop",
-		},
+			"hub_location_intro_gun_shop"
+		}
 	},
 	breed_name = {
 		ui_name = "Breed Name",
@@ -318,13 +320,13 @@ CutsceneCompanion.component_data = {
 		options_keys = {
 			"None",
 			"Companion Dog",
-			"Companion Servo-Skull",
+			"Companion Servo-Skull"
 		},
 		options_values = {
 			"none",
 			"companion_dog",
-			"companion_servo_skull",
-		},
+			"companion_servo_skull"
+		}
 	},
 	cinematic_slot = {
 		ui_name = "Slot",
@@ -335,25 +337,25 @@ CutsceneCompanion.component_data = {
 			"1",
 			"2",
 			"3",
-			"4",
+			"4"
 		},
 		options_values = {
 			"none",
 			1,
 			2,
 			3,
-			4,
-		},
+			4
+		}
 	},
 	starting_animation_event = {
 		ui_name = "Starting Animation Event",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	walking_animation_event = {
 		ui_name = "Walk Animation Event",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	materialize = {
 		category = "Materialize",
@@ -363,35 +365,35 @@ CutsceneCompanion.component_data = {
 		options_keys = {
 			"Disabled",
 			"Enabled (Start Visible)",
-			"Enabled (Start Hidden)",
+			"Enabled (Start Hidden)"
 		},
 		options_values = {
 			"disabled",
 			"enabled_visible",
-			"enabled_hidden",
-		},
+			"enabled_hidden"
+		}
 	},
 	inputs = {
 		start_weapon_specific_walk_animation = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		start_inventory_specific_walk_animation = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		start_materialize = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		start_dematerialize = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"CutsceneCompanionExtension",
-	},
+		"CutsceneCompanionExtension"
+	}
 }
 
 return CutsceneCompanion

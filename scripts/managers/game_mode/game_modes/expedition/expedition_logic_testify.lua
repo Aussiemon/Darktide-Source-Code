@@ -8,7 +8,7 @@ local GameModeExpeditionTestify = {
 			coordinates[#coordinates + 1] = {
 				x = position.x,
 				y = position.y,
-				z = position.z + 2,
+				z = position.z + 2
 			}
 		end
 
@@ -47,7 +47,7 @@ local GameModeExpeditionTestify = {
 			coordinates[#coordinates + 1] = {
 				x = position.x,
 				y = position.y,
-				z = position.z + 2,
+				z = position.z + 2
 			}
 		end
 
@@ -87,7 +87,7 @@ local GameModeExpeditionTestify = {
 		local mechanism_data = mechanism:mechanism_data()
 
 		return mechanism_data.layout_seed
-	end,
+	end
 }
 
 return GameModeExpeditionTestify

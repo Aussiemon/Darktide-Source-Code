@@ -51,7 +51,7 @@ LevelInstanceManager.spawn_level_instance = function (self, level_name, position
 	local returned_id = unit_spawner_manager:register_dynamic_level_spawned_units_server(instance_data.level, level_units)
 
 	self:_server_sync_instanced_level_with_clients(instance_data)
-	Managers.state.extension:add_and_register_units(self._world, level_units, nil, "level_spawned")
+	Managers.state.extension:add_and_register_units(self._world, level_units, nil, "level_spawned", true)
 	Level.trigger_level_spawned(instance_data.level)
 
 	local sub_levels = Level.nested_levels(instance_data.level)
@@ -71,7 +71,7 @@ LevelInstanceManager._spawn_level_instance_local = function (self, level_name, p
 		instance_id = instance_id,
 		level_id = level_id,
 		position_boxed = Vector3Box(),
-		rotation_boxed = QuaternionBox(),
+		rotation_boxed = QuaternionBox()
 	}
 
 	Vector3Box.store(instance_data.position_boxed, position)
@@ -93,8 +93,12 @@ LevelInstanceManager.destroy_level_instance = function (self, level_id)
 end
 
 LevelInstanceManager.hot_join_sync = function (self, peer_id, channel_id)
-	for level_id, instance_data in pairs(self._spawned_level_instances) do
-		self:_server_sync_instanced_level_with_clients(instance_data, channel_id)
+	local level_ids = table.keys(self._spawned_level_instances)
+
+	table.sort(level_ids)
+
+	for i = 1, #level_ids do
+		self:_server_sync_instanced_level_with_clients(self._spawned_level_instances[level_ids[i]], channel_id)
 	end
 end
 
@@ -120,7 +124,18 @@ LevelInstanceManager.rpc_level_instance_spawn = function (self, channel_id, leve
 	local level_units = Level.units(instance_data.level, true)
 
 	unit_spawner_manager:register_dynamic_level_spawned_units_client(instance_data.level, level_units, server_level_id)
-	Managers.state.extension:add_and_register_units(self._world, level_units, nil, "level_spawned")
+	Managers.state.extension:add_and_register_units(self._world, level_units, nil, "level_spawned", true)
+	Level.trigger_level_spawned(instance_data.level)
+
+	local sub_levels = Level.nested_levels(instance_data.level)
+
+	for i = 1, #sub_levels do
+		Level.trigger_level_spawned(sub_levels[i])
+	end
+end
+
+LevelInstanceManager.spawned_level_instances = function (self)
+	return self._spawned_level_instances
 end
 
 LevelInstanceManager.rpc_level_instance_destroy = function (self, instance_hash)

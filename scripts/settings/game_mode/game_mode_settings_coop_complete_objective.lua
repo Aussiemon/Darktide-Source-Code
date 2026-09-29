@@ -17,7 +17,7 @@ local settings = {
 		"about_to_fail_disabled",
 		"about_to_fail_dead",
 		"outro_cinematic",
-		"done",
+		"done"
 	},
 	side_compositions = {
 		{
@@ -25,43 +25,43 @@ local settings = {
 			name = "heroes",
 			relations = {
 				enemy = {
-					"villains",
-				},
-			},
+					"villains"
+				}
+			}
 		},
 		{
 			color_name = "red",
 			name = "villains",
 			relations = {
 				enemy = {
-					"heroes",
-				},
-			},
-		},
+					"heroes"
+				}
+			}
+		}
 	},
 	side_sub_faction_types = {
 		villains = {
 			"chaos",
 			"cultist",
-			"renegade",
-		},
+			"renegade"
+		}
 	},
 	spawn = {
 		ammo_percentage = 1,
 		grenade_percentage = 1,
-		health_percentage = 1,
+		health_percentage = 1
 	},
 	respawn = {
 		ammo_percentage = 0.5,
 		grenade_percentage = 0,
 		health_percentage = 0.5,
-		respawn_time = 20,
+		respawn_time = 20
 	},
 	hud_settings = {
-		player_composition = "game_session_players",
+		player_composition = "game_session_players"
 	},
 	hotkeys = {
-		hotkey_system = "system_view",
+		hotkey_system = "system_view"
 	},
 	persistent_player_data_settings = {
 		max_damage_percent_from_bot = 0.75,
@@ -71,13 +71,13 @@ local settings = {
 		respawn_dead_from_character_states = {
 			"hogtied",
 			"dead",
-			"knocked_down",
-		},
+			"knocked_down"
+		}
 	},
 	afk_check = {
 		ignore_disabled_players = true,
-		location = "mission",
-	},
+		location = "mission"
+	}
 }
 
 return settings

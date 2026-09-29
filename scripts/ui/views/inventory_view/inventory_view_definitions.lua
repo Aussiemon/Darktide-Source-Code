@@ -23,13 +23,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	grid_background = {
 		horizontal_alignment = "left",
@@ -39,8 +39,8 @@ local scenegraph_definition = {
 		position = {
 			grid_start_offset_x,
 			216,
-			1,
-		},
+			1
+		}
 	},
 	grid_content_pivot = {
 		horizontal_alignment = "left",
@@ -48,13 +48,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			10,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	grid_scrollbar = {
 		horizontal_alignment = "right",
@@ -62,13 +62,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			scrollbar_width,
-			grid_size[2],
+			grid_size[2]
 		},
 		position = {
 			-10,
 			38,
-			1,
-		},
+			1
+		}
 	},
 	grid_mask = {
 		horizontal_alignment = "center",
@@ -78,8 +78,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			10,
-		},
+			10
+		}
 	},
 	grid_interaction = {
 		horizontal_alignment = "left",
@@ -87,13 +87,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			1000 + scrollbar_width * 2,
-			mask_size[2],
+			mask_size[2]
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	grid_divider_bottom = {
 		horizontal_alignment = "center",
@@ -101,13 +101,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			grid_size[1] + 2,
-			36,
+			36
 		},
 		position = {
 			0,
 			36,
-			12,
-		},
+			12
+		}
 	},
 	grid_divider_top = {
 		horizontal_alignment = "center",
@@ -115,13 +115,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			840,
-			840,
+			840
 		},
 		position = {
 			0,
 			-50,
-			12,
-		},
+			12
+		}
 	},
 	grid_tab_panel = {
 		horizontal_alignment = "center",
@@ -129,13 +129,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			-50,
-			1,
-		},
+			1
+		}
 	},
 	tab_menu_title_text = {
 		horizontal_alignment = "left",
@@ -143,13 +143,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			960,
-			50,
+			50
 		},
 		position = {
 			10,
 			-50,
-			2,
-		},
+			2
+		}
 	},
 	tab_menu_back_button = {
 		horizontal_alignment = "left",
@@ -157,13 +157,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			72,
-			72,
+			72
 		},
 		position = {
 			-70,
 			-50,
-			3,
-		},
+			3
+		}
 	},
 	wallet_entry = {
 		horizontal_alignment = "right",
@@ -171,13 +171,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			400,
-			40,
+			40
 		},
 		position = {
 			-90,
 			375,
-			1,
-		},
+			1
+		}
 	},
 	slot_character_title = {
 		horizontal_alignment = "center",
@@ -187,8 +187,8 @@ local scenegraph_definition = {
 		position = {
 			440,
 			423,
-			9,
-		},
+			9
+		}
 	},
 	slot_gear_head = {
 		horizontal_alignment = "center",
@@ -198,8 +198,8 @@ local scenegraph_definition = {
 		position = {
 			-440,
 			-252,
-			9,
-		},
+			9
+		}
 	},
 	slot_gear_upperbody = {
 		horizontal_alignment = "center",
@@ -209,8 +209,8 @@ local scenegraph_definition = {
 		position = {
 			-440,
 			-12,
-			9,
-		},
+			9
+		}
 	},
 	slot_gear_lowerbody = {
 		horizontal_alignment = "center",
@@ -220,8 +220,8 @@ local scenegraph_definition = {
 		position = {
 			-440,
 			228,
-			9,
-		},
+			9
+		}
 	},
 	slot_companion_gear_full = {
 		horizontal_alignment = "center",
@@ -231,8 +231,8 @@ local scenegraph_definition = {
 		position = {
 			-696,
 			-132,
-			9,
-		},
+			9
+		}
 	},
 	slot_gear_extra_cosmetic = {
 		horizontal_alignment = "center",
@@ -242,8 +242,8 @@ local scenegraph_definition = {
 		position = {
 			440,
 			-252,
-			9,
-		},
+			9
+		}
 	},
 	slot_portrait_frame = {
 		horizontal_alignment = "center",
@@ -253,8 +253,8 @@ local scenegraph_definition = {
 		position = {
 			440,
 			-12,
-			9,
-		},
+			9
+		}
 	},
 	slot_insignia = {
 		horizontal_alignment = "center",
@@ -264,8 +264,8 @@ local scenegraph_definition = {
 		position = {
 			440,
 			228,
-			9,
-		},
+			9
+		}
 	},
 	loadout_frame = {
 		horizontal_alignment = "left",
@@ -273,13 +273,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			840,
-			840,
+			840
 		},
 		position = {
 			60,
 			166,
-			20,
-		},
+			20
+		}
 	},
 	loadout_background_1 = {
 		horizontal_alignment = "left",
@@ -287,13 +287,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			100,
 			80,
-			-16,
-		},
+			-16
+		}
 	},
 	loadout_background_2 = {
 		horizontal_alignment = "left",
@@ -301,13 +301,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			70,
 			490,
-			-16,
-		},
+			-16
+		}
 	},
 	slot_primary_header = {
 		horizontal_alignment = "center",
@@ -315,13 +315,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			840,
-			50,
+			50
 		},
 		position = {
 			0,
 			38,
-			1,
-		},
+			1
+		}
 	},
 	slot_secondary_header = {
 		horizontal_alignment = "center",
@@ -329,13 +329,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			840,
-			50,
+			50
 		},
 		position = {
 			0,
 			243,
-			1,
-		},
+			1
+		}
 	},
 	slot_primary = {
 		horizontal_alignment = "center",
@@ -345,8 +345,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			110,
-			-15,
-		},
+			-15
+		}
 	},
 	slot_secondary = {
 		horizontal_alignment = "center",
@@ -356,8 +356,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			315,
-			-15,
-		},
+			-15
+		}
 	},
 	button_skin_sets = {
 		horizontal_alignment = "right",
@@ -365,13 +365,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			-620,
 			-260,
-			0,
-		},
+			0
+		}
 	},
 	button_expressions = {
 		horizontal_alignment = "center",
@@ -379,13 +379,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			620,
 			282,
-			0,
-		},
+			0
+		}
 	},
 	item_stats_pivot = {
 		horizontal_alignment = "center",
@@ -395,9 +395,9 @@ local scenegraph_definition = {
 		position = {
 			210,
 			166,
-			3,
-		},
-	},
+			3
+		}
+	}
 }
 
 scenegraph_definition.slot_attachments_header = {
@@ -406,13 +406,13 @@ scenegraph_definition.slot_attachments_header = {
 	vertical_alignment = "top",
 	size = {
 		840,
-		50,
+		50
 	},
 	position = {
 		0,
 		450,
-		1,
-	},
+		1
+	}
 }
 scenegraph_definition.slot_attachment_1 = {
 	horizontal_alignment = "center",
@@ -422,8 +422,8 @@ scenegraph_definition.slot_attachment_1 = {
 	position = {
 		-33 - (ItemPassTemplates.gear_icon_size[1] + 102),
 		-187,
-		-15,
-	},
+		-15
+	}
 }
 scenegraph_definition.slot_attachment_2 = {
 	horizontal_alignment = "center",
@@ -433,8 +433,8 @@ scenegraph_definition.slot_attachment_2 = {
 	position = {
 		-33,
 		-187,
-		-15,
-	},
+		-15
+	}
 }
 scenegraph_definition.slot_attachment_3 = {
 	horizontal_alignment = "center",
@@ -444,8 +444,8 @@ scenegraph_definition.slot_attachment_3 = {
 	position = {
 		-33 + (ItemPassTemplates.gear_icon_size[1] + 102),
 		-187,
-		-15,
-	},
+		-15
+	}
 }
 scenegraph_definition.button_emote_1 = {
 	horizontal_alignment = "center",
@@ -453,13 +453,13 @@ scenegraph_definition.button_emote_1 = {
 	vertical_alignment = "center",
 	size = {
 		0,
-		0,
+		0
 	},
 	position = {
 		620,
 		-338,
-		0,
-	},
+		0
+	}
 }
 scenegraph_definition.button_emote_2 = {
 	horizontal_alignment = "center",
@@ -467,13 +467,13 @@ scenegraph_definition.button_emote_2 = {
 	vertical_alignment = "center",
 	size = {
 		0,
-		0,
+		0
 	},
 	position = {
 		620,
 		-214,
-		0,
-	},
+		0
+	}
 }
 scenegraph_definition.button_emote_3 = {
 	horizontal_alignment = "center",
@@ -481,13 +481,13 @@ scenegraph_definition.button_emote_3 = {
 	vertical_alignment = "center",
 	size = {
 		0,
-		0,
+		0
 	},
 	position = {
 		620,
 		-90,
-		0,
-	},
+		0
+	}
 }
 scenegraph_definition.button_emote_4 = {
 	horizontal_alignment = "center",
@@ -495,13 +495,13 @@ scenegraph_definition.button_emote_4 = {
 	vertical_alignment = "center",
 	size = {
 		0,
-		0,
+		0
 	},
 	position = {
 		620,
 		34,
-		0,
-	},
+		0
+	}
 }
 scenegraph_definition.button_emote_5 = {
 	horizontal_alignment = "center",
@@ -509,13 +509,13 @@ scenegraph_definition.button_emote_5 = {
 	vertical_alignment = "center",
 	size = {
 		0,
-		0,
+		0
 	},
 	position = {
 		620,
 		158,
-		0,
-	},
+		0
+	}
 }
 
 local tab_menu_title_text_font_style = table.clone(UIFontSettings.header_1)
@@ -523,7 +523,7 @@ local tab_menu_title_text_font_style = table.clone(UIFontSettings.header_1)
 tab_menu_title_text_font_style.offset = {
 	0,
 	0,
-	3,
+	3
 }
 tab_menu_title_text_font_style.text_horizontal_alignment = "left"
 tab_menu_title_text_font_style.text_vertical_alignment = "center"
@@ -534,7 +534,7 @@ local wallet_text_font_style = table.clone(UIFontSettings.body)
 wallet_text_font_style.offset = {
 	-60,
 	0,
-	3,
+	3
 }
 wallet_text_font_style.text_horizontal_alignment = "right"
 wallet_text_font_style.text_vertical_alignment = "center"
@@ -544,8 +544,8 @@ local widget_definitions = {
 		{
 			pass_type = "text",
 			value_id = "text",
-			style = tab_menu_title_text_font_style,
-		},
+			style = tab_menu_title_text_font_style
+		}
 	}, "tab_menu_title_text"),
 	tab_menu_back_button = UIWidget.create_definition(ButtonPassTemplates.title_back_button, "tab_menu_back_button"),
 	grid_background = UIWidget.create_definition({
@@ -558,25 +558,25 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					20,
-					70,
+					70
 				},
-				color = Color.terminal_grid_background(255, true),
-			},
+				color = Color.terminal_grid_background(255, true)
+			}
 		},
 		{
 			pass_type = "texture",
 			value = "content/ui/materials/frames/loadout_main",
 			style = {
-				scenegraph_id = "grid_divider_top",
-			},
+				scenegraph_id = "grid_divider_top"
+			}
 		},
 		{
 			pass_type = "texture",
 			value = "content/ui/materials/dividers/horizontal_frame_big_lower",
 			style = {
-				scenegraph_id = "grid_divider_bottom",
-			},
-		},
+				scenegraph_id = "grid_divider_bottom"
+			}
+		}
 	}, "grid_background"),
 	grid_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.default_scrollbar, "grid_scrollbar"),
 	grid_mask = UIWidget.create_definition({
@@ -588,29 +588,29 @@ local widget_definitions = {
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
-		},
+					3
+				}
+			}
+		}
 	}, "grid_mask"),
 	grid_interaction = UIWidget.create_definition({
 		{
 			content_id = "hotspot",
-			pass_type = "hotspot",
-		},
-	}, "grid_interaction"),
+			pass_type = "hotspot"
+		}
+	}, "grid_interaction")
 }
 local wallet_entry_definition = UIWidget.create_definition({
 	{
 		pass_type = "text",
 		value = "",
 		value_id = "text",
-		style = wallet_text_font_style,
+		style = wallet_text_font_style
 	},
 	{
 		pass_type = "texture",
@@ -622,19 +622,19 @@ local wallet_entry_definition = UIWidget.create_definition({
 				255,
 				255,
 				255,
-				255,
+				255
 			},
 			size = {
 				56,
-				40,
+				40
 			},
 			offset = {
 				0,
 				0,
-				0,
-			},
-		},
-	},
+				0
+			}
+		}
+	}
 }, "wallet_entry")
 local animations = {
 	wallet_on_enter = {
@@ -656,7 +656,7 @@ local animations = {
 						widget.default_offset = table.clone(offset)
 					end
 				end
-			end,
+			end
 		},
 		{
 			end_time = 1,
@@ -673,7 +673,7 @@ local animations = {
 
 					widget.alpha_multiplier = math.clamp(anim_progress * (1 + (i - 1) * 0.4), 0, 1)
 				end
-			end,
+			end
 		},
 		{
 			end_time = 1,
@@ -695,8 +695,8 @@ local animations = {
 
 					offset[1] = default_offset[1] + x_anim_distance + extra_amount * (i + 1)
 				end
-			end,
-		},
+			end
+		}
 	},
 	wallet_on_exit = {
 		{
@@ -714,8 +714,8 @@ local animations = {
 
 					widget.alpha_multiplier = math.min(math.clamp(anim_progress * (1 + (i - 1) * 0.4), 0, 1), widget.alpha_multiplier or 0)
 				end
-			end,
-		},
+			end
+		}
 	},
 	cosmetics_on_enter = {
 		{
@@ -740,7 +740,7 @@ local animations = {
 						widget.alpha_multiplier = 0
 					end
 				end
-			end,
+			end
 		},
 		{
 			end_time = 0.8,
@@ -785,8 +785,8 @@ local animations = {
 				parent:_set_scenegraph_position("button_emote_5", scenegraph_definition.button_emote_5.position[1] + x_anim_distance + extra_amount * 5)
 				parent:_set_scenegraph_position("button_skin_sets", scenegraph_definition.button_skin_sets.position[1] + x_anim_distance + extra_amount * 2)
 				parent:_set_scenegraph_position("button_expressions", scenegraph_definition.button_expressions.position[1] + x_anim_distance + extra_amount * 4)
-			end,
-		},
+			end
+		}
 	},
 	loadout_on_enter = {
 		{
@@ -811,7 +811,7 @@ local animations = {
 						widget.alpha_multiplier = 0
 					end
 				end
-			end,
+			end
 		},
 		{
 			end_time = 0.8,
@@ -842,9 +842,9 @@ local animations = {
 				local x_anim_distance = x_anim_distance_max - x_anim_distance_max * anim_progress
 
 				parent:_set_scenegraph_position("loadout_frame", scenegraph_definition.loadout_frame.position[1] - x_anim_distance)
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
@@ -852,5 +852,5 @@ return {
 	item_stats_grid_settings = item_stats_grid_settings,
 	wallet_entry_definition = wallet_entry_definition,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

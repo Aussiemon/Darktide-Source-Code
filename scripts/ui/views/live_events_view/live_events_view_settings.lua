@@ -7,43 +7,43 @@ Settings.currency_reward_icons = {
 	aquilas = "content/ui/materials/icons/currencies/premium_big",
 	credits = "content/ui/materials/icons/currencies/credits_big",
 	diamantine = "content/ui/materials/icons/currencies/diamantine_big",
-	plasteel = "content/ui/materials/icons/currencies/plasteel_big",
+	plasteel = "content/ui/materials/icons/currencies/plasteel_big"
 }
 Settings.ui_item_display_materials = {
 	CHARACTER_INSIGNIA = "content/ui/materials/nameplates/insignias/default",
 	PORTRAIT_FRAME = "content/ui/materials/icons/items/containers/item_container_square",
-	default = "content/ui/materials/icons/items/containers/item_container_square",
+	default = "content/ui/materials/icons/items/containers/item_container_square"
 }
 Settings.ui_item_display_sizes = {
 	default = {
 		104,
-		88,
+		88
 	},
 	PORTRAIT_FRAME = {
 		72,
-		80,
+		80
 	},
 	CHARACTER_INSIGNIA = {
 		32,
-		80,
-	},
+		80
+	}
 }
 Settings.ui_item_display_offsets = {
 	default = {
 		0,
 		8,
-		12,
+		12
 	},
 	PORTRAIT_FRAME = {
 		12.299999999999997,
 		8.299999999999997,
-		12,
+		12
 	},
 	CHARACTER_INSIGNIA = {
 		32.3,
 		8.299999999999997,
-		12,
-	},
+		12
+	}
 }
 Settings.input_legend_entries = {
 	{
@@ -59,7 +59,7 @@ Settings.input_legend_entries = {
 			local active_view_instance = parent._active_view_instance
 
 			return active_view_instance and not active_view_instance._show_reward_tooltip
-		end,
+		end
 	},
 	{
 		alignment = "right_alignment",
@@ -74,7 +74,7 @@ Settings.input_legend_entries = {
 			local active_view_instance = parent._active_view_instance
 
 			return active_view_instance and active_view_instance._show_reward_tooltip
-		end,
+		end
 	},
 	{
 		alignment = "right_alignment",
@@ -90,7 +90,7 @@ Settings.input_legend_entries = {
 
 				return pages and pages > 1
 			end
-		end,
+		end
 	},
 	{
 		alignment = "right_alignment",
@@ -106,8 +106,8 @@ Settings.input_legend_entries = {
 
 				return pages and pages > 1
 			end
-		end,
-	},
+		end
+	}
 }
 Settings.faction_settings = {
 	leftover = {
@@ -116,16 +116,16 @@ Settings.faction_settings = {
 			display_name = "loc_leftover_faction_a_name",
 			id = "pure",
 			texture = "content/ui/textures/backgrounds/live_events/leftover_event_faction_a",
-			color = Color.citadel_jokaero_orange(255, true),
+			color = Color.citadel_jokaero_orange(255, true)
 		},
 		impure = {
 			buff = "live_event_leftover_buff_faction_b",
 			display_name = "loc_leftover_faction_b_name",
 			id = "impure",
 			texture = "content/ui/textures/backgrounds/live_events/leftover_event_faction_b",
-			color = Color.citadel_guilliman_blue(255, true),
-		},
-	},
+			color = Color.citadel_guilliman_blue(255, true)
+		}
+	}
 }
 Settings.global_stats_settings = {
 	leftover = {
@@ -134,23 +134,28 @@ Settings.global_stats_settings = {
 			heretical_artifacts_impure = "impure",
 			heretical_artifacts_pure = "pure",
 			impure = "heretical_artifacts_impure",
-			pure = "heretical_artifacts_pure",
-		},
-	},
+			pure = "heretical_artifacts_pure"
+		}
+	}
 }
+Settings.objective_complete_glyph = ""
+Settings.objective_lock_glyph = ""
 Settings.default_entry_width = 1420
 Settings.default_progress_bar_size = {
 	1200,
-	20,
+	20
 }
 Settings.live_events_history_limit = 5
 Settings.live_events_history_entries = {
+	"endless_hordes",
+	"barren",
+	"leftover",
 	"skulls_guns",
 	"elite_army",
 	"play_expeditions",
 	"abhuman_explosions",
 	"broker_stimms",
-	"saints",
+	"saints"
 }
 
 return settings("LiveEventsViewSettings", Settings)

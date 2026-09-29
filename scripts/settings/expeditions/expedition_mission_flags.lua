@@ -3,109 +3,109 @@
 local expedition_mission_flags = {
 	generic = {
 		ui = {
-			display_string = "loc_expeditions_modifier_simple_generic",
-		},
+			display_string = "loc_expeditions_modifier_simple_generic"
+		}
 	},
 	extract_01 = {
 		ui = {
-			display_string = "loc_expeditions_modifier_simple_extraction_last_location",
-		},
+			display_string = "loc_expeditions_modifier_simple_extraction_last_location"
+		}
 	},
 	auspex_01 = {
 		ui = {
-			display_string = "loc_expeditions_modifier_simple_auspex_disabled",
-		},
+			display_string = "loc_expeditions_modifier_simple_auspex_disabled"
+		}
 	},
 	timer_01 = {
 		ui = {
-			display_string = "loc_expeditions_modifier_simple_timer_disabled",
-		},
+			display_string = "loc_expeditions_modifier_simple_timer_disabled"
+		}
 	},
 	timer_02 = {
 		ui = {
-			display_string = "loc_expeditions_modifier_simple_timer_shorter",
-		},
+			display_string = "loc_expeditions_modifier_simple_timer_shorter"
+		}
 	},
 	timer_03 = {
 		ui = {
-			display_string = "loc_expeditions_modifier_simple_timer_longer",
-		},
+			display_string = "loc_expeditions_modifier_simple_timer_longer"
+		}
 	},
 	store_gen = {
 		ui = {
-			display_string = "loc_expeditions_modifier_simple_store_unique_inventory_generic",
-		},
+			display_string = "loc_expeditions_modifier_simple_store_unique_inventory_generic"
+		}
 	},
 	store_01 = {
 		ui = {
-			display_string = "loc_expeditions_modifier_simple_store_free",
-		},
+			display_string = "loc_expeditions_modifier_simple_store_free"
+		}
 	},
 	store_02 = {
 		ui = {
-			display_string = "loc_expeditions_modifier_simple_store_disabled",
-		},
+			display_string = "loc_expeditions_modifier_simple_store_disabled"
+		}
 	},
 	store_03 = {
 		ui = {
-			display_string = "loc_expeditions_modifier_simple_store_mines_only",
-		},
+			display_string = "loc_expeditions_modifier_simple_store_mines_only"
+		}
 	},
 	store_04 = {
 		ui = {
-			display_string = "loc_expeditions_modifier_simple_store_valkyrie_only",
-		},
+			display_string = "loc_expeditions_modifier_simple_store_valkyrie_only"
+		}
 	},
 	store_05 = {
 		ui = {
-			display_string = "loc_expeditions_modifier_simple_store_explosives_only",
-		},
+			display_string = "loc_expeditions_modifier_simple_store_explosives_only"
+		}
 	},
 	store_06 = {
 		ui = {
-			display_string = "loc_expeditions_modifier_simple_store_artillery_only",
-		},
+			display_string = "loc_expeditions_modifier_simple_store_artillery_only"
+		}
 	},
 	opps_01 = {
 		ui = {
-			display_string = "loc_expeditions_modifier_simple_opportunities_disabled",
-		},
+			display_string = "loc_expeditions_modifier_simple_opportunities_disabled"
+		}
 	},
 	opps_02 = {
 		ui = {
-			display_string = "loc_expeditions_modifier_simple_opportunities_more",
-		},
+			display_string = "loc_expeditions_modifier_simple_opportunities_more"
+		}
 	},
 	opps_03 = {
 		ui = {
-			display_string = "loc_expeditions_modifier_simple_opportunities_fewer",
-		},
+			display_string = "loc_expeditions_modifier_simple_opportunities_fewer"
+		}
 	},
 	locs_01 = {
 		ui = {
-			display_string = "loc_expeditions_modifier_simple_locations_more",
-		},
+			display_string = "loc_expeditions_modifier_simple_locations_more"
+		}
 	},
 	locs_02 = {
 		ui = {
-			display_string = "loc_expeditions_modifier_simple_locations_fewer",
-		},
+			display_string = "loc_expeditions_modifier_simple_locations_fewer"
+		}
 	},
 	locs_03 = {
 		ui = {
-			display_string = "loc_expeditions_modifier_simple_locations_single",
-		},
+			display_string = "loc_expeditions_modifier_simple_locations_single"
+		}
 	},
 	theme_01 = {
 		ui = {
-			display_string = "loc_expeditions_modifier_simple_theme_darkness",
-		},
+			display_string = "loc_expeditions_modifier_simple_theme_darkness"
+		}
 	},
 	theme_02 = {
 		ui = {
-			display_string = "loc_expeditions_modifier_simple_theme_dawn",
-		},
-	},
+			display_string = "loc_expeditions_modifier_simple_theme_dawn"
+		}
+	}
 }
 
 return settings("ExpeditionMissionFlags", expedition_mission_flags)

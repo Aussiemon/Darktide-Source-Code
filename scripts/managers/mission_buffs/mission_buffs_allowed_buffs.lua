@@ -12,14 +12,13 @@ allowed_buffs.legendary_buffs = {
 		"hordes_buff_explode_enemies_on_ranged_kill",
 		"hordes_buff_aoe_shock_closest_enemy_on_interval",
 		"hordes_buff_staggering_pulse",
-		"hordes_buff_extra_ability_charge",
 		"hordes_buff_random_damage_immunity",
 		"hordes_buff_big_weakspot_damage_increase",
 		"hordes_buff_bleeding_and_burning_on_melee_hit",
 		"hordes_buff_boosted_melee_attack_on_cooldown",
 		"hordes_buff_explosion_on_toughness_broken",
-		"hordes_buff_reflect_melee_damage",
-	},
+		"hordes_buff_reflect_melee_damage"
+	}
 }
 
 local legendary_grenade_buffs_applied_to_all = {
@@ -28,219 +27,232 @@ local legendary_grenade_buffs_applied_to_all = {
 	"hordes_buff_grenade_heals_on_explosion",
 	"hordes_buff_grenade_explosion_applies_elemental_weakness",
 	"hordes_buff_grenade_explosion_applies_rending_debuff",
-	"hordes_buff_grenade_replenishment_over_time",
+	"hordes_buff_grenade_replenishment_over_time"
 }
 
 allowed_buffs.legendary_buffs.veteran = {
-	generic = {},
+	generic = {
+		"hordes_buff_extra_ability_charge"
+	},
 	grenade_ability = {
 		veteran_frag_grenade = table.append(table.shallow_copy(legendary_grenade_buffs_applied_to_all), {
 			"hordes_buff_spawn_dome_shield_on_grenade_explosion",
 			"hordes_buff_grenade_explosion_kill_replenish_grenades",
-			"hordes_buff_shock_on_grenade_impact",
+			"hordes_buff_shock_on_grenade_impact"
 		}),
 		veteran_smoke_grenade = table.append(table.shallow_copy(legendary_grenade_buffs_applied_to_all), {
 			"hordes_buff_spawn_dome_shield_on_grenade_explosion",
 			"hordes_buff_veteran_shock_units_in_smoke_grenade",
-			"hordes_buff_shock_on_grenade_impact",
+			"hordes_buff_shock_on_grenade_impact"
 		}),
 		veteran_krak_grenade = table.append(table.shallow_copy(legendary_grenade_buffs_applied_to_all), {
 			"hordes_buff_spawn_dome_shield_on_grenade_explosion",
 			"hordes_buff_grenade_explosion_kill_replenish_grenades",
-			"hordes_buff_veteran_sticky_grenade_pulls_enemies",
-		}),
+			"hordes_buff_veteran_sticky_grenade_pulls_enemies"
+		})
 	},
 	combat_ability = {
 		volley_fire_stance = {
-			"hordes_buff_veteran_infinite_ammo_during_stance",
+			"hordes_buff_veteran_infinite_ammo_during_stance"
 		},
 		veteran_stealth = {
 			"hordes_buff_veteran_increased_damage_after_stealth",
-			"hordes_buff_veteran_grouped_upgraded_stealth",
+			"hordes_buff_veteran_grouped_upgraded_stealth"
 		},
 		voice_of_command = {
-			"hordes_buff_veteran_apply_infinite_bleed_on_shout",
-		},
-	},
+			"hordes_buff_veteran_apply_infinite_bleed_on_shout"
+		}
+	}
 }
 allowed_buffs.legendary_buffs.zealot = {
-	generic = {},
+	generic = {
+		"hordes_buff_extra_ability_charge"
+	},
 	grenade_ability = {
 		zealot_shock_grenade = table.append(table.shallow_copy(legendary_grenade_buffs_applied_to_all), {
 			"hordes_buff_spawn_dome_shield_on_grenade_explosion",
 			"hordes_buff_zealot_shock_grenade_increase_next_hit_damage",
-			"hordes_buff_shock_on_grenade_impact",
+			"hordes_buff_shock_on_grenade_impact"
 		}),
 		zealot_fire_grenade = table.append(table.shallow_copy(legendary_grenade_buffs_applied_to_all), {
 			"hordes_buff_spawn_dome_shield_on_grenade_explosion",
 			"hordes_buff_zealot_regen_toughness_inside_fire_grenade",
-			"hordes_buff_shock_on_grenade_impact",
+			"hordes_buff_shock_on_grenade_impact"
 		}),
 		zealot_throwing_knives = {
-			"hordes_buff_zealot_knives_bleed_and_restore_thoughness_on_kill",
-		},
+			"hordes_buff_zealot_knives_bleed_and_restore_thoughness_on_kill"
+		}
 	},
 	combat_ability = {
 		zealot_dash = {
-			"hordes_buff_zealot_fire_trail_on_lunge",
+			"hordes_buff_zealot_fire_trail_on_lunge"
 		},
 		bolstering_prayer = {
-			"hordes_buff_zealot_channel_heals_corruption",
+			"hordes_buff_zealot_channel_heals_corruption"
 		},
-		zealot_invisibility = {},
-	},
+		zealot_invisibility = {}
+	}
 }
 allowed_buffs.legendary_buffs.psyker = {
-	generic = {},
+	generic = {
+		"hordes_buff_extra_ability_charge"
+	},
 	grenade_ability = {
 		psyker_smite = {
 			"hordes_buff_psyker_brain_burst_burns_and_bleeds_on_hit",
 			"hordes_buff_psyker_brain_burst_spreads_fire_on_hit",
-			"hordes_buff_psyker_brain_burst_hits_nearby_enemies",
+			"hordes_buff_psyker_brain_burst_hits_nearby_enemies"
 		},
 		psyker_chain_lightning = {
-			"hordes_buff_psyker_smite_always_max_damage",
+			"hordes_buff_psyker_smite_always_max_damage"
 		},
 		psyker_throwing_knives = {
 			"hordes_buff_psyker_recover_knife_on_knife_kill",
-			"hordes_buff_psyker_burning_on_throwing_knife_hit",
-		},
+			"hordes_buff_psyker_burning_on_throwing_knife_hit"
+		}
 	},
 	combat_ability = {
 		psyker_shout = {
 			"hordes_buff_psyker_shout_always_stagger",
-			"hordes_buff_psyker_shout_boosts_allies",
+			"hordes_buff_psyker_shout_boosts_allies"
 		},
 		psyker_shield = {
-			"hordes_buff_psyker_shock_on_touch_force_field",
+			"hordes_buff_psyker_shock_on_touch_force_field"
 		},
 		psyker_overcharge_stance = {
-			"hordes_buff_psyker_overcharge_reduced_damage_taken",
-		},
-	},
+			"hordes_buff_psyker_overcharge_reduced_damage_taken"
+		}
+	}
 }
 allowed_buffs.legendary_buffs.ogryn = {
-	generic = {},
+	generic = {
+		"hordes_buff_extra_ability_charge"
+	},
 	grenade_ability = {
 		ogryn_grenade_frag = table.append(table.shallow_copy(legendary_grenade_buffs_applied_to_all), {
 			"hordes_buff_spawn_dome_shield_on_grenade_explosion",
 			"hordes_buff_grenade_explosion_kill_replenish_grenades",
 			"hordes_buff_ogryn_biggest_boom_grenade",
-			"hordes_buff_shock_on_grenade_impact",
+			"hordes_buff_shock_on_grenade_impact"
 		}),
 		ogryn_grenade_box_cluster = table.append(table.shallow_copy(legendary_grenade_buffs_applied_to_all), {
 			"hordes_buff_ogryn_box_of_surprises",
-			"hordes_buff_grenade_explosion_kill_replenish_grenades",
+			"hordes_buff_grenade_explosion_kill_replenish_grenades"
 		}),
 		ogryn_grenade_box = table.append(table.shallow_copy(legendary_grenade_buffs_applied_to_all), {
 			"hordes_buff_ogryn_box_of_surprises",
-			"hordes_buff_grenade_explosion_kill_replenish_grenades",
+			"hordes_buff_grenade_explosion_kill_replenish_grenades"
 		}),
 		ogryn_grenade_friend_rock = {
 			"hordes_buff_ogryn_omega_lucky_rock",
-			"hordes_buff_ogryn_rock_charge_while_wield",
-		},
+			"hordes_buff_ogryn_rock_charge_while_wield"
+		}
 	},
 	combat_ability = {
 		ogryn_charge = {
 			"hordes_buff_ogryn_taunt_on_lunge",
-			"hordes_buff_ogryn_fire_trail_on_lunge",
+			"hordes_buff_ogryn_fire_trail_on_lunge"
 		},
 		ogryn_taunt_shout = {
-			"hordes_buff_ogryn_apply_fire_on_shout",
+			"hordes_buff_ogryn_apply_fire_on_shout"
 		},
 		ogryn_gunlugger_stance = {
-			"hordes_buff_ogryn_increase_penetration_during_stance",
-		},
-	},
+			"hordes_buff_ogryn_increase_penetration_during_stance"
+		}
+	}
 }
 allowed_buffs.legendary_buffs.adamant = {
-	generic = {},
+	generic = {
+		"hordes_buff_extra_ability_charge"
+	},
 	grenade_ability = {
 		adamant_shock_mine = {
-			"hordes_buff_adamant_mine_explosion",
+			"hordes_buff_adamant_mine_explosion"
 		},
 		adamant_grenade = table.append(table.shallow_copy(legendary_grenade_buffs_applied_to_all), {
-			"hordes_buff_adamant_grenade_multi",
+			"hordes_buff_adamant_grenade_multi"
 		}),
 		adamant_whistle = {
-			"hordes_buff_adamant_auto_detonate",
-		},
+			"hordes_buff_adamant_auto_detonate"
+		}
 	},
 	combat_ability = {
 		adamant_area_buff_drone = {
-			"hordes_buff_adamant_drone_stun",
+			"hordes_buff_adamant_drone_stun"
 		},
 		adamant_stance = {
-			"hordes_buff_adamant_stance_immunity",
+			"hordes_buff_adamant_stance_immunity"
 		},
 		adamant_charge = {
-			"hordes_buff_adamant_random_bash",
-		},
-	},
+			"hordes_buff_adamant_random_bash"
+		}
+	}
 }
 allowed_buffs.legendary_buffs.adamant.grenade_ability.adamant_grenade_improved = table.clone(allowed_buffs.legendary_buffs.adamant.grenade_ability.adamant_grenade)
 allowed_buffs.legendary_buffs.broker = {
-	generic = {},
+	generic = {
+		"hordes_buff_extra_ability_charge"
+	},
 	grenade_ability = {
 		broker_missile_launcher = {
-			"hordes_buff_broker_missile_launcher_special_kill_restores_grenade",
+			"hordes_buff_broker_missile_launcher_special_kill_restores_grenade"
 		},
 		broker_tox_grenade = {
 			"hordes_buff_broker_tox_grenade_applies_self_propagating_toxin",
 			"hordes_buff_grenade_heals_on_explosion",
 			"hordes_buff_grenade_explosion_applies_elemental_weakness",
 			"hordes_buff_grenade_explosion_applies_rending_debuff",
-			"hordes_buff_spawn_dome_shield_on_grenade_explosion",
+			"hordes_buff_spawn_dome_shield_on_grenade_explosion"
 		},
 		broker_flash_grenade = table.append(table.shallow_copy(legendary_grenade_buffs_applied_to_all), {
 			"hordes_buff_spawn_dome_shield_on_grenade_explosion",
-			"hordes_buff_broker_flash_grenade_increase_damage_taken",
-		}),
+			"hordes_buff_broker_flash_grenade_increase_damage_taken"
+		})
 	},
 	combat_ability = {
 		broker_focus_stance = {
-			"hordes_buff_broker_damage_increase_over_time_during_focus_stance",
+			"hordes_buff_broker_damage_increase_over_time_during_focus_stance"
 		},
 		broker_punk_rage_stance = {
-			"hordes_buff_broker_health_regen_during_punk_rage",
+			"hordes_buff_broker_health_regen_during_punk_rage"
 		},
 		broker_stimm_field = {
-			"hordes_buff_broker_stimm_field_shock_on_interval",
-		},
-	},
+			"hordes_buff_broker_stimm_field_shock_on_interval"
+		}
+	}
 }
 allowed_buffs.legendary_buffs.broker.grenade_ability.broker_flash_grenade_improved = table.clone(allowed_buffs.legendary_buffs.broker.grenade_ability.broker_flash_grenade)
 allowed_buffs.legendary_buffs.cryptic = {
 	generic = {
-		"hordes_buff_cryptic_dodge_costs_cooldown",
+		"hordes_buff_extra_ability_charge",
+		"hordes_buff_cryptic_dodge_costs_cooldown"
 	},
 	grenade_ability = {
 		cryptic_servo_skull_order_base = {},
 		cryptic_force_field = {
-			"hordes_buff_cryptic_force_field_leaves_fire_liquid_area",
+			"hordes_buff_cryptic_force_field_leaves_fire_liquid_area"
 		},
 		arc_grenade = table.append(table.shallow_copy(legendary_grenade_buffs_applied_to_all), {
 			"hordes_buff_spawn_dome_shield_on_grenade_explosion",
-			"hordes_buff_cryptic_arc_grenade_extra_arcs",
-		}),
+			"hordes_buff_cryptic_arc_grenade_extra_arcs"
+		})
 	},
 	combat_ability = {
 		cryptic_discharge = {
-			"hordes_buff_cryptic_discharge_ability_always_full_charges_bonus",
+			"hordes_buff_cryptic_discharge_ability_always_full_charges_bonus"
 		},
 		cryptic_precision_stance = {
-			"hordes_buff_cryptic_precision_stance_duration_extension_on_kill",
+			"hordes_buff_cryptic_precision_stance_duration_extension_on_kill"
 		},
 		cryptic_chordclaw = {
-			"hordes_buff_cryptic_chordclaw_kills_replenish_charge",
-		},
+			"hordes_buff_cryptic_chordclaw_kills_replenish_charge"
+		}
 	},
 	talent_specific = {
 		cryptic_flamethrower = {
-			"hordes_buff_cryptic_servo_skull_flamethrower_uses_no_charge",
-		},
-	},
+			"hordes_buff_cryptic_servo_skull_flamethrower_uses_no_charge"
+		}
+	}
 }
 allowed_buffs.legendary_buffs.cryptic.grenade_ability.cryptic_servo_skull_order = table.clone(allowed_buffs.legendary_buffs.cryptic.grenade_ability.cryptic_servo_skull_order_base)
 allowed_buffs.available_family_builds = {
@@ -250,14 +262,14 @@ allowed_buffs.available_family_builds = {
 	"electric",
 	"elementalist",
 	"critical",
-	"unstoppable",
+	"unstoppable"
 }
 allowed_buffs.buff_families = {
 	fire = {
 		name = "Fire Build",
 		sfx = "wwise/events/world/play_horde_mode_buff_family_fire",
 		priority_buffs = {
-			"hordes_buff_burning_on_melee_hit",
+			"hordes_buff_burning_on_melee_hit"
 		},
 		buffs = {
 			"hordes_buff_burning_on_ranged_hit",
@@ -268,15 +280,15 @@ allowed_buffs.buff_families = {
 			"hordes_buff_burning_damage_per_burning_enemy",
 			"hordes_buff_damage_taken_by_flamers_and_grenadier_reduced",
 			"hordes_buff_coherency_damage_vs_burning",
-			"hordes_buff_coherency_burning_duration",
-		},
+			"hordes_buff_coherency_burning_duration"
+		}
 	},
 	electric = {
 		id = "electric",
 		name = "Electric Build",
 		sfx = "wwise/events/world/play_horde_mode_buff_family_electric",
 		priority_buffs = {
-			"hordes_buff_shock_on_ranged_hit",
+			"hordes_buff_shock_on_ranged_hit"
 		},
 		buffs = {
 			"hordes_buff_shock_on_melee_hit",
@@ -287,15 +299,15 @@ allowed_buffs.buff_families = {
 			"hordes_buff_shock_on_hit_after_dodge",
 			"hordes_buff_shock_closest_enemy_on_interval",
 			"hordes_buff_damage_taken_close_to_electrocuted_enemy",
-			"hordes_buff_coherency_damage_taken_close_to_electrocuted_enemy",
-		},
+			"hordes_buff_coherency_damage_taken_close_to_electrocuted_enemy"
+		}
 	},
 	elementalist = {
 		id = "elementalist",
 		name = "Elementalist Build",
 		sfx = "wwise/events/world/play_horde_mode_buff_family_elemental",
 		priority_buffs = {
-			"hordes_buff_shock_on_blocking_melee_attack",
+			"hordes_buff_shock_on_blocking_melee_attack"
 		},
 		buffs = {
 			"hordes_buff_burning_on_ranged_hit",
@@ -306,15 +318,15 @@ allowed_buffs.buff_families = {
 			"hordes_buff_improved_dodge_speed_and_distance",
 			"hordes_buff_combat_ability_cooldown_on_damage_taken",
 			"hordes_buff_extra_toughness_near_burning_shocked_enemies",
-			"hordes_buff_coherency_burning_duration",
-		},
+			"hordes_buff_coherency_burning_duration"
+		}
 	},
 	unkillable = {
 		id = "unkillable",
 		name = "Unkillable Build",
 		sfx = "wwise/events/world/play_horde_mode_buff_family_unkillable",
 		priority_buffs = {
-			"hordes_buff_shock_pulse_on_toughness_broken",
+			"hordes_buff_shock_pulse_on_toughness_broken"
 		},
 		buffs = {
 			"hordes_buff_toughness_regen_in_melee_range",
@@ -325,15 +337,15 @@ allowed_buffs.buff_families = {
 			"hordes_buff_toughness_damage_taken_above_threshold",
 			"hordes_buff_damage_taken_by_flamers_and_grenadier_reduced",
 			"hordes_buff_health_regen",
-			"hordes_buff_damage_increase_on_toughness_broken",
-		},
+			"hordes_buff_damage_increase_on_toughness_broken"
+		}
 	},
 	cowboy = {
 		id = "cowboy",
 		name = "Cowboy Build",
 		sfx = "wwise/events/world/play_horde_mode_buff_family_cowboy",
 		priority_buffs = {
-			"hordes_buff_no_ammo_consumption_on_crits",
+			"hordes_buff_no_ammo_consumption_on_crits"
 		},
 		buffs = {
 			"hordes_buff_damage_increase",
@@ -346,15 +358,15 @@ allowed_buffs.buff_families = {
 			"hordes_buff_other_slot_damage_increase_on_kill",
 			"hordes_buff_ranged_attacks_hit_mass_penetration_increased",
 			"hordes_buff_melee_damage_missing_ammo_in_clip",
-			"hordes_buff_weakspot_ranged_hit_gives_infinite_ammo",
-		},
+			"hordes_buff_weakspot_ranged_hit_gives_infinite_ammo"
+		}
 	},
 	critical = {
 		id = "critical",
 		name = "Critical Build",
 		sfx = "wwise/events/world/play_horde_mode_buff_family_critical",
 		priority_buffs = {
-			"hordes_buff_explode_enemies_on_critical_kill",
+			"hordes_buff_explode_enemies_on_critical_kill"
 		},
 		buffs = {
 			"hordes_buff_weakspot_damage_increase",
@@ -371,15 +383,15 @@ allowed_buffs.buff_families = {
 			"hordes_buff_increase_melee_crit_chance_on_ranged_critical_kill",
 			"hordes_buff_increase_ranged_crit_chance_on_melee_critical_kill",
 			"hordes_buff_critical_damage_from_consecutive_critical_hits",
-			"hordes_buff_crit_chance_per_missing_stamina_bar",
-		},
+			"hordes_buff_crit_chance_per_missing_stamina_bar"
+		}
 	},
 	unstoppable = {
 		id = "unstoppable",
 		name = "Unstoppable Build",
 		sfx = "wwise/events/world/play_horde_mode_buff_family_unstoppable",
 		priority_buffs = {
-			"hordes_buff_sprinting_staggers",
+			"hordes_buff_sprinting_staggers"
 		},
 		buffs = {
 			"hordes_buff_dodge_staggers",
@@ -392,9 +404,9 @@ allowed_buffs.buff_families = {
 			"hordes_buff_no_movement_speed_reduction_on_aim_and_windup",
 			"hordes_buff_increase_impact_on_push_attacks",
 			"hordes_buff_dodge_incapacitating_attacks",
-			"hordes_buff_damage_per_full_stamina_bar",
-		},
-	},
+			"hordes_buff_damage_per_full_stamina_bar"
+		}
+	}
 }
 
 return allowed_buffs

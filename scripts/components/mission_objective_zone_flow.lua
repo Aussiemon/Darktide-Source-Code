@@ -53,12 +53,12 @@ MissionObjectiveZoneFlow.component_data = {
 	return_to_skull = {
 		ui_name = "Return to servo skull",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	max_progress = {
 		ui_name = "Max Progress",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	progress_ui_type = {
 		category = "UI",
@@ -68,23 +68,23 @@ MissionObjectiveZoneFlow.component_data = {
 		options_keys = {
 			"bar",
 			"counter",
-			"none",
+			"none"
 		},
 		options_values = {
 			"bar",
 			"counter",
-			"none",
-		},
+			"none"
+		}
 	},
 	inputs = {
 		increment_progression = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"MissionObjectiveZoneFlowExtension",
-	},
+		"MissionObjectiveZoneFlowExtension"
+	}
 }
 
 return MissionObjectiveZoneFlow

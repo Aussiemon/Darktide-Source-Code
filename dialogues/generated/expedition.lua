@@ -12,32 +12,32 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo",
+				"generic_mission_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"expedition_elevator_coming",
+				"expedition_elevator_coming"
 			},
 			{
 				"faction_memory",
 				"expedition_elevator_coming",
 				OP.TIMEDIFF,
 				OP.GT,
-				300,
-			},
+				300
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"expedition_elevator_coming",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -53,46 +53,46 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_alarm_triggered_a",
-				},
+					"expeditions_alarm_triggered_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"expeditions_opportunity_start_first_a",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"last_opportunity",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 2,
-			},
-		},
+				duration = 2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -108,31 +108,31 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_alarm_triggered_a",
-				},
+					"expeditions_alarm_triggered_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -148,27 +148,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"expeditions_artillery_support_a",
+				"expeditions_artillery_support_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "player_prio_0",
@@ -181,24 +181,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo",
+				"generic_mission_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"expeditions_call_extraction_a",
-			},
+				"expeditions_call_extraction_a"
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -214,46 +214,46 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_call_extraction",
-				},
+					"expeditions_call_extraction"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
+					"pilot"
+				}
 			},
 			{
 				"faction_memory",
 				"dummy_memory",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"dummy_memory_2",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1.5,
-			},
-		},
+				duration = 1.5
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -269,46 +269,46 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_chest_locked_a",
-				},
+					"expeditions_chest_locked_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"expeditions_opportunity_start_first_a",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"last_opportunity",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -324,53 +324,53 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_chest_unlocked_a",
-				},
+					"expeditions_chest_unlocked_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"expeditions_chest_unlocked_a",
 				OP.TIMEDIFF,
 				OP.GT,
-				15,
+				15
 			},
 			{
 				"faction_memory",
 				"expeditions_opportunity_start_first_a",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"expeditions_chest_unlocked_a",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -386,40 +386,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_distraction_end_a",
-				},
+					"expeditions_distraction_end_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"expeditions_opportunity_start_first_a",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -434,46 +434,46 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_distraction_start_a",
-				},
+					"expeditions_distraction_start_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"expeditions_opportunity_start_first_a",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"last_opportunity",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -488,34 +488,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_distraction_start_a",
-				},
+					"expeditions_distraction_start_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -531,29 +531,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_extraction_reminder_a",
-				},
+					"expeditions_extraction_reminder_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -569,7 +569,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -577,27 +577,27 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"expeditions_call_extraction_a",
-					"expeditions_call_extraction_pilot_a",
-				},
+					"expeditions_call_extraction_pilot_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector",
-				},
-			},
+					"dreg_lector"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -613,42 +613,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heat_vo",
+				"heat_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"drop",
-				},
+					"drop"
+				}
 			},
 			{
 				"query_context",
 				"heat_stage",
 				OP.SET_INCLUDES,
 				args = {
-					"alert",
-				},
+					"alert"
+				}
 			},
 			{
 				"faction_memory",
 				"heat_vo",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"heat_vo",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -664,46 +664,46 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heat_vo",
+				"heat_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"rise",
-				},
+					"rise"
+				}
 			},
 			{
 				"query_context",
 				"heat_stage",
 				OP.SET_INCLUDES,
 				args = {
-					"alert",
-				},
+					"alert"
+				}
 			},
 			{
 				"faction_memory",
 				"heat_vo_disabled",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"heat_vo",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.5,
-			},
-		},
+				duration = 0.5
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -719,47 +719,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heat_vo",
+				"heat_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"horde_spawn",
-				},
+					"horde_spawn"
+				}
 			},
 			{
 				"query_context",
 				"heat_stage",
 				OP.SET_INCLUDES,
 				args = {
-					"alert",
-				},
+					"alert"
+				}
 			},
 			{
 				"faction_memory",
 				"heat_vo",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"heat_vo",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 2,
-			},
-		},
+				duration = 2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -775,15 +775,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heat_vo",
+				"heat_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"monster_spawn",
-				},
+					"monster_spawn"
+				}
 			},
 			{
 				"query_context",
@@ -791,27 +791,27 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"undetected",
-					"alert",
-				},
+					"alert"
+				}
 			},
 			{
 				"faction_memory",
 				"heat_vo",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"heat_vo",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -827,66 +827,66 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heat_vo",
+				"heat_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"opportunity_started",
-				},
+					"opportunity_started"
+				}
 			},
 			{
 				"query_context",
 				"heat_stage",
 				OP.SET_INCLUDES,
 				args = {
-					"alert",
-				},
+					"alert"
+				}
 			},
 			{
 				"faction_memory",
 				"heat_vo",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"heat_vo_disabled",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"last_opportunity",
 				OP.TIMEDIFF,
 				OP.LT,
-				20,
+				20
 			},
 			{
 				"faction_memory",
 				"expeditions_opportunity_start_first_a",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"heat_vo",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 8,
-			},
-		},
+				duration = 8
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -902,15 +902,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heat_vo",
+				"heat_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"safe_room_entered",
-				},
+					"safe_room_entered"
+				}
 			},
 			{
 				"query_context",
@@ -921,32 +921,32 @@ return function ()
 					"undetected",
 					"alert",
 					"detected",
-					"max",
-				},
+					"max"
+				}
 			},
 			{
 				"faction_memory",
 				"heat_vo",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"heat_vo",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -962,15 +962,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heat_vo",
+				"heat_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"safe_room_event",
-				},
+					"safe_room_event"
+				}
 			},
 			{
 				"query_context",
@@ -981,44 +981,44 @@ return function ()
 					"undetected",
 					"alert",
 					"detected",
-					"max",
-				},
+					"max"
+				}
 			},
 			{
 				"faction_memory",
 				"dummy",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"heat_vo",
 				OP.TIMEDIFF,
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"heat_vo_disabled",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"heat_vo",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1034,42 +1034,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heat_vo",
+				"heat_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"drop",
-				},
+					"drop"
+				}
 			},
 			{
 				"query_context",
 				"heat_stage",
 				OP.SET_INCLUDES,
 				args = {
-					"detected",
-				},
+					"detected"
+				}
 			},
 			{
 				"faction_memory",
 				"heat_vo",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"heat_vo",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1085,46 +1085,46 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heat_vo",
+				"heat_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"rise",
-				},
+					"rise"
+				}
 			},
 			{
 				"query_context",
 				"heat_stage",
 				OP.SET_INCLUDES,
 				args = {
-					"detected",
-				},
+					"detected"
+				}
 			},
 			{
 				"faction_memory",
 				"heat_vo_disabled",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"heat_vo",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.5,
-			},
-		},
+				duration = 0.5
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1140,47 +1140,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heat_vo",
+				"heat_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"horde_spawn",
-				},
+					"horde_spawn"
+				}
 			},
 			{
 				"query_context",
 				"heat_stage",
 				OP.SET_INCLUDES,
 				args = {
-					"detected",
-				},
+					"detected"
+				}
 			},
 			{
 				"faction_memory",
 				"heat_vo",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"heat_vo",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 2,
-			},
-		},
+				duration = 2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1196,42 +1196,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heat_vo",
+				"heat_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"loner_targeted",
-				},
+					"loner_targeted"
+				}
 			},
 			{
 				"query_context",
 				"heat_stage",
 				OP.SET_INCLUDES,
 				args = {
-					"detected",
-				},
+					"detected"
+				}
 			},
 			{
 				"faction_memory",
 				"heat_vo",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"heat_vo",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1247,42 +1247,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heat_vo",
+				"heat_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"monster_spawn",
-				},
+					"monster_spawn"
+				}
 			},
 			{
 				"query_context",
 				"heat_stage",
 				OP.SET_INCLUDES,
 				args = {
-					"detected",
-				},
+					"detected"
+				}
 			},
 			{
 				"faction_memory",
 				"heat_vo",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"heat_vo",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1298,66 +1298,66 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heat_vo",
+				"heat_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"opportunity_started",
-				},
+					"opportunity_started"
+				}
 			},
 			{
 				"query_context",
 				"heat_stage",
 				OP.SET_INCLUDES,
 				args = {
-					"detected",
-				},
+					"detected"
+				}
 			},
 			{
 				"faction_memory",
 				"heat_vo",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"heat_vo_disabled",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"last_opportunity",
 				OP.TIMEDIFF,
 				OP.LT,
-				20,
+				20
 			},
 			{
 				"faction_memory",
 				"expeditions_opportunity_start_first_a",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"heat_vo",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 8,
-			},
-		},
+				duration = 8
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1373,7 +1373,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -1381,27 +1381,27 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"expeditions_heat_detected_opportunity_start_a",
-					"expeditions_heat_alert_opportunity_start_a",
-				},
+					"expeditions_heat_alert_opportunity_start_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1417,52 +1417,52 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heat_vo",
+				"heat_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"safe_room_exited",
-				},
+					"safe_room_exited"
+				}
 			},
 			{
 				"query_context",
 				"heat_stage",
 				OP.SET_INCLUDES,
 				args = {
-					"detected",
-				},
+					"detected"
+				}
 			},
 			{
 				"faction_memory",
 				"heat_vo",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"heat_vo",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"last_new_area",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 2,
-			},
-		},
+				duration = 2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1478,46 +1478,46 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heat_vo",
+				"heat_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"rise",
-				},
+					"rise"
+				}
 			},
 			{
 				"query_context",
 				"heat_stage",
 				OP.SET_INCLUDES,
 				args = {
-					"max",
-				},
+					"max"
+				}
 			},
 			{
 				"faction_memory",
 				"heat_vo_disabled",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"heat_vo",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.5,
-			},
-		},
+				duration = 0.5
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1533,47 +1533,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heat_vo",
+				"heat_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"horde_spawn",
-				},
+					"horde_spawn"
+				}
 			},
 			{
 				"query_context",
 				"heat_stage",
 				OP.SET_INCLUDES,
 				args = {
-					"max",
-				},
+					"max"
+				}
 			},
 			{
 				"faction_memory",
 				"heat_vo",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"heat_vo",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 2,
-			},
-		},
+				duration = 2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1589,42 +1589,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heat_vo",
+				"heat_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"monster_spawn",
-				},
+					"monster_spawn"
+				}
 			},
 			{
 				"query_context",
 				"heat_stage",
 				OP.SET_INCLUDES,
 				args = {
-					"max",
-				},
+					"max"
+				}
 			},
 			{
 				"faction_memory",
 				"heat_vo",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"heat_vo",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1640,66 +1640,66 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heat_vo",
+				"heat_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"opportunity_started",
-				},
+					"opportunity_started"
+				}
 			},
 			{
 				"query_context",
 				"heat_stage",
 				OP.SET_INCLUDES,
 				args = {
-					"max",
-				},
+					"max"
+				}
 			},
 			{
 				"faction_memory",
 				"heat_vo",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"heat_vo_disabled",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"last_opportunity",
 				OP.TIMEDIFF,
 				OP.LT,
-				20,
+				20
 			},
 			{
 				"faction_memory",
 				"expeditions_opportunity_start_first_a",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"heat_vo",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 8,
-			},
-		},
+				duration = 8
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1715,34 +1715,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_heat_max_opportunity_start_a",
-				},
+					"expeditions_heat_max_opportunity_start_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1758,42 +1758,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heat_vo",
+				"heat_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"trickle_horde_spawn",
-				},
+					"trickle_horde_spawn"
+				}
 			},
 			{
 				"query_context",
 				"heat_stage",
 				OP.SET_INCLUDES,
 				args = {
-					"max",
-				},
+					"max"
+				}
 			},
 			{
 				"faction_memory",
 				"heat_vo",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"heat_vo",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1809,52 +1809,52 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heat_vo",
+				"heat_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"safe_room_exited",
-				},
+					"safe_room_exited"
+				}
 			},
 			{
 				"query_context",
 				"heat_stage",
 				OP.SET_INCLUDES,
 				args = {
-					"max",
-				},
+					"max"
+				}
 			},
 			{
 				"faction_memory",
 				"heat_vo",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"heat_vo",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"last_new_area",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 2,
-			},
-		},
+				duration = 2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1870,42 +1870,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heat_vo",
+				"heat_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"drop",
-				},
+					"drop"
+				}
 			},
 			{
 				"query_context",
 				"heat_stage",
 				OP.SET_INCLUDES,
 				args = {
-					"undetected",
-				},
+					"undetected"
+				}
 			},
 			{
 				"faction_memory",
 				"heat_vo",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"heat_vo",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1921,46 +1921,46 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heat_vo",
+				"heat_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"rise",
-				},
+					"rise"
+				}
 			},
 			{
 				"query_context",
 				"heat_stage",
 				OP.SET_INCLUDES,
 				args = {
-					"undetected",
-				},
+					"undetected"
+				}
 			},
 			{
 				"faction_memory",
 				"heat_vo_disabled",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"heat_vo",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.5,
-			},
-		},
+				duration = 0.5
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1976,15 +1976,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heat_vo",
+				"heat_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"opportunity_started",
-				},
+					"opportunity_started"
+				}
 			},
 			{
 				"query_context",
@@ -1992,51 +1992,51 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"none",
-					"undetected",
-				},
+					"undetected"
+				}
 			},
 			{
 				"faction_memory",
 				"heat_vo",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"heat_vo_disabled",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"last_opportunity",
 				OP.TIMEDIFF,
 				OP.LT,
-				20,
+				20
 			},
 			{
 				"faction_memory",
 				"expeditions_opportunity_start_first_a",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"heat_vo",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 8,
-			},
-		},
+				duration = 8
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2052,7 +2052,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -2060,24 +2060,24 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"expeditions_heat_undetected_opportunity_start_a",
-					"expeditions_heat_alert_opportunity_start_a",
-				},
+					"expeditions_heat_alert_opportunity_start_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -2090,46 +2090,46 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"expeditions_loot_converter_a",
+				"expeditions_loot_converter_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman",
-				},
+					"travelling_salesman"
+				}
 			},
 			{
 				"faction_memory",
 				"data_reliquary_carried",
 				OP.EQ,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"last_loot_converter",
 				OP.TIMEDIFF,
 				OP.GT,
-				300,
-			},
+				300
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"last_loot_converter",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_giver_default",
-		},
+			target = "mission_giver_default"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2145,34 +2145,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_mission_forced_extraction_a",
-				},
+					"expeditions_mission_forced_extraction_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 3,
-			},
-		},
+				duration = 3
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2188,15 +2188,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heat_vo",
+				"heat_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"safe_room_exited",
-				},
+					"safe_room_exited"
+				}
 			},
 			{
 				"query_context",
@@ -2205,32 +2205,32 @@ return function ()
 				args = {
 					"none",
 					"undetected",
-					"alert",
-				},
+					"alert"
+				}
 			},
 			{
 				"faction_memory",
 				"heat_vo",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"heat_vo",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"last_new_area",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2245,40 +2245,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"expeditions_mission_start_a",
+				"expeditions_mission_start_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
+					"pilot"
+				}
 			},
 			{
 				"faction_memory",
 				"expeditions_mission_start_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"expeditions_mission_start_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "all_including_self",
-		},
+			target = "all_including_self"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2293,47 +2293,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_mission_start_a",
-				},
+					"expeditions_mission_start_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
+					"pilot"
+				}
 			},
 			{
 				"faction_memory",
 				"expeditions_mission_start_b",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"expeditions_mission_start_b",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2348,7 +2348,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -2356,33 +2356,33 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"expeditions_mission_start_b",
-					"expeditions_mission_start_a",
-				},
+					"expeditions_mission_start_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman",
-				},
+					"travelling_salesman"
+				}
 			},
 			{
 				"faction_memory",
 				"expeditions_mission_start_b",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2398,42 +2398,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"global_context",
 				"circumstance_vo_id",
 				OP.SET_INCLUDES,
 				args = {
-					"circumstance_vo_exp_lightning",
-				},
+					"circumstance_vo_exp_lightning"
+				}
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_mission_start_d",
-				},
+					"expeditions_mission_start_d"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2449,42 +2449,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"global_context",
 				"circumstance_vo_id",
 				OP.SET_INCLUDES,
 				args = {
-					"circumstance_vo_exp_flies",
-				},
+					"circumstance_vo_exp_flies"
+				}
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_mission_start_d",
-				},
+					"expeditions_mission_start_d"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2500,42 +2500,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"global_context",
 				"circumstance_vo_id",
 				OP.SET_INCLUDES,
 				args = {
-					"circumstance_vo_exp_vortex",
-				},
+					"circumstance_vo_exp_vortex"
+				}
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_mission_start_d",
-				},
+					"expeditions_mission_start_d"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2551,42 +2551,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"global_context",
 				"circumstance_vo_id",
 				OP.SET_INCLUDES,
 				args = {
-					"circumstance_vo_exp_sandstorm",
-				},
+					"circumstance_vo_exp_sandstorm"
+				}
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_mission_start_d",
-				},
+					"expeditions_mission_start_d"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2602,42 +2602,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"global_context",
 				"circumstance_vo_id",
 				OP.SET_INCLUDES,
 				args = {
-					"circumstance_vo_exp_toxic_gas",
-				},
+					"circumstance_vo_exp_toxic_gas"
+				}
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_mission_start_d",
-				},
+					"expeditions_mission_start_d"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2653,42 +2653,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"global_context",
 				"circumstance_vo_id",
 				OP.SET_INCLUDES,
 				args = {
-					"circumstance_vo_exp_minefield",
-				},
+					"circumstance_vo_exp_minefield"
+				}
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_mission_start_d",
-				},
+					"expeditions_mission_start_d"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2703,34 +2703,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_mission_start_c",
-				},
+					"expeditions_mission_start_c"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman",
-				},
-			},
+					"travelling_salesman"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2746,40 +2746,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_opportunities_no_more_a",
-				},
+					"expeditions_opportunities_no_more_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"expeditions_opportunity_start_first_a",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 2,
-			},
-		},
+				duration = 2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2795,7 +2795,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
@@ -2806,57 +2806,57 @@ return function ()
 					"expeditions_chest_locked_a",
 					"expeditions_sealed_door_a",
 					"expeditions_place_explosives_a",
-					"expeditions_distraction_start_a",
-				},
+					"expeditions_distraction_start_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"expeditions_opportunity_start_first_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"expeditions_opportunity_start_first_a_perma",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"expeditions_opportunity_start_first_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"last_opportunity",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"expeditions_opportunity_start_first_a_perma",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2872,46 +2872,46 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_place_explosives_a",
-				},
+					"expeditions_place_explosives_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
+					"pilot"
+				}
 			},
 			{
 				"faction_memory",
 				"expeditions_opportunity_start_first_a",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"last_opportunity",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2927,46 +2927,46 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_power_out_a",
-				},
+					"expeditions_power_out_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"expeditions_opportunity_start_first_a",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"last_opportunity",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2982,40 +2982,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_power_restored_a",
-				},
+					"expeditions_power_restored_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"expeditions_opportunity_start_first_a",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3031,46 +3031,46 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_sealed_door_a",
-				},
+					"expeditions_sealed_door_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
+					"pilot"
+				}
 			},
 			{
 				"faction_memory",
 				"expeditions_opportunity_start_first_a",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"last_opportunity",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_0",
@@ -3083,29 +3083,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo",
+				"generic_mission_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"expeditions_sentry_gun_activated_a",
+				"expeditions_sentry_gun_activated_a"
 			},
 			{
 				"faction_memory",
 				"expeditions_sentry_gun_activated_a",
 				OP.TIMEDIFF,
 				OP.GT,
-				3,
-			},
+				3
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"expeditions_sentry_gun_activated_a",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_0",
@@ -3118,29 +3118,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo",
+				"generic_mission_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"expeditions_sentry_gun_deactivated_a",
+				"expeditions_sentry_gun_deactivated_a"
 			},
 			{
 				"faction_memory",
 				"expeditions_sentry_gun_deactivated_a",
 				OP.TIMEDIFF,
 				OP.GT,
-				3,
-			},
+				3
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"expeditions_sentry_gun_deactivated_a",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3156,32 +3156,32 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"expeditions_shield_deployed_a",
+				"expeditions_shield_deployed_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1.5,
-			},
-		},
+				duration = 1.5
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3197,34 +3197,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_heat_alert_safe_room_event_a",
-				},
+					"expeditions_heat_alert_safe_room_event_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3240,36 +3240,36 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_shop_exit_reminder_a",
-				},
+					"expeditions_shop_exit_reminder_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"last_new_area",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
-			},
+				120
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3285,29 +3285,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_shop_found_a",
-				},
+					"expeditions_shop_found_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman",
-				},
-			},
+					"travelling_salesman"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -3320,40 +3320,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"expeditions_shop_goodbye_a",
+				"expeditions_shop_goodbye_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman",
-				},
+					"travelling_salesman"
+				}
 			},
 			{
 				"faction_memory",
 				"expeditions_shop_goodbye_a",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"expeditions_shop_goodbye_a",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_giver_default",
-		},
+			target = "mission_giver_default"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -3366,40 +3366,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"expeditions_shop_greeting_a",
+				"expeditions_shop_greeting_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman",
-				},
+					"travelling_salesman"
+				}
 			},
 			{
 				"faction_memory",
 				"expeditions_shop_greeting_a",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"expeditions_shop_greeting_a",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_giver_default",
-		},
+			target = "mission_giver_default"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -3412,40 +3412,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"expeditions_shop_purchase_a",
+				"expeditions_shop_purchase_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman",
-				},
+					"travelling_salesman"
+				}
 			},
 			{
 				"faction_memory",
 				"expeditions_shop_purchase_a",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"expeditions_shop_purchase_a",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_giver_default",
-		},
+			target = "mission_giver_default"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3460,57 +3460,57 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"data_reliquary",
+				"data_reliquary"
 			},
 			{
 				"query_context",
 				"distance",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"query_context",
 				"distance",
 				OP.LT,
-				30,
+				30
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"expeditions_sighted_first_data_reliquary_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"expeditions_sighted_first_data_reliquary_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3525,34 +3525,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"expeditions_sighted_first_data_reliquary_a",
-				},
+					"expeditions_sighted_first_data_reliquary_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3568,52 +3568,52 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"salvage",
+				"salvage"
 			},
 			{
 				"query_context",
 				"distance",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"query_context",
 				"distance",
 				OP.LT,
-				30,
+				30
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"expeditions_sighted_first_salvage_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"expeditions_sighted_first_salvage_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3629,52 +3629,52 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"tech_remnants",
+				"tech_remnants"
 			},
 			{
 				"query_context",
 				"distance",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"query_context",
 				"distance",
 				OP.LT,
-				30,
+				30
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"expeditions_sighted_first_tech_remnants_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"expeditions_sighted_first_tech_remnants_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3690,40 +3690,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"expeditions_valkyrie_support_a",
+				"expeditions_valkyrie_support_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
+					"pilot"
+				}
 			},
 			{
 				"faction_memory",
 				"expeditions_valkyrie_support",
 				OP.TIMEDIFF,
 				OP.GT,
-				30,
-			},
+				30
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"expeditions_valkyrie_support",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3739,45 +3739,45 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"expeditions_valkyrie_support_hover_a",
+				"expeditions_valkyrie_support_hover_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
+					"pilot"
+				}
 			},
 			{
 				"faction_memory",
 				"expeditions_valkyrie_support",
 				OP.TIMEDIFF,
 				OP.GT,
-				30,
-			},
+				30
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"expeditions_valkyrie_support",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 2,
-			},
-		},
+				duration = 2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -3790,31 +3790,31 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.NEQ,
-				"true_disabled",
+				"true_disabled"
 			},
 			{
 				"user_context",
@@ -3822,8 +3822,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"veteran_female_a",
-					"veteran_male_a",
-				},
+					"veteran_male_a"
+				}
 			},
 			{
 				"global_context",
@@ -3855,52 +3855,52 @@ return function ()
 					"adamant_male_b",
 					"adamant_female_b",
 					"adamant_male_c",
-					"adamant_female_c",
-				},
+					"adamant_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_wastes_short_conversation_01_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_wastes_short_conversation_01_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -3913,23 +3913,23 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_wastes_short_conversation_01_a",
-				},
-			},
+					"mission_wastes_short_conversation_01_a"
+				}
+			}
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -3942,31 +3942,31 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.NEQ,
-				"true_disabled",
+				"true_disabled"
 			},
 			{
 				"user_context",
@@ -3974,8 +3974,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"veteran_female_b",
-					"veteran_male_b",
-				},
+					"veteran_male_b"
+				}
 			},
 			{
 				"global_context",
@@ -4007,52 +4007,52 @@ return function ()
 					"adamant_male_b",
 					"adamant_female_b",
 					"adamant_male_c",
-					"adamant_female_c",
-				},
+					"adamant_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_wastes_short_conversation_02_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_wastes_short_conversation_02_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4065,23 +4065,23 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_wastes_short_conversation_02_a",
-				},
-			},
+					"mission_wastes_short_conversation_02_a"
+				}
+			}
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4094,31 +4094,31 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.NEQ,
-				"true_disabled",
+				"true_disabled"
 			},
 			{
 				"user_context",
@@ -4126,8 +4126,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"veteran_female_c",
-					"veteran_male_c",
-				},
+					"veteran_male_c"
+				}
 			},
 			{
 				"global_context",
@@ -4159,52 +4159,52 @@ return function ()
 					"adamant_male_b",
 					"adamant_female_b",
 					"adamant_male_c",
-					"adamant_female_c",
-				},
+					"adamant_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_wastes_short_conversation_03_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_wastes_short_conversation_03_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4217,23 +4217,23 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_wastes_short_conversation_03_a",
-				},
-			},
+					"mission_wastes_short_conversation_03_a"
+				}
+			}
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4246,31 +4246,31 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.NEQ,
-				"true_disabled",
+				"true_disabled"
 			},
 			{
 				"user_context",
@@ -4278,8 +4278,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"zealot_female_a",
-					"zealot_male_a",
-				},
+					"zealot_male_a"
+				}
 			},
 			{
 				"global_context",
@@ -4311,52 +4311,52 @@ return function ()
 					"adamant_male_b",
 					"adamant_female_b",
 					"adamant_male_c",
-					"adamant_female_c",
-				},
+					"adamant_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_wastes_short_conversation_04_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_wastes_short_conversation_04_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4369,23 +4369,23 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_wastes_short_conversation_04_a",
-				},
-			},
+					"mission_wastes_short_conversation_04_a"
+				}
+			}
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4398,31 +4398,31 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.NEQ,
-				"true_disabled",
+				"true_disabled"
 			},
 			{
 				"user_context",
@@ -4430,8 +4430,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"zealot_female_b",
-					"zealot_male_b",
-				},
+					"zealot_male_b"
+				}
 			},
 			{
 				"global_context",
@@ -4463,52 +4463,52 @@ return function ()
 					"adamant_male_b",
 					"adamant_female_b",
 					"adamant_male_c",
-					"adamant_female_c",
-				},
+					"adamant_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_wastes_short_conversation_05_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_wastes_short_conversation_05_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4521,23 +4521,23 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_wastes_short_conversation_05_a",
-				},
-			},
+					"mission_wastes_short_conversation_05_a"
+				}
+			}
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4550,31 +4550,31 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.NEQ,
-				"true_disabled",
+				"true_disabled"
 			},
 			{
 				"user_context",
@@ -4582,8 +4582,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"zealot_female_c",
-					"zealot_male_c",
-				},
+					"zealot_male_c"
+				}
 			},
 			{
 				"global_context",
@@ -4615,52 +4615,52 @@ return function ()
 					"adamant_male_b",
 					"adamant_female_b",
 					"adamant_male_c",
-					"adamant_female_c",
-				},
+					"adamant_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_wastes_short_conversation_06_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_wastes_short_conversation_06_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4673,23 +4673,23 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_wastes_short_conversation_06_a",
-				},
-			},
+					"mission_wastes_short_conversation_06_a"
+				}
+			}
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4702,31 +4702,31 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.NEQ,
-				"true_disabled",
+				"true_disabled"
 			},
 			{
 				"user_context",
@@ -4734,8 +4734,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"psyker_female_a",
-					"psyker_male_a",
-				},
+					"psyker_male_a"
+				}
 			},
 			{
 				"global_context",
@@ -4767,52 +4767,52 @@ return function ()
 					"adamant_male_b",
 					"adamant_female_b",
 					"adamant_male_c",
-					"adamant_female_c",
-				},
+					"adamant_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_wastes_short_conversation_07_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_wastes_short_conversation_07_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4825,23 +4825,23 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_wastes_short_conversation_07_a",
-				},
-			},
+					"mission_wastes_short_conversation_07_a"
+				}
+			}
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4854,31 +4854,31 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.NEQ,
-				"true_disabled",
+				"true_disabled"
 			},
 			{
 				"user_context",
@@ -4886,8 +4886,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"psyker_female_b",
-					"psyker_male_b",
-				},
+					"psyker_male_b"
+				}
 			},
 			{
 				"global_context",
@@ -4919,52 +4919,52 @@ return function ()
 					"adamant_male_b",
 					"adamant_female_b",
 					"adamant_male_c",
-					"adamant_female_c",
-				},
+					"adamant_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_wastes_short_conversation_08_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_wastes_short_conversation_08_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -4977,23 +4977,23 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_wastes_short_conversation_08_a",
-				},
-			},
+					"mission_wastes_short_conversation_08_a"
+				}
+			}
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5006,31 +5006,31 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.NEQ,
-				"true_disabled",
+				"true_disabled"
 			},
 			{
 				"user_context",
@@ -5038,8 +5038,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"psyker_female_c",
-					"psyker_male_c",
-				},
+					"psyker_male_c"
+				}
 			},
 			{
 				"global_context",
@@ -5071,52 +5071,52 @@ return function ()
 					"adamant_male_b",
 					"adamant_female_b",
 					"adamant_male_c",
-					"adamant_female_c",
-				},
+					"adamant_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_wastes_short_conversation_09_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_wastes_short_conversation_09_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5129,23 +5129,23 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_wastes_short_conversation_09_a",
-				},
-			},
+					"mission_wastes_short_conversation_09_a"
+				}
+			}
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5158,39 +5158,39 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.NEQ,
-				"true_disabled",
+				"true_disabled"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_a",
-				},
+					"ogryn_a"
+				}
 			},
 			{
 				"global_context",
@@ -5222,52 +5222,52 @@ return function ()
 					"adamant_male_b",
 					"adamant_female_b",
 					"adamant_male_c",
-					"adamant_female_c",
-				},
+					"adamant_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_wastes_short_conversation_10_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_wastes_short_conversation_10_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5280,23 +5280,23 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_wastes_short_conversation_10_a",
-				},
-			},
+					"mission_wastes_short_conversation_10_a"
+				}
+			}
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5309,39 +5309,39 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.NEQ,
-				"true_disabled",
+				"true_disabled"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_b",
-				},
+					"ogryn_b"
+				}
 			},
 			{
 				"global_context",
@@ -5373,52 +5373,52 @@ return function ()
 					"adamant_male_b",
 					"adamant_female_b",
 					"adamant_male_c",
-					"adamant_female_c",
-				},
+					"adamant_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_wastes_short_conversation_11_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_wastes_short_conversation_11_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5431,23 +5431,23 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_wastes_short_conversation_11_a",
-				},
-			},
+					"mission_wastes_short_conversation_11_a"
+				}
+			}
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5460,39 +5460,39 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"short_story_talk",
+				"short_story_talk"
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1,
+				1
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				90,
+				90
 			},
 			{
 				"global_context",
 				"is_decaying_tension",
 				OP.NEQ,
-				"true_disabled",
+				"true_disabled"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_c",
-				},
+					"ogryn_c"
+				}
 			},
 			{
 				"global_context",
@@ -5524,52 +5524,52 @@ return function ()
 					"adamant_male_b",
 					"adamant_female_b",
 					"adamant_male_c",
-					"adamant_female_c",
-				},
+					"adamant_female_c"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_wastes_short_conversation_12_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_wastes_short_conversation_12_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_short_conversation",
 				OP.TIMESET,
-				"0",
-			},
+				"0"
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5582,23 +5582,23 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_wastes_short_conversation_12_a",
-				},
-			},
+					"mission_wastes_short_conversation_12_a"
+				}
+			}
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5614,21 +5614,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
+					"travelling_salesman_a"
+				}
 			},
 			{
 				"global_context",
@@ -5636,45 +5636,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_001_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_001_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5690,34 +5690,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_001_a",
-				},
+					"zenica_combat_pause_npc_001_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5733,34 +5733,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_001_b",
-				},
+					"zenica_combat_pause_npc_001_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5776,34 +5776,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_001_c",
-				},
+					"zenica_combat_pause_npc_001_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5819,21 +5819,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
+					"travelling_salesman_a"
+				}
 			},
 			{
 				"global_context",
@@ -5841,45 +5841,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_002_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_002_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5895,34 +5895,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_002_a",
-				},
+					"zenica_combat_pause_npc_002_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5938,34 +5938,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_002_b",
-				},
+					"zenica_combat_pause_npc_002_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -5981,34 +5981,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_002_c",
-				},
+					"zenica_combat_pause_npc_002_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6024,21 +6024,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
+					"travelling_salesman_a"
+				}
 			},
 			{
 				"global_context",
@@ -6046,45 +6046,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_003_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_003_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6100,34 +6100,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_003_a",
-				},
+					"zenica_combat_pause_npc_003_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6143,34 +6143,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_003_b",
-				},
+					"zenica_combat_pause_npc_003_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6186,34 +6186,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_003_c",
-				},
+					"zenica_combat_pause_npc_003_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6229,34 +6229,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_003_d",
-				},
+					"zenica_combat_pause_npc_003_d"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6272,21 +6272,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
+					"travelling_salesman_a"
+				}
 			},
 			{
 				"global_context",
@@ -6294,45 +6294,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_004_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_004_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6348,34 +6348,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_004_a",
-				},
+					"zenica_combat_pause_npc_004_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6391,34 +6391,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_004_b",
-				},
+					"zenica_combat_pause_npc_004_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6434,34 +6434,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_004_c",
-				},
+					"zenica_combat_pause_npc_004_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6477,21 +6477,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
+					"travelling_salesman_a"
+				}
 			},
 			{
 				"global_context",
@@ -6499,45 +6499,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_005_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_005_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6553,34 +6553,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_005_a",
-				},
+					"zenica_combat_pause_npc_005_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6596,34 +6596,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_005_b",
-				},
+					"zenica_combat_pause_npc_005_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6639,34 +6639,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_005_c",
-				},
+					"zenica_combat_pause_npc_005_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6682,34 +6682,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_005_d",
-				},
+					"zenica_combat_pause_npc_005_d"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6725,21 +6725,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
+					"travelling_salesman_a"
+				}
 			},
 			{
 				"global_context",
@@ -6747,45 +6747,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_006_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_006_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6801,34 +6801,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_006_a",
-				},
+					"zenica_combat_pause_npc_006_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6844,34 +6844,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_006_b",
-				},
+					"zenica_combat_pause_npc_006_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6887,34 +6887,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_006_c",
-				},
+					"zenica_combat_pause_npc_006_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -6930,21 +6930,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
+					"travelling_salesman_a"
+				}
 			},
 			{
 				"global_context",
@@ -6952,45 +6952,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_007_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_007_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7006,34 +7006,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_007_a",
-				},
+					"zenica_combat_pause_npc_007_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7049,34 +7049,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_007_b",
-				},
+					"zenica_combat_pause_npc_007_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7092,34 +7092,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_007_c",
-				},
+					"zenica_combat_pause_npc_007_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7135,21 +7135,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
+					"travelling_salesman_a"
+				}
 			},
 			{
 				"global_context",
@@ -7157,45 +7157,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_008_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_008_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7211,34 +7211,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_008_a",
-				},
+					"zenica_combat_pause_npc_008_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7254,34 +7254,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_008_b",
-				},
+					"zenica_combat_pause_npc_008_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7297,34 +7297,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_008_c",
-				},
+					"zenica_combat_pause_npc_008_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7340,21 +7340,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
+					"travelling_salesman_a"
+				}
 			},
 			{
 				"global_context",
@@ -7362,45 +7362,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_009_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_009_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7416,34 +7416,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_009_a",
-				},
+					"zenica_combat_pause_npc_009_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7459,34 +7459,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_009_b",
-				},
+					"zenica_combat_pause_npc_009_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7501,34 +7501,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_009_c",
-				},
+					"zenica_combat_pause_npc_009_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7543,34 +7543,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_009_d",
-				},
+					"zenica_combat_pause_npc_009_d"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7586,21 +7586,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
+					"travelling_salesman_a"
+				}
 			},
 			{
 				"global_context",
@@ -7608,45 +7608,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_010_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_010_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7662,34 +7662,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_010_a",
-				},
+					"zenica_combat_pause_npc_010_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7705,34 +7705,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_010_b",
-				},
+					"zenica_combat_pause_npc_010_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7748,34 +7748,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_010_c",
-				},
+					"zenica_combat_pause_npc_010_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7791,21 +7791,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
+					"tech_priest_a"
+				}
 			},
 			{
 				"global_context",
@@ -7813,45 +7813,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_011_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_011_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7867,34 +7867,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_011_a",
-				},
+					"zenica_combat_pause_npc_011_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7910,34 +7910,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_011_b",
-				},
+					"zenica_combat_pause_npc_011_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7953,34 +7953,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_011_c",
-				},
+					"zenica_combat_pause_npc_011_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -7996,21 +7996,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
+					"tech_priest_a"
+				}
 			},
 			{
 				"global_context",
@@ -8018,45 +8018,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_012_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_012_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8072,34 +8072,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_012_a",
-				},
+					"zenica_combat_pause_npc_012_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8115,34 +8115,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_012_b",
-				},
+					"zenica_combat_pause_npc_012_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8158,34 +8158,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_012_c",
-				},
+					"zenica_combat_pause_npc_012_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8201,21 +8201,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
+					"tech_priest_a"
+				}
 			},
 			{
 				"global_context",
@@ -8223,45 +8223,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_013_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_013_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8277,34 +8277,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_013_a",
-				},
+					"zenica_combat_pause_npc_013_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8320,34 +8320,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_013_b",
-				},
+					"zenica_combat_pause_npc_013_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8363,34 +8363,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_013_c",
-				},
+					"zenica_combat_pause_npc_013_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8406,21 +8406,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
+					"tech_priest_a"
+				}
 			},
 			{
 				"global_context",
@@ -8428,45 +8428,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_014_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_014_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8482,34 +8482,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_014_a",
-				},
+					"zenica_combat_pause_npc_014_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8525,34 +8525,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_014_b",
-				},
+					"zenica_combat_pause_npc_014_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8568,34 +8568,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_014_c",
-				},
+					"zenica_combat_pause_npc_014_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8611,21 +8611,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
+					"tech_priest_a"
+				}
 			},
 			{
 				"global_context",
@@ -8633,45 +8633,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_015_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_015_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8687,34 +8687,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_015_a",
-				},
+					"zenica_combat_pause_npc_015_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8730,34 +8730,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_015_b",
-				},
+					"zenica_combat_pause_npc_015_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8773,34 +8773,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_015_c",
-				},
+					"zenica_combat_pause_npc_015_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8816,21 +8816,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
+					"travelling_salesman_a"
+				}
 			},
 			{
 				"global_context",
@@ -8838,45 +8838,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_016_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_016_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8892,34 +8892,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_016_a",
-				},
+					"zenica_combat_pause_npc_016_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8935,34 +8935,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_016_b",
-				},
+					"zenica_combat_pause_npc_016_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -8978,34 +8978,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_016_c",
-				},
+					"zenica_combat_pause_npc_016_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9021,34 +9021,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_016_d",
-				},
+					"zenica_combat_pause_npc_016_d"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9064,34 +9064,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_016_e",
-				},
+					"zenica_combat_pause_npc_016_e"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9107,21 +9107,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
+					"travelling_salesman_a"
+				}
 			},
 			{
 				"global_context",
@@ -9129,45 +9129,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_017_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_017_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9183,34 +9183,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_017_a",
-				},
+					"zenica_combat_pause_npc_017_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9226,34 +9226,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_017_b",
-				},
+					"zenica_combat_pause_npc_017_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9269,34 +9269,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_017_c",
-				},
+					"zenica_combat_pause_npc_017_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9312,21 +9312,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
+					"travelling_salesman_a"
+				}
 			},
 			{
 				"global_context",
@@ -9334,45 +9334,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_018_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_018_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9388,34 +9388,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_018_a",
-				},
+					"zenica_combat_pause_npc_018_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9431,34 +9431,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_018_b",
-				},
+					"zenica_combat_pause_npc_018_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9474,34 +9474,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_018_c",
-				},
+					"zenica_combat_pause_npc_018_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9517,21 +9517,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
+					"travelling_salesman_a"
+				}
 			},
 			{
 				"global_context",
@@ -9539,45 +9539,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_019_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_019_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9593,34 +9593,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_019_a",
-				},
+					"zenica_combat_pause_npc_019_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9636,34 +9636,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_019_b",
-				},
+					"zenica_combat_pause_npc_019_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9679,34 +9679,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_019_c",
-				},
+					"zenica_combat_pause_npc_019_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9722,21 +9722,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
+					"travelling_salesman_a"
+				}
 			},
 			{
 				"global_context",
@@ -9744,45 +9744,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_020_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_020_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9798,34 +9798,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_020_a",
-				},
+					"zenica_combat_pause_npc_020_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9841,34 +9841,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_020_b",
-				},
+					"zenica_combat_pause_npc_020_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9884,34 +9884,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_020_c",
-				},
+					"zenica_combat_pause_npc_020_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -9927,21 +9927,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
+					"tech_priest_a"
+				}
 			},
 			{
 				"global_context",
@@ -9949,45 +9949,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_021_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_021_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10003,34 +10003,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_021_a",
-				},
+					"zenica_combat_pause_npc_021_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10046,34 +10046,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_021_b",
-				},
+					"zenica_combat_pause_npc_021_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10089,34 +10089,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_021_c",
-				},
+					"zenica_combat_pause_npc_021_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10132,21 +10132,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
+					"tech_priest_a"
+				}
 			},
 			{
 				"global_context",
@@ -10154,45 +10154,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_022_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_022_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10208,34 +10208,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_022_a",
-				},
+					"zenica_combat_pause_npc_022_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10251,34 +10251,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_022_b",
-				},
+					"zenica_combat_pause_npc_022_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10294,34 +10294,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_022_c",
-				},
+					"zenica_combat_pause_npc_022_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10337,34 +10337,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_022_d",
-				},
+					"zenica_combat_pause_npc_022_d"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10380,21 +10380,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
+					"tech_priest_a"
+				}
 			},
 			{
 				"global_context",
@@ -10402,45 +10402,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_023_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_023_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10456,34 +10456,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_023_a",
-				},
+					"zenica_combat_pause_npc_023_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10499,34 +10499,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_023_b",
-				},
+					"zenica_combat_pause_npc_023_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10542,34 +10542,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_023_c",
-				},
+					"zenica_combat_pause_npc_023_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10585,21 +10585,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
+					"tech_priest_a"
+				}
 			},
 			{
 				"global_context",
@@ -10607,45 +10607,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_024_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_024_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10660,34 +10660,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_024_a",
-				},
+					"zenica_combat_pause_npc_024_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10702,34 +10702,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_024_b",
-				},
+					"zenica_combat_pause_npc_024_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10745,34 +10745,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_024_c",
-				},
+					"zenica_combat_pause_npc_024_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10788,21 +10788,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
+					"tech_priest_a"
+				}
 			},
 			{
 				"global_context",
@@ -10810,45 +10810,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_025_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_025_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10864,34 +10864,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_025_a",
-				},
+					"zenica_combat_pause_npc_025_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10907,34 +10907,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_025_b",
-				},
+					"zenica_combat_pause_npc_025_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10950,34 +10950,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_025_c",
-				},
+					"zenica_combat_pause_npc_025_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10993,34 +10993,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_025_d",
-				},
+					"zenica_combat_pause_npc_025_d"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11036,21 +11036,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
+					"tech_priest_a"
+				}
 			},
 			{
 				"global_context",
@@ -11058,45 +11058,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_026_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_026_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11112,34 +11112,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_026_a",
-				},
+					"zenica_combat_pause_npc_026_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11155,34 +11155,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_026_b",
-				},
+					"zenica_combat_pause_npc_026_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11198,34 +11198,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_026_c",
-				},
+					"zenica_combat_pause_npc_026_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11241,21 +11241,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
+					"tech_priest_a"
+				}
 			},
 			{
 				"global_context",
@@ -11263,45 +11263,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_027_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_027_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11317,34 +11317,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_027_a",
-				},
+					"zenica_combat_pause_npc_027_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11360,34 +11360,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_027_b",
-				},
+					"zenica_combat_pause_npc_027_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11403,34 +11403,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_027_c",
-				},
+					"zenica_combat_pause_npc_027_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11446,34 +11446,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_027_d",
-				},
+					"zenica_combat_pause_npc_027_d"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11489,21 +11489,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
+					"tech_priest_a"
+				}
 			},
 			{
 				"global_context",
@@ -11511,45 +11511,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_028_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_028_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11565,34 +11565,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_028_a",
-				},
+					"zenica_combat_pause_npc_028_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11608,34 +11608,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_028_b",
-				},
+					"zenica_combat_pause_npc_028_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11651,34 +11651,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_028_c",
-				},
+					"zenica_combat_pause_npc_028_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11694,21 +11694,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
+					"tech_priest_a"
+				}
 			},
 			{
 				"global_context",
@@ -11716,45 +11716,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_029_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_029_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11770,34 +11770,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_029_a",
-				},
+					"zenica_combat_pause_npc_029_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11813,34 +11813,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_029_b",
-				},
+					"zenica_combat_pause_npc_029_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11856,34 +11856,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_029_c",
-				},
+					"zenica_combat_pause_npc_029_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11899,21 +11899,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
+					"tech_priest_a"
+				}
 			},
 			{
 				"global_context",
@@ -11921,45 +11921,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_030_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_030_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -11975,34 +11975,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_030_a",
-				},
+					"zenica_combat_pause_npc_030_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12018,34 +12018,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_030_b",
-				},
+					"zenica_combat_pause_npc_030_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12061,34 +12061,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_030_c",
-				},
+					"zenica_combat_pause_npc_030_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12104,21 +12104,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
+					"pilot_a"
+				}
 			},
 			{
 				"global_context",
@@ -12127,51 +12127,51 @@ return function ()
 				args = {
 					"low",
 					"medium",
-					"high",
-				},
+					"high"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				300,
+				300
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_031_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
+				180
 			},
 			{
 				"faction_memory",
 				"expeditions_high_heat",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_031_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12187,34 +12187,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_031_a",
-				},
+					"zenica_combat_pause_npc_031_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
-			},
+					"dreg_lector_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12230,34 +12230,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_031_b",
-				},
+					"zenica_combat_pause_npc_031_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12273,34 +12273,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_031_c",
-				},
+					"zenica_combat_pause_npc_031_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
-			},
+					"dreg_lector_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12316,21 +12316,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
+					"pilot_a"
+				}
 			},
 			{
 				"global_context",
@@ -12339,51 +12339,51 @@ return function ()
 				args = {
 					"low",
 					"medium",
-					"high",
-				},
+					"high"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				300,
+				300
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_032_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
+				180
 			},
 			{
 				"faction_memory",
 				"expeditions_high_heat",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_032_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12399,34 +12399,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_032_a",
-				},
+					"zenica_combat_pause_npc_032_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
-			},
+					"dreg_lector_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12442,34 +12442,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_032_b",
-				},
+					"zenica_combat_pause_npc_032_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12485,34 +12485,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_032_c",
-				},
+					"zenica_combat_pause_npc_032_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
-			},
+					"dreg_lector_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12528,21 +12528,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
+					"pilot_a"
+				}
 			},
 			{
 				"global_context",
@@ -12551,51 +12551,51 @@ return function ()
 				args = {
 					"low",
 					"medium",
-					"high",
-				},
+					"high"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				300,
+				300
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_033_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
+				180
 			},
 			{
 				"faction_memory",
 				"expeditions_high_heat",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_033_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12611,34 +12611,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_033_a",
-				},
+					"zenica_combat_pause_npc_033_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
-			},
+					"dreg_lector_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12654,34 +12654,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_033_b",
-				},
+					"zenica_combat_pause_npc_033_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12697,34 +12697,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_033_c",
-				},
+					"zenica_combat_pause_npc_033_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
-			},
+					"dreg_lector_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12740,21 +12740,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
+					"dreg_lector_a"
+				}
 			},
 			{
 				"global_context",
@@ -12763,51 +12763,51 @@ return function ()
 				args = {
 					"low",
 					"medium",
-					"high",
-				},
+					"high"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				300,
+				300
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_034_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
+				180
 			},
 			{
 				"faction_memory",
 				"expeditions_high_heat",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_034_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12823,34 +12823,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_034_a",
-				},
+					"zenica_combat_pause_npc_034_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12866,34 +12866,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_034_b",
-				},
+					"zenica_combat_pause_npc_034_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
-			},
+					"dreg_lector_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12909,34 +12909,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_034_c",
-				},
+					"zenica_combat_pause_npc_034_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12952,21 +12952,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
+					"pilot_a"
+				}
 			},
 			{
 				"global_context",
@@ -12975,51 +12975,51 @@ return function ()
 				args = {
 					"low",
 					"medium",
-					"high",
-				},
+					"high"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				300,
+				300
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_035_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
+				180
 			},
 			{
 				"faction_memory",
 				"expeditions_high_heat",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_035_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13035,34 +13035,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_035_a",
-				},
+					"zenica_combat_pause_npc_035_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
-			},
+					"dreg_lector_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13078,34 +13078,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_035_b",
-				},
+					"zenica_combat_pause_npc_035_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13121,34 +13121,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_035_c",
-				},
+					"zenica_combat_pause_npc_035_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
-			},
+					"dreg_lector_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13164,21 +13164,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
+					"dreg_lector_a"
+				}
 			},
 			{
 				"global_context",
@@ -13187,51 +13187,51 @@ return function ()
 				args = {
 					"low",
 					"medium",
-					"high",
-				},
+					"high"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				300,
+				300
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_036_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
+				180
 			},
 			{
 				"faction_memory",
 				"expeditions_high_heat",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_036_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13247,34 +13247,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_036_a",
-				},
+					"zenica_combat_pause_npc_036_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13290,34 +13290,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_036_b",
-				},
+					"zenica_combat_pause_npc_036_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
-			},
+					"dreg_lector_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13333,34 +13333,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_036_c",
-				},
+					"zenica_combat_pause_npc_036_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13376,21 +13376,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
+					"dreg_lector_a"
+				}
 			},
 			{
 				"global_context",
@@ -13399,51 +13399,51 @@ return function ()
 				args = {
 					"low",
 					"medium",
-					"high",
-				},
+					"high"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				300,
+				300
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_037_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
+				180
 			},
 			{
 				"faction_memory",
 				"expeditions_high_heat",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_037_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13459,34 +13459,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_037_a",
-				},
+					"zenica_combat_pause_npc_037_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13502,34 +13502,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_037_b",
-				},
+					"zenica_combat_pause_npc_037_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
-			},
+					"dreg_lector_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13545,34 +13545,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_037_c",
-				},
+					"zenica_combat_pause_npc_037_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13588,21 +13588,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
+					"dreg_lector_a"
+				}
 			},
 			{
 				"global_context",
@@ -13611,51 +13611,51 @@ return function ()
 				args = {
 					"low",
 					"medium",
-					"high",
-				},
+					"high"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				300,
+				300
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_038_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
+				180
 			},
 			{
 				"faction_memory",
 				"expeditions_high_heat",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_038_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13671,34 +13671,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_038_a",
-				},
+					"zenica_combat_pause_npc_038_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13714,34 +13714,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_038_b",
-				},
+					"zenica_combat_pause_npc_038_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
-			},
+					"dreg_lector_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13757,34 +13757,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_038_c",
-				},
+					"zenica_combat_pause_npc_038_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13800,21 +13800,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
+					"dreg_lector_a"
+				}
 			},
 			{
 				"global_context",
@@ -13823,51 +13823,51 @@ return function ()
 				args = {
 					"low",
 					"medium",
-					"high",
-				},
+					"high"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				300,
+				300
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_039_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
+				180
 			},
 			{
 				"faction_memory",
 				"expeditions_high_heat",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_039_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13883,34 +13883,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_039_a",
-				},
+					"zenica_combat_pause_npc_039_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13926,34 +13926,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_039_b",
-				},
+					"zenica_combat_pause_npc_039_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
-			},
+					"dreg_lector_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -13969,34 +13969,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_039_c",
-				},
+					"zenica_combat_pause_npc_039_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14012,21 +14012,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
+					"dreg_lector_a"
+				}
 			},
 			{
 				"global_context",
@@ -14035,51 +14035,51 @@ return function ()
 				args = {
 					"low",
 					"medium",
-					"high",
-				},
+					"high"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				300,
+				300
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_040_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
+				180
 			},
 			{
 				"faction_memory",
 				"expeditions_high_heat",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_040_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14095,34 +14095,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_040_a",
-				},
+					"zenica_combat_pause_npc_040_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14138,34 +14138,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_040_b",
-				},
+					"zenica_combat_pause_npc_040_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
-			},
+					"dreg_lector_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14181,34 +14181,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_040_c",
-				},
+					"zenica_combat_pause_npc_040_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14223,21 +14223,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
+					"travelling_salesman_a"
+				}
 			},
 			{
 				"global_context",
@@ -14245,45 +14245,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_041_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_041_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
-		},
+			target = "self"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14298,34 +14298,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_041_a",
-				},
+					"zenica_combat_pause_npc_041_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14341,34 +14341,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_041_b",
-				},
+					"zenica_combat_pause_npc_041_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14384,34 +14384,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_041_c",
-				},
+					"zenica_combat_pause_npc_041_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14427,21 +14427,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
+					"travelling_salesman_a"
+				}
 			},
 			{
 				"global_context",
@@ -14449,45 +14449,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_042_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_042_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14503,34 +14503,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_042_a",
-				},
+					"zenica_combat_pause_npc_042_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14546,34 +14546,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_042_b",
-				},
+					"zenica_combat_pause_npc_042_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14589,34 +14589,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_042_c",
-				},
+					"zenica_combat_pause_npc_042_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14632,21 +14632,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
+					"travelling_salesman_a"
+				}
 			},
 			{
 				"global_context",
@@ -14654,45 +14654,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_043_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_043_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14708,34 +14708,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_043_a",
-				},
+					"zenica_combat_pause_npc_043_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14751,34 +14751,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_043_b",
-				},
+					"zenica_combat_pause_npc_043_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14794,34 +14794,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_043_c",
-				},
+					"zenica_combat_pause_npc_043_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14837,21 +14837,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
+					"pilot_a"
+				}
 			},
 			{
 				"global_context",
@@ -14859,45 +14859,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_044_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_044_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14913,34 +14913,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_044_a",
-				},
+					"zenica_combat_pause_npc_044_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14956,34 +14956,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_044_b",
-				},
+					"zenica_combat_pause_npc_044_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -14999,34 +14999,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_044_c",
-				},
+					"zenica_combat_pause_npc_044_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15042,21 +15042,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
+					"pilot_a"
+				}
 			},
 			{
 				"global_context",
@@ -15064,45 +15064,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_045_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_045_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15118,34 +15118,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_045_a",
-				},
+					"zenica_combat_pause_npc_045_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15161,34 +15161,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_045_b",
-				},
+					"zenica_combat_pause_npc_045_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15204,21 +15204,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
+					"dreg_lector_a"
+				}
 			},
 			{
 				"global_context",
@@ -15227,51 +15227,51 @@ return function ()
 				args = {
 					"low",
 					"medium",
-					"high",
-				},
+					"high"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				300,
+				300
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_046_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
+				180
 			},
 			{
 				"faction_memory",
 				"expeditions_high_heat",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_046_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15287,34 +15287,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_046_a",
-				},
+					"zenica_combat_pause_npc_046_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15330,34 +15330,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_046_b",
-				},
+					"zenica_combat_pause_npc_046_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
-			},
+					"dreg_lector_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15373,34 +15373,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_046_c",
-				},
+					"zenica_combat_pause_npc_046_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15416,21 +15416,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
+					"dreg_lector_a"
+				}
 			},
 			{
 				"global_context",
@@ -15439,51 +15439,51 @@ return function ()
 				args = {
 					"low",
 					"medium",
-					"high",
-				},
+					"high"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				300,
+				300
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_047_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
+				180
 			},
 			{
 				"faction_memory",
 				"expeditions_high_heat",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_047_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15499,34 +15499,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_047_a",
-				},
+					"zenica_combat_pause_npc_047_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15542,34 +15542,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_047_b",
-				},
+					"zenica_combat_pause_npc_047_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
-			},
+					"dreg_lector_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15585,34 +15585,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_047_c",
-				},
+					"zenica_combat_pause_npc_047_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15628,21 +15628,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
+					"dreg_lector_a"
+				}
 			},
 			{
 				"global_context",
@@ -15651,51 +15651,51 @@ return function ()
 				args = {
 					"low",
 					"medium",
-					"high",
-				},
+					"high"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				300,
+				300
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_048_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
+				180
 			},
 			{
 				"faction_memory",
 				"expeditions_high_heat",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_048_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15711,34 +15711,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_048_a",
-				},
+					"zenica_combat_pause_npc_048_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15754,34 +15754,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_048_b",
-				},
+					"zenica_combat_pause_npc_048_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
-			},
+					"dreg_lector_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15797,34 +15797,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_048_c",
-				},
+					"zenica_combat_pause_npc_048_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15840,21 +15840,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
+					"dreg_lector_a"
+				}
 			},
 			{
 				"global_context",
@@ -15863,51 +15863,51 @@ return function ()
 				args = {
 					"low",
 					"medium",
-					"high",
-				},
+					"high"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				300,
+				300
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_049_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
+				180
 			},
 			{
 				"faction_memory",
 				"expeditions_high_heat",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_049_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15923,34 +15923,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_049_a",
-				},
+					"zenica_combat_pause_npc_049_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -15966,34 +15966,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_049_b",
-				},
+					"zenica_combat_pause_npc_049_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
-			},
+					"dreg_lector_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16009,34 +16009,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_049_c",
-				},
+					"zenica_combat_pause_npc_049_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16052,21 +16052,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
+					"dreg_lector_a"
+				}
 			},
 			{
 				"global_context",
@@ -16075,51 +16075,51 @@ return function ()
 				args = {
 					"low",
 					"medium",
-					"high",
-				},
+					"high"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				300,
+				300
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_050_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
+				180
 			},
 			{
 				"faction_memory",
 				"expeditions_high_heat",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_050_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16135,34 +16135,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_050_a",
-				},
+					"zenica_combat_pause_npc_050_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16178,34 +16178,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_050_b",
-				},
+					"zenica_combat_pause_npc_050_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
-			},
+					"dreg_lector_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16221,34 +16221,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_050_c",
-				},
+					"zenica_combat_pause_npc_050_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"travelling_salesman_a",
-				},
-			},
+					"travelling_salesman_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16264,21 +16264,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
+					"dreg_lector_a"
+				}
 			},
 			{
 				"global_context",
@@ -16287,51 +16287,51 @@ return function ()
 				args = {
 					"low",
 					"medium",
-					"high",
-				},
+					"high"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				300,
+				300
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_056_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
+				180
 			},
 			{
 				"faction_memory",
 				"expeditions_high_heat",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_056_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16347,34 +16347,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_056_a",
-				},
+					"zenica_combat_pause_npc_056_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16390,34 +16390,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_056_b",
-				},
+					"zenica_combat_pause_npc_056_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
-			},
+					"dreg_lector_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16433,34 +16433,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_056_c",
-				},
+					"zenica_combat_pause_npc_056_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16476,21 +16476,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
+					"dreg_lector_a"
+				}
 			},
 			{
 				"global_context",
@@ -16499,51 +16499,51 @@ return function ()
 				args = {
 					"low",
 					"medium",
-					"high",
-				},
+					"high"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				300,
+				300
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_057_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
+				180
 			},
 			{
 				"faction_memory",
 				"expeditions_high_heat",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_057_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16559,34 +16559,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_057_a",
-				},
+					"zenica_combat_pause_npc_057_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16602,34 +16602,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_057_b",
-				},
+					"zenica_combat_pause_npc_057_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
-			},
+					"dreg_lector_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16645,34 +16645,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_057_c",
-				},
+					"zenica_combat_pause_npc_057_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16688,21 +16688,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
+					"dreg_lector_a"
+				}
 			},
 			{
 				"global_context",
@@ -16711,51 +16711,51 @@ return function ()
 				args = {
 					"low",
 					"medium",
-					"high",
-				},
+					"high"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				300,
+				300
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_058_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
+				180
 			},
 			{
 				"faction_memory",
 				"expeditions_high_heat",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_058_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16771,34 +16771,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_058_a",
-				},
+					"zenica_combat_pause_npc_058_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16814,34 +16814,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_058_b",
-				},
+					"zenica_combat_pause_npc_058_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
-			},
+					"dreg_lector_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16857,34 +16857,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_058_c",
-				},
+					"zenica_combat_pause_npc_058_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16900,21 +16900,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
+					"dreg_lector_a"
+				}
 			},
 			{
 				"global_context",
@@ -16923,51 +16923,51 @@ return function ()
 				args = {
 					"low",
 					"medium",
-					"high",
-				},
+					"high"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				300,
+				300
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_059_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
+				180
 			},
 			{
 				"faction_memory",
 				"expeditions_high_heat",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_059_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -16983,34 +16983,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_059_a",
-				},
+					"zenica_combat_pause_npc_059_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17026,34 +17026,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_059_b",
-				},
+					"zenica_combat_pause_npc_059_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
-			},
+					"dreg_lector_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17069,34 +17069,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_059_c",
-				},
+					"zenica_combat_pause_npc_059_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17112,34 +17112,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_059_d",
-				},
+					"zenica_combat_pause_npc_059_d"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
-			},
+					"dreg_lector_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17155,21 +17155,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
+					"dreg_lector_a"
+				}
 			},
 			{
 				"global_context",
@@ -17178,51 +17178,51 @@ return function ()
 				args = {
 					"low",
 					"medium",
-					"high",
-				},
+					"high"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				300,
+				300
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_060_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
+				180
 			},
 			{
 				"faction_memory",
 				"expeditions_high_heat",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_060_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17238,34 +17238,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_060_a",
-				},
+					"zenica_combat_pause_npc_060_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17281,34 +17281,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_060_b",
-				},
+					"zenica_combat_pause_npc_060_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"dreg_lector_a",
-				},
-			},
+					"dreg_lector_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17324,34 +17324,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_060_c",
-				},
+					"zenica_combat_pause_npc_060_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17367,21 +17367,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
+					"tech_priest_a"
+				}
 			},
 			{
 				"global_context",
@@ -17389,45 +17389,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_061_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_061_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17443,34 +17443,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_061_a",
-				},
+					"zenica_combat_pause_npc_061_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17486,34 +17486,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_061_b",
-				},
+					"zenica_combat_pause_npc_061_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17529,34 +17529,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_061_c",
-				},
+					"zenica_combat_pause_npc_061_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17572,21 +17572,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
+					"tech_priest_a"
+				}
 			},
 			{
 				"global_context",
@@ -17594,45 +17594,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_062_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_062_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17648,34 +17648,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_062_a",
-				},
+					"zenica_combat_pause_npc_062_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17691,34 +17691,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_062_b",
-				},
+					"zenica_combat_pause_npc_062_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17734,34 +17734,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_062_c",
-				},
+					"zenica_combat_pause_npc_062_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17777,21 +17777,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
+					"tech_priest_a"
+				}
 			},
 			{
 				"global_context",
@@ -17799,45 +17799,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_063_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_063_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17853,34 +17853,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_063_a",
-				},
+					"zenica_combat_pause_npc_063_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17896,34 +17896,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_063_b",
-				},
+					"zenica_combat_pause_npc_063_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17939,34 +17939,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_063_c",
-				},
+					"zenica_combat_pause_npc_063_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -17982,21 +17982,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
+					"tech_priest_a"
+				}
 			},
 			{
 				"global_context",
@@ -18004,45 +18004,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_064_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_064_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -18058,34 +18058,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_064_a",
-				},
+					"zenica_combat_pause_npc_064_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -18101,34 +18101,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_064_b",
-				},
+					"zenica_combat_pause_npc_064_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -18144,34 +18144,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_064_c",
-				},
+					"zenica_combat_pause_npc_064_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -18187,21 +18187,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
+					"tech_priest_a"
+				}
 			},
 			{
 				"global_context",
@@ -18209,45 +18209,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_065_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_065_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -18263,34 +18263,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_065_a",
-				},
+					"zenica_combat_pause_npc_065_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -18306,34 +18306,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_065_b",
-				},
+					"zenica_combat_pause_npc_065_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -18349,34 +18349,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_065_c",
-				},
+					"zenica_combat_pause_npc_065_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -18392,21 +18392,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
+					"pilot_a"
+				}
 			},
 			{
 				"global_context",
@@ -18414,45 +18414,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_066_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_066_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -18468,34 +18468,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_066_a",
-				},
+					"zenica_combat_pause_npc_066_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -18511,34 +18511,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_066_b",
-				},
+					"zenica_combat_pause_npc_066_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -18554,34 +18554,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_066_c",
-				},
+					"zenica_combat_pause_npc_066_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -18597,21 +18597,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
+					"pilot_a"
+				}
 			},
 			{
 				"global_context",
@@ -18619,45 +18619,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_067_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_067_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -18673,34 +18673,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_067_a",
-				},
+					"zenica_combat_pause_npc_067_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -18716,34 +18716,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_067_b",
-				},
+					"zenica_combat_pause_npc_067_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -18759,34 +18759,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_067_c",
-				},
+					"zenica_combat_pause_npc_067_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -18802,21 +18802,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
+					"pilot_a"
+				}
 			},
 			{
 				"global_context",
@@ -18824,45 +18824,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_068_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_068_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -18878,34 +18878,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_068_a",
-				},
+					"zenica_combat_pause_npc_068_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -18921,34 +18921,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_068_b",
-				},
+					"zenica_combat_pause_npc_068_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -18964,34 +18964,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_068_c",
-				},
+					"zenica_combat_pause_npc_068_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -19007,21 +19007,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
+					"pilot_a"
+				}
 			},
 			{
 				"global_context",
@@ -19029,45 +19029,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_069_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_069_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -19083,34 +19083,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_069_a",
-				},
+					"zenica_combat_pause_npc_069_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -19126,34 +19126,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_069_b",
-				},
+					"zenica_combat_pause_npc_069_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -19169,34 +19169,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_069_c",
-				},
+					"zenica_combat_pause_npc_069_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -19212,21 +19212,21 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"npc_story_talk",
+				"npc_story_talk"
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
+					"pilot_a"
+				}
 			},
 			{
 				"global_context",
@@ -19234,45 +19234,45 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"low",
-					"medium",
-				},
+					"medium"
+				}
 			},
 			{
 				"global_context",
 				"level_time",
 				OP.GT,
-				120,
+				120
 			},
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_070_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
 				OP.TIMEDIFF,
 				OP.GT,
-				180,
-			},
+				180
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"zenica_combat_pause_npc_070_a",
 				OP.ADD,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"time_since_last_vox_story_talk",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -19288,34 +19288,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_070_a",
-				},
+					"zenica_combat_pause_npc_070_a"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -19331,34 +19331,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_070_b",
-				},
+					"zenica_combat_pause_npc_070_b"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot_a",
-				},
-			},
+					"pilot_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -19374,33 +19374,33 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"zenica_combat_pause_npc_070_c",
-				},
+					"zenica_combat_pause_npc_070_c"
+				}
 			},
 			{
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest_a",
-				},
-			},
+					"tech_priest_a"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 end

@@ -25,7 +25,7 @@ BrokerBuffUtils.populate_stimm_field_syringe_buff_variants = function (buff_temp
 			buff.predicted = false
 			buff.keywords = {
 				"syringe",
-				"syringe_broker",
+				"syringe_broker"
 			}
 			buffs_to_add[variant_name] = buff
 		end
@@ -34,10 +34,6 @@ BrokerBuffUtils.populate_stimm_field_syringe_buff_variants = function (buff_temp
 	table.merge(buff_templates, buffs_to_add)
 
 	buff_templates.syringe_heal_corruption_buff_stimm_field.single_application = true
-	buff_templates.syringe_broker_buff_stimm_field.single_application_buff_overrides = table.set({
-		"broker_stimm_durability_5b",
-		"broker_stimm_durability_4",
-	})
 
 	local start_func_super = buff_templates.syringe_broker_buff_stimm_field.start_func
 
@@ -136,7 +132,7 @@ end
 
 local allowed_items = table.set({
 	"content/items/weapons/player/ranged/needlepistol_p1_m1",
-	"content/items/weapons/player/ranged/needlepistol_p1_m2",
+	"content/items/weapons/player/ranged/needlepistol_p1_m2"
 })
 
 BrokerBuffUtils.bespoke_needlepistol_close_range_kill_check_proc_hit = function (params, template_data, template_context, t)

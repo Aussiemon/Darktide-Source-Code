@@ -23,7 +23,7 @@ LocalWaitForSessionHostState.update = function (self, dt)
 		Log.info("LocalWaitForSessionHostState", "Timeout waiting for game session host")
 
 		return "timeout", {
-			game_reason = "timeout",
+			game_reason = "timeout"
 		}
 	end
 end

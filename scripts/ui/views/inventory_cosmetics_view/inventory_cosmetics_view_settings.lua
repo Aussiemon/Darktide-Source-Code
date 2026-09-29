@@ -2,17 +2,17 @@
 
 local grid_size = {
 	424,
-	750,
+	750
 }
 local grid_width = grid_size[1]
 local grid_height = grid_size[2]
 local grid_spacing = {
 	20,
-	20,
+	20
 }
 local mask_size = {
 	grid_width + grid_spacing[1] * 4,
-	grid_height,
+	grid_height
 }
 local inventory_cosmetics_view = {
 	item_discard_anim_duration = 0.3,
@@ -37,42 +37,42 @@ local inventory_cosmetics_view = {
 		"slot_pocketable_small",
 		"slot_luggable",
 		"slot_combat_ability",
-		"slot_grenade_ability",
+		"slot_grenade_ability"
 	},
 	animations_per_archetype = {
 		adamant = {
-			initial_event = "character_cosmetics_idle",
+			initial_event = "character_cosmetics_idle"
 		},
 		cryptic = {
-			initial_event = "character_cosmetics_idle",
+			initial_event = "character_cosmetics_idle"
 		},
 		ogryn = {
-			initial_event = "character_cosmetics_idle",
+			initial_event = "character_cosmetics_idle"
 		},
 		psyker = {
-			initial_event = "character_cosmetics_idle",
+			initial_event = "character_cosmetics_idle"
 		},
 		veteran = {
-			initial_event = "character_cosmetics_idle",
+			initial_event = "character_cosmetics_idle"
 		},
 		zealot = {
-			initial_event = "character_cosmetics_idle",
+			initial_event = "character_cosmetics_idle"
 		},
 		broker = {
-			initial_event = "character_cosmetics_idle",
-		},
+			initial_event = "character_cosmetics_idle"
+		}
 	},
 	grid_spacing = grid_spacing,
 	grid_size = grid_size,
 	mask_size = mask_size,
 	stats_size = {
 		440,
-		6,
+		6
 	},
 	trait_size = {
 		64,
-		64,
-	},
+		64
+	}
 }
 
 return settings("InventoryCosmeticsViewSettings", inventory_cosmetics_view)

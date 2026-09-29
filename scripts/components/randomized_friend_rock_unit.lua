@@ -91,13 +91,13 @@ RandomizedFriendRockUnit.component_data = {
 			visiblity_group_name = {
 				ui_name = "Visiblity Group Name",
 				ui_type = "text_box",
-				value = "",
-			},
+				value = ""
+			}
 		},
 		control_order = {
-			"visiblity_group_name",
-		},
-	},
+			"visiblity_group_name"
+		}
+	}
 }
 
 return RandomizedFriendRockUnit

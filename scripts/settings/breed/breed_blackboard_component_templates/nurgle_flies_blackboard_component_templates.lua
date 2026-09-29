@@ -4,8 +4,8 @@ local base_template = require("scripts/settings/breed/breed_blackboard_component
 local nurgle_flies = {
 	behavior = {
 		move_medium = "string",
-		move_state = "string",
-	},
+		move_state = "string"
+	}
 }
 
 table.merge(nurgle_flies, base_template)
@@ -22,7 +22,7 @@ nurgle_flies.spawn = {
 	spawner_spawn_index = "number",
 	spawner_unit = "Unit",
 	unit = "Unit",
-	world = "World",
+	world = "World"
 }
 nurgle_flies.chase_target = {
 	idle_time = "number",
@@ -31,11 +31,11 @@ nurgle_flies.chase_target = {
 	num_players_inside = "number",
 	target_unit = "Unit",
 	wander_state = "string",
-	wander_time = "number",
+	wander_time = "number"
 }
 
 local templates = {
-	nurgle_flies = nurgle_flies,
+	nurgle_flies = nurgle_flies
 }
 
 return templates

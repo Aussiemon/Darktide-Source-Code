@@ -15,7 +15,7 @@ VectorFieldSwirl.init = function (self, unit)
 	end
 
 	self._settings = {
-		duration = self._duration,
+		duration = self._duration
 	}
 
 	local world = Unit.world(unit)
@@ -108,7 +108,7 @@ VectorFieldSwirl.create_paramaters = function (self, unit)
 		pull_speed = pull_speed,
 		center = center,
 		radius = scale.x * 0.5,
-		up = Quaternion.up(rotation),
+		up = Quaternion.up(rotation)
 	}
 end
 
@@ -116,7 +116,7 @@ VectorFieldSwirl.component_data = {
 	vector_field_name = {
 		ui_name = "Vector Field Name",
 		ui_type = "text_box",
-		value = "wind",
+		value = "wind"
 	},
 	duration = {
 		decimals = 2,
@@ -124,7 +124,7 @@ VectorFieldSwirl.component_data = {
 		step = 0.01,
 		ui_name = "Duration",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	whirl_speed = {
 		decimals = 2,
@@ -133,7 +133,7 @@ VectorFieldSwirl.component_data = {
 		step = 0.01,
 		ui_name = "Whirl Speed",
 		ui_type = "slider",
-		value = 30,
+		value = 30
 	},
 	pull_speed = {
 		decimals = 2,
@@ -142,7 +142,7 @@ VectorFieldSwirl.component_data = {
 		step = 0.01,
 		ui_name = "Pull Speed",
 		ui_type = "slider",
-		value = 10,
+		value = 10
 	},
 	bounding_volume = {
 		ui_name = "Bounding Volume",
@@ -150,24 +150,24 @@ VectorFieldSwirl.component_data = {
 		value = "global_direction",
 		options = {
 			"none",
-			"sphere",
-		},
+			"sphere"
+		}
 	},
 	effect_resource_01 = {
 		filter = "vector_field",
 		ui_name = "Effect Resource",
-		ui_type = "resource",
+		ui_type = "resource"
 	},
 	inputs = {
 		start_effect = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		stop_effect = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return VectorFieldSwirl

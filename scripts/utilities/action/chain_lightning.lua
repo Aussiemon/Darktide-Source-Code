@@ -64,7 +64,7 @@ ChainLightning.breadth_first_validation_functions = {
 		end
 
 		return true
-	end,
+	end
 }
 ChainLightning.depth_first_validation_functions = {
 	node_target_alive_and_not_self = function (t, node, player_unit)
@@ -120,7 +120,7 @@ ChainLightning.depth_first_validation_functions = {
 		end
 
 		return true
-	end,
+	end
 }
 ChainLightning.jump_validation_functions = {
 	target_alive_and_electrocuted = function (target_unit)
@@ -164,7 +164,7 @@ ChainLightning.jump_validation_functions = {
 		local valid_target = target_buff_extension and is_electrocuted
 
 		return valid_target
-	end,
+	end
 }
 
 local _is_in_cover, _has_line_of_sight, _check_line_of_sight

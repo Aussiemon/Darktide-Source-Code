@@ -7,89 +7,89 @@ local MELEE_COMBAT = {
 	{
 		"BtMeleeFollowTargetAction",
 		name = "follow",
-		action_data = action_data.follow,
+		action_data = action_data.follow
 	},
 	{
 		"BtCombatIdleAction",
 		condition = "should_use_combat_idle",
 		name = "combat_idle",
-		action_data = action_data.combat_idle,
+		action_data = action_data.combat_idle
 	},
 	{
 		"BtMeleeAttackAction",
 		condition = "attack_allowed",
 		name = "melee_attack",
 		condition_args = {
-			attack_type = "melee",
+			attack_type = "melee"
 		},
-		action_data = action_data.melee_attack,
+		action_data = action_data.melee_attack
 	},
 	{
 		"BtMeleeAttackAction",
 		condition = "attack_allowed",
 		name = "melee_attack_punch",
 		condition_args = {
-			attack_type = "melee",
+			attack_type = "melee"
 		},
-		action_data = action_data.melee_attack_punch,
+		action_data = action_data.melee_attack_punch
 	},
 	{
 		"BtMeleeAttackAction",
 		condition = "attack_allowed",
 		name = "melee_attack_pommel",
 		condition_args = {
-			attack_type = "melee",
+			attack_type = "melee"
 		},
-		action_data = action_data.melee_attack_pommel,
+		action_data = action_data.melee_attack_pommel
 	},
 	{
 		"BtMeleeAttackAction",
 		condition = "attack_allowed",
 		name = "melee_attack_kick",
 		condition_args = {
-			attack_type = "melee",
+			attack_type = "melee"
 		},
-		action_data = action_data.melee_attack_kick,
+		action_data = action_data.melee_attack_kick
 	},
 	{
 		"BtMeleeAttackAction",
 		condition = "attack_allowed",
 		name = "melee_attack_cleave",
 		condition_args = {
-			attack_type = "melee",
+			attack_type = "melee"
 		},
-		action_data = action_data.melee_attack_cleave,
+		action_data = action_data.melee_attack_cleave
 	},
 	{
 		"BtMeleeAttackAction",
 		condition = "moving_attack_allowed",
 		name = "moving_melee_attack",
 		condition_args = {
-			attack_type = "moving_melee",
+			attack_type = "moving_melee"
 		},
-		action_data = action_data.moving_melee_attack,
+		action_data = action_data.moving_melee_attack
 	},
 	{
 		"BtMeleeAttackAction",
 		condition = "moving_attack_allowed",
 		name = "moving_melee_attack_cleave",
 		condition_args = {
-			attack_type = "moving_melee",
+			attack_type = "moving_melee"
 		},
-		action_data = action_data.moving_melee_attack_cleave,
+		action_data = action_data.moving_melee_attack_cleave
 	},
 	condition = "is_aggroed",
-	name = "melee_combat",
+	name = "melee_combat"
 }
 local SPECIAL_ACTION = {
 	"BtSelectorNode",
 	{
 		"BtUseStimAction",
 		name = "use_stim",
-		action_data = action_data.use_stim,
+		action_data = action_data.use_stim
 	},
 	condition = "minion_can_use_special_action",
-	name = "use_special_action",
+	name = "use_special_action"
 }
 local DISABLE = {
 	"BtSelectorNode",
@@ -97,7 +97,7 @@ local DISABLE = {
 		"BtMinionVortexGrabbedAction",
 		condition = "vortex_grabbed",
 		name = "vortex_grabbed",
-		action_data = action_data.vortex_grabbed,
+		action_data = action_data.vortex_grabbed
 	},
 	{
 		"BtDisableAction",
@@ -105,21 +105,21 @@ local DISABLE = {
 		exit_state = "base",
 		name = "disable",
 		state = "disabled",
-		action_data = action_data.disable,
+		action_data = action_data.disable
 	},
-	name = "disable_actions",
+	name = "disable_actions"
 }
 local CLIMB_ENTER_HOOK = {
 	hook = "unwield_slot",
 	args = {
-		slot_name = "slot_melee_weapon",
-	},
+		slot_name = "slot_melee_weapon"
+	}
 }
 local CLIMB_LEAVE_HOOK = {
 	hook = "wield_slot",
 	args = {
-		slot_name = "slot_melee_weapon",
-	},
+		slot_name = "slot_melee_weapon"
+	}
 }
 local behavior_tree = {
 	"BtSelectorNode",
@@ -127,7 +127,7 @@ local behavior_tree = {
 		"BtDieAction",
 		name = "death",
 		state = "dead",
-		action_data = action_data.death,
+		action_data = action_data.death
 	},
 	DISABLE,
 	{
@@ -136,14 +136,14 @@ local behavior_tree = {
 		exit_state = "base",
 		name = "exit_spawner",
 		state = "exiting_spawner",
-		action_data = action_data.exit_spawner,
+		action_data = action_data.exit_spawner
 	},
 	{
 		"BtSelectorNode",
 		{
 			"BtTeleportAction",
 			condition = "at_teleport_smart_object",
-			name = "teleport",
+			name = "teleport"
 		},
 		{
 			"BtClimbAction",
@@ -151,61 +151,61 @@ local behavior_tree = {
 			name = "climb",
 			action_data = action_data.climb,
 			enter_hook = CLIMB_ENTER_HOOK,
-			leave_hook = CLIMB_LEAVE_HOOK,
+			leave_hook = CLIMB_LEAVE_HOOK
 		},
 		{
 			"BtJumpAcrossAction",
 			condition = "at_jump_smart_object",
 			name = "jump_across",
-			action_data = action_data.jump_across,
+			action_data = action_data.jump_across
 		},
 		{
 			"BtOpenDoorAction",
 			condition = "at_door_smart_object",
 			name = "open_door",
-			action_data = action_data.open_door,
+			action_data = action_data.open_door
 		},
 		{
 			"BtSmashObstacleAction",
 			condition = "at_smashable_obstacle_smart_object",
 			name = "smash_obstacle",
-			action_data = action_data.smash_obstacle,
+			action_data = action_data.smash_obstacle
 		},
 		condition = "at_smart_object",
-		name = "smart_object",
+		name = "smart_object"
 	},
 	SPECIAL_ACTION,
 	{
 		"BtStaggerAction",
 		condition = "is_staggered",
 		name = "stagger",
-		action_data = action_data.stagger,
+		action_data = action_data.stagger
 	},
 	{
 		"BtBlockedAction",
 		condition = "is_blocked",
 		name = "blocked",
-		action_data = action_data.blocked,
+		action_data = action_data.blocked
 	},
 	MELEE_COMBAT,
 	{
 		"BtAlertedAction",
 		condition = "is_alerted",
 		name = "alerted",
-		action_data = action_data.alerted,
+		action_data = action_data.alerted
 	},
 	{
 		"BtPatrolAction",
 		condition = "should_patrol",
 		name = "patrol",
-		action_data = action_data.patrol,
+		action_data = action_data.patrol
 	},
 	{
 		"BtIdleAction",
 		name = "idle",
-		action_data = action_data.idle,
+		action_data = action_data.idle
 	},
-	name = "chaos_ogryn_executor",
+	name = "chaos_ogryn_executor"
 }
 
 return behavior_tree

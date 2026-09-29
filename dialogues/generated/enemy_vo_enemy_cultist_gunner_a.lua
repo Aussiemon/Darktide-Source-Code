@@ -24,7 +24,7 @@ local enemy_vo_enemy_cultist_gunner_a = {
 			"loc_enemy_cultist_gunner_a__friendly_fire_17",
 			"loc_enemy_cultist_gunner_a__friendly_fire_18",
 			"loc_enemy_cultist_gunner_a__friendly_fire_19",
-			"loc_enemy_cultist_gunner_a__friendly_fire_20",
+			"loc_enemy_cultist_gunner_a__friendly_fire_20"
 		},
 		sound_events_duration = {
 			1.779521,
@@ -46,7 +46,7 @@ local enemy_vo_enemy_cultist_gunner_a = {
 			2.898729,
 			2.238729,
 			1.271063,
-			2.290833,
+			2.290833
 		},
 		sound_event_weights = {
 			0.05,
@@ -68,9 +68,9 @@ local enemy_vo_enemy_cultist_gunner_a = {
 			0.05,
 			0.05,
 			0.05,
-			0.05,
+			0.05
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	cultist_gunner_reloading = {
 		randomize_indexes_n = 0,
@@ -84,7 +84,7 @@ local enemy_vo_enemy_cultist_gunner_a = {
 			"loc_enemy_cultist_gunner_a__reloading_06",
 			"loc_enemy_cultist_gunner_a__reloading_07",
 			"loc_enemy_cultist_gunner_a__reloading_08",
-			"loc_enemy_cultist_gunner_a__reloading_09",
+			"loc_enemy_cultist_gunner_a__reloading_09"
 		},
 		sound_events_duration = {
 			3.425521,
@@ -95,9 +95,9 @@ local enemy_vo_enemy_cultist_gunner_a = {
 			3.238771,
 			1.383292,
 			1.823583,
-			2.535271,
+			2.535271
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	cultist_gunner_start_shooting = {
 		randomize_indexes_n = 0,
@@ -122,7 +122,7 @@ local enemy_vo_enemy_cultist_gunner_a = {
 			"loc_enemy_cultist_gunner_a__shooting_17",
 			"loc_enemy_cultist_gunner_a__shooting_18",
 			"loc_enemy_cultist_gunner_a__shooting_19",
-			"loc_enemy_cultist_gunner_a__shooting_20",
+			"loc_enemy_cultist_gunner_a__shooting_20"
 		},
 		sound_events_duration = {
 			3.223521,
@@ -144,7 +144,7 @@ local enemy_vo_enemy_cultist_gunner_a = {
 			2.988625,
 			6.856375,
 			4.007125,
-			4.197146,
+			4.197146
 		},
 		sound_event_weights = {
 			0.05,
@@ -166,10 +166,10 @@ local enemy_vo_enemy_cultist_gunner_a = {
 			0.05,
 			0.05,
 			0.05,
-			0.05,
+			0.05
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("enemy_vo_enemy_cultist_gunner_a", enemy_vo_enemy_cultist_gunner_a)

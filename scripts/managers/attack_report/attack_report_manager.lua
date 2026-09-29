@@ -17,12 +17,12 @@ local DAMAGE_INDICATOR_ATTACK_RESULTS = {
 	[attack_results.toughness_absorbed_melee] = true,
 	[attack_results.toughness_broken] = true,
 	[attack_results.friendly_fire] = true,
-	[attack_results.blocked] = true,
+	[attack_results.blocked] = true
 }
 local RING_BUFFER_SIZE = 2048
 local MAX_UPDATES_PER_FRAME = 64
 local CLIENT_RPCS = {
-	"rpc_add_attack_result",
+	"rpc_add_attack_result"
 }
 
 AttackReportManager.init = function (self, is_server, network_event_delegate)
@@ -195,11 +195,13 @@ AttackReportManager._process_attack_result = function (self, buffer_data)
 
 		_trigger_hit_events(local_human, is_in_first_person_mode, attacking_unit, attack_result, did_damage, hit_weakspot, hit_world_position, damage_efficiency, is_critical_strike, damage_profile)
 
-		local tags = breed_or_nil and breed_or_nil.tags
-		local allowed_breed = tags and (tags.monster or tags.special or tags.elite)
+		if breed_or_nil and not breed_or_nil.skip_kill_feed_announcement then
+			local tags = breed_or_nil and breed_or_nil.tags
+			local allowed_breed = tags and (tags.monster or tags.special or tags.elite)
 
-		if allowed_breed and attack_result == attack_results.died then
-			Managers.event:trigger("event_combat_feed_kill", attacking_unit, attacked_unit)
+			if allowed_breed and attack_result == attack_results.died then
+				Managers.event:trigger("event_combat_feed_kill", attacking_unit, attacked_unit)
+			end
 		end
 	end
 

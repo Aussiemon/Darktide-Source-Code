@@ -5,8 +5,8 @@ local circumstance_templates = {
 	default = {
 		theme_tag = "default",
 		wwise_state = "None",
-		mission_overrides = MissionOverrides.stats_default,
-	},
+		mission_overrides = MissionOverrides.stats_default
+	}
 }
 
 return circumstance_templates

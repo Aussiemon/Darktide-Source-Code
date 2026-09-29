@@ -43,7 +43,7 @@ InvitesXboxLive.send_invite = function (self, xuid, invite_address)
 	if not Managers.account:user_detached() then
 		local user_id = Managers.account:user_id()
 		local async_block, error_code = XboxLiveMPA.send_invites(user_id, {
-			xuid,
+			xuid
 		}, true, invite_address)
 
 		if async_block then
@@ -68,10 +68,10 @@ InvitesXboxLive.on_profile_signed_in = function (self, xuid)
 		local invite = invites[i]
 		local invited_user = invite.invited_user
 		local joiner_xuid = invite.joiner_xuid
-		local recipient_xuid = invited_user ~= "0" and invited_user or joiner_xuid ~= "0" and joiner_xuid
+		local recipient_xuid = invited_user ~= "0000000000000000" and invited_user or joiner_xuid ~= "0000000000000000" and joiner_xuid or nil
 
-		if recipient_xuid and my_xuid and recipient_xuid ~= my_xuid then
-			Log.info("InvitesXboxLive", "Clearing invite lingering from previous profile. my_xuid: %s, invite: %s", my_xuid, table.tostring(invite))
+		if not my_xuid or not recipient_xuid or recipient_xuid ~= my_xuid then
+			Log.info("InvitesXboxLive", "Clearing invite lingering from previous profile. my_xuid: %s (%s), invite: %s", my_xuid, xuid, table.tostring(invite))
 			table.remove(invites, i)
 		end
 	end

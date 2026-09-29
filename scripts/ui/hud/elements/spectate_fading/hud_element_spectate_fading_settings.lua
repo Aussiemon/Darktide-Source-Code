@@ -5,8 +5,8 @@ local hud_element_spectate_fading_settings = {
 		timer_name = "ui",
 		viewport_layer = 2,
 		viewport_type = "overlay",
-		world_layer = 20,
-	},
+		world_layer = 20
+	}
 }
 
 return settings("HudElementSpectateFadingSettings", hud_element_spectate_fading_settings)

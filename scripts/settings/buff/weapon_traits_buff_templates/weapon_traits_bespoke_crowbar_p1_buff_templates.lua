@@ -28,15 +28,15 @@ templates.weapon_trait_bespoke_crowbar_p1_increased_weakspot_damage_on_push = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_push_finish] = 1,
+		[proc_events.on_push_finish] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.weakspot_damage] = 0.01,
+		[stat_buffs.weakspot_damage] = 0.01
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = function (params, template_data, template_context)
 		return params.num_hit_units and params.num_hit_units > 0
-	end,
+	end
 }
 templates.weapon_trait_bespoke_crowbar_p1_staggered_targets_receive_increased_stagger_debuff = table.clone(BaseWeaponTraitBuffTemplates.staggered_targets_receive_increased_stagger_debuff)
 templates.weapon_trait_bespoke_crowbar_p1_rending_vs_staggered = table.clone(BaseWeaponTraitBuffTemplates.rending_vs_staggered)
@@ -45,17 +45,17 @@ templates.weapon_trait_bespoke_crowbar_p1_pass_past_armor_on_heavy_attack = {
 	force_predicted_proc = true,
 	predicted = false,
 	keywords = {
-		keywords.fully_charged_attacks_infinite_cleave,
+		keywords.fully_charged_attacks_infinite_cleave
 	},
 	stat_buffs = {
-		[stat_buffs.melee_fully_charged_damage] = 0.025,
+		[stat_buffs.melee_fully_charged_damage] = 0.025
 	},
 	proc_events = {
 		[proc_events.on_sweep_start] = 1,
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	conditional_keywords = {
-		keywords.ignore_armor_aborts_attack,
+		keywords.ignore_armor_aborts_attack
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.active and ConditionalFunctions.is_item_slot_wielded(template_data, template_context)
@@ -69,11 +69,11 @@ templates.weapon_trait_bespoke_crowbar_p1_pass_past_armor_on_heavy_attack = {
 		end,
 		[proc_events.on_sweep_finish] = function (params, template_data, template_context)
 			template_data.active = false
-		end,
+		end
 	},
 	check_active_func = function (template_data, template_context)
 		return ConditionalFunctions.is_item_slot_wielded(template_data, template_context) and template_data.active
-	end,
+	end
 }
 templates.weapon_trait_bespoke_crowbar_p1_elite_kills_grants_stackable_power_parent = {
 	allow_proc_while_active = true,
@@ -83,16 +83,16 @@ templates.weapon_trait_bespoke_crowbar_p1_elite_kills_grants_stackable_power_par
 	predicted = false,
 	stacks_to_remove = 1,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	add_child_proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	specific_check_proc_funcs = {
-		[proc_events.on_kill] = CheckProcFunctions.on_elite_or_special_kill,
-	},
+		[proc_events.on_kill] = CheckProcFunctions.on_elite_or_special_kill
+	}
 }
 templates.weapon_trait_bespoke_crowbar_p1_elite_kills_grants_stackable_power_child = {
 	class_name = "buff",
@@ -101,9 +101,9 @@ templates.weapon_trait_bespoke_crowbar_p1_elite_kills_grants_stackable_power_chi
 	predicted = false,
 	stack_offset = -1,
 	conditional_stat_buffs = {
-		[stat_buffs.power_level_modifier] = 0.125,
+		[stat_buffs.power_level_modifier] = 0.125
 	},
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 templates.weapon_trait_bespoke_crowbar_p1_targets_receive_rending_debuff_on_weapon_special = table.clone(BaseWeaponTraitBuffTemplates.targets_receive_rending_debuff)
 
@@ -126,15 +126,15 @@ templates.weapon_trait_bespoke_crowbar_p1_crit_chance_on_push = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_push_finish] = 1,
+		[proc_events.on_push_finish] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.melee_critical_strike_chance] = 0.01,
+		[stat_buffs.melee_critical_strike_chance] = 0.01
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = function (params, template_data, template_context)
 		return params.num_hit_units and params.num_hit_units > 0
-	end,
+	end
 }
 
 return templates

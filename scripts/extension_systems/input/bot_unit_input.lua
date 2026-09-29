@@ -11,7 +11,7 @@ BotUnitInput.init = function (self, physics_world, player)
 	self._ephemeral_input = Script.new_map(num_ephemeral_actions)
 	self._move = {
 		x = 0,
-		y = 0,
+		y = 0
 	}
 	self._player = player
 	self._aim_position = Vector3Box(0, 0, 0)
@@ -23,6 +23,7 @@ BotUnitInput.init = function (self, physics_world, player)
 	self._interact_held = false
 	self._dodge = false
 	self._avoiding_aoe_threat = false
+	self._is_hovering_position = false
 	self._look_at_player_unit = nil
 	self._look_at_player_rotation_allowed = false
 	self._look_at_player_first_person_component = nil
@@ -247,6 +248,7 @@ BotUnitInput._update_movement = function (self, unit, input, dt, t)
 	local group_extension = self._group_extension
 	local bot_group_data = group_extension:bot_group_data()
 	local threat_data = bot_group_data.aoe_threat
+	local hover_target_data = bot_group_data.hover_target
 	local move = self._move
 
 	if on_ladder then
@@ -257,6 +259,37 @@ BotUnitInput._update_movement = function (self, unit, input, dt, t)
 			input.jump = true
 			move.x = 0
 			move.y = 0
+		end
+	elseif t < hover_target_data.expires then
+		self._is_hovering_position = true
+
+		local hover_target_pos = hover_target_data.hover_target_pos:unbox()
+		local wanted_distance_from_target_pos = hover_target_data.wanted_distance_from_target_pos
+		local should_dodge = hover_target_data.should_dodge
+		local tolerance = hover_target_data.tolerance
+		local rotation = hover_target_data.rotation and hover_target_data.rotation:unbox()
+		local unit_pos = POSITION_LOOKUP[unit]
+		local target_pos
+
+		if rotation then
+			target_pos = hover_target_pos + Quaternion.forward(rotation) * wanted_distance_from_target_pos
+		else
+			target_pos = hover_target_pos + Vector3.normalize(unit_pos - hover_target_pos) * wanted_distance_from_target_pos
+		end
+
+		local direction = Vector3.normalize(target_pos - unit_pos)
+		local distance = Vector3.distance(unit_pos, target_pos)
+
+		if distance < tolerance then
+			move.x = 0
+			move.y = 0
+		else
+			move.x = Vector3.dot(Quaternion.right(wanted_rotation), direction)
+			move.y = Vector3.dot(Quaternion.forward(wanted_rotation), direction)
+		end
+
+		if should_dodge then
+			self:dodge()
 		end
 	elseif t < threat_data.expires and t > threat_data.dodge_t then
 		self:dodge()
@@ -287,6 +320,23 @@ BotUnitInput._update_movement = function (self, unit, input, dt, t)
 
 		move.x = move_scale * Vector3.dot(flat_right, flat_goal_direction)
 		move.y = move_scale * Vector3.dot(flat_forward, flat_goal_direction)
+	end
+
+	if t >= hover_target_data.expires and self._is_hovering_position then
+		hover_target_data.expires = -math.huge
+
+		hover_target_data.hover_target_pos:store(Vector3.zero())
+
+		hover_target_data.wanted_distance_from_target_pos = 0
+		hover_target_data.should_dodge = false
+		hover_target_data.tolerance = 1
+		hover_target_data.wanted_rotation = nil
+
+		if navigation_extension:destination_reached() then
+			navigation_extension:stop()
+		end
+
+		self._is_hovering_position = false
 	end
 
 	if self._avoiding_aoe_threat and t >= threat_data.expires then

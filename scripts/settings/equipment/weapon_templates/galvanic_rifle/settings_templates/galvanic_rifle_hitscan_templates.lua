@@ -11,33 +11,33 @@ hitscan_templates.default_galvanic_rifle_bullet = {
 	range = 100,
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.default_autogun_assault,
-		},
-	},
+			damage_profile = DamageProfileTemplates.default_autogun_assault
+		}
+	}
 }
 hitscan_templates.galvanic_rifle_p1_m1_bullet = {
 	range = 100,
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.galvanic_rifle_p1_m1,
-		},
+			damage_profile = DamageProfileTemplates.galvanic_rifle_p1_m1
+		}
 	},
 	collision_tests = {
 		{
 			against = "statics",
 			collision_filter = "filter_player_character_shooting_raycast_statics",
-			test = "ray",
+			test = "ray"
 		},
 		{
 			against = "dynamics",
 			collision_filter = "filter_player_character_shooting_raycast_dynamics",
 			radius = 0.02,
-			test = "sphere",
-		},
-	},
+			test = "sphere"
+		}
+	}
 }
 
 return {
 	base_templates = hitscan_templates,
-	overrides = overrides,
+	overrides = overrides
 }

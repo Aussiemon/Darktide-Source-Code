@@ -4,5 +4,5 @@ return {
 	fade_in_time = 0.3,
 	fade_out_time = 0.15,
 	use_parent_renderer = false,
-	wait_reason = nil,
+	wait_reason = nil
 }

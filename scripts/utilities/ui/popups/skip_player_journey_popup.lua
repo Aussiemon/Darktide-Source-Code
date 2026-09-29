@@ -9,14 +9,14 @@ local popup_context = {
 			template_type = "terminal_button_hold_small",
 			text = "loc_popup_skip_journey_yes_button",
 			template_options = {
-				timer = 2,
-			},
+				timer = 2
+			}
 		},
 		{
 			close_on_pressed = true,
-			text = "loc_popup_skip_journey_no_button",
-		},
-	},
+			text = "loc_popup_skip_journey_no_button"
+		}
+	}
 }
 
 local function skip_player_journey_popup(context, id_callback, yes_callback, no_callback)
@@ -43,5 +43,5 @@ end
 
 return {
 	mind_wipe = skip_journey_mind_wipe,
-	hub = skip_journey_hub,
+	hub = skip_journey_hub
 }

@@ -16,11 +16,11 @@ local store_view_settings = {
 		"npc_first_interaction_purser_b",
 		"npc_first_interaction_purser_c",
 		"npc_first_interaction_purser_d",
-		"npc_first_interaction_purser_e",
+		"npc_first_interaction_purser_e"
 	},
 	vo_event_vendor_greeting = {
-		"hub_interact_purser",
-	},
+		"hub_interact_purser"
+	}
 }
 
 return settings("StoreViewSettings", store_view_settings)

@@ -3,7 +3,7 @@
 local EmoteManager = class("EmoteManager")
 local CLIENT_RPCS = {
 	"rpc_trigger_emote",
-	"rpc_stop_emote",
+	"rpc_stop_emote"
 }
 
 EmoteManager.init = function (self, is_host, network_event_delegate)
@@ -150,7 +150,7 @@ local emote_key_to_slot_id = {
 	emote_2 = "slot_animation_emote_2",
 	emote_3 = "slot_animation_emote_3",
 	emote_4 = "slot_animation_emote_4",
-	emote_5 = "slot_animation_emote_5",
+	emote_5 = "slot_animation_emote_5"
 }
 
 EmoteManager.check_emote_input = function (self, input_extension)

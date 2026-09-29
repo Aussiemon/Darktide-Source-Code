@@ -27,17 +27,17 @@ local nurgle_parasite_settings = {
 	specific_head_gib_settings = {
 		random_radius = 2,
 		hit_zones = {
-			"head",
+			"head"
 		},
-		damage_profile = DamageProfileTemplates.havoc_self_gib,
-	},
+		damage_profile = DamageProfileTemplates.havoc_self_gib
+	}
 }
 
 local function _parasite_head_stop_function(template_data, template_context)
 	local unit = template_context.unit
 	local position = POSITION_LOOKUP[unit]
 	local world, physics_world, impact_normal, charge_level, attack_type = template_context.world, template_context.physics_world, Vector3.up(), 1
-	local explosion_template = ExplosionTemplates.nurgle_head_parasite
+	local explosion_template = template_data.explosion_template or ExplosionTemplates.nurgle_head_parasite
 
 	Explosion.create_explosion(world, physics_world, position, Quaternion.look(impact_normal), unit, explosion_template, DEFAULT_POWER_LEVEL, charge_level, attack_type)
 
@@ -67,90 +67,111 @@ local function _parasite_head_stop_function(template_data, template_context)
 	end
 end
 
+local function _parasite_head_start_func(template_data, template_context)
+	local unit = template_context.unit
+
+	template_data.health_extension = ScriptUnit.extension(template_context.unit, "health_system")
+
+	if not template_context.is_server then
+		return
+	end
+
+	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+	local breed = unit_data_extension:breed()
+	local hit_mass = breed.hit_mass
+
+	if type(hit_mass) == "table" then
+		hit_mass = Managers.state.difficulty:get_table_entry_by_challenge(hit_mass)
+	end
+
+	template_data.old_hit_mass = hit_mass
+
+	local new_hit_mass = hit_mass * 1.5
+	local health_extension = ScriptUnit.extension(unit, "health_system")
+
+	health_extension:set_hit_mass(new_hit_mass)
+
+	local variable_name = "anim_move_speed"
+
+	if breed.animation_variable_init and breed.animation_variable_init[variable_name] then
+		local animation_extension = ScriptUnit.extension(unit, "animation_system")
+
+		animation_extension:set_variable(variable_name, 1.25)
+	end
+
+	local suppression_extension = ScriptUnit.has_extension(unit, "suppression_system")
+
+	if suppression_extension then
+		suppression_extension:add_suppression_immunity_duration(999)
+	end
+
+	local attack_intensity_extension = ScriptUnit.has_extension(unit, "attack_intensity_system")
+
+	if attack_intensity_extension then
+		attack_intensity_extension:set_allow_all_attacks_duration(999)
+	end
+end
+
+local function _parasite_head_proc_func(params, template_data, template_context)
+	if not template_context.is_server then
+		return
+	end
+
+	local attack_type = params.attack_type
+
+	if attack_type ~= "ranged" then
+		return
+	end
+
+	local hit_zone = params.hit_zone_name_or_nil
+
+	if hit_zone == "head" then
+		local unit = template_context.unit
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+		local current_health_percent = health_extension:current_health_percent()
+
+		if current_health_percent <= 0.3 then
+			_parasite_head_stop_function(template_data, template_context)
+		end
+	end
+end
+
 templates.headshot_parasite_enemies = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[buff_proc_events.on_minion_damage_taken] = 1,
+		[buff_proc_events.on_minion_damage_taken] = 1
 	},
 	keywords = {
 		buff_keywords.infested_head_armor_override,
-		buff_keywords.has_nurgle_parasite,
+		buff_keywords.has_nurgle_parasite
+	},
+	start_func = _parasite_head_start_func,
+	proc_func = _parasite_head_proc_func
+}
+templates.headshot_parasite_enemies_nurgle_explosion_2026 = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[buff_proc_events.on_minion_damage_taken] = 1
+	},
+	keywords = {
+		buff_keywords.infested_head_armor_override,
+		buff_keywords.has_nurgle_parasite
 	},
 	start_func = function (template_data, template_context)
-		local unit = template_context.unit
+		template_data.explosion_template = ExplosionTemplates.nurgle_head_parasite_nurgle_explosion_2026
 
-		template_data.health_extension = ScriptUnit.extension(template_context.unit, "health_system")
-
-		if not template_context.is_server then
-			return
-		end
-
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local breed = unit_data_extension:breed()
-		local hit_mass = breed.hit_mass
-
-		if type(hit_mass) == "table" then
-			hit_mass = Managers.state.difficulty:get_table_entry_by_challenge(hit_mass)
-		end
-
-		template_data.old_hit_mass = hit_mass
-
-		local new_hit_mass = hit_mass * 1.5
-		local health_extension = ScriptUnit.extension(unit, "health_system")
-
-		health_extension:set_hit_mass(new_hit_mass)
-
-		local variable_name = "anim_move_speed"
-
-		if breed.animation_variable_init and breed.animation_variable_init[variable_name] then
-			local animation_extension = ScriptUnit.extension(unit, "animation_system")
-
-			animation_extension:set_variable(variable_name, 1.25)
-		end
-
-		local suppression_extension = ScriptUnit.has_extension(unit, "suppression_system")
-
-		if suppression_extension then
-			suppression_extension:add_suppression_immunity_duration(999)
-		end
-
-		local attack_intensity_extension = ScriptUnit.has_extension(unit, "attack_intensity_system")
-
-		if attack_intensity_extension then
-			attack_intensity_extension:set_allow_all_attacks_duration(999)
-		end
+		_parasite_head_start_func(template_data, template_context)
 	end,
-	proc_func = function (params, template_data, template_context)
-		if not template_context.is_server then
-			return
-		end
-
-		local attack_type = params.attack_type
-
-		if attack_type ~= "ranged" then
-			return
-		end
-
-		local hit_zone = params.hit_zone_name_or_nil
-
-		if hit_zone == "head" then
-			local unit = template_context.unit
-			local health_extension = ScriptUnit.extension(unit, "health_system")
-			local current_health_percent = health_extension:current_health_percent()
-
-			if current_health_percent <= 0.3 then
-				_parasite_head_stop_function(template_data, template_context)
-			end
-		end
-	end,
+	proc_func = _parasite_head_proc_func
 }
 templates.mutator_minion_nurgle_blessing_tougher = {
 	class_name = "buff",
 	predicted = false,
 	target = buff_targets.minion_only,
 	keywords = {
-		buff_keywords.empowered,
+		buff_keywords.empowered
 	},
 	stat_buffs = {
 		[buff_stat_buffs.unarmored_damage] = -0.35,
@@ -163,7 +184,7 @@ templates.mutator_minion_nurgle_blessing_tougher = {
 		[buff_stat_buffs.impact_modifier] = -1,
 		[buff_stat_buffs.ranged_attack_speed] = 0.2,
 		[buff_stat_buffs.minion_num_shots_modifier] = 2,
-		[buff_stat_buffs.movement_speed] = 0.25,
+		[buff_stat_buffs.movement_speed] = 0.25
 	},
 	minion_effects = {
 		node_effects = {
@@ -172,20 +193,20 @@ templates.mutator_minion_nurgle_blessing_tougher = {
 				vfx = {
 					orphaned_policy = "destroy",
 					particle_effect = "content/fx/particles/enemies/buff_nurgle_blessing",
-					stop_type = "stop",
-				},
-			},
+					stop_type = "stop"
+				}
+			}
 		},
 		material_vector = {
 			name = "stimmed_color",
 			value = {
 				0.358,
 				0.786,
-				0.22,
+				0.22
 			},
-			priority = minion_effects_priorities.mutators,
-		},
-	},
+			priority = minion_effects_priorities.mutators
+		}
+	}
 }
 
 local CORRUPTION_DAMAGE_TYPE = "corruption"
@@ -194,7 +215,7 @@ local CORRUPTION_PERMANENT_POWER_LEVEL = {
 	2,
 	2,
 	2,
-	2,
+	2
 }
 
 templates.mutator_corruption_over_time = {
@@ -211,7 +232,7 @@ templates.mutator_corruption_over_time = {
 
 			Attack.execute(unit, damage_profile, "power_level", power_level, "damage_type", CORRUPTION_DAMAGE_TYPE, "attack_type", attack_types.buff)
 		end
-	end,
+	end
 }
 
 local CORRUPTION_PERMANENT_POWER_LEVEL_2 = {
@@ -219,7 +240,7 @@ local CORRUPTION_PERMANENT_POWER_LEVEL_2 = {
 	8,
 	10,
 	12,
-	15,
+	15
 }
 
 templates.mutator_corruption_over_time_2 = {
@@ -236,15 +257,15 @@ templates.mutator_corruption_over_time_2 = {
 
 			Attack.execute(unit, damage_profile, "power_level", power_level, "damage_type", CORRUPTION_DAMAGE_TYPE, "attack_type", attack_types.buff)
 		end
-	end,
+	end
 }
 templates.mutator_player_cooldown_reduction = {
 	class_name = "buff",
 	predicted = false,
 	target = buff_targets.player_only,
 	stat_buffs = {
-		[buff_stat_buffs.ability_cooldown_modifier] = -0.2,
-	},
+		[buff_stat_buffs.combat_ability_resource_cost_per_use_modifier] = -0.2
+	}
 }
 templates.mutator_movement_speed_on_spawn = {
 	class_name = "buff",
@@ -253,43 +274,24 @@ templates.mutator_movement_speed_on_spawn = {
 	predicted = false,
 	target = buff_targets.player_only,
 	stat_buffs = {
-		[buff_stat_buffs.movement_speed] = 1,
+		[buff_stat_buffs.movement_speed] = 1
 	},
-	hud_priority = math.huge,
+	hud_priority = math.huge
 }
 templates.mutator_player_enhanced_grenade_abilities = {
 	class_name = "buff",
 	predicted = false,
 	target = buff_targets.player_only,
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local template = template_context.template
-		local stat_buffs = template.stat_buffs.extra_max_amount_of_grenades
-		local extra_grenades = stat_buffs
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-
-		template_context.initial_num_charges = grenade_ability_component.num_charges
-		grenade_ability_component.num_charges = grenade_ability_component.num_charges + extra_grenades
-	end,
-	stop_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-		local initial_num_charges = template_context.initial_num_charges
-
-		grenade_ability_component.num_charges = math.min(grenade_ability_component.num_charges, initial_num_charges)
-	end,
 	stat_buffs = {
 		[buff_stat_buffs.extra_max_amount_of_grenades] = 2,
-		[buff_stat_buffs.warp_charge_amount_smite] = 0.5,
-	},
+		[buff_stat_buffs.warp_charge_amount_smite] = 0.5
+	}
 }
 
 local PURPLE_STIM_COLOR = {
 	0.75,
 	0,
-	0.75,
+	0.75
 }
 local TWIN_SPLIT_BREED_LIST = {
 	chaos_beast_of_nurgle = "chaos_ogryn_bulwark",
@@ -320,7 +322,7 @@ local TWIN_SPLIT_BREED_LIST = {
 	renegade_netgunner = "renegade_berzerker",
 	renegade_rifleman = "chaos_newly_infected",
 	renegade_shocktrooper = "renegade_assault",
-	renegade_sniper = "renegade_gunner",
+	renegade_sniper = "renegade_gunner"
 }
 
 templates.mutator_stimmed_minion_purple = {
@@ -329,7 +331,7 @@ templates.mutator_stimmed_minion_purple = {
 	target = buff_targets.minion_only,
 	keywords = {
 		buff_keywords.stimmed,
-		buff_keywords.despawn_on_death,
+		buff_keywords.despawn_on_death
 	},
 	start_func = function (template_data, template_context)
 		return
@@ -383,7 +385,7 @@ templates.mutator_stimmed_minion_purple = {
 		end
 	end,
 	minion_effects = {
-		node_effects_priotity = minion_effects_priorities.mutators + 3,
+		node_effects_priority = minion_effects_priorities.mutators + 3,
 		node_effects = {
 			{
 				node_name = "j_lefteye",
@@ -395,20 +397,20 @@ templates.mutator_stimmed_minion_purple = {
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = PURPLE_STIM_COLOR,
+							value = PURPLE_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = PURPLE_STIM_COLOR,
+							value = PURPLE_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "material_variable_21872256_69bf7e2a",
-							value = PURPLE_STIM_COLOR,
-						},
-					},
-				},
+							value = PURPLE_STIM_COLOR
+						}
+					}
+				}
 			},
 			{
 				node_name = "j_righteye",
@@ -420,39 +422,39 @@ templates.mutator_stimmed_minion_purple = {
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = PURPLE_STIM_COLOR,
+							value = PURPLE_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = PURPLE_STIM_COLOR,
+							value = PURPLE_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "material_variable_21872256_69bf7e2a",
-							value = PURPLE_STIM_COLOR,
-						},
-					},
-				},
-			},
+							value = PURPLE_STIM_COLOR
+						}
+					}
+				}
+			}
 		},
 		material_vector = {
 			name = "stimmed_color",
 			value = PURPLE_STIM_COLOR,
-			priority = minion_effects_priorities.mutators,
-		},
-	},
+			priority = minion_effects_priorities.mutators
+		}
+	}
 }
 
 local YELLOW_STIM_COLOR = {
 	0.358,
 	0.786,
-	0.22,
+	0.22
 }
 local RED_STIM_COLOR = {
 	0.9,
 	0,
-	0.005,
+	0.005
 }
 
 templates.empowered_poxwalker = {
@@ -461,7 +463,7 @@ templates.empowered_poxwalker = {
 	keywords = {
 		buff_keywords.stimmed,
 		buff_keywords.empowered,
-		buff_keywords.in_toxic_gas,
+		buff_keywords.in_toxic_gas
 	},
 	stat_buffs = {
 		[buff_stat_buffs.disgustingly_resilient_damage] = -0.2,
@@ -471,7 +473,7 @@ templates.empowered_poxwalker = {
 		[buff_stat_buffs.berserker_damage] = -0.2,
 		[buff_stat_buffs.armored_damage] = -0.2,
 		[buff_stat_buffs.super_armor_damage] = -0.2,
-		[buff_stat_buffs.movement_speed] = 0.30000000000000004,
+		[buff_stat_buffs.movement_speed] = 0.30000000000000004
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -539,20 +541,20 @@ templates.empowered_poxwalker = {
 						{
 							material_name = "eye_flash_init",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
-						},
-					},
-				},
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
 			},
 			{
 				node_name = "j_lefteyesocket",
@@ -564,20 +566,20 @@ templates.empowered_poxwalker = {
 						{
 							material_name = "eye_flash_init",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
-						},
-					},
-				},
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
 			},
 			{
 				node_name = "j_righteye",
@@ -589,23 +591,23 @@ templates.empowered_poxwalker = {
 						{
 							material_name = "eye_flash_init",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
-						},
-					},
-				},
-			},
-		},
-	},
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
+			}
+		}
+	}
 }
 templates.empowered_poxwalker_with_duration = {
 	class_name = "buff",
@@ -614,7 +616,7 @@ templates.empowered_poxwalker_with_duration = {
 	keywords = {
 		buff_keywords.stimmed,
 		buff_keywords.empowered,
-		buff_keywords.in_toxic_gas,
+		buff_keywords.in_toxic_gas
 	},
 	stat_buffs = {
 		[buff_stat_buffs.disgustingly_resilient_damage] = -0.2,
@@ -624,7 +626,7 @@ templates.empowered_poxwalker_with_duration = {
 		[buff_stat_buffs.berserker_damage] = -0.2,
 		[buff_stat_buffs.armored_damage] = -0.2,
 		[buff_stat_buffs.super_armor_damage] = -0.2,
-		[buff_stat_buffs.movement_speed] = 0.30000000000000004,
+		[buff_stat_buffs.movement_speed] = 0.30000000000000004
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -692,15 +694,15 @@ templates.empowered_poxwalker_with_duration = {
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
-						},
-					},
-				},
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
 			},
 			{
 				node_name = "j_lefteyesocket",
@@ -712,15 +714,15 @@ templates.empowered_poxwalker_with_duration = {
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
-						},
-					},
-				},
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
 			},
 			{
 				node_name = "j_righteye",
@@ -732,18 +734,18 @@ templates.empowered_poxwalker_with_duration = {
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
-						},
-					},
-				},
-			},
-		},
-	},
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
+			}
+		}
+	}
 }
 templates.empowered_by_pox_gas = {
 	class_name = "buff",
@@ -751,7 +753,7 @@ templates.empowered_by_pox_gas = {
 	keywords = {
 		buff_keywords.stimmed,
 		buff_keywords.empowered,
-		buff_keywords.in_toxic_gas,
+		buff_keywords.in_toxic_gas
 	},
 	stat_buffs = {
 		[buff_stat_buffs.disgustingly_resilient_damage] = -0.2,
@@ -761,7 +763,7 @@ templates.empowered_by_pox_gas = {
 		[buff_stat_buffs.berserker_damage] = -0.2,
 		[buff_stat_buffs.armored_damage] = -0.2,
 		[buff_stat_buffs.super_armor_damage] = -0.2,
-		[buff_stat_buffs.movement_speed] = 0.30000000000000004,
+		[buff_stat_buffs.movement_speed] = 0.30000000000000004
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -837,20 +839,20 @@ templates.empowered_by_pox_gas = {
 						{
 							material_name = "eye_flash_init",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
-						},
-					},
-				},
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
 			},
 			{
 				node_name = "j_lefteyesocket",
@@ -862,20 +864,20 @@ templates.empowered_by_pox_gas = {
 						{
 							material_name = "eye_flash_init",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
-						},
-					},
-				},
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
 			},
 			{
 				node_name = "j_righteye",
@@ -887,23 +889,23 @@ templates.empowered_by_pox_gas = {
 						{
 							material_name = "eye_flash_init",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
-						},
-					},
-				},
-			},
-		},
-	},
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
+			}
+		}
+	}
 }
 templates.empowered_twin = {
 	class_name = "buff",
@@ -911,7 +913,7 @@ templates.empowered_twin = {
 	target = buff_targets.minion_only,
 	keywords = {
 		buff_keywords.stimmed,
-		buff_keywords.empowered,
+		buff_keywords.empowered
 	},
 	stat_buffs = {
 		[buff_stat_buffs.weakspot_damage_taken] = 1,
@@ -923,7 +925,7 @@ templates.empowered_twin = {
 		[buff_stat_buffs.super_armor_damage] = -0.5,
 		[buff_stat_buffs.impact_modifier] = -3,
 		[buff_stat_buffs.ranged_attack_speed] = 0.5,
-		[buff_stat_buffs.melee_attack_speed] = 0.5,
+		[buff_stat_buffs.melee_attack_speed] = 0.5
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -968,17 +970,17 @@ templates.empowered_twin = {
 				vfx = {
 					orphaned_policy = "stop",
 					particle_effect = "content/fx/particles/enemies/enrage_head_outline",
-					stop_type = "destroy",
-				},
-			},
-		},
-	},
+					stop_type = "destroy"
+				}
+			}
+		}
+	}
 }
 templates.mutant_mutator = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.movement_speed] = 0.10000000000000009,
+		[buff_stat_buffs.movement_speed] = 0.10000000000000009
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -1029,20 +1031,20 @@ templates.mutant_mutator = {
 						{
 							material_name = "eye_flash_init",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
-						},
-					},
-				},
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
 			},
 			{
 				node_name = "j_righteye",
@@ -1054,23 +1056,23 @@ templates.mutant_mutator = {
 						{
 							material_name = "eye_flash_init",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
-						},
-					},
-				},
-			},
-		},
-	},
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
+			}
+		}
+	}
 }
 templates.drop_skull_pickup_on_death = {
 	class_name = "buff",
@@ -1093,7 +1095,7 @@ templates.drop_skull_pickup_on_death = {
 		if not HEALTH_ALIVE[unit] then
 			return true
 		end
-	end,
+	end
 }
 templates.drop_stolen_rations_01_pickup_small_on_death = {
 	class_name = "buff",
@@ -1116,7 +1118,7 @@ templates.drop_stolen_rations_01_pickup_small_on_death = {
 		if not HEALTH_ALIVE[unit] then
 			return true
 		end
-	end,
+	end
 }
 templates.drop_stolen_rations_01_pickup_medium_on_death = {
 	class_name = "buff",
@@ -1139,14 +1141,14 @@ templates.drop_stolen_rations_01_pickup_medium_on_death = {
 		if not HEALTH_ALIVE[unit] then
 			return true
 		end
-	end,
+	end
 }
 
 local drop_stolen_rations_01_pickup_medium_many_on_death_placement_settings = {
 	circle_radius = 0.75,
 	num_slots = 2,
 	position_offset = 0.2,
-	randomize_rotation = true,
+	randomize_rotation = true
 }
 
 templates.drop_stolen_rations_01_pickup_medium_many_on_death = {
@@ -1189,7 +1191,7 @@ templates.drop_stolen_rations_01_pickup_medium_many_on_death = {
 		if not HEALTH_ALIVE[unit] then
 			return true
 		end
-	end,
+	end
 }
 templates.drop_many_pickups_on_death = {
 	auto_tag_on_spawn = nil,
@@ -1202,7 +1204,7 @@ templates.drop_many_pickups_on_death = {
 		circle_radius = 0.75,
 		num_slots = 3,
 		position_offset = 0.2,
-		randomize_rotation = true,
+		randomize_rotation = true
 	},
 	stop_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -1247,7 +1249,7 @@ templates.drop_many_pickups_on_death = {
 		if not HEALTH_ALIVE[unit] then
 			return true
 		end
-	end,
+	end
 }
 templates.drop_single_skull_on_death = table.add_missing({
 	pickup_name = "skulls_01_pickup",
@@ -1255,8 +1257,8 @@ templates.drop_single_skull_on_death = table.add_missing({
 		circle_radius = 0.75,
 		num_slots = 1,
 		position_offset = 0.2,
-		randomize_rotation = true,
-	},
+		randomize_rotation = true
+	}
 }, table.clone(templates.drop_many_pickups_on_death))
 templates.drop_many_skulls_on_death = table.add_missing({
 	pickup_name = "skulls_01_pickup",
@@ -1264,8 +1266,8 @@ templates.drop_many_skulls_on_death = table.add_missing({
 		circle_radius = 0.75,
 		num_slots = 3,
 		position_offset = 0.2,
-		randomize_rotation = true,
-	},
+		randomize_rotation = true
+	}
 }, table.clone(templates.drop_many_pickups_on_death))
 templates.drop_shocktrooper_grenade_on_death = {
 	class_name = "buff",
@@ -1287,7 +1289,7 @@ templates.drop_shocktrooper_grenade_on_death = {
 		if not HEALTH_ALIVE[unit] then
 			return true
 		end
-	end,
+	end
 }
 
 return templates

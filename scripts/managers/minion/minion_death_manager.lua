@@ -15,7 +15,7 @@ local proc_events = BuffSettings.proc_events
 local MinionDeathManager = class("MinionDeathManager")
 local _trigger_kill_vo, _trigger_on_kill_procs
 local CLIENT_RPCS = {
-	"rpc_minion_set_dead",
+	"rpc_minion_set_dead"
 }
 
 MinionDeathManager.init = function (self, is_server, network_event_delegate, soft_cap_out_of_bounds_units)
@@ -42,10 +42,14 @@ MinionDeathManager.delete_units = function (self)
 	self._minion_ragdoll:cleanup_ragdolls()
 end
 
+MinionDeathManager.delete_units_except = function (self, ragdoll_exceptions)
+	self._minion_ragdoll:remove_ragdolls_except(ragdoll_exceptions)
+end
+
 local INSTANT_RAGDOLL_STAGGER_TYPES = {
 	explosion = true,
 	heavy = true,
-	running = true,
+	running = true
 }
 
 MinionDeathManager.die = function (self, unit, attacking_unit_or_nil, attack_direction, hit_zone_name_or_nil, damage_profile, attack_type_or_nil, herding_template_or_nil, is_critical_strike_or_nil, damage_type_or_nil)
@@ -133,9 +137,14 @@ MinionDeathManager.die = function (self, unit, attacking_unit_or_nil, attack_dir
 		end
 
 		Managers.state.pacing:remove_aggroed_minion(unit)
+		Managers.event:trigger("on_minion_death_event", unit, breed)
 	else
 		death_component.hit_during_death = true
 	end
+
+	local behavior_extension = ScriptUnit.extension(unit, "behavior_system")
+
+	behavior_extension:prioritize_staggered_update()
 end
 
 local extensions_to_keep = {
@@ -145,7 +154,7 @@ local extensions_to_keep = {
 	MinionProximityExtension = "legacy_v2_proximity_system",
 	MinionUnitDataExtension = "unit_data_system",
 	MinionVisualLoadoutExtension = "visual_loadout_system",
-	WoundsExtension = "wounds_system",
+	WoundsExtension = "wounds_system"
 }
 
 MinionDeathManager.set_dead = function (self, unit, attack_direction, hit_zone_name, damage_profile_name, do_ragdoll_push, herding_template_name)
@@ -161,7 +170,7 @@ MinionDeathManager.set_dead = function (self, unit, attack_direction, hit_zone_n
 		do_ragdoll_push = do_ragdoll_push,
 		herding_template_name = herding_template_name,
 		death_velocity = death_velocity,
-		no_ragdoll = breed.no_ragdoll,
+		no_ragdoll = breed.no_ragdoll
 	}
 
 	Unit.flow_event(unit, "on_death")

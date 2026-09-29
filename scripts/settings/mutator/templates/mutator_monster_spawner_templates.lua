@@ -17,7 +17,7 @@ local mutator_templates = {
 		trigger_distance = 77,
 		spawn_locations = MutatorSpawnerLocationSources.prebaked_mission_locations("expeditions_locations"),
 		size = {
-			level_size_4 = true,
+			level_size_4 = true
 		},
 		spawners = {
 			{
@@ -28,27 +28,27 @@ local mutator_templates = {
 					use_slot_specific_levels = true,
 					levels = {
 						level_size_4 = {
-							"content/levels/expeditions/circumstances/exp_circ_04m_rotten_armor",
-						},
+							"content/levels/expeditions/circumstances/exp_circ_04m_rotten_armor"
+						}
 					},
 					placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
 					size_lookup = {
-						"level_size_4",
+						"level_size_4"
 					},
 					spawn_settings = {
-						randomize_rotation = true,
-					},
-				},
+						randomize_rotation = true
+					}
+				}
 			},
 			{
 				class = "scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node_enemy_template",
 				template = {
 					placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
 					composition = EnemyEventSpawnerSettings.nurgle_totem,
-					enemy_placement_method = MutatorSpawnerNode.CIRCLE_PLACEMENT,
-				},
-			},
-		},
+					enemy_placement_method = MutatorSpawnerNode.CIRCLE_PLACEMENT
+				}
+			}
+		}
 	},
 	mutator_spawner_expedition_rotten_armor_size_02 = {
 		class = "scripts/managers/mutator/mutators/mutator_spawner",
@@ -58,7 +58,7 @@ local mutator_templates = {
 		trigger_distance = 77,
 		spawn_locations = MutatorSpawnerLocationSources.prebaked_mission_locations("expeditions_locations"),
 		size = {
-			level_size_2 = true,
+			level_size_2 = true
 		},
 		spawners = {
 			{
@@ -69,19 +69,19 @@ local mutator_templates = {
 					use_slot_specific_levels = true,
 					levels = {
 						level_size_2 = {
-							"content/levels/expeditions/circumstances/exp_circ_02m_rotten_armor_01",
-						},
+							"content/levels/expeditions/circumstances/exp_circ_02m_rotten_armor_01"
+						}
 					},
 					placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
 					size_lookup = {
-						"level_size_2",
+						"level_size_2"
 					},
 					spawn_settings = {
-						randomize_rotation = true,
-					},
-				},
-			},
-		},
+						randomize_rotation = true
+					}
+				}
+			}
+		}
 	},
 	mutator_spawner_size_4_test = {
 		class = "scripts/managers/mutator/mutators/mutator_spawner",
@@ -91,7 +91,7 @@ local mutator_templates = {
 		trigger_distance = 50,
 		spawn_locations = MutatorSpawnerLocationSources.mission_provided_gizmo(),
 		size = {
-			level_size_4 = true,
+			level_size_4 = true
 		},
 		spawners = {
 			{
@@ -102,27 +102,27 @@ local mutator_templates = {
 					use_slot_specific_levels = true,
 					levels = {
 						level_size_4 = {
-							"content/levels/live_events/test_levels/live_event_size_4_test",
-						},
+							"content/levels/live_events/test_levels/live_event_size_4_test"
+						}
 					},
 					placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
 					size_lookup = {
-						"level_size_4",
+						"level_size_4"
 					},
 					spawn_settings = {
-						randomize_rotation = true,
-					},
-				},
+						randomize_rotation = true
+					}
+				}
 			},
 			{
 				class = "scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node_enemy_template",
 				template = {
 					placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
 					composition = EnemyEventSpawnerSettings.nurgle_totem,
-					enemy_placement_method = MutatorSpawnerNode.CIRCLE_PLACEMENT,
-				},
-			},
-		},
+					enemy_placement_method = MutatorSpawnerNode.CIRCLE_PLACEMENT
+				}
+			}
+		}
 	},
 	mutator_plasma_smuggler_props = {
 		class = "scripts/managers/mutator/mutators/mutator_spawner",
@@ -139,32 +139,32 @@ local mutator_templates = {
 						level_size_4 = {
 							"content/levels/live_events/plasma_smugglers_props_1",
 							"content/levels/live_events/plasma_smugglers_props_2",
-							"content/levels/live_events/plasma_smugglers_props_3",
-						},
+							"content/levels/live_events/plasma_smugglers_props_3"
+						}
 					},
 					placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
 					size_lookup = {
-						"level_size_4",
+						"level_size_4"
 					},
 					spawn_settings = {
-						randomize_rotation = true,
-					},
-				},
+						randomize_rotation = true
+					}
+				}
 			},
 			{
 				class = "scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node_horde_trigger",
-				template = {},
+				template = {}
 			},
 			{
 				class = "scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node_enemy_template",
 				template = {
 					placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
 					composition = EnemyEventSpawnerSettings.live_event_plasma_smugglers,
-					enemy_placement_method = MutatorSpawnerNode.CIRCLE_PLACEMENT,
-				},
-			},
-		},
-	},
+					enemy_placement_method = MutatorSpawnerNode.CIRCLE_PLACEMENT
+				}
+			}
+		}
+	}
 }
 
 return mutator_templates

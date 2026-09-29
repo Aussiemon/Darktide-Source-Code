@@ -19,7 +19,7 @@ BootStateLoadRenderSettings._state_update = function (self, dt)
 	local render_options = require("scripts/settings/options/render_settings")
 	local render_settings = render_options.settings
 	local settings = {
-		render_settings,
+		render_settings
 	}
 
 	for i = 1, #settings do
@@ -42,6 +42,18 @@ BootStateLoadRenderSettings._state_update = function (self, dt)
 	return true
 end
 
+local function _check_validation_function(name, validation_function)
+	local success, result = pcall(validation_function)
+
+	if not success then
+		Log.error("BootStateLoadRenderSettings", "Validation function for setting %q failed: %s", name, result)
+
+		return false
+	end
+
+	return result
+end
+
 BootStateLoadRenderSettings._check_settings_to_run = function (self, settings, settings_to_run)
 	if not DEDICATED_SERVER then
 		for _, setting in ipairs(settings) do
@@ -56,7 +68,7 @@ BootStateLoadRenderSettings._check_settings_to_run = function (self, settings, s
 			local apply_on_startup = setting.apply_on_startup
 			local validation_function = setting.validation_function
 
-			if apply_on_startup and (not validation_function or validation_function()) then
+			if apply_on_startup and (not validation_function or _check_validation_function(setting.id, validation_function)) then
 				local init = setting.init
 
 				if init then

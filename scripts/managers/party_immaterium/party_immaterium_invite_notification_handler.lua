@@ -34,7 +34,7 @@ PartyImmateriumInviteNotificationHandler.add_invite = function (self, party_id, 
 	self._invite_queue[#self._invite_queue + 1] = {
 		party_id = party_id,
 		invite_token = invite_token,
-		inviter_name = inviter_name,
+		inviter_name = inviter_name
 	}
 
 	if not self._active_invite then
@@ -104,7 +104,7 @@ PartyImmateriumInviteNotificationHandler._activate_next_invite = function (self)
 
 	if inviter_name and inviter_name ~= "" then
 		description = Localize("loc_social_party_invite_received_description", true, {
-			player_name = inviter_name,
+			player_name = inviter_name
 		})
 	else
 		description = Localize("loc_social_party_invite_received_description_no_player_name")
@@ -116,12 +116,12 @@ PartyImmateriumInviteNotificationHandler._activate_next_invite = function (self)
 		Localize("loc_social_party_invite_received_header"),
 		description,
 		(Localize("loc_social_party_invite_accept", true, {
-			input = input_text,
-		})),
+			input = input_text
+		}))
 	}
 
 	Managers.event:trigger("event_add_notification_message", "matchmaking", {
-		texts = texts,
+		texts = texts
 	}, function (notification_id)
 		invite.notification_id = notification_id
 	end)
@@ -141,13 +141,13 @@ PartyImmateriumInviteNotificationHandler._cb_confirm_mission_change = function (
 			Localize("loc_expeditions_extraction_warning_header"),
 			Localize("loc_social_party_invite_received_abandon"),
 			(Localize("loc_social_party_invite_accept", true, {
-				input = input_text,
-			})),
+				input = input_text
+			}))
 		}
 
 		Managers.event:trigger("event_remove_notification", invite.notification_id)
 		Managers.event:trigger("event_add_notification_message", "matchmaking", {
-			texts = texts,
+			texts = texts
 		}, function (notification_id)
 			invite.notification_id = notification_id
 		end)
@@ -166,7 +166,7 @@ PartyImmateriumInviteNotificationHandler._cb_invite_accepted = function (self)
 	if active_invite then
 		Managers.party_immaterium:join_party({
 			party_id = active_invite.party_id,
-			invite_token = active_invite.invite_token,
+			invite_token = active_invite.invite_token
 		})
 		self:_clear_active_invite()
 	end

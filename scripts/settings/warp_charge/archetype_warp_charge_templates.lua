@@ -22,15 +22,15 @@ archetype_warp_charge_templates.default = {
 	vent_interval = 2,
 	vent_power_level = {
 		20,
-		20,
+		20
 	},
 	vent_damage_profile = DamageProfileTemplates.plasma_vent_damage,
 	vent_damage_type = damage_types.warp,
 	fx = {
 		looping_venting_wwise_start_event = "wwise/events/player/play_psyker_venting",
 		looping_venting_wwise_stop_event = "wwise/events/player/stop_psyker_venting",
-		looping_wwise_parameter_name = "psyker_overload",
-	},
+		looping_wwise_parameter_name = "psyker_overload"
+	}
 }
 archetype_warp_charge_templates.psyker = {
 	auto_vent_delay = 3,
@@ -49,15 +49,15 @@ archetype_warp_charge_templates.psyker = {
 	vent_interval = 0.25,
 	vent_power_level = {
 		0,
-		8,
+		8
 	},
 	vent_damage_profile = DamageProfileTemplates.plasma_vent_damage,
 	vent_damage_type = damage_types.warp,
 	fx = {
 		looping_venting_wwise_start_event = "wwise/events/player/play_psyker_venting",
 		looping_venting_wwise_stop_event = "wwise/events/player/stop_psyker_venting",
-		looping_wwise_parameter_name = "psyker_overload",
-	},
+		looping_wwise_parameter_name = "psyker_overload"
+	}
 }
 
 return settings("ArchetypeWarpChargeTemplates", archetype_warp_charge_templates)

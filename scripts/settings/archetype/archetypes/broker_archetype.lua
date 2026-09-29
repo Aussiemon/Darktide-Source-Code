@@ -15,7 +15,6 @@ local archetype_data = {
 	archetype_icon_selection_large = "content/ui/materials/icons/classes/broker_terminal",
 	archetype_icon_selection_large_unselected = "content/ui/materials/icons/classes/broker_terminal_shadow",
 	archetype_name = "loc_class_broker_name",
-	archetype_selection_background = "content/ui/materials/backgrounds/info_panels/broker",
 	archetype_selection_highlight_icon = "content/ui/textures/frames/class_selection/windows/broker/class_selection_top_broker",
 	archetype_selection_icon = "content/ui/textures/frames/class_selection/windows/broker/class_selection_top_broker_unselected",
 	archetype_selection_level = "content/levels/ui/class_selection/class_selection_broker/class_selection_broker",
@@ -29,7 +28,6 @@ local archetype_data = {
 	companion_breed = nil,
 	companion_name_input = nil,
 	deluxe_dlc = "broker_deluxe",
-	end_of_round_state_machine = "content/characters/player/human/third_person/animations/menu/state_machines/end_of_round/end_of_round_broker",
 	health = 150,
 	inventory_state_machine = "content/characters/player/human/third_person/animations/menu/state_machines/inventory/inventory_broker",
 	knocked_down_health = 1000,
@@ -53,79 +51,93 @@ local archetype_data = {
 	warp_charge = ArchetypeWarpChargeTemplates.default,
 	talents = ArchetypeTalents.broker,
 	base_talents = {
-		broker_ability_focus = 1,
-		broker_aura_gunslinger = 1,
-		broker_blitz_flash_grenade = 1,
-		broker_passive_improved_sprint_dodge = 1,
-		broker_passive_increased_dodges = 1,
-		broker_stimm_description_talent = 1,
+		broker_ability_focus = {
+			target_slot = "slot_combat_ability",
+			tier = 1
+		},
+		broker_blitz_flash_grenade = {
+			target_slot = "slot_grenade_ability",
+			tier = 1
+		},
+		broker_aura_gunslinger = {
+			tier = 1
+		},
+		broker_passive_improved_sprint_dodge = {
+			tier = 1
+		},
+		broker_stimm_description_talent = {
+			tier = 1
+		}
 	},
 	conditional_base_talents = {
-		broker_syringe = 1,
+		broker_syringe = {
+			target_slot = "slot_pocketable_small",
+			tier = 1
+		}
 	},
 	conditional_base_talent_funcs = {
-		broker_syringe = function (selected_talents)
+		broker_syringe = function (selected_talent_names)
 			local TalentSettings = require("scripts/settings/talent/talent_settings")
 
 			for talent_name in pairs(TalentSettings.broker_stimm) do
-				if selected_talents[talent_name] then
+				if selected_talent_names[talent_name] then
 					return true
 				end
 			end
 
 			return false
-		end,
+		end
 	},
 	main_menu_camera_offsets = {
 		x = 0,
 		z = -0.05,
 		y = {
 			0.2,
-			-0.3,
-		},
+			-0.3
+		}
 	},
 	selection_sound_event = UiSoundEvents.character_create_archetype_broker,
 	name_input = {
 		error_loc_key = "loc_character_create_name_validation_failed_message",
-		max_length = 18,
+		max_length = 18
 	},
 	skip_onboarding_chapters = {
 		inventory_popup = true,
 		play_prologue = true,
 		speak_to_morrow = true,
 		training_reward = true,
-		visit_chapel = true,
+		visit_chapel = true
 	},
 	defining_weapons = {
 		{
 			display_name = "loc_weapon_family_dual_shivs_p1_m1",
-			item = "content/items/weapons/player/melee/dual_shivs_p1_m1",
+			item = "content/items/weapons/player/melee/dual_shivs_p1_m1"
 		},
 		{
 			display_name = "loc_weapon_family_saw_p1_m1",
-			item = "content/items/weapons/player/melee/saw_p1_m1",
+			item = "content/items/weapons/player/melee/saw_p1_m1"
 		},
 		{
 			display_name = "loc_weapon_family_crowbar_p1_m1",
-			item = "content/items/weapons/player/melee/crowbar_p1_m1",
+			item = "content/items/weapons/player/melee/crowbar_p1_m1"
 		},
 		{
 			display_name = "loc_weapon_family_dual_autopistols_p1_m1",
-			item = "content/items/weapons/player/ranged/dual_autopistols_p1_m1",
+			item = "content/items/weapons/player/ranged/dual_autopistols_p1_m1"
 		},
 		{
 			display_name = "loc_weapon_family_dual_stubpistols_p1_m1",
-			item = "content/items/weapons/player/ranged/dual_stubpistols_p1_m1",
+			item = "content/items/weapons/player/ranged/dual_stubpistols_p1_m1"
 		},
 		{
 			display_name = "loc_weapon_family_needlepistol_p1_m1",
-			item = "content/items/weapons/player/ranged/needlepistol_p1_m1",
-		},
+			item = "content/items/weapons/player/ranged/needlepistol_p1_m1"
+		}
 	},
 	requires_dlc_reconciliation = {
 		"broker_deluxe",
-		"broker_cosmetic",
-	},
+		"broker_cosmetic"
+	}
 }
 
 return archetype_data

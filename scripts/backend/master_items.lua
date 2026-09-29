@@ -10,7 +10,7 @@ end
 
 MasterItems.default_inventory = function (archetype_name, game_mode_settings_or_nil)
 	local inventory = {
-		slot_unarmed = MasterItems.get_cached()["content/items/weapons/player/melee/unarmed"],
+		slot_unarmed = MasterItems.get_cached()["content/items/weapons/player/melee/unarmed"]
 	}
 
 	do
@@ -166,7 +166,7 @@ local function _item_plus_overrides(gear, gear_id, is_preview_item)
 		__gear = gear,
 		__gear_id = is_preview_item and math.uuid() or gear_id,
 		__original_gear_id = is_preview_item and gear_id,
-		__is_preview_item = is_preview_item and true or false,
+		__is_preview_item = is_preview_item and true or false
 	}
 
 	setmetatable(item_instance, {
@@ -218,7 +218,7 @@ local function _item_plus_overrides(gear, gear_id, is_preview_item)
 			local master_item = rawget(item_instance, "__master_item")
 
 			return string.format("master_item: [%s] gear_id: [%s]", tostring(master_item and master_item.name), tostring(rawget(item_instance, "__gear_id")))
-		end,
+		end
 	})
 
 	local success = _update_master_data(item_instance)
@@ -238,10 +238,10 @@ local function _store_item_plus_overrides(data)
 		__gear = {
 			masterDataInstance = {
 				id = data.id,
-				overrides = data.overrides,
-			},
+				overrides = data.overrides
+			}
 		},
-		__gear_id = data.gear_id or data.gearId,
+		__gear_id = data.gear_id or data.gearId
 	}
 
 	setmetatable(item_instance, {
@@ -289,7 +289,7 @@ local function _store_item_plus_overrides(data)
 			local master_item = rawget(item_instance, "__master_item")
 
 			return string.format("master_item: [%s] gear_id: [%s]", tostring(master_item and master_item.name), tostring(rawget(item_instance, "__gear_id")))
-		end,
+		end
 	})
 
 	local success = _update_master_data(item_instance)
@@ -352,10 +352,10 @@ MasterItems.get_ui_item_instance = function (item)
 		__gear = {
 			masterDataInstance = {
 				id = item.name,
-				overrides = overrides,
-			},
+				overrides = overrides
+			}
 		},
-		__gear_id = item.gear_id or math.uuid(),
+		__gear_id = item.gear_id or math.uuid()
 	}
 
 	setmetatable(item_instance, {
@@ -403,7 +403,7 @@ MasterItems.get_ui_item_instance = function (item)
 			local master_item = rawget(item_instance, "__master_item")
 
 			return string.format("master_item: [%s] gear_id: [%s]", tostring(master_item and master_item.name), tostring(rawget(item_instance, "__gear_id")))
-		end,
+		end
 	})
 
 	local success = _update_master_data(item_instance)

@@ -45,7 +45,7 @@ SmartTagTarget.component_data = {
 			"pickup",
 			"hack",
 			"live_event_objective",
-			"live_event_interest_point",
+			"live_event_interest_point"
 		},
 		options_values = {
 			"health_station",
@@ -53,12 +53,12 @@ SmartTagTarget.component_data = {
 			"pickup",
 			"hack",
 			"live_event_objective",
-			"live_event_interest_point",
-		},
+			"live_event_interest_point"
+		}
 	},
 	extensions = {
-		"SmartTagExtension",
-	},
+		"SmartTagExtension"
+	}
 }
 
 return SmartTagTarget

@@ -8,8 +8,8 @@ local slot_templates = {
 			abandon_slot_when_staggered = false,
 			abandon_slot_when_staggered_time = 0.3,
 			avoid_slots_behind_overwhelmed_target = true,
-			slot_type = "normal",
-		},
+			slot_type = "normal"
+		}
 	},
 	renegade_executor = {
 		{
@@ -18,8 +18,8 @@ local slot_templates = {
 			abandon_slot_when_staggered = false,
 			abandon_slot_when_staggered_time = 0.3,
 			avoid_slots_behind_overwhelmed_target = true,
-			slot_type = "medium",
-		},
+			slot_type = "medium"
+		}
 	},
 	chaos_ogryn = {
 		{
@@ -28,8 +28,8 @@ local slot_templates = {
 			abandon_slot_when_staggered = false,
 			abandon_slot_when_staggered_time = 0.3,
 			avoid_slots_behind_overwhelmed_target = false,
-			slot_type = "large",
-		},
+			slot_type = "large"
+		}
 	},
 	chaos_spawn = {
 		{
@@ -38,8 +38,8 @@ local slot_templates = {
 			abandon_slot_when_staggered = false,
 			abandon_slot_when_staggered_time = 0.3,
 			avoid_slots_behind_overwhelmed_target = false,
-			slot_type = "large",
-		},
+			slot_type = "large"
+		}
 	},
 	chaos_poxwalker = {
 		{
@@ -48,8 +48,8 @@ local slot_templates = {
 			abandon_slot_when_staggered = false,
 			abandon_slot_when_staggered_time = 0.3,
 			avoid_slots_behind_overwhelmed_target = true,
-			slot_type = "normal",
-		},
+			slot_type = "normal"
+		}
 	},
 	cultist_berzerker = {
 		{
@@ -58,9 +58,9 @@ local slot_templates = {
 			abandon_slot_when_staggered = false,
 			abandon_slot_when_staggered_time = 0.3,
 			avoid_slots_behind_overwhelmed_target = true,
-			slot_type = "medium",
-		},
-	},
+			slot_type = "medium"
+		}
+	}
 }
 
 return settings("SlotTemplates", slot_templates)

@@ -7,9 +7,9 @@ local summon_templates = {
 		vo_event_death = "owner_call_dead",
 		interval_til_next_summon = {
 			10,
-			20,
-		},
-	},
+			20
+		}
+	}
 }
 
 return summon_templates

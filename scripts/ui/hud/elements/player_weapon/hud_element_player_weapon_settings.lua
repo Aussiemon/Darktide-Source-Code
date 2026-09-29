@@ -22,26 +22,26 @@ local hud_element_player_weapon_settings = {
 	bar_segment_background_color = get_hud_color("color_tint_main_4", 255),
 	ammo_round_size = {
 		19,
-		10,
+		10
 	},
 	infinite_symbol_size = {
 		51.25,
-		30,
+		30
 	},
 	infinite_symbol_size_focused = {
 		61.5,
-		36,
+		36
 	},
 	events = {
 		{
 			"event_on_active_input_changed",
-			"event_on_input_changed",
+			"event_on_input_changed"
 		},
 		{
 			"event_on_input_settings_changed",
-			"event_on_input_changed",
-		},
-	},
+			"event_on_input_changed"
+		}
+	}
 }
 
 return settings("HudElementPlayerWeaponSettings", hud_element_player_weapon_settings)

@@ -19,24 +19,24 @@ local prop_data = {
 			actors = {
 				"c_intact",
 				"c_intact_destructible",
-				"c_broken",
-			},
+				"c_broken"
+			}
 		},
 		{
 			name = hit_zone_names.center_mass,
 			actors = {
 				"c_dynamic_cable_01_static_intact",
 				"c_dynamic_cable_02_intact",
-				"c_dynamic_cable_03_intact",
-			},
-		},
+				"c_dynamic_cable_03_intact"
+			}
+		}
 	},
 	tags = {
 		point_cost = nil,
 		tags = {
-			hazard = true,
-		},
-	},
+			hazard = true
+		}
+	}
 }
 
 return prop_data

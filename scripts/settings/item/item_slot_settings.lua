@@ -16,12 +16,20 @@ local item_slot_settings = {
 			"slot_body_hair_color",
 			"slot_body_hair",
 			"slot_gear_head",
-			"slot_body_face_makeup",
-		},
+			"slot_body_face_makeup"
+		}
 	},
-	slot_body_face_tattoo = {
+	slot_body_face_hair = {
 		show_in_character_create = true,
 		slot_type = "body",
+		slot_dependencies = {
+			"slot_body_hair_color",
+			"slot_body_face_hair_color"
+		}
+	},
+	slot_body_face_makeup = {
+		show_in_character_create = true,
+		slot_type = "body"
 	},
 	slot_body_face_scar = {
 		show_in_character_create = true,
@@ -29,20 +37,12 @@ local item_slot_settings = {
 		slot_dependencies = {
 			"slot_body_skin_color",
 			"slot_body_skin_color_secondary",
-			"slot_body_skin_discoloration",
-		},
+			"slot_body_skin_discoloration"
+		}
 	},
-	slot_body_face_hair = {
+	slot_body_face_tattoo = {
 		show_in_character_create = true,
-		slot_type = "body",
-		slot_dependencies = {
-			"slot_body_hair_color",
-			"slot_body_face_hair_color",
-		},
-	},
-	slot_body_face_makeup = {
-		show_in_character_create = true,
-		slot_type = "body",
+		slot_type = "body"
 	},
 	slot_body_torso = {
 		show_in_character_create = true,
@@ -54,19 +54,8 @@ local item_slot_settings = {
 			"slot_body_skin_color_secondary",
 			"slot_body_skin_discoloration",
 			"slot_body_eye_color",
-			"slot_body_eye_color_secondary",
-		},
-	},
-	slot_body_legs = {
-		show_in_character_create = true,
-		slot_type = "body",
-		slot_dependencies = {
-			"slot_body_tattoo",
-			"slot_body_face_tattoo",
-			"slot_body_skin_color",
-			"slot_body_skin_color_secondary",
-			"slot_body_skin_discoloration",
-		},
+			"slot_body_eye_color_secondary"
+		}
 	},
 	slot_body_arms = {
 		show_in_character_create = true,
@@ -76,98 +65,97 @@ local item_slot_settings = {
 			"slot_body_face_tattoo",
 			"slot_body_skin_color",
 			"slot_body_skin_color_secondary",
-			"slot_body_skin_discoloration",
-		},
+			"slot_body_skin_discoloration"
+		}
+	},
+	slot_body_legs = {
+		show_in_character_create = true,
+		slot_type = "body",
+		slot_dependencies = {
+			"slot_body_tattoo",
+			"slot_body_face_tattoo",
+			"slot_body_skin_color",
+			"slot_body_skin_color_secondary",
+			"slot_body_skin_discoloration"
+		}
 	},
 	slot_body_hair = {
 		show_in_character_create = true,
 		slot_type = "body",
 		slot_dependencies = {
-			"slot_body_hair_color",
-		},
+			"slot_body_hair_color"
+		}
 	},
 	slot_body_tattoo = {
 		show_in_character_create = true,
 		slot_type = "body",
 		slot_dependencies = {
-			"slot_body_face_tattoo",
-		},
-	},
-	slot_companion_body_skin_color = {
-		show_in_character_create = true,
-		slot_type = "body",
-		archetype_restrictions = {
-			"adamant",
-		},
-	},
-	slot_companion_body_fur_color = {
-		show_in_character_create = true,
-		slot_type = "body",
-		archetype_restrictions = {
-			"adamant",
-		},
-	},
-	slot_companion_body_coat_pattern = {
-		show_in_character_create = true,
-		slot_type = "body",
-		archetype_restrictions = {
-			"adamant",
-		},
-	},
-	slot_body_hair_color = {
-		show_in_character_create = true,
-		slot_type = "body",
-	},
-	slot_body_face_hair_color = {
-		show_in_character_create = true,
-		slot_type = "body",
-		slot_dependencies = {
-			"slot_body_hair_color",
-		},
-		forced_parent_slot_names = {
-			"slot_body_face_hair",
-		},
-	},
-	slot_body_skin_color = {
-		show_in_character_create = true,
-		slot_type = "body",
-	},
-	slot_body_skin_color_secondary = {
-		show_in_character_create = true,
-		slot_type = "body",
-		archetype_restrictions = {
-			"cryptic",
-		},
-	},
-	slot_body_skin_discoloration = {
-		show_in_character_create = true,
-		slot_type = "body",
-		archetype_restrictions = {
-			"cryptic",
-		},
+			"slot_body_face_tattoo"
+		}
 	},
 	slot_body_eye_color = {
 		show_in_character_create = true,
-		slot_type = "body",
+		slot_type = "body"
 	},
 	slot_body_eye_color_secondary = {
 		show_in_character_create = true,
 		slot_type = "body",
 		archetype_restrictions = {
-			"cryptic",
-		},
+			"cryptic"
+		}
 	},
-	slot_companion_gear_full = {
-		display_icon = "content/ui/materials/icons/cosmetics/categories/companion_gear_full",
-		display_name = "loc_inventory_title_slot_companion_gear_full_new",
-		equipped_in_inventory = true,
+	slot_body_hair_color = {
 		show_in_character_create = true,
-		slot_type = "gear",
-		store_category = "companion_gear_full",
-		archetype_restrictions = {
-			"adamant",
-			"cryptic",
+		slot_type = "body"
+	},
+	slot_body_face_hair_color = {
+		show_in_character_create = true,
+		slot_type = "body",
+		slot_dependencies = {
+			"slot_body_hair_color"
 		},
+		forced_parent_slot_names = {
+			"slot_body_face_hair"
+		}
+	},
+	slot_body_skin_color = {
+		show_in_character_create = true,
+		slot_type = "body"
+	},
+	slot_body_skin_color_secondary = {
+		show_in_character_create = true,
+		slot_type = "body",
+		archetype_restrictions = {
+			"cryptic"
+		}
+	},
+	slot_body_skin_discoloration = {
+		show_in_character_create = true,
+		slot_type = "body",
+		archetype_restrictions = {
+			"cryptic"
+		}
+	},
+	slot_companion_body_skin_color = {
+		show_in_character_create = true,
+		slot_type = "body",
+		archetype_restrictions = {
+			"adamant"
+		}
+	},
+	slot_companion_body_fur_color = {
+		show_in_character_create = true,
+		slot_type = "body",
+		archetype_restrictions = {
+			"adamant"
+		}
+	},
+	slot_companion_body_coat_pattern = {
+		show_in_character_create = true,
+		slot_type = "body",
+		archetype_restrictions = {
+			"adamant"
+		}
 	},
 	slot_gear_head = {
 		display_icon = "content/ui/materials/icons/cosmetics/categories/headgear",
@@ -180,8 +168,8 @@ local item_slot_settings = {
 			"slot_body_skin_color_secondary",
 			"slot_body_eye_color",
 			"slot_body_eye_color_secondary",
-			"slot_gear_material_override_decal",
-		},
+			"slot_gear_material_override_decal"
+		}
 	},
 	slot_gear_upperbody = {
 		display_icon = "content/ui/materials/icons/cosmetics/categories/upper_body",
@@ -193,8 +181,8 @@ local item_slot_settings = {
 			"slot_body_tattoo",
 			"slot_body_skin_color",
 			"slot_body_skin_color_secondary",
-			"slot_gear_material_override_decal",
-		},
+			"slot_gear_material_override_decal"
+		}
 	},
 	slot_gear_lowerbody = {
 		display_icon = "content/ui/materials/icons/cosmetics/categories/lower_body",
@@ -205,43 +193,55 @@ local item_slot_settings = {
 		slot_dependencies = {
 			"slot_body_skin_color",
 			"slot_body_skin_color_secondary",
-			"slot_gear_material_override_decal",
-		},
+			"slot_gear_material_override_decal"
+		}
 	},
 	slot_gear_extra_cosmetic = {
 		display_icon = "content/ui/materials/icons/cosmetics/categories/upper_body",
 		display_name = "loc_inventory_title_slot_gear_extra_cosmetic",
 		equipped_in_inventory = true,
 		slot_type = "gear",
-		store_category = "outfits",
+		store_category = "outfits"
 	},
 	slot_gear_material_override_decal = {
 		show_in_character_create = true,
 		slot_type = "material",
 		archetype_restrictions = {
+			"adamant"
+		}
+	},
+	slot_companion_gear_full = {
+		display_icon = "content/ui/materials/icons/cosmetics/categories/companion_gear_full",
+		display_name = "loc_inventory_title_slot_companion_gear_full_new",
+		equipped_in_inventory = true,
+		show_in_character_create = true,
+		slot_type = "gear",
+		store_category = "companion_gear_full",
+		archetype_restrictions = {
 			"adamant",
-		},
+			"cryptic"
+		}
 	},
 	slot_attachment_1 = {
 		display_name = "loc_inventory_title_slot_attachment_1",
 		equipped_in_inventory = true,
 		ignore_character_spawning = true,
 		slot_type = "gadget",
-		store_category = "devices",
+		store_category = "devices"
 	},
 	slot_attachment_2 = {
 		display_name = "loc_inventory_title_slot_attachment_2",
 		equipped_in_inventory = true,
 		ignore_character_spawning = true,
 		slot_type = "gadget",
-		store_category = "devices",
+		store_category = "devices"
 	},
 	slot_attachment_3 = {
 		display_name = "loc_inventory_title_slot_attachment_3",
 		equipped_in_inventory = true,
 		ignore_character_spawning = true,
 		slot_type = "gadget",
-		store_category = "devices",
+		store_category = "devices"
 	},
 	slot_insignia = {
 		display_name = "loc_inventory_title_slot_insignia",
@@ -251,8 +251,8 @@ local item_slot_settings = {
 		store_category = "nameplates",
 		item_icon_size = {
 			40,
-			100,
-		},
+			100
+		}
 	},
 	slot_portrait_frame = {
 		display_name = "loc_inventory_title_slot_portrait_frame",
@@ -262,8 +262,8 @@ local item_slot_settings = {
 		store_category = "nameplates",
 		item_icon_size = {
 			90,
-			100,
-		},
+			100
+		}
 	},
 	slot_character_title = {
 		display_name = "loc_inventory_title_slot_character_title",
@@ -274,8 +274,8 @@ local item_slot_settings = {
 		icon_color = Color.terminal_text_body(255, true),
 		item_icon_size = {
 			90,
-			90,
-		},
+			90
+		}
 	},
 	slot_animation_emote_1 = {
 		display_name = "loc_inventory_title_slot_animation_emote_1",
@@ -286,9 +286,9 @@ local item_slot_settings = {
 		store_category = "emotes",
 		item_icon_size = {
 			128,
-			128,
+			128
 		},
-		icon_color = Color.terminal_text_body(255, true),
+		icon_color = Color.terminal_text_body(255, true)
 	},
 	slot_animation_emote_2 = {
 		display_name = "loc_inventory_title_slot_animation_emote_2",
@@ -298,10 +298,10 @@ local item_slot_settings = {
 		store_category = "emotes",
 		item_icon_size = {
 			128,
-			128,
+			128
 		},
 		icon_color = Color.terminal_text_body(255, true),
-		icon_angle = -math.pi / 2.5,
+		icon_angle = -math.pi / 2.5
 	},
 	slot_animation_emote_3 = {
 		display_name = "loc_inventory_title_slot_animation_emote_3",
@@ -311,10 +311,10 @@ local item_slot_settings = {
 		store_category = "emotes",
 		item_icon_size = {
 			128,
-			128,
+			128
 		},
 		icon_color = Color.terminal_text_body(255, true),
-		icon_angle = -math.pi / 1.25,
+		icon_angle = -math.pi / 1.25
 	},
 	slot_animation_emote_4 = {
 		display_name = "loc_inventory_title_slot_animation_emote_4",
@@ -324,10 +324,10 @@ local item_slot_settings = {
 		store_category = "emotes",
 		item_icon_size = {
 			128,
-			128,
+			128
 		},
 		icon_color = Color.terminal_text_body(255, true),
-		icon_angle = math.pi / 1.25,
+		icon_angle = math.pi / 1.25
 	},
 	slot_animation_emote_5 = {
 		display_name = "loc_inventory_title_slot_animation_emote_5",
@@ -337,10 +337,10 @@ local item_slot_settings = {
 		store_category = "emotes",
 		item_icon_size = {
 			128,
-			128,
+			128
 		},
 		icon_color = Color.terminal_text_body(255, true),
-		icon_angle = math.pi / 2.5,
+		icon_angle = math.pi / 2.5
 	},
 	slot_animation_end_of_round = {
 		display_name = "loc_inventory_title_slot_animation_end_of_round",
@@ -348,20 +348,20 @@ local item_slot_settings = {
 		ignore_character_spawning = true,
 		slot_type = "ui",
 		store_category = "poses",
-		icon_angle = math.pi / 2.5,
+		icon_angle = math.pi / 2.5
 	},
 	slot_trinket_1 = {
 		display_name = "loc_inventory_title_slot_trinket_1",
 		ignore_character_spawning = true,
-		slot_type = "ui",
+		slot_type = "ui"
 	},
 	slot_weapon_skin = {
 		display_name = "loc_inventory_title_slot_primary",
 		ignore_character_spawning = true,
-		slot_type = "weapon",
+		slot_type = "weapon"
 	},
 	slot_luggable = {
-		slot_type = "luggable",
+		slot_type = "luggable"
 	},
 	slot_primary = {
 		buffable = true,
@@ -370,7 +370,7 @@ local item_slot_settings = {
 		gamepad_wield_input = "quick_wield",
 		slot_type = "weapon",
 		store_category = "weapons",
-		wield_input = "wield_1",
+		wield_input = "wield_1"
 	},
 	slot_secondary = {
 		buffable = true,
@@ -379,18 +379,18 @@ local item_slot_settings = {
 		gamepad_wield_input = "quick_wield",
 		slot_type = "weapon",
 		store_category = "weapons",
-		wield_input = "wield_2",
+		wield_input = "wield_2"
 	},
 	slot_timed = {
-		slot_type = "weapon",
+		slot_type = "weapon"
 	},
 	slot_pocketable = {
 		slot_type = "pocketable",
 		wield_input = "wield_3",
 		gamepad_wield_input = {
 			"wield_3",
-			"wield_3_gamepad",
-		},
+			"wield_3_gamepad"
+		}
 	},
 	slot_pocketable_small = {
 		ability_type = "pocketable_ability",
@@ -398,31 +398,32 @@ local item_slot_settings = {
 		wield_input = "wield_4",
 		gamepad_wield_input = {
 			"wield_4",
-			"wield_3_gamepad",
-		},
+			"wield_3_gamepad"
+		}
 	},
 	slot_device = {
 		slot_type = "device",
-		wield_input = "wield_5",
+		wield_input = "wield_5"
 	},
 	slot_unarmed = {
-		slot_type = "unarmed",
+		slot_type = "unarmed"
 	},
 	slot_combat_ability = {
-		slot_type = "ability",
+		ability_type = "combat_ability",
+		slot_type = "ability"
 	},
 	slot_grenade_ability = {
 		ability_type = "grenade_ability",
-		slot_type = "ability",
+		slot_type = "ability"
 	},
 	inspect_pose = {},
 	slot_set = {},
 	slot_net = {
-		slot_type = "vfx",
+		slot_type = "vfx"
 	},
 	slot_prop = {
-		slot_type = "vfx",
-	},
+		slot_type = "vfx"
+	}
 }
 
 for slot_name, config in pairs(item_slot_settings) do

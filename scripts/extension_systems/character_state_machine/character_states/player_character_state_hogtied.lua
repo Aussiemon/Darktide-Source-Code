@@ -17,7 +17,7 @@ local INVENTORY_SLOT_TO_WIELD_ON_ENTER = "slot_unarmed"
 local INVENTORY_SLOT_TO_WIELD_ON_EXIT = "slot_primary"
 local STINGER_EXIT_ALIAS = "disabled_exit"
 local STINGER_PROPERTIES = {
-	stinger_type = "hogtied",
+	stinger_type = "hogtied"
 }
 
 PlayerCharacterStateHogtied.init = function (self, character_state_init_context, ...)
@@ -65,9 +65,10 @@ end
 PlayerCharacterStateHogtied.on_exit = function (self, unit, t, next_state)
 	PlayerCharacterStateHogtied.super.on_exit(self, unit, t, next_state)
 
-	local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player)
+	local first_person_mode_component = self._first_person_mode_component
+	local rewind_seconds = LagCompensation.rewind_seconds(self._is_server, self._is_local_unit, self._player)
 
-	FirstPersonView.enter(t, self._first_person_mode_component, rewind_ms)
+	FirstPersonView.enter(t, first_person_mode_component, rewind_seconds)
 
 	local inventory_component = self._inventory_component
 

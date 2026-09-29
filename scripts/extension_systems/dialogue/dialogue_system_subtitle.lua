@@ -62,7 +62,7 @@ DialogueSystemSubtitle.create_subtitle = function (self, currently_playing_subti
 		is_audible = true,
 		currently_playing_subtitle = currently_playing_subtitle,
 		speaker_name = speaker_name,
-		duration = duration,
+		duration = duration
 	}
 
 	if optional_delay then

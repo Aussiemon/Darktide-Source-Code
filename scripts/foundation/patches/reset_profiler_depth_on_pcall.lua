@@ -3,7 +3,7 @@
 return function ()
 	local function pack_pcall(status, ...)
 		return status, {
-			...,
+			...
 		}, select("#", ...)
 	end
 

@@ -29,7 +29,7 @@ damage_templates.adamant_shout = {
 	suppression_value = 30,
 	power_distribution = {
 		attack = 0,
-		impact = 30,
+		impact = 30
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -40,7 +40,7 @@ damage_templates.adamant_shout = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -50,12 +50,12 @@ damage_templates.adamant_shout = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-		},
+			[armor_types.void_shield] = 1
+		}
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.adamant_shout_damage = {
 	damage_type = nil,
@@ -67,7 +67,7 @@ damage_templates.adamant_shout_damage = {
 	suppression_value = 30,
 	power_distribution = {
 		attack = 100,
-		impact = 17,
+		impact = 17
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -78,7 +78,7 @@ damage_templates.adamant_shout_damage = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -88,12 +88,12 @@ damage_templates.adamant_shout_damage = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-		},
+			[armor_types.void_shield] = 1
+		}
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.adamant_charge_impact = {
 	ignore_stagger_reduction = true,
@@ -102,11 +102,11 @@ damage_templates.adamant_charge_impact = {
 	stagger_override = "heavy",
 	power_distribution = {
 		attack = 0,
-		impact = 250,
+		impact = 250
 	},
 	cleave_distribution = {
 		attack = 0,
-		impact = math.huge,
+		impact = math.huge
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -117,7 +117,7 @@ damage_templates.adamant_charge_impact = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 3,
@@ -127,15 +127,15 @@ damage_templates.adamant_charge_impact = {
 			[armor_types.berserker] = 3,
 			[armor_types.super_armor] = 3,
 			[armor_types.disgustingly_resilient] = 3,
-			[armor_types.void_shield] = 3,
-		},
+			[armor_types.void_shield] = 3
+		}
 	},
 	targets = {
-		default_target = {},
+		default_target = {}
 	},
 	attacker_impact_effects = {
-		camera_effect_shake_event = "adamant_charge_impact",
-	},
+		camera_effect_shake_event = "adamant_charge_impact"
+	}
 }
 damage_templates.adamant_charge_damage = {
 	ignore_stagger_reduction = true,
@@ -143,11 +143,11 @@ damage_templates.adamant_charge_damage = {
 	stagger_override = "heavy",
 	power_distribution = {
 		attack = 300,
-		impact = 1,
+		impact = 1
 	},
 	cleave_distribution = {
 		attack = 1,
-		impact = 1,
+		impact = 1
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -158,7 +158,7 @@ damage_templates.adamant_charge_damage = {
 			[armor_types.berserker] = 1.5,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
+			[armor_types.void_shield] = 1
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -168,15 +168,15 @@ damage_templates.adamant_charge_damage = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-		},
+			[armor_types.void_shield] = 1
+		}
 	},
 	targets = {
-		default_target = {},
+		default_target = {}
 	},
 	attacker_impact_effects = {
-		camera_effect_shake_event = "adamant_charge_impact",
-	},
+		camera_effect_shake_event = "adamant_charge_impact"
+	}
 }
 damage_templates.adamant_companion_pounce = {
 	companion_pounce = true,
@@ -194,7 +194,7 @@ damage_templates.adamant_companion_pounce = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 0.6,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -204,25 +204,25 @@ damage_templates.adamant_companion_pounce = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-		},
+			[armor_types.void_shield] = 1
+		}
 	},
 	power_distribution = {
 		attack = 100,
-		impact = 10,
+		impact = 10
 	},
 	cleave_distribution = {
 		attack = 1,
-		impact = 1,
+		impact = 1
 	},
 	force_look_function = ForcedLookSettings.look_functions.medium,
 	push_template = push_templates.medium,
 	ogryn_push_template = push_templates.medium,
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.adamant_companion_human_pounce = table.clone(damage_templates.adamant_companion_pounce)
 damage_templates.adamant_companion_ogryn_pounce = table.clone(damage_templates.adamant_companion_pounce)
@@ -250,7 +250,7 @@ damage_templates.adamant_companion_initial_pounce = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -260,33 +260,33 @@ damage_templates.adamant_companion_initial_pounce = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-		},
+			[armor_types.void_shield] = 1
+		}
 	},
 	power_distribution = {
 		attack = 0,
-		impact = 10,
+		impact = 10
 	},
 	cleave_distribution = {
 		attack = 1,
-		impact = 1,
+		impact = 1
 	},
 	force_look_function = ForcedLookSettings.look_functions.medium,
 	push_template = push_templates.medium,
 	ogryn_push_template = push_templates.medium,
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.adamant_companion_no_damage_pounce = table.clone(damage_templates.adamant_companion_initial_pounce)
 damage_templates.adamant_companion_no_damage_pounce.power_distribution = {
 	attack = 0,
-	impact = 10,
+	impact = 10
 }
 
 return {
 	base_templates = damage_templates,
-	overrides = overrides,
+	overrides = overrides
 }

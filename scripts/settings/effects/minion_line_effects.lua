@@ -9,10 +9,10 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger_enemy",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger_enemy"
+				}
+			}
+		}
 	},
 	renegade_lasbeam = {
 		sfx = "wwise/events/weapon/play_weapon_lasgun_crack_beam_nearby_husk",
@@ -22,10 +22,10 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger_enemy",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger_enemy"
+				}
+			}
+		}
 	},
 	renegade_gunner_lasbeam = {
 		sfx = "wwise/events/weapon/play_weapon_lasgun_crack_beam_nearby_husk",
@@ -35,10 +35,10 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger_enemy",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger_enemy"
+				}
+			}
+		}
 	},
 	renegade_sniper_lasbeam = {
 		sfx = "wwise/events/weapon/play_weapon_lasgun_crack_beam_nearby_husk",
@@ -49,10 +49,10 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/enemies/renegade_sniper/renegade_sniper_beam_emitter",
-				},
-			},
-		},
+					vfx = "content/fx/particles/enemies/renegade_sniper/renegade_sniper_beam_emitter"
+				}
+			}
+		}
 	},
 	renegade_assault_lasbeam = {
 		sfx = "wwise/events/weapon/play_weapon_lasgun_crack_beam_nearby_husk",
@@ -62,10 +62,10 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger_enemy",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger_enemy"
+				}
+			}
+		}
 	},
 	cultist_autogun_bullet = {
 		sfx = "wwise/events/weapon/play_shared_combat_weapon_bullet_flyby_small_husk",
@@ -74,10 +74,10 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail_3p",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail_3p"
+				}
+			}
+		}
 	},
 	renegade_heavy_stubber_bullet = {
 		sfx = "wwise/events/weapon/play_shared_combat_weapon_bolter_bullet_flyby_husk",
@@ -86,10 +86,10 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail_3p",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail_3p"
+				}
+			}
+		}
 	},
 	renegade_pellet = {
 		sfx = "wwise/events/weapon/play_shared_combat_weapon_bullet_flyby_small_husk",
@@ -99,10 +99,10 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/shotgun/shotgun_trail_smoke",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/shotgun/shotgun_trail_smoke"
+				}
+			}
+		}
 	},
 	renegade_captain_pellet = {
 		sfx = "wwise/events/weapon/play_shared_combat_weapon_bullet_flyby_small_husk",
@@ -112,10 +112,10 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/shotgun/shotgun_trail_smoke",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/shotgun/shotgun_trail_smoke"
+				}
+			}
+		}
 	},
 	renegade_captain_boltshell = {
 		sfx = "wwise/events/weapon/play_shared_combat_weapon_bolter_bullet_flyby",
@@ -125,10 +125,10 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/shotgun/shotgun_trail_smoke",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/shotgun/shotgun_trail_smoke"
+				}
+			}
+		}
 	},
 	renegade_captain_plasma_beam = {
 		keep_aligned = true,
@@ -140,10 +140,10 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/plasma_gun/plasma_beam_linger_orange",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/plasma_gun/plasma_beam_linger_orange"
+				}
+			}
+		}
 	},
 	servo_skull_lasbeam = {
 		sfx = "wwise/events/weapon/play_weapon_lasgun_crack_beam_imperial_guards",
@@ -153,11 +153,11 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger_yellow",
-				},
-			},
-		},
-	},
+					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger_yellow"
+				}
+			}
+		}
+	}
 }
 
 return line_effects

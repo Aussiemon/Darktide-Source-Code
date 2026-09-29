@@ -43,9 +43,9 @@ ActionInspect3p.finish = function (self, reason, data, t, time_in_action)
 		ForceRotation.stop(locomotion_force_rotation)
 	end
 
-	local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player)
+	local rewind_seconds = LagCompensation.rewind_seconds(self._is_server, self._is_local_unit, self._player)
 
-	FirstPersonView.enter(t, self._first_person_mode_component, rewind_ms)
+	FirstPersonView.enter(t, first_person_mode_component, rewind_seconds)
 
 	if reason ~= "new_interrupting_action" then
 		local weapon_tweak_templates_component = self._weapon_tweak_templates_component

@@ -23,13 +23,13 @@ local scenegraph_definition = {
 	screen = {
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			200,
-		},
+			200
+		}
 	},
 	canvas = {
 		horizontal_alignment = "center",
@@ -37,13 +37,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	test = {
 		horizontal_alignment = "left",
@@ -51,13 +51,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			540,
-			200,
+			200
 		},
 		position = {
 			50,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	list_background = {
 		horizontal_alignment = "left",
@@ -65,13 +65,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			mission_area_width,
-			mission_area_height,
+			mission_area_height
 		},
 		position = {
 			side_buffer + 60,
 			top_buffer + 60,
-			0,
-		},
+			0
+		}
 	},
 	list_mask = {
 		horizontal_alignment = "center",
@@ -79,13 +79,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			mission_area_width,
-			mission_area_height,
+			mission_area_height
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	list_anchor = {
 		horizontal_alignment = "left",
@@ -93,13 +93,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			100,
 			250,
-			10,
-		},
+			10
+		}
 	},
 	campaign_header = {
 		horizontal_alignment = "center",
@@ -107,13 +107,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			mission_area_width,
-			50,
+			50
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	panel_button_right = {
 		horizontal_alignment = "right",
@@ -121,13 +121,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			50,
-			panel_height,
+			panel_height
 		},
 		position = {
 			0,
 			0,
-			20,
-		},
+			20
+		}
 	},
 	panel_button_left = {
 		horizontal_alignment = "left",
@@ -135,13 +135,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			50,
-			panel_height,
+			panel_height
 		},
 		position = {
 			0,
 			0,
-			20,
-		},
+			20
+		}
 	},
 	list_panel = {
 		horizontal_alignment = "center",
@@ -149,13 +149,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			mission_area_width - 100,
-			panel_height,
+			panel_height
 		},
 		position = {
 			0,
 			0,
-			50,
-		},
+			50
+		}
 	},
 	top_detail = {
 		horizontal_alignment = "center",
@@ -163,13 +163,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			mission_area_width,
-			100,
+			100
 		},
 		position = {
 			0,
 			-100,
-			2,
-		},
+			2
+		}
 	},
 	bottom_detail = {
 		horizontal_alignment = "center",
@@ -177,13 +177,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			mission_area_width,
-			38,
+			38
 		},
 		position = {
 			0,
 			38,
-			30,
-		},
+			30
+		}
 	},
 	scrollbar_horizontal = {
 		horizontal_alignment = "center",
@@ -191,13 +191,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			mission_area_width,
-			20,
+			20
 		},
 		position = {
 			0,
 			0,
-			30,
-		},
+			30
+		}
 	},
 	scrollbar_vertical = {
 		horizontal_alignment = "right",
@@ -205,14 +205,14 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			20,
-			mission_area_height,
+			mission_area_height
 		},
 		position = {
 			0,
 			0,
-			30,
-		},
-	},
+			30
+		}
+	}
 }
 
 local function _get_input_text(action)
@@ -236,7 +236,7 @@ local function create_scrollbar_widget(orientation)
 	local scrollbar_width = orientation == "horizontal" and mission_area_width or 20
 	local thumb_size = {
 		0,
-		0,
+		0
 	}
 	local tot_size = 4000
 
@@ -272,10 +272,10 @@ local function create_scrollbar_widget(orientation)
 				offset = {
 					scrollbar_horizontal_offset,
 					0,
-					0,
-				},
+					0
+				}
 			},
-			visibility_function = scrollbar_visibility_function,
+			visibility_function = scrollbar_visibility_function
 		},
 		{
 			pass_type = "texture",
@@ -286,25 +286,25 @@ local function create_scrollbar_widget(orientation)
 				vertical_alignment = "center",
 				size = {
 					scrollbar_width,
-					scrollbar_height,
+					scrollbar_height
 				},
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					scrollbar_horizontal_offset,
 					0,
-					12,
+					12
 				},
 				color = {
 					255,
 					255,
 					88,
-					27,
-				},
+					27
+				}
 			},
-			visibility_function = scrollbar_visibility_function,
+			visibility_function = scrollbar_visibility_function
 		},
 		{
 			pass_type = "rect",
@@ -313,12 +313,12 @@ local function create_scrollbar_widget(orientation)
 				size = thumb_size,
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					scrollbar_horizontal_offset,
 					0,
-					11,
+					11
 				},
 				vertical_alignment = thumb_vertical_alignment,
 				horizontal_alignment = thumb_horizontal_alignment,
@@ -326,20 +326,20 @@ local function create_scrollbar_widget(orientation)
 					255,
 					140.25,
 					48.400000000000006,
-					14.850000000000001,
+					14.850000000000001
 				},
 				default_color = {
 					255,
 					140.25,
 					48.400000000000006,
-					14.850000000000001,
+					14.850000000000001
 				},
 				hover_color = {
 					255,
 					255,
 					88,
-					27,
-				},
+					27
+				}
 			},
 			visibility_function = scrollbar_visibility_function,
 			change_function = function (content, style, animations, dt)
@@ -359,7 +359,7 @@ local function create_scrollbar_widget(orientation)
 				local hover_color = style.hover_color
 
 				ColorUtilities.color_lerp(default_color, hover_color, color_change_progress, style.color)
-			end,
+			end
 		},
 		{
 			pass_type = "logic",
@@ -423,7 +423,7 @@ local function create_scrollbar_widget(orientation)
 					content.scroll_percentage = percentage
 					content.scroll_value = percentage
 				end
-			end,
+			end
 		},
 		{
 			pass_type = "logic",
@@ -486,7 +486,7 @@ local function create_scrollbar_widget(orientation)
 
 					content.scroll_percentage = content.scroll_value or content.scroll_percentage or 0
 				end
-			end,
+			end
 		},
 		{
 			pass_type = "logic",
@@ -505,8 +505,8 @@ local function create_scrollbar_widget(orientation)
 
 				hotspot_style.offset[axis] = scroll_thumb_offset
 				thumb_style.offset[axis] = scroll_thumb_offset
-			end,
-		},
+			end
+		}
 	}, scenegraph_id)
 
 	return scrollbar_widget
@@ -538,7 +538,7 @@ local function create_debrief_widget(scenegraph_id, is_locked)
 			pass_type = "rect",
 			style_id = "background",
 			style = Styles.debrief_video.background,
-			change_function = _update_debrief_button_size_by_selection_state,
+			change_function = _update_debrief_button_size_by_selection_state
 		},
 		{
 			pass_type = "texture",
@@ -546,7 +546,7 @@ local function create_debrief_widget(scenegraph_id, is_locked)
 			value = "content/ui/materials/mission_board/frame_with_corner_detail",
 			value_id = "frame",
 			style = frame_style,
-			change_function = _update_debrief_button_size_by_selection_state,
+			change_function = _update_debrief_button_size_by_selection_state
 		},
 		{
 			content_id = "hotspot",
@@ -577,7 +577,7 @@ local function create_debrief_widget(scenegraph_id, is_locked)
 
 					content.hover_sound_played = nil
 				end
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -591,12 +591,12 @@ local function create_debrief_widget(scenegraph_id, is_locked)
 				if style.material_values and not is_locked then
 					style.material_values.enable_animation = content.hotspot.anim_hover_progress
 				end
-			end,
+			end
 		},
 		{
 			pass_type = "rect",
 			style_id = "line",
-			style = line_style,
+			style = line_style
 		},
 		{
 			pass_type = "text",
@@ -607,7 +607,7 @@ local function create_debrief_widget(scenegraph_id, is_locked)
 			visibility_function = function (content, style)
 				local hotspot = content.hotspot
 
-				return InputDevice.gamepad_active and hotspot.parent_is_selected
+				return InputDevice.gamepad_active and hotspot.parent_is_selected and not is_locked
 			end,
 			change_function = function (content, style, animation, dt)
 				if not InputDevice.gamepad_active then
@@ -620,8 +620,8 @@ local function create_debrief_widget(scenegraph_id, is_locked)
 				local input_text = InputUtils.input_text_for_current_input_device(input_service_name, alias_key)
 
 				content.gamepad_input_hint = input_text
-			end,
-		},
+			end
+		}
 	}, scenegraph_id)
 
 	widget_definition.content.is_locked = is_locked
@@ -633,21 +633,21 @@ local function create_panel_step_button(scenegraph_id, horz_alignment, input_act
 	local uvs = horz_alignment == "right" and {
 		{
 			1,
-			0,
+			0
 		},
 		{
 			0,
-			1,
-		},
+			1
+		}
 	} or {
 		{
 			0,
-			0,
+			0
 		},
 		{
 			1,
-			1,
-		},
+			1
+		}
 	}
 	local button_icon_style = table.clone(Styles.panel_stepper.button_icon)
 	local button_icon_glow_style = table.clone(Styles.panel_stepper.button_icon_glow)
@@ -657,7 +657,7 @@ local function create_panel_step_button(scenegraph_id, horz_alignment, input_act
 
 	local input_text = _get_input_text(input_action)
 	local content_override = {
-		gamepad_input = input_action,
+		gamepad_input = input_action
 	}
 
 	return UIWidget.create_definition({
@@ -665,7 +665,7 @@ local function create_panel_step_button(scenegraph_id, horz_alignment, input_act
 			content_id = "hotspot",
 			pass_type = "hotspot",
 			style_id = "hotspot",
-			style = Styles.panel_stepper.hotspot,
+			style = Styles.panel_stepper.hotspot
 		},
 		{
 			pass_type = "texture",
@@ -676,18 +676,18 @@ local function create_panel_step_button(scenegraph_id, horz_alignment, input_act
 					255,
 					255,
 					88,
-					27,
+					27
 				},
 				offset = {
 					0,
 					0,
-					6,
+					6
 				},
 				size_addition = {
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -705,7 +705,7 @@ local function create_panel_step_button(scenegraph_id, horz_alignment, input_act
 				style.color[1] = 255 * (1 - hotspot_data.anim_input_progress)
 				style.size[1] = style.default_size[1] + 10 * hotspot_data.anim_hover_progress
 				style.size[2] = style.default_size[2] + 10 * hotspot_data.anim_hover_progress
-			end,
+			end
 		},
 		{
 			pass_type = "texture_uv",
@@ -723,7 +723,7 @@ local function create_panel_step_button(scenegraph_id, horz_alignment, input_act
 				style.color[1] = 255 * hotspot_data.anim_input_progress
 				style.size[1] = style.default_size[1] + 10 * hotspot_data.anim_hover_progress
 				style.size[2] = style.default_size[2] + 10 * hotspot_data.anim_hover_progress
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -744,8 +744,8 @@ local function create_panel_step_button(scenegraph_id, horz_alignment, input_act
 
 					content.button_input = input_text
 				end
-			end,
-		},
+			end
+		}
 	}, scenegraph_id, content_override)
 end
 
@@ -755,12 +755,12 @@ local function create_list_panel_widget(scenegraph_id)
 			content_id = "panel_button_hotspot",
 			pass_type = "hotspot",
 			style_id = "panel_button_hotspot",
-			style = Styles.list_panel.panel_button_hotspot,
+			style = Styles.list_panel.panel_button_hotspot
 		},
 		{
 			pass_type = "rect",
 			style_id = "panel_button_background",
-			style = Styles.list_panel.panel_button_background,
+			style = Styles.list_panel.panel_button_background
 		},
 		{
 			pass_type = "rect",
@@ -772,7 +772,7 @@ local function create_list_panel_widget(scenegraph_id)
 
 				alpha = math.clamp(alpha + 255 * hotspot.anim_select_progress, 0, 255)
 				style.color[1] = alpha
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -785,11 +785,11 @@ local function create_list_panel_widget(scenegraph_id)
 
 				style.text_color = (hotspot.is_hover or hotspot.is_selected) and style.selected_color or style.default_color
 
-				local font_size = 22 + 2 * hotspot.anim_hover_progress
+				local font_size = Styles.list_panel.panel_button_campaign_title.font_size + 2 * hotspot.anim_hover_progress
 
 				font_size = font_size + 3 * hotspot.anim_select_progress
 				style.font_size = font_size
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -800,18 +800,18 @@ local function create_list_panel_widget(scenegraph_id)
 					255,
 					255,
 					88,
-					27,
+					27
 				},
 				offset = {
 					0,
 					0,
-					6,
+					6
 				},
 				size_addition = {
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -823,36 +823,36 @@ local function create_list_panel_widget(scenegraph_id)
 					255,
 					255,
 					88,
-					27,
+					27
 				},
 				selected_color = {
 					255,
 					0,
 					0,
-					0,
+					0
 				},
 				default_color = {
 					255,
 					255,
 					88,
-					27,
+					27
 				},
 				offset = {
 					0,
 					0,
-					6,
+					6
 				},
 				size_addition = {
 					0,
-					0,
-				},
+					0
+				}
 			},
 			change_function = function (content, style, animations, dt)
 				local hotspot = content.panel_button_hotspot
 
 				style.color = (hotspot.is_hover or hotspot.is_selected) and style.selected_color or style.default_color
-			end,
-		},
+			end
+		}
 	}, scenegraph_id)
 end
 
@@ -860,8 +860,8 @@ local widget_definitions = {
 	list_mask = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/offscreen_masks/ui_overlay_offscreen_straight_blur_02",
-		},
+			value = "content/ui/materials/offscreen_masks/ui_overlay_offscreen_straight_blur_02"
+		}
 	}, "list_mask"),
 	list_background = UIWidget.create_definition({
 		{
@@ -872,22 +872,22 @@ local widget_definitions = {
 					160,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					-1,
-				},
-			},
+					-1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
 			style_id = "list_background_fade",
 			value = "content/ui/materials/backgrounds/terminal_basic",
 			value_id = "list_background_fade",
-			style = Styles.list_background.list_background_fade,
-		},
+			style = Styles.list_background.list_background_fade
+		}
 	}, "list_background"),
 	list_frame = UIWidget.create_definition({
 		{
@@ -899,19 +899,19 @@ local widget_definitions = {
 					255,
 					255,
 					88,
-					27,
+					27
 				},
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				size_addition = {
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "list_background"),
 	top_detail = UIWidget.create_definition({
 		{
@@ -919,8 +919,8 @@ local widget_definitions = {
 			style_id = "detail_texture",
 			value = "content/ui/materials/icons/mission_types_pj/mission_type_story",
 			value_id = "detail_texture",
-			style = Styles.top_detail.detail_texture,
-		},
+			style = Styles.top_detail.detail_texture
+		}
 	}, "top_detail"),
 	bottom_detail = UIWidget.create_definition({
 		{
@@ -949,11 +949,11 @@ local widget_definitions = {
 				end
 
 				content.progress = progress + dt
-			end,
-		},
+			end
+		}
 	}, "bottom_detail"),
 	panel_stepper_right = create_panel_step_button("panel_button_right", "right", "navigate_secondary_right_pressed"),
-	panel_stepper_left = create_panel_step_button("panel_button_left", "left", "navigate_secondary_left_pressed"),
+	panel_stepper_left = create_panel_step_button("panel_button_left", "left", "navigate_secondary_left_pressed")
 }
 local animations = {}
 
@@ -988,7 +988,7 @@ animations.title_enter = {
 			ui_scenegraph.list_background.position[1] = side_buffer + 60 + mission_area_width * 0.5 - 1
 			ui_scenegraph.list_background.position[2] = top_buffer + 60 + mission_area_height * 0.5 - 1
 			parent._background_entry_done = false
-		end,
+		end
 	},
 	{
 		end_time = 0.3,
@@ -1006,7 +1006,7 @@ animations.title_enter = {
 		end,
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 			return
-		end,
+		end
 	},
 	{
 		end_time = 0.55,
@@ -1042,7 +1042,7 @@ animations.title_enter = {
 			parent._background_entry_done = true
 
 			parent:_start_mission_list_entry_animation()
-		end,
+		end
 	},
 	{
 		end_time = 0.7,
@@ -1053,7 +1053,7 @@ animations.title_enter = {
 		end,
 		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 			widgets.list_background.style.list_background_fade.color[1] = 90 * progress
-		end,
+		end
 	},
 	{
 		end_time = 1.25,
@@ -1077,7 +1077,7 @@ animations.title_enter = {
 			local text_style = bottom_detail_style.flavor_text_1
 			local text_width = Text.text_width(params.ui_renderer, bottom_detail.content.default_flavor_text, text_style, {
 				mission_area_width,
-				0,
+				0
 			})
 
 			text_style.size[1] = text_width + 60
@@ -1107,8 +1107,8 @@ animations.title_enter = {
 
 			bottom_detail.content.entry_animation_done = true
 			parent._enter_animation = nil
-		end,
-	},
+		end
+	}
 }
 animations.mission_tile_entry = {
 	{
@@ -1141,7 +1141,7 @@ animations.mission_tile_entry = {
 			style.side_objective_icon.visible = false
 			style.side_objective_frame.visible = false
 			style.side_objective_background.visible = false
-		end,
+		end
 	},
 	{
 		end_time = 0.35,
@@ -1192,7 +1192,7 @@ animations.mission_tile_entry = {
 			style.location_lock.color[1] = 255 * ease_progress
 			style.location_vignette.color[1] = 255 * ease_progress
 			style.location_rect.color[1] = 255 * ease_progress
-		end,
+		end
 	},
 	{
 		end_time = 0.35,
@@ -1235,7 +1235,7 @@ animations.mission_tile_entry = {
 			style.display_order_text.text_color[1] = 255 * math.easeOutCubic(progress)
 			style.display_order_text_frame.color[1] = 255 * math.easeOutCubic(progress)
 			content.display_order_text = Utf8.sub_string(content.default_display_order_text, 1, math.floor(content.display_order_text_num_characters * progress))
-		end,
+		end
 	},
 	{
 		end_time = 0.35,
@@ -1285,7 +1285,7 @@ animations.mission_tile_entry = {
 				style.side_objective_frame.color[1] = 255 * math.easeOutCubic(progress)
 				style.side_objective_background.color[1] = 255 * math.easeOutCubic(progress)
 			end
-		end,
+		end
 	},
 	{
 		end_time = 0.05,
@@ -1298,7 +1298,7 @@ animations.mission_tile_entry = {
 			if not line_widgets then
 				return
 			end
-		end,
+		end
 	},
 	{
 		end_time = 0.35,
@@ -1348,7 +1348,7 @@ animations.mission_tile_entry = {
 					style.line_rect.size[2] = default_size[2] * math.easeOutCubic(progress)
 				end
 			end
-		end,
+		end
 	},
 	{
 		end_time = 0.05,
@@ -1370,7 +1370,7 @@ animations.mission_tile_entry = {
 			style.debrief_icon.color[1] = 0
 			style.line.color[1] = 0
 			style.gamepad_input_hint.text_color[1] = 0
-		end,
+		end
 	},
 	{
 		end_time = 0.2,
@@ -1406,7 +1406,7 @@ animations.mission_tile_entry = {
 			style.background.color[1] = 255 * math.easeOutCubic(progress)
 			style.frame.color[1] = (is_locked and style.frame.disabled_color[1] or style.frame.default_color[1]) * math.easeOutCubic(progress)
 			style.line.color[1] = (is_locked and style.line.disabled_color[1] or style.line.default_color[1]) * math.easeOutCubic(progress)
-		end,
+		end
 	},
 	{
 		end_time = 0.35,
@@ -1440,8 +1440,8 @@ animations.mission_tile_entry = {
 
 			style.debrief_icon.color[1] = (is_locked and style.debrief_icon.disabled_color[1] or style.debrief_icon.default_color[1]) * math.easeOutCubic(progress)
 			style.gamepad_input_hint.text_color[1] = 255 * math.easeOutCubic(progress)
-		end,
-	},
+		end
+	}
 }
 animations.title_exit = {
 	{
@@ -1466,7 +1466,7 @@ animations.title_exit = {
 					widget.visible = false
 				end
 			end
-		end,
+		end
 	},
 	{
 		end_time = 0.4,
@@ -1483,7 +1483,7 @@ animations.title_exit = {
 		end,
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 			return
-		end,
+		end
 	},
 	{
 		end_time = 0.75,
@@ -1505,8 +1505,8 @@ animations.title_exit = {
 			parent:set_visibility(false)
 
 			parent._exit_animation = nil
-		end,
-	},
+		end
+	}
 }
 Definitions.scenegraph_definition = scenegraph_definition
 Definitions.widget_definitions = widget_definitions

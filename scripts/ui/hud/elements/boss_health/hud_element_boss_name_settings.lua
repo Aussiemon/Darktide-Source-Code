@@ -13,9 +13,9 @@ style.text_color = UIHudSettings.color_tint_alert_2
 local hud_element_boss_name_settings = {
 	size = {
 		720,
-		32,
+		32
 	},
-	style = style,
+	style = style
 }
 
 return settings("HudElementBossNameSettings", hud_element_boss_name_settings)

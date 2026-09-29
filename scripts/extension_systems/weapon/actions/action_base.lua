@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_base.lua
 
+local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ActionBase = class("ActionBase")
 
 ActionBase.init = function (self, action_context, action_params, action_settings)
@@ -43,7 +44,20 @@ ActionBase.init = function (self, action_context, action_params, action_settings
 end
 
 ActionBase.start = function (self, action_settings, t, time_scale, action_start_params)
-	return
+	self:_set_ability_type(action_start_params)
+end
+
+ActionBase._set_ability_type = function (self, action_start_params)
+	local action_settings = self._action_settings
+	local ability_type
+
+	if action_settings.ability_type_func then
+		ability_type = action_settings.ability_type_func(action_start_params, nil)
+	else
+		ability_type = action_settings.ability_type or ItemSlotSettings[action_start_params.slot_name].ability_type
+	end
+
+	self._ability_type = ability_type
 end
 
 ActionBase.finish = function (self, reason, data, t, time_in_action)
@@ -62,8 +76,8 @@ ActionBase.action_settings = function (self)
 	return self._action_settings
 end
 
-ActionBase.server_correction_occurred = function (self)
-	return
+ActionBase.server_correction_occurred = function (self, unit, from_frame, to_frame, correction_method, action_start_params)
+	self:_set_ability_type(action_start_params)
 end
 
 ActionBase.trigger_anim_event = function (self, anim_event, anim_event_3p, action_time_offset, ...)
@@ -101,13 +115,11 @@ ActionBase.rotation_contraints = function (self)
 	return rotation_contraints
 end
 
-ActionBase._use_ability_charge = function (self, optional_num_charges)
-	local action_settings = self._action_settings
-	local ability_type = action_settings.ability_type
+ActionBase._consume_ability_usage_cost = function (self, optional_usage_cost_override, optional_usage_cost_multiplier)
 	local ability_extension = self._ability_extension
-	local charges_used = ability_extension:use_ability_charge(ability_type, optional_num_charges)
+	local target_cost, actual_consumption = ability_extension:consume_ability_usage_cost(self._ability_type, optional_usage_cost_override, optional_usage_cost_multiplier)
 
-	return charges_used
+	return target_cost, actual_consumption
 end
 
 return ActionBase

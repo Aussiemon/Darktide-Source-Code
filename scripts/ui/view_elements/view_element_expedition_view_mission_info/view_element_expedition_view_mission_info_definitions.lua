@@ -20,13 +20,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			1870,
-			995,
+			995
 		},
 		position = {
 			0,
 			25,
-			3,
-		},
+			3
+		}
 	},
 	_sidebar = {
 		horizontal_alignment = "right",
@@ -34,13 +34,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			483,
-			995,
+			995
 		},
 		position = {
 			0,
 			0,
-			4,
-		},
+			4
+		}
 	},
 	_mission_info = {
 		horizontal_alignment = "center",
@@ -48,13 +48,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			483,
-			415,
+			415
 		},
 		position = {
 			0,
 			155,
-			5,
-		},
+			5
+		}
 	},
 	_mission_info_tabs = {
 		horizontal_alignment = "center",
@@ -62,13 +62,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			483,
-			34,
+			34
 		},
 		position = {
 			0,
 			1,
-			10,
-		},
+			10
+		}
 	},
 	_mission_info_page = {
 		horizontal_alignment = "center",
@@ -76,13 +76,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			483,
-			250,
+			250
 		},
 		position = {
 			0,
 			34,
-			1,
-		},
+			1
+		}
 	},
 	_mission_info_stats = {
 		horizontal_alignment = "center",
@@ -90,14 +90,14 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			483,
-			80,
+			80
 		},
 		position = {
 			0,
 			34,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local widget_definitions = {}
 
@@ -116,7 +116,7 @@ local function _create_checkbox(y_offset, text_size)
 	return {
 		pass_type = "texture",
 		value = Settings.checkbox_border,
-		style = style,
+		style = style
 	}, style.size
 end
 
@@ -135,7 +135,7 @@ local function _create_checkmark(y_offset, text_size)
 	return {
 		pass_type = "texture",
 		value = Settings.checkbox_filling,
-		style = style,
+		style = style
 	}, style.size
 end
 
@@ -149,13 +149,13 @@ local function _create_checkbox_text(y_offset, localized_string, ui_renderer)
 	text_height = text_height + style.extra_y_margin
 	style.size = {
 		style.size[1],
-		text_height,
+		text_height
 	}
 
 	return {
 		pass_type = "text",
 		value = localized_string or "<missing text>",
-		style = style,
+		style = style
 	}, style.size
 end
 
@@ -195,7 +195,7 @@ local function _create_personal_total_loot(y_offset, ui_renderer, requirement, a
 	local string = Localize("loc_personal_total_loot", true, {
 		node_name = Localize(required_node_name),
 		gathered = clamped_gathered_amount,
-		goal = requirement.goal_amount,
+		goal = requirement.goal_amount
 	})
 	local text_pass, text_size = _create_checkbox_text(y_offset, string, ui_renderer)
 
@@ -230,7 +230,7 @@ local function _create_personal_total_loot_mapwide(y_offset, ui_renderer, requir
 	local clamped_gathered_amount = math.clamp(requirement.gathered_amount, 0, requirement.goal_amount)
 	local string = Localize("loc_personal_total_loot_mapwide", true, {
 		gathered = clamped_gathered_amount,
-		goal = requirement.goal_amount,
+		goal = requirement.goal_amount
 	})
 	local text_pass, text_size = _create_checkbox_text(y_offset, string, ui_renderer)
 
@@ -267,7 +267,7 @@ local function _create_personal_best_loot(y_offset, ui_renderer, requirement, al
 	local string = Localize("loc_personal_best_loot", true, {
 		node_name = Localize(required_node_name),
 		gathered = clamped_gathered_amount,
-		goal = requirement.goal_amount,
+		goal = requirement.goal_amount
 	})
 	local text_pass, text_size = _create_checkbox_text(y_offset, string, ui_renderer)
 
@@ -304,7 +304,7 @@ local function _create_global_stat_node(y_offset, ui_renderer, requirement, all_
 	local string = Localize("loc_global_stat_node", true, {
 		node_name = Localize(required_node_name),
 		gathered = clamped_gathered_amount,
-		goal = requirement.goal_amount,
+		goal = requirement.goal_amount
 	})
 	local text_pass, text_size = _create_checkbox_text(y_offset, string, ui_renderer)
 
@@ -339,7 +339,7 @@ local function _create_global_stat_mapwide(y_offset, ui_renderer, requirement)
 	local clamped_gathered_amount = math.clamp(requirement.gathered_amount, 0, requirement.goal_amount)
 	local string = Localize("loc_global_stat_map", true, {
 		gathered = clamped_gathered_amount,
-		goal = requirement.goal_amount,
+		goal = requirement.goal_amount
 	})
 	local text_pass, text_size = _create_checkbox_text(y_offset, string, ui_renderer)
 
@@ -373,7 +373,7 @@ local function _create_global_timer(y_offset, ui_renderer, requirement)
 	local y_sizes = {}
 	local time_string = os.date(nil, requirement.goal_amount)
 	local string = Localize("loc_global_timer", true, {
-		time_remaining = time_string,
+		time_remaining = time_string
 	})
 	local text_pass, text_size = _create_checkbox_text(y_offset, string, ui_renderer)
 
@@ -414,7 +414,7 @@ local function _create_requirement_list_divider(y_offset)
 		style_id = "divider_center_text",
 		value_id = "divider_center_text",
 		value = Localize("loc_or_capitalized"),
-		style = center_text_style,
+		style = center_text_style
 	}
 	local center_text_y_size = center_text_style.size[2]
 
@@ -429,7 +429,7 @@ local function _create_requirement_list_divider(y_offset)
 	local left_line_pass = {
 		pass_type = "rect",
 		style_id = "divider_left_line",
-		style = left_line_style,
+		style = left_line_style
 	}
 	local left_line_y_size = left_line_style.size[2]
 
@@ -444,7 +444,7 @@ local function _create_requirement_list_divider(y_offset)
 	local right_line_pass = {
 		pass_type = "rect",
 		style_id = "divider_right_line",
-		style = right_line_style,
+		style = right_line_style
 	}
 	local right_line_y_size = right_line_style.size[2]
 
@@ -540,58 +540,58 @@ Definitions.create_unlock_requirements_page = function (node, all_nodes, ui_rend
 			pass_type = "texture",
 			style_id = "frame",
 			value = "content/ui/materials/frames/frame_tile_2px",
-			style = frame_style,
+			style = frame_style
 		},
 		{
 			pass_type = "rect",
 			style_id = "background",
-			style = background_style,
+			style = background_style
 		},
 		{
 			pass_type = "text",
 			style_id = "title",
 			value_id = "title",
 			value = Localize("loc_grid_point"),
-			style = Styles.mission_info_page.title,
+			style = Styles.mission_info_page.title
 		},
 		{
 			pass_type = "text",
 			style_id = "subtitle",
 			value_id = "subtitle",
 			value = node and node.ui and node.ui.display_name and Localize(node.ui.display_name) or "<missing node name>",
-			style = Styles.mission_info_page.subtitle,
+			style = Styles.mission_info_page.subtitle
 		},
 		{
 			pass_type = "texture",
 			value = "content/ui/materials/icons/mission_types/expedition_node_symbol",
 			value_id = "icon",
-			style = icon_style,
+			style = icon_style
 		},
 		{
 			pass_type = "text",
 			style_id = "unlock_status",
 			value = "<missing unlock status data>",
 			value_id = "unlock_status",
-			style = Styles.mission_info_page.unlock_requirements.unlock_status,
+			style = Styles.mission_info_page.unlock_requirements.unlock_status
 		},
 		{
 			pass_type = "texture",
 			style_id = "icon_frame",
 			value = "content/ui/materials/frames/frame_tile_2px",
-			style = Styles.mission_info_page.icon_frame,
+			style = Styles.mission_info_page.icon_frame
 		},
 		{
 			pass_type = "rect",
 			style_id = "footer_line",
-			style = Styles.mission_info_page.footer_line,
+			style = Styles.mission_info_page.footer_line
 		},
 		{
 			pass_type = "rotated_texture",
 			style_id = "background_fade",
 			value = "content/ui/materials/hud/backgrounds/fade_horizontal",
 			value_id = "background_fade",
-			style = background_fade_style,
-		},
+			style = background_fade_style
+		}
 	})
 
 	return UIWidget.create_definition(passes, "_mission_info_page"), y_offset
@@ -668,58 +668,58 @@ Definitions.create_minor_modifiers_page = function (modifier_names, node, ui_ren
 			pass_type = "texture",
 			style_id = "frame",
 			value = "content/ui/materials/frames/frame_tile_2px",
-			style = frame_style,
+			style = frame_style
 		},
 		{
 			pass_type = "rect",
 			style_id = "background",
-			style = background_style,
+			style = background_style
 		},
 		{
 			pass_type = "text",
 			style_id = "title",
 			value_id = "title",
 			value = Localize("loc_grid_point"),
-			style = Styles.mission_info_page.title,
+			style = Styles.mission_info_page.title
 		},
 		{
 			pass_type = "text",
 			style_id = "subtitle",
 			value_id = "subtitle",
 			value = node and node.ui and node.ui.display_name and Localize(node.ui.display_name) or "<missing node name>",
-			style = Styles.mission_info_page.subtitle,
+			style = Styles.mission_info_page.subtitle
 		},
 		{
 			pass_type = "texture",
 			value = "content/ui/materials/icons/mission_types/expedition_node_symbol",
 			value_id = "icon",
-			style = icon_style,
+			style = icon_style
 		},
 		{
 			pass_type = "texture",
 			style_id = "icon_frame",
 			value = "content/ui/materials/frames/frame_tile_2px",
-			style = Styles.mission_info_page.icon_frame,
+			style = Styles.mission_info_page.icon_frame
 		},
 		{
 			pass_type = "rect",
 			style_id = "footer_line",
-			style = Styles.mission_info_page.footer_line,
+			style = Styles.mission_info_page.footer_line
 		},
 		{
 			pass_type = "rotated_texture",
 			style_id = "background_fade",
 			value = "content/ui/materials/hud/backgrounds/fade_horizontal",
 			value_id = "background_fade",
-			style = background_fade_style,
+			style = background_fade_style
 		},
 		{
 			pass_type = "text",
 			style_id = "modifiers",
 			value_id = "modifiers",
 			value = modifiers_string or "<missing minor modifier data>",
-			style = modifiers_style,
-		},
+			style = modifiers_style
+		}
 	}
 
 	return UIWidget.create_definition(passes, "_mission_info_page"), y_offset
@@ -731,37 +731,37 @@ Definitions.create_page_tab = function (icon)
 			pass_type = "texture",
 			style_id = "frame",
 			value = "content/ui/materials/frames/frame_tile_2px",
-			style = Styles.mission_info_tab.frame,
+			style = Styles.mission_info_tab.frame
 		},
 		{
 			pass_type = "rect",
 			style_id = "background",
-			style = Styles.mission_info_tab.background,
+			style = Styles.mission_info_tab.background
 		},
 		{
 			pass_type = "rect",
 			style_id = "background_bottom_edge",
-			style = Styles.mission_info_tab.background_bottom_edge,
+			style = Styles.mission_info_tab.background_bottom_edge
 		},
 		{
 			pass_type = "texture",
 			style_id = "gradient",
 			value = "content/ui/materials/gradients/gradient_horizontal",
-			style = Styles.mission_info_tab.gradient,
+			style = Styles.mission_info_tab.gradient
 		},
 		{
 			pass_type = "texture",
 			style_id = "icon",
 			value_id = "icon",
 			value = icon or Settings.default_tab_icon,
-			style = Styles.mission_info_tab.icon,
+			style = Styles.mission_info_tab.icon
 		},
 		{
 			content_id = "hotspot",
 			pass_type = "hotspot",
 			style_id = "hotspot",
-			style = Styles.mission_info_tab.hotspot,
-		},
+			style = Styles.mission_info_tab.hotspot
+		}
 	}, "_mission_info_tabs", nil, Dimensions.tab_size)
 end
 
@@ -822,58 +822,58 @@ Definitions.create_major_modifier_page = function (modifier_name, node, ui_rende
 			pass_type = "texture",
 			style_id = "frame",
 			value = "content/ui/materials/frames/frame_tile_2px",
-			style = frame_style,
+			style = frame_style
 		},
 		{
 			pass_type = "rect",
 			style_id = "background",
-			style = background_style,
+			style = background_style
 		},
 		{
 			pass_type = "text",
 			style_id = "title",
 			value_id = "title",
 			value = category_name,
-			style = Styles.mission_info_page.title,
+			style = Styles.mission_info_page.title
 		},
 		{
 			pass_type = "text",
 			style_id = "subtitle",
 			value_id = "subtitle",
 			value = display_name,
-			style = Styles.mission_info_page.subtitle,
+			style = Styles.mission_info_page.subtitle
 		},
 		{
 			pass_type = "texture",
 			value = "content/ui/materials/icons/mission_types/expedition_node_symbol",
 			value_id = "icon",
-			style = icon_style,
+			style = icon_style
 		},
 		{
 			pass_type = "texture",
 			style_id = "icon_frame",
 			value = "content/ui/materials/frames/frame_tile_2px",
-			style = Styles.mission_info_page.icon_frame,
+			style = Styles.mission_info_page.icon_frame
 		},
 		{
 			pass_type = "rect",
 			style_id = "footer_line",
-			style = Styles.mission_info_page.footer_line,
+			style = Styles.mission_info_page.footer_line
 		},
 		{
 			pass_type = "text",
 			style_id = "description",
 			value_id = "description",
 			value = description,
-			style = description_style,
+			style = description_style
 		},
 		{
 			pass_type = "rotated_texture",
 			style_id = "background_fade",
 			value = "content/ui/materials/hud/backgrounds/fade_horizontal",
 			value_id = "background_fade",
-			style = background_fade_style,
-		},
+			style = background_fade_style
+		}
 	}, "_mission_info_page"), y_offset
 end
 
@@ -883,45 +883,45 @@ Definitions.create_quickplay_page = function ()
 			pass_type = "texture",
 			style_id = "frame",
 			value = "content/ui/materials/frames/frame_tile_2px",
-			style = Styles.mission_info_page.frame,
+			style = Styles.mission_info_page.frame
 		},
 		{
 			pass_type = "rect",
 			style_id = "background",
-			style = Styles.mission_info_page.background,
+			style = Styles.mission_info_page.background
 		},
 		{
 			pass_type = "texture",
 			style_id = "icon",
 			value = "content/ui/materials/icons/mission_types_pj/mission_type_quick",
-			style = Styles.mission_info_page.quickplay_page.icon,
+			style = Styles.mission_info_page.quickplay_page.icon
 		},
 		{
 			pass_type = "text",
 			style_id = "title",
 			value_id = "title",
 			value = Localize("loc_mission_board_quickplay_header") .. " - " .. Localize("loc_mission_name_exp_wastes"),
-			style = Styles.mission_info_page.quickplay_page.title,
+			style = Styles.mission_info_page.quickplay_page.title
 		},
 		{
 			pass_type = "rect",
 			style_id = "footer_line",
-			style = Styles.mission_info_page.footer_line,
+			style = Styles.mission_info_page.footer_line
 		},
 		{
 			pass_type = "text",
 			style_id = "description",
 			value_id = "description",
 			value = Localize("loc_mission_board_quickplay_description"),
-			style = Styles.mission_info_page.quickplay_page.description,
+			style = Styles.mission_info_page.quickplay_page.description
 		},
 		{
 			pass_type = "rotated_texture",
 			style_id = "background_fade",
 			value = "content/ui/materials/hud/backgrounds/fade_horizontal",
 			value_id = "background_fade",
-			style = Styles.mission_info_page.background_fade,
-		},
+			style = Styles.mission_info_page.background_fade
+		}
 	}, "_mission_info_page")
 end
 
@@ -935,60 +935,60 @@ Definitions.create_mission_info_stats = function (node)
 			pass_type = "texture",
 			style_id = "frame",
 			value = "content/ui/materials/frames/frame_tile_2px",
-			style = Styles.mission_info_stats.frame,
+			style = Styles.mission_info_stats.frame
 		},
 		{
 			pass_type = "rect",
 			style_id = "background",
-			style = Styles.mission_info_stats.background,
+			style = Styles.mission_info_stats.background
 		},
 		{
 			pass_type = "text",
 			style_id = "personal_best_text",
 			value_id = "personal_best_text",
 			value = Localize("loc_expeditions_personal_best_node"),
-			style = Styles.mission_info_stats.personal_best_text,
+			style = Styles.mission_info_stats.personal_best_text
 		},
 		{
 			pass_type = "text",
 			style_id = "personal_best_number",
 			value_id = "personal_best_number",
 			value = node.stats and node.stats.best_loot or 0,
-			style = Styles.mission_info_stats.personal_best_number,
+			style = Styles.mission_info_stats.personal_best_number
 		},
 		{
 			pass_type = "texture",
 			style_id = "personal_best_icon",
 			value_id = "personal_best_icon",
 			value = Settings.loot_icon,
-			style = Styles.mission_info_stats.personal_best_icon,
+			style = Styles.mission_info_stats.personal_best_icon
 		},
 		{
 			pass_type = "rect",
 			value_id = "divider_line",
-			style = Styles.mission_info_stats.divider_line,
+			style = Styles.mission_info_stats.divider_line
 		},
 		{
 			pass_type = "text",
 			style_id = "personal_total_text",
 			value_id = "personal_total_text",
 			value = Localize("loc_expeditions_personal_total_node"),
-			style = Styles.mission_info_stats.personal_total_text,
+			style = Styles.mission_info_stats.personal_total_text
 		},
 		{
 			pass_type = "text",
 			style_id = "personal_total_number",
 			value_id = "personal_total_number",
 			value = node.stats and node.stats.total_loot or 0,
-			style = Styles.mission_info_stats.personal_total_number,
+			style = Styles.mission_info_stats.personal_total_number
 		},
 		{
 			pass_type = "texture",
 			style_id = "personal_total_icon",
 			value_id = "personal_total_icon",
 			value = Settings.loot_icon,
-			style = Styles.mission_info_stats.personal_total_icon,
-		},
+			style = Styles.mission_info_stats.personal_total_icon
+		}
 	}, "_mission_info_stats")
 end
 

@@ -11,32 +11,32 @@ Styles.difficulty_progress_tooltip.background = {
 	scale_to_material = true,
 	size = {
 		Dimensions.threat_tooltip_size[1],
-		Dimensions.threat_tooltip_size[2],
+		Dimensions.threat_tooltip_size[2]
 	},
 	offset = {
 		0,
 		0,
-		3,
+		3
 	},
-	color = Color.black(255, true),
+	color = Color.black(255, true)
 }
 Styles.difficulty_progress_tooltip.frame = {
 	scale_to_material = true,
 	size = {
 		Dimensions.threat_tooltip_size[1],
-		Dimensions.threat_tooltip_size[2],
+		Dimensions.threat_tooltip_size[2]
 	},
 	offset = {
 		0,
 		0,
-		4,
+		4
 	},
 	color = {
 		255,
 		169,
 		211,
-		158,
-	},
+		158
+	}
 }
 Styles.difficulty_progress_tooltip.text = {
 	font_size = 14,
@@ -47,45 +47,45 @@ Styles.difficulty_progress_tooltip.text = {
 	vertical_alignment = "center",
 	size = {
 		Dimensions.threat_tooltip_size[1] - 20,
-		Dimensions.threat_tooltip_size[2] - 10,
+		Dimensions.threat_tooltip_size[2] - 10
 	},
 	text_color = table.shallow_copy(default_colors.terminal_text_dark),
 	offset = {
 		0,
 		0,
-		5,
-	},
+		5
+	}
 }
 Styles.difficulty_progress_bar = {}
 Styles.difficulty_progress_bar.frame = {
 	scale_to_material = true,
 	size = {
 		nil,
-		8,
+		8
 	},
 	offset = {
 		0,
 		0,
-		5,
+		5
 	},
-	color = Color.white(nil, true),
+	color = Color.white(nil, true)
 }
 Styles.difficulty_progress_bar.progress_bar = {
 	scale_to_material = true,
 	size = {
 		Dimensions.threat_level_progress_bar_size[1],
-		Dimensions.threat_level_progress_bar_size[2],
+		Dimensions.threat_level_progress_bar_size[2]
 	},
 	default_size = {
 		Dimensions.threat_level_progress_bar_size[1],
-		Dimensions.threat_level_progress_bar_size[2],
+		Dimensions.threat_level_progress_bar_size[2]
 	},
 	offset = {
 		0,
 		0,
-		4,
+		4
 	},
-	color = Color.white(nil, true),
+	color = Color.white(nil, true)
 }
 
 return settings("ViewElementMissionBoardDifficultySelectorStyles", Styles)

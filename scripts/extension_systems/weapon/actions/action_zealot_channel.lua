@@ -20,6 +20,7 @@ local MINION_BREED_TYPE = BreedSettings.types.minion
 local proc_events = BuffSettings.proc_events
 local special_rules = SpecialRulesSettings.special_rules
 local buff_keywords = BuffSettings.keywords
+local distance_to_check = DamageSettings.in_melee_range
 local ActionZealotChannel = class("ActionZealotChannel", "ActionAbilityBase")
 
 ActionZealotChannel.init = function (self, action_context, action_params, action_settings)
@@ -36,7 +37,7 @@ ActionZealotChannel.init = function (self, action_context, action_params, action
 		power_level = 0,
 		update_index = 1,
 		results = Script.new_array(128),
-		forced_results = Script.new_array(128),
+		forced_results = Script.new_array(128)
 	}
 end
 
@@ -49,6 +50,7 @@ ActionZealotChannel.start = function (self, action_settings, t, time_scale, acti
 	local player_unit = self._player_unit
 	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 
+	self._buff_extension = buff_extension
 	self._combat_ability_component.active = true
 	self._ability_extension = ScriptUnit.extension(player_unit, "ability_system")
 	self._coherency_extension = ScriptUnit.extension(player_unit, "coherency_system")
@@ -112,19 +114,19 @@ ActionZealotChannel.start = function (self, action_settings, t, time_scale, acti
 
 	self._total_num_ticks = math.ceil((action_settings.total_time - 0.5) / TICK_RATE)
 	self._zealot_channel_corruption_healing_per_tick = HordesBuffsData.hordes_buff_zealot_channel_heals_corruption.buff_stats.health.value / self._total_num_ticks
-	self._ability_charges_used = self:_use_ability_charge()
 
+	local target_cost, actual_consumption = self:_consume_ability_usage_cost()
 	local param_table = buff_extension:request_proc_event_param_table()
 
 	if param_table then
 		param_table.unit = player_unit
-		param_table.ability_charges_used = self._ability_charges_used_at_start + self._ability_charges_used
+		param_table.ability_cost = self._ability_cost_at_start + target_cost
 		param_table.remaining_ability_charges_before_use = self._remaining_ability_charges_before_use_at_start
 
 		buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
 	end
 
-	self._combat_ability_component.cooldown_paused = true
+	self._ability_extension:pause_ability_resource_regen(self._ability_type)
 end
 
 ActionZealotChannel.fixed_update = function (self, dt, t, time_in_action)
@@ -174,7 +176,7 @@ end
 local SUPPRESSION_DECAY_DELAY = {
 	3.2,
 	3,
-	5,
+	5
 }
 
 ActionZealotChannel._on_channel_tick = function (self, dt, in_coherence_units, t, time_in_action)
@@ -191,7 +193,7 @@ ActionZealotChannel._on_channel_tick = function (self, dt, in_coherence_units, t
 
 		local toughness_extension = ScriptUnit.has_extension(in_coherence_unit, "toughness_system")
 
-		if toughness_extension and toughness_extension:current_toughness_percent() == 1 then
+		if toughness_extension then
 			buff_extension:add_internally_controlled_buff(self._toughness_bonus_buff, t)
 		end
 
@@ -229,24 +231,24 @@ ActionZealotChannel._on_channel_tick = function (self, dt, in_coherence_units, t
 		self:_collect_tick_stagger_targets(dt, radius, power_level)
 	end
 
-	if time_in_action > self._add_buff_time then
-		for in_coherence_unit, _ in pairs(in_coherence_units) do
-			local buff_extension = ScriptUnit.has_extension(in_coherence_unit, "buff_system")
+	for in_coherence_unit, _ in pairs(in_coherence_units) do
+		local buff_extension = ScriptUnit.has_extension(in_coherence_unit, "buff_system")
 
-			if buff_extension then
-				if self._offensive_buff then
-					buff_extension:add_internally_controlled_buff(self._offensive_buff, t)
-				end
+		if buff_extension then
+			if self._offensive_buff then
+				buff_extension:add_internally_controlled_buff(self._offensive_buff, t)
+			end
 
-				if self._defensive_buff then
-					buff_extension:add_internally_controlled_buff(self._defensive_buff, t)
-				end
+			if self._defensive_buff then
+				buff_extension:add_internally_controlled_buff(self._defensive_buff, t)
 			end
 		end
 	end
 
 	self:trigger_anim_event("raise", "raise")
 
+	local first_tick = time_in_action < 0.5
+	local distance_to_check_sq = distance_to_check * distance_to_check
 	local aggroed_minions = Managers.state.pacing:aggroed_minions()
 	local player_position = POSITION_LOOKUP[self._player_unit]
 	local action_settings = self._action_settings
@@ -254,13 +256,20 @@ ActionZealotChannel._on_channel_tick = function (self, dt, in_coherence_units, t
 
 	for minion_unit, _ in pairs(aggroed_minions) do
 		local enemy_breed = ScriptUnit.extension(minion_unit, "unit_data_system"):breed()
+		local minion_position = POSITION_LOOKUP[minion_unit]
+		local distance_sq = Vector3.distance_squared(player_position, minion_position)
+		local in_close_range = distance_sq <= distance_to_check_sq
+		local valid_target = first_tick or in_close_range
 
-		if enemy_breed.suppress_config then
+		if enemy_breed.suppress_config and valid_target then
 			local perception_extension = ScriptUnit.extension(minion_unit, "perception_system")
 
 			if perception_extension:has_line_of_sight(self._player_unit) then
 				Suppression.apply_suppression(minion_unit, self._player_unit, damage_profile, player_position)
-				Suppression.apply_suppression_decay_delay(minion_unit, math.random_range(SUPPRESSION_DECAY_DELAY[1], SUPPRESSION_DECAY_DELAY[2]))
+
+				if in_close_range then
+					Suppression.apply_suppression_decay_delay(minion_unit, math.random_range(0.5, 1))
+				end
 			end
 		end
 	end
@@ -354,6 +363,8 @@ ActionZealotChannel._update_tick_stagger_targets = function (self, time_in_actio
 	local forced_stagger_results = tick_stagger_data.forced_results
 	local player_position = POSITION_LOOKUP[player_unit]
 	local damage_profile = action_settings.damage_profile
+	local first_tick = time_in_action < 0.5
+	local distance_to_check_sq = distance_to_check * distance_to_check
 	local counter = 1
 
 	while counter <= num_updates_per_frame do
@@ -362,24 +373,33 @@ ActionZealotChannel._update_tick_stagger_targets = function (self, time_in_actio
 		if target_unit and HEALTH_ALIVE[target_unit] then
 			local attack_direction = stagger_results[index + 1]:unbox()
 			local enemy_breed = ScriptUnit.extension(target_unit, "unit_data_system"):breed()
+			local minion_position = POSITION_LOOKUP[target_unit]
+			local distance_sq = Vector3.distance_squared(player_position, minion_position)
+			local in_close_range = distance_sq <= distance_to_check_sq
+			local valid_target = first_tick or in_close_range
 
-			if enemy_breed.suppress_config then
-				Suppression.apply_suppression(target_unit, player_unit, damage_profile, player_position)
-				Suppression.apply_suppression_decay_delay(target_unit, math.random_range(SUPPRESSION_DECAY_DELAY[1], SUPPRESSION_DECAY_DELAY[2]))
+			if valid_target then
+				if enemy_breed.suppress_config then
+					Suppression.apply_suppression(target_unit, player_unit, damage_profile, player_position)
 
-				_hit_units[target_unit] = true
-			elseif enemy_breed.can_be_blinded and not _hit_units[target_unit] then
-				local blackboard = BLACKBOARDS[target_unit]
-				local stagger_component = blackboard.stagger
-				local is_staggered = stagger_component.num_triggered_staggers > 0
+					if in_close_range then
+						Suppression.apply_suppression_decay_delay(target_unit, math.random_range(0.5, 1))
+					end
 
-				if not is_staggered then
-					local random_duration_range = math.random_range(2.6666666666666665, 4)
+					_hit_units[target_unit] = true
+				elseif enemy_breed.can_be_blinded and not _hit_units[target_unit] then
+					local blackboard = BLACKBOARDS[target_unit]
+					local stagger_component = blackboard.stagger
+					local is_staggered = stagger_component.num_triggered_staggers > 0
 
-					Stagger.force_stagger(target_unit, "blinding", attack_direction, random_duration_range, 1, 0.3333333333333333, player_unit)
+					if not is_staggered then
+						local random_duration_range = math.random_range(2.6666666666666665, 4)
+
+						Stagger.force_stagger(target_unit, "blinding", attack_direction, random_duration_range, 1, 0.3333333333333333, player_unit)
+					end
+				else
+					Attack.execute(target_unit, damage_profile, "attack_direction", attack_direction, "power_level", power_level, "hit_zone_name", "torso", "attacking_unit", player_unit)
 				end
-			else
-				Attack.execute(target_unit, damage_profile, "attack_direction", attack_direction, "power_level", power_level, "hit_zone_name", "torso", "attacking_unit", player_unit)
 			end
 		end
 
@@ -434,7 +454,8 @@ ActionZealotChannel.finish = function (self, reason, data, t, time_in_action, ac
 	end
 
 	self._combat_ability_component.active = false
-	self._combat_ability_component.cooldown_paused = false
+
+	self._ability_extension:resume_ability_resource_regen(self._ability_type)
 
 	if self._is_server then
 		local restored_toughness = 0
@@ -460,6 +481,10 @@ ActionZealotChannel.finish = function (self, reason, data, t, time_in_action, ac
 		if source_player and restored_toughness > 0 then
 			Managers.stats:record_private("hook_zealot_chorus_toughness_restored", source_player, restored_toughness)
 		end
+	end
+
+	if self._talent_extension and self._talent_extension:has_special_rule(special_rules.zealot_resist_death_ability) then
+		self._buff_extension:add_internally_controlled_buff("zealot_resist_death_temp", t)
 	end
 end
 

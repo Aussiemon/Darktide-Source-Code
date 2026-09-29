@@ -17,7 +17,7 @@ local pickup_data = {
 		end
 
 		Managers.event:trigger("event_add_expedition_time_bonus", 300)
-	end,
+	end
 }
 
 return pickup_data

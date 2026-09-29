@@ -10,13 +10,13 @@ local core_mutators = {
 	"mutator_live_event_saints_shrine_gameplay",
 	"mutator_saints_horde_pacing",
 	"mutator_saints_headshot_parasite_enemies",
-	"mutator_saints_nurgle_hordes",
+	"mutator_saints_nurgle_hordes"
 }
 local base_templates = CircumstanceUtils.inherit(BaseLiveEventTemplate, core_mutators, {
-	"stats_saints",
+	"stats_saints"
 }, "saints_core")
 local circumstance_templates = table.reduce({
-	base_templates,
+	base_templates
 }, table.merge, {})
 
 circumstance_templates.saints_core.ui.display_name = "loc_circumstance_saints_core_default_title"

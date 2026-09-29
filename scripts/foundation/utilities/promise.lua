@@ -8,7 +8,7 @@ local State = {
 	CANCELED = "canceled",
 	FULFILLED = "fulfilled",
 	PENDING = "pending",
-	REJECTED = "rejected",
+	REJECTED = "rejected"
 }
 
 local function passthrough(x)
@@ -40,6 +40,14 @@ local function do_async(callback)
 	else
 		table.insert(queue, callback)
 	end
+end
+
+local function error_message(value)
+	if type(value) == "table" then
+		return table.tostring(value, 2, true)
+	end
+
+	return tostring(value)
 end
 
 local function cancel(promise)
@@ -98,7 +106,7 @@ Promise.next = function (self, on_fulfilled, on_rejected)
 		reject = is_callable(on_rejected) and on_rejected or nil,
 		promise = promise,
 		debug_traceback_info_1 = _source_location(2),
-		debug_traceback_info_2 = _source_location(3),
+		debug_traceback_info_2 = _source_location(3)
 	})
 	run(self)
 
@@ -197,8 +205,10 @@ function resolve(promise, x)
 
 			err = {
 				fatal = true,
-				message = inner_message or err,
+				message = inner_message or err
 			}
+		elseif err.message == nil then
+			err.message = error_message(err)
 		end
 
 		err.__traceback = "<<Promise Stack>> " .. debug.traceback("Error in promise resolve", 2) .. "\n<</Promise Stack>>\n<<Promise Context>>\n" .. extract_stored_traceback(promise) .. "\n<</Promise Context>>\n"
@@ -249,8 +259,10 @@ function run(promise)
 
 					err = {
 						fatal = true,
-						message = inner_message or err,
+						message = inner_message or err
 					}
+				elseif err.message == nil then
+					err.message = error_message(err)
 				end
 
 				err.__traceback = "<<Promise Stack>> " .. debug.traceback("Error in promise resolve", 2) .. "\n<</Promise Stack>>\n<<Promise Context>>\n" .. extract_stored_traceback(obj) .. "\n<</Promise Context>>\n"
@@ -362,7 +374,7 @@ end
 
 Promise.all = function (...)
 	local promises = {
-		...,
+		...
 	}
 	local results = {}
 	local state = State.FULFILLED
@@ -399,7 +411,7 @@ end
 
 Promise.race = function (...)
 	local promises = {
-		...,
+		...
 	}
 	local promise = Promise.new()
 
@@ -521,7 +533,7 @@ Promise.until_value_is_true = function (predicate)
 
 	table.insert(predicates, {
 		promise = promise,
-		predicate = predicate,
+		predicate = predicate
 	})
 
 	return promise

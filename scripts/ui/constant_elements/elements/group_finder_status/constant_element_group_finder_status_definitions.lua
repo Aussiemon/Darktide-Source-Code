@@ -14,13 +14,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			900,
-		},
+			900
+		}
 	},
 	party_panel = {
 		horizontal_alignment = "right",
@@ -28,13 +28,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			500,
-			37,
+			37
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	request_panel = {
 		horizontal_alignment = "right",
@@ -42,13 +42,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			500,
-			25,
+			25
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	team_status_text = {
 		horizontal_alignment = "right",
@@ -56,13 +56,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			600,
-			37,
+			37
 		},
 		position = {
 			-240,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	request_text = {
 		horizontal_alignment = "right",
@@ -70,14 +70,14 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			800,
-			20,
+			20
 		},
 		position = {
 			-40,
 			0,
-			2,
-		},
-	},
+			2
+		}
+	}
 }
 local team_status_text_style = table.clone(UIFontSettings.header_4)
 
@@ -86,7 +86,7 @@ team_status_text_style.text_horizontal_alignment = "right"
 team_status_text_style.offset = {
 	0,
 	0,
-	0,
+	0
 }
 team_status_text_style.font_type = "machine_medium"
 team_status_text_style.text_color = Color.terminal_text_body(255, true)
@@ -98,7 +98,7 @@ request_text_style.text_horizontal_alignment = "right"
 request_text_style.offset = {
 	0,
 	-2,
-	1,
+	1
 }
 request_text_style.text_color = Color.terminal_corner_selected(255, true)
 
@@ -108,16 +108,16 @@ local widget_definitions = {
 			pass_type = "text",
 			value_id = "text",
 			value = Localize("loc_group_finder_status_panel_title"),
-			style = team_status_text_style,
-		},
+			style = team_status_text_style
+		}
 	}, "team_status_text"),
 	request_text = UIWidget.create_definition({
 		{
 			pass_type = "text",
 			value = "",
 			value_id = "text",
-			style = request_text_style,
-		},
+			style = request_text_style
+		}
 	}, "request_text"),
 	party_panel = UIWidget.create_definition({
 		{
@@ -128,15 +128,15 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					160,
-					74,
+					74
 				},
 				offset = {
 					0,
 					0,
-					10,
+					10
 				},
-				color = Color.white(255, true),
-			},
+				color = Color.white(255, true)
+			}
 		},
 		{
 			pass_type = "circle",
@@ -144,15 +144,15 @@ local widget_definitions = {
 				horizontal_alignment = "right",
 				size = {
 					60,
-					60,
+					60
 				},
 				offset = {
 					12,
 					0,
-					8,
+					8
 				},
-				color = Color.black(255, true),
-			},
+				color = Color.black(255, true)
+			}
 		},
 		{
 			pass_type = "circle",
@@ -160,16 +160,16 @@ local widget_definitions = {
 				horizontal_alignment = "right",
 				size = {
 					60,
-					60,
+					60
 				},
 				offset = {
 					12,
 					0,
-					9,
+					9
 				},
 				color = Color.terminal_corner_hover(255, true),
 				default_color = Color.terminal_corner_hover(255, true),
-				highlight_color = Color.terminal_corner_selected(255, true),
+				highlight_color = Color.terminal_corner_selected(255, true)
 			},
 			change_function = function (content, style, _, dt)
 				local has_requests = content.has_requests
@@ -193,7 +193,7 @@ local widget_definitions = {
 				local pulse_progress = 1 - (0.5 + math.sin(Application.time_since_launch() * pulse_speed) * 0.5)
 
 				style.color[1] = 180 + 75 * pulse_progress
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -202,10 +202,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
-				color = Color.terminal_frame(255, true),
-			},
+				color = Color.terminal_frame(255, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -214,15 +214,15 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					nil,
-					2,
+					2
 				},
 				offset = {
 					0,
 					0,
-					6,
+					6
 				},
-				color = Color.terminal_text_body(255, true),
-			},
+				color = Color.terminal_text_body(255, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -231,20 +231,20 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					nil,
-					2,
+					2
 				},
 				offset = {
 					0,
 					1,
-					5,
+					5
 				},
 				color = {
 					255,
 					30,
 					30,
-					30,
-				},
-			},
+					30
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -262,24 +262,24 @@ local widget_definitions = {
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				color = {
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				size = {
 					32,
-					40,
+					40
 				},
 				offset = {
 					-191,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -297,24 +297,24 @@ local widget_definitions = {
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				color = {
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				size = {
 					32,
-					40,
+					40
 				},
 				offset = {
 					-154,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -332,24 +332,24 @@ local widget_definitions = {
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				color = {
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				size = {
 					32,
-					40,
+					40
 				},
 				offset = {
 					-117,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -367,25 +367,25 @@ local widget_definitions = {
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				color = {
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				size = {
 					32,
-					40,
+					40
 				},
 				offset = {
 					-80,
 					0,
-					3,
-				},
-			},
-		},
+					3
+				}
+			}
+		}
 	}, "party_panel"),
 	request_panel = UIWidget.create_definition({
 		{
@@ -395,13 +395,13 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				color = Color.ui_terminal_dark(255, true),
 				material_values = {
 					shine_progress = 0,
-					shine_color = ColorUtilities.format_color_to_material(Color.terminal_text_key_value(255, true)),
-				},
+					shine_color = ColorUtilities.format_color_to_material(Color.terminal_text_key_value(255, true))
+				}
 			},
 			change_function = function (content, style, animations, dt)
 				local shine_delay = content.shine_delay or 0
@@ -427,7 +427,7 @@ local widget_definitions = {
 					content.shine_delay = math.max(shine_delay - dt, 0)
 					style.material_values.shine_progress = 1
 				end
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -436,15 +436,15 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					nil,
-					2,
+					2
 				},
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
-				color = Color.terminal_corner_selected(255, true),
-			},
+				color = Color.terminal_corner_selected(255, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -453,22 +453,22 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					nil,
-					2,
+					2
 				},
 				offset = {
 					0,
 					1,
-					1,
+					1
 				},
 				color = {
 					255,
 					30,
 					30,
-					30,
-				},
-			},
-		},
-	}, "request_panel"),
+					30
+				}
+			}
+		}
+	}, "request_panel")
 }
 local ready_status_definition = UIWidget.create_definition({
 	{
@@ -480,18 +480,18 @@ local ready_status_definition = UIWidget.create_definition({
 			vertical_alignment = "center",
 			size = {
 				22,
-				46,
+				46
 			},
 			offset = {
 				0,
 				0,
-				2,
+				2
 			},
-			color = Color.ui_terminal(76.5, true),
+			color = Color.ui_terminal(76.5, true)
 		},
 		visibility_function = function (content, style)
 			return content.occupied
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -502,18 +502,18 @@ local ready_status_definition = UIWidget.create_definition({
 			vertical_alignment = "center",
 			size = {
 				22,
-				46,
+				46
 			},
 			offset = {
 				0,
 				0,
-				2,
+				2
 			},
-			color = Color.ui_terminal(255, true),
+			color = Color.ui_terminal(255, true)
 		},
 		visibility_function = function (content, style)
 			return content.selected and content.occupied
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -523,19 +523,19 @@ local ready_status_definition = UIWidget.create_definition({
 			vertical_alignment = "center",
 			size = {
 				22,
-				46,
+				46
 			},
 			offset = {
 				0,
 				0,
-				2,
+				2
 			},
-			color = Color.ui_red_light(127.5, true),
+			color = Color.ui_red_light(127.5, true)
 		},
 		visibility_function = function (content, style)
 			return not content.occupied
-		end,
-	},
+		end
+	}
 }, "team_status")
 local animations = {
 	player_request_enter = {
@@ -546,7 +546,7 @@ local animations = {
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				widgets.request_text.alpha_multiplier = 0
 				widgets.request_panel.alpha_multiplier = 1
-			end,
+			end
 		},
 		{
 			end_time = 0.6,
@@ -562,7 +562,7 @@ local animations = {
 
 				parent:_set_scenegraph_size("request_panel", nil, new_height)
 				parent:set_scenegraph_position("request_panel", nil, new_height)
-			end,
+			end
 		},
 		{
 			end_time = 1.2,
@@ -572,7 +572,7 @@ local animations = {
 				local anim_progress = math.easeOutCubic(progress)
 
 				widgets.request_text.alpha_multiplier = anim_progress
-			end,
+			end
 		},
 		{
 			end_time = 1.6,
@@ -582,7 +582,7 @@ local animations = {
 				local anim_progress = math.easeOutCubic(progress)
 
 				widgets.request_text.offset[1] = -50 + 0 * anim_progress
-			end,
+			end
 		},
 		{
 			end_time = 1.8,
@@ -590,7 +590,7 @@ local animations = {
 			start_time = 0,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				widgets.request_panel.content.shine_delay = 1
-			end,
+			end
 		},
 		{
 			end_time = 2,
@@ -598,8 +598,8 @@ local animations = {
 			start_time = 1.4,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				widgets.request_panel.content.shine_delay = 0
-			end,
-		},
+			end
+		}
 	},
 	player_request_exit = {
 		{
@@ -610,7 +610,7 @@ local animations = {
 				local anim_progress = math.easeOutCubic(1 - progress)
 
 				widgets.request_text.offset[1] = -50 + 0 * anim_progress
-			end,
+			end
 		},
 		{
 			end_time = 0.6,
@@ -620,7 +620,7 @@ local animations = {
 				local anim_progress = math.easeOutCubic(1 - progress)
 
 				widgets.request_text.alpha_multiplier = anim_progress
-			end,
+			end
 		},
 		{
 			end_time = 1.2,
@@ -636,7 +636,7 @@ local animations = {
 
 				parent:_set_scenegraph_size("request_panel", nil, new_height)
 				parent:set_scenegraph_position("request_panel", nil, new_height)
-			end,
+			end
 		},
 		{
 			end_time = 1.2,
@@ -644,14 +644,14 @@ local animations = {
 			start_time = 1.2,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				widgets.request_panel.alpha_multiplier = 0
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
 	animations = animations,
 	ready_status_definition = ready_status_definition,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

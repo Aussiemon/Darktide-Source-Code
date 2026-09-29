@@ -9,8 +9,8 @@ local settings = {
 	name = "loc_play_expeditions_name",
 	stat = "live_event_expeditions_loot_extracted",
 	item_rewards = {
-		"content/items/2d/portrait_frames/events_play_expeditions",
-	},
+		"content/items/2d/portrait_frames/events_play_expeditions"
+	}
 }
 
 return settings

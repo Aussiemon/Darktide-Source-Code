@@ -26,19 +26,20 @@ end
 local States = {
 	Disabled = nil,
 	MainView = 1,
-	TempView = 2,
+	TempView = 2
 }
 
 ImguiManager.init = function (self)
 	self._guis = {}
 	self._active_guis = {
 		[States.MainView] = {},
-		[States.TempView] = {},
+		[States.TempView] = {}
 	}
 	self._persistent_guis = 0
 	self._has_viewport_dock = false
 	self._using_input = false
 	self._active_view_groups = {}
+	self._suppressed_hotkeys = {}
 	self._state = States.Disabled
 	self._is_imgui_available = _check_is_available()
 
@@ -133,6 +134,14 @@ ImguiManager.using_input = function (self)
 	return self:is_active() and self._using_input
 end
 
+ImguiManager.suppress_hotkey = function (self, hotkey_action)
+	self._suppressed_hotkeys[hotkey_action] = true
+end
+
+ImguiManager.release_hotkey = function (self, hotkey_action)
+	self._suppressed_hotkeys[hotkey_action] = nil
+end
+
 ImguiManager.add_gui = function (self, name, hotkey_action, class_type, params, view_definition)
 	local guis = self._guis
 	local instance = class_type:new(params, view_definition)
@@ -140,7 +149,7 @@ ImguiManager.add_gui = function (self, name, hotkey_action, class_type, params, 
 	guis[name] = {
 		instance = instance,
 		hotkey_action = hotkey_action,
-		view_definition = view_definition,
+		view_definition = view_definition
 	}
 
 	local state = self._state
@@ -187,7 +196,7 @@ ImguiManager.resize_gui = function (self, gui_name, width, height)
 
 	gui.resize = {
 		width,
-		height,
+		height
 	}
 end
 
@@ -352,7 +361,7 @@ ImguiManager._handle_input = function (self)
 	for gui_name, gui in pairs(guis) do
 		local hotkey_action = gui.hotkey_action
 
-		if hotkey_action and input:get(hotkey_action) then
+		if hotkey_action and not self._suppressed_hotkeys[hotkey_action] and input:get(hotkey_action) then
 			if state == States.Disabled then
 				state = States.TempView
 
@@ -578,7 +587,7 @@ local DISABLED_STYLE_COLORS = {
 	0,
 	0,
 	0,
-	160,
+	160
 }
 
 ImguiManager._push_disabled_style_colors = function (self)
@@ -727,7 +736,7 @@ ImguiManager.enable_view_group = function (self, view_group_name, params)
 
 	self._active_view_groups[view_group_name] = {
 		reference_count = 1,
-		params = params,
+		params = params
 	}
 end
 

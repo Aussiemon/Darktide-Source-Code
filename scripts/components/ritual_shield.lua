@@ -78,13 +78,13 @@ RitualShield.component_data = {
 	material_slot_name = {
 		ui_name = "Material Slot Name",
 		ui_type = "text_box",
-		value = "physics",
+		value = "physics"
 	},
 	dissolve_variable_name = {
 		category = "Material Variable Name",
 		ui_name = "Dissolve Variable Name",
 		ui_type = "text_box",
-		value = "dissolve",
+		value = "dissolve"
 	},
 	dissolve_duration = {
 		decimals = 3,
@@ -92,13 +92,13 @@ RitualShield.component_data = {
 		min = 0.5,
 		ui_name = "Dissolve Duration",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	pulse_variable_name = {
 		category = "Material Variable Name",
 		ui_name = "Pulse Variable Name",
 		ui_type = "text_box",
-		value = "pulse_intensity",
+		value = "pulse_intensity"
 	},
 	pulse_duration = {
 		decimals = 3,
@@ -106,18 +106,18 @@ RitualShield.component_data = {
 		min = 0.5,
 		ui_name = "Pulse Duration",
 		ui_type = "number",
-		value = 5,
+		value = 5
 	},
 	inputs = {
 		start_pulse = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		start_dissolve = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return RitualShield

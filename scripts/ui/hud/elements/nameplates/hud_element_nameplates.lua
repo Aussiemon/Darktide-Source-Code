@@ -106,7 +106,7 @@ HudElementNameplates._nameplate_extension_scan = function (self)
 				if not nameplate_units[unit] then
 					nameplate_units[unit] = {
 						marker_id = nil,
-						synced = true,
+						synced = true
 					}
 
 					do
@@ -235,7 +235,7 @@ HudElementNameplates._add_companion_nameplate = function (self, marker_type, com
 
 	companion_nameplates[companion_unit] = {
 		marker_id = nil,
-		synced = true,
+		synced = true
 	}
 
 	local marker_callback = callback(self, "_on_companion_nameplate_marker_spawned", companion_unit)

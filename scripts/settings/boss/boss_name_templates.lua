@@ -215,7 +215,7 @@ boss_name_templates.renegade_captain = {
 	"loc_renegade_captain_male_name_210",
 	"loc_renegade_captain_male_name_211",
 	"loc_renegade_captain_male_name_212",
-	"loc_renegade_captain_male_name_213",
+	"loc_renegade_captain_male_name_213"
 }
 boss_name_templates.cultist_captain = {
 	"loc_cultist_captain_male_name_001",
@@ -242,20 +242,22 @@ boss_name_templates.cultist_captain = {
 	"loc_cultist_captain_male_name_022",
 	"loc_cultist_captain_male_name_023",
 	"loc_cultist_captain_male_name_024",
-	"loc_cultist_captain_male_name_025",
+	"loc_cultist_captain_male_name_025"
 }
 boss_name_templates.plague_ogryn = "loc_plague_ogryn_name"
 boss_name_templates.daemonhost = "loc_daemonhost_name"
+boss_name_templates.torment_daemonhost = "loc_torment_daemonhost_name"
 boss_name_templates.mutator_daemonhost = "loc_mutator_daemonhost_name"
 boss_name_templates.beast_of_nurgle = "loc_breed_display_name_chaos_beast_of_nurgle"
 boss_name_templates.chaos_spawn = "loc_breed_display_name_chaos_spawn"
+boss_name_templates.spillway_wizard = "loc_breed_display_name_renegade_wizard_spillway"
 boss_name_templates.renegade_twin_captain = "loc_breed_display_name_renegade_twin_captain"
 boss_name_templates.havoc_renegade_twin_captain = {
 	"loc_havoc_male_twin_name_01",
 	"loc_havoc_male_twin_name_02",
 	"loc_havoc_male_twin_name_04",
 	"loc_havoc_male_twin_name_05",
-	"loc_havoc_male_twin_name_06",
+	"loc_havoc_male_twin_name_06"
 }
 boss_name_templates.renegade_twin_captain_two = "loc_breed_display_name_renegade_twin_captain_two"
 boss_name_templates.havoc_renegade_twin_captain_two = {
@@ -263,7 +265,7 @@ boss_name_templates.havoc_renegade_twin_captain_two = {
 	"loc_havoc_female_twin_name_02",
 	"loc_havoc_female_twin_name_03",
 	"loc_havoc_female_twin_name_05",
-	"loc_havoc_female_twin_name_06",
+	"loc_havoc_female_twin_name_06"
 }
 boss_name_templates.chaos_ogryn_houndmaster = {
 	"loc_chaos_ogryn_houndmaster_name_01",
@@ -280,7 +282,7 @@ boss_name_templates.chaos_ogryn_houndmaster = {
 	"loc_chaos_ogryn_houndmaster_name_12",
 	"loc_chaos_ogryn_houndmaster_name_13",
 	"loc_chaos_ogryn_houndmaster_name_14",
-	"loc_chaos_ogryn_houndmaster_name_15",
+	"loc_chaos_ogryn_houndmaster_name_15"
 }
 
 return settings("BossNameTemplates", boss_name_templates)

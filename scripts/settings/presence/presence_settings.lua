@@ -13,7 +13,7 @@ presence_settings.settings = {
 		can_be_joined = false,
 		fail_reason_myself = nil,
 		fail_reason_other = nil,
-		hud_localization = "loc_hud_presence_main_menu",
+		hud_localization = "loc_hud_presence_main_menu"
 	},
 	title_screen = {
 		advertise_playing = false,
@@ -21,7 +21,7 @@ presence_settings.settings = {
 		can_be_joined = false,
 		fail_reason_myself = nil,
 		fail_reason_other = nil,
-		hud_localization = "loc_hud_presence_main_menu",
+		hud_localization = "loc_hud_presence_main_menu"
 	},
 	main_menu = {
 		advertise_playing = true,
@@ -29,7 +29,7 @@ presence_settings.settings = {
 		can_be_joined = true,
 		fail_reason_myself = nil,
 		fail_reason_other = nil,
-		hud_localization = "loc_hud_presence_main_menu",
+		hud_localization = "loc_hud_presence_main_menu"
 	},
 	loading = {
 		advertise_playing = false,
@@ -37,7 +37,7 @@ presence_settings.settings = {
 		can_be_joined = false,
 		fail_reason_myself = nil,
 		fail_reason_other = nil,
-		hud_localization = "loc_hud_presence_loading",
+		hud_localization = "loc_hud_presence_loading"
 	},
 	onboarding = {
 		advertise_playing = false,
@@ -46,7 +46,7 @@ presence_settings.settings = {
 		fail_reason_myself = nil,
 		fail_reason_other = nil,
 		hud_localization = "loc_hud_presence_prologue",
-		split_party = true,
+		split_party = true
 	},
 	hub = {
 		advertise_playing = true,
@@ -54,7 +54,7 @@ presence_settings.settings = {
 		can_be_joined = true,
 		fail_reason_myself = nil,
 		fail_reason_other = nil,
-		hud_localization = "loc_hud_presence_hub",
+		hud_localization = "loc_hud_presence_hub"
 	},
 	cinematic = {
 		advertise_playing = false,
@@ -62,7 +62,7 @@ presence_settings.settings = {
 		can_be_joined = false,
 		fail_reason_myself = nil,
 		fail_reason_other = nil,
-		hud_localization = "loc_hud_presence_cinematic",
+		hud_localization = "loc_hud_presence_cinematic"
 	},
 	matchmaking = {
 		advertise_playing = true,
@@ -70,7 +70,7 @@ presence_settings.settings = {
 		can_be_joined = true,
 		fail_reason_myself = "loc_social_party_join_rejection_reason_you_are_in_matchmaking",
 		fail_reason_other = "loc_social_party_join_rejection_reason_player_in_matchmaking",
-		hud_localization = "loc_hud_presence_matchmaking",
+		hud_localization = "loc_hud_presence_matchmaking"
 	},
 	mission = {
 		advertise_playing = true,
@@ -78,7 +78,7 @@ presence_settings.settings = {
 		can_be_joined = true,
 		fail_reason_myself = "loc_social_party_join_rejection_reason_you_are_in_mission",
 		fail_reason_other = "loc_social_party_join_rejection_reason_player_in_mission",
-		hud_localization = "loc_hud_presence_mission",
+		hud_localization = "loc_hud_presence_mission"
 	},
 	training_grounds = {
 		advertise_playing = true,
@@ -87,7 +87,7 @@ presence_settings.settings = {
 		fail_reason_myself = nil,
 		fail_reason_other = nil,
 		hud_localization = "loc_hud_presence_training_grounds",
-		split_party = false,
+		split_party = false
 	},
 	end_of_round = {
 		advertise_playing = false,
@@ -95,8 +95,8 @@ presence_settings.settings = {
 		can_be_joined = true,
 		fail_reason_myself = nil,
 		fail_reason_other = nil,
-		hud_localization = "loc_hud_presence_end_of_round",
-	},
+		hud_localization = "loc_hud_presence_end_of_round"
+	}
 }
 
 presence_settings.evaluate_presence = function (game_state)

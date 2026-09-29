@@ -9,18 +9,18 @@ local HordeCompositions = require("scripts/managers/pacing/horde_pacing/horde_co
 local MutatorGameplayLiveEventLeftover = require("scripts/managers/mutator/mutators/mutator_gameplay/mutator_gameplay_live_event_leftover")
 local _side_notification_settings = {
 	interaction_type_loc_strings = {
-		"loc_player_leftover_pickup_notification",
+		"loc_player_leftover_pickup_notification"
 	},
 	pickup_localization_by_size = {
 		large = "loc_leftover_pickup_large",
 		medium = "loc_leftover_pickup_medium",
-		small = "loc_leftover_pickup_small",
+		small = "loc_leftover_pickup_small"
 	},
 	pickup_icon_by_size = {
 		large = "content/ui/materials/icons/currencies/live_events/leftover_live_event_large",
 		medium = "content/ui/materials/icons/currencies/live_events/leftover_live_event_medium",
-		small = "content/ui/materials/icons/currencies/live_events/leftover_live_event_small",
-	},
+		small = "content/ui/materials/icons/currencies/live_events/leftover_live_event_small"
+	}
 }
 local spawn_enemy_composition = {
 	{
@@ -30,17 +30,17 @@ local spawn_enemy_composition = {
 					name = "cultist_assault",
 					amount = {
 						4,
-						4,
-					},
+						4
+					}
 				},
 				{
 					name = "cultist_vanguard",
 					amount = {
 						1,
-						4,
-					},
-				},
-			},
+						4
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -48,17 +48,17 @@ local spawn_enemy_composition = {
 					name = "cultist_assault",
 					amount = {
 						2,
-						8,
-					},
+						8
+					}
 				},
 				{
 					name = "cultist_vanguard",
 					amount = {
 						1,
-						4,
-					},
-				},
-			},
+						4
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -66,17 +66,17 @@ local spawn_enemy_composition = {
 					name = "cultist_assault",
 					amount = {
 						4,
-						8,
-					},
+						8
+					}
 				},
 				{
 					name = "cultist_vanguard",
 					amount = {
 						2,
-						4,
-					},
-				},
-			},
+						4
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -84,17 +84,17 @@ local spawn_enemy_composition = {
 					name = "cultist_assault",
 					amount = {
 						6,
-						12,
-					},
+						12
+					}
 				},
 				{
 					name = "cultist_vanguard",
 					amount = {
 						3,
-						4,
-					},
-				},
-			},
+						4
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -102,17 +102,17 @@ local spawn_enemy_composition = {
 					name = "cultist_assault",
 					amount = {
 						8,
-						14,
-					},
+						14
+					}
 				},
 				{
 					name = "cultist_vanguard",
 					amount = {
 						3,
-						4,
-					},
-				},
-			},
+						4
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -120,19 +120,19 @@ local spawn_enemy_composition = {
 					name = "cultist_assault",
 					amount = {
 						12,
-						14,
-					},
+						14
+					}
 				},
 				{
 					name = "cultist_vanguard",
 					amount = {
 						4,
-						8,
-					},
-				},
-			},
-		},
-	},
+						8
+					}
+				}
+			}
+		}
+	}
 }
 local mutator_templates = {
 	mutator_leftover_main_path_pickup_spawns = {
@@ -150,21 +150,21 @@ local mutator_templates = {
 						level_size_2 = {
 							"content/levels/live_events/leftover/live_event_leftover_pickup_spawn_large",
 							"content/levels/live_events/leftover/live_event_leftover_pickup_spawn_medium",
-							"content/levels/live_events/leftover/live_event_leftover_pickup_spawn_small",
-						},
+							"content/levels/live_events/leftover/live_event_leftover_pickup_spawn_small"
+						}
 					},
 					placement_method = MutatorSpawnerNode.CIRCLE_PLACEMENT,
 					size_lookup = {
-						"level_size_2",
+						"level_size_2"
 					},
 					spawn_settings = {
 						count = 3,
 						position_offset = 5,
-						randomize_rotation = true,
-					},
-				},
-			},
-		},
+						randomize_rotation = true
+					}
+				}
+			}
+		}
 	},
 	mutator_leftover_gameplay_logic = {
 		activate_on_load = true,
@@ -173,19 +173,19 @@ local mutator_templates = {
 		gameplay_template = {
 			path = "scripts/managers/mutator/mutators/mutator_gameplay/mutator_gameplay_live_event_leftover",
 			start_module_on_activate = true,
-			settings = {},
+			settings = {}
 		},
-		side_notification = _side_notification_settings,
+		side_notification = _side_notification_settings
 	},
 	mutator_live_event_leftover_hub = {
 		activate_on_load = true,
-		class = "scripts/managers/mutator/mutators/mutator_gameplay/mutator_gameplay_live_event_leftover_hub",
+		class = "scripts/managers/mutator/mutators/mutator_gameplay/mutator_gameplay_live_event_leftover_hub"
 	},
 	mutator_drop_leftover_01_pickup_small_on_death = {
 		class = "scripts/managers/mutator/mutators/mutator_base",
 		random_spawn_buff_templates = {
 			buffs = {
-				"drop_leftover_01_pickup_small_on_death",
+				"drop_leftover_01_pickup_small_on_death"
 			},
 			breed_chances = {
 				chaos_armored_infected = 0.05,
@@ -196,15 +196,15 @@ local mutator_templates = {
 				cultist_melee = 0.05,
 				renegade_assault = 0.05,
 				renegade_melee = 0.05,
-				renegade_rifleman = 0.05,
-			},
-		},
+				renegade_rifleman = 0.05
+			}
+		}
 	},
 	mutator_drop_leftover_01_pickup_medium_on_death = {
 		class = "scripts/managers/mutator/mutators/mutator_base",
 		random_spawn_buff_templates = {
 			buffs = {
-				"drop_leftover_01_pickup_medium_on_death",
+				"drop_leftover_01_pickup_medium_on_death"
 			},
 			breed_chances = {
 				chaos_ogryn_bulwark = 0.2,
@@ -224,15 +224,15 @@ local mutator_templates = {
 				renegade_netgunner = 0.1,
 				renegade_plasma_gunner = 0.1,
 				renegade_shocktrooper = 0.1,
-				renegade_sniper = 0.1,
-			},
-		},
+				renegade_sniper = 0.1
+			}
+		}
 	},
 	mutator_drop_leftover_01_pickup_medium_many_on_death = {
 		class = "scripts/managers/mutator/mutators/mutator_base",
 		random_spawn_buff_templates = {
 			buffs = {
-				"drop_leftover_01_pickup_medium_many_on_death",
+				"drop_leftover_01_pickup_medium_many_on_death"
 			},
 			breed_chances = {
 				chaos_beast_of_nurgle = 1,
@@ -242,15 +242,15 @@ local mutator_templates = {
 				chaos_spawn = 1,
 				renegade_captain = 1,
 				renegade_twin_captain = 1,
-				renegade_twin_captain_two = 1,
-			},
-		},
+				renegade_twin_captain_two = 1
+			}
+		}
 	},
 	mutator_live_event_leftover_drop_large_pickups_on_death = {
 		class = "scripts/managers/mutator/mutators/mutator_base",
 		random_spawn_buff_templates = {
 			buffs = {
-				"live_event_leftover_drop_many_large_pickups_on_death",
+				"live_event_leftover_drop_many_large_pickups_on_death"
 			},
 			breed_chances = {
 				chaos_beast_of_nurgle = 1,
@@ -260,9 +260,9 @@ local mutator_templates = {
 				chaos_spawn = 1,
 				renegade_captain = 1,
 				renegade_twin_captain = 1,
-				renegade_twin_captain_two = 1,
-			},
-		},
+				renegade_twin_captain_two = 1
+			}
+		}
 	},
 	mutator_live_event_leftover_loot_point_spawns = {
 		class = "scripts/managers/mutator/mutators/mutator_spawner",
@@ -272,7 +272,7 @@ local mutator_templates = {
 		trigger_distance = 50,
 		spawn_locations = MutatorSpawnerLocationSources.mission_provided_gizmo(),
 		size = {
-			level_size_4 = true,
+			level_size_4 = true
 		},
 		spawners = {
 			{
@@ -282,33 +282,33 @@ local mutator_templates = {
 					use_raycast = false,
 					levels = {
 						level_size_4 = {
-							"content/levels/live_events/leftover/live_event_leftover_loot_point",
-						},
+							"content/levels/live_events/leftover/live_event_leftover_loot_point"
+						}
 					},
 					placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
 					size_lookup = {
-						"level_size_4",
+						"level_size_4"
 					},
 					spawn_settings = {
-						randomize_rotation = true,
-					},
-				},
+						randomize_rotation = true
+					}
+				}
 			},
 			{
 				class = "scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node_enemy_template",
 				template = {
 					placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
 					composition = {
-						cultist = spawn_enemy_composition,
+						cultist = spawn_enemy_composition
 					},
 					spawn_settings = {
-						position_offset = 1,
+						position_offset = 1
 					},
-					enemy_placement_method = MutatorSpawnerNode.CIRCLE_PLACEMENT,
-				},
-			},
-		},
-	},
+					enemy_placement_method = MutatorSpawnerNode.CIRCLE_PLACEMENT
+				}
+			}
+		}
+	}
 }
 
 return mutator_templates

@@ -148,13 +148,14 @@ LiveEventsView.on_enter = function (self)
 
 	self._events = events
 
-	self:_setup_events_button_list(events)
+	self:_setup_events_button_list(events, sorted_ids)
 
 	local left_navigation_arrow_widget = self._widgets_by_name.navigation_arrow_left
 	local right_navigation_arrow_widget = self._widgets_by_name.navigation_arrow_right
 
 	left_navigation_arrow_widget.content.hotspot.pressed_callback = callback(self, "_on_previous_page_pressed")
 	right_navigation_arrow_widget.content.hotspot.pressed_callback = callback(self, "_on_next_page_pressed")
+	self._widgets_by_name.entries_scrollbar.visible = false
 
 	local first_button_widget = self._button_list_widgets and self._button_list_widgets[1]
 
@@ -260,30 +261,33 @@ LiveEventsView.dialogue_system = function (self)
 	end
 end
 
-LiveEventsView._setup_events_button_list = function (self, events)
+LiveEventsView._setup_events_button_list = function (self, events, sorted_ids)
 	local button_list_widgets = {}
 	local event_button_id_list = {}
 	local button_index = 1
 	local server_time = Managers.backend:get_server_time()
 
-	for _, event in pairs(events) do
-		local template_name = event.template_name
-		local event_data = LiveEvents[template_name]
+	if next(events) and next(sorted_ids) then
+		for _, id in ipairs(sorted_ids) do
+			local event = events[id]
+			local template_name = event.template_name
+			local event_data = LiveEvents[template_name]
 
-		if event_data then
-			local starts_at, ends_at = event.starts_at, event.ends_at
-			local has_values = starts_at and ends_at
-			local is_active = has_values and starts_at <= server_time and server_time <= ends_at
+			if event_data then
+				local starts_at, ends_at = event.starts_at, event.ends_at
+				local has_values = starts_at and ends_at
+				local is_active = has_values and starts_at <= server_time and server_time <= ends_at
 
-			if is_active then
-				local button_widget = self:_create_entry_button_widget(event_data, template_name, button_index, event.id, event)
+				if is_active then
+					local button_widget = self:_create_entry_button_widget(event_data, template_name, button_index, event.id, event)
 
-				button_widget.offset[2] = (button_index - 1) * Styles.spacing.button_spacing
-				button_list_widgets[#button_list_widgets + 1] = button_widget
-				button_index = button_index + 1
-				event_button_id_list[template_name] = true
-			elseif starts_at and server_time < starts_at then
-				event_button_id_list[template_name] = true
+					button_widget.offset[2] = (button_index - 1) * Styles.spacing.button_spacing
+					button_list_widgets[#button_list_widgets + 1] = button_widget
+					button_index = button_index + 1
+					event_button_id_list[template_name] = true
+				elseif starts_at and server_time < starts_at then
+					event_button_id_list[template_name] = true
+				end
 			end
 		end
 	end
@@ -322,8 +326,8 @@ LiveEventsView._create_entry_button_widget = function (self, event_data, templat
 		event_id = event_id,
 		hotspot = {
 			pressed_callback = callback(self, "_on_entry_selected", event_id or template_name, button_index),
-			on_pressed_sound = UISoundEvents.default_click,
-		},
+			on_pressed_sound = UISoundEvents.default_click
+		}
 	}
 	local button_definition = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "button_list_anchor", button_content_override, Styles.sizes.event_button_size)
 	local button_widget = self:_create_widget(button_name, button_definition)
@@ -490,11 +494,37 @@ LiveEventsView._handle_page_scroll = function (self, dt, t)
 	self._ui_scenegraph.rewards_anchor.local_position[1] = new_x
 	self._ui_scenegraph.event_progress_bar.local_position[1] = new_x
 
+	local scroll_length = self._entries_scroll_length or 0
+	local scrollbar_widget = self._widgets_by_name.entries_scrollbar
+	local scroll_value = scrollbar_widget and scrollbar_widget.content.value or 0
+
+	self._ui_scenegraph.entries_anchor.local_position[2] = -scroll_length * scroll_value
+
 	UIScenegraph.update_scenegraph(self._ui_scenegraph, self._render_scale)
 end
 
 LiveEventsView._set_current_event_progress = function (self, current_progress)
 	self._selected_event_progress = current_progress
+end
+
+LiveEventsView._reward_progress_text = function (self, reward_widget)
+	local content = reward_widget.content
+	local prev_ceiling = content.segment_prev_ceiling or 0
+	local target = math.max((content.tier_xp or 0) - prev_ceiling, 0)
+
+	if content.segment_locked then
+		local lock_color = Styles.event_progress_bar.objective_lock.text_color
+
+		return string.format("{#color(%d, %d, %d)}%s{#reset()}", lock_color[2], lock_color[3], lock_color[4], Settings.objective_lock_glyph)
+	end
+
+	local progress = content.segment_progress or 0
+
+	if target <= progress then
+		return Settings.objective_complete_glyph
+	end
+
+	return tostring(progress) .. " / " .. tostring(target)
 end
 
 LiveEventsView._set_current_event_progress_text = function (self, current_progress, target_progress)
@@ -596,7 +626,7 @@ LiveEventsView._update_reward_tooltip = function (self, dt, t, input_service, ui
 						reward_tooltip_content.reward_tooltip_rarity = string.format("{#color(%d, %d, %d)}%s{#reset()}", rarity_settings.color[2], rarity_settings.color[3], rarity_settings.color[4], Localize(rarity_settings.display_name))
 						reward_tooltip_style.reward_tooltip_info.visible = true
 						reward_tooltip_style.reward_tooltip_rarity.visible = true
-						reward_tooltip_content.reward_tooltip_target_xp = tostring(self._selected_event_progress) .. " / " .. tostring(reward_widget.content.tier_xp)
+						reward_tooltip_content.reward_tooltip_target_xp = self:_reward_progress_text(reward_widget)
 						reward_tooltip_style.reward_tooltip_target_xp.visible = true
 					else
 						local currency_settings = WalletSettings[reward.currency]
@@ -605,7 +635,7 @@ LiveEventsView._update_reward_tooltip = function (self, dt, t, input_service, ui
 						reward_tooltip_content.reward_tooltip_rarity = ""
 						reward_tooltip_style.reward_tooltip_rarity.visible = false
 						reward_tooltip_style.reward_tooltip_info.visible = false
-						reward_tooltip_content.reward_tooltip_target_xp = tostring(self._selected_event_progress) .. " / " .. tostring(reward_widget.content.tier_xp)
+						reward_tooltip_content.reward_tooltip_target_xp = self:_reward_progress_text(reward_widget)
 						reward_tooltip_style.reward_tooltip_target_xp.visible = true
 					end
 				elseif not reward and reward_widget.content.item then
@@ -715,6 +745,7 @@ LiveEventsView._handle_gamepad_input = function (self, dt, t, input_service)
 		end
 	end
 
+	local previous_reward_index = self._selected_reward_index
 	local current_selected_page = self._selected_entry_page
 	local entry_data = self._entry_data and self._entry_data[current_selected_page]
 	local entry_page_widgets = entry_data and entry_data.widgets
@@ -754,6 +785,10 @@ LiveEventsView._handle_gamepad_input = function (self, dt, t, input_service)
 				hotspot.is_selected = i == self._selected_reward_index
 				widget.dirty = true
 			end
+		end
+
+		if self._selected_reward_index ~= previous_reward_index then
+			self:_scroll_reward_into_view(reward_widgets[self._selected_reward_index])
 		end
 	end
 end
@@ -871,7 +906,7 @@ LiveEventsView._on_leftover_pledge_result = function (self, success, amount, fac
 
 		temp_progression_data[event_id] = {
 			page_idx = self._selected_entry_page,
-			[global_stat_name] = (content[global_stat_name] or 0) + amount,
+			[global_stat_name] = (content[global_stat_name] or 0) + amount
 		}
 	end
 
@@ -889,11 +924,67 @@ LiveEventsView._callback_hide_reward_tooltip = function (self)
 end
 
 LiveEventsView.set_entries_scenegraph_size = function (self, width, height)
-	self:_set_scenegraph_size("entries_anchor", width, height)
-	self:_set_scenegraph_size("entries_mask", width, height)
-	self:_set_scenegraph_size("entries", width, height)
-	self:_set_scenegraph_size("navigation_arrow_left", nil, height)
-	self:_set_scenegraph_size("navigation_arrow_right", nil, height)
+	local content_height = height or 0
+	local region_height = math.min(content_height, Styles.sizes.entry_height)
+
+	self:_set_scenegraph_size("entries_viewport", width, region_height)
+	self:_set_scenegraph_size("entries_mask", width, region_height)
+	self:_set_scenegraph_size("entries_anchor", width, content_height)
+	self:_set_scenegraph_size("entries", width, content_height)
+	self:_set_scenegraph_size("navigation_arrow_left", nil, region_height)
+	self:_set_scenegraph_size("navigation_arrow_right", nil, region_height)
+	self:_set_scenegraph_size("entries_scrollbar", nil, math.max(region_height - 20, 1))
+
+	self._entries_region_height = region_height
+	self._entries_scroll_length = math.max(content_height - region_height, 0)
+
+	local scrollbar_widget = self._widgets_by_name.entries_scrollbar
+
+	if scrollbar_widget then
+		local content = scrollbar_widget.content
+
+		content.scroll_length = self._entries_scroll_length
+		content.area_length = region_height
+		content.value = 0
+		content.scroll_value = nil
+		content.scroll_add = nil
+		content.current_scroll_direction = nil
+		scrollbar_widget.visible = self._entries_scroll_length > 0
+	end
+end
+
+LiveEventsView._scroll_reward_into_view = function (self, reward_widget)
+	local scroll_length = self._entries_scroll_length or 0
+	local scrollbar_widget = self._widgets_by_name.entries_scrollbar
+
+	if scroll_length <= 0 or not scrollbar_widget or not reward_widget then
+		return
+	end
+
+	local viewport_node = self._ui_scenegraph.entries_viewport
+	local rewards_node = self._ui_scenegraph.rewards_box
+
+	if not viewport_node.world_position or not rewards_node.world_position then
+		return
+	end
+
+	local region_height = self._entries_region_height or Styles.sizes.entry_height
+	local tile_height = Styles.sizes.reward_size[2]
+	local viewport_top = viewport_node.world_position[2]
+	local tile_top = rewards_node.world_position[2] + reward_widget.offset[2] - tile_height
+	local overflow = 0
+
+	if tile_top < viewport_top then
+		overflow = tile_top - viewport_top
+	elseif tile_top + tile_height > viewport_top + region_height then
+		overflow = tile_top + tile_height - (viewport_top + region_height)
+	end
+
+	if overflow ~= 0 then
+		local content = scrollbar_widget.content
+
+		content.value = math.clamp((content.value or 0) + overflow / scroll_length, 0, 1)
+	end
 end
 
 LiveEventsView._create_offscreen_renderer = function (self)
@@ -912,7 +1003,7 @@ LiveEventsView._create_offscreen_renderer = function (self)
 		world = world,
 		viewport = viewport,
 		viewport_name = viewport_name,
-		renderer_name = renderer_name,
+		renderer_name = renderer_name
 	}
 end
 

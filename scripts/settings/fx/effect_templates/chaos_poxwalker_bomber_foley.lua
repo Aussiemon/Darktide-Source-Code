@@ -7,7 +7,7 @@ local STOP_SOUND_EVENT = "wwise/events/minions/stop_all_minion_poxwalker_bomber_
 local TARGET_NODE_NAME = "ap_voice"
 local resources = {
 	start_sound_event = START_SOUND_EVENT,
-	stop_sound_event = STOP_SOUND_EVENT,
+	stop_sound_event = STOP_SOUND_EVENT
 }
 local effect_template = {
 	name = "chaos_poxwalker_bomber_foley",
@@ -53,7 +53,7 @@ local effect_template = {
 
 			WwiseWorld.trigger_resource_event(wwise_world, STOP_SOUND_EVENT, source_id)
 		end
-	end,
+	end
 }
 
 return effect_template

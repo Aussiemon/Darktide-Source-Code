@@ -108,7 +108,7 @@ MechanismAdventure.init = function (self, ...)
 
 		if do_vote then
 			local voting_params = {
-				mission_data = data,
+				mission_data = data
 			}
 
 			Managers.voting:start_voting("mission_lobby_ready", voting_params):next(function (voting_id)
@@ -297,7 +297,7 @@ MechanismAdventure._check_state_change = function (self, state, data)
 
 					return Managers.voting:start_voting(voting_template, {
 						new_party_id = response.party_id,
-						new_party_invite_token = response.invite_token,
+						new_party_invite_token = response.invite_token
 					}):next(function (voting_id)
 						Log.info("MechanismAdventure", "stay_in_party_voting_id:%s", voting_id)
 
@@ -399,7 +399,7 @@ MechanismAdventure.wanted_transition = function (self)
 				circumstance_name = data.circumstance_name,
 				mission_giver_vo = data.mission_giver_vo_override,
 				side_mission = data.side_mission,
-				havoc_data = data.havoc_data,
+				havoc_data = data.havoc_data
 			}
 
 			return false, StateLoading, next_state_context
@@ -413,8 +413,8 @@ MechanismAdventure.wanted_transition = function (self)
 				next_state = StateGameplay,
 				havoc_data = data.havoc_data,
 				next_state_params = {
-					mechanism_data = self._mechanism_data,
-				},
+					mechanism_data = self._mechanism_data
+				}
 			}
 
 			return false, StateLoading, next_state_context
@@ -427,15 +427,15 @@ MechanismAdventure.wanted_transition = function (self)
 				next_state = self._game_states[state],
 				next_state_params = {
 					mission_name = data.mission_name,
-					mechanism_data = self._mechanism_data,
-				},
+					mechanism_data = self._mechanism_data
+				}
 			}
 
 			return false, StateLoading, next_state_context
 		else
 			local next_state_context = {
 				mission_name = data.mission_name,
-				mechanism_data = self._mechanism_data,
+				mechanism_data = self._mechanism_data
 			}
 
 			return false, self._game_states[state], next_state_context
@@ -489,7 +489,7 @@ MechanismAdventure._show_retry_popup = function (self)
 
 						self._joining_party_game_session = nil
 					end
-				end,
+				end
 			},
 			{
 				close_on_pressed = true,
@@ -501,16 +501,16 @@ MechanismAdventure._show_retry_popup = function (self)
 
 					Managers.party_immaterium:join_party({
 						party_id = "",
-						current_game_session_id = self._game_session_id,
+						current_game_session_id = self._game_session_id
 					}):next(function ()
 						self._retrying = nil
 					end):catch(function (error)
 						Log.info("MechanismAdventure", "Failed joining party in old game session, leaving to hub")
 						Managers.multiplayer_session:leave("leave_mission")
 					end)
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)

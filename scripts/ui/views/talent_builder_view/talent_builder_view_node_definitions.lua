@@ -6,10 +6,44 @@ local STIMM_COLOR = {
 	255,
 	64,
 	223,
-	208,
+	208
 }
+local ORPHANED_COLOR = Color.error_soft(255, true)
+
+local function ORPHANED_FLASH(dt)
+	return math.remap(-1, 1, 0.5, 1, math.sin(Application.time_since_launch() * math.two_pi * 0.75))
+end
 
 local function node_highligt_change_function(content, style, _, dt)
+	local material_values = style.material_values
+	local orphaned = content.orphaned or false
+
+	if orphaned ~= style.applied_orphaned_color then
+		local fill_color = orphaned and ORPHANED_COLOR or {
+			255,
+			234,
+			255,
+			255
+		}
+		local blur_color = orphaned and ORPHANED_COLOR or {
+			255,
+			73,
+			161,
+			242
+		}
+
+		material_values.fill_color = ColorUtilities.format_color_to_material(fill_color)
+		material_values.blur_color = ColorUtilities.format_color_to_material(blur_color)
+		style.applied_orphaned_color = orphaned
+	end
+
+	if orphaned then
+		local flash = ORPHANED_FLASH(dt)
+
+		material_values.fill_color[4] = flash
+		material_values.blur_color[4] = flash
+	end
+
 	local alpha_anim_progress = content.alpha_anim_progress or 0
 	local alpha_fraction
 
@@ -117,7 +151,7 @@ local function node_icon_change_function(content, style, _, dt, override_availab
 	end
 end
 
-return {
+local node_definitions = {
 	node_definition = UIWidget.create_definition({
 		{
 			pass_type = "texture",
@@ -128,17 +162,17 @@ return {
 				vertical_alignment = "center",
 				size = {
 					151.2,
-					240.79999999999998,
+					240.79999999999998
 				},
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				color = Color.white(255, true),
 				material_values = {
-					progress = 1,
-				},
+					progress = 1
+				}
 			},
 			change_function = function (content, style, _, dt)
 				local material_values = style.material_values
@@ -155,15 +189,15 @@ return {
 					progress = progress + dt * selection_anim_speed
 					material_values.progress = math.min(progress, 1)
 				end
-			end,
+			end
 		},
 		{
 			content_id = "hotspot",
 			pass_type = "hotspot",
 			style_id = "hotspot",
 			content = {
-				hover_type = "circle",
-			},
+				hover_type = "circle"
+			}
 		},
 		{
 			pass_type = "texture",
@@ -175,15 +209,15 @@ return {
 					frame = "content/ui/textures/frames/talents/circular_frame",
 					icon_mask = "content/ui/textures/frames/talents/circular_frame_mask",
 					intensity = -0.5,
-					saturation = 1,
+					saturation = 1
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
-			change_function = node_icon_change_function,
+			change_function = node_icon_change_function
 		},
 		{
 			pass_type = "texture",
@@ -195,19 +229,19 @@ return {
 				offset = {
 					0,
 					0,
-					-11,
+					-11
 				},
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				color = {
 					180,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -217,25 +251,15 @@ return {
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				color = Color.white(255, true),
 				material_values = {
-					fill_color = ColorUtilities.format_color_to_material({
-						255,
-						234,
-						255,
-						255,
-					}),
-					blur_color = ColorUtilities.format_color_to_material({
-						255,
-						73,
-						161,
-						242,
-					}),
-				},
+					blur_color = nil,
+					fill_color = nil
+				}
 			},
-			change_function = node_highligt_change_function,
+			change_function = node_highligt_change_function
 		},
 		{
 			pass_type = "texture",
@@ -245,9 +269,9 @@ return {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
-				color = Color.ui_terminal(255, true),
+				color = Color.ui_terminal(255, true)
 			},
 			change_function = function (content, style)
 				local hotspot = content.hotspot
@@ -255,7 +279,7 @@ return {
 				local hover_alpha = anim_progress * 255
 
 				style.color[1] = hover_alpha
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -265,14 +289,14 @@ return {
 				horizontal_alignment = "center",
 				vertical_alignment = "center",
 				material_values = {
-					saturation = 1,
+					saturation = 1
 				},
 				offset = {
 					0,
 					0,
-					6,
+					6
 				},
-				color = Color.white(255, true),
+				color = Color.white(255, true)
 			},
 			change_function = function (content, style, _, dt)
 				local anim_block_speed = 5
@@ -286,7 +310,7 @@ return {
 
 				content.anim_blocked_progress = anim_blocked_progress
 				style.color[1] = anim_blocked_progress * 255
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -296,14 +320,14 @@ return {
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				color = {
 					255,
 					246,
 					69,
-					69,
-				},
+					69
+				}
 			},
 			change_function = function (content, style)
 				local draw_blocked_highlight = content.draw_blocked_highlight
@@ -312,8 +336,8 @@ return {
 				local anim_blocked_progress = content.anim_blocked_progress or 0
 
 				style.color[1] = draw_blocked_highlight and anim_blocked_progress * (155 + 100 * block_anim_progress) or 0
-			end,
-		},
+			end
+		}
 	}, "talent", nil, nil),
 	node_definition_ability = UIWidget.create_definition({
 		{
@@ -325,17 +349,17 @@ return {
 				vertical_alignment = "center",
 				size = {
 					151.2,
-					240.79999999999998,
+					240.79999999999998
 				},
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				color = Color.white(255, true),
 				material_values = {
-					progress = 1,
-				},
+					progress = 1
+				}
 			},
 			change_function = function (content, style, _, dt)
 				local material_values = style.material_values
@@ -352,15 +376,15 @@ return {
 					progress = progress + dt * selection_anim_speed
 					material_values.progress = math.min(progress, 1)
 				end
-			end,
+			end
 		},
 		{
 			content_id = "hotspot",
 			pass_type = "hotspot",
 			style_id = "hotspot",
 			content = {
-				hover_type = "circle",
-			},
+				hover_type = "circle"
+			}
 		},
 		{
 			pass_type = "texture",
@@ -370,17 +394,18 @@ return {
 			style = {
 				material_values = {
 					frame = "content/ui/textures/frames/talents/hex_frame",
+					gradient_map = "content/ui/textures/color_ramps/talent_ability",
 					icon_mask = "content/ui/textures/frames/talents/hex_frame_mask",
 					intensity = -0.5,
-					saturation = 1,
+					saturation = 1
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
-			change_function = node_icon_change_function,
+			change_function = node_icon_change_function
 		},
 		{
 			pass_type = "texture",
@@ -392,19 +417,19 @@ return {
 				offset = {
 					0,
 					0,
-					-11,
+					-11
 				},
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				color = {
 					180,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -416,19 +441,19 @@ return {
 				offset = {
 					0,
 					0,
-					-11,
+					-11
 				},
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				color = {
 					180,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -438,25 +463,15 @@ return {
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				color = Color.white(255, true),
 				material_values = {
-					fill_color = ColorUtilities.format_color_to_material({
-						255,
-						234,
-						255,
-						255,
-					}),
-					blur_color = ColorUtilities.format_color_to_material({
-						255,
-						73,
-						161,
-						242,
-					}),
-				},
+					blur_color = nil,
+					fill_color = nil
+				}
 			},
-			change_function = node_highligt_change_function,
+			change_function = node_highligt_change_function
 		},
 		{
 			pass_type = "texture",
@@ -466,9 +481,9 @@ return {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
-				color = Color.ui_terminal(255, true),
+				color = Color.ui_terminal(255, true)
 			},
 			change_function = function (content, style)
 				local hotspot = content.hotspot
@@ -476,7 +491,7 @@ return {
 				local hover_alpha = anim_progress * 255
 
 				style.color[1] = hover_alpha
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -486,14 +501,14 @@ return {
 				horizontal_alignment = "center",
 				vertical_alignment = "center",
 				material_values = {
-					saturation = 1,
+					saturation = 1
 				},
 				offset = {
 					0,
 					0,
-					6,
+					6
 				},
-				color = Color.white(255, true),
+				color = Color.white(255, true)
 			},
 			change_function = function (content, style, _, dt)
 				local anim_block_speed = 5
@@ -507,7 +522,7 @@ return {
 
 				content.anim_blocked_progress = anim_blocked_progress
 				style.color[1] = anim_blocked_progress * 255
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -517,14 +532,14 @@ return {
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				color = {
 					255,
 					246,
 					69,
-					69,
-				},
+					69
+				}
 			},
 			change_function = function (content, style)
 				local draw_blocked_highlight = content.draw_blocked_highlight
@@ -533,8 +548,8 @@ return {
 				local anim_blocked_progress = content.anim_blocked_progress or 0
 
 				style.color[1] = draw_blocked_highlight and anim_blocked_progress * (155 + 100 * block_anim_progress) or 0
-			end,
-		},
+			end
+		}
 	}, "talent", nil, nil),
 	node_definition_ability_modifier = UIWidget.create_definition({
 		{
@@ -546,17 +561,17 @@ return {
 				vertical_alignment = "center",
 				size = {
 					151.2,
-					240.79999999999998,
+					240.79999999999998
 				},
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				color = Color.white(255, true),
 				material_values = {
-					progress = 1,
-				},
+					progress = 1
+				}
 			},
 			change_function = function (content, style, _, dt)
 				local material_values = style.material_values
@@ -573,15 +588,15 @@ return {
 					progress = progress + dt * selection_anim_speed
 					material_values.progress = math.min(progress, 1)
 				end
-			end,
+			end
 		},
 		{
 			content_id = "hotspot",
 			pass_type = "hotspot",
 			style_id = "hotspot",
 			content = {
-				hover_type = "circle",
-			},
+				hover_type = "circle"
+			}
 		},
 		{
 			pass_type = "texture",
@@ -593,15 +608,15 @@ return {
 					frame = "content/ui/textures/frames/talents/hex_frame",
 					icon_mask = "content/ui/textures/frames/talents/hex_frame_mask",
 					intensity = -0.5,
-					saturation = 1,
+					saturation = 1
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
-			change_function = node_icon_change_function,
+			change_function = node_icon_change_function
 		},
 		{
 			pass_type = "texture",
@@ -613,19 +628,19 @@ return {
 				offset = {
 					0,
 					0,
-					-11,
+					-11
 				},
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				color = {
 					180,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -637,19 +652,19 @@ return {
 				offset = {
 					0,
 					0,
-					-11,
+					-11
 				},
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				color = {
 					180,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -659,25 +674,15 @@ return {
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				color = Color.white(255, true),
 				material_values = {
-					fill_color = ColorUtilities.format_color_to_material({
-						255,
-						234,
-						255,
-						255,
-					}),
-					blur_color = ColorUtilities.format_color_to_material({
-						255,
-						73,
-						161,
-						242,
-					}),
-				},
+					blur_color = nil,
+					fill_color = nil
+				}
 			},
-			change_function = node_highligt_change_function,
+			change_function = node_highligt_change_function
 		},
 		{
 			pass_type = "texture",
@@ -687,9 +692,9 @@ return {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
-				color = Color.ui_terminal(255, true),
+				color = Color.ui_terminal(255, true)
 			},
 			change_function = function (content, style)
 				local hotspot = content.hotspot
@@ -697,7 +702,7 @@ return {
 				local hover_alpha = anim_progress * 255
 
 				style.color[1] = hover_alpha
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -707,14 +712,14 @@ return {
 				horizontal_alignment = "center",
 				vertical_alignment = "center",
 				material_values = {
-					saturation = 1,
+					saturation = 1
 				},
 				offset = {
 					0,
 					0,
-					6,
+					6
 				},
-				color = Color.white(255, true),
+				color = Color.white(255, true)
 			},
 			change_function = function (content, style, _, dt)
 				local anim_block_speed = 5
@@ -728,7 +733,7 @@ return {
 
 				content.anim_blocked_progress = anim_blocked_progress
 				style.color[1] = anim_blocked_progress * 255
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -738,14 +743,14 @@ return {
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				color = {
 					255,
 					246,
 					69,
-					69,
-				},
+					69
+				}
 			},
 			change_function = function (content, style)
 				local draw_blocked_highlight = content.draw_blocked_highlight
@@ -754,8 +759,8 @@ return {
 				local anim_blocked_progress = content.anim_blocked_progress or 0
 
 				style.color[1] = draw_blocked_highlight and anim_blocked_progress * (155 + 100 * block_anim_progress) or 0
-			end,
-		},
+			end
+		}
 	}, "talent", nil, nil),
 	node_definition_stat = UIWidget.create_definition({
 		{
@@ -767,17 +772,17 @@ return {
 				vertical_alignment = "center",
 				size = {
 					151.2,
-					240.79999999999998,
+					240.79999999999998
 				},
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				color = Color.white(255, true),
 				material_values = {
-					progress = 1,
-				},
+					progress = 1
+				}
 			},
 			change_function = function (content, style, _, dt)
 				local material_values = style.material_values
@@ -794,15 +799,15 @@ return {
 					progress = progress + dt * selection_anim_speed
 					material_values.progress = math.min(progress, 1)
 				end
-			end,
+			end
 		},
 		{
 			content_id = "hotspot",
 			pass_type = "hotspot",
 			style_id = "hotspot",
 			content = {
-				hover_type = "circle",
-			},
+				hover_type = "circle"
+			}
 		},
 		{
 			pass_type = "texture",
@@ -813,15 +818,15 @@ return {
 				ignore_icon = true,
 				material_values = {
 					intensity = -0.5,
-					saturation = 1,
+					saturation = 1
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
-			change_function = node_icon_change_function,
+			change_function = node_icon_change_function
 		},
 		{
 			pass_type = "texture",
@@ -833,19 +838,19 @@ return {
 				offset = {
 					0,
 					0,
-					-11,
+					-11
 				},
 				size_addition = {
 					-24,
-					-24,
+					-24
 				},
 				color = {
 					180,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -855,25 +860,15 @@ return {
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				color = Color.white(255, true),
 				material_values = {
-					fill_color = ColorUtilities.format_color_to_material({
-						255,
-						234,
-						255,
-						255,
-					}),
-					blur_color = ColorUtilities.format_color_to_material({
-						255,
-						73,
-						161,
-						242,
-					}),
-				},
+					blur_color = nil,
+					fill_color = nil
+				}
 			},
-			change_function = node_highligt_change_function,
+			change_function = node_highligt_change_function
 		},
 		{
 			pass_type = "texture",
@@ -883,9 +878,9 @@ return {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
-				color = Color.ui_terminal(255, true),
+				color = Color.ui_terminal(255, true)
 			},
 			change_function = function (content, style)
 				local hotspot = content.hotspot
@@ -893,7 +888,7 @@ return {
 				local hover_alpha = anim_progress * 255
 
 				style.color[1] = hover_alpha
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -903,14 +898,14 @@ return {
 				horizontal_alignment = "center",
 				vertical_alignment = "center",
 				material_values = {
-					saturation = 1,
+					saturation = 1
 				},
 				offset = {
 					0,
 					0,
-					6,
+					6
 				},
-				color = Color.white(255, true),
+				color = Color.white(255, true)
 			},
 			change_function = function (content, style, _, dt)
 				local anim_block_speed = 5
@@ -924,7 +919,7 @@ return {
 
 				content.anim_blocked_progress = anim_blocked_progress
 				style.color[1] = anim_blocked_progress * 255
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -934,14 +929,14 @@ return {
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				color = {
 					255,
 					246,
 					69,
-					69,
-				},
+					69
+				}
 			},
 			change_function = function (content, style)
 				local draw_blocked_highlight = content.draw_blocked_highlight
@@ -950,8 +945,8 @@ return {
 				local anim_blocked_progress = content.anim_blocked_progress or 0
 
 				style.color[1] = draw_blocked_highlight and anim_blocked_progress * (155 + 100 * block_anim_progress) or 0
-			end,
-		},
+			end
+		}
 	}, "talent", nil, nil),
 	node_definition_keystone = UIWidget.create_definition({
 		{
@@ -963,17 +958,17 @@ return {
 				vertical_alignment = "center",
 				size = {
 					151.2,
-					240.79999999999998,
+					240.79999999999998
 				},
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				color = Color.white(255, true),
 				material_values = {
-					progress = 1,
-				},
+					progress = 1
+				}
 			},
 			change_function = function (content, style, _, dt)
 				local material_values = style.material_values
@@ -990,15 +985,15 @@ return {
 					progress = progress + dt * selection_anim_speed
 					material_values.progress = math.min(progress, 1)
 				end
-			end,
+			end
 		},
 		{
 			content_id = "hotspot",
 			pass_type = "hotspot",
 			style_id = "hotspot",
 			content = {
-				hover_type = "circle",
-			},
+				hover_type = "circle"
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1010,15 +1005,15 @@ return {
 					frame = "content/ui/textures/frames/talents/circular_frame",
 					icon_mask = "content/ui/textures/frames/talents/circular_frame_mask",
 					intensity = -0.5,
-					saturation = 1,
+					saturation = 1
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
-			change_function = node_icon_change_function,
+			change_function = node_icon_change_function
 		},
 		{
 			pass_type = "texture",
@@ -1030,19 +1025,19 @@ return {
 				offset = {
 					0,
 					0,
-					-11,
+					-11
 				},
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				color = {
 					180,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1052,25 +1047,15 @@ return {
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				color = Color.white(255, true),
 				material_values = {
-					fill_color = ColorUtilities.format_color_to_material({
-						255,
-						234,
-						255,
-						255,
-					}),
-					blur_color = ColorUtilities.format_color_to_material({
-						255,
-						73,
-						161,
-						242,
-					}),
-				},
+					blur_color = nil,
+					fill_color = nil
+				}
 			},
-			change_function = node_highligt_change_function,
+			change_function = node_highligt_change_function
 		},
 		{
 			pass_type = "texture",
@@ -1080,9 +1065,9 @@ return {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
-				color = Color.ui_terminal(255, true),
+				color = Color.ui_terminal(255, true)
 			},
 			change_function = function (content, style)
 				local hotspot = content.hotspot
@@ -1090,7 +1075,7 @@ return {
 				local hover_alpha = anim_progress * 255
 
 				style.color[1] = hover_alpha
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -1100,14 +1085,14 @@ return {
 				horizontal_alignment = "center",
 				vertical_alignment = "center",
 				material_values = {
-					saturation = 1,
+					saturation = 1
 				},
 				offset = {
 					0,
 					0,
-					6,
+					6
 				},
-				color = Color.white(255, true),
+				color = Color.white(255, true)
 			},
 			change_function = function (content, style, _, dt)
 				local anim_block_speed = 5
@@ -1121,7 +1106,7 @@ return {
 
 				content.anim_blocked_progress = anim_blocked_progress
 				style.color[1] = anim_blocked_progress * 255
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -1131,14 +1116,14 @@ return {
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				color = {
 					255,
 					246,
 					69,
-					69,
-				},
+					69
+				}
 			},
 			change_function = function (content, style)
 				local draw_blocked_highlight = content.draw_blocked_highlight
@@ -1147,8 +1132,8 @@ return {
 				local anim_blocked_progress = content.anim_blocked_progress or 0
 
 				style.color[1] = draw_blocked_highlight and anim_blocked_progress * (155 + 100 * block_anim_progress) or 0
-			end,
-		},
+			end
+		}
 	}, "talent", nil, nil),
 	node_definition_tactical = UIWidget.create_definition({
 		{
@@ -1160,17 +1145,17 @@ return {
 				vertical_alignment = "center",
 				size = {
 					151.2,
-					240.79999999999998,
+					240.79999999999998
 				},
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				color = Color.white(255, true),
 				material_values = {
-					progress = 1,
-				},
+					progress = 1
+				}
 			},
 			change_function = function (content, style, _, dt)
 				local material_values = style.material_values
@@ -1187,15 +1172,15 @@ return {
 					progress = progress + dt * selection_anim_speed
 					material_values.progress = math.min(progress, 1)
 				end
-			end,
+			end
 		},
 		{
 			content_id = "hotspot",
 			pass_type = "hotspot",
 			style_id = "hotspot",
 			content = {
-				hover_type = "circle",
-			},
+				hover_type = "circle"
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1207,15 +1192,15 @@ return {
 					frame = "content/ui/textures/frames/talents/square_frame",
 					icon_mask = "content/ui/textures/frames/talents/square_frame_mask",
 					intensity = -0.5,
-					saturation = 1,
+					saturation = 1
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
-			change_function = node_icon_change_function,
+			change_function = node_icon_change_function
 		},
 		{
 			pass_type = "texture",
@@ -1227,19 +1212,19 @@ return {
 				offset = {
 					0,
 					0,
-					-11,
+					-11
 				},
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				color = {
 					180,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1249,25 +1234,15 @@ return {
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				color = Color.white(255, true),
 				material_values = {
-					fill_color = ColorUtilities.format_color_to_material({
-						255,
-						234,
-						255,
-						255,
-					}),
-					blur_color = ColorUtilities.format_color_to_material({
-						255,
-						73,
-						161,
-						242,
-					}),
-				},
+					blur_color = nil,
+					fill_color = nil
+				}
 			},
-			change_function = node_highligt_change_function,
+			change_function = node_highligt_change_function
 		},
 		{
 			pass_type = "texture",
@@ -1277,9 +1252,9 @@ return {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
-				color = Color.ui_terminal(255, true),
+				color = Color.ui_terminal(255, true)
 			},
 			change_function = function (content, style)
 				local hotspot = content.hotspot
@@ -1287,7 +1262,7 @@ return {
 				local hover_alpha = anim_progress * 255
 
 				style.color[1] = hover_alpha
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -1297,14 +1272,14 @@ return {
 				horizontal_alignment = "center",
 				vertical_alignment = "center",
 				material_values = {
-					saturation = 1,
+					saturation = 1
 				},
 				offset = {
 					0,
 					0,
-					6,
+					6
 				},
-				color = Color.white(255, true),
+				color = Color.white(255, true)
 			},
 			change_function = function (content, style, _, dt)
 				local anim_block_speed = 5
@@ -1318,7 +1293,7 @@ return {
 
 				content.anim_blocked_progress = anim_blocked_progress
 				style.color[1] = anim_blocked_progress * 255
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -1328,14 +1303,14 @@ return {
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				color = {
 					255,
 					246,
 					69,
-					69,
-				},
+					69
+				}
 			},
 			change_function = function (content, style)
 				local draw_blocked_highlight = content.draw_blocked_highlight
@@ -1344,8 +1319,8 @@ return {
 				local anim_blocked_progress = content.anim_blocked_progress or 0
 
 				style.color[1] = draw_blocked_highlight and anim_blocked_progress * (155 + 100 * block_anim_progress) or 0
-			end,
-		},
+			end
+		}
 	}, "talent", nil, nil),
 	node_definition_tactical_modifier = UIWidget.create_definition({
 		{
@@ -1357,17 +1332,17 @@ return {
 				vertical_alignment = "center",
 				size = {
 					151.2,
-					240.79999999999998,
+					240.79999999999998
 				},
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				color = Color.white(255, true),
 				material_values = {
-					progress = 1,
-				},
+					progress = 1
+				}
 			},
 			change_function = function (content, style, _, dt)
 				local material_values = style.material_values
@@ -1384,15 +1359,15 @@ return {
 					progress = progress + dt * selection_anim_speed
 					material_values.progress = math.min(progress, 1)
 				end
-			end,
+			end
 		},
 		{
 			content_id = "hotspot",
 			pass_type = "hotspot",
 			style_id = "hotspot",
 			content = {
-				hover_type = "circle",
-			},
+				hover_type = "circle"
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1404,15 +1379,15 @@ return {
 					frame = "content/ui/textures/frames/talents/square_frame",
 					icon_mask = "content/ui/textures/frames/talents/square_frame_mask",
 					intensity = -0.5,
-					saturation = 1,
+					saturation = 1
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
-			change_function = node_icon_change_function,
+			change_function = node_icon_change_function
 		},
 		{
 			pass_type = "texture",
@@ -1424,19 +1399,19 @@ return {
 				offset = {
 					0,
 					0,
-					-11,
+					-11
 				},
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				color = {
 					180,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1446,25 +1421,15 @@ return {
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				color = Color.white(255, true),
 				material_values = {
-					fill_color = ColorUtilities.format_color_to_material({
-						255,
-						234,
-						255,
-						255,
-					}),
-					blur_color = ColorUtilities.format_color_to_material({
-						255,
-						73,
-						161,
-						242,
-					}),
-				},
+					blur_color = nil,
+					fill_color = nil
+				}
 			},
-			change_function = node_highligt_change_function,
+			change_function = node_highligt_change_function
 		},
 		{
 			pass_type = "texture",
@@ -1474,9 +1439,9 @@ return {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
-				color = Color.ui_terminal(255, true),
+				color = Color.ui_terminal(255, true)
 			},
 			change_function = function (content, style)
 				local hotspot = content.hotspot
@@ -1484,7 +1449,7 @@ return {
 				local hover_alpha = anim_progress * 255
 
 				style.color[1] = hover_alpha
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -1494,14 +1459,14 @@ return {
 				horizontal_alignment = "center",
 				vertical_alignment = "center",
 				material_values = {
-					saturation = 1,
+					saturation = 1
 				},
 				offset = {
 					0,
 					0,
-					6,
+					6
 				},
-				color = Color.white(255, true),
+				color = Color.white(255, true)
 			},
 			change_function = function (content, style, _, dt)
 				local anim_block_speed = 5
@@ -1515,7 +1480,7 @@ return {
 
 				content.anim_blocked_progress = anim_blocked_progress
 				style.color[1] = anim_blocked_progress * 255
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -1525,14 +1490,14 @@ return {
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				color = {
 					255,
 					246,
 					69,
-					69,
-				},
+					69
+				}
 			},
 			change_function = function (content, style)
 				local draw_blocked_highlight = content.draw_blocked_highlight
@@ -1541,8 +1506,8 @@ return {
 				local anim_blocked_progress = content.anim_blocked_progress or 0
 
 				style.color[1] = draw_blocked_highlight and anim_blocked_progress * (155 + 100 * block_anim_progress) or 0
-			end,
-		},
+			end
+		}
 	}, "talent", nil, nil),
 	node_definition_aura = UIWidget.create_definition({
 		{
@@ -1554,17 +1519,17 @@ return {
 				vertical_alignment = "center",
 				size = {
 					151.2,
-					240.79999999999998,
+					240.79999999999998
 				},
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				color = Color.white(255, true),
 				material_values = {
-					progress = 1,
-				},
+					progress = 1
+				}
 			},
 			change_function = function (content, style, _, dt)
 				local material_values = style.material_values
@@ -1581,15 +1546,15 @@ return {
 					progress = progress + dt * selection_anim_speed
 					material_values.progress = math.min(progress, 1)
 				end
-			end,
+			end
 		},
 		{
 			content_id = "hotspot",
 			pass_type = "hotspot",
 			style_id = "hotspot",
 			content = {
-				hover_type = "circle",
-			},
+				hover_type = "circle"
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1601,15 +1566,15 @@ return {
 					frame = "content/ui/textures/frames/talents/circular_frame",
 					icon_mask = "content/ui/textures/frames/talents/circular_frame_mask",
 					intensity = -0.5,
-					saturation = 1,
+					saturation = 1
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
-			change_function = node_icon_change_function,
+			change_function = node_icon_change_function
 		},
 		{
 			pass_type = "texture",
@@ -1621,19 +1586,19 @@ return {
 				offset = {
 					0,
 					0,
-					-11,
+					-11
 				},
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				color = {
 					180,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1643,25 +1608,15 @@ return {
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				color = Color.white(255, true),
 				material_values = {
-					fill_color = ColorUtilities.format_color_to_material({
-						255,
-						234,
-						255,
-						255,
-					}),
-					blur_color = ColorUtilities.format_color_to_material({
-						255,
-						73,
-						161,
-						242,
-					}),
-				},
+					blur_color = nil,
+					fill_color = nil
+				}
 			},
-			change_function = node_highligt_change_function,
+			change_function = node_highligt_change_function
 		},
 		{
 			pass_type = "texture",
@@ -1671,9 +1626,9 @@ return {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
-				color = Color.ui_terminal(255, true),
+				color = Color.ui_terminal(255, true)
 			},
 			change_function = function (content, style)
 				local hotspot = content.hotspot
@@ -1681,7 +1636,7 @@ return {
 				local hover_alpha = anim_progress * 255
 
 				style.color[1] = hover_alpha
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -1691,14 +1646,14 @@ return {
 				horizontal_alignment = "center",
 				vertical_alignment = "center",
 				material_values = {
-					saturation = 1,
+					saturation = 1
 				},
 				offset = {
 					0,
 					0,
-					6,
+					6
 				},
-				color = Color.white(255, true),
+				color = Color.white(255, true)
 			},
 			change_function = function (content, style, _, dt)
 				local anim_block_speed = 5
@@ -1712,7 +1667,7 @@ return {
 
 				content.anim_blocked_progress = anim_blocked_progress
 				style.color[1] = anim_blocked_progress * 255
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -1722,14 +1677,14 @@ return {
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				color = {
 					255,
 					246,
 					69,
-					69,
-				},
+					69
+				}
 			},
 			change_function = function (content, style)
 				local draw_blocked_highlight = content.draw_blocked_highlight
@@ -1738,10 +1693,18 @@ return {
 				local anim_blocked_progress = content.anim_blocked_progress or 0
 
 				style.color[1] = draw_blocked_highlight and anim_blocked_progress * (155 + 100 * block_anim_progress) or 0
-			end,
-		},
+			end
+		}
 	}, "talent", nil, nil),
 	node_definition_start = UIWidget.create_definition({
+		{
+			content_id = "hotspot",
+			pass_type = "hotspot",
+			style_id = "hotspot",
+			content = {
+				hover_type = "circle"
+			}
+		},
 		{
 			pass_type = "texture",
 			style_id = "icon",
@@ -1754,11 +1717,11 @@ return {
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				size = {
 					134,
-					134,
+					134
 				},
 				color = Color.white(255, true),
 				material_values = {
@@ -1766,17 +1729,17 @@ return {
 						255,
 						224,
 						250,
-						255,
+						255
 					}),
 					blur_color = ColorUtilities.format_color_to_material({
 						255,
 						99,
 						167,
-						176,
-					}),
-				},
+						176
+					})
+				}
 			},
-			change_function = node_icon_change_function,
+			change_function = node_icon_change_function
 		},
 		{
 			pass_type = "texture",
@@ -1788,21 +1751,21 @@ return {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
 				size = {
 					134,
-					134,
+					134
 				},
 				color = Color.white(255, true),
 				material_values = {
 					fill_amount = 0.5,
-					fill_color = ColorUtilities.format_color_to_material(STIMM_COLOR),
-				},
+					fill_color = ColorUtilities.format_color_to_material(STIMM_COLOR)
+				}
 			},
 			visibility_function = function (content, style)
 				return content.fill_texture ~= "content/ui/materials/base/ui_default_base"
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -1814,21 +1777,21 @@ return {
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				size = {
 					134,
-					134,
+					134
 				},
 				color = Color.white(255, true),
 				material_values = {
 					fill_amount = 0.5,
-					fill_color = ColorUtilities.format_color_to_material(STIMM_COLOR),
-				},
+					fill_color = ColorUtilities.format_color_to_material(STIMM_COLOR)
+				}
 			},
 			visibility_function = function (content, style)
 				return content.center_texture ~= "content/ui/materials/base/ui_default_base"
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -1840,22 +1803,22 @@ return {
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				size = {
 					134,
-					134,
+					134
 				},
 				color = Color.white(200, true),
 				material_values = {
 					fill_amount = 0.5,
-					fill_color = ColorUtilities.format_color_to_material(STIMM_COLOR),
-				},
+					fill_color = ColorUtilities.format_color_to_material(STIMM_COLOR)
+				}
 			},
 			visibility_function = function (content, style)
 				return content.center_texture_glass ~= "content/ui/materials/base/ui_default_base"
-			end,
-		},
+			end
+		}
 	}, "talent", nil, nil),
 	node_definition_broker_stimm = UIWidget.create_definition({
 		{
@@ -1867,17 +1830,17 @@ return {
 				vertical_alignment = "center",
 				size = {
 					151.2,
-					240.79999999999998,
+					240.79999999999998
 				},
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				color = Color.white(255, true),
 				material_values = {
-					progress = 1,
-				},
+					progress = 1
+				}
 			},
 			change_function = function (content, style, _, dt)
 				local material_values = style.material_values
@@ -1894,15 +1857,15 @@ return {
 					progress = progress + dt * selection_anim_speed
 					material_values.progress = math.min(progress, 1)
 				end
-			end,
+			end
 		},
 		{
 			content_id = "hotspot",
 			pass_type = "hotspot",
 			style_id = "hotspot",
 			content = {
-				hover_type = "circle",
-			},
+				hover_type = "circle"
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1914,17 +1877,17 @@ return {
 					frame = "content/ui/textures/frames/talents/diamond_frame",
 					icon_mask = "content/ui/textures/frames/talents/diamond_frame_mask",
 					intensity = -0.5,
-					saturation = 1,
+					saturation = 1
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
 			change_function = function (content, style, _, dt, ...)
 				node_icon_change_function(content, style, _, dt, 1, -0.5, ...)
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -1936,19 +1899,19 @@ return {
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				color = {
 					180,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1958,13 +1921,13 @@ return {
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				color = Color.white(255, true),
 				material_values = {
 					fill_amount = 0,
-					fill_color = ColorUtilities.format_color_to_material(STIMM_COLOR),
-				},
+					fill_color = ColorUtilities.format_color_to_material(STIMM_COLOR)
+				}
 			},
 			change_function = function (content, style, _, dt)
 				local fill_amount = style.material_values.fill_amount
@@ -1980,7 +1943,7 @@ return {
 				end
 
 				style.material_values.fill_amount = fill_amount
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -1990,9 +1953,9 @@ return {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
-				color = Color.ui_terminal(255, true),
+				color = Color.ui_terminal(255, true)
 			},
 			change_function = function (content, style)
 				local hotspot = content.hotspot
@@ -2000,7 +1963,7 @@ return {
 				local hover_alpha = anim_progress * 255
 
 				style.color[1] = hover_alpha
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -2010,14 +1973,14 @@ return {
 				horizontal_alignment = "center",
 				vertical_alignment = "center",
 				material_values = {
-					saturation = 1,
+					saturation = 1
 				},
 				offset = {
 					0,
 					0,
-					6,
+					6
 				},
-				color = Color.white(255, true),
+				color = Color.white(255, true)
 			},
 			change_function = function (content, style, _, dt)
 				local anim_block_speed = 5
@@ -2031,7 +1994,7 @@ return {
 
 				content.anim_blocked_progress = anim_blocked_progress
 				style.color[1] = anim_blocked_progress * 255
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -2041,14 +2004,14 @@ return {
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				color = {
 					255,
 					246,
 					69,
-					69,
-				},
+					69
+				}
 			},
 			change_function = function (content, style)
 				local draw_blocked_highlight = content.draw_blocked_highlight
@@ -2057,14 +2020,14 @@ return {
 				local anim_blocked_progress = content.anim_blocked_progress or 0
 
 				style.color[1] = draw_blocked_highlight and anim_blocked_progress * (155 + 100 * block_anim_progress) or 0
-			end,
-		},
+			end
+		}
 	}, "talent", nil, nil),
 	node_connection_broker_stimm_definition = UIWidget.create_definition({
 		{
 			pass_type = "rotated_texture",
 			style_id = "line_empty",
-			value = "content/ui/materials/frames/talents/stimm_path_empty",
+			value = "content/ui/materials/frames/talents/path_empty",
 			style = {
 				horizontal_alignment = "left",
 				vertical_alignment = "center",
@@ -2072,18 +2035,18 @@ return {
 				angle = -math.pi / 4,
 				pivot = {
 					0,
-					12,
+					12
 				},
 				offset = {
 					55,
 					0,
-					0,
+					0
 				},
 				size = {
 					60,
-					24,
-				},
-			},
+					24
+				}
+			}
 		},
 		{
 			pass_type = "rotated_texture",
@@ -2096,25 +2059,25 @@ return {
 				angle = -math.pi / 4,
 				pivot = {
 					0,
-					4,
+					4
 				},
 				offset = {
 					55,
 					0,
-					2,
+					2
 				},
 				size = {
 					60,
-					8,
+					8
 				},
 				material_values = {
 					fill_amount = 1,
-					fill_color = ColorUtilities.format_color_to_material(STIMM_COLOR),
-				},
+					fill_color = ColorUtilities.format_color_to_material(STIMM_COLOR)
+				}
 			},
 			visibility_function = function (content, style)
 				return content.has_progressed or content.progressing
-			end,
+			end
 		},
 		{
 			pass_type = "rotated_texture",
@@ -2127,26 +2090,26 @@ return {
 				angle = -math.pi / 4,
 				pivot = {
 					0,
-					4,
+					4
 				},
 				offset = {
 					55,
 					0,
-					2,
+					2
 				},
 				size = {
 					60,
-					8,
+					8
 				},
 				material_values = {
 					fill_amount = 1,
-					fill_color = ColorUtilities.format_color_to_material(STIMM_COLOR),
-				},
+					fill_color = ColorUtilities.format_color_to_material(STIMM_COLOR)
+				}
 			},
 			visibility_function = function (content)
 				return content.can_progress or content.progressing
-			end,
-		},
+			end
+		}
 	}, "talent"),
 	node_connection_definition = UIWidget.create_definition({
 		{
@@ -2160,18 +2123,18 @@ return {
 				angle = -math.pi / 4,
 				pivot = {
 					0,
-					9,
+					9
 				},
 				offset = {
 					55,
 					0,
-					0,
+					0
 				},
 				size = {
 					60,
-					18,
-				},
-			},
+					18
+				}
+			}
 		},
 		{
 			pass_type = "rotated_texture",
@@ -2184,35 +2147,55 @@ return {
 				angle = -math.pi / 4,
 				pivot = {
 					0,
-					9,
+					9
 				},
 				offset = {
 					55,
 					0,
-					2,
+					2
 				},
 				size = {
 					60,
-					18,
+					18
 				},
 				material_values = {
-					fill_color = ColorUtilities.format_color_to_material({
-						255,
-						234,
-						255,
-						255,
-					}),
-					blur_color = ColorUtilities.format_color_to_material({
-						255,
-						73,
-						161,
-						242,
-					}),
-				},
+					blur_color = nil,
+					fill_color = nil
+				}
 			},
 			visibility_function = function (content, style)
 				return content.has_progressed or content.progressing
 			end,
+			change_function = function (content, style, _, dt)
+				local material_values = style.material_values
+				local orphaned = content.orphaned or false
+
+				if orphaned ~= style.applied_orphaned_color then
+					local fill_color = orphaned and ORPHANED_COLOR or {
+						255,
+						234,
+						255,
+						255
+					}
+					local blur_color = orphaned and ORPHANED_COLOR or {
+						255,
+						73,
+						161,
+						242
+					}
+
+					material_values.fill_color = ColorUtilities.format_color_to_material(fill_color)
+					material_values.blur_color = ColorUtilities.format_color_to_material(blur_color)
+					style.applied_orphaned_color = orphaned
+				end
+
+				if orphaned then
+					local flash = ORPHANED_FLASH(dt)
+
+					material_values.fill_color[4] = flash
+					material_values.blur_color[4] = flash
+				end
+			end
 		},
 		{
 			pass_type = "rotated_texture",
@@ -2225,41 +2208,59 @@ return {
 				angle = -math.pi / 4,
 				pivot = {
 					0,
-					6,
+					6
 				},
 				offset = {
 					55,
 					0,
-					2,
+					2
 				},
 				size = {
 					60,
-					12,
+					12
 				},
 				material_values = {
+					blur_color = nil,
 					effect_amount = 1,
 					effect_speed = -0.8,
-					fill_color = ColorUtilities.format_color_to_material({
-						255,
-						42,
-						91,
-						137,
-					}),
-					blur_color = ColorUtilities.format_color_to_material({
-						255,
-						33,
-						62,
-						89,
-					}),
-				},
+					fill_color = nil
+				}
 			},
 			visibility_function = function (content)
 				return content.can_progress or content.progressing
 			end,
 			change_function = function (content, style, _, dt)
 				local material_values = style.material_values
-				local progress = material_values.progress
-			end,
-		},
-	}, "talent"),
+				local orphaned = content.orphaned or false
+
+				if orphaned ~= style.applied_orphaned_color then
+					local fill_color = orphaned and ORPHANED_COLOR or {
+						255,
+						42,
+						91,
+						137
+					}
+					local blur_color = orphaned and ORPHANED_COLOR or {
+						255,
+						33,
+						62,
+						89
+					}
+
+					material_values.fill_color = ColorUtilities.format_color_to_material(fill_color)
+					material_values.blur_color = ColorUtilities.format_color_to_material(blur_color)
+					style.applied_orphaned_color = orphaned
+				end
+
+				if orphaned then
+					local flash = ORPHANED_FLASH(dt)
+
+					material_values.fill_color[4] = flash
+					material_values.blur_color[4] = flash
+				end
+			end
+		}
+	}, "talent")
 }
+
+return node_definitions

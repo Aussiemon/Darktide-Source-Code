@@ -26,7 +26,7 @@ local barrel_explosion_close_admr = {
 		[armor_types.berserker] = 2,
 		[armor_types.super_armor] = 3,
 		[armor_types.disgustingly_resilient] = 3,
-		[armor_types.void_shield] = 0.75,
+		[armor_types.void_shield] = 0.75
 	},
 	impact = {
 		[armor_types.unarmored] = 2,
@@ -36,8 +36,8 @@ local barrel_explosion_close_admr = {
 		[armor_types.berserker] = 2,
 		[armor_types.super_armor] = 5,
 		[armor_types.disgustingly_resilient] = 2,
-		[armor_types.void_shield] = 2,
-	},
+		[armor_types.void_shield] = 2
+	}
 }
 local barrel_explosion_far_admr = {
 	attack = {
@@ -48,7 +48,7 @@ local barrel_explosion_far_admr = {
 		[armor_types.berserker] = 1.5,
 		[armor_types.super_armor] = 2,
 		[armor_types.disgustingly_resilient] = 2,
-		[armor_types.void_shield] = 0.75,
+		[armor_types.void_shield] = 0.75
 	},
 	impact = {
 		[armor_types.unarmored] = 2,
@@ -58,8 +58,8 @@ local barrel_explosion_far_admr = {
 		[armor_types.berserker] = 2,
 		[armor_types.super_armor] = 5,
 		[armor_types.disgustingly_resilient] = 2,
-		[armor_types.void_shield] = 2,
-	},
+		[armor_types.void_shield] = 2
+	}
 }
 local fire_barrel_explosion_close_admr = {
 	attack = {
@@ -70,7 +70,7 @@ local fire_barrel_explosion_close_admr = {
 		[armor_types.berserker] = 1,
 		[armor_types.super_armor] = 0.2,
 		[armor_types.disgustingly_resilient] = 0.75,
-		[armor_types.void_shield] = 0.75,
+		[armor_types.void_shield] = 0.75
 	},
 	impact = {
 		[armor_types.unarmored] = 1,
@@ -80,8 +80,8 @@ local fire_barrel_explosion_close_admr = {
 		[armor_types.berserker] = 1,
 		[armor_types.super_armor] = 1,
 		[armor_types.disgustingly_resilient] = 1,
-		[armor_types.void_shield] = 1,
-	},
+		[armor_types.void_shield] = 1
+	}
 }
 local fire_barrel_explosion_far_admr = {
 	attack = {
@@ -92,7 +92,7 @@ local fire_barrel_explosion_far_admr = {
 		[armor_types.berserker] = 1,
 		[armor_types.super_armor] = 0.2,
 		[armor_types.disgustingly_resilient] = 0.75,
-		[armor_types.void_shield] = 0.75,
+		[armor_types.void_shield] = 0.75
 	},
 	impact = {
 		[armor_types.unarmored] = 1,
@@ -102,8 +102,8 @@ local fire_barrel_explosion_far_admr = {
 		[armor_types.berserker] = 1,
 		[armor_types.super_armor] = 1,
 		[armor_types.disgustingly_resilient] = 1,
-		[armor_types.void_shield] = 1,
-	},
+		[armor_types.void_shield] = 1
+	}
 }
 local breach_charge_explosion_close = {
 	attack = {
@@ -114,7 +114,7 @@ local breach_charge_explosion_close = {
 		[armor_types.berserker] = 1,
 		[armor_types.super_armor] = 0.2,
 		[armor_types.disgustingly_resilient] = 0.75,
-		[armor_types.void_shield] = 0.75,
+		[armor_types.void_shield] = 0.75
 	},
 	impact = {
 		[armor_types.unarmored] = 1,
@@ -124,8 +124,8 @@ local breach_charge_explosion_close = {
 		[armor_types.berserker] = 1,
 		[armor_types.super_armor] = 1,
 		[armor_types.disgustingly_resilient] = 1,
-		[armor_types.void_shield] = 1,
-	},
+		[armor_types.void_shield] = 1
+	}
 }
 
 damage_templates.barrel_explosion_close = {
@@ -142,36 +142,80 @@ damage_templates.barrel_explosion_close = {
 	suppression_value = 20,
 	cleave_distribution = {
 		attack = 0.1,
-		impact = 0.15,
+		impact = 0.15
 	},
 	armor_damage_modifier_ranged = {
 		near = barrel_explosion_close_admr,
-		far = barrel_explosion_far_admr,
+		far = barrel_explosion_far_admr
 	},
 	power_distribution_ranged = {
 		attack = {
 			far = 10,
-			near = 100,
+			near = 100
 		},
 		impact = {
 			far = 2,
-			near = 30,
-		},
+			near = 30
+		}
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	power_distribution = {
 		attack = 300,
-		impact = 100,
+		impact = 100
 	},
 	force_look_function = ForcedLookSettings.look_functions.heavy,
 	push_template = push_templates.grenadier_explosion,
 	catapulting_template = CatapultingTemplates.barrel_explosion,
 	gibbing_type = GibbingTypes.explosion,
-	gibbing_power = GibbingPower.heavy,
+	gibbing_power = GibbingPower.heavy
+}
+damage_templates.renegade_wizard_z_catapult = {
+	disorientation_type = "grenadier",
+	ignore_stagger_reduction = true,
+	ignore_stun_immunity = true,
+	ignore_toughness = true,
+	interrupt_alternate_fire = true,
+	ogryn_disorientation_type = "grenadier",
+	override_allow_friendly_fire = true,
+	ragdoll_push_force = 1000,
+	stagger_category = "explosion",
+	suppression_value = 20,
+	cleave_distribution = {
+		attack = 0.1,
+		impact = 0.15
+	},
+	armor_damage_modifier_ranged = {
+		near = barrel_explosion_close_admr,
+		far = barrel_explosion_far_admr
+	},
+	power_distribution_ranged = {
+		attack = {
+			far = 10,
+			near = 100
+		},
+		impact = {
+			far = 2,
+			near = 30
+		}
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	},
+	power_distribution = {
+		attack = 300,
+		impact = 100
+	},
+	force_look_function = ForcedLookSettings.look_functions.heavy,
+	push_template = push_templates.grenadier_explosion,
+	catapulting_template = CatapultingTemplates.renegade_wizard,
+	gibbing_type = GibbingTypes.explosion,
+	gibbing_power = GibbingPower.heavy
 }
 damage_templates.expeditions_lightning_strike_explosion_close = {
 	disorientation_type = "grenadier",
@@ -186,40 +230,40 @@ damage_templates.expeditions_lightning_strike_explosion_close = {
 	suppression_value = 20,
 	cleave_distribution = {
 		attack = 0.1,
-		impact = 0.15,
+		impact = 0.15
 	},
 	armor_damage_modifier_ranged = {
 		near = barrel_explosion_close_admr,
-		far = barrel_explosion_far_admr,
+		far = barrel_explosion_far_admr
 	},
 	power_distribution_ranged = {
 		attack = {
 			far = 10,
-			near = 100,
+			near = 100
 		},
 		impact = {
 			far = 2,
-			near = 30,
-		},
+			near = 30
+		}
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	power_distribution = {
 		attack = 600,
-		impact = 100,
+		impact = 100
 	},
 	force_look_function = ForcedLookSettings.look_functions.heavy,
 	push_template = push_templates.grenadier_explosion,
 	gibbing_type = GibbingTypes.explosion,
-	gibbing_power = GibbingPower.heavy,
+	gibbing_power = GibbingPower.heavy
 }
 damage_templates.expeditions_lightning_strike_explosion = table.clone(damage_templates.expeditions_lightning_strike_explosion_close)
 damage_templates.expeditions_lightning_strike_explosion.power_distribution = {
 	attack = 300,
-	impact = 50,
+	impact = 50
 }
 damage_templates.fire_barrel_explosion = {
 	disorientation_type = "grenadier",
@@ -235,46 +279,46 @@ damage_templates.fire_barrel_explosion = {
 	suppression_value = 20,
 	cleave_distribution = {
 		attack = 0.1,
-		impact = 0.15,
+		impact = 0.15
 	},
 	armor_damage_modifier_ranged = {
 		near = fire_barrel_explosion_close_admr,
-		far = fire_barrel_explosion_far_admr,
+		far = fire_barrel_explosion_far_admr
 	},
 	power_distribution_ranged = {
 		attack = {
 			far = 10,
-			near = 10,
+			near = 10
 		},
 		impact = {
 			far = 2,
-			near = 30,
-		},
+			near = 30
+		}
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	power_distribution = {
 		attack = 10,
-		impact = 10,
+		impact = 10
 	},
 	force_look_function = ForcedLookSettings.look_functions.heavy,
 	push_template = push_templates.grenadier_explosion,
 	catapulting_template = CatapultingTemplates.barrel_explosion,
 	gibbing_type = GibbingTypes.explosion,
-	gibbing_power = GibbingPower.heavy,
+	gibbing_power = GibbingPower.heavy
 }
 damage_templates.barrel_explosion = table.clone(damage_templates.barrel_explosion_close)
 damage_templates.barrel_explosion.power_distribution = {
 	attack = 100,
-	impact = 50,
+	impact = 50
 }
 damage_templates.fire_barrel_explosion_close = table.clone(damage_templates.fire_barrel_explosion)
 damage_templates.fire_barrel_explosion_close.power_distribution = {
 	attack = 50,
-	impact = 20,
+	impact = 20
 }
 damage_templates.barrel_explosion.barrel_explosion = nil
 damage_templates.corruptor_emerge_explosion = {
@@ -289,59 +333,63 @@ damage_templates.corruptor_emerge_explosion = {
 	suppression_value = 3,
 	cleave_distribution = {
 		attack = 0.15,
-		impact = 0.15,
+		impact = 0.15
 	},
 	armor_damage_modifier_ranged = {
 		near = barrel_explosion_close_admr,
-		far = barrel_explosion_close_admr,
+		far = barrel_explosion_close_admr
 	},
 	targets = {
 		default_target = {
 			armor_damage_modifier_ranged = {
 				near = barrel_explosion_close_admr,
-				far = barrel_explosion_close_admr,
-			},
-		},
+				far = barrel_explosion_close_admr
+			}
+		}
 	},
 	power_distribution = {
 		attack = 0,
-		impact = 4,
+		impact = 4
 	},
 	force_look_function = ForcedLookSettings.look_functions.to_or_from_attack_direction,
 	push_template = push_templates.grenadier_explosion,
-	catapulting_template = CatapultingTemplates.corruptor_emerge_explosion,
+	catapulting_template = CatapultingTemplates.corruptor_emerge_explosion
 }
 damage_templates.nurgle_head_parasite = table.clone(damage_templates.corruptor_emerge_explosion)
 damage_templates.nurgle_head_parasite.ignore_toughness = false
 damage_templates.nurgle_head_parasite.permanent_damage_ratio = 0.5
 damage_templates.nurgle_head_parasite.power_distribution = {
 	attack = 100,
-	impact = 50,
+	impact = 50
 }
+damage_templates.nurgle_head_parasite_nurgle_explosion_2026 = table.clone(damage_templates.nurgle_head_parasite)
+damage_templates.nurgle_head_parasite_nurgle_explosion_2026.catapulting_template = CatapultingTemplates.nurgle_head_parasite_nurgle_explosion_2026
+damage_templates.nurgle_head_parasite_nurgle_explosion_2026.push_template = push_templates.nurgle_head_parasite_nurgle_explosion_2026
+damage_templates.nurgle_head_parasite_nurgle_explosion_2026.ragdoll_push_force = 500
 damage_templates.corruptor_damage_tick = {
 	ignore_toughness = true,
 	permanent_damage_ratio = 1,
 	stagger_category = "ranged",
 	cleave_distribution = {
 		attack = 0.15,
-		impact = 0.15,
+		impact = 0.15
 	},
 	armor_damage_modifier_ranged = {
 		near = barrel_explosion_close_admr,
-		far = barrel_explosion_close_admr,
+		far = barrel_explosion_close_admr
 	},
 	targets = {
 		default_target = {
 			armor_damage_modifier_ranged = {
 				near = barrel_explosion_close_admr,
-				far = barrel_explosion_close_admr,
-			},
-		},
+				far = barrel_explosion_close_admr
+			}
+		}
 	},
 	power_distribution = {
 		attack = 0.3,
-		impact = 4,
-	},
+		impact = 4
+	}
 }
 damage_templates.breach_charge_explosion = {
 	disorientation_type = "grenadier",
@@ -356,27 +404,27 @@ damage_templates.breach_charge_explosion = {
 	suppression_value = 3,
 	cleave_distribution = {
 		attack = 0.15,
-		impact = 0.15,
+		impact = 0.15
 	},
 	armor_damage_modifier_ranged = {
 		near = breach_charge_explosion_close,
-		far = breach_charge_explosion_close,
+		far = breach_charge_explosion_close
 	},
 	targets = {
 		default_target = {
 			armor_damage_modifier_ranged = {
 				near = breach_charge_explosion_close,
-				far = breach_charge_explosion_close,
-			},
-		},
+				far = breach_charge_explosion_close
+			}
+		}
 	},
 	power_distribution = {
 		attack = 1,
-		impact = 4,
+		impact = 4
 	},
 	force_look_function = ForcedLookSettings.look_functions.to_or_from_attack_direction,
 	push_template = push_templates.grenadier_explosion,
-	catapulting_template = CatapultingTemplates.breach_charge_catapult,
+	catapulting_template = CatapultingTemplates.breach_charge_catapult
 }
 damage_templates.flamer_backpack_explosion_close = {
 	disorientation_type = "grenadier",
@@ -391,41 +439,41 @@ damage_templates.flamer_backpack_explosion_close = {
 	suppression_value = 20,
 	cleave_distribution = {
 		attack = 0.1,
-		impact = 0.15,
+		impact = 0.15
 	},
 	armor_damage_modifier_ranged = {
 		near = barrel_explosion_close_admr,
-		far = barrel_explosion_far_admr,
+		far = barrel_explosion_far_admr
 	},
 	power_distribution_ranged = {
 		attack = {
 			far = 10,
-			near = 100,
+			near = 100
 		},
 		impact = {
 			far = 2,
-			near = 30,
-		},
+			near = 30
+		}
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	power_distribution = {
 		attack = 300,
-		impact = 100,
+		impact = 100
 	},
 	force_look_function = ForcedLookSettings.look_functions.heavy,
 	push_template = push_templates.grenadier_explosion,
 	catapulting_template = CatapultingTemplates.flamer_explosion,
 	gibbing_type = GibbingTypes.implosion,
-	gibbing_power = GibbingPower.heavy,
+	gibbing_power = GibbingPower.heavy
 }
 damage_templates.flamer_backpack_explosion = table.clone(damage_templates.flamer_backpack_explosion_close)
 damage_templates.flamer_backpack_explosion_close.power_distribution = {
 	attack = 100,
-	impact = 50,
+	impact = 50
 }
 damage_templates.interrupted_flamer_backpack_explosion_close = {
 	disorientation_type = "grenadier",
@@ -440,41 +488,41 @@ damage_templates.interrupted_flamer_backpack_explosion_close = {
 	suppression_value = 20,
 	cleave_distribution = {
 		attack = 0.1,
-		impact = 0.15,
+		impact = 0.15
 	},
 	armor_damage_modifier_ranged = {
 		near = barrel_explosion_close_admr,
-		far = barrel_explosion_far_admr,
+		far = barrel_explosion_far_admr
 	},
 	power_distribution_ranged = {
 		attack = {
 			far = 10,
-			near = 100,
+			near = 100
 		},
 		impact = {
 			far = 2,
-			near = 30,
-		},
+			near = 30
+		}
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	power_distribution = {
 		attack = 150,
-		impact = 75,
+		impact = 75
 	},
 	force_look_function = ForcedLookSettings.look_functions.heavy,
 	push_template = push_templates.grenadier_explosion,
 	catapulting_template = CatapultingTemplates.interrupted_flamer_explosion,
 	gibbing_type = GibbingTypes.implosion,
-	gibbing_power = GibbingPower.heavy,
+	gibbing_power = GibbingPower.heavy
 }
 damage_templates.interrupted_flamer_backpack_explosion = table.clone(damage_templates.interrupted_flamer_backpack_explosion_close)
 damage_templates.interrupted_flamer_backpack_explosion.power_distribution = {
 	attack = 75,
-	impact = 25,
+	impact = 25
 }
 
 local tank_wall_explosion_close_admr = {
@@ -486,7 +534,7 @@ local tank_wall_explosion_close_admr = {
 		[armor_types.berserker] = 2,
 		[armor_types.super_armor] = 3,
 		[armor_types.disgustingly_resilient] = 3,
-		[armor_types.void_shield] = 0.75,
+		[armor_types.void_shield] = 0.75
 	},
 	impact = {
 		[armor_types.unarmored] = 2,
@@ -496,8 +544,8 @@ local tank_wall_explosion_close_admr = {
 		[armor_types.berserker] = 2,
 		[armor_types.super_armor] = 5,
 		[armor_types.disgustingly_resilient] = 2,
-		[armor_types.void_shield] = 2,
-	},
+		[armor_types.void_shield] = 2
+	}
 }
 
 damage_templates.no_mans_land_tank_wall_explosion = {
@@ -512,27 +560,27 @@ damage_templates.no_mans_land_tank_wall_explosion = {
 	suppression_value = 3,
 	power_distribution = {
 		attack = 100,
-		impact = 4,
+		impact = 4
 	},
 	cleave_distribution = {
 		attack = 0.15,
-		impact = 0.15,
+		impact = 0.15
 	},
 	armor_damage_modifier_ranged = {
 		near = tank_wall_explosion_close_admr,
-		far = tank_wall_explosion_close_admr,
+		far = tank_wall_explosion_close_admr
 	},
 	targets = {
 		default_target = {
 			armor_damage_modifier_ranged = {
 				near = tank_wall_explosion_close_admr,
-				far = tank_wall_explosion_close_admr,
-			},
-		},
+				far = tank_wall_explosion_close_admr
+			}
+		}
 	},
 	force_look_function = ForcedLookSettings.look_functions.to_or_from_attack_direction,
 	push_template = push_templates.grenadier_explosion,
-	catapulting_template = CatapultingTemplates.breach_charge_catapult,
+	catapulting_template = CatapultingTemplates.breach_charge_catapult
 }
 
 local AIRSTRIKE_NUKE_ADM = {
@@ -544,7 +592,7 @@ local AIRSTRIKE_NUKE_ADM = {
 		[armor_types.berserker] = 1,
 		[armor_types.super_armor] = 1,
 		[armor_types.disgustingly_resilient] = 1,
-		[armor_types.void_shield] = 1,
+		[armor_types.void_shield] = 1
 	},
 	impact = {
 		[armor_types.unarmored] = 2,
@@ -554,8 +602,8 @@ local AIRSTRIKE_NUKE_ADM = {
 		[armor_types.berserker] = 2,
 		[armor_types.super_armor] = 2,
 		[armor_types.disgustingly_resilient] = 2,
-		[armor_types.void_shield] = 2,
-	},
+		[armor_types.void_shield] = 2
+	}
 }
 local AIRSTRIKE_NUKE_ATTACK = 1600
 local AIRSTRIKE_NUKE_IMPACT = 128
@@ -567,34 +615,34 @@ damage_templates.expedition_airstrike_nuke_close = {
 	suppression_value = 20,
 	cleave_distribution = {
 		attack = 0.1,
-		impact = 0.15,
+		impact = 0.15
 	},
 	armor_damage_modifier_ranged = {
 		near = AIRSTRIKE_NUKE_ADM,
-		far = AIRSTRIKE_NUKE_ADM,
+		far = AIRSTRIKE_NUKE_ADM
 	},
 	power_distribution_ranged = {
 		attack = {
 			near = AIRSTRIKE_NUKE_ATTACK,
-			far = AIRSTRIKE_NUKE_ATTACK * 0.8,
+			far = AIRSTRIKE_NUKE_ATTACK * 0.8
 		},
 		impact = {
 			near = AIRSTRIKE_NUKE_IMPACT,
-			far = AIRSTRIKE_NUKE_IMPACT * 0.8,
-		},
+			far = AIRSTRIKE_NUKE_IMPACT * 0.8
+		}
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	power_distribution = {
 		attack = AIRSTRIKE_NUKE_ATTACK,
-		impact = AIRSTRIKE_NUKE_IMPACT,
+		impact = AIRSTRIKE_NUKE_IMPACT
 	},
 	gibbing_type = GibbingTypes.explosion,
 	gibbing_power = GibbingPower.infinite,
-	gib_push_force = GibPushForce.explosive_heavy,
+	gib_push_force = GibPushForce.explosive_heavy
 }
 overrides.expedition_airstrike_nuke = {
 	parent_template_name = "expedition_airstrike_nuke_close",
@@ -603,35 +651,35 @@ overrides.expedition_airstrike_nuke = {
 			"power_distribution_ranged",
 			"attack",
 			"near",
-			AIRSTRIKE_NUKE_ATTACK * 0.8,
+			AIRSTRIKE_NUKE_ATTACK * 0.8
 		},
 		{
 			"power_distribution_ranged",
 			"attack",
 			"far",
-			AIRSTRIKE_NUKE_ATTACK * 0.4,
+			AIRSTRIKE_NUKE_ATTACK * 0.4
 		},
 		{
 			"power_distribution_ranged",
 			"impact",
 			"near",
-			AIRSTRIKE_NUKE_IMPACT * 0.8,
+			AIRSTRIKE_NUKE_IMPACT * 0.8
 		},
 		{
 			"power_distribution_ranged",
 			"impact",
 			"far",
-			AIRSTRIKE_NUKE_IMPACT * 0.4,
+			AIRSTRIKE_NUKE_IMPACT * 0.4
 		},
 		{
 			"gibbing_power",
-			GibbingPower.heavy,
+			GibbingPower.heavy
 		},
 		{
 			"gib_push_force",
-			GibPushForce.explosive,
-		},
-	},
+			GibPushForce.explosive
+		}
+	}
 }
 damage_templates.promethium_barrel_explosion = {
 	ignore_stagger_reduction = true,
@@ -640,41 +688,41 @@ damage_templates.promethium_barrel_explosion = {
 	suppression_value = 20,
 	cleave_distribution = {
 		attack = 0.1,
-		impact = 0.15,
+		impact = 0.15
 	},
 	armor_damage_modifier_ranged = {
 		near = fire_barrel_explosion_close_admr,
-		far = fire_barrel_explosion_far_admr,
+		far = fire_barrel_explosion_far_admr
 	},
 	power_distribution_ranged = {
 		attack = {
 			far = 10,
-			near = 10,
+			near = 10
 		},
 		impact = {
 			far = 2,
-			near = 30,
-		},
+			near = 30
+		}
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	power_distribution = {
 		attack = 10,
-		impact = 10,
+		impact = 10
 	},
 	gibbing_type = GibbingTypes.explosion,
-	gibbing_power = GibbingPower.heavy,
+	gibbing_power = GibbingPower.heavy
 }
 damage_templates.promethium_barrel_explosion_close = table.clone(damage_templates.promethium_barrel_explosion)
 damage_templates.promethium_barrel_explosion_close.power_distribution = {
 	attack = 50,
-	impact = 20,
+	impact = 20
 }
 
 return {
 	base_templates = damage_templates,
-	overrides = overrides,
+	overrides = overrides
 }

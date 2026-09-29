@@ -9,50 +9,50 @@ local mission_vo_cm_raid_cryptic_b = {
 			"loc_cryptic_b__guidance_starting_area_02",
 			"loc_cryptic_b__guidance_starting_area_03",
 			"loc_cryptic_b__guidance_starting_area_04",
-			"loc_cryptic_b__guidance_starting_area_05",
+			"loc_cryptic_b__guidance_starting_area_05"
 		},
 		sound_events_duration = {
 			3.329385,
 			4.440385,
 			3.256146,
 			3.062646,
-			4.296688,
+			4.296688
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	mission_raid_trapped_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
 			[1] = "loc_cryptic_b__mission_raid_trapped_a_01",
-			[2] = "loc_cryptic_b__mission_raid_trapped_a_02",
+			[2] = "loc_cryptic_b__mission_raid_trapped_a_02"
 		},
 		sound_events_duration = {
 			[1] = 1.489396,
-			[2] = 3.203323,
+			[2] = 3.203323
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	mission_raid_trapped_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
 			[1] = "loc_cryptic_b__mission_raid_trapped_b_01",
-			[2] = "loc_cryptic_b__mission_raid_trapped_b_02",
+			[2] = "loc_cryptic_b__mission_raid_trapped_b_02"
 		},
 		sound_events_duration = {
 			[1] = 3.549646,
-			[2] = 3.500406,
+			[2] = 3.500406
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_cm_raid_cryptic_b", mission_vo_cm_raid_cryptic_b)

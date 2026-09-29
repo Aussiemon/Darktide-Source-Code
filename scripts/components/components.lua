@@ -15,7 +15,7 @@ local special_functions = {
 	delete = true,
 	name = true,
 	new = true,
-	super = true,
+	super = true
 }
 
 local function _component_data_default_value(component_data, unit, guid, variable_name)
@@ -118,6 +118,10 @@ local function _is_resource(type_name)
 	return type_name == "resource"
 end
 
+local function _is_min_max_slider(type_name)
+	return type_name == "min_max_slider"
+end
+
 local function _is_array(type_name)
 	return type_name == "text_box_array" or type_name == "check_box_array" or type_name == "combo_box_array" or type_name == "number_array" or type_name == "resource_array"
 end
@@ -216,7 +220,7 @@ local function _component_data_get_color(self, unit, guid, variable_name)
 		255,
 		255,
 		255,
-		255,
+		255
 	}
 	local default_boxed_color = _component_data_default_value(self.component_data, unit, guid, variable_name)
 
@@ -227,7 +231,7 @@ local function _component_data_get_color(self, unit, guid, variable_name)
 			255,
 			r * 255,
 			g * 255,
-			b * 255,
+			b * 255
 		}
 	end
 
@@ -240,6 +244,24 @@ local function _component_data_get_color(self, unit, guid, variable_name)
 	end
 
 	return QuaternionBox(Color(elements[1], elements[2], elements[3], elements[4]))
+end
+
+local function _component_data_get_min_max_slider(self, unit, guid, variable_name)
+	local default_values = _component_data_default_value(self.component_data, unit, guid, variable_name)
+	local values = {
+		0,
+		0
+	}
+
+	for i = 1, 2 do
+		local value = Unit.get_data(unit, "components", guid, "component_data", variable_name, i) or default_values and default_values[i] or 0
+
+		if value then
+			values[i] = value
+		end
+	end
+
+	return values
 end
 
 local function _component_data_get_resource(component_data, unit, guid, variable_name)
@@ -287,7 +309,7 @@ local function _component_data_get_struct_array(self, definition, unit, guid, va
 					255,
 					255,
 					255,
-					255,
+					255
 				}
 				local default_boxed_color = member_data.value
 
@@ -298,7 +320,7 @@ local function _component_data_get_struct_array(self, definition, unit, guid, va
 						x * 255,
 						y * 255,
 						z * 255,
-						255,
+						255
 					}
 				end
 
@@ -311,6 +333,14 @@ local function _component_data_get_struct_array(self, definition, unit, guid, va
 				end
 
 				new_entry[member_name] = QuaternionBox(Color(color_elements[1], color_elements[2], color_elements[3], color_elements[4]))
+			elseif _is_min_max_slider(member_type_name) then
+				local min = Unit.get_data(unit, "components", guid, "component_data", variable_name, array_entry_index, member_name, 1) or member_data.value[1]
+				local max = Unit.get_data(unit, "components", guid, "component_data", variable_name, array_entry_index, member_name, 2) or member_data.value[2]
+
+				new_entry[member_name] = {
+					min,
+					max
+				}
 			else
 				local value = Unit.get_data(unit, "components", guid, "component_data", variable_name, array_entry_index, member_name)
 
@@ -342,7 +372,7 @@ function component(component_name, super_name, ...)
 	if not component_table then
 		component_table = {
 			super = super,
-			__component_name = component_name,
+			__component_name = component_name
 		}
 		component_table.__index = component_table
 		component_table.__interfaces = {}
@@ -397,6 +427,10 @@ function component(component_name, super_name, ...)
 
 				if _is_color(data_type) then
 					return _component_data_get_color(self, unit, self.guid, variable_name)
+				end
+
+				if _is_min_max_slider(data_type) then
+					return _component_data_get_min_max_slider(self, unit, self.guid, variable_name)
 				end
 
 				if _is_array(data_type) then
@@ -475,6 +509,9 @@ _require_component("scripts/components/barrel_overheat")
 _require_component("scripts/components/beast_of_nurgle")
 _require_component("scripts/components/bot_jump_assist")
 _require_component("scripts/components/breach_charge_addon")
+_require_component("scripts/components/boss_handler")
+_require_component("scripts/components/boss_handler_position")
+_require_component("scripts/components/spillway_boss_tooth")
 _require_component("scripts/components/broadphase")
 _require_component("scripts/components/buff_volume")
 _require_component("scripts/components/chain_sword_blur")
@@ -490,6 +527,7 @@ _require_component("scripts/components/cryptic_character_create_voice_screen")
 _require_component("scripts/components/cutscene_camera")
 _require_component("scripts/components/cutscene_character")
 _require_component("scripts/components/cutscene_companion")
+_require_component("scripts/components/cutscene_minion_dissolve")
 _require_component("scripts/components/damage_volume")
 _require_component("scripts/components/decal")
 _require_component("scripts/components/decoder_device")
@@ -559,6 +597,7 @@ _require_component("scripts/components/mutator_spawner")
 _require_component("scripts/components/moveable_platform")
 _require_component("scripts/components/nav_block")
 _require_component("scripts/components/nav_box_obstacle")
+_require_component("scripts/components/nav_crossroad_spawn_block")
 _require_component("scripts/components/nav_graph")
 _require_component("scripts/components/networked_timer")
 _require_component("scripts/components/networked_unique_randomize")
@@ -624,6 +663,8 @@ _require_component("scripts/components/weapon_flashlight")
 _require_component("scripts/components/weapon_material_variables")
 _require_component("scripts/components/weapon_special_display")
 _require_component("scripts/components/weather_volume")
+_require_component("scripts/components/wizard_boss_dance_walls")
+_require_component("scripts/components/wizard_boss_shockwave")
 _require_component("scripts/components/world_marker")
 _require_component("scripts/components/wwise_emitter_occlusion")
 _require_component("scripts/components/wwise_portal_volume")

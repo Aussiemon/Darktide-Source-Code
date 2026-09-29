@@ -7,7 +7,7 @@ local _task_reserved_words = {
 	"count",
 	"complexity",
 	"value",
-	"taskType",
+	"taskType"
 }
 local contract_lookup = {}
 
@@ -17,7 +17,7 @@ end
 
 local function default_parameters(target_value, specifiers)
 	return {
-		count = target_value,
+		count = target_value
 	}
 end
 
@@ -28,7 +28,7 @@ ContractCriteriaParser.parse_backend_criteria = function (backend_criteria)
 		target = backend_criteria.count,
 		complexity = backend_criteria.complexity,
 		specifiers = {},
-		task_type = task_type,
+		task_type = task_type
 	}
 
 	for name, value in pairs(backend_criteria) do

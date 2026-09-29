@@ -123,6 +123,8 @@ PlayerUnitBuffExtension.game_object_initialized = function (self, game_session, 
 end
 
 PlayerUnitBuffExtension.extensions_ready = function (self, world, unit)
+	PlayerUnitBuffExtension.super.extensions_ready(self, world, unit)
+
 	self._toughness_extension = ScriptUnit.has_extension(unit, "toughness_system")
 end
 
@@ -682,7 +684,7 @@ PlayerUnitBuffExtension._add_rpc_synced_buff = function (self, template, t, ...)
 				optional_lerp_value = optional_lerp_value,
 				optional_slot_id = optional_slot_id,
 				optional_parent_buff_template_id = optional_parent_buff_template_id,
-				from_talent = from_talent,
+				from_talent = from_talent
 			}
 			local buffs_added_before_game_object_creation = self._buffs_added_before_game_object_creation
 
@@ -730,12 +732,9 @@ PlayerUnitBuffExtension._set_proc_active_start_time = function (self, index, act
 			return
 		end
 
-		local activation_frame = activation_time / self._fixed_time_step
 		local player = self._player
 
 		if player.remote then
-			local channel_id = player:channel_id()
-			local game_object_id = self._game_object_id
 			local buffs_by_index = self._buffs_by_index
 			local buff_instance = buffs_by_index[index]
 
@@ -851,7 +850,7 @@ PlayerUnitBuffExtension.start_on_screen_effect = function (self, index, on_scree
 
 	on_screen_effects[#on_screen_effects + 1] = {
 		particle_id = on_screen_effect_id,
-		stop_type = stop_type,
+		stop_type = stop_type
 	}
 end
 

@@ -14,7 +14,7 @@ local BASE_LAYER_EMPTY_EVENT = "base_layer_to_empty"
 local IMPACT_HIT_MASS_MODIFIERS = {
 	0.9,
 	0.75,
-	0.5,
+	0.5
 }
 local _disable_anim_driven_locomotion
 
@@ -224,6 +224,7 @@ BtStaggerAction.leave = function (self, unit, breed, blackboard, scratchpad, act
 
 	stagger_component.count = 0
 	stagger_component.num_triggered_staggers = 0
+	stagger_component.staggered_by_melee_push = false
 
 	MinionShield.reset_block_timings(scratchpad, unit)
 

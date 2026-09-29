@@ -5,10 +5,10 @@ local Promise = require("scripts/foundation/utilities/promise")
 local DLCLicense = class("DLCLicense")
 
 DLCLicense.CLIENT_GET_DLC_STATUS_WHITELIST = {
-	[1] = "licensed",
+	[1] = "licensed"
 }
 DLCLicense.CLIENT_POST_DLC_STATUS_WHITELIST = {
-	[1] = "licensed",
+	[1] = "licensed"
 }
 
 DLCLicense.licensed_products_get = function (account_id, player_profile, platform_id)
@@ -18,7 +18,7 @@ DLCLicense.licensed_products_get = function (account_id, player_profile, platfor
 	local dlc_licenses = {}
 
 	dlc_licenses.archetypes = {
-		player_profile.archetype.name,
+		player_profile.archetype.name
 	}
 
 	for k, v in pairs(dlc_licenses) do
@@ -26,7 +26,7 @@ DLCLicense.licensed_products_get = function (account_id, player_profile, platfor
 	end
 
 	return Managers.backend:title_request(builder:to_string(), {
-		method = "GET",
+		method = "GET"
 	}):next(function (response)
 		return response.body
 	end):catch(function (error)
@@ -34,7 +34,7 @@ DLCLicense.licensed_products_get = function (account_id, player_profile, platfor
 
 		return Promise.rejected({
 			error_code = "failed_dlc_license_check_backend",
-			error = error,
+			error = error
 		})
 	end)
 end
@@ -52,7 +52,7 @@ DLCLicense.licensed_products_update = function (account_id, product_ids, challen
 
 		return Promise.rejected({
 			error_code = "failed_dlc_license_check_engine",
-			error = error,
+			error = error
 		})
 	end):next(function (platform_token)
 		local headers = {}
@@ -66,7 +66,7 @@ DLCLicense.licensed_products_update = function (account_id, product_ids, challen
 
 			return Promise.rejected({
 				error_code = "failed_dlc_license_check_engine",
-				error = error,
+				error = error
 			})
 		end):next(function (license_token)
 			if license_token then
@@ -76,13 +76,13 @@ DLCLicense.licensed_products_update = function (account_id, product_ids, challen
 			return Managers.backend:title_request(builder:to_string(), {
 				method = "POST",
 				body = request_body,
-				headers = headers,
+				headers = headers
 			}):catch(function (error)
 				Log.exception("DLCLicense", "Error updating license '%s'", tostring(error))
 
 				return Promise.rejected({
 					error_code = "failed_dlc_license_check_backend",
-					error = error,
+					error = error
 				})
 			end):next(function (response)
 				return response.body

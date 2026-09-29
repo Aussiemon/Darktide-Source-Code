@@ -14,18 +14,18 @@ local cultist_flamer_settings = {
 		flamer_velocity_variable_name = "velocity",
 		ground_impact_particle = "content/fx/particles/enemies/cultist_flamer/cultist_flame_thrower_hit",
 		ground_impact_velocity_variable_name = "velocity",
-		num_parabola_control_points = 4,
+		num_parabola_control_points = 4
 	},
 	sfx = {
 		aim_sfx_event = "wwise/events/weapon/play_minion_flamethrower_green_wind_up",
 		looping_sfx_start_event = "wwise/events/weapon/play_minion_flamethrower_green_start",
-		looping_sfx_stop_event = "wwise/events/weapon/play_minion_flamethrower_green_stop",
+		looping_sfx_stop_event = "wwise/events/weapon/play_minion_flamethrower_green_stop"
 	},
 	trajectory_config = {
 		acceptable_accuracy = 1,
 		gravity = 8.82,
-		initial_speed = 12,
-	},
+		initial_speed = 12
+	}
 }
 
 return settings("CultistFlamerSettings", cultist_flamer_settings)

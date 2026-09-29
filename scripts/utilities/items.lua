@@ -2,7 +2,7 @@
 
 local AchievementUIHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
-local ItemSourceSettings = require("scripts/settings/item/item_source_settings_new")
+local ItemSourceSettings = require("scripts/settings/item/item_source_settings")
 local LiveEvents = require("scripts/settings/live_event/live_events")
 local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
@@ -19,7 +19,7 @@ local WORKFLOW_STATE_ORDER = table.mirror_array_inplace({
 	"PROTOTYPE",
 	"FUNCTIONAL",
 	"SHIPPABLE",
-	"RELEASABLE",
+	"RELEASABLE"
 })
 local Items = {}
 
@@ -134,7 +134,7 @@ Items.mark_item_id_as_new = function (item, skip_notification)
 	local show_notification = skip_notification and skip_notification ~= true or not skip_notification
 
 	new_item_notifications[gear_id] = {
-		show_notification = show_notification,
+		show_notification = show_notification
 	}
 
 	Managers.save:queue_save()
@@ -349,7 +349,7 @@ Items.sub_display_name = function (item, required_level, include_item_type)
 		local no_cache = true
 
 		text = text .. " · {#color(120,120,120)}" .. Localize("loc_requires_level", no_cache, {
-			level = required_level,
+			level = required_level
 		})
 	end
 
@@ -483,7 +483,7 @@ end
 
 local trinket_slot_order = {
 	"slot_trinket_1",
-	"slot_trinket_2",
+	"slot_trinket_2"
 }
 
 Items.get_current_equipped_trinket = function (item)
@@ -641,7 +641,7 @@ end
 Items.level_display_name = function (item)
 	local item_level = Items.expertise_level(item)
 	local item_level_display_name_localized = Localize("loc_item_display_level_format_key", true, {
-		level = item_level,
+		level = item_level
 	})
 
 	return item_level_display_name_localized
@@ -670,7 +670,7 @@ local _item_property_definitions = {
 			local item_voice_modulator = item.voice_fx_preset
 
 			return item_voice_modulator and item_voice_modulator ~= "voice_fx_rtpc_none"
-		end,
+		end
 	},
 	{
 		icon = "",
@@ -680,8 +680,8 @@ local _item_property_definitions = {
 			local right_value = table.nested_get(item, "profile_properties", "footstep_type_right")
 
 			return left_value and left_value ~= "" or right_value and right_value ~= ""
-		end,
-	},
+		end
+	}
 }
 
 local function _item_property_list(item)
@@ -738,7 +738,7 @@ local _obtained_source_color_context = {
 	value = nil,
 	r = _key_value_color[2],
 	g = _key_value_color[3],
-	b = _key_value_color[4],
+	b = _key_value_color[4]
 }
 
 Items.obtained_display_name = function (item)
@@ -757,7 +757,7 @@ Items.obtained_display_name = function (item)
 			if first_slot_name then
 				local player_manager = Managers.player
 				local player = player_manager:local_player(1)
-				local achievement = AchievementUIHelper.get_acheivement_by_reward_item(item)
+				local achievement = AchievementUIHelper.get_achievement_by_reward_item(item)
 				local is_complete = achievement and Managers.achievements:achievement_completed(player, achievement.id)
 
 				if achievement then
@@ -766,7 +766,7 @@ Items.obtained_display_name = function (item)
 							local sub_penances_count = table.size(achievement.achievements)
 
 							optional_description = Localize("loc_inventory_cosmetic_item_acquisition_penance_description_multiple_requirement", true, {
-								penance_amount = sub_penances_count,
+								penance_amount = sub_penances_count
 							})
 						else
 							optional_description = AchievementUIHelper.localized_description(achievement)
@@ -780,7 +780,7 @@ Items.obtained_display_name = function (item)
 					local achievement_label_colored = Localize("loc_color_value_fomat_key", true, _obtained_source_color_context)
 
 					display_name = Localize(display_name_localization_key, true, {
-						achievement_label = achievement_label_colored,
+						achievement_label = achievement_label_colored
 					})
 				end
 			end
@@ -796,7 +796,7 @@ Items.obtained_display_name = function (item)
 			end
 
 			display_name = Localize(display_name_localization_key, true, {
-				live_event_label = live_event_label_colored,
+				live_event_label = live_event_label_colored
 			})
 		elseif source_settings.dlc_name then
 			optional_description = Localize("loc_term_glossary_dlc")
@@ -851,7 +851,7 @@ local SHOW_ARCHETYPE_RESTRICTION_ITEM_TYPES = {
 	GEAR_LOWERBODY = true,
 	GEAR_UPPERBODY = true,
 	LEGS = true,
-	SET = true,
+	SET = true
 }
 
 Items.restriction_text = function (item, prefer_iconography)
@@ -1006,7 +1006,7 @@ Items.retrieve_items_for_archetype = function (archetype, filtered_slots, workfl
 	local WORKFLOW_STATES = {
 		"SHIPPABLE",
 		"RELEASABLE",
-		"FUNCTIONAL",
+		"FUNCTIONAL"
 	}
 
 	workflow_states = workflow_states and workflow_states or WORKFLOW_STATES
@@ -1030,13 +1030,13 @@ Items.retrieve_items_for_archetype = function (archetype, filtered_slots, workfl
 			end
 
 			local is_item_stripped = true
-			local strip_tags_table = Application.get_strip_tags_table()
+			local feature_flags_table = Application.get_feature_flags_table()
 
 			if table.size(item.feature_flags) == 0 then
 				is_item_stripped = false
 			else
 				for _, feature_flag in pairs(item.feature_flags) do
-					if strip_tags_table[feature_flag] == true then
+					if feature_flags_table[feature_flag] == true then
 						is_item_stripped = false
 
 						break
@@ -1070,7 +1070,7 @@ Items.perk_item_by_id = function (perk_id)
 end
 
 local temp_item_rank_localization_context = {
-	rank = 0,
+	rank = 0
 }
 
 Items.rank_display_text = function (item)
@@ -1192,6 +1192,7 @@ Items.equip_slot_items = function (items)
 	if items then
 		local item_gear_ids_by_slots = {}
 		local item_gear_names_by_slots = {}
+		local has_real_equips = false
 
 		for slot_name, item in pairs(items) do
 			if item then
@@ -1203,11 +1204,17 @@ Items.equip_slot_items = function (items)
 				if breed_valid and slot_valid then
 					if item.gear_id then
 						item_gear_ids_by_slots[slot_name] = item.gear_id
+						has_real_equips = true
 					elseif item.name then
 						item_gear_names_by_slots[slot_name] = item.name
+						has_real_equips = true
 					end
 				end
 			end
+		end
+
+		if not has_real_equips then
+			return Promise.resolved()
 		end
 
 		local ui_manager = Managers.ui
@@ -1309,6 +1316,7 @@ Items.equip_slot_master_items = function (items)
 
 	if items then
 		local item_master_ids_by_slots = {}
+		local has_real_equips = false
 
 		for slot_name, item in pairs(items) do
 			local breeds = item and item.breeds
@@ -1318,7 +1326,12 @@ Items.equip_slot_master_items = function (items)
 
 			if breed_valid and slot_valid then
 				item_master_ids_by_slots[slot_name] = item.name
+				has_real_equips = true
 			end
+		end
+
+		if not has_real_equips then
+			return Promise.resolved()
 		end
 
 		local ui_manager = Managers.ui
@@ -1747,7 +1760,7 @@ Items.preview_stats_change = function (item, expertise_increase, stats, max_stat
 		filled_stats[#filled_stats + 1] = {
 			display_name = stat.display_name,
 			name = stat.name,
-			value = fraction and fraction * 100 or 0,
+			value = fraction and fraction * 100 or 0
 		}
 	end
 
@@ -1763,7 +1776,7 @@ Items.preview_stats_change = function (item, expertise_increase, stats, max_stat
 
 			result[filled_stat.display_name] = {
 				fraction = math.min(value / 100, 1),
-				value = math.min(value, 100),
+				value = math.min(value, 100)
 			}
 		end
 
@@ -1877,150 +1890,9 @@ Items.preview_stats_change = function (item, expertise_increase, stats, max_stat
 
 		result[filled_stat.display_name] = {
 			fraction = math.min(value / 100, 1),
-			value = math.min(value, 100),
+			value = math.min(value, 100)
 		}
 	end
-
-	return result
-end
-
-Items.create_mannequin_profile_by_item = function (item, prefered_gender, prefered_archetype, prefered_breed)
-	local Breeds = require("scripts/settings/breed/breeds")
-	local Archetypes = require("scripts/settings/archetype/archetypes")
-	local item_gender, item_breed, item_archetype, item_slot_name
-
-	if item.breeds and not table.is_empty(item.breeds) then
-		if prefered_breed and table.find(item.breeds, prefered_breed) then
-			item_breed = prefered_breed
-		end
-
-		if not item_breed then
-			for i = 1, #item.breeds do
-				local breed_name = item.breeds[i]
-
-				if Breeds[breed_name] then
-					item_breed = breed_name
-
-					break
-				end
-			end
-		end
-	end
-
-	item_breed = item_breed or prefered_breed
-
-	if item.archetypes and not table.is_empty(item.archetypes) and prefered_archetype and table.find(item.archetypes, prefered_archetype) then
-		item_archetype = prefered_archetype
-	end
-
-	local archetypes_by_breed = {}
-	local archetypes_by_breed_size = 0
-
-	if not item_archetype then
-		for archtype_name, archetype_data in pairs(Archetypes) do
-			if archetype_data.breed == item_breed then
-				archetypes_by_breed[#archetypes_by_breed + 1] = archtype_name
-				archetypes_by_breed_size = archetypes_by_breed_size + 1
-			end
-		end
-
-		if archetypes_by_breed_size == 1 then
-			item_archetype = archetypes_by_breed[1]
-		end
-	end
-
-	if not item_archetype and item.archetypes then
-		local archetype
-		local num_archetypes = #item.archetypes
-
-		for ii = 1, num_archetypes do
-			local archetype_name = item.archetypes[ii]
-
-			archetype = Archetypes[archetype_name]
-
-			if archetype then
-				item_archetype = archetype_name
-
-				break
-			end
-		end
-	end
-
-	if not item_archetype and archetypes_by_breed_size > 1 then
-		local archetype_index = math.random(1, archetypes_by_breed_size)
-
-		item_archetype = archetypes_by_breed[archetype_index]
-	end
-
-	item_archetype = item_archetype or prefered_archetype
-
-	if item.genders and not table.is_empty(item.genders) and prefered_gender and table.find(item.genders, prefered_gender) then
-		item_gender = prefered_gender
-	end
-
-	if not item_gender then
-		local breed_data = Breeds[item_breed]
-
-		if breed_data then
-			local default_gender
-
-			for i = 1, #breed_data.genders do
-				local gender = breed_data.genders[i]
-
-				if gender == prefered_gender then
-					item_gender = prefered_gender
-				end
-
-				if gender == "male" then
-					default_gender = gender
-				end
-			end
-
-			item_gender = item_gender or default_gender or breed_data.genders[1]
-		end
-
-		item_gender = item_gender or prefered_gender
-	end
-
-	if item.slots and not table.is_empty(item.slots) then
-		item_slot_name = item.slots[1]
-	else
-		item_slot_name = nil
-	end
-
-	local loadout = {}
-	local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[item_breed]
-	local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[item_gender]
-	local required_items = required_gender_item_names_per_slot and (required_gender_item_names_per_slot[item_slot_name] or required_gender_item_names_per_slot.default)
-
-	if required_items then
-		for slot_name, slot_item_name in pairs(required_items) do
-			local item_definition = MasterItems.get_item(slot_item_name)
-
-			if item_definition then
-				local slot_item = table.clone(item_definition)
-
-				loadout[slot_name] = slot_item
-			end
-		end
-	end
-
-	local archetype = Archetypes[item_archetype]
-
-	if archetype.companion_breed == "companion_dog" and item.companion_state_machine then
-		loadout.slot_companion_gear_full = MasterItems.get_item("content/items/characters/companion/companion_dog/gear_full/companion_dog_set_02_var_01")
-	end
-
-	if archetype.companion_breed == "companion_servo_skull" and item.companion_state_machine then
-		loadout.slot_companion_gear_full = MasterItems.get_item("content/items/characters/companion/companion_servo_skull/gear_full/cryptic_servo_skull_scanning_var_01")
-	end
-
-	local result = {
-		loadout = loadout,
-		archetype = archetype,
-		breed = Breeds[item_breed],
-		gender = item_gender,
-	}
 
 	return result
 end
@@ -2037,14 +1909,14 @@ Items.track_reward_item_to_gear = function (item)
 	return gear_id, gear
 end
 
-Items.register_reward = function (item_id, reward_id)
+Items.register_reward = function (item_id, reward_id, skip_notification)
 	local rewarded_master_item = MasterItems.get_item(item_id)
 
 	rewarded_master_item.uuid = reward_id
 	rewarded_master_item.masterDataInstance = {
 		id = item_id,
 		overrides = {},
-		slots = rewarded_master_item.slots,
+		slots = rewarded_master_item.slots
 	}
 
 	local gear_id, gear = Items.track_reward_item_to_gear(rewarded_master_item)
@@ -2054,7 +1926,7 @@ Items.register_reward = function (item_id, reward_id)
 	local item = MasterItems.get_item_instance(gear, gear_id)
 
 	if item then
-		local skip_notification = true
+		skip_notification = skip_notification == nil and true or skip_notification
 
 		Items.mark_item_id_as_new(item, skip_notification)
 	end
@@ -2062,11 +1934,11 @@ Items.register_reward = function (item_id, reward_id)
 	return item
 end
 
-Items.register_track_reward = function (claimed_reward)
+Items.register_track_reward = function (claimed_reward, skip_notification)
 	local item_id = claimed_reward.id
 	local reward_id = claimed_reward.gearId
 
-	return Items.register_reward(item_id, reward_id)
+	return Items.register_reward(item_id, reward_id, skip_notification)
 end
 
 Items.advertise_reward = function (reason, item_id, reward_id)
@@ -2075,7 +1947,7 @@ Items.advertise_reward = function (reason, item_id, reward_id)
 
 	Managers.event:trigger("event_add_notification_message", "item_granted", {
 		reason = reason,
-		item = rewarded_master_item,
+		item = rewarded_master_item
 	}, nil, sound_event)
 end
 
@@ -2086,7 +1958,7 @@ Items.advertise_track_reward = function (claimed_reward)
 
 	Managers.event:trigger("event_add_notification_message", "item_granted", {
 		reason = reason,
-		item = rewarded_master_item,
+		item = rewarded_master_item
 	}, nil, sound_event)
 end
 

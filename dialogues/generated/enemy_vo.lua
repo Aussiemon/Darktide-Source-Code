@@ -12,47 +12,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"alerted_idle",
+				"alerted_idle"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_armored_infected",
+				"chaos_armored_infected"
 			},
 			{
 				"user_memory",
 				"chaos_armored_infected_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"chaos_armored_infected_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"chaos_armored_infected_alerted_idle",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"chaos_armored_infected_alerted_idle",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -65,47 +65,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"assault",
+				"assault"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_armored_infected",
+				"chaos_armored_infected"
 			},
 			{
 				"user_memory",
 				"chaos_armored_infected_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				8,
+				8
 			},
 			{
 				"faction_memory",
 				"chaos_armored_infected_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				4,
-			},
+				4
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"chaos_armored_infected_assault",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"chaos_armored_infected_assault",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -118,50 +118,50 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"melee_idle",
+				"melee_idle"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_armored_infected",
+				"chaos_armored_infected"
 			},
 			{
 				"user_memory",
 				"chaos_armored_infected_melee_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"chaos_armored_infected_melee_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"chaos_armored_infected_melee_idle",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"chaos_armored_infected_melee_idle",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -174,47 +174,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"chaos_daemonhost_aggro",
+				"chaos_daemonhost_aggro"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_daemonhost",
+				"chaos_daemonhost"
 			},
 			{
 				"user_memory",
 				"enemy_memory_chaos_daemonhost_aggro",
 				OP.TIMEDIFF,
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"faction_memory_chaos_daemonhost_aggro",
 				OP.TIMEDIFF,
 				OP.GT,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_chaos_daemonhost_aggro",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_chaos_daemonhost_aggro",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -227,47 +227,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"chaos_daemonhost_death_long",
+				"chaos_daemonhost_death_long"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_daemonhost",
+				"chaos_daemonhost"
 			},
 			{
 				"user_memory",
 				"enemy_memory_daemonhost_death_long",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"faction_memory_daemonhost_death_long",
 				OP.TIMEDIFF,
 				OP.GT,
-				2,
-			},
+				2
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_daemonhost_death_long",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_daemonhost_death_long",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -280,47 +280,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"chaos_daemonhost_mantra_high",
+				"chaos_daemonhost_mantra_high"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_daemonhost",
+				"chaos_daemonhost"
 			},
 			{
 				"user_memory",
 				"enemy_memory_daemonhost_mantra_high",
 				OP.TIMEDIFF,
 				OP.GT,
-				1,
+				1
 			},
 			{
 				"faction_memory",
 				"faction_memory_daemonhost_mantra_high",
 				OP.TIMEDIFF,
 				OP.GT,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_daemonhost_mantra_high",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_daemonhost_mantra_high",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -333,35 +333,35 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"chaos_daemonhost_mantra_low",
+				"chaos_daemonhost_mantra_low"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_daemonhost",
+				"chaos_daemonhost"
 			},
 			{
 				"user_memory",
 				"enemy_memory_daemonhost_mantra_low",
 				OP.TIMEDIFF,
 				OP.GT,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_daemonhost_mantra_low",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -374,35 +374,35 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"chaos_daemonhost_mantra_medium",
+				"chaos_daemonhost_mantra_medium"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_daemonhost",
+				"chaos_daemonhost"
 			},
 			{
 				"user_memory",
 				"enemy_memory_daemonhost_mantra_medium",
 				OP.TIMEDIFF,
 				OP.GT,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_daemonhost_mantra_medium",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -415,47 +415,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"chaos_daemonhost_warp_grab",
+				"chaos_daemonhost_warp_grab"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_daemonhost",
+				"chaos_daemonhost"
 			},
 			{
 				"user_memory",
 				"enemy_memory_daemonhost_warp_grab",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"faction_memory_daemonhost_warp_grab",
 				OP.TIMEDIFF,
 				OP.GT,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_daemonhost_warp_grab",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_daemonhost_warp_grab",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -468,47 +468,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"alerted_idle",
+				"alerted_idle"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_newly_infected",
+				"chaos_newly_infected"
 			},
 			{
 				"user_memory",
 				"enemy_memory_ni_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"faction_memory_ni_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_ni_alerted_idle",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_ni_alerted_idle",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -521,47 +521,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"assault",
+				"assault"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_newly_infected",
+				"chaos_newly_infected"
 			},
 			{
 				"user_memory",
 				"enemy_memory_ni_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				8,
+				8
 			},
 			{
 				"faction_memory",
 				"faction_memory_ni_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				4,
-			},
+				4
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_ni_assault",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_ni_assault",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -574,50 +574,50 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"melee_idle",
+				"melee_idle"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_newly_infected",
+				"chaos_newly_infected"
 			},
 			{
 				"user_memory",
 				"enemy_memory_ni_melee_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"faction_memory_ni_melee_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_ni_melee_idle",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_ni_melee_idle",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -630,38 +630,38 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"alerted_idle",
+				"alerted_idle"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark"
 			},
 			{
 				"user_memory",
 				"enemy_memory_chaos_ogryn_bulwark_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_chaos_ogryn_bulwark_alerted_idle",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -674,52 +674,52 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"assault",
+				"assault"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark"
 			},
 			{
 				"user_memory",
 				"chaos_ogryn_bulwark_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"faction_memory_chaos_ogryn_bulwark_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"chaos_ogryn_bulwark_assault",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_chaos_ogryn_bulwark_assault",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.5,
-			},
-		},
+				duration = 0.5
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -732,50 +732,50 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"alerted_idle",
+				"alerted_idle"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_ogryn_executor",
+				"chaos_ogryn_executor"
 			},
 			{
 				"user_memory",
 				"enemy_memory_chaos_ogryn_executor_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"chaos_ogryn_executor_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				2,
-			},
+				2
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_chaos_ogryn_executor_alerted_idle",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"chaos_ogryn_executor_alerted_idle",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -788,50 +788,50 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"assault",
+				"assault"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_ogryn_executor",
+				"chaos_ogryn_executor"
 			},
 			{
 				"user_memory",
 				"chaos_ogryn_executor_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"faction_chaos_ogryn_executor_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"chaos_ogryn_executor_assault",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_chaos_ogryn_executor_assault",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -844,55 +844,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"no_damage_taunt",
+				"no_damage_taunt"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_ogryn_executor",
+				"chaos_ogryn_executor"
 			},
 			{
 				"user_memory",
 				"enemy_memory_no_damage_taunt",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
+				5
 			},
 			{
 				"faction_memory",
 				"faction_memory_no_damage_taunt",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_no_damage_taunt",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_no_damage_taunt",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.5,
-			},
-		},
+				duration = 0.5
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -905,50 +905,50 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"alerted_idle",
+				"alerted_idle"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner"
 			},
 			{
 				"user_memory",
 				"enemy_memory_ogryn_gunner_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				6,
+				6
 			},
 			{
 				"faction_memory",
 				"faction_memory_ogryn_gunner_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				3,
-			},
+				3
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_ogryn_gunner_alerted_idle",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_ogryn_gunner_alerted_idle",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -961,47 +961,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"start_shooting",
+				"start_shooting"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner"
 			},
 			{
 				"user_memory",
 				"enemy_memory_ogryn_start_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
-				3,
+				3
 			},
 			{
 				"faction_memory",
 				"faction_memory_ogryn_start_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_ogryn_start_shooting",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_ogryn_start_shooting",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -1014,35 +1014,35 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"long_death",
+				"long_death"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_captain",
+				"cultist_captain"
 			},
 			{
 				"user_memory",
 				"enemy_memory_cultist_captain_long_death",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_cultist_captain_long_death",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -1055,42 +1055,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"reinforcements",
+				"reinforcements"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_captain",
+				"cultist_captain"
 			},
 			{
 				"user_memory",
 				"enemy_memory_cultist_captain_reinforcements",
 				OP.TIMEDIFF,
 				OP.GT,
-				25,
+				25
 			},
 			{
 				"user_memory",
 				"enemy_memory_cultist_captain_taunt_combat",
 				OP.TIMEDIFF,
 				OP.GT,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_cultist_captain_reinforcements",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -1103,44 +1103,44 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"taunt",
+				"taunt"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_captain",
+				"cultist_captain"
 			},
 			{
 				"user_memory",
 				"enemy_memory_cultist_captain_taunt",
 				OP.GTEQ,
 				OP.GT,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_cultist_captain_taunt",
 				OP.ADD,
-				"1",
-			},
+				"1"
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_giver_default_class",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -1153,47 +1153,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"taunt_combat",
+				"taunt_combat"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_captain",
+				"cultist_captain"
 			},
 			{
 				"user_memory",
 				"enemy_memory_cultist_captain_taunt_combat",
 				OP.TIMEDIFF,
 				OP.GT,
-				35,
+				35
 			},
 			{
 				"user_memory",
 				"enemy_memory_cultist_captain_taunt",
 				OP.GT,
 				OP.GT,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_cultist_captain_taunt_combat",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 2,
-			},
-		},
+				duration = 2
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -1206,40 +1206,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"spawned",
+				"spawned"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_flamer",
+				"cultist_flamer"
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_flamer_spawned",
 				OP.TIMEDIFF,
 				OP.GT,
-				2,
-			},
+				2
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"faction_memory_cultist_flamer_spawned",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -1252,52 +1252,52 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"start_shooting",
+				"start_shooting"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_flamer",
+				"cultist_flamer"
 			},
 			{
 				"user_memory",
 				"enemy_memory_cf_start_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
-				4,
+				4
 			},
 			{
 				"faction_memory",
 				"faction_memory_cf_start_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
-				2,
-			},
+				2
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_cf_start_shooting",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_cf_start_shooting",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1.5,
-			},
-		},
+				duration = 1.5
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -1310,47 +1310,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"skulking",
+				"skulking"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_grenadier",
+				"cultist_grenadier"
 			},
 			{
 				"user_memory",
 				"enemy_memory_cultist_grenadier_skulking",
 				OP.TIMEDIFF,
 				OP.GT,
-				15,
+				15
 			},
 			{
 				"faction_memory",
 				"faction_enemy_memory_cultist_grenadier_skulking",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_cultist_grenadier_skulking",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_enemy_memory_cultist_grenadier_skulking",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -1363,40 +1363,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"spawned",
+				"spawned"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_grenadier",
+				"cultist_grenadier"
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_grenadier_spawned",
 				OP.TIMEDIFF,
 				OP.GT,
-				2,
-			},
+				2
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"faction_memory_cultist_grenadier_spawned",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -1409,35 +1409,35 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"throwing_grenade",
+				"throwing_grenade"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_grenadier",
+				"cultist_grenadier"
 			},
 			{
 				"user_memory",
 				"cultist_grenadier_throwing_grenade",
 				OP.TIMEDIFF,
 				OP.GT,
-				9,
-			},
+				9
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"cultist_grenadier_throwing_grenade",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -1450,47 +1450,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"friendly_fire",
+				"friendly_fire"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_gunner",
+				"cultist_gunner"
 			},
 			{
 				"user_memory",
 				"enemy_memory_cultist_gunner_friendly_fire",
 				OP.TIMEDIFF,
 				OP.GT,
-				15,
+				15
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_gunner_friendly_fire",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_cultist_gunner_friendly_fire",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_gunner_friendly_fire",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -1503,47 +1503,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"reloading",
+				"reloading"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_gunner",
+				"cultist_gunner"
 			},
 			{
 				"user_memory",
 				"enemy_memory_cultist_gunner_reloading",
 				OP.TIMEDIFF,
 				OP.GT,
-				3,
+				3
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_gunner_reloading",
 				OP.TIMEDIFF,
 				OP.GT,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_cultist_gunner_reloading",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_gunner_reloading",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -1556,47 +1556,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"start_shooting",
+				"start_shooting"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_gunner",
+				"cultist_gunner"
 			},
 			{
 				"user_memory",
 				"memory_cultist_gunner_start_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
-				3,
+				3
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_gunner_start_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"memory_cultist_gunner_start_shooting",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_gunner_start_shooting",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -1609,47 +1609,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"alerted_idle",
+				"alerted_idle"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_melee",
+				"cultist_melee"
 			},
 			{
 				"user_memory",
 				"cultist_melee_fighter_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_melee_fighter_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"cultist_melee_fighter_alerted_idle",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_melee_fighter_alerted_idle",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -1662,47 +1662,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"assault",
+				"assault"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_melee",
+				"cultist_melee"
 			},
 			{
 				"user_memory",
 				"cultist_melee_fighter_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_melee_fighter_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				4,
-			},
+				4
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"cultist_melee_fighter_assault",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_melee_fighter_assault",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -1715,47 +1715,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"long_death",
+				"long_death"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_melee",
+				"cultist_melee"
 			},
 			{
 				"user_memory",
 				"enemy_memory_long_death",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
+				20
 			},
 			{
 				"faction_memory",
 				"faction_memory_long_death",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_long_death",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_long_death",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -1768,50 +1768,50 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"melee_idle",
+				"melee_idle"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_melee",
+				"cultist_melee"
 			},
 			{
 				"user_memory",
 				"cultist_melee_fighter_melee_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
+				20
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_melee_fighter_melee_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"cultist_melee_fighter_melee_idle",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_melee_fighter_melee_idle",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -1824,47 +1824,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"switch_to_melee",
+				"switch_to_melee"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_assault",
+				"cultist_assault"
 			},
 			{
 				"user_memory",
 				"cultist_rusher_switch_to_melee",
 				OP.TIMEDIFF,
 				OP.GT,
-				8,
+				8
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_rusher_switch_to_melee",
 				OP.TIMEDIFF,
 				OP.GT,
-				4,
-			},
+				4
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"cultist_rusher_switch_to_melee",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_rusher_switch_to_melee",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -1877,55 +1877,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"take_cover",
+				"take_cover"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_assault",
+				"cultist_assault"
 			},
 			{
 				"user_memory",
 				"cultist_assault_take_cover",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
+				20
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_assault_take_cover",
 				OP.TIMEDIFF,
 				OP.GT,
-				8,
-			},
+				8
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"cultist_assault_take_cover",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_assault_take_cover",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -1938,47 +1938,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"alerted_idle",
+				"alerted_idle"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_shocktrooper",
+				"cultist_shocktrooper"
 			},
 			{
 				"user_memory",
 				"enemy_memory_cultist_shocktrooper",
 				OP.TIMEDIFF,
 				OP.GT,
-				6,
+				6
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_shocktrooper",
 				OP.TIMEDIFF,
 				OP.GT,
-				3,
-			},
+				3
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_cultist_shocktrooper",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_shocktrooper",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -1991,47 +1991,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"start_shooting",
+				"start_shooting"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_shocktrooper",
+				"cultist_shocktrooper"
 			},
 			{
 				"user_memory",
 				"enemy_memory_cultist_shocktrooper_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
+				5
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_shocktrooper_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_cultist_shocktrooper_shooting",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_shocktrooper_shooting",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -2044,47 +2044,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"assault",
+				"assault"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_berzerker",
+				"cultist_berzerker"
 			},
 			{
 				"user_memory",
 				"cultist_berzerker_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"faction_cultist_berzerker_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"cultist_berzerker_assault",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_traitor_berzerker_assault",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -2097,47 +2097,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"alerted_idle",
+				"alerted_idle"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_assault",
+				"cultist_assault"
 			},
 			{
 				"user_memory",
 				"cultist_assault_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_assault_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"cultist_assault_alerted_idle",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_assault_alerted_idle",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -2150,47 +2150,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"assault",
+				"assault"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"cultist_assault",
+				"cultist_assault"
 			},
 			{
 				"user_memory",
 				"cultist_rusher_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				8,
+				8
 			},
 			{
 				"faction_memory",
 				"faction_memory_rusher_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				4,
-			},
+				4
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"cultist_rusher_assault",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_rusher_assault",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -2203,55 +2203,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"alerted_idle",
+				"alerted_idle"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_ogryn_houndmaster",
+				"chaos_ogryn_houndmaster"
 			},
 			{
 				"user_memory",
 				"hound_master_alerted",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"hound_master_alerted",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"hound_master_alerted",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"hound_master_alerted",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -2264,7 +2264,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -2272,32 +2272,32 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"ability_pious_stabber",
-					"ability_shock_trooper",
-				},
+					"ability_shock_trooper"
+				}
 			},
 			{
 				"user_memory",
 				"hound_master_alerted_through_stealth",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"hound_master_alerted_through_stealth",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -2310,50 +2310,50 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"summon_minions",
+				"summon_minions"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_ogryn_houndmaster",
+				"chaos_ogryn_houndmaster"
 			},
 			{
 				"user_memory",
 				"hound_master_call_hounds",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"hound_master_call_hounds",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"hound_master_call_hounds",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"hound_master_call_hounds",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -2366,50 +2366,50 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"assault",
+				"assault"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_ogryn_houndmaster",
+				"chaos_ogryn_houndmaster"
 			},
 			{
 				"user_memory",
 				"hound_master_combat_taunt",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
+				20
 			},
 			{
 				"faction_memory",
 				"hound_master_combat_taunt",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"hound_master_combat_taunt",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"hound_master_combat_taunt",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -2422,50 +2422,50 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"owner_call_attack",
+				"owner_call_attack"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_ogryn_houndmaster",
+				"chaos_ogryn_houndmaster"
 			},
 			{
 				"user_memory",
 				"hound_master_hound_attack",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"hound_master_hound_attack",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"hound_master_hound_attack",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"hound_master_hound_attack",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -2478,55 +2478,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"owner_call_dead",
+				"owner_call_dead"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_ogryn_houndmaster",
+				"chaos_ogryn_houndmaster"
 			},
 			{
 				"user_memory",
 				"hound_master_hound_dead",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"hound_master_hound_dead",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"hound_master_hound_dead",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"hound_master_hound_dead",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -2539,55 +2539,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"owner_call_pounced",
+				"owner_call_pounced"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"chaos_ogryn_houndmaster",
+				"chaos_ogryn_houndmaster"
 			},
 			{
 				"user_memory",
 				"hound_master_hound_pounce_success",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"hound_master_hound_pounce_success",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"hound_master_hound_pounce_success",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"hound_master_hound_pounce_success",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -2600,50 +2600,50 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"alerted_idle",
+				"alerted_idle"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_plasma_gunner",
+				"renegade_plasma_gunner"
 			},
 			{
 				"user_memory",
 				"enemy_memory_plasma_gunner_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				6,
+				6
 			},
 			{
 				"faction_memory",
 				"faction_memory_plasma_gunner_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				3,
-			},
+				3
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_plasma_gunner_alerted_idle",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_plasma_gunner_alerted_idle",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -2656,47 +2656,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"start_shooting",
+				"start_shooting"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_plasma_gunner",
+				"renegade_plasma_gunner"
 			},
 			{
 				"user_memory",
 				"enemy_memory_plasma_gunner_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"faction_memory_plasma_gunner_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
-				3,
-			},
+				3
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_plasma_gunner_shooting",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_plasma_gunner_shooting",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -2709,52 +2709,52 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"stopped_shooting",
+				"stopped_shooting"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_plasma_gunner",
+				"renegade_plasma_gunner"
 			},
 			{
 				"user_memory",
 				"enemy_memory_plasma_gunner_stopped_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"faction_memory_plasma_gunner_stopped_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
-				3,
-			},
+				3
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_plasma_gunner_stopped_shooting",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_plasma_gunner_stopped_shooting",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.5,
-			},
-		},
+				duration = 0.5
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -2767,50 +2767,50 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"take_cover",
+				"take_cover"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_plasma_gunner",
+				"renegade_plasma_gunner"
 			},
 			{
 				"user_memory",
 				"enemy_memory_take_cover",
 				OP.TIMEDIFF,
 				OP.GT,
-				30,
+				30
 			},
 			{
 				"faction_memory",
 				"faction_memory_take_cover",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_take_cover",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_take_cover",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -2823,7 +2823,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -2833,27 +2833,27 @@ return function ()
 					"response_for_ogryn_critical_health",
 					"response_for_psyker_critical_health",
 					"response_for_veteran_critical_health",
-					"response_for_zealot_critical_health",
-				},
+					"response_for_zealot_critical_health"
+				}
 			},
 			{
 				"user_memory",
 				"ranged_idle_player_low_on_health",
 				OP.TIMEDIFF,
 				OP.GT,
-				30,
-			},
+				30
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"ranged_idle_player_low_on_health",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -2866,26 +2866,26 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"ranged_idle_player_out_of_ammo",
+				"ranged_idle_player_out_of_ammo"
 			},
 			{
 				"user_memory",
 				"ranged_idle_player_out_of_ammo",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"ranged_idle_player_out_of_ammo",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -2898,35 +2898,35 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"long_death",
+				"long_death"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_captain",
+				"renegade_captain"
 			},
 			{
 				"user_memory",
 				"enemy_memory_renegade_captain_long_death",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_renegade_captain_long_death",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -2939,42 +2939,42 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"reinforcements",
+				"reinforcements"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_captain",
+				"renegade_captain"
 			},
 			{
 				"user_memory",
 				"enemy_memory_renegade_captain_reinforcements",
 				OP.TIMEDIFF,
 				OP.GT,
-				25,
+				25
 			},
 			{
 				"user_memory",
 				"enemy_memory_renegade_captain_taunt_combat",
 				OP.TIMEDIFF,
 				OP.GT,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_renegade_captain_reinforcements",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -2987,44 +2987,44 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"taunt",
+				"taunt"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_captain",
+				"renegade_captain"
 			},
 			{
 				"user_memory",
 				"enemy_memory_renegade_captain_taunt",
 				OP.GTEQ,
 				OP.GT,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_renegade_captain_taunt",
 				OP.ADD,
-				"1",
-			},
+				"1"
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_giver_default_class",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.5,
-			},
-		},
+				duration = 0.5
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -3037,47 +3037,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"taunt_combat",
+				"taunt_combat"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_captain",
+				"renegade_captain"
 			},
 			{
 				"user_memory",
 				"enemy_memory_renegade_captain_taunt_combat",
 				OP.TIMEDIFF,
 				OP.GT,
-				35,
+				35
 			},
 			{
 				"user_memory",
 				"enemy_memory_renegade_captain_taunt",
 				OP.GT,
 				OP.GT,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_renegade_captain_taunt_combat",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 2,
-			},
-		},
+				duration = 2
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -3090,47 +3090,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"skulking",
+				"skulking"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_grenadier",
+				"renegade_grenadier"
 			},
 			{
 				"user_memory",
 				"enemy_memory_renegade_grenadier_skulking",
 				OP.TIMEDIFF,
 				OP.GT,
-				15,
+				15
 			},
 			{
 				"faction_memory",
 				"faction_memory_renegade_grenadier_skulking",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_renegade_grenadier_skulking",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_renegade_grenadier_skulking",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -3143,47 +3143,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"assault",
+				"assault"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_berzerker",
+				"renegade_berzerker"
 			},
 			{
 				"user_memory",
 				"traitor_berzerker_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"faction_traitor_berzerker_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"traitor_berzerker_assault",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_traitor_berzerker_assault",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -3196,50 +3196,50 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"alerted_idle",
+				"alerted_idle"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_executor",
+				"renegade_executor"
 			},
 			{
 				"user_memory",
 				"enemy_memory_traitor_enforcer_executor_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				2,
+				2
 			},
 			{
 				"faction_memory",
 				"traitor_enforcer_executor_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_traitor_enforcer_executor_alerted_idle",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"traitor_enforcer_executor_alerted_idle",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -3252,55 +3252,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"assault",
+				"assault"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_executor",
+				"renegade_executor"
 			},
 			{
 				"user_memory",
 				"renegade_executor_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"faction_memory_renegade_executor_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"renegade_executor_assault",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_renegade_executor_assault",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.5,
-			},
-		},
+				duration = 0.5
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -3313,35 +3313,35 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"melee_idle",
+				"melee_idle"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_executor",
+				"renegade_executor"
 			},
 			{
 				"user_memory",
 				"melee_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				2,
-			},
+				2
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"melee_idle",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -3354,43 +3354,43 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"special_attack",
+				"special_attack"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_executor",
+				"renegade_executor"
 			},
 			{
 				"user_memory",
 				"special_attack",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"special_attack",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -3403,40 +3403,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"spawned",
+				"spawned"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_grenadier",
+				"renegade_grenadier"
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_grenadier_spawned",
 				OP.TIMEDIFF,
 				OP.GT,
-				2,
-			},
+				2
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"faction_memory_traitor_grenadier_spawned",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -3449,35 +3449,35 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"throwing_grenade",
+				"throwing_grenade"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_grenadier",
+				"renegade_grenadier"
 			},
 			{
 				"user_memory",
 				"throwing_grenade",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"throwing_grenade",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -3490,43 +3490,43 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"spawned",
+				"spawned"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_flamer",
+				"renegade_flamer"
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_flamer_spawned",
 				OP.TIMEDIFF,
 				OP.GT,
-				2,
-			},
+				2
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"faction_memory_traitor_flamer_spawned",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -3539,55 +3539,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"start_shooting",
+				"start_shooting"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_flamer",
+				"renegade_flamer"
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_flamer_start_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
-				2,
+				2
 			},
 			{
 				"user_memory",
 				"enemy_memory_traitor_flamer_start_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
-				4,
-			},
+				4
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"faction_memory_traitor_flamer_start_shooting",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"user_memory",
 				"enemy_memory_traitor_flamer_start_shooting",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1.5,
-			},
-		},
+				duration = 1.5
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -3600,50 +3600,50 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"alerted_idle",
+				"alerted_idle"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_rifleman",
+				"renegade_rifleman"
 			},
 			{
 				"user_memory",
 				"traitor_guard_rifleman_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_guard_rifleman_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"traitor_guard_rifleman_alerted_idle",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_guard_rifleman_alerted_idle",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -3656,55 +3656,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"ranged_idle",
+				"ranged_idle"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_rifleman",
+				"renegade_rifleman"
 			},
 			{
 				"user_memory",
 				"traitor_guard_rifleman_ranged_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_guard_rifleman_ranged_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"traitor_guard_rifleman_ranged_idle",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_guard_rifleman_ranged_idle",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -3717,29 +3717,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.EQ,
-				"reload_failed_out_of_ammo",
+				"reload_failed_out_of_ammo"
 			},
 			{
 				"user_memory",
 				"last_replied",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"last_replied",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -3752,55 +3752,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"take_cover",
+				"take_cover"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_rifleman",
+				"renegade_rifleman"
 			},
 			{
 				"user_memory",
 				"traitor_guard_rifleman_take_cover",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
+				20
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_guard_rifleman_take_cover",
 				OP.TIMEDIFF,
 				OP.GT,
-				8,
-			},
+				8
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"traitor_guard_rifleman_take_cover",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_guard_rifleman_take_cover",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -3813,50 +3813,50 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"take_position",
+				"take_position"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_rifleman",
+				"renegade_rifleman"
 			},
 			{
 				"user_memory",
 				"traitor_guard_rifleman_take_position",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
+				20
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_guard_rifleman_take_position",
 				OP.TIMEDIFF,
 				OP.GT,
-				8,
-			},
+				8
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"traitor_guard_rifleman_take_position",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_guard_rifleman_take_position",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -3869,50 +3869,50 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"alerted_idle",
+				"alerted_idle"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_assault",
+				"renegade_assault"
 			},
 			{
 				"user_memory",
 				"traitor_guard_smg_rusher_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_guard_smg_rusher_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"traitor_guard_smg_rusher_alerted_idle",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_guard_smg_rusher_alerted_idle",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -3925,55 +3925,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"ranged_idle",
+				"ranged_idle"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_assault",
+				"renegade_assault"
 			},
 			{
 				"user_memory",
 				"traitor_guard_smg_rusher_ranged_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				8,
+				8
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_guard_smg_rusher_ranged_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				2,
-			},
+				2
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"traitor_guard_smg_rusher_ranged_idle",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_guard_smg_rusher_ranged_idle",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -3986,29 +3986,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.EQ,
-				"reload_failed_out_of_ammo",
+				"reload_failed_out_of_ammo"
 			},
 			{
 				"user_memory",
 				"last_replied",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"last_replied",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -4021,29 +4021,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.EQ,
-				"critical_health",
+				"critical_health"
 			},
 			{
 				"user_memory",
 				"last_replied",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"last_replied",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -4056,55 +4056,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"take_cover",
+				"take_cover"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_assault",
+				"renegade_assault"
 			},
 			{
 				"user_memory",
 				"enemy_memory_take_cover",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"faction_memory_take_cover",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_take_cover",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_take_cover",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -4117,50 +4117,50 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"take_position",
+				"take_position"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_assault",
+				"renegade_assault"
 			},
 			{
 				"user_memory",
 				"enemy_memory_take_position",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"faction_memory_take_position",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_take_position",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_take_position",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -4173,47 +4173,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"alerted_idle",
+				"alerted_idle"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_gunner",
+				"renegade_gunner"
 			},
 			{
 				"user_memory",
 				"enemy_memory_traitor_gunner_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				6,
+				6
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_gunner_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				3,
-			},
+				3
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_traitor_gunner_alerted_idle",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_gunner_alerted_idle",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -4226,47 +4226,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"ranged_idle",
+				"ranged_idle"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_gunner",
+				"renegade_gunner"
 			},
 			{
 				"user_memory",
 				"enemy_memory_traitor_gunner_ranged_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				40,
+				40
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_gunner_ranged_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_traitor_gunner_ranged_idle",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_gunner_ranged_idle",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -4279,29 +4279,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.EQ,
-				"reload_failed_out_of_ammo",
+				"reload_failed_out_of_ammo"
 			},
 			{
 				"user_memory",
 				"last_replied",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"last_replied",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -4314,29 +4314,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.EQ,
-				"critical_health",
+				"critical_health"
 			},
 			{
 				"user_memory",
 				"last_replied",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"last_replied",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -4349,47 +4349,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"start_shooting",
+				"start_shooting"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_gunner",
+				"renegade_gunner"
 			},
 			{
 				"user_memory",
 				"enemy_memory_traitor_gunner_start_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
-				3,
+				3
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_gunner_start_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_traitor_gunner_start_shooting",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_gunner_start_shooting",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -4402,50 +4402,50 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"take_cover",
+				"take_cover"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_gunner",
+				"renegade_gunner"
 			},
 			{
 				"user_memory",
 				"enemy_memory_take_cover",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
+				20
 			},
 			{
 				"faction_memory",
 				"faction_memory_take_cover",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_take_cover",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_take_cover",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -4458,47 +4458,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"take_position",
+				"take_position"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_gunner",
+				"renegade_gunner"
 			},
 			{
 				"user_memory",
 				"enemy_memory_take_position",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
+				20
 			},
 			{
 				"faction_memory",
 				"faction_memory_take_position",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_take_position",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_take_position",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -4511,50 +4511,50 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"assault",
+				"assault"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_netgunner",
+				"renegade_netgunner"
 			},
 			{
 				"faction_memory",
 				"faction_traitor_netgunner_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				2,
+				2
 			},
 			{
 				"user_memory",
 				"user_traitor_netgunner_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				3,
-			},
+				3
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"faction_traitor_netgunner_assault",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"user_memory",
 				"user_traitor_netgunner_assault",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -4567,31 +4567,31 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"catching_net",
+				"catching_net"
 			},
 			{
 				"user_memory",
 				"traitor_netgunner_catching_net",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"traitor_netgunner_catching_net",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -4604,43 +4604,43 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"spawned",
+				"spawned"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_netgunner",
+				"renegade_netgunner"
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_netgunner_spawned",
 				OP.TIMEDIFF,
 				OP.GT,
-				2,
-			},
+				2
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"faction_memory_traitor_netgunner_spawned",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 2,
-			},
-		},
+				duration = 2
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -4653,26 +4653,26 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"throwing_net",
+				"throwing_net"
 			},
 			{
 				"user_memory",
 				"traitor_net_gunner_throwing_net",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"traitor_net_gunner_throwing_net",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -4685,50 +4685,50 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"alerted_idle",
+				"alerted_idle"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_shocktrooper",
+				"renegade_shocktrooper"
 			},
 			{
 				"user_memory",
 				"enemy_memory_traitor_scout_shocktrooper_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				6,
+				6
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_scout_shocktrooper_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				3,
-			},
+				3
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_traitor_scout_shocktrooper_alerted_idle",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_scout_shocktrooper_alerted_idle",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -4741,55 +4741,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"melee_idle",
+				"melee_idle"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_shocktrooper",
+				"renegade_shocktrooper"
 			},
 			{
 				"user_memory",
 				"traitor_scout_shocktrooper_melee_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				15,
+				15
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_scout_shocktrooper_melee_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"traitor_scout_shocktrooper_melee_idle",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_scout_shocktrooper_melee_idle",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.5,
-			},
-		},
+				duration = 0.5
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -4802,55 +4802,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"no_damage_taunt",
+				"no_damage_taunt"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_shocktrooper",
+				"renegade_shocktrooper"
 			},
 			{
 				"user_memory",
 				"enemy_memory_no_damage_taunt",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"faction_memory_no_damage_taunt",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_no_damage_taunt",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_no_damage_taunt",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.5,
-			},
-		},
+				duration = 0.5
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -4863,50 +4863,50 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"take_cover",
+				"take_cover"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_shocktrooper",
+				"renegade_shocktrooper"
 			},
 			{
 				"user_memory",
 				"enemy_memory_take_cover",
 				OP.TIMEDIFF,
 				OP.GT,
-				30,
+				30
 			},
 			{
 				"faction_memory",
 				"faction_memory_take_cover",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_take_cover",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_take_cover",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -4919,47 +4919,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"take_position",
+				"take_position"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_shocktrooper",
+				"renegade_shocktrooper"
 			},
 			{
 				"user_memory",
 				"traitor_scout_shocktrooper_take_position",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
+				20
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_scout_shocktrooper_take_position",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"traitor_scout_shocktrooper_take_position",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_scout_shocktrooper_take_position",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -4972,35 +4972,35 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"start_shooting",
+				"start_shooting"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_shocktrooper",
+				"renegade_shocktrooper"
 			},
 			{
 				"faction_memory",
 				"faction_memory_shocktrooper_start_shooting",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"faction_memory_shocktrooper_start_shooting",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -5013,47 +5013,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"alerted_idle",
+				"alerted_idle"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_melee",
+				"renegade_melee"
 			},
 			{
 				"user_memory",
 				"traitor_trenchfighter_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_trenchfighter_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				5,
-			},
+				5
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"traitor_trenchfighter_alerted_idle",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_trenchfighter_alerted_idle",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -5066,47 +5066,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"assault",
+				"assault"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_melee",
+				"renegade_melee"
 			},
 			{
 				"user_memory",
 				"traitor_trenchfighter_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				6,
+				6
 			},
 			{
 				"faction_memory",
 				"faction_trenchfighter_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				2,
-			},
+				2
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"traitor_trenchfighter_assault",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_trenchfighter_assault",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -5119,47 +5119,47 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"melee_idle",
+				"melee_idle"
 			},
 			{
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_melee",
+				"renegade_melee"
 			},
 			{
 				"user_memory",
 				"traitor_trenchfighter_melee_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				8,
+				8
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_trenchfighter_melee_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				4,
-			},
+				4
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"traitor_trenchfighter_melee_idle",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_trenchfighter_melee_idle",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "enemy_vo_prio_0",
@@ -5172,13 +5172,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_enemy_vo_event",
+				"generic_enemy_vo_event"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"taunt_disabled",
+				"taunt_disabled"
 			},
 			{
 				"query_context",
@@ -5186,19 +5186,19 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"renegade_twin_captain",
-					"renegade_twin_captain_two",
-				},
+					"renegade_twin_captain_two"
+				}
 			},
 			{
 				"global_context",
 				"current_mission",
 				OP.NEQ,
-				"km_enforcer_twins",
-			},
+				"km_enforcer_twins"
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 end

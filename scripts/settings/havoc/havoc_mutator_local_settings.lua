@@ -11,10 +11,10 @@ local CHAOS_DAEMONHOST_COMPOISTION = {
 					name = "chaos_mutator_daemonhost",
 					amount = {
 						1,
-						1,
-					},
-				},
-			},
+						1
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -22,10 +22,10 @@ local CHAOS_DAEMONHOST_COMPOISTION = {
 					name = "chaos_mutator_daemonhost",
 					amount = {
 						1,
-						1,
-					},
-				},
-			},
+						1
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -33,10 +33,10 @@ local CHAOS_DAEMONHOST_COMPOISTION = {
 					name = "chaos_mutator_daemonhost",
 					amount = {
 						1,
-						1,
-					},
-				},
-			},
+						1
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -44,10 +44,10 @@ local CHAOS_DAEMONHOST_COMPOISTION = {
 					name = "chaos_mutator_daemonhost",
 					amount = {
 						1,
-						1,
-					},
-				},
-			},
+						1
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -55,10 +55,10 @@ local CHAOS_DAEMONHOST_COMPOISTION = {
 					name = "chaos_mutator_daemonhost",
 					amount = {
 						1,
-						1,
-					},
-				},
-			},
+						1
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -66,12 +66,12 @@ local CHAOS_DAEMONHOST_COMPOISTION = {
 					name = "chaos_mutator_daemonhost",
 					amount = {
 						1,
-						1,
-					},
-				},
-			},
-		},
-	},
+						1
+					}
+				}
+			}
+		}
+	}
 }
 local havoc_mutator_local_settings = {
 	mutator_havoc_enemies_corrupted = {
@@ -110,7 +110,7 @@ local havoc_mutator_local_settings = {
 			renegade_rifleman = 0.1,
 			renegade_shocktrooper = 0.1,
 			renegade_sniper = 0.1,
-			renegade_vanguard = 0.1,
+			renegade_vanguard = 0.1
 		},
 		buff_settings = {
 			buff_template_name = "havoc_corrupted_enemies",
@@ -122,9 +122,9 @@ local havoc_mutator_local_settings = {
 			corruption_color = {
 				0.37254901960784315,
 				0.6823529411764706,
-				0,
-			},
-		},
+				0
+			}
+		}
 	},
 	mutator_havoc_enemies_parasite_headshot = {
 		breed_chances = {
@@ -164,8 +164,8 @@ local havoc_mutator_local_settings = {
 			renegade_rifleman = 0.1,
 			renegade_shocktrooper = 0.1,
 			renegade_sniper = 0,
-			renegade_vanguard = 0.1,
-		},
+			renegade_vanguard = 0.1
+		}
 	},
 	mutator_encroaching_garden = {
 		breed_chances = {
@@ -205,7 +205,7 @@ local havoc_mutator_local_settings = {
 			renegade_rifleman = 0,
 			renegade_shocktrooper = 0.25,
 			renegade_sniper = 0,
-			renegade_vanguard = 0,
+			renegade_vanguard = 0
 		},
 		buff_settings = {
 			healing_frequency = 2,
@@ -213,7 +213,7 @@ local havoc_mutator_local_settings = {
 			havoc_encroaching_garden_color = {
 				0.5568627450980392,
 				0.6313725490196078,
-				0.3215686274509804,
+				0.3215686274509804
 			},
 			healing_amount_by_armor_type = {
 				armored = 950,
@@ -221,14 +221,14 @@ local havoc_mutator_local_settings = {
 				disgustingly_resilient = 1000,
 				resistant = 1100,
 				super_armor = 800,
-				unarmored = 1200,
+				unarmored = 1200
 			},
 			stat_buff_settings = {
 				impact_modifier = -3,
 				max_health_modifier = 100,
-				suppressor_decay_multiplier = -3,
-			},
-		},
+				suppressor_decay_multiplier = -3
+			}
+		}
 	},
 	bolstering_minions_01 = {
 		breed_chances = {
@@ -267,7 +267,7 @@ local havoc_mutator_local_settings = {
 			renegade_rifleman = 0.1,
 			renegade_shocktrooper = 0.25,
 			renegade_sniper = 0.35,
-			renegade_vanguard = 0.1,
+			renegade_vanguard = 0.1
 		},
 		buff_settings = {
 			bolstering_multiplier = {
@@ -275,7 +275,7 @@ local havoc_mutator_local_settings = {
 				default = -0.1,
 				elite = -0.05,
 				monster = -0.03,
-				special = -0.06,
+				special = -0.06
 			},
 			bolstering_stat_buffs = {
 				"unarmored_damage",
@@ -283,9 +283,9 @@ local havoc_mutator_local_settings = {
 				"disgustingly_resilient_damage",
 				"berserker_damage",
 				"armored_damage",
-				"super_armor_damage",
-			},
-		},
+				"super_armor_damage"
+			}
+		}
 	},
 	mutator_havoc_tougher_skin = {
 		breed_chances = {
@@ -323,8 +323,8 @@ local havoc_mutator_local_settings = {
 			renegade_rifleman = 0.1,
 			renegade_shocktrooper = 0.25,
 			renegade_sniper = 0.35,
-			renegade_vanguard = 0.1,
-		},
+			renegade_vanguard = 0.1
+		}
 	},
 	mutator_stimmed_minions = {
 		breed_chances = {
@@ -342,7 +342,7 @@ local havoc_mutator_local_settings = {
 			renegade_melee = 0.3,
 			renegade_plasma_gunner = 0.3,
 			renegade_rifleman = 0.5,
-			renegade_shocktrooper = 0.3,
+			renegade_shocktrooper = 0.3
 		},
 		buff_settings = {
 			blue_stimm_settings = {
@@ -353,8 +353,8 @@ local havoc_mutator_local_settings = {
 					disgustingly_resilient_damage = -0.6,
 					resistant_damage = -0.6,
 					super_armor_damage = -0.55,
-					unarmored_damage = -0.6,
-				},
+					unarmored_damage = -0.6
+				}
 			},
 			green_stimm_settings = {
 				heal_multipliers = {
@@ -362,22 +362,22 @@ local havoc_mutator_local_settings = {
 					0.6,
 					0.7,
 					0.8,
-					1,
+					1
 				},
 				stat_buff_settings = {
 					damage_taken_from_bleeding = -0.5,
 					damage_taken_from_burning = -0.5,
 					damage_taken_from_electrocution = -0.5,
 					impact_modifier = -1,
-					warp_damage = -0.5,
-				},
+					warp_damage = -0.5
+				}
 			},
 			red_stimm_settings = {
 				stat_buff_settings = {
 					impact_modifier = -2,
 					melee_attack_speed = 0.4,
-					stagger_duration_multiplier = 0.1,
-				},
+					stagger_duration_multiplier = 0.1
+				}
 			},
 			yellow_stimm_settings = {
 				hit_mass_multiplier = 1.5,
@@ -392,10 +392,10 @@ local havoc_mutator_local_settings = {
 					resistant_damage = -0.35,
 					super_armor_damage = -0.35,
 					unarmored_damage = -0.35,
-					weakspot_damage_taken = 4,
-				},
-			},
-		},
+					weakspot_damage_taken = 4
+				}
+			}
+		}
 	},
 	mutator_havoc_enraged = {
 		breed_chances = {
@@ -435,7 +435,7 @@ local havoc_mutator_local_settings = {
 			renegade_rifleman = 0,
 			renegade_shocktrooper = 1,
 			renegade_sniper = 0,
-			renegade_vanguard = 0,
+			renegade_vanguard = 0
 		},
 		buff_settings = {
 			damage_required_to_trigger = 0.5,
@@ -446,17 +446,17 @@ local havoc_mutator_local_settings = {
 			enraged_color = {
 				1,
 				0,
-				0,
+				0
 			},
 			scale = {
 				human = 1.1,
-				ogryn = 1.2,
+				ogryn = 1.2
 			},
 			stat_buff_settings = {
 				melee_attack_speed = 0.4,
-				stagger_duration_multiplier = 0.1,
-			},
-		},
+				stagger_duration_multiplier = 0.1
+			}
+		}
 	},
 	mutator_havoc_rotten_armor = {
 		breed_chances = {
@@ -491,7 +491,7 @@ local havoc_mutator_local_settings = {
 			renegade_netgunner = 0,
 			renegade_rifleman = 0,
 			renegade_shocktrooper = 0,
-			renegade_sniper = 0,
+			renegade_sniper = 0
 		},
 		buff_settings = {
 			sfx_death_name = "wwise/events/minions/play_nurgle_corpse_explode_rotten",
@@ -501,15 +501,15 @@ local havoc_mutator_local_settings = {
 				0.9,
 				0.75,
 				0.5,
-				0.25,
+				0.25
 			},
 			damage_reduction_template_names = {
 				"havoc_rotten_armor_dr_01",
 				"havoc_rotten_armor_dr_02",
 				"havoc_rotten_armor_dr_03",
 				"havoc_rotten_armor_dr_04",
-				"havoc_rotten_armor_dr_05",
-			},
+				"havoc_rotten_armor_dr_05"
+			}
 		},
 		breed_armor_type_overrides = {
 			afro = "disgustingly_resilient",
@@ -521,14 +521,14 @@ local havoc_mutator_local_settings = {
 			upper_left_arm = "disgustingly_resilient",
 			upper_left_leg = "disgustingly_resilient",
 			upper_right_arm = "disgustingly_resilient",
-			upper_right_leg = "disgustingly_resilient",
-		},
+			upper_right_leg = "disgustingly_resilient"
+		}
 	},
 	mutator_havoc_chaos_rituals = {
 		class = "scripts/managers/mutator/mutators/mutator_spawner",
 		force_horde_on_spawn = true,
 		trigger_distance = 55,
-		spawn_locations = MutatorSpawnerLocationSources.prebaked_mission_locations(),
+		spawn_locations = MutatorSpawnerLocationSources.mission_provided_gizmo(),
 		num_to_spawn_per_mission = {
 			cm_archives = 5,
 			cm_habs = 3,
@@ -550,6 +550,7 @@ local havoc_mutator_local_settings = {
 			lm_cooling = 5,
 			lm_rails = 5,
 			lm_scavenge = 5,
+			spillway = 5
 		},
 		spawners = {
 			{
@@ -559,12 +560,12 @@ local havoc_mutator_local_settings = {
 					placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
 					composition = {
 						renegade = CHAOS_DAEMONHOST_COMPOISTION,
-						cultist = CHAOS_DAEMONHOST_COMPOISTION,
+						cultist = CHAOS_DAEMONHOST_COMPOISTION
 					},
-					enemy_placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
-				},
-			},
-		},
+					enemy_placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT
+				}
+			}
+		}
 	},
 	mutator_havoc_twins_settings = {
 		class = "scripts/managers/mutator/mutators/mutator_spawner",
@@ -577,18 +578,18 @@ local havoc_mutator_local_settings = {
 				template = {
 					injection_template_settings = {
 						force_horde_on_spawn = true,
-						name = "havoc_twins",
+						name = "havoc_twins"
 					},
 					enemy_placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
 					placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
 					composition = {
 						cultist = nil,
-						renegade = nil,
-					},
-				},
-			},
-		},
-	},
+						renegade = nil
+					}
+				}
+			}
+		}
+	}
 }
 
 return settings("HavocMutatorLocalSettings", havoc_mutator_local_settings)

@@ -8,7 +8,7 @@ local ChestSystem = class("ChestSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
 	"rpc_chest_set_state",
 	"rpc_chest_hot_join",
-	"rpc_chest_despawn",
+	"rpc_chest_despawn"
 }
 
 ChestSystem.init = function (self, context, ...)

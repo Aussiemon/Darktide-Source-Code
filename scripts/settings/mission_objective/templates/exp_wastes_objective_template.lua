@@ -14,7 +14,7 @@ mission_objective_templates = {
 				objective_category = "overarching",
 				persistent_between_locations = true,
 				popups_enabled = false,
-				progress_timer = false,
+				progress_timer = false
 			},
 			expedition_loot = {
 				header = "loc_game_mode_expedition_objective_header_loot",
@@ -25,7 +25,7 @@ mission_objective_templates = {
 				objective_category = "overarching",
 				persistent_between_locations = true,
 				popups_enabled = false,
-				progress_timer = false,
+				progress_timer = false
 			},
 			expedition_rescue_player = {
 				header = "loc_game_mode_expedition_objective_header_rescue_players",
@@ -40,15 +40,16 @@ mission_objective_templates = {
 						local amount_color = Color.terminal_text_key_value(255, true)
 						local amount_text = Text.apply_color_to_text(tostring(available_rescue_loot), amount_color)
 						local new_localized_header = Localize(default_header_string, true, {
-							amount = amount_text,
+							amount = amount_text
 						})
 
 						objective:set_header(new_localized_header)
-					end,
-				},
+					end
+				}
 			},
 			objective_expedition_timer = {
 				duration = 900,
+				group_id = 0,
 				header = "loc_game_mode_expedition_objective_header_time",
 				hud_sort_order = -2,
 				mission_objective_type = "timed",
@@ -56,7 +57,7 @@ mission_objective_templates = {
 				persistent_between_locations = true,
 				popups_enabled = false,
 				progress_timer = true,
-				progression_sync_high_fidelity = true,
+				progression_sync_high_fidelity = true
 			},
 			objective_expedition_escape = {
 				additional_height = 20,
@@ -67,7 +68,7 @@ mission_objective_templates = {
 				objective_category = "overarching",
 				persistent_between_locations = true,
 				popups_enabled = false,
-				ui_state = "critical",
+				ui_state = "critical"
 			},
 			objective_expedition_clear_exit = {
 				alert_text = "loc_objective_progression_missing",
@@ -75,7 +76,7 @@ mission_objective_templates = {
 				mission_objective_type = "zone",
 				progress_bar = true,
 				title_text = "loc_expedition_critical_update_sanctuary_start",
-				ui_state = "alert",
+				ui_state = "alert"
 			},
 			objective_expedition_enter_airlock = {
 				additional_height = 20,
@@ -84,7 +85,7 @@ mission_objective_templates = {
 				hud_sort_order = -1,
 				mission_objective_type = "timed",
 				objective_category = "overarching",
-				progress_timer = false,
+				progress_timer = false
 			},
 			objective_expedition_clear_extraction = {
 				alert_text = "loc_objective_progression_missing",
@@ -92,7 +93,7 @@ mission_objective_templates = {
 				mission_objective_type = "zone",
 				progress_bar = true,
 				title_text = "loc_expedition_critical_update_extraction_start",
-				ui_state = "alert",
+				ui_state = "alert"
 			},
 			objective_expedition_enter_valkyrie = {
 				additional_height = 20,
@@ -102,7 +103,7 @@ mission_objective_templates = {
 				mission_objective_type = "timed",
 				objective_category = "overarching",
 				progress_timer = true,
-				ui_state = "alert",
+				ui_state = "alert"
 			},
 			objective_capture_zone_001 = {
 				description = "loc_objective_capture_zone_001_description",
@@ -111,7 +112,7 @@ mission_objective_templates = {
 				mission_objective_type = "zone",
 				vo_trigger_id_end = "expeditions_distraction_end_a",
 				vo_trigger_id_start = "expeditions_distraction_start_a",
-				vo_trigger_on_string = "loc_objective_wait_for_servo_skull",
+				vo_trigger_on_string = "loc_objective_wait_for_servo_skull"
 			},
 			objective_capture_zone_002 = {
 				description = "loc_objective_capture_zone_002_description",
@@ -120,7 +121,7 @@ mission_objective_templates = {
 				mission_objective_type = "zone",
 				vo_trigger_id_end = "expeditions_distraction_end_a",
 				vo_trigger_id_start = "expeditions_distraction_start_a",
-				vo_trigger_on_string = "loc_objective_wait_for_servo_skull",
+				vo_trigger_on_string = "loc_objective_wait_for_servo_skull"
 			},
 			objective_capture_zone_003 = {
 				description = "loc_objective_capture_zone_003_description",
@@ -129,30 +130,30 @@ mission_objective_templates = {
 				mission_objective_type = "zone",
 				vo_trigger_id_end = "expeditions_distraction_end_a",
 				vo_trigger_id_start = "expeditions_distraction_start_a",
-				vo_trigger_on_string = "loc_objective_wait_for_servo_skull",
+				vo_trigger_on_string = "loc_objective_wait_for_servo_skull"
 			},
 			objective_open_loot_vault = {
 				description = "loc_objective_open_loot_vault_description",
 				header = "loc_objective_open_loot_vault_header",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_capture_zone_find_servoskull_001 = {
 				description = "loc_objective_capture_zone_find_servoskull_001_description",
 				header = "loc_objective_capture_zone_find_servoskull_001_header",
 				localized_header = "Opportunity - Find the Servoskull",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_capture_zone_follow_servoskull_001 = {
 				description = "loc_objective_capture_zone_follow_servoskull_001_description",
 				header = "loc_objective_capture_zone_follow_servoskull_001_header",
 				localized_header = "Opportunity - Follow the Servoskull",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_capture_zone_use_servoskull_001 = {
 				description = "loc_objective_capture_zone_use_servoskull_001_description",
 				header = "loc_objective_capture_zone_use_servoskull_001_header",
 				localized_header = "Opportunity - Use the Servoskull",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_expedition_location_01_hacking_01 = {
 				description = "decoding objective description",
@@ -160,7 +161,7 @@ mission_objective_templates = {
 				mission_objective_type = "decode",
 				progress_bar = true,
 				vo_trigger_id_end = "expeditions_chest_unlocked_a",
-				vo_trigger_id_start = "expeditions_chest_locked_a",
+				vo_trigger_id_start = "expeditions_chest_locked_a"
 			},
 			objective_expedition_location_01_luggable_01 = {
 				description = "luggable objective description",
@@ -168,35 +169,35 @@ mission_objective_templates = {
 				mission_objective_type = "luggable",
 				progress_bar = true,
 				vo_trigger_id_end = "expeditions_power_restored_a",
-				vo_trigger_id_start = "expeditions_power_out_a",
+				vo_trigger_id_start = "expeditions_power_out_a"
 			},
 			objective_expedition_mandatory_01 = {
 				description = "mandatory_01 objective description",
 				header = "mandatory_01 objective header",
 				localized_header = "Mandatory Objective",
 				mission_objective_type = "goal",
-				progress_bar = false,
+				progress_bar = false
 			},
 			objective_expedition_extract_01 = {
 				description = "extract_01 objective description",
 				header = "extract_01 objective header",
 				localized_header = "Extract",
 				mission_objective_type = "goal",
-				progress_bar = false,
+				progress_bar = false
 			},
 			objective_expedition_extract_aa_turrent = {
 				description = "Locate and disable the Anti Air gun blocking thy extraction",
 				header = "Anti Air Gun",
 				localized_header = "Locate and Disable the Anti Air gun in this sector to be able to extract",
 				mission_objective_type = "goal",
-				progress_bar = false,
+				progress_bar = false
 			},
 			objective_expedition_safe_zone_traversal_power_off = {
 				description = "Safe door has been disabled by external forces, find and destroy them",
 				header = "Electrical bugaloo",
 				localized_header = "Safe door has been disabled by external forces, find and destroy them",
 				mission_objective_type = "goal",
-				progress_bar = false,
+				progress_bar = false
 			},
 			objective_expedition_location_03_hacking_01 = {
 				description = "decoding objective description",
@@ -204,13 +205,13 @@ mission_objective_templates = {
 				mission_objective_type = "decode",
 				progress_bar = true,
 				vo_trigger_id_end = "expeditions_chest_unlocked_a",
-				vo_trigger_id_start = "expeditions_chest_locked_a",
+				vo_trigger_id_start = "expeditions_chest_locked_a"
 			},
 			objective_expedition_location_03_hacking_02 = {
 				description = "decoding objective description",
 				header = "decoding objective header",
 				mission_objective_type = "decode",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_expedition_location_03_luggable_01 = {
 				description = "luggable objective description",
@@ -218,50 +219,50 @@ mission_objective_templates = {
 				mission_objective_type = "luggable",
 				progress_bar = true,
 				vo_trigger_id_end = "expeditions_power_restored_a",
-				vo_trigger_id_start = "expeditions_power_out_a",
+				vo_trigger_id_start = "expeditions_power_out_a"
 			},
 			objective_expedition_location_03_luggable_02 = {
 				description = "luggable objective description",
 				header = "loc_objective_deposit_luggable_header",
 				mission_objective_type = "luggable",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_expedition_location_03_payload_01 = {
 				description = "move payload description",
 				header = "move payload header",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_expedition_location_03_scanning_01 = {
 				header = "scanning objective header",
 				localized_header = "Opportunity - Scan Area",
-				mission_objective_type = "zone",
+				mission_objective_type = "zone"
 			},
 			objective_expedition_op_32m_debug_dataslate_001 = {
 				header = "scanning objective header",
 				localized_header = "Opportunity - Scan Area",
-				mission_objective_type = "zone",
+				mission_objective_type = "zone"
 			},
 			objective_expedition_op_32m_debug_dataslate_002 = {
 				description = "goal objective description",
 				header = "Open ridgehauler cargo",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_expedition_op_32m_debug_mining_drill_luggable_001 = {
 				description = "luggable objective description",
 				header = "loc_objective_deposit_luggable_header",
 				mission_objective_type = "luggable",
 				vo_trigger_id_end = "expeditions_power_restored_a",
-				vo_trigger_id_start = "expeditions_power_out_a",
+				vo_trigger_id_start = "expeditions_power_out_a"
 			},
 			objective_expedition_op_32m_debug_mining_drill_start_001 = {
 				description = "move payload description",
 				header = "Override the machine",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_expedition_op_32m_debug_mining_drill_hit_001 = {
 				description = "move payload description",
 				header = "Destroy the ore hatch",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_expedition_wait_20s = {
 				description = "wait 40s objective description",
@@ -269,7 +270,7 @@ mission_objective_templates = {
 				header = "wait 20s objective header",
 				localized_header = "Wait 20s",
 				mission_objective_type = "timed",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_expedition_wait_40s = {
 				description = "wait 40s objective description",
@@ -277,82 +278,82 @@ mission_objective_templates = {
 				header = "wait 40s objective header",
 				localized_header = "Wait 40s",
 				mission_objective_type = "timed",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_expedition_luggable = {
 				description = "luggable objective description",
 				header = "loc_objective_deposit_luggable_header",
 				mission_objective_type = "luggable",
 				vo_trigger_id_end = "expeditions_power_restored_a",
-				vo_trigger_id_start = "expeditions_power_out_a",
+				vo_trigger_id_start = "expeditions_power_out_a"
 			},
 			objective_expedition_hacking_001 = {
 				description = "decoding objective description",
 				header = "loc_objective_decode_objective_header",
 				mission_objective_type = "decode",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_expedition_hacking_002 = {
 				description = "decoding objective description",
 				header = "loc_objective_decode_objective_header",
 				mission_objective_type = "decode",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_expedition_hacking_003 = {
 				description = "decoding objective description",
 				header = "loc_objective_decode_objective_header",
 				mission_objective_type = "decode",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_expedition_dataslate = {
 				description = "grab data-slate description",
 				header = "Grab the data-slate",
 				localized_header = "Grab Data-slate",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_expedition_lower_contraption = {
 				description = "lower contraption description",
 				header = "Lower the contraption",
 				localized_header = "Lower Contraption",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_expedition_eliminate_target_001 = {
 				description = "kill the captain or die trying",
 				header = "kill the captain",
 				localized_header = "Kill the Captain",
-				mission_objective_type = "kill",
+				mission_objective_type = "kill"
 			},
 			objective_expedition_find_dataslate = {
 				description = "dig for data-slate description",
 				header = "Dig for the data-slate",
 				localized_header = "Opportunity - Find Data-slate",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_expedition_luggable_48m_radio_001 = {
 				description = "luggable objective description",
 				header = "loc_objective_deposit_luggable_header",
 				mission_objective_type = "luggable",
 				vo_trigger_id_end = "expeditions_power_restored_a",
-				vo_trigger_id_start = "expeditions_power_out_a",
+				vo_trigger_id_start = "expeditions_power_out_a"
 			},
 			objective_expedition_hacking_48m_radio_001 = {
 				description = "decoding objective description",
 				header = "loc_objective_decode_objective_header",
 				mission_objective_type = "decode",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_expedition_send_signal_48m_radio_001 = {
 				description = "send  encoded signal description",
 				header = "Send the encoded signal",
 				localized_header = "Opportunity - Send the signal",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_op_64m_luggable_building_001_01 = {
 				description = "luggable objective description",
 				header = "loc_objective_deposit_luggable_header",
 				mission_objective_type = "luggable",
 				vo_trigger_id_end = "expeditions_power_restored_a",
-				vo_trigger_id_start = "expeditions_power_out_a",
+				vo_trigger_id_start = "expeditions_power_out_a"
 			},
 			objective_op_64m_luggable_building_001_02 = {
 				description = "open the cells",
@@ -360,13 +361,13 @@ mission_objective_templates = {
 				localized_header = "Opportunity - Open cells",
 				mission_objective_type = "goal",
 				vo_mission_giver = "pilot_a",
-				vo_trigger_id_start = "expeditions_sealed_door_a",
+				vo_trigger_id_start = "expeditions_sealed_door_a"
 			},
 			objective_op_64m_heist_002_01 = {
 				description = "Start the mining lift",
 				header = "Start the mining lift",
 				localized_header = "Opportunity - Start the mining lift",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_op_64m_heist_002_02 = {
 				description = "Wait for the mining lift to arrive",
@@ -374,76 +375,76 @@ mission_objective_templates = {
 				header = "Wait for the mining lift to arrive",
 				localized_header = "Opportunity - Wait for the mining lift to arrive",
 				mission_objective_type = "timed",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_op_48m_luggable_building_001_01 = {
 				description = "luggable objective description",
 				header = "loc_objective_deposit_luggable_header",
 				mission_objective_type = "luggable",
 				vo_trigger_id_end = "expeditions_power_restored_a",
-				vo_trigger_id_start = "expeditions_power_out_a",
+				vo_trigger_id_start = "expeditions_power_out_a"
 			},
 			objective_op_48m_luggable_building_001_02 = {
 				description = "open the storage",
 				header = "loc_objective_open_storage_header",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_op_48m_luggable_building_003_01 = {
 				description = "Power up the generator",
 				header = "loc_objective_deposit_luggable_header",
 				mission_objective_type = "luggable",
 				vo_trigger_id_end = "expeditions_power_restored_a",
-				vo_trigger_id_start = "expeditions_power_out_a",
+				vo_trigger_id_start = "expeditions_power_out_a"
 			},
 			objective_op_64m_luggable_building_003_01 = {
 				description = "Power up the generator",
 				header = "loc_objective_deposit_luggable_header",
 				mission_objective_type = "luggable",
 				vo_trigger_id_end = "expeditions_power_restored_a",
-				vo_trigger_id_start = "expeditions_power_out_a",
+				vo_trigger_id_start = "expeditions_power_out_a"
 			},
 			objective_op_64m_luggable_building_003_02 = {
 				description = "Loot the storage",
 				header = "loc_objective_loot_storage_header",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_op_32m_luggable_building_001_01 = {
 				description = "luggable objective description",
 				header = "loc_objective_deposit_luggable_header",
 				mission_objective_type = "luggable",
 				vo_trigger_id_end = "expeditions_power_restored_a",
-				vo_trigger_id_start = "expeditions_power_out_a",
+				vo_trigger_id_start = "expeditions_power_out_a"
 			},
 			objective_op_32m_luggable_building_001_02 = {
 				description = "open the storage",
 				header = "loc_objective_open_storage_header",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_op_32m_luggable_building_001_var_hack_01 = {
 				description = "Turn on the power",
 				header = "loc_objective_turn_on_power_header",
 				mission_objective_type = "goal",
 				vo_trigger_id_end = "expeditions_power_restored_a",
-				vo_trigger_id_start = "expeditions_power_out_a",
+				vo_trigger_id_start = "expeditions_power_out_a"
 			},
 			objective_op_32m_luggable_building_002_01 = {
 				description = "luggable objective description",
 				header = "loc_objective_deposit_luggable_header",
 				mission_objective_type = "luggable",
 				vo_trigger_id_end = "expeditions_power_restored_a",
-				vo_trigger_id_start = "expeditions_power_out_a",
+				vo_trigger_id_start = "expeditions_power_out_a"
 			},
 			objective_op_32m_luggable_building_002_02 = {
 				description = "open the storage",
 				header = "loc_objective_open_storage_header",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_op_32m_luggable_building_003_01 = {
 				description = "luggable objective description",
 				header = "loc_objective_deposit_luggable_header",
 				mission_objective_type = "luggable",
 				vo_trigger_id_end = "expeditions_power_restored_a",
-				vo_trigger_id_start = "expeditions_power_out_a",
+				vo_trigger_id_start = "expeditions_power_out_a"
 			},
 			objective_op_32m_hack_door_001 = {
 				description = "decoding objective description",
@@ -451,7 +452,7 @@ mission_objective_templates = {
 				mission_objective_type = "decode",
 				progress_bar = true,
 				vo_mission_giver = "pilot_a",
-				vo_trigger_id_start = "expeditions_sealed_door_a",
+				vo_trigger_id_start = "expeditions_sealed_door_a"
 			},
 			objective_op_32m_hack_door_002 = {
 				description = "decoding objective description",
@@ -459,25 +460,25 @@ mission_objective_templates = {
 				mission_objective_type = "decode",
 				progress_bar = true,
 				vo_mission_giver = "pilot_a",
-				vo_trigger_id_start = "expeditions_sealed_door_a",
+				vo_trigger_id_start = "expeditions_sealed_door_a"
 			},
 			objective_op_32m_destructible_test_001 = {
 				description = "demolition objective description",
 				header = "Destroy chains",
 				localized_header = "Opportunity - Destroy Chains",
-				mission_objective_type = "demolition",
+				mission_objective_type = "demolition"
 			},
 			objective_op_64m_dome_dot_start_event_001 = {
 				description = "shut down the machine",
 				header = "Shutdown machine",
 				localized_header = "Opportunity - Shutdown machine",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_op_64m_dome_dot_overload_event_001 = {
 				description = "overload the machine",
 				header = "Overload machine",
 				localized_header = "Opportunity - Overload the machine",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_op_32m_hacking_chest_001 = {
 				description = "decoding objective description",
@@ -485,7 +486,7 @@ mission_objective_templates = {
 				mission_objective_type = "decode",
 				progress_bar = true,
 				vo_trigger_id_end = "expeditions_chest_unlocked_a",
-				vo_trigger_id_start = "expeditions_chest_locked_a",
+				vo_trigger_id_start = "expeditions_chest_locked_a"
 			},
 			objective_op_32m_hacking_chest_002 = {
 				description = "decoding objective description",
@@ -493,7 +494,7 @@ mission_objective_templates = {
 				mission_objective_type = "decode",
 				progress_bar = true,
 				vo_trigger_id_end = "expeditions_chest_unlocked_a",
-				vo_trigger_id_start = "expeditions_chest_locked_a",
+				vo_trigger_id_start = "expeditions_chest_locked_a"
 			},
 			objective_op_16m_hacking_chest_001 = {
 				description = "decoding objective description",
@@ -501,13 +502,13 @@ mission_objective_templates = {
 				mission_objective_type = "decode",
 				progress_bar = true,
 				vo_trigger_id_end = "expeditions_chest_unlocked_a",
-				vo_trigger_id_start = "expeditions_chest_locked_a",
+				vo_trigger_id_start = "expeditions_chest_locked_a"
 			},
 			objective_op_16m_hacking_chest_stall_001 = {
 				description = "decoding objective description",
 				header = "loc_objective_decode_objective_header",
 				mission_objective_type = "decode",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_op_16m_hacking_chest_002 = {
 				description = "decoding objective description",
@@ -515,44 +516,44 @@ mission_objective_templates = {
 				mission_objective_type = "decode",
 				progress_bar = true,
 				vo_trigger_id_end = "expeditions_chest_unlocked_a",
-				vo_trigger_id_start = "expeditions_chest_locked_a",
+				vo_trigger_id_start = "expeditions_chest_locked_a"
 			},
 			objective_op_16m_hacking_chest_stall_002 = {
 				description = "decoding objective description",
 				header = "loc_objective_decode_objective_header",
 				mission_objective_type = "decode",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_op_48m_fort_antenna_align_001 = {
 				description = "align the antenna",
 				header = "Align the antenna",
 				localized_header = "Opportunity - Align the antenna",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_op_16m_destructible_test_001 = {
 				description = "demolition objective description",
 				header = "Destroy hinges",
 				localized_header = "Opportunity - Destroy Hinges",
-				mission_objective_type = "demolition",
+				mission_objective_type = "demolition"
 			},
 			objective_op_16m_power_leak_001 = {
 				description = "disable power",
 				header = "loc_objective_disable_power",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_op_32m_vault_001 = {
 				description = "find a way inside the vault",
 				header = "loc_objective_open_vault_header",
 				mission_objective_type = "luggable",
 				vo_mission_giver = "pilot_a",
-				vo_trigger_id_start = "expeditions_sealed_door_a",
+				vo_trigger_id_start = "expeditions_sealed_door_a"
 			},
 			objective_op_32m_vault_003 = {
 				description = "find a way inside the vault",
 				header = "loc_objective_open_vault_header",
 				mission_objective_type = "luggable",
 				vo_mission_giver = "pilot_a",
-				vo_trigger_id_start = "expeditions_sealed_door_a",
+				vo_trigger_id_start = "expeditions_sealed_door_a"
 			},
 			objective_op_32m_vault_002 = {
 				description = "find a way inside the vault",
@@ -560,7 +561,7 @@ mission_objective_templates = {
 				hidden = true,
 				mission_objective_type = "luggable",
 				vo_mission_giver = "pilot_a",
-				vo_trigger_id_start = "expeditions_sealed_door_a",
+				vo_trigger_id_start = "expeditions_sealed_door_a"
 			},
 			objective_op_48m_heist_002 = {
 				description = "find a way inside the vault",
@@ -568,71 +569,71 @@ mission_objective_templates = {
 				localized_header = "Opportunity - Find a way inside the Vault",
 				mission_objective_type = "luggable",
 				vo_mission_giver = "pilot_a",
-				vo_trigger_id_start = "expeditions_sealed_door_a",
+				vo_trigger_id_start = "expeditions_sealed_door_a"
 			},
 			objective_expedition_loot_deadsider_stash = {
 				description = "access the deadsider stash",
 				header = "loc_objective_access_deadsider_stash_header",
 				mission_objective_type = "goal",
 				vo_mission_giver = "pilot_a",
-				vo_trigger_id_start = "expeditions_sealed_door_a",
+				vo_trigger_id_start = "expeditions_sealed_door_a"
 			},
 			objective_op_48m_deadsider_stash_decode = {
 				description = "decoding objective description",
 				header = "loc_objective_decode_objective_header",
 				hidden = true,
 				mission_objective_type = "decode",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_op_48m_deadsider_stash_demo_001 = {
 				description = "demolition objective description",
 				header = "Unblock minecart",
 				hidden = true,
 				localized_header = "Opportunity - Unblock minecart",
-				mission_objective_type = "demolition",
+				mission_objective_type = "demolition"
 			},
 			objective_op_32m_mine_cart_001_start_elevator = {
 				description = "start the elevator",
 				header = "Start the elevator",
 				localized_header = "Opportunity - Start elevator",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_op_32m_mine_cart_001_demo = {
 				description = "demolition objective description",
 				header = "Break Chains",
 				localized_header = "Opportunity - Break Chains",
-				mission_objective_type = "demolition",
+				mission_objective_type = "demolition"
 			},
 			objective_op_32m_mine_cart_001_tip_cart = {
 				description = "tip mine cart over",
 				header = "Tip mine cart over",
 				localized_header = "Opportunity - Tip mine cart over",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_expedition_hack_minigame_only = {
 				description = "decoding objective description",
 				header = "loc_objective_decode_objective_header",
 				hidden = true,
-				mission_objective_type = "decode",
+				mission_objective_type = "decode"
 			},
 			objective_op_48m_fort_dot_001_disable = {
 				description = "disable the power",
 				header = "Disable the power",
 				localized_header = "Opportunity - Disable power",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_op_48m_fort_dot_001_luggable = {
 				description = "luggable objective description",
 				header = "loc_objective_deposit_luggable_header",
 				hidden = true,
-				mission_objective_type = "luggable",
+				mission_objective_type = "luggable"
 			},
 			objective_op_48m_fort_dot_001_decode = {
 				description = "decoding objective description",
 				header = "loc_objective_decode_objective_header",
 				hidden = true,
 				mission_objective_type = "decode",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_op_32m_locked_ds_countdown = {
 				description = "prevent Deadsider stash from being destroyed",
@@ -640,20 +641,20 @@ mission_objective_templates = {
 				header = "Prevent Deadsider stash from being destroyed",
 				localized_header = "Prevent Deadsider stash from being destroyed",
 				mission_objective_type = "timed",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_op_16m_drop_pod_demo_001 = {
 				description = "demolition objective description",
 				header = "Unblock minecart",
 				hidden = true,
 				localized_header = "Opportunity - Open the drop pod",
-				mission_objective_type = "demolition",
+				mission_objective_type = "demolition"
 			},
 			objective_op_32m_mine_cart_002_01 = {
 				description = "Operate the mining lift",
 				header = "Operate the mining lift",
 				localized_header = "Opportunity - Operate the mining lift",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_op_32m_mine_cart_002_02 = {
 				description = "Wait for the mining lift to arrive",
@@ -661,32 +662,32 @@ mission_objective_templates = {
 				header = "Wait for the mining lift to arrive",
 				localized_header = "Opportunity - Wait for the mining lift to arrive",
 				mission_objective_type = "timed",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_op_48m_fort_generator_001_01 = {
 				description = "start the generator",
 				header = "loc_objective_start_generator_header",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_op_48m_fort_generator_001_02 = {
 				description = "open door",
 				header = "loc_objective_open_door_header",
 				hidden = true,
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_op_64m_mining_001 = {
 				description = "Loot the mine",
 				header = "loc_objective_loot_mine_header",
 				mission_objective_type = "goal",
 				vo_mission_giver = "pilot_a",
-				vo_trigger_id_start = "expeditions_place_explosives_a",
+				vo_trigger_id_start = "expeditions_place_explosives_a"
 			},
 			objective_op_64m_mining_002 = {
 				description = "Loot the mine",
 				header = "loc_objective_loot_mine_header",
 				mission_objective_type = "goal",
 				vo_mission_giver = "pilot_a",
-				vo_trigger_id_start = "expeditions_place_explosives_a",
+				vo_trigger_id_start = "expeditions_place_explosives_a"
 			},
 			objective_op_64m_fort_boss_001 = {
 				description = "Open the gate",
@@ -694,20 +695,20 @@ mission_objective_templates = {
 				localized_header = "Opportunity - Open the gate",
 				mission_objective_type = "goal",
 				vo_mission_giver = "pilot_a",
-				vo_trigger_id_start = "expeditions_sealed_door_a",
+				vo_trigger_id_start = "expeditions_sealed_door_a"
 			},
 			objective_op_48m_mining_001_01 = {
 				description = "Use the battery",
 				header = "loc_objective_deposit_luggable_header",
 				mission_objective_type = "luggable",
 				vo_trigger_id_end = "expeditions_power_restored_a",
-				vo_trigger_id_start = "expeditions_power_out_a",
+				vo_trigger_id_start = "expeditions_power_out_a"
 			},
 			objective_op_48m_mining_001_02 = {
 				description = "Start the mining lift",
 				header = "Start the mining lift",
 				localized_header = "Opportunity - Start the mining lift",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_op_48m_mining_001_03 = {
 				description = "Wait for the mining lift to arrive",
@@ -715,27 +716,27 @@ mission_objective_templates = {
 				header = "Wait for the mining lift to arrive",
 				localized_header = "Opportunity - Wait for the mining lift to arrive",
 				mission_objective_type = "timed",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_op_48m_mining_002 = {
 				description = "Loot the mine",
 				header = "loc_objective_loot_mine_header",
 				mission_objective_type = "goal",
 				vo_mission_giver = "pilot_a",
-				vo_trigger_id_start = "expeditions_place_explosives_a",
+				vo_trigger_id_start = "expeditions_place_explosives_a"
 			},
 			objective_op_48m_mining_003_01 = {
 				description = "Use the battery",
 				header = "loc_objective_deposit_luggable_header",
 				mission_objective_type = "luggable",
 				vo_trigger_id_end = "expeditions_power_restored_a",
-				vo_trigger_id_start = "expeditions_power_out_a",
+				vo_trigger_id_start = "expeditions_power_out_a"
 			},
 			objective_op_48m_mining_003_02 = {
 				description = "Start the mining lift",
 				header = "Start the mining lift",
 				localized_header = "Opportunity - Start the mining lift",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_op_48m_mining_003_03 = {
 				description = "Wait for the mining lift to arrive",
@@ -743,19 +744,19 @@ mission_objective_templates = {
 				header = "Wait for the mining lift to arrive",
 				localized_header = "Opportunity - Wait for the mining lift to arrive",
 				mission_objective_type = "timed",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_op_48m_mining_004_01 = {
 				description = "loc_objective_deposit_luggable_header",
 				mission_objective_type = "luggable",
 				vo_trigger_id_end = "expeditions_power_restored_a",
-				vo_trigger_id_start = "expeditions_power_out_a",
+				vo_trigger_id_start = "expeditions_power_out_a"
 			},
 			objective_op_48m_mining_004_02 = {
 				description = "Move the minecarts",
 				header = "Move the minecarts",
 				localized_header = "Opportunity - Move the minecarts",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_op_48m_mining_004_03 = {
 				description = "Wait for the minecarts to clear the path",
@@ -763,20 +764,20 @@ mission_objective_templates = {
 				header = "Wait for the minecarts to clear the path",
 				localized_header = "Opportunity - Wait for the minecarts to clear the path",
 				mission_objective_type = "timed",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_op_32m_mining_001_01 = {
 				description = "Use the battery",
 				header = "loc_objective_deposit_luggable_header",
 				mission_objective_type = "luggable",
 				vo_trigger_id_end = "expeditions_power_restored_a",
-				vo_trigger_id_start = "expeditions_power_out_a",
+				vo_trigger_id_start = "expeditions_power_out_a"
 			},
 			objective_op_32m_mining_001_02 = {
 				description = "Start the mining lift",
 				header = "Start the mining lift",
 				localized_header = "Opportunity - Start the mining lift",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_op_32m_mining_001_03 = {
 				description = "Wait for the mining lift to arrive",
@@ -784,163 +785,172 @@ mission_objective_templates = {
 				header = "Wait for the mining lift to arrive",
 				localized_header = "Opportunity - Wait for the mining lift to arrive",
 				mission_objective_type = "timed",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_op_64m_spheres_001_set_a = {
 				description = "decoding objective description",
 				header = "decoding objective header",
 				localized_header = "Opportunity - Decode Objective",
 				mission_objective_type = "decode",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_op_64m_spheres_001_set_a_double = {
 				description = "decoding objective description",
 				header = "decoding objective header",
 				localized_header = "Opportunity - Decode Objective",
 				mission_objective_type = "decode",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_op_64m_spheres_001_set_b = {
 				description = "decoding objective description",
 				header = "decoding objective header",
 				localized_header = "Opportunity - Decode Objective",
 				mission_objective_type = "decode",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_op_64m_spheres_001_set_b_double = {
 				description = "decoding objective description",
 				header = "decoding objective header",
 				localized_header = "Opportunity - Decode Objective",
 				mission_objective_type = "decode",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_op_64m_spheres_001_set_c = {
 				description = "decoding objective description",
 				header = "decoding objective header",
 				localized_header = "Opportunity - Decode Objective",
 				mission_objective_type = "decode",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_op_64m_spheres_001_set_c_double = {
 				description = "decoding objective description",
 				header = "decoding objective header",
 				localized_header = "Opportunity - Decode Objective",
 				mission_objective_type = "decode",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_op_64m_spheres_001_set_d = {
 				description = "decoding objective description",
 				header = "decoding objective header",
 				localized_header = "Opportunity - Decode Objective",
 				mission_objective_type = "decode",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_op_64m_spheres_001_set_d_double = {
 				description = "decoding objective description",
 				header = "decoding objective header",
 				localized_header = "Opportunity - Decode Objective",
 				mission_objective_type = "decode",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_op_64m_spheres_001_set_e = {
 				description = "decoding objective description",
 				header = "decoding objective header",
 				localized_header = "Opportunity - Decode Objective",
 				mission_objective_type = "decode",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_op_64m_spheres_001_set_e_double = {
 				description = "decoding objective description",
 				header = "decoding objective header",
 				localized_header = "Opportunity - Decode Objective",
 				mission_objective_type = "decode",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_op_64m_spheres_001_set_f = {
 				description = "decoding objective description",
 				header = "decoding objective header",
 				localized_header = "Opportunity - Decode Objective",
 				mission_objective_type = "decode",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_op_48m_ritual_001 = {
 				description = "Kill all ritualists before they summon",
 				duration = 40,
 				header = "Kill all ritualists before they summon",
-				localized_header = "Opportunity - Kill all ritualists",
+				localized_header = "Kill all ritualists",
 				mission_objective_type = "timed",
-				progress_bar = true,
+				progress_bar = true
+			},
+			objective_op_64m_ritual_001 = {
+				description = "Kill all ritualists before they summon",
+				duration = 60,
+				group_id = 0,
+				header = "Kill all ritualists before they summon",
+				localized_header = "Kill all ritualists",
+				mission_objective_type = "timed",
+				progress_bar = true
 			},
 			objective_op_48m_spheres_001_01 = {
 				description = "open the shutter",
 				header = "Open the shutter",
 				localized_header = "Opportunity - Open the shutter",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_op_48m_spheres_001_02 = {
 				description = "decoding objective description",
 				header = "loc_objective_decode_objective_header",
 				mission_objective_type = "decode",
-				progress_bar = true,
+				progress_bar = true
 			},
 			objective_op_48m_spheres_001_03 = {
 				description = "Use the battery",
 				header = "loc_objective_deposit_luggable_header",
-				mission_objective_type = "luggable",
+				mission_objective_type = "luggable"
 			},
 			objective_op_32m_drop_pod_001_01 = {
 				description = "loc_objective_op_32m_drop_pod_001_01_description",
 				duration = 30,
 				header = "loc_objective_op_32m_drop_pod_001_01_header",
-				mission_objective_type = "zone",
+				mission_objective_type = "zone"
 			},
 			objective_op_32m_drop_pod_001_02 = {
 				description = "loc_objective_op_32m_drop_pod_001_02_description",
 				duration = 30,
 				header = "loc_objective_op_32m_drop_pod_001_02_header",
-				mission_objective_type = "zone",
+				mission_objective_type = "zone"
 			},
 			objective_op_32m_drop_pod_001_03 = {
 				description = "loc_objective_op_32m_drop_pod_001_03_description",
 				duration = 30,
 				header = "loc_objective_op_32m_drop_pod_001_03_header",
-				mission_objective_type = "zone",
+				mission_objective_type = "zone"
 			},
 			objective_op_48m_extract_data_001_01 = {
 				description = "defend the area during data transfer",
 				duration = 45,
 				header = "Defend the area during data transfer",
-				mission_objective_type = "zone",
+				mission_objective_type = "zone"
 			},
 			objective_op_48m_extract_data_001_02 = {
 				description = "return to area before the signal is lost!",
 				duration = 10,
 				header = "Return to area before the signal is lost!",
-				mission_objective_type = "timed",
+				mission_objective_type = "timed"
 			},
 			objective_op_48m_extract_data_001_03 = {
 				description = "Extract data",
 				header = "Extract data",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_op_16m_buried_treasure_001_01 = {
 				description = "Place device",
 				header = "Place device",
-				mission_objective_type = "goal",
+				mission_objective_type = "goal"
 			},
 			objective_op_16m_buried_treasure_001_02 = {
 				description = "loc_objective_op_48m_buried_treasure_001_02_description",
 				duration = 15,
 				header = "loc_objective_op_48m_buried_treasure_001_02_header",
-				mission_objective_type = "zone",
+				mission_objective_type = "zone"
 			},
 			objective_op_32m_scale_zone_001_01 = {
 				description = "start drain sequence",
 				header = "Start drain sequence",
-				mission_objective_type = "goal",
-			},
-		},
-	},
+				mission_objective_type = "goal"
+			}
+		}
+	}
 }
 
 return mission_objective_templates

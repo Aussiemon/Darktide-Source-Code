@@ -3,19 +3,19 @@
 local node_definitions = require("scripts/ui/views/talent_builder_view/talent_builder_view_node_definitions")
 local summary_window_size = {
 	800,
-	800,
+	800
 }
 local summary_grid_size = {
 	summary_window_size[1] - 40,
-	summary_window_size[2] - 100,
+	summary_window_size[2] - 100
 }
 local tutorial_window_size = {
 	900,
-	576,
+	576
 }
 local tutorial_grid_size = {
 	tutorial_window_size[1] - 420,
-	tutorial_window_size[2] - 225,
+	tutorial_window_size[2] - 225
 }
 local talent_builder_view_settings = {
 	tooltip_fade_delay = 0.3,
@@ -30,50 +30,38 @@ local talent_builder_view_settings = {
 			button_2 = "loc_next",
 			header = "loc_talent_menu_tutorial_header_1",
 			image = "content/ui/materials/frames/talents/tutorial/talent_tree_tutorial_bg_01",
-			text = "loc_talent_menu_tutorial_body_1",
+			text = "loc_talent_menu_tutorial_body_1"
 		},
 		{
 			button_1 = "loc_previous",
 			button_2 = "loc_next",
 			header = "loc_talent_menu_tutorial_header_2",
 			image = "content/ui/materials/frames/talents/tutorial/talent_tree_tutorial_bg_02",
-			text = "loc_talent_menu_tutorial_body_2",
+			text = "loc_talent_menu_tutorial_body_2"
 		},
 		{
 			button_1 = "loc_previous",
 			button_2 = "loc_talent_menu_tutorial_final_button_label",
 			header = "loc_talent_menu_tutorial_header_4",
 			image = "content/ui/materials/frames/talents/tutorial/talent_tree_tutorial_bg_03",
-			text = "loc_talent_menu_tutorial_body_4",
-		},
+			text = "loc_talent_menu_tutorial_body_4"
+		}
 	},
 	node_gradient_colors = {
-		"content/ui/textures/color_ramps/class_node_colors/adamant_01",
-		"content/ui/textures/color_ramps/class_node_colors/adamant_02",
-		"content/ui/textures/color_ramps/class_node_colors/adamant_03",
-		"content/ui/textures/color_ramps/class_node_colors/cryptic_01",
-		"content/ui/textures/color_ramps/class_node_colors/cryptic_02",
-		"content/ui/textures/color_ramps/class_node_colors/cryptic_03",
-		"content/ui/textures/color_ramps/class_node_colors/ogryn_01",
-		"content/ui/textures/color_ramps/class_node_colors/ogryn_02",
-		"content/ui/textures/color_ramps/class_node_colors/ogryn_03",
-		"content/ui/textures/color_ramps/class_node_colors/psyker_01",
-		"content/ui/textures/color_ramps/class_node_colors/psyker_02",
-		"content/ui/textures/color_ramps/class_node_colors/psyker_03",
-		"content/ui/textures/color_ramps/class_node_colors/veteran_01",
-		"content/ui/textures/color_ramps/class_node_colors/veteran_02",
-		"content/ui/textures/color_ramps/class_node_colors/veteran_03",
-		"content/ui/textures/color_ramps/class_node_colors/zealot_01",
-		"content/ui/textures/color_ramps/class_node_colors/zealot_02",
-		"content/ui/textures/color_ramps/class_node_colors/zealot_03",
+		"not_selected",
+		"content/ui/textures/color_ramps/talent_ability",
+		"content/ui/textures/color_ramps/talent_aura",
+		"content/ui/textures/color_ramps/talent_blitz",
+		"content/ui/textures/color_ramps/talent_default",
+		"content/ui/textures/color_ramps/talent_keystone"
 	},
 	settings_by_node_type = {
 		start = {
 			node_definition = node_definitions.node_definition_start,
 			size = {
 				120,
-				120,
-			},
+				120
+			}
 		},
 		stat = {
 			display_name = "loc_glossary_talent_stat",
@@ -82,8 +70,8 @@ local talent_builder_view_settings = {
 			node_definition = node_definitions.node_definition_stat,
 			size = {
 				82,
-				82,
-			},
+				82
+			}
 		},
 		iconic = {
 			display_name = "loc_class_selection_class_iconic",
@@ -92,8 +80,8 @@ local talent_builder_view_settings = {
 			node_definition = node_definitions.node_definition_stat,
 			size = {
 				82,
-				82,
-			},
+				82
+			}
 		},
 		tactical = {
 			display_name = "loc_glossary_term_tactical",
@@ -106,8 +94,8 @@ local talent_builder_view_settings = {
 			node_definition = node_definitions.node_definition_tactical,
 			size = {
 				110,
-				110,
-			},
+				110
+			}
 		},
 		tactical_modifier = {
 			display_name = "loc_glossary_term_tactical",
@@ -119,8 +107,8 @@ local talent_builder_view_settings = {
 			node_definition = node_definitions.node_definition_tactical_modifier,
 			size = {
 				75,
-				75,
-			},
+				75
+			}
 		},
 		ability = {
 			display_name = "loc_glossary_term_class_ability",
@@ -133,8 +121,8 @@ local talent_builder_view_settings = {
 			node_definition = node_definitions.node_definition_ability,
 			size = {
 				132,
-				132,
-			},
+				132
+			}
 		},
 		ability_modifier = {
 			display_name = "loc_glossary_talent_ability_modifier",
@@ -146,8 +134,8 @@ local talent_builder_view_settings = {
 			node_definition = node_definitions.node_definition_ability_modifier,
 			size = {
 				80,
-				80,
-			},
+				80
+			}
 		},
 		aura = {
 			display_name = "loc_glossary_term_aura",
@@ -160,8 +148,8 @@ local talent_builder_view_settings = {
 			node_definition = node_definitions.node_definition_aura,
 			size = {
 				110,
-				110,
-			},
+				110
+			}
 		},
 		aura_modifier = {
 			display_name = "loc_glossary_talent_aura_modifier",
@@ -173,8 +161,8 @@ local talent_builder_view_settings = {
 			node_definition = node_definitions.node_definition,
 			size = {
 				80,
-				80,
-			},
+				80
+			}
 		},
 		keystone = {
 			display_name = "loc_glossary_talent_keystone",
@@ -187,8 +175,8 @@ local talent_builder_view_settings = {
 			node_definition = node_definitions.node_definition_keystone,
 			size = {
 				110,
-				110,
-			},
+				110
+			}
 		},
 		keystone_modifier = {
 			display_name = "loc_glossary_talent_keystone_modifier",
@@ -200,8 +188,8 @@ local talent_builder_view_settings = {
 			node_definition = node_definitions.node_definition,
 			size = {
 				80,
-				80,
-			},
+				80
+			}
 		},
 		default = {
 			display_name = "loc_glossary_talent_default",
@@ -213,8 +201,8 @@ local talent_builder_view_settings = {
 			node_definition = node_definitions.node_definition,
 			size = {
 				80,
-				80,
-			},
+				80
+			}
 		},
 		broker_stimm = {
 			display_name = "loc_stimm_lab_recipe",
@@ -226,39 +214,39 @@ local talent_builder_view_settings = {
 			node_definition = node_definitions.node_definition_broker_stimm,
 			size = {
 				110,
-				110,
-			},
-		},
+				110
+			}
+		}
 	},
 	archetype_starting_talent_nodes_offset = {
 		adamant = {
-			2,
-			-20,
+			0,
+			0
 		},
 		broker = {
 			0,
-			0,
+			0
 		},
 		cryptic = {
-			2,
-			-20,
+			0,
+			0
 		},
 		ogryn = {
-			2,
-			-20,
+			0,
+			0
 		},
 		psyker = {
-			33,
-			-25,
+			0,
+			0
 		},
 		veteran = {
-			60,
-			-20,
+			0,
+			0
 		},
 		zealot = {
-			-30,
-			35,
-		},
+			0,
+			0
+		}
 	},
 	archetype_backgrounds_by_name = {
 		adamant = "content/ui/materials/frames/talents/talent_bg_top_gradient_adamant",
@@ -267,27 +255,27 @@ local talent_builder_view_settings = {
 		ogryn = "content/ui/materials/frames/talents/talent_bg_top_gradient_ogryn",
 		psyker = "content/ui/materials/frames/talents/talent_bg_top_gradient_psyker",
 		veteran = "content/ui/materials/frames/talents/talent_bg_top_gradient_veteran",
-		zealot = "content/ui/materials/frames/talents/talent_bg_top_gradient_zealot",
+		zealot = "content/ui/materials/frames/talents/talent_bg_top_gradient_zealot"
 	},
 	node_text_colors = {
 		default = {
 			255,
 			120,
 			120,
-			120,
+			120
 		},
 		chosen = {
 			255,
 			93,
 			118,
-			202,
+			202
 		},
 		maxed_out = {
 			255,
 			255,
 			255,
-			255,
-		},
+			255
+		}
 	},
 	archetype_glow_colors = {
 		adamant = {
@@ -296,29 +284,29 @@ local talent_builder_view_settings = {
 					255,
 					224,
 					250,
-					255,
+					255
 				},
 				blur_color = {
 					255,
 					99,
 					167,
-					176,
-				},
+					176
+				}
 			},
 			line_available = {
 				fill_color = {
 					255,
 					39,
 					74,
-					78,
+					78
 				},
 				blur_color = {
 					127,
 					42,
 					55,
-					59,
-				},
-			},
+					59
+				}
+			}
 		},
 		cryptic = {
 			line_chosen = {
@@ -326,29 +314,29 @@ local talent_builder_view_settings = {
 					255,
 					224,
 					250,
-					255,
+					255
 				},
 				blur_color = {
 					255,
 					99,
 					167,
-					176,
-				},
+					176
+				}
 			},
 			line_available = {
 				fill_color = {
 					255,
 					39,
 					74,
-					78,
+					78
 				},
 				blur_color = {
 					127,
 					42,
 					55,
-					59,
-				},
-			},
+					59
+				}
+			}
 		},
 		psyker = {
 			line_chosen = {
@@ -356,29 +344,29 @@ local talent_builder_view_settings = {
 					255,
 					224,
 					250,
-					255,
+					255
 				},
 				blur_color = {
 					255,
 					99,
 					167,
-					176,
-				},
+					176
+				}
 			},
 			line_available = {
 				fill_color = {
 					255,
 					39,
 					74,
-					78,
+					78
 				},
 				blur_color = {
 					127,
 					42,
 					55,
-					59,
-				},
-			},
+					59
+				}
+			}
 		},
 		ogryn = {
 			line_chosen = {
@@ -386,29 +374,29 @@ local talent_builder_view_settings = {
 					255,
 					224,
 					250,
-					255,
+					255
 				},
 				blur_color = {
 					255,
 					99,
 					167,
-					176,
-				},
+					176
+				}
 			},
 			line_available = {
 				fill_color = {
 					255,
 					39,
 					74,
-					78,
+					78
 				},
 				blur_color = {
 					127,
 					42,
 					55,
-					59,
-				},
-			},
+					59
+				}
+			}
 		},
 		veteran = {
 			line_chosen = {
@@ -416,29 +404,29 @@ local talent_builder_view_settings = {
 					255,
 					224,
 					250,
-					255,
+					255
 				},
 				blur_color = {
 					255,
 					99,
 					167,
-					176,
-				},
+					176
+				}
 			},
 			line_available = {
 				fill_color = {
 					255,
 					39,
 					74,
-					78,
+					78
 				},
 				blur_color = {
 					127,
 					42,
 					55,
-					59,
-				},
-			},
+					59
+				}
+			}
 		},
 		zealot = {
 			line_chosen = {
@@ -446,29 +434,29 @@ local talent_builder_view_settings = {
 					255,
 					224,
 					250,
-					255,
+					255
 				},
 				blur_color = {
 					150,
 					99,
 					167,
-					176,
-				},
+					176
+				}
 			},
 			line_available = {
 				fill_color = {
 					255,
 					39,
 					74,
-					78,
+					78
 				},
 				blur_color = {
 					127,
 					42,
 					55,
-					59,
-				},
-			},
+					59
+				}
+			}
 		},
 		broker = {
 			line_chosen = {
@@ -476,30 +464,30 @@ local talent_builder_view_settings = {
 					255,
 					224,
 					250,
-					255,
+					255
 				},
 				blur_color = {
 					150,
 					99,
 					167,
-					176,
-				},
+					176
+				}
 			},
 			line_available = {
 				fill_color = {
 					255,
 					39,
 					74,
-					78,
+					78
 				},
 				blur_color = {
 					127,
 					42,
 					55,
-					59,
-				},
-			},
-		},
+					59
+				}
+			}
+		}
 	},
 	gamepad_cursor_settings = {
 		arrow_rotate_rate = 0.0001,
@@ -523,8 +511,8 @@ local talent_builder_view_settings = {
 		snap_selection_speed_threshold = 1,
 		stickiness_radius = 45,
 		stickiness_speed_threshold = 50,
-		widget_drag_coefficient = 1,
-	},
+		widget_drag_coefficient = 1
+	}
 }
 
 return settings("TalentBuilderViewSettings", talent_builder_view_settings)

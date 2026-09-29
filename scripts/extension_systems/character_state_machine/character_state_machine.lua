@@ -20,7 +20,7 @@ CharacterStateMachine.init = function (self, unit, is_server, states, start_stat
 		end,
 		game_object_initialized = function ()
 			return
-		end,
+		end
 	}
 
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
@@ -38,7 +38,7 @@ CharacterStateMachine.init = function (self, unit, is_server, states, start_stat
 		self._init_context = {
 			dt = dt,
 			t = t,
-			start_state = start_state,
+			start_state = start_state
 		}
 	end
 end

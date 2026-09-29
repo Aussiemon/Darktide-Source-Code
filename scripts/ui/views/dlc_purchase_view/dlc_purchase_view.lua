@@ -44,11 +44,17 @@ DLCPurchaseView.on_enter = function (self)
 	self._widgets_by_name.deluxe_dlc_button.style.texture.material_values.main_texture = self._dlc_settings_deluxe.image
 	self._dlc_buttons_ordered = {
 		self._widgets_by_name.standard_dlc_button,
-		self._widgets_by_name.deluxe_dlc_button,
+		self._widgets_by_name.deluxe_dlc_button
 	}
 
 	self:_register_button_callbacks()
 	self:_on_input_direction(0)
+
+	if IS_PLAYSTATION and not self._ps_store_icon_showing then
+		NpCommerceDialog.show_ps_store_icon(2)
+
+		self._ps_store_icon_showing = true
+	end
 end
 
 DLCPurchaseView.destroy = function (self)
@@ -101,7 +107,7 @@ DLCPurchaseView._cb_on_flow_finished = function (self, dlc_settings, product_id,
 	self._last_purchase_was_successful = is_success
 
 	local product_ids = {
-		product_id,
+		product_id
 	}
 
 	if dlc_settings.includes then
@@ -114,7 +120,7 @@ DLCPurchaseView._cb_on_flow_finished = function (self, dlc_settings, product_id,
 
 	local product_id_promise = (IS_XBS or IS_GDK) and Managers.dlc:xbs_get_and_inform_entitlements(product_ids) or Promise.resolved({
 		show_popup_function = nil,
-		product_ids = product_ids,
+		product_ids = product_ids
 	})
 
 	self._promise_container:cancel_on_destroy(product_id_promise)
@@ -131,7 +137,7 @@ DLCPurchaseView._cb_on_product_ids_fetched = function (self, promise_data)
 
 	if promise_data.product_ids == nil then
 		promise = Promise.resolved({
-			dlcUpdates = {},
+			dlcUpdates = {}
 		})
 	else
 		promise = Managers.backend.interfaces.external_payment:reconcile_dlc(promise_data.product_ids)
@@ -189,6 +195,12 @@ DLCPurchaseView.can_exit = function (self)
 end
 
 DLCPurchaseView.on_exit = function (self)
+	if IS_PLAYSTATION and self._ps_store_icon_showing then
+		NpCommerceDialog.hide_ps_store_icon()
+
+		self._ps_store_icon_showing = false
+	end
+
 	DLCPurchaseView.super.on_exit(self)
 end
 

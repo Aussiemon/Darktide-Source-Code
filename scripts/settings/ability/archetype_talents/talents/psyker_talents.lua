@@ -42,43 +42,43 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_combat_ability_overcharge_stance",
+					value = "loc_talent_psyker_combat_ability_overcharge_stance"
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.overcharge_stance.post_stance_duration,
+					value = talent_settings.overcharge_stance.post_stance_duration
 				},
 				base_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = psyker_overcharge_stance_buff_template.stat_buffs.damage,
+					value = psyker_overcharge_stance_buff_template.stat_buffs.damage
 				},
 				weakspot_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = psyker_overcharge_stance_buff_template.stat_buffs.weakspot_damage,
+					value = psyker_overcharge_stance_buff_template.stat_buffs.weakspot_damage
 				},
 				crit_chance = {
 					format_type = "percentage",
 					prefix = "+",
-					value = psyker_overcharge_stance_buff_template.stat_buffs.critical_strike_chance,
+					value = psyker_overcharge_stance_buff_template.stat_buffs.critical_strike_chance
 				},
 				max_peril = {
 					format_type = "percentage",
-					value = psyker_overcharge_stance_buff_template.early_out_percentage,
+					value = psyker_overcharge_stance_buff_template.early_out_percentage
 				},
 				cooldown = {
 					format_type = "number",
-					value = PlayerAbilities.psyker_overcharge_stance.cooldown,
+					value = PlayerAbilities.psyker_overcharge_stance.cooldown
 				},
 				damage_per_stack = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.overcharge_stance.damage_per_stack,
+					value = talent_settings.overcharge_stance.damage_per_stack
 				},
 				vent = {
 					format_type = "percentage",
-					value = talent_settings.overcharge_stance.venting,
+					value = talent_settings.overcharge_stance.venting
 				},
 				tdr = {
 					format_type = "percentage",
@@ -86,30 +86,29 @@ local archetype_talents = {
 					value = psyker_overcharge_reduced_toughness_damage_taken_buff.conditional_stat_buffs.toughness_damage_taken_multiplier,
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
-					end,
+					end
 				},
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings.psyker_combat_ability_stance.toughness,
+					value = talent_settings.psyker_combat_ability_stance.toughness
 				},
 				max_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.overcharge_stance.damage_per_stack * talent_settings.overcharge_stance.max_stacks,
-				},
+					value = talent_settings.overcharge_stance.damage_per_stack * talent_settings.overcharge_stance.max_stacks
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_overcharge_reduced_toughness_damage_taken",
-				identifier = "psyker_overcharge_reduced_toughness_damage_taken",
+				identifier = "psyker_overcharge_reduced_toughness_damage_taken"
 			},
 			special_rule = {
 				identifier = "psyker_overcharge_stance_quell_peril",
-				special_rule_name = "psyker_overcharge_stance_quell_peril",
+				special_rule_name = "psyker_overcharge_stance_quell_peril"
 			},
 			player_ability = {
-				ability_type = "combat_ability",
-				ability = PlayerAbilities.psyker_overcharge_stance,
-			},
+				ability = PlayerAbilities.psyker_overcharge_stance
+			}
 		},
 		psyker_combat_ability_shout = {
 			description = "loc_talent_psyker_shout_ability_description",
@@ -119,17 +118,16 @@ local archetype_talents = {
 			format_values = {
 				warpcharge_vent = {
 					format_type = "percentage",
-					value = talent_settings_2.combat_ability.warpcharge_vent_base,
+					value = talent_settings_2.combat_ability.warpcharge_vent_base
 				},
 				cooldown = {
 					format_type = "number",
-					value = talent_settings_2.combat_ability.cooldown,
-				},
+					value = talent_settings_2.combat_ability.cooldown
+				}
 			},
 			player_ability = {
-				ability_type = "combat_ability",
-				ability = PlayerAbilities.psyker_discharge_shout,
-			},
+				ability = PlayerAbilities.psyker_discharge_shout
+			}
 		},
 		psyker_combat_ability_force_field = {
 			description = "loc_talent_psyker_combat_ability_shield_description",
@@ -139,21 +137,20 @@ local archetype_talents = {
 			format_values = {
 				duration = {
 					format_type = "number",
-					value = talent_settings_3.combat_ability.duration,
+					value = talent_settings_3.combat_ability.duration
 				},
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_combat_ability_shield",
+					value = "loc_talent_psyker_combat_ability_shield"
 				},
 				cooldown = {
 					format_type = "number",
-					value = PlayerAbilities.psyker_force_field.cooldown,
-				},
+					value = PlayerAbilities.psyker_force_field.cooldown
+				}
 			},
 			player_ability = {
-				ability_type = "combat_ability",
-				ability = PlayerAbilities.psyker_force_field,
-			},
+				ability = PlayerAbilities.psyker_force_field
+			}
 		},
 		psyker_grenade_throwing_knives = {
 			description = "loc_ability_psyker_blitz_throwing_knives_description",
@@ -164,27 +161,26 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_ability_psyker_blitz_throwing_knives",
-				},
+					value = "loc_ability_psyker_blitz_throwing_knives"
+				}
 			},
 			player_ability = {
-				ability_type = "grenade_ability",
-				ability = PlayerAbilities.psyker_throwing_knives,
+				ability = PlayerAbilities.psyker_throwing_knives
 			},
 			special_rule = {
 				identifier = "disable_grenade_pickups",
-				special_rule_name = special_rules.disable_grenade_pickups,
+				special_rule_name = special_rules.disable_grenade_pickups
 			},
 			dev_info = {
 				{
 					damage_profile_name = "psyker_throwing_knives",
-					info_func = "damage_profile",
-				},
+					info_func = "damage_profile"
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_knife_replenishment",
-				identifier = "psyker_knife_replenishment",
-			},
+				identifier = "psyker_knife_replenishment"
+			}
 		},
 		psyker_grenade_smite = {
 			description = "loc_ability_psyker_smite_description_new",
@@ -193,9 +189,12 @@ local archetype_talents = {
 			icon = "content/ui/textures/icons/talents/psyker/psyker_blitz_brain_burst",
 			name = "G-Ability - Target enemies to charge a Smite attack, dealing a high amount of damage",
 			player_ability = {
-				ability_type = "grenade_ability",
-				ability = PlayerAbilities.psyker_smite,
+				ability = PlayerAbilities.psyker_smite
 			},
+			special_rule = {
+				identifier = "disable_grenade_pickups",
+				special_rule_name = special_rules.disable_grenade_pickups
+			}
 		},
 		psyker_grenade_chain_lightning = {
 			description = "loc_ability_psyker_chain_lightning_description",
@@ -205,26 +204,29 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_ability_psyker_chain_lightning",
+					value = "loc_ability_psyker_chain_lightning"
 				},
 				jump_chance = talent_settings_3.passive_1.empowered_chain_lightning_chance * 100,
 				damage = talent_settings_3.passive_1.chain_lightning_damage * 100,
-				proc_chance = talent_settings_3.grenade.on_hit_proc_chance * 100,
+				proc_chance = talent_settings_3.grenade.on_hit_proc_chance * 100
 			},
 			player_ability = {
-				ability_type = "grenade_ability",
-				ability = PlayerAbilities.psyker_chain_lightning,
+				ability = PlayerAbilities.psyker_chain_lightning
+			},
+			special_rule = {
+				identifier = "disable_grenade_pickups",
+				special_rule_name = special_rules.disable_grenade_pickups
 			},
 			passive = {
 				identifier = {
 					"psyker_kills_during_smite_tracking",
-					"psyker_increased_chain_lightning_size",
+					"psyker_increased_chain_lightning_size"
 				},
 				buff_template_name = {
 					"psyker_kills_during_smite_tracking",
-					"psyker_increased_chain_lightning_size",
-				},
-			},
+					"psyker_increased_chain_lightning_size"
+				}
+			}
 		},
 		psyker_brain_burst_improved = {
 			description = "loc_talent_psyker_brain_burst_improved_description",
@@ -234,11 +236,11 @@ local archetype_talents = {
 			format_values = {
 				talent_new = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_brain_burst_improved",
+					value = "loc_talent_psyker_brain_burst_improved"
 				},
 				talent_old = {
 					format_type = "loc_string",
-					value = "loc_ability_psyker_smite",
+					value = "loc_ability_psyker_smite"
 				},
 				damage = {
 					format_type = "percentage",
@@ -248,18 +250,18 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.smite_damage_multiplier,
-						},
+							stat_buffs.smite_damage_multiplier
+						}
 					},
 					value_manipulation = function (value)
 						return (value - 1) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_brain_burst_improved",
-				identifier = "psyker_brain_burst_improved",
-			},
+				identifier = "psyker_brain_burst_improved"
+			}
 		},
 		psyker_shout_reduces_warp_charge_generation = {
 			description = "loc_talent_psyker_shout_reduces_warp_charge_generation_description",
@@ -269,7 +271,7 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_shout_vent_warp_charge",
+					value = "loc_talent_psyker_shout_vent_warp_charge"
 				},
 				warp_generation = {
 					format_type = "percentage",
@@ -279,12 +281,12 @@ local archetype_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.warp_charge_amount,
-						},
+							stat_buffs.warp_charge_amount
+						}
 					},
 					value_manipulation = function (value)
 						return (1 - value) * 100
-					end,
+					end
 				},
 				max_stacks = {
 					format_type = "number",
@@ -292,9 +294,9 @@ local archetype_talents = {
 						buff_template_name = "psyker_shout_warp_generation_reduction",
 						find_value_type = "buff_template",
 						path = {
-							"max_stacks",
-						},
-					},
+							"max_stacks"
+						}
+					}
 				},
 				duration = {
 					format_type = "number",
@@ -302,15 +304,15 @@ local archetype_talents = {
 						buff_template_name = "psyker_shout_warp_generation_reduction",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
-				},
+							"duration"
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_shout_reduces_warp_generation",
-				identifier = "psyker_shout_reduces_warp_generation",
-			},
+				identifier = "psyker_shout_reduces_warp_generation"
+			}
 		},
 		psyker_shout_vent_warp_charge = {
 			description = "loc_talent_psyker_shout_vent_warp_charge_description",
@@ -320,25 +322,24 @@ local archetype_talents = {
 			format_values = {
 				warpcharge_vent = {
 					format_type = "percentage",
-					value = talent_settings_2.combat_ability.warpcharge_vent_improved,
+					value = talent_settings_2.combat_ability.warpcharge_vent_improved
 				},
 				cooldown = {
 					format_type = "number",
-					value = PlayerAbilities.psyker_discharge_shout.cooldown,
+					value = PlayerAbilities.psyker_discharge_shout.cooldown
 				},
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_2_combat",
-				},
+					value = "loc_talent_psyker_2_combat"
+				}
 			},
 			special_rule = {
 				identifier = "shout_warp_charge_vent_improved",
-				special_rule_name = "shout_warp_charge_vent_improved",
+				special_rule_name = "shout_warp_charge_vent_improved"
 			},
 			player_ability = {
-				ability_type = "combat_ability",
-				ability = PlayerAbilities.psyker_discharge_shout_improved,
-			},
+				ability = PlayerAbilities.psyker_discharge_shout_improved
+			}
 		},
 		psyker_shout_damage_per_warp_charge = {
 			description = "loc_talent_psyker_shout_damage_per_warp_charge_description",
@@ -348,29 +349,29 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_shout_vent_warp_charge",
+					value = "loc_talent_psyker_shout_vent_warp_charge"
 				},
 				base_damage = {
 					format_type = "number",
 					find_value = {
 						damage_profile_name = "psyker_biomancer_shout_damage",
 						find_value_type = "base_damage",
-						power_level = talent_settings_2.combat_ability.power_level,
-					},
+						power_level = talent_settings_2.combat_ability.power_level
+					}
 				},
 				max_damage = {
 					format_type = "number",
 					find_value = {
 						damage_profile_name = "psyker_biomancer_shout_damage",
 						find_value_type = "base_damage",
-						power_level = talent_settings_2.combat_ability.power_level * 2,
-					},
-				},
+						power_level = talent_settings_2.combat_ability.power_level * 2
+					}
+				}
 			},
 			special_rule = {
 				identifier = "psyker_discharge_damage_per_warp_charge",
-				special_rule_name = "psyker_discharge_damage_per_warp_charge",
-			},
+				special_rule_name = "psyker_discharge_damage_per_warp_charge"
+			}
 		},
 		psyker_discharge_damage_debuff = {
 			description = "loc_talent_psyker_discharge_damage_debuff_description",
@@ -380,31 +381,31 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_shout_vent_warp_charge",
+					value = "loc_talent_psyker_shout_vent_warp_charge"
 				},
 				damage_reduction = {
 					format_type = "percentage",
 					value = talent_settings.psyker_discharge_damage_debuff.damage_reduction,
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
+					end
 				},
 				damage_taken = {
 					format_type = "percentage",
 					value = talent_settings.psyker_discharge_damage_debuff.damage_taken,
 					value_manipulation = function (value)
 						return math_round((value - 1) * 100)
-					end,
+					end
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.psyker_discharge_damage_debuff.duration,
-				},
+					value = talent_settings.psyker_discharge_damage_debuff.duration
+				}
 			},
 			special_rule = {
 				identifier = "psyker_discharge_damage_debuff",
-				special_rule_name = "psyker_discharge_damage_debuff",
-			},
+				special_rule_name = "psyker_discharge_damage_debuff"
+			}
 		},
 		psyker_passive_souls_from_elite_kills = {
 			description = "loc_talent_psyker_souls_new_desc",
@@ -418,9 +419,9 @@ local archetype_talents = {
 						buff_template_name = "psyker_souls",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
+							"duration"
+						}
+					}
 				},
 				stack = {
 					format_type = "number",
@@ -428,34 +429,34 @@ local archetype_talents = {
 						buff_template_name = "psyker_souls",
 						find_value_type = "buff_template",
 						path = {
-							"max_stacks",
-						},
-					},
+							"max_stacks"
+						}
+					}
 				},
 				cooldown_reduction = {
 					format_type = "percentage",
-					value = talent_settings_2.combat_ability_1.cooldown_reduction_percent,
+					value = talent_settings_2.combat_ability_1.cooldown_reduction_percent
 				},
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings_2.passive_1.damage / talent_settings_2.offensive_2_1.max_souls_talent,
-				},
+					value = talent_settings_2.passive_1.damage / talent_settings_2.offensive_2_1.max_souls_talent
+				}
 			},
 			passive = {
 				identifier = {
 					"psyker_souls_increase_damage",
-					"psyker_passive_souls_from_elite_kills",
+					"psyker_passive_souls_from_elite_kills"
 				},
 				buff_template_name = {
 					"psyker_souls_increase_damage",
-					"psyker_passive_souls_from_elite_kills",
-				},
+					"psyker_passive_souls_from_elite_kills"
+				}
 			},
 			special_rule = {
 				identifier = "psyker_restore_cooldown_per_soul",
-				special_rule_name = special_rules.psyker_restore_cooldown_per_soul,
-			},
+				special_rule_name = special_rules.psyker_restore_cooldown_per_soul
+			}
 		},
 		psyker_chance_to_vent_on_kill = {
 			description = "loc_talent_psyker_quell_on_kill_and_reduction_desc",
@@ -465,11 +466,11 @@ local archetype_talents = {
 			format_values = {
 				warp_charge_percent = {
 					format_type = "percentage",
-					value = talent_settings_2.passive_2.warp_charge_percent,
+					value = talent_settings_2.passive_2.warp_charge_percent
 				},
 				chance = {
 					format_type = "percentage",
-					value = talent_settings_2.passive_2.on_hit_proc_chance,
+					value = talent_settings_2.passive_2.on_hit_proc_chance
 				},
 				warp_charge_reduction = {
 					format_type = "percentage",
@@ -477,13 +478,13 @@ local archetype_talents = {
 					value = talent_settings_2.passive_2.warp_charge_amount,
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_chance_to_vent_on_kill",
-				identifier = "psyker_chance_to_vent_on_kill",
-			},
+				identifier = "psyker_chance_to_vent_on_kill"
+			}
 		},
 		psyker_overcharge_reduced_warp_charge = {
 			description = "loc_ability_psyker_overcharge_reduced_warp_charge_vent_speed_description",
@@ -493,7 +494,7 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_combat_ability_overcharge_stance",
+					value = "loc_talent_psyker_combat_ability_overcharge_stance"
 				},
 				warp_charge = {
 					format_type = "percentage",
@@ -501,7 +502,7 @@ local archetype_talents = {
 					value = psyker_overcharge_reduced_warp_charge.conditional_stat_buffs.warp_charge_amount,
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
-					end,
+					end
 				},
 				venting = {
 					format_type = "percentage",
@@ -509,13 +510,13 @@ local archetype_talents = {
 					value = psyker_overcharge_reduced_warp_charge.conditional_stat_buffs.vent_warp_charge_speed,
 					value_manipulation = function (value)
 						return (1 - value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_overcharge_reduced_warp_charge",
-				identifier = "psyker_overcharge_reduced_warp_charge",
-			},
+				identifier = "psyker_overcharge_reduced_warp_charge"
+			}
 		},
 		psyker_overcharge_stance_infinite_casting = {
 			description = "loc_talent_psyker_overcharge_infinite_casting_desc",
@@ -525,13 +526,13 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_combat_ability_overcharge_stance",
-				},
+					value = "loc_talent_psyker_combat_ability_overcharge_stance"
+				}
 			},
 			special_rule = {
 				identifier = "psyker_overcharge_stance_infinite_casting",
-				special_rule_name = "psyker_overcharge_stance_infinite_casting",
-			},
+				special_rule_name = "psyker_overcharge_stance_infinite_casting"
+			}
 		},
 		psyker_overcharge_reduced_toughness_damage_taken = {
 			description = "loc_ability_psyker_overcharge_reduced_toughness_damage_taken_description",
@@ -541,7 +542,7 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_combat_ability_overcharge_stance",
+					value = "loc_talent_psyker_combat_ability_overcharge_stance"
 				},
 				tdr = {
 					format_type = "percentage",
@@ -549,13 +550,13 @@ local archetype_talents = {
 					value = psyker_overcharge_reduced_toughness_damage_taken_buff.conditional_stat_buffs.toughness_damage_taken_multiplier,
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_overcharge_reduced_toughness_damage_taken",
-				identifier = "psyker_overcharge_reduced_toughness_damage_taken",
-			},
+				identifier = "psyker_overcharge_reduced_toughness_damage_taken"
+			}
 		},
 		psyker_overcharge_increased_movement_speed = {
 			description = "loc_ability_psyker_overcharge_movement_speed_description",
@@ -565,18 +566,18 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_combat_ability_overcharge_stance",
+					value = "loc_talent_psyker_combat_ability_overcharge_stance"
 				},
 				movement_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = psyker_overcharge_increased_movement_speed_buff.conditional_stat_buffs.movement_speed,
-				},
+					value = psyker_overcharge_increased_movement_speed_buff.conditional_stat_buffs.movement_speed
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_overcharge_increased_movement_speed",
-				identifier = "psyker_overcharge_increased_movement_speed",
-			},
+				identifier = "psyker_overcharge_increased_movement_speed"
+			}
 		},
 		psyker_overcharge_weakspot_kill_bonuses = {
 			description = "loc_ability_psyker_overcharge_weakspot_description",
@@ -586,31 +587,31 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_combat_ability_overcharge_stance",
+					value = "loc_talent_psyker_combat_ability_overcharge_stance"
 				},
 				second = {
 					format_type = "number",
-					value = talent_settings.overcharge_stance.second_per_weakspot,
+					value = talent_settings.overcharge_stance.second_per_weakspot
 				},
 				finesse_damage_per_stack = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.overcharge_stance.finesse_damage_per_stack,
+					value = talent_settings.overcharge_stance.finesse_damage_per_stack
 				},
 				max_finesse_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.overcharge_stance.finesse_damage_per_stack * talent_settings.overcharge_stance.max_stacks,
+					value = talent_settings.overcharge_stance.finesse_damage_per_stack * talent_settings.overcharge_stance.max_stacks
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.overcharge_stance.post_stance_duration,
-				},
+					value = talent_settings.overcharge_stance.post_stance_duration
+				}
 			},
 			special_rule = {
 				identifier = "psyker_overchage_stance_weakspot_kills",
-				special_rule_name = "psyker_overchage_stance_weakspot_kills",
-			},
+				special_rule_name = "psyker_overchage_stance_weakspot_kills"
+			}
 		},
 		psyker_empowered_ability = {
 			description = "loc_talent_psyker_empowered_ability_description",
@@ -625,17 +626,17 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"proc_events",
-							proc_events.on_hit,
-						},
-					},
+							proc_events.on_hit
+						}
+					}
 				},
 				blitz_one = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_brain_burst_improved",
+					value = "loc_talent_psyker_brain_burst_improved"
 				},
 				smite_cost = {
 					format_type = "percentage",
-					value = 1 - talent_settings_3.passive_1.psyker_smite_cost_multiplier,
+					value = 1 - talent_settings_3.passive_1.psyker_smite_cost_multiplier
 				},
 				smite_attack_speed = {
 					format_type = "percentage",
@@ -644,9 +645,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.smite_attack_speed,
-						},
-					},
+							stat_buffs.smite_attack_speed
+						}
+					}
 				},
 				smite_damage = {
 					format_type = "percentage",
@@ -656,18 +657,18 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.smite_damage,
-						},
-					},
+							stat_buffs.smite_damage
+						}
+					}
 				},
 				blitz_two = {
 					format_type = "loc_string",
-					value = "loc_ability_psyker_chain_lightning",
+					value = "loc_ability_psyker_chain_lightning"
 				},
 				chain_lightning_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings_3.passive_1.chain_lightning_damage,
+					value = talent_settings_3.passive_1.chain_lightning_damage
 				},
 				chain_lightning_jump_time_multiplier = {
 					format_type = "percentage",
@@ -676,47 +677,47 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.chain_lightning_jump_time_multiplier,
-						},
-					},
+							stat_buffs.chain_lightning_jump_time_multiplier
+						}
+					}
 				},
 				blitz_three = {
 					format_type = "loc_string",
-					value = "loc_ability_psyker_blitz_throwing_knives",
+					value = "loc_ability_psyker_blitz_throwing_knives"
 				},
 				throwing_knives_cost = {
 					format_type = "percentage",
-					value = 1,
+					value = 1
 				},
 				throwing_knives_charges = {
 					format_type = "number",
-					value = 0,
+					value = 0
 				},
 				throwing_knives_old_damage = {
 					format_type = "number",
 					find_value = {
 						damage_profile_name = "psyker_throwing_knives",
 						find_value_type = "base_damage",
-						power_level = PowerLevelSettings.default_power_level,
-					},
+						power_level = PowerLevelSettings.default_power_level
+					}
 				},
 				throwing_knives_new_damage = {
 					format_type = "number",
 					find_value = {
 						damage_profile_name = "psyker_throwing_knives_pierce",
 						find_value_type = "base_damage",
-						power_level = PowerLevelSettings.default_power_level,
-					},
-				},
+						power_level = PowerLevelSettings.default_power_level
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_empowered_grenades_passive",
-				identifier = "psyker_empowered_grenades_passive",
+				identifier = "psyker_empowered_grenades_passive"
 			},
 			special_rule = {
 				identifier = "psyker_empowered_grenades",
-				special_rule_name = "psyker_empowered_grenades",
-			},
+				special_rule_name = "psyker_empowered_grenades"
+			}
 		},
 		psyker_throwing_knives_piercing = {
 			description = "loc_talent_psyker_throwing_knives_pierce_description",
@@ -726,13 +727,13 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_ability_psyker_blitz_throwing_knives",
-				},
+					value = "loc_ability_psyker_blitz_throwing_knives"
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_throwing_knives_piercing",
-				identifier = "psyker_throwing_knives_piercing",
-			},
+				identifier = "psyker_throwing_knives_piercing"
+			}
 		},
 		psyker_throwing_knives_cast_speed = {
 			description = "loc_talent_psyker_throwing_knives_cast_speed_description",
@@ -742,7 +743,7 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_ability_psyker_blitz_throwing_knives",
+					value = "loc_ability_psyker_blitz_throwing_knives"
 				},
 				speed = {
 					format_type = "percentage",
@@ -752,12 +753,12 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.psyker_throwing_knife_speed_modifier,
-						},
+							stat_buffs.psyker_throwing_knife_speed_modifier
+						}
 					},
 					value_manipulation = function (value)
 						return value * 100
-					end,
+					end
 				},
 				recharge = {
 					format_type = "percentage",
@@ -766,12 +767,12 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.grenade_ability_cooldown_modifier,
-						},
+							stat_buffs.grenade_ability_resource_regen_modifier
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value * 100)
-					end,
+					end
 				},
 				stacks = {
 					format_values = "number",
@@ -779,9 +780,9 @@ local archetype_talents = {
 						buff_template_name = "psyker_throwing_knife_stacking_speed_buff",
 						find_value_type = "buff_template",
 						path = {
-							"max_stacks",
-						},
-					},
+							"max_stacks"
+						}
+					}
 				},
 				duration = {
 					format_type = "number",
@@ -789,15 +790,15 @@ local archetype_talents = {
 						buff_template_name = "psyker_throwing_knife_stacking_speed_buff",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
-				},
+							"duration"
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_reduced_throwing_knife_cooldown",
-				identifier = "psyker_reduced_throwing_knife_cooldown",
-			},
+				identifier = "psyker_reduced_throwing_knife_cooldown"
+			}
 		},
 		psyker_throwing_knives_combat_ability_recharge = {
 			description = "loc_talent_psyker_throwing_knives_combat_ability_recharge_desc",
@@ -807,13 +808,13 @@ local archetype_talents = {
 			format_values = {
 				charges = {
 					format_type = "number",
-					value = talent_settings.throwing_knives.charges_restored,
-				},
+					value = talent_settings.throwing_knives.charges_restored
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_throwing_knives_ability_recharge",
-				identifier = "psyker_throwing_knives_ability_recharge",
-			},
+				identifier = "psyker_throwing_knives_ability_recharge"
+			}
 		},
 		psyker_chain_lightning_improved_target_buff = {
 			description = "loc_talent_psyker_chain_lightning_improved_target_buff_alt_description",
@@ -823,7 +824,7 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_ability_psyker_chain_lightning",
+					value = "loc_ability_psyker_chain_lightning"
 				},
 				damage = {
 					format_type = "percentage",
@@ -833,18 +834,18 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.damage_taken_multiplier,
-						},
+							stat_buffs.damage_taken_multiplier
+						}
 					},
 					value_manipulation = function (value)
 						return (value - 1) * 100
-					end,
-				},
+					end
+				}
 			},
 			special_rule = {
 				identifier = "psyker_chain_lightning_improved_target_buff",
-				special_rule_name = "psyker_chain_lightning_improved_target_buff",
-			},
+				special_rule_name = "psyker_chain_lightning_improved_target_buff"
+			}
 		},
 		psyker_aura_ability_cooldown = {
 			description = "loc_talent_psyker_aura_reduced_ability_cooldown_description",
@@ -856,14 +857,14 @@ local archetype_talents = {
 					format_type = "percentage",
 					num_decimals = 1,
 					prefix = "+",
-					value = math.abs(talent_settings_3.coherency.ability_cooldown_modifier),
-				},
+					value = math.abs(talent_settings_3.coherency.ability_cooldown_modifier)
+				}
 			},
 			coherency = {
 				buff_template_name = "psyker_aura_ability_cooldown",
 				identifier = "psyker_aura",
-				priority = 1,
-			},
+				priority = 1
+			}
 		},
 		psyker_cooldown_aura_improved = {
 			description = "loc_talent_psyker_cooldown_aura_improved_description",
@@ -874,18 +875,18 @@ local archetype_talents = {
 				cooldown_reduction = {
 					format_type = "percentage",
 					prefix = "+",
-					value = math.abs(talent_settings_3.coherency.ability_cooldown_modifier_improved),
+					value = math.abs(talent_settings_3.coherency.ability_cooldown_modifier_improved)
 				},
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_aura_reduced_ability_cooldown",
-				},
+					value = "loc_talent_psyker_aura_reduced_ability_cooldown"
+				}
 			},
 			coherency = {
 				buff_template_name = "psyker_aura_ability_cooldown_improved",
 				identifier = "psyker_aura",
-				priority = 2,
-			},
+				priority = 2
+			}
 		},
 		psyker_aura_crit_chance_aura = {
 			description = "loc_ability_psyker_gunslinger_aura_description",
@@ -901,9 +902,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.critical_strike_chance,
-						},
-					},
+							stat_buffs.critical_strike_chance
+						}
+					}
 				},
 				max_stacks = {
 					format_type = "number",
@@ -911,16 +912,16 @@ local archetype_talents = {
 						buff_template_name = "psyker_aura_crit_chance_aura",
 						find_value_type = "buff_template",
 						path = {
-							"max_stacks",
-						},
-					},
-				},
+							"max_stacks"
+						}
+					}
+				}
 			},
 			coherency = {
 				buff_template_name = "psyker_aura_crit_chance_aura",
 				identifier = "psyker_aura",
-				priority = 2,
-			},
+				priority = 2
+			}
 		},
 		psyker_aura_damage_vs_elites = {
 			description = "loc_talent_psyker_base_3_description",
@@ -931,14 +932,14 @@ local archetype_talents = {
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings_2.coherency.damage_vs_elites,
-				},
+					value = talent_settings_2.coherency.damage_vs_elites
+				}
 			},
 			coherency = {
 				buff_template_name = "psyker_aura_damage_vs_elites",
 				identifier = "psyker_aura",
-				priority = 2,
-			},
+				priority = 2
+			}
 		},
 		psyker_toughness_on_soul = {
 			description = "loc_talent_psyker_toughness_regen_on_soul_desc",
@@ -948,17 +949,17 @@ local archetype_talents = {
 			format_values = {
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings_2.toughness_1.percent_toughness * talent_settings_2.toughness_1.duration,
+					value = talent_settings_2.toughness_1.percent_toughness * talent_settings_2.toughness_1.duration
 				},
 				time = {
 					format_type = "number",
-					value = talent_settings_2.toughness_1.duration,
-				},
+					value = talent_settings_2.toughness_1.duration
+				}
 			},
 			special_rule = {
 				identifier = "psyker_toughness_on_soul",
-				special_rule_name = "psyker_toughness_on_soul",
-			},
+				special_rule_name = "psyker_toughness_on_soul"
+			}
 		},
 		psyker_toughness_on_warp_kill = {
 			description = "loc_talent_psyker_toughness_on_warp_kill_desc",
@@ -968,13 +969,13 @@ local archetype_talents = {
 			format_values = {
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings_2.toughness_2.percent_toughness,
-				},
+					value = talent_settings_2.toughness_2.percent_toughness
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_toughness_on_warp_kill",
-				identifier = "psyker_toughness_on_warp_kill",
-			},
+				identifier = "psyker_toughness_on_warp_kill"
+			}
 		},
 		psyker_toughness_on_vent = {
 			description = "loc_talent_psyker_toughness_from_vent_and_gen_desc",
@@ -987,23 +988,23 @@ local archetype_talents = {
 					value = talent_settings_2.toughness_3.multiplier,
 					value_manipulation = function (value)
 						return value * 10
-					end,
+					end
 				},
 				warp_charge = {
 					format_type = "percentage",
-					value = 0.1,
-				},
+					value = 0.1
+				}
 			},
 			passive = {
 				identifier = {
 					"psyker_toughness_on_vent",
-					"psyker_toughness_on_warp_generation",
+					"psyker_toughness_on_warp_generation"
 				},
 				buff_template_name = {
 					"psyker_toughness_on_vent",
-					"psyker_toughness_on_warp_generation",
-				},
-			},
+					"psyker_toughness_on_warp_generation"
+				}
+			}
 		},
 		psyker_warp_charge_generation_generates_toughness = {
 			description = "loc_talent_psyker_warp_charge_generation_generates_toughness_description",
@@ -1016,17 +1017,17 @@ local archetype_talents = {
 					value = talent_settings_2.toughness_4.multiplier,
 					value_manipulation = function (value)
 						return value * 10
-					end,
+					end
 				},
 				warp_charge = {
 					format_type = "percentage",
-					value = 0.1,
-				},
+					value = 0.1
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_toughness_on_warp_generation",
-				identifier = "psyker_toughness_on_warp_generation",
-			},
+				identifier = "psyker_toughness_on_warp_generation"
+			}
 		},
 		psyker_toughness_on_melee = {
 			description = "loc_talent_psyker_toughness_on_melee_description",
@@ -1036,21 +1037,21 @@ local archetype_talents = {
 			format_values = {
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings.melee_toughness.toughness,
+					value = talent_settings.melee_toughness.toughness
 				},
 				instant_toughness = {
 					format_type = "percentage",
-					value = talent_settings.melee_toughness.instant_toughness,
+					value = talent_settings.melee_toughness.instant_toughness
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.melee_toughness.duration,
-				},
+					value = talent_settings.melee_toughness.duration
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_toughness_on_melee",
-				identifier = "psyker_toughness_on_melee",
-			},
+				identifier = "psyker_toughness_on_melee"
+			}
 		},
 		psyker_increased_vent_speed = {
 			description = "loc_talent_psyker_increased_vent_speed_description",
@@ -1060,13 +1061,13 @@ local archetype_talents = {
 			format_values = {
 				vent_speed = {
 					format_type = "percentage",
-					value = 1 - talent_settings_3.mixed_3.vent_warp_charge_speed,
-				},
+					value = 1 - talent_settings_3.mixed_3.vent_warp_charge_speed
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_increased_vent_speed",
-				identifier = "psyker_increased_vent_speed",
-			},
+				identifier = "psyker_increased_vent_speed"
+			}
 		},
 		psyker_guaranteed_crit_on_multiple_weakspot_hits = {
 			description = "loc_talent_psyker_weakspot_grants_crit_once_description",
@@ -1080,15 +1081,15 @@ local archetype_talents = {
 						buff_template_name = "psyker_guaranteed_ranged_shot_on_stacked",
 						find_value_type = "buff_template",
 						path = {
-							"max_stacks",
-						},
-					},
-				},
+							"max_stacks"
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_guaranteed_crit_on_multiple_weakspot_hits",
-				identifier = "psyker_guaranteed_crit_on_multiple_weakspot_hits",
-			},
+				identifier = "psyker_guaranteed_crit_on_multiple_weakspot_hits"
+			}
 		},
 		psyker_kills_stack_other_weapon_damage = {
 			description = "loc_talent_psyker_kills_stack_other_weapon_damage_both_description",
@@ -1104,9 +1105,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.warp_damage,
-						},
-					},
+							stat_buffs.warp_damage
+						}
+					}
 				},
 				non_warp_damage = {
 					format_type = "percentage",
@@ -1116,9 +1117,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.damage,
-						},
-					},
+							stat_buffs.damage
+						}
+					}
 				},
 				stacks = {
 					format_type = "number",
@@ -1126,9 +1127,9 @@ local archetype_talents = {
 						buff_template_name = "psyker_cycle_stacking_warp_damage",
 						find_value_type = "buff_template",
 						path = {
-							"max_stacks",
-						},
-					},
+							"max_stacks"
+						}
+					}
 				},
 				duration = {
 					format_type = "number",
@@ -1136,9 +1137,9 @@ local archetype_talents = {
 						buff_template_name = "psyker_cycle_stacking_warp_damage",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
+							"duration"
+						}
+					}
 				},
 				ranged_damage = {
 					format_type = "percentage",
@@ -1147,9 +1148,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.ranged_damage,
-						},
-					},
+							stat_buffs.ranged_damage
+						}
+					}
 				},
 				ranged_stacks = {
 					format_type = "number",
@@ -1157,9 +1158,9 @@ local archetype_talents = {
 						buff_template_name = "psyker_cycle_stacking_ranged_damage_stacks",
 						find_value_type = "buff_template",
 						path = {
-							"max_stacks",
-						},
-					},
+							"max_stacks"
+						}
+					}
 				},
 				melee_damage = {
 					format_type = "percentage",
@@ -1168,9 +1169,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_damage,
-						},
-					},
+							stat_buffs.melee_damage
+						}
+					}
 				},
 				melee_stacks = {
 					format_type = "number",
@@ -1178,15 +1179,15 @@ local archetype_talents = {
 						buff_template_name = "psyker_cycle_stacking_melee_damage_stacks",
 						find_value_type = "buff_template",
 						path = {
-							"max_stacks",
-						},
-					},
-				},
+							"max_stacks"
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_kills_stack_other_weapon_damage",
-				identifier = "psyker_kills_stack_other_weapon_damage",
-			},
+				identifier = "psyker_kills_stack_other_weapon_damage"
+			}
 		},
 		psyker_crits_empower_next_attack = {
 			description = "loc_talent_psyker_damage_on_crit_stacking_desc",
@@ -1202,9 +1203,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.damage,
-						},
-					},
+							stat_buffs.damage
+						}
+					}
 				},
 				duration = {
 					format_type = "number",
@@ -1212,9 +1213,9 @@ local archetype_talents = {
 						buff_template_name = "psyker_crits_empower_warp_buff",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
+							"duration"
+						}
+					}
 				},
 				stacks = {
 					format_type = "number",
@@ -1222,15 +1223,15 @@ local archetype_talents = {
 						buff_template_name = "psyker_crits_empower_warp_buff",
 						find_value_type = "buff_template",
 						path = {
-							"max_stacks",
-						},
-					},
-				},
+							"max_stacks"
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_crits_empower_warp",
-				identifier = "psyker_crits_empower_warp",
-			},
+				identifier = "psyker_crits_empower_warp"
+			}
 		},
 		psyker_damage_based_on_warp_charge = {
 			description = "loc_talent_psyker_damage_based_on_warp_charge_desc",
@@ -1241,13 +1242,13 @@ local archetype_talents = {
 				max_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings_2.offensive_1_1.damage,
-				},
+					value = talent_settings_2.offensive_1_1.damage
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_warp_charge_increase_force_weapon_damage",
-				identifier = "psyker_warp_charge_increase_force_weapon_damage",
-			},
+				identifier = "psyker_warp_charge_increase_force_weapon_damage"
+			}
 		},
 		psyker_reduced_warp_charge_cost_and_venting_speed = {
 			description = "loc_talent_psyker_reduced_warp_charge_cost_venting_speed_desc",
@@ -1258,13 +1259,13 @@ local archetype_talents = {
 				warp_charge_amount = {
 					format_type = "percentage",
 					prefix = "-",
-					value = (1 - talent_settings_2.offensive_1_2.warp_charge_capacity) / talent_settings_2.offensive_2_1.max_souls_talent,
-				},
+					value = (1 - talent_settings_2.offensive_1_2.warp_charge_capacity) / talent_settings_2.offensive_2_1.max_souls_talent
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_reduced_warp_charge_cost_and_venting_speed",
-				identifier = "psyker_reduced_warp_charge_cost_and_venting_speed",
-			},
+				identifier = "psyker_reduced_warp_charge_cost_and_venting_speed"
+			}
 		},
 		psyker_souls_increase_damage = {
 			description = "loc_talent_psyker_souls_increase_damage_desc",
@@ -1275,13 +1276,13 @@ local archetype_talents = {
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings_2.passive_1.damage / talent_settings_2.offensive_2_1.max_souls_talent,
-				},
+					value = talent_settings_2.passive_1.damage / talent_settings_2.offensive_2_1.max_souls_talent
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_souls_increase_damage",
-				identifier = "psyker_souls_increase_damage",
-			},
+				identifier = "psyker_souls_increase_damage"
+			}
 		},
 		psyker_elite_kills_add_warpfire = {
 			description = "loc_talent_psyker_elite_and_special_kills_add_warpfire_desc",
@@ -1291,13 +1292,13 @@ local archetype_talents = {
 			format_values = {
 				stacks = {
 					format_type = "number",
-					value = talent_settings_2.offensive_1_3.num_stacks,
-				},
+					value = talent_settings_2.offensive_1_3.num_stacks
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_elite_kills_add_warpfire",
-				identifier = "psyker_elite_kills_add_warpfire",
-			},
+				identifier = "psyker_elite_kills_add_warpfire"
+			}
 		},
 		psyker_increased_chain_lightning_size = {
 			description = "loc_talent_psyker_increased_chain_lightning_size_description",
@@ -1307,7 +1308,7 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_ability_psyker_chain_lightning",
+					value = "loc_ability_psyker_chain_lightning"
 				},
 				max_jumps = {
 					format_type = "number",
@@ -1317,15 +1318,15 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.chain_lightning_max_jumps,
-						},
-					},
-				},
+							stat_buffs.chain_lightning_max_jumps
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_increased_chain_lightning_size",
-				identifier = "psyker_increased_chain_lightning_size",
-			},
+				identifier = "psyker_increased_chain_lightning_size"
+			}
 		},
 		psyker_empowered_grenades_increased_max_stacks = {
 			description = "loc_talent_psyker_increased_empowered_chain_lightning_stacks_description",
@@ -1335,17 +1336,17 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_empowered_ability",
+					value = "loc_talent_psyker_empowered_ability"
 				},
 				max_stacks = {
 					format_type = "number",
-					value = talent_settings_3.offensive_2.max_stacks_talent,
-				},
+					value = talent_settings_3.offensive_2.max_stacks_talent
+				}
 			},
 			special_rule = {
 				identifier = "psyker_empowered_grenades_increased_max_stacks",
-				special_rule_name = "psyker_empowered_grenades_increased_max_stacks",
-			},
+				special_rule_name = "psyker_empowered_grenades_increased_max_stacks"
+			}
 		},
 		psyker_shield_stun_passive = {
 			description = "loc_talent_psyker_force_field_stun_increased_new_description",
@@ -1355,21 +1356,21 @@ local archetype_talents = {
 			format_values = {
 				proc_chance = {
 					format_type = "percentage",
-					value = talent_settings_3.offensive_3.proc_chance,
+					value = talent_settings_3.offensive_3.proc_chance
 				},
 				special_proc_chance = {
 					format_type = "percentage",
-					value = talent_settings_3.offensive_3.special_proc_chance,
+					value = talent_settings_3.offensive_3.special_proc_chance
 				},
 				ability = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_combat_ability_shield",
-				},
+					value = "loc_talent_psyker_combat_ability_shield"
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_shield_stun_passive",
-				identifier = "psyker_shield_stun_passive",
-			},
+				identifier = "psyker_shield_stun_passive"
+			}
 		},
 		psyker_coherency_aura_size_increase = {
 			description = "loc_talent_psyker_coherency_size_increase_description",
@@ -1384,15 +1385,15 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.coherency_radius_modifier,
-						},
-					},
-				},
+							stat_buffs.coherency_radius_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_coherency_aura_size_increase",
-				identifier = "psyker_coherency_aura_size_increase",
-			},
+				identifier = "psyker_coherency_aura_size_increase"
+			}
 		},
 		psyker_aura_souls_on_kill = {
 			description = "loc_talent_psyker_souls_on_kill_coop_desc",
@@ -1402,33 +1403,33 @@ local archetype_talents = {
 			format_values = {
 				soul_chance = {
 					format_type = "percentage",
-					value = talent_settings_2.coop_1.on_kill_proc_chance,
-				},
+					value = talent_settings_2.coop_1.on_kill_proc_chance
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_aura_souls_on_kill",
-				identifier = "psyker_aura_souls_on_kill",
-			},
+				identifier = "psyker_aura_souls_on_kill"
+			}
 		},
 		psyker_2_tier_3_name_2 = {
-			description = "loc_talent_psyker_cooldown_on_allied_elite_kills_fixed_desc",
+			description = "loc_talent_psyker_cooldown_on_elite_kills_desc",
 			display_name = "loc_talent_psyker_elite_kills_give_combat_ability_cd_coherency",
 			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_5_3",
 			name = "Killing an elite enemy restores combat ability cooldown to allies in coherency",
 			format_values = {
 				cooldown = {
 					format_type = "percentage",
-					value = talent_settings.psyker_cooldown.cooldown,
+					value = talent_settings.psyker_cooldown.cooldown
 				},
 				time = {
 					format_type = "number",
-					value = talent_settings.psyker_cooldown.duration,
-				},
+					value = talent_settings.psyker_cooldown.duration
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_aura_cooldown_reduction_on_elite_kill",
-				identifier = "psyker_aura_cooldown_reduction_on_elite_kill",
-			},
+				identifier = "psyker_aura_cooldown_reduction_on_elite_kill"
+			}
 		},
 		psyker_2_tier_3_name_3 = {
 			description = "loc_talent_biomancer_smite_increases_non_warp_damage_desc",
@@ -1437,12 +1438,12 @@ local archetype_talents = {
 			name = "Damaging an enemy with your smite ability causes them to take increased damage from all sources for 5 seconds.",
 			format_values = {
 				damage = math_round((talent_settings_2.coop_3.damage_taken_multiplier - 1) * 100),
-				time = talent_settings_2.coop_3.duration,
+				time = talent_settings_2.coop_3.duration
 			},
 			passive = {
 				buff_template_name = "psyker_smite_makes_victim_vulnerable",
-				identifier = "psyker_smite_makes_victim_vulnerable",
-			},
+				identifier = "psyker_smite_makes_victim_vulnerable"
+			}
 		},
 		psyker_aura_toughness_on_ally_knocked_down = {
 			description = "loc_talent_psyker_restore_toughness_to_allies_when_ally_down_description",
@@ -1452,13 +1453,13 @@ local archetype_talents = {
 			format_values = {
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings_3.coop_1.toughness_percent,
-				},
+					value = talent_settings_3.coop_1.toughness_percent
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_aura_toughness_on_ally_knocked_down",
-				identifier = "psyker_aura_toughness_on_ally_knocked_down",
-			},
+				identifier = "psyker_aura_toughness_on_ally_knocked_down"
+			}
 		},
 		psyker_dodge_after_crits = {
 			description = "loc_talent_psyker_dodge_after_crits_description",
@@ -1472,15 +1473,15 @@ local archetype_talents = {
 						buff_template_name = "psyker_dodge_after_crits",
 						find_value_type = "buff_template",
 						path = {
-							"active_duration",
-						},
-					},
-				},
+							"active_duration"
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_dodge_after_crits",
-				identifier = "psyker_dodge_after_crits",
-			},
+				identifier = "psyker_dodge_after_crits"
+			}
 		},
 		psyker_crits_regen_toughness_movement_speed = {
 			description = "loc_talent_psyker_crits_regen_toughness_speed_description",
@@ -1490,26 +1491,26 @@ local archetype_talents = {
 			format_values = {
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings.psyker_crits_regen_toughness_movement_speed.toughness,
+					value = talent_settings.psyker_crits_regen_toughness_movement_speed.toughness
 				},
 				movement_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.psyker_crits_regen_toughness_movement_speed.movement_speed,
+					value = talent_settings.psyker_crits_regen_toughness_movement_speed.movement_speed
 				},
 				seconds = {
 					format_type = "number",
-					value = talent_settings.psyker_crits_regen_toughness_movement_speed.duration,
+					value = talent_settings.psyker_crits_regen_toughness_movement_speed.duration
 				},
 				stacks = {
 					format_type = "number",
-					value = talent_settings.psyker_crits_regen_toughness_movement_speed.max_stacks,
-				},
+					value = talent_settings.psyker_crits_regen_toughness_movement_speed.max_stacks
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_crits_regen_toughness_movement_speed",
-				identifier = "psyker_crits_regen_toughness_movement_speed",
-			},
+				identifier = "psyker_crits_regen_toughness_movement_speed"
+			}
 		},
 		psyker_improved_dodge = {
 			description = "loc_talent_psyker_improved_dodge_description",
@@ -1525,9 +1526,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.dodge_linger_time_modifier,
-						},
-					},
+							stat_buffs.dodge_linger_time_modifier
+						}
+					}
 				},
 				extra_consecutive_dodges = {
 					format_type = "number",
@@ -1536,15 +1537,15 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.extra_consecutive_dodges,
-						},
-					},
-				},
+							stat_buffs.extra_consecutive_dodges
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_improved_dodge",
-				identifier = "psyker_improved_dodge",
-			},
+				identifier = "psyker_improved_dodge"
+			}
 		},
 		psyker_block_costs_warp_charge = {
 			description = "loc_talent_psyker_block_costs_warp_charge_desc",
@@ -1554,13 +1555,13 @@ local archetype_talents = {
 			format_values = {
 				warp_charge_block_cost = {
 					format_type = "percentage",
-					value = talent_settings_2.defensive_1.warp_charge_cost_multiplier,
-				},
+					value = talent_settings_2.defensive_1.warp_charge_cost_multiplier
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_block_costs_warp_charge",
-				identifier = "psyker_block_costs_warp_charge",
-			},
+				identifier = "psyker_block_costs_warp_charge"
+			}
 		},
 		psyker_warp_charge_reduces_toughness_damage_taken = {
 			description = "loc_talent_psyker_toughness_damage_reduction_from_warp_charge_desc",
@@ -1574,7 +1575,7 @@ local archetype_talents = {
 					value = talent_settings_2.defensive_2.min_toughness_damage_multiplier,
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
-					end,
+					end
 				},
 				max_damage = {
 					format_type = "percentage",
@@ -1582,24 +1583,30 @@ local archetype_talents = {
 					value = talent_settings_2.defensive_2.max_toughness_damage_multiplier,
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_warp_charge_reduces_toughness_damage_taken",
-				identifier = "psyker_warp_charge_reduces_toughness_damage_taken",
-			},
+				identifier = "psyker_warp_charge_reduces_toughness_damage_taken"
+			}
 		},
 		psyker_venting_improvements = {
-			description = "loc_talent_psyker_no_movement_penalty_quell_reload_desc",
+			description = "loc_talent_psyker_improved_venting_desc",
 			display_name = "loc_talent_psyker_venting_doesnt_slow",
 			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_3_1",
 			name = "Venting no longer slows your movement speed.",
-			format_values = {},
+			format_values = {
+				movement_speed = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings_2.defensive_3.movement_speed
+				}
+			},
 			passive = {
 				buff_template_name = "psyker_venting_improvements",
-				identifier = "psyker_venting_improvements",
-			},
+				identifier = "psyker_venting_improvements"
+			}
 		},
 		psyker_boost_allies_in_sphere = {
 			description = "loc_talent_psyker_force_field_grants_toughness_desc",
@@ -1609,7 +1616,7 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_combat_ability_shield",
+					value = "loc_talent_psyker_combat_ability_shield"
 				},
 				toughness_damage_reduction = {
 					format_type = "percentage",
@@ -1617,21 +1624,21 @@ local archetype_talents = {
 					value = talent_settings_3.combat_ability.toughness_damage_reduction,
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
-					end,
+					end
 				},
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings_3.combat_ability.toughness_for_allies,
+					value = talent_settings_3.combat_ability.toughness_for_allies
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings_3.combat_ability.toughness_duration,
-				},
+					value = talent_settings_3.combat_ability.toughness_duration
+				}
 			},
 			special_rule = {
 				identifier = "psyker_boost_allies_in_sphere",
-				special_rule_name = "psyker_boost_allies_in_sphere",
-			},
+				special_rule_name = "psyker_boost_allies_in_sphere"
+			}
 		},
 		psyker_boost_allies_passing_through_force_field = {
 			description = "loc_talent_psyker_force_field_grants_movement_and_toughness_dr_description",
@@ -1641,12 +1648,12 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_combat_ability_shield",
+					value = "loc_talent_psyker_combat_ability_shield"
 				},
 				movement_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = psyker_force_field_buff.stat_buffs.movement_speed,
+					value = psyker_force_field_buff.stat_buffs.movement_speed
 				},
 				toughness_dr = {
 					format_type = "percentage",
@@ -1654,17 +1661,17 @@ local archetype_talents = {
 					value = psyker_force_field_buff.stat_buffs.toughness_damage_taken_multiplier,
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
-					end,
+					end
 				},
 				duration = {
 					format_type = "number",
-					value = psyker_force_field_buff.duration,
-				},
+					value = psyker_force_field_buff.duration
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_boost_allies_passing_through_force_field",
-				identifier = "psyker_boost_allies_passing_through_force_field",
-			},
+				identifier = "psyker_boost_allies_passing_through_force_field"
+			}
 		},
 		psyker_increased_max_souls = {
 			description = "loc_talent_psyker_increased_souls_desc",
@@ -1674,13 +1681,13 @@ local archetype_talents = {
 			format_values = {
 				soul_amount = {
 					format_type = "number",
-					value = max_souls_talent,
-				},
+					value = max_souls_talent
+				}
 			},
 			special_rule = {
 				identifier = "psyker_increased_max_souls",
-				special_rule_name = "psyker_increased_max_souls",
-			},
+				special_rule_name = "psyker_increased_max_souls"
+			}
 		},
 		psyker_spread_warpfire_on_kill = {
 			description = "loc_talent_psyker_warpfire_spread_desc",
@@ -1690,13 +1697,13 @@ local archetype_talents = {
 			format_values = {
 				stacks = {
 					format_type = "number",
-					value = talent_settings_2.offensive_2_2.stacks_to_share,
-				},
+					value = talent_settings_2.offensive_2_2.stacks_to_share
+				}
 			},
 			special_rule = {
 				identifier = "psyker_spread_warpfire_on_kill",
-				special_rule_name = "psyker_spread_warpfire_on_kill",
-			},
+				special_rule_name = "psyker_spread_warpfire_on_kill"
+			}
 		},
 		psyker_smite_on_hit = {
 			description = "loc_talent_psyker_smite_on_hit_special_elite_desc",
@@ -1706,21 +1713,21 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_brain_burst_improved",
+					value = "loc_talent_psyker_brain_burst_improved"
 				},
 				smite_chance = {
 					format_type = "percentage",
-					value = talent_settings_2.offensive_2_3.smite_chance,
+					value = talent_settings_2.offensive_2_3.smite_chance
 				},
 				time = {
 					format_type = "number",
-					value = talent_settings_2.offensive_2_3.cooldown,
-				},
+					value = talent_settings_2.offensive_2_3.cooldown
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_smite_on_hit",
-				identifier = "psyker_smite_on_hit",
-			},
+				identifier = "psyker_smite_on_hit"
+			}
 		},
 		psyker_empowered_chain_lightnings_replenish_toughness_to_allies = {
 			description = "loc_talent_psyker_empowered_chain_lightnings_replenish_toughness_to_allies_description",
@@ -1730,17 +1737,17 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_empowered_ability",
+					value = "loc_talent_psyker_empowered_ability"
 				},
 				toughness = {
 					format_type = "percentage",
-					value = talent_settings_3.spec_passive_1.toughness_for_allies,
-				},
+					value = talent_settings_3.spec_passive_1.toughness_for_allies
+				}
 			},
 			special_rule = {
 				identifier = "psyker_empowered_grenades_toughness_on_attack",
-				special_rule_name = "psyker_empowered_grenades_toughness_on_attack",
-			},
+				special_rule_name = "psyker_empowered_grenades_toughness_on_attack"
+			}
 		},
 		psyker_empowered_grenades_passive_improved = {
 			description = "loc_talent_psyker_increase_empower_chain_lighting_chance_description",
@@ -1750,7 +1757,7 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_empowered_ability",
+					value = "loc_talent_psyker_empowered_ability"
 				},
 				proc_chance_before = {
 					format_type = "percentage",
@@ -1759,9 +1766,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"proc_events",
-							proc_events.on_hit,
-						},
-					},
+							proc_events.on_hit
+						}
+					}
 				},
 				proc_chance_after = {
 					format_type = "percentage",
@@ -1770,15 +1777,15 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"proc_events",
-							proc_events.on_hit,
-						},
-					},
-				},
+							proc_events.on_hit
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_empowered_grenades_passive_improved",
-				identifier = "psyker_empowered_grenades_passive",
-			},
+				identifier = "psyker_empowered_grenades_passive"
+			}
 		},
 		psyker_empowered_ability_on_elite_kills = {
 			description = "loc_talent_psyker_empowered_ability_on_elite_kills_description",
@@ -1788,13 +1795,13 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_empowered_ability",
-				},
+					value = "loc_talent_psyker_empowered_ability"
+				}
 			},
 			special_rule = {
 				identifier = "psyker_empowered_grenades_stack_on_elite_kills",
-				special_rule_name = "psyker_empowered_grenades_stack_on_elite_kills",
-			},
+				special_rule_name = "psyker_empowered_grenades_stack_on_elite_kills"
+			}
 		},
 		psyker_souls_restore_cooldown_on_ability = {
 			description = "loc_talent_psyker_souls_restore_cooldown_on_ability_increased_souls_desc",
@@ -1803,12 +1810,12 @@ local archetype_talents = {
 			name = "Using Unleash the warp removes all souls and reduces the cooldown for each soul removed",
 			format_values = {
 				stacks = 2,
-				cooldown = talent_settings_2.combat_ability_1.cooldown_reduction_percent * 100,
+				cooldown = talent_settings_2.combat_ability_1.cooldown_reduction_percent * 100
 			},
 			special_rule = {
 				identifier = "psyker_restore_cooldown_per_soul",
-				special_rule_name = special_rules.psyker_restore_cooldown_per_soul,
-			},
+				special_rule_name = special_rules.psyker_restore_cooldown_per_soul
+			}
 		},
 		psyker_warpfire_on_shout = {
 			description = "loc_talent_psyker_warpfire_on_shout_desc",
@@ -1818,11 +1825,11 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_shout_vent_warp_charge",
+					value = "loc_talent_psyker_shout_vent_warp_charge"
 				},
 				min_stacks = {
 					format_type = "string",
-					value = "1 - ",
+					value = "1 - "
 				},
 				warpfire_stacks = {
 					format_type = "number",
@@ -1830,15 +1837,15 @@ local archetype_talents = {
 						buff_template_name = "psyker_shout_applies_warpfire",
 						find_value_type = "buff_template",
 						path = {
-							"warpfire_max_stacks",
-						},
-					},
-				},
+							"warpfire_max_stacks"
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_shout_applies_warpfire",
-				identifier = "psyker_shout_applies_warpfire",
-			},
+				identifier = "psyker_shout_applies_warpfire"
+			}
 		},
 		psyker_warpfire_generate_souls = {
 			description = "loc_talent_psyker_warpfire_generates_souls_desc",
@@ -1853,15 +1860,15 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"proc_events",
-							proc_events.on_minion_death,
-						},
-					},
-				},
+							proc_events.on_minion_death
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_soul_on_warpfire_kill",
-				identifier = "psyker_soul_on_warpfire_kill",
-			},
+				identifier = "psyker_soul_on_warpfire_kill"
+			}
 		},
 		psyker_ability_increase_brain_burst_speed = {
 			description = "loc_talent_psyker_ability_increase_brain_burst_speed_desc",
@@ -1871,26 +1878,26 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_brain_burst_improved",
+					value = "loc_talent_psyker_brain_burst_improved"
 				},
 				smite_attack_speed = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings_2.combat_ability_3.smite_attack_speed,
+					value = talent_settings_2.combat_ability_3.smite_attack_speed
 				},
 				warp_charge_cost = {
 					format_type = "percentage",
-					value = talent_settings_2.combat_ability_3.warp_charge_amount_smite,
+					value = talent_settings_2.combat_ability_3.warp_charge_amount_smite
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings_2.combat_ability_3.duration,
-				},
+					value = talent_settings_2.combat_ability_3.duration
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_ability_increase_brain_burst_speed",
-				identifier = "psyker_ability_increase_brain_burst_speed",
-			},
+				identifier = "psyker_ability_increase_brain_burst_speed"
+			}
 		},
 		psyker_shield_extra_charge = {
 			description = "loc_talent_psyker_force_field_charges_description",
@@ -1900,25 +1907,24 @@ local archetype_talents = {
 			format_values = {
 				max_charges = {
 					format_type = "number",
-					value = psyker_force_field.max_charges + psyker_combat_ability_extra_charge.stat_buffs.ability_extra_charges,
+					value = psyker_force_field.max_charges + psyker_combat_ability_extra_charge.stat_buffs.ability_extra_charges
 				},
 				cooldown = {
 					format_type = "number",
-					value = psyker_force_field_improved.cooldown,
+					value = psyker_force_field_improved.cooldown
 				},
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_combat_ability_shield",
-				},
+					value = "loc_talent_psyker_combat_ability_shield"
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_combat_ability_extra_charge",
-				identifier = "psyker_combat_ability_extra_charge",
+				identifier = "psyker_combat_ability_extra_charge"
 			},
 			player_ability = {
-				ability_type = "combat_ability",
-				ability = PlayerAbilities.psyker_force_field_improved,
-			},
+				ability = PlayerAbilities.psyker_force_field_improved
+			}
 		},
 		psyker_sphere_shield = {
 			description = "loc_talent_psyker_force_field_dome_increased_cd_desc",
@@ -1928,26 +1934,25 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_combat_ability_shield",
+					value = "loc_talent_psyker_combat_ability_shield"
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings_3.combat_ability.sphere_duration,
+					value = talent_settings_3.combat_ability.sphere_duration
 				},
 				cooldown = {
 					format_type = "number",
-					value = talent_settings_3.combat_ability.cooldown_sphere,
-				},
+					value = talent_settings_3.combat_ability.cooldown_sphere
+				}
 			},
 			player_ability = {
-				ability_type = "combat_ability",
 				priority = 1,
-				ability = PlayerAbilities.psyker_force_field_dome,
+				ability = PlayerAbilities.psyker_force_field_dome
 			},
 			special_rule = {
 				identifier = "psyker_sphere_shield",
-				special_rule_name = "psyker_sphere_shield",
-			},
+				special_rule_name = "psyker_sphere_shield"
+			}
 		},
 		psyker_new_mark_passive = {
 			description = "loc_talent_psyker_marked_enemies_passive_updated_desc",
@@ -1960,9 +1965,9 @@ local archetype_talents = {
 						buff_template_name = "psyker_marked_enemies_passive",
 						find_value_type = "buff_template",
 						path = {
-							"target_distance_improved",
-						},
-					},
+							"target_distance_improved"
+						}
+					}
 				},
 				toughness = {
 					format_type = "percentage",
@@ -1970,9 +1975,9 @@ local archetype_talents = {
 						buff_template_name = "psyker_marked_enemies_passive",
 						find_value_type = "buff_template",
 						path = {
-							"toughness_percentage",
-						},
-					},
+							"toughness_percentage"
+						}
+					}
 				},
 				move_speed = {
 					format_type = "percentage",
@@ -1982,9 +1987,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.movement_speed,
-						},
-					},
+							stat_buffs.movement_speed
+						}
+					}
 				},
 				move_speed_duration = {
 					format_type = "number",
@@ -1992,9 +1997,9 @@ local archetype_talents = {
 						buff_template_name = "psyker_marked_enemies_passive_bonus",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
+							"duration"
+						}
+					}
 				},
 				base_damage = {
 					format_type = "percentage",
@@ -2004,9 +2009,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.damage,
-						},
-					},
+							stat_buffs.damage
+						}
+					}
 				},
 				crit_damage = {
 					format_type = "percentage",
@@ -2016,9 +2021,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.critical_strike_damage,
-						},
-					},
+							stat_buffs.critical_strike_damage
+						}
+					}
 				},
 				weakspot_damage = {
 					format_type = "percentage",
@@ -2029,9 +2034,9 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.weakspot_damage,
-						},
-					},
+							stat_buffs.weakspot_damage
+						}
+					}
 				},
 				bonus_duration = {
 					format_type = "number",
@@ -2039,9 +2044,9 @@ local archetype_talents = {
 						buff_template_name = "psyker_marked_enemies_passive_bonus_stacking",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
+							"duration"
+						}
+					}
 				},
 				bonus_stacks = {
 					format_type = "number",
@@ -2049,15 +2054,15 @@ local archetype_talents = {
 						buff_template_name = "psyker_marked_enemies_passive_bonus_stacking",
 						find_value_type = "buff_template",
 						path = {
-							"max_stacks",
-						},
-					},
-				},
+							"max_stacks"
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_marked_enemies_passive",
-				identifier = "psyker_marked_enemies_passive",
-			},
+				identifier = "psyker_marked_enemies_passive"
+			}
 		},
 		psyker_mark_increased_range = {
 			description = "loc_talent_psyker_mark_increased_range_description",
@@ -2071,9 +2076,9 @@ local archetype_talents = {
 						buff_template_name = "psyker_marked_enemies_passive",
 						find_value_type = "buff_template",
 						path = {
-							"target_distance_base",
-						},
-					},
+							"target_distance_base"
+						}
+					}
 				},
 				radius = {
 					format_type = "number",
@@ -2081,19 +2086,19 @@ local archetype_talents = {
 						buff_template_name = "psyker_marked_enemies_passive",
 						find_value_type = "buff_template",
 						path = {
-							"target_distance_improved",
-						},
-					},
+							"target_distance_improved"
+						}
+					}
 				},
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_marked_enemies_passive",
-				},
+					value = "loc_talent_psyker_marked_enemies_passive"
+				}
 			},
 			special_rule = {
 				identifier = "psyker_mark_increased_range",
-				special_rule_name = "psyker_mark_increased_range",
-			},
+				special_rule_name = "psyker_mark_increased_range"
+			}
 		},
 		psyker_mark_increased_max_stacks = {
 			description = "loc_talent_psyker_mark_increased_max_stacks_description",
@@ -2107,9 +2112,9 @@ local archetype_talents = {
 						buff_template_name = "psyker_marked_enemies_passive_bonus_stacking",
 						find_value_type = "buff_template",
 						path = {
-							"max_stacks",
-						},
-					},
+							"max_stacks"
+						}
+					}
 				},
 				stacks_after = {
 					format_type = "number",
@@ -2117,19 +2122,19 @@ local archetype_talents = {
 						buff_template_name = "psyker_marked_enemies_passive_bonus_stacking_increased_stacks",
 						find_value_type = "buff_template",
 						path = {
-							"max_stacks",
-						},
-					},
+							"max_stacks"
+						}
+					}
 				},
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_marked_enemies_passive",
-				},
+					value = "loc_talent_psyker_marked_enemies_passive"
+				}
 			},
 			special_rule = {
 				identifier = "psyker_mark_increased_max_stacks",
-				special_rule_name = "psyker_mark_increased_max_stacks",
-			},
+				special_rule_name = "psyker_mark_increased_max_stacks"
+			}
 		},
 		psyker_mark_increased_duration = {
 			description = "loc_talent_psyker_mark_increased_duration_description",
@@ -2143,9 +2148,9 @@ local archetype_talents = {
 						buff_template_name = "psyker_marked_enemies_passive_bonus_stacking",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
+							"duration"
+						}
+					}
 				},
 				duration_after = {
 					format_type = "number",
@@ -2153,19 +2158,19 @@ local archetype_talents = {
 						buff_template_name = "psyker_marked_enemies_passive_bonus_stacking_increased_duration",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
+							"duration"
+						}
+					}
 				},
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_marked_enemies_passive",
-				},
+					value = "loc_talent_psyker_marked_enemies_passive"
+				}
 			},
 			special_rule = {
 				identifier = "psyker_mark_increased_duration",
-				special_rule_name = "psyker_mark_increased_duration",
-			},
+				special_rule_name = "psyker_mark_increased_duration"
+			}
 		},
 		psyker_mark_increased_mark_targets = {
 			description = "loc_talent_psyker_mark_increased_mark_targets_description",
@@ -2174,8 +2179,8 @@ local archetype_talents = {
 			name = "???",
 			special_rule = {
 				identifier = "psyker_mark_increased_mark_targets",
-				special_rule_name = "psyker_mark_increased_mark_targets",
-			},
+				special_rule_name = "psyker_mark_increased_mark_targets"
+			}
 		},
 		psyker_mark_kills_can_vent = {
 			description = "loc_talent_psyker_mark_kills_can_vent_description",
@@ -2189,9 +2194,9 @@ local archetype_talents = {
 						buff_template_name = "psyker_marked_enemies_passive",
 						find_value_type = "buff_template",
 						path = {
-							"chance_to_vent_proc_chance",
-						},
-					},
+							"chance_to_vent_proc_chance"
+						}
+					}
 				},
 				warp_charge_percentage = {
 					format_type = "percentage",
@@ -2199,19 +2204,19 @@ local archetype_talents = {
 						buff_template_name = "psyker_marked_enemies_passive",
 						find_value_type = "buff_template",
 						path = {
-							"chance_to_vent_warp_charge_percent",
-						},
-					},
+							"chance_to_vent_warp_charge_percent"
+						}
+					}
 				},
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_marked_enemies_passive",
-				},
+					value = "loc_talent_psyker_marked_enemies_passive"
+				}
 			},
 			special_rule = {
 				identifier = "psyker_mark_kills_can_vent",
-				special_rule_name = "psyker_mark_kills_can_vent",
-			},
+				special_rule_name = "psyker_mark_kills_can_vent"
+			}
 		},
 		psyker_mark_weakspot_kills = {
 			description = "loc_talent_psyker_mark_weakspot_stacks_description",
@@ -2221,17 +2226,17 @@ local archetype_talents = {
 			format_values = {
 				talent_name = {
 					format_type = "loc_string",
-					value = "loc_talent_psyker_marked_enemies_passive",
+					value = "loc_talent_psyker_marked_enemies_passive"
 				},
 				stacks = {
 					format_type = "number",
-					value = talent_settings.mark_passive.weakspot_stacks - 1,
-				},
+					value = talent_settings.mark_passive.weakspot_stacks - 1
+				}
 			},
 			special_rule = {
 				identifier = "psyker_mark_weakspot_kills",
-				special_rule_name = "psyker_mark_weakspot_kills",
-			},
+				special_rule_name = "psyker_mark_weakspot_kills"
+			}
 		},
 		psyker_melee_attack_speed = {
 			description = "loc_talent_psyker_melee_attack_speed_desc",
@@ -2246,15 +2251,15 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_attack_speed,
-						},
-					},
-				},
+							stat_buffs.melee_attack_speed
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_melee_attack_speed",
-				identifier = "psyker_melee_attack_speed",
-			},
+				identifier = "psyker_melee_attack_speed"
+			}
 		},
 		psyker_cleave_from_peril = {
 			description = "loc_talent_psyker_cleave_from_peril_desc",
@@ -2265,13 +2270,13 @@ local archetype_talents = {
 				max_cleave = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.cleave_from_peril.max,
-				},
+					value = talent_settings.cleave_from_peril.max
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_cleave_from_peril",
-				identifier = "psyker_cleave_from_peril",
-			},
+				identifier = "psyker_cleave_from_peril"
+			}
 		},
 		psyker_blocking_soulblaze = {
 			description = "loc_talent_psyker_blocking_push_soulblaze_desc",
@@ -2281,13 +2286,13 @@ local archetype_talents = {
 			format_values = {
 				stacks = {
 					format_type = "number",
-					value = talent_settings.blocking_soulbaze.stacks,
-				},
+					value = talent_settings.blocking_soulbaze.stacks
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_blocking_soulblaze",
-				identifier = "psyker_blocking_soulblaze",
-			},
+				identifier = "psyker_blocking_soulblaze"
+			}
 		},
 		psyker_melee_weaving = {
 			description = "loc_talent_psyker_melee_weaving_desc",
@@ -2297,7 +2302,7 @@ local archetype_talents = {
 			format_values = {
 				vent = {
 					format_type = "percentage",
-					value = talent_settings.melee_weaving.vent_percentage,
+					value = talent_settings.melee_weaving.vent_percentage
 				},
 				warp_generation = {
 					format_type = "percentage",
@@ -2305,17 +2310,17 @@ local archetype_talents = {
 					value = talent_settings.melee_weaving.warp_generation,
 					value_manipulation = function (value)
 						return 100 - math.round(value * 100)
-					end,
+					end
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.melee_weaving.duration,
-				},
+					value = talent_settings.melee_weaving.duration
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_melee_weaving",
-				identifier = "psyker_melee_weaving",
-			},
+				identifier = "psyker_melee_weaving"
+			}
 		},
 		psyker_killing_enemy_with_warpfire_boosts = {
 			description = "loc_talent_psyker_killing_enemy_with_warpfire_boosts_duration_desc",
@@ -2329,9 +2334,9 @@ local archetype_talents = {
 						buff_template_name = "psyker_killing_enemy_with_warpfire_boosts_boost_buff",
 						find_value_type = "buff_template",
 						path = {
-							"toughness_percentage",
-						},
-					},
+							"toughness_percentage"
+						}
+					}
 				},
 				duration = {
 					format_type = "number",
@@ -2339,9 +2344,9 @@ local archetype_talents = {
 						buff_template_name = "psyker_killing_enemy_with_warpfire_boosts_boost_buff",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
+							"duration"
+						}
+					}
 				},
 				crit_chance = {
 					format_type = "percentage",
@@ -2350,15 +2355,15 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.critical_strike_chance,
-						},
-					},
-				},
+							stat_buffs.critical_strike_chance
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_killing_enemy_with_warpfire_boosts",
-				identifier = "psyker_killing_enemy_with_warpfire_boosts",
-			},
+				identifier = "psyker_killing_enemy_with_warpfire_boosts"
+			}
 		},
 		psyker_warp_attacks_rending = {
 			description = "loc_talent_psyker_warp_attacks_rending_alt_desc",
@@ -2369,17 +2374,17 @@ local archetype_talents = {
 				rending = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.warp_attacks_rending.warp_rending,
+					value = talent_settings.warp_attacks_rending.warp_rending
 				},
 				threshold = {
 					format_type = "percentage",
-					value = talent_settings.warp_attacks_rending.threshold,
-				},
+					value = talent_settings.warp_attacks_rending.threshold
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_warp_attacks_rending",
-				identifier = "psyker_warp_attacks_rending",
-			},
+				identifier = "psyker_warp_attacks_rending"
+			}
 		},
 		psyker_warp_glass_cannon = {
 			description = "loc_talent_psyker_warp_glass_cannon_desc",
@@ -2395,12 +2400,12 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness_replenish_multiplier,
-						},
+							stat_buffs.toughness_replenish_multiplier
+						}
 					},
 					value_manipulation = function (value)
 						return (1 - math.abs(value)) * 100
-					end,
+					end
 				},
 				peril_reduction = {
 					format_type = "percentage",
@@ -2410,18 +2415,18 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.warp_charge_amount,
-						},
+							stat_buffs.warp_charge_amount
+						}
 					},
 					value_manipulation = function (value)
 						return (1 - value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_warp_glass_cannon",
-				identifier = "psyker_warp_glass_cannon",
-			},
+				identifier = "psyker_warp_glass_cannon"
+			}
 		},
 		psyker_soulblaze_reduces_damage_taken = {
 			description = "loc_talent_psyker_soulblaze_reduces_damage_taken_desc",
@@ -2437,12 +2442,12 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"proc_stat_buffs",
-							stat_buffs.toughness_damage_taken_multiplier,
-						},
+							stat_buffs.toughness_damage_taken_multiplier
+						}
 					},
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
-					end,
+					end
 				},
 				time = {
 					format_type = "number",
@@ -2450,15 +2455,15 @@ local archetype_talents = {
 						buff_template_name = "psyker_soulblaze_reduces_damage_taken",
 						find_value_type = "buff_template",
 						path = {
-							"active_duration",
-						},
-					},
-				},
+							"active_duration"
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_soulblaze_reduces_damage_taken",
-				identifier = "psyker_soulblaze_reduces_damage_taken",
-			},
+				identifier = "psyker_soulblaze_reduces_damage_taken"
+			}
 		},
 		psyker_ranged_crits_vent = {
 			description = "loc_talent_psyker_ranged_crits_vent_desc",
@@ -2473,19 +2478,19 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"proc_events",
-							proc_events.on_hit,
-						},
-					},
+							proc_events.on_hit
+						}
+					}
 				},
 				percent = {
 					format_type = "percentage",
-					value = talent_settings.ranged_crits_vent.warp_charge_percent,
-				},
+					value = talent_settings.ranged_crits_vent.warp_charge_percent
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_ranged_crits_vent",
-				identifier = "psyker_ranged_crits_vent",
-			},
+				identifier = "psyker_ranged_crits_vent"
+			}
 		},
 		psyker_reload_speed_warp_charge = {
 			description = "loc_talent_psyker_reload_speed_warp_desc",
@@ -2495,21 +2500,21 @@ local archetype_talents = {
 			format_values = {
 				warp_charge = {
 					format_type = "percentage",
-					value = talent_settings.reload_speed_warp.warp_charge,
+					value = talent_settings.reload_speed_warp.warp_charge
 				},
 				reload_speed = {
 					format_type = "percentage",
-					value = talent_settings.reload_speed_warp.reload_speed,
+					value = talent_settings.reload_speed_warp.reload_speed
 				},
 				threshold = {
 					format_type = "percentage",
-					value = talent_settings.reload_speed_warp.threshold,
-				},
+					value = talent_settings.reload_speed_warp.threshold
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_reload_speed_warp",
-				identifier = "psyker_reload_speed_warp",
-			},
+				identifier = "psyker_reload_speed_warp"
+			}
 		},
 		psyker_chain_lightning_heavy_attacks = {
 			description = "loc_talent_psyker_chain_lightning_damage_heavy_attacks_desc",
@@ -2519,8 +2524,8 @@ local archetype_talents = {
 			format_values = {},
 			passive = {
 				buff_template_name = "psyker_chain_lightning_heavy_attacks",
-				identifier = "psyker_chain_lightning_heavy_attacks",
-			},
+				identifier = "psyker_chain_lightning_heavy_attacks"
+			}
 		},
 		psyker_force_staff_quick_attack_bonus = {
 			description = "loc_talent_psyker_force_staff_quick_attack_bonus_desc",
@@ -2535,12 +2540,12 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.warp_damage_taken_multiplier,
-						},
+							stat_buffs.warp_damage_taken_multiplier
+						}
 					},
 					value_manipulation = function (value)
 						return (value - 1) * 100
-					end,
+					end
 				},
 				max_stacks = {
 					format_type = "number",
@@ -2548,9 +2553,9 @@ local archetype_talents = {
 						buff_template_name = "psyker_force_staff_quick_attack_debuff",
 						find_value_type = "buff_template",
 						path = {
-							"max_stacks",
-						},
-					},
+							"max_stacks"
+						}
+					}
 				},
 				duration = {
 					format_type = "number",
@@ -2558,15 +2563,15 @@ local archetype_talents = {
 						buff_template_name = "psyker_force_staff_quick_attack_debuff",
 						find_value_type = "buff_template",
 						path = {
-							"duration",
-						},
-					},
-				},
+							"duration"
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_force_staff_quick_attack_bonus",
-				identifier = "psyker_force_staff_quick_attack_bonus",
-			},
+				identifier = "psyker_force_staff_quick_attack_bonus"
+			}
 		},
 		psyker_force_staff_wield_speed = {
 			description = "loc_talent_psyker_force_staff_wield_speed_desc",
@@ -2576,13 +2581,13 @@ local archetype_talents = {
 			format_values = {
 				wield_speed = {
 					format_type = "percentage",
-					value = talent_settings.psyker_force_staff_wield_speed.max,
-				},
+					value = talent_settings.psyker_force_staff_wield_speed.max
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_force_staff_wield_speed",
-				identifier = "psyker_force_staff_wield_speed",
-			},
+				identifier = "psyker_force_staff_wield_speed"
+			}
 		},
 		psyker_damage_to_peril_conversion = {
 			description = "loc_talent_psyker_damage_to_peril_conversion_desc",
@@ -2590,13 +2595,108 @@ local archetype_talents = {
 			format_values = {
 				percent = {
 					format_type = "percentage",
-					value = talent_settings.psyker_damage_to_peril_conversion.percent,
-				},
+					value = talent_settings.psyker_damage_to_peril_conversion.percent
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_damage_to_peril_conversion",
-				identifier = "psyker_damage_to_peril_conversion",
+				identifier = "psyker_damage_to_peril_conversion"
+			}
+		},
+		psyker_peril_passive = {
+			description = "loc_talent_psyker_peril_passive_desc",
+			display_name = "loc_talent_psyker_peril_passive",
+			format_values = {
+				max_peril = {
+					format_type = "percentage",
+					value = 1
+				},
+				critical_peril = {
+					format_type = "percentage",
+					value = 0.97
+				},
+				passive_quell_time = {
+					format_type = "number",
+					value = 3
+				},
+				vent_input = {
+					format_type = "loc_string",
+					value = "loc_input_description_vent"
+				}
+			}
+		},
+		psyker_weapon_attacks_peril_equilibrium = {
+			description = "loc_talent_psyker_weapon_attacks_peril_equilibrium_desc",
+			display_name = "loc_talent_psyker_weapon_attacks_peril_equilibrium",
+			icon = "content/ui/textures/icons/talents/psyker/psyker_damage_to_peril_conversion",
+			name = "Weapon Hits shift Peril toward 50%",
+			format_values = {
+				threshold = {
+					format_type = "percentage",
+					value = talent_settings.psyker_weapon_attacks_peril_equilibrium.threshold
+				},
+				amount = {
+					format_type = "percentage",
+					value = talent_settings.psyker_weapon_attacks_peril_equilibrium.warp_charge_percent
+				}
 			},
+			passive = {
+				buff_template_name = "psyker_weapon_attacks_peril_equilibrium",
+				identifier = "psyker_weapon_attacks_peril_equilibrium"
+			}
+		},
+		psyker_increased_warp_damage = {
+			description = "loc_talent_psyker_increased_warp_damage_desc",
+			display_name = "loc_talent_psyker_increased_warp_damage",
+			icon = "content/ui/textures/icons/talents/psyker/psyker_warp_attacks_rending",
+			name = "Increased Warp Damage",
+			format_values = {
+				warp_damage = {
+					format_type = "percentage",
+					prefix = "+",
+					find_value = {
+						buff_template_name = "psyker_increased_warp_damage",
+						find_value_type = "buff_template",
+						path = {
+							"stat_buffs",
+							stat_buffs.warp_damage
+						}
+					}
+				}
+			},
+			passive = {
+				buff_template_name = "psyker_increased_warp_damage",
+				identifier = "psyker_increased_warp_damage"
+			}
+		},
+		psyker_increased_blitz_damage = {
+			description = "loc_talent_psyker_increased_blitz_damage_desc",
+			display_name = "loc_talent_psyker_increased_blitz_damage",
+			icon = "content/ui/textures/icons/talents/psyker/psyker_blitz_chain_lightning",
+			name = "Increased Blitz Damage",
+			format_values = {
+				blitz_damage = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.psyker_increased_blitz_damage.damage
+				},
+				blitz_one = {
+					format_type = "loc_string",
+					value = "loc_talent_psyker_brain_burst_improved"
+				},
+				blitz_two = {
+					format_type = "loc_string",
+					value = "loc_ability_psyker_chain_lightning"
+				},
+				blitz_three = {
+					format_type = "loc_string",
+					value = "loc_ability_psyker_blitz_throwing_knives"
+				}
+			},
+			passive = {
+				buff_template_name = "psyker_increased_blitz_damage",
+				identifier = "psyker_increased_blitz_damage"
+			}
 		},
 		psyker_damage_resistance_stun_immunity = {
 			description = "loc_talent_psyker_damage_resistance_stun_immunity_desc",
@@ -2608,17 +2708,17 @@ local archetype_talents = {
 					value = talent_settings.psyker_damage_resistance_stun_immunity.dr,
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
-					end,
+					end
 				},
 				duration = {
 					format_type = "number",
-					value = talent_settings.psyker_damage_resistance_stun_immunity.duration,
-				},
+					value = talent_settings.psyker_damage_resistance_stun_immunity.duration
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_damage_resistance_stun_immunity",
-				identifier = "psyker_damage_resistance_stun_immunity",
-			},
+				identifier = "psyker_damage_resistance_stun_immunity"
+			}
 		},
 		psyker_stat_mix = {
 			description = "loc_talent_psyker_stat_mix_desc",
@@ -2627,23 +2727,23 @@ local archetype_talents = {
 				stamina = {
 					format_type = "number",
 					prefix = "+",
-					value = talent_settings.psyker_stat_mix.stamina,
+					value = talent_settings.psyker_stat_mix.stamina
 				},
 				peril_reduction = {
 					format_type = "percentage",
 					prefix = "-",
-					value = 1 - talent_settings.psyker_stat_mix.peril_decay,
+					value = 1 - talent_settings.psyker_stat_mix.peril_decay
 				},
 				toughness_replenish = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.psyker_stat_mix.toughness_replenish_modifier,
-				},
+					value = talent_settings.psyker_stat_mix.toughness_replenish_modifier
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_stat_mix",
-				identifier = "psyker_stat_mix",
-			},
+				identifier = "psyker_stat_mix"
+			}
 		},
 		psyker_damage_vs_ogryns_and_monsters = {
 			description = "loc_talent_psyker_damage_vs_ogryns_and_monsters_desc",
@@ -2652,13 +2752,13 @@ local archetype_talents = {
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.psyker_damage_vs_ogryns_and_monsters.damage_vs_ogryn_and_monsters,
-				},
+					value = talent_settings.psyker_damage_vs_ogryns_and_monsters.damage_vs_ogryn_and_monsters
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_damage_vs_ogryns_and_monsters",
-				identifier = "psyker_damage_vs_ogryns_and_monsters",
-			},
+				identifier = "psyker_damage_vs_ogryns_and_monsters"
+			}
 		},
 		psyker_alternative_peril_explosion = {
 			description = "loc_talent_psyker_alternative_peril_explosion_new_desc",
@@ -2669,22 +2769,22 @@ local archetype_talents = {
 				overload_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.psyker_alternative_peril_explosion.overload_damage,
+					value = talent_settings.psyker_alternative_peril_explosion.overload_damage
 				},
 				overload_radius = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.psyker_alternative_peril_explosion.overload_radius,
-				},
+					value = talent_settings.psyker_alternative_peril_explosion.overload_radius
+				}
 			},
 			special_rule = {
 				identifier = "psyker_no_knock_down_overload",
-				special_rule_name = special_rules.psyker_no_knock_down_overload,
+				special_rule_name = special_rules.psyker_no_knock_down_overload
 			},
 			passive = {
 				buff_template_name = "psyker_alternative_peril_explosion",
-				identifier = "psyker_alternative_peril_explosion",
-			},
+				identifier = "psyker_alternative_peril_explosion"
+			}
 		},
 		psyker_force_staff_bonus = {
 			description = "loc_talent_psyker_force_staff_both_bonus_desc",
@@ -2695,28 +2795,28 @@ local archetype_talents = {
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.psyker_force_staff_both_bonus.primary_damage,
+					value = talent_settings.psyker_force_staff_both_bonus.primary_damage
 				},
 				time = {
 					format_type = "number",
-					value = talent_settings.psyker_force_staff_both_bonus.duration,
+					value = talent_settings.psyker_force_staff_both_bonus.duration
 				},
 				secondary_damage = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.psyker_force_staff_both_bonus.secondary_damage,
+					value = talent_settings.psyker_force_staff_both_bonus.secondary_damage
 				},
 				secondary_time = {
 					format_type = "number",
-					value = talent_settings.psyker_force_staff_both_bonus.secondary_duration,
-				},
+					value = talent_settings.psyker_force_staff_both_bonus.secondary_duration
+				}
 			},
 			passive = {
 				buff_template_name = "psyker_force_staff_bonus",
-				identifier = "psyker_force_staff_bonus",
-			},
-		},
-	},
+				identifier = "psyker_force_staff_bonus"
+			}
+		}
+	}
 }
 
 return archetype_talents

@@ -288,7 +288,7 @@ Overheat.track_heat_change = function (inventory_slot_component, to_state, sourc
 			"percentage: ",
 			"",
 			"source: ",
-			"",
+			""
 		}
 		tracks[track_index] = track
 	end

@@ -14,7 +14,7 @@ local enemy_vo_enemy_captain_maniac_a = {
 			"loc_enemy_captain_maniac_a__long_death_07",
 			"loc_enemy_captain_maniac_a__long_death_08",
 			"loc_enemy_captain_maniac_a__long_death_09",
-			"loc_enemy_captain_maniac_a__long_death_10",
+			"loc_enemy_captain_maniac_a__long_death_10"
 		},
 		sound_events_duration = {
 			7.079021,
@@ -26,7 +26,7 @@ local enemy_vo_enemy_captain_maniac_a = {
 			6.704438,
 			11.64206,
 			8.133125,
-			8.210375,
+			8.210375
 		},
 		sound_event_weights = {
 			0.1,
@@ -38,9 +38,9 @@ local enemy_vo_enemy_captain_maniac_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1,
+			0.1
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	renegade_captain_reinforcements = {
 		randomize_indexes_n = 0,
@@ -50,23 +50,23 @@ local enemy_vo_enemy_captain_maniac_a = {
 			"loc_enemy_captain_maniac_a__reinforcements_02",
 			"loc_enemy_captain_maniac_a__reinforcements_03",
 			"loc_enemy_captain_maniac_a__reinforcements_04",
-			"loc_enemy_captain_maniac_a__reinforcements_05",
+			"loc_enemy_captain_maniac_a__reinforcements_05"
 		},
 		sound_events_duration = {
 			2.401,
 			2.582,
 			5.015,
 			3.417,
-			2.779,
+			2.779
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	renegade_captain_taunt = {
 		randomize_indexes_n = 0,
@@ -81,7 +81,7 @@ local enemy_vo_enemy_captain_maniac_a = {
 			"loc_enemy_captain_maniac_a__taunt_07",
 			"loc_enemy_captain_maniac_a__taunt_08",
 			"loc_enemy_captain_maniac_a__taunt_09",
-			"loc_enemy_captain_maniac_a__taunt_10",
+			"loc_enemy_captain_maniac_a__taunt_10"
 		},
 		sound_events_duration = {
 			2.342,
@@ -93,7 +93,7 @@ local enemy_vo_enemy_captain_maniac_a = {
 			5.094,
 			3.837,
 			5.267,
-			3.685,
+			3.685
 		},
 		sound_event_weights = {
 			0.1,
@@ -105,9 +105,9 @@ local enemy_vo_enemy_captain_maniac_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1,
+			0.1
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	renegade_captain_taunt_combat = {
 		randomize_indexes_n = 0,
@@ -122,7 +122,7 @@ local enemy_vo_enemy_captain_maniac_a = {
 			"loc_enemy_captain_maniac_a__taunt_combat_07",
 			"loc_enemy_captain_maniac_a__taunt_combat_08",
 			"loc_enemy_captain_maniac_a__taunt_combat_09",
-			"loc_enemy_captain_maniac_a__taunt_combat_10",
+			"loc_enemy_captain_maniac_a__taunt_combat_10"
 		},
 		sound_events_duration = {
 			3.347,
@@ -134,7 +134,7 @@ local enemy_vo_enemy_captain_maniac_a = {
 			5.371,
 			6.045,
 			3.465,
-			3.86,
+			3.86
 		},
 		sound_event_weights = {
 			0.1,
@@ -146,10 +146,10 @@ local enemy_vo_enemy_captain_maniac_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1,
+			0.1
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("enemy_vo_enemy_captain_maniac_a", enemy_vo_enemy_captain_maniac_a)

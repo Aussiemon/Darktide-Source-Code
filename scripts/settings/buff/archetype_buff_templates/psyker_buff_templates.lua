@@ -105,7 +105,7 @@ function _psyker_passive_start(template_data, template_context)
 
 	if not is_playing then
 		local data = {
-			particle_name = "content/fx/particles/abilities/biomancer_soul",
+			particle_name = "content/fx/particles/abilities/biomancer_soul"
 		}
 		local spawner_name = "hips"
 
@@ -171,10 +171,10 @@ templates.psyker_passive_souls_from_elite_kills = {
 	stat_buffs = {},
 	proc_events = {
 		[proc_events.on_kill] = talent_settings_2.passive_1.on_hit_proc_chance,
-		[proc_events.on_combat_ability] = talent_settings_2.passive_1.on_combat_ability_proc_chance,
+		[proc_events.on_combat_ability] = talent_settings_2.passive_1.on_combat_ability_proc_chance
 	},
 	conditional_stat_buffs = {
-		toughness_replenish_modifier = talent_settings_2.defensive_2.toughness_replenish_modifier,
+		toughness_replenish_modifier = talent_settings_2.defensive_2.toughness_replenish_modifier
 	},
 	conditional_stat_buffs_func = _psyker_passive_conditional_stat_buffs,
 	lerp_t_func = _psyker_passive_lerp_t,
@@ -182,8 +182,8 @@ templates.psyker_passive_souls_from_elite_kills = {
 	stop_func = _psyker_passive_stop,
 	specific_proc_func = {
 		on_kill = _psyker_passive_proc_on_kill,
-		on_combat_ability = _psyker_passive_proc_on_combat_ability,
-	},
+		on_combat_ability = _psyker_passive_proc_on_combat_ability
+	}
 }
 
 function _add_soul_function(template_data, template_context, t, previous_stack_count)
@@ -304,7 +304,7 @@ function _souls_proc_func(params, template_data, template_context)
 			local cooldown_reduction_percent = talent_settings_2.combat_ability_1.cooldown_reduction_percent
 			local cooldown_percentage = cooldown_reduction_percent * num_souls
 
-			ability_extension:reduce_ability_cooldown_percentage("combat_ability", cooldown_percentage)
+			ability_extension:restore_ability_charge_percentage("combat_ability", cooldown_percentage)
 		end
 	end
 
@@ -312,7 +312,7 @@ function _souls_proc_func(params, template_data, template_context)
 end
 
 local souls_proc_events = {
-	[proc_events.on_combat_ability] = 1,
+	[proc_events.on_combat_ability] = 1
 }
 
 templates.psyker_souls = {
@@ -334,8 +334,8 @@ templates.psyker_souls = {
 	stop_func = _souls_stop_function,
 	conditional_exit_func = _souls_conditional_exit_function,
 	related_talents = {
-		"psyker_passive_souls_from_elite_kills",
-	},
+		"psyker_passive_souls_from_elite_kills"
+	}
 }
 templates.psyker_souls_increased_max_stacks = {
 	allow_proc_while_active = true,
@@ -356,8 +356,8 @@ templates.psyker_souls_increased_max_stacks = {
 	stop_func = _souls_stop_function,
 	conditional_exit_func = _souls_conditional_exit_function,
 	related_talents = {
-		"psyker_passive_souls_from_elite_kills",
-	},
+		"psyker_passive_souls_from_elite_kills"
+	}
 }
 templates.psyker_shout_applies_warpfire = {
 	class_name = "proc_buff",
@@ -365,7 +365,7 @@ templates.psyker_shout_applies_warpfire = {
 	warpfire_max_stacks = 6,
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_combat_ability] = talent_settings_2.passive_1.on_combat_ability_proc_chance,
+		[proc_events.on_combat_ability] = talent_settings_2.passive_1.on_combat_ability_proc_chance
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -399,14 +399,14 @@ templates.psyker_shout_applies_warpfire = {
 			if buff_extension and HEALTH_ALIVE[unit_hit] and not MinionState.is_sleeping_deamonhost(unit_hit) and num_warpfire_stacks > 0 then
 				buff_extension:add_internally_controlled_buff_with_stacks("warp_fire", num_warpfire_stacks, t, "owner_unit", template_context.unit)
 			end
-		end,
-	},
+		end
+	}
 }
 templates.psyker_shout_reduces_warp_generation = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_psyker_shout_finish] = 1,
+		[proc_events.on_psyker_shout_finish] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		local t = FixedFrame.get_latest_fixed_time()
@@ -414,7 +414,7 @@ templates.psyker_shout_reduces_warp_generation = {
 		local num_hits = params.num_hits
 
 		template_context.buff_extension:add_internally_controlled_buff_with_stacks(buff_name, num_hits, t, "parent_buff_template", "psyker_shout_reduces_warp_generation")
-	end,
+	end
 }
 templates.psyker_shout_warp_generation_reduction = {
 	class_name = "buff",
@@ -425,23 +425,23 @@ templates.psyker_shout_warp_generation_reduction = {
 	max_stacks = 25,
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.warp_charge_amount] = 0.99,
+		[stat_buffs.warp_charge_amount] = 0.99
 	},
 	talent_overrides = {
 		{
 			stat_buffs = {
-				[stat_buffs.warp_charge_amount] = 0.99,
-			},
+				[stat_buffs.warp_charge_amount] = 0.99
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.warp_charge_amount] = 0.98,
-			},
-		},
+				[stat_buffs.warp_charge_amount] = 0.98
+			}
+		}
 	},
 	related_talents = {
-		"psyker_shout_reduces_warp_charge_generation",
-	},
+		"psyker_shout_reduces_warp_charge_generation"
+	}
 }
 templates.psyker_discharge_damage_debuff = {
 	class_name = "buff",
@@ -450,29 +450,29 @@ templates.psyker_discharge_damage_debuff = {
 	duration = talent_settings.psyker_discharge_damage_debuff.duration,
 	stat_buffs = {
 		[stat_buffs.damage] = talent_settings.psyker_discharge_damage_debuff.damage_reduction,
-		[stat_buffs.damage_taken_multiplier] = talent_settings.psyker_discharge_damage_debuff.damage_taken,
-	},
+		[stat_buffs.damage_taken_multiplier] = talent_settings.psyker_discharge_damage_debuff.damage_taken
+	}
 }
 templates.psyker_combat_ability_extra_charge = {
 	class_name = "buff",
 	max_stacks = 1,
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.ability_extra_charges] = 1,
-	},
+		[stat_buffs.ability_extra_charges] = 1
+	}
 }
 templates.psyker_ability_increase_brain_burst_speed = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_combat_ability] = 1,
+		[proc_events.on_combat_ability] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		local t = FixedFrame.get_latest_fixed_time()
 		local buff_name = "psyker_efficient_smites"
 
 		template_context.buff_extension:add_internally_controlled_buff(buff_name, t)
-	end,
+	end
 }
 templates.psyker_efficient_smites = {
 	class_name = "buff",
@@ -483,23 +483,23 @@ templates.psyker_efficient_smites = {
 	duration = talent_settings_2.combat_ability_3.duration,
 	stat_buffs = {
 		[stat_buffs.warp_charge_amount_smite] = talent_settings_2.combat_ability_3.warp_charge_amount_smite,
-		[stat_buffs.smite_attack_speed] = talent_settings_2.combat_ability_3.smite_attack_speed,
+		[stat_buffs.smite_attack_speed] = talent_settings_2.combat_ability_3.smite_attack_speed
 	},
 	player_effects = {
-		on_screen_effect = "content/fx/particles/screenspace/psyker_biomancer_fast_smites",
+		on_screen_effect = "content/fx/particles/screenspace/psyker_biomancer_fast_smites"
 	},
 	related_talents = {
-		"psyker_ability_increase_brain_burst_speed",
-	},
+		"psyker_ability_increase_brain_burst_speed"
+	}
 }
 templates.psyker_chance_to_vent_on_kill = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = talent_settings_2.passive_2.on_hit_proc_chance,
+		[proc_events.on_kill] = talent_settings_2.passive_2.on_hit_proc_chance
 	},
 	stat_buffs = {
-		[stat_buffs.warp_charge_amount] = talent_settings_2.passive_2.warp_charge_amount,
+		[stat_buffs.warp_charge_amount] = talent_settings_2.passive_2.warp_charge_amount
 	},
 	check_proc_func = CheckProcFunctions.on_kill,
 	start_func = function (template_data, template_context)
@@ -523,21 +523,21 @@ templates.psyker_chance_to_vent_on_kill = {
 
 			template_data.procced = false
 		end
-	end,
+	end
 }
 templates.psyker_brain_burst_improved = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.smite_damage_multiplier] = 1.5,
-	},
+		[stat_buffs.smite_damage_multiplier] = 1.5
+	}
 }
 templates.psyker_reduced_throwing_knife_cooldown = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.grenade_ability_cooldown_modifier] = -0.3,
-	},
+		[stat_buffs.grenade_ability_resource_regen_modifier] = 0.3
+	}
 }
 
 local external_properties = {}
@@ -591,10 +591,10 @@ templates.psyker_knife_replenishment = {
 		local next_knife_t = template_data.next_knife_t
 
 		if not next_knife_t then
-			local cooldown = ability_extension:max_ability_cooldown("grenade_ability")
+			local ability_charge_regen_time = ability_extension:max_regen_time_for_ability_charge("grenade_ability")
 
-			template_data.next_knife_t = t + cooldown
-			template_data.cooldown = cooldown
+			template_data.next_knife_t = t + ability_charge_regen_time
+			template_data.ability_charge_regen_time = ability_charge_regen_time
 
 			return
 		end
@@ -625,13 +625,13 @@ templates.psyker_knife_replenishment = {
 
 		local t = FixedFrame.get_latest_fixed_time()
 		local time_until_next = next_knife_t - t
-		local percentage_left = time_until_next / template_data.cooldown
+		local percentage_left = time_until_next / template_data.ability_charge_regen_time
 
 		return 1 - percentage_left
 	end,
 	related_talents = {
-		"psyker_grenade_throwing_knives",
-	},
+		"psyker_grenade_throwing_knives"
+	}
 }
 
 local marked_targets = {}
@@ -772,7 +772,7 @@ templates.psyker_marked_enemies_passive = {
 	toughness_percentage = 0.25,
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_damage_taken] = 1,
+		[proc_events.on_damage_taken] = 1
 	},
 	start_func = function (template_data, template_context)
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -967,8 +967,8 @@ templates.psyker_marked_enemies_passive = {
 			if template_data.current_target and (params.attacked_unit == template_data.current_target or params.attacking_unit == template_data.current_target) then
 				template_data.last_encountered = t
 			end
-		end,
-	},
+		end
+	}
 }
 templates.psyker_marked_enemies_passive_bonus_stacking = {
 	class_name = "buff",
@@ -983,11 +983,11 @@ templates.psyker_marked_enemies_passive_bonus_stacking = {
 	stat_buffs = {
 		[stat_buffs.damage] = 0.01,
 		[stat_buffs.critical_strike_damage] = 0.02,
-		[stat_buffs.weakspot_damage] = 0.025,
+		[stat_buffs.weakspot_damage] = 0.025
 	},
 	related_talents = {
-		"psyker_mark_increased_max_stacks",
-	},
+		"psyker_mark_increased_max_stacks"
+	}
 }
 templates.psyker_marked_enemies_passive_bonus_stacking_increased_stacks = table.clone(templates.psyker_marked_enemies_passive_bonus_stacking)
 templates.psyker_marked_enemies_passive_bonus_stacking_increased_stacks.max_stacks = 25
@@ -1003,10 +1003,10 @@ templates.psyker_marked_enemies_passive_bonus = {
 	predicted = false,
 	refresh_duration_on_stack = true,
 	stat_buffs = {
-		[stat_buffs.movement_speed] = 0.2,
+		[stat_buffs.movement_speed] = 0.2
 	},
 	keywords = {
-		[keywords.count_as_dodge_vs_ranged] = true,
+		[keywords.count_as_dodge_vs_ranged] = true
 	},
 	update_func = function (template_data, template_context, dt, t)
 		local unit = template_context.unit
@@ -1015,8 +1015,8 @@ templates.psyker_marked_enemies_passive_bonus = {
 		Toughness.replenish_percentage(unit, percent)
 	end,
 	related_talents = {
-		"psyker_new_mark_passive",
-	},
+		"psyker_new_mark_passive"
+	}
 }
 
 local overcharge_max_stacks = talent_settings.overcharge_stance.max_stacks
@@ -1037,33 +1037,33 @@ templates.psyker_overcharge_stance = {
 		wwise_state = {
 			group = "player_ability",
 			off_state = "none",
-			on_state = "psyker_gunslinger_ability",
-		},
+			on_state = "psyker_gunslinger_ability"
+		}
 	},
 	stat_buffs = {
 		[stat_buffs.weakspot_damage] = 0.1,
 		[stat_buffs.damage] = talent_settings.overcharge_stance.base_damage,
-		[stat_buffs.critical_strike_chance] = talent_settings.overcharge_stance.crit_chance,
+		[stat_buffs.critical_strike_chance] = talent_settings.overcharge_stance.crit_chance
 	},
 	lerped_stat_buffs = {
 		[stat_buffs.damage] = {
 			min = 0,
-			max = talent_settings.overcharge_stance.damage_per_stack * overcharge_max_stacks,
-		},
+			max = talent_settings.overcharge_stance.damage_per_stack * overcharge_max_stacks
+		}
 	},
 	conditional_lerped_stat_buffs = {
 		[stat_buffs.finesse_modifier_bonus] = {
 			min = 0,
-			max = talent_settings.overcharge_stance.finesse_damage_per_stack * overcharge_max_stacks,
-		},
+			max = talent_settings.overcharge_stance.finesse_damage_per_stack * overcharge_max_stacks
+		}
 	},
 	keywords = {
 		keywords.psyker_overcharge,
 		keywords.suppression_immune,
-		keywords.psychic_fortress,
+		keywords.psychic_fortress
 	},
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.on_hit_charge_template = WeaponChargeTemplates.psyker_overcharge_stance_hit
@@ -1155,16 +1155,16 @@ templates.psyker_overcharge_stance = {
 		return math.min(overcharge_max_stacks, template_data.stacks + template_data.bonus_stacks) / overcharge_max_stacks
 	end,
 	related_talents = {
-		"psyker_combat_ability_stance",
-	},
+		"psyker_combat_ability_stance"
+	}
 }
 templates.psyker_overcharge_stance_cool_off = {
 	class_name = "buff",
 	predicted = false,
 	duration = talent_settings.overcharge_stance.cooloff_duration,
 	keywords = {
-		keywords.psychic_fortress,
-	},
+		keywords.psychic_fortress
+	}
 }
 templates.psyker_overcharge_stance_damage = {
 	class_name = "buff",
@@ -1182,27 +1182,27 @@ templates.psyker_overcharge_stance_damage = {
 		wwise_state = {
 			group = "player_ability",
 			off_state = "none",
-			on_state = "psyker_gunslinger_ability",
-		},
+			on_state = "psyker_gunslinger_ability"
+		}
 	},
 	stat_buffs = {
-		[stat_buffs.damage] = talent_settings.overcharge_stance.damage_per_stack,
+		[stat_buffs.damage] = talent_settings.overcharge_stance.damage_per_stack
 	},
 	related_talents = {
-		"psyker_combat_ability_stance",
-	},
+		"psyker_combat_ability_stance"
+	}
 }
 templates.psyker_overcharge_stance_finesse_damage = table.clone(templates.psyker_overcharge_stance_damage)
 templates.psyker_overcharge_stance_finesse_damage.stat_buffs = {
 	[stat_buffs.damage] = talent_settings.overcharge_stance.damage_per_stack,
-	[stat_buffs.finesse_modifier_bonus] = talent_settings.overcharge_stance.finesse_damage_per_stack,
+	[stat_buffs.finesse_modifier_bonus] = talent_settings.overcharge_stance.finesse_damage_per_stack
 }
 templates.psyker_overcharge_reduced_warp_charge = {
 	class_name = "buff",
 	predicted = false,
 	conditional_stat_buffs = {
 		[stat_buffs.warp_charge_amount] = 0.8,
-		[stat_buffs.vent_warp_charge_speed] = 0.7,
+		[stat_buffs.vent_warp_charge_speed] = 0.7
 	},
 	start_func = function (template_data, template_context)
 		local buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
@@ -1214,21 +1214,21 @@ templates.psyker_overcharge_reduced_warp_charge = {
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.active
-	end,
+	end
 }
 templates.psyker_overcharge_stance_infinite_casting = {
 	class_name = "buff",
 	predicted = false,
 	duration = talent_settings.overcharge_stance.post_stance_duration + talent_settings.overcharge_stance.cooloff_duration,
 	keywords = {
-		keywords.psychic_fortress,
-	},
+		keywords.psychic_fortress
+	}
 }
 templates.psyker_overcharge_reduced_toughness_damage_taken = {
 	class_name = "buff",
 	predicted = false,
 	conditional_stat_buffs = {
-		[stat_buffs.toughness_damage_taken_multiplier] = 0.8,
+		[stat_buffs.toughness_damage_taken_multiplier] = 0.8
 	},
 	start_func = function (template_data, template_context)
 		local buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
@@ -1240,13 +1240,13 @@ templates.psyker_overcharge_reduced_toughness_damage_taken = {
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.active
-	end,
+	end
 }
 templates.psyker_overcharge_increased_movement_speed = {
 	class_name = "buff",
 	predicted = false,
 	conditional_stat_buffs = {
-		[stat_buffs.movement_speed] = 0.2,
+		[stat_buffs.movement_speed] = 0.2
 	},
 	start_func = function (template_data, template_context)
 		local buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
@@ -1258,13 +1258,13 @@ templates.psyker_overcharge_increased_movement_speed = {
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.active
-	end,
+	end
 }
 templates.psyker_overcharge_weakspot_kill_bonuses = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	update_func = function (template_data, template_context)
 		template_data.active = template_context.buff_extension:has_keyword(keywords.psyker_overcharge)
@@ -1273,9 +1273,9 @@ templates.psyker_overcharge_weakspot_kill_bonuses = {
 	conditional_proc_func = function (template_data, template_context)
 		return template_data.active
 	end,
-	proc_func = function (params, template_data, template_context, dt, t)
+	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("psyker_overcharge_weakspot_kill_bonuses_buff", t)
-	end,
+	end
 }
 templates.psyker_overcharge_weakspot_kill_bonuses_buff = {
 	class_name = "buff",
@@ -1285,7 +1285,7 @@ templates.psyker_overcharge_weakspot_kill_bonuses_buff = {
 	max_stacks = 25,
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.finesse_modifier_bonus] = 0.1,
+		[stat_buffs.finesse_modifier_bonus] = 0.1
 	},
 	start_func = function (template_data, template_context)
 		template_data.buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
@@ -1297,8 +1297,8 @@ templates.psyker_overcharge_weakspot_kill_bonuses_buff = {
 		return template_data.inactive
 	end,
 	related_talents = {
-		"psyker_overcharge_weakspot_kill_bonuses",
-	},
+		"psyker_overcharge_weakspot_kill_bonuses"
+	}
 }
 templates.psyker_aura_damage_vs_elites = {
 	class_name = "buff",
@@ -1311,19 +1311,19 @@ templates.psyker_aura_damage_vs_elites = {
 	buff_category = buff_categories.aura,
 	max_stacks = talent_settings_2.coherency.max_stacks,
 	stat_buffs = {
-		[stat_buffs.damage_vs_elites] = talent_settings_2.coherency.damage_vs_elites,
+		[stat_buffs.damage_vs_elites] = talent_settings_2.coherency.damage_vs_elites
 	},
 	start_func = _penance_start_func("psyker_elite_kills_aura_tracking_buff"),
 	related_talents = {
-		"psyker_aura_damage_vs_elites",
-	},
+		"psyker_aura_damage_vs_elites"
+	}
 }
 templates.psyker_elite_kills_aura_tracking_buff = {
 	class_name = "proc_buff",
 	predicted = false,
 	unique_buff_id = "psyker_elite_kills_aura_tracking_buff",
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_elite_or_special_minion_death,
 	start_func = function (template_data, template_context)
@@ -1346,7 +1346,7 @@ templates.psyker_elite_kills_aura_tracking_buff = {
 		end
 
 		template_data.last_num_in_coherency = template_data.coherency_extension:evaluate_and_send_achievement_data(template_data.parent_buff_name, template_data.hook_name)
-	end,
+	end
 }
 templates.psyker_aura_crit_chance_aura = {
 	class_name = "buff",
@@ -1359,19 +1359,19 @@ templates.psyker_aura_crit_chance_aura = {
 	predicted = false,
 	buff_category = buff_categories.aura,
 	stat_buffs = {
-		[stat_buffs.critical_strike_chance] = 0.05,
+		[stat_buffs.critical_strike_chance] = 0.05
 	},
 	start_func = _penance_start_func("psyker_crit_hits_aura_tracking_buff"),
 	related_talents = {
-		"psyker_aura_crit_chance_aura",
-	},
+		"psyker_aura_crit_chance_aura"
+	}
 }
 templates.psyker_crit_hits_aura_tracking_buff = {
 	buff_id = "psyker_crit_hits_aura_tracking_buff",
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1404,7 +1404,7 @@ templates.psyker_crit_hits_aura_tracking_buff = {
 		end
 
 		template_data.num_crits_made = template_data.num_crits_made + 1
-	end,
+	end
 }
 
 local percent_toughness = talent_settings_2.toughness_1.percent_toughness
@@ -1429,29 +1429,29 @@ templates.psyker_souls_replenish_toughness_stacking_buff = {
 		Toughness.replenish_percentage(unit, percent_to_replenish, false, "talent_toughness_1")
 	end,
 	related_talents = {
-		"psyker_toughness_on_soul",
-	},
+		"psyker_toughness_on_soul"
+	}
 }
 templates.psyker_toughness_on_warp_kill = {
 	class_name = "proc_buff",
 	max_stacks = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_warp_kill,
 	proc_func = function (params, template_data, template_context)
 		local percentage = talent_settings_2.toughness_2.percent_toughness
 
 		Toughness.replenish_percentage(template_context.unit, percentage, false, "talent_toughness_2")
-	end,
+	end
 }
 templates.psyker_toughness_on_warp_generation = {
 	class_name = "proc_buff",
 	max_stacks = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_warp_charge_changed] = 1,
+		[proc_events.on_warp_charge_changed] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		local percentage_change = params.percentage_change
@@ -1463,14 +1463,14 @@ templates.psyker_toughness_on_warp_generation = {
 
 			Toughness.replenish_percentage(template_context.unit, percentage_change, false, "toughness_on_warp_generation")
 		end
-	end,
+	end
 }
 templates.psyker_toughness_on_vent = {
 	class_name = "proc_buff",
 	max_stacks = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_warp_charge_changed] = 1,
+		[proc_events.on_warp_charge_changed] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		local percentage_change = params.percentage_change
@@ -1480,7 +1480,7 @@ templates.psyker_toughness_on_vent = {
 
 			Toughness.replenish_percentage(template_context.unit, toughness_percentage, false, "toughness_on_vent")
 		end
-	end,
+	end
 }
 templates.psyker_warp_charge_increase_force_weapon_damage = {
 	class_name = "buff",
@@ -1488,8 +1488,8 @@ templates.psyker_warp_charge_increase_force_weapon_damage = {
 	lerped_stat_buffs = {
 		[stat_buffs.damage] = {
 			min = talent_settings_2.offensive_1_1.damage_min,
-			max = talent_settings_2.offensive_1_1.damage,
-		},
+			max = talent_settings_2.offensive_1_1.damage
+		}
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1501,7 +1501,7 @@ templates.psyker_warp_charge_increase_force_weapon_damage = {
 		local current_percent = template_data.warp_charge_component.current_percentage
 
 		return current_percent
-	end,
+	end
 }
 templates.psyker_reduced_warp_charge_cost_and_venting_speed = {
 	class_name = "buff",
@@ -1509,8 +1509,8 @@ templates.psyker_reduced_warp_charge_cost_and_venting_speed = {
 	lerped_stat_buffs = {
 		[stat_buffs.warp_charge_amount] = {
 			min = 1,
-			max = talent_settings_2.offensive_1_2.warp_charge_capacity,
-		},
+			max = talent_settings_2.offensive_1_2.warp_charge_capacity
+		}
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1523,7 +1523,7 @@ templates.psyker_reduced_warp_charge_cost_and_venting_speed = {
 		local current_souls = template_data.talent_resource_component.current_resource
 
 		return current_souls / max_souls_talent
-	end,
+	end
 }
 templates.psyker_souls_increase_damage = {
 	class_name = "buff",
@@ -1531,8 +1531,8 @@ templates.psyker_souls_increase_damage = {
 	lerped_stat_buffs = {
 		[stat_buffs.damage] = {
 			min = 0,
-			max = talent_settings_2.passive_1.damage,
-		},
+			max = talent_settings_2.passive_1.damage
+		}
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1545,14 +1545,14 @@ templates.psyker_souls_increase_damage = {
 		local current_souls = template_data.talent_resource_component.current_resource
 
 		return current_souls / max_souls_talent
-	end,
+	end
 }
 templates.psyker_elite_kills_add_warpfire = {
 	class_name = "proc_buff",
 	max_stacks = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	start_func = function (template_data, template_context)
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -1617,14 +1617,14 @@ templates.psyker_elite_kills_add_warpfire = {
 				buff_extension:add_internally_controlled_buff_with_stacks("warp_fire", num_stacks, t, "owner_unit", owner_unit)
 			end
 		end
-	end,
+	end
 }
 templates.psyker_aura_souls_on_kill = {
 	class_name = "proc_buff",
 	max_stacks = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_minion_death] = 1,
+		[proc_events.on_minion_death] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1653,13 +1653,13 @@ templates.psyker_aura_souls_on_kill = {
 
 			buff_extension:add_internally_controlled_buff(template_data.buff_name, t)
 		end
-	end,
+	end
 }
 templates.psyker_aura_cooldown_reduction_on_elite_kill = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_minion_death] = 1,
+		[proc_events.on_minion_death] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1677,12 +1677,6 @@ templates.psyker_aura_cooldown_reduction_on_elite_kill = {
 			return
 		end
 
-		local coherency_extension = template_data.coherency_extension
-
-		if not coherency_extension then
-			return
-		end
-
 		local attacking_unit = params.attacking_unit
 
 		if attacking_unit == template_context.unit then
@@ -1690,17 +1684,7 @@ templates.psyker_aura_cooldown_reduction_on_elite_kill = {
 
 			return
 		end
-
-		local in_coherence_units = coherency_extension:in_coherence_units()
-
-		for coherence_unit, _ in pairs(in_coherence_units) do
-			if attacking_unit == coherence_unit then
-				template_context.buff_extension:add_internally_controlled_buff("psyker_cooldown_buff", t)
-
-				break
-			end
-		end
-	end,
+	end
 }
 templates.psyker_cooldown_buff = {
 	class_name = "buff",
@@ -1732,29 +1716,35 @@ templates.psyker_cooldown_buff = {
 		if t > template_data.timer then
 			template_data.timer = template_data.timer + 1
 
-			template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", talent_settings.psyker_cooldown.cooldown)
+			template_data.ability_extension:restore_ability_resource("combat_ability", talent_settings.psyker_cooldown.cooldown)
 		end
 	end,
 	related_talents = {
-		"psyker_2_tier_3_name_2",
-	},
+		"psyker_2_tier_3_name_2"
+	}
 }
 templates.psyker_damage_to_peril_conversion = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_damage_taken] = 1,
+		[proc_events.on_damage_taken] = 1
 	},
 	proc_func = function (params, template_data, template_context, t)
 		if template_context.unit ~= params.attacked_unit then
 			return
 		end
 
+		local warp_charge_component = template_data.warp_charge_component
+		local current_warp_charge = warp_charge_component.current_percentage
+		local below_critical = template_data.warp_charge_component.current_percentage < 0.97
+
+		if not below_critical then
+			return
+		end
+
 		local toughness_damage_amount = params.toughness_damage_amount or 0
 		local damage_taken = params.damage_amount + toughness_damage_amount
 		local peril_converted = damage_taken * 0.0025
-		local warp_charge_component = template_data.warp_charge_component
-		local current_warp_charge = warp_charge_component.current_percentage
 		local stat_buffs = template_context.buff_extension:stat_buffs()
 		local warp_charge_amount_multiplier = stat_buffs.warp_charge_amount or 1
 
@@ -1779,7 +1769,7 @@ templates.psyker_damage_to_peril_conversion = {
 		end
 	end,
 	conditional_stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = 1 - talent_settings.psyker_damage_to_peril_conversion.percent,
+		[stat_buffs.damage_taken_multiplier] = 1 - talent_settings.psyker_damage_to_peril_conversion.percent
 	},
 	start_func = function (template_data, template_context)
 		local unit_data_extension = ScriptUnit.has_extension(template_context.unit, "unit_data_system")
@@ -1791,7 +1781,7 @@ templates.psyker_damage_to_peril_conversion = {
 		local below_critical = template_data.warp_charge_component.current_percentage < 0.97
 
 		return below_critical
-	end,
+	end
 }
 templates.psyker_damage_resistance_stun_immunity = {
 	class_name = "buff",
@@ -1800,10 +1790,10 @@ templates.psyker_damage_resistance_stun_immunity = {
 	hud_priority = 3,
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = talent_settings.psyker_damage_resistance_stun_immunity.dr,
+		[stat_buffs.damage_taken_multiplier] = talent_settings.psyker_damage_resistance_stun_immunity.dr
 	},
 	conditional_keywords = {
-		keywords.stun_immune,
+		keywords.stun_immune
 	},
 	start_func = function (template_data, template_context)
 		local unit_data_extension = ScriptUnit.has_extension(template_context.unit, "unit_data_system")
@@ -1823,7 +1813,7 @@ templates.psyker_damage_resistance_stun_immunity = {
 		template_data.above_critical = above_critical
 
 		return above_critical
-	end,
+	end
 }
 templates.psyker_damage_resistance_stun_immunity_duration = {
 	class_name = "buff",
@@ -1834,16 +1824,19 @@ templates.psyker_damage_resistance_stun_immunity_duration = {
 	predicted = false,
 	refresh_duration_on_stack = true,
 	keywords = {
-		keywords.stun_immune,
+		keywords.stun_immune
 	},
 	duration = talent_settings.psyker_damage_resistance_stun_immunity.duration,
+	related_talents = {
+		"psyker_damage_resistance_stun_immunity"
+	}
 }
 templates.psyker_damage_vs_ogryns_and_monsters = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.damage_vs_ogryn_and_monsters] = talent_settings.psyker_damage_vs_ogryns_and_monsters.damage_vs_ogryn_and_monsters,
-	},
+		[stat_buffs.damage_vs_ogryn_and_monsters] = talent_settings.psyker_damage_vs_ogryns_and_monsters.damage_vs_ogryn_and_monsters
+	}
 }
 templates.psyker_stat_mix = {
 	class_name = "buff",
@@ -1851,22 +1844,22 @@ templates.psyker_stat_mix = {
 	stat_buffs = {
 		[stat_buffs.warp_charge_dissipation_multiplier] = talent_settings.psyker_stat_mix.peril_decay,
 		[stat_buffs.stamina_modifier] = talent_settings.psyker_stat_mix.stamina,
-		[stat_buffs.toughness_replenish_modifier] = talent_settings.psyker_stat_mix.toughness_replenish_modifier,
-	},
+		[stat_buffs.toughness_replenish_modifier] = talent_settings.psyker_stat_mix.toughness_replenish_modifier
+	}
 }
 templates.psyker_coherency_aura_size_increase = {
 	class_name = "buff",
 	predicted = false,
 	keywords = {},
 	stat_buffs = {
-		[stat_buffs.coherency_radius_modifier] = talent_settings.coherency_aura_size_increase.radius,
-	},
+		[stat_buffs.coherency_radius_modifier] = talent_settings.coherency_aura_size_increase.radius
+	}
 }
 templates.psyker_smite_makes_victim_vulnerable = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_smite_attack,
 	proc_func = function (params, template_data, template_context)
@@ -1882,7 +1875,7 @@ templates.psyker_smite_makes_victim_vulnerable = {
 				buff_extension:add_internally_controlled_buff(buff_name, t, "owner_unit", template_context.unit)
 			end
 		end
-	end,
+	end
 }
 templates.psyker_smite_vulnerable_debuff = {
 	class_name = "buff",
@@ -1891,8 +1884,8 @@ templates.psyker_smite_vulnerable_debuff = {
 	refresh_duration_on_stack = true,
 	duration = talent_settings_2.coop_3.duration,
 	stat_buffs = {
-		[stat_buffs.non_warp_damage_taken_multiplier] = talent_settings_2.coop_3.damage_taken_multiplier,
-	},
+		[stat_buffs.non_warp_damage_taken_multiplier] = talent_settings_2.coop_3.damage_taken_multiplier
+	}
 }
 templates.psyker_block_costs_warp_charge = {
 	always_show_in_hud = true,
@@ -1902,10 +1895,10 @@ templates.psyker_block_costs_warp_charge = {
 	hud_priority = 3,
 	predicted = false,
 	conditional_keywords = {
-		keywords.block_gives_warp_charge,
+		keywords.block_gives_warp_charge
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.warp_charge_block_cost] = talent_settings_2.defensive_1.warp_charge_cost_multiplier,
+		[stat_buffs.warp_charge_block_cost] = talent_settings_2.defensive_1.warp_charge_cost_multiplier
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1934,8 +1927,8 @@ templates.psyker_block_costs_warp_charge = {
 		return duration
 	end,
 	related_talents = {
-		"psyker_block_costs_warp_charge",
-	},
+		"psyker_block_costs_warp_charge"
+	}
 }
 templates.psyker_warp_charge_reduces_toughness_damage_taken = {
 	class_name = "buff",
@@ -1943,8 +1936,8 @@ templates.psyker_warp_charge_reduces_toughness_damage_taken = {
 	lerped_stat_buffs = {
 		[stat_buffs.toughness_damage_taken_multiplier] = {
 			min = talent_settings_2.defensive_2.min_toughness_damage_multiplier,
-			max = talent_settings_2.defensive_2.max_toughness_damage_multiplier,
-		},
+			max = talent_settings_2.defensive_2.max_toughness_damage_multiplier
+		}
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1957,7 +1950,7 @@ templates.psyker_warp_charge_reduces_toughness_damage_taken = {
 		local current_percent = template_data.warp_charge_component.current_percentage
 
 		return current_percent
-	end,
+	end
 }
 templates.psyker_venting_improvements = {
 	class_name = "buff",
@@ -1967,6 +1960,7 @@ templates.psyker_venting_improvements = {
 	stat_buffs = {
 		[stat_buffs.vent_warp_charge_decrease_movement_reduction] = talent_settings_2.defensive_3.vent_warp_charge_decrease_movement_reduction,
 		[stat_buffs.reload_decrease_movement_reduction] = talent_settings_2.defensive_3.reload_decrease_movement_reduction,
+		[stat_buffs.movement_speed] = talent_settings_2.defensive_3.movement_speed
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1984,8 +1978,8 @@ templates.psyker_venting_improvements = {
 		return is_venting
 	end,
 	related_talents = {
-		"psyker_venting_improvements",
-	},
+		"psyker_venting_improvements"
+	}
 }
 templates.psyker_smite_on_hit = {
 	class_name = "proc_buff",
@@ -1995,7 +1989,7 @@ templates.psyker_smite_on_hit = {
 	predicted = false,
 	cooldown_duration = talent_settings_2.offensive_2_3.cooldown,
 	proc_events = {
-		[proc_events.on_hit] = talent_settings_2.offensive_2_3.smite_chance,
+		[proc_events.on_hit] = talent_settings_2.offensive_2_3.smite_chance
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -2118,14 +2112,14 @@ templates.psyker_smite_on_hit = {
 		template_data.smite_target = attacked_unit
 	end,
 	related_talents = {
-		"psyker_smite_on_hit",
-	},
+		"psyker_smite_on_hit"
+	}
 }
 templates.psyker_soul_on_warpfire_kill = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_minion_death] = talent_settings_2.combat_ability_2.soul_chance,
+		[proc_events.on_minion_death] = talent_settings_2.combat_ability_2.soul_chance
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -2160,7 +2154,7 @@ templates.psyker_soul_on_warpfire_kill = {
 		local num_stacks = template_data.psyker_increased_soul_generation and talent_settings_2.combat_ability_1.stacks or 1
 
 		buff_extension:add_internally_controlled_buff_with_stacks(buff_name, num_stacks, t)
-	end,
+	end
 }
 templates.psyker_increased_chain_lightning_size = {
 	class_name = "buff",
@@ -2168,8 +2162,8 @@ templates.psyker_increased_chain_lightning_size = {
 	stat_buffs = {
 		[stat_buffs.chain_lightning_max_jumps] = talent_settings_3.offensive_1.chain_lightning_max_jumps,
 		[stat_buffs.chain_lightning_max_radius] = talent_settings_3.offensive_1.chain_lightning_max_radius,
-		[stat_buffs.chain_lightning_max_angle] = talent_settings_3.offensive_1.chain_lightning_max_angle,
-	},
+		[stat_buffs.chain_lightning_max_angle] = talent_settings_3.offensive_1.chain_lightning_max_angle
+	}
 }
 templates.psyker_kills_during_smite_tracking = {
 	class_name = "proc_buff",
@@ -2177,7 +2171,7 @@ templates.psyker_kills_during_smite_tracking = {
 	proc_events = {
 		[proc_events.on_chain_lightning_jump] = 1,
 		[proc_events.on_chain_lightning_finish] = 1,
-		[proc_events.on_minion_death] = 1,
+		[proc_events.on_minion_death] = 1
 	},
 	specific_proc_func = {
 		on_chain_lightning_jump = function (params, template_data, template_context)
@@ -2233,7 +2227,7 @@ templates.psyker_kills_during_smite_tracking = {
 			elseif not is_level_unit and template_data.afflicted_units_object_id[killed_unit_id_or_index] then
 				template_data.afflicted_units_killed = template_data.afflicted_units_killed + 1
 			end
-		end,
+		end
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -2245,7 +2239,7 @@ templates.psyker_kills_during_smite_tracking = {
 		template_data.talent_extension = ScriptUnit.extension(unit, "talent_system")
 		template_data.buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
-	end,
+	end
 }
 
 local empowered_chain_lightning_chance = talent_settings_3.passive_1.empowered_chain_lightning_chance
@@ -2283,7 +2277,7 @@ templates.psyker_empowered_grenades_passive = {
 		[proc_events.on_chain_lightning_finish] = 1,
 		[proc_events.on_chain_lightning_start] = 1,
 		[proc_events.on_action_damage_target] = 1,
-		[proc_events.on_shoot_projectile] = 1,
+		[proc_events.on_shoot_projectile] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -2386,8 +2380,8 @@ templates.psyker_empowered_grenades_passive = {
 					Toughness.replenish_percentage(coherency_unit, toughness_for_allies)
 				end
 			end
-		end,
-	},
+		end
+	}
 }
 templates.psyker_empowered_grenades_passive_improved = table.clone(templates.psyker_empowered_grenades_passive)
 templates.psyker_empowered_grenades_passive_improved.proc_events[proc_events.on_hit] = talent_settings_3.spec_passive_2.empowered_chain_lightning_chance
@@ -2404,17 +2398,17 @@ templates.psyker_empowered_grenades_passive_visual_buff = {
 		[proc_events.on_kill] = 1,
 		[proc_events.on_action_damage_target] = 1,
 		[proc_events.on_chain_lightning_start] = 1,
-		[proc_events.on_chain_lightning_finish] = 1,
+		[proc_events.on_chain_lightning_finish] = 1
 	},
 	stat_buffs = {
 		[stat_buffs.chain_lightning_damage] = talent_settings_3.passive_1.chain_lightning_damage,
 		[stat_buffs.chain_lightning_jump_time_multiplier] = 0.5,
 		[stat_buffs.psyker_smite_cost_multiplier] = talent_settings_3.passive_1.psyker_smite_cost_multiplier,
 		[stat_buffs.smite_attack_speed] = 0.5,
-		[stat_buffs.smite_damage] = 0.5,
+		[stat_buffs.smite_damage] = 0.5
 	},
 	keywords = {
-		keywords.psyker_empowered_grenade,
+		keywords.psyker_empowered_grenade
 	},
 	visual_stack_count = function (template_data, template_context)
 		return math.min(template_context.stack_count, template_data.max_stacks)
@@ -2475,7 +2469,7 @@ templates.psyker_empowered_grenades_passive_visual_buff = {
 			if params.damage_type == "smite" or params.damage_type == "throwing_knife" or params.damage_type == "electrocution" then
 				Managers.stats:record_private("hook_psyker_empowered_ability", template_context.player, params)
 			end
-		end,
+		end
 	},
 	conditional_stack_exit_func = function (template_data, template_context)
 		if template_data.finish or template_context.stack_count > template_data.max_stacks then
@@ -2485,11 +2479,11 @@ templates.psyker_empowered_grenades_passive_visual_buff = {
 		end
 	end,
 	player_effects = {
-		on_screen_effect = "content/fx/particles/screenspace/screen_psyker_protectorate_passive",
+		on_screen_effect = "content/fx/particles/screenspace/screen_psyker_protectorate_passive"
 	},
 	related_talents = {
-		"psyker_empowered_ability",
-	},
+		"psyker_empowered_ability"
+	}
 }
 templates.psyker_empowered_grenades_passive_visual_buff_increased = table.clone(templates.psyker_empowered_grenades_passive_visual_buff)
 templates.psyker_empowered_grenades_passive_visual_buff_increased.max_stacks = max_stack_talent + 1
@@ -2498,7 +2492,7 @@ templates.psyker_shield_stun_passive = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_unit_touch_force_field] = 1,
+		[proc_events.on_unit_touch_force_field] = 1
 	},
 	start_func = function (template_data, template_context)
 		return
@@ -2540,7 +2534,7 @@ templates.psyker_shield_stun_passive = {
 				buff_extension:add_internally_controlled_buff("psyker_stun_effect", t, "owner_unit", template_context.unit)
 			end
 		end
-	end,
+	end
 }
 
 local shield_toughness_ally = talent_settings_3.combat_ability.toughness_for_allies
@@ -2555,8 +2549,8 @@ templates.psyker_boost_allies_in_sphere_buff = {
 		Toughness.replenish_percentage(template_context.unit, shield_toughness_ally * dt, false, "psyker_sphere")
 	end,
 	related_talents = {
-		"psyker_boost_allies_in_sphere",
-	},
+		"psyker_boost_allies_in_sphere"
+	}
 }
 templates.psyker_boost_allies_in_sphere_end_buff = {
 	class_name = "buff",
@@ -2566,18 +2560,18 @@ templates.psyker_boost_allies_in_sphere_end_buff = {
 	buff_category = buff_categories.talents_secondary,
 	duration = talent_settings_3.combat_ability.toughness_duration,
 	stat_buffs = {
-		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings_3.combat_ability.toughness_damage_reduction,
+		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings_3.combat_ability.toughness_damage_reduction
 	},
 	special_rule = special_rules.psyker_boost_allies_in_sphere,
 	related_talents = {
-		"psyker_boost_allies_in_sphere",
-	},
+		"psyker_boost_allies_in_sphere"
+	}
 }
 templates.psyker_boost_allies_passing_through_force_field = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_unit_touch_force_field] = 1,
+		[proc_events.on_unit_touch_force_field] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.force_fields_used = {}
@@ -2611,7 +2605,7 @@ templates.psyker_boost_allies_passing_through_force_field = {
 
 			template_data.force_fields_used[force_field_unit][unit] = true
 		end
-	end,
+	end
 }
 templates.psyker_force_field_buff = {
 	class_name = "buff",
@@ -2622,11 +2616,11 @@ templates.psyker_force_field_buff = {
 	max_stacks = talent_settings_3.defensive_1.max_stacks,
 	stat_buffs = {
 		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings_3.defensive_1.toughness_damage_taken_multiplier,
-		[stat_buffs.movement_speed] = talent_settings_3.defensive_1.movement_speed,
+		[stat_buffs.movement_speed] = talent_settings_3.defensive_1.movement_speed
 	},
 	player_effects = {
-		on_screen_effect = "content/fx/particles/screenspace/screen_psyker_protectorate_shield_buff",
-	},
+		on_screen_effect = "content/fx/particles/screenspace/screen_psyker_protectorate_shield_buff"
+	}
 }
 templates.psyker_aura_ability_cooldown = {
 	class_name = "buff",
@@ -2640,19 +2634,19 @@ templates.psyker_aura_ability_cooldown = {
 	max_stacks = talent_settings_3.coherency.max_stacks,
 	keywords = {},
 	stat_buffs = {
-		[stat_buffs.ability_cooldown_modifier] = talent_settings_3.coherency.ability_cooldown_modifier,
+		[stat_buffs.combat_ability_resource_cost_per_use_modifier] = talent_settings_3.coherency.ability_cooldown_modifier
 	},
 	start_func = _penance_start_func("psyker_cooldown_reduction_aura_tracking_buff"),
 	related_talents = {
-		"psyker_aura_ability_cooldown",
-	},
+		"psyker_aura_ability_cooldown"
+	}
 }
 templates.psyker_cooldown_reduction_aura_tracking_buff = {
 	class_name = "proc_buff",
 	predicted = false,
 	unique_buff_id = "psyker_cooldown_reduction_aura_tracking_buff",
 	proc_events = {
-		[proc_events.on_combat_ability] = 1,
+		[proc_events.on_combat_ability] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -2666,14 +2660,14 @@ templates.psyker_cooldown_reduction_aura_tracking_buff = {
 			return
 		end
 
-		local modified_cooldown_time = template_data.ability_extension:get_current_ability_cooldown_time()
-		local default_cooldown_time = modified_cooldown_time / (talent_settings_3.coherency.ability_cooldown_modifier * -1 * 100 - 100) * 100 * -1
+		local modified_charge_max_regen_time = template_data.ability_extension:max_regen_time_for_ability_charge("combat_ability")
+		local default_cooldown_time = modified_charge_max_regen_time / (talent_settings_3.coherency.ability_cooldown_modifier * -1 * 100 - 100) * 100 * -1
 		local saved_time = default_cooldown_time * talent_settings_3.coherency.ability_cooldown_modifier * -1
 		local hook_name = "hook_psyker_team_cooldown_recovery_aura"
 		local parent_buff_name = "psyker_aura_ability_cooldown"
 
 		template_data.last_num_in_coherency = template_data.coherency_extension:evaluate_and_send_achievement_data(parent_buff_name, hook_name, saved_time)
-	end,
+	end
 }
 templates.psyker_aura_ability_cooldown_improved = {
 	class_name = "buff",
@@ -2687,19 +2681,19 @@ templates.psyker_aura_ability_cooldown_improved = {
 	max_stacks = talent_settings_3.coop_2.max_stacks,
 	keywords = {},
 	stat_buffs = {
-		[stat_buffs.ability_cooldown_modifier] = talent_settings_3.coherency.ability_cooldown_modifier_improved,
+		[stat_buffs.combat_ability_resource_cost_per_use_modifier] = talent_settings_3.coherency.ability_cooldown_modifier_improved
 	},
 	start_func = _penance_start_func("psyker_improved_cooldown_reduction_aura_tracking_buff"),
 	related_talents = {
-		"psyker_cooldown_aura_improved",
-	},
+		"psyker_cooldown_aura_improved"
+	}
 }
 templates.psyker_improved_cooldown_reduction_aura_tracking_buff = {
 	class_name = "proc_buff",
 	predicted = false,
 	unique_buff_id = "psyker_improved_cooldown_reduction_aura_tracking_buff",
 	proc_events = {
-		[proc_events.on_combat_ability] = 1,
+		[proc_events.on_combat_ability] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -2713,14 +2707,14 @@ templates.psyker_improved_cooldown_reduction_aura_tracking_buff = {
 			return
 		end
 
-		local modified_cooldown_time = template_data.ability_extension:get_current_ability_cooldown_time()
-		local default_cooldown_time = modified_cooldown_time / (talent_settings_3.coherency.ability_cooldown_modifier_improved * -1 * 100 - 100) * 100 * -1
+		local modified_charge_max_regen_time = template_data.ability_extension:max_regen_time_for_ability_charge()
+		local default_cooldown_time = modified_charge_max_regen_time / (talent_settings_3.coherency.ability_cooldown_modifier_improved * -1 * 100 - 100) * 100 * -1
 		local saved_time = default_cooldown_time * talent_settings_3.coherency.ability_cooldown_modifier_improved * -1
 		local hook_name = "hook_psyker_team_cooldown_recovery_aura"
 		local parent_buff_name = "psyker_cooldown_aura_improved"
 
 		template_data.last_num_in_coherency = template_data.coherency_extension:evaluate_and_send_achievement_data(parent_buff_name, hook_name, saved_time)
-	end,
+	end
 }
 templates.psyker_stun_effect = {
 	class_name = "interval_buff",
@@ -2729,7 +2723,7 @@ templates.psyker_stun_effect = {
 	predicted = false,
 	start_interval_on_apply = true,
 	keywords = {
-		keywords.electrocuted,
+		keywords.electrocuted
 	},
 	interval = talent_settings_3.grenade.stun_interval,
 	duration = talent_settings_3.grenade.duration,
@@ -2774,29 +2768,29 @@ templates.psyker_stun_effect = {
 					material_emission = true,
 					orphaned_policy = "destroy",
 					particle_effect = "content/fx/particles/enemies/buff_chainlightning",
-					stop_type = "stop",
+					stop_type = "stop"
 				},
 				sfx = {
 					looping_wwise_start_event = "wwise/events/weapon/play_psyker_chain_lightning_hit",
-					looping_wwise_stop_event = "wwise/events/weapon/stop_psyker_chain_lightning_hit",
-				},
-			},
-		},
-	},
+					looping_wwise_stop_event = "wwise/events/weapon/stop_psyker_chain_lightning_hit"
+				}
+			}
+		}
+	}
 }
 templates.psyker_throwing_knives_piercing = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[stat_buffs.psyker_smite_max_hit_mass_attack_modifier] = 0.5,
-		[stat_buffs.psyker_smite_max_hit_mass_impact_modifier] = 0.5,
-	},
+		[stat_buffs.psyker_smite_max_hit_mass_impact_modifier] = 0.5
+	}
 }
 templates.psyker_throwing_knives_ability_recharge = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_combat_ability] = 1,
+		[proc_events.on_combat_ability] = 1
 	},
 	proc_func = function (params, template_data, template_context, t)
 		local ability_extension = ScriptUnit.has_extension(template_context.unit, "ability_system")
@@ -2806,17 +2800,17 @@ templates.psyker_throwing_knives_ability_recharge = {
 
 			ability_extension:restore_ability_charge("grenade_ability", charges)
 		end
-	end,
+	end
 }
 templates.psyker_throwing_knife_stacking_speed = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_shoot_projectile] = 1,
+		[proc_events.on_shoot_projectile] = 1
 	},
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("psyker_throwing_knife_stacking_speed_buff", t)
-	end,
+	end
 }
 templates.psyker_throwing_knife_stacking_speed_buff = {
 	class_name = "buff",
@@ -2825,21 +2819,21 @@ templates.psyker_throwing_knife_stacking_speed_buff = {
 	predicted = false,
 	refresh_duration_on_stack = true,
 	stat_buffs = {
-		[stat_buffs.psyker_throwing_knife_speed_modifier] = 0.05,
-	},
+		[stat_buffs.psyker_throwing_knife_speed_modifier] = 0.05
+	}
 }
 templates.psyker_increased_vent_speed = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.vent_warp_charge_speed] = talent_settings_3.mixed_3.vent_warp_charge_speed,
-	},
+		[stat_buffs.vent_warp_charge_speed] = talent_settings_3.mixed_3.vent_warp_charge_speed
+	}
 }
 templates.psyker_kills_stack_other_weapon_damage = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	proc_func = function (params, template_data, template_context, t)
 		local damage_type = params.damage_type
@@ -2855,7 +2849,7 @@ templates.psyker_kills_stack_other_weapon_damage = {
 
 			template_context.buff_extension:add_internally_controlled_buff(buff_name, t)
 		end
-	end,
+	end
 }
 templates.psyker_cycle_stacking_warp_damage = {
 	class_name = "buff",
@@ -2867,11 +2861,11 @@ templates.psyker_cycle_stacking_warp_damage = {
 	predicted = false,
 	refresh_duration_on_stack = true,
 	stat_buffs = {
-		[stat_buffs.warp_damage] = 0.05,
+		[stat_buffs.warp_damage] = 0.05
 	},
 	related_talents = {
-		"psyker_kills_stack_other_weapon_damage",
-	},
+		"psyker_kills_stack_other_weapon_damage"
+	}
 }
 templates.psyker_cycle_stacking_non_warp_damage = {
 	class_name = "buff",
@@ -2884,21 +2878,21 @@ templates.psyker_cycle_stacking_non_warp_damage = {
 	refresh_duration_on_stack = true,
 	stat_buffs = {
 		[stat_buffs.damage] = 0.05,
-		[stat_buffs.warp_damage] = -0.05,
+		[stat_buffs.warp_damage] = -0.05
 	},
 	related_talents = {
-		"psyker_kills_stack_other_weapon_damage",
-	},
+		"psyker_kills_stack_other_weapon_damage"
+	}
 }
 templates.psyker_cycle_stacking_melee_damage_stacks = {
 	class_name = "proc_buff",
 	max_stacks = 4,
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.melee_damage] = 0.05,
+		[stat_buffs.melee_damage] = 0.05
 	},
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		local attack_type = params.attack_type
@@ -2909,17 +2903,17 @@ templates.psyker_cycle_stacking_melee_damage_stacks = {
 	end,
 	conditional_exit_func = function (template_data, template_context)
 		return template_data.finish
-	end,
+	end
 }
 templates.psyker_cycle_stacking_ranged_damage_stacks = {
 	class_name = "proc_buff",
 	max_stacks = 4,
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.ranged_damage] = 0.05,
+		[stat_buffs.ranged_damage] = 0.05
 	},
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		local attack_type = params.attack_type
@@ -2930,14 +2924,14 @@ templates.psyker_cycle_stacking_ranged_damage_stacks = {
 	end,
 	conditional_exit_func = function (template_data, template_context)
 		return template_data.finish
-	end,
+	end
 }
 templates.psyker_crits_empower_warp = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
 		[proc_events.on_critical_strike] = 1,
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	specific_check_proc_funcs = {
 		[proc_events.on_critical_strike] = function (params, template_data)
@@ -2951,7 +2945,7 @@ templates.psyker_crits_empower_warp = {
 			local is_ranged_hit = CheckProcFunctions.on_ranged_hit(params, template_data, template_context, t)
 
 			return is_critical_strike or template_data.crit and (is_melee_hit or is_ranged_hit)
-		end,
+		end
 	},
 	specific_proc_func = {
 		on_hit = function (params, template_data, template_context, t)
@@ -2960,8 +2954,8 @@ templates.psyker_crits_empower_warp = {
 			end
 
 			template_data.crit = false
-		end,
-	},
+		end
+	}
 }
 templates.psyker_crits_empower_warp_buff = {
 	always_show_in_hud = true,
@@ -2973,11 +2967,11 @@ templates.psyker_crits_empower_warp_buff = {
 	predicted = false,
 	refresh_duration_on_stack = true,
 	stat_buffs = {
-		[stat_buffs.damage] = 0.03,
+		[stat_buffs.damage] = 0.03
 	},
 	related_talents = {
-		"psyker_crits_empower_next_attack",
-	},
+		"psyker_crits_empower_next_attack"
+	}
 }
 templates.psyker_dodge_after_crits = {
 	active_duration = 1,
@@ -2988,7 +2982,7 @@ templates.psyker_dodge_after_crits = {
 	predicted = true,
 	proc_events = {
 		[proc_events.on_critical_strike] = 1,
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = function (params, template_data, template_context)
 		if params.damage_type then
@@ -3005,11 +2999,11 @@ templates.psyker_dodge_after_crits = {
 		return valid
 	end,
 	proc_keywords = {
-		keywords.count_as_dodge_vs_ranged,
+		keywords.count_as_dodge_vs_ranged
 	},
 	related_talents = {
-		"psyker_dodge_after_crits",
-	},
+		"psyker_dodge_after_crits"
+	}
 }
 templates.psyker_crits_regen_toughness_movement_speed = {
 	class_name = "proc_buff",
@@ -3022,7 +3016,7 @@ templates.psyker_crits_regen_toughness_movement_speed = {
 	end,
 	proc_events = {
 		[proc_events.on_critical_strike] = 1,
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	specific_check_proc_funcs = {
 		[proc_events.on_critical_strike] = function (params, template_data)
@@ -3036,7 +3030,7 @@ templates.psyker_crits_regen_toughness_movement_speed = {
 			local is_ranged_hit = CheckProcFunctions.on_ranged_hit(params, template_data, template_context, t)
 
 			return is_critical_strike or template_data.crit and (is_melee_hit or is_ranged_hit)
-		end,
+		end
 	},
 	proc_func = function (params, template_data, template_context, t)
 		local buff_to_add = "psyker_stacking_movement_buff"
@@ -3044,7 +3038,7 @@ templates.psyker_crits_regen_toughness_movement_speed = {
 		template_context.buff_extension:add_internally_controlled_buff(buff_to_add, t)
 
 		template_data.crit = false
-	end,
+	end
 }
 templates.psyker_stacking_movement_buff = {
 	class_name = "buff",
@@ -3057,7 +3051,7 @@ templates.psyker_stacking_movement_buff = {
 	max_stacks_cap = talent_settings.psyker_crits_regen_toughness_movement_speed.max_stacks,
 	duration = talent_settings.psyker_crits_regen_toughness_movement_speed.duration,
 	stat_buffs = {
-		[stat_buffs.movement_speed] = talent_settings.psyker_crits_regen_toughness_movement_speed.movement_speed,
+		[stat_buffs.movement_speed] = talent_settings.psyker_crits_regen_toughness_movement_speed.movement_speed
 	},
 	update_func = function (template_data, template_context, dt)
 		local toughness = talent_settings.psyker_crits_regen_toughness_movement_speed.toughness * dt / talent_settings.psyker_crits_regen_toughness_movement_speed.duration
@@ -3065,22 +3059,22 @@ templates.psyker_stacking_movement_buff = {
 		Toughness.replenish_percentage(template_context.unit, toughness, false, "psyker_crits_regen_toughness_movement_speed")
 	end,
 	related_talents = {
-		"psyker_crits_regen_toughness_movement_speed",
-	},
+		"psyker_crits_regen_toughness_movement_speed"
+	}
 }
 templates.psyker_improved_dodge = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[stat_buffs.dodge_linger_time_modifier] = 0.5,
-		[stat_buffs.extra_consecutive_dodges] = 1,
-	},
+		[stat_buffs.extra_consecutive_dodges] = 1
+	}
 }
 templates.psyker_guaranteed_crit_on_multiple_weakspot_hits = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_weakspot_hit,
 	proc_func = function (params, template_data, template_context, t)
@@ -3101,7 +3095,7 @@ templates.psyker_guaranteed_crit_on_multiple_weakspot_hits = {
 		end
 
 		template_context.buff_extension:add_internally_controlled_buff("psyker_guaranteed_ranged_shot_on_stacked", t)
-	end,
+	end
 }
 
 local weakspot_crit_stacks = 5
@@ -3115,10 +3109,10 @@ templates.psyker_guaranteed_ranged_shot_on_stacked = {
 	predicted = false,
 	max_stacks = weakspot_crit_stacks,
 	proc_events = {
-		[proc_events.on_critical_strike] = 1,
+		[proc_events.on_critical_strike] = 1
 	},
 	conditional_keywords = {
-		keywords.guaranteed_ranged_critical_strike,
+		keywords.guaranteed_ranged_critical_strike
 	},
 	on_stack_added_func = function (template_data, template_context)
 		template_data.active = template_context.stack_count >= weakspot_crit_stacks
@@ -3138,14 +3132,14 @@ templates.psyker_guaranteed_ranged_shot_on_stacked = {
 		return template_data.active
 	end,
 	related_talents = {
-		"psyker_guaranteed_crit_on_multiple_weakspot_hits",
-	},
+		"psyker_guaranteed_crit_on_multiple_weakspot_hits"
+	}
 }
 templates.psyker_aura_toughness_on_ally_knocked_down = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_ally_knocked_down] = 1,
+		[proc_events.on_ally_knocked_down] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -3163,14 +3157,14 @@ templates.psyker_aura_toughness_on_ally_knocked_down = {
 		for coherency_unit, _ in pairs(units_in_coherence) do
 			Toughness.replenish_percentage(coherency_unit, toughness_percent)
 		end
-	end,
+	end
 }
 templates.psyker_melee_attack_speed = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.melee_attack_speed] = talent_settings.melee_attack_speed.attack_speed,
-	},
+		[stat_buffs.melee_attack_speed] = talent_settings.melee_attack_speed.attack_speed
+	}
 }
 templates.psyker_cleave_from_peril = {
 	class_name = "buff",
@@ -3178,8 +3172,8 @@ templates.psyker_cleave_from_peril = {
 	lerped_stat_buffs = {
 		[stat_buffs.max_hit_mass_attack_modifier] = {
 			min = talent_settings.cleave_from_peril.min,
-			max = talent_settings.cleave_from_peril.max,
-		},
+			max = talent_settings.cleave_from_peril.max
+		}
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -3191,7 +3185,7 @@ templates.psyker_cleave_from_peril = {
 		local current_percent = template_data.warp_charge_component.current_percentage
 
 		return current_percent
-	end,
+	end
 }
 templates.psyker_melee_weaving = {
 	class_name = "proc_buff",
@@ -3200,10 +3194,10 @@ templates.psyker_melee_weaving = {
 	predicted = false,
 	active_duration = talent_settings.melee_weaving.duration,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.warp_charge_amount] = talent_settings.melee_weaving.warp_generation,
+		[stat_buffs.warp_charge_amount] = talent_settings.melee_weaving.warp_generation
 	},
 	check_proc_func = CheckProcFunctions.on_melee_weakspot_kills,
 	start_func = function (template_data, template_context)
@@ -3229,8 +3223,8 @@ templates.psyker_melee_weaving = {
 		end
 	end,
 	related_talents = {
-		"psyker_melee_weaving",
-	},
+		"psyker_melee_weaving"
+	}
 }
 
 local soublaze_dr_max_stacks = talent_settings.nearby_soublaze_defense.max_stacks
@@ -3245,8 +3239,8 @@ templates.psyker_nearby_soulblaze_reduced_damage = {
 	lerped_stat_buffs = {
 		[stat_buffs.melee_critical_strike_chance] = {
 			min = talent_settings.nearby_soublaze_defense.critical_min,
-			max = talent_settings.nearby_soublaze_defense.critical_max,
-		},
+			max = talent_settings.nearby_soublaze_defense.critical_max
+		}
 	},
 	start_func = function (template_data, template_context)
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -3303,15 +3297,15 @@ templates.psyker_nearby_soulblaze_reduced_damage = {
 		return math.clamp(template_data.num_stacks, 0, soublaze_dr_max_stacks)
 	end,
 	related_talents = {
-		"psyker_killing_enemy_with_warpfire_boosts",
-	},
+		"psyker_killing_enemy_with_warpfire_boosts"
+	}
 }
 templates.psyker_killing_enemy_with_warpfire_boosts = {
 	allow_proc_while_active = true,
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_minion_death] = 1,
+		[proc_events.on_minion_death] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.buff_name = "psyker_killing_enemy_with_warpfire_boosts_boost_buff"
@@ -3337,7 +3331,7 @@ templates.psyker_killing_enemy_with_warpfire_boosts = {
 		local buff_name = template_data.buff_name
 
 		template_context.buff_extension:add_internally_controlled_buff(buff_name, t)
-	end,
+	end
 }
 templates.psyker_killing_enemy_with_warpfire_boosts_boost_buff = {
 	class_name = "buff",
@@ -3349,7 +3343,7 @@ templates.psyker_killing_enemy_with_warpfire_boosts_boost_buff = {
 	refresh_duration_on_stack = true,
 	toughness_percentage = 0.15,
 	stat_buffs = {
-		[stat_buffs.critical_strike_chance] = 0.05,
+		[stat_buffs.critical_strike_chance] = 0.05
 	},
 	update_func = function (template_data, template_context, dt)
 		local toughness = template_context.template.toughness_percentage * dt / template_context.template.duration
@@ -3357,16 +3351,16 @@ templates.psyker_killing_enemy_with_warpfire_boosts_boost_buff = {
 		Toughness.replenish_percentage(template_context.unit, toughness, false, "psyker_crits_regen_toughness_movement_speed")
 	end,
 	related_talents = {
-		"psyker_killing_enemy_with_warpfire_boosts",
-	},
+		"psyker_killing_enemy_with_warpfire_boosts"
+	}
 }
 templates.psyker_warp_glass_cannon = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[stat_buffs.warp_charge_amount] = talent_settings.glass_cannon.warp_charge_amount,
-		[stat_buffs.toughness_replenish_multiplier] = talent_settings.glass_cannon.toughness_replenish_multiplier,
-	},
+		[stat_buffs.toughness_replenish_multiplier] = talent_settings.glass_cannon.toughness_replenish_multiplier
+	}
 }
 templates.psyker_warp_attacks_rending = {
 	always_show_in_hud = true,
@@ -3377,8 +3371,8 @@ templates.psyker_warp_attacks_rending = {
 	lerped_stat_buffs = {
 		[stat_buffs.warp_attacks_rending_multiplier] = {
 			min = 0,
-			max = talent_settings.warp_attacks_rending.warp_rending,
-		},
+			max = talent_settings.warp_attacks_rending.warp_rending
+		}
 	},
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		local current_percent = template_data.warp_charge_component.current_percentage
@@ -3394,8 +3388,8 @@ templates.psyker_warp_attacks_rending = {
 		template_data.inventory_slot_secondary_component = unit_data_extension:read_component("slot_secondary")
 	end,
 	related_talents = {
-		"psyker_warp_attacks_rending",
-	},
+		"psyker_warp_attacks_rending"
+	}
 }
 templates.psyker_soulblaze_reduces_damage_taken = {
 	active_duration = 3,
@@ -3405,23 +3399,23 @@ templates.psyker_soulblaze_reduces_damage_taken = {
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_warp_fire_applied] = 1,
+		[proc_events.on_warp_fire_applied] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings.soulblaze_reduces_damage_taken.toughness_damage_taken_multiplier,
+		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings.soulblaze_reduces_damage_taken.toughness_damage_taken_multiplier
 	},
 	check_proc_func = function (params, template_data, template_context)
 		return params.buffer_unit == template_context.unit
 	end,
 	related_talents = {
-		"psyker_soulblaze_reduces_damage_taken",
-	},
+		"psyker_soulblaze_reduces_damage_taken"
+	}
 }
 templates.psyker_ranged_crits_vent = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = talent_settings.ranged_crits_vent.proc_chance,
+		[proc_events.on_hit] = talent_settings.ranged_crits_vent.proc_chance
 	},
 	check_proc_func = function (params, template_data, template_context)
 		if not params.is_critical_strike then
@@ -3457,7 +3451,7 @@ templates.psyker_ranged_crits_vent = {
 
 			template_data.procced = false
 		end
-	end,
+	end
 }
 templates.psyker_reload_speed_warp = {
 	always_show_in_hud = true,
@@ -3467,10 +3461,10 @@ templates.psyker_reload_speed_warp = {
 	predicted = false,
 	proc_events = {
 		[proc_events.on_reload] = 1,
-		[proc_events.on_reload_start] = 1,
+		[proc_events.on_reload_start] = 1
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.reload_speed] = talent_settings.reload_speed_warp.reload_speed,
+		[stat_buffs.reload_speed] = talent_settings.reload_speed_warp.reload_speed
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.warp_charge_component.current_percentage <= talent_settings.reload_speed_warp.threshold
@@ -3489,7 +3483,7 @@ templates.psyker_reload_speed_warp = {
 		end,
 		[proc_events.on_reload] = function (params, template_data)
 			return template_data.warp_charge_component.current_percentage <= talent_settings.reload_speed_warp.threshold
-		end,
+		end
 	},
 	specific_proc_func = {
 		on_reload_start = function (params, template_data, template_context, t)
@@ -3515,17 +3509,17 @@ templates.psyker_reload_speed_warp = {
 			local charge_template = WeaponChargeTemplates.psyker_reload_speed_warp
 
 			WarpCharge.increase_immediate(t, increase_percentage, warp_charge_component, charge_template, unit, refilled_percent, true)
-		end,
+		end
 	},
 	related_talents = {
-		"psyker_reload_speed_warp_charge",
-	},
+		"psyker_reload_speed_warp_charge"
+	}
 }
 templates.psyker_chain_lightning_heavy_attacks = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_heavy_hit,
 	proc_func = function (params, template_data, template_context, t)
@@ -3539,13 +3533,13 @@ templates.psyker_chain_lightning_heavy_attacks = {
 			buff_ext:add_internally_controlled_buff(buff_name, t, "owner_unit", template_context.unit)
 		end
 	end,
-	special_rule = special_rules.psyker_chain_lightning_improved_target_buff,
+	special_rule = special_rules.psyker_chain_lightning_improved_target_buff
 }
 templates.psyker_force_staff_quick_attack_bonus = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = function (params, template_data, template_context)
 		return params.damage_profile and params.damage_profile.force_staff_primary
@@ -3557,7 +3551,7 @@ templates.psyker_force_staff_quick_attack_bonus = {
 		if buff_extension then
 			buff_extension:add_internally_controlled_buff("psyker_force_staff_quick_attack_debuff", t)
 		end
-	end,
+	end
 }
 templates.psyker_force_staff_quick_attack_debuff = {
 	class_name = "buff",
@@ -3566,14 +3560,14 @@ templates.psyker_force_staff_quick_attack_debuff = {
 	predicted = false,
 	refresh_duration_on_stack = true,
 	stat_buffs = {
-		[stat_buffs.warp_damage_taken_multiplier] = 1.06,
-	},
+		[stat_buffs.warp_damage_taken_multiplier] = 1.06
+	}
 }
 templates.psyker_force_staff_melee_attack_bonus = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	check_proc_func = function (params, template_data, template_context)
 		local wielded_slot = template_data.inventory_component.wielded_slot
@@ -3583,8 +3577,8 @@ templates.psyker_force_staff_melee_attack_bonus = {
 	lerped_stat_buffs = {
 		[stat_buffs.force_staff_melee_damage] = {
 			min = talent_settings.psyker_force_staff_melee_attack_bonus.min,
-			max = talent_settings.psyker_force_staff_melee_attack_bonus.max,
-		},
+			max = talent_settings.psyker_force_staff_melee_attack_bonus.max
+		}
 	},
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		local current_percent = template_data.warp_charge_component.current_percentage
@@ -3614,7 +3608,7 @@ templates.psyker_force_staff_melee_attack_bonus = {
 
 			template_data.procced = false
 		end
-	end,
+	end
 }
 templates.psyker_force_staff_wield_speed = {
 	class_name = "buff",
@@ -3622,8 +3616,8 @@ templates.psyker_force_staff_wield_speed = {
 	lerped_stat_buffs = {
 		[stat_buffs.wield_speed] = {
 			min = talent_settings.psyker_force_staff_wield_speed.min,
-			max = talent_settings.psyker_force_staff_wield_speed.max,
-		},
+			max = talent_settings.psyker_force_staff_wield_speed.max
+		}
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -3635,14 +3629,14 @@ templates.psyker_force_staff_wield_speed = {
 		local current_percent = template_data.warp_charge_component.current_percentage
 
 		return current_percent
-	end,
+	end
 }
 templates.psyker_melee_toughness = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.toughness_melee_replenish] = 1,
-	},
+		[stat_buffs.toughness_melee_replenish] = 1
+	}
 }
 templates.psyker_alternative_peril_explosion = {
 	class_name = "proc_buff",
@@ -3650,11 +3644,11 @@ templates.psyker_alternative_peril_explosion = {
 	stat_buffs = {
 		[stat_buffs.overheat_explosion_speed_modifier] = 1.65,
 		[stat_buffs.overheat_explosion_damage_modifier] = talent_settings.psyker_alternative_peril_explosion.overload_damage,
-		[stat_buffs.overheat_explosion_radius_modifier] = talent_settings.psyker_alternative_peril_explosion.overload_radius,
+		[stat_buffs.overheat_explosion_radius_modifier] = talent_settings.psyker_alternative_peril_explosion.overload_radius
 	},
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_action_finish] = 1,
+		[proc_events.on_action_finish] = 1
 	},
 	specific_proc_func = {
 		on_action_finish = function (params, template_data, template_context, t)
@@ -3673,7 +3667,7 @@ templates.psyker_alternative_peril_explosion = {
 			if CheckProcFunctions.on_elite_kill(params) then
 				template_data.kill = true
 			end
-		end,
+		end
 	},
 	update_func = function (template_data, template_context, dt, t)
 		if not template_data.should_take_damage then
@@ -3705,13 +3699,13 @@ templates.psyker_alternative_peril_explosion = {
 
 			template_data.kill = false
 		end
-	end,
+	end
 }
 templates.psyker_force_staff_bonus = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_action_finish] = 1,
+		[proc_events.on_action_finish] = 1
 	},
 	check_proc_func = function (params, template_data, template_context)
 		local wielded_slot = template_data.inventory_component.wielded_slot
@@ -3754,7 +3748,7 @@ templates.psyker_force_staff_bonus = {
 		elseif name == "rapid_left" then
 			template_context.buff_extension:add_internally_controlled_buff("psyker_force_staff_secondary_bonus_buff", t)
 		end
-	end,
+	end
 }
 templates.psyker_force_staff_bonus_buff = {
 	class_name = "buff",
@@ -3764,12 +3758,12 @@ templates.psyker_force_staff_bonus_buff = {
 	predicted = false,
 	refresh_duration_on_stack = true,
 	stat_buffs = {
-		[stat_buffs.force_staff_single_target_damage] = talent_settings.psyker_force_staff_both_bonus.primary_damage,
+		[stat_buffs.force_staff_single_target_damage] = talent_settings.psyker_force_staff_both_bonus.primary_damage
 	},
 	duration = talent_settings.psyker_force_staff_both_bonus.duration,
 	related_talents = {
-		"psyker_force_staff_bonus",
-	},
+		"psyker_force_staff_bonus"
+	}
 }
 templates.psyker_force_staff_secondary_bonus_buff = {
 	class_name = "buff",
@@ -3779,18 +3773,18 @@ templates.psyker_force_staff_secondary_bonus_buff = {
 	predicted = false,
 	refresh_duration_on_stack = true,
 	stat_buffs = {
-		[stat_buffs.force_staff_secondary_damage] = talent_settings.psyker_force_staff_both_bonus.secondary_damage,
+		[stat_buffs.force_staff_secondary_damage] = talent_settings.psyker_force_staff_both_bonus.secondary_damage
 	},
 	duration = talent_settings.psyker_force_staff_both_bonus.secondary_duration,
 	related_talents = {
-		"psyker_force_staff_bonus",
-	},
+		"psyker_force_staff_bonus"
+	}
 }
 templates.psyker_toughness_on_melee = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_melee_hit,
 	proc_func = function (params, template_data, template_context, t)
@@ -3803,7 +3797,7 @@ templates.psyker_toughness_on_melee = {
 
 			Toughness.replenish_percentage(template_context.unit, toughness, false, "psyker_melee_toughness")
 		end
-	end,
+	end
 }
 templates.psyker_toughness_on_melee_buff = {
 	class_name = "buff",
@@ -3819,8 +3813,112 @@ templates.psyker_toughness_on_melee_buff = {
 		Toughness.replenish_percentage(template_context.unit, toughness, false, "psyker_melee_toughness")
 	end,
 	related_talents = {
-		"psyker_toughness_on_melee",
+		"psyker_toughness_on_melee"
+	}
+}
+templates.psyker_increased_warp_damage = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[stat_buffs.warp_damage] = talent_settings.psyker_increased_warp_damage.warp_damage
 	},
+	related_talents = {
+		"psyker_increased_warp_damage"
+	}
+}
+templates.psyker_increased_blitz_damage = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[stat_buffs.smite_damage] = talent_settings.psyker_increased_blitz_damage.damage,
+		[stat_buffs.chain_lightning_damage] = talent_settings.psyker_increased_blitz_damage.damage,
+		[stat_buffs.psyker_throwing_knives_damage_multiplier] = talent_settings.psyker_increased_blitz_damage.damage
+	},
+	related_talents = {
+		"psyker_increased_blitz_damage"
+	}
+}
+
+local psyker_weapon_attacks_peril_equilibrium_settings = talent_settings.psyker_weapon_attacks_peril_equilibrium
+
+templates.psyker_weapon_attacks_peril_equilibrium = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_hit] = 1
+	},
+	check_proc_func = function (params, template_data, template_context, t)
+		if params.attacking_unit ~= template_context.unit then
+			return false
+		end
+
+		if params.damage == 0 then
+			return false
+		end
+
+		local damage_type = params.damage_type
+
+		if warp_damage_types[damage_type] then
+			return false
+		end
+
+		local attack_type = params.attack_type
+
+		return attack_type == attack_types.melee or attack_type == attack_types.ranged
+	end,
+	start_func = function (template_data, template_context)
+		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
+
+		template_data.warp_charge_component = unit_data_extension:write_component("warp_charge")
+		template_data.procs = 0
+	end,
+	proc_func = function (params, template_data, template_context, t)
+		template_data.procs = template_data.procs + 1
+	end,
+	update_func = function (template_data, template_context, dt, t)
+		if template_data.procs <= 0 then
+			return
+		end
+
+		template_data.procs = template_data.procs - 1
+
+		local warp_charge_component = template_data.warp_charge_component
+		local current_percentage = warp_charge_component.current_percentage
+		local threshold = psyker_weapon_attacks_peril_equilibrium_settings.threshold
+		local amount = psyker_weapon_attacks_peril_equilibrium_settings.warp_charge_percent
+		local new_percentage
+
+		if current_percentage < threshold then
+			new_percentage = math.min(current_percentage + amount, threshold)
+		else
+			return
+		end
+
+		if new_percentage == current_percentage then
+			template_data.procs = 0
+
+			return
+		end
+
+		warp_charge_component.last_charge_at_t = t
+		warp_charge_component.current_percentage = new_percentage
+
+		local buff_extension = template_context.buff_extension
+		local percentage_change = current_percentage - new_percentage
+
+		if percentage_change ~= 0 then
+			local param_table = buff_extension:request_proc_event_param_table()
+
+			if param_table then
+				param_table.percentage_change = percentage_change
+
+				buff_extension:add_proc_event(proc_events.on_warp_charge_changed, param_table)
+			end
+		end
+	end,
+	related_talents = {
+		"psyker_weapon_attacks_peril_equilibrium"
+	}
 }
 
 return templates

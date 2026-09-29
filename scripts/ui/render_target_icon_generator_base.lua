@@ -20,7 +20,7 @@ RenderTargetIconGeneratorBase.init = function (self, render_settings)
 
 	self._default_size = {
 		width,
-		height,
+		height
 	}
 	self._default_render_target_capture_multiple = render_settings and render_settings.render_target_capture_multiple or 4
 	self._id_counter = 0
@@ -192,7 +192,7 @@ RenderTargetIconGeneratorBase._generate_icon_request = function (self, request_i
 			data = data,
 			size = size,
 			id = request_id,
-			prioritized = prioritized,
+			prioritized = prioritized
 		}
 
 		if self._render_enabled then
@@ -373,13 +373,13 @@ RenderTargetIconGeneratorBase._handle_request_queue = function (self)
 end
 
 RenderTargetIconGeneratorBase._handle_next_request_in_queue = function (self)
+	local request_id = self._requests_queue_order[1]
+	local request = self:_request_by_id(request_id)
+
 	if not self._world_spawner then
 		self:_initialize_world()
 		self:_setup_viewport()
 	end
-
-	local request_id = self._requests_queue_order[1]
-	local request = self:_request_by_id(request_id)
 
 	self:_handle_request(request)
 end
@@ -445,11 +445,11 @@ RenderTargetIconGeneratorBase._setup_viewport = function (self, custom_size)
 	self._capture_render_target = Renderer.create_resource("render_target", "R8G8B8A8", nil, width * default_render_target_capture_multiple, height * default_render_target_capture_multiple, self._unique_id)
 	self._capture_render_target_size = {
 		width,
-		height,
+		height
 	}
 
 	local render_targets = {
-		back_buffer = self._capture_render_target,
+		back_buffer = self._capture_render_target
 	}
 
 	self._world_spawner:create_viewport(camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment, nil, render_targets)

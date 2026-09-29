@@ -66,30 +66,30 @@ LightCycle.component_data = {
 		step = 1,
 		ui_name = "Distance (Meters)",
 		ui_type = "slider",
-		value = 1,
+		value = 1
 	},
 	speed = {
 		decimals = 1,
 		step = 1,
 		ui_name = "Speed (Meters per Second)",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	start_enabled = {
 		ui_name = "Start Enabled",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	inputs = {
 		start = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		stop = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return LightCycle

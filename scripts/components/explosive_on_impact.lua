@@ -116,34 +116,34 @@ ExplosiveOnImpact.component_data = {
 		options_keys = {
 			"expedition_airstrike_nuke",
 			"explosive_barrel",
-			"fire_barrel",
+			"fire_barrel"
 		},
 		options_values = {
 			"expedition_airstrike_nuke",
 			"explosive_barrel",
-			"fire_barrel",
-		},
+			"fire_barrel"
+		}
 	},
 	power_level = {
 		decimals = 0,
 		step = 1,
 		ui_name = "Power Level",
 		ui_type = "number",
-		value = 1000,
+		value = 1000
 	},
 	charge_level = {
 		decimals = 0,
 		step = 1,
 		ui_name = "Charge Level",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	inputs = {
 		detonate = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return ExplosiveOnImpact

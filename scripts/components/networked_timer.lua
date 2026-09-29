@@ -88,49 +88,49 @@ NetworkedTimer.component_data = {
 		step = 0.01,
 		ui_name = "Duration (in sec.)",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	hud_description = {
 		ui_name = "HUD Description",
 		ui_type = "text_box",
-		value = "loc_description",
+		value = "loc_description"
 	},
 	max_speed_modifier = {
 		step = 0.01,
 		ui_name = "Max Speed Modifier",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	reset_speed_modifier_on_state_change = {
 		ui_name = "Max Speed Modifier",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	inputs = {
 		start = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		pause = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		stop = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		fast_forward = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		rewind = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"NetworkedTimerExtension",
-	},
+		"NetworkedTimerExtension"
+	}
 }
 
 return NetworkedTimer

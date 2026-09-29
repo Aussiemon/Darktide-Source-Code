@@ -21,10 +21,10 @@ CraftingMechanicusUpgradeExpertiseView.init = function (self, settings, context)
 		item = self._item,
 		trait_ids = {},
 		trait_master_ids = {},
-		tiers = {},
+		tiers = {}
 	}
 	self._can_craft_context = {
-		trait_items = {},
+		trait_items = {}
 	}
 end
 
@@ -56,6 +56,9 @@ CraftingMechanicusUpgradeExpertiseView.on_enter = function (self)
 
 		self:_present_crafting(self._mastery_data)
 		self:_get_wallet()
+	end):catch(function ()
+		Managers.ui:close_view(self.view_name)
+		self._parent:go_to_crafting_view("select_item_mechanicus")
 	end)
 
 	self._enter_animation_id = self:_start_animation("on_enter", self._widgets, self)
@@ -130,7 +133,7 @@ CraftingMechanicusUpgradeExpertiseView._present_crafting = function (self, maste
 		start = start_value,
 		current = start_value,
 		max_available = max_available_value,
-		max = max_value,
+		max = max_value
 	}
 
 	expertise_data.start = math.max(expertise_data.current, expertise_data.start)

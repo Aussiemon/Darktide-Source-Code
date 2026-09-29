@@ -6,7 +6,7 @@ local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local background_size = {
 	960,
-	50,
+	50
 }
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
@@ -16,13 +16,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			background_size[1],
-			background_size[2],
+			background_size[2]
 		},
 		position = {
 			0,
 			HudElementPlayerCompassSettings.edge_offset,
-			0,
-		},
+			0
+		}
 	},
 	background = {
 		horizontal_alignment = "center",
@@ -30,13 +30,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			background_size[1] - 50,
-			background_size[2],
+			background_size[2]
 		},
 		position = {
 			0,
 			5,
-			1,
-		},
+			1
+		}
 	},
 	area = {
 		horizontal_alignment = "center",
@@ -44,13 +44,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			760,
-			40,
+			40
 		},
 		position = {
 			0,
 			5,
-			0,
-		},
+			0
+		}
 	},
 	background_frame = {
 		horizontal_alignment = "center",
@@ -58,13 +58,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			716,
-			716,
+			716
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	pivot = {
 		horizontal_alignment = "left",
@@ -72,13 +72,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	default_icon = {
 		horizontal_alignment = "left",
@@ -86,14 +86,14 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			3,
-		},
-	},
+			3
+		}
+	}
 }
 local widget_definitions = {
 	background = UIWidget.create_definition({
@@ -106,16 +106,16 @@ local widget_definitions = {
 				offset = {
 					0,
 					-7,
-					1,
+					1
 				},
 				size = {
 					96,
-					68,
+					68
 				},
 				material_values = {
-					state = 1,
-				},
-			},
+					state = 1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -126,12 +126,12 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				material_values = {
-					state = 1,
-				},
-			},
+					state = 1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -145,22 +145,22 @@ local widget_definitions = {
 				offset = {
 					-38,
 					4,
-					1,
+					1
 				},
 				size = {
 					20,
-					20,
+					20
 				},
 				color = {
 					255,
 					114,
 					247,
-					119,
-				},
+					119
+				}
 			},
 			visibility_function = function (content, style)
 				return content.show_arrow_right
-			end,
+			end
 		},
 		{
 			pass_type = "texture_uv",
@@ -173,33 +173,33 @@ local widget_definitions = {
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
+						1
+					}
 				},
 				size = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					36,
 					4,
-					1,
+					1
 				},
 				color = {
 					255,
 					114,
 					247,
-					119,
-				},
+					119
+				}
 			},
 			visibility_function = function (content, style)
 				return content.show_arrow_left
-			end,
-		},
+			end
+		}
 	}, "background"),
 	navigation_lines = UIWidget.create_definition({
 		{
@@ -212,19 +212,19 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					756,
-					26,
+					26
 				},
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				material_values = {
-					uv_offset = 0,
-				},
-			},
-		},
-	}, "area"),
+					uv_offset = 0
+				}
+			}
+		}
+	}, "area")
 }
 local header_font_setting_name = "hud_body"
 local header_font_settings = UIFontSettings[header_font_setting_name]
@@ -233,7 +233,7 @@ local header_font_color = {
 	255,
 	114,
 	247,
-	119,
+	119
 }
 local default_widget_icon_definition = UIWidget.create_definition({
 	{
@@ -248,27 +248,27 @@ local default_widget_icon_definition = UIWidget.create_definition({
 			vertical_alignment = "center",
 			size_addition = {
 				0,
-				0,
+				0
 			},
 			default_size_addition = {
 				10,
-				10,
+				10
 			},
 			offset = {
 				0,
 				0,
-				1,
+				1
 			},
 			color = {
 				255,
 				255,
 				255,
-				255,
-			},
+				255
+			}
 		},
 		visibility_function = function (content, style)
 			return content.marked
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -281,27 +281,27 @@ local default_widget_icon_definition = UIWidget.create_definition({
 			vertical_alignment = "center",
 			size_addition = {
 				50,
-				50,
+				50
 			},
 			default_size_addition = {
 				50,
-				50,
+				50
 			},
 			offset = {
 				0,
 				0,
-				-1,
+				-1
 			},
 			color = {
 				160,
 				0,
 				0,
-				0,
-			},
+				0
+			}
 		},
 		visibility_function = function (content, style)
 			return content.draw_background
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -313,18 +313,18 @@ local default_widget_icon_definition = UIWidget.create_definition({
 			vertical_alignment = "center",
 			size_addition = {
 				0,
-				0,
+				0
 			},
 			offset = {
 				0,
 				0,
-				2,
+				2
 			},
-			color = Color.ui_hud_green_light(255, true),
+			color = Color.ui_hud_green_light(255, true)
 		},
 		visibility_function = function (content, style)
 			return content.icon ~= nil
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -335,18 +335,18 @@ local default_widget_icon_definition = UIWidget.create_definition({
 			vertical_alignment = "center",
 			size_addition = {
 				0,
-				0,
+				0
 			},
 			offset = {
 				0,
 				0,
-				1,
+				1
 			},
-			color = Color.ui_hud_green_light(255, true),
+			color = Color.ui_hud_green_light(255, true)
 		},
 		visibility_function = function (content, style)
 			return content.icon ~= nil and content.animating
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -357,18 +357,18 @@ local default_widget_icon_definition = UIWidget.create_definition({
 			vertical_alignment = "center",
 			size_addition = {
 				0,
-				0,
+				0
 			},
 			offset = {
 				0,
 				0,
-				1,
+				1
 			},
-			color = Color.ui_hud_green_light(255, true),
+			color = Color.ui_hud_green_light(255, true)
 		},
 		visibility_function = function (content, style)
 			return content.icon ~= nil and content.animating
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -380,18 +380,18 @@ local default_widget_icon_definition = UIWidget.create_definition({
 			vertical_alignment = "center",
 			size_addition = {
 				0,
-				0,
+				0
 			},
 			offset = {
 				0,
 				0,
-				1,
+				1
 			},
-			color = Color.ui_hud_green_light(255, true),
+			color = Color.ui_hud_green_light(255, true)
 		},
 		visibility_function = function (content, style)
 			return content.title_icon ~= nil
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -402,18 +402,18 @@ local default_widget_icon_definition = UIWidget.create_definition({
 			vertical_alignment = "center",
 			size_addition = {
 				0,
-				0,
+				0
 			},
 			offset = {
 				0,
 				0,
-				1,
+				1
 			},
-			color = Color.ui_hud_green_light(255, true),
+			color = Color.ui_hud_green_light(255, true)
 		},
 		visibility_function = function (content, style)
 			return content.title_icon ~= nil and content.animating
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -424,22 +424,22 @@ local default_widget_icon_definition = UIWidget.create_definition({
 			vertical_alignment = "center",
 			size_addition = {
 				0,
-				0,
+				0
 			},
 			offset = {
 				0,
 				0,
-				1,
+				1
 			},
-			color = Color.ui_hud_green_light(255, true),
+			color = Color.ui_hud_green_light(255, true)
 		},
 		visibility_function = function (content, style)
 			return content.title_icon ~= nil and content.animating
-		end,
-	},
+		end
+	}
 }, "default_icon", nil, {
 	20,
-	20,
+	20
 })
 local default_compass_coordinate_definition = UIWidget.create_definition({
 	{
@@ -455,16 +455,16 @@ local default_compass_coordinate_definition = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				2,
+				2
 			},
 			default_offset = {
 				0,
 				0,
-				2,
+				2
 			},
 			size_addition = {
 				0,
-				0,
+				0
 			},
 			font_type = header_font_settings.font_type,
 			font_size = header_font_settings.font_size,
@@ -473,21 +473,21 @@ local default_compass_coordinate_definition = UIWidget.create_definition({
 			default_text_color = header_font_color,
 			size = {
 				200,
-				20,
-			},
+				20
+			}
 		},
 		visibility_function = function (content, style)
 			return content.text ~= nil and content.text ~= ""
-		end,
-	},
+		end
+	}
 }, "default_icon", nil, {
 	20,
-	20,
+	20
 })
 
 return {
 	default_widget_icon_definition = default_widget_icon_definition,
 	default_compass_coordinate_definition = default_compass_coordinate_definition,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

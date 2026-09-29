@@ -5,7 +5,7 @@ local BackendError = require("scripts/foundation/managers/backend/backend_error"
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local Interface = {
 	"fetch_current",
-	"fetch_all_happenings",
+	"fetch_all_happenings"
 }
 local MissionHappenings = class("MissionHappenings")
 

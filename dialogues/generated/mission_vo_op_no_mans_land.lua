@@ -15,13 +15,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_trenches_boss_arrives_a",
+				"mission_trenches_boss_arrives_a"
 			},
 			{
 				"user_context",
@@ -29,27 +29,27 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"tech_priest",
-					"boon_vendor",
-				},
+					"boon_vendor"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_trenches_boss_arrives_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_trenches_boss_arrives_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "visible_npcs",
-		},
+			target = "visible_npcs"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -65,34 +65,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_boss_arrives_a",
-				},
+					"mission_trenches_boss_arrives_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -108,27 +108,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_bridge_blocked_01_a",
+				"mission_trenches_bridge_blocked_01_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -144,34 +144,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_bridge_blocked_01_a",
-				},
+					"mission_trenches_bridge_blocked_01_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -187,34 +187,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_bridge_blocked_01_a",
-				},
+					"mission_trenches_bridge_blocked_01_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"boon_vendor",
-				},
-			},
+					"boon_vendor"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -230,27 +230,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_bridge_blocked_02_a",
+				"mission_trenches_bridge_blocked_02_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -266,15 +266,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_bridge_blocked_02_a",
-				},
+					"mission_trenches_bridge_blocked_02_a"
+				}
 			},
 			{
 				"user_context",
@@ -282,19 +282,19 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"tech_priest",
-					"boon_vendor",
-				},
-			},
+					"boon_vendor"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -310,13 +310,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_trenches_bridge_blocked_03_a",
+				"mission_trenches_bridge_blocked_03_a"
 			},
 			{
 				"user_context",
@@ -324,27 +324,27 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"tech_priest",
-					"boon_vendor",
-				},
+					"boon_vendor"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_trenches_bridge_blocked_03_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_trenches_bridge_blocked_03_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "visible_npcs",
-		},
+			target = "visible_npcs"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -360,34 +360,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_bridge_blocked_03_a",
-				},
+					"mission_trenches_bridge_blocked_03_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -403,27 +403,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_bridge_open_a",
+				"mission_trenches_bridge_open_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -439,13 +439,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_trenches_call_reinforcements_a",
+				"mission_trenches_call_reinforcements_a"
 			},
 			{
 				"user_context",
@@ -453,27 +453,27 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"tech_priest",
-					"boon_vendor",
-				},
+					"boon_vendor"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_trenches_call_reinforcements_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_trenches_call_reinforcements_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -489,13 +489,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_trenches_cinematic_intro_a",
+				"mission_trenches_cinematic_intro_a"
 			},
 			{
 				"user_context",
@@ -503,27 +503,27 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"tech_priest",
-					"boon_vendor",
-				},
+					"boon_vendor"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_trenches_cinematic_intro_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_trenches_cinematic_intro_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -539,39 +539,39 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_first_path_cleared_a",
-				},
+					"mission_trenches_first_path_cleared_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 5,
+				duration = 5
 			},
 			random_ignore_vo = {
 				chance = 0.5,
 				hold_for = 0,
-				max_failed_tries = 0,
-			},
-		},
+				max_failed_tries = 0
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -587,15 +587,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_cityfight_a",
-				},
+					"mission_trenches_cityfight_a"
+				}
 			},
 			{
 				"user_context",
@@ -603,19 +603,19 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"tech_priest",
-					"boon_vendor",
-				},
-			},
+					"boon_vendor"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -631,13 +631,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_trenches_clear_bastion_a",
+				"mission_trenches_clear_bastion_a"
 			},
 			{
 				"user_context",
@@ -645,27 +645,27 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"tech_priest",
-					"boon_vendor",
-				},
+					"boon_vendor"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_trenches_clear_bastion_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_trenches_clear_bastion_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -681,40 +681,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_trenches_extract_a",
+				"mission_trenches_extract_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
+					"commissar"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_trenches_extract_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_trenches_extract_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -730,15 +730,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_extract_a",
-				},
+					"mission_trenches_extract_a"
+				}
 			},
 			{
 				"user_context",
@@ -746,19 +746,19 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"tech_priest",
-					"boon_vendor",
-				},
-			},
+					"boon_vendor"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -774,27 +774,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_fifth_interstitial_01_a",
+				"mission_trenches_fifth_interstitial_01_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -810,34 +810,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fifth_interstitial_01_a",
-				},
+					"mission_trenches_fifth_interstitial_01_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
-			},
+					"commissar"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "visible_npcs",
+			target = "visible_npcs"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -853,34 +853,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fifth_interstitial_01_b",
-				},
+					"mission_trenches_fifth_interstitial_01_b"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -896,34 +896,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fifth_interstitial_01_c",
-				},
+					"mission_trenches_fifth_interstitial_01_c"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
-			},
+					"commissar"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -939,27 +939,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_fifth_interstitial_02_a",
+				"mission_trenches_fifth_interstitial_02_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -975,34 +975,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fifth_interstitial_02_a",
-				},
+					"mission_trenches_fifth_interstitial_02_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
-			},
+					"commissar"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "visible_npcs",
+			target = "visible_npcs"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -1018,34 +1018,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fifth_interstitial_02_b",
-				},
+					"mission_trenches_fifth_interstitial_02_b"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1061,34 +1061,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fifth_interstitial_02_c",
-				},
+					"mission_trenches_fifth_interstitial_02_c"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
-			},
+					"commissar"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -1104,27 +1104,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_fifth_interstitial_03_a",
+				"mission_trenches_fifth_interstitial_03_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1140,34 +1140,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fifth_interstitial_03_a",
-				},
+					"mission_trenches_fifth_interstitial_03_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
-			},
+					"commissar"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "visible_npcs",
+			target = "visible_npcs"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -1183,34 +1183,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fifth_interstitial_03_b",
-				},
+					"mission_trenches_fifth_interstitial_03_b"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1226,34 +1226,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fifth_interstitial_03_c",
-				},
+					"mission_trenches_fifth_interstitial_03_c"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
-			},
+					"commissar"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -1269,34 +1269,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_first_interstitial_01_a",
+				"mission_trenches_first_interstitial_01_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			random_ignore_vo = {
 				chance = 0.5,
 				hold_for = 0,
-				max_failed_tries = 0,
-			},
-		},
+				max_failed_tries = 0
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1312,15 +1312,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_first_interstitial_01_a",
-				},
+					"mission_trenches_first_interstitial_01_a"
+				}
 			},
 			{
 				"user_context",
@@ -1328,19 +1328,19 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"tech_priest",
-					"boon_vendor",
-				},
-			},
+					"boon_vendor"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "visible_npcs",
+			target = "visible_npcs"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -1356,34 +1356,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_first_interstitial_01_b",
-				},
+					"mission_trenches_first_interstitial_01_b"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -1399,34 +1399,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_first_interstitial_02_a",
+				"mission_trenches_first_interstitial_02_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			random_ignore_vo = {
 				chance = 0.5,
 				hold_for = 0,
-				max_failed_tries = 0,
-			},
-		},
+				max_failed_tries = 0
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1442,15 +1442,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_first_interstitial_02_a",
-				},
+					"mission_trenches_first_interstitial_02_a"
+				}
 			},
 			{
 				"user_context",
@@ -1458,19 +1458,19 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"tech_priest",
-					"boon_vendor",
-				},
-			},
+					"boon_vendor"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "visible_npcs",
+			target = "visible_npcs"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -1486,34 +1486,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_first_interstitial_02_b",
-				},
+					"mission_trenches_first_interstitial_02_b"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -1528,34 +1528,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_first_interstitial_03_a",
+				"mission_trenches_first_interstitial_03_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			random_ignore_vo = {
 				chance = 0.5,
 				hold_for = 0,
-				max_failed_tries = 0,
-			},
-		},
+				max_failed_tries = 0
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -1569,29 +1569,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_first_interstitial_03_a",
-				},
+					"mission_trenches_first_interstitial_03_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "self",
-		},
+			target = "self"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -1606,29 +1606,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_first_interstitial_03_b",
-				},
+					"mission_trenches_first_interstitial_03_b"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1644,7 +1644,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -1653,27 +1653,27 @@ return function ()
 				args = {
 					"mission_trenches_first_tank_sighting_01_c",
 					"mission_trenches_first_tank_sighting_02_c",
-					"mission_trenches_first_tank_sighting_03_c",
-				},
+					"mission_trenches_first_tank_sighting_03_c"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -1686,7 +1686,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -1694,19 +1694,19 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"mission_trenches_first_objective_a",
-					"mission_trenches_safe_zone_d",
-				},
-			},
+					"mission_trenches_safe_zone_d"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "level_event",
+			target = "level_event"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1722,13 +1722,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_trenches_first_path_blocked_a",
+				"mission_trenches_first_path_blocked_a"
 			},
 			{
 				"user_context",
@@ -1736,27 +1736,27 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"tech_priest",
-					"boon_vendor",
-				},
+					"boon_vendor"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_trenches_first_path_blocked_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_trenches_first_path_blocked_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "visible_npcs",
-		},
+			target = "visible_npcs"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -1772,34 +1772,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_first_path_blocked_a",
-				},
+					"mission_trenches_first_path_blocked_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -1815,27 +1815,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_first_path_cleared_a",
+				"mission_trenches_first_path_cleared_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "self",
-		},
+			target = "self"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -1850,27 +1850,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_first_tank_sighting_01_a",
+				"mission_trenches_first_tank_sighting_01_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "self",
-		},
+			target = "self"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -1884,29 +1884,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_first_tank_sighting_01_a",
-				},
+					"mission_trenches_first_tank_sighting_01_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "self",
-		},
+			target = "self"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -1921,29 +1921,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_first_tank_sighting_01_b",
-				},
+					"mission_trenches_first_tank_sighting_01_b"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -1958,27 +1958,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_first_tank_sighting_02_a",
+				"mission_trenches_first_tank_sighting_02_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "self",
-		},
+			target = "self"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -1992,29 +1992,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_first_tank_sighting_02_a",
-				},
+					"mission_trenches_first_tank_sighting_02_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "self",
-		},
+			target = "self"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -2029,29 +2029,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_first_tank_sighting_02_b",
-				},
+					"mission_trenches_first_tank_sighting_02_b"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -2066,27 +2066,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_first_tank_sighting_03_a",
+				"mission_trenches_first_tank_sighting_03_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "self",
-		},
+			target = "self"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -2100,29 +2100,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_first_tank_sighting_03_a",
-				},
+					"mission_trenches_first_tank_sighting_03_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "self",
-		},
+			target = "self"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -2137,29 +2137,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_first_tank_sighting_03_b",
-				},
+					"mission_trenches_first_tank_sighting_03_b"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2175,46 +2175,46 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_trenches_fourth_interstitial_01_a",
+				"mission_trenches_fourth_interstitial_01_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_trenches_fourth_interstitial_01_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"boon_vendor_active",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_trenches_fourth_interstitial_01_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2230,34 +2230,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fourth_interstitial_01_a",
-				},
+					"mission_trenches_fourth_interstitial_01_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
-			},
+					"commissar"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2273,34 +2273,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fourth_interstitial_01_b",
-				},
+					"mission_trenches_fourth_interstitial_01_b"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2316,34 +2316,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fourth_interstitial_01_c",
-				},
+					"mission_trenches_fourth_interstitial_01_c"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
-			},
+					"commissar"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2359,46 +2359,46 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_trenches_fourth_interstitial_02_a",
+				"mission_trenches_fourth_interstitial_02_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_trenches_fourth_interstitial_02_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"boon_vendor_active",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_trenches_fourth_interstitial_02_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2414,34 +2414,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fourth_interstitial_02_a",
-				},
+					"mission_trenches_fourth_interstitial_02_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
-			},
+					"commissar"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2457,34 +2457,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fourth_interstitial_02_b",
-				},
+					"mission_trenches_fourth_interstitial_02_b"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2500,34 +2500,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fourth_interstitial_02_c",
-				},
+					"mission_trenches_fourth_interstitial_02_c"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
-			},
+					"commissar"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2543,46 +2543,46 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_trenches_fourth_interstitial_03_a",
+				"mission_trenches_fourth_interstitial_03_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
+					"commissar"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_trenches_fourth_interstitial_03_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"boon_vendor_active",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_trenches_fourth_interstitial_03_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2598,34 +2598,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fourth_interstitial_03_a",
-				},
+					"mission_trenches_fourth_interstitial_03_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2641,34 +2641,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fourth_interstitial_03_b",
-				},
+					"mission_trenches_fourth_interstitial_03_b"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
-			},
+					"commissar"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "visible_npcs",
+			target = "visible_npcs"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -2684,34 +2684,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fourth_interstitial_03_c",
-				},
+					"mission_trenches_fourth_interstitial_03_c"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2727,51 +2727,51 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_trenches_fourth_interstitial_01_a",
+				"mission_trenches_fourth_interstitial_01_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"boon_vendor",
-				},
+					"boon_vendor"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_trenches_fourth_interstitial_04_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"boon_vendor_active",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_trenches_fourth_interstitial_04_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 3,
-			},
-		},
+				duration = 3
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2787,34 +2787,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fourth_interstitial_04_a",
-				},
+					"mission_trenches_fourth_interstitial_04_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
-			},
+					"commissar"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2830,34 +2830,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fourth_interstitial_04_b",
-				},
+					"mission_trenches_fourth_interstitial_04_b"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"boon_vendor",
-				},
-			},
+					"boon_vendor"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2873,34 +2873,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fourth_interstitial_04_c",
-				},
+					"mission_trenches_fourth_interstitial_04_c"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
-			},
+					"commissar"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2916,51 +2916,51 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_trenches_fourth_interstitial_02_a",
+				"mission_trenches_fourth_interstitial_02_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"boon_vendor",
-				},
+					"boon_vendor"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_trenches_fourth_interstitial_05_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"boon_vendor_active",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_trenches_fourth_interstitial_05_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 3,
-			},
-		},
+				duration = 3
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2976,34 +2976,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fourth_interstitial_05_a",
-				},
+					"mission_trenches_fourth_interstitial_05_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
-			},
+					"commissar"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3019,34 +3019,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fourth_interstitial_05_b",
-				},
+					"mission_trenches_fourth_interstitial_05_b"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"boon_vendor",
-				},
-			},
+					"boon_vendor"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3062,34 +3062,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fourth_interstitial_05_c",
-				},
+					"mission_trenches_fourth_interstitial_05_c"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
-			},
+					"commissar"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3105,51 +3105,51 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_trenches_fourth_interstitial_03_a",
+				"mission_trenches_fourth_interstitial_03_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
+					"commissar"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_trenches_fourth_interstitial_06_a",
 				OP.EQ,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"boon_vendor_active",
 				OP.EQ,
-				1,
-			},
+				1
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_trenches_fourth_interstitial_06_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 3,
-			},
-		},
+				duration = 3
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3165,34 +3165,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fourth_interstitial_06_a",
-				},
+					"mission_trenches_fourth_interstitial_06_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"boon_vendor",
-				},
-			},
+					"boon_vendor"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3208,34 +3208,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fourth_interstitial_06_b",
-				},
+					"mission_trenches_fourth_interstitial_06_b"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
-			},
+					"commissar"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "visible_npcs",
+			target = "visible_npcs"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3251,34 +3251,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fourth_interstitial_06_c",
-				},
+					"mission_trenches_fourth_interstitial_06_c"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"boon_vendor",
-				},
-			},
+					"boon_vendor"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3294,40 +3294,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_trenches_fourth_interstitial_a",
+				"mission_trenches_fourth_interstitial_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
+					"commissar"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_trenches_fourth_interstitial_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_trenches_fourth_interstitial_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3343,15 +3343,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_fourth_interstitial_a",
-				},
+					"mission_trenches_fourth_interstitial_a"
+				}
 			},
 			{
 				"user_context",
@@ -3359,19 +3359,19 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"tech_priest",
-					"boon_vendor",
-				},
-			},
+					"boon_vendor"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -3387,27 +3387,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_gate_destroyed_b",
+				"mission_trenches_gate_destroyed_b"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "level_event",
-		},
+			target = "level_event"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -3423,27 +3423,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_gate_sighted_a",
+				"mission_trenches_gate_sighted_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3459,13 +3459,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_trenches_hurry_up_a",
+				"mission_trenches_hurry_up_a"
 			},
 			{
 				"user_context",
@@ -3473,27 +3473,27 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"tech_priest",
-					"boon_vendor",
-				},
+					"boon_vendor"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_trenches_hurry_up_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_trenches_hurry_up_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "visible_npcs",
-		},
+			target = "visible_npcs"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -3509,34 +3509,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_hurry_up_a",
-				},
+					"mission_trenches_hurry_up_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -3552,27 +3552,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_killing_ground_a",
+				"mission_trenches_killing_ground_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3588,40 +3588,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_trenches_outro_fail_01_a",
+				"mission_trenches_outro_fail_01_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"traitor_gunner",
-				},
+					"traitor_gunner"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_trenches_outro_fail_01_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_trenches_outro_fail_01_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3637,40 +3637,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_trenches_outro_success_a",
+				"mission_trenches_outro_success_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
+					"tank_commander"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_trenches_outro_success_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_trenches_outro_success_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3686,40 +3686,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_trenches_pickups_a",
+				"mission_trenches_pickups_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
+					"commissar"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_trenches_pickups_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_trenches_pickups_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3735,40 +3735,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_trenches_roadkill_a",
+				"mission_trenches_roadkill_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
+					"tank_commander"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_trenches_roadkill_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_trenches_roadkill_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3784,40 +3784,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_trenches_safe_zone_a",
+				"mission_trenches_safe_zone_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
+					"commissar"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_trenches_safe_zone_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_trenches_safe_zone_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3833,15 +3833,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_safe_zone_a",
-				},
+					"mission_trenches_safe_zone_a"
+				}
 			},
 			{
 				"user_context",
@@ -3849,19 +3849,19 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"tech_priest",
-					"boon_vendor",
-				},
-			},
+					"boon_vendor"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3877,34 +3877,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_safe_zone_b",
-				},
+					"mission_trenches_safe_zone_b"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
-			},
+					"commissar"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3920,7 +3920,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -3929,34 +3929,34 @@ return function ()
 				args = {
 					"mission_trenches_first_tank_sighting_01_c",
 					"mission_trenches_first_tank_sighting_02_c",
-					"mission_trenches_first_tank_sighting_03_c",
-				},
+					"mission_trenches_first_tank_sighting_03_c"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"boon_vendor",
-				},
-			},
+					"boon_vendor"
+				}
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"boon_vendor_active",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3972,40 +3972,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_trenches_second_interstitial_01_a",
+				"mission_trenches_second_interstitial_01_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
+					"commissar"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_trenches_second_interstitial_01_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_trenches_second_interstitial_01_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "visible_npcs",
-		},
+			target = "visible_npcs"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -4021,34 +4021,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_second_interstitial_01_a",
-				},
+					"mission_trenches_second_interstitial_01_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -4064,34 +4064,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_second_interstitial_01_b",
-				},
+					"mission_trenches_second_interstitial_01_b"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
-			},
+					"commissar"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -4107,40 +4107,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_trenches_second_interstitial_02_a",
+				"mission_trenches_second_interstitial_02_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
+					"commissar"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_trenches_second_interstitial_02_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_trenches_second_interstitial_02_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "visible_npcs",
-		},
+			target = "visible_npcs"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -4156,34 +4156,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_second_interstitial_02_a",
-				},
+					"mission_trenches_second_interstitial_02_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -4199,15 +4199,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_second_interstitial_02_b",
-				},
+					"mission_trenches_second_interstitial_02_b"
+				}
 			},
 			{
 				"user_context",
@@ -4215,19 +4215,19 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"tech_priest",
-					"boon_vendor",
-				},
-			},
+					"boon_vendor"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -4243,40 +4243,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_trenches_second_interstitial_03_a",
+				"mission_trenches_second_interstitial_03_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
+					"commissar"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_trenches_second_interstitial_03_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_trenches_second_interstitial_03_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "visible_npcs",
-		},
+			target = "visible_npcs"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -4292,34 +4292,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_second_interstitial_03_a",
-				},
+					"mission_trenches_second_interstitial_03_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -4335,15 +4335,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_second_interstitial_03_b",
-				},
+					"mission_trenches_second_interstitial_03_b"
+				}
 			},
 			{
 				"user_context",
@@ -4351,19 +4351,19 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"tech_priest",
-					"boon_vendor",
-				},
-			},
+					"boon_vendor"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -4379,27 +4379,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_second_path_blocked_a",
+				"mission_trenches_second_path_blocked_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -4415,27 +4415,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_second_path_blocked_alt_a",
+				"mission_trenches_second_path_blocked_alt_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -4450,27 +4450,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_second_path_cleared_01_a",
+				"mission_trenches_second_path_cleared_01_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "self",
-		},
+			target = "self"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -4485,29 +4485,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_second_path_cleared_01_a",
-				},
+					"mission_trenches_second_path_cleared_01_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -4523,27 +4523,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_second_path_cleared_02_a",
+				"mission_trenches_second_path_cleared_02_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -4559,15 +4559,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_second_path_cleared_02_a",
-				},
+					"mission_trenches_second_path_cleared_02_a"
+				}
 			},
 			{
 				"user_context",
@@ -4575,19 +4575,19 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"tech_priest",
-					"boon_vendor",
-				},
-			},
+					"boon_vendor"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -4603,27 +4603,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_second_path_cleared_03_a",
+				"mission_trenches_second_path_cleared_03_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -4639,15 +4639,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_second_path_cleared_03_a",
-				},
+					"mission_trenches_second_path_cleared_03_a"
+				}
 			},
 			{
 				"user_context",
@@ -4655,19 +4655,19 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"tech_priest",
-					"boon_vendor",
-				},
-			},
+					"boon_vendor"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -4683,27 +4683,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_second_path_stand_back_a",
+				"mission_trenches_second_path_stand_back_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -4719,40 +4719,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_trenches_seventh_interstitial_a",
+				"mission_trenches_seventh_interstitial_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
+					"commissar"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_trenches_seventh_interstitial_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_trenches_seventh_interstitial_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -4768,15 +4768,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_seventh_interstitial_a",
-				},
+					"mission_trenches_seventh_interstitial_a"
+				}
 			},
 			{
 				"user_context",
@@ -4784,19 +4784,19 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"tech_priest",
-					"boon_vendor",
-				},
-			},
+					"boon_vendor"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "visible_npcs",
+			target = "visible_npcs"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -4812,34 +4812,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_seventh_interstitial_b",
-				},
+					"mission_trenches_seventh_interstitial_b"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -4854,34 +4854,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_sixth_interstitial_a",
+				"mission_trenches_sixth_interstitial_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			random_ignore_vo = {
 				chance = 0.5,
 				hold_for = 0,
-				max_failed_tries = 0,
-			},
-		},
+				max_failed_tries = 0
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -4896,29 +4896,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_sixth_interstitial_a",
-				},
+					"mission_trenches_sixth_interstitial_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -4934,34 +4934,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_sixth_interstitial_b",
-				},
+					"mission_trenches_sixth_interstitial_b"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"commissar",
-				},
-			},
+					"commissar"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -4977,27 +4977,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_skyfire_a",
+				"mission_trenches_skyfire_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5013,27 +5013,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_skyfire_destroyed_a",
+				"mission_trenches_skyfire_destroyed_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -5049,15 +5049,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_gate_destroyed_b",
-				},
+					"mission_trenches_gate_destroyed_b"
+				}
 			},
 			{
 				"user_context",
@@ -5065,19 +5065,19 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"tech_priest",
-					"boon_vendor",
-				},
-			},
+					"boon_vendor"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5090,27 +5090,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_steelhead_callout_a",
+				"mission_trenches_steelhead_callout_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mourningstar_soldier",
-				},
-			},
+					"mourningstar_soldier"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5123,27 +5123,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_steelhead_idle_conv_01_a",
+				"mission_trenches_steelhead_idle_conv_01_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mourningstar_soldier",
-				},
-			},
+					"mourningstar_soldier"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "visible_npcs",
-		},
+			target = "visible_npcs"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5156,34 +5156,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_steelhead_idle_conv_01_a",
-				},
+					"mission_trenches_steelhead_idle_conv_01_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mourningstar_soldier",
-				},
-			},
+					"mourningstar_soldier"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5196,27 +5196,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_steelhead_idle_conv_02_a",
+				"mission_trenches_steelhead_idle_conv_02_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mourningstar_soldier",
-				},
-			},
+					"mourningstar_soldier"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "visible_npcs",
-		},
+			target = "visible_npcs"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5229,34 +5229,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_steelhead_idle_conv_02_a",
-				},
+					"mission_trenches_steelhead_idle_conv_02_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mourningstar_soldier",
-				},
-			},
+					"mourningstar_soldier"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5269,27 +5269,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_steelhead_idle_conv_03_a",
+				"mission_trenches_steelhead_idle_conv_03_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mourningstar_soldier",
-				},
-			},
+					"mourningstar_soldier"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "visible_npcs",
-		},
+			target = "visible_npcs"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5302,34 +5302,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_steelhead_idle_conv_03_a",
-				},
+					"mission_trenches_steelhead_idle_conv_03_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mourningstar_soldier",
-				},
-			},
+					"mourningstar_soldier"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5342,27 +5342,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_steelhead_idle_conv_04_a",
+				"mission_trenches_steelhead_idle_conv_04_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mourningstar_soldier",
-				},
-			},
+					"mourningstar_soldier"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "visible_npcs",
-		},
+			target = "visible_npcs"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5375,34 +5375,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_steelhead_idle_conv_04_a",
-				},
+					"mission_trenches_steelhead_idle_conv_04_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mourningstar_soldier",
-				},
-			},
+					"mourningstar_soldier"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5415,27 +5415,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_steelhead_idle_conv_05_a",
+				"mission_trenches_steelhead_idle_conv_05_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mourningstar_soldier",
-				},
-			},
+					"mourningstar_soldier"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "visible_npcs",
-		},
+			target = "visible_npcs"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5448,34 +5448,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_steelhead_idle_conv_05_a",
-				},
+					"mission_trenches_steelhead_idle_conv_05_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mourningstar_soldier",
-				},
-			},
+					"mourningstar_soldier"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5488,27 +5488,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_steelhead_idle_conv_06_a",
+				"mission_trenches_steelhead_idle_conv_06_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mourningstar_soldier",
-				},
-			},
+					"mourningstar_soldier"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "visible_npcs",
-		},
+			target = "visible_npcs"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5521,34 +5521,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_steelhead_idle_conv_06_a",
-				},
+					"mission_trenches_steelhead_idle_conv_06_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mourningstar_soldier",
-				},
-			},
+					"mourningstar_soldier"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5561,27 +5561,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_steelhead_idle_conv_07_a",
+				"mission_trenches_steelhead_idle_conv_07_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mourningstar_soldier",
-				},
-			},
+					"mourningstar_soldier"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "visible_npcs",
-		},
+			target = "visible_npcs"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5594,34 +5594,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_steelhead_idle_conv_07_a",
-				},
+					"mission_trenches_steelhead_idle_conv_07_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mourningstar_soldier",
-				},
-			},
+					"mourningstar_soldier"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5634,27 +5634,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_steelhead_idle_conv_08_a",
+				"mission_trenches_steelhead_idle_conv_08_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mourningstar_soldier",
-				},
-			},
+					"mourningstar_soldier"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "visible_npcs",
-		},
+			target = "visible_npcs"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5667,34 +5667,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_steelhead_idle_conv_08_a",
-				},
+					"mission_trenches_steelhead_idle_conv_08_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mourningstar_soldier",
-				},
-			},
+					"mourningstar_soldier"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5707,27 +5707,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_steelhead_idle_conv_09_a",
+				"mission_trenches_steelhead_idle_conv_09_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mourningstar_soldier",
-				},
-			},
+					"mourningstar_soldier"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "visible_npcs",
-		},
+			target = "visible_npcs"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5740,34 +5740,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_steelhead_idle_conv_09_a",
-				},
+					"mission_trenches_steelhead_idle_conv_09_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mourningstar_soldier",
-				},
-			},
+					"mourningstar_soldier"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5780,27 +5780,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_steelhead_idle_conv_10_a",
+				"mission_trenches_steelhead_idle_conv_10_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mourningstar_soldier",
-				},
-			},
+					"mourningstar_soldier"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "visible_npcs",
-		},
+			target = "visible_npcs"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5813,34 +5813,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_steelhead_idle_conv_10_a",
-				},
+					"mission_trenches_steelhead_idle_conv_10_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mourningstar_soldier",
-				},
-			},
+					"mourningstar_soldier"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5855,34 +5855,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_third_interstitial_01_a",
+				"mission_trenches_third_interstitial_01_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			random_ignore_vo = {
 				chance = 0.5,
 				hold_for = 0,
-				max_failed_tries = 0,
-			},
-		},
+				max_failed_tries = 0
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5897,29 +5897,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_third_interstitial_01_a",
-				},
+					"mission_trenches_third_interstitial_01_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5934,34 +5934,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo",
+				"npc_vo"
 			},
 			{
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"mission_trenches_third_interstitial_03_a",
+				"mission_trenches_third_interstitial_03_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			random_ignore_vo = {
 				chance = 0.5,
 				hold_for = 0,
-				max_failed_tries = 0,
-			},
-		},
+				max_failed_tries = 0
+			}
+		}
 	})
 	define_rule({
 		category = "npc_prio_0",
@@ -5976,28 +5976,28 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_trenches_third_interstitial_03_a",
-				},
+					"mission_trenches_third_interstitial_03_a"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tank_commander",
-				},
-			},
+					"tank_commander"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 end

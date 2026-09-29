@@ -17,8 +17,8 @@ local pickup_data = {
 	randomized_rotation = {
 		false,
 		false,
-		true,
-	},
+		true
+	}
 }
 
 return pickup_data

@@ -15,14 +15,14 @@ templates.weapon_trait_bespoke_ogryn_thumper_p2_toughness_on_elite_kills = table
 templates.weapon_trait_bespoke_ogryn_thumper_p2_power_bonus_on_continuous_fire = table.merge({
 	use_combo = true,
 	conditional_stat_buffs = {
-		[stat_buffs.power_level_modifier] = 0.02,
-	},
+		[stat_buffs.power_level_modifier] = 0.02
+	}
 }, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire)
 templates.weapon_trait_bespoke_ogryn_thumper_p2_explosion_radius_bonus_on_continuous_fire = table.merge({
 	use_combo = true,
 	conditional_stat_buffs = {
-		[stat_buffs.explosion_radius_modifier] = 0.03,
-	},
+		[stat_buffs.explosion_radius_modifier] = 0.03
+	}
 }, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire)
 templates.weapon_trait_bespoke_ogryn_thumper_p2_pass_past_armor_on_weapon_special = table.clone(BaseWeaponTraitBuffTemplates.pass_trough_armor_on_weapon_special)
 templates.weapon_trait_bespoke_ogryn_thumper_p2_targets_receive_rending_debuff = table.clone(BaseWeaponTraitBuffTemplates.targets_receive_rending_debuff)
@@ -34,7 +34,7 @@ templates.weapon_trait_bespoke_ogryn_thumper_p2_close_explosion_applies_bleed = 
 	start_func = BuffUtils.add_debuff_on_hit_start,
 	proc_func = BuffUtils.add_debuff_on_hit_proc,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = function (params, template_data, template_context)
 		if not CheckProcFunctions.on_damaging_hit then
@@ -64,9 +64,9 @@ templates.weapon_trait_bespoke_ogryn_thumper_p2_close_explosion_applies_bleed = 
 	target_buff_data = {
 		internal_buff_name = "bleed",
 		max_stacks = 31,
-		num_stacks_on_proc = 1,
+		num_stacks_on_proc = 1
 	},
-	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded
 }
 templates.weapon_trait_bespoke_ogryn_thumper_p2_weakspot_projectile_hit_increases_reload_speed = {
 	active_duration = 3,
@@ -74,12 +74,12 @@ templates.weapon_trait_bespoke_ogryn_thumper_p2_weakspot_projectile_hit_increase
 	max_stacks = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.reload_speed] = 0.5,
+		[stat_buffs.reload_speed] = 0.5
 	},
-	check_proc_func = CheckProcFunctions.on_weakspot_hit,
+	check_proc_func = CheckProcFunctions.on_weakspot_hit
 }
 
 return templates

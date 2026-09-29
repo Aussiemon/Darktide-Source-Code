@@ -14,9 +14,9 @@ local considerations = {
 				0.75,
 				0,
 				1,
-				0,
-			},
-		},
+				0
+			}
+		}
 	},
 	bot_follow = {
 		distance_to_target = {
@@ -31,10 +31,10 @@ local considerations = {
 				0.75,
 				1,
 				1,
-				1,
-			},
-		},
-	},
+				1
+			}
+		}
+	}
 }
 
 return considerations

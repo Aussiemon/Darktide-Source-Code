@@ -14,8 +14,8 @@ local renegade_gunner_default = {
 	damage_falloff = {
 		falloff_range = 35,
 		max_power_reduction = 0.5,
-		max_range = 35,
-	},
+		max_range = 35
+	}
 }
 local renegade_gunner_sweep = table.clone(renegade_gunner_default)
 
@@ -42,7 +42,7 @@ local shoot_templates = {
 	renegade_gunner_sweep = renegade_gunner_sweep,
 	renegade_gunner_aimed = renegade_gunner_aimed,
 	renegade_gunner_shoot_close = renegade_gunner_shoot_close,
-	renegade_gunner_shoot_spray_n_pray = renegade_gunner_shoot_spray_n_pray,
+	renegade_gunner_shoot_spray_n_pray = renegade_gunner_shoot_spray_n_pray
 }
 
 return shoot_templates

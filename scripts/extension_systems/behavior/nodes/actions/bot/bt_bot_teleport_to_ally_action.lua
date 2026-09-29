@@ -28,7 +28,7 @@ local function _debug_draw_cant_reach_ally(unit, follow_component)
 	local options = {
 		time = duration,
 		color = Color.red(),
-		rotation = Quaternion.identity(),
+		rotation = Quaternion.identity()
 	}
 
 	Debug:world_text(debug_text_1, between_position + Vector3(0, 0, 3), options)

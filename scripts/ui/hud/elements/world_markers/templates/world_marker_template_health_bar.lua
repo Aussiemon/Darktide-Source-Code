@@ -6,7 +6,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local template = {}
 local size = {
 	200,
-	6,
+	6
 }
 
 template.size = size
@@ -15,7 +15,7 @@ template.unit_node = "j_head"
 template.position_offset = {
 	0,
 	0,
-	0.35,
+	0.35
 }
 template.check_line_of_sight = true
 template.max_distance = 20
@@ -28,7 +28,7 @@ template.bar_settings = {
 	bar_spacing = 2,
 	duration_health = 1,
 	duration_health_ghost = 2.5,
-	health_animation_threshold = 0.1,
+	health_animation_threshold = 0.1
 }
 template.fade_settings = {
 	default_fade = 0,
@@ -36,7 +36,7 @@ template.fade_settings = {
 	fade_to = 1,
 	distance_max = template.max_distance,
 	distance_min = template.max_distance * 0.5,
-	easing_function = math.ease_exp,
+	easing_function = math.ease_exp
 }
 
 template.create_widget_defintion = function (template, scenegraph_id)
@@ -46,12 +46,12 @@ template.create_widget_defintion = function (template, scenegraph_id)
 	local header_font_color = header_font_settings.text_color
 	local bar_size = {
 		size[1],
-		size[2],
+		size[2]
 	}
 	local bar_offset = {
 		-size[1] * 0.5,
 		0,
-		0,
+		0
 	}
 
 	return UIWidget.create_definition({
@@ -67,9 +67,9 @@ template.create_widget_defintion = function (template, scenegraph_id)
 					120,
 					30,
 					30,
-					30,
-				},
-			},
+					30
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -80,16 +80,16 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					bar_offset[1],
 					bar_offset[2],
-					2,
+					2
 				},
 				size = bar_size,
 				color = {
 					255,
 					220,
 					100,
-					100,
-				},
-			},
+					100
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -101,16 +101,16 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					bar_offset[1],
 					bar_offset[2],
-					1,
+					1
 				},
 				size = bar_size,
 				color = {
 					200,
 					255,
 					255,
-					255,
-				},
-			},
+					255
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -121,16 +121,16 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					bar_offset[1],
 					bar_offset[2],
-					3,
+					3
 				},
 				size = bar_size,
 				color = {
 					255,
 					220,
 					20,
-					20,
-				},
-			},
+					20
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -145,7 +145,7 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					-size[1] * 0.5,
 					-size[2],
-					2,
+					2
 				},
 				font_type = header_font_settings.font_type,
 				font_size = header_font_settings.font_size,
@@ -154,10 +154,10 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				default_text_color = header_font_color,
 				size = {
 					600,
-					size[2],
-				},
-			},
-		},
+					size[2]
+				}
+			}
+		}
 	}, scenegraph_id)
 end
 

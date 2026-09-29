@@ -15,7 +15,7 @@ local class_rework_veteran_female_b = {
 			"loc_veteran_female_b__ability_shock_trooper_11",
 			"loc_veteran_female_b__ability_shock_trooper_12",
 			"loc_veteran_female_b__ability_shock_trooper_13",
-			"loc_veteran_female_b__ability_shock_trooper_14",
+			"loc_veteran_female_b__ability_shock_trooper_14"
 		},
 		sound_events_duration = {
 			2.897875,
@@ -28,9 +28,9 @@ local class_rework_veteran_female_b = {
 			1.945604,
 			1.517583,
 			2.601063,
-			1.62325,
+			1.62325
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	ability_squad_leader = {
 		randomize_indexes_n = 0,
@@ -50,7 +50,7 @@ local class_rework_veteran_female_b = {
 			"loc_veteran_female_b__ability_squad_leader_12",
 			"loc_veteran_female_b__ability_squad_leader_13",
 			"loc_veteran_female_b__ability_squad_leader_14",
-			"loc_veteran_female_b__ability_squad_leader_15",
+			"loc_veteran_female_b__ability_squad_leader_15"
 		},
 		sound_events_duration = {
 			2.248458,
@@ -67,10 +67,10 @@ local class_rework_veteran_female_b = {
 			2.196146,
 			3.008125,
 			2.042188,
-			2.571229,
+			2.571229
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("class_rework_veteran_female_b", class_rework_veteran_female_b)

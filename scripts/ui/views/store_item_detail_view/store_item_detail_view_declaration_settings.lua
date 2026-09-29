@@ -14,14 +14,14 @@ local view_settings = {
 	state_bound = true,
 	use_transition_ui = true,
 	levels = {
-		"content/levels/ui/vendor_cosmetics_preview_gear/vendor_cosmetics_preview_gear",
+		"content/levels/ui/vendor_cosmetics_preview_gear/vendor_cosmetics_preview_gear"
 	},
 	testify_flags = {
-		ui_views = false,
+		ui_views = false
 	},
 	wwise_states = {
-		options = WwiseGameSyncSettings.state_groups.options.credit_store_menu,
-	},
+		options = WwiseGameSyncSettings.state_groups.options.credit_store_menu
+	}
 }
 
 return settings("StoreItemDetailViewDeclarationSettings", view_settings)

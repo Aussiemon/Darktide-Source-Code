@@ -24,7 +24,7 @@ local enemy_vo_enemy_chaos_armored_infected_male_a = {
 			"loc_enemy_chaos_armored_infected_male_a__attack_17",
 			"loc_enemy_chaos_armored_infected_male_a__attack_18",
 			"loc_enemy_chaos_armored_infected_male_a__attack_19",
-			"loc_enemy_chaos_armored_infected_male_a__attack_20",
+			"loc_enemy_chaos_armored_infected_male_a__attack_20"
 		},
 		sound_events_duration = {
 			3.656979,
@@ -46,7 +46,7 @@ local enemy_vo_enemy_chaos_armored_infected_male_a = {
 			5.586396,
 			6.772604,
 			5.734167,
-			3.342271,
+			3.342271
 		},
 		sound_event_weights = {
 			0.05,
@@ -68,9 +68,9 @@ local enemy_vo_enemy_chaos_armored_infected_male_a = {
 			0.05,
 			0.05,
 			0.05,
-			0.05,
+			0.05
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	chaos_armored_infected_assault = {
 		randomize_indexes_n = 0,
@@ -95,7 +95,7 @@ local enemy_vo_enemy_chaos_armored_infected_male_a = {
 			"loc_enemy_chaos_armored_infected_male_a__attack_17",
 			"loc_enemy_chaos_armored_infected_male_a__attack_18",
 			"loc_enemy_chaos_armored_infected_male_a__attack_19",
-			"loc_enemy_chaos_armored_infected_male_a__attack_20",
+			"loc_enemy_chaos_armored_infected_male_a__attack_20"
 		},
 		sound_events_duration = {
 			3.656979,
@@ -117,7 +117,7 @@ local enemy_vo_enemy_chaos_armored_infected_male_a = {
 			5.586396,
 			6.772604,
 			5.734167,
-			3.342271,
+			3.342271
 		},
 		sound_event_weights = {
 			0.05,
@@ -139,9 +139,9 @@ local enemy_vo_enemy_chaos_armored_infected_male_a = {
 			0.05,
 			0.05,
 			0.05,
-			0.05,
+			0.05
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	chaos_armored_infected_melee_idle = {
 		randomize_indexes_n = 0,
@@ -166,7 +166,7 @@ local enemy_vo_enemy_chaos_armored_infected_male_a = {
 			"loc_enemy_chaos_armored_infected_male_a__combat_idle_17",
 			"loc_enemy_chaos_armored_infected_male_a__combat_idle_18",
 			"loc_enemy_chaos_armored_infected_male_a__combat_idle_19",
-			"loc_enemy_chaos_armored_infected_male_a__combat_idle_20",
+			"loc_enemy_chaos_armored_infected_male_a__combat_idle_20"
 		},
 		sound_events_duration = {
 			4.352125,
@@ -188,7 +188,7 @@ local enemy_vo_enemy_chaos_armored_infected_male_a = {
 			4.878021,
 			9.230521,
 			12.59669,
-			14.80944,
+			14.80944
 		},
 		sound_event_weights = {
 			0.05,
@@ -210,10 +210,10 @@ local enemy_vo_enemy_chaos_armored_infected_male_a = {
 			0.05,
 			0.05,
 			0.05,
-			0.05,
+			0.05
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("enemy_vo_enemy_chaos_armored_infected_male_a", enemy_vo_enemy_chaos_armored_infected_male_a)

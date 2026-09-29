@@ -39,16 +39,16 @@ local SFX_NAMES = {
 	friendly_rock_charge_stop = "wwise/events/player/stop_horde_mode_buff_rock_charge_loop",
 	gravity_pull = "wwise/events/player/play_horde_mode_buff_gravitation",
 	grenade_refil = "wwise/events/player/play_horde_mode_buff_grenade_refill",
-	healing = "wwise/events/weapon/play_horde_mode_heal_self_confirmation",
+	healing = "wwise/events/player/play_horde_mode_heal_self_confirmation",
 	inferno = "wwise/events/player/play_horde_mode_buff_fire_inferno",
 	reduced_damage_hit = "wwise/events/player/play_horde_mode_buff_shield_hit",
-	shield = "wwise/events/weapon/play_horde_mode_buff_shield",
+	shield = "wwise/events/player/play_horde_mode_buff_shield",
 	shock_aoe_big = "wwise/events/player/play_horde_mode_buff_electric_shock",
 	shock_crit = "wwise/events/player/play_horde_mode_buff_electric_crit",
 	shock_proc = "wwise/events/player/play_horde_mode_buff_electric_damage",
 	stagger_hit = "wwise/events/player/play_horde_mode_buff_stagger_hit",
 	stagger_pulse = "wwise/events/player/play_horde_mode_buff_stagger_pulse",
-	super_crit = "wwise/events/player/play_horde_mode_buff_super_crit",
+	super_crit = "wwise/events/player/play_horde_mode_buff_super_crit"
 }
 local templates = {}
 
@@ -61,8 +61,8 @@ templates.hordes_buff_damage_immunity_after_game_end = {
 	predicted = false,
 	buff_category = buff_categories.hordes_sub_buff,
 	keywords = {
-		buff_keywords.invulnerable,
-	},
+		buff_keywords.invulnerable
+	}
 }
 templates.hordes_buff_max_grenades_increase = {
 	class_name = "buff",
@@ -71,8 +71,8 @@ templates.hordes_buff_max_grenades_increase = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	stat_buffs = {
-		[stat_buffs.extra_max_amount_of_grenades] = 1,
-	},
+		[stat_buffs.extra_max_amount_of_grenades] = 1
+	}
 }
 templates.hordes_buff_rending_increase = {
 	class_name = "buff",
@@ -81,8 +81,8 @@ templates.hordes_buff_rending_increase = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	stat_buffs = {
-		[stat_buffs.rending_multiplier] = 0.15,
-	},
+		[stat_buffs.rending_multiplier] = 0.15
+	}
 }
 templates.hordes_buff_damage_vs_bleeding = {
 	class_name = "buff",
@@ -91,8 +91,8 @@ templates.hordes_buff_damage_vs_bleeding = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	stat_buffs = {
-		[stat_buffs.damage_vs_bleeding] = 0.1,
-	},
+		[stat_buffs.damage_vs_bleeding] = 0.1
+	}
 }
 templates.hordes_buff_burning_duration_increase = {
 	class_name = "buff",
@@ -101,8 +101,8 @@ templates.hordes_buff_burning_duration_increase = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	stat_buffs = {
-		[stat_buffs.burning_duration] = 0.5,
-	},
+		[stat_buffs.burning_duration] = 0.5
+	}
 }
 templates.hordes_buff_heavy_attacks_gain_damage_and_stagger = {
 	class_name = "proc_buff",
@@ -112,11 +112,11 @@ templates.hordes_buff_heavy_attacks_gain_damage_and_stagger = {
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
 		[proc_events.on_sweep_start] = 1,
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	conditional_stat_buffs = {
 		[stat_buffs.melee_damage] = 0.15,
-		[stat_buffs.melee_impact_modifier] = 0.3,
+		[stat_buffs.melee_impact_modifier] = 0.3
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.is_heavy
@@ -130,8 +130,8 @@ templates.hordes_buff_heavy_attacks_gain_damage_and_stagger = {
 		end,
 		[proc_events.on_sweep_finish] = function (params, template_data, template_context)
 			template_data.is_heavy = false
-		end,
-	},
+		end
+	}
 }
 templates.hordes_buff_damage_vs_ogryn_and_monsters_increase = {
 	class_name = "buff",
@@ -140,8 +140,8 @@ templates.hordes_buff_damage_vs_ogryn_and_monsters_increase = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	stat_buffs = {
-		[stat_buffs.damage_vs_ogryn_and_monsters] = 0.35,
-	},
+		[stat_buffs.damage_vs_ogryn_and_monsters] = 0.35
+	}
 }
 templates.hordes_buff_damage_vs_super_armor_and_armored_increase = {
 	class_name = "buff",
@@ -151,8 +151,8 @@ templates.hordes_buff_damage_vs_super_armor_and_armored_increase = {
 	buff_category = buff_categories.hordes_buff,
 	stat_buffs = {
 		[stat_buffs.super_armor_damage] = 0.15,
-		[stat_buffs.armored_damage] = 0.15,
-	},
+		[stat_buffs.armored_damage] = 0.15
+	}
 }
 templates.hordes_buff_ammo_reserve_capacity_increase = {
 	class_name = "buff",
@@ -161,8 +161,8 @@ templates.hordes_buff_ammo_reserve_capacity_increase = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	stat_buffs = {
-		[stat_buffs.ammo_reserve_capacity] = 0.15,
-	},
+		[stat_buffs.ammo_reserve_capacity] = 0.15
+	}
 }
 templates.hordes_buff_melee_damage_on_missing_wounds = {
 	class_name = "buff",
@@ -173,8 +173,8 @@ templates.hordes_buff_melee_damage_on_missing_wounds = {
 	lerped_stat_buffs = {
 		[stat_buffs.melee_damage] = {
 			max = 0.35000000000000003,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -201,14 +201,14 @@ templates.hordes_buff_melee_damage_on_missing_wounds = {
 		local missing_wounds = template_data.missing_wounds or 0
 
 		return math.clamp01(missing_wounds / max_wounds)
-	end,
+	end
 }
 templates.hordes_buff_improved_weapon_reload_on_non_empty_clip = {
 	class_name = "buff",
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	conditional_stat_buffs = {
-		[stat_buffs.reload_speed] = 0.25,
+		[stat_buffs.reload_speed] = 0.25
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.is_active
@@ -232,7 +232,7 @@ templates.hordes_buff_improved_weapon_reload_on_non_empty_clip = {
 			template_data.is_active = active
 		end
 	end,
-	check_active_func = ConditionalFunctions.is_reloading,
+	check_active_func = ConditionalFunctions.is_reloading
 }
 templates.hordes_buff_improved_weapon_reload_on_elite_kill = {
 	class_name = "proc_buff",
@@ -241,7 +241,7 @@ templates.hordes_buff_improved_weapon_reload_on_elite_kill = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_elite_or_special_kill,
 	start_func = function (template_data, template_context)
@@ -251,7 +251,7 @@ templates.hordes_buff_improved_weapon_reload_on_elite_kill = {
 	end,
 	proc_func = function (params, template_data, template_context, t)
 		template_data.buff_extension:add_internally_controlled_buff("hordes_buff_improved_weapon_reload_on_elite_kill_effect", t)
-	end,
+	end
 }
 templates.hordes_buff_improved_weapon_reload_on_elite_kill_effect = {
 	class_name = "proc_buff",
@@ -260,10 +260,10 @@ templates.hordes_buff_improved_weapon_reload_on_elite_kill_effect = {
 	predicted = false,
 	buff_category = buff_categories.hordes_sub_buff,
 	proc_events = {
-		[proc_events.on_reload] = 1,
+		[proc_events.on_reload] = 1
 	},
 	stat_buffs = {
-		[stat_buffs.reload_speed] = 0.3,
+		[stat_buffs.reload_speed] = 0.3
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -288,7 +288,7 @@ templates.hordes_buff_improved_weapon_reload_on_elite_kill_effect = {
 		local is_reloading = action_kind and (action_kind == "reload_shotgun" or action_kind == "reload_state" or action_kind == "ranged_load_special")
 
 		return template_data.done and not is_reloading
-	end,
+	end
 }
 templates.hordes_buff_ranged_damage_on_enemy_on_melee_hit = {
 	class_name = "proc_buff",
@@ -297,7 +297,7 @@ templates.hordes_buff_ranged_damage_on_enemy_on_melee_hit = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_melee_hit,
 	proc_func = function (params, template_data, template_context)
@@ -313,7 +313,7 @@ templates.hordes_buff_ranged_damage_on_enemy_on_melee_hit = {
 				victim_buff_extension:add_internally_controlled_buff("hordes_buff_ranged_damage_on_enemy_on_melee_hit_minion_effect", t, "owner_unit", player_unit)
 			end
 		end
-	end,
+	end
 }
 templates.hordes_buff_ranged_damage_on_enemy_on_melee_hit_minion_effect = {
 	class_name = "proc_buff",
@@ -324,7 +324,7 @@ templates.hordes_buff_ranged_damage_on_enemy_on_melee_hit_minion_effect = {
 	refresh_duration_on_stack = true,
 	buff_category = buff_categories.hordes_sub_buff,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.is_active = true
@@ -355,7 +355,7 @@ templates.hordes_buff_ranged_damage_on_enemy_on_melee_hit_minion_effect = {
 		end
 
 		return not template_data.is_active
-	end,
+	end
 }
 templates.hordes_buff_toughness_regen_out_of_melee_range = {
 	always_show_in_hud = true,
@@ -409,7 +409,7 @@ templates.hordes_buff_toughness_regen_out_of_melee_range = {
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.is_active
-	end,
+	end
 }
 templates.hordes_buff_grenade_replenishment_on_elite_kill = {
 	class_name = "proc_buff",
@@ -418,7 +418,7 @@ templates.hordes_buff_grenade_replenishment_on_elite_kill = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_minion_death] = 0.05,
+		[proc_events.on_minion_death] = 0.05
 	},
 	check_proc_func = CheckProcFunctions.on_elite_or_special_minion_death,
 	start_func = function (template_data, template_context)
@@ -467,7 +467,7 @@ templates.hordes_buff_grenade_replenishment_on_elite_kill = {
 				player_fx_extension:trigger_wwise_events_local_only(SFX_NAMES.grenade_refil, nil, unit)
 			end
 		end
-	end,
+	end
 }
 templates.hordes_buff_combat_ability_cooldown_reduction_on_elite_kills = {
 	class_name = "proc_buff",
@@ -476,7 +476,7 @@ templates.hordes_buff_combat_ability_cooldown_reduction_on_elite_kills = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_special_kill,
 	start_func = function (template_data, template_context)
@@ -488,8 +488,8 @@ templates.hordes_buff_combat_ability_cooldown_reduction_on_elite_kills = {
 	proc_func = function (params, template_data, template_context)
 		local cooldown_reduction = 10
 
-		template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", cooldown_reduction)
-	end,
+		template_data.ability_extension:restore_ability_resource("combat_ability", cooldown_reduction)
+	end
 }
 templates.hordes_ailment_minion_burning = {
 	class_name = "interval_buff",
@@ -502,7 +502,7 @@ templates.hordes_ailment_minion_burning = {
 	refresh_duration_on_stack = true,
 	buff_category = buff_categories.hordes_sub_buff,
 	keywords = {
-		buff_keywords.burning,
+		buff_keywords.burning
 	},
 	interval_func = function (template_data, template_context, template)
 		local unit = template_context.unit
@@ -517,7 +517,7 @@ templates.hordes_ailment_minion_burning = {
 			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
 		end
 	end,
-	minion_effects = minion_burning_buff_effects.chemfire,
+	minion_effects = minion_burning_buff_effects.chemfire
 }
 templates.hordes_ailment_minion_bleed = {
 	class_name = "interval_buff",
@@ -530,7 +530,7 @@ templates.hordes_ailment_minion_bleed = {
 	refresh_duration_on_stack = true,
 	buff_category = buff_categories.hordes_sub_buff,
 	keywords = {
-		buff_keywords.bleeding,
+		buff_keywords.bleeding
 	},
 	interval_func = function (template_data, template_context, template)
 		local unit = template_context.unit
@@ -554,11 +554,11 @@ templates.hordes_ailment_minion_bleed = {
 					material_emission = true,
 					orphaned_policy = "destroy",
 					particle_effect = "content/fx/particles/enemies/buff_bleeding",
-					stop_type = "stop",
-				},
-			},
-		},
-	},
+					stop_type = "stop"
+				}
+			}
+		}
+	}
 }
 templates.hordes_ailment_infinite_minion_bleed = table.clone(templates.hordes_ailment_minion_bleed)
 templates.hordes_ailment_infinite_minion_bleed.duration = nil
@@ -577,11 +577,11 @@ templates.hordes_ailment_shock = {
 	start_with_frame_offset = true,
 	buff_category = buff_categories.hordes_sub_buff,
 	keywords = {
-		buff_keywords.electrocuted,
+		buff_keywords.electrocuted
 	},
 	interval = {
 		0.3,
-		0.8,
+		0.8
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -621,11 +621,11 @@ templates.hordes_ailment_shock = {
 					material_emission = false,
 					orphaned_policy = "destroy",
 					particle_effect = "content/fx/particles/enemies/buff_stummed",
-					stop_type = "stop",
-				},
-			},
-		},
-	},
+					stop_type = "stop"
+				}
+			}
+		}
+	}
 }
 
 return templates

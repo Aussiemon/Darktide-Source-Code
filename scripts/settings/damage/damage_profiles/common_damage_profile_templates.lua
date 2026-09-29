@@ -24,21 +24,21 @@ damage_templates.default = {
 	stagger_category = "melee",
 	armor_damage_modifier = {
 		attack = default_armor_mod,
-		impact = default_armor_mod,
+		impact = default_armor_mod
 	},
 	power_distribution = {
 		attack = 0.1,
-		impact = 0.5,
+		impact = 0.5
 	},
 	cleave_distribution = {
 		attack = 0.25,
-		impact = 0.25,
+		impact = 0.25
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.default_ranged = {
 	stagger_category = "ranged",
@@ -52,7 +52,7 @@ damage_templates.default_ranged = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
+			[armor_types.void_shield] = 1
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -62,22 +62,22 @@ damage_templates.default_ranged = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.75,
-			[armor_types.void_shield] = 0.75,
-		},
+			[armor_types.void_shield] = 0.75
+		}
 	},
 	power_distribution = {
 		attack = 0.1,
-		impact = 0.25,
+		impact = 0.25
 	},
 	cleave_distribution = {
 		attack = 0.25,
-		impact = 0.25,
+		impact = 0.25
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.light_push = {
 	is_push = true,
@@ -87,8 +87,8 @@ damage_templates.light_push = {
 		attack = 0,
 		impact = {
 			4,
-			8,
-		},
+			8
+		}
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -99,7 +99,7 @@ damage_templates.light_push = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -109,12 +109,12 @@ damage_templates.light_push = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.5,
 			[armor_types.disgustingly_resilient] = 0.75,
-			[armor_types.void_shield] = 0.75,
-		},
+			[armor_types.void_shield] = 0.75
+		}
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.default_push = {
 	is_push = true,
@@ -124,8 +124,8 @@ damage_templates.default_push = {
 		attack = 0,
 		impact = {
 			8,
-			12,
-		},
+			12
+		}
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -136,7 +136,7 @@ damage_templates.default_push = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -146,16 +146,16 @@ damage_templates.default_push = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.5,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
-		},
+			[armor_types.void_shield] = 0
+		}
 	},
 	stagger_duration_modifier = {
 		0.5,
-		0.75,
+		0.75
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.ninja_push = {
 	is_push = true,
@@ -165,8 +165,8 @@ damage_templates.ninja_push = {
 		attack = 0,
 		impact = {
 			6,
-			10,
-		},
+			10
+		}
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -177,7 +177,7 @@ damage_templates.ninja_push = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -187,16 +187,16 @@ damage_templates.ninja_push = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.5,
 			[armor_types.disgustingly_resilient] = 0.75,
-			[armor_types.void_shield] = 0.75,
-		},
+			[armor_types.void_shield] = 0.75
+		}
 	},
 	stagger_duration_modifier = {
 		0.5,
-		0.75,
+		0.75
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.push_test = {
 	is_push = true,
@@ -206,8 +206,8 @@ damage_templates.push_test = {
 		attack = 0,
 		impact = {
 			5,
-			9,
-		},
+			9
+		}
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -218,7 +218,7 @@ damage_templates.push_test = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1.25,
@@ -228,12 +228,12 @@ damage_templates.push_test = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.5,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
-		},
+			[armor_types.void_shield] = 0
+		}
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.push_psyker = {
 	is_push = true,
@@ -241,7 +241,7 @@ damage_templates.push_psyker = {
 	stagger_category = "melee",
 	power_distribution = {
 		attack = 0,
-		impact = 100,
+		impact = 100
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -252,7 +252,7 @@ damage_templates.push_psyker = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -262,12 +262,12 @@ damage_templates.push_psyker = {
 			[armor_types.berserker] = 0.4,
 			[armor_types.super_armor] = 0.01,
 			[armor_types.disgustingly_resilient] = 0.7,
-			[armor_types.void_shield] = 0,
-		},
+			[armor_types.void_shield] = 0
+		}
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.push_psyker_outer = {
 	is_push = true,
@@ -275,7 +275,7 @@ damage_templates.push_psyker_outer = {
 	stagger_override = "light",
 	power_distribution = {
 		attack = 0,
-		impact = 10,
+		impact = 10
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -286,7 +286,7 @@ damage_templates.push_psyker_outer = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -296,12 +296,12 @@ damage_templates.push_psyker_outer = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.5,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
-		},
+			[armor_types.void_shield] = 0
+		}
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.ogryn_push = {
 	ignore_stagger_reduction = true,
@@ -312,8 +312,8 @@ damage_templates.ogryn_push = {
 		attack = 0,
 		impact = {
 			8,
-			16,
-		},
+			16
+		}
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -324,7 +324,7 @@ damage_templates.ogryn_push = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1.25,
@@ -334,12 +334,12 @@ damage_templates.ogryn_push = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.5,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
-		},
+			[armor_types.void_shield] = 0
+		}
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.ogryn_shield_push = {
 	ignore_stagger_reduction = true,
@@ -350,8 +350,8 @@ damage_templates.ogryn_shield_push = {
 		attack = 0,
 		impact = {
 			16,
-			32,
-		},
+			32
+		}
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -362,7 +362,7 @@ damage_templates.ogryn_shield_push = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1.25,
@@ -372,12 +372,12 @@ damage_templates.ogryn_shield_push = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.5,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
-		},
+			[armor_types.void_shield] = 0
+		}
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.human_shield_push = {
 	is_push = true,
@@ -387,8 +387,8 @@ damage_templates.human_shield_push = {
 		attack = 0,
 		impact = {
 			9,
-			18,
-		},
+			18
+		}
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -399,7 +399,7 @@ damage_templates.human_shield_push = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -409,16 +409,16 @@ damage_templates.human_shield_push = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.5,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
-		},
+			[armor_types.void_shield] = 0
+		}
 	},
 	stagger_duration_modifier = {
 		0.5,
-		0.75,
+		0.75
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.default_shield_push = {
 	is_push = true,
@@ -428,8 +428,8 @@ damage_templates.default_shield_push = {
 		attack = 0,
 		impact = {
 			8,
-			12,
-		},
+			12
+		}
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -440,7 +440,7 @@ damage_templates.default_shield_push = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -450,16 +450,16 @@ damage_templates.default_shield_push = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.5,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
-		},
+			[armor_types.void_shield] = 0
+		}
 	},
 	stagger_duration_modifier = {
 		0.5,
-		0.75,
+		0.75
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.plasma_vent_damage = {
 	ignore_depleting_toughness = true,
@@ -476,7 +476,7 @@ damage_templates.plasma_vent_damage = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
+			[armor_types.void_shield] = 1
 		},
 		impact = {
 			[armor_types.unarmored] = 0,
@@ -486,22 +486,22 @@ damage_templates.plasma_vent_damage = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-		},
+			[armor_types.void_shield] = 0
+		}
 	},
 	power_distribution = {
 		attack = 8,
-		impact = 0,
+		impact = 0
 	},
 	cleave_distribution = {
 		attack = 1,
-		impact = 0,
+		impact = 0
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.plasma_vent_damage_proficiency = {
 	ignore_depleting_toughness = true,
@@ -518,7 +518,7 @@ damage_templates.plasma_vent_damage_proficiency = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
+			[armor_types.void_shield] = 1
 		},
 		impact = {
 			[armor_types.unarmored] = 0,
@@ -528,22 +528,22 @@ damage_templates.plasma_vent_damage_proficiency = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-		},
+			[armor_types.void_shield] = 0
+		}
 	},
 	power_distribution = {
 		attack = 8,
-		impact = 0,
+		impact = 0
 	},
 	cleave_distribution = {
 		attack = 1,
-		impact = 0,
+		impact = 0
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.plasma_overheat = {
 	ignore_shield = true,
@@ -559,7 +559,7 @@ damage_templates.plasma_overheat = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
+			[armor_types.void_shield] = 1
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -569,35 +569,35 @@ damage_templates.plasma_overheat = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-		},
+			[armor_types.void_shield] = 1
+		}
 	},
 	power_distribution = {
 		attack = 600,
-		impact = 1,
+		impact = 1
 	},
 	power_distribution_ranged = {
 		attack = {
 			far = 100,
-			near = 600,
+			near = 600
 		},
 		impact = {
 			far = 10,
-			near = 75,
-		},
+			near = 75
+		}
 	},
 	cleave_distribution = {
 		attack = 1,
-		impact = 1,
+		impact = 1
 	},
 	stat_buffs = {
-		"overheat_explosion_damage_modifier",
+		"overheat_explosion_damage_modifier"
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.knocked_down_tick = {
 	stagger_category = "ranged",
@@ -610,7 +610,7 @@ damage_templates.knocked_down_tick = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
+			[armor_types.void_shield] = 1
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -620,22 +620,22 @@ damage_templates.knocked_down_tick = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-		},
+			[armor_types.void_shield] = 1
+		}
 	},
 	power_distribution = {
 		attack = 70,
-		impact = 0,
+		impact = 0
 	},
 	cleave_distribution = {
 		attack = 1,
-		impact = 1,
+		impact = 1
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.netted_tick = {
 	ignore_toughness = true,
@@ -650,7 +650,7 @@ damage_templates.netted_tick = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.5,
 			[armor_types.disgustingly_resilient] = 0.75,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -660,22 +660,22 @@ damage_templates.netted_tick = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.5,
 			[armor_types.disgustingly_resilient] = 0.75,
-			[armor_types.void_shield] = 0,
-		},
+			[armor_types.void_shield] = 0
+		}
 	},
 	power_distribution = {
 		attack = 1,
-		impact = 0,
+		impact = 0
 	},
 	cleave_distribution = {
 		attack = 1,
-		impact = 0,
+		impact = 0
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.grimoire_tick = {
 	ignore_shield = true,
@@ -692,7 +692,7 @@ damage_templates.grimoire_tick = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
+			[armor_types.void_shield] = 1
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -702,23 +702,23 @@ damage_templates.grimoire_tick = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-		},
+			[armor_types.void_shield] = 1
+		}
 	},
 	power_distribution = {
 		attack = 10,
-		impact = 0,
+		impact = 0
 	},
 	cleave_distribution = {
 		attack = 1,
-		impact = 0,
+		impact = 0
 	},
 	damage_type = damage_types.grimoire,
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.overheat_exploding_tick = {
 	ignore_shield = true,
@@ -726,23 +726,23 @@ damage_templates.overheat_exploding_tick = {
 	stagger_category = "melee",
 	armor_damage_modifier = {
 		attack = default_armor_mod,
-		impact = default_armor_mod,
+		impact = default_armor_mod
 	},
 	power_distribution = {
 		attack = 0,
-		impact = 0.5,
+		impact = 0.5
 	},
 	cleave_distribution = {
 		attack = 0.25,
-		impact = 0.25,
+		impact = 0.25
 	},
 	force_look_function = ForcedLookSettings.look_functions.medium,
 	push_template = push_templates.medium,
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.warp_charge_exploding_tick = {
 	ignore_shield = true,
@@ -750,23 +750,95 @@ damage_templates.warp_charge_exploding_tick = {
 	stagger_category = "melee",
 	armor_damage_modifier = {
 		attack = default_armor_mod,
-		impact = default_armor_mod,
+		impact = default_armor_mod
 	},
 	power_distribution = {
 		attack = 0,
-		impact = 0.5,
+		impact = 0.5
 	},
 	cleave_distribution = {
 		attack = 0.25,
-		impact = 0.25,
+		impact = 0.25
 	},
 	force_look_function = ForcedLookSettings.look_functions.medium,
 	push_template = push_templates.medium,
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
+}
+damage_templates.no_damage_knock = {
+	ignore_stagger_reduction = true,
+	ragdoll_push_force = 500,
+	stagger_category = "explosion",
+	cleave_distribution = {
+		attack = 0.1,
+		impact = 0.1
 	},
+	ranges = {
+		max = 20,
+		min = 19
+	},
+	armor_damage_modifier_ranged = {
+		near = {
+			attack = {
+				[armor_types.unarmored] = 0,
+				[armor_types.armored] = 0,
+				[armor_types.resistant] = 0,
+				[armor_types.player] = 0,
+				[armor_types.berserker] = 0,
+				[armor_types.super_armor] = 0,
+				[armor_types.disgustingly_resilient] = 0,
+				[armor_types.void_shield] = 0
+			},
+			impact = {
+				[armor_types.unarmored] = 5,
+				[armor_types.armored] = 5,
+				[armor_types.resistant] = 5,
+				[armor_types.player] = 5,
+				[armor_types.berserker] = 5,
+				[armor_types.super_armor] = 5,
+				[armor_types.disgustingly_resilient] = 5,
+				[armor_types.void_shield] = 5
+			}
+		},
+		far = {
+			attack = {
+				[armor_types.unarmored] = 0,
+				[armor_types.armored] = 0,
+				[armor_types.resistant] = 0,
+				[armor_types.player] = 0,
+				[armor_types.berserker] = 0,
+				[armor_types.super_armor] = 0,
+				[armor_types.disgustingly_resilient] = 0,
+				[armor_types.void_shield] = 0
+			},
+			impact = {
+				[armor_types.unarmored] = 5,
+				[armor_types.armored] = 5,
+				[armor_types.resistant] = 5,
+				[armor_types.player] = 5,
+				[armor_types.berserker] = 5,
+				[armor_types.super_armor] = 5,
+				[armor_types.disgustingly_resilient] = 5,
+				[armor_types.void_shield] = 5
+			}
+		}
+	},
+	power_distribution = {
+		attack = 0,
+		impact = 7.5
+	},
+	targets = {
+		default_target = {
+			boost_curve_multiplier_finesse = 1.2,
+			boost_curve = PowerLevelSettings.boost_curves.default,
+			finesse_boost = {
+				[armor_types.unarmored] = 1
+			}
+		}
+	}
 }
 damage_templates.vortex_grab_wall_slam = {
 	disorientation_type = "falling_light",
@@ -777,23 +849,23 @@ damage_templates.vortex_grab_wall_slam = {
 	stagger_category = "ranged",
 	armor_damage_modifier = {
 		attack = default_armor_mod,
-		impact = default_armor_mod,
+		impact = default_armor_mod
 	},
 	power_distribution = {
 		attack = 0.4,
-		impact = 0.4,
+		impact = 0.4
 	},
 	cleave_distribution = {
 		attack = 0.25,
-		impact = 0.25,
+		impact = 0.25
 	},
 	force_look_function = ForcedLookSettings.look_functions.light,
 	push_template = push_templates.heavy,
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.falling_light = {
 	disorientation_type = "falling_light",
@@ -804,23 +876,23 @@ damage_templates.falling_light = {
 	stagger_category = "ranged",
 	armor_damage_modifier = {
 		attack = default_armor_mod,
-		impact = default_armor_mod,
+		impact = default_armor_mod
 	},
 	power_distribution = {
 		attack = 0.4,
-		impact = 0.4,
+		impact = 0.4
 	},
 	cleave_distribution = {
 		attack = 0.25,
-		impact = 0.25,
+		impact = 0.25
 	},
 	force_look_function = ForcedLookSettings.look_functions.light,
 	push_template = push_templates.heavy,
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 overrides.falling_heavy = {
 	parent_template_name = "falling_light",
@@ -828,42 +900,42 @@ overrides.falling_heavy = {
 		{
 			"power_distribution",
 			"attack",
-			1.4,
+			1.4
 		},
 		{
 			"power_distribution",
 			"impact",
-			1.4,
+			1.4
 		},
 		{
 			"force_look_function",
-			ForcedLookSettings.look_functions.heavy,
+			ForcedLookSettings.look_functions.heavy
 		},
 		{
 			"disorientation_type",
-			"falling_heavy",
-		},
-	},
+			"falling_heavy"
+		}
+	}
 }
 damage_templates.kill_volume_and_off_navmesh = {
 	stagger_category = "melee",
 	armor_damage_modifier = {
 		attack = default_armor_mod,
-		impact = default_armor_mod,
+		impact = default_armor_mod
 	},
 	power_distribution = {
 		attack = 0.1,
-		impact = 0.5,
+		impact = 0.5
 	},
 	cleave_distribution = {
 		attack = 0.25,
-		impact = 0.25,
+		impact = 0.25
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.kill_volume_with_gibbing = {
 	damage_type = "grenade",
@@ -872,24 +944,24 @@ damage_templates.kill_volume_with_gibbing = {
 	suppression_value = 10,
 	armor_damage_modifier = {
 		attack = default_armor_mod,
-		impact = default_armor_mod,
+		impact = default_armor_mod
 	},
 	power_distribution = {
 		attack = 0.1,
-		impact = 0.5,
+		impact = 0.5
 	},
 	cleave_distribution = {
 		attack = 0.25,
-		impact = 0.25,
+		impact = 0.25
 	},
 	gibbing_type = gibbing_types.explosion,
 	gibbing_power = gibbing_power.infinite,
 	gib_push_force = GibbingSettings.gib_push_force.explosive_heavy,
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.sticky_dodge_push = {
 	is_push = true,
@@ -899,8 +971,8 @@ damage_templates.sticky_dodge_push = {
 		attack = 0,
 		impact = {
 			12,
-			16,
-		},
+			16
+		}
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -911,7 +983,7 @@ damage_templates.sticky_dodge_push = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -921,27 +993,27 @@ damage_templates.sticky_dodge_push = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.5,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
-		},
+			[armor_types.void_shield] = 0
+		}
 	},
 	stagger_duration_modifier = {
 		0.5,
-		0.75,
+		0.75
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.ogryn_dodge_impact = {
 	is_push = true,
 	stagger_category = "explosion",
 	power_distribution = {
 		attack = 0,
-		impact = 0.5,
+		impact = 0.5
 	},
 	cleave_distribution = {
 		attack = 0,
-		impact = math.huge,
+		impact = math.huge
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -952,7 +1024,7 @@ damage_templates.ogryn_dodge_impact = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -962,23 +1034,23 @@ damage_templates.ogryn_dodge_impact = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-		},
+			[armor_types.void_shield] = 1
+		}
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.light_dodge_impact = {
 	is_push = true,
 	stagger_category = "melee",
 	power_distribution = {
 		attack = 0,
-		impact = 0.5,
+		impact = 0.5
 	},
 	cleave_distribution = {
 		attack = 0,
-		impact = math.huge,
+		impact = math.huge
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -989,7 +1061,7 @@ damage_templates.light_dodge_impact = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -999,23 +1071,23 @@ damage_templates.light_dodge_impact = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-		},
+			[armor_types.void_shield] = 1
+		}
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.slide_knockdown = {
 	is_push = true,
 	stagger_category = "melee",
 	power_distribution = {
 		attack = 0,
-		impact = 0.35,
+		impact = 0.35
 	},
 	cleave_distribution = {
 		attack = 0,
-		impact = math.huge,
+		impact = math.huge
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -1026,7 +1098,7 @@ damage_templates.slide_knockdown = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.5,
-			[armor_types.void_shield] = 0.5,
+			[armor_types.void_shield] = 0.5
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -1036,15 +1108,15 @@ damage_templates.slide_knockdown = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-		},
+			[armor_types.void_shield] = 1
+		}
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 
 return {
 	base_templates = damage_templates,
-	overrides = overrides,
+	overrides = overrides
 }

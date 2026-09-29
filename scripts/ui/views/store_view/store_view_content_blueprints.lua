@@ -15,7 +15,7 @@ local group_header_font_style = table.clone(UIFontSettings.header_3)
 group_header_font_style.offset = {
 	0,
 	0,
-	3,
+	3
 }
 group_header_font_style.text_horizontal_alignment = "center"
 group_header_font_style.text_vertical_alignment = "center"
@@ -26,7 +26,7 @@ local sub_header_font_style = table.clone(UIFontSettings.header_3)
 sub_header_font_style.offset = {
 	0,
 	0,
-	3,
+	3
 }
 sub_header_font_style.font_size = 18
 sub_header_font_style.text_horizontal_alignment = "center"
@@ -42,11 +42,11 @@ item_header_text_style.vertical_alignment = "center"
 item_header_text_style.offset = {
 	10,
 	-55,
-	4,
+	4
 }
 item_header_text_style.size_addition = {
 	-20,
-	0,
+	0
 }
 item_header_text_style.text_color = Color.terminal_text_header(255, true)
 item_header_text_style.font_size = 24
@@ -60,11 +60,11 @@ aquila_header_text_style.font_size = 36
 aquila_header_text_style.offset = {
 	0,
 	3,
-	4,
+	4
 }
 aquila_header_text_style.size_addition = {
 	0,
-	0,
+	0
 }
 
 local item_header_premium_text_style = table.clone(item_header_text_style)
@@ -81,11 +81,11 @@ item_sub_header_text_style.vertical_alignment = "center"
 item_sub_header_text_style.offset = {
 	10,
 	-10,
-	4,
+	4
 }
 item_sub_header_text_style.size_addition = {
 	-20,
-	0,
+	0
 }
 item_sub_header_text_style.text_color = Color.terminal_text_body(255, true)
 item_sub_header_text_style.font_size = 24
@@ -99,11 +99,11 @@ item_description_text_style.vertical_alignment = "bottom"
 item_description_text_style.offset = {
 	0,
 	-60,
-	5,
+	5
 }
 item_description_text_style.size_addition = {
 	-30,
-	-30,
+	-30
 }
 item_description_text_style.text_color = Color.terminal_text_body(255, true)
 
@@ -116,7 +116,7 @@ item_price_text_style.vertical_alignment = "center"
 item_price_text_style.offset = {
 	-30,
 	-10,
-	4,
+	4
 }
 item_price_text_style.text_color = Color.white(255, true)
 
@@ -126,7 +126,7 @@ aquila_price_text_style.text_horizontal_alignment = "center"
 aquila_price_text_style.offset = {
 	0,
 	-10,
-	4,
+	4
 }
 
 local timer_text_style = table.clone(UIFontSettings.body_small)
@@ -139,12 +139,12 @@ timer_text_style.hover_color = {
 	255,
 	255,
 	255,
-	255,
+	255
 }
 timer_text_style.offset = {
 	30,
 	-15,
-	5,
+	5
 }
 timer_text_style.horizontal_alignment = "center"
 timer_text_style.vertical_alignment = "center"
@@ -195,25 +195,25 @@ local aquila_button_icon_pass = {
 		offset = {
 			0,
 			0,
-			1,
+			1
 		},
 		size = {
 			196,
-			230.99999999999997,
+			230.99999999999997
 		},
 		uvs = {
 			{
 				0,
-				0,
+				0
 			},
 			{
 				1,
-				1,
-			},
+				1
+			}
 		},
 		material_values = {
-			shine = 0,
-		},
+			shine = 0
+		}
 	},
 	visibility_function = function (content, style)
 		return not not style.material_values and not not style.material_values.main_texture
@@ -231,7 +231,7 @@ local aquila_button_icon_pass = {
 		style.uvs[1][2] = start_uv + current_uv
 		style.uvs[2][1] = end_uv - current_uv
 		style.uvs[2][2] = end_uv - current_uv
-	end,
+	end
 }
 local mtx_pack_description_text = {
 	{
@@ -239,7 +239,7 @@ local mtx_pack_description_text = {
 		style_id = "pack_description",
 		value = "",
 		value_id = "pack_description",
-		style = item_description_text_style,
+		style = item_description_text_style
 	},
 	{
 		pass_type = "texture",
@@ -249,44 +249,44 @@ local mtx_pack_description_text = {
 		style = {
 			size_addition = {
 				60,
-				20,
+				20
 			},
 			color = Color.terminal_corner(178.5, true),
 			offset = {
 				item_description_text_style.offset[1],
 				item_description_text_style.offset[2],
-				item_description_text_style.offset[3] - 1,
+				item_description_text_style.offset[3] - 1
 			},
 			horizontal_alignment = item_description_text_style.horizontal_alignment,
-			vertical_alignment = item_description_text_style.vertical_alignment,
+			vertical_alignment = item_description_text_style.vertical_alignment
 		},
 		visibility_function = function (content, style)
 			return content.pack_description ~= ""
-		end,
-	},
+		end
+	}
 }
 local blueprints = {
 	dynamic_spacing = {
 		size = {
 			0,
-			0,
+			0
 		},
 		size_function = function (parent, config)
 			return config.size
-		end,
+		end
 	},
 	group_header = {
 		size = {
 			grid_width,
-			70,
+			70
 		},
 		pass_template = {
 			{
 				pass_type = "text",
 				value = "",
 				value_id = "text",
-				style = group_header_font_style,
-			},
+				style = group_header_font_style
+			}
 		},
 		init = function (parent, widget, element, callback_name)
 			local content = widget.content
@@ -310,20 +310,20 @@ local blueprints = {
 			end
 
 			content.text = text
-		end,
+		end
 	},
 	sub_header = {
 		size = {
 			grid_width,
-			20,
+			20
 		},
 		pass_template = {
 			{
 				pass_type = "text",
 				value = "",
 				value_id = "text",
-				style = sub_header_font_style,
-			},
+				style = sub_header_font_style
+			}
 		},
 		init = function (parent, widget, element, callback_name)
 			local content = widget.content
@@ -347,7 +347,7 @@ local blueprints = {
 			end
 
 			content.text = text
-		end,
+		end
 	},
 	button = {
 		pass_template = {
@@ -355,12 +355,12 @@ local blueprints = {
 				content_id = "hotspot",
 				pass_type = "hotspot",
 				content = {
-					use_is_focused = true,
+					use_is_focused = true
 				},
 				style = {
 					on_hover_sound = UISoundEvents.default_mouse_hover,
-					on_pressed_sound = UISoundEvents.default_click,
-				},
+					on_pressed_sound = UISoundEvents.default_click
+				}
 			},
 			{
 				pass_type = "texture",
@@ -373,12 +373,12 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						0,
+						0
 					},
 					size_addition = {
 						20,
-						20,
-					},
+						20
+					}
 				},
 				change_function = function (content, style, _, dt)
 					local hotspot = content.hotspot
@@ -390,7 +390,7 @@ local blueprints = {
 
 					style_size_additon[1] = 20 + 20 * math.easeInCubic(1 - progress)
 					style_size_additon[2] = 20 + 20 * math.easeInCubic(1 - progress)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -405,12 +405,12 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						5,
+						5
 					},
 					size_addition = {
 						0,
-						-8,
-					},
+						-8
+					}
 				},
 				change_function = function (content, style, _, dt)
 					local hotspot = content.hotspot
@@ -420,7 +420,7 @@ local blueprints = {
 					local color = style.color
 
 					Colors.color_lerp(default_color, hover_color, progress, color)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -430,20 +430,20 @@ local blueprints = {
 					vertical_alignment = "bottom",
 					size = {
 						nil,
-						50,
+						50
 					},
 					offset = {
 						0,
 						0,
-						3,
+						3
 					},
 					color = {
 						180,
 						0,
 						0,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "text",
@@ -453,7 +453,7 @@ local blueprints = {
 				style = item_price_text_style,
 				visibility_function = function (content, style)
 					return not content.element.owned and content.element.discount
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -465,24 +465,24 @@ local blueprints = {
 					vertical_alignment = "bottom",
 					size = {
 						40,
-						28,
+						28
 					},
 					offset = {
 						-5,
 						-10,
-						4,
-					},
+						4
+					}
 				},
 				visibility_function = function (content, style)
 					return not content.element.owned and not content.element.formattedPrice
-				end,
+				end
 			},
 			{
 				pass_type = "text",
 				style_id = "price",
 				value = "??? ",
 				value_id = "price",
-				style = item_price_text_style,
+				style = item_price_text_style
 			},
 			{
 				pass_type = "texture",
@@ -496,28 +496,28 @@ local blueprints = {
 					color = Color.black(153, true),
 					size = {
 						nil,
-						0,
+						0
 					},
 					offset = {
 						0,
 						20,
-						3,
-					},
-				},
+						3
+					}
+				}
 			},
 			{
 				pass_type = "text",
 				style_id = "title",
 				value = "<Title>",
 				value_id = "title",
-				style = item_header_text_style,
+				style = item_header_text_style
 			},
 			{
 				pass_type = "text",
 				style_id = "sub_title",
 				value = "<Sub Title>",
 				value_id = "sub_title",
-				style = item_sub_header_text_style,
+				style = item_sub_header_text_style
 			},
 			{
 				pass_type = "rotated_texture",
@@ -529,19 +529,19 @@ local blueprints = {
 					vertical_alignment = "center",
 					size = {
 						80,
-						80,
+						80
 					},
 					color = {
 						60,
 						160,
 						160,
-						160,
+						160
 					},
 					offset = {
 						0,
 						0,
-						2,
-					},
+						2
+					}
 				},
 				visibility_function = function (content, style)
 					return not content.element._is_image_loaded
@@ -551,7 +551,7 @@ local blueprints = {
 
 					style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
 					style.angle = style.rotation_progress * math.pi * 2
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -564,18 +564,18 @@ local blueprints = {
 					vertical_alignment = "top",
 					size = {
 						nil,
-						30,
+						30
 					},
 					offset = {
 						0,
 						-15,
-						6,
+						6
 					},
 					size_addition = {
 						20,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -588,18 +588,18 @@ local blueprints = {
 					vertical_alignment = "bottom",
 					size = {
 						nil,
-						30,
+						30
 					},
 					offset = {
 						0,
 						15,
-						6,
+						6
 					},
 					size_addition = {
 						20,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -614,17 +614,17 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						0,
+						0
 					},
 					color = Color.terminal_frame(255, true),
 					size_addition = {
 						25,
-						20,
-					},
+						20
+					}
 				},
 				visibility_function = function (content, style)
 					return not content.has_media
-				end,
+				end
 			},
 			{
 				pass_type = "texture_uv",
@@ -638,21 +638,21 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						1,
+						1
 					},
 					uvs = {
 						{
 							0,
-							0,
+							0
 						},
 						{
 							1,
-							1,
-						},
+							1
+						}
 					},
 					material_values = {
-						shine = 0,
-					},
+						shine = 0
+					}
 				},
 				visibility_function = function (content, style)
 					return not not style.material_values and not not style.material_values.main_texture
@@ -670,7 +670,7 @@ local blueprints = {
 					style.uvs[1][2] = start_uv + current_uv
 					style.uvs[2][1] = end_uv - current_uv
 					style.uvs[2][2] = end_uv - current_uv
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -681,25 +681,25 @@ local blueprints = {
 					horizontal_alignment = "center",
 					vertical_alignment = "center",
 					material_values = {
-						use_placeholder_texture = 1,
+						use_placeholder_texture = 1
 					},
 					offset = {
 						0,
 						0,
-						1,
+						1
 					},
 					size = {
 						192,
-						128,
+						128
 					},
 					size_addition = {
 						0,
-						0,
-					},
+						0
+					}
 				},
 				visibility_function = function (content, style)
 					return content.item
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -712,20 +712,20 @@ local blueprints = {
 					offset = {
 						-35,
 						-67,
-						6,
+						6
 					},
 					size = {
 						28,
-						44,
+						44
 					},
 					size_addition = {
 						0,
-						0,
-					},
+						0
+					}
 				},
 				visibility_function = function (content, style)
 					return content.show_discount_percent_1
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -738,20 +738,20 @@ local blueprints = {
 					offset = {
 						-55,
 						-67,
-						6,
+						6
 					},
 					size = {
 						28,
-						44,
+						44
 					},
 					size_addition = {
 						0,
-						0,
-					},
+						0
+					}
 				},
 				visibility_function = function (content, style)
 					return content.show_discount_percent_2
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -764,20 +764,20 @@ local blueprints = {
 					offset = {
 						-75,
 						-67,
-						6,
+						6
 					},
 					size = {
 						28,
-						44,
+						44
 					},
 					size_addition = {
 						0,
-						0,
-					},
+						0
+					}
 				},
 				visibility_function = function (content, style)
 					return content.show_discount_percent_3
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -790,20 +790,20 @@ local blueprints = {
 					offset = {
 						20,
 						-20,
-						5,
+						5
 					},
 					size = {
 						256,
-						128,
+						128
 					},
 					size_addition = {
 						0,
-						0,
-					},
+						0
+					}
 				},
 				visibility_function = function (content, style)
 					return content.discount_banner
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -812,8 +812,8 @@ local blueprints = {
 				style = timer_text_style,
 				visibility_function = function (content, style)
 					return content.timer_text
-				end,
-			},
+				end
+			}
 		},
 		init = function (parent, widget, element, callback_name)
 			local content = widget.content
@@ -830,12 +830,12 @@ local blueprints = {
 			local title_width = content.size[1] + style.title.size_addition[1]
 			local _, title_height = parent:_text_size(content.title, title_style, {
 				title_width,
-				1080,
+				1080
 			})
 			local title_background_margin = 20
 
 			style.title_background.size = {
-				[2] = title_height + title_background_margin,
+				[2] = title_height + title_background_margin
 			}
 			style.title_background.offset[2] = style.title.offset[2]
 			style.title_background.offset[2] = style.title_background.offset[2] - title_background_margin * 0.25
@@ -882,7 +882,7 @@ local blueprints = {
 			local price_style = style.price
 			local price_width, price_height = parent:_text_size(content.price, price_style, {
 				title_width,
-				1080,
+				1080
 			})
 
 			style.price.offset[1] = element.owned and style.price_icon.offset[1] or style.price_icon.offset[1] - icon_margin - style.price_icon.size[1]
@@ -907,7 +907,7 @@ local blueprints = {
 			if element.discount then
 				local text_width, _ = parent:_text_size(content.price, price_style, {
 					title_width,
-					1080,
+					1080
 				})
 				local discount_margin = 20
 				local price_style = style.price
@@ -918,7 +918,7 @@ local blueprints = {
 				local discount_style = style.discount_price
 				local discount_width, discount_height = parent:_text_size(content.discount_price, discount_style, {
 					title_width,
-					1080,
+					1080
 				})
 
 				style.discount_price.offset[1] = style.price.offset[1] - discount_margin - price_width
@@ -962,7 +962,7 @@ local blueprints = {
 					state_machine = item_state_machine,
 					animation_event = item_animation_event,
 					companion_state_machine = companion_item_state_machine,
-					companion_animation_event = companion_item_animation_event,
+					companion_animation_event = companion_item_animation_event
 				}
 
 				content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context)
@@ -993,7 +993,7 @@ local blueprints = {
 
 				content.icon_load_id = nil
 			end
-		end,
+		end
 	},
 	aquila_button = {
 		pass_template = {
@@ -1001,12 +1001,12 @@ local blueprints = {
 				content_id = "hotspot",
 				pass_type = "hotspot",
 				content = {
-					use_is_focused = true,
+					use_is_focused = true
 				},
 				style = {
 					on_hover_sound = UISoundEvents.default_mouse_hover,
-					on_pressed_sound = UISoundEvents.default_click,
-				},
+					on_pressed_sound = UISoundEvents.default_click
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1019,12 +1019,12 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						0,
+						0
 					},
 					size_addition = {
 						20,
-						20,
-					},
+						20
+					}
 				},
 				change_function = function (content, style, _, dt)
 					local hotspot = content.hotspot
@@ -1036,7 +1036,7 @@ local blueprints = {
 
 					style_size_additon[1] = 20 + 20 * math.easeInCubic(1 - progress)
 					style_size_additon[2] = 20 + 20 * math.easeInCubic(1 - progress)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1051,12 +1051,12 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						5,
+						5
 					},
 					size_addition = {
 						0,
-						-8,
-					},
+						-8
+					}
 				},
 				change_function = function (content, style, _, dt)
 					local hotspot = content.hotspot
@@ -1066,7 +1066,7 @@ local blueprints = {
 					local color = style.color
 
 					Colors.color_lerp(default_color, hover_color, progress, color)
-				end,
+				end
 			},
 			{
 				pass_type = "rect",
@@ -1075,24 +1075,24 @@ local blueprints = {
 					vertical_alignment = "bottom",
 					size_addition = {
 						-2,
-						0,
+						0
 					},
 					size = {
 						nil,
-						50,
+						50
 					},
 					offset = {
 						0,
 						0,
-						3,
+						3
 					},
 					color = {
 						180,
 						0,
 						0,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1104,31 +1104,31 @@ local blueprints = {
 					vertical_alignment = "bottom",
 					size = {
 						30,
-						30,
+						30
 					},
 					offset = {
 						-30,
 						-10,
-						4,
-					},
+						4
+					}
 				},
 				visibility_function = function (content, style)
 					return content.element and not content.element.owned and not content.element.formattedPrice
-				end,
+				end
 			},
 			{
 				pass_type = "text",
 				style_id = "price",
 				value = "??? ",
 				value_id = "price",
-				style = aquila_price_text_style,
+				style = aquila_price_text_style
 			},
 			{
 				pass_type = "text",
 				style_id = "bonus_description",
 				value = "",
 				value_id = "bonus_description",
-				style = item_description_text_style,
+				style = item_description_text_style
 			},
 			{
 				pass_type = "texture",
@@ -1138,20 +1138,20 @@ local blueprints = {
 				style = {
 					size_addition = {
 						60,
-						20,
+						20
 					},
 					color = Color.terminal_corner(178.5, true),
 					offset = {
 						item_description_text_style.offset[1],
 						item_description_text_style.offset[2],
-						item_description_text_style.offset[3] - 1,
+						item_description_text_style.offset[3] - 1
 					},
 					horizontal_alignment = item_description_text_style.horizontal_alignment,
-					vertical_alignment = item_description_text_style.vertical_alignment,
+					vertical_alignment = item_description_text_style.vertical_alignment
 				},
 				visibility_function = function (content, style)
 					return content.bonus_description ~= ""
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1161,20 +1161,20 @@ local blueprints = {
 				style = {
 					size_addition = {
 						60,
-						20,
+						20
 					},
 					color = Color.terminal_corner(178.5, true),
 					offset = {
 						item_description_text_style.offset[1],
 						item_description_text_style.offset[2],
-						item_description_text_style.offset[3],
+						item_description_text_style.offset[3]
 					},
 					horizontal_alignment = item_description_text_style.horizontal_alignment,
-					vertical_alignment = item_description_text_style.vertical_alignment,
+					vertical_alignment = item_description_text_style.vertical_alignment
 				},
 				visibility_function = function (content, style)
 					return content.bonus_description ~= ""
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1187,26 +1187,26 @@ local blueprints = {
 					vertical_alignment = "top",
 					size_addition = {
 						-2,
-						20,
+						20
 					},
 					color = Color.black(153, true),
 					size = {
 						nil,
-						0,
+						0
 					},
 					offset = {
 						0,
 						0,
-						3,
-					},
-				},
+						3
+					}
+				}
 			},
 			{
 				pass_type = "text",
 				style_id = "title",
 				value = "<Title>",
 				value_id = "title",
-				style = aquila_header_text_style,
+				style = aquila_header_text_style
 			},
 			{
 				pass_type = "texture",
@@ -1218,21 +1218,21 @@ local blueprints = {
 					vertical_alignment = "top",
 					size = {
 						48,
-						33.6,
+						33.6
 					},
 					offset = {
 						0,
 						10,
-						5,
+						5
 					},
 					size_addition = {
 						0,
-						0,
-					},
+						0
+					}
 				},
 				visibility_function = function (content, style)
 					return content.icon
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1245,18 +1245,18 @@ local blueprints = {
 					vertical_alignment = "top",
 					size = {
 						nil,
-						30,
+						30
 					},
 					offset = {
 						0,
 						-15,
-						6,
+						6
 					},
 					size_addition = {
 						20,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1269,18 +1269,18 @@ local blueprints = {
 					vertical_alignment = "bottom",
 					size = {
 						nil,
-						30,
+						30
 					},
 					offset = {
 						0,
 						15,
-						6,
+						6
 					},
 					size_addition = {
 						20,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1295,15 +1295,15 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						0,
+						0
 					},
 					color = Color.terminal_frame(255, true),
 					size_addition = {
 						25,
-						20,
-					},
-				},
-			},
+						20
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name)
 			local content = widget.content
@@ -1318,7 +1318,7 @@ local blueprints = {
 			local max_width = content.size[1] + style.title.size_addition[1]
 			local title_width, title_height = parent:_text_size(content.title, title_style, {
 				max_width,
-				200,
+				200
 			})
 			local icon_margin = 10
 			local price_text = element.owned and string.format("%s ", Localize("loc_item_owned")) or element.formattedPrice and element.formattedPrice or Text.format_currency(element.price)
@@ -1345,7 +1345,7 @@ local blueprints = {
 
 			content.icon = icon_texture_small
 			style.title_background.size = {
-				[2] = title_height,
+				[2] = title_height
 			}
 			style.icon.offset[1] = (title_width + style.icon.size[1] + icon_margin) * 0.5
 
@@ -1363,7 +1363,7 @@ local blueprints = {
 					style.texture.offset[2] = -40
 					style.texture.size = {
 						168,
-						198,
+						198
 					}
 				else
 					style.texture.offset[2] = -10
@@ -1380,7 +1380,7 @@ local blueprints = {
 						texture_pass.offset[2] = -40
 						texture_pass.size = {
 							168,
-							198,
+							198
 						}
 					else
 						texture_pass.horizontal_alignment = "left"
@@ -1396,11 +1396,11 @@ local blueprints = {
 					style.pack_description_background.offset[3] = -1
 					style.pack_description_background.size = {
 						196,
-						230.99999999999997,
+						230.99999999999997
 					}
 				end
 			end
-		end,
+		end
 	},
 	button_special_offer_1 = {
 		pass_template = {
@@ -1408,12 +1408,12 @@ local blueprints = {
 				content_id = "hotspot",
 				pass_type = "hotspot",
 				content = {
-					use_is_focused = true,
+					use_is_focused = true
 				},
 				style = {
 					on_hover_sound = UISoundEvents.default_mouse_hover,
-					on_pressed_sound = UISoundEvents.default_click,
-				},
+					on_pressed_sound = UISoundEvents.default_click
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1426,12 +1426,12 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						0,
+						0
 					},
 					size_addition = {
 						20,
-						20,
-					},
+						20
+					}
 				},
 				change_function = function (content, style, _, dt)
 					local hotspot = content.hotspot
@@ -1443,7 +1443,7 @@ local blueprints = {
 
 					style_size_additon[1] = 20 + 20 * math.easeInCubic(1 - progress)
 					style_size_additon[2] = 20 + 20 * math.easeInCubic(1 - progress)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1458,12 +1458,12 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						5,
+						5
 					},
 					size_addition = {
 						0,
-						-8,
-					},
+						-8
+					}
 				},
 				change_function = function (content, style, _, dt)
 					local hotspot = content.hotspot
@@ -1473,7 +1473,7 @@ local blueprints = {
 					local color = style.color
 
 					Colors.color_lerp(default_color, hover_color, progress, color)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1483,20 +1483,20 @@ local blueprints = {
 					vertical_alignment = "bottom",
 					size = {
 						nil,
-						50,
+						50
 					},
 					offset = {
 						0,
 						0,
-						3,
+						3
 					},
 					color = {
 						180,
 						0,
 						0,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "text",
@@ -1506,7 +1506,7 @@ local blueprints = {
 				style = item_price_text_style,
 				visibility_function = function (content, style)
 					return not content.element.owned and content.element.discount
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1518,38 +1518,38 @@ local blueprints = {
 					vertical_alignment = "bottom",
 					size = {
 						40,
-						28,
+						28
 					},
 					offset = {
 						-5,
 						-10,
-						4,
-					},
+						4
+					}
 				},
 				visibility_function = function (content, style)
 					return not content.element.owned and not content.element.formattedPrice
-				end,
+				end
 			},
 			{
 				pass_type = "text",
 				style_id = "price",
 				value = "??? ",
 				value_id = "price",
-				style = item_price_text_style,
+				style = item_price_text_style
 			},
 			{
 				pass_type = "text",
 				style_id = "title",
 				value = "<Title>",
 				value_id = "title",
-				style = item_header_premium_text_style,
+				style = item_header_premium_text_style
 			},
 			{
 				pass_type = "text",
 				style_id = "sub_title",
 				value = "<Sub Title>",
 				value_id = "sub_title",
-				style = item_sub_header_text_style,
+				style = item_sub_header_text_style
 			},
 			{
 				pass_type = "texture",
@@ -1562,24 +1562,24 @@ local blueprints = {
 					vertical_alignment = "top",
 					size = {
 						nil,
-						46.199999999999996,
+						46.199999999999996
 					},
 					offset = {
 						0,
 						-20,
-						6,
+						6
 					},
 					size_addition = {
 						8,
-						0,
+						0
 					},
 					material_values = {
 						gunge_size = {
 							147,
-							46.199999999999996,
-						},
-					},
-				},
+							46.199999999999996
+						}
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1592,18 +1592,18 @@ local blueprints = {
 					vertical_alignment = "bottom",
 					size = {
 						nil,
-						42,
+						42
 					},
 					offset = {
 						0,
 						14,
-						6,
+						6
 					},
 					size_addition = {
 						8,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1618,17 +1618,17 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						0,
+						0
 					},
 					color = Color.terminal_frame(255, true),
 					size_addition = {
 						25,
-						20,
-					},
+						20
+					}
 				},
 				visibility_function = function (content, style)
 					return not content.has_media
-				end,
+				end
 			},
 			{
 				pass_type = "texture_uv",
@@ -1642,21 +1642,21 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						1,
+						1
 					},
 					uvs = {
 						{
 							0,
-							0,
+							0
 						},
 						{
 							1,
-							1,
-						},
+							1
+						}
 					},
 					material_values = {
-						shine = 0,
-					},
+						shine = 0
+					}
 				},
 				visibility_function = function (content, style)
 					return not not style.material_values and not not style.material_values.main_texture
@@ -1674,7 +1674,7 @@ local blueprints = {
 					style.uvs[1][2] = start_uv + current_uv
 					style.uvs[2][1] = end_uv - current_uv
 					style.uvs[2][2] = end_uv - current_uv
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1685,25 +1685,25 @@ local blueprints = {
 					horizontal_alignment = "center",
 					vertical_alignment = "center",
 					material_values = {
-						use_placeholder_texture = 1,
+						use_placeholder_texture = 1
 					},
 					offset = {
 						0,
 						0,
-						1,
+						1
 					},
 					size = {
 						192,
-						128,
+						128
 					},
 					size_addition = {
 						0,
-						0,
-					},
+						0
+					}
 				},
 				visibility_function = function (content, style)
 					return content.item
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1716,20 +1716,20 @@ local blueprints = {
 					offset = {
 						-35,
 						-67,
-						6,
+						6
 					},
 					size = {
 						28,
-						44,
+						44
 					},
 					size_addition = {
 						0,
-						0,
-					},
+						0
+					}
 				},
 				visibility_function = function (content, style)
 					return content.show_discount_percent_1
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1742,20 +1742,20 @@ local blueprints = {
 					offset = {
 						-55,
 						-67,
-						6,
+						6
 					},
 					size = {
 						28,
-						44,
+						44
 					},
 					size_addition = {
 						0,
-						0,
-					},
+						0
+					}
 				},
 				visibility_function = function (content, style)
 					return content.show_discount_percent_2
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1768,20 +1768,20 @@ local blueprints = {
 					offset = {
 						-75,
 						-67,
-						6,
+						6
 					},
 					size = {
 						28,
-						44,
+						44
 					},
 					size_addition = {
 						0,
-						0,
-					},
+						0
+					}
 				},
 				visibility_function = function (content, style)
 					return content.show_discount_percent_3
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1794,20 +1794,20 @@ local blueprints = {
 					offset = {
 						20,
 						-20,
-						5,
+						5
 					},
 					size = {
 						256,
-						128,
+						128
 					},
 					size_addition = {
 						0,
-						0,
-					},
+						0
+					}
 				},
 				visibility_function = function (content, style)
 					return content.discount_banner
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -1816,8 +1816,8 @@ local blueprints = {
 				style = timer_text_style,
 				visibility_function = function (content, style)
 					return content.timer_text
-				end,
-			},
+				end
+			}
 		},
 		init = function (parent, widget, element, callback_name)
 			local content = widget.content
@@ -1834,7 +1834,7 @@ local blueprints = {
 			local title_width = content.size[1] + style.title.size_addition[1]
 			local _, title_height = parent:_text_size(content.title, title_style, {
 				title_width,
-				1080,
+				1080
 			})
 
 			content.price = element.owned and string.format("%s ", Localize("loc_item_owned")) or element.formattedPrice and element.formattedPrice or Text.format_currency(element.price)
@@ -1860,7 +1860,7 @@ local blueprints = {
 			if element.aquila_texture then
 				style.texture.size = {
 					215,
-					215,
+					215
 				}
 			end
 
@@ -1873,7 +1873,7 @@ local blueprints = {
 			local price_style = style.price
 			local price_width, price_height = parent:_text_size(content.price, price_style, {
 				title_width,
-				1080,
+				1080
 			})
 
 			style.price.offset[1] = element.owned and style.price_icon.offset[1] or style.price_icon.offset[1] - icon_margin - style.price_icon.size[1]
@@ -1898,7 +1898,7 @@ local blueprints = {
 			if element.discount then
 				local text_width, _ = parent:_text_size(content.price, price_style, {
 					title_width,
-					1080,
+					1080
 				})
 				local discount_margin = 20
 				local price_style = style.price
@@ -1909,7 +1909,7 @@ local blueprints = {
 				local discount_style = style.discount_price
 				local discount_width, discount_height = parent:_text_size(content.discount_price, discount_style, {
 					title_width,
-					1080,
+					1080
 				})
 
 				style.discount_price.offset[1] = style.price.offset[1] - discount_margin - price_width
@@ -1961,7 +1961,7 @@ local blueprints = {
 					state_machine = item_state_machine,
 					animation_event = item_animation_event,
 					companion_state_machine = companion_item_state_machine,
-					companion_animation_event = companion_item_animation_event,
+					companion_animation_event = companion_item_animation_event
 				}
 
 				content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context)
@@ -1986,10 +1986,10 @@ local blueprints = {
 
 				content.icon_load_id = nil
 			end
-		end,
+		end
 	},
 	aquila_button_icon_pass = aquila_button_icon_pass,
-	mtx_pack_description_text = mtx_pack_description_text,
+	mtx_pack_description_text = mtx_pack_description_text
 }
 
 return blueprints

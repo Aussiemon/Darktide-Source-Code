@@ -16,13 +16,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	watermark_1 = {
 		horizontal_alignment = "left",
@@ -32,8 +32,8 @@ local scenegraph_definition = {
 		position = {
 			width_spacing,
 			height_spacing,
-			990,
-		},
+			990
+		}
 	},
 	watermark_2 = {
 		horizontal_alignment = "center",
@@ -43,8 +43,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			height_spacing,
-			990,
-		},
+			990
+		}
 	},
 	watermark_3 = {
 		horizontal_alignment = "right",
@@ -54,8 +54,8 @@ local scenegraph_definition = {
 		position = {
 			-width_spacing,
 			height_spacing,
-			990,
-		},
+			990
+		}
 	},
 	watermark_4 = {
 		horizontal_alignment = "left",
@@ -65,8 +65,8 @@ local scenegraph_definition = {
 		position = {
 			width_spacing,
 			0,
-			990,
-		},
+			990
+		}
 	},
 	watermark_5 = {
 		horizontal_alignment = "center",
@@ -76,8 +76,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			990,
-		},
+			990
+		}
 	},
 	watermark_6 = {
 		horizontal_alignment = "right",
@@ -87,8 +87,8 @@ local scenegraph_definition = {
 		position = {
 			-width_spacing,
 			0,
-			990,
-		},
+			990
+		}
 	},
 	watermark_7 = {
 		horizontal_alignment = "left",
@@ -98,8 +98,8 @@ local scenegraph_definition = {
 		position = {
 			width_spacing,
 			-height_spacing,
-			990,
-		},
+			990
+		}
 	},
 	watermark_8 = {
 		horizontal_alignment = "center",
@@ -109,8 +109,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			-height_spacing,
-			990,
-		},
+			990
+		}
 	},
 	watermark_9 = {
 		horizontal_alignment = "right",
@@ -120,8 +120,8 @@ local scenegraph_definition = {
 		position = {
 			-width_spacing,
 			-height_spacing,
-			990,
-		},
+			990
+		}
 	},
 	watermark_10 = {
 		horizontal_alignment = "center",
@@ -131,8 +131,8 @@ local scenegraph_definition = {
 		position = {
 			-400,
 			-200,
-			990,
-		},
+			990
+		}
 	},
 	watermark_11 = {
 		horizontal_alignment = "center",
@@ -142,8 +142,8 @@ local scenegraph_definition = {
 		position = {
 			-400,
 			200,
-			990,
-		},
+			990
+		}
 	},
 	watermark_12 = {
 		horizontal_alignment = "center",
@@ -153,8 +153,8 @@ local scenegraph_definition = {
 		position = {
 			400,
 			-200,
-			990,
-		},
+			990
+		}
 	},
 	watermark_13 = {
 		horizontal_alignment = "center",
@@ -164,9 +164,9 @@ local scenegraph_definition = {
 		position = {
 			400,
 			200,
-			990,
-		},
-	},
+			990
+		}
+	}
 }
 local widget_definitions = {
 	watermarks = UIWidget.create_definition({
@@ -178,11 +178,11 @@ local widget_definitions = {
 					255,
 					255,
 					255,
-					255,
-				},
-			},
-		},
-	}, "watermark_canvas"),
+					255
+				}
+			}
+		}
+	}, "watermark_canvas")
 }
 local title_text_style = table.clone(UIFontSettings.header_3)
 
@@ -190,13 +190,13 @@ title_text_style.font_size = 18
 title_text_style.offset = {
 	0,
 	-20,
-	0,
+	0
 }
 title_text_style.text_color = {
 	50,
 	255,
 	255,
-	255,
+	255
 }
 title_text_style.text_horizontal_alignment = "center"
 
@@ -206,13 +206,13 @@ description_text_style.font_size = 18
 description_text_style.offset = {
 	0,
 	20,
-	0,
+	0
 }
 description_text_style.text_color = {
 	50,
 	255,
 	255,
-	255,
+	255
 }
 description_text_style.text_horizontal_alignment = "center"
 description_text_style.text_vertical_alignment = "bottom"
@@ -221,5 +221,5 @@ return {
 	title_text_style = title_text_style,
 	description_text_style = description_text_style,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

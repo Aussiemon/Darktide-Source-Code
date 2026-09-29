@@ -3,7 +3,7 @@
 local Ammo = require("scripts/utilities/ammo")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local RESET_WEAPON_MODIFIERS = {
-	traits = {},
+	traits = {}
 }
 local NO_WEAPON_MODIFIERS = {}
 
@@ -13,7 +13,7 @@ local function _weapon_modifier_from_template(weapon_modifiers_or_nil, value)
 
 	for modifier_name, _ in pairs(weapon_modifiers) do
 		local new_entry = {
-			name = modifier_name,
+			name = modifier_name
 		}
 
 		if value then
@@ -33,7 +33,7 @@ local function _weapon_trait_from_template(weapon_modifiers_or_nil, value)
 	for _, modifier_name in pairs(weapon_modifiers) do
 		local new_entry = {
 			rarity = 1,
-			name = modifier_name,
+			name = modifier_name
 		}
 
 		table.insert(new_list, new_entry)
@@ -131,7 +131,7 @@ local PlayerManagerFixedTestify = {
 
 			PlayerUnitVisualLoadout.wield_slot(slot, player_unit, t)
 		end
-	end,
+	end
 }
 
 return PlayerManagerFixedTestify

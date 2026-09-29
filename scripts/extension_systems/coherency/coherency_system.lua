@@ -33,7 +33,7 @@ CoherencySystem.on_add_extension = function (self, world, unit, extension_name, 
 	local coherency_data = {
 		units_in_direct_coherence = {},
 		units_in_direct_coherence_temp = {},
-		units_left_coherence_stickiness_time = {},
+		units_left_coherence_stickiness_time = {}
 	}
 
 	extension._coherency_data = coherency_data
@@ -146,6 +146,9 @@ local function _has_coherency_system_filter_function(filter_unit)
 end
 
 local daisy_chains = {}
+local proximity_check_params = {
+	proximity_radius = nil
+}
 
 CoherencySystem.update = function (self, context, dt, t, ...)
 	CoherencySystem.super.update(self, context, dt, t, ...)
@@ -170,7 +173,9 @@ CoherencySystem.update = function (self, context, dt, t, ...)
 			local relation_side_names = side:relation_side_names("allied")
 			local coherence_radius, stickiness_limit, stickiness_time = coherency_extension:coherency_settings()
 
-			Proximity.check_sticky_proximity(unit, relation_side_names, coherence_radius, current_units_in_direct_coherency, _has_coherency_system_filter_function, broadphase, stickiness_limit, stickiness_time, coherence_stickiness_time, prev_units_in_direct_coherency, dt)
+			proximity_check_params.proximity_radius = coherence_radius
+
+			Proximity.check_sticky_proximity(nil, nil, unit, relation_side_names, proximity_check_params, current_units_in_direct_coherency, Proximity.check_proximity_of_position, _has_coherency_system_filter_function, broadphase, stickiness_limit, stickiness_time, coherence_stickiness_time, prev_units_in_direct_coherency, dt)
 			table.clear(prev_units_in_direct_coherency)
 
 			coherency_data.units_in_direct_coherence = current_units_in_direct_coherency

@@ -54,14 +54,14 @@ WeatherVolume.component_data = {
 		preview = false,
 		ui_name = "World Particles",
 		ui_type = "resource",
-		value = "",
+		value = ""
 	},
 	screen_particles = {
 		filter = "particles",
 		preview = false,
 		ui_name = "Screen Particles",
 		ui_type = "resource",
-		value = "",
+		value = ""
 	},
 	priority = {
 		decimals = 0,
@@ -70,11 +70,11 @@ WeatherVolume.component_data = {
 		step = 1,
 		ui_name = "Priority",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	extensions = {
-		"WeatherExtension",
-	},
+		"WeatherExtension"
+	}
 }
 
 return WeatherVolume

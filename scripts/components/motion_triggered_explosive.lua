@@ -300,7 +300,7 @@ MotionTriggeredExplosive._spawn_cluster = function (self, cluster_settings)
 		0,
 		0.25,
 		0.5,
-		0.75,
+		0.75
 	})
 	local material
 	local item_name = cluster_settings.item
@@ -369,7 +369,7 @@ MotionTriggeredExplosive.component_data = {
 	start_timer_on_spawn = {
 		ui_name = "Start timer on Spawn",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	setting_name = {
 		ui_name = "Setting Name",
@@ -378,48 +378,48 @@ MotionTriggeredExplosive.component_data = {
 		options_keys = {
 			"explosive_trap",
 			"fire_trap",
-			"shock_trap",
+			"shock_trap"
 		},
 		options_values = {
 			"explosive_trap",
 			"fire_trap",
-			"shock_trap",
-		},
+			"shock_trap"
+		}
 	},
 	power_level = {
 		decimals = 0,
 		step = 1,
 		ui_name = "Power Level",
 		ui_type = "number",
-		value = 1000,
+		value = 1000
 	},
 	charge_level = {
 		decimals = 0,
 		step = 1,
 		ui_name = "Charge Level",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	detection_radius = {
 		decimals = 1,
 		step = 0.1,
 		ui_name = "Detonation detection radius (in meters.)",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	fuse_time = {
 		decimals = 1,
 		step = 0.1,
 		ui_name = "Fuse Time (in sec.)",
 		ui_type = "number",
-		value = 5,
+		value = 5
 	},
 	inputs = {
 		start_timer = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return MotionTriggeredExplosive

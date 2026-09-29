@@ -38,7 +38,7 @@ ViewLoader.start_loading = function (self, context)
 			always_even_with_debug = true,
 			always = not disable_preload,
 			not_ps5 = not disable_preload and not IS_PLAYSTATION,
-			not_ps5_nor_lockhart = not disable_preload and not IS_PLAYSTATION and sub_platform ~= "lockhart",
+			not_ps5_nor_lockhart = not disable_preload and not IS_PLAYSTATION and sub_platform ~= "lockhart"
 		}
 
 		for view_name, view_settings in pairs(Views) do

@@ -1,13 +1,14 @@
 ﻿-- chunkname: @scripts/ui/views/mission_board_view/mission_board_view_logic.lua
 
-local Danger = require("scripts/utilities/danger")
 local DangerSettings = require("scripts/settings/difficulty/danger_settings")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local Promise = require("scripts/foundation/utilities/promise")
 local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local QPCode = require("scripts/utilities/qp_code")
 local Settings = require("scripts/ui/views/mission_board_view/mission_board_view_settings")
+local MissionBoard = require("scripts/backend/mission_board")
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
+local DANGER_LEVELS = DangerSettings.danger_levels
 local MAX_DISPLAYED_STORY_MISSIONS = 3
 
 local function _filter_backend_missions(missions)
@@ -327,11 +328,11 @@ MissionBoardViewLogic.get_bonus_range = function (self, category)
 	return lo, hi
 end
 
-MissionBoardViewLogic.is_mission_locked = function (self, mission)
+MissionBoardViewLogic.is_mission_locked = function (self, mission, campaign)
 	local mission_key = mission.map
 	local mission_category = mission.category
 	local is_locked = true
-	local mission_unlock_data = self:get_mission_unlock_data(mission_key, mission_category)
+	local mission_unlock_data = self:get_mission_unlock_data(mission_key, mission_category, campaign)
 
 	if not mission_unlock_data then
 		return is_locked
@@ -344,7 +345,7 @@ MissionBoardViewLogic.is_mission_locked = function (self, mission)
 	return is_locked
 end
 
-MissionBoardViewLogic.get_mission_unlock_data = function (self, mission_key, mission_category)
+MissionBoardViewLogic.get_mission_unlock_data = function (self, mission_key, mission_category, campaign)
 	if not mission_key or not mission_category then
 		Log.warning("MissionBoardView", "Trying to get mission unlock data with invalid key or category. key: %s, category: %s", tostring(mission_key), tostring(mission_category))
 
@@ -369,7 +370,7 @@ MissionBoardViewLogic.get_mission_unlock_data = function (self, mission_key, mis
 		return nil
 	end
 
-	return mission_data
+	return MissionBoard.resolve_for_campaign(mission_data, campaign)
 end
 
 MissionBoardViewLogic.refresh_filtered_missions = function (self)
@@ -385,7 +386,7 @@ MissionBoardViewLogic.refresh_filtered_missions = function (self)
 
 	local included_ids = {}
 	local filters = {
-		page_settings.filter,
+		page_settings.filter
 	}
 
 	for _, mission in ipairs(mission_data) do
@@ -691,7 +692,7 @@ MissionBoardViewLogic._get_quickplay_categories = function (self, categories)
 
 	local qp_categories = {
 		"common",
-		"event",
+		"event"
 	}
 
 	if self._quickplay_into_narrative then
@@ -713,62 +714,25 @@ MissionBoardViewLogic.page_is_unlocked = function (self, page_index, page_settin
 	return page_setting.check_unlocked and page_setting.check_unlocked(self) or page_setting.is_unlocked
 end
 
-local function level_matches_unlock(difficulty_data, current_difficulty)
+local function _level_matches_unlock(difficulty_data, current_difficulty)
 	local challenge = difficulty_data.challenge
 	local resistance = difficulty_data.resistance
 
 	return challenge <= current_difficulty.challenge and resistance <= current_difficulty.resistance
 end
 
-local function level_is_at_least(level)
-	return function (parent)
-		return parent._player_level >= level
-	end
-end
-
-local function _pages_from_difficulty()
-	local pages = {}
-
-	for i, difficulty_data in ipairs(DangerSettings) do
-		local is_auric = difficulty_data.name == "auric"
-		local unlocks_at_level = Danger.required_level_by_mission_type(i)
-
-		pages[i] = {
-			loc_name = difficulty_data.display_name,
-			ui_theme = is_auric and "auric" or "default",
-			check_unlocked = level_is_at_least(unlocks_at_level or 1),
-			filter = {
-				challenge = difficulty_data.challenge,
-				resistance = difficulty_data.resistance,
-				category_whitelist = {
-					"common",
-					"event",
-					"maelstrom",
-					"story",
-				},
-			},
-			qp = {
-				challenge = difficulty_data.challenge,
-			},
-		}
-	end
-
-	return pages
-end
-
 local function _populate_pages(missions, difficulty_progress_data)
 	local pages = {}
-	local page_index = 1
 	local current_difficulty = difficulty_progress_data.current
 
-	for i, difficulty_data in ipairs(DangerSettings) do
+	for ii, difficulty_data in ipairs(DANGER_LEVELS) do
 		local is_auric = difficulty_data.name == "auric"
 
-		pages[i] = {
-			name = DangerSettings[i].name,
+		pages[ii] = {
+			name = DANGER_LEVELS[ii].name,
 			loc_name = difficulty_data.display_name,
 			ui_theme = is_auric and "auric" or "default",
-			is_unlocked = level_matches_unlock(difficulty_data, current_difficulty),
+			is_unlocked = _level_matches_unlock(difficulty_data, current_difficulty),
 			filter = {
 				challenge = difficulty_data.challenge,
 				resistance = difficulty_data.resistance,
@@ -776,13 +740,13 @@ local function _populate_pages(missions, difficulty_progress_data)
 					"common",
 					"event",
 					"maelstrom",
-					"story",
-				},
+					"story"
+				}
 			},
 			qp = {
 				challenge = difficulty_data.challenge,
-				resistance = difficulty_data.resistance,
-			},
+				resistance = difficulty_data.resistance
+			}
 		}
 	end
 
@@ -790,7 +754,7 @@ local function _populate_pages(missions, difficulty_progress_data)
 end
 
 MissionBoardViewLogic._should_show_mission = function (self, mission)
-	local mission_data = self:get_mission_unlock_data(mission.map, mission.category)
+	local mission_data = self:get_mission_unlock_data(mission.map, mission.category, mission.campaign)
 
 	if mission.circumstance and not CircumstanceTemplates[mission.circumstance] then
 		return false
@@ -815,21 +779,21 @@ MissionBoardViewLogic._should_show_mission = function (self, mission)
 		for _, prerequisite in ipairs(prerequisites) do
 			local mission_key = prerequisite.key
 			local mission_category = prerequisite.category
-			local mission_data = self:get_mission_unlock_data(mission_key, mission_category)
+			local mission_unlock_data = self:get_mission_unlock_data(mission_key, mission_category, mission_data.campaign)
 
-			if not mission_data then
+			if not mission_unlock_data then
 				prerequisites_fullfilled = false
 
 				break
 			end
 
-			if mission_data.unlocked and mission_data.unlocked == false then
+			if mission_unlock_data.unlocked and mission_unlock_data.unlocked == false then
 				prerequisites_fullfilled = false
 
 				break
 			end
 
-			if mission_data.completed and mission_data.completed == false then
+			if mission_unlock_data.completed and mission_unlock_data.completed == false then
 				prerequisites_fullfilled = false
 
 				break
@@ -880,7 +844,7 @@ MissionBoardViewLogic._mission_passes_filter = function (self, mission, filter)
 		return false
 	end
 
-	local mission_unlock_data = self:get_mission_unlock_data(mission.map, mission.category)
+	local mission_unlock_data = self:get_mission_unlock_data(mission.map, mission.category, mission.campaign)
 
 	if not mission_unlock_data then
 		return false
@@ -903,7 +867,7 @@ MissionBoardViewLogic._is_story_mission_complete = function (self, mission)
 	end
 
 	local mission_key = mission.map
-	local mission_unlock_data = self:get_mission_unlock_data(mission_key, mission.category)
+	local mission_unlock_data = self:get_mission_unlock_data(mission_key, mission.category, mission.campaign)
 
 	if not mission_unlock_data then
 		return false
@@ -1020,7 +984,7 @@ MissionBoardViewLogic._config_failure = function (self, errors)
 	local error_message = Localize("loc_popup_description_backend_error")
 
 	Managers.event:trigger("event_add_notification_message", "alert", {
-		text = error_message,
+		text = error_message
 	})
 
 	self._config_done = false

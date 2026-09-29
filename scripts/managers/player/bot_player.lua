@@ -10,7 +10,7 @@ BotPlayer.init = function (self, unique_id, session_id, channel_id, peer_id, loc
 
 	self._telemetry_ids = {
 		instance = nil,
-		session = nil,
+		session = nil
 	}
 end
 
@@ -45,7 +45,7 @@ BotPlayer.set_profile = function (self, profile)
 	self._telemetry_subject = {
 		bot = true,
 		account_id = self._debug_name,
-		character_id = self:local_player_id(),
+		character_id = self:local_player_id()
 	}
 
 	Managers.event:trigger("event_player_set_profile", self, profile)

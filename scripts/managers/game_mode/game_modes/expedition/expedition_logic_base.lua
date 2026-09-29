@@ -4,6 +4,7 @@ local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local Expedition = require("scripts/utilities/expedition")
 local ExpeditionAirstrikes = require("scripts/settings/expeditions/expedition_airstrikes")
 local ExpeditionCurrencyHandler = require("scripts/utilities/expeditions/expedition_currency_handler")
+local ExpeditionLevelTemplates = require("scripts/settings/expeditions/expedition_level_templates")
 local ExpeditionLootHandler = require("scripts/utilities/expeditions/expedition_loot_handler")
 local ExpeditionMinionLootHandler = require("scripts/utilities/expeditions/expedition_minion_loot_handler")
 local ExpeditionNavigationHandler = require("scripts/utilities/expeditions/expedition_navigation_handler")
@@ -112,6 +113,10 @@ ExpeditionLogicBase.can_player_enter_game = function (self)
 	end
 
 	return false
+end
+
+ExpeditionLogicBase.is_ready_for_hot_join = function (self)
+	return true
 end
 
 ExpeditionLogicBase.in_safe_zone = function (self)
@@ -239,7 +244,7 @@ ExpeditionLogicBase._on_gameplay_paused = function (self, is_hotjoin)
 		for _, level_data in ipairs(levels_data) do
 			if level_data.level and level_data.spawned then
 				local template_type = level_data.template_type
-				local template = Expedition.get_level_template_by_type(template_type)
+				local template = ExpeditionLevelTemplates[template_type]
 				local on_gameplay_pause_function = template and template.on_gameplay_pause_function
 
 				if on_gameplay_pause_function then
@@ -256,6 +261,14 @@ end
 
 ExpeditionLogicBase.rpc_expedition_navigation_complete_level = function (self, channel_id, level_index)
 	self._navigation_handler:expedition_mark_level_complete(level_index)
+end
+
+ExpeditionLogicBase.rpc_expedition_navigation_show_level = function (self, channel_id, level_index, show)
+	if show then
+		self._navigation_handler:expedition_show_map(level_index)
+	else
+		self._navigation_handler:expedition_hide_map(level_index)
+	end
 end
 
 ExpeditionLogicBase.rpc_expedition_set_navigation_active = function (self, channel_id, active)
@@ -334,7 +347,7 @@ ExpeditionLogicBase._update_levels_visibility = function (self)
 
 			if level and level_data.spawned then
 				local template_type = level_data.template_type
-				local template = Expedition.get_level_template_by_type(template_type)
+				local template = ExpeditionLevelTemplates[template_type]
 				local visibility_function = template.visibility_function
 
 				if visibility_function then
@@ -368,7 +381,7 @@ ExpeditionLogicBase._on_gameplay_resume = function (self)
 		for _, level_data in ipairs(levels_data) do
 			if level_data.level and level_data.spawned then
 				local template_type = level_data.template_type
-				local template = Expedition.get_level_template_by_type(template_type)
+				local template = ExpeditionLevelTemplates[template_type]
 				local on_gameplay_resume_function = template and template.on_gameplay_resume_function
 
 				if on_gameplay_resume_function then
@@ -459,7 +472,7 @@ ExpeditionLogicBase._load_location_by_index = function (self, new_index)
 		level_loader:start_loading({
 			level_name = level_name,
 			theme_tag = theme_tag,
-			dont_load_theme = not level_data.is_location and not level_data.is_safe_zone,
+			dont_load_theme = not level_data.is_location and not level_data.is_safe_zone
 		})
 
 		level_data.level_loader = level_loader
@@ -499,18 +512,11 @@ ExpeditionLogicBase._spawn_loaded_levels = function (self)
 end
 
 ExpeditionLogicBase._clear_location_systems = function (self)
-	if self._is_server then
-		Managers.state.game_session:send_rpc_clients("rpc_expedition_clear_location_systems")
-		Managers.state.minion_spawn:despawn_all_minions()
-		Managers.state.pacing:reset()
-	end
-
 	local extension_manager = Managers.state.extension
 
 	extension_manager:system("interactor_system"):reset()
 	extension_manager:system("mission_objective_system"):evaluate_location_objectives()
 	self._navigation_handler:reset()
-	Managers.state.minion_death:delete_units()
 	Managers.state.blood:delete_units()
 end
 
@@ -590,7 +596,7 @@ ExpeditionLogicBase._register_safe_zone_pickup_unit_by_pickup_spawner_unit = fun
 			pickup_unit = is_pickup and pickup_unit or nil,
 			original_description = unit_interactee_extension:description(),
 			original_extra_description = unit_interactee_extension:extra_description(),
-			info = product_info,
+			info = product_info
 		}
 
 		if num_charges_left and num_charges_left > -1 then
@@ -625,14 +631,14 @@ ExpeditionLogicBase._refresh_safe_zone_unit_store_data_presentation = function (
 
 			unit_interactee_extension:set_description("loc_game_mode_expedition_pickup_price_desc", {
 				description = Localize(original_description),
-				price = price_text,
+				price = price_text
 			})
 
 			local num_charges = info.charges
 
 			if num_charges and num_charges > 0 then
 				local charges_text = Localize("loc_game_mode_expedition_pickup_charges_desc", true, {
-					charges = num_charges,
+					charges = num_charges
 				})
 
 				charges_text = Text.apply_color_to_text(charges_text, Color.terminal_icon(255, true))
@@ -754,18 +760,16 @@ ExpeditionLogicBase.can_purchase_product = function (self, interactee_unit, inte
 			local pickup_name = pickup_data.pickup_name
 			local pickup_store_data = self:get_unit_store_data(interactee_unit)
 			local pickup_info = pickup_store_data.info
-			local player_purchases_per_store = pickup_info.player_purchases_per_store
+			local player_purchase_limit_per_store = pickup_info.player_purchase_limit_per_store
 
-			if player_purchases_per_store then
-				local expedition = self._expedition
-				local current_section_index = self._current_section_index
-				local current_section = expedition[current_section_index]
+			if player_purchase_limit_per_store then
+				local current_section = self:current_section()
 				local players_purchases = current_section.players_purchases
 				local character_id = player:character_id()
 				local current_player_purchases = players_purchases[character_id]
 				local current_player_product_purchases = current_player_purchases and current_player_purchases[pickup_name] or 0
 
-				if player_purchases_per_store <= current_player_product_purchases then
+				if player_purchase_limit_per_store <= current_player_product_purchases then
 					return false, "loc_expeditions_store_purchase_limit_reached"
 				end
 			end
@@ -837,7 +841,11 @@ ExpeditionLogicBase.event_expedition_started = function (self)
 end
 
 ExpeditionLogicBase.event_expedition_airlock_sealed = function (self)
-	return
+	local world = self:_game_world()
+	local wwise_world = Wwise.wwise_world(world)
+	local stop_event = "wwise/events/minions/stop_all_enemy_sfx"
+
+	WwiseWorld.trigger_resource_event(wwise_world, stop_event)
 end
 
 ExpeditionLogicBase.event_expedition_airlock_closed = function (self)
@@ -849,9 +857,7 @@ ExpeditionLogicBase.event_expedition_resumed = function (self)
 end
 
 ExpeditionLogicBase.event_level_start_extraction = function (self)
-	local expedition = self._expedition
-	local current_section_index = self._current_section_index
-	local section = expedition[current_section_index]
+	local section = self:current_section()
 	local extraction_level = section.extraction_level
 
 	Level.trigger_event(extraction_level, "event_level_start_extraction")
@@ -999,7 +1005,7 @@ end
 ExpeditionLogicBase.pre_populate_pickups_setup = function (self, pickup_spawners)
 	if self._is_server then
 		local template = self._expedition_template
-		local current_location_data = self._expedition[self._current_section_index]
+		local current_location_data = self:current_section()
 
 		return ExpeditionPickupDistribution.pre_populate_pickups_setup(template, current_location_data, pickup_spawners)
 	end
@@ -1085,7 +1091,7 @@ ExpeditionLogicBase._retain_last_environment = function (self, connector_exit_un
 		blend_layer = nil,
 		blend_mask = nil,
 		fade_in_distance = nil,
-		shading_environment_resource_name = nil,
+		shading_environment_resource_name = nil
 	}
 	local environment_volumes = World.units_by_resource(world, "content/gizmos/volume_units/shading_environment/shading_environment_volume")
 
@@ -1209,7 +1215,7 @@ ExpeditionLogicBase.rpc_register_expedition_danger_zone = function (self, channe
 	self._danger_zones[#self._danger_zones + 1] = {
 		unit = unit,
 		position = Vector3Box(position),
-		proximity_distance = proximity_distance,
+		proximity_distance = proximity_distance
 	}
 end
 
@@ -1260,6 +1266,28 @@ ExpeditionLogicBase.is_player_in_danger_zone = function (self, player)
 	return in_proximity, proximity_unit
 end
 
+ExpeditionLogicBase.current_section = function (self, optional_index_modifier)
+	local current_section_index = self._current_section_index
+	local index = optional_index_modifier and current_section_index + optional_index_modifier or current_section_index
+	local current_section = self._expedition[index]
+
+	return current_section
+end
+
+ExpeditionLogicBase.path_type = function (self)
+	local current_section = self:current_section()
+	local path_type = current_section.path_type
+
+	return path_type
+end
+
+ExpeditionLogicBase.location_start_area = function (self)
+	local current_section = self:current_section()
+	local location_start_area = current_section.arrival_unit or current_section.connector_entrance_unit
+
+	return location_start_area
+end
+
 ExpeditionLogicBase.rpc_expedition_start_event = function (self, channel, event_name, event_seed, time_into_event)
 	self:start_event(event_name, event_seed, time_into_event)
 end
@@ -1302,7 +1330,7 @@ ExpeditionLogicBase.start_event = function (self, event_name, event_seed, time_i
 			event_name = event_name,
 			start_time = game_time,
 			data = {
-				seed = event_seed,
+				seed = event_seed
 			},
 			template = table.clone_instance(event_template),
 			context = {
@@ -1311,8 +1339,8 @@ ExpeditionLogicBase.start_event = function (self, event_name, event_seed, time_i
 				physics_world = World.physics_world(world),
 				wwise_world = Managers.world:wwise_world(world),
 				nav_world = self._nav_world,
-				level_grid_handler = self._level_grid_handler,
-			},
+				level_grid_handler = self._level_grid_handler
+			}
 		}
 
 		if optional_server_context and self._is_server then
@@ -1382,9 +1410,7 @@ ExpeditionLogicBase.start_location_events = function (self)
 		Managers.state.game_session:send_rpc_clients("rpc_expedition_start_location_events")
 	end
 
-	local current_section_index = self._current_section_index
-	local expedition = self._expedition
-	local current_section = expedition[current_section_index]
+	local current_section = self:current_section()
 	local events = current_section.events
 
 	if #events > 0 then

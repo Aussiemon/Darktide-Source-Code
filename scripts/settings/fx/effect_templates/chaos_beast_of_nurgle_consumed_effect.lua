@@ -4,7 +4,7 @@ local CONSUMED_EFFECT_UNIT = "content/characters/enemy/chaos_beast_of_nurgle/swa
 local STOMACH_UNIT = "content/characters/enemy/chaos_beast_of_nurgle/swallow/stomach"
 local resources = {
 	consumed_effect_unit = CONSUMED_EFFECT_UNIT,
-	stomach_unit = STOMACH_UNIT,
+	stomach_unit = STOMACH_UNIT
 }
 local NODE_NAME = "j_spine"
 local effect_template = {
@@ -64,7 +64,7 @@ local effect_template = {
 		local unit = template_data.unit
 
 		Unit.set_unit_visibility(unit, true)
-	end,
+	end
 }
 
 return effect_template

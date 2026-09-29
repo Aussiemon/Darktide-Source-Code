@@ -8,21 +8,21 @@ local enemy_vo_enemy_traitor_guard_rifleman_female_b = {
 			"loc_enemy_traitor_guard_rifleman_female_b__ranged_idle_player_low_on_health_01",
 			"loc_enemy_traitor_guard_rifleman_female_b__ranged_idle_player_low_on_health_02",
 			"loc_enemy_traitor_guard_rifleman_female_b__ranged_idle_player_low_on_health_03",
-			"loc_enemy_traitor_guard_rifleman_female_b__ranged_idle_player_low_on_health_04",
+			"loc_enemy_traitor_guard_rifleman_female_b__ranged_idle_player_low_on_health_04"
 		},
 		sound_events_duration = {
 			0.711292,
 			1.235479,
 			0.962646,
-			2.624688,
+			2.624688
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25,
+			0.25
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	ranged_idle_player_out_of_ammo = {
 		randomize_indexes_n = 0,
@@ -47,7 +47,7 @@ local enemy_vo_enemy_traitor_guard_rifleman_female_b = {
 			"loc_enemy_traitor_guard_rifleman_female_b__take_cover_17",
 			"loc_enemy_traitor_guard_rifleman_female_b__take_cover_18",
 			"loc_enemy_traitor_guard_rifleman_female_b__take_cover_19",
-			"loc_enemy_traitor_guard_rifleman_female_b__take_cover_20",
+			"loc_enemy_traitor_guard_rifleman_female_b__take_cover_20"
 		},
 		sound_events_duration = {
 			1.117229,
@@ -69,7 +69,7 @@ local enemy_vo_enemy_traitor_guard_rifleman_female_b = {
 			1.621708,
 			1.144917,
 			1.021438,
-			1.638938,
+			1.638938
 		},
 		sound_event_weights = {
 			0.05,
@@ -91,9 +91,9 @@ local enemy_vo_enemy_traitor_guard_rifleman_female_b = {
 			0.05,
 			0.05,
 			0.05,
-			0.05,
+			0.05
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	traitor_guard_rifleman_alerted_idle = {
 		randomize_indexes_n = 0,
@@ -118,7 +118,7 @@ local enemy_vo_enemy_traitor_guard_rifleman_female_b = {
 			"loc_enemy_traitor_guard_rifleman_female_b__alerted_idle_17",
 			"loc_enemy_traitor_guard_rifleman_female_b__alerted_idle_18",
 			"loc_enemy_traitor_guard_rifleman_female_b__alerted_idle_19",
-			"loc_enemy_traitor_guard_rifleman_female_b__alerted_idle_20",
+			"loc_enemy_traitor_guard_rifleman_female_b__alerted_idle_20"
 		},
 		sound_events_duration = {
 			0.787875,
@@ -140,7 +140,7 @@ local enemy_vo_enemy_traitor_guard_rifleman_female_b = {
 			1.932333,
 			1.681125,
 			0.825813,
-			0.805833,
+			0.805833
 		},
 		sound_event_weights = {
 			0.05,
@@ -162,9 +162,9 @@ local enemy_vo_enemy_traitor_guard_rifleman_female_b = {
 			0.05,
 			0.05,
 			0.05,
-			0.05,
+			0.05
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	traitor_guard_rifleman_ranged_idle = {
 		randomize_indexes_n = 0,
@@ -179,7 +179,7 @@ local enemy_vo_enemy_traitor_guard_rifleman_female_b = {
 			"loc_enemy_traitor_guard_rifleman_female_b__ranged_idle_07",
 			"loc_enemy_traitor_guard_rifleman_female_b__ranged_idle_08",
 			"loc_enemy_traitor_guard_rifleman_female_b__ranged_idle_09",
-			"loc_enemy_traitor_guard_rifleman_female_b__ranged_idle_10",
+			"loc_enemy_traitor_guard_rifleman_female_b__ranged_idle_10"
 		},
 		sound_events_duration = {
 			1.329458,
@@ -191,7 +191,7 @@ local enemy_vo_enemy_traitor_guard_rifleman_female_b = {
 			1.207646,
 			1.105042,
 			2.701458,
-			2.834458,
+			2.834458
 		},
 		sound_event_weights = {
 			0.1,
@@ -203,9 +203,9 @@ local enemy_vo_enemy_traitor_guard_rifleman_female_b = {
 			0.1,
 			0.1,
 			0.1,
-			0.1,
+			0.1
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	traitor_guard_rifleman_ranged_idle_player_low_on_ammo = {
 		randomize_indexes_n = 0,
@@ -214,21 +214,21 @@ local enemy_vo_enemy_traitor_guard_rifleman_female_b = {
 			"loc_enemy_traitor_guard_rifleman_female_b__ranged_idle_player_out_of_ammo_01",
 			"loc_enemy_traitor_guard_rifleman_female_b__ranged_idle_player_out_of_ammo_02",
 			"loc_enemy_traitor_guard_rifleman_female_b__ranged_idle_player_out_of_ammo_03",
-			"loc_enemy_traitor_guard_rifleman_female_b__ranged_idle_player_out_of_ammo_04",
+			"loc_enemy_traitor_guard_rifleman_female_b__ranged_idle_player_out_of_ammo_04"
 		},
 		sound_events_duration = {
 			0.693333,
 			1.484979,
 			1.306958,
-			1.628771,
+			1.628771
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25,
+			0.25
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	traitor_guard_rifleman_take_cover = {
 		randomize_indexes_n = 0,
@@ -253,7 +253,7 @@ local enemy_vo_enemy_traitor_guard_rifleman_female_b = {
 			"loc_enemy_traitor_guard_rifleman_female_b__take_cover_17",
 			"loc_enemy_traitor_guard_rifleman_female_b__take_cover_18",
 			"loc_enemy_traitor_guard_rifleman_female_b__take_cover_19",
-			"loc_enemy_traitor_guard_rifleman_female_b__take_cover_20",
+			"loc_enemy_traitor_guard_rifleman_female_b__take_cover_20"
 		},
 		sound_events_duration = {
 			1.117229,
@@ -275,7 +275,7 @@ local enemy_vo_enemy_traitor_guard_rifleman_female_b = {
 			1.621708,
 			1.144917,
 			1.021438,
-			1.638938,
+			1.638938
 		},
 		sound_event_weights = {
 			0.05,
@@ -297,9 +297,9 @@ local enemy_vo_enemy_traitor_guard_rifleman_female_b = {
 			0.05,
 			0.05,
 			0.05,
-			0.05,
+			0.05
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	traitor_guard_rifleman_take_position = {
 		randomize_indexes_n = 0,
@@ -324,7 +324,7 @@ local enemy_vo_enemy_traitor_guard_rifleman_female_b = {
 			"loc_enemy_traitor_guard_rifleman_female_b__take_position_17",
 			"loc_enemy_traitor_guard_rifleman_female_b__take_position_18",
 			"loc_enemy_traitor_guard_rifleman_female_b__take_position_19",
-			"loc_enemy_traitor_guard_rifleman_female_b__take_position_20",
+			"loc_enemy_traitor_guard_rifleman_female_b__take_position_20"
 		},
 		sound_events_duration = {
 			1.271792,
@@ -346,7 +346,7 @@ local enemy_vo_enemy_traitor_guard_rifleman_female_b = {
 			1.588688,
 			1.046417,
 			0.641583,
-			0.800229,
+			0.800229
 		},
 		sound_event_weights = {
 			0.05,
@@ -368,10 +368,10 @@ local enemy_vo_enemy_traitor_guard_rifleman_female_b = {
 			0.05,
 			0.05,
 			0.05,
-			0.05,
+			0.05
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("enemy_vo_enemy_traitor_guard_rifleman_female_b", enemy_vo_enemy_traitor_guard_rifleman_female_b)

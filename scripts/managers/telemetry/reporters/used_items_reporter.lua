@@ -7,10 +7,6 @@ UsedItemsReporter.init = function (self)
 	self._reports = {}
 end
 
-UsedItemsReporter.update = function (self, dt, t)
-	return
-end
-
 UsedItemsReporter.report = function (self)
 	if table.is_empty(self._reports) then
 		return
@@ -30,14 +26,14 @@ UsedItemsReporter.register_event = function (self, player, item_name)
 		local player_data = {
 			telemetry_subject = subject,
 			telemetry_game_session = player:telemetry_game_session(),
-			telemetry_current_instance = player:telemetry_current_instance(),
+			telemetry_current_instance = player:telemetry_current_instance()
 		}
 
 		self._reports[player_key] = {
 			player_data = player_data,
 			entries = {
-				[item_name] = 1,
-			},
+				[item_name] = 1
+			}
 		}
 	end
 end

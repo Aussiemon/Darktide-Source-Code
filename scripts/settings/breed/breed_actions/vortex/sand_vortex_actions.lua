@@ -6,15 +6,15 @@ local action_data = {
 		ignore_rotate_towards_target = true,
 		vo_event = nil,
 		anim_events = {
-			"idle",
-		},
+			"idle"
+		}
 	},
 	death = {
 		instant_ragdoll_chance = 0,
 		death_animations = {},
-		ragdoll_timings = {},
+		ragdoll_timings = {}
 	},
-	vortex_wander = {},
+	vortex_wander = {}
 }
 
 return action_data

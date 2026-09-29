@@ -29,7 +29,7 @@ function _noise(x, seed)
 end
 
 function _smoothed_noise(x, seed)
-	return _noise(x, seed) / 2 + _noise(x - 1, seed) / 4 + _noise(x + 1, seed) / 4
+	return _noise(x, seed) * 0.5 + _noise(x - 1, seed) * 0.25 + _noise(x + 1, seed) * 0.25
 end
 
 function _interpolated_noise(x, seed)

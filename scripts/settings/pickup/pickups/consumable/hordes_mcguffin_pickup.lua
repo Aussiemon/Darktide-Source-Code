@@ -13,7 +13,7 @@ local pickup_data = {
 
 		Level.trigger_event(level, "mcguffin_picked_up")
 		Managers.event:trigger("hordes_mode_on_mcguffin_picked_up")
-	end,
+	end
 }
 
 return pickup_data

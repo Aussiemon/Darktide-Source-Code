@@ -7,7 +7,7 @@ local CLIENT_RPCS = {
 	"rpc_destructible_damage_taken",
 	"rpc_destructible_last_destruction",
 	"rpc_sync_destructible",
-	"rpc_destructible_mark_for_deletion",
+	"rpc_destructible_mark_for_deletion"
 }
 
 DestructibleSystem.init = function (self, extension_system_creation_context, ...)
@@ -47,6 +47,16 @@ DestructibleSystem.clear_unit_ids_from_removed_level_list = function (self, unit
 		local unit_id = unit_id_list[i]
 
 		removed_level_unit_ids[unit_id] = nil
+	end
+end
+
+DestructibleSystem.clear_removed_level_unit_ids_in_range = function (self, first_index, end_index)
+	local removed_level_unit_ids = self._removed_level_unit_ids
+
+	for unit_id in pairs(removed_level_unit_ids) do
+		if first_index <= unit_id and unit_id < end_index then
+			removed_level_unit_ids[unit_id] = nil
+		end
 	end
 end
 

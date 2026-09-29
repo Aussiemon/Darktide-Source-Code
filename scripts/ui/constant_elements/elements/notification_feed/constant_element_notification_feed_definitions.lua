@@ -16,14 +16,14 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			-10,
 			450,
-			990,
-		},
-	},
+			990
+		}
+	}
 }
 
 local function _convert_to_material_color(color)
@@ -35,7 +35,7 @@ local function _convert_to_material_color(color)
 		color[2] / 255,
 		color[3] / 255,
 		color[4] / 255,
-		color[1] / 255,
+		color[1] / 255
 	}
 
 	return material_color
@@ -46,7 +46,7 @@ local create_notification_message = {
 		local text_compensation = 4
 		local icon_size = {
 			50,
-			50,
+			50
 		}
 		local text_font_style = table.clone(UIFontSettings.body)
 
@@ -57,11 +57,11 @@ local create_notification_message = {
 		text_font_style.offset = {
 			0,
 			0,
-			2,
+			2
 		}
 		text_font_style.size = {
 			header_size[1] * 2,
-			header_size[2] * 2,
+			header_size[2] * 2
 		}
 		text_font_style.text_color = table.clone(Color.terminal_text_header(255, true))
 		text_font_style.font_size = 20
@@ -79,15 +79,15 @@ local create_notification_message = {
 					vertical_alignment = "top",
 					size_addition = {
 						0,
-						20,
+						20
 					},
 					offset = {
 						0,
 						text_compensation,
-						0,
+						0
 					},
-					material_values = {},
-				},
+					material_values = {}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -99,25 +99,25 @@ local create_notification_message = {
 					scale_to_material = true,
 					vertical_alignment = "top",
 					size = {
-						50,
+						50
 					},
 					size_addition = {
 						0,
-						16,
+						16
 					},
 					offset = {
 						0,
 						text_compensation - 8,
-						3,
+						3
 					},
 					color = Color.white(0, true),
 					material_values = {
-						texture_map = "content/ui/textures/masks/notification_shine",
-					},
+						texture_map = "content/ui/textures/masks/notification_shine"
+					}
 				},
 				visibility_function = function (content)
 					return content.show_shine
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -132,14 +132,14 @@ local create_notification_message = {
 					offset = {
 						0,
 						4,
-						1,
+						1
 					},
 					color = Color.white(255, true),
-					material_values = {},
+					material_values = {}
 				},
-				visibility_function = function (content)
-					return content.icon
-				end,
+				visibility_function = function (content, style)
+					return content.icon and style.material_values.use_placeholder_texture == 0
+				end
 			},
 			{
 				pass_type = "text",
@@ -149,7 +149,7 @@ local create_notification_message = {
 				style = text_font_style,
 				visibility_function = function (content)
 					return content.text_1
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -159,7 +159,7 @@ local create_notification_message = {
 				style = text_font_style,
 				visibility_function = function (content)
 					return content.text_2
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -169,7 +169,7 @@ local create_notification_message = {
 				style = text_font_style,
 				visibility_function = function (content)
 					return content.text_3
-				end,
+				end
 			},
 			{
 				pass_type = "rect",
@@ -182,16 +182,16 @@ local create_notification_message = {
 					offset = {
 						0,
 						0,
-						1,
+						1
 					},
 					size = {
 						header_size[1],
-						7,
-					},
+						7
+					}
 				},
 				visibility_function = function (content)
 					return content.progress
-				end,
+				end
 			},
 			{
 				pass_type = "rect",
@@ -204,25 +204,25 @@ local create_notification_message = {
 					full_width = header_size[1],
 					size = {
 						header_size[1],
-						7,
+						7
 					},
 					offset = {
 						0,
 						0,
-						2,
-					},
+						2
+					}
 				},
 				visibility_function = function (content)
 					return content.progress
-				end,
-			},
+				end
+			}
 		}
 	end,
 	init = function (parent, widget, element)
 		local total_text_size = 0
 		local icon_size = {
 			0,
-			0,
+			0
 		}
 		local text_offset = 30
 		local max_text_width = 400
@@ -251,37 +251,37 @@ local create_notification_message = {
 			elseif element.icon_size == "large" then
 				icon_size = {
 					128,
-					128,
+					128
 				}
 				text_offset = 210
 			elseif element.icon_size == "medium" then
 				icon_size = {
 					80,
-					80,
+					80
 				}
 				text_offset = 130
 			elseif element.icon_size == "portrait_frame" then
 				icon_size = ItemSlotSettings.slot_portrait_frame and ItemSlotSettings.slot_portrait_frame.item_icon_size or {
 					90,
-					100,
+					100
 				}
 				text_offset = 210
 			elseif element.icon_size == "insignia" then
 				icon_size = ItemSlotSettings.slot_insignia and ItemSlotSettings.slot_insignia.item_icon_size or {
 					40,
-					90,
+					90
 				}
 				text_offset = 210
 			elseif element.icon_size == "currency" then
 				icon_size = {
 					104,
-					88,
+					88
 				}
 				text_offset = 130
 			else
 				icon_size = {
 					40,
-					40,
+					40
 				}
 				text_offset = 80
 			end
@@ -298,13 +298,13 @@ local create_notification_message = {
 
 				local width, height = Text.text_size(parent._parent:ui_renderer(), text.display_name, text_style, {
 					max_text_width,
-					1080,
+					1080
 				})
 
 				text_style.offset[2] = total_text_size
 				text_style.size = {
 					max_text_width,
-					height,
+					height
 				}
 				total_text_size = total_text_size + height + text_margin
 				widget.content[pass_name] = text.display_name
@@ -317,6 +317,7 @@ local create_notification_message = {
 
 		widget.content.icon = element.icon
 		widget.style.icon.material_values = element.icon_material_values or {}
+		widget.style.icon.material_values.use_placeholder_texture = 1
 		element.color = element.color or Color.terminal_background(255 * ConstantElementNotificationFeedSettings.default_alpha_value, true)
 		widget.style.background.material_values.background_color = _convert_to_material_color(element.color)
 		widget.style.background.material_values.line_color = _convert_to_material_color(element.line_color)
@@ -330,7 +331,7 @@ local create_notification_message = {
 
 			icon_size = {
 				scale_ratio * icon_size[1],
-				scale_ratio * icon_size[2],
+				scale_ratio * icon_size[2]
 			}
 		end
 
@@ -341,11 +342,11 @@ local create_notification_message = {
 
 		widget.size = {
 			widget_width,
-			widget_height,
+			widget_height
 		}
 		widget.style.background.size = {
 			widget_width,
-			height,
+			height
 		}
 		widget.style.shine.size[2] = height - background_compensation_top
 		widget.content.show_shine = element.show_shine
@@ -357,7 +358,7 @@ local create_notification_message = {
 		widget.style.icon.offset = {
 			-text_offset * 0.5 - notification_horizontal_start_offset,
 			widget.style.icon.offset[2] + widget_height * 0.5,
-			widget.style.icon.offset[3],
+			widget.style.icon.offset[3]
 		}
 		widget.style.progress_background.offset[2] = widget.style.progress_background.offset[2] + offset_content_compensation + background_compensation_top + widget_height
 		widget.style.progress.offset[2] = widget.style.progress_background.offset[2]
@@ -369,7 +370,7 @@ local create_notification_message = {
 			text_style.offset = {
 				-text_offset - notification_horizontal_start_offset,
 				text_style.offset[2] + offset_content_compensation + notification_vertical_margin,
-				text_style.offset[3],
+				text_style.offset[3]
 			}
 		end
 
@@ -379,7 +380,7 @@ local create_notification_message = {
 		widget.style.text_1.text_color[1] = 0
 		widget.style.text_2.text_color[1] = 0
 		widget.style.text_3.text_color[1] = 0
-	end,
+	end
 }
 local counter_font_style = table.clone(UIFontSettings.body)
 
@@ -390,13 +391,13 @@ counter_font_style.vertical_alignment = "top"
 counter_font_style.offset = {
 	-12,
 	-35,
-	2,
+	2
 }
 counter_font_style.text_color = Color.terminal_text_header(255, true)
 counter_font_style.font_size = 20
 counter_font_style.size = {
 	550,
-	20,
+	20
 }
 
 local widget_definitions = {
@@ -411,24 +412,24 @@ local widget_definitions = {
 				offset = {
 					0,
 					-10,
-					0,
+					0
 				},
 				size = {
 					550,
-					2,
-				},
-			},
+					2
+				}
+			}
 		},
 		{
 			pass_type = "text",
 			style_id = "queue_counter",
 			value = "",
 			value_id = "queue_counter",
-			style = counter_font_style,
-		},
+			style = counter_font_style
+		}
 	}, "background", {
-		visible = false,
-	}),
+		visible = false
+	})
 }
 local offset_end_position = 5
 local offset_start_position = header_size[1]
@@ -445,11 +446,11 @@ local animations = {
 				widget.style.background.offset[1] = offset_start_position
 				widget.style.icon.size_addition = {
 					widget.style.icon.size[1] * 0.9,
-					widget.style.icon.size[2] * 0.9,
+					widget.style.icon.size[2] * 0.9
 				}
 				widget.style.icon.original_size_addition = {
 					widget.style.icon.size_addition[1],
-					widget.style.icon.size_addition[2],
+					widget.style.icon.size_addition[2]
 				}
 				widget.style.background.color[1] = 255
 				widget.style.icon.color[1] = 0
@@ -463,7 +464,7 @@ local animations = {
 				widget.style.text_2.original_offset = widget.style.text_2.offset[1]
 				widget.style.text_3.offset[1] = widget.style.text_3.offset[1] + text_start_offset
 				widget.style.text_3.original_offset = widget.style.text_3.offset[1]
-			end,
+			end
 		},
 		{
 			end_time = 0.15,
@@ -474,7 +475,7 @@ local animations = {
 				local location_diff = offset_start_position - offset_end_position
 
 				widget.style.background.offset[1] = offset_end_position + (location_diff - location_diff * anim_progress)
-			end,
+			end
 		},
 		{
 			end_time = 0.6,
@@ -490,9 +491,9 @@ local animations = {
 
 				widget.style.icon.size_addition = {
 					width - width * anim_progress,
-					height - height * anim_progress,
+					height - height * anim_progress
 				}
-			end,
+			end
 		},
 		{
 			end_time = 0.35,
@@ -507,7 +508,7 @@ local animations = {
 				widget.style.text_2.offset[1] = widget.style.text_2.original_offset - 25 * anim_progress
 				widget.style.text_3.text_color[1] = 255 * anim_progress
 				widget.style.text_3.offset[1] = widget.style.text_3.original_offset - 25 * anim_progress
-			end,
+			end
 		},
 		{
 			end_time = 0.9,
@@ -519,8 +520,8 @@ local animations = {
 
 				widget.style.shine.color[1] = 255 * fade_anim_progress
 				widget.style.shine.offset[1] = -(header_size[1] * 1.5) * math.sin(anim_progress)
-			end,
-		},
+			end
+		}
 	},
 	popup_leave = {
 		{
@@ -535,14 +536,14 @@ local animations = {
 				local location_diff = offset_start_position - offset_end_position
 
 				widget.offset[1] = offset_end_position + location_diff * anim_progress
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
 	notification_message = create_notification_message,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
-	animations = animations,
+	animations = animations
 }

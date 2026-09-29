@@ -377,7 +377,7 @@ ScriptWorld.create_shading_environment = function (world, viewport, shading_envi
 	Viewport.set_data(viewport, "shading_settings", {
 		shading_environment_resource,
 		1,
-		ShadingEnvironmentBlendMask.ALL,
+		ShadingEnvironmentBlendMask.ALL
 	})
 
 	return shading_environment
@@ -415,7 +415,7 @@ ScriptWorld.spawn_level = function (world, name, position, rotation, spawn_units
 	spawned_level_count = spawned_level_count + 1
 	levels[name] = {
 		level = level,
-		id = spawned_level_count,
+		id = spawned_level_count
 	}
 
 	Log.info("ScriptWorld", "Registering level named: %q with id: %d", name, spawned_level_count)
@@ -443,7 +443,7 @@ ScriptWorld._register_nested_levels = function (levels, parent, last_count)
 
 		levels[sub_level_names[i]] = {
 			level = sub_levels[i],
-			id = last_count + i,
+			id = last_count + i
 		}
 	end
 
@@ -550,7 +550,7 @@ ScriptWorld.spawn_level_instance = function (world, name, position, rotation, sp
 	rotation = rotation or Quaternion.identity()
 
 	local euler_angles = {
-		Quaternion.to_euler_angles_xyz(rotation),
+		Quaternion.to_euler_angles_xyz(rotation)
 	}
 	local did_modify = false
 

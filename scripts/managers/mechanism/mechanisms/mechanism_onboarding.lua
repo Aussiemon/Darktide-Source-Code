@@ -7,16 +7,12 @@ local Missions = require("scripts/settings/mission/mission_templates")
 local StateGameplay = require("scripts/game_states/game/state_gameplay")
 local StateLoading = require("scripts/game_states/game/state_loading")
 local HOST_TYPES = MatchmakingConstants.HOST_TYPES
-local SINGLEPLAY_TYPES = MatchmakingConstants.SINGLEPLAY_TYPES
 local MechanismOnboarding = class("MechanismOnboarding", "MechanismBase")
 
 MechanismOnboarding.init = function (self, ...)
 	MechanismOnboarding.super.init(self, ...)
 
 	local context = self._context
-
-	self._singleplay_type = context.singleplay_type
-
 	local mission_name = context.mission_name
 	local mission_settings = Missions[mission_name]
 	local level_name = mission_settings.level
@@ -79,8 +75,8 @@ MechanismOnboarding.wanted_transition = function (self)
 			side_mission = side_mission,
 			next_state = StateGameplay,
 			next_state_params = {
-				mechanism_data = mechanism_data,
-			},
+				mechanism_data = mechanism_data
+			}
 		}
 	elseif state == "gameplay" then
 		if self._init_scenario and Managers.state.game_mode then
@@ -173,7 +169,7 @@ MechanismOnboarding._show_retry_popup = function (self)
 					self._retry_popup_id = nil
 
 					self:_retry_join()
-				end,
+				end
 			},
 			{
 				close_on_pressed = true,
@@ -183,9 +179,9 @@ MechanismOnboarding._show_retry_popup = function (self)
 					self._retry_popup_id = nil
 
 					Managers.party_immaterium:leave_party()
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -213,10 +209,6 @@ MechanismOnboarding.destroy = function (self)
 
 		self._retry_popup_id = nil
 	end
-end
-
-MechanismOnboarding.singleplay_type = function (self)
-	return self._singleplay_type
 end
 
 implements(MechanismOnboarding, MechanismBase.INTERFACE)

@@ -387,7 +387,7 @@ end
 
 local ALLOWED_INPUTS_IN_SPRINT = {
 	combat_ability = true,
-	wield = true,
+	wield = true
 }
 
 function _check_input(t, action_input_extension, weapon_extension, weapon_template, has_hip_fire_buff, grenade_ability_template)

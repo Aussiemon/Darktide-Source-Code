@@ -60,8 +60,8 @@ HavocService.default_havoc_cadence_status = function (self)
 		current_cadence = {
 			end_date = nil,
 			next_cadence_start_date = nil,
-			start_date = nil,
-		},
+			start_date = nil
+		}
 	}
 end
 
@@ -259,7 +259,7 @@ HavocService.activate_havoc_mission = function (self, order_id)
 
 	for i = 1, #party_members do
 		participants[#participants + 1] = {
-			accountId = party_members[i]:account_id(),
+			accountId = party_members[i]:account_id()
 		}
 	end
 
@@ -370,7 +370,7 @@ HavocService.can_all_party_members_play_havoc = function (self)
 				denied_info[#denied_info + 1] = {
 					member = member,
 					denied_reason = status,
-					is_myself = presence:is_myself(),
+					is_myself = presence:is_myself()
 				}
 				all_can_play = false
 			end

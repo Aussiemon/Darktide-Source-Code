@@ -25,7 +25,7 @@ local sound_data = {
 		vce_run_breath = "wwise/events/minions/play_beast_of_nurgle_vce_run_breath",
 		vce_spit = "wwise/events/minions/play_beast_of_nurgle_vce_spit",
 		vce_spit_short = "wwise/events/minions/play_beast_of_nurgle_vce_spit_short",
-		vce_swallow = "wwise/events/minions/play_beast_of_nurgle_vce_swallow",
+		vce_swallow = "wwise/events/minions/play_beast_of_nurgle_vce_swallow"
 	},
 	use_proximity_culling = {
 		footstep = false,
@@ -51,8 +51,8 @@ local sound_data = {
 		vce_run_breath = false,
 		vce_spit = false,
 		vce_spit_short = false,
-		vce_swallow = false,
-	},
+		vce_swallow = false
+	}
 }
 
 return sound_data

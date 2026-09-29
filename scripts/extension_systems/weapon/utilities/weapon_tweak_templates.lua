@@ -25,7 +25,7 @@ local template_types = WeaponTweakTemplateSettings.template_types
 local buff_targets = WeaponTweakTemplateSettings.buff_targets
 local DEFAULT_LERP_VALUE = WeaponTweakTemplateSettings.DEFAULT_LERP_VALUE
 local DEFAULT_STAT_TRAIT_VALUE = WeaponTweakTemplateSettings.DEFAULT_STAT_TRAIT_VALUE
-local DEFALT_FALLBACK_LERP_VALUE = WeaponTweakTemplateSettings.DEFALT_FALLBACK_LERP_VALUE
+local DEFAULT_FALLBACK_LERP_VALUE = WeaponTweakTemplateSettings.DEFAULT_FALLBACK_LERP_VALUE
 local WeaponTweakStatsUiDataStats = WeaponTweakStatsUiData.stats
 local WeaponTweakTemplates = {}
 local math_lerp = math.lerp
@@ -132,12 +132,10 @@ WeaponTweakTemplates.calculate_lerp_values = function (weapon_template, base_sta
 
 	if base_stat_definitions then
 		for base_stat_name, base_stat_definition in pairs(base_stat_definitions) do
-			local base_stat_value = base_stat_values[base_stat_name] or DEFAULT_STAT_TRAIT_VALUE
+			local base_stat_value_or_nil = base_stat_values[base_stat_name]
 			local overclock_modifier = overclock_modifiers[base_stat_name] or 0
 
-			base_stat_value = base_stat_value + overclock_modifier
-
-			_add_lerped_tweak_modifiers(weapon_tweaks, base_stat_definition, base_stat_value)
+			_add_lerped_tweak_modifiers(weapon_tweaks, base_stat_definition, base_stat_value_or_nil, overclock_modifier)
 		end
 	end
 
@@ -148,7 +146,7 @@ WeaponTweakTemplates.extract_buffs = function (weapon_template)
 	local buffs = {
 		[buff_targets.on_equip] = {},
 		[buff_targets.on_wield] = {},
-		[buff_targets.on_unwield] = {},
+		[buff_targets.on_unwield] = {}
 	}
 	local weapon_buffs = weapon_template.buffs
 
@@ -313,7 +311,7 @@ end
 function _lookup_entry(new_identifier, base_identifier)
 	return {
 		new_identifier = new_identifier,
-		base_identifier = base_identifier,
+		base_identifier = base_identifier
 	}
 end
 
@@ -384,7 +382,7 @@ function _resolve_template(out_template, base_template, lerp_values_or_nil, defa
 			end
 
 			if lerpable_value then
-				local t = current_lerp_values or default_lerp_value_or_nil or DEFALT_FALLBACK_LERP_VALUE
+				local t = current_lerp_values or default_lerp_value_or_nil or DEFAULT_FALLBACK_LERP_VALUE
 
 				if type(lerp_basic) == "table" then
 					out_template[key] = _lerp_array(lerp_basic, lerp_perfect, t)
@@ -433,7 +431,7 @@ function _add_tweak_modifiers(out_tweaks, modifier_definition)
 	end
 end
 
-local function _add_lerped_tweak_modifiers_helper(tweak_groups, lerp_t, out_tweak_target)
+local function _add_lerped_tweak_modifiers_helper(tweak_groups, lerp_t_or_nil, out_tweak_target)
 	for tweak_group_idx = 1, #tweak_groups do
 		local tweak_group = tweak_groups[tweak_group_idx]
 
@@ -444,6 +442,8 @@ local function _add_lerped_tweak_modifiers_helper(tweak_groups, lerp_t, out_twea
 			if type(tweak_value) == "table" then
 				local lerp_min = tweak_value.min
 				local lerp_max = tweak_value.max
+				local tweak_name = tweak_row[1]
+				local lerp_t = lerp_t_or_nil or DEFAULT_STAT_TRAIT_VALUE[tweak_name] or DEFAULT_STAT_TRAIT_VALUE.default
 
 				tweak_value = math_lerp(lerp_min, lerp_max, lerp_t)
 			end
@@ -453,7 +453,7 @@ local function _add_lerped_tweak_modifiers_helper(tweak_groups, lerp_t, out_twea
 	end
 end
 
-function _add_lerped_tweak_modifiers(out_tweaks, modifier_definition, lerp_t)
+function _add_lerped_tweak_modifiers(out_tweaks, modifier_definition, lerp_t_or_nil)
 	for template_type, targets in pairs(modifier_definition) do
 		if rawget(template_types, template_type) then
 			local out_tweak = out_tweaks[template_type] or {}
@@ -461,13 +461,13 @@ function _add_lerped_tweak_modifiers(out_tweaks, modifier_definition, lerp_t)
 			for target_template, tweak_groups in pairs(targets) do
 				local out_tweak_target = out_tweak[target_template] or {}
 
-				_add_lerped_tweak_modifiers_helper(tweak_groups, lerp_t, out_tweak_target)
+				_add_lerped_tweak_modifiers_helper(tweak_groups, lerp_t_or_nil, out_tweak_target)
 
 				if tweak_groups.overrides then
 					for sub_tweak_groups_id, sub_tweak_groups in pairs(tweak_groups.overrides) do
 						local sub_out_tweak_target = out_tweak_target[sub_tweak_groups_id] or {}
 
-						_add_lerped_tweak_modifiers_helper(sub_tweak_groups, lerp_t, sub_out_tweak_target)
+						_add_lerped_tweak_modifiers_helper(sub_tweak_groups, lerp_t_or_nil, sub_out_tweak_target)
 
 						out_tweak_target[sub_tweak_groups_id] = sub_out_tweak_target
 					end
@@ -492,7 +492,7 @@ function _build_templates(source_templates, base_template_lookup, lerp_values, o
 		local template_lerp_values = lerp_values and lerp_values[lookup_type]
 		local default_lerp_value_or_nil = template_lerp_values and template_lerp_values[DEFAULT_LERP_VALUE]
 
-		_resolve_template(new_template, base_template, template_lerp_values, default_lerp_value_or_nil or DEFALT_FALLBACK_LERP_VALUE, override_lerp_value_or_nil)
+		_resolve_template(new_template, base_template, template_lerp_values, default_lerp_value_or_nil, override_lerp_value_or_nil)
 
 		templates[new_identifier] = new_template
 	end
@@ -517,7 +517,7 @@ local BASE_TEMPLATES = {
 	[template_types.warp_charge] = WeaponWarpChargeTemplates,
 	[template_types.weapon_chain_lightning] = WeaponChainLightningTemplates,
 	[template_types.weapon_handling] = WeaponHandlingTemplates,
-	[template_types.weapon_shout] = WeaponShoutTemplates,
+	[template_types.weapon_shout] = WeaponShoutTemplates
 }
 
 WeaponTweakTemplates.get_base_stats = function (weapon_template, template_type, target)

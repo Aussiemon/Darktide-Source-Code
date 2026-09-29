@@ -283,12 +283,12 @@ ContractsView._setup_task_grid_layout = function (self)
 	local bottom_material = "content/ui/materials/frames/contracts_bottom"
 	local bottom_divider_size = {
 		732,
-		256,
+		256
 	}
 	local bottom_divider_position = {
 		0,
 		bottom_divider_size[2] * 0.5 - 40,
-		12,
+		12
 	}
 	local grid_divider_bottom_widget = self._task_grid:widget_by_name("grid_divider_bottom")
 
@@ -350,7 +350,7 @@ ContractsView._set_contract_info = function (self, contract_data)
 	local progress_content = progress_widget.content
 	local localization_content = {
 		tasks_completed = num_tasks_completed,
-		tasks_total = num_tasks,
+		tasks_total = num_tasks
 	}
 	local progress_text = Localize(ViewSettings.contract_progress_localization_string_format, true, localization_content)
 
@@ -416,9 +416,9 @@ ContractsView._populate_task_list = function (self, tasks)
 			task_reward = reward,
 			size = {
 				task_size_normal[1],
-				task_size_normal[2] + math.max(label_height - 10, 0),
+				task_size_normal[2] + math.max(label_height - 10, 0)
 			},
-			fulfilled = task_is_fulfilled,
+			fulfilled = task_is_fulfilled
 		}
 
 		if task_is_fulfilled then
@@ -436,7 +436,7 @@ ContractsView._populate_task_list = function (self, tasks)
 	table.sort(task_list, sort_function)
 
 	local list_padding = {
-		widget_type = "list_padding",
+		widget_type = "list_padding"
 	}
 
 	table.insert(task_list, 1, list_padding)
@@ -514,35 +514,35 @@ ContractsView._display_confirmation_popup = function (self, task_id, wallet)
 		popup_params.description_text = "loc_contracts_reroll_confimation_popup_description"
 		popup_params.description_text_params = {
 			cost = reroll_cost_amount,
-			balance = balance_amount,
+			balance = balance_amount
 		}
 		popup_params.options = {
 			{
 				close_on_pressed = true,
 				stop_exit_sound = true,
 				text = "loc_contracts_reroll_confimation_yes",
-				callback = callback(self, "cb_reroll_task_confirmed", task_id, wallet, reroll_cost),
+				callback = callback(self, "cb_reroll_task_confirmed", task_id, wallet, reroll_cost)
 			},
 			{
 				close_on_pressed = true,
 				hotkey = "back",
 				template_type = "terminal_button_small",
-				text = "loc_contracts_reroll_confimation_no",
-			},
+				text = "loc_contracts_reroll_confimation_no"
+			}
 		}
 	else
 		popup_params.title_text = "loc_contracts_reroll_insufficient_funds_popup_title"
 		popup_params.description_text = "loc_contracts_reroll_insufficient_funds_popup_description"
 		popup_params.description_text_params = {
 			cost = reroll_cost_amount,
-			balance = balance_amount,
+			balance = balance_amount
 		}
 		popup_params.options = {
 			{
 				close_on_pressed = true,
 				hotkey = "back",
-				text = "loc_contracts_reroll_insufficient_funds_close",
-			},
+				text = "loc_contracts_reroll_insufficient_funds_close"
+			}
 		}
 	end
 

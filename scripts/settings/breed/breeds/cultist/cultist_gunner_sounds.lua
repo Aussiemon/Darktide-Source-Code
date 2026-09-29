@@ -13,7 +13,7 @@ local sound_data = {
 		vce_death_gassed = "wwise/events/minions/play_enemy_cultist_gunner__death_quick_vce",
 		vce_death_long = "wwise/events/minions/play_enemy_cultist_gunner__death_quick_vce",
 		vce_grunt = "wwise/events/minions/play_enemy_cultist_gunner__stagger_vce",
-		vce_hurt = "wwise/events/minions/play_enemy_cultist_gunner__hurt_vce",
+		vce_hurt = "wwise/events/minions/play_enemy_cultist_gunner__hurt_vce"
 	},
 	use_proximity_culling = {
 		footstep = false,
@@ -21,8 +21,8 @@ local sound_data = {
 		stop_vce = false,
 		vce_death = false,
 		vce_death_long = false,
-		vce_hurt = false,
-	},
+		vce_hurt = false
+	}
 }
 
 table.add_missing(sound_data.events, RenegadeCommonSounds.events)

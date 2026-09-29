@@ -12,7 +12,7 @@ hordes_legendary_ogryn_buffs_data.hordes_buff_ogryn_box_of_surprises = {
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/big_buffs/hordes_buff_ogryn_box_of_surprises",
 	title = "Suprise !!!",
 	filter_category = filtering_categories.jackpot,
-	buff_stats = {},
+	buff_stats = {}
 }
 hordes_legendary_ogryn_buffs_data.hordes_buff_ogryn_omega_lucky_rock = {
 	description = "Ogryn rock has a 20% chance of one shotting the target hit",
@@ -24,9 +24,9 @@ hordes_legendary_ogryn_buffs_data.hordes_buff_ogryn_omega_lucky_rock = {
 		chance = {
 			format_type = "percentage",
 			prefix = "+",
-			value = 0.2,
-		},
-	},
+			value = 0.2
+		}
+	}
 }
 hordes_legendary_ogryn_buffs_data.hordes_buff_ogryn_taunt_on_lunge = {
 	description = "Ogryn charge now taunt enemies touched and takes 40% less damage from taunt enemies for 10s",
@@ -38,9 +38,9 @@ hordes_legendary_ogryn_buffs_data.hordes_buff_ogryn_taunt_on_lunge = {
 		damage = {
 			format_type = "percentage",
 			prefix = "+",
-			value = 0.4,
-		},
-	},
+			value = 0.4
+		}
+	}
 }
 hordes_legendary_ogryn_buffs_data.hordes_buff_ogryn_apply_fire_on_shout = {
 	description = "Ogryn taunt put 15 stacks of fire on ennemies",
@@ -51,9 +51,9 @@ hordes_legendary_ogryn_buffs_data.hordes_buff_ogryn_apply_fire_on_shout = {
 	buff_stats = {
 		stacks = {
 			format_type = "number",
-			value = 15,
-		},
-	},
+			value = 15
+		}
+	}
 }
 hordes_legendary_ogryn_buffs_data.hordes_buff_ogryn_fire_trail_on_lunge = {
 	description = "Using your lunge ability burns enemies around you.",
@@ -64,9 +64,9 @@ hordes_legendary_ogryn_buffs_data.hordes_buff_ogryn_fire_trail_on_lunge = {
 	buff_stats = {
 		stacks = {
 			format_type = "number",
-			value = 2,
-		},
-	},
+			value = 2
+		}
+	}
 }
 hordes_legendary_ogryn_buffs_data.hordes_buff_ogryn_rock_charge_while_wield = {
 	description = "Gain 25% damage every second while holding your friendly rock. Max of 400% increase.",
@@ -78,9 +78,9 @@ hordes_legendary_ogryn_buffs_data.hordes_buff_ogryn_rock_charge_while_wield = {
 		damage = {
 			format_type = "percentage",
 			prefix = "+",
-			value = 0.25,
-		},
-	},
+			value = 0.25
+		}
+	}
 }
 hordes_legendary_ogryn_buffs_data.hordes_buff_ogryn_biggest_boom_grenade = {
 	description = "Ogryn Grenade gains 100% damage and doubles the explosion size.",
@@ -92,9 +92,9 @@ hordes_legendary_ogryn_buffs_data.hordes_buff_ogryn_biggest_boom_grenade = {
 		dammage = {
 			format_type = "percentage",
 			prefix = "+",
-			value = 1,
-		},
-	},
+			value = 1
+		}
+	}
 }
 hordes_legendary_ogryn_buffs_data.hordes_buff_ogryn_increase_penetration_during_stance = {
 	description = "Ranged attacks gain 100% penetration on critical hits during Point-Blank Barrage.",
@@ -106,9 +106,9 @@ hordes_legendary_ogryn_buffs_data.hordes_buff_ogryn_increase_penetration_during_
 		penetration = {
 			format_type = "percentage",
 			prefix = "+",
-			value = 1,
-		},
-	},
+			value = 1
+		}
+	}
 }
 
 return hordes_legendary_ogryn_buffs_data

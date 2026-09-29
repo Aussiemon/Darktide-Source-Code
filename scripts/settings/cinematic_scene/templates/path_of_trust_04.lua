@@ -22,14 +22,14 @@ local cinematic_scene_templates = {
 			"slot_grenade_ability",
 			"slot_attachment_1",
 			"slot_attachment_2",
-			"slot_attachment_3",
+			"slot_attachment_3"
 		},
 		popup_info = {
 			button_text = "loc_popup_cutscene_strategium_accept_button",
 			description_text = "loc_popup_path_of_trust_cutscene_waiting_rannick_description",
-			header_text = "loc_popup_path_of_trust_cutscene_waiting_rannick_header",
-		},
-	},
+			header_text = "loc_popup_path_of_trust_cutscene_waiting_rannick_header"
+		}
+	}
 }
 
 return cinematic_scene_templates

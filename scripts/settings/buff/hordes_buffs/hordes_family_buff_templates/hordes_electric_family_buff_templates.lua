@@ -1,59 +1,26 @@
 ﻿-- chunkname: @scripts/settings/buff/hordes_buffs/hordes_family_buff_templates/hordes_electric_family_buff_templates.lua
 
-local Action = require("scripts/utilities/action/action")
-local Ammo = require("scripts/utilities/ammo")
-local Armor = require("scripts/utilities/attack/armor")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local Attack = require("scripts/utilities/attack/attack")
-local AttackSettings = require("scripts/settings/damage/attack_settings")
-local Breeds = require("scripts/settings/breed/breeds")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local BurningSettings = require("scripts/settings/burning/burning_settings")
 local CheckProcFunctions = require("scripts/settings/buff/helper_functions/check_proc_functions")
-local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local Explosion = require("scripts/utilities/attack/explosion")
-local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local FixedFrame = require("scripts/utilities/fixed_frame")
-local Health = require("scripts/utilities/health")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local HordesBuffsData = require("scripts/settings/buff/hordes_buffs/hordes_buffs_data")
 local HordesBuffsUtilities = require("scripts/settings/buff/hordes_buffs/hordes_buffs_utilities")
-local ImpactEffect = require("scripts/utilities/attack/impact_effect")
-local LiquidArea = require("scripts/extension_systems/liquid_area/utilities/liquid_area")
-local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
 local MinionState = require("scripts/utilities/minion_state")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
-local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local SharedBuffFunctions = require("scripts/settings/buff/helper_functions/shared_buff_functions")
-local Stagger = require("scripts/utilities/attack/stagger")
-local StaggerSettings = require("scripts/settings/damage/stagger_settings")
-local Stamina = require("scripts/utilities/attack/stamina")
-local Suppression = require("scripts/utilities/attack/suppression")
-local Toughness = require("scripts/utilities/toughness/toughness")
-local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
-local PI = math.pi
-local PI_2 = PI * 2
 local buff_categories = BuffSettings.buff_categories
-local buff_keywords = BuffSettings.keywords
 local group_keywords = BuffSettings.group_keywords
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
-local armor_types = ArmorSettings.types
-local attack_types = AttackSettings.attack_types
-local damage_types = DamageSettings.damage_types
 local hit_zone_names = HitZone.hit_zone_names
-local stagger_types = StaggerSettings.stagger_types
-local stagger_impact_comparison = StaggerSettings.stagger_impact_comparison
-local minion_burning_buff_effects = BurningSettings.buff_effects.minions
 local SFX_NAMES = HordesBuffsUtilities.SFX_NAMES
 local VFX_NAMES = HordesBuffsUtilities.VFX_NAMES
 local BROADPHASE_RESULTS = {}
 local range_melee = DamageSettings.in_melee_range
-local range_close = DamageSettings.ranged_close
-local range_far = DamageSettings.ranged_far
 local templates = {}
 
 table.make_unique(templates)
@@ -68,7 +35,7 @@ templates.hordes_buff_shock_on_ranged_hit = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_hit] = shock_on_ranged_hit_chance,
+		[proc_events.on_hit] = shock_on_ranged_hit_chance
 	},
 	check_proc_func = CheckProcFunctions.on_ranged_hit,
 	proc_func = function (params, template_data, template_context)
@@ -87,7 +54,7 @@ templates.hordes_buff_shock_on_ranged_hit = {
 			fx_system:trigger_wwise_event(SFX_NAMES.shock_proc, enemy_position)
 			fx_system:trigger_vfx(VFX_NAMES.single_target_shock, enemy_position)
 		end
-	end,
+	end
 }
 
 local shock_on_melee_hit_chance = HordesBuffsData.hordes_buff_shock_on_melee_hit.buff_stats.shock_chance.value
@@ -99,7 +66,7 @@ templates.hordes_buff_shock_on_melee_hit = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_hit] = shock_on_melee_hit_chance,
+		[proc_events.on_hit] = shock_on_melee_hit_chance
 	},
 	check_proc_func = CheckProcFunctions.on_melee_hit,
 	proc_func = function (params, template_data, template_context)
@@ -118,7 +85,7 @@ templates.hordes_buff_shock_on_melee_hit = {
 			fx_system:trigger_wwise_event(SFX_NAMES.shock_proc, enemy_position)
 			fx_system:trigger_vfx(VFX_NAMES.single_target_shock, enemy_position)
 		end
-	end,
+	end
 }
 
 local percent_extra_damage_vs_electructuted_enemies = HordesBuffsData.hordes_buff_damage_vs_electrocuted.buff_stats.damage.value
@@ -130,8 +97,8 @@ templates.hordes_buff_damage_vs_electrocuted = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	stat_buffs = {
-		[stat_buffs.damage_vs_electrocuted] = percent_extra_damage_vs_electructuted_enemies,
-	},
+		[stat_buffs.damage_vs_electrocuted] = percent_extra_damage_vs_electructuted_enemies
+	}
 }
 
 local shock_on_toughness_broken_range = HordesBuffsData.hordes_buff_shock_pulse_on_toughness_broken.buff_stats.range.value
@@ -144,7 +111,7 @@ templates.hordes_buff_shock_pulse_on_toughness_broken = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_player_toughness_broken] = 1,
+		[proc_events.on_player_toughness_broken] = 1
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -190,7 +157,7 @@ templates.hordes_buff_shock_pulse_on_toughness_broken = {
 
 		fx_system:trigger_wwise_event(SFX_NAMES.shock_aoe_big, player_position)
 		fx_system:trigger_vfx(VFX_NAMES.big_shock, player_position)
-	end,
+	end
 }
 
 local melee_instakill_on_electrocuted_enemy_chance = HordesBuffsData.hordes_buff_instakill_melee_hit_on_electrocuted_enemy.buff_stats.kill_chance.value
@@ -202,7 +169,7 @@ templates.hordes_buff_instakill_melee_hit_on_electrocuted_enemy = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_hit] = melee_instakill_on_electrocuted_enemy_chance,
+		[proc_events.on_hit] = melee_instakill_on_electrocuted_enemy_chance
 	},
 	check_proc_func = CheckProcFunctions.on_melee_hit,
 	proc_func = function (params, template_data, template_context)
@@ -254,7 +221,7 @@ templates.hordes_buff_instakill_melee_hit_on_electrocuted_enemy = {
 				end
 			end
 		end
-	end,
+	end
 }
 
 local improved_dodge_speed_percent = HordesBuffsData.hordes_buff_improved_dodge_speed_and_distance.buff_stats.fast.value
@@ -268,8 +235,8 @@ templates.hordes_buff_improved_dodge_speed_and_distance = {
 	buff_category = buff_categories.hordes_buff,
 	stat_buffs = {
 		[stat_buffs.dodge_speed_multiplier] = 1 + improved_dodge_speed_percent,
-		[stat_buffs.dodge_distance_modifier] = improved_dodge_range_percent,
-	},
+		[stat_buffs.dodge_distance_modifier] = improved_dodge_range_percent
+	}
 }
 templates.hordes_buff_shock_on_hit_after_dodge = {
 	class_name = "server_only_proc_buff",
@@ -278,7 +245,7 @@ templates.hordes_buff_shock_on_hit_after_dodge = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_successful_dodge] = 1,
+		[proc_events.on_successful_dodge] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		if not template_context.is_server then
@@ -293,7 +260,7 @@ templates.hordes_buff_shock_on_hit_after_dodge = {
 
 			buff_extension:add_internally_controlled_buff("hordes_buff_shock_on_hit_after_dodge_effect", t, "owner_unit", player_unit)
 		end
-	end,
+	end
 }
 templates.hordes_buff_shock_on_hit_after_dodge_effect = {
 	class_name = "server_only_proc_buff",
@@ -304,7 +271,7 @@ templates.hordes_buff_shock_on_hit_after_dodge_effect = {
 	refresh_duration_on_stack = true,
 	buff_category = buff_categories.hordes_sub_buff,
 	proc_events = {
-		[proc_events.on_player_hit_received] = 1,
+		[proc_events.on_player_hit_received] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_melee_hit,
 	proc_func = function (params, template_data, template_context)
@@ -330,7 +297,7 @@ templates.hordes_buff_shock_on_hit_after_dodge_effect = {
 				fx_system:trigger_vfx(VFX_NAMES.big_shock, enemy_position)
 			end
 		end
-	end,
+	end
 }
 templates.hordes_buff_shock_closest_enemy_on_interval = {
 	class_name = "interval_buff",
@@ -381,7 +348,7 @@ templates.hordes_buff_shock_closest_enemy_on_interval = {
 				fx_system:trigger_vfx(VFX_NAMES.single_target_shock, enemy_position)
 			end
 		end
-	end,
+	end
 }
 
 local percent_damage_reduction_close_to_electrocuted_enemy = HordesBuffsData.hordes_buff_damage_taken_close_to_electrocuted_enemy.buff_stats.damage_reduce.value
@@ -394,7 +361,7 @@ templates.hordes_buff_damage_taken_close_to_electrocuted_enemy = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_damage_taken] = 1,
+		[proc_events.on_damage_taken] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		return template_data.is_active and params.attacked_unit == template_context.unit
@@ -403,7 +370,7 @@ templates.hordes_buff_damage_taken_close_to_electrocuted_enemy = {
 		template_data.player_fx_extension:trigger_wwise_events_local_only(SFX_NAMES.reduced_damage_hit, false, template_context.unit)
 	end,
 	conditional_stat_buffs = {
-		[stat_buffs.damage_taken_modifier] = -percent_damage_reduction_close_to_electrocuted_enemy,
+		[stat_buffs.damage_taken_modifier] = -percent_damage_reduction_close_to_electrocuted_enemy
 	},
 	start_func = function (template_data, template_context)
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -469,7 +436,7 @@ templates.hordes_buff_damage_taken_close_to_electrocuted_enemy = {
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.is_active
-	end,
+	end
 }
 
 local coherency_percent_damage_reduction_close_to_electrocuted_enemy = HordesBuffsData.hordes_buff_coherency_damage_taken_close_to_electrocuted_enemy.buff_stats.damage_reduce.value
@@ -489,7 +456,7 @@ templates.hordes_buff_coherency_damage_taken_close_to_electrocuted_enemy = {
 		local coherency_system = Managers.state.extension:system("coherency_system")
 
 		coherency_system:add_external_buff(unit, "hordes_buff_coherency_damage_taken_close_to_electrocuted_enemy_effect")
-	end,
+	end
 }
 templates.hordes_buff_coherency_damage_taken_close_to_electrocuted_enemy_effect = {
 	class_name = "buff",
@@ -500,7 +467,7 @@ templates.hordes_buff_coherency_damage_taken_close_to_electrocuted_enemy_effect 
 	predicted = false,
 	buff_category = buff_categories.hordes_sub_buff,
 	conditional_stat_buffs = {
-		[stat_buffs.damage_taken_modifier] = -coherency_percent_damage_reduction_close_to_electrocuted_enemy,
+		[stat_buffs.damage_taken_modifier] = -coherency_percent_damage_reduction_close_to_electrocuted_enemy
 	},
 	start_func = function (template_data, template_context)
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -565,7 +532,7 @@ templates.hordes_buff_coherency_damage_taken_close_to_electrocuted_enemy_effect 
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.is_active
-	end,
+	end
 }
 
 return templates

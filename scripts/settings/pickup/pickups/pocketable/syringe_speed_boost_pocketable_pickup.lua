@@ -38,13 +38,13 @@ local pickup_data = {
 				local pickup_name = pickup_data.name
 				local data = {
 					pickup_name = pickup_name,
-					exchanged_unit = replaced_unit_name,
+					exchanged_unit = replaced_unit_name
 				}
 
 				Managers.telemetry_events:player_picked_up_stimm(player, data)
 			end
 		end
-	end,
+	end
 }
 
 return pickup_data

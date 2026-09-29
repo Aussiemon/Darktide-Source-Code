@@ -325,7 +325,7 @@ end
 
 ViewElementPerksItem._setup_tabs = function (self)
 	local tab_settings = {
-		num_tabs = RankSettings.max_perk_rank,
+		num_tabs = RankSettings.max_perk_rank
 	}
 	local widget_definitions = ViewElementPerksItemDefinitions.create_tab_widgets(tab_settings)
 	local widgets_by_name = self._widgets_by_name
@@ -426,7 +426,7 @@ ViewElementPerksItem._present = function (self, first_presentation)
 	local layout = {}
 
 	layout[#layout + 1] = {
-		widget_type = "spacing_vertical_small",
+		widget_type = "spacing_vertical_small"
 	}
 
 	for i = 1, #perks_data do
@@ -438,12 +438,12 @@ ViewElementPerksItem._present = function (self, first_presentation)
 		layout[#layout + 1] = {
 			widget_type = "perk",
 			perk_item = perk_item,
-			perk_rarity = rank,
+			perk_rarity = rank
 		}
 	end
 
 	layout[#layout + 1] = {
-		widget_type = "spacing_vertical",
+		widget_type = "spacing_vertical"
 	}
 
 	local left_click_callback = callback(self, "cb_on_grid_entry_left_pressed")

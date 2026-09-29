@@ -17,14 +17,14 @@ local views = {
 		preload_in_mission = "not_ps5",
 		state_bound = true,
 		enter_sound_events = {
-			UISoundEvents.system_menu_enter,
+			UISoundEvents.system_menu_enter
 		},
 		exit_sound_events = {
-			UISoundEvents.system_menu_exit,
+			UISoundEvents.system_menu_exit
 		},
 		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.ingame_menu,
-		},
+			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
+		}
 	},
 	news_view = {
 		class = "NewsView",
@@ -33,8 +33,8 @@ local views = {
 		path = "scripts/ui/views/news_view/news_view",
 		state_bound = true,
 		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.ingame_menu,
-		},
+			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
+		}
 	},
 	player_character_options_view = {
 		class = "PlayerCharacterOptionsView",
@@ -47,14 +47,14 @@ local views = {
 		preload_in_hub = "not_ps5_nor_lockhart",
 		state_bound = true,
 		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.ingame_menu,
+			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
 		},
 		enter_sound_events = {
-			UISoundEvents.default_menu_enter,
+			UISoundEvents.default_menu_enter
 		},
 		exit_sound_events = {
-			UISoundEvents.default_menu_exit,
-		},
+			UISoundEvents.default_menu_exit
+		}
 	},
 	options_view = {
 		class = "OptionsView",
@@ -67,14 +67,14 @@ local views = {
 		preload_in_mission = "not_ps5_nor_lockhart",
 		state_bound = true,
 		enter_sound_events = {
-			UISoundEvents.default_menu_enter,
+			UISoundEvents.default_menu_enter
 		},
 		exit_sound_events = {
-			UISoundEvents.default_menu_exit,
+			UISoundEvents.default_menu_exit
 		},
 		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.ingame_menu,
-		},
+			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
+		}
 	},
 	character_appearance_view = {
 		class = "CharacterAppearanceView",
@@ -89,14 +89,14 @@ local views = {
 			"content/levels/ui/cartel_selection/cartel_selection",
 			"content/levels/ui/character_create/character_create",
 			"content/levels/ui/character_create_cryptic/character_create_cryptic",
-			"content/levels/ui/forgeworld_selection/forgeworld_selection",
+			"content/levels/ui/forgeworld_selection/forgeworld_selection"
 		},
 		enter_sound_events = {
-			UISoundEvents.character_appearence_enter,
+			UISoundEvents.character_appearence_enter
 		},
 		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.appearance_menu,
-		},
+			options = WwiseGameSyncSettings.state_groups.options.appearance_menu
+		}
 	},
 	inventory_background_view = {
 		class = "InventoryBackgroundView",
@@ -108,16 +108,16 @@ local views = {
 		state_bound = true,
 		use_transition_ui = true,
 		levels = {
-			"content/levels/ui/inventory/inventory",
+			"content/levels/ui/inventory/inventory"
 		},
 		enter_sound_events = {
-			UISoundEvents.default_menu_enter,
+			UISoundEvents.default_menu_enter
 		},
 		exit_sound_events = {
-			UISoundEvents.default_menu_exit,
+			UISoundEvents.default_menu_exit
 		},
 		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.ingame_menu,
+			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
 		},
 		validation_function = function ()
 			local game_mode_manager = Managers.state.game_mode
@@ -132,7 +132,7 @@ local views = {
 			local can_open_view = not is_prologue_hub or played_basic_training
 
 			return can_open_view
-		end,
+		end
 	},
 	inventory_view = {
 		class = "InventoryView",
@@ -144,11 +144,11 @@ local views = {
 		preload_in_hub = "not_ps5",
 		state_bound = true,
 		dummy_data = {
-			debug = true,
+			debug = true
 		},
 		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.ingame_menu,
-		},
+			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
+		}
 	},
 	inventory_cosmetics_view = {
 		class = "InventoryCosmeticsView",
@@ -160,17 +160,17 @@ local views = {
 		state_bound = true,
 		use_transition_ui = true,
 		levels = {
-			"content/levels/ui/cosmetics_preview/cosmetics_preview",
+			"content/levels/ui/cosmetics_preview/cosmetics_preview"
 		},
 		dummy_data = {
-			debug = true,
+			debug = true
 		},
 		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.ingame_menu,
+			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
 		},
 		enter_sound_events = {
-			UISoundEvents.default_menu_enter,
-		},
+			UISoundEvents.default_menu_enter
+		}
 	},
 	inventory_weapons_view = {
 		class = "InventoryWeaponsView",
@@ -182,17 +182,17 @@ local views = {
 		state_bound = true,
 		use_transition_ui = true,
 		levels = {
-			"content/levels/ui/inventory_weapon_view/inventory_weapon_view",
+			"content/levels/ui/inventory_weapon_view/inventory_weapon_view"
 		},
 		dummy_data = {
-			debug = true,
+			debug = true
 		},
 		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.ingame_menu,
+			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
 		},
 		enter_sound_events = {
-			UISoundEvents.default_menu_enter,
-		},
+			UISoundEvents.default_menu_enter
+		}
 	},
 	inventory_weapon_details_view = {
 		class = "InventoryWeaponDetailsView",
@@ -204,14 +204,14 @@ local views = {
 		state_bound = true,
 		use_transition_ui = false,
 		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.ingame_menu,
+			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
 		},
 		enter_sound_events = {
-			UISoundEvents.default_menu_enter,
+			UISoundEvents.default_menu_enter
 		},
 		exit_sound_events = {
-			UISoundEvents.default_menu_exit,
-		},
+			UISoundEvents.default_menu_exit
+		}
 	},
 	cosmetics_inspect_view = {
 		class = "CosmeticsInspectView",
@@ -222,20 +222,20 @@ local views = {
 		state_bound = true,
 		use_transition_ui = true,
 		levels = {
-			"content/levels/ui/cosmetics_preview/cosmetics_preview",
+			"content/levels/ui/cosmetics_preview/cosmetics_preview"
 		},
 		dummy_data = {
-			debug = true,
+			debug = true
 		},
 		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.ingame_menu,
+			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
 		},
 		enter_sound_events = {
-			UISoundEvents.default_menu_enter,
+			UISoundEvents.default_menu_enter
 		},
 		exit_sound_events = {
-			UISoundEvents.default_menu_exit,
-		},
+			UISoundEvents.default_menu_exit
+		}
 	},
 	inventory_weapon_cosmetics_view = {
 		class = "InventoryWeaponCosmeticsView",
@@ -247,14 +247,14 @@ local views = {
 		state_bound = true,
 		use_transition_ui = true,
 		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.ingame_menu,
+			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
 		},
 		enter_sound_events = {
-			UISoundEvents.default_menu_enter,
+			UISoundEvents.default_menu_enter
 		},
 		exit_sound_events = {
-			UISoundEvents.default_menu_exit,
-		},
+			UISoundEvents.default_menu_exit
+		}
 	},
 	class_selection_view = {
 		class = "ClassSelectionView",
@@ -273,11 +273,11 @@ local views = {
 			"content/levels/ui/class_selection/class_selection_ogryn/class_selection_ogryn",
 			"content/levels/ui/class_selection/class_selection_psyker/class_selection_psyker",
 			"content/levels/ui/class_selection/class_selection_veteran/class_selection_veteran",
-			"content/levels/ui/class_selection/class_selection_zealot/class_selection_zealot",
+			"content/levels/ui/class_selection/class_selection_zealot/class_selection_zealot"
 		},
 		exit_sound_events = {
-			UISoundEvents.character_create_exit,
-		},
+			UISoundEvents.character_create_exit
+		}
 	},
 	splash_view = {
 		class = "SplashView",
@@ -286,7 +286,7 @@ local views = {
 		path = "scripts/ui/views/splash_view/splash_view",
 		preload_in_hub = "not_ps5_nor_lockhart",
 		preload_in_mission = "not_ps5_nor_lockhart",
-		state_bound = true,
+		state_bound = true
 	},
 	video_view = {
 		class = "VideoView",
@@ -297,24 +297,25 @@ local views = {
 		preload_in_hub = "always",
 		state_bound = false,
 		use_transition_ui = true,
-		wwise_state_query = true,
+		wwise_state_query = true
 	},
 	title_view = {
 		class = "TitleView",
 		display_name = "loc_title_view_display_name",
+		draw_while_loading = true,
 		package = "packages/ui/views/title_view/title_view",
 		path = "scripts/ui/views/title_view/title_view",
 		state_bound = true,
 		use_transition_ui = true,
 		enter_sound_events = {
-			UISoundEvents.title_screen_enter,
+			UISoundEvents.title_screen_enter
 		},
 		exit_sound_events = {
-			UISoundEvents.title_screen_exit,
+			UISoundEvents.title_screen_exit
 		},
 		wwise_states = {
-			music_game_state = WwiseGameSyncSettings.state_groups.music_game_state.title,
-		},
+			music_game_state = WwiseGameSyncSettings.state_groups.music_game_state.title
+		}
 	},
 	end_view = {
 		class = "EndView",
@@ -325,11 +326,11 @@ local views = {
 		state_bound = true,
 		use_transition_ui = true,
 		enter_sound_events = {
-			UISoundEvents.end_screen_enter,
+			UISoundEvents.end_screen_enter
 		},
 		exit_sound_events = {
-			UISoundEvents.end_screen_exit,
-		},
+			UISoundEvents.end_screen_exit
+		}
 	},
 	end_player_view = {
 		class = "EndPlayerView",
@@ -338,7 +339,7 @@ local views = {
 		package = "packages/ui/views/end_player_view/end_player_view",
 		parent_transition_view = "end_view",
 		path = "scripts/ui/views/end_player_view/end_player_view",
-		state_bound = false,
+		state_bound = false
 	},
 	loading_view = {
 		class = "LoadingView",
@@ -352,8 +353,8 @@ local views = {
 		preload_in_mission = "always",
 		use_transition_ui = "outro",
 		backgrounds = {
-			"loading_screen_background",
-		},
+			"loading_screen_background"
+		}
 	},
 	mission_intro_view = {
 		class = "MissionIntroView",
@@ -366,14 +367,14 @@ local views = {
 		preload_in_mission = "not_ps5_nor_lockhart",
 		use_transition_ui = true,
 		enter_sound_events = {
-			UISoundEvents.mission_briefing_start,
+			UISoundEvents.mission_briefing_start
 		},
 		exit_sound_events = {
-			UISoundEvents.mission_briefing_stop,
+			UISoundEvents.mission_briefing_stop
 		},
 		wwise_states = {
-			music_game_state = WwiseGameSyncSettings.state_groups.music_game_state.mission_briefing,
-		},
+			music_game_state = WwiseGameSyncSettings.state_groups.music_game_state.mission_briefing
+		}
 	},
 	blank_view = {
 		class = "BlankView",
@@ -381,7 +382,7 @@ local views = {
 		display_name = "loc_blank_view_display_name",
 		draw_while_loading = true,
 		path = "scripts/ui/views/blank_view/blank_view",
-		use_transition_ui = "outro",
+		use_transition_ui = "outro"
 	},
 	cutscene_view = {
 		class = "CutsceneView",
@@ -390,7 +391,7 @@ local views = {
 		path = "scripts/ui/views/cutscene_view/cutscene_view",
 		preload_in_hub = "always",
 		preload_in_mission = "always",
-		use_transition_ui = true,
+		use_transition_ui = true
 	},
 	splash_video_view = {
 		class = "SplashVideoView",
@@ -404,8 +405,11 @@ local views = {
 		use_transition_ui = true,
 		dummy_data = {
 			sound_name = "content/videos/fatshark_splash",
-			video_name = "content/videos/fatshark_splash",
+			video_name = "content/videos/fatshark_splash"
 		},
+		testify_flags = {
+			ui_views = false
+		}
 	},
 	mission_board_view = {
 		class = "MissionBoardView",
@@ -417,34 +421,35 @@ local views = {
 		state_bound = true,
 		use_transition_ui = true,
 		levels = {
-			"content/levels/ui/mission_board_player_journey/mission_board_player_journey",
+			"content/levels/ui/mission_board_player_journey/mission_board_player_journey"
 		},
 		enter_sound_events = {
-			UISoundEvents.mission_board_enter,
+			UISoundEvents.mission_board_enter
 		},
 		exit_sound_events = {
-			UISoundEvents.mission_board_exit,
+			UISoundEvents.mission_board_exit
 		},
 		wwise_states = {
 			music_game_state = WwiseGameSyncSettings.state_groups.music_game_state.mission_board,
-			options = WwiseGameSyncSettings.state_groups.options.ingame_menu,
-		},
+			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
+		}
 	},
 	lobby_view = {
 		class = "LobbyView",
 		disable_game_world = true,
 		display_name = "loc_lobby_view_display_name",
+		draw_while_loading = true,
 		package = "packages/ui/views/lobby_view/lobby_view",
 		path = "scripts/ui/views/lobby_view/lobby_view",
 		preload_in_hub = "always",
 		throttle_frame_rate = false,
 		use_transition_ui = true,
 		testify_flags = {
-			ui_views = false,
+			ui_views = false
 		},
 		wwise_states = {
-			music_game_state = WwiseGameSyncSettings.state_groups.music_game_state.loadout,
-		},
+			music_game_state = WwiseGameSyncSettings.state_groups.music_game_state.loadout
+		}
 	},
 	main_menu_view = {
 		class = "MainMenuView",
@@ -455,11 +460,14 @@ local views = {
 		path = "scripts/ui/views/main_menu_view/main_menu_view",
 		throttle_frame_rate = false,
 		enter_sound_events = {
-			UISoundEvents.main_menu_enter,
+			UISoundEvents.main_menu_enter
 		},
 		exit_sound_events = {
-			UISoundEvents.main_menu_exit,
+			UISoundEvents.main_menu_exit
 		},
+		testify_flags = {
+			ui_views = false
+		}
 	},
 	barber_vendor_background_view = {
 		class = "ContractsBackgroundView",
@@ -478,17 +486,17 @@ local views = {
 			"content/levels/ui/barber/barber",
 			"content/levels/ui/barber_character_appearance_cryptic/barber_character_appearance_cryptic",
 			"content/levels/ui/barber_character_appearance/barber_character_appearance",
-			"content/levels/ui/barber_character_mindwipe/barber_character_mindwipe",
+			"content/levels/ui/barber_character_mindwipe/barber_character_mindwipe"
 		},
 		enter_sound_events = {
-			UISoundEvents.barber_chirurgeon_on_enter,
+			UISoundEvents.barber_chirurgeon_on_enter
 		},
 		exit_sound_events = {
-			UISoundEvents.barber_chirurgeon_on_exit,
+			UISoundEvents.barber_chirurgeon_on_exit
 		},
 		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.vendor_menu,
-		},
+			options = WwiseGameSyncSettings.state_groups.options.vendor_menu
+		}
 	},
 	contracts_background_view = {
 		class = "ContractsBackgroundView",
@@ -503,17 +511,17 @@ local views = {
 		state_bound = true,
 		use_transition_ui = true,
 		levels = {
-			"content/levels/ui/contracts_view/contracts_view",
+			"content/levels/ui/contracts_view/contracts_view"
 		},
 		enter_sound_events = {
-			UISoundEvents.mark_vendor_on_enter,
+			UISoundEvents.mark_vendor_on_enter
 		},
 		exit_sound_events = {
-			UISoundEvents.mark_vendor_on_exit,
+			UISoundEvents.mark_vendor_on_exit
 		},
 		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.vendor_menu,
-		},
+			options = WwiseGameSyncSettings.state_groups.options.vendor_menu
+		}
 	},
 	contracts_view = {
 		class = "ContractsView",
@@ -524,14 +532,14 @@ local views = {
 		preload_in_hub = "not_ps5_nor_lockhart",
 		state_bound = true,
 		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.vendor_menu,
+			options = WwiseGameSyncSettings.state_groups.options.vendor_menu
 		},
 		enter_sound_events = {
-			UISoundEvents.default_menu_enter,
+			UISoundEvents.default_menu_enter
 		},
 		exit_sound_events = {
-			UISoundEvents.default_menu_exit,
-		},
+			UISoundEvents.default_menu_exit
+		}
 	},
 	marks_vendor_view = {
 		class = "MarksVendorView",
@@ -546,17 +554,17 @@ local views = {
 		state_bound = true,
 		use_transition_ui = false,
 		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.vendor_menu,
+			options = WwiseGameSyncSettings.state_groups.options.vendor_menu
 		},
 		testify_flags = {
-			ui_views = false,
+			ui_views = false
 		},
 		enter_sound_events = {
-			UISoundEvents.default_menu_enter,
+			UISoundEvents.default_menu_enter
 		},
 		exit_sound_events = {
-			UISoundEvents.default_menu_exit,
-		},
+			UISoundEvents.default_menu_exit
+		}
 	},
 	marks_goods_vendor_view = {
 		class = "MarksVendorView",
@@ -571,17 +579,17 @@ local views = {
 		state_bound = true,
 		use_transition_ui = false,
 		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.vendor_menu,
+			options = WwiseGameSyncSettings.state_groups.options.vendor_menu
 		},
 		dummy_data = {
-			debug = true,
+			debug = true
 		},
 		enter_sound_events = {
-			UISoundEvents.default_menu_enter,
+			UISoundEvents.default_menu_enter
 		},
 		exit_sound_events = {
-			UISoundEvents.default_menu_exit,
-		},
+			UISoundEvents.default_menu_exit
+		}
 	},
 	credits_vendor_view = {
 		class = "CreditsVendorView",
@@ -596,17 +604,17 @@ local views = {
 		state_bound = true,
 		use_transition_ui = false,
 		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.vendor_menu,
+			options = WwiseGameSyncSettings.state_groups.options.vendor_menu
 		},
 		testify_flags = {
-			ui_views = false,
+			ui_views = false
 		},
 		enter_sound_events = {
-			UISoundEvents.default_menu_enter,
+			UISoundEvents.default_menu_enter
 		},
 		exit_sound_events = {
-			UISoundEvents.default_menu_exit,
-		},
+			UISoundEvents.default_menu_exit
+		}
 	},
 	credits_vendor_background_view = {
 		class = "ContractsBackgroundView",
@@ -621,17 +629,17 @@ local views = {
 		state_bound = true,
 		use_transition_ui = true,
 		levels = {
-			"content/levels/ui/credits_vendor/credits_vendor",
+			"content/levels/ui/credits_vendor/credits_vendor"
 		},
 		enter_sound_events = {
-			UISoundEvents.credits_vendor_on_enter,
+			UISoundEvents.credits_vendor_on_enter
 		},
 		exit_sound_events = {
-			UISoundEvents.credits_vendor_on_exit,
+			UISoundEvents.credits_vendor_on_exit
 		},
 		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.vendor_menu,
-		},
+			options = WwiseGameSyncSettings.state_groups.options.vendor_menu
+		}
 	},
 	main_menu_background_view = {
 		class = "MainMenuBackgroundView",
@@ -642,8 +650,8 @@ local views = {
 		throttle_frame_rate = false,
 		use_transition_ui = true,
 		levels = {
-			"content/levels/ui/main_menu/main_menu",
-		},
+			"content/levels/ui/main_menu/main_menu"
+		}
 	},
 	mission_voting_view = {
 		class = "MissionVotingView",
@@ -657,11 +665,11 @@ local views = {
 		state_bound = true,
 		throttle_frame_rate = false,
 		enter_sound_events = {
-			UISoundEvents.mission_vote_popup_enter,
+			UISoundEvents.mission_vote_popup_enter
 		},
 		testify_flags = {
-			ui_views = false,
-		},
+			ui_views = false
+		}
 	},
 	social_menu_view = {
 		class = "SocialMenuView",
@@ -675,17 +683,17 @@ local views = {
 		state_bound = true,
 		use_transition_ui = true,
 		levels = {
-			"content/levels/ui/inventory/inventory",
+			"content/levels/ui/inventory/inventory"
 		},
 		enter_sound_events = {
-			UISoundEvents.default_menu_enter,
+			UISoundEvents.default_menu_enter
 		},
 		exit_sound_events = {
-			UISoundEvents.default_menu_exit,
+			UISoundEvents.default_menu_exit
 		},
 		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.ingame_menu,
-		},
+			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
+		}
 	},
 	social_menu_roster_view = {
 		class = "SocialMenuRosterView",
@@ -695,7 +703,7 @@ local views = {
 		path = "scripts/ui/views/social_menu_roster_view/social_menu_roster_view",
 		preload_in_hub = "not_ps5",
 		preload_in_mission = "not_ps5",
-		state_bound = true,
+		state_bound = true
 	},
 	scanner_display_view = {
 		allow_hud = true,
@@ -703,7 +711,7 @@ local views = {
 		display_name = "loc_scanner_display_name",
 		package = "packages/ui/views/scanner_display_view/scanner_display_view",
 		path = "scripts/ui/views/scanner_display_view/scanner_display_view",
-		state_bound = true,
+		state_bound = true
 	},
 	custom_settings_view = {
 		class = "CustomSettingsView",
@@ -712,8 +720,8 @@ local views = {
 		path = "scripts/ui/views/custom_settings_view/custom_settings_view",
 		state_bound = true,
 		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.ingame_menu,
-		},
+			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
+		}
 	},
 	training_grounds_view = {
 		class = "TrainingGroundsView",
@@ -725,17 +733,17 @@ local views = {
 		state_bound = true,
 		use_transition_ui = true,
 		levels = {
-			"content/levels/ui/training_grounds/training_grounds",
+			"content/levels/ui/training_grounds/training_grounds"
 		},
 		enter_sound_events = {
-			TrainingGroundsSoundEvents.hub_pod_interact_enter,
+			TrainingGroundsSoundEvents.hub_pod_interact_enter
 		},
 		exit_sound_events = {
-			TrainingGroundsSoundEvents.hub_pod_interact_exit,
+			TrainingGroundsSoundEvents.hub_pod_interact_exit
 		},
 		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.vendor_menu,
-		},
+			options = WwiseGameSyncSettings.state_groups.options.vendor_menu
+		}
 	},
 	training_grounds_options_view = {
 		class = "TrainingGroundsOptionsView",
@@ -746,8 +754,8 @@ local views = {
 		preload_in_hub = "not_ps5_nor_lockhart",
 		state_bound = true,
 		levels = {
-			"content/levels/ui/training_grounds/training_grounds",
-		},
+			"content/levels/ui/training_grounds/training_grounds"
+		}
 	},
 	credits_view = {
 		class = "CreditsView",
@@ -758,8 +766,8 @@ local views = {
 		state_bound = true,
 		wwise_states = {
 			music_game_state = WwiseGameSyncSettings.state_groups.music_game_state.credits,
-			options = WwiseGameSyncSettings.state_groups.options.credits,
-		},
+			options = WwiseGameSyncSettings.state_groups.options.credits
+		}
 	},
 	talent_builder_view = {
 		class = "TalentBuilderView",
@@ -769,17 +777,17 @@ local views = {
 		preload_in_hub = "not_ps5_nor_lockhart",
 		state_bound = true,
 		package = {
-			"packages/ui/views/talent_builder_view/talent_builder_view",
+			"packages/ui/views/talent_builder_view/talent_builder_view"
 		},
 		testify_flags = {
-			ui_views = false,
+			ui_views = false
 		},
 		enter_sound_events = {
-			UISoundEvents.talent_menu_enter,
+			UISoundEvents.talent_menu_enter
 		},
 		exit_sound_events = {
-			UISoundEvents.talent_menu_exit,
-		},
+			UISoundEvents.talent_menu_exit
+		}
 	},
 	broker_stimm_builder_view = {
 		class = "TalentBuilderView",
@@ -790,14 +798,14 @@ local views = {
 		preload_in_hub = "not_ps5_nor_lockhart",
 		state_bound = true,
 		testify_flags = {
-			ui_views = false,
+			ui_views = false
 		},
 		enter_sound_events = {
-			UISoundEvents.talent_menu_enter,
+			UISoundEvents.talent_menu_enter
 		},
 		exit_sound_events = {
-			UISoundEvents.talent_menu_exit,
-		},
+			UISoundEvents.talent_menu_exit
+		}
 	},
 	live_events_view = {
 		class = "ContractsView",
@@ -808,15 +816,15 @@ local views = {
 		preload_in_hub = "not_ps5_nor_lockhart",
 		state_bound = true,
 		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.vendor_menu,
+			options = WwiseGameSyncSettings.state_groups.options.vendor_menu
 		},
 		enter_sound_events = {
-			UISoundEvents.default_menu_enter,
+			UISoundEvents.default_menu_enter
 		},
 		exit_sound_events = {
-			UISoundEvents.default_menu_exit,
-		},
-	},
+			UISoundEvents.default_menu_exit
+		}
+	}
 }
 
 local function _declare_view(name, settings)
@@ -850,6 +858,7 @@ _declare_view("dlc_purchase_view", require("scripts/ui/views/dlc_purchase_view/d
 _declare_view("premium_currency_purchase_view", require("scripts/ui/views/premium_currency_purchase_view/premium_currency_purchase_view_declaration_settings"))
 _declare_view("player_survey_view", require("scripts/ui/views/player_survey_view/player_survey_view_declaration_settings"))
 _declare_view("live_event_skulls_guns_progress_view", require("scripts/ui/views/live_events_view/live_event_skulls_guns_progress_view/live_event_skulls_guns_progress_view_declaration_settings"))
+_declare_view("live_event_torment_progress_view", require("scripts/ui/views/live_events_view/live_event_torment_progress_view/live_event_torment_progress_view_declaration_settings"))
 
 for view_name, settings in pairs(views) do
 	settings.name = view_name

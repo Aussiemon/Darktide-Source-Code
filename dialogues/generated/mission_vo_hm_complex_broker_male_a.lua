@@ -9,24 +9,24 @@ local mission_vo_hm_complex_broker_male_a = {
 			"loc_broker_male_a__guidance_starting_area_02",
 			"loc_broker_male_a__guidance_starting_area_03",
 			"loc_broker_male_a__guidance_starting_area_04",
-			"loc_broker_male_a__guidance_starting_area_05",
+			"loc_broker_male_a__guidance_starting_area_05"
 		},
 		sound_events_duration = {
 			4.146938,
 			3.423625,
 			2.380875,
 			5.720115,
-			2.603885,
+			2.603885
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_hm_complex_broker_male_a", mission_vo_hm_complex_broker_male_a)

@@ -18,13 +18,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	layout_background = {
 		horizontal_alignment = "left",
@@ -32,13 +32,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			256,
-			256,
+			256
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	middle_background = {
 		horizontal_alignment = "center",
@@ -46,13 +46,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			256,
-			256,
+			256
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	talent = {
 		horizontal_alignment = "left",
@@ -60,13 +60,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			110,
-			110,
+			110
 		},
 		position = {
 			0,
 			0,
-			5,
-		},
+			5
+		}
 	},
 	gamepad_cursor_pivot = {
 		horizontal_alignment = "left",
@@ -74,13 +74,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			1,
-			1,
+			1
 		},
 		position = {
 			0,
 			0,
-			500,
-		},
+			500
+		}
 	},
 	gamepad_cursor = {
 		horizontal_alignment = "center",
@@ -88,13 +88,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			80,
-			125,
+			125
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	summary_window = {
 		horizontal_alignment = "center",
@@ -104,8 +104,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			30,
-			170,
-		},
+			170
+		}
 	},
 	summary_grid = {
 		horizontal_alignment = "center",
@@ -115,8 +115,8 @@ local scenegraph_definition = {
 		position = {
 			-5,
 			-20,
-			1,
-		},
+			1
+		}
 	},
 	tutorial_window = {
 		horizontal_alignment = "center",
@@ -126,8 +126,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			30,
-			170,
-		},
+			170
+		}
 	},
 	tutorial_grid = {
 		horizontal_alignment = "right",
@@ -137,8 +137,8 @@ local scenegraph_definition = {
 		position = {
 			-60,
 			-120,
-			2,
-		},
+			2
+		}
 	},
 	tutorial_button_1 = {
 		horizontal_alignment = "center",
@@ -146,13 +146,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			300,
-			40,
+			40
 		},
 		position = {
 			-170,
 			-40,
-			3,
-		},
+			3
+		}
 	},
 	tutorial_button_2 = {
 		horizontal_alignment = "center",
@@ -160,14 +160,14 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			300,
-			40,
+			40
 		},
 		position = {
 			170,
 			-40,
-			3,
-		},
-	},
+			3
+		}
+	}
 }
 local overlay_scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
@@ -177,13 +177,13 @@ local overlay_scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	scroll_background = {
 		horizontal_alignment = "center",
@@ -191,13 +191,13 @@ local overlay_scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			256,
-			256,
+			256
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	tooltip = {
 		horizontal_alignment = "left",
@@ -205,13 +205,13 @@ local overlay_scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			400,
-			400,
+			400
 		},
 		position = {
 			0,
 			0,
-			130,
-		},
+			130
+		}
 	},
 	info_banner = {
 		horizontal_alignment = "left",
@@ -219,13 +219,13 @@ local overlay_scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			402,
-			658,
+			658
 		},
 		position = {
 			60,
 			270,
-			10,
-		},
+			10
+		}
 	},
 	talent_points = {
 		horizontal_alignment = "center",
@@ -233,13 +233,13 @@ local overlay_scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			400,
-			50,
+			50
 		},
 		position = {
 			0,
 			130,
-			10,
-		},
+			10
+		}
 	},
 	summary_header = {
 		horizontal_alignment = "center",
@@ -247,13 +247,13 @@ local overlay_scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			300,
-			50,
+			50
 		},
 		position = {
 			0,
 			320,
-			10,
-		},
+			10
+		}
 	},
 	summary_button = {
 		horizontal_alignment = "center",
@@ -261,13 +261,13 @@ local overlay_scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			300,
-			50,
+			50
 		},
 		position = {
 			0,
 			-90,
-			1,
-		},
+			1
+		}
 	},
 	loadout_slot_ability = {
 		horizontal_alignment = "center",
@@ -275,13 +275,13 @@ local overlay_scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			80,
-			80,
+			80
 		},
 		position = {
 			-90,
 			80,
-			1,
-		},
+			1
+		}
 	},
 	loadout_slot_tactical = {
 		horizontal_alignment = "center",
@@ -289,13 +289,13 @@ local overlay_scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			80,
-			80,
+			80
 		},
 		position = {
 			0,
 			80,
-			1,
-		},
+			1
+		}
 	},
 	loadout_slot_aura = {
 		horizontal_alignment = "center",
@@ -303,13 +303,13 @@ local overlay_scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			80,
-			80,
+			80
 		},
 		position = {
 			90,
 			80,
-			1,
-		},
+			1
+		}
 	},
 	talent_points_total = {
 		horizontal_alignment = "center",
@@ -317,14 +317,14 @@ local overlay_scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			400,
-			50,
+			50
 		},
 		position = {
 			0,
 			130,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 
 local function node_highligt_change_function(content, style, _, dt)
@@ -415,15 +415,15 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size_addition = {
 					0,
-					-160,
+					-160
 				},
 				offset = {
 					0,
 					100,
-					10,
-				},
-			},
-		},
+					10
+				}
+			}
+		}
 	}, "screen"),
 	tooltip = UIWidget.create_definition({
 		{
@@ -433,17 +433,17 @@ local widget_definitions = {
 					220,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
 			style_id = "background",
 			value = "content/ui/materials/backgrounds/default_square",
 			style = {
-				color = Color.terminal_background(nil, true),
-			},
+				color = Color.terminal_background(nil, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -456,9 +456,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -471,14 +471,14 @@ local widget_definitions = {
 				color = Color.black(200, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -491,9 +491,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					2,
-				},
-			},
+					2
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -506,9 +506,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -527,22 +527,22 @@ local widget_definitions = {
 					100,
 					255,
 					200,
-					50,
+					50
 				},
 				size = {
 					nil,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -559,24 +559,24 @@ local widget_definitions = {
 				text_color = Color.terminal_text_body(255, true),
 				size = {
 					nil,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				color = {
 					100,
 					100,
 					255,
-					0,
+					0
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -593,18 +593,18 @@ local widget_definitions = {
 				text_color = Color.terminal_text_body_sub_header(255, true),
 				size = {
 					nil,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -621,18 +621,18 @@ local widget_definitions = {
 				text_color = Color.terminal_text_body_sub_header(255, true),
 				size = {
 					nil,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -649,24 +649,24 @@ local widget_definitions = {
 				text_color = Color.terminal_text_body_sub_header(255, true),
 				size = {
 					nil,
-					0,
+					0
 				},
 				color = {
 					100,
 					0,
 					0,
-					255,
+					255
 				},
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -683,18 +683,18 @@ local widget_definitions = {
 				text_color = Color.terminal_text_body(200, true),
 				size = {
 					nil,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -711,18 +711,18 @@ local widget_definitions = {
 				text_color = Color.terminal_text_body(255, true),
 				size = {
 					nil,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -740,28 +740,28 @@ local widget_definitions = {
 					255,
 					142,
 					60,
-					60,
+					60
 				},
 				size = {
 					nil,
-					0,
+					0
 				},
 				color = {
 					100,
 					0,
 					0,
-					255,
+					255
 				},
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -779,28 +779,28 @@ local widget_definitions = {
 					255,
 					198,
 					83,
-					83,
+					83
 				},
 				size = {
 					nil,
-					0,
+					0
 				},
 				color = {
 					255,
 					159,
 					67,
-					67,
+					67
 				},
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -818,18 +818,18 @@ local widget_definitions = {
 				cant_interact_color = Color.text_cant_afford(255, true),
 				size = {
 					nil,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -846,18 +846,18 @@ local widget_definitions = {
 				text_color = Color.text_default(255, true),
 				size = {
 					nil,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -866,20 +866,20 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					nil,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				color = {
 					150,
 					35,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -888,21 +888,21 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					nil,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				color = {
 					100,
 					0,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "tooltip"),
 	scroll_background = UIWidget.create_definition({
 		{
@@ -913,15 +913,15 @@ local widget_definitions = {
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "scroll_background", nil, nil),
 	screen_effects = UIWidget.create_definition({
 		{
@@ -931,20 +931,20 @@ local widget_definitions = {
 				horizontal_alignment = "center",
 				vertical_alignment = "top",
 				size = {
-					1920,
+					1920
 				},
 				color = {
 					255,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					2,
-				},
-			},
+					2
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -954,18 +954,18 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					nil,
-					130,
+					130
 				},
 				color = {
 					255,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					-20,
-					25,
+					25
 				},
 				material_values = {
 					offset = 0.8,
@@ -974,10 +974,10 @@ local widget_definitions = {
 						0,
 						0,
 						0,
-						0,
-					},
-				},
-			},
+						0
+					}
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -987,18 +987,18 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					nil,
-					60,
+					60
 				},
 				color = {
 					255,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					25,
+					25
 				},
 				material_values = {
 					offset = 0.8,
@@ -1007,11 +1007,11 @@ local widget_definitions = {
 						0,
 						0,
 						0,
-						0,
-					},
-				},
-			},
-		},
+						0
+					}
+				}
+			}
+		}
 	}, "screen"),
 	info_banner = UIWidget.create_definition({
 		{
@@ -1022,21 +1022,21 @@ local widget_definitions = {
 				horizontal_alignment = "center",
 				vertical_alignment = "center",
 				material_values = {
-					effect_progress = 0,
+					effect_progress = 0
 				},
 				size = {
 					380,
-					228,
+					228
 				},
 				offset = {
 					0,
 					-300,
-					5,
+					5
 				},
 				size_addition = {
 					0,
-					0,
-				},
+					0
+				}
 			},
 			change_function = function (content, style, _, dt)
 				local material_values = style.material_values
@@ -1060,7 +1060,7 @@ local widget_definitions = {
 					size_addition[1] = size_anim_value
 					size_addition[2] = size_anim_value
 				end
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -1073,14 +1073,14 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				color = Color.white(255, true),
 				size_addition = {
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1091,19 +1091,19 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					310,
-					560,
+					560
 				},
 				offset = {
 					0,
 					40,
-					0,
+					0
 				},
 				size_addition = {
 					24,
-					24,
+					24
 				},
-				color = Color.terminal_grid_background(nil, true),
-			},
+				color = Color.terminal_grid_background(nil, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1115,19 +1115,19 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					254,
-					14,
+					14
 				},
 				offset = {
 					0,
 					280,
-					0,
+					0
 				},
 				color = Color.white(255, true),
 				size_addition = {
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1139,24 +1139,24 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					402,
-					116,
+					116
 				},
 				offset = {
 					0,
 					-36,
-					3,
+					3
 				},
 				color = Color.white(255, true),
 				size_addition = {
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "info_banner"),
 	summary_button = UIWidget.create_definition(ButtonPassTemplates.input_legend_button, "summary_button", {
 		text = "",
-		visible = true,
+		visible = true
 	}),
 	summary_header = UIWidget.create_definition({
 		{
@@ -1174,11 +1174,11 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
-			value = Localize("loc_alias_talent_builder_view_title_summary"),
-		},
+			value = Localize("loc_alias_talent_builder_view_title_summary")
+		}
 	}, "summary_header"),
 	talent_points = UIWidget.create_definition({
 		{
@@ -1196,10 +1196,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
-			value = Localize("loc_talent_talent_points"),
+			value = Localize("loc_talent_talent_points")
 		},
 		{
 			pass_type = "text",
@@ -1217,10 +1217,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					50,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "talent_points"),
 	loadout_slot_ability = UIWidget.create_definition({
 		{
@@ -1228,21 +1228,21 @@ local widget_definitions = {
 			pass_type = "hotspot",
 			style_id = "hotspot",
 			content = {
-				hover_type = "circle",
+				hover_type = "circle"
 			},
 			style = {
 				horizontal_alignment = "center",
 				vertical_alignment = "center",
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1254,15 +1254,15 @@ local widget_definitions = {
 					frame = "content/ui/textures/frames/talents/hex_frame",
 					icon_mask = "content/ui/textures/frames/talents/hex_frame_mask",
 					intensity = 0,
-					saturation = 1,
+					saturation = 1
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
-			change_function = node_icon_change_function,
+			change_function = node_icon_change_function
 		},
 		{
 			pass_type = "texture",
@@ -1272,7 +1272,7 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				color = Color.white(255, true),
 				material_values = {
@@ -1280,17 +1280,17 @@ local widget_definitions = {
 						255,
 						234,
 						255,
-						255,
+						255
 					}),
 					blur_color = ColorUtilities.format_color_to_material({
 						255,
 						73,
 						161,
-						242,
-					}),
-				},
+						242
+					})
+				}
 			},
-			change_function = node_highligt_change_function,
+			change_function = node_highligt_change_function
 		},
 		{
 			pass_type = "texture",
@@ -1300,9 +1300,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
-				color = Color.ui_terminal(255, true),
+				color = Color.ui_terminal(255, true)
 			},
 			change_function = function (content, style)
 				local hotspot = content.hotspot
@@ -1310,12 +1310,12 @@ local widget_definitions = {
 				local hover_alpha = anim_progress * 255
 
 				style.color[1] = hover_alpha
-			end,
-		},
+			end
+		}
 	}, "loadout_slot_ability", {
 		hotspot = {
-			on_hover_sound = UISoundEvents.default_mouse_hover,
-		},
+			on_hover_sound = UISoundEvents.default_mouse_hover
+		}
 	}),
 	loadout_slot_aura = UIWidget.create_definition({
 		{
@@ -1327,14 +1327,14 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1346,15 +1346,15 @@ local widget_definitions = {
 					frame = "content/ui/textures/frames/talents/circular_frame",
 					icon_mask = "content/ui/textures/frames/talents/circular_frame_mask",
 					intensity = 0,
-					saturation = 1,
+					saturation = 1
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
-			change_function = node_icon_change_function,
+			change_function = node_icon_change_function
 		},
 		{
 			pass_type = "texture",
@@ -1364,7 +1364,7 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				color = Color.white(255, true),
 				material_values = {
@@ -1372,17 +1372,17 @@ local widget_definitions = {
 						255,
 						234,
 						255,
-						255,
+						255
 					}),
 					blur_color = ColorUtilities.format_color_to_material({
 						255,
 						73,
 						161,
-						242,
-					}),
-				},
+						242
+					})
+				}
 			},
-			change_function = node_highligt_change_function,
+			change_function = node_highligt_change_function
 		},
 		{
 			pass_type = "texture",
@@ -1392,9 +1392,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
-				color = Color.ui_terminal(255, true),
+				color = Color.ui_terminal(255, true)
 			},
 			change_function = function (content, style)
 				local hotspot = content.hotspot
@@ -1402,12 +1402,12 @@ local widget_definitions = {
 				local hover_alpha = anim_progress * 255
 
 				style.color[1] = hover_alpha
-			end,
-		},
+			end
+		}
 	}, "loadout_slot_aura", {
 		hotspot = {
-			on_hover_sound = UISoundEvents.default_mouse_hover,
-		},
+			on_hover_sound = UISoundEvents.default_mouse_hover
+		}
 	}),
 	loadout_slot_tactical = UIWidget.create_definition({
 		{
@@ -1419,14 +1419,14 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1438,15 +1438,15 @@ local widget_definitions = {
 					frame = "content/ui/textures/frames/talents/square_frame",
 					icon_mask = "content/ui/textures/frames/talents/square_frame_mask",
 					intensity = 0,
-					saturation = 1,
+					saturation = 1
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
-			change_function = node_icon_change_function,
+			change_function = node_icon_change_function
 		},
 		{
 			pass_type = "texture",
@@ -1456,7 +1456,7 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				color = Color.white(255, true),
 				material_values = {
@@ -1464,17 +1464,17 @@ local widget_definitions = {
 						255,
 						234,
 						255,
-						255,
+						255
 					}),
 					blur_color = ColorUtilities.format_color_to_material({
 						255,
 						73,
 						161,
-						242,
-					}),
-				},
+						242
+					})
+				}
 			},
-			change_function = node_highligt_change_function,
+			change_function = node_highligt_change_function
 		},
 		{
 			pass_type = "texture",
@@ -1484,9 +1484,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
-				color = Color.ui_terminal(255, true),
+				color = Color.ui_terminal(255, true)
 			},
 			change_function = function (content, style)
 				local hotspot = content.hotspot
@@ -1494,19 +1494,19 @@ local widget_definitions = {
 				local hover_alpha = anim_progress * 255
 
 				style.color[1] = hover_alpha
-			end,
-		},
+			end
+		}
 	}, "loadout_slot_tactical", {
 		hotspot = {
-			on_hover_sound = UISoundEvents.default_mouse_hover,
-		},
-	}),
+			on_hover_sound = UISoundEvents.default_mouse_hover
+		}
+	})
 }
 local color_cursor = {
 	255,
 	255,
 	255,
-	255,
+	255
 }
 local layout_node_widget_definitions = {
 	layout_background = UIWidget.create_definition({
@@ -1519,21 +1519,21 @@ local layout_node_widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					1696,
-					1074,
+					1074
 				},
 				color = {
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				offset = {
 					138,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "layout_background"),
 	archetype_middle_coin = UIWidget.create_definition({
 		{
@@ -1545,21 +1545,21 @@ local layout_node_widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					1024,
-					1024,
+					1024
 				},
 				color = {
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				offset = {
 					168,
 					35,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "middle_background"),
 	gamepad_cursor = UIWidget.create_definition({
 		{
@@ -1573,15 +1573,15 @@ local layout_node_widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				size_addition = {
 					20,
-					20,
-				},
-			},
-		},
-	}, "gamepad_cursor"),
+					20
+				}
+			}
+		}
+	}, "gamepad_cursor")
 }
 local layout_widget_definitions = {
 	summary_window = UIWidget.create_definition({
@@ -1593,14 +1593,14 @@ local layout_widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					10,
-				},
-			},
+					10
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -1612,18 +1612,18 @@ local layout_widget_definitions = {
 					100,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					169,
+					169
 				},
 				size_addition = {
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1634,14 +1634,14 @@ local layout_widget_definitions = {
 					100,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					168,
-				},
-			},
+					168
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1652,10 +1652,10 @@ local layout_widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					24,
-					24,
+					24
 				},
-				color = Color.terminal_grid_background(nil, true),
-			},
+				color = Color.terminal_grid_background(nil, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1668,9 +1668,9 @@ local layout_widget_definitions = {
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1683,14 +1683,14 @@ local layout_widget_definitions = {
 				color = Color.black(200, true),
 				size_addition = {
 					96,
-					96,
+					96
 				},
 				offset = {
 					0,
 					0,
-					5,
-				},
-			},
+					5
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1703,9 +1703,9 @@ local layout_widget_definitions = {
 				offset = {
 					0,
 					0,
-					4,
-				},
-			},
+					4
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1718,9 +1718,9 @@ local layout_widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
-				},
-			},
+					5
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -1738,23 +1738,23 @@ local layout_widget_definitions = {
 					100,
 					255,
 					200,
-					50,
+					50
 				},
 				size = {
 					nil,
-					0,
+					0
 				},
 				offset = {
 					0,
 					35,
-					7,
+					7
 				},
 				size_addition = {
 					-40,
-					0,
-				},
+					0
+				}
 			},
-			value = Localize("loc_alias_talent_builder_view_popup_title_summary"),
+			value = Localize("loc_alias_talent_builder_view_popup_title_summary")
 		},
 		{
 			pass_type = "texture",
@@ -1764,15 +1764,15 @@ local layout_widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					468,
-					22,
+					22
 				},
 				color = Color.terminal_text_header(255, true),
 				offset = {
 					0,
 					60,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1782,19 +1782,19 @@ local layout_widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					nil,
-					10,
+					10
 				},
 				size_addition = {
 					10,
-					0,
+					0
 				},
 				color = Color.terminal_text_header(255, true),
 				offset = {
 					0,
 					-4,
-					14,
-				},
-			},
+					14
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1804,20 +1804,20 @@ local layout_widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					nil,
-					10,
+					10
 				},
 				size_addition = {
 					10,
-					0,
+					0
 				},
 				color = Color.terminal_text_header(255, true),
 				offset = {
 					0,
 					4,
-					14,
-				},
-			},
-		},
+					14
+				}
+			}
+		}
 	}, "summary_window"),
 	tutorial_window = UIWidget.create_definition({
 		{
@@ -1828,14 +1828,14 @@ local layout_widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					10,
-				},
-			},
+					10
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1847,20 +1847,20 @@ local layout_widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					tutorial_window_size[1] - (tutorial_grid_size[1] + 60),
-					tutorial_window_size[2],
+					tutorial_window_size[2]
 				},
 				color = {
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				offset = {
 					0,
 					0,
-					2,
-				},
-			},
+					2
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -1873,18 +1873,18 @@ local layout_widget_definitions = {
 					100,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					169,
+					169
 				},
 				size_addition = {
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1896,14 +1896,14 @@ local layout_widget_definitions = {
 					100,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					168,
-				},
-			},
+					168
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -1915,18 +1915,18 @@ local layout_widget_definitions = {
 					100,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					-1,
+					-1
 				},
 				size_addition = {
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1938,10 +1938,10 @@ local layout_widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					24,
-					24,
+					24
 				},
-				color = Color.terminal_grid_background(nil, true),
-			},
+				color = Color.terminal_grid_background(nil, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1954,9 +1954,9 @@ local layout_widget_definitions = {
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1969,14 +1969,14 @@ local layout_widget_definitions = {
 				color = Color.black(200, true),
 				size_addition = {
 					96,
-					96,
+					96
 				},
 				offset = {
 					0,
 					0,
-					5,
-				},
-			},
+					5
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1989,9 +1989,9 @@ local layout_widget_definitions = {
 				offset = {
 					0,
 					0,
-					4,
-				},
-			},
+					4
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -2004,9 +2004,9 @@ local layout_widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
-				},
-			},
+					5
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -2022,19 +2022,19 @@ local layout_widget_definitions = {
 				text_color = Color.terminal_text_header(255, true),
 				size = {
 					tutorial_grid_size[1],
-					0,
+					0
 				},
 				offset = {
 					-60,
 					35,
-					7,
+					7
 				},
 				size_addition = {
 					0,
-					0,
-				},
+					0
+				}
 			},
-			value = Localize("loc_alias_talent_builder_view_popup_title_summary"),
+			value = Localize("loc_alias_talent_builder_view_popup_title_summary")
 		},
 		{
 			pass_type = "text",
@@ -2051,18 +2051,18 @@ local layout_widget_definitions = {
 				text_color = Color.terminal_text_body_sub_header(255, true),
 				size = {
 					tutorial_grid_size[1],
-					0,
+					0
 				},
 				offset = {
 					-60,
 					70,
-					7,
+					7
 				},
 				size_addition = {
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -2073,19 +2073,19 @@ local layout_widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					nil,
-					10,
+					10
 				},
 				size_addition = {
 					10,
-					0,
+					0
 				},
 				color = Color.terminal_text_header(255, true),
 				offset = {
 					0,
 					-4,
-					14,
-				},
-			},
+					14
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -2096,29 +2096,29 @@ local layout_widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					nil,
-					10,
+					10
 				},
 				size_addition = {
 					10,
-					0,
+					0
 				},
 				color = Color.terminal_text_header(255, true),
 				offset = {
 					0,
 					4,
-					14,
-				},
-			},
-		},
+					14
+				}
+			}
+		}
 	}, "tutorial_window"),
 	tutorial_button_1 = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "tutorial_button_1", {
 		text = "tutorial_button_1",
-		visible = true,
+		visible = true
 	}),
 	tutorial_button_2 = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "tutorial_button_2", {
 		text = "tutorial_button_2",
-		visible = true,
-	}),
+		visible = true
+	})
 }
 local tutorial_window_open_delay = 0.5
 local animations = {
@@ -2149,7 +2149,7 @@ local animations = {
 						grid_widgets[i].alpha_multiplier = 0
 					end
 				end
-			end,
+			end
 		},
 		{
 			end_time = 1.2,
@@ -2162,7 +2162,7 @@ local animations = {
 
 				tutorial_window.style.screen_background.color[1] = alpha
 				tutorial_window.style.screen_background_vignette.color[1] = alpha
-			end,
+			end
 		},
 		{
 			name = "fade_in_window",
@@ -2182,7 +2182,7 @@ local animations = {
 				window_style.edge_top.color[1] = alpha
 				window_style.edge_bottom.color[1] = alpha
 				window_style.window_background.color[1] = alpha
-			end,
+			end
 		},
 		{
 			name = "fade_in_content",
@@ -2208,7 +2208,7 @@ local animations = {
 				tutorial_window.style.title.text_color[1] = alpha
 				tutorial_window.style.page_counter.text_color[1] = alpha
 				tutorial_window.style.image.color[1] = alpha
-			end,
+			end
 		},
 		{
 			name = "move",
@@ -2223,9 +2223,9 @@ local animations = {
 				local y_anim_distance = y_anim_distance_max - y_anim_distance_max * anim_progress
 
 				parent:_set_scenegraph_size("tutorial_window", nil, 100 + (scenegraph_definition.tutorial_window.size[2] - 100) * anim_progress)
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 local definitions = {
 	animations = animations,
@@ -2233,7 +2233,7 @@ local definitions = {
 	layout_widget_definitions = layout_widget_definitions,
 	layout_node_widget_definitions = layout_node_widget_definitions,
 	scenegraph_definition = scenegraph_definition,
-	overlay_scenegraph_definition = overlay_scenegraph_definition,
+	overlay_scenegraph_definition = overlay_scenegraph_definition
 }
 local node_definitions = require("scripts/ui/views/talent_builder_view/talent_builder_view_node_definitions")
 

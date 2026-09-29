@@ -12,7 +12,7 @@ local CLIENT_RPCS = {
 	"rpc_payload_add_proximity_history",
 	"rpc_payload_add_main_path_history",
 	"rpc_payload_set_aim_constraint_target_override",
-	"rpc_payload_clear_aim_constraint_target_override",
+	"rpc_payload_clear_aim_constraint_target_override"
 }
 
 PayloadSystem.init = function (self, context, ...)

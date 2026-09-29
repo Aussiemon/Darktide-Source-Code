@@ -31,9 +31,9 @@ LoadingView.init = function (self, settings, context)
 			value = "content/ui/materials/loading/" .. background,
 			style = {
 				horizontal_alignment = "center",
-				vertical_alignment = "center",
-			},
-		},
+				vertical_alignment = "center"
+			}
+		}
 	}, "loading_image")
 
 	LoadingView.super.init(self, definitions, settings, context, background_package)
@@ -99,7 +99,7 @@ LoadingView._widget_text_length = function (self, widget_id)
 	local text_style = widget.style.text
 	local text_width = Text.text_width(self._ui_renderer, text, text_style, {
 		widget_width,
-		widget_height,
+		widget_height
 	})
 
 	return text_width

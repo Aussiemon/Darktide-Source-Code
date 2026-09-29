@@ -6,6 +6,7 @@ local NetworkLookup = require("scripts/network_lookup/network_lookup")
 local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
+local FixedFrame = require("scripts/utilities/fixed_frame")
 local locomotion_states = ProjectileLocomotionSettings.states
 local surface_hit_types = SurfaceMaterialSettings.hit_types
 local WWISE_PARAMETER_NAME_SPEED = "projectile_speed"
@@ -14,9 +15,11 @@ local SYNC_EFFECT = {
 	build_up_stop = true,
 	fuse = true,
 	impact = true,
+	on_killed = true,
+	on_sweep_hit = true,
 	spawn = false,
 	stick = true,
-	target_aquired = true,
+	target_aquired = true
 }
 local ProjectileFxExtension = class("ProjectileFxExtension")
 
@@ -53,6 +56,8 @@ ProjectileFxExtension.init = function (self, extension_init_context, unit, exten
 	local owner_particle_group_id = fx_system.unit_to_particle_group_lookup[owner_unit]
 
 	self._optional_particle_group_id = owner_particle_group_id
+	self._client_triggered_fx_timestamps = {}
+	self._detached_particles = {}
 end
 
 ProjectileFxExtension.extensions_ready = function (self, world, unit)
@@ -105,6 +110,10 @@ ProjectileFxExtension.destroy = function (self)
 
 		self._source_id = nil
 	end
+
+	for k, v in pairs(self._detached_particles) do
+		World.destroy_particles(self._world, v.effect_id)
+	end
 end
 
 ProjectileFxExtension.fixed_update = function (self, unit, dt, t, fixed_frame)
@@ -121,6 +130,8 @@ ProjectileFxExtension.update = function (self, unit, dt, t)
 	if self._wait_with_spawn_effects_until_not_sleeping then
 		self:_handle_spawn_effects_waiting()
 	end
+
+	self:_update_detached_particles(t, dt)
 
 	for effect_type, settings in pairs(effects) do
 		local life_time = self._life_times[effect_type]
@@ -252,6 +263,22 @@ ProjectileFxExtension.on_cluster = function (self)
 	end
 end
 
+ProjectileFxExtension.on_killed = function (self)
+	local effects = self._effects
+
+	if effects and effects.on_killed then
+		self:start_fx("on_killed")
+	end
+end
+
+ProjectileFxExtension.on_sweep_hit = function (self)
+	local effects = self._effects
+
+	if effects and effects.on_sweep_hit then
+		self:start_fx("on_sweep_hit")
+	end
+end
+
 ProjectileFxExtension.hot_join_sync = function (self, unit, sender, channel_id)
 	local effects = self._effects
 
@@ -278,13 +305,42 @@ ProjectileFxExtension.hot_join_sync = function (self, unit, sender, channel_id)
 	end
 end
 
+ProjectileFxExtension.should_play_fx = function (self, effect_type)
+	if self._is_server then
+		return true
+	end
+
+	local effects = self._effects[effect_type]
+
+	if not effects then
+		local exception_message = string.format("Trying to trigger effect of type %s on projectile with projectile template %s", effect_type, self._projectile_template.name)
+
+		Log.exception("ProjectileFxExtension", exception_message)
+
+		return false
+	end
+
+	if not effects.prioritize_client_instantiation then
+		return true
+	end
+
+	local timestamp = self._client_triggered_fx_timestamps[effect_type]
+	local fixed_t = FixedFrame.get_latest_fixed_time()
+
+	if timestamp and fixed_t < timestamp then
+		return false
+	else
+		return true
+	end
+end
+
 ProjectileFxExtension.try_start_fx = function (self, effect_type)
 	if self._effects[effect_type] then
 		self:start_fx(effect_type)
 	end
 end
 
-ProjectileFxExtension.start_fx = function (self, effect_type)
+ProjectileFxExtension.start_fx = function (self, effect_type, from_rpc)
 	local effects = self._effects[effect_type]
 
 	if not effects then
@@ -297,6 +353,12 @@ ProjectileFxExtension.start_fx = function (self, effect_type)
 
 	local sfx = effects.sfx
 	local vfx = effects.vfx
+
+	if not self._is_server and effects.prioritize_client_instantiation and not from_rpc then
+		local fixed_t = FixedFrame.get_latest_fixed_time()
+
+		self._client_triggered_fx_timestamps[effect_type] = fixed_t + effects.client_latency_window
+	end
 
 	if sfx then
 		local wwise_world = self._wwise_world
@@ -420,6 +482,18 @@ ProjectileFxExtension.start_and_link_vfx = function (self, effect_name, orphaned
 	return effect_id
 end
 
+ProjectileFxExtension.unlink_particle = function (self, effect_type)
+	local effect_id = self._effect_ids[effect_type]
+	local effects = self._effects[effect_type]
+	local vfx = effects.vfx
+	local node_name = vfx.node_name
+	local node_index = node_name and Unit.node(self._unit, node_name) or 1
+
+	World.unlink_particles(self._world, effect_id, self._unit, node_index)
+
+	return effect_id
+end
+
 ProjectileFxExtension.play_one_off_sound = function (self, sound_name)
 	local unit = self._unit
 	local fx_system = Managers.state.extension:system("fx_system")
@@ -452,6 +526,68 @@ ProjectileFxExtension.should_play_husk_effect = function (self)
 	end
 
 	return true
+end
+
+ProjectileFxExtension.lerp_vfx_towards_target = function (self, target_unit, effect_type, end_t, z_delta)
+	local effect_id = self:unlink_particle(effect_type)
+	local start_pos = Vector3Box(Unit.world_position(self._unit, 1))
+	local start_t = FixedFrame.get_latest_fixed_time()
+
+	self._detached_particles[effect_type] = {
+		effect_id = effect_id,
+		target_unit = target_unit,
+		start_pos = start_pos,
+		start_t = start_t,
+		end_t = end_t,
+		z_delta = z_delta
+	}
+	self._effect_ids[effect_type] = nil
+
+	if self._is_server and self._game_object_id then
+		local target_game_object_id = Managers.state.unit_spawner:game_object_id(target_unit)
+
+		if target_game_object_id then
+			local effect_type_id = NetworkLookup.projectile_template_effects[effect_type]
+
+			Managers.state.game_session:send_rpc_clients("rpc_projectile_lerp_vfx_towards_target", self._game_object_id, effect_type_id, target_game_object_id, end_t, z_delta)
+		end
+	end
+end
+
+ProjectileFxExtension.reattach_vfx = function (self, effect_type)
+	local particle_data = self._detached_particles[effect_type]
+
+	if particle_data then
+		World.link_particles(self._world, particle_data.effect_id, self._unit, 1, Matrix4x4.identity(), "destroy")
+
+		self._detached_particles[effect_type] = nil
+		self._effect_ids[effect_type] = nil
+		self._effect_ids[effect_type] = particle_data.effect_id
+	end
+
+	if self._is_server and self._game_object_id then
+		local effect_type_id = NetworkLookup.projectile_template_effects[effect_type]
+
+		Managers.state.game_session:send_rpc_clients("rpc_projectile_reattach_vfx", self._game_object_id, effect_type_id)
+	end
+end
+
+ProjectileFxExtension._update_detached_particles = function (self, t, dt)
+	for effect_type, data in pairs(self._detached_particles) do
+		local target_unit = data.target_unit
+
+		if ALIVE[target_unit] then
+			local target_unit_pos = POSITION_LOOKUP[target_unit]
+			local duration = data.end_t - data.start_t
+			local time_elapsed = t - data.start_t
+			local alpha = time_elapsed / duration
+			local start_pos = data.start_pos:unbox()
+			local lerp_target = Vector3(target_unit_pos.x, target_unit_pos.y, start_pos.z + data.z_delta * duration)
+			local particle_pos = Vector3.lerp(data.start_pos:unbox(), lerp_target, alpha)
+
+			World.move_particles(self._world, data.effect_id, particle_pos)
+		end
+	end
 end
 
 return ProjectileFxExtension

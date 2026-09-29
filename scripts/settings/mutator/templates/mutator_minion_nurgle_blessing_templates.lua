@@ -7,7 +7,7 @@ local mutator_templates = {
 		class = "scripts/managers/mutator/mutators/mutator_minion_nurgle_blessing",
 		random_spawn_buff_templates = {
 			buffs = {
-				"mutator_minion_nurgle_blessing_tougher",
+				"mutator_minion_nurgle_blessing_tougher"
 			},
 			breed_chances = {
 				chaos_beast_of_nurgle = 0.25,
@@ -41,22 +41,22 @@ local mutator_templates = {
 				renegade_netgunner = 0.15,
 				renegade_rifleman = 0.05,
 				renegade_shocktrooper = 0.15,
-				renegade_sniper = 0.15,
-			},
-		},
+				renegade_sniper = 0.15
+			}
+		}
 	},
 	mutator_corruption_over_time = {
 		class = "scripts/managers/mutator/mutators/mutator_minion_nurgle_blessing",
 		buff_templates = {
-			"mutator_corruption_over_time",
-		},
+			"mutator_corruption_over_time"
+		}
 	},
 	mutator_corruption_over_time_2 = {
 		class = "scripts/managers/mutator/mutators/mutator_minion_nurgle_blessing",
 		buff_templates = {
-			"mutator_corruption_over_time_2",
-		},
-	},
+			"mutator_corruption_over_time_2"
+		}
+	}
 }
 
 return mutator_templates

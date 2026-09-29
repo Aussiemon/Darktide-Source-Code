@@ -41,7 +41,7 @@ local ConstantElementPopupHandlerTestify = {
 		end
 
 		constant_element_popup_handler:trigger_widget_callback(widget)
-	end,
+	end
 }
 
 return ConstantElementPopupHandlerTestify

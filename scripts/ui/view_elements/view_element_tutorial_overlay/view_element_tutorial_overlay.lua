@@ -38,7 +38,7 @@ ViewElementTutorialOverlay.init = function (self, parent, draw_layer, start_scal
 	self._previous_color_intensities_by_renderer = {}
 	self._pivot_offset = {
 		0,
-		0,
+		0
 	}
 	self._highligt_color_intensity = 1
 	self._background_color_intensity = 1
@@ -266,13 +266,13 @@ ViewElementTutorialOverlay._setup_tooltip_grid = function (self)
 		widget_icon_load_margin = 0,
 		grid_spacing = {
 			0,
-			0,
+			0
 		},
 		grid_size = grid_size,
 		mask_size = {
 			grid_size[1] + MASK_PADDING_PIXEL_SIZE,
-			grid_size[2] + MASK_PADDING_PIXEL_SIZE,
-		},
+			grid_size[2] + MASK_PADDING_PIXEL_SIZE
+		}
 	}
 
 	self._grid_settings = grid_settings
@@ -401,7 +401,7 @@ end
 local _device_list = {
 	Pad1,
 	Keyboard,
-	Mouse,
+	Mouse
 }
 
 ViewElementTutorialOverlay.update = function (self, dt, t, input_service)
@@ -483,12 +483,12 @@ ViewElementTutorialOverlay.update = function (self, dt, t, input_service)
 					-- Nothing
 				end
 
-				::label_1_0::
+				::label_28_0::
 
 				local grid_widget_element = grid_widget.content.element
 			end
 
-			::label_1_1::
+			::label_28_1::
 
 			input_service = input_service:null_service()
 		end

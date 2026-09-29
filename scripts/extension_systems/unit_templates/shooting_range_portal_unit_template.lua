@@ -29,7 +29,7 @@ local shooting_range_portal_unit_template = {
 	husk_init = function (unit, config, template_context, game_session, game_object_id, owner_id)
 		config:add("InteracteeExtension", {})
 		config:add("ComponentExtension")
-	end,
+	end
 }
 
 return shooting_range_portal_unit_template

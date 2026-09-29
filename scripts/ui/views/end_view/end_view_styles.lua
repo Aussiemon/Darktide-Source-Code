@@ -6,8 +6,8 @@ local end_view_styles = {
 	voting_button_fade_time = 0.5,
 	panel_size = {
 		440,
-		200,
-	},
+		200
+	}
 }
 
 end_view_styles.page_corner_decoration = {}
@@ -18,15 +18,15 @@ page_corner_decoration_style.corner_decoration = {
 	offset = {
 		0,
 		0,
-		1,
-	},
+		1
+	}
 }
 page_corner_decoration_style.candles = {
 	offset = {
 		0,
 		0,
-		2,
-	},
+		2
+	}
 }
 end_view_styles.page_bottom_decoration = {}
 
@@ -38,12 +38,12 @@ page_bottom_decoration_style.bottom_decoration = {
 	offset = {
 		0,
 		0,
-		0,
+		0
 	},
 	size = {
 		nil,
-		106,
-	},
+		106
+	}
 }
 end_view_styles.page_bottom_center_decoration = {}
 
@@ -53,15 +53,15 @@ page_page_bottom_center_decoration.bottom_center_decoration = {
 	offset = {
 		0,
 		0,
-		5,
-	},
+		5
+	}
 }
 end_view_styles.defeat_page_overlay = {}
 
 local defeat_page_overlay_styles = end_view_styles.defeat_page_overlay
 
 defeat_page_overlay_styles.overlay = {
-	color = Color.black(64, true),
+	color = Color.black(64, true)
 }
 end_view_styles.stay_in_party_vote = {}
 
@@ -91,7 +91,7 @@ local vote_choice_style = stay_in_party_vote_style.vote_choice
 vote_choice_style.offset = {
 	0,
 	30,
-	1,
+	1
 }
 stay_in_party_vote_style.vote_count_text = table.clone(vote_text_style)
 
@@ -105,6 +105,125 @@ local stay_in_party_vote_tooltip_style = stay_in_party_vote_style.tooltip
 
 stay_in_party_vote_tooltip_style.text_color[1] = 0
 stay_in_party_vote_tooltip_style.text_vertical_alignment = "bottom"
+end_view_styles.rate_match = {}
+
+local rate_match_style = end_view_styles.rate_match
+local rate_match_fade_time = 0.25
+local rate_match_default_color = Color.ui_grey_light(255, true)
+local rate_match_hover_color = Color.white(255, true)
+local rate_match_selected_color = Color.ui_terminal(255, true)
+local rate_match_faded_color = Color.ui_grey_medium(255, true)
+local rate_match_row_y = 34
+
+rate_match_style.title = table.clone(UIFontSettings.input_legend_button)
+
+local rate_match_title_style = rate_match_style.title
+
+rate_match_title_style.text_color = table.clone(rate_match_default_color)
+rate_match_title_style.text_horizontal_alignment = "left"
+rate_match_title_style.text_vertical_alignment = "top"
+rate_match_title_style.offset = {
+	0,
+	12,
+	1
+}
+rate_match_style.positive_hotspot = {
+	size = {
+		96,
+		48
+	},
+	offset = {
+		0,
+		rate_match_row_y - 2,
+		0
+	},
+	on_hover_sound = UISoundEvents.default_mouse_hover,
+	on_pressed_sound = UISoundEvents.default_select
+}
+rate_match_style.negative_hotspot = {
+	size = {
+		96,
+		48
+	},
+	offset = {
+		110,
+		rate_match_row_y - 2,
+		0
+	},
+	on_hover_sound = UISoundEvents.default_mouse_hover,
+	on_pressed_sound = UISoundEvents.default_select
+}
+
+local function _rate_match_icon_style(rating, offset_x, texture)
+	return {
+		horizontal_alignment = "left",
+		vertical_alignment = "top",
+		rating = rating,
+		size = {
+			44,
+			44
+		},
+		offset = {
+			offset_x,
+			rate_match_row_y,
+			1
+		},
+		material_values = {
+			texture_map = texture
+		},
+		fade_time = rate_match_fade_time,
+		color = table.clone(rate_match_default_color),
+		normal_color = table.clone(rate_match_default_color),
+		default_color = rate_match_default_color,
+		hover_color = rate_match_hover_color,
+		selected_color = rate_match_selected_color,
+		faded_color = rate_match_faded_color
+	}
+end
+
+rate_match_style.positive_icon = _rate_match_icon_style("positive", 34, "content/ui/textures/icons/emotes/human_positive")
+rate_match_style.negative_icon = _rate_match_icon_style("negative", 78, "content/ui/textures/icons/emotes/human_negative")
+
+local function _rate_match_keybind_style(rating, offset_x)
+	local style = table.clone(UIFontSettings.input_legend_button)
+
+	style.rating = rating
+	style.text_horizontal_alignment = "left"
+	style.text_vertical_alignment = "top"
+	style.offset = {
+		offset_x,
+		rate_match_row_y + 6,
+		1
+	}
+	style.fade_time = rate_match_fade_time
+	style.text_color = table.clone(rate_match_selected_color)
+	style.normal_color = table.clone(rate_match_selected_color)
+	style.default_color = rate_match_selected_color
+	style.hover_color = rate_match_selected_color
+	style.selected_color = rate_match_faded_color
+	style.faded_color = rate_match_faded_color
+
+	return style
+end
+
+rate_match_style.positive_keybind = _rate_match_keybind_style("positive", 0)
+rate_match_style.negative_keybind = _rate_match_keybind_style("negative", 128)
+end_view_styles.session_stats_prompt = {}
+
+local session_stats_prompt_style = end_view_styles.session_stats_prompt
+
+session_stats_prompt_style.hotspot = {
+	on_hover_sound = UISoundEvents.default_mouse_hover
+}
+session_stats_prompt_style.text = table.clone(UIFontSettings.input_legend_button)
+
+local session_stats_prompt_text_style = session_stats_prompt_style.text
+
+session_stats_prompt_text_style.text_horizontal_alignment = "center"
+session_stats_prompt_text_style.text_vertical_alignment = "center"
+session_stats_prompt_text_style.text_color = Color.ui_grey_light(255, true)
+session_stats_prompt_text_style.normal_color = Color.ui_grey_light(255, true)
+session_stats_prompt_text_style.hover_color = Color.white(255, true)
 end_view_styles.continue_button = {}
 
 local continue_button_style = end_view_styles.continue_button
@@ -143,11 +262,11 @@ mission_header_title_style_victory.text_horizontal_alignment = "center"
 mission_header_title_style_victory.offset = {
 	0,
 	10,
-	0,
+	0
 }
 mission_header_title_style_victory.text_color = Color.terminal_text_header(255, true)
 mission_header_title_style_victory.scale_to_material = true
-mission_header_victory_style.mission_sub_header = table.clone(UIFontSettings.body_small)
+mission_header_victory_style.mission_sub_header = table.clone(UIFontSettings.header_1)
 
 local mission_sub_header_victory_style = mission_header_victory_style.mission_sub_header
 
@@ -155,12 +274,10 @@ mission_sub_header_victory_style.text_horizontal_alignment = "center"
 mission_sub_header_victory_style.text_vertical_alignment = "center"
 mission_sub_header_victory_style.offset = {
 	0,
-	55,
-	0,
+	62,
+	0
 }
-mission_sub_header_victory_style.text_color = Color.terminal_text_body(255, true)
-mission_sub_header_victory_style.stats_font_size = 26
-mission_sub_header_victory_style.stats_text_color = Color.terminal_text_header(255, true)
+mission_sub_header_victory_style.material = "content/ui/materials/font_gradients/slug_font_gradient_gold"
 end_view_styles.mission_header_defeat = table.clone(mission_header_victory_style)
 
 local mission_header_defeat_style = end_view_styles.mission_header_defeat
@@ -174,7 +291,7 @@ local mission_sub_header_defeat_style = mission_header_defeat_style.mission_sub_
 mission_sub_header_defeat_style.offset = {
 	0,
 	62,
-	0,
+	0
 }
 mission_sub_header_defeat_style.text_horizontal_alignment = "center"
 mission_sub_header_defeat_style.text_vertical_alignment = "center"
@@ -187,30 +304,30 @@ player_panel_victory_style.character_portrait = {
 	horizontal_alignment = "center",
 	size = {
 		90,
-		100,
+		100
 	},
 	offset = {
 		0,
 		-20,
-		0,
+		0
 	},
 	material_values = {
 		use_placeholder_texture = 1,
-		texture_frame = end_view_styles.default_frame_material,
-	},
+		texture_frame = end_view_styles.default_frame_material
+	}
 }
 player_panel_victory_style.character_insignia = {
 	horizontal_alignment = "center",
 	size = {
 		40,
-		100,
+		100
 	},
 	offset = {
 		-65,
 		-20,
-		0,
+		0
 	},
-	material_values = {},
+	material_values = {}
 }
 player_panel_victory_style.character_name = table.clone(UIFontSettings.body)
 
@@ -220,7 +337,7 @@ character_name_style_victory.text_horizontal_alignment = "center"
 character_name_style_victory.offset = {
 	0,
 	85,
-	0,
+	0
 }
 character_name_style_victory.own_player_text_color = Color.terminal_text_header(255, true)
 player_panel_victory_style.character_title = table.clone(UIFontSettings.body_small)
@@ -231,7 +348,7 @@ character_title_style_victory.text_horizontal_alignment = "center"
 character_title_style_victory.offset = {
 	0,
 	115,
-	0,
+	0
 }
 player_panel_victory_style.character_archetype_title = table.clone(UIFontSettings.body_small)
 
@@ -241,12 +358,12 @@ character_archetype_title_style_victory.text_horizontal_alignment = "center"
 character_archetype_title_style_victory.offset = {
 	0,
 	140,
-	0,
+	0
 }
 character_archetype_title_style_victory.original_offset = {
 	0,
 	140,
-	0,
+	0
 }
 character_archetype_title_style_victory.default_color = Color.terminal_text_body_sub_header(255, true)
 character_archetype_title_style_victory.text_color = Color.terminal_text_body_sub_header(255, true)
@@ -260,7 +377,7 @@ checkmark_style_victory.horizontal_alignment = "center"
 checkmark_style_victory.offset = {
 	92,
 	0,
-	2,
+	2
 }
 checkmark_style_victory.hdr = true
 checkmark_style_victory.text_color = Color.ui_terminal(255, true)
@@ -272,21 +389,21 @@ local party_status_text_style_victory = player_panel_victory_style.party_status
 party_status_text_style_victory.offset = {
 	92,
 	-20,
-	0,
+	0
 }
 party_status_text_style_victory.text_vertical_alignment = "bottom"
 player_panel_victory_style.account_divider = {
 	horizontal_alignment = "center",
 	size = {
 		280,
-		1,
+		1
 	},
 	offset = {
 		0,
 		166,
-		0,
+		0
 	},
-	color = Color.ui_grey_medium(255, true),
+	color = Color.ui_grey_medium(255, true)
 }
 player_panel_victory_style.account_name = table.clone(UIFontSettings.body_small)
 
@@ -296,7 +413,7 @@ account_name_style_victory.text_horizontal_alignment = "center"
 account_name_style_victory.offset = {
 	0,
 	170,
-	0,
+	0
 }
 account_name_style_victory.text_color = Color.ui_grey_medium(255, true)
 end_view_styles.player_panel_defeat = table.clone(player_panel_victory_style)
@@ -308,7 +425,7 @@ character_portrait_style_defeat.color = {
 	255,
 	128,
 	128,
-	128,
+	128
 }
 
 local character_insignia_style_defeat = player_panel_defeat_style.character_insignia

@@ -17,7 +17,7 @@ local templates = {
 		start_pressure = 40,
 		vfx_name_filled = "content/fx/particles/liquid_area/fire_lingering",
 		vfx_name_rim = "content/fx/particles/liquid_area/fire_lingering_edge",
-		spread_function = LiquidSpread.pour,
+		spread_function = LiquidSpread.pour
 	},
 	prop_corruptor = {
 		bots_allowed_to_assist_within = true,
@@ -29,7 +29,7 @@ local templates = {
 		max_liquid = 60,
 		start_pressure = 15,
 		vfx_name_filled = "content/fx/particles/liquid_area/corruptor_nurgle_goo",
-		spread_function = LiquidSpread.pour,
+		spread_function = LiquidSpread.pour
 	},
 	prop_filtration_tank = {
 		cell_size = 0.4,
@@ -41,7 +41,7 @@ local templates = {
 		spawn_brush_size = 1,
 		start_pressure = 20,
 		vfx_name_filled = "content/fx/particles/liquid_area/druglab_tank_goo",
-		spread_function = LiquidSpread.pour,
+		spread_function = LiquidSpread.pour
 	},
 	prop_druglab_tank = {
 		cell_size = 0.8,
@@ -53,8 +53,8 @@ local templates = {
 		spawn_brush_size = 1,
 		start_pressure = 45,
 		vfx_name_filled = "content/fx/particles/liquid_area/druglab_tank_goo",
-		spread_function = LiquidSpread.pour,
-	},
+		spread_function = LiquidSpread.pour
+	}
 }
 
 return templates

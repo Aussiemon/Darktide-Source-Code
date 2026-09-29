@@ -18,13 +18,13 @@ templates.weapon_trait_bespoke_bolter_p1_crit_chance_based_on_aim_time = table.c
 templates.weapon_trait_bespoke_bolter_p1_toughness_on_elite_kills = table.clone(BaseWeaponTraitBuffTemplates.toughness_on_elite_kills)
 templates.weapon_trait_bespoke_bolter_p1_stacking_crit_bonus_on_continuous_fire = table.merge({
 	conditional_stat_buffs = {
-		[stat_buffs.critical_strike_chance] = 0.01,
+		[stat_buffs.critical_strike_chance] = 0.01
 	},
-	continuous_fire_step_func = FireStepFunctions.default_continuous_fire_step_func,
+	continuous_fire_step_func = FireStepFunctions.default_continuous_fire_step_func
 }, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire)
 templates.weapon_trait_bespoke_bolter_p1_toughness_on_continuous_fire = table.merge({
 	toughness_fixed_percentage = 0.1,
-	continuous_fire_step_func = FireStepFunctions.toughness_regen_continuous_fire_step_func,
+	continuous_fire_step_func = FireStepFunctions.toughness_regen_continuous_fire_step_func
 }, BaseWeaponTraitBuffTemplates.toughness_on_continuous_fire)
 templates.weapon_trait_bespoke_bolter_p1_increase_close_damage_on_close_kill_parent = table.clone(BaseWeaponTraitBuffTemplates.increase_close_damage_on_close_kill_parent)
 templates.weapon_trait_bespoke_bolter_p1_increase_close_damage_on_close_kill_child = table.clone(BaseWeaponTraitBuffTemplates.increase_close_damage_on_close_kill_child)

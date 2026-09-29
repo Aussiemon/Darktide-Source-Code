@@ -7,7 +7,7 @@ local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local ViewElementPlayerPanelSettings = require("scripts/ui/view_elements/view_element_player_panel/view_element_player_panel_settings")
 local character_experience_bar_size = {
 	280,
-	10,
+	10
 }
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
@@ -17,13 +17,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	character_panel = {
 		horizontal_alignment = "left",
@@ -31,13 +31,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			420,
-			100,
+			100
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	character_insigna = {
 		horizontal_alignment = "left",
@@ -45,13 +45,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			30,
-			80,
+			80
 		},
 		position = {
 			10,
 			10,
-			1,
-		},
+			1
+		}
 	},
 	character_portrait = {
 		horizontal_alignment = "left",
@@ -59,13 +59,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			70,
-			80,
+			80
 		},
 		position = {
 			40,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	character_name = {
 		horizontal_alignment = "left",
@@ -73,13 +73,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			400,
-			30,
+			30
 		},
 		position = {
 			80,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	character_title = {
 		horizontal_alignment = "left",
@@ -87,13 +87,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			280,
-			54,
+			54
 		},
 		position = {
 			80,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	character_level = {
 		horizontal_alignment = "right",
@@ -101,13 +101,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			40,
-			54,
+			54
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	character_experience = {
 		horizontal_alignment = "left",
@@ -117,9 +117,9 @@ local scenegraph_definition = {
 		position = {
 			80,
 			-10,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local character_name_style = table.clone(UIFontSettings.header_3)
 
@@ -145,10 +145,10 @@ local widget_definitions = {
 					160,
 					0,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "character_panel"),
 	character_portrait = UIWidget.create_definition({
 		{
@@ -158,10 +158,10 @@ local widget_definitions = {
 			value_id = "texture",
 			style = {
 				material_values = {
-					use_placeholder_texture = 1,
-				},
-			},
-		},
+					use_placeholder_texture = 1
+				}
+			}
+		}
 	}, "character_portrait"),
 	character_insigna = UIWidget.create_definition({
 		{
@@ -169,40 +169,40 @@ local widget_definitions = {
 			style_id = "texture",
 			value = "content/ui/materials/base/ui_default_base",
 			style = {
-				material_values = {},
-			},
-		},
+				material_values = {}
+			}
+		}
 	}, "character_insigna"),
 	character_name = UIWidget.create_definition({
 		{
 			pass_type = "text",
 			value = "text",
 			value_id = "text",
-			style = character_name_style,
-		},
+			style = character_name_style
+		}
 	}, "character_name"),
 	character_title = UIWidget.create_definition({
 		{
 			pass_type = "text",
 			value = "text",
 			value_id = "text",
-			style = character_title_style,
-		},
+			style = character_title_style
+		}
 	}, "character_title"),
 	character_level = UIWidget.create_definition({
 		{
 			pass_type = "text",
 			value = "text",
 			value_id = "text",
-			style = character_level_style,
-		},
+			style = character_level_style
+		}
 	}, "character_level"),
 	character_experience = UIWidget.create_definition(BarPassTemplates.character_menu_experience_bar, "character_experience", {
-		bar_length = character_experience_bar_size[1],
-	}, character_experience_bar_size),
+		bar_length = character_experience_bar_size[1]
+	}, character_experience_bar_size)
 }
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

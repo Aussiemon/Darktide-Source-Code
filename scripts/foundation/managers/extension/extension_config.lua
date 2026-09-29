@@ -33,6 +33,20 @@ ExtensionConfig.add = function (self, extension_class_name, init_args, remove_wh
 	self._num_extensions = self._num_extensions + 1
 end
 
+ExtensionConfig.append = function (self, extension_class_name, init_args)
+	local exts = self._extension_data
+
+	for i = 1, 3 do
+		local extension_name = exts[i]
+
+		if extension_name == extension_class_name then
+			table.merge_recursive(exts[i + 1], init_args)
+
+			return
+		end
+	end
+end
+
 ExtensionConfig.num_extensions = function (self)
 	if #self._unit_extensions > 0 then
 		return #self._unit_extensions

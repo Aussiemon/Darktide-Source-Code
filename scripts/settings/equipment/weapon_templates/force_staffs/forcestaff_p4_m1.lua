@@ -31,18 +31,18 @@ weapon_template.action_inputs = {
 		input_sequence = {
 			{
 				input = "action_one_pressed",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	charge = {
 		buffer_time = 0.1,
 		input_sequence = {
 			{
 				input = "action_two_hold",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	charge_release = {
 		buffer_time = 0.1,
@@ -50,9 +50,9 @@ weapon_template.action_inputs = {
 			{
 				input = "action_two_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				time_window = math.huge
+			}
+		}
 	},
 	shoot_charged = {
 		buffer_time = 0.5,
@@ -60,18 +60,9 @@ weapon_template.action_inputs = {
 			{
 				hold_input = "action_two_hold",
 				input = "action_one_pressed",
-				value = true,
-			},
-		},
-	},
-	wield = {
-		buffer_time = 0,
-		clear_input_queue = true,
-		input_sequence = {
-			{
-				inputs = wield_inputs,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	vent = {
 		buffer_time = 0,
@@ -79,9 +70,9 @@ weapon_template.action_inputs = {
 		input_sequence = {
 			{
 				input = "weapon_reload_hold",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	vent_release = {
 		buffer_time = 0.261,
@@ -89,18 +80,18 @@ weapon_template.action_inputs = {
 			{
 				input = "weapon_reload_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				time_window = math.huge
+			}
+		}
 	},
 	special_action = {
 		buffer_time = 0.2,
 		input_sequence = {
 			{
 				input = "weapon_extra_pressed",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	special_action_hold = {
 		buffer_time = 0.2,
@@ -108,9 +99,9 @@ weapon_template.action_inputs = {
 			{
 				hold_input = "weapon_extra_hold",
 				input = "weapon_extra_hold",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	special_action_light = {
 		buffer_time = 0.3,
@@ -119,9 +110,9 @@ weapon_template.action_inputs = {
 			{
 				input = "weapon_extra_hold",
 				time_window = 0.25,
-				value = false,
-			},
-		},
+				value = false
+			}
+		}
 	},
 	special_action_heavy = {
 		buffer_time = 0.5,
@@ -130,16 +121,16 @@ weapon_template.action_inputs = {
 			{
 				duration = 0.25,
 				input = "weapon_extra_hold",
-				value = true,
+				value = true
 			},
 			{
 				auto_complete = false,
 				input = "weapon_extra_hold",
 				time_window = 1.5,
-				value = false,
-			},
-		},
-	},
+				value = false
+			}
+		}
+	}
 }
 
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
@@ -147,99 +138,72 @@ table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inp
 weapon_template.action_input_hierarchy = {
 	{
 		input = "wield",
-		transition = "stay",
+		transition = "stay"
 	},
 	{
 		input = "shoot_pressed",
-		transition = "stay",
+		transition = "stay"
 	},
 	{
 		input = "charge",
 		transition = {
 			{
 				input = "shoot_charged",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "wield",
-				transition = "base",
-			},
-			{
-				input = "combat_ability",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "charge_release",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "vent",
-				transition = "base",
-			},
-		},
+				transition = "base"
+			}
+		}
 	},
 	{
 		input = "vent",
 		transition = {
 			{
 				input = "vent_release",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "wield",
-				transition = "base",
-			},
-			{
-				input = "combat_ability",
-				transition = "base",
-			},
-			{
-				input = "grenade_ability",
-				transition = "base",
-			},
-		},
+				transition = "base"
+			}
+		}
 	},
 	{
 		input = "special_action_hold",
 		transition = {
 			{
 				input = "wield",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "special_action",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "special_action_light",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "special_action_heavy",
-				transition = "base",
-			},
-			{
-				input = "combat_ability",
-				transition = "base",
-			},
-			{
-				input = "grenade_ability",
-				transition = "base",
-			},
-		},
-	},
+				transition = "base"
+			}
+		}
+	}
 }
 
 ActionInputHierarchy.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
-	action_unwield = {
-		kind = "unwield",
-		start_input = "wield",
-		total_time = 0,
-		uninterruptible = true,
-		allowed_chain_actions = {},
-	},
 	action_wield = {
 		allowed_during_sprint = true,
 		anim_event = "equip",
@@ -250,24 +214,18 @@ weapon_template.actions = {
 			special_action_hold = {
 				action_name = "action_stab_start",
 				chain_time = 0.4,
-				reset_combo = true,
+				reset_combo = true
 			},
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			shoot_pressed = {
 				action_name = "rapid_left",
-				chain_time = 0.2,
+				chain_time = 0.2
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0,
-			},
-		},
+				chain_time = 0
+			}
+		}
 	},
 	rapid_left = {
 		anim_event = "orb_shoot",
@@ -283,56 +241,76 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 1.25,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 1.1,
-				t = 0.3,
+				t = 0.3
 			},
 			{
 				modifier = 1,
-				t = 0.5,
+				t = 0.5
 			},
-			start_modifier = 0.8,
+			start_modifier = 0.8
 		},
+		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
+			if not condition_func_params then
+				return true
+			end
+
+			local weapon_extension = condition_func_params.weapon_extension
+			local last_shoot_action_t = weapon_extension.last_shoot_action_t
+			local next_allowed_shoot_action_t = last_shoot_action_t + 0.5
+
+			if next_allowed_shoot_action_t <= t then
+				return true
+			end
+
+			return false
+		end,
+		action_finish_func = function (reason, data, condition_func_params, t)
+			if not condition_func_params then
+				return
+			end
+
+			local weapon_extension = condition_func_params.weapon_extension
+			local weapon_action_component = condition_func_params.weapon_action_component
+			local start_t = weapon_action_component.start_t
+
+			weapon_extension.last_shoot_action_t = start_t
+		end,
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.29,
+				chain_time = 0.29
 			},
 			shoot_pressed = {
 				action_name = "rapid_left",
-				chain_time = 0.5,
+				chain_time = 0.5
 			},
 			special_action_hold = {
 				action_name = "action_stab_start",
 				chain_time = 0.3,
-				reset_combo = true,
+				reset_combo = true
 			},
 			charge = {
 				action_name = "action_charge",
 				chain_time = 0.3,
-				reset_combo = true,
-			},
+				reset_combo = true
+			}
 		},
 		fx = {
-			shoot_sfx_alias = "ranged_single_shot",
+			shoot_sfx_alias = "ranged_single_shot"
 		},
 		projectile_template = ProjectileTemplates.force_staff_ball,
 		buff_keywords = {
-			buff_keywords.allow_hipfire_during_sprint,
+			buff_keywords.allow_hipfire_during_sprint
 		},
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
-			buff_stat_buffs.ranged_attack_speed,
-		},
+			buff_stat_buffs.ranged_attack_speed
+		}
 	},
 	action_charge = {
 		allowed_during_sprint = true,
@@ -352,60 +330,54 @@ weapon_template.actions = {
 		target_finder_module_class_name = "smart_target_targeting",
 		total_time = math.huge,
 		crosshair = {
-			crosshair_type = "charge_up",
+			crosshair_type = "charge_up"
 		},
 		action_movement_curve = {
 			{
 				modifier = 0.3,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.3,
-				t = 0.15,
+				t = 0.15
 			},
 			{
 				modifier = 0.6,
-				t = 0.25,
+				t = 0.25
 			},
 			{
 				modifier = 0.6,
-				t = 0.5,
+				t = 0.5
 			},
 			{
 				modifier = 0.4,
-				t = 1,
+				t = 1
 			},
 			{
 				modifier = 0.3,
-				t = 2,
+				t = 2
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		allowed_chain_actions = {
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.3,
+				chain_time = 0.3
 			},
 			shoot_charged = {
-				action_name = "action_shoot_charged",
+				action_name = "action_shoot_charged"
 			},
 			special_action_hold = {
 				action_name = "action_stab_start",
 				chain_time = 0.3,
-				reset_combo = true,
-			},
+				reset_combo = true
+			}
 		},
 		finish_reason_to_action_input = {
 			stunned = {
-				input_name = "shoot_charged",
-			},
+				input_name = "shoot_charged"
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			if end_reason == "hold_input_released" or end_reason == "stunned" then
@@ -423,11 +395,11 @@ weapon_template.actions = {
 			looping_sound_alias = "ranged_charging",
 			sfx_parameter = "charge_level",
 			sfx_source_name = "_charge",
-			vfx_source_name = "_charge",
+			vfx_source_name = "_charge"
 		},
 		time_scale_stat_buffs = {
-			buff_stat_buffs.charge_up_time,
-		},
+			buff_stat_buffs.charge_up_time
+		}
 	},
 	action_shoot_charged = {
 		allowed_during_sprint = true,
@@ -449,42 +421,36 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 0.1,
-				t = 0.35,
+				t = 0.35
 			},
 			{
 				modifier = 0.1,
-				t = 0.55,
+				t = 0.55
 			},
 			{
 				modifier = 1,
-				t = 0.75,
+				t = 0.75
 			},
-			start_modifier = 0.1,
+			start_modifier = 0.1
 		},
 		fx = {
 			sfx_use_charge_level = true,
-			shoot_sfx_alias = "ranged_single_shot",
+			shoot_sfx_alias = "ranged_single_shot"
 		},
 		allowed_chain_actions = {
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			charge = {
 				action_name = "action_charge",
-				chain_time = 0.425,
+				chain_time = 0.425
 			},
 			shoot_pressed = {
 				action_name = "rapid_left",
-				chain_time = 0.425,
+				chain_time = 0.425
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.35,
-			},
+				chain_time = 0.35
+			}
 		},
 		projectile_template = ProjectileTemplates.force_staff_ball_heavy,
 		charge_effects = {
@@ -492,12 +458,12 @@ weapon_template.actions = {
 			charge_on_action_start = true,
 			full_charge_warp_charge_percent = 0.05,
 			vfx_source_name = "_muzzle",
-			warp_charge_percent = 0.2,
+			warp_charge_percent = 0.2
 		},
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
-			buff_stat_buffs.ranged_attack_speed,
-		},
+			buff_stat_buffs.ranged_attack_speed
+		}
 	},
 	action_stab_start = {
 		allowed_during_sprint = true,
@@ -507,52 +473,47 @@ weapon_template.actions = {
 		start_input = "special_action_hold",
 		total_time = 1.1,
 		crosshair = {
-			crosshair_type = "dot",
+			crosshair_type = "dot"
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-				chain_time = 0.15,
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions({
+				chain_time = 0.15
+			}),
 			special_action_hold = {
 				action_name = "action_stab_start",
-				chain_time = 0.9,
+				chain_time = 0.9
 			},
 			shoot_pressed = {
 				action_name = "rapid_left",
 				chain_time = 1,
-				reset_combo = true,
+				reset_combo = true
 			},
 			charge = {
 				action_name = "action_charge",
 				chain_time = 0.5,
-				reset_combo = true,
+				reset_combo = true
 			},
 			vent = {
-				action_name = "action_vent",
+				action_name = "action_vent"
 			},
 			special_action_light = {
 				action_name = "action_stab",
-				chain_time = 0.2,
+				chain_time = 0.2
 			},
 			special_action_heavy = {
 				action_name = "action_stab_heavy",
-				chain_time = 0.4,
-			},
+				chain_time = 0.4
+			}
 		},
 		conditional_state_to_action_input = {
 			action_end = {
-				input_name = "special_action_heavy",
-			},
+				input_name = "special_action_heavy"
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
-		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none
 	},
 	action_swipe_start = {
 		allowed_during_sprint = true,
@@ -562,48 +523,43 @@ weapon_template.actions = {
 		start_input = nil,
 		total_time = 1.1,
 		crosshair = {
-			crosshair_type = "dot",
+			crosshair_type = "dot"
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-				chain_time = 0.15,
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions({
+				chain_time = 0.15
+			}),
 			shoot_pressed = {
 				action_name = "rapid_left",
 				chain_time = 1,
-				reset_combo = true,
+				reset_combo = true
 			},
 			charge = {
 				action_name = "action_charge",
 				chain_time = 1,
-				reset_combo = true,
+				reset_combo = true
 			},
 			vent = {
-				action_name = "action_vent",
+				action_name = "action_vent"
 			},
 			special_action_light = {
 				action_name = "action_swipe",
-				chain_time = 0.1,
+				chain_time = 0.1
 			},
 			special_action_heavy = {
 				action_name = "action_swipe_heavy",
-				chain_time = 0.6,
-			},
+				chain_time = 0.6
+			}
 		},
 		conditional_state_to_action_input = {
 			action_end = {
-				input_name = "special_action_heavy",
-			},
+				input_name = "special_action_heavy"
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
-		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none
 	},
 	action_stab = {
 		allowed_during_sprint = true,
@@ -621,71 +577,66 @@ weapon_template.actions = {
 		uninterruptible = true,
 		weapon_handling_template = "time_scale_1_3",
 		crosshair = {
-			crosshair_type = "dot",
+			crosshair_type = "dot"
 		},
 		action_movement_curve = {
 			{
 				modifier = 0.8,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 1.75,
-				t = 0.25,
+				t = 0.25
 			},
 			{
 				modifier = 1.35,
-				t = 0.3,
+				t = 0.3
 			},
 			{
 				modifier = 1.2,
-				t = 0.35,
+				t = 0.35
 			},
 			{
 				modifier = 1.1,
-				t = 0.4,
+				t = 0.4
 			},
 			{
 				modifier = 1,
-				t = 0.6,
+				t = 0.6
 			},
 			{
 				modifier = 0.95,
-				t = 1,
+				t = 1
 			},
-			start_modifier = 0.8,
+			start_modifier = 0.8
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-				chain_time = 0.15,
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions({
+				chain_time = 0.15
+			}),
 			shoot_pressed = {
 				action_name = "rapid_left",
 				chain_time = 0.1,
-				reset_combo = true,
+				reset_combo = true
 			},
 			charge = {
 				action_name = "action_charge",
 				chain_time = 0.45,
-				reset_combo = true,
+				reset_combo = true
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.45,
+				chain_time = 0.45
 			},
 			special_action_hold = {
 				action_name = "action_swipe_start",
-				chain_time = 0.4,
-			},
+				chain_time = 0.4
+			}
 		},
 		weapon_box = {
 			0.08,
 			2.4,
-			0.08,
+			0.08
 		},
 		sweeps = {
 			{
@@ -693,17 +644,17 @@ weapon_template.actions = {
 				anchor_point_offset = {
 					0.1,
 					1.1,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		damage_type = damage_types.blunt_light,
 		damage_profile = DamageProfileTemplates.force_staff_bash,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
-			buff_stat_buffs.melee_attack_speed,
+			buff_stat_buffs.melee_attack_speed
 		},
-		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none
 	},
 	action_stab_heavy = {
 		allowed_during_sprint = true,
@@ -722,72 +673,67 @@ weapon_template.actions = {
 		uninterruptible = true,
 		weapon_handling_template = "time_scale_1_2",
 		crosshair = {
-			crosshair_type = "dot",
+			crosshair_type = "dot"
 		},
 		action_movement_curve = {
 			{
 				modifier = 0.8,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 1.75,
-				t = 0.25,
+				t = 0.25
 			},
 			{
 				modifier = 1.35,
-				t = 0.3,
+				t = 0.3
 			},
 			{
 				modifier = 1.2,
-				t = 0.35,
+				t = 0.35
 			},
 			{
 				modifier = 1.1,
-				t = 0.4,
+				t = 0.4
 			},
 			{
 				modifier = 1,
-				t = 0.6,
+				t = 0.6
 			},
 			{
 				modifier = 0.95,
-				t = 1,
+				t = 1
 			},
-			start_modifier = 0.8,
+			start_modifier = 0.8
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-				chain_time = 0.15,
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions({
+				chain_time = 0.15
+			}),
 			shoot_pressed = {
 				action_name = "rapid_left",
 				chain_time = 0.1,
-				reset_combo = true,
+				reset_combo = true
 			},
 			charge = {
 				action_name = "action_charge",
 				chain_time = 0.4,
-				reset_combo = true,
+				reset_combo = true
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.4,
+				chain_time = 0.4
 			},
 			special_action_hold = {
 				action_name = "action_swipe_start",
-				chain_time = 0.4,
-			},
+				chain_time = 0.4
+			}
 		},
 		damage_type = damage_types.blunt_heavy,
 		weapon_box = {
 			0.08,
 			2.75,
-			0.08,
+			0.08
 		},
 		sweeps = {
 			{
@@ -795,16 +741,16 @@ weapon_template.actions = {
 				anchor_point_offset = {
 					0.1,
 					1.1,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		damage_profile = DamageProfileTemplates.force_staff_bash_stab_heavy,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
-			buff_stat_buffs.melee_attack_speed,
+			buff_stat_buffs.melee_attack_speed
 		},
-		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none
 	},
 	action_swipe = {
 		allowed_during_sprint = true,
@@ -824,72 +770,67 @@ weapon_template.actions = {
 		uninterruptible = true,
 		weapon_handling_template = "time_scale_1_2",
 		crosshair = {
-			crosshair_type = "dot",
+			crosshair_type = "dot"
 		},
 		action_movement_curve = {
 			{
 				modifier = 0.3,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.5,
-				t = 0.25,
+				t = 0.25
 			},
 			{
 				modifier = 0.5,
-				t = 0.3,
+				t = 0.3
 			},
 			{
 				modifier = 1.5,
-				t = 0.35,
+				t = 0.35
 			},
 			{
 				modifier = 1.5,
-				t = 0.4,
+				t = 0.4
 			},
 			{
 				modifier = 1.05,
-				t = 0.6,
+				t = 0.6
 			},
 			{
 				modifier = 0.75,
-				t = 1,
+				t = 1
 			},
-			start_modifier = 0.8,
+			start_modifier = 0.8
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-				chain_time = 0.15,
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions({
+				chain_time = 0.15
+			}),
 			special_action_hold = {
 				action_name = "action_stab_start",
-				chain_time = 0.7,
+				chain_time = 0.7
 			},
 			shoot_pressed = {
 				action_name = "rapid_left",
 				chain_time = 1,
-				reset_combo = true,
+				reset_combo = true
 			},
 			charge = {
 				action_name = "action_charge",
 				chain_time = 1,
-				reset_combo = true,
+				reset_combo = true
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.6,
-			},
+				chain_time = 0.6
+			}
 		},
 		damage_type = damage_types.blunt_light,
 		weapon_box = {
 			0.15,
 			0.15,
-			1.2,
+			1.2
 		},
 		sweeps = {
 			{
@@ -897,16 +838,16 @@ weapon_template.actions = {
 				anchor_point_offset = {
 					0,
 					-0.2,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		damage_profile = DamageProfileTemplates.force_staff_bash,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
-			buff_stat_buffs.melee_attack_speed,
+			buff_stat_buffs.melee_attack_speed
 		},
-		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none
 	},
 	action_swipe_heavy = {
 		allowed_during_sprint = true,
@@ -925,71 +866,66 @@ weapon_template.actions = {
 		total_time = 1.1,
 		uninterruptible = true,
 		crosshair = {
-			crosshair_type = "dot",
+			crosshair_type = "dot"
 		},
 		action_movement_curve = {
 			{
 				modifier = 0.3,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.5,
-				t = 0.25,
+				t = 0.25
 			},
 			{
 				modifier = 0.5,
-				t = 0.3,
+				t = 0.3
 			},
 			{
 				modifier = 1.5,
-				t = 0.35,
+				t = 0.35
 			},
 			{
 				modifier = 1.5,
-				t = 0.4,
+				t = 0.4
 			},
 			{
 				modifier = 1.05,
-				t = 0.6,
+				t = 0.6
 			},
 			{
 				modifier = 0.75,
-				t = 1,
+				t = 1
 			},
-			start_modifier = 0.8,
+			start_modifier = 0.8
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-				chain_time = 0.15,
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions({
+				chain_time = 0.15
+			}),
 			special_action_hold = {
 				action_name = "action_stab_start",
-				chain_time = 0.6,
+				chain_time = 0.6
 			},
 			shoot_pressed = {
 				action_name = "rapid_left",
 				chain_time = 0.7,
-				reset_combo = true,
+				reset_combo = true
 			},
 			charge = {
 				action_name = "action_charge",
 				chain_time = 0.7,
-				reset_combo = true,
+				reset_combo = true
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.6,
-			},
+				chain_time = 0.6
+			}
 		},
 		weapon_box = {
 			0.15,
 			0.15,
-			1.2,
+			1.2
 		},
 		sweeps = {
 			{
@@ -997,17 +933,17 @@ weapon_template.actions = {
 				anchor_point_offset = {
 					0,
 					-0.2,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		damage_type = damage_types.blunt_heavy,
 		damage_profile = DamageProfileTemplates.heavy_force_staff_bash,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
-			buff_stat_buffs.melee_attack_speed,
+			buff_stat_buffs.melee_attack_speed
 		},
-		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none
 	},
 	action_vent = {
 		abort_sprint = true,
@@ -1025,103 +961,48 @@ weapon_template.actions = {
 		vo_tag = "ability_venting",
 		total_time = math.huge,
 		crosshair = {
-			crosshair_type = "dot",
+			crosshair_type = "dot"
 		},
 		action_movement_curve = {
 			{
 				modifier = 0.5,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.6,
-				t = 0.15,
+				t = 0.15
 			},
 			{
 				modifier = 0.7,
-				t = 0.4,
+				t = 0.4
 			},
 			{
 				modifier = 0.85,
-				t = 5,
+				t = 5
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		running_action_state_to_action_input = {
 			fully_vented = {
-				input_name = "vent_release",
-			},
+				input_name = "vent_release"
+			}
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-				chain_time = 0.15,
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions({
+				chain_time = 0.15
+			}),
 			special_action_hold = {
 				action_name = "action_stab_start",
-				chain_time = 0.4,
-			},
+				chain_time = 0.4
+			}
 		},
 		time_scale_stat_buffs = {
-			buff_stat_buffs.vent_warp_charge_multiplier,
+			buff_stat_buffs.vent_warp_charge_multiplier
 		},
-		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none
 	},
-	action_inspect_3p = {
-		action_prevents_jump = true,
-		block_first_person_rotation = true,
-		can_crouch = false,
-		can_jump = false,
-		force_look = true,
-		kind = "inspect_3p",
-		lock_view = false,
-		skip_3p_anims = false,
-		stop_input = "inspect_stop",
-		total_time = math.huge,
-		anim_end_event_condition_func = function (unit, data, end_reason)
-			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
-		end,
-		crosshair = {
-			crosshair_type = "inspect",
-		},
-		allowed_chain_actions = {
-			inspect_3p_stop = {
-				action_name = "action_inspect",
-				chain_time = 1.1,
-			},
-		},
-		action_movement_curve = {
-			{
-				modifier = 0,
-				t = 0,
-			},
-			start_modifier = 0,
-		},
-		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
-	},
-	action_inspect = {
-		anim_end_event = "inspect_end",
-		anim_event = "inspect_start",
-		kind = "inspect",
-		lock_view = true,
-		skip_3p_anims = false,
-		start_input = "inspect_start",
-		stop_input = "inspect_stop",
-		total_time = math.huge,
-		crosshair = {
-			crosshair_type = "inspect",
-		},
-		allowed_chain_actions = {
-			inspect_3p_start = {
-				action_name = "action_inspect_3p",
-				chain_time = 0.75,
-			},
-		},
-		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
-	},
+	action_inspect = BaseTemplateSettings.generate_inspect_action(),
+	action_inspect_3p = BaseTemplateSettings.generate_inspect_3p_action()
 }
 
 table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
@@ -1130,7 +1011,7 @@ weapon_template.anim_state_machine_3p = "content/characters/player/human/third_p
 weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/force_staff"
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
-	uses_overheat = false,
+	uses_overheat = false
 }
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
@@ -1140,16 +1021,16 @@ weapon_template.suppression_template = "force_staff_p1_m1_suppression_assault"
 weapon_template.fx_sources = {
 	_charge = "fx_overheat",
 	_muzzle = "fx_overheat",
-	_overheat = "fx_overheat",
+	_overheat = "fx_overheat"
 }
 weapon_template.crosshair = {
-	crosshair_type = "dot",
+	crosshair_type = "dot"
 }
 weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"ranged",
 	"force_staff",
-	"p4",
+	"p4"
 }
 weapon_template.dodge_template = "killshot"
 weapon_template.sprint_template = "support"
@@ -1172,20 +1053,20 @@ weapon_template.base_stats = {
 				display_data = {
 					prefix = "loc_ingame_action_one",
 					display_stats = {
-						__all_basic_stats = true,
-					},
-				},
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_shoot_charged = {
 				damage_trait_templates.forcestaff_p4_m1_dps_stat,
 				display_data = {
 					prefix = "loc_ingame_action_two",
 					display_stats = {
-						__all_basic_stats = true,
-					},
-				},
-			},
-		},
+						__all_basic_stats = true
+					}
+				}
+			}
+		}
 	},
 	forcestaff_p4_m1_explosion_size_stat = {
 		display_name = "loc_stats_display_explosion_stat",
@@ -1193,9 +1074,9 @@ weapon_template.base_stats = {
 		explosion = {
 			action_shoot_charged = {
 				explosion_trait_templates.forcestaff_p4_m1_explosion_size_stat,
-				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats,
-			},
-		},
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
+			}
+		}
 	},
 	forcestaff_p4_m1_vent_speed_stat = {
 		display_name = "loc_stats_display_vent_speed",
@@ -1203,9 +1084,9 @@ weapon_template.base_stats = {
 		warp_charge = {
 			base = {
 				warp_charge_trait_templates.forcestaff_p4_m1_vent_speed_stat,
-				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats,
-			},
-		},
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
+			}
+		}
 	},
 	forcestaff_p4_m1_charge_speed_stat = {
 		display_name = "loc_stats_display_charge_speed",
@@ -1216,20 +1097,20 @@ weapon_template.base_stats = {
 				display_data = {
 					prefix = "loc_ingame_action_one",
 					display_stats = {
-						__all_basic_stats = true,
-					},
-				},
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_charge = {
 				charge_trait_templates.forcestaff_p4_m1_charge_speed_stat,
 				display_data = {
 					prefix = "loc_ingame_action_two",
 					display_stats = {
-						__all_basic_stats = true,
-					},
-				},
-			},
-		},
+						__all_basic_stats = true
+					}
+				}
+			}
+		}
 	},
 	forcestaff_p4_m1_warp_charge_cost_stat = {
 		display_name = "loc_stats_display_warp_resist_stat",
@@ -1240,30 +1121,30 @@ weapon_template.base_stats = {
 				display_data = {
 					prefix = "loc_ingame_action_one",
 					display_stats = {
-						__all_basic_stats = true,
-					},
-				},
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_charge = {
 				charge_trait_templates.forcestaff_p4_m1_warp_charge_cost_stat,
 				display_data = {
 					prefix = "loc_glossary_term_charge",
 					display_stats = {
-						__all_basic_stats = true,
-					},
-				},
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_shoot_charged = {
 				charge_trait_templates.forcestaff_secondary_action_charge_cost_stat,
 				display_data = {
 					prefix = "loc_ingame_action_two",
 					display_stats = {
-						__all_basic_stats = true,
-					},
-				},
-			},
-		},
-	},
+						__all_basic_stats = true
+					}
+				}
+			}
+		}
+	}
 }
 weapon_template.traits = {}
 
@@ -1272,32 +1153,32 @@ local bespoke_forcestaff_p4_traits = table.ukeys(WeaponTraitsBespokeForcestaffP4
 table.append(weapon_template.traits, bespoke_forcestaff_p4_traits)
 
 weapon_template.hipfire_inputs = {
-	shoot_pressed = true,
+	shoot_pressed = true
 }
 weapon_template.displayed_keywords = {
 	{
-		display_name = "loc_weapon_keyword_warp_weapon",
+		display_name = "loc_weapon_keyword_warp_weapon"
 	},
 	{
-		display_name = "loc_weapon_keyword_charged_attack",
-	},
+		display_name = "loc_weapon_keyword_charged_attack"
+	}
 }
 weapon_template.displayed_attacks = {
 	primary = {
 		display_name = "loc_forcestaff_p1_m1_attack_primary",
 		fire_mode = "projectile",
-		type = "hipfire",
+		type = "hipfire"
 	},
 	secondary = {
 		display_name = "loc_forcestaff_p1_m1_attack_primary",
 		fire_mode = "projectile",
-		type = "charge",
+		type = "charge"
 	},
 	special = {
 		desc = "loc_stats_special_action_melee_weapon_bash_forcestaff_desc",
 		display_name = "loc_forcestaff_p1_m1_attack_special",
-		type = "melee_hand",
-	},
+		type = "melee_hand"
+	}
 }
 weapon_template.weapon_card_data = {
 	main = {
@@ -1305,19 +1186,19 @@ weapon_template.weapon_card_data = {
 			header = "primary_attack",
 			icon = "charge",
 			sub_icon = "projectile",
-			value_func = "primary_attack",
+			value_func = "primary_attack"
 		},
 		{
 			header = "secondary_attack",
 			icon = "charge",
 			sub_icon = "projectile",
-			value_func = "secondary_attack",
-		},
+			value_func = "secondary_attack"
+		}
 	},
 	weapon_special = {
 		header = "weapon_bash",
-		icon = "melee_hand",
-	},
+		icon = "melee_hand"
+	}
 }
 weapon_template.special_action_name = "action_stab"
 

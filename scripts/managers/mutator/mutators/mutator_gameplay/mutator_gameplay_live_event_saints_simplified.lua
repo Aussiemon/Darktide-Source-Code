@@ -170,24 +170,24 @@ MutatorGameplayLiveEventSaintsSimplified.get_side_notification_data_formatter = 
 		local selected_color = Color.terminal_corner_selected(255, true)
 		local amount = string.format("{#color(%d,%d,%d)}%s{#reset()}", selected_color[2], selected_color[3], selected_color[4], amount_size)
 		local for_amount = string.format("{#color(%d,%d,%d)}%s{#reset()}", selected_color[2], selected_color[3], selected_color[4], Localize("loc_player_saints_relic_pickup_amount", true, {
-			points = amount_value,
+			points = amount_value
 		}))
 		local text = Localize(text_localization_key, true, {
 			amount = amount,
 			player_name = player_name,
-			amount_value = data.amount_value,
+			amount_value = data.amount_value
 		})
 		local enter_sound_event = notification_settings.notification_sound_event
 		local texts = {}
 
 		texts[#texts + 1] = reason and {
-			display_name = reason,
+			display_name = reason
 		}
 		texts[#texts + 1] = {
-			display_name = text,
+			display_name = text
 		}
 		texts[#texts + 1] = {
-			display_name = for_amount,
+			display_name = for_amount
 		}
 
 		return {
@@ -195,7 +195,7 @@ MutatorGameplayLiveEventSaintsSimplified.get_side_notification_data_formatter = 
 			texts = texts,
 			icon = icon_texture_large,
 			color = Color.terminal_grid_background(100, true),
-			enter_sound_event = enter_sound_event,
+			enter_sound_event = enter_sound_event
 		}
 	end
 end

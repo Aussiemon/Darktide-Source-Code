@@ -8,27 +8,27 @@ ammo_trait_templates.default_ammo_stat = {
 		1,
 		{
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	{
 		"ammunition_reserve",
 		{
 			max = 1,
-			min = 0,
-		},
-	},
+			min = 0
+		}
+	}
 }
 ammo_trait_templates.default_ammo_perk = {
 	{
 		"ammunition_clips",
 		1,
-		0.05,
+		0.05
 	},
 	{
 		"ammunition_reserve",
-		0.05,
-	},
+		0.05
+	}
 }
 ammo_trait_templates.flamer_p1_m1_ammo_stat = {
 	{
@@ -36,31 +36,31 @@ ammo_trait_templates.flamer_p1_m1_ammo_stat = {
 		1,
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		"ammunition_reserve",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
-	},
+			min = 0.25
+		}
+	}
 }
 ammo_trait_templates.default_explosive_ammo_stat = {
 	{
 		"ammunition_reserve",
 		{
 			max = 1,
-			min = 0,
-		},
-	},
+			min = 0
+		}
+	}
 }
 ammo_trait_templates.default_explosive_ammo_perk = {
 	{
 		"ammunition_reserve",
-		0.05,
-	},
+		0.05
+	}
 }
 
 return ammo_trait_templates

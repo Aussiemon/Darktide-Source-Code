@@ -18,7 +18,7 @@ RandomizedFriendRockUnit.init = function (self, context, slot, weapon_template, 
 	for _, component in ipairs(components_1p) do
 		unit_components[#unit_components + 1] = {
 			unit = base_unit_1p,
-			component = component,
+			component = component
 		}
 	end
 
@@ -28,7 +28,7 @@ RandomizedFriendRockUnit.init = function (self, context, slot, weapon_template, 
 	for _, component in ipairs(components_3p) do
 		unit_components[#unit_components + 1] = {
 			unit = base_unit_3p,
-			component = component,
+			component = component
 		}
 	end
 

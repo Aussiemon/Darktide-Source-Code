@@ -12,17 +12,17 @@ local view_settings = {
 	state_bound = true,
 	use_transition_ui = true,
 	wwise_states = {
-		options = WwiseGameSyncSettings.state_groups.options.ingame_menu,
+		options = WwiseGameSyncSettings.state_groups.options.ingame_menu
 	},
 	enter_sound_events = {
-		UISoundEvents.default_menu_enter,
+		UISoundEvents.default_menu_enter
 	},
 	exit_sound_events = {
-		UISoundEvents.default_menu_exit,
+		UISoundEvents.default_menu_exit
 	},
 	dummy_data = {
-		debug_preview = true,
-	},
+		debug_preview = true
+	}
 }
 
 return settings("InventoryWeaponMarksViewDeclarationSettings", view_settings)

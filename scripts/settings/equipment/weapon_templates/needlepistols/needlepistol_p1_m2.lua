@@ -40,9 +40,9 @@ weapon_template.action_inputs = {
 		input_sequence = {
 			{
 				input = "action_one_pressed",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	zoom_shoot = {
 		buffer_time = 0.225,
@@ -50,9 +50,9 @@ weapon_template.action_inputs = {
 		input_sequence = {
 			{
 				input = "action_one_pressed",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	zoom = {
 		buffer_time = 0.4,
@@ -64,10 +64,10 @@ weapon_template.action_inputs = {
 					input = "action_two_pressed",
 					setting = "toggle_ads",
 					setting_value = true,
-					value = true,
-				},
-			},
-		},
+					value = true
+				}
+			}
+		}
 	},
 	zoom_release = {
 		buffer_time = 0.25,
@@ -81,10 +81,10 @@ weapon_template.action_inputs = {
 					setting = "toggle_ads",
 					setting_value = true,
 					value = true,
-					time_window = math.huge,
-				},
-			},
-		},
+					time_window = math.huge
+				}
+			}
+		}
 	},
 	reload = {
 		buffer_time = 0,
@@ -92,28 +92,28 @@ weapon_template.action_inputs = {
 		input_sequence = {
 			{
 				input = "weapon_reload_pressed",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	wield = {
 		buffer_time = 0,
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				inputs = wield_inputs,
-			},
-		},
+				inputs = wield_inputs
+			}
+		}
 	},
 	special_action_push = {
 		buffer_time = 0.2,
 		input_sequence = {
 			{
 				input = "weapon_extra_pressed",
-				value = true,
-			},
-		},
-	},
+				value = true
+			}
+		}
+	}
 }
 
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
@@ -121,53 +121,45 @@ table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inp
 weapon_template.action_input_hierarchy = {
 	{
 		input = "shoot_pressed",
-		transition = "stay",
+		transition = "stay"
 	},
 	{
 		input = "zoom",
 		transition = {
 			{
 				input = "zoom_release",
-				transition = "previous",
+				transition = "previous"
 			},
 			{
 				input = "special_action_push",
-				transition = "stay",
+				transition = "stay"
 			},
 			{
 				input = "zoom_shoot",
-				transition = "stay",
+				transition = "stay"
 			},
 			{
 				input = "reload",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "wield",
-				transition = "base",
-			},
-			{
-				input = "combat_ability",
-				transition = "base",
-			},
-			{
-				input = "grenade_ability",
-				transition = "base",
-			},
-		},
+				transition = "base"
+			}
+		}
 	},
 	{
 		input = "special_action_push",
-		transition = "base",
+		transition = "base"
 	},
 	{
 		input = "wield",
-		transition = "stay",
+		transition = "stay"
 	},
 	{
 		input = "reload",
-		transition = "stay",
-	},
+		transition = "stay"
+	}
 }
 
 ActionInputHierarchy.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
@@ -183,17 +175,9 @@ weapon_template.weapon_special_tweak_data = {
 		end
 
 		return true
-	end,
+	end
 }
 weapon_template.actions = {
-	action_unwield = {
-		allowed_during_sprint = true,
-		kind = "unwield",
-		start_input = "wield",
-		total_time = 0,
-		uninterruptible = true,
-		allowed_chain_actions = {},
-	},
 	action_wield = {
 		allowed_during_sprint = true,
 		kind = "ranged_wield",
@@ -217,35 +201,29 @@ weapon_template.actions = {
 		end,
 		conditional_state_to_action_input = {
 			started_reload = {
-				input_name = "reload",
-			},
+				input_name = "reload"
+			}
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			zoom = {
 				action_name = "action_zoom",
-				chain_time = 0.2,
+				chain_time = 0.2
 			},
 			shoot_pressed = {
 				action_name = "action_shoot_hip",
-				chain_time = 0.2,
+				chain_time = 0.2
 			},
 			reload = {
-				action_name = "action_reload",
+				action_name = "action_reload"
 			},
 			special_action_push = {
 				{
 					action_name = "action_cycle_chem",
-					chain_time = 0.05,
-				},
-			},
-		},
+					chain_time = 0.05
+				}
+			}
+		}
 	},
 	action_shoot_hip = {
 		allow_shots_with_less_than_required_ammo = false,
@@ -261,25 +239,25 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 1.2,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 1.35,
-				t = 0.15,
+				t = 0.15
 			},
 			{
 				modifier = 1.15,
-				t = 0.175,
+				t = 0.175
 			},
 			{
 				modifier = 1.05,
-				t = 0.3,
+				t = 0.3
 			},
 			{
 				modifier = 1,
-				t = 0.5,
+				t = 0.5
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		fx = {
 			crit_shoot_sfx_alias = "critical_shot_extra",
@@ -288,55 +266,49 @@ weapon_template.actions = {
 			out_of_ammo_sfx_alias = "ranged_out_of_ammo",
 			shoot_sfx_alias = "ranged_single_shot",
 			spread_rotated_muzzle_flash = true,
-			line_effect = LineEffects.needle_trail,
+			line_effect = LineEffects.needle_trail
 		},
 		fire_configuration = {
 			anim_event = "attack_shoot",
 			anim_event_3p = "attack_shoot",
 			same_side_suppression_enabled = false,
 			hit_scan_template = HitScanTemplates.default_needlepistol_dart,
-			damage_type = damage_types.needle,
+			damage_type = damage_types.needle
 		},
 		fire_special_configuration = {
 			anim_event = "attack_shoot",
 			anim_event_3p = "attack_shoot",
 			same_side_suppression_enabled = false,
 			hit_scan_template = HitScanTemplates.needlepistol_dart_aoe,
-			damage_type = damage_types.needle,
+			damage_type = damage_types.needle
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			reload = {
-				action_name = "action_reload",
+				action_name = "action_reload"
 			},
 			shoot_pressed = {
 				action_name = "action_shoot_hip",
-				chain_time = 0.225,
+				chain_time = 0.225
 			},
 			zoom = {
 				action_name = "action_zoom",
-				chain_time = 0.2,
+				chain_time = 0.2
 			},
 			special_action_push = {
 				{
 					action_name = "action_cycle_chem",
-					chain_time = 0.2,
-				},
-			},
+					chain_time = 0.2
+				}
+			}
 		},
 		buff_keywords = {
-			buff_keywords.allow_hipfire_during_sprint,
+			buff_keywords.allow_hipfire_during_sprint
 		},
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
-			buff_stat_buffs.ranged_attack_speed,
-		},
+			buff_stat_buffs.ranged_attack_speed
+		}
 	},
 	action_shoot_zoomed = {
 		allow_shots_with_less_than_required_ammo = true,
@@ -349,30 +321,30 @@ weapon_template.actions = {
 		total_time = 0.3,
 		weapon_handling_template = "needlepistol_burst",
 		crosshair = {
-			crosshair_type = "ironsight",
+			crosshair_type = "ironsight"
 		},
 		action_movement_curve = {
 			{
 				modifier = 0.8,
-				t = 0.05,
+				t = 0.05
 			},
 			{
 				modifier = 0.75,
-				t = 0.15,
+				t = 0.15
 			},
 			{
 				modifier = 0.775,
-				t = 0.175,
+				t = 0.175
 			},
 			{
 				modifier = 0.85,
-				t = 0.3,
+				t = 0.3
 			},
 			{
 				modifier = 1,
-				t = 1,
+				t = 1
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		fx = {
 			crit_shoot_sfx_alias = "critical_shot_extra",
@@ -380,126 +352,108 @@ weapon_template.actions = {
 			out_of_ammo_sfx_alias = "ranged_out_of_ammo",
 			shoot_sfx_alias = "ranged_single_shot",
 			spread_rotated_muzzle_flash = true,
-			line_effect = LineEffects.needle_trail,
+			line_effect = LineEffects.needle_trail
 		},
 		fire_configuration = {
 			anim_event = "attack_shoot",
 			same_side_suppression_enabled = false,
 			hit_scan_template = HitScanTemplates.default_needlepistol_dart,
-			damage_type = damage_types.needle,
+			damage_type = damage_types.needle
 		},
 		fire_special_configuration = {
 			anim_event = "attack_shoot",
 			same_side_suppression_enabled = false,
 			hit_scan_template = HitScanTemplates.needlepistol_dart_aoe,
-			damage_type = damage_types.needle,
+			damage_type = damage_types.needle
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			reload = {
-				action_name = "action_reload",
+				action_name = "action_reload"
 			},
 			zoom_shoot = {
 				action_name = "action_shoot_zoomed",
-				chain_time = 0.225,
+				chain_time = 0.225
 			},
 			zoom_release = {
 				action_name = "action_unzoom",
-				chain_time = 0.225,
+				chain_time = 0.225
 			},
 			special_action_push = {
 				{
 					action_name = "action_cycle_chem",
-					chain_time = 0.2,
-				},
-			},
+					chain_time = 0.2
+				}
+			}
 		},
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
-			buff_stat_buffs.ranged_attack_speed,
-		},
+			buff_stat_buffs.ranged_attack_speed
+		}
 	},
 	action_zoom = {
 		kind = "aim",
 		start_input = "zoom",
 		total_time = 0.3,
 		crosshair = {
-			crosshair_type = "ironsight",
+			crosshair_type = "ironsight"
 		},
 		smart_targeting_template = SmartTargetingTemplates.alternate_fire_killshot,
 		action_movement_curve = {
 			{
 				modifier = 0.95,
-				t = 0.05,
+				t = 0.05
 			},
 			{
 				modifier = 0.95,
-				t = 0.15,
+				t = 0.15
 			},
 			{
 				modifier = 0.925,
-				t = 0.175,
+				t = 0.175
 			},
 			{
 				modifier = 0.95,
-				t = 0.3,
+				t = 0.3
 			},
 			{
 				modifier = 0.9,
-				t = 1,
+				t = 1
 			},
-			start_modifier = 0.9,
+			start_modifier = 0.9
 		},
 		allowed_chain_actions = {
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			reload = {
-				action_name = "action_reload",
+				action_name = "action_reload"
 			},
 			zoom_shoot = {
 				action_name = "action_shoot_zoomed",
-				chain_time = 0.175,
-			},
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-		},
+				chain_time = 0.175
+			}
+		}
 	},
 	action_unzoom = {
 		kind = "unaim",
 		start_input = "zoom_release",
 		total_time = 0.2,
 		crosshair = {
-			crosshair_type = "ironsight",
+			crosshair_type = "ironsight"
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			reload = {
-				action_name = "action_reload",
+				action_name = "action_reload"
 			},
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			zoom = {
-				action_name = "action_zoom",
+				action_name = "action_zoom"
 			},
 			special_action_push = {
 				{
-					action_name = "action_cycle_chem",
-				},
-			},
-		},
+					action_name = "action_cycle_chem"
+				}
+			}
+		}
 	},
 	action_reload = {
 		abort_sprint = true,
@@ -510,60 +464,54 @@ weapon_template.actions = {
 		stop_alternate_fire = true,
 		total_time = 3,
 		crosshair = {
-			crosshair_type = "none",
+			crosshair_type = "none"
 		},
 		action_movement_curve = {
 			{
 				modifier = 0.875,
-				t = 0.05,
+				t = 0.05
 			},
 			{
 				modifier = 0.95,
-				t = 0.075,
+				t = 0.075
 			},
 			{
 				modifier = 0.99,
-				t = 0.25,
+				t = 0.25
 			},
 			{
 				modifier = 1,
-				t = 0.3,
+				t = 0.3
 			},
 			{
 				modifier = 1.05,
-				t = 0.8,
+				t = 0.8
 			},
 			{
 				modifier = 1.05,
-				t = 0.9,
+				t = 0.9
 			},
 			{
 				modifier = 1,
-				t = 2,
+				t = 2
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			shoot_pressed = {
 				action_name = "action_shoot_hip",
-				chain_time = 2,
+				chain_time = 2
 			},
 			zoom = {
 				action_name = "action_zoom",
-				chain_time = 2,
-			},
+				chain_time = 2
+			}
 		},
 		time_scale_stat_buffs = {
-			buff_stat_buffs.reload_speed,
+			buff_stat_buffs.reload_speed
 		},
-		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none
 	},
 	action_cycle_chem = {
 		abort_sprint = false,
@@ -580,118 +528,62 @@ weapon_template.actions = {
 		total_time = 0.8,
 		uninterruptible = true,
 		crosshair = {
-			crosshair_type = "dot",
+			crosshair_type = "dot"
 		},
 		action_movement_curve = {
 			{
 				modifier = 1.2,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.8,
-				t = 0.25,
+				t = 0.25
 			},
 			{
 				modifier = 0.9,
-				t = 0.4,
+				t = 0.4
 			},
 			{
 				modifier = 1,
-				t = 1,
+				t = 1
 			},
-			start_modifier = 1.4,
+			start_modifier = 1.4
 		},
 		allowed_chain_actions = {
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			reload = {
 				action_name = "action_reload",
-				chain_time = 0.7,
+				chain_time = 0.7
 			},
 			special_action_push = {
 				action_name = "action_cycle_chem",
-				chain_time = 0.7,
+				chain_time = 0.7
 			},
 			shoot_pressed = {
 				action_name = "action_shoot_hip",
-				chain_time = 0.7,
+				chain_time = 0.7
 			},
 			zoom_shoot = {
 				action_name = "action_shoot_zoomed",
-				chain_time = 0.7,
+				chain_time = 0.7
 			},
 			zoom_release = {
 				action_name = "action_unzoom",
-				chain_time = 0.7,
+				chain_time = 0.7
 			},
 			zoom = {
 				action_name = "action_zoom",
-				chain_time = 0.7,
-			},
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-		},
+				chain_time = 0.7
+			}
+		}
 	},
-	action_inspect_3p = {
-		action_prevents_jump = true,
-		block_first_person_rotation = true,
-		can_crouch = false,
-		can_jump = false,
-		force_look = true,
-		kind = "inspect_3p",
-		lock_view = false,
-		skip_3p_anims = false,
-		stop_input = "inspect_stop",
-		total_time = math.huge,
-		anim_end_event_condition_func = function (unit, data, end_reason)
-			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
-		end,
-		crosshair = {
-			crosshair_type = "inspect",
-		},
-		allowed_chain_actions = {
-			inspect_3p_stop = {
-				action_name = "action_inspect",
-				chain_time = 1.1,
-			},
-		},
-		action_movement_curve = {
-			{
-				modifier = 0,
-				t = 0,
-			},
-			start_modifier = 0,
-		},
-		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
-	},
-	action_inspect = {
-		anim_end_event = "inspect_end",
-		anim_event = "inspect_start",
-		kind = "inspect",
-		lock_view = true,
-		skip_3p_anims = false,
-		start_input = "inspect_start",
-		stop_input = "inspect_stop",
-		total_time = math.huge,
-		crosshair = {
-			crosshair_type = "inspect",
-		},
-		allowed_chain_actions = {
-			inspect_3p_start = {
-				action_name = "action_inspect_3p",
-				chain_time = 0.75,
-			},
-		},
-		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
-	},
+	action_inspect = BaseTemplateSettings.generate_inspect_action(),
+	action_inspect_3p = BaseTemplateSettings.generate_inspect_3p_action()
 }
 weapon_template.buffs = {
 	on_equip = {
-		"m2_toxins",
-	},
+		"m2_toxins"
+	}
 }
 
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
@@ -703,12 +595,12 @@ weapon_template.base_stats = {
 		damage = {
 			action_shoot_hip = {
 				damage_trait_templates.default_dps_stat,
-				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_shoot_zoomed = {
-				damage_trait_templates.default_dps_stat,
-			},
-		},
+				damage_trait_templates.default_dps_stat
+			}
+		}
 	},
 	needlepistol_p1_mobility_stat = {
 		display_name = "loc_stats_display_mobility_stat",
@@ -716,37 +608,37 @@ weapon_template.base_stats = {
 		dodge = {
 			base = {
 				dodge_trait_templates.default_dodge_stat,
-				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats,
-			},
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
+			}
 		},
 		sprint = {
 			base = {
 				sprint_trait_templates.default_sprint_stat,
-				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats,
-			},
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
+			}
 		},
 		movement_curve_modifier = {
 			base = {
 				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat,
-				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats,
-			},
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
+			}
 		},
 		recoil = {
 			base = {
 				recoil_trait_templates.default_mobility_recoil_stat,
-				display_data = WeaponBarUIDescriptionTemplates.create_template("mobility_recoil", "loc_weapon_stats_display_hip_fire"),
+				display_data = WeaponBarUIDescriptionTemplates.create_template("mobility_recoil", "loc_weapon_stats_display_hip_fire")
 			},
 			alternate_fire = {
 				recoil_trait_templates.default_mobility_recoil_stat,
-				display_data = WeaponBarUIDescriptionTemplates.create_template("mobility_recoil", "loc_weapon_stats_display_ads"),
-			},
+				display_data = WeaponBarUIDescriptionTemplates.create_template("mobility_recoil", "loc_weapon_stats_display_ads")
+			}
 		},
 		spread = {
 			base = {
 				spread_trait_templates.default_mobility_spread_stat,
-				display_data = WeaponBarUIDescriptionTemplates.create_template("mobility_spread"),
-			},
-		},
+				display_data = WeaponBarUIDescriptionTemplates.create_template("mobility_spread")
+			}
+		}
 	},
 	needlepistol_p1_stability_stat = {
 		display_name = "loc_stats_display_stability_stat",
@@ -754,25 +646,25 @@ weapon_template.base_stats = {
 		recoil = {
 			base = {
 				recoil_trait_templates.default_recoil_stat,
-				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_recoil", "loc_weapon_stats_display_hip_fire"),
+				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_recoil", "loc_weapon_stats_display_hip_fire")
 			},
 			alternate_fire = {
 				recoil_trait_templates.default_recoil_stat,
-				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_recoil", "loc_weapon_stats_display_ads"),
-			},
+				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_recoil", "loc_weapon_stats_display_ads")
+			}
 		},
 		spread = {
 			base = {
 				spread_trait_templates.default_spread_stat,
-				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_spread"),
-			},
+				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_spread")
+			}
 		},
 		sway = {
 			alternate_fire = {
 				sway_trait_templates.default_sway_stat,
-				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_sway"),
-			},
-		},
+				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_sway")
+			}
+		}
 	},
 	needlepistol_p1_power_stat = {
 		display_name = "loc_stats_display_power_stat",
@@ -780,12 +672,12 @@ weapon_template.base_stats = {
 		damage = {
 			action_shoot_hip = {
 				damage_trait_templates.default_power_stat,
-				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_shoot_zoomed = {
-				damage_trait_templates.default_power_stat,
-			},
-		},
+				damage_trait_templates.default_power_stat
+			}
+		}
 	},
 	needlepistol_p1_ammo_stat = {
 		display_name = "loc_stats_display_ammo_stat",
@@ -793,10 +685,10 @@ weapon_template.base_stats = {
 		ammo = {
 			base = {
 				ammo_trait_templates.default_ammo_stat,
-				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats,
-			},
-		},
-	},
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
+			}
+		}
+	}
 }
 
 table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
@@ -812,26 +704,26 @@ weapon_template.ammo_template = "needle_pistol_p1_m1"
 weapon_template.conditional_state_to_action_input = {
 	{
 		conditional_state = "no_ammo_and_started_reload",
-		input_name = "reload",
+		input_name = "reload"
 	},
 	{
 		conditional_state = "no_ammo_with_delay",
-		input_name = "reload",
-	},
+		input_name = "reload"
+	}
 }
 weapon_template.no_ammo_delay = 0.25
 weapon_template.hud_configuration = {
 	uses_ammunition = true,
-	uses_overheat = false,
+	uses_overheat = false
 }
 weapon_template.sprint_ready_up_time = 0.02
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.fx_sources = {
 	_mag_well = "fx_reload",
-	_muzzle = "fx_muzzle_01",
+	_muzzle = "fx_muzzle_01"
 }
 weapon_template.crosshair = {
-	crosshair_type = "assault",
+	crosshair_type = "assault"
 }
 weapon_template.hit_marker_type = "center"
 weapon_template.alternate_fire_settings = {
@@ -845,41 +737,41 @@ weapon_template.alternate_fire_settings = {
 	sway_template = "default_needlepistol_killshot",
 	toughness_template = "killshot_zoomed",
 	crosshair = {
-		crosshair_type = "ironsight",
+		crosshair_type = "ironsight"
 	},
 	camera = {
 		custom_vertical_fov = 45,
 		near_range = 0.025,
-		vertical_fov = 55,
+		vertical_fov = 55
 	},
 	movement_speed_modifier = {
 		{
 			modifier = 0.9,
-			t = 0,
+			t = 0
 		},
 		{
 			modifier = 0.9,
-			t = 0.25,
+			t = 0.25
 		},
 		{
 			modifier = 0.85,
-			t = 0.35,
+			t = 0.35
 		},
 		{
 			modifier = 0.9,
-			t = 0.5,
+			t = 0.5
 		},
 		{
 			modifier = 1,
-			t = 1,
+			t = 1
 		},
-		start_modifier = 1,
-	},
+		start_modifier = 1
+	}
 }
 weapon_template.keywords = {
 	"ranged",
 	"needlepistol",
-	"p2",
+	"p2"
 }
 weapon_template.can_use_while_vaulting = true
 weapon_template.dodge_template = "assault"
@@ -898,39 +790,39 @@ local bespoke_needlepistol_p1_traits = table.ukeys(WeaponTraitsBespokeNeedlePist
 table.append(weapon_template.traits, bespoke_needlepistol_p1_traits)
 
 weapon_template.hipfire_inputs = {
-	shoot_pressed = true,
+	shoot_pressed = true
 }
 weapon_template.weapon_temperature_settings = {
 	barrel_threshold = 0.4,
 	decay_rate = 0.075,
 	grace_time = 0.4,
 	increase_rate = 0.07,
-	use_charge = false,
+	use_charge = false
 }
 weapon_template.displayed_keywords = {
 	{
-		display_name = "loc_weapon_keyword_mobile",
+		display_name = "loc_weapon_keyword_mobile"
 	},
 	{
-		display_name = "loc_weapon_keyword_chem",
-	},
+		display_name = "loc_weapon_keyword_chem"
+	}
 }
 weapon_template.displayed_attacks = {
 	primary = {
 		display_name = "loc_ranged_attack_primary",
 		fire_mode = "semi_auto",
-		type = "hipfire",
+		type = "hipfire"
 	},
 	secondary = {
 		display_name = "loc_ranged_attack_secondary_ads",
 		fire_mode = "semi_auto",
-		type = "ads",
+		type = "ads"
 	},
 	special = {
 		desc = "loc_stats_special_action_chem_swap_needlepistol_p1_m1_desc",
 		display_name = "loc_weapon_special_mode_switch",
-		type = "activate",
-	},
+		type = "activate"
+	}
 }
 weapon_template.weapon_card_data = {
 	main = {
@@ -938,31 +830,31 @@ weapon_template.weapon_card_data = {
 			header = "hipfire",
 			icon = "hipfire",
 			sub_icon = "semi_auto",
-			value_func = "primary_attack",
+			value_func = "primary_attack"
 		},
 		{
 			header = "ads",
 			icon = "ads",
 			sub_icon = "semi_auto",
-			value_func = "secondary_attack",
+			value_func = "secondary_attack"
 		},
 		{
 			header = "ammo",
-			value_func = "ammo",
-		},
+			value_func = "ammo"
+		}
 	},
 	weapon_special = {
 		header = "activate",
-		icon = "activate",
-	},
+		icon = "activate"
+	}
 }
 weapon_template.explicit_combo = {
 	{
-		"action_shoot_hip",
+		"action_shoot_hip"
 	},
 	{
-		"action_shoot_zoomed",
-	},
+		"action_shoot_zoomed"
+	}
 }
 weapon_template.special_action_name = "action_cycle_chem"
 

@@ -6,8 +6,8 @@ local view_element_player_panel_settings = {
 	button_text_margin = 20,
 	button_size = {
 		300,
-		50,
-	},
+		50
+	}
 }
 
 return settings("ViewElementPlayerPanelSettings", view_element_player_panel_settings)

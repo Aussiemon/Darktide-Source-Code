@@ -15,10 +15,10 @@ local voting_template = {
 	voting_impl = "network",
 	options = {
 		OPTIONS.yes,
-		OPTIONS.no,
+		OPTIONS.no
 	},
 	results = {
-		RESULTS.approved,
+		RESULTS.approved
 	},
 	timeout_option = OPTIONS.yes,
 	required_params = {},
@@ -97,7 +97,7 @@ local voting_template = {
 
 		Log.info("EXPEDITION_CONTINUE_VOTING", "vote_casted %s voter_peer_id:%s voter_peer_id:%s", voting_id, voter_peer_id, voter_peer_id)
 		Managers.event:trigger("event_on_continue_vote_casted", voter_peer_id, vote_option)
-	end,
+	end
 }
 
 return voting_template

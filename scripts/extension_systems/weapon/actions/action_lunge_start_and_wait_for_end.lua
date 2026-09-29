@@ -44,7 +44,9 @@ ActionLungeStartAndWaitForEnd.running_action_state = function (self, t, time_in_
 	end
 end
 
-ActionLungeStartAndWaitForEnd.server_correction_occurred = function (self)
+ActionLungeStartAndWaitForEnd.server_correction_occurred = function (self, ...)
+	ActionLungeStartAndWaitForEnd.super.server_correction_occurred(self, ...)
+
 	local character_sate_component = self._character_sate_component
 	local lunging_state_name = self._lunging_state_name
 	local current_character_state = character_sate_component.state_name

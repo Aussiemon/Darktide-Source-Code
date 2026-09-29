@@ -17,17 +17,17 @@ do
 		title_height = 70,
 		grid_spacing = {
 			0,
-			0,
+			0
 		},
 		grid_size = {
 			width - padding,
-			height,
+			height
 		},
 		mask_size = {
 			width + 40,
-			height,
+			height
 		},
-		edge_padding = padding,
+		edge_padding = padding
 	}
 end
 
@@ -39,26 +39,26 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	canvas_height = {
 		horizontal_alignment = "center",
 		scale = "fit_height",
 		size = {
 			1920,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	grid_background = {
 		horizontal_alignment = "right",
@@ -68,8 +68,8 @@ local scenegraph_definition = {
 		position = {
 			-29,
 			-170,
-			1,
-		},
+			1
+		}
 	},
 	grid_start = {
 		horizontal_alignment = "left",
@@ -77,13 +77,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	grid_content_pivot = {
 		horizontal_alignment = "right",
@@ -91,13 +91,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	mission_title = {
 		horizontal_alignment = "left",
@@ -105,13 +105,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			1200,
-			100,
+			100
 		},
 		position = {
 			100,
 			65,
-			1,
-		},
+			1
+		}
 	},
 	havoc_title = {
 		horizontal_alignment = "right",
@@ -119,13 +119,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			425,
-			550,
+			550
 		},
 		position = {
 			-62,
 			-287,
-			1,
-		},
+			1
+		}
 	},
 	panel_pivot = {
 		horizontal_alignment = "left",
@@ -133,13 +133,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			-120,
-			1,
-		},
+			1
+		}
 	},
 	panel = {
 		horizontal_alignment = "center",
@@ -149,8 +149,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	loading_pivot = {
 		horizontal_alignment = "left",
@@ -158,13 +158,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			-250,
-			1,
-		},
+			1
+		}
 	},
 	loading = {
 		horizontal_alignment = "center",
@@ -174,8 +174,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	loadout_pivot = {
 		horizontal_alignment = "left",
@@ -183,13 +183,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			-120,
-			1,
-		},
+			1
+		}
 	},
 	loadout = {
 		horizontal_alignment = "center",
@@ -199,8 +199,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			180,
-			1,
-		},
+			1
+		}
 	},
 	inspect_button_pivot = {
 		horizontal_alignment = "left",
@@ -208,13 +208,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			-120,
-			1,
-		},
+			1
+		}
 	},
 	inspect_button = {
 		horizontal_alignment = "center",
@@ -224,8 +224,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	talent_tooltip = {
 		horizontal_alignment = "left",
@@ -233,13 +233,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			400,
-			110,
+			110
 		},
 		position = {
 			0,
 			0,
-			63,
-		},
+			63
+		}
 	},
 	item_stats_pivot = {
 		horizontal_alignment = "center",
@@ -247,14 +247,14 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			3,
-		},
-	},
+			3
+		}
+	}
 }
 local widget_definitions = {
 	talent_tooltip = UIWidget.create_definition({
@@ -265,17 +265,17 @@ local widget_definitions = {
 					220,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
 			style_id = "background",
 			value = "content/ui/materials/backgrounds/default_square",
 			style = {
-				color = Color.terminal_background(nil, true),
-			},
+				color = Color.terminal_background(nil, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -288,9 +288,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -303,14 +303,14 @@ local widget_definitions = {
 				color = Color.black(200, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -323,9 +323,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					2,
-				},
-			},
+					2
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -338,9 +338,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -359,22 +359,22 @@ local widget_definitions = {
 					100,
 					255,
 					200,
-					50,
+					50
 				},
 				size = {
 					nil,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -391,24 +391,24 @@ local widget_definitions = {
 				text_color = Color.terminal_text_body(255, true),
 				size = {
 					nil,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				color = {
 					100,
 					100,
 					255,
-					0,
+					0
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -425,21 +425,21 @@ local widget_definitions = {
 				text_color = Color.terminal_text_body_sub_header(255, true),
 				size = {
 					nil,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "talent_tooltip", {
-		visible = false,
+		visible = false
 	}),
 	mission_title = UIWidget.create_definition({
 		{
@@ -447,7 +447,7 @@ local widget_definitions = {
 			style_id = "title",
 			value = "n/a",
 			value_id = "title",
-			style = LobbyViewFontStyle.title_text_style,
+			style = LobbyViewFontStyle.title_text_style
 		},
 		{
 			pass_type = "texture",
@@ -457,17 +457,17 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					1200,
-					18,
-				},
-			},
+					18
+				}
+			}
 		},
 		{
 			pass_type = "text",
 			style_id = "sub_title",
 			value = "n/a",
 			value_id = "sub_title",
-			style = LobbyViewFontStyle.sub_title_text_style,
-		},
+			style = LobbyViewFontStyle.sub_title_text_style
+		}
 	}, "mission_title"),
 	havoc_title = UIWidget.create_definition({
 		{
@@ -481,13 +481,13 @@ local widget_definitions = {
 				offset = {
 					0,
 					16,
-					11,
+					11
 				},
 				size = {
 					50,
-					50,
-				},
-			},
+					50
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -500,13 +500,13 @@ local widget_definitions = {
 				offset = {
 					1,
 					16,
-					10,
+					10
 				},
 				size = {
 					50,
-					50,
-				},
-			},
+					50
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -522,10 +522,10 @@ local widget_definitions = {
 				offset = {
 					53,
 					21,
-					10,
+					10
 				},
-				text_color = Color.golden_rod(255, true),
-			},
+				text_color = Color.golden_rod(255, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -536,14 +536,14 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					437,
-					20,
+					20
 				},
 				offset = {
 					0,
 					-4,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -554,14 +554,14 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					200,
-					30,
+					30
 				},
 				offset = {
 					0,
 					-8,
-					4,
-				},
-			},
+					4
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -574,14 +574,14 @@ local widget_definitions = {
 				color = Color.terminal_grid_background_gradient(255, true),
 				size = {
 					441,
-					570,
+					570
 				},
 				offset = {
 					-8,
 					-8,
-					2,
-				},
-			},
+					2
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -595,18 +595,18 @@ local widget_definitions = {
 					255,
 					169,
 					191,
-					153,
+					153
 				},
 				size = {
 					425,
-					550,
+					550
 				},
 				offset = {
 					0,
 					0,
-					2,
-				},
-			},
+					2
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -615,25 +615,25 @@ local widget_definitions = {
 					84,
 					169,
 					191,
-					153,
+					153
 				},
 				offset = {
 					5,
 					5,
-					1,
+					1
 				},
 				size = {
 					415,
-					540,
-				},
-			},
-		},
+					540
+				}
+			}
+		}
 	}, "havoc_title"),
 	grid_interaction = UIWidget.create_definition({
 		{
 			content_id = "hotspot",
-			pass_type = "hotspot",
-		},
+			pass_type = "hotspot"
+		}
 	}, "grid_background"),
 	metal_corners = UIWidget.create_definition({
 		{
@@ -643,15 +643,15 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					120,
-					240,
+					240
 				},
 				offset = {
 					0,
 					0,
-					62,
+					62
 				},
-				color = Color.white(255, true),
-			},
+				color = Color.white(255, true)
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -661,25 +661,25 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					120,
-					240,
+					240
 				},
 				offset = {
 					0,
 					0,
-					62,
+					62
 				},
 				color = Color.white(255, true),
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
-				},
-			},
+						1
+					}
+				}
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -688,15 +688,15 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					210,
-					390,
+					390
 				},
 				offset = {
 					0,
 					0,
-					62,
+					62
 				},
-				color = Color.white(255, true),
-			},
+				color = Color.white(255, true)
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -706,27 +706,27 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					210,
-					390,
+					390
 				},
 				offset = {
 					0,
 					0,
-					62,
+					62
 				},
 				color = Color.white(255, true),
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
-				},
-			},
-		},
-	}, "screen"),
+						1
+					}
+				}
+			}
+		}
+	}, "screen")
 }
 
 for i = 1, 4 do
@@ -745,13 +745,13 @@ for i = 1, 4 do
 				offset = {
 					32,
 					-5,
-					5,
+					5
 				},
 				size = {
 					30,
-					30,
-				},
-			},
+					30
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -765,15 +765,15 @@ for i = 1, 4 do
 				vertical_alignment = "top",
 				size = {
 					326,
-					20,
+					20
 				},
 				offset = {
 					67,
 					0,
-					10,
+					10
 				},
-				text_color = Color.golden_rod(255, true),
-			},
+				text_color = Color.golden_rod(255, true)
+			}
 		},
 		{
 			pass_type = "text",
@@ -787,21 +787,21 @@ for i = 1, 4 do
 				vertical_alignment = "top",
 				size = {
 					361,
-					51,
+					51
 				},
 				offset = {
 					32,
 					20,
-					10,
+					10
 				},
 				text_color = {
 					255,
 					169,
 					191,
-					153,
-				},
-			},
-		},
+					153
+				}
+			}
+		}
 	}, "havoc_title")
 end
 
@@ -811,8 +811,8 @@ local panel_definition = UIWidget.create_definition({
 		pass_type = "hotspot",
 		content = {
 			disabled = true,
-			use_is_focused = true,
-		},
+			use_is_focused = true
+		}
 	},
 	{
 		pass_type = "texture",
@@ -823,13 +823,13 @@ local panel_definition = UIWidget.create_definition({
 			horizontal_alignment = "center",
 			material_values = {
 				texture_icon = "content/ui/textures/icons/items/frames/default",
-				use_placeholder_texture = 1,
+				use_placeholder_texture = 1
 			},
 			size = {
 				90,
-				100,
-			},
-		},
+				100
+			}
+		}
 	},
 	{
 		pass_type = "texture",
@@ -840,18 +840,18 @@ local panel_definition = UIWidget.create_definition({
 			vertical_alignment = "top",
 			size = {
 				24,
-				24,
+				24
 			},
 			offset = {
 				0,
 				35,
-				2,
+				2
 			},
-			color = Color.ui_terminal(255, true),
+			color = Color.ui_terminal(255, true)
 		},
 		visibility_function = function (content, style)
 			return content.is_ready
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -862,23 +862,23 @@ local panel_definition = UIWidget.create_definition({
 			horizontal_alignment = "center",
 			size = {
 				40,
-				100,
+				100
 			},
 			offset = {
 				-65,
 				0,
-				2,
+				2
 			},
 			material_values = {
-				texture_map = nil,
+				texture_map = nil
 			},
 			color = {
 				0,
 				255,
 				255,
-				255,
-			},
-		},
+				255
+			}
+		}
 	},
 	{
 		pass_type = "text",
@@ -895,7 +895,7 @@ local panel_definition = UIWidget.create_definition({
 			local ignore_alpha = true
 
 			ColorUtilities.color_lerp(default_color, highlight_color, hover_progress, text_color, ignore_alpha)
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -912,7 +912,7 @@ local panel_definition = UIWidget.create_definition({
 			local ignore_alpha = true
 
 			ColorUtilities.color_lerp(default_color, highlight_color, hover_progress, text_color, ignore_alpha)
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -929,7 +929,7 @@ local panel_definition = UIWidget.create_definition({
 			local ignore_alpha = true
 
 			ColorUtilities.color_lerp(default_color, highlight_color, hover_progress, text_color, ignore_alpha)
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -939,17 +939,17 @@ local panel_definition = UIWidget.create_definition({
 			horizontal_alignment = "center",
 			size = {
 				140,
-				18,
+				18
 			},
 			offset = {
 				0,
 				165,
-				0,
-			},
+				0
+			}
 		},
 		visibility_function = function (content, style)
 			return content.has_guild
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -969,7 +969,7 @@ local panel_definition = UIWidget.create_definition({
 		end,
 		visibility_function = function (content, style)
 			return content.has_guild
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -981,13 +981,13 @@ local panel_definition = UIWidget.create_definition({
 			color = Color.ui_terminal(255, true),
 			size_addition = {
 				30,
-				15,
+				15
 			},
 			offset = {
 				0,
 				0,
-				0,
-			},
+				0
+			}
 		},
 		change_function = function (content, style)
 			local anim_progress = math.max(content.hotspot.anim_focus_progress, content.hotspot.anim_select_progress)
@@ -999,7 +999,7 @@ local panel_definition = UIWidget.create_definition({
 
 			size_addition[1] = size_padding
 			size_addition[2] = size_padding
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -1012,16 +1012,16 @@ local panel_definition = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				0,
+				0
 			},
 			size_addition = {
 				10,
-				5,
-			},
+				5
+			}
 		},
 		visibility_function = function (content, style)
 			return content.hotspot.is_focused or content.hotspot.is_hover
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -1041,21 +1041,21 @@ local panel_definition = UIWidget.create_definition({
 		end,
 		visibility_function = function (content, style)
 			return content.hotspot.is_focused or content.hotspot.is_hover
-		end,
-	},
+		end
+	}
 }, "panel")
 local loading_definition = UIWidget.create_definition({
 	{
 		pass_type = "rotated_texture",
 		value = "content/ui/materials/symbols/cog_big",
 		style = {
-			color = Color.ui_chalk_grey(255, true),
+			color = Color.ui_chalk_grey(255, true)
 		},
 		change_function = function (content, style)
 			local progress = -(Application.time_since_launch() * 0.3) % 1
 
 			style.angle = math.pi * 2 * progress
-		end,
+		end
 	},
 	{
 		pass_type = "rotated_texture",
@@ -1063,28 +1063,28 @@ local loading_definition = UIWidget.create_definition({
 		style = {
 			size = {
 				51,
-				51,
+				51
 			},
 			offset = {
 				43,
 				-40,
-				0,
+				0
 			},
-			color = Color.ui_chalk_grey(255, true),
+			color = Color.ui_chalk_grey(255, true)
 		},
 		change_function = function (content, style)
 			local progress = Application.time_since_launch() * 0.45 % 1
 
 			style.angle = math.pi * 2 * progress
-		end,
+		end
 	},
 	{
 		pass_type = "text",
 		style_id = "loading_text",
 		value_id = "loading_text",
 		value = Managers.localization:localize("loc_lobby_finding_player"),
-		style = LobbyViewFontStyle.loading_text_style,
-	},
+		style = LobbyViewFontStyle.loading_text_style
+	}
 }, "loading")
 local tooltip_visibility_on = "loc_lobby_legend_tooltip_visibility_on"
 local tooltip_visibility_off = "loc_lobby_legend_tooltip_visibility_off"
@@ -1098,14 +1098,14 @@ local legend_inputs = {
 		on_pressed_callback = "cb_on_open_main_menu_pressed",
 		visibility_function = function (parent)
 			return not parent._is_main_menu_open
-		end,
+		end
 	},
 	{
 		alignment = "right_alignment",
 		display_name = "loc_input_legend_inventory",
 		input_action = "lobby_open_inventory",
 		on_pressed_callback = "cb_on_inventory_pressed",
-		visibility_function = nil,
+		visibility_function = nil
 	},
 	{
 		alignment = "right_alignment",
@@ -1118,7 +1118,7 @@ local legend_inputs = {
 			parent._input_legend_element:set_display_name(id, display_name)
 
 			return true
-		end,
+		end
 	},
 	{
 		alignment = "right_alignment",
@@ -1131,8 +1131,8 @@ local legend_inputs = {
 			parent._input_legend_element:set_display_name(id, display_name)
 
 			return not parent._using_cursor_navigation
-		end,
-	},
+		end
+	}
 }
 
 return {
@@ -1142,5 +1142,5 @@ return {
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
 	item_stats_grid_settings = item_stats_grid_settings,
-	havoc_circumstance = widget_definitions.havoc_circumstance,
+	havoc_circumstance = widget_definitions.havoc_circumstance
 }

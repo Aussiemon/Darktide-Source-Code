@@ -27,7 +27,6 @@ ActionStanceChange.init = function (self, action_context, action_params, action_
 
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._inventory_slot_secondary_component = unit_data_extension:write_component("slot_secondary")
-	self._ability_type = action_settings.ability_type or "none"
 
 	local player_unit = self._player_unit
 
@@ -55,7 +54,7 @@ ActionStanceChange.start = function (self, action_settings, t, time_scale, actio
 	local charge_based_buffs_to_add = ability_template_tweak_data.charge_based_buffs_to_add
 
 	if charge_based_buffs_to_add then
-		local charges = self._ability_charges_used_at_start
+		local charges = self._ability_cost_at_start
 
 		buff_to_add = charge_based_buffs_to_add[charges]
 	else
@@ -107,12 +106,27 @@ ActionStanceChange.start = function (self, action_settings, t, time_scale, actio
 	end
 
 	local reload_weapon = talent_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_reloads_weapon)
+	local ogryn_free_reload_consumed = false
 
 	if reload_secondary or reload_weapon then
 		local inventory_slot_secondary_component = self._inventory_slot_secondary_component
 		local missing_ammo_in_clip = Ammo.missing_ammo_in_clips(inventory_slot_secondary_component)
+		local current_reserve = inventory_slot_secondary_component.current_ammunition_reserve
+
+		if current_reserve < missing_ammo_in_clip then
+			local buff_extension = self._buff_extension
+
+			if buff_extension:has_buff_using_buff_template("ogryn_free_reload_after_ability") then
+				inventory_slot_secondary_component.free_ammunition_transfer = true
+				ogryn_free_reload_consumed = true
+			end
+		end
 
 		Ammo.transfer_from_reserve_to_clip(inventory_slot_secondary_component, missing_ammo_in_clip)
+
+		if ogryn_free_reload_consumed then
+			inventory_slot_secondary_component.free_ammunition_transfer = false
+		end
 
 		local weapon_template = visual_loadout_extension:weapon_template_from_slot(slot_to_wield)
 		local reload_template = weapon_template.reload_template
@@ -176,8 +190,9 @@ ActionStanceChange.start = function (self, action_settings, t, time_scale, actio
 
 		if param_table then
 			param_table.unit = player_unit
-			param_table.ability_charges_used = self._ability_charges_used_at_start
+			param_table.ability_cost = self._ability_cost_at_start
 			param_table.remaining_ability_charges_before_use = self._remaining_ability_charges_before_use_at_start
+			param_table.ogryn_free_reload_consumed = ogryn_free_reload_consumed
 
 			buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
 		end

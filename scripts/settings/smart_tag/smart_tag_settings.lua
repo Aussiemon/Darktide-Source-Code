@@ -1,61 +1,53 @@
 ﻿-- chunkname: @scripts/settings/smart_tag/smart_tag_settings.lua
 
-local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
-local CompanionServoSkullAbility = require("scripts/utilities/companion/companion_servo_skull_ability")
-local CompanionServoSkullSettings = require("scripts/settings/companion/companion_servo_skull_settings")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
-local FixedFrame = require("scripts/utilities/fixed_frame")
+local DoubleTagTemplates = require("scripts/settings/smart_tag/double_tag_templates")
 local MinionPerception = require("scripts/utilities/minion_perception")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
-local Vo = require("scripts/utilities/vo")
+local UiSoundEvents = require("scripts/settings/ui/ui_sound_events")
 local VoQueryConstants = require("scripts/settings/dialogue/vo_query_constants")
-local special_rules = SpecialRulesSettings.special_rules
-local servo_skull_states = CompanionServoSkullSettings.STATES
 local vo_concepts = VoQueryConstants.concepts
 local vo_trigger_ids = VoQueryConstants.trigger_ids
 local groups = {
 	enemy = {
-		limit = 1,
+		limit = 1
 	},
-	double_tag_enemy = {
-		limit = 1,
+	double_tag = {
+		limit = 1
 	},
 	object = {
-		limit = 4,
+		limit = 4
 	},
 	health_station = {
-		limit = 1,
+		limit = 1
 	},
 	hacking = {
-		limit = 1,
+		limit = 1
 	},
 	location_ping = {
-		limit = 1,
+		limit = 1
 	},
 	location_threat = {
-		limit = 1,
+		limit = 1
 	},
 	location_attention = {
-		limit = 1,
-	},
+		limit = 1
+	}
 }
 local replies = {
 	ok = {
 		description = "loc_reply_smart_tag_ok",
 		voice_tag_concept = vo_concepts.on_demand_com_wheel,
-		voice_tag_id = vo_trigger_ids.com_wheel_vo_yes,
+		voice_tag_id = vo_trigger_ids.com_wheel_vo_yes
 	},
 	dibs = {
 		description = "loc_reply_smart_tag_dibs",
 		voice_tag_concept = vo_concepts.on_demand_com_wheel,
-		voice_tag_id = vo_trigger_ids.com_wheel_vo_need_that,
+		voice_tag_id = vo_trigger_ids.com_wheel_vo_need_that
 	},
 	follow_you = {
 		description = "loc_reply_smart_tag_follow",
 		voice_tag_concept = vo_concepts.on_demand_com_wheel,
-		voice_tag_id = vo_trigger_ids.com_wheel_vo_follow_you,
-	},
+		voice_tag_id = vo_trigger_ids.com_wheel_vo_follow_you
+	}
 }
 local templates = {
 	location_ping = {
@@ -64,15 +56,15 @@ local templates = {
 		is_cancelable = true,
 		lifetime = 60,
 		marker_type = "location_ping",
-		sound_enter_tagger = UISoundEvents.smart_tag_location_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_location_default_enter_others,
-		sound_exit_tagger = UISoundEvents.smart_tag_location_default_exit,
-		sound_exit_others = UISoundEvents.smart_tag_location_default_exit,
+		sound_enter_tagger = UiSoundEvents.smart_tag_location_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_location_default_enter_others,
+		sound_exit_tagger = UiSoundEvents.smart_tag_location_default_exit,
+		sound_exit_others = UiSoundEvents.smart_tag_location_default_exit,
 		voice_tag_concept = vo_concepts.on_demand_com_wheel,
 		voice_tag_id = vo_trigger_ids.com_wheel_vo_lets_go_this_way,
 		replies = {
-			replies.follow_you,
-		},
+			replies.follow_you
+		}
 	},
 	location_threat = {
 		display_name = "loc_smart_tag_type_threat",
@@ -80,13 +72,13 @@ local templates = {
 		is_cancelable = true,
 		lifetime = 30,
 		marker_type = "location_threat",
-		sound_enter_tagger = UISoundEvents.smart_tag_location_threat_enter,
-		sound_enter_others = UISoundEvents.smart_tag_location_threat_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_location_threat_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_location_threat_enter_others,
 		voice_tag_concept = vo_concepts.on_demand_com_wheel,
 		voice_tag_id = vo_trigger_ids.com_wheel_vo_enemy_over_here,
 		replies = {
-			replies.ok,
-		},
+			replies.ok
+		}
 	},
 	location_attention = {
 		display_name = "loc_smart_tag_type_attention",
@@ -94,491 +86,433 @@ local templates = {
 		is_cancelable = true,
 		lifetime = 30,
 		marker_type = "location_attention",
-		sound_enter_tagger = UISoundEvents.smart_tag_location_attention_enter,
-		sound_enter_others = UISoundEvents.smart_tag_location_attention_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_location_attention_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_location_attention_enter_others,
 		voice_tag_concept = vo_concepts.on_demand_com_wheel,
 		voice_tag_id = vo_trigger_ids.com_wheel_vo_over_here,
 		replies = {
-			replies.ok,
-		},
+			replies.ok
+		}
 	},
 	small_clip_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.dibs,
+			replies.dibs
 		},
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_ammo,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_ammo
 	},
 	large_clip_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.dibs,
+			replies.dibs
 		},
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_ammo,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_ammo
 	},
 	syringe_corruption_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.dibs,
+			replies.dibs
 		},
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_stimm_health,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_stimm_health
 	},
 	syringe_ability_boost_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.dibs,
+			replies.dibs
 		},
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_stimm_concentration,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_stimm_concentration
 	},
 	syringe_power_boost_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.dibs,
+			replies.dibs
 		},
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_stimm_power,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_stimm_power
 	},
 	syringe_speed_boost_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.dibs,
+			replies.dibs
 		},
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_stimm_speed,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_stimm_speed
 	},
 	small_grenade_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.dibs,
+			replies.dibs
 		},
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-		voice_tag_id = vo_trigger_ids.smart_tag_vo_small_grenade,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_small_grenade
 	},
 	side_mission_consumable_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.dibs,
+			replies.dibs
 		},
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_side_mission_consumable,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_side_mission_consumable
 	},
 	side_mission_grimoire_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.dibs,
+			replies.dibs
 		},
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_side_mission_grimoire,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_side_mission_grimoire
 	},
 	side_mission_tome_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.dibs,
+			replies.dibs
 		},
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_side_mission_tome,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_side_mission_tome
 	},
 	side_mission_communication_device_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.dibs,
+			replies.dibs
 		},
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_side_mission_communication_device,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_side_mission_communication_device
 	},
 	luggable_battery_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.ok,
+			replies.ok
 		},
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_battery,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_battery
 	},
 	luggable_container_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.ok,
+			replies.ok
 		},
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_container,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_container
 	},
 	luggable_control_rod_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.ok,
+			replies.ok
 		},
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_control_rod,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_control_rod
 	},
 	pocketable_medical_crate_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.dibs,
+			replies.dibs
 		},
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_medical_crate,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_medical_crate
 	},
 	pocketable_ammo_cache_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.dibs,
+			replies.dibs
 		},
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_deployed_ammo_crate,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_deployed_ammo_crate
 	},
 	deployed_medical_crate_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
 		voice_tag_concept = vo_concepts.generic_mission_vo,
-		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_deployed_medical_crate,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_deployed_medical_crate
 	},
 	deployed_ammo_cache_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_deployed_ammo_crate,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_deployed_ammo_crate
 	},
 	expeditions_loot_pickup_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others
 	},
 	expeditions_salvage_pickup_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others
 	},
 	expedition_expedition_grenade_airstrike_pocketable_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.dibs,
-		},
+			replies.dibs
+		}
 	},
 	expedition_expedition_grenade_artillery_strike_pocketable_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.dibs,
-		},
+			replies.dibs
+		}
 	},
 	expedition_expedition_grenade_big_pocketable_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.dibs,
-		},
+			replies.dibs
+		}
 	},
 	expedition_expedition_grenade_valkyrie_hover_pocketable_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.dibs,
-		},
+			replies.dibs
+		}
 	},
 	expedition_motion_detection_mine_fire_pocketable_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.dibs,
-		},
+			replies.dibs
+		}
 	},
 	expedition_motion_detection_mine_explosive_pocketable_pickup_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.dibs,
-		},
+			replies.dibs
+		}
 	},
 	expedition_motion_detection_mine_shock_pocketable_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.dibs,
-		},
+			replies.dibs
+		}
 	},
 	expedition_expedition_deployable_force_field_pocketable_pickup_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.dibs,
-		},
+			replies.dibs
+		}
 	},
 	expedition_expedition_time_syringe_timed_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.dibs,
-		},
+			replies.dibs
+		}
 	},
 	expedition_expedition_explosive_luggable_01_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.dibs,
-		},
+			replies.dibs
+		}
 	},
 	expedition_large_ammunition_crate_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.dibs,
+			replies.dibs
 		},
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_ammo,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_ammo
 	},
 	small_metal_pickup_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.ok,
+			replies.ok
 		},
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_forge_metal,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_forge_metal
 	},
 	large_metal_pickup_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.ok,
+			replies.ok
 		},
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_forge_metal,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_forge_metal
 	},
 	small_platinum_pickup_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.ok,
+			replies.ok
 		},
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_platinum,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_platinum
 	},
 	large_platinum_pickup_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.ok,
+			replies.ok
 		},
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_platinum,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_platinum
 	},
 	hacking_over_here = {
 		group = "hacking",
 		is_cancelable = true,
 		lifetime = 10,
 		replies = {
-			replies.ok,
+			replies.ok
 		},
-		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-	},
-	hacking_over_here_companion = {
-		can_override = true,
-		group = "hacking",
-		is_cancelable = false,
-		lifetime = 10,
-		override_ui_interaction_type = "hacking_companion",
-		replies = {
-			replies.ok,
-		},
-		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-		start = function (tag, tagger_unit)
-			if not tag._is_server then
-				return
-			end
-
-			local companion_spawner_extension = ScriptUnit.extension(tagger_unit, "companion_spawner_system")
-			local ability_extension = ScriptUnit.extension(tagger_unit, "ability_system")
-			local target_unit = tag:target_unit()
-			local companion_unit = companion_spawner_extension:spawned_unit_lookup(special_rules.cryptic_servo_skull_hack)
-
-			if CompanionServoSkullAbility.validate_target_func_hacking_ability(target_unit, ability_extension, companion_unit) then
-				CompanionServoSkullAbility.start_hacking_ability(companion_unit, target_unit, ability_extension)
-
-				tag.started_hacking = true
-			else
-				tag.started_hacking = false
-			end
-		end,
-		update = function (tag)
-			if not tag._is_server then
-				return
-			end
-
-			if not tag.started_hacking then
-				local tagger_unit = tag:tagger_unit()
-				local companion_spawner_extension = ScriptUnit.has_extension(tagger_unit, "companion_spawner_system")
-				local companion_unit = companion_spawner_extension and companion_spawner_extension:spawned_unit_lookup(special_rules.cryptic_servo_skull_hack)
-
-				if not ALIVE[companion_unit] then
-					return
-				end
-
-				local ability_extension = ScriptUnit.extension(tagger_unit, "ability_system")
-				local target_unit = tag:target_unit()
-
-				if CompanionServoSkullAbility.validate_target_func_hacking_ability(target_unit, ability_extension, companion_unit) then
-					CompanionServoSkullAbility.start_hacking_ability(companion_unit, target_unit, ability_extension)
-
-					tag.started_hacking = true
-				end
-			end
-		end,
-		stop = function (tag)
-			if not tag._is_server then
-				return
-			end
-		end,
+		voice_tag_concept = vo_concepts.on_demand_vo_tag_item
 	},
 	health_station_without_battery_over_here = {
 		group = "health_station",
 		is_cancelable = true,
 		lifetime = 10,
 		replies = {
-			replies.ok,
+			replies.ok
 		},
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-		voice_tag_id = vo_trigger_ids.smart_tag_vo_station_health_without_battery,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_station_health_without_battery
 	},
 	health_station_over_here = {
 		group = "health_station",
 		is_cancelable = true,
 		lifetime = 10,
 		replies = {
-			replies.dibs,
+			replies.dibs
 		},
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
-		voice_tag_id = vo_trigger_ids.smart_tag_vo_station_health,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_station_health
 	},
 	event_pickup_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_pickup_default_enter_others,
 		replies = {
-			replies.ok,
+			replies.ok
 		},
-		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
+		voice_tag_concept = vo_concepts.on_demand_vo_tag_item
 	},
 	live_event_objective_over_here = {
 		display_name = "loc_smart_tag_type_attention",
@@ -586,13 +520,13 @@ local templates = {
 		is_cancelable = true,
 		lifetime = 30,
 		marker_type = "location_attention",
-		sound_enter_tagger = UISoundEvents.smart_tag_location_attention_enter,
-		sound_enter_others = UISoundEvents.smart_tag_location_attention_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_location_attention_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_location_attention_enter_others,
 		replies = {
-			replies.ok,
+			replies.ok
 		},
 		voice_tag_concept = vo_concepts.on_demand_com_wheel,
-		voice_tag_id = vo_trigger_ids.com_wheel_vo_over_here,
+		voice_tag_id = vo_trigger_ids.com_wheel_vo_over_here
 	},
 	enemy_over_here = {
 		display_name = "loc_smart_tag_type_threat",
@@ -601,10 +535,10 @@ local templates = {
 		marker_type = "unit_threat",
 		target_unit_outline = "smart_tagged_enemy",
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_enemy,
-		sound_enter_tagger = UISoundEvents.smart_tag_location_threat_enter,
-		sound_enter_others = UISoundEvents.smart_tag_location_threat_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_location_threat_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_location_threat_enter_others,
 		replies = {
-			replies.ok,
+			replies.ok
 		},
 		start = function (tag, tagger_unit)
 			local breed = tag:breed()
@@ -647,7 +581,7 @@ local templates = {
 					Managers.event:trigger("event_smart_tag_created", tag)
 				end
 			end
-		end,
+		end
 	},
 	enemy_over_here_veteran = {
 		can_override = true,
@@ -657,10 +591,10 @@ local templates = {
 		marker_type = "unit_threat_veteran",
 		target_unit_outline = "veteran_smart_tag",
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_enemy,
-		sound_enter_tagger = UISoundEvents.smart_tag_location_threat_enter,
-		sound_enter_others = UISoundEvents.smart_tag_location_threat_enter_others,
+		sound_enter_tagger = UiSoundEvents.smart_tag_location_threat_enter,
+		sound_enter_others = UiSoundEvents.smart_tag_location_threat_enter_others,
 		replies = {
-			replies.ok,
+			replies.ok
 		},
 		start = function (tag, tagger_unit)
 			local breed = tag:breed()
@@ -703,194 +637,11 @@ local templates = {
 					Managers.event:trigger("event_smart_tag_created", tag)
 				end
 			end
-		end,
-	},
-	enemy_companion_target = {
-		can_override = true,
-		companion_order = true,
-		display_name = "loc_smart_tag_type_threat",
-		group = "double_tag_enemy",
-		lifetime = 25,
-		marker_type = "unit_threat_companion",
-		target_unit_outline = "adamant_smart_tag",
-		voice_tag_concept = vo_concepts.on_demand_vo_tag_enemy,
-		sound_enter_tagger = UISoundEvents.smart_tag_location_threat_enter,
-		sound_enter_others = UISoundEvents.smart_tag_location_threat_enter_others,
-		replies = {
-			replies.ok,
-		},
-		start = function (tag, tagger_unit)
-			if not tag._is_server then
-				return
-			end
-
-			local t = FixedFrame.get_latest_fixed_time()
-
-			tag.start_time = t
-
-			local vo_tag = "ability_targeting_a"
-			local currently_playing = Vo.is_currently_playing_dialogue(tagger_unit)
-
-			if currently_playing then
-				Vo.set_unit_vo_memory(tagger_unit, "user_memory", "command_triggered", "timeset")
-			else
-				Vo.play_combat_ability_event(tagger_unit, vo_tag)
-			end
-		end,
-		update = function (tag)
-			if not tag._is_server then
-				return
-			end
-
-			local t = FixedFrame.get_latest_fixed_time()
-			local time_in_tag = t - tag.start_time
-
-			if time_in_tag >= 1 and not tag.played_sound then
-				tag.played_sound = true
-
-				local companion_spawner_extension = ScriptUnit.has_extension(tag:tagger_unit(), "companion_spawner_system")
-
-				if companion_spawner_extension then
-					local companion_units = companion_spawner_extension and companion_spawner_extension:companion_units()
-
-					if companion_units then
-						for i = 1, #companion_units do
-							repeat
-								local companion_unit = companion_units[i]
-
-								if not companion_unit then
-									break
-								end
-
-								local companion_tag_manager_extension = ScriptUnit.has_extension(companion_unit, "companion_tag_manager_system")
-
-								if companion_tag_manager_extension then
-									local fx_system = Managers.state.extension:system("fx_system")
-
-									if not fx_system:has_running_template_of_name(companion_unit, EffectTemplates.companion_dog_bark.name) then
-										local template_effect_id = fx_system:start_template_effect(EffectTemplates.companion_dog_bark, companion_unit)
-
-										tag.template_effect_id = template_effect_id
-									end
-								end
-							until true
-						end
-					end
-				end
-			end
-		end,
-		stop = function (tag)
-			if not tag._is_server or not tag.template_effect_id then
-				return
-			end
-
-			local companion_spawner_extension = ScriptUnit.has_extension(tag:tagger_unit(), "companion_spawner_system")
-			local companion_units = companion_spawner_extension and companion_spawner_extension:companion_units()
-
-			if companion_units then
-				for i = 1, #companion_units do
-					repeat
-						local companion_unit = companion_units[i]
-
-						if not companion_unit then
-							break
-						end
-
-						local companion_tag_manager_extension = ScriptUnit.has_extension(companion_unit, "companion_tag_manager_system")
-
-						if companion_tag_manager_extension then
-							local fx_system = Managers.state.extension:system("fx_system")
-
-							if fx_system:has_running_template_of_name(companion_unit, EffectTemplates.companion_dog_bark.name) then
-								fx_system:stop_template_effect(tag.template_effect_id)
-
-								tag.template_effect_id = nil
-							end
-						end
-					until true
-				end
-			end
-		end,
-	},
-	servo_skull_enemy_companion_target = {
-		can_override = true,
-		companion_order = true,
-		display_name = "loc_smart_tag_type_threat",
-		group = "double_tag_enemy",
-		lifetime = 25,
-		marker_type = "unit_threat_companion",
-		target_unit_outline = "adamant_smart_tag",
-		voice_tag_concept = vo_concepts.on_demand_vo_tag_enemy,
-		sound_enter_tagger = UISoundEvents.smart_tag_location_threat_enter,
-		sound_enter_others = UISoundEvents.smart_tag_location_threat_enter_others,
-		replies = {
-			replies.ok,
-		},
-		start = function (tag, tagger_unit)
-			if not tag._is_server then
-				return
-			end
-
-			local t = FixedFrame.get_latest_fixed_time()
-
-			tag.start_time = t
-
-			local vo_tag = "ability_targeting_a"
-			local currently_playing = Vo.is_currently_playing_dialogue(tagger_unit)
-
-			if currently_playing then
-				Vo.set_unit_vo_memory(tagger_unit, "user_memory", "command_triggered", "timeset")
-			else
-				Vo.play_combat_ability_event(tagger_unit, vo_tag)
-			end
-
-			local companion_spawner_extension = ScriptUnit.extension(tagger_unit, "companion_spawner_system")
-			local ability_extension = ScriptUnit.extension(tagger_unit, "ability_system")
-			local target_unit = tag:target_unit()
-			local companion_unit = companion_spawner_extension:spawned_unit_lookup(special_rules.cryptic_servo_skull_hack)
-			local can_shoot, prevent_shooting_activation_on_fail = CompanionServoSkullAbility.validate_target_func_shooting_ability(target_unit, ability_extension, companion_unit)
-
-			if can_shoot then
-				CompanionServoSkullAbility.start_shooting_ability(companion_unit, target_unit, ability_extension)
-
-				tag.started_shooting = true
-			elseif prevent_shooting_activation_on_fail then
-				tag.started_shooting = true
-			else
-				tag.started_shooting = false
-			end
-		end,
-		update = function (tag)
-			if not tag._is_server then
-				return
-			end
-
-			if not tag.started_shooting then
-				local tagger_unit = tag:tagger_unit()
-				local companion_spawner_extension = ScriptUnit.has_extension(tagger_unit, "companion_spawner_system")
-				local companion_unit = companion_spawner_extension and companion_spawner_extension:spawned_unit_lookup(special_rules.cryptic_servo_skull_hack)
-
-				if not ALIVE[companion_unit] then
-					return
-				end
-
-				local ability_extension = ScriptUnit.extension(tagger_unit, "ability_system")
-				local target_unit = tag:target_unit()
-
-				if CompanionServoSkullAbility.validate_target_func_shooting_ability(target_unit, ability_extension, companion_unit) then
-					CompanionServoSkullAbility.start_shooting_ability(companion_unit, target_unit, ability_extension)
-
-					tag.started_shooting = true
-				end
-			end
-		end,
-		stop = function (tag)
-			if not tag._is_server then
-				return
-			end
-		end,
-	},
+		end
+	}
 }
+
+table.merge(templates, DoubleTagTemplates)
 
 for name, template in pairs(templates) do
 	template.name = name
@@ -903,7 +654,7 @@ end
 local smart_tag_settings = {
 	groups = groups,
 	replies = replies,
-	templates = templates,
+	templates = templates
 }
 
 return settings("SmartTagSettings", smart_tag_settings)

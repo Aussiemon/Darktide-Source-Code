@@ -14,7 +14,7 @@ require("scripts/extension_systems/health/psyker_force_field_unit_health_extensi
 require("scripts/foundation/managers/extension/extension_system_base")
 
 local CLIENT_RPCS = {
-	"rpc_kill_unit_health",
+	"rpc_kill_unit_health"
 }
 local HealthSystem = class("HealthSystem", "ExtensionSystemBase")
 

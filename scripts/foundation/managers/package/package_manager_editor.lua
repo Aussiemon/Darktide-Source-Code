@@ -16,7 +16,7 @@ PackageManagerEditor.load = function (self, package_name, reference_name, callba
 	if callback then
 		local item = {
 			id = id,
-			callback = callback,
+			callback = callback
 		}
 
 		self._callback_queue[#self._callback_queue + 1] = item

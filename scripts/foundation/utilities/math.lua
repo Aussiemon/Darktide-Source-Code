@@ -10,6 +10,9 @@ local pi = math.pi
 math.two_pi = pi * 2
 math.half_pi = pi * 0.5
 math.inverse_sqrt_2 = 1 / math_sqrt(2)
+math.small = 1e-08
+math.kinda_small = 0.0001
+math.very_small = 1e-20
 math.nan = 0 / 0
 
 math.is_nan = function (x)
@@ -562,6 +565,20 @@ math.ease_out_elastic = function (t)
 	local p = 0.3
 
 	return 2^(-10 * t) * math_sin((t - p * 0.25) * (2 * pi) / p) + 1
+end
+
+math.ease_in_out_elastic = function (t)
+	local c5 = 2 * math.pi / 4.5
+
+	if t == 0 then
+		return 0
+	elseif t == 1 then
+		return 1
+	elseif t < 0.5 then
+		return -(math.pow(2, 20 * t - 10) * math.sin((20 * t - 11.125) * c5)) / 2
+	else
+		return math.pow(2, -20 * t + 10) * math.sin((20 * t - 11.125) * c5) / 2 + 1
+	end
 end
 
 math.ease_sine = function (t)

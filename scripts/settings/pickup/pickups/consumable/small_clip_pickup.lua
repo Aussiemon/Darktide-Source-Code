@@ -16,7 +16,7 @@ local pickup_data = {
 		local amount = math.ceil(percentage * max_ammunition_reserve)
 
 		return amount
-	end,
+	end
 }
 
 return pickup_data

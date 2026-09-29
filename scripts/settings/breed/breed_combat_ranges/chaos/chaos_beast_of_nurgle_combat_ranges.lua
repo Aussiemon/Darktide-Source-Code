@@ -9,18 +9,18 @@ local combat_ranges = {
 				distance = 30,
 				distance_operator = "lesser",
 				sticky_time = 1,
-				switch_combat_range = "close",
-			},
+				switch_combat_range = "close"
+			}
 		},
 		close = {
 			{
 				distance = 32,
 				distance_operator = "greater",
 				sticky_time = 0,
-				switch_combat_range = "far",
-			},
-		},
-	},
+				switch_combat_range = "far"
+			}
+		}
+	}
 }
 
 return combat_ranges

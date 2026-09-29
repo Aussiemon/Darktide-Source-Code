@@ -38,7 +38,7 @@ local NAV_GRAPH_POINTS = {}
 local SLOT_COUNT = 1
 local OCCUPIED_COST = 2
 local REGISTER_FOR_CROWD_DISPERSION = {
-	teleporters = false,
+	teleporters = false
 }
 
 NavGraphExtension._create_nav_graphs = function (self)
@@ -97,11 +97,14 @@ NavGraphExtension.setup_from_component = function (self, component, unit, enable
 	table.clear_array(TEMP_SMART_OBJECT_IDS, #TEMP_SMART_OBJECT_IDS)
 
 	if optional_simple_smart_objects then
+		local level = Unit.level(unit)
+		local level_pose = Level.pose(level)
+
 		for i = 1, #optional_simple_smart_objects do
 			local simple_smart_object = optional_simple_smart_objects[i]
 			local smart_object = SmartObject:new()
 
-			smart_object:from_simple(simple_smart_object)
+			smart_object:from_simple_with_pose(simple_smart_object, level_pose)
 
 			smart_objects[#smart_objects + 1] = smart_object
 
@@ -111,12 +114,12 @@ NavGraphExtension.setup_from_component = function (self, component, unit, enable
 			TEMP_SMART_OBJECT_IDS[i] = smart_object_id
 		end
 	else
-		local new_smart_objects
+		local debug_draws, new_smart_objects
 
 		if optional_smart_objects then
 			new_smart_objects = optional_smart_objects
 		else
-			new_smart_objects = NavGraphQueries.generate_smart_objects(unit, self._nav_world, self._physics_world, component)
+			new_smart_objects, debug_draws = NavGraphQueries.generate_smart_objects(unit, self._nav_world, self._physics_world, component)
 		end
 
 		for i = 1, #new_smart_objects do

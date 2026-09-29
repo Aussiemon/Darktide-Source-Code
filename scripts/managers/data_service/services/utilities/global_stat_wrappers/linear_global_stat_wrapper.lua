@@ -9,7 +9,7 @@ LinearGlobalStatWrapper.init = function (self, obj, func_name, category, stat_na
 		delay = 0.09,
 		delay_jitter = 0.02,
 		step_factor = 0.04,
-		step_jitter = 0.01,
+		step_jitter = 0.01
 	})
 
 	return LinearGlobalStatWrapper.super.init(self, obj, func_name, category, stat_name, options)

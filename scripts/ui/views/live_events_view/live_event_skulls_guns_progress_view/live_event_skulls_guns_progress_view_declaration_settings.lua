@@ -7,7 +7,7 @@ local view_settings = {
 	package = "packages/ui/views/live_events_view/live_event_skulls_guns_progress_view/live_event_skulls_guns_progress_view",
 	path = "scripts/ui/views/live_events_view/live_event_skulls_guns_progress_view/live_event_skulls_guns_progress_view",
 	state_bound = false,
-	use_transition_ui = false,
+	use_transition_ui = false
 }
 
 return settings("LiveEventSkullsGunsProgressViewDeclarationSettings", view_settings)

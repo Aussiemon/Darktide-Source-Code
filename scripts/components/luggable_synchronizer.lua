@@ -85,52 +85,52 @@ LuggableSynchronizer.component_data = {
 	objective_name = {
 		ui_name = "Objective Name",
 		ui_type = "text_box",
-		value = "default",
+		value = "default"
 	},
 	objective_stages = {
 		decimals = 0,
 		min = 1,
 		ui_name = "Objective Stages",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	automatic_start = {
 		ui_name = "Auto Start On Mission Start",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	shuffle_stages = {
 		ui_name = "Shuffle Stages",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	use_safe_zone = {
 		ui_name = "Use Safe Zone",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	manual_luggable_spawn = {
 		ui_name = "Spawn Luggable Manually",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	max_socket_target = {
 		decimals = 0,
 		min = 1,
 		ui_name = "Max Socket Target",
 		ui_type = "number",
-		value = 10,
+		value = 10
 	},
 	keep_unused_sockets = {
 		ui_name = "Keep Unused Sockets",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	luggable_should_respawn = {
 		category = "Spawn settings",
 		ui_name = "Luggable should Respawn",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	luggable_respawn_timer = {
 		category = "Spawn settings",
@@ -138,7 +138,7 @@ LuggableSynchronizer.component_data = {
 		step = 0.1,
 		ui_name = "Luggable Respawn Timer (in sec.)",
 		ui_type = "number",
-		value = 3,
+		value = 3
 	},
 	luggable_reset_timer = {
 		category = "Spawn settings",
@@ -146,7 +146,7 @@ LuggableSynchronizer.component_data = {
 		step = 0.1,
 		ui_name = "Luggable Reset Timer (in sec.)",
 		ui_type = "number",
-		value = 120,
+		value = 120
 	},
 	luggable_consume_timer = {
 		category = "Spawn settings",
@@ -154,37 +154,37 @@ LuggableSynchronizer.component_data = {
 		step = 0.1,
 		ui_name = "Luggable Consume Timer (in sec.)",
 		ui_type = "number",
-		value = 3,
+		value = 3
 	},
 	is_side_mission_synchronizer = {
 		category = "Side Mission",
 		ui_name = "Is Side Mission Synchronizer",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	automatic_start_on_level_spawned = {
 		category = "Side Mission",
 		ui_name = "Automatic Start On Mission Start",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	inputs = {
 		start_luggable_event = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		spawn_single_luggable = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		hide_all_luggables = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"LuggableSynchronizerExtension",
-	},
+		"LuggableSynchronizerExtension"
+	}
 }
 
 return LuggableSynchronizer

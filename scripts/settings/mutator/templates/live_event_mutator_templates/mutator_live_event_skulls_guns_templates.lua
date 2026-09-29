@@ -8,18 +8,18 @@ local ResistanceUtils = require("scripts/managers/pacing/utilities/resistance_ut
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local _side_notification_settings = {
 	interaction_type_loc_strings = {
-		"loc_player_skulls_pickup_notification",
+		"loc_player_skulls_pickup_notification"
 	},
 	pickup_localization_by_size = {
 		large = "loc_tainted_skull_pickup",
 		medium = "loc_tainted_skull_pickup",
-		small = "loc_tainted_skull_pickup",
+		small = "loc_tainted_skull_pickup"
 	},
 	pickup_icon_by_size = {
 		large = "content/ui/materials/icons/currencies/live_events/skulls_live_event_small",
 		medium = "content/ui/materials/icons/currencies/live_events/skulls_live_event_small",
-		small = "content/ui/materials/icons/currencies/live_events/skulls_live_event_small",
-	},
+		small = "content/ui/materials/icons/currencies/live_events/skulls_live_event_small"
+	}
 }
 local _nurgle_totem_mutator_base = {
 	class = "scripts/managers/mutator/mutators/mutator_spawner",
@@ -38,22 +38,22 @@ local _nurgle_totem_mutator_base = {
 						{
 							unit_name = "content/environment/artsets/imperial/global/props/skull_totem/skull_totem_01",
 							unit_template_name = "level_prop",
-							unit_settings = LevelProps.nurgle_totem,
-						},
-					},
+							unit_settings = LevelProps.nurgle_totem
+						}
+					}
 				},
 				placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
 				size_lookup = {
-					"level_size_4",
+					"level_size_4"
 				},
 				spawn_settings = {
-					randomize_rotation = true,
-				},
-			},
+					randomize_rotation = true
+				}
+			}
 		},
 		{
 			class = "scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node_horde_trigger",
-			template = {},
+			template = {}
 		},
 		{
 			class = "scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node_enemy_template",
@@ -62,17 +62,17 @@ local _nurgle_totem_mutator_base = {
 				composition = EnemyEventSpawnerSettings.live_event_skull_totem_guards,
 				enemy_placement_method = MutatorSpawnerNode.CIRCLE_PLACEMENT,
 				spawn_settings = {
-					position_offset = 4,
-				},
-			},
-		},
-	},
+					position_offset = 4
+				}
+			}
+		}
+	}
 }
 local mutator_templates = {
 	mutator_nurgle_totem = table.clone(_nurgle_totem_mutator_base),
 	mutator_nurgle_totem_more = table.add_missing({
 		max_spawned_per_section = 2,
-		num_to_spawn = 5,
+		num_to_spawn = 5
 	}, table.clone(_nurgle_totem_mutator_base)),
 	mutator_live_event_skulls_notification_feed = {
 		activate_on_load = true,
@@ -81,15 +81,15 @@ local mutator_templates = {
 		gameplay_template = {
 			path = "scripts/managers/mutator/mutators/mutator_gameplay/mutator_gameplay_live_event_skulls",
 			start_module_on_activate = true,
-			settings = {},
+			settings = {}
 		},
-		side_notification = _side_notification_settings,
+		side_notification = _side_notification_settings
 	},
 	mutator_live_event_skulls_drop_single_skull_pickup_on_death = {
 		class = "scripts/managers/mutator/mutators/mutator_base",
 		random_spawn_buff_templates = {
 			buffs = {
-				"drop_single_skull_on_death",
+				"drop_single_skull_on_death"
 			},
 			breed_chances = {
 				chaos_beast_of_nurgle = 0,
@@ -120,15 +120,15 @@ local mutator_templates = {
 				renegade_netgunner = 0.0825,
 				renegade_rifleman = 0.01875,
 				renegade_shocktrooper = 0.0375,
-				renegade_sniper = 0.0825,
-			},
-		},
+				renegade_sniper = 0.0825
+			}
+		}
 	},
 	mutator_live_event_skulls_drop_many_skull_pickups_on_death = {
 		class = "scripts/managers/mutator/mutators/mutator_base",
 		random_spawn_buff_templates = {
 			buffs = {
-				"drop_many_skulls_on_death",
+				"drop_many_skulls_on_death"
 			},
 			breed_chances = {
 				chaos_beast_of_nurgle = 1,
@@ -159,9 +159,9 @@ local mutator_templates = {
 				renegade_netgunner = 0,
 				renegade_rifleman = 0,
 				renegade_shocktrooper = 0,
-				renegade_sniper = 0,
-			},
-		},
+				renegade_sniper = 0
+			}
+		}
 	},
 	mutator_live_event_skulls_guns_full = {
 		activate_on_load = true,
@@ -180,16 +180,16 @@ local mutator_templates = {
 							50,
 							35,
 							30,
-							25,
+							25
 						},
 						high = {
 							40,
 							30,
 							25,
 							20,
-							15,
+							15
 						},
-						interpolation_func = ResistanceUtils.interpolation_linear,
+						interpolation_func = ResistanceUtils.interpolation_linear
 					},
 					chance_of_coordinated_strike = {
 						interpolate_floats = true,
@@ -198,36 +198,36 @@ local mutator_templates = {
 							0.15,
 							0.175,
 							0.2,
-							0.25,
+							0.25
 						},
 						high = {
 							0.35,
 							0.4,
 							0.45,
 							0.5,
-							0.55,
+							0.55
 						},
-						interpolation_func = ResistanceUtils.interpolation_linear,
-					},
+						interpolation_func = ResistanceUtils.interpolation_linear
+					}
 				}),
 				notifications = {
 					event_start = {
 						style = "alert",
 						subtitle = "loc_skulls_guns_event_auto_event_start_subtitle",
 						title = "loc_skulls_guns_event_auto_event_start_title",
-						sound_event = UISoundEvents.notification_warning,
+						sound_event = UISoundEvents.notification_warning
 					},
 					event_end = {
 						style = "default",
 						subtitle = "loc_skulls_guns_event_auto_event_end_subtitle",
 						title = "loc_skulls_guns_event_auto_event_end_title",
-						sound_event = UISoundEvents.notification_achievement,
-					},
-				},
-			},
+						sound_event = UISoundEvents.notification_achievement
+					}
+				}
+			}
 		},
-		side_notification = _side_notification_settings,
-	},
+		side_notification = _side_notification_settings
+	}
 }
 
 return mutator_templates

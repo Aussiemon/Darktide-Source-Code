@@ -15,7 +15,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -23,8 +23,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"renegade_captain_taunt",
-					"cultist_captain_taunt",
-				},
+					"cultist_captain_taunt"
+				}
 			},
 			{
 				"user_context",
@@ -34,31 +34,31 @@ return function ()
 					"explicator",
 					"pilot",
 					"sergeant",
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"global_context",
 				"current_mission",
 				OP.NEQ,
-				"op_train",
+				"op_train"
 			},
 			{
 				"faction_memory",
 				"allow_captain_taunt_response",
 				OP.GT,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_0",
@@ -71,29 +71,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo",
+				"generic_mission_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"event_kill_target_damaged",
+				"event_kill_target_damaged"
 			},
 			{
 				"faction_memory",
 				"event_kill_target_damaged",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"event_kill_target_damaged",
 				OP.ADD,
-				1,
-			},
-		},
+				1
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_0",
@@ -106,32 +106,32 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo",
+				"generic_mission_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"event_kill_target_destroyed_a",
+				"event_kill_target_destroyed_a"
 			},
 			{
 				"faction_memory",
 				"event_kill_target_destroyed_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"event_kill_target_destroyed_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_giver_default_class",
-		},
+			target = "mission_giver_default_class"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -147,15 +147,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"event_kill_target_destroyed_a",
-				},
+					"event_kill_target_destroyed_a"
+				}
 			},
 			{
 				"user_context",
@@ -165,19 +165,19 @@ return function ()
 					"explicator",
 					"pilot",
 					"sergeant",
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_0",
@@ -190,32 +190,32 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo",
+				"generic_mission_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"event_kill_target_heavy_damage_a",
+				"event_kill_target_heavy_damage_a"
 			},
 			{
 				"faction_memory",
 				"event_kill_target_heavy_damage_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"event_kill_target_heavy_damage_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_giver_default_class",
-		},
+			target = "mission_giver_default_class"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -231,15 +231,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"event_kill_target_heavy_damage_a",
-				},
+					"event_kill_target_heavy_damage_a"
+				}
 			},
 			{
 				"user_context",
@@ -249,18 +249,18 @@ return function ()
 					"explicator",
 					"pilot",
 					"sergeant",
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 end

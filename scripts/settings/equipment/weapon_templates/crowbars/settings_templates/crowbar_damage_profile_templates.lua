@@ -35,7 +35,7 @@ local crowbar_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_0_9,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -45,8 +45,8 @@ local crowbar_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-	},
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
+	}
 }
 
 damage_templates.light_crowbar_tank = {
@@ -73,7 +73,7 @@ damage_templates.light_crowbar_tank = {
 					[armor_types.berserker] = damage_lerp_values.lerp_0_9,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -83,78 +83,78 @@ damage_templates.light_crowbar_tank = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
-				},
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
+				}
 			},
 			power_distribution = {
 				attack = {
 					60,
-					120,
+					120
 				},
 				impact = {
 					8,
-					14,
-				},
+					14
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				0.4,
-				0.8,
+				0.8
 			},
 			power_level_multiplier = {
 				0.5,
-				1.5,
-			},
+				1.5
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					35,
-					70,
+					70
 				},
 				impact = {
 					6,
-					10,
-				},
-			},
+					10
+				}
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					22,
-					50,
+					50
 				},
 				impact = {
 					5,
-					7,
-				},
-			},
+					7
+				}
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					15,
-					35,
+					35
 				},
 				impact = {
 					4,
-					5,
-				},
-			},
+					5
+				}
+			}
 		},
 		default_target = {
 			power_distribution = {
 				attack = {
 					10,
-					25,
+					25
 				},
 				impact = {
 					2,
-					5,
-				},
+					5
+				}
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.heavy_crowbar_tank = {
 	finesse_ability_damage_multiplier = 2,
@@ -180,7 +180,7 @@ damage_templates.heavy_crowbar_tank = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -190,90 +190,90 @@ damage_templates.heavy_crowbar_tank = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_1,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
-				},
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
+				}
 			},
 			power_distribution = {
 				attack = {
 					105,
-					210,
+					210
 				},
 				impact = {
 					10,
-					20,
-				},
+					20
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				0.4,
-				0.8,
+				0.8
 			},
 			power_level_multiplier = {
 				0.5,
-				1.5,
-			},
+				1.5
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					70,
-					140,
+					140
 				},
 				impact = {
 					8,
-					16,
-				},
-			},
+					16
+				}
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					45,
-					90,
+					90
 				},
 				impact = {
 					7,
-					14,
-				},
-			},
+					14
+				}
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					30,
-					65,
+					65
 				},
 				impact = {
 					6,
-					12,
-				},
-			},
+					12
+				}
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					25,
-					50,
+					50
 				},
 				impact = {
 					5,
-					10,
-				},
-			},
+					10
+				}
+			}
 		},
 		default_target = {
 			power_distribution = {
 				attack = {
 					15,
-					35,
+					35
 				},
 				impact = {
 					5,
-					10,
-				},
+					10
+				}
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.light_crowbar_smiter = {
 	finesse_ability_damage_multiplier = 2,
@@ -299,7 +299,7 @@ damage_templates.light_crowbar_smiter = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -309,56 +309,56 @@ damage_templates.light_crowbar_smiter = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_8,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
-				},
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
+				}
 			},
 			power_distribution = {
 				attack = {
 					90,
-					180,
+					180
 				},
 				impact = {
 					8,
-					14,
-				},
+					14
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				0.6,
-				1.2,
+				1.2
 			},
 			power_level_multiplier = {
 				0.5,
-				1.5,
-			},
+				1.5
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					30,
-					70,
+					70
 				},
 				impact = {
 					6,
-					10,
-				},
-			},
+					10
+				}
+			}
 		},
 		default_target = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					10,
-					20,
+					20
 				},
 				impact = {
 					2,
-					5,
-				},
+					5
+				}
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.heavy_crowbar_smiter = {
 	finesse_ability_damage_multiplier = 2,
@@ -384,7 +384,7 @@ damage_templates.heavy_crowbar_smiter = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_4,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -394,82 +394,82 @@ damage_templates.heavy_crowbar_smiter = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_1,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
-				},
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
+				}
 			},
 			power_distribution = {
 				attack = {
 					175,
-					350,
+					350
 				},
 				impact = {
 					12,
-					24,
-				},
+					24
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				0.8,
-				1.6,
+				1.6
 			},
 			power_level_multiplier = {
 				0.5,
-				1.5,
-			},
+				1.5
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					60,
-					120,
+					120
 				},
 				impact = {
 					8,
-					16,
-				},
+					16
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				0.4,
-				0.8,
-			},
+				0.8
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					25,
-					50,
+					50
 				},
 				impact = {
 					6,
-					12,
-				},
-			},
+					12
+				}
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					15,
-					30,
+					30
 				},
 				impact = {
 					4,
-					8,
-				},
-			},
+					8
+				}
+			}
 		},
 		default_target = {
 			power_distribution = {
 				attack = {
 					10,
-					25,
+					25
 				},
 				impact = {
 					3,
-					6,
-				},
+					6
+				}
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.light_crowbar_linesman = {
 	finesse_ability_damage_multiplier = 2,
@@ -487,83 +487,83 @@ damage_templates.light_crowbar_linesman = {
 			power_distribution = {
 				attack = {
 					60,
-					125,
+					125
 				},
 				impact = {
 					4,
-					8,
-				},
+					8
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				0.4,
-				0.8,
+				0.8
 			},
 			power_level_multiplier = {
 				0.5,
-				1.5,
-			},
+				1.5
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					45,
-					90,
+					90
 				},
 				impact = {
 					3,
-					6,
-				},
-			},
+					6
+				}
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					25,
-					55,
+					55
 				},
 				impact = {
 					3,
-					6,
-				},
-			},
+					6
+				}
+			}
 		},
 		default_target = {
 			power_distribution = {
 				attack = {
 					10,
-					30,
+					30
 				},
 				impact = {
 					2,
-					5,
-				},
+					5
+				}
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 overrides.light_crowbar_special = {
 	parent_template_name = "light_crowbar_smiter",
 	overrides = {
 		{
 			"stagger_category",
-			"melee",
+			"melee"
 		},
 		{
 			"stagger_override",
-			"light",
+			"light"
 		},
 		{
 			"cleave_distribution",
-			no_cleave,
+			no_cleave
 		},
 		{
 			"damage_type",
-			damage_types.sawing_stuck,
+			damage_types.sawing_stuck
 		},
 		{
 			"ignore_instant_ragdoll_chance",
-			true,
+			true
 		},
 		{
 			"targets",
@@ -572,15 +572,15 @@ overrides.light_crowbar_special = {
 			"attack",
 			{
 				95,
-				190,
-			},
+				190
+			}
 		},
 		{
 			"targets",
 			1,
 			"power_distribution",
 			"impact",
-			12,
+			12
 		},
 		{
 			"targets",
@@ -588,7 +588,7 @@ overrides.light_crowbar_special = {
 			"armor_damage_modifier",
 			"attack",
 			"armored",
-			damage_lerp_values.lerp_0_9,
+			damage_lerp_values.lerp_0_9
 		},
 		{
 			"targets",
@@ -596,32 +596,32 @@ overrides.light_crowbar_special = {
 			"armor_damage_modifier",
 			"attack",
 			"super_armor",
-			damage_lerp_values.lerp_0_4,
-		},
-	},
+			damage_lerp_values.lerp_0_4
+		}
+	}
 }
 overrides.light_crowbar_sticky = {
 	parent_template_name = "light_crowbar_tank",
 	overrides = {
 		{
 			"stagger_category",
-			"melee",
+			"melee"
 		},
 		{
 			"stagger_override",
-			"light",
+			"light"
 		},
 		{
 			"damage_type",
-			damage_types.sawing_stuck,
+			damage_types.sawing_stuck
 		},
 		{
 			"ignore_instant_ragdoll_chance",
-			true,
+			true
 		},
 		{
 			"ignore_stagger_reduction",
-			true,
+			true
 		},
 		{
 			"targets",
@@ -630,15 +630,15 @@ overrides.light_crowbar_sticky = {
 			"attack",
 			{
 				70,
-				140,
-			},
+				140
+			}
 		},
 		{
 			"targets",
 			1,
 			"power_distribution",
 			"impact",
-			16,
+			16
 		},
 		{
 			"targets",
@@ -646,7 +646,7 @@ overrides.light_crowbar_sticky = {
 			"armor_damage_modifier",
 			"attack",
 			"armored",
-			damage_lerp_values.lerp_1,
+			damage_lerp_values.lerp_1
 		},
 		{
 			"targets",
@@ -654,28 +654,32 @@ overrides.light_crowbar_sticky = {
 			"armor_damage_modifier",
 			"attack",
 			"super_armor",
-			damage_lerp_values.lerp_0_4,
-		},
-	},
+			damage_lerp_values.lerp_0_4
+		}
+	}
 }
 overrides.heavy_crowbar_special = {
 	parent_template_name = "heavy_crowbar_tank",
 	overrides = {
 		{
 			"stagger_category",
-			"sticky",
+			"sticky"
 		},
 		{
 			"cleave_distribution",
-			no_cleave,
+			no_cleave
 		},
 		{
 			"damage_type",
-			damage_types.sawing_stuck,
+			damage_types.sawing_stuck
 		},
 		{
 			"ignore_instant_ragdoll_chance",
-			true,
+			true
+		},
+		{
+			"ignore_stagger_reduction",
+			true
 		},
 		{
 			"targets",
@@ -684,8 +688,8 @@ overrides.heavy_crowbar_special = {
 			"attack",
 			{
 				190,
-				380,
-			},
+				380
+			}
 		},
 		{
 			"targets",
@@ -693,7 +697,7 @@ overrides.heavy_crowbar_special = {
 			"armor_damage_modifier",
 			"attack",
 			"armored",
-			damage_lerp_values.lerp_0_9,
+			damage_lerp_values.lerp_0_9
 		},
 		{
 			"targets",
@@ -701,35 +705,39 @@ overrides.heavy_crowbar_special = {
 			"armor_damage_modifier",
 			"attack",
 			"super_armor",
-			damage_lerp_values.lerp_0_7,
+			damage_lerp_values.lerp_0_7
 		},
 		{
 			"targets",
 			1,
 			"power_distribution",
 			"impact",
-			25,
+			25
 		},
-	},
+		{
+			"shield_breaker",
+			true
+		}
+	}
 }
 overrides.heavy_crowbar_sticky = {
 	parent_template_name = "heavy_crowbar_tank",
 	overrides = {
 		{
 			"damage_type",
-			damage_types.sawing_stuck,
+			damage_types.sawing_stuck
 		},
 		{
 			"stagger_override",
-			"medium",
+			"medium"
 		},
 		{
 			"ignore_instant_ragdoll_chance",
-			true,
+			true
 		},
 		{
 			"ignore_stagger_reduction",
-			true,
+			true
 		},
 		{
 			"targets",
@@ -738,8 +746,8 @@ overrides.heavy_crowbar_sticky = {
 			"attack",
 			{
 				130,
-				260,
-			},
+				260
+			}
 		},
 		{
 			"targets",
@@ -747,7 +755,7 @@ overrides.heavy_crowbar_sticky = {
 			"armor_damage_modifier",
 			"attack",
 			"armored",
-			damage_lerp_values.lerp_1,
+			damage_lerp_values.lerp_1
 		},
 		{
 			"targets",
@@ -755,19 +763,23 @@ overrides.heavy_crowbar_sticky = {
 			"armor_damage_modifier",
 			"attack",
 			"super_armor",
-			damage_lerp_values.lerp_0_8,
+			damage_lerp_values.lerp_0_8
 		},
 		{
 			"targets",
 			1,
 			"power_distribution",
 			"impact",
-			30,
+			30
 		},
-	},
+		{
+			"shield_breaker",
+			true
+		}
+	}
 }
 
 return {
 	base_templates = damage_templates,
-	overrides = overrides,
+	overrides = overrides
 }

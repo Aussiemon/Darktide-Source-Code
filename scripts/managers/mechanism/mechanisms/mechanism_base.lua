@@ -8,7 +8,7 @@ MechanismBase.INTERFACE = {
 	"sync_data",
 	"is_allowed_to_reserve_slots",
 	"peers_reserved_slots",
-	"peer_freed_slot",
+	"peer_freed_slot"
 }
 
 MechanismBase.init = function (self, mechanism_name, network_event_delegate, mechanism_context, optional_teams)

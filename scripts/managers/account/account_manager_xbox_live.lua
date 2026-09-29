@@ -19,7 +19,7 @@ local SIGNIN_STATES = {
 	idle = "",
 	loading_save = "loc_signin_load_save",
 	querying_storage = "loc_signin_query_storage",
-	signin_profile = "loc_signin_acquiring_user_profile",
+	signin_profile = "loc_signin_acquiring_user_profile"
 }
 
 AccountManagerXboxLive.init = function (self)
@@ -540,21 +540,21 @@ AccountManagerXboxLive._show_gamertag_popup = function (self)
 			description_text = "loc_popup_desc_signed_in_gamertag",
 			title_text = "loc_popup_info",
 			description_text_params = {
-				gamertag = self._gamertag,
+				gamertag = self._gamertag
 			},
 			options = {
 				{
 					close_on_pressed = true,
 					text = "loc_popup_button_confirm",
-					callback = callback(self, "_setup_friends_list"),
+					callback = callback(self, "_setup_friends_list")
 				},
 				{
 					close_on_pressed = true,
 					hotkey = "back",
 					text = "loc_exit_to_title_display_name",
-					callback = callback(self, "return_to_title_screen"),
-				},
-			},
+					callback = callback(self, "return_to_title_screen")
+				}
+			}
 		}
 
 		Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -803,26 +803,26 @@ AccountManagerXboxLive._show_disconnect_error = function (self)
 		title_text = "loc_popup_header_controller_disconnect_error",
 		priority_order = math.huge,
 		description_text_params = {
-			gamertag = self._gamertag,
+			gamertag = self._gamertag
 		},
 		options = {
 			{
 				close_on_pressed = true,
 				text = "loc_retry",
-				callback = callback(self, "_cb_verify_profile"),
+				callback = callback(self, "_cb_verify_profile")
 			},
 			{
 				close_on_pressed = true,
 				text = "loc_select_profile",
-				callback = callback(self, "_cb_open_profile_picker"),
+				callback = callback(self, "_cb_open_profile_picker")
 			},
 			{
 				close_on_pressed = true,
 				hotkey = "back",
 				text = "loc_exit_to_title_display_name",
-				callback = callback(self, "return_to_title_screen"),
-			},
-		},
+				callback = callback(self, "return_to_title_screen")
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -842,26 +842,26 @@ AccountManagerXboxLive._show_signed_out_error = function (self)
 		title_text = "loc_popup_header_signed_out_error",
 		priority_order = math.huge,
 		description_text_params = {
-			gamertag = self._gamertag,
+			gamertag = self._gamertag
 		},
 		options = {
 			{
 				close_on_pressed = true,
 				text = "loc_retry",
-				callback = callback(self, "_cb_verify_profile"),
+				callback = callback(self, "_cb_verify_profile")
 			},
 			{
 				close_on_pressed = true,
 				text = "loc_select_profile",
-				callback = callback(self, "_cb_open_profile_picker"),
+				callback = callback(self, "_cb_open_profile_picker")
 			},
 			{
 				close_on_pressed = true,
 				hotkey = "back",
 				text = "loc_exit_to_title_display_name",
-				callback = callback(self, "return_to_title_screen"),
-			},
-		},
+				callback = callback(self, "return_to_title_screen")
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -878,9 +878,9 @@ AccountManagerXboxLive._show_fatal_error = function (self, title_text, descripti
 			{
 				close_on_pressed = true,
 				text = "loc_popup_button_close",
-				callback = callback(self, "return_to_title_screen"),
-			},
-		},
+				callback = callback(self, "return_to_title_screen")
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -966,7 +966,7 @@ AccountManagerXboxLive.open_to_store = function (self, product_id)
 
 	if not async_job then
 		return Promise.rejected({
-			message = string.format("show_product_page_ui_async returned error_code=0x%x", error_code),
+			message = string.format("show_product_page_ui_async returned error_code=0x%x", error_code)
 		})
 	end
 
@@ -995,11 +995,11 @@ AccountManagerXboxLive.open_to_store = function (self, product_id)
 
 		if result == 0 then
 			return {
-				success = true,
+				success = true
 			}
 		else
 			return {
-				success = false,
+				success = false
 			}
 		end
 	end)

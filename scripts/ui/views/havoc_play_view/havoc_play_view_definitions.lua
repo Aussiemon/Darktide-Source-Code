@@ -11,15 +11,15 @@ local column_width = 483
 local column_spacing = 100
 local mission_detail_background_size = {
 	column_width + 200,
-	554,
+	554
 }
 local badge_size = {
 	294,
-	235.2,
+	235.2
 }
 local mission_detail_grid_size = {
 	mission_detail_background_size[1] - 30,
-	mission_detail_background_size[2],
+	mission_detail_background_size[2]
 }
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
@@ -29,13 +29,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			3,
-		},
+			3
+		}
 	},
 	page_header = {
 		horizontal_alignment = "left",
@@ -43,13 +43,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			1300,
-			80,
+			80
 		},
 		position = {
 			130,
 			10,
-			2,
-		},
+			2
+		}
 	},
 	page_sub_header = {
 		horizontal_alignment = "left",
@@ -57,13 +57,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			1300,
-			100,
+			100
 		},
 		position = {
 			0,
 			30,
-			0,
-		},
+			0
+		}
 	},
 	reward_area = {
 		horizontal_alignment = "right",
@@ -71,13 +71,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			400,
-			630,
+			630
 		},
 		position = {
 			-150,
 			32,
-			1,
-		},
+			1
+		}
 	},
 	reward_title = {
 		horizontal_alignment = "left",
@@ -85,13 +85,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			400,
-			30,
+			30
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	reward_description = {
 		horizontal_alignment = "left",
@@ -99,13 +99,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			400,
-			50,
+			50
 		},
 		position = {
 			0,
 			40,
-			1,
-		},
+			1
+		}
 	},
 	reward_objective_1 = {
 		horizontal_alignment = "left",
@@ -113,13 +113,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			400,
-			50,
+			50
 		},
 		position = {
 			0,
 			150,
-			1,
-		},
+			1
+		}
 	},
 	reward_objective_2 = {
 		horizontal_alignment = "left",
@@ -127,13 +127,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			400,
-			50,
+			50
 		},
 		position = {
 			0,
 			210,
-			1,
-		},
+			1
+		}
 	},
 	weekly_reward = {
 		horizontal_alignment = "right",
@@ -141,13 +141,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			400,
-			160,
+			160
 		},
 		position = {
 			0,
 			340,
-			1,
-		},
+			1
+		}
 	},
 	reward_header = {
 		horizontal_alignment = "left",
@@ -155,13 +155,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			400,
-			30,
+			30
 		},
 		position = {
 			0,
 			-40,
-			1,
-		},
+			1
+		}
 	},
 	mission_area = {
 		horizontal_alignment = "left",
@@ -169,13 +169,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			1040,
-			544,
+			544
 		},
 		position = {
 			130,
 			160,
-			1,
-		},
+			1
+		}
 	},
 	mission_detail_grid_background = {
 		horizontal_alignment = "right",
@@ -185,8 +185,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	mission_detail_grid = {
 		horizontal_alignment = "right",
@@ -196,8 +196,8 @@ local scenegraph_definition = {
 		position = {
 			mission_detail_grid_size[1] + 10,
 			-12,
-			2,
-		},
+			2
+		}
 	},
 	havoc_stepper = {
 		horizontal_alignment = "center",
@@ -205,13 +205,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			600,
-			180,
+			180
 		},
 		position = {
 			0,
 			60,
-			3,
-		},
+			3
+		}
 	},
 	detail = {
 		horizontal_alignment = "left",
@@ -219,13 +219,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			column_width,
-			344,
+			344
 		},
 		position = {
 			0,
 			250,
-			2,
-		},
+			2
+		}
 	},
 	current_rank_header = {
 		horizontal_alignment = "center",
@@ -233,13 +233,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			column_width,
-			25,
+			25
 		},
 		position = {
 			0,
 			-290,
-			0,
-		},
+			0
+		}
 	},
 	current_rank = {
 		horizontal_alignment = "center",
@@ -249,8 +249,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			-10,
-			5,
-		},
+			5
+		}
 	},
 	detail_header = {
 		horizontal_alignment = "right",
@@ -258,13 +258,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			column_width,
-			75,
+			75
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	detail_location = {
 		horizontal_alignment = "right",
@@ -272,13 +272,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			column_width,
-			269,
+			269
 		},
 		position = {
 			0,
 			269,
-			0,
-		},
+			0
+		}
 	},
 	objective = {
 		horizontal_alignment = "left",
@@ -286,13 +286,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			column_width,
-			200,
+			200
 		},
 		position = {
 			0,
 			210,
-			0,
-		},
+			0
+		}
 	},
 	objective_header = {
 		horizontal_alignment = "left",
@@ -300,13 +300,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			column_width,
-			68,
+			68
 		},
 		position = {
 			0,
 			0,
-			10,
-		},
+			10
+		}
 	},
 	reward_timer = {
 		horizontal_alignment = "left",
@@ -314,13 +314,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			800,
-			30,
+			30
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	play_button = {
 		horizontal_alignment = "right",
@@ -330,8 +330,8 @@ local scenegraph_definition = {
 		position = {
 			-180,
 			-150,
-			15,
-		},
+			15
+		}
 	},
 	party_finder_button = {
 		horizontal_alignment = "right",
@@ -341,8 +341,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			-180,
-			15,
-		},
+			15
+		}
 	},
 	play_button_disabled_info = {
 		horizontal_alignment = "center",
@@ -350,14 +350,14 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			380,
-			80,
+			80
 		},
 		position = {
 			0,
 			80,
-			3,
-		},
-	},
+			3
+		}
+	}
 }
 
 local function reward_objective_definition(scenegraph_id, text)
@@ -370,9 +370,9 @@ local function reward_objective_definition(scenegraph_id, text)
 					200,
 					10,
 					10,
-					10,
-				},
-			},
+					10
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -385,9 +385,9 @@ local function reward_objective_definition(scenegraph_id, text)
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -400,9 +400,9 @@ local function reward_objective_definition(scenegraph_id, text)
 				offset = {
 					0,
 					0,
-					4,
-				},
-			},
+					4
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -415,14 +415,14 @@ local function reward_objective_definition(scenegraph_id, text)
 				color = Color.black(255, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -431,14 +431,14 @@ local function reward_objective_definition(scenegraph_id, text)
 			style = {
 				color = Color.terminal_grid_background_gradient(nil, true),
 				size = {
-					50,
+					50
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -457,12 +457,12 @@ local function reward_objective_definition(scenegraph_id, text)
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				size = {
-					50,
-				},
-			},
+					50
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -478,14 +478,14 @@ local function reward_objective_definition(scenegraph_id, text)
 				offset = {
 					60,
 					0,
-					1,
+					1
 				},
 				size_addition = {
 					-140,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, scenegraph_id)
 end
 
@@ -499,9 +499,9 @@ local function rank_objective_definition(scenegraph_id, text)
 					200,
 					10,
 					10,
-					10,
-				},
-			},
+					10
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -514,9 +514,9 @@ local function rank_objective_definition(scenegraph_id, text)
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -529,9 +529,9 @@ local function rank_objective_definition(scenegraph_id, text)
 				offset = {
 					0,
 					0,
-					4,
-				},
-			},
+					4
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -544,14 +544,14 @@ local function rank_objective_definition(scenegraph_id, text)
 				color = Color.black(255, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -567,13 +567,13 @@ local function rank_objective_definition(scenegraph_id, text)
 				offset = {
 					20,
 					0,
-					1,
+					1
 				},
 				size_addition = {
 					-90,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -590,13 +590,13 @@ local function rank_objective_definition(scenegraph_id, text)
 				offset = {
 					40,
 					0,
-					1,
+					1
 				},
 				size = {
-					150,
-				},
-			},
-		},
+					150
+				}
+			}
+		}
 	}, scenegraph_id)
 end
 
@@ -615,15 +615,15 @@ local widget_definitions = {
 				offset = {
 					0,
 					-40,
-					1,
+					1
 				},
 				size_addition = {
 					0,
-					0,
+					0
 				},
-				text_color = Color.terminal_text_body_sub_header(nil, true),
+				text_color = Color.terminal_text_body_sub_header(nil, true)
 			},
-			value = Localize("loc_havoc_attempts"),
+			value = Localize("loc_havoc_attempts")
 		},
 		{
 			pass_type = "texture",
@@ -637,16 +637,16 @@ local widget_definitions = {
 				offset = {
 					-40,
 					0,
-					1,
+					1
 				},
 				size = {
 					31,
-					31,
+					31
 				},
 				material_values = {
-					texture_map = "content/ui/textures/icons/generic/havoc_strike",
-				},
-			},
+					texture_map = "content/ui/textures/icons/generic/havoc_strike"
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -660,16 +660,16 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size = {
 					31,
-					31,
+					31
 				},
 				material_values = {
-					texture_map = "content/ui/textures/icons/generic/havoc_strike",
-				},
-			},
+					texture_map = "content/ui/textures/icons/generic/havoc_strike"
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -683,17 +683,17 @@ local widget_definitions = {
 				offset = {
 					40,
 					0,
-					1,
+					1
 				},
 				size = {
 					31,
-					31,
+					31
 				},
 				material_values = {
-					texture_map = "content/ui/textures/icons/generic/havoc_strike",
-				},
-			},
-		},
+					texture_map = "content/ui/textures/icons/generic/havoc_strike"
+				}
+			}
+		}
 	}, "havoc_stepper"),
 	mission_detail_grid_background = UIWidget.create_definition({
 		{
@@ -703,11 +703,11 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
-				color = Color.terminal_frame(0, true),
-			},
-		},
+				color = Color.terminal_frame(0, true)
+			}
+		}
 	}, "mission_detail_grid_background"),
 	reward_objective_1 = reward_objective_definition("reward_objective_1", Localize("loc_havoc_reward_objective_order")),
 	reward_objective_2 = rank_objective_definition("reward_objective_2", Localize("loc_havoc_reward_objective_highest_weekly")),
@@ -719,8 +719,8 @@ local widget_definitions = {
 			style = {
 				horizontal_alignment = "center",
 				vertical_alignment = "center",
-				color = Color.terminal_frame(nil, true),
-			},
+				color = Color.terminal_frame(nil, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -734,9 +734,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					7,
-				},
-			},
+					7
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -748,14 +748,14 @@ local widget_definitions = {
 				color = Color.terminal_background_gradient(nil, true),
 				size_addition = {
 					0,
-					-40,
+					-40
 				},
 				offset = {
 					0,
 					0,
-					2,
-				},
-			},
+					2
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -768,14 +768,14 @@ local widget_definitions = {
 				color = Color.black(200, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -788,14 +788,14 @@ local widget_definitions = {
 				color = Color.black(200, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -809,13 +809,13 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					6,
+					6
 				},
 				size_addition = {
 					0,
-					-40,
-				},
-			},
+					-40
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -826,21 +826,21 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size_addition = {
 					0,
-					-40,
-				},
-			},
+					-40
+				}
+			}
 		},
 		{
 			pass_type = "rect",
 			style_id = "background",
 			value_id = "content/ui/materials/backgrounds/default_square",
 			style = {
-				color = Color.black(150, true),
-			},
+				color = Color.black(150, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -853,14 +853,14 @@ local widget_definitions = {
 				color = Color.black(255, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -873,21 +873,21 @@ local widget_definitions = {
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				size = {
 					192,
-					128,
+					128
 				},
 				offset = {
 					0,
 					-20,
-					7,
+					7
 				},
 				material_values = {
-					texture_map = "content/ui/textures/icons/engrams/engram_rarity_01",
-				},
-			},
+					texture_map = "content/ui/textures/icons/engrams/engram_rarity_01"
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -899,14 +899,14 @@ local widget_definitions = {
 				color = Color.item_rarity_1(255, true),
 				size = {
 					165,
-					165,
+					165
 				},
 				offset = {
 					0,
 					-20,
-					6,
-				},
-			},
+					6
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -919,18 +919,18 @@ local widget_definitions = {
 				offset = {
 					-20,
 					-6,
-					4,
+					4
 				},
 				default_offset = {
 					-20,
 					-6,
-					4,
+					4
 				},
 				size = {
 					42,
-					30,
-				},
-			},
+					30
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -943,18 +943,18 @@ local widget_definitions = {
 				offset = {
 					-60,
 					-6,
-					4,
+					4
 				},
 				default_offset = {
 					-60,
 					-6,
-					4,
+					4
 				},
 				size = {
 					42,
-					30,
-				},
-			},
+					30
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -967,19 +967,19 @@ local widget_definitions = {
 				offset = {
 					-100,
 					-6,
-					4,
+					4
 				},
 				default_offset = {
 					-100,
 					-6,
-					4,
+					4
 				},
 				size = {
 					42,
-					30,
-				},
-			},
-		},
+					30
+				}
+			}
+		}
 	}, "weekly_reward"),
 	reward_header = UIWidget.create_definition({
 		{
@@ -995,16 +995,16 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size_addition = {
 					0,
-					0,
+					0
 				},
-				text_color = Color.terminal_text_body(nil, true),
+				text_color = Color.terminal_text_body(nil, true)
 			},
-			value = Localize("loc_havoc_reset_rewards"),
-		},
+			value = Localize("loc_havoc_reset_rewards")
+		}
 	}, "reward_header"),
 	reward_title = UIWidget.create_definition({
 		{
@@ -1020,16 +1020,16 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size_addition = {
 					0,
-					0,
+					0
 				},
-				text_color = Color.terminal_text_header(nil, true),
+				text_color = Color.terminal_text_header(nil, true)
 			},
-			value = Localize("loc_havoc_weekly_cache_name"),
-		},
+			value = Localize("loc_havoc_weekly_cache_name")
+		}
 	}, "reward_title"),
 	reward_description = UIWidget.create_definition({
 		{
@@ -1045,16 +1045,16 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size_addition = {
 					0,
-					0,
+					0
 				},
-				text_color = Color.terminal_text_body(nil, true),
+				text_color = Color.terminal_text_body(nil, true)
 			},
-			value = Localize("loc_havoc_reward_objective_description"),
-		},
+			value = Localize("loc_havoc_reward_objective_description")
+		}
 	}, "reward_description"),
 	current_rank_header = UIWidget.create_definition({
 		{
@@ -1070,12 +1070,12 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
-				text_color = Color.terminal_text_header(nil, true),
+				text_color = Color.terminal_text_header(nil, true)
 			},
-			value = Localize("loc_havoc_order_info_overlay"),
-		},
+			value = Localize("loc_havoc_order_info_overlay")
+		}
 	}, "current_rank_header"),
 	reward_timer_header = UIWidget.create_definition({
 		{
@@ -1091,26 +1091,26 @@ local widget_definitions = {
 				offset = {
 					0,
 					30,
-					1,
+					1
 				},
-				text_color = Color.terminal_text_body(255, true),
+				text_color = Color.terminal_text_body(255, true)
 			},
-			value = Localize("loc_havoc_time"),
-		},
+			value = Localize("loc_havoc_time")
+		}
 	}, "reward_timer"),
 	play_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "play_button", {
 		gamepad_action = "confirm_pressed",
 		original_text = Utf8.upper(Localize("loc_story_mission_play_menu_button_start_mission")),
 		hotspot = {
-			on_pressed_sound = nil,
-		},
+			on_pressed_sound = nil
+		}
 	}),
 	party_finder_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "party_finder_button", {
 		gamepad_action = "mission_board_group_finder_open",
 		original_text = Utf8.upper(Localize("loc_group_finder_menu_title")),
 		hotspot = {
-			on_pressed_sound = nil,
-		},
+			on_pressed_sound = nil
+		}
 	}),
 	page_header = UIWidget.create_definition({
 		{
@@ -1128,11 +1128,11 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
-			value = Localize("loc_havoc_name"),
-		},
+			value = Localize("loc_havoc_name")
+		}
 	}, "page_header"),
 	detail = UIWidget.create_definition({
 		{
@@ -1144,9 +1144,9 @@ local widget_definitions = {
 					200,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -1163,9 +1163,9 @@ local widget_definitions = {
 				offset = {
 					20,
 					-10,
-					2,
-				},
-			},
+					2
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -1182,9 +1182,9 @@ local widget_definitions = {
 				offset = {
 					20,
 					16,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1197,9 +1197,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
-				},
-			},
+					5
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1212,14 +1212,14 @@ local widget_definitions = {
 				color = Color.black(200, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1232,9 +1232,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
-				},
-			},
+					5
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1244,9 +1244,9 @@ local widget_definitions = {
 			value_id = "location_image",
 			style = {
 				material_values = {
-					texture_map = "content/ui/textures/missions/quickplay",
-				},
-			},
+					texture_map = "content/ui/textures/missions/quickplay"
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -1257,12 +1257,12 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					6,
-				},
+					6
+				}
 			},
 			visibility_function = function (content)
 				return content.locked
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -1279,12 +1279,12 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					7,
-				},
+					7
+				}
 			},
 			visibility_function = function (content)
 				return content.locked
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -1301,12 +1301,12 @@ local widget_definitions = {
 				offset = {
 					20,
 					10,
-					8,
-				},
+					8
+				}
 			},
 			visibility_function = function (content)
 				return content.locked
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -1323,16 +1323,16 @@ local widget_definitions = {
 				offset = {
 					20,
 					48,
-					8,
+					8
 				},
 				size_addition = {
 					-40,
-					0,
-				},
+					0
+				}
 			},
 			visibility_function = function (content)
 				return content.locked
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -1349,16 +1349,16 @@ local widget_definitions = {
 				offset = {
 					20,
 					71,
-					8,
+					8
 				},
 				size_addition = {
 					-40,
-					0,
-				},
+					0
+				}
 			},
 			visibility_function = function (content)
 				return content.locked
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -1375,16 +1375,16 @@ local widget_definitions = {
 				offset = {
 					20,
 					94,
-					8,
+					8
 				},
 				size_addition = {
 					-40,
-					0,
-				},
+					0
+				}
 			},
 			visibility_function = function (content)
 				return content.locked
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -1401,17 +1401,17 @@ local widget_definitions = {
 				offset = {
 					20,
 					117,
-					8,
+					8
 				},
 				size_addition = {
 					-40,
-					0,
-				},
+					0
+				}
 			},
 			visibility_function = function (content)
 				return content.locked
-			end,
-		},
+			end
+		}
 	}, "detail"),
 	objective = UIWidget.create_definition({
 		{
@@ -1424,9 +1424,9 @@ local widget_definitions = {
 					128,
 					169,
 					211,
-					158,
-				},
-			},
+					158
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -1442,13 +1442,13 @@ local widget_definitions = {
 				offset = {
 					70,
 					13,
-					3,
+					3
 				},
 				size_addition = {
 					-90,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -1463,14 +1463,14 @@ local widget_definitions = {
 				offset = {
 					70,
 					33,
-					4,
+					4
 				},
 				size_addition = {
 					-90,
-					0,
+					0
 				},
-				text_color = Color.terminal_text_header(nil, true),
-			},
+				text_color = Color.terminal_text_header(nil, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1483,13 +1483,13 @@ local widget_definitions = {
 				offset = {
 					20,
 					16,
-					2,
+					2
 				},
 				size = {
 					36,
-					36,
-				},
-			},
+					36
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -1506,12 +1506,12 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
 			visibility_function = function (content)
 				return content.is_locked
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -1524,9 +1524,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
-				},
-			},
+					5
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1539,14 +1539,14 @@ local widget_definitions = {
 				color = Color.black(200, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1559,9 +1559,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
-				},
-			},
+					5
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -1572,9 +1572,9 @@ local widget_definitions = {
 					200,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -1589,14 +1589,14 @@ local widget_definitions = {
 				offset = {
 					20,
 					80,
-					1,
+					1
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "objective"),
 	play_button_disabled_info = UIWidget.create_definition({
 		{
@@ -1607,9 +1607,9 @@ local widget_definitions = {
 					150,
 					58,
 					15,
-					15,
-				},
-			},
+					15
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1621,9 +1621,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -1639,15 +1639,15 @@ local widget_definitions = {
 				offset = {
 					10,
 					0,
-					2,
+					2
 				},
 				size_addition = {
 					-20,
-					0,
-				},
-			},
-		},
-	}, "play_button_disabled_info"),
+					0
+				}
+			}
+		}
+	}, "play_button_disabled_info")
 }
 local grid_blueprints = {
 	dynamic_spacing = {
@@ -1656,27 +1656,27 @@ local grid_blueprints = {
 
 			return size and {
 				size[1],
-				size[2],
+				size[2]
 			} or {
 				225,
-				20,
+				20
 			}
-		end,
+		end
 	},
 	texture = {
 		size = {
 			64,
-			64,
+			64
 		},
 		size_function = function (parent, element, ui_renderer)
 			local size = element.size
 
 			return size and {
 				size[1],
-				size[2],
+				size[2]
 			} or {
 				64,
-				64,
+				64
 			}
 		end,
 		pass_template = {
@@ -1689,10 +1689,10 @@ local grid_blueprints = {
 						255,
 						255,
 						255,
-						255,
-					},
-				},
-			},
+						255
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -1715,12 +1715,12 @@ local grid_blueprints = {
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end,
+		end
 	},
 	header = {
 		size = {
 			mission_detail_grid_size[1],
-			100,
+			100
 		},
 		pass_template = {
 			{
@@ -1737,10 +1737,10 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						3,
-					},
-				},
-			},
+						3
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -1768,12 +1768,12 @@ local grid_blueprints = {
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end,
+		end
 	},
 	mutator = {
 		size = {
 			mission_detail_grid_size[1] / 2 - 5,
-			mission_detail_grid_size[2] / 2 - 5,
+			mission_detail_grid_size[2] / 2 - 5
 		},
 		pass_template = {
 			{
@@ -1783,9 +1783,9 @@ local grid_blueprints = {
 						200,
 						0,
 						0,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1796,31 +1796,31 @@ local grid_blueprints = {
 						255,
 						255,
 						255,
-						255,
+						255
 					},
 					offset = {
 						0,
 						0,
-						1,
-					},
+						1
+					}
 				},
 				visibility_function = function (content)
 					return content.background
-				end,
+				end
 			},
 			{
 				pass_type = "rect",
 				style = {
 					color = Color.terminal_text_key_value(255, true),
 					size = {
-						5,
+						5
 					},
 					offset = {
 						0,
 						0,
-						2,
-					},
-				},
+						2
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1833,9 +1833,9 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						5,
-					},
-				},
+						5
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1848,14 +1848,14 @@ local grid_blueprints = {
 					color = Color.black(255, true),
 					size_addition = {
 						20,
-						20,
+						20
 					},
 					offset = {
 						0,
 						0,
-						3,
-					},
-				},
+						3
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1865,15 +1865,15 @@ local grid_blueprints = {
 				style = {
 					size = {
 						50,
-						50,
+						50
 					},
 					offset = {
 						25,
 						10,
-						3,
+						3
 					},
-					color = Color.terminal_text_key_value(255, true),
-				},
+					color = Color.terminal_text_key_value(255, true)
+				}
 			},
 			{
 				pass_type = "text",
@@ -1890,13 +1890,13 @@ local grid_blueprints = {
 					offset = {
 						85,
 						0,
-						3,
+						3
 					},
 					size_addition = {
 						-95,
-						-20,
-					},
-				},
+						-20
+					}
+				}
 			},
 			{
 				pass_type = "text",
@@ -1913,14 +1913,14 @@ local grid_blueprints = {
 					offset = {
 						85,
 						0,
-						3,
+						3
 					},
 					size_addition = {
 						-95,
-						-20,
-					},
-				},
-			},
+						-20
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -1949,7 +1949,7 @@ local grid_blueprints = {
 				local text_style = style.header
 				local text_size = {
 					size[1],
-					size[2],
+					size[2]
 				}
 				local size_addition = text_style.size_addition
 
@@ -1967,7 +1967,7 @@ local grid_blueprints = {
 				local text_style = style.text
 				local text_size = {
 					size[1],
-					size[2],
+					size[2]
 				}
 				local size_addition = text_style.size_addition
 
@@ -1987,12 +1987,12 @@ local grid_blueprints = {
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end,
+		end
 	},
 	body = {
 		size = {
 			mission_detail_grid_size[1],
-			100,
+			100
 		},
 		pass_template = {
 			{
@@ -2009,10 +2009,10 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						3,
-					},
-				},
-			},
+						3
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -2036,8 +2036,8 @@ local grid_blueprints = {
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end,
-	},
+		end
+	}
 }
 local animations = {
 	on_enter = {
@@ -2047,7 +2047,7 @@ local animations = {
 			start_time = 0,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				parent.anim_alpha_multiplier = 0
-			end,
+			end
 		},
 		{
 			end_time = 0.8,
@@ -2067,8 +2067,8 @@ local animations = {
 
 				parent:_set_scenegraph_position("page_header", scenegraph_definition.page_header.position[1] - x_anim_distance)
 				parent:_set_scenegraph_position("play_button", scenegraph_definition.play_button.position[1] + x_anim_distance)
-			end,
-		},
+			end
+		}
 	},
 	on_enter_fast = {
 		{
@@ -2082,43 +2082,43 @@ local animations = {
 				local anim_progress = math.easeOutCubic(progress)
 
 				parent.anim_alpha_multiplier = anim_progress
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 local rank_badges = {
 	{
 		level = 1,
-		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_1",
+		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_1"
 	},
 	{
 		level = 5,
-		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_2",
+		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_2"
 	},
 	{
 		level = 10,
-		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_3",
+		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_3"
 	},
 	{
 		level = 15,
-		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_4",
+		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_4"
 	},
 	{
 		level = 20,
-		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_5",
+		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_5"
 	},
 	{
 		level = 25,
-		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_6",
+		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_6"
 	},
 	{
 		level = 30,
-		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_7",
+		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_7"
 	},
 	{
 		level = 35,
-		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_8",
-	},
+		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_8"
+	}
 }
 local badge_definitions = {
 	size = badge_size,
@@ -2126,11 +2126,11 @@ local badge_definitions = {
 		local default_rank_texture = rank_badges[1].texture
 		local circle_size = {
 			100,
-			100,
+			100
 		}
 		local letter_size = {
 			60.199999999999996,
-			60.199999999999996,
+			60.199999999999996
 		}
 		local letter_margin = 12.6
 		local current_rank = config.rank
@@ -2158,15 +2158,15 @@ local badge_definitions = {
 					offset = {
 						0,
 						40,
-						4,
+						4
 					},
 					size = {
 						circle_size[1],
-						circle_size[2],
+						circle_size[2]
 					},
-					color = Color.black(255, true),
-				},
-			},
+					color = Color.black(255, true)
+				}
+			}
 		}
 
 		pass_templates[#pass_templates + 1] = {
@@ -2180,16 +2180,16 @@ local badge_definitions = {
 				offset = {
 					0,
 					56,
-					10,
+					10
 				},
 				size = {
 					badge_size[1],
-					badge_size[2],
+					badge_size[2]
 				},
 				material_values = {
-					texture_map = current_rank_badge.texture,
-				},
-			},
+					texture_map = current_rank_badge.texture
+				}
+			}
 		}
 
 		local current_rank_to_string = tostring(current_rank)
@@ -2210,23 +2210,23 @@ local badge_definitions = {
 					start_offset_y = 125.99999999999999,
 					size = {
 						letter_size[1],
-						letter_size[2],
+						letter_size[2]
 					},
 					color = Color.white(255, true),
 					offset = {
 						x_offset,
 						125.99999999999999,
-						6,
+						6
 					},
 					material_values = {
-						number = rank_number,
-					},
-				},
+						number = rank_number
+					}
+				}
 			}
 		end
 
 		return pass_templates
-	end,
+	end
 }
 
 return {
@@ -2234,5 +2234,5 @@ return {
 	grid_blueprints = grid_blueprints,
 	scenegraph_definition = scenegraph_definition,
 	widget_definitions = widget_definitions,
-	badge_definitions = badge_definitions,
+	badge_definitions = badge_definitions
 }

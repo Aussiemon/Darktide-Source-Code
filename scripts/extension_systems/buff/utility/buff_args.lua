@@ -5,42 +5,47 @@ local NIL_VALUE = "__NIL_VALUE__"
 local ARGS = {
 	{
 		block_prediction = true,
-		name = "buff_lerp_value",
+		name = "buff_lerp_value"
 	},
 	{
 		block_prediction = true,
-		name = "item_slot_name",
+		name = "item_slot_name"
 	},
 	{
 		block_prediction = true,
-		name = "parent_buff_template",
+		name = "parent_buff_template"
 	},
 	{
 		block_prediction = true,
 		name = "skip_talent",
-		default_value = NIL_VALUE,
+		default_value = NIL_VALUE
 	},
 	{
 		component_type = "Unit",
 		name = "owner_unit",
-		default_value = NIL_VALUE,
+		default_value = NIL_VALUE
 	},
 	{
 		default_value = "not_equipped",
 		name = "source_item",
 		component_type = {
 			network_type = "player_item_name",
-			use_network_lookup = "player_item_names",
-		},
+			use_network_lookup = "player_item_names"
+		}
 	},
 	{
 		default_value = "n/a",
 		name = "from_talent",
 		component_type = {
 			network_type = "talent_name_id",
-			use_network_lookup = "archetype_talent_names",
-		},
+			use_network_lookup = "archetype_talent_names"
+		}
 	},
+	{
+		block_prediction = true,
+		default_value = true,
+		name = "first_time_affected"
+	}
 }
 local NUM_ARGS = #ARGS
 

@@ -8,7 +8,7 @@ local workflow_states_to_check = {
 	FUNCTIONAL = true,
 	PROTOTYPE = true,
 	RELEASABLE = true,
-	SHIPPABLE = true,
+	SHIPPABLE = true
 }
 
 local function _weapon_item_tests(weapon_templates)

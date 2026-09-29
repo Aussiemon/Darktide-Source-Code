@@ -13,31 +13,31 @@ suppression_templates.grenadier_gauntlet_p1_m1_suppression_demolitions = {
 		immediate_spread = {
 			{
 				pitch = 0.5,
-				yaw = 0.5,
-			},
-		},
+				yaw = 0.5
+			}
+		}
 	},
 	moving = {
 		inherits = {
 			"grenadier_gauntlet_p1_m1_suppression_demolitions",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"grenadier_gauntlet_p1_m1_suppression_demolitions",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"grenadier_gauntlet_p1_m1_suppression_demolitions",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 
 return {
 	base_templates = suppression_templates,
-	overrides = overrides,
+	overrides = overrides
 }

@@ -8,19 +8,19 @@ local special_rules = SpecialRulesSettings.special_rules
 local talent_settings = TalentSettings.psyker_3.combat_ability
 local SOUND_EVENTS_WALL = {
 	start = "wwise/events/player/play_ability_psyker_protectorate_shield",
-	stop = "wwise/events/player/stop_ability_psyker_protectorate_shield",
+	stop = "wwise/events/player/stop_ability_psyker_protectorate_shield"
 }
 local SOUND_EVENTS_SPHERE = {
 	start = "wwise/events/player/play_ability_psyker_shield_dome",
-	stop = "wwise/events/player/stop_ability_psyker_shield_dome",
+	stop = "wwise/events/player/stop_ability_psyker_shield_dome"
 }
 local PARTICLES_WALL = {
 	start = "content/fx/particles/abilities/protectorate_forward_shield_init_wide",
-	stop = "content/fx/particles/abilities/protectorate_forward_shield_fade_wide",
+	stop = "content/fx/particles/abilities/protectorate_forward_shield_fade_wide"
 }
 local PARTICLES_SPHERE = {
 	start = "content/fx/particles/abilities/protectorate_sphere_shield_init",
-	stop = "content/fx/particles/abilities/protectorate_sphere_shield_fade",
+	stop = "content/fx/particles/abilities/protectorate_sphere_shield_fade"
 }
 local DEFAULT_UNIT_RADIUS = 1
 local SPHERE_UNIT_RADIUS = 6
@@ -63,7 +63,7 @@ PsykerForceFieldUnitExtension.init = function (self, extension_init_context, uni
 		self.enemy_side_names = self.side:relation_side_names("enemy")
 	end
 
-	local width = 11
+	local width = 13
 	local forward = Quaternion.forward(rotation)
 	local rotation_left = Quaternion.from_euler_angles_xyz(0, 0, 90)
 	local left = Quaternion.rotate(rotation_left, forward) * width / 2
@@ -82,7 +82,7 @@ PsykerForceFieldUnitExtension.init = function (self, extension_init_context, uni
 		p4,
 		p5,
 		p6,
-		p7,
+		p7
 	}
 
 	local owner_unit = self.owner_unit
@@ -378,7 +378,7 @@ PsykerForceFieldUnitExtension.on_player_enter = function (self, unit, t)
 
 		buff_affected_units[unit] = {
 			local_index = local_index,
-			component_index = component_index,
+			component_index = component_index
 		}
 	end
 

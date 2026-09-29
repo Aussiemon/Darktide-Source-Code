@@ -84,25 +84,25 @@ DruglabTankShield.component_data = {
 	material_slot_name = {
 		ui_name = "Material Slot Name",
 		ui_type = "text_box",
-		value = "lambert1",
+		value = "lambert1"
 	},
 	shield_strength_variable_name = {
 		category = "Material Variable Names",
 		ui_name = "Shield Strength",
 		ui_type = "text_box",
-		value = "shield_power",
+		value = "shield_power"
 	},
 	shield_min_strength_variable_name = {
 		category = "Material Variable Names",
 		ui_name = "Min Shield Strength",
 		ui_type = "text_box",
-		value = "min_shield_power",
+		value = "min_shield_power"
 	},
 	overload_variable_name = {
 		category = "Material Variable Names",
 		ui_name = "Overload",
 		ui_type = "text_box",
-		value = "overload",
+		value = "overload"
 	},
 	overload_duration = {
 		decimals = 3,
@@ -110,14 +110,14 @@ DruglabTankShield.component_data = {
 		min = 0.5,
 		ui_name = "Overload Duration",
 		ui_type = "number",
-		value = 2,
+		value = 2
 	},
 	inputs = {
 		druglab_tank_shield_start_overload = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return DruglabTankShield

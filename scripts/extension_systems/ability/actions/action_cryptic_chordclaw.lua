@@ -55,7 +55,7 @@ ActionCrypticChordclaw.start = function (self, action_settings, t, time_scale, a
 	local player_position = locomotion_position
 	local player_unit = self._player_unit
 	local talent_extension = self._talent_extension
-	local charges_used = self._ability_charges_used_at_start
+	local charges_used = self._ability_cost_at_start
 
 	Luggable.drop_luggable(t, player_unit, inventory_component, visual_loadout_extension, true)
 

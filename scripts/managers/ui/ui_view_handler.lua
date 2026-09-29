@@ -784,7 +784,7 @@ UIViewHandler._open = function (self, view_name, opening_duration, context, sett
 		fade_in = use_transition_ui,
 		use_transition_ui = use_transition_ui,
 		parent_transition_view = view_settings.parent_transition_view,
-		draw_while_loading = view_settings.draw_while_loading,
+		draw_while_loading = view_settings.draw_while_loading
 	}
 
 	self._num_active_views = self._num_active_views + 1
@@ -831,7 +831,7 @@ UIViewHandler.register_view_world = function (self, view_name, world_name, layer
 
 	registered_view_worlds[view_name][world_name] = {
 		layer_offset = layer,
-		current_layer = layer,
+		current_layer = layer
 	}
 
 	local current_view_layer = self._curent_frame_view_layers[view_name]
@@ -839,8 +839,6 @@ UIViewHandler.register_view_world = function (self, view_name, world_name, layer
 	if current_view_layer and current_view_layer ~= layer then
 		self:_set_view_worlds_layer(view_name, current_view_layer)
 	end
-
-	self:_set_view_worlds_enabled(view_name, false)
 end
 
 UIViewHandler.unregister_world = function (self, world_name)

@@ -9,7 +9,7 @@ local settings = {
 	name = "loc_skulls_guns_01_name",
 	stat = "live_event_skulls_count",
 	item_rewards = {
-		"content/items/2d/portrait_frames/events_skulls_guns",
+		"content/items/2d/portrait_frames/events_skulls_guns"
 	},
 	objective = {
 		widgets = {
@@ -20,11 +20,11 @@ local settings = {
 					stat_category = "lw-mb",
 					stat_name = "live_event_skulls_guns_recovered",
 					title = "loc_skulls_guns_01_name",
-					track_name = "skulls_guns_global-2026",
-				},
-			},
-		},
-	},
+					track_name = "skulls_guns_global-2026"
+				}
+			}
+		}
+	}
 }
 
 return settings

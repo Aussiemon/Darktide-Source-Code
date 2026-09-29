@@ -7,150 +7,150 @@ local adamant_weapon_unlock_settings = {
 			"content/items/weapons/player/melee/combataxe_p1_m1",
 			"content/items/weapons/player/ranged/autogun_p1_m1",
 			"content/items/weapons/player/melee/powermaul_p2_m1",
-			"content/items/weapons/player/ranged/shotgun_p4_m1",
-		},
+			"content/items/weapons/player/ranged/shotgun_p4_m1"
+		}
 	},
 	{
 		level = 2,
 		items = {
-			"content/items/weapons/player/ranged/stubrevolver_p1_m2",
-		},
+			"content/items/weapons/player/ranged/stubrevolver_p1_m2"
+		}
 	},
 	{
 		level = 3,
 		items = {
-			"content/items/weapons/player/ranged/autogun_p3_m2",
-		},
+			"content/items/weapons/player/ranged/autogun_p3_m2"
+		}
 	},
 	{
 		level = 4,
 		items = {
-			"content/items/weapons/player/ranged/autopistol_p1_m1",
-		},
+			"content/items/weapons/player/ranged/autopistol_p1_m1"
+		}
 	},
 	{
 		level = 5,
 		items = {
-			"content/items/weapons/player/melee/powermaul_shield_p1_m1",
-		},
+			"content/items/weapons/player/melee/powermaul_shield_p1_m1"
+		}
 	},
 	{
 		level = 6,
-		items = {},
+		items = {}
 	},
 	{
 		level = 7,
 		items = {
 			"content/items/weapons/player/ranged/autogun_p2_m1",
-			"content/items/weapons/player/melee/powermaul_2h_p1_m1",
-		},
+			"content/items/weapons/player/melee/powermaul_2h_p1_m1"
+		}
 	},
 	{
 		level = 8,
 		items = {
-			"content/items/weapons/player/ranged/shotgun_p1_m2",
-		},
+			"content/items/weapons/player/ranged/shotgun_p1_m2"
+		}
 	},
 	{
 		level = 9,
 		items = {
 			"content/items/weapons/player/melee/combataxe_p2_m1",
-			"content/items/weapons/player/ranged/boltpistol_p1_m1",
-		},
+			"content/items/weapons/player/ranged/boltpistol_p1_m1"
+		}
 	},
 	{
 		level = 10,
-		items = {},
+		items = {}
 	},
 	{
 		level = 11,
 		items = {
 			"content/items/weapons/player/melee/chainsword_p1_m1",
-			"content/items/weapons/player/ranged/shotpistol_shield_p1_m1",
-		},
+			"content/items/weapons/player/ranged/shotpistol_shield_p1_m1"
+		}
 	},
 	{
 		level = 12,
 		items = {
-			"content/items/weapons/player/ranged/shotgun_p2_m1",
-		},
+			"content/items/weapons/player/ranged/shotgun_p2_m1"
+		}
 	},
 	{
 		level = 13,
 		items = {
-			"content/items/weapons/player/melee/powermaul_p1_m1",
-		},
+			"content/items/weapons/player/melee/powermaul_p1_m1"
+		}
 	},
 	{
 		level = 14,
 		items = {
-			"content/items/weapons/player/ranged/bolter_p1_m1",
-		},
+			"content/items/weapons/player/ranged/bolter_p1_m1"
+		}
 	},
 	{
 		level = 15,
-		items = {},
+		items = {}
 	},
 	{
 		level = 16,
-		items = {},
+		items = {}
 	},
 	{
 		level = 17,
-		items = {},
+		items = {}
 	},
 	{
 		level = 18,
-		items = {},
+		items = {}
 	},
 	{
 		level = 19,
-		items = {},
+		items = {}
 	},
 	{
 		level = 20,
-		items = {},
+		items = {}
 	},
 	{
 		level = 21,
-		items = {},
+		items = {}
 	},
 	{
 		level = 22,
-		items = {},
+		items = {}
 	},
 	{
 		level = 23,
-		items = {},
+		items = {}
 	},
 	{
 		level = 24,
-		items = {},
+		items = {}
 	},
 	{
 		level = 25,
-		items = {},
+		items = {}
 	},
 	{
 		level = 26,
-		items = {},
+		items = {}
 	},
 	{
 		level = 27,
-		items = {},
+		items = {}
 	},
 	{
 		level = 28,
-		items = {},
+		items = {}
 	},
 	{
 		level = 29,
-		items = {},
+		items = {}
 	},
 	{
 		level = 30,
-		items = {},
-	},
+		items = {}
+	}
 }
 
 return adamant_weapon_unlock_settings

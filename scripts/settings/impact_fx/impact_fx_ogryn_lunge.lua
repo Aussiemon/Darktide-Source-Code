@@ -16,81 +16,81 @@ local unarmored = {
 		shove = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_player_push_unarmored",
-			},
-		},
+				event = "wwise/events/weapon/play_player_push_unarmored"
+			}
+		}
 	},
 	vfx = {
 		weakspot_died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		weakspot_damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		damage_reduced = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		damage_negated = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		shield_blocked = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		blocked = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		dead = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		shove = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
-		},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
+		}
 	},
 	blood_ball = {
 		blocked = nil,
@@ -102,8 +102,8 @@ local unarmored = {
 		shield_blocked = nil,
 		shove = nil,
 		weakspot_damage = nil,
-		weakspot_died = nil,
-	},
+		weakspot_died = nil
+	}
 }
 local armored = {
 	sfx = {
@@ -119,81 +119,81 @@ local armored = {
 		shove = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_player_push_armored",
-			},
-		},
+				event = "wwise/events/weapon/play_player_push_armored"
+			}
+		}
 	},
 	vfx = {
 		weakspot_died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		weakspot_damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		damage_reduced = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		damage_negated = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		shield_blocked = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		blocked = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		dead = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		shove = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
-		},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
+		}
 	},
 	blood_ball = {
 		blocked = nil,
@@ -205,8 +205,8 @@ local armored = {
 		shield_blocked = nil,
 		shove = nil,
 		weakspot_damage = nil,
-		weakspot_died = nil,
-	},
+		weakspot_died = nil
+	}
 }
 local super_armor = {
 	sfx = {
@@ -222,81 +222,81 @@ local super_armor = {
 		shove = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_player_push_super_armor",
-			},
-		},
+				event = "wwise/events/weapon/play_player_push_super_armor"
+			}
+		}
 	},
 	vfx = {
 		weakspot_died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		weakspot_damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		damage_reduced = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		damage_negated = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		shield_blocked = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		blocked = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		dead = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		shove = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
-		},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
+		}
 	},
 	blood_ball = {
 		blocked = nil,
@@ -308,8 +308,8 @@ local super_armor = {
 		shield_blocked = nil,
 		shove = nil,
 		weakspot_damage = nil,
-		weakspot_died = nil,
-	},
+		weakspot_died = nil
+	}
 }
 local disgustingly_resilient = {
 	sfx = {
@@ -325,81 +325,81 @@ local disgustingly_resilient = {
 		shove = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_player_push_resilient",
-			},
-		},
+				event = "wwise/events/weapon/play_player_push_resilient"
+			}
+		}
 	},
 	vfx = {
 		weakspot_died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		weakspot_damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		damage_reduced = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		damage_negated = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		shield_blocked = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		blocked = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		dead = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		shove = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
-		},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
+		}
 	},
 	blood_ball = {
 		blocked = nil,
@@ -411,8 +411,8 @@ local disgustingly_resilient = {
 		shield_blocked = nil,
 		shove = nil,
 		weakspot_damage = nil,
-		weakspot_died = nil,
-	},
+		weakspot_died = nil
+	}
 }
 local resistant = table.clone(unarmored)
 local berserker = table.clone(unarmored)
@@ -426,6 +426,6 @@ return {
 		[armor_types.player] = player,
 		[armor_types.resistant] = resistant,
 		[armor_types.super_armor] = super_armor,
-		[armor_types.unarmored] = unarmored,
-	},
+		[armor_types.unarmored] = unarmored
+	}
 }

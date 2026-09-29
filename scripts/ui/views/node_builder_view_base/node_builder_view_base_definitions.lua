@@ -11,13 +11,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			256,
-			256,
+			256
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	node_pivot = {
 		horizontal_alignment = "left",
@@ -25,17 +25,17 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			110,
-			110,
+			110
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
-	},
+			2
+		}
+	}
 }
 local overlay_scenegraph_definition = {
-	screen = UIWorkspaceSettings.screen,
+	screen = UIWorkspaceSettings.screen
 }
 local widget_definitions = {
 	input_surface = UIWidget.create_definition({
@@ -47,15 +47,15 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					10,
-				},
-			},
-		},
+					10
+				}
+			}
+		}
 	}, "screen"),
 	background = UIWidget.create_definition({
 		{
@@ -65,11 +65,11 @@ local widget_definitions = {
 					255,
 					0,
 					0,
-					0,
-				},
-			},
-		},
-	}, "screen", nil, nil),
+					0
+				}
+			}
+		}
+	}, "screen", nil, nil)
 }
 local layout_node_widget_definitions = {
 	layout_background = UIWidget.create_definition({
@@ -81,16 +81,16 @@ local layout_node_widget_definitions = {
 					255,
 					120,
 					120,
-					120,
+					120
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
-	}, "layout_background", nil, nil),
+					1
+				}
+			}
+		}
+	}, "layout_background", nil, nil)
 }
 local layout_widget_definitions = {}
 
@@ -99,5 +99,5 @@ return {
 	layout_widget_definitions = layout_widget_definitions,
 	layout_node_widget_definitions = layout_node_widget_definitions,
 	scenegraph_definition = scenegraph_definition,
-	overlay_scenegraph_definition = overlay_scenegraph_definition,
+	overlay_scenegraph_definition = overlay_scenegraph_definition
 }

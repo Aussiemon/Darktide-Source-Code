@@ -5,12 +5,12 @@ local mission_vo_lm_rails_cryptic_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_cryptic_b__mission_rails_disable_skyfire_a_01",
+			[1] = "loc_cryptic_b__mission_rails_disable_skyfire_a_01"
 		},
 		sound_events_duration = {
-			[1] = 2.548281,
+			[1] = 2.548281
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	mission_rails_first_objective_response = {
 		randomize_indexes_n = 0,
@@ -20,24 +20,24 @@ local mission_vo_lm_rails_cryptic_b = {
 			"loc_cryptic_b__guidance_starting_area_02",
 			"loc_cryptic_b__guidance_starting_area_03",
 			"loc_cryptic_b__guidance_starting_area_04",
-			"loc_cryptic_b__guidance_starting_area_05",
+			"loc_cryptic_b__guidance_starting_area_05"
 		},
 		sound_events_duration = {
 			3.329385,
 			4.440385,
 			3.256146,
 			3.062646,
-			4.296688,
+			4.296688
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_lm_rails_cryptic_b", mission_vo_lm_rails_cryptic_b)

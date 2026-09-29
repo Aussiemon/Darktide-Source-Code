@@ -134,12 +134,12 @@ Interactable._setup_animation = function (self, interaction_length)
 		local anim_data = {
 			[states.forward] = {
 				time = anim_length,
-				speed = speed,
+				speed = speed
 			},
 			[states.backward] = {
 				time = 0,
-				speed = speed,
-			},
+				speed = speed
+			}
 		}
 
 		self._states = states
@@ -361,7 +361,7 @@ end
 Interactable.component_config = {
 	disable_event_public = false,
 	enable_event_public = false,
-	starts_enabled_default = true,
+	starts_enabled_default = true
 }
 Interactable.component_data = {
 	interaction_type = {
@@ -403,7 +403,7 @@ Interactable.component_data = {
 			"setup_decoding",
 			"training_ground",
 			"vendor",
-			"scripted_scenario",
+			"scripted_scenario"
 		},
 		options_values = {
 			"ammunition",
@@ -440,8 +440,8 @@ Interactable.component_data = {
 			"setup_decoding",
 			"training_ground",
 			"vendor",
-			"scripted_scenario",
-		},
+			"scripted_scenario"
+		}
 	},
 	ui_interaction_type = {
 		category = "UI",
@@ -456,7 +456,7 @@ Interactable.component_data = {
 			"pickup_hidden",
 			"point_of_interest",
 			"puzzle",
-			"use_template",
+			"use_template"
 		},
 		options_values = {
 			"critical",
@@ -466,8 +466,8 @@ Interactable.component_data = {
 			"pickup_hidden",
 			"point_of_interest",
 			"puzzle",
-			"use_template",
-		},
+			"use_template"
+		}
 	},
 	interaction_icon = {
 		category = "UI",
@@ -486,7 +486,7 @@ Interactable.component_data = {
 			"objective_secondary",
 			"objective_side",
 			"speak",
-			"use_template",
+			"use_template"
 		},
 		options_values = {
 			"content/ui/materials/hud/interactions/icons/ammunition",
@@ -500,87 +500,87 @@ Interactable.component_data = {
 			"content/ui/materials/hud/interactions/icons/objective_secondary",
 			"content/ui/materials/hud/interactions/icons/objective_side",
 			"content/ui/materials/hud/interactions/icons/speak",
-			"use_template",
-		},
+			"use_template"
+		}
 	},
 	start_enabled = {
 		ui_name = "Start Enabled",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	interaction_length = {
 		step = 0.5,
 		ui_name = "Interaction Length (in sec.)",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	infinite_interaction = {
 		ui_name = "Infinite Interaction",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	shared_interaction = {
 		ui_name = "Shared Interaction",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	only_once = {
 		ui_name = "Only Once",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	start_active = {
 		ui_name = "Start Active (don't touch)",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	interactor_item_to_equip = {
 		filter = "item",
 		ui_name = "Interactor Item to Equip (scanner, decoder, ...)",
 		ui_type = "resource",
-		value = "",
+		value = ""
 	},
 	require_all_players = {
 		category = "UI",
 		ui_name = "Show 'Require All Players'",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	display_start_event = {
 		category = "UI",
 		ui_name = "Show 'Start Event'",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	hud_description = {
 		category = "UI",
 		ui_name = "Override Description",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	sub_description = {
 		category = "UI",
 		ui_name = "Override Action Text",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	missing_players_description = {
 		category = "UI",
 		ui_name = "Override Missing Players Text",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	support_simple_animation = {
 		category = "Animation",
 		ui_name = "Support Simple Animation",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	support_prop_animation = {
 		category = "Animation",
 		ui_name = "Support State Machine",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	animation_back_speed_modifier = {
 		category = "Animation",
@@ -588,7 +588,7 @@ Interactable.component_data = {
 		step = 0.5,
 		ui_name = "Animation Back Speed Modifier",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	animation_speed_modifier = {
 		category = "Animation",
@@ -596,43 +596,43 @@ Interactable.component_data = {
 		step = 0.5,
 		ui_name = "Animation Speed Modifier",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	emissive_material = {
 		category = "Emissive",
 		ui_name = "Emissive Material",
 		ui_type = "text_box",
-		value = "emissive_interactable_01",
+		value = "emissive_interactable_01"
 	},
 	inputs = {
 		interactable_enable = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		interactable_disable = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		interactable_set_used = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		interactable_clear_block = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		interactable_missing_players = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		disable_display_start_event = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"InteracteeExtension",
-	},
+		"InteracteeExtension"
+	}
 }
 
 return Interactable

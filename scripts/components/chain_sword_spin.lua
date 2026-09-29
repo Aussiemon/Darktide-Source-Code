@@ -63,9 +63,9 @@ ChainSwordSpin.component_data = {
 	inputs = {
 		set_speed = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return ChainSwordSpin

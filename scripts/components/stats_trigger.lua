@@ -63,7 +63,7 @@ StatsTrigger.component_data = {
 		category = "hook name",
 		ui_name = "hook name",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	optional_value = {
 		decimals = 0,
@@ -71,7 +71,7 @@ StatsTrigger.component_data = {
 		step = 1000,
 		ui_name = "optional value",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	hook_type = {
 		category = "Hook Type",
@@ -80,19 +80,19 @@ StatsTrigger.component_data = {
 		value = "none",
 		options_keys = {
 			"player",
-			"team",
+			"team"
 		},
 		options_values = {
 			"player",
-			"team",
-		},
+			"team"
+		}
 	},
 	inputs = {
 		stat_trigger_on_unit_destruction = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return StatsTrigger

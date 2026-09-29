@@ -36,7 +36,7 @@ MinionDeath.set_dead = function (unit, attack_direction, hit_zone_name, damage_p
 end
 
 local IMPACT_FX_DATA = {
-	local_only = true,
+	local_only = true
 }
 
 MinionDeath.attack_ragdoll = function (ragdoll_unit, attack_direction, damage_profile, damage_type, hit_zone_name_or_nil, hit_world_position_or_nil, attacking_unit_or_nil, hit_actor_or_nil, herding_template_or_nil, critical_strike_or_nil)
@@ -91,7 +91,7 @@ local VALID_HIT_ZONES = {
 	upper_left_leg = true,
 	upper_right_arm = true,
 	upper_right_leg = true,
-	upper_tail = true,
+	upper_tail = true
 }
 
 local function _find_random_hitzone(ragdoll_unit, optional_is_critical_strike)

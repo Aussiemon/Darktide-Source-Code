@@ -5,10 +5,10 @@ local crime_options = {
 		name = "None",
 		visibility = {
 			archetypes = {
-				"broker",
-			},
-		},
-	},
+				"broker"
+			}
+		}
+	}
 }
 
 return crime_options

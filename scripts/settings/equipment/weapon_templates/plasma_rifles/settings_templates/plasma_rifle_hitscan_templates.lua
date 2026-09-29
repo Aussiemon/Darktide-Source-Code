@@ -18,29 +18,29 @@ hitscan_templates.default_plasma_rifle_killshot = {
 			explosion_template = nil,
 			damage_profile = DamageProfileTemplates.default_plasma_killshot,
 			armor_explosion = {
-				[armor_types.super_armor] = ExplosionTemplates.plasma_rifle_exit,
-			},
+				[armor_types.super_armor] = ExplosionTemplates.plasma_rifle_exit
+			}
 		},
 		penetration = {
 			depth = 0.5,
 			destroy_on_exit = false,
 			target_index_increase = 2,
-			exit_explosion_template = ExplosionTemplates.plasma_rifle_exit,
-		},
+			exit_explosion_template = ExplosionTemplates.plasma_rifle_exit
+		}
 	},
 	collision_tests = {
 		{
 			against = "statics",
 			collision_filter = "filter_player_character_shooting_raycast_statics",
-			test = "ray",
+			test = "ray"
 		},
 		{
 			against = "dynamics",
 			collision_filter = "filter_player_character_shooting_raycast_dynamics",
 			radius = 0.1,
-			test = "sphere",
-		},
-	},
+			test = "sphere"
+		}
+	}
 }
 hitscan_templates.default_plasma_rifle_bfg = {
 	range = 100,
@@ -50,29 +50,29 @@ hitscan_templates.default_plasma_rifle_bfg = {
 			explosion_template = nil,
 			damage_profile = DamageProfileTemplates.default_plasma_bfg,
 			armor_explosion = {
-				[armor_types.super_armor] = ExplosionTemplates.plasma_rifle_exit,
-			},
+				[armor_types.super_armor] = ExplosionTemplates.plasma_rifle_exit
+			}
 		},
 		penetration = {
 			depth = 1.25,
 			destroy_on_exit = false,
 			target_index_increase = 2,
-			exit_explosion_template = ExplosionTemplates.plasma_rifle_exit,
-		},
+			exit_explosion_template = ExplosionTemplates.plasma_rifle_exit
+		}
 	},
 	collision_tests = {
 		{
 			against = "statics",
 			collision_filter = "filter_player_character_shooting_raycast_statics",
-			test = "ray",
+			test = "ray"
 		},
 		{
 			against = "dynamics",
 			collision_filter = "filter_player_character_shooting_raycast_dynamics",
 			radius = 0.1,
-			test = "sphere",
-		},
-	},
+			test = "sphere"
+		}
+	}
 }
 hitscan_templates.default_plasma_rifle_bfg_light = {
 	range = 100,
@@ -82,29 +82,29 @@ hitscan_templates.default_plasma_rifle_bfg_light = {
 			explosion_template = nil,
 			damage_profile = DamageProfileTemplates.default_plasma_bfg_light,
 			armor_explosion = {
-				[armor_types.super_armor] = ExplosionTemplates.plasma_rifle_exit,
-			},
+				[armor_types.super_armor] = ExplosionTemplates.plasma_rifle_exit
+			}
 		},
 		penetration = {
 			depth = 1.25,
 			destroy_on_exit = false,
 			target_index_increase = 2,
-			exit_explosion_template = ExplosionTemplates.plasma_rifle_exit,
-		},
+			exit_explosion_template = ExplosionTemplates.plasma_rifle_exit
+		}
 	},
 	collision_tests = {
 		{
 			against = "statics",
 			collision_filter = "filter_player_character_shooting_raycast_statics",
-			test = "ray",
+			test = "ray"
 		},
 		{
 			against = "dynamics",
 			collision_filter = "filter_player_character_shooting_raycast_dynamics",
 			radius = 0.1,
-			test = "sphere",
-		},
-	},
+			test = "sphere"
+		}
+	}
 }
 hitscan_templates.default_plasma_rifle_demolition = {
 	range = 100,
@@ -112,28 +112,28 @@ hitscan_templates.default_plasma_rifle_demolition = {
 		impact = {
 			destroy_on_impact = false,
 			damage_profile = DamageProfileTemplates.default_plasma_bfg,
-			explosion_template = ExplosionTemplates.plasma_rifle,
+			explosion_template = ExplosionTemplates.plasma_rifle
 		},
 		penetration = {
 			depth = 2,
 			destroy_on_exit = false,
 			target_index_increase = 2,
-			exit_explosion_template = ExplosionTemplates.plasma_rifle,
-		},
+			exit_explosion_template = ExplosionTemplates.plasma_rifle
+		}
 	},
 	collision_tests = {
 		{
 			against = "statics",
 			collision_filter = "filter_player_character_shooting_raycast_statics",
-			test = "ray",
+			test = "ray"
 		},
 		{
 			against = "dynamics",
 			collision_filter = "filter_player_character_shooting_raycast_dynamics",
 			radius = 0.1,
-			test = "sphere",
-		},
-	},
+			test = "sphere"
+		}
+	}
 }
 hitscan_templates.plasma_p1_m2_hitscan_light = {
 	range = 100,
@@ -149,29 +149,29 @@ hitscan_templates.plasma_p1_m2_hitscan_light = {
 				[armor_types.berserker] = ExplosionTemplates.light_plasma_p1_m2_explosion,
 				[armor_types.super_armor] = ExplosionTemplates.light_plasma_p1_m2_explosion,
 				[armor_types.disgustingly_resilient] = ExplosionTemplates.light_plasma_p1_m2_explosion,
-				[armor_types.void_shield] = ExplosionTemplates.light_plasma_p1_m2_explosion,
-			},
+				[armor_types.void_shield] = ExplosionTemplates.light_plasma_p1_m2_explosion
+			}
 		},
 		penetration = {
 			depth = 1.25,
 			destroy_on_exit = false,
 			target_index_increase = 2,
-			exit_explosion_template = ExplosionTemplates.plasma_p1_m2_exit_explosion,
-		},
+			exit_explosion_template = ExplosionTemplates.plasma_p1_m2_exit_explosion
+		}
 	},
 	collision_tests = {
 		{
 			against = "statics",
 			collision_filter = "filter_player_character_shooting_raycast_statics",
-			test = "ray",
+			test = "ray"
 		},
 		{
 			against = "dynamics",
 			collision_filter = "filter_player_character_shooting_raycast_dynamics",
 			radius = 0.1,
-			test = "sphere",
-		},
-	},
+			test = "sphere"
+		}
+	}
 }
 hitscan_templates.plasma_p1_m2_hitscan_charged = {
 	range = 100,
@@ -187,32 +187,32 @@ hitscan_templates.plasma_p1_m2_hitscan_charged = {
 				[armor_types.berserker] = ExplosionTemplates.charged_plasma_p1_m2_explosion,
 				[armor_types.super_armor] = ExplosionTemplates.charged_plasma_p1_m2_explosion,
 				[armor_types.disgustingly_resilient] = ExplosionTemplates.charged_plasma_p1_m2_explosion,
-				[armor_types.void_shield] = ExplosionTemplates.charged_plasma_p1_m2_explosion,
-			},
+				[armor_types.void_shield] = ExplosionTemplates.charged_plasma_p1_m2_explosion
+			}
 		},
 		penetration = {
 			depth = 2,
 			destroy_on_exit = false,
 			target_index_increase = 2,
-			exit_explosion_template = ExplosionTemplates.plasma_p1_m2_exit_explosion,
-		},
+			exit_explosion_template = ExplosionTemplates.plasma_p1_m2_exit_explosion
+		}
 	},
 	collision_tests = {
 		{
 			against = "statics",
 			collision_filter = "filter_player_character_shooting_raycast_statics",
-			test = "ray",
+			test = "ray"
 		},
 		{
 			against = "dynamics",
 			collision_filter = "filter_player_character_shooting_raycast_dynamics",
 			radius = 0.1,
-			test = "sphere",
-		},
-	},
+			test = "sphere"
+		}
+	}
 }
 
 return {
 	base_templates = hitscan_templates,
-	overrides = overrides,
+	overrides = overrides
 }

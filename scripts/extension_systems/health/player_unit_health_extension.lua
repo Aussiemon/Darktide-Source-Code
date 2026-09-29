@@ -258,6 +258,7 @@ PlayerUnitHealthExtension.add_heal = function (self, heal_amount, heal_type)
 
 	if param_table then
 		param_table.damage_amount = heal_amount
+		param_table.actual_heal_amount = actual_heal_amount
 		param_table.heal_type = heal_type
 
 		self._buff_extension:add_proc_event(proc_events.on_healing_taken, param_table)

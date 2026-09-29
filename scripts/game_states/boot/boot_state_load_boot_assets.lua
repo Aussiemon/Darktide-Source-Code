@@ -10,7 +10,7 @@ BootStateLoadBootAssets.on_enter = function (self, ...)
 	local boot_packages = {
 		"packages/boot_assets",
 		"packages/strings",
-		"packages/game_scripts",
+		"packages/game_scripts"
 	}
 
 	self._package_ids = {}

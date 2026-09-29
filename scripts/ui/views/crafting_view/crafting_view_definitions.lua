@@ -14,13 +14,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			150,
-			570,
+			570
 		},
 		position = {
 			0,
 			-50,
-			500,
-		},
+			500
+		}
 	},
 	corner_top_right_no_wallet = {
 		horizontal_alignment = "right",
@@ -28,13 +28,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			150,
-			570,
+			570
 		},
 		position = {
 			0,
 			-60,
-			500,
-		},
+			500
+		}
 	},
 	corner_top_right = {
 		horizontal_alignment = "right",
@@ -42,13 +42,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			346,
-			570,
+			570
 		},
 		position = {
 			0,
 			-60,
-			500,
-		},
+			500
+		}
 	},
 	corner_bottom_left = {
 		horizontal_alignment = "left",
@@ -56,13 +56,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			180,
-			350,
+			350
 		},
 		position = {
 			0,
 			0,
-			500,
-		},
+			500
+		}
 	},
 	corner_bottom_right = {
 		horizontal_alignment = "right",
@@ -70,13 +70,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			180,
-			350,
+			350
 		},
 		position = {
 			0,
 			0,
-			500,
-		},
+			500
+		}
 	},
 	wallet_pivot = {
 		horizontal_alignment = "right",
@@ -84,14 +84,14 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			-120,
 			128,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local widget_definitions = {
 	overlay = UIWidget.create_definition({
@@ -103,21 +103,21 @@ local widget_definitions = {
 					100,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "screen"),
 	corner_top_left = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/crafting_01_upper_left",
-		},
+			value = "content/ui/materials/frames/screen/crafting_01_upper_left"
+		}
 	}, "corner_top_left"),
 	corner_top_right_no_wallet = UIWidget.create_definition({
 		{
@@ -127,28 +127,28 @@ local widget_definitions = {
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
-				},
-			},
-		},
+						1
+					}
+				}
+			}
+		}
 	}, "corner_top_right_no_wallet", {
-		visible = false,
+		visible = false
 	}),
 	corner_top_right = UIWidget.create_definition({
 		{
 			pass_type = "texture_uv",
-			value = "content/ui/materials/frames/screen/crafting_01_upper_right",
-		},
+			value = "content/ui/materials/frames/screen/crafting_01_upper_right"
+		}
 	}, "corner_top_right"),
 	corner_bottom_left = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/crafting_01_lower",
+			value = "content/ui/materials/frames/screen/crafting_01_lower"
 		},
 		{
 			pass_type = "texture",
@@ -157,10 +157,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "corner_bottom_left"),
 	corner_bottom_right = UIWidget.create_definition({
 		{
@@ -170,14 +170,14 @@ local widget_definitions = {
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
-				},
-			},
+						1
+					}
+				}
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -186,26 +186,26 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
-				},
-			},
-		},
-	}, "corner_bottom_right"),
+						1
+					}
+				}
+			}
+		}
+	}, "corner_bottom_right")
 }
 local input_legend_params = {}
 local intro_texts = {
 	description_text = "loc_crafting_view_intro_description",
-	title_text = "loc_crafting_view_intro_title",
+	title_text = "loc_crafting_view_intro_title"
 }
 local button_options_definitions = {
 	{
@@ -213,15 +213,15 @@ local button_options_definitions = {
 		unlocalized_name = "Mechanicus Patch Crafting",
 		callback = function (crafting_view)
 			crafting_view:go_to_crafting_view("select_item_mechanicus")
-		end,
+		end
 	},
 	{
 		display_name = "loc_mastery_crafting_sacrifice_weapon_title",
 		unlocalized_name = "Mechanicus Patch Sacrifice Weapon",
 		callback = function (crafting_view)
 			crafting_view:go_to_crafting_view("barter_items_mechanicus")
-		end,
-	},
+		end
+	}
 }
 local background_world_params = {
 	level_name = "content/levels/ui/crafting_view_itemization/crafting_view_itemization",
@@ -233,7 +233,7 @@ local background_world_params = {
 	viewport_name = "ui_crafting_world_viewport",
 	viewport_type = "default",
 	world_layer = 1,
-	world_name = "ui_crafting_world",
+	world_name = "ui_crafting_world"
 }
 local crafting_tab_params = {
 	select_item_mechanicus = {
@@ -275,7 +275,7 @@ local crafting_tab_params = {
 							end
 
 							return false
-						end,
+						end
 					},
 					{
 						alignment = "right_alignment",
@@ -299,7 +299,7 @@ local crafting_tab_params = {
 							local item_type = previewed_item.item_type
 
 							return item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED"
-						end,
+						end
 					},
 					{
 						alignment = "right_alignment",
@@ -320,11 +320,11 @@ local crafting_tab_params = {
 							end
 
 							return InputDevice.gamepad_active
-						end,
-					},
-				},
-			},
-		},
+						end
+					}
+				}
+			}
+		}
 	},
 	barter_items_mechanicus = {
 		crafting_level_story_event = "camera_recipe_enter_anim",
@@ -379,16 +379,16 @@ local crafting_tab_params = {
 							end
 
 							return false
-						end,
-					},
-				},
-			},
-		},
-	},
+						end
+					}
+				}
+			}
+		}
+	}
 }
 local used_settings = {
 	CraftingSettings,
-	CraftingMechanicusSettings,
+	CraftingMechanicusSettings
 }
 
 for ii = 1, #used_settings do
@@ -407,9 +407,9 @@ for ii = 1, #used_settings do
 						parent:show_wallets(true)
 					end,
 					view = view_name,
-					display_name = recipe.display_name,
-				},
-			},
+					display_name = recipe.display_name
+				}
+			}
 		}
 
 		if recipe.ui_show_in_vendor_view then
@@ -418,7 +418,7 @@ for ii = 1, #used_settings do
 				disabled = not not recipe.ui_disabled,
 				callback = function (crafting_view)
 					crafting_view:go_to_crafting_view(recipe.view_name)
-				end,
+				end
 			}
 		end
 	end
@@ -431,5 +431,5 @@ return {
 	button_options_definitions = button_options_definitions,
 	input_legend_params = input_legend_params,
 	background_world_params = background_world_params,
-	crafting_tab_params = crafting_tab_params,
+	crafting_tab_params = crafting_tab_params
 }

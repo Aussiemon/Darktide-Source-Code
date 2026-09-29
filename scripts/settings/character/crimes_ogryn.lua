@@ -9,18 +9,18 @@ local crime_options = {
 		unlocks = {
 			{
 				text = "loc_character_sentence_01_unlocks",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		slot_items = {
 			slot_gear_lowerbody = "content/items/characters/player/ogryn/gear_lowerbody/ogryn_prisoner_lowerbody_c",
-			slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/ogryn_prisoner_upperbody_c",
+			slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/ogryn_prisoner_upperbody_c"
 		},
 		visibility = {
 			archetypes = {
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_sentence_02_description",
@@ -30,18 +30,18 @@ local crime_options = {
 		unlocks = {
 			{
 				text = "loc_character_sentence_02_unlocks",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		slot_items = {
 			slot_gear_lowerbody = "content/items/characters/player/ogryn/gear_lowerbody/ogryn_prisoner_lowerbody_a",
-			slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/ogryn_prisoner_upperbody_a",
+			slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/ogryn_prisoner_upperbody_a"
 		},
 		visibility = {
 			archetypes = {
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_sentence_03_description",
@@ -51,18 +51,18 @@ local crime_options = {
 		unlocks = {
 			{
 				text = "loc_character_sentence_03_unlocks",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		slot_items = {
 			slot_gear_lowerbody = "content/items/characters/player/ogryn/gear_lowerbody/ogryn_prisoner_lowerbody_b",
-			slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/ogryn_prisoner_upperbody_b",
+			slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/ogryn_prisoner_upperbody_b"
 		},
 		visibility = {
 			archetypes = {
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_sentence_04_description",
@@ -72,19 +72,19 @@ local crime_options = {
 		unlocks = {
 			{
 				text = "loc_character_sentence_04_unlocks",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		slot_items = {
 			slot_gear_lowerbody = "content/items/characters/player/ogryn/gear_lowerbody/ogryn_prisoner_lowerbody_d",
-			slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/ogryn_prisoner_upperbody_d",
+			slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/ogryn_prisoner_upperbody_d"
 		},
 		visibility = {
 			archetypes = {
-				"ogryn",
-			},
-		},
-	},
+				"ogryn"
+			}
+		}
+	}
 }
 
 return crime_options

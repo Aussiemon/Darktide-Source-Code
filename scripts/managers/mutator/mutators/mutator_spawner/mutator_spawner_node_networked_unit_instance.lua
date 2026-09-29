@@ -35,7 +35,7 @@ MutatorSpawnerNodeNetworkedUnitInstance._do_spawn = function (self, spawn_positi
 
 	self._spawned_units[#self._spawned_units + 1] = {
 		instance = unit_instance,
-		game_object_id = game_object_id,
+		game_object_id = game_object_id
 	}
 
 	table.swap_delete(self._current_units, idx)

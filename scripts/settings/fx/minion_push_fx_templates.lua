@@ -14,8 +14,8 @@ push_fx_templates.cultist_mutant_push = {
 		[armor_types.resistant] = "wwise/events/weapon/play_specials_push_unarmored",
 		[armor_types.super_armor] = "wwise/events/weapon/play_specials_push_super_armor",
 		[armor_types.unarmored] = "wwise/events/weapon/play_specials_push_unarmored",
-		[armor_types.void_shield] = "wwise/events/weapon/play_specials_push_unarmored",
-	},
+		[armor_types.void_shield] = "wwise/events/weapon/play_specials_push_unarmored"
+	}
 }
 push_fx_templates.captain_charge_push = {
 	node_name = "j_hips",
@@ -27,8 +27,8 @@ push_fx_templates.captain_charge_push = {
 		[armor_types.resistant] = "wwise/events/weapon/play_specials_push_unarmored",
 		[armor_types.super_armor] = "wwise/events/weapon/play_specials_push_super_armor",
 		[armor_types.unarmored] = "wwise/events/weapon/play_specials_push_unarmored",
-		[armor_types.void_shield] = "wwise/events/weapon/play_specials_push_unarmored",
-	},
+		[armor_types.void_shield] = "wwise/events/weapon/play_specials_push_unarmored"
+	}
 }
 push_fx_templates.lunge_push = {
 	sfx = {
@@ -38,8 +38,8 @@ push_fx_templates.lunge_push = {
 		[armor_types.resistant] = "wwise/events/weapon/play_specials_push_unarmored",
 		[armor_types.super_armor] = "wwise/events/weapon/play_specials_push_super_armor",
 		[armor_types.unarmored] = "wwise/events/weapon/play_specials_push_unarmored",
-		[armor_types.void_shield] = "wwise/events/weapon/play_specials_push_unarmored",
-	},
+		[armor_types.void_shield] = "wwise/events/weapon/play_specials_push_unarmored"
+	}
 }
 
 return settings("MinionPushFxTemplates", push_fx_templates)

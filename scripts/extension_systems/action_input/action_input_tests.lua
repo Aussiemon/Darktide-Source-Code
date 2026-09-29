@@ -40,7 +40,7 @@ function _action_input_tests(template)
 						local element = input_sequence[i]
 						local inputs = element.inputs
 
-						if element.input then
+						if element.input or element.input_alias then
 							local value = element.value
 
 							if type(value) == "nil" then
@@ -54,7 +54,7 @@ function _action_input_tests(template)
 								if num_inputs > 0 then
 									for j = 1, #inputs do
 										local input_config = inputs[j]
-										local input, value = input_config.input, input_config.value
+										local input, value = input_config.input or input_config.input_alias, input_config.value
 
 										if type(input) == "nil" then
 											success = false
@@ -72,7 +72,7 @@ function _action_input_tests(template)
 								end
 							else
 								success = false
-								error_msg = string.format("%saction_input %q failed. element %i in input_sequence has inputs defined, but is not a table.\n")
+								error_msg = string.format("%saction_input %q failed. element %i in input_sequence has inputs defined, but is not a table.\n", error_msg, action_input, i)
 							end
 						else
 							success = false

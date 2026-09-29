@@ -13,28 +13,28 @@ suppression_templates.rippergun_p1_m1_suppression_assault = {
 		immediate_spread = {
 			{
 				pitch = 0.5,
-				yaw = 0.5,
-			},
-		},
+				yaw = 0.5
+			}
+		}
 	},
 	moving = {
 		inherits = {
 			"rippergun_p1_m1_suppression_assault",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"rippergun_p1_m1_suppression_assault",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"rippergun_p1_m1_suppression_assault",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 suppression_templates.rippergun_p1_m1_suppression_spraynpray = {
 	still = {
@@ -43,31 +43,31 @@ suppression_templates.rippergun_p1_m1_suppression_spraynpray = {
 		immediate_spread = {
 			{
 				pitch = 0.25,
-				yaw = 0.25,
-			},
-		},
+				yaw = 0.25
+			}
+		}
 	},
 	moving = {
 		inherits = {
 			"rippergun_p1_m1_suppression_spraynpray",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"rippergun_p1_m1_suppression_spraynpray",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"rippergun_p1_m1_suppression_spraynpray",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 
 return {
 	base_templates = suppression_templates,
-	overrides = overrides,
+	overrides = overrides
 }

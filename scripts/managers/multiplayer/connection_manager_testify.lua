@@ -33,7 +33,7 @@ local ConnectionManagerTestify = {
 		end
 
 		Testify:set_rpcs_registered_value(false)
-	end,
+	end
 }
 
 return ConnectionManagerTestify

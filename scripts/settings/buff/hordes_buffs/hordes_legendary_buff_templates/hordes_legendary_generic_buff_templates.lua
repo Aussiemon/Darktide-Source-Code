@@ -66,11 +66,11 @@ templates.hordes_buff_uninterruptible_more_damage_taken = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	keywords = {
-		buff_keywords.uninterruptible,
+		buff_keywords.uninterruptible
 	},
 	stat_buffs = {
-		[stat_buffs.damage_taken_modifier] = 0,
-	},
+		[stat_buffs.damage_taken_modifier] = 0
+	}
 }
 
 local percent_ability_cooldown_recovered_per_kill = HordesBuffsData.hordes_buff_combat_ability_cooldown_on_kills.buff_stats.cooldown.value
@@ -82,7 +82,7 @@ templates.hordes_buff_combat_ability_cooldown_on_kills = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -118,8 +118,8 @@ templates.hordes_buff_combat_ability_cooldown_on_kills = {
 	proc_func = function (params, template_data, template_context)
 		local ability_extension = template_data.ability_extension
 
-		ability_extension:reduce_ability_cooldown_percentage("combat_ability", percent_ability_cooldown_recovered_per_kill)
-	end,
+		ability_extension:restore_ability_charge_percentage("combat_ability", percent_ability_cooldown_recovered_per_kill)
+	end
 }
 
 local percent_ammo_refil_while_holding_melee = HordesBuffsData.hordes_buff_auto_clip_fill_while_melee.buff_stats.ammo.value
@@ -130,7 +130,7 @@ templates.hordes_buff_auto_clip_fill_while_melee = {
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
 		[proc_events.on_wield_ranged] = 1,
-		[proc_events.on_wield_melee] = 1,
+		[proc_events.on_wield_melee] = 1
 	},
 	specific_proc_func = {
 		[proc_events.on_wield_ranged] = function (params, template_data, template_context)
@@ -142,7 +142,7 @@ templates.hordes_buff_auto_clip_fill_while_melee = {
 			local t = FixedFrame.get_latest_fixed_time()
 
 			template_data.next_check_time = t + 5
-		end,
+		end
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -197,7 +197,7 @@ templates.hordes_buff_auto_clip_fill_while_melee = {
 				player_fx_extension:trigger_wwise_events_local_only(SFX_NAMES.ammo_refil, nil, player_unit)
 			end
 		end
-	end,
+	end
 }
 templates.hordes_buff_weakspot_ranged_hit_always_stagger = {
 	class_name = "server_only_proc_buff",
@@ -206,7 +206,7 @@ templates.hordes_buff_weakspot_ranged_hit_always_stagger = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_weakspot_hit_ranged,
 	proc_func = function (params, template_data, template_context, t)
@@ -221,7 +221,7 @@ templates.hordes_buff_weakspot_ranged_hit_always_stagger = {
 		if HEALTH_ALIVE[enemy_unit] and not is_enemy_staggered_with_stronger_force then
 			Stagger.force_stagger(enemy_unit, target_stagger_type, attack_direction, 4, 1, 4, player_unit)
 		end
-	end,
+	end
 }
 
 local percent_chance_enemy_explodes_on_ranged_kill = HordesBuffsData.hordes_buff_explode_enemies_on_ranged_kill.buff_stats.chance.value
@@ -234,7 +234,7 @@ templates.hordes_buff_explode_enemies_on_ranged_kill = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_kill] = percent_chance_enemy_explodes_on_ranged_kill,
+		[proc_events.on_kill] = percent_chance_enemy_explodes_on_ranged_kill
 	},
 	check_proc_func = CheckProcFunctions.on_ranged_hit,
 	proc_func = function (params, template_data, template_context)
@@ -243,7 +243,7 @@ templates.hordes_buff_explode_enemies_on_ranged_kill = {
 		local explosion_template = ExplosionTemplates.frag_grenade
 
 		Explosion.create_explosion(template_context.world, template_context.physics_world, explosion_position, Quaternion.identity(), template_context.unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
-	end,
+	end
 }
 
 local aoe_shock_interval = HordesBuffsData.hordes_buff_aoe_shock_closest_enemy_on_interval.buff_stats.time.value
@@ -294,7 +294,7 @@ templates.hordes_buff_aoe_shock_closest_enemy_on_interval = {
 				HordesBuffsUtilities.trigger_aoe_shock_at_position(enemy_unit_position, player_unit, broadphase, enemy_side_names, aoe_shock_on_interval_range, t)
 			end
 		end
-	end,
+	end
 }
 
 local staggering_pulse_interval = HordesBuffsData.hordes_buff_staggering_pulse.buff_stats.time.value
@@ -329,7 +329,7 @@ templates.hordes_buff_staggering_pulse = {
 		end
 
 		HordesBuffsUtilities.compute_stagger_and_supression_pulse(template_context.is_server, template_context.unit, template_data.broadphase, template_data.enemy_side_names, t)
-	end,
+	end
 }
 
 local extra_ability_charges = HordesBuffsData.hordes_buff_extra_ability_charge.buff_stats.stack.value
@@ -341,32 +341,11 @@ templates.hordes_buff_extra_ability_charge = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	stat_buffs = {
-		[stat_buffs.ability_extra_charges] = extra_ability_charges,
+		[stat_buffs.ability_extra_charges] = extra_ability_charges
 	},
 	keywords = {
-		buff_keywords.allow_extra_ability_charges,
-	},
-	start_func = function (template_data, template_context)
-		if not template_context.is_server then
-			return
-		end
-
-		template_data.restored_ability_charge = false
-	end,
-	post_update_keywords_and_stats_func = function (template_data, template_context)
-		if not template_context.is_server or template_data.restored_ability_charge then
-			return
-		end
-
-		local player_unit = template_context.unit
-		local ability_extension = ScriptUnit.has_extension(player_unit, "ability_system")
-
-		if ability_extension then
-			ability_extension:restore_ability_charge("combat_ability", 1)
-		end
-
-		template_data.restored_ability_charge = true
-	end,
+		buff_keywords.allow_extra_ability_charges
+	}
 }
 
 local random_damage_immunity_chance = HordesBuffsData.hordes_buff_random_damage_immunity.buff_stats.chance.value
@@ -378,13 +357,13 @@ templates.hordes_buff_random_damage_immunity = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	keywords = {
-		buff_keywords.random_damage_immune,
+		buff_keywords.random_damage_immune
 	},
 	stat_buffs = {
-		[stat_buffs.random_damage_immunity_chance] = random_damage_immunity_chance,
+		[stat_buffs.random_damage_immunity_chance] = random_damage_immunity_chance
 	},
 	proc_events = {
-		[proc_events.on_player_hit_received] = 1,
+		[proc_events.on_player_hit_received] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -402,7 +381,7 @@ templates.hordes_buff_random_damage_immunity = {
 		if player_fx_extension then
 			player_fx_extension:trigger_wwise_events_local_only(SFX_NAMES.damage_negated, false, template_context.unit)
 		end
-	end,
+	end
 }
 
 local big_weakspot_damage_increase = HordesBuffsData.hordes_buff_big_weakspot_damage_increase.buff_stats.damage.value
@@ -415,10 +394,10 @@ templates.hordes_buff_big_weakspot_damage_increase = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	stat_buffs = {
-		[stat_buffs.weakspot_damage] = big_weakspot_damage_increase,
+		[stat_buffs.weakspot_damage] = big_weakspot_damage_increase
 	},
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = function (params, template_data, template_context)
 		return (not template_context.is_server or not DEDICATED_SERVER) and CheckProcFunctions.on_weakspot_hit(params, template_data, template_context)
@@ -433,7 +412,7 @@ templates.hordes_buff_big_weakspot_damage_increase = {
 		if wwise_event and ALIVE[hit_unit] then
 			WwiseWorld.trigger_resource_event(wwise_world, wwise_event, hit_unit)
 		end
-	end,
+	end
 }
 
 local num_enemies_per_cluster_for_coherency_from_enemies = HordesBuffsData.hordes_buff_toughness_coherency_from_enemies_instead_of_players.buff_stats.count.value
@@ -445,33 +424,33 @@ templates.hordes_buff_toughness_coherency_from_enemies_instead_of_players = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	keywords = {
-		buff_keywords.prevent_coherency_toughness_buff,
+		buff_keywords.prevent_coherency_toughness_buff
 	},
 	stepped_stat_buffs = {
 		{
-			[stat_buffs.toughness_coherency_regen_rate_modifier] = 0,
+			[stat_buffs.toughness_coherency_regen_rate_modifier] = 0
 		},
 		{
-			[stat_buffs.toughness_coherency_regen_rate_modifier] = 0.5,
+			[stat_buffs.toughness_coherency_regen_rate_modifier] = 0.5
 		},
 		{
-			[stat_buffs.toughness_coherency_regen_rate_modifier] = 0.75,
+			[stat_buffs.toughness_coherency_regen_rate_modifier] = 0.75
 		},
 		{
-			[stat_buffs.toughness_coherency_regen_rate_modifier] = 1,
+			[stat_buffs.toughness_coherency_regen_rate_modifier] = 1
 		},
 		{
-			[stat_buffs.toughness_coherency_regen_rate_modifier] = 1.25,
+			[stat_buffs.toughness_coherency_regen_rate_modifier] = 1.25
 		},
 		{
-			[stat_buffs.toughness_coherency_regen_rate_modifier] = 1.5,
+			[stat_buffs.toughness_coherency_regen_rate_modifier] = 1.5
 		},
 		{
-			[stat_buffs.toughness_coherency_regen_rate_modifier] = 1.75,
+			[stat_buffs.toughness_coherency_regen_rate_modifier] = 1.75
 		},
 		{
-			[stat_buffs.toughness_coherency_regen_rate_modifier] = 2,
-		},
+			[stat_buffs.toughness_coherency_regen_rate_modifier] = 2
+		}
 	},
 	start_func = function (template_data, template_context)
 		local player_unit = template_context.unit
@@ -515,7 +494,7 @@ templates.hordes_buff_toughness_coherency_from_enemies_instead_of_players = {
 			template_data.sticky_num_enemies_in_range = template_data.num_enemies_in_range
 			template_data.next_sticky_refresh_t = t + template_data.sticky_refresh_rate
 		end
-	end,
+	end
 }
 
 local bleed_burn_melee_hit_burning_stacks = HordesBuffsData.hordes_buff_bleeding_and_burning_on_melee_hit.buff_stats.burn.value
@@ -528,7 +507,7 @@ templates.hordes_buff_bleeding_and_burning_on_melee_hit = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_hit] = 0.4,
+		[proc_events.on_hit] = 0.4
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		local is_ogryn_lunge_hit = params.damage_type == "ogryn_lunge"
@@ -552,7 +531,7 @@ templates.hordes_buff_bleeding_and_burning_on_melee_hit = {
 
 			fx_system:trigger_wwise_event(SFX_NAMES.burn_bleeding_ailment_proc, enemy_position)
 		end
-	end,
+	end
 }
 templates.hordes_buff_bleeding_and_burning_on_melee_hit_ailment = {
 	class_name = "interval_buff",
@@ -563,7 +542,7 @@ templates.hordes_buff_bleeding_and_burning_on_melee_hit_ailment = {
 	buff_category = buff_categories.hordes_sub_buff,
 	keywords = {
 		buff_keywords.burning,
-		buff_keywords.bleeding,
+		buff_keywords.bleeding
 	},
 	interval_func = function (template_data, template_context, template)
 		local unit = template_context.unit
@@ -581,7 +560,7 @@ templates.hordes_buff_bleeding_and_burning_on_melee_hit_ailment = {
 			Attack.execute(unit, burning_damage_template, "power_level", power_level, "damage_type", damage_types.burning, "attacking_unit", owner_unit, "item", source_item, "attack_type", attack_types.buff)
 		end
 	end,
-	minion_effects = minion_burning_buff_effects.bleedfire,
+	minion_effects = minion_burning_buff_effects.bleedfire
 }
 
 local boosted_melee_swing_cooldown = HordesBuffsData.hordes_buff_boosted_melee_attack_on_cooldown.buff_stats.time.value
@@ -596,7 +575,7 @@ templates.hordes_buff_boosted_melee_attack_on_cooldown = {
 	buff_category = buff_categories.hordes_buff,
 	conditional_stat_buffs = {
 		[stat_buffs.melee_damage] = boosted_melee_swing_stat_boost,
-		[stat_buffs.melee_impact_modifier] = boosted_melee_swing_stat_boost,
+		[stat_buffs.melee_impact_modifier] = boosted_melee_swing_stat_boost
 	},
 	start_func = function (template_data, template_context)
 		template_data.melee_attack_boost_active = true
@@ -606,7 +585,7 @@ templates.hordes_buff_boosted_melee_attack_on_cooldown = {
 	proc_events = {
 		[proc_events.on_sweep_start] = 1,
 		[proc_events.on_sweep_finish] = 1,
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	specific_check_proc_funcs = {
 		[proc_events.on_sweep_start] = function (params, template_data, template_context, t)
@@ -621,7 +600,7 @@ templates.hordes_buff_boosted_melee_attack_on_cooldown = {
 			local num_hits = params.num_hit_units
 
 			return template_data.melee_attack_boost_active and num_hits > 0
-		end,
+		end
 	},
 	specific_proc_func = {
 		on_sweep_start = function (params, template_data, template_context, t)
@@ -655,7 +634,7 @@ templates.hordes_buff_boosted_melee_attack_on_cooldown = {
 		on_sweep_finish = function (params, template_data, template_context, t)
 			template_data.melee_attack_boost_active = false
 			template_data.cooldown_end_t = t + boosted_melee_swing_cooldown
-		end,
+		end
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.melee_attack_boost_active
@@ -706,7 +685,7 @@ templates.hordes_buff_boosted_melee_attack_on_cooldown = {
 
 			template_data.on_screen_effect_swing_id = nil
 		end
-	end,
+	end
 }
 
 local explosion_on_toughness_broken_cooldown = HordesBuffsData.hordes_buff_explosion_on_toughness_broken.buff_stats.time.value
@@ -719,7 +698,7 @@ templates.hordes_buff_explosion_on_toughness_broken = {
 	buff_category = buff_categories.hordes_buff,
 	cooldown_duration = explosion_on_toughness_broken_cooldown,
 	proc_events = {
-		[proc_events.on_player_toughness_broken] = 1,
+		[proc_events.on_player_toughness_broken] = 1
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -744,7 +723,7 @@ templates.hordes_buff_explosion_on_toughness_broken = {
 		local explosion_template = ExplosionTemplates.hordes_buff_explosion_on_toughness_broken
 
 		Explosion.create_explosion(template_context.world, template_context.physics_world, explosion_position, Quaternion.identity(), template_context.unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
-	end,
+	end
 }
 
 local reflect_attack_default_push_settings = {
@@ -755,7 +734,7 @@ local reflect_attack_default_push_settings = {
 	inner_damage_profile = DamageProfileTemplates.hordes_buff_damage_reflection_hit,
 	inner_damage_type = damage_types.physical,
 	outer_damage_profile = DamageProfileTemplates.hordes_buff_damage_reflection_hit,
-	outer_damage_type = damage_types.physical,
+	outer_damage_type = damage_types.physical
 }
 local reflect_attack_high_damage_push_settings = {
 	name = "high",
@@ -765,7 +744,7 @@ local reflect_attack_high_damage_push_settings = {
 	inner_damage_profile = DamageProfileTemplates.hordes_buff_high_damage_reflection_hit,
 	inner_damage_type = damage_types.physical,
 	outer_damage_profile = DamageProfileTemplates.hordes_buff_high_damage_reflection_hit,
-	outer_damage_type = damage_types.physical,
+	outer_damage_type = damage_types.physical
 }
 
 templates.hordes_buff_reflect_melee_damage = {
@@ -776,7 +755,7 @@ templates.hordes_buff_reflect_melee_damage = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_player_hit_received] = 1,
+		[proc_events.on_player_hit_received] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
@@ -819,7 +798,7 @@ templates.hordes_buff_reflect_melee_damage = {
 
 			PushAttack.push(physics_world, player_position, push_direction, rewind_ms, power_level, push_settings, unit, is_predicted, nil)
 		end
-	end,
+	end
 }
 
 return templates

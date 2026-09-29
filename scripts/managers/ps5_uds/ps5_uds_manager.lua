@@ -39,7 +39,7 @@ PS5UDSManager.wrap = function (self, job_type, job_id, debug_name)
 	self._ongoing_jobs[job_id] = {
 		job_type = job_type,
 		promise = promise,
-		debug_name = debug_name,
+		debug_name = debug_name
 	}
 
 	return promise
@@ -104,7 +104,7 @@ PS5UDSManager._handle_ongoing_jobs = function (self)
 			end
 
 			data.promise:reject({
-				status,
+				status
 			})
 		end
 	end
@@ -119,7 +119,7 @@ PS5UDSManager._handle_trophy_info = function (self)
 			log_error("[_handle_trophy_info] Error 0x%x", status_error_code)
 			self._get_trophy_info_promise:resolve({
 				data = {},
-				details = {},
+				details = {}
 			})
 		else
 			local trophy_details_list, trophy_data_list, error_code = Trophies.get_trophies_info_async_result(self._trophy_info_job_id)
@@ -133,7 +133,7 @@ PS5UDSManager._handle_trophy_info = function (self)
 				log_error("[_handle_trophy_info] Error 0x%x", error_code)
 				self._get_trophy_info_promise:resolve({
 					data = {},
-					details = {},
+					details = {}
 				})
 			else
 				for _, trophy_details in ipairs(trophy_details_list) do
@@ -149,7 +149,7 @@ PS5UDSManager._handle_trophy_info = function (self)
 				else
 					self._get_trophy_info_promise:resolve({
 						data = self._trophy_data,
-						details = self._trophy_details,
+						details = self._trophy_details
 					})
 				end
 			end
@@ -192,7 +192,7 @@ PS5UDSManager.release = function (self, job)
 		end
 
 		job_data.promise:reject({
-			-1,
+			-1
 		})
 	end
 
@@ -225,7 +225,7 @@ PS5UDSManager._wrap = function (self, job, debug_name)
 
 	self._ongoing_jobs[job] = {
 		promise = promise,
-		debug_name = debug_name,
+		debug_name = debug_name
 	}
 
 	return promise

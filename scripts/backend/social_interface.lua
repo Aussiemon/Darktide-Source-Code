@@ -9,7 +9,7 @@ local Interface = {
 	"add_blocked_account",
 	"remove_blocked_account",
 	"suggested_names_by_archetype",
-	"fetch_group_finder_tags",
+	"fetch_group_finder_tags"
 }
 
 return Interface

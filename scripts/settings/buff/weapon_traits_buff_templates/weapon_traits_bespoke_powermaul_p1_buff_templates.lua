@@ -7,7 +7,6 @@ local ConditionalFunctions = require("scripts/settings/buff/helper_functions/con
 local MinionState = require("scripts/utilities/minion_state")
 local stagger_results = AttackSettings.stagger_results
 local damage_efficiencies = AttackSettings.damage_efficiencies
-local buff_keywords = BuffSettings.keywords
 local group_keywords = BuffSettings.group_keywords
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
@@ -36,9 +35,10 @@ templates.weapon_trait_bespoke_powermaul_p1_block_has_chance_to_stun = {
 	predicted = false,
 	proc_events = {
 		[proc_events.on_perfect_block] = 1,
+		[proc_events.on_block] = 1
 	},
 	add_child_proc_events = {
-		[proc_events.on_perfect_block] = 1,
+		[proc_events.on_block] = 1
 	},
 	conditional_proc_func = function (template_data, template_context, t)
 		local stacks = template_context.buff_extension:current_stacks("block_has_chance_to_stun_child")
@@ -53,14 +53,16 @@ templates.weapon_trait_bespoke_powermaul_p1_block_has_chance_to_stun = {
 	check_proc_func = function (params, template_data, template_context)
 		return params.attack_type == "melee"
 	end,
-	proc_func = function (params, template_data, template_context, t)
-		local attacking_unit = params.attacking_unit
-		local attacking_unit_buff_extension = ScriptUnit.has_extension(attacking_unit, "buff_system")
+	specific_proc_func = {
+		on_perfect_block = function (params, template_data, template_context, t)
+			local attacking_unit = params.attacking_unit
+			local attacking_unit_buff_extension = ScriptUnit.has_extension(attacking_unit, "buff_system")
 
-		if attacking_unit_buff_extension then
-			attacking_unit_buff_extension:add_internally_controlled_buff("power_maul_stun", t)
+			if attacking_unit_buff_extension then
+				attacking_unit_buff_extension:add_internally_controlled_buff("power_maul_stun", t)
+			end
 		end
-	end,
+	}
 }
 templates.block_has_chance_to_stun_child = {
 	class_name = "buff",
@@ -69,16 +71,16 @@ templates.block_has_chance_to_stun_child = {
 	predicted = false,
 	stack_offset = -1,
 	conditional_stat_buffs = {
-		[stat_buffs.melee_power_level_modifier] = 0.2,
+		[stat_buffs.melee_power_level_modifier] = 0.2
 	},
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 templates.weapon_trait_bespoke_powermaul_p1_staggering_hits_has_chance_to_stun = {
 	class_name = "proc_buff",
 	cooldown_duration = 5,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = function (params, template_data, template_context)
@@ -96,16 +98,16 @@ templates.weapon_trait_bespoke_powermaul_p1_staggering_hits_has_chance_to_stun =
 				stick_to_buff_extension:add_internally_controlled_buff("power_maul_stun", t)
 			end
 		end
-	end,
+	end
 }
 templates.weapon_trait_bespoke_powermaul_p1_damage_bonus_vs_electrocuted = {
 	class_name = "buff",
 	hide_icon_in_hud = true,
 	predicted = false,
 	conditional_stat_buffs = {
-		[stat_buffs.damage_vs_electrocuted] = 0.5,
+		[stat_buffs.damage_vs_electrocuted] = 0.5
 	},
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 templates.weapon_trait_bespoke_powermaul_p1_hitting_electrocuted_spreads = {
 	class_name = "proc_buff",
@@ -116,7 +118,7 @@ templates.weapon_trait_bespoke_powermaul_p1_hitting_electrocuted_spreads = {
 	special_proc = 3,
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_sweep_start] = 1,
+		[proc_events.on_sweep_start] = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	start_func = function (template_data, template_context)
@@ -207,8 +209,8 @@ templates.weapon_trait_bespoke_powermaul_p1_hitting_electrocuted_spreads = {
 			end
 
 			template_data.can_proc = false
-		end,
-	},
+		end
+	}
 }
 
 return templates

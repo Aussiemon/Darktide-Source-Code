@@ -11,13 +11,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			3,
-		},
+			3
+		}
 	},
 	title_text = {
 		horizontal_alignment = "center",
@@ -25,13 +25,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			900,
-			50,
+			50
 		},
 		position = {
 			0,
 			1,
-			3,
-		},
+			3
+		}
 	},
 	divider = {
 		horizontal_alignment = "center",
@@ -39,13 +39,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			700,
-			76,
+			76
 		},
 		position = {
 			0,
 			-500,
-			0,
-		},
+			0
+		}
 	},
 	input_text = {
 		horizontal_alignment = "center",
@@ -53,13 +53,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			900,
-			50,
+			50
 		},
 		position = {
 			0,
 			500,
-			3,
-		},
+			3
+		}
 	},
 	weapon_stats_pivot = {
 		horizontal_alignment = "center",
@@ -67,13 +67,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			530,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			300,
-		},
+			300
+		}
 	},
 	rarity_glow = {
 		horizontal_alignment = "center",
@@ -81,14 +81,14 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			500,
-			500,
+			500
 		},
 		position = {
 			0,
 			15,
-			50,
-		},
-	},
+			50
+		}
+	}
 }
 local title_text_style = table.clone(UIFontSettings.header_1)
 
@@ -140,10 +140,10 @@ local widget_definitions = {
 					200,
 					0,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "screen"),
 	title_text = UIWidget.create_definition({
 		{
@@ -151,16 +151,16 @@ local widget_definitions = {
 			style_id = "text",
 			value_id = "text",
 			value = Localize("loc_item_result_overlay_title"),
-			style = title_text_style,
-		},
+			style = title_text_style
+		}
 	}, "title_text"),
 	input_text = UIWidget.create_definition({
 		{
 			pass_type = "text",
 			value = "n/a",
 			value_id = "text",
-			style = input_text_style,
-		},
+			style = input_text_style
+		}
 	}, "input_text"),
 	rarity_glow = UIWidget.create_definition({
 		{
@@ -174,9 +174,9 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					340,
-					350,
-				},
-			},
+					350
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -189,14 +189,14 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					340,
-					350,
+					350
 				},
 				material_values = {
 					intensity = 0,
-					progress = 1,
-				},
+					progress = 1
+				}
 			},
-			change_function = bottom_particle_change_function,
+			change_function = bottom_particle_change_function
 		},
 		{
 			pass_type = "texture",
@@ -208,14 +208,14 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					340,
-					350,
+					350
 				},
 				material_values = {
 					intensity = 0,
-					progress = 1,
-				},
+					progress = 1
+				}
 			},
-			change_function = bottom_particle_change_function,
+			change_function = bottom_particle_change_function
 		},
 		{
 			pass_type = "texture",
@@ -227,14 +227,14 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					340,
-					350,
+					350
 				},
 				material_values = {
 					intensity = 0,
-					progress = 1,
-				},
+					progress = 1
+				}
 			},
-			change_function = bottom_particle_change_function,
+			change_function = bottom_particle_change_function
 		},
 		{
 			pass_type = "texture",
@@ -246,14 +246,14 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					340,
-					350,
+					350
 				},
 				material_values = {
 					intensity = 0,
-					progress = 1,
-				},
+					progress = 1
+				}
 			},
-			change_function = bottom_particle_change_function,
+			change_function = bottom_particle_change_function
 		},
 		{
 			pass_type = "texture",
@@ -265,14 +265,14 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					340,
-					350,
+					350
 				},
 				material_values = {
 					intensity = 0,
-					progress = 1,
-				},
+					progress = 1
+				}
 			},
-			change_function = top_particle_change_function,
+			change_function = top_particle_change_function
 		},
 		{
 			pass_type = "texture",
@@ -284,14 +284,14 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					340,
-					350,
+					350
 				},
 				material_values = {
 					intensity = 0,
-					progress = 1,
-				},
+					progress = 1
+				}
 			},
-			change_function = top_particle_change_function,
+			change_function = top_particle_change_function
 		},
 		{
 			pass_type = "texture",
@@ -303,14 +303,14 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					340,
-					350,
+					350
 				},
 				material_values = {
 					intensity = 0,
-					progress = 1,
-				},
+					progress = 1
+				}
 			},
-			change_function = top_particle_change_function,
+			change_function = top_particle_change_function
 		},
 		{
 			pass_type = "texture",
@@ -322,15 +322,15 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					340,
-					350,
+					350
 				},
 				material_values = {
 					intensity = 0,
-					progress = 1,
-				},
+					progress = 1
+				}
 			},
-			change_function = top_particle_change_function,
-		},
+			change_function = top_particle_change_function
+		}
 	}, "rarity_glow"),
 	divider = UIWidget.create_definition({
 		{
@@ -341,9 +341,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -357,15 +357,15 @@ local widget_definitions = {
 				offset = {
 					0,
 					-3,
-					0,
+					0
 				},
 				size_addition = {
 					-320,
-					9,
-				},
-			},
-		},
-	}, "divider"),
+					9
+				}
+			}
+		}
+	}, "divider")
 }
 local anim_start_delay = 0
 local animations = {
@@ -376,7 +376,7 @@ local animations = {
 			start_time = 0,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				parent._alpha_multiplier = 0
-			end,
+			end
 		},
 		{
 			name = "fade_in",
@@ -386,7 +386,7 @@ local animations = {
 				local anim_progress = math.easeOutCubic(progress)
 
 				parent._alpha_multiplier = anim_progress
-			end,
+			end
 		},
 		{
 			name = "move_pivot",
@@ -398,9 +398,9 @@ local animations = {
 				local y = 80 - 80 * anim_progress
 
 				parent:_set_scenegraph_position(scenegraph_id, nil, y)
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
@@ -413,12 +413,12 @@ return {
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
-				color = Color.black(30, true),
-			},
-		},
+				color = Color.black(30, true)
+			}
+		}
 	}, "screen"),
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

@@ -2,7 +2,7 @@
 
 local ability_size = {
 	92,
-	80,
+	80
 }
 local hud_element_player_ability_handler_settings = {
 	scan_delay = 0.25,
@@ -19,11 +19,11 @@ local hud_element_player_ability_handler_settings = {
 				position = {
 					-450,
 					-40,
-					1,
-				},
-			},
-		},
-	},
+					1
+				}
+			}
+		}
+	}
 }
 
 return settings("HudElementPlayerAbilityHandlerSettings", hud_element_player_ability_handler_settings)

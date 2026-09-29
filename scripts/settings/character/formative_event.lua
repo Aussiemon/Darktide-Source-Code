@@ -9,9 +9,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_event_01_description_snippet",
 		visibility = {
 			archetypes = {
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_event_02_description",
@@ -20,9 +20,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_event_02_description_snippet",
 		visibility = {
 			archetypes = {
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_event_03_description",
@@ -31,9 +31,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_event_03_description_snippet",
 		visibility = {
 			archetypes = {
-				"psyker",
-			},
-		},
+				"psyker"
+			}
+		}
 	},
 	{
 		description = "loc_character_event_04_description",
@@ -43,9 +43,9 @@ local formative_event_options = {
 		visibility = {
 			archetypes = {
 				"ogryn",
-				"veteran",
-			},
-		},
+				"veteran"
+			}
+		}
 	},
 	{
 		description = "loc_character_event_05_description",
@@ -55,9 +55,9 @@ local formative_event_options = {
 		visibility = {
 			archetypes = {
 				"zealot",
-				"cryptic",
-			},
-		},
+				"cryptic"
+			}
+		}
 	},
 	{
 		description = "loc_character_event_06_description",
@@ -66,9 +66,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_event_06_description_snippet",
 		visibility = {
 			archetypes = {
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		description = "loc_character_event_07_description",
@@ -77,9 +77,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_event_07_description_snippet",
 		visibility = {
 			archetypes = {
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		description = "loc_character_event_08_description",
@@ -88,9 +88,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_event_08_description_snippet",
 		visibility = {
 			archetypes = {
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		description = "loc_character_event_09_description",
@@ -99,9 +99,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_event_09_description_snippet",
 		visibility = {
 			archetypes = {
-				"psyker",
-			},
-		},
+				"psyker"
+			}
+		}
 	},
 	{
 		description = "loc_character_event_10_description",
@@ -110,9 +110,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_event_10_description_snippet",
 		visibility = {
 			archetypes = {
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_event_11_description",
@@ -121,9 +121,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_event_11_description_snippet",
 		visibility = {
 			archetypes = {
-				"veteran",
-			},
-		},
+				"veteran"
+			}
+		}
 	},
 	{
 		description = "loc_character_event_12_description",
@@ -132,9 +132,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_event_12_description_snippet",
 		visibility = {
 			archetypes = {
-				"psyker",
-			},
-		},
+				"psyker"
+			}
+		}
 	},
 	{
 		description = "loc_character_event_13_description",
@@ -144,9 +144,9 @@ local formative_event_options = {
 		visibility = {
 			archetypes = {
 				"psyker",
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		description = "loc_character_event_14_description",
@@ -155,9 +155,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_event_14_description_snippet",
 		visibility = {
 			archetypes = {
-				"psyker",
-			},
-		},
+				"psyker"
+			}
+		}
 	},
 	{
 		description = "loc_character_event_15_description",
@@ -166,9 +166,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_event_15_description_snippet",
 		visibility = {
 			archetypes = {
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		description = "loc_character_event_16_description",
@@ -178,9 +178,9 @@ local formative_event_options = {
 		visibility = {
 			archetypes = {
 				"ogryn",
-				"veteran",
-			},
-		},
+				"veteran"
+			}
+		}
 	},
 	{
 		description = "loc_character_event_17_description",
@@ -189,9 +189,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_event_17_description_snippet",
 		visibility = {
 			archetypes = {
-				"veteran",
-			},
-		},
+				"veteran"
+			}
+		}
 	},
 	{
 		description = "loc_character_event_18_description",
@@ -201,9 +201,9 @@ local formative_event_options = {
 		visibility = {
 			archetypes = {
 				"psyker",
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		description = "loc_character_event_19_description",
@@ -213,9 +213,9 @@ local formative_event_options = {
 		visibility = {
 			archetypes = {
 				"ogryn",
-				"veteran",
-			},
-		},
+				"veteran"
+			}
+		}
 	},
 	{
 		description = "loc_character_event_20_description",
@@ -224,9 +224,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_event_20_description_snippet",
 		visibility = {
 			archetypes = {
-				"psyker",
-			},
-		},
+				"psyker"
+			}
+		}
 	},
 	{
 		description = "loc_character_event_21_description",
@@ -236,9 +236,9 @@ local formative_event_options = {
 		visibility = {
 			archetypes = {
 				"ogryn",
-				"veteran",
-			},
-		},
+				"veteran"
+			}
+		}
 	},
 	{
 		description = "loc_character_event_22_description",
@@ -247,9 +247,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_event_22_description_snippet",
 		visibility = {
 			archetypes = {
-				"veteran",
-			},
-		},
+				"veteran"
+			}
+		}
 	},
 	{
 		description = "loc_character_commendations_01_description",
@@ -258,9 +258,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_commendations_01_description_snippet",
 		visibility = {
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		description = "loc_character_commendations_02_description",
@@ -269,9 +269,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_commendations_02_description_snippet",
 		visibility = {
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		description = "loc_character_commendations_03_description",
@@ -280,9 +280,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_commendations_03_description_snippet",
 		visibility = {
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		description = "loc_character_commendations_04_description",
@@ -291,9 +291,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_commendations_04_description_snippet",
 		visibility = {
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		description = "loc_character_commendations_05_description",
@@ -302,9 +302,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_commendations_05_description_snippet",
 		visibility = {
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		description = "loc_character_commendations_06_description",
@@ -313,9 +313,9 @@ local formative_event_options = {
 		story_snippet = "loc_character_commendations_06_description_snippet",
 		visibility = {
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		description = "loc_character_commendations_07_description",
@@ -324,18 +324,18 @@ local formative_event_options = {
 		story_snippet = "loc_character_commendations_07_description_snippet",
 		visibility = {
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		name = "None",
 		visibility = {
 			archetypes = {
-				"broker",
-			},
-		},
-	},
+				"broker"
+			}
+		}
+	}
 }
 
 table.append(formative_event_options, FORMATIVE_EVENT_CRYPTIC)

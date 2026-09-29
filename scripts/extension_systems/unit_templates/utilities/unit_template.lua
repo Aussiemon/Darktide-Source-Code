@@ -104,7 +104,7 @@ UnitTemplate.broadphase_radius_and_categories = function (breed, side_id)
 	local broadphase_radius, breed_type = breed.broadphase_radius, breed.breed_type
 	local broadphase_categories = {
 		side_name,
-		breed_type,
+		breed_type
 	}
 
 	if breed.broadphase_categories then

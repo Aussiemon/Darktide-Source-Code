@@ -6,7 +6,7 @@ local CLIENT_RPCS = {
 	"rpc_expedition_loot_converter_use",
 	"rpc_expedition_loot_converter_hot_join",
 	"rpc_expedition_loot_converter_despawn_loot_unit",
-	"rpc_expedition_loot_converter_convertion_complete",
+	"rpc_expedition_loot_converter_convertion_complete"
 }
 
 ExpeditionLootConverterSystem.init = function (self, context, system_init_data, ...)

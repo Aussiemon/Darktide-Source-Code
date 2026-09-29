@@ -2,7 +2,7 @@
 
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local RPCS = {
-	"rpc_sync_local_profiles_reply",
+	"rpc_sync_local_profiles_reply"
 }
 local LocalProfilesSyncState = class("LocalProfilesSyncState")
 
@@ -46,7 +46,7 @@ LocalProfilesSyncState.update = function (self, dt)
 		Log.info("LocalProfilesSyncState", "Timeout waiting for rpc_sync_local_profiles_reply")
 
 		return "timeout", {
-			game_reason = "timeout",
+			game_reason = "timeout"
 		}
 	end
 
@@ -56,7 +56,7 @@ LocalProfilesSyncState.update = function (self, dt)
 		Log.info("LocalProfilesSyncState", "Connection channel disconnected")
 
 		return "disconnected", {
-			engine_reason = reason,
+			engine_reason = reason
 		}
 	end
 

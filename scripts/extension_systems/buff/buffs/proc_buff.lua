@@ -144,8 +144,6 @@ ProcBuff._active_percentage = function (self, t)
 end
 
 ProcBuff.is_cooling_down = function (self, t)
-	local t = FixedFrame.get_latest_fixed_time()
-
 	return self:_is_cooling_down(t)
 end
 
@@ -421,7 +419,7 @@ ProcBuff._start_proc_active_fx = function (self)
 
 				table.insert(active_vfx, {
 					particle_id = on_screen_effect_id,
-					stop_type = stop_type,
+					stop_type = stop_type
 				})
 			end
 
@@ -433,7 +431,7 @@ ProcBuff._start_proc_active_fx = function (self)
 				table.insert(active_looping_sfx, {
 					playing_id = playing_id,
 					source_id = source_id,
-					stop_event = player_effects.looping_wwise_stop_event,
+					stop_event = player_effects.looping_wwise_stop_event
 				})
 			end
 
@@ -519,7 +517,7 @@ ProcBuff._show_in_hud = function (self)
 	local template_context = self._template_context
 	local visual_stack_count = self:visual_stack_count()
 
-	if visual_stack_count == 0 then
+	if visual_stack_count == 0 and not template.show_at_zero_stacks then
 		return false
 	end
 

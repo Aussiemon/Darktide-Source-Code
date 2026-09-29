@@ -7,10 +7,6 @@ PlayerQuickSwappedReporter.init = function (self)
 	self._reports = {}
 end
 
-PlayerQuickSwappedReporter.update = function (self, dt, t)
-	return
-end
-
 PlayerQuickSwappedReporter.report = function (self)
 	if table.is_empty(self._reports) then
 		return
@@ -30,14 +26,14 @@ PlayerQuickSwappedReporter.register_event = function (self, player, weapon_name)
 		local player_data = {
 			telemetry_subject = subject,
 			telemetry_game_session = player:telemetry_game_session(),
-			telemetry_current_instance = player:telemetry_current_instance(),
+			telemetry_current_instance = player:telemetry_current_instance()
 		}
 
 		self._reports[player_key] = {
 			player_data = player_data,
 			entries = {
-				[weapon_name] = 1,
-			},
+				[weapon_name] = 1
+			}
 		}
 	end
 end

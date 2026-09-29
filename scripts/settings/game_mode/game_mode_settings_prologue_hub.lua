@@ -20,7 +20,7 @@ local settings = {
 	vaulting_allowed = false,
 	states = {
 		"running",
-		"prologue_complete",
+		"prologue_complete"
 	},
 	side_compositions = {
 		{
@@ -28,57 +28,57 @@ local settings = {
 			name = "heroes",
 			relations = {
 				enemy = {
-					"villains",
-				},
-			},
+					"villains"
+				}
+			}
 		},
 		{
 			color_name = "red",
 			name = "villains",
 			relations = {
 				enemy = {
-					"heroes",
-				},
-			},
-		},
+					"heroes"
+				}
+			}
+		}
 	},
 	side_sub_faction_types = {
 		villains = {
 			"chaos",
 			"cultist",
-			"renegade",
-		},
+			"renegade"
+		}
 	},
 	hud_settings = {
-		player_composition = "players",
+		player_composition = "players"
 	},
 	hotkeys = {
 		hotkey_inventory = "inventory_background_view",
-		hotkey_system = "system_view",
+		hotkey_system = "system_view"
 	},
 	default_inventory = {
 		adamant = {
-			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human",
+			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human"
 		},
 		broker = {
-			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human",
+			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human"
 		},
 		cryptic = {
-			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human",
+			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human"
 		},
 		ogryn = {
-			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_ogryn",
+			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_ogryn"
 		},
 		psyker = {
-			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human",
+			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human"
 		},
 		veteran = {
-			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human",
+			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human"
 		},
 		zealot = {
-			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human",
-		},
-	},
+			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human"
+		}
+	}
 }
 
 return settings

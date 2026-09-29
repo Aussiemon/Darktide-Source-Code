@@ -317,23 +317,31 @@ ParticleEffect.stop_particle = function (self)
 	end
 end
 
+ParticleEffect.events.set_object_set_unit_visible = function (self, visible)
+	if visible then
+		self:create_particle()
+	else
+		self:destroy_particle()
+	end
+end
+
 ParticleEffect.component_data = {
 	particle = {
 		filter = "particles",
 		preview = false,
 		ui_name = "Particle",
 		ui_type = "resource",
-		value = "",
+		value = ""
 	},
 	particle_node_name = {
 		ui_name = "Node Name",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	create_particle_on_spawn = {
 		ui_name = "Create Particle on Spawn",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	scalar_parameters = {
 		ui_name = "List of parameters (scalar)",
@@ -342,26 +350,26 @@ ParticleEffect.component_data = {
 			cloud_name = {
 				ui_name = "Particle Cloud Name",
 				ui_type = "text_box",
-				value = "",
+				value = ""
 			},
 			parameter_name = {
 				ui_name = "Parameter Name",
 				ui_type = "text_box",
-				value = "",
+				value = ""
 			},
 			parameter_value = {
 				decimals = 2,
 				step = 0.01,
 				ui_name = "Value",
 				ui_type = "number",
-				value = 0,
-			},
+				value = 0
+			}
 		},
 		control_order = {
 			"cloud_name",
 			"parameter_name",
-			"parameter_value",
-		},
+			"parameter_value"
+		}
 	},
 	vector_two_parameters = {
 		ui_name = "List of parameters (vector2)",
@@ -370,24 +378,24 @@ ParticleEffect.component_data = {
 			cloud_name = {
 				ui_name = "Particle Cloud Name",
 				ui_type = "text_box",
-				value = "",
+				value = ""
 			},
 			parameter_name = {
 				ui_name = "Parameter Name",
 				ui_type = "text_box",
-				value = "",
+				value = ""
 			},
 			parameter_value = {
 				ui_name = "Value",
 				ui_type = "vector",
-				value = Vector3Box(0, 0, 0),
-			},
+				value = Vector3Box(0, 0, 0)
+			}
 		},
 		control_order = {
 			"cloud_name",
 			"parameter_name",
-			"parameter_value",
-		},
+			"parameter_value"
+		}
 	},
 	vector_three_parameters = {
 		ui_name = "List of parameters (vector3)",
@@ -396,24 +404,24 @@ ParticleEffect.component_data = {
 			cloud_name = {
 				ui_name = "Particle Cloud Name",
 				ui_type = "text_box",
-				value = "",
+				value = ""
 			},
 			parameter_name = {
 				ui_name = "Parameter Name",
 				ui_type = "text_box",
-				value = "",
+				value = ""
 			},
 			parameter_value = {
 				ui_name = "Value",
 				ui_type = "vector",
-				value = Vector3Box(0, 0, 0),
-			},
+				value = Vector3Box(0, 0, 0)
+			}
 		},
 		control_order = {
 			"cloud_name",
 			"parameter_name",
-			"parameter_value",
-		},
+			"parameter_value"
+		}
 	},
 	vector_four_parameters = {
 		ui_name = "List of parameters (vector4)",
@@ -422,24 +430,24 @@ ParticleEffect.component_data = {
 			cloud_name = {
 				ui_name = "Particle Cloud Name",
 				ui_type = "text_box",
-				value = "",
+				value = ""
 			},
 			parameter_name = {
 				ui_name = "Parameter Name",
 				ui_type = "text_box",
-				value = "",
+				value = ""
 			},
 			parameter_value = {
 				ui_name = "Value",
 				ui_type = "color",
-				value = QuaternionBox(1, 0, 0, 0),
-			},
+				value = QuaternionBox(1, 0, 0, 0)
+			}
 		},
 		control_order = {
 			"cloud_name",
 			"parameter_name",
-			"parameter_value",
-		},
+			"parameter_value"
+		}
 	},
 	script_data_parameters = {
 		ui_name = "List of parameters (Script Data)",
@@ -448,39 +456,39 @@ ParticleEffect.component_data = {
 			cloud_name = {
 				ui_name = "Particle Cloud Name",
 				ui_type = "text_box",
-				value = "",
+				value = ""
 			},
 			parameter_name = {
 				ui_name = "Parameter Name",
 				ui_type = "text_box",
-				value = "",
+				value = ""
 			},
 			script_data_name = {
 				ui_name = "Script Data Variable Name",
 				ui_type = "text_box",
-				value = "",
-			},
+				value = ""
+			}
 		},
 		control_order = {
 			"cloud_name",
 			"parameter_name",
-			"script_data_name",
-		},
+			"script_data_name"
+		}
 	},
 	inputs = {
 		create_particle = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		destroy_particle = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		stop_particle = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return ParticleEffect

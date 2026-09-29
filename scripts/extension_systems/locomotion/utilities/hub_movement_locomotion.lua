@@ -59,7 +59,7 @@ end
 
 local MOVEMENT_SETTINGS = {
 	shared = {},
-	current_move_state = {},
+	current_move_state = {}
 }
 
 HubMovementLocomotion.fetch_movement_settings = function (unit, player_character_constants, hub_jog_character_state_component)

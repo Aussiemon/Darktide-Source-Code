@@ -16,16 +16,16 @@ Styles.mission_area_info.image = {
 	vertical_alignment = "bottom",
 	size = {
 		480,
-		269,
+		269
 	},
 	offset = {
 		0,
 		0,
-		1,
+		1
 	},
 	material_values = {
-		texture_map = "content/ui/textures/missions/quickplay",
-	},
+		texture_map = "content/ui/textures/missions/quickplay"
+	}
 }
 Styles.mission_area_info.inner_shadow = {
 	horizontal_alignment = "center",
@@ -35,13 +35,13 @@ Styles.mission_area_info.inner_shadow = {
 		255,
 		0,
 		0,
-		0,
+		0
 	},
 	offset = {
 		0,
 		0,
-		2,
-	},
+		2
+	}
 }
 Styles.mission_area_info.lock = {
 	horizontal_alignment = "center",
@@ -49,19 +49,19 @@ Styles.mission_area_info.lock = {
 	vertical_alignment = "bottom",
 	size = {
 		252,
-		252,
+		252
 	},
 	offset = {
 		0,
 		-10,
-		5,
+		5
 	},
 	color = {
 		125,
 		255,
 		255,
-		255,
-	},
+		255
+	}
 }
 Styles.mission_area_info.outer_frame = {
 	scale_to_material = true,
@@ -69,8 +69,8 @@ Styles.mission_area_info.outer_frame = {
 	offset = {
 		0,
 		0,
-		10,
-	},
+		10
+	}
 }
 Styles.mission_area_info.title_frame = {
 	horizontal_alignment = "center",
@@ -78,14 +78,14 @@ Styles.mission_area_info.title_frame = {
 	vertical_alignment = "top",
 	size = {
 		Dimensions.details_width,
-		66,
+		66
 	},
 	color = Color.terminal_frame(nil, true),
 	offset = {
 		0,
 		0,
-		2,
-	},
+		2
+	}
 }
 Styles.mission_area_info.title_background = {
 	horizontal_alignment = "center",
@@ -93,14 +93,14 @@ Styles.mission_area_info.title_background = {
 	vertical_alignment = "top",
 	size = {
 		Dimensions.details_width,
-		92,
+		92
 	},
 	color = Color.black(255, true),
 	offset = {
 		0,
 		0,
-		-1,
-	},
+		-1
+	}
 }
 Styles.mission_area_info.mission_title = {
 	font_size = 20,
@@ -111,14 +111,14 @@ Styles.mission_area_info.mission_title = {
 	vertical_alignment = "top",
 	size = {
 		Dimensions.details_width,
-		78,
+		78
 	},
 	text_color = table.shallow_copy(default_colors.terminal_header_text),
 	offset = {
 		20,
 		12,
-		2,
-	},
+		2
+	}
 }
 Styles.mission_area_info.mission_sub_title = {
 	font_size = 14,
@@ -129,14 +129,14 @@ Styles.mission_area_info.mission_sub_title = {
 	vertical_alignment = "top",
 	size = {
 		Dimensions.details_width,
-		78,
+		78
 	},
 	text_color = table.shallow_copy(default_colors.text_sub_header),
 	offset = {
 		20,
 		38,
-		2,
-	},
+		2
+	}
 }
 Styles.mission_area_info.timer = {}
 Styles.mission_area_info.timer.timer_bar_frame = {
@@ -146,13 +146,13 @@ Styles.mission_area_info.timer.timer_bar_frame = {
 	offset = {
 		0,
 		-28,
-		4,
+		4
 	},
 	size = {
 		364,
-		28,
+		28
 	},
-	color = table.shallow_copy(default_colors.terminal_frame),
+	color = table.shallow_copy(default_colors.terminal_frame)
 }
 Styles.mission_area_info.timer.timer_frame = {
 	horizontal_alignment = "right",
@@ -161,13 +161,13 @@ Styles.mission_area_info.timer.timer_frame = {
 	offset = {
 		-20,
 		-(Dimensions.sidebar_small_buffer - 8 + 13),
-		4,
+		4
 	},
 	size = {
 		320,
-		8,
+		8
 	},
-	color = table.shallow_copy(default_colors.terminal_frame),
+	color = table.shallow_copy(default_colors.terminal_frame)
 }
 Styles.mission_area_info.timer.timer_bar = {
 	horizontal_alignment = "right",
@@ -175,16 +175,16 @@ Styles.mission_area_info.timer.timer_bar = {
 	offset = {
 		-20,
 		-(Dimensions.sidebar_small_buffer - 8 + 13),
-		3,
+		3
 	},
 	size = {
 		320,
-		8,
+		8
 	},
 	material_values = {
-		progress = 1,
+		progress = 1
 	},
-	color = table.shallow_copy(default_colors.main),
+	color = table.shallow_copy(default_colors.main)
 }
 Styles.mission_area_info.timer.timer_text_frame = {
 	horizontal_alignment = "left",
@@ -193,27 +193,27 @@ Styles.mission_area_info.timer.timer_text_frame = {
 	offset = {
 		0,
 		-28,
-		4,
+		4
 	},
 	size = {
 		120,
-		28,
+		28
 	},
-	color = table.shallow_copy(default_colors.terminal_frame),
+	color = table.shallow_copy(default_colors.terminal_frame)
 }
 Styles.mission_area_info.timer.timer_icon = {
 	horizontal_alignment = "left",
 	vertical_alignment = "top",
 	size = {
 		19,
-		19,
+		19
 	},
 	offset = {
 		16,
 		-(19 + Dimensions.sidebar_small_buffer - 8),
-		3,
+		3
 	},
-	color = table.shallow_copy(default_colors.terminal_header_text),
+	color = table.shallow_copy(default_colors.terminal_header_text)
 }
 Styles.mission_area_info.timer.timer_text = {
 	drop_shadow = true,
@@ -224,14 +224,14 @@ Styles.mission_area_info.timer.timer_text = {
 	vertical_alignment = "top",
 	size = {
 		nil,
-		24,
+		24
 	},
 	offset = {
 		40,
 		-(Dimensions.sidebar_small_buffer - 8 + 21),
-		3,
+		3
 	},
-	text_color = table.shallow_copy(default_colors.terminal_header_text),
+	text_color = table.shallow_copy(default_colors.terminal_header_text)
 }
 Styles.mission_area_info.timer.infinite_symbol = {
 	horizontal_alignment = "left",
@@ -239,14 +239,14 @@ Styles.mission_area_info.timer.infinite_symbol = {
 	visible = true,
 	size = {
 		25.2,
-		14.399999999999999,
+		14.399999999999999
 	},
 	offset = {
 		46,
 		-20,
-		10,
+		10
 	},
-	color = table.shallow_copy(default_colors.terminal_header_text),
+	color = table.shallow_copy(default_colors.terminal_header_text)
 }
 
 return settings("ViewElementMissionBoardMissionLocationStyles", Styles)

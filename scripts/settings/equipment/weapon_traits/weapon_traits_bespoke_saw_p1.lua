@@ -17,9 +17,9 @@ templates.weapon_trait_bespoke_saw_p1_chained_hits_increases_power = {
 				find_value_type = "trait_override",
 				path = {
 					"stat_buffs",
-					stat_buffs.melee_power_level_modifier,
-				},
-			},
+					stat_buffs.melee_power_level_modifier
+				}
+			}
 		},
 		stacks = {
 			format_type = "number",
@@ -27,39 +27,39 @@ templates.weapon_trait_bespoke_saw_p1_chained_hits_increases_power = {
 				buff_template_name = "weapon_trait_bespoke_saw_p1_chained_hits_increases_power_child",
 				find_value_type = "buff_template",
 				path = {
-					"max_stacks",
-				},
-			},
-		},
+					"max_stacks"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_saw_p1_chained_hits_increases_power_parent = {
 			{
 				max_stacks = 10,
 				stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.02,
-				},
+					[stat_buffs.melee_power_level_modifier] = 0.02
+				}
 			},
 			{
 				max_stacks = 10,
 				stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.03,
-				},
+					[stat_buffs.melee_power_level_modifier] = 0.03
+				}
 			},
 			{
 				max_stacks = 10,
 				stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.04,
-				},
+					[stat_buffs.melee_power_level_modifier] = 0.04
+				}
 			},
 			{
 				max_stacks = 10,
 				stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.05,
-				},
-			},
-		},
-	},
+					[stat_buffs.melee_power_level_modifier] = 0.05
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_saw_p1_chained_hits_increases_crit_chance = {
 	format_values = {
@@ -71,9 +71,9 @@ templates.weapon_trait_bespoke_saw_p1_chained_hits_increases_crit_chance = {
 				find_value_type = "trait_override",
 				path = {
 					"stat_buffs",
-					stat_buffs.critical_strike_chance,
-				},
-			},
+					stat_buffs.critical_strike_chance
+				}
+			}
 		},
 		stacks = {
 			format_type = "number",
@@ -81,35 +81,35 @@ templates.weapon_trait_bespoke_saw_p1_chained_hits_increases_crit_chance = {
 				buff_template_name = "weapon_trait_bespoke_saw_p1_chained_hits_increases_crit_chance_child",
 				find_value_type = "buff_template",
 				path = {
-					"max_stacks",
-				},
-			},
-		},
+					"max_stacks"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_saw_p1_chained_hits_increases_crit_chance_parent = {
 			{
 				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.025,
-				},
+					[stat_buffs.critical_strike_chance] = 0.025
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.03,
-				},
+					[stat_buffs.critical_strike_chance] = 0.03
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.035,
-				},
+					[stat_buffs.critical_strike_chance] = 0.035
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.04,
-				},
-			},
-		},
-	},
+					[stat_buffs.critical_strike_chance] = 0.04
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_saw_p1_stacking_finesse_on_one_hit_kill = {
 	format_values = {
@@ -121,9 +121,9 @@ templates.weapon_trait_bespoke_saw_p1_stacking_finesse_on_one_hit_kill = {
 				find_value_type = "trait_override",
 				path = {
 					"stat_buffs",
-					stat_buffs.melee_finesse_modifier_bonus,
-				},
-			},
+					stat_buffs.melee_finesse_modifier_bonus
+				}
+			}
 		},
 		stacks = {
 			format_type = "number",
@@ -131,9 +131,9 @@ templates.weapon_trait_bespoke_saw_p1_stacking_finesse_on_one_hit_kill = {
 				buff_template_name = "weapon_trait_bespoke_saw_p1_stacking_finesse_on_one_hit_kill_parent",
 				find_value_type = "trait_override",
 				path = {
-					"max_stacks",
-				},
-			},
+					"max_stacks"
+				}
+			}
 		},
 		time = {
 			format_type = "number",
@@ -141,39 +141,39 @@ templates.weapon_trait_bespoke_saw_p1_stacking_finesse_on_one_hit_kill = {
 				buff_template_name = "weapon_trait_bespoke_saw_p1_stacking_finesse_on_one_hit_kill_parent",
 				find_value_type = "buff_template",
 				path = {
-					"child_duration",
-				},
-			},
-		},
+					"child_duration"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_saw_p1_stacking_finesse_on_one_hit_kill_parent = {
 			{
 				max_stacks = 5,
 				stat_buffs = {
-					[stat_buffs.melee_finesse_modifier_bonus] = 0.14,
-				},
+					[stat_buffs.melee_finesse_modifier_bonus] = 0.14
+				}
 			},
 			{
 				max_stacks = 5,
 				stat_buffs = {
-					[stat_buffs.melee_finesse_modifier_bonus] = 0.16,
-				},
+					[stat_buffs.melee_finesse_modifier_bonus] = 0.16
+				}
 			},
 			{
 				max_stacks = 5,
 				stat_buffs = {
-					[stat_buffs.melee_finesse_modifier_bonus] = 0.18,
-				},
+					[stat_buffs.melee_finesse_modifier_bonus] = 0.18
+				}
 			},
 			{
 				max_stacks = 5,
 				stat_buffs = {
-					[stat_buffs.melee_finesse_modifier_bonus] = 0.2,
-				},
-			},
-		},
-	},
+					[stat_buffs.melee_finesse_modifier_bonus] = 0.2
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_saw_p1_power_bonus_on_first_attack = {
 	format_values = {
@@ -186,9 +186,9 @@ templates.weapon_trait_bespoke_saw_p1_power_bonus_on_first_attack = {
 				path = {
 					"conditional_switch_stat_buffs",
 					1,
-					stat_buffs.melee_power_level_modifier,
-				},
-			},
+					stat_buffs.melee_power_level_modifier
+				}
+			}
 		},
 		cooldown = {
 			format_type = "number",
@@ -196,10 +196,10 @@ templates.weapon_trait_bespoke_saw_p1_power_bonus_on_first_attack = {
 				buff_template_name = "weapon_trait_bespoke_saw_p1_power_bonus_on_first_attack",
 				find_value_type = "trait_override",
 				path = {
-					"no_power_duration",
-				},
-			},
-		},
+					"no_power_duration"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_saw_p1_power_bonus_on_first_attack = {
@@ -207,36 +207,36 @@ templates.weapon_trait_bespoke_saw_p1_power_bonus_on_first_attack = {
 				no_power_duration = 5,
 				conditional_switch_stat_buffs = {
 					{
-						[stat_buffs.melee_power_level_modifier] = 0.6,
-					},
-				},
+						[stat_buffs.melee_power_level_modifier] = 0.6
+					}
+				}
 			},
 			{
 				no_power_duration = 4.5,
 				conditional_switch_stat_buffs = {
 					{
-						[stat_buffs.melee_power_level_modifier] = 0.6,
-					},
-				},
+						[stat_buffs.melee_power_level_modifier] = 0.6
+					}
+				}
 			},
 			{
 				no_power_duration = 4,
 				conditional_switch_stat_buffs = {
 					{
-						[stat_buffs.melee_power_level_modifier] = 0.6,
-					},
-				},
+						[stat_buffs.melee_power_level_modifier] = 0.6
+					}
+				}
 			},
 			{
 				no_power_duration = 3.5,
 				conditional_switch_stat_buffs = {
 					{
-						[stat_buffs.melee_power_level_modifier] = 0.6,
-					},
-				},
-			},
-		},
-	},
+						[stat_buffs.melee_power_level_modifier] = 0.6
+					}
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_saw_p1_consecutive_melee_hits_same_target_increases_melee_power = {
 	format_values = {
@@ -248,9 +248,9 @@ templates.weapon_trait_bespoke_saw_p1_consecutive_melee_hits_same_target_increas
 				find_value_type = "trait_override",
 				path = {
 					"stat_buffs",
-					stat_buffs.melee_power_level_modifier,
-				},
-			},
+					stat_buffs.melee_power_level_modifier
+				}
+			}
 		},
 		time = {
 			format_type = "number",
@@ -258,9 +258,9 @@ templates.weapon_trait_bespoke_saw_p1_consecutive_melee_hits_same_target_increas
 				buff_template_name = "weapon_trait_bespoke_saw_p1_consecutive_melee_hits_same_target_increases_melee_power_parent",
 				find_value_type = "trait_override",
 				path = {
-					"child_duration",
-				},
-			},
+					"child_duration"
+				}
+			}
 		},
 		stacks = {
 			format_type = "number",
@@ -268,39 +268,39 @@ templates.weapon_trait_bespoke_saw_p1_consecutive_melee_hits_same_target_increas
 				buff_template_name = "weapon_trait_bespoke_saw_p1_consecutive_melee_hits_same_target_increases_melee_power_child",
 				find_value_type = "buff_template",
 				path = {
-					"max_stacks",
-				},
-			},
-		},
+					"max_stacks"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_saw_p1_consecutive_melee_hits_same_target_increases_melee_power_parent = {
 			{
 				child_duration = 2,
 				stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.04,
-				},
+					[stat_buffs.melee_power_level_modifier] = 0.04
+				}
 			},
 			{
 				child_duration = 2,
 				stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.06,
-				},
+					[stat_buffs.melee_power_level_modifier] = 0.06
+				}
 			},
 			{
 				child_duration = 2,
 				stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.08,
-				},
+					[stat_buffs.melee_power_level_modifier] = 0.08
+				}
 			},
 			{
 				child_duration = 2,
 				stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.1,
-				},
-			},
-		},
-	},
+					[stat_buffs.melee_power_level_modifier] = 0.1
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_saw_p1_bleed_on_crit = {
 	format_values = {
@@ -311,35 +311,35 @@ templates.weapon_trait_bespoke_saw_p1_bleed_on_crit = {
 				find_value_type = "trait_override",
 				path = {
 					"target_buff_data",
-					"num_stacks_on_proc",
-				},
-			},
-		},
+					"num_stacks_on_proc"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_saw_p1_bleed_on_crit = {
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 5,
-				},
+					num_stacks_on_proc = 5
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 6,
-				},
+					num_stacks_on_proc = 6
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 7,
-				},
+					num_stacks_on_proc = 7
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 8,
-				},
-			},
-		},
-	},
+					num_stacks_on_proc = 8
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_saw_p1_bleed_on_non_weakspot_hit = {
 	format_values = {
@@ -350,35 +350,35 @@ templates.weapon_trait_bespoke_saw_p1_bleed_on_non_weakspot_hit = {
 				find_value_type = "trait_override",
 				path = {
 					"target_buff_data",
-					"num_stacks_on_proc",
-				},
-			},
-		},
+					"num_stacks_on_proc"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_saw_p1_bleed_on_non_weakspot_hit = {
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 1,
-				},
+					num_stacks_on_proc = 1
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 2,
-				},
+					num_stacks_on_proc = 2
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 3,
-				},
+					num_stacks_on_proc = 3
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 4,
-				},
-			},
-		},
-	},
+					num_stacks_on_proc = 4
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_saw_p1_increased_weakspot_damage_against_toxin_status = {
 	format_values = {
@@ -390,35 +390,35 @@ templates.weapon_trait_bespoke_saw_p1_increased_weakspot_damage_against_toxin_st
 				find_value_type = "trait_override",
 				path = {
 					"conditional_stat_buffs",
-					stat_buffs.melee_weakspot_damage_vs_toxin_status,
-				},
-			},
-		},
+					stat_buffs.melee_weakspot_damage_vs_toxin_status
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_saw_p1_increased_weakspot_damage_against_toxin_status = {
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.melee_weakspot_damage_vs_toxin_status] = 0.525,
-				},
+					[stat_buffs.melee_weakspot_damage_vs_toxin_status] = 0.525
+				}
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.melee_weakspot_damage_vs_toxin_status] = 0.55,
-				},
+					[stat_buffs.melee_weakspot_damage_vs_toxin_status] = 0.55
+				}
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.melee_weakspot_damage_vs_toxin_status] = 0.575,
-				},
+					[stat_buffs.melee_weakspot_damage_vs_toxin_status] = 0.575
+				}
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.melee_weakspot_damage_vs_toxin_status] = 0.6,
-				},
-			},
-		},
-	},
+					[stat_buffs.melee_weakspot_damage_vs_toxin_status] = 0.6
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_saw_p1_hit_mass_consumption_reduction_on_kill = {
 	format_values = {
@@ -430,12 +430,12 @@ templates.weapon_trait_bespoke_saw_p1_hit_mass_consumption_reduction_on_kill = {
 				find_value_type = "trait_override",
 				path = {
 					"stat_buffs",
-					stat_buffs.consumed_hit_mass_modifier,
-				},
+					stat_buffs.consumed_hit_mass_modifier
+				}
 			},
 			value_manipulation = function (value)
 				return (1 - value) * 100
-			end,
+			end
 		},
 		time = {
 			format_type = "number",
@@ -443,39 +443,39 @@ templates.weapon_trait_bespoke_saw_p1_hit_mass_consumption_reduction_on_kill = {
 				buff_template_name = "weapon_trait_bespoke_saw_p1_hit_mass_consumption_reduction_on_kill",
 				find_value_type = "buff_template",
 				path = {
-					"active_duration",
-				},
-			},
+					"active_duration"
+				}
+			}
 		},
 		stacks = {
 			format_type = "string",
-			value = "5",
-		},
+			value = "5"
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_saw_p1_hit_mass_consumption_reduction_on_kill = {
 			{
 				stat_buffs = {
-					[stat_buffs.consumed_hit_mass_modifier] = 0.7,
-				},
+					[stat_buffs.consumed_hit_mass_modifier] = 0.7
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.consumed_hit_mass_modifier] = 0.6,
-				},
+					[stat_buffs.consumed_hit_mass_modifier] = 0.6
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.consumed_hit_mass_modifier] = 0.5,
-				},
+					[stat_buffs.consumed_hit_mass_modifier] = 0.5
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.consumed_hit_mass_modifier] = 0.4,
-				},
-			},
-		},
-	},
+					[stat_buffs.consumed_hit_mass_modifier] = 0.4
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_saw_p1_chained_hits_increases_melee_cleave = {
 	format_values = {
@@ -487,9 +487,9 @@ templates.weapon_trait_bespoke_saw_p1_chained_hits_increases_melee_cleave = {
 				find_value_type = "trait_override",
 				path = {
 					"stat_buffs",
-					stat_buffs.max_hit_mass_attack_modifier,
-				},
-			},
+					stat_buffs.max_hit_mass_attack_modifier
+				}
+			}
 		},
 		stacks = {
 			format_type = "number",
@@ -497,35 +497,35 @@ templates.weapon_trait_bespoke_saw_p1_chained_hits_increases_melee_cleave = {
 				buff_template_name = "weapon_trait_bespoke_saw_p1_chained_hits_increases_melee_cleave_child",
 				find_value_type = "buff_template",
 				path = {
-					"max_stacks",
-				},
-			},
-		},
+					"max_stacks"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_saw_p1_chained_hits_increases_melee_cleave_parent = {
 			{
 				stat_buffs = {
-					[stat_buffs.max_hit_mass_attack_modifier] = 0.1,
-				},
+					[stat_buffs.max_hit_mass_attack_modifier] = 0.1
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.max_hit_mass_attack_modifier] = 0.15,
-				},
+					[stat_buffs.max_hit_mass_attack_modifier] = 0.15
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.max_hit_mass_attack_modifier] = 0.2,
-				},
+					[stat_buffs.max_hit_mass_attack_modifier] = 0.2
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.max_hit_mass_attack_modifier] = 0.25,
-				},
-			},
-		},
-	},
+					[stat_buffs.max_hit_mass_attack_modifier] = 0.25
+				}
+			}
+		}
+	}
 }
 
 return templates

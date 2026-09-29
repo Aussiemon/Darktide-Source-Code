@@ -10,11 +10,11 @@ local mission_intro_view_settings = {
 	intro_levels_by_zone_id = {
 		default = {
 			level_name = "content/levels/ui/mission_intro/mission_intro",
-			shading_environment = "content/shading_environments/ui/mission_intro",
+			shading_environment = "content/shading_environments/ui/mission_intro"
 		},
 		horde = {
 			level_name = "content/levels/ui/horde_mission_intro/horde_mission_intro",
-			shading_environment = "content/shading_environments/ui/horde_mission_intro",
+			shading_environment = "content/shading_environments/ui/horde_mission_intro"
 		},
 		expeditions = {
 			level_name = "content/levels/ui/expeditions_mission_intro/expeditions_mission_intro",
@@ -22,19 +22,19 @@ local mission_intro_view_settings = {
 			shading_environments = {
 				darkness = "content/shading_environments/expeditions/wastes/cinematics/expeditions_wastes_mission_intro_darkness",
 				dawn = "content/shading_environments/expeditions/wastes/cinematics/expeditions_wastes_mission_intro_dawn",
-				default = "content/shading_environments/expeditions/wastes/cinematics/expeditions_wastes_mission_intro_default",
-			},
-		},
+				default = "content/shading_environments/expeditions/wastes/cinematics/expeditions_wastes_mission_intro_default"
+			}
+		}
 	},
 	world_custom_flags = {
 		Application.ENABLE_VOLUMETRICS,
-		Application.ENABLE_RAY_TRACING,
+		Application.ENABLE_RAY_TRACING
 	},
 	prioritized_ogryn_sized_slots = {
 		3,
 		5,
 		4,
-		6,
+		6
 	},
 	ignored_slots = {
 		"slot_primary",
@@ -47,7 +47,7 @@ local mission_intro_view_settings = {
 		"slot_companion_gear_full",
 		"slot_companion_body_skin_color",
 		"slot_companion_body_fur_color",
-		"slot_companion_body_coat_pattern",
+		"slot_companion_body_coat_pattern"
 	},
 	animations_per_archetype = {
 		adamant = {
@@ -55,19 +55,19 @@ local mission_intro_view_settings = {
 			"mission_briefing_pose_04",
 			"mission_briefing_pose_05",
 			"mission_briefing_pose_06",
-			"mission_briefing_pose_07",
+			"mission_briefing_pose_07"
 		},
 		broker = {
 			"mission_briefing_pose_02",
 			"mission_briefing_pose_04",
 			"mission_briefing_pose_05",
-			"mission_briefing_pose_06",
+			"mission_briefing_pose_06"
 		},
 		cryptic = {
 			"mission_briefing_pose_01",
 			"mission_briefing_pose_02",
 			"mission_briefing_pose_03",
-			"mission_briefing_pose_04",
+			"mission_briefing_pose_04"
 		},
 		ogryn = {
 			"mission_briefing_pose_01",
@@ -77,21 +77,21 @@ local mission_intro_view_settings = {
 			"mission_briefing_pose_05",
 			"mission_briefing_pose_06",
 			"mission_briefing_pose_07",
-			"mission_briefing_pose_08",
+			"mission_briefing_pose_08"
 		},
 		psyker = {
 			"mission_briefing_pose_02",
 			"mission_briefing_pose_04",
 			"mission_briefing_pose_05",
 			"mission_briefing_pose_06",
-			"mission_briefing_pose_07",
+			"mission_briefing_pose_07"
 		},
 		veteran = {
 			"mission_briefing_pose_02",
 			"mission_briefing_pose_04",
 			"mission_briefing_pose_05",
 			"mission_briefing_pose_06",
-			"mission_briefing_pose_07",
+			"mission_briefing_pose_07"
 		},
 		zealot = {
 			"mission_briefing_pose_02",
@@ -99,112 +99,112 @@ local mission_intro_view_settings = {
 			"mission_briefing_pose_04",
 			"mission_briefing_pose_05",
 			"mission_briefing_pose_06",
-			"mission_briefing_pose_07",
-		},
+			"mission_briefing_pose_07"
+		}
 	},
 	story_briefing_lines = {
 		player_journey_01 = {
 			1,
 			1,
-			1,
+			1
 		},
 		player_journey_02 = {
 			3,
 			1,
-			4,
+			4
 		},
 		player_journey_03 = {
 			3,
 			4,
-			1,
+			1
 		},
 		player_journey_04 = {
 			1,
 			2,
-			4,
+			4
 		},
 		player_journey_05 = {
 			2,
 			1,
-			3,
+			3
 		},
 		player_journey_06_A = {
 			1,
 			1,
-			2,
+			2
 		},
 		player_journey_07_A = {
 			3,
 			3,
-			3,
+			3
 		},
 		player_journey_06_B = {
 			1,
 			1,
-			1,
+			1
 		},
 		player_journey_07_B = {
 			3,
 			2,
-			3,
+			3
 		},
 		player_journey_08 = {
 			1,
 			4,
-			3,
+			3
 		},
 		player_journey_09 = {
 			1,
 			2,
-			1,
+			1
 		},
 		player_journey_010 = {
 			1,
 			1,
-			1,
+			1
 		},
 		player_journey_011_A = {
 			2,
 			2,
-			2,
+			2
 		},
 		player_journey_012_A = {
 			4,
 			1,
-			4,
+			4
 		},
 		player_journey_013_A = {
 			4,
 			2,
-			1,
+			1
 		},
 		player_journey_011_B = {
 			1,
 			2,
 			1,
-			2,
+			2
 		},
 		player_journey_014 = {
 			1,
 			1,
-			3,
+			3
 		},
 		story_nomansland_01 = {
 			3,
 			1,
-			3,
+			3
 		},
 		story_nomansland_02 = {
 			2,
 			1,
-			2,
+			2
 		},
 		story_nomansland_03 = {
 			1,
 			3,
-			3,
-		},
-	},
+			3
+		}
+	}
 }
 
 return settings("MissionIntroViewSettings", mission_intro_view_settings)

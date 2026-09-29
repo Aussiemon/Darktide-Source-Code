@@ -6,33 +6,33 @@ local hub_location_introduction_settings = {
 		video_template = "hli_mission_board",
 		video_template_by_archetype = {
 			adamant = "hli_mission_board_adamant",
-			cryptic = "hli_mission_board_cryptic",
-		},
+			cryptic = "hli_mission_board_cryptic"
+		}
 	},
 	barber_vendor_background_view = {
 		narrative_event_name = "hli_barbershop_viewed",
-		video_template = "hli_barbershop",
+		video_template = "hli_barbershop"
 	},
 	contracts_background_view = {
 		narrative_event_name = "hli_contracts_viewed",
-		video_template = "hli_contracts",
+		video_template = "hli_contracts"
 	},
 	crafting_view = {
 		narrative_event_name = "hli_crafting_station_underground_viewed",
-		video_template = "hli_crafting_station_underground",
+		video_template = "hli_crafting_station_underground"
 	},
 	credits_vendor_background_view = {
 		narrative_event_name = "hli_gun_shop_viewed",
-		video_template = "hli_gun_shop",
+		video_template = "hli_gun_shop"
 	},
 	penance_overview_view = {
 		narrative_event_name = "hli_penances_viewed",
-		video_template = "hli_penances",
+		video_template = "hli_penances"
 	},
 	expedition_view = {
 		narrative_event_name = "hli_expeditions_viewed",
-		video_template = "hli_expeditions",
-	},
+		video_template = "hli_expeditions"
+	}
 }
 
 return settings("HubLocationIntroductionSettings", hub_location_introduction_settings)

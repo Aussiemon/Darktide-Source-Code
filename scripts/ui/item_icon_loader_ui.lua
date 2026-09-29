@@ -42,7 +42,7 @@ ItemIconLoaderUI.load_icon = function (self, item, on_load_callback, on_unload_c
 			item = item,
 			item_name = item_name,
 			packages_to_load = packages_to_load,
-			id = id,
+			id = id
 		}
 		self._requests_queue_order[#self._requests_queue_order + 1] = gear_id
 	end
@@ -78,7 +78,7 @@ ItemIconLoaderUI.unload_icon = function (self, id)
 	data.callbacks[id] = nil
 	self._requests_to_unload[#self._requests_to_unload + 1] = {
 		frame_delay_counter = 2,
-		id = id,
+		id = id
 	}
 end
 

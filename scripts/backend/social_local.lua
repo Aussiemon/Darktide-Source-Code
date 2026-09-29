@@ -28,7 +28,7 @@ SocialLocal.fetch_friends = function (self)
 
 		local response_data = {
 			friends = friends,
-			maxFriends = max_number_friends,
+			maxFriends = max_number_friends
 		}
 
 		promise:resolve(response_data)
@@ -56,7 +56,7 @@ SocialLocal.send_friend_request = function (self, account_id, method)
 					accountName = "DummyData",
 					accountId = account_id,
 					status = is_sent and FriendStatus.invited or FriendStatus.invite,
-					invitedTime = tostring(server_time),
+					invitedTime = tostring(server_time)
 				}
 
 				self._friends[account_id] = friend
@@ -85,7 +85,7 @@ SocialLocal.fetch_recently_played = function (self, character_id)
 		promise:reject({})
 	else
 		local response_data = {
-			recentParticipants = {},
+			recentParticipants = {}
 		}
 
 		promise:resolve(response_data)
@@ -130,7 +130,7 @@ SocialLocal.fetch_blocked_accounts = function (self)
 	else
 		local response_data = {
 			maxBlocks = 10,
-			blockList = table.clone(self._temp_block_list),
+			blockList = table.clone(self._temp_block_list)
 		}
 
 		promise:resolve(response_data)
@@ -165,7 +165,7 @@ SocialLocal.fetch_group_finder_tags = function (self)
 		promise:reject({})
 	else
 		local response_data = {
-			tags = {},
+			tags = {}
 		}
 
 		promise:resolve(response_data)

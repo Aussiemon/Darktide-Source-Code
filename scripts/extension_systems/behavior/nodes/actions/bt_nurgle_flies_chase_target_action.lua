@@ -172,7 +172,7 @@ end
 
 local traversal_condition = {
 	"at_jump_smart_object",
-	"at_climb_smart_object",
+	"at_climb_smart_object"
 }
 
 BTNurgleFliesChaseTargetAction._need_to_traverse = function (self, unit, blackboard, scratchpad, condition_args, action_data, is_running)

@@ -67,7 +67,7 @@ PartyImmateriumConnection.abort = function (self)
 
 		self:_on_error({
 			aborted = true,
-			error_details = "ABORTED",
+			error_details = "ABORTED"
 		})
 	end
 end

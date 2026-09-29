@@ -23,51 +23,51 @@ local broker_stimm_field_crate_deployable_unit_template = {
 		Unit.set_data(unit, "deployable_type", "medical_crate")
 
 		local radius, categories = 1, {
-			"deployable",
+			"deployable"
 		}
 
 		config:add("BroadphaseExtension", {
 			moving = false,
 			radius = radius,
-			categories = categories,
+			categories = categories
 		})
 		config:add("SideExtension", {
-			side_id = side_id,
+			side_id = side_id
 		})
 
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
 		local broadphase = broadphase_system.broadphase
 		local relation_init_data = {
 			allied = {
-				proximity_radius = deployable.proximity_radius,
+				proximity_check_params = deployable.proximity_check_params,
 				stickiness_limit = deployable.stickiness_limit,
 				stickiness_time = deployable.stickiness_time,
 				logic = {
 					{
 						class_name = "ProximityBrokerStimmField",
 						use_as_job = true,
-						init_data = deployable.proximity_init_data,
-					},
-				},
-			},
+						init_data = deployable.proximity_init_data
+					}
+				}
+			}
 		}
 
 		config:add("SideRelationProximityExtension", {
 			owner_unit_or_nil = owner_unit,
 			broadphase = broadphase,
-			relation_init_data = relation_init_data,
+			relation_init_data = relation_init_data
 		})
 		config:add("PointOfInterestTargetExtension", {
 			tag = "healthstation",
-			view_distance = nil,
+			view_distance = nil
 		})
 		config:add("ComponentExtension")
 		config:add("SmartTagExtension", {
 			auto_tag_on_spawn = false,
-			target_type = "medical_crate_deployable",
+			target_type = "medical_crate_deployable"
 		})
 		config:add("DeployableUnitLocomotionExtension", {
-			placed_on_unit = placed_on_unit,
+			placed_on_unit = placed_on_unit
 		})
 
 		game_object_data.side_id = side_id
@@ -113,12 +113,12 @@ local broker_stimm_field_crate_deployable_unit_template = {
 		end
 
 		config:add("SideExtension", {
-			side_id = side_id,
+			side_id = side_id
 		})
 		config:add("ComponentExtension")
 		config:add("HuskCoherencyExtension")
 		config:add("SmartTagExtension", {
-			target_type = "medical_crate_deployable",
+			target_type = "medical_crate_deployable"
 		})
 		config:add("DeployableHuskLocomotionExtension", {})
 		Unit.flow_event(unit, "lua_deploy")
@@ -135,7 +135,7 @@ local broker_stimm_field_crate_deployable_unit_template = {
 		if has_owner then
 			player_unit_spawn_manager:relinquish_unit_ownership(unit)
 		end
-	end,
+	end
 }
 
 return broker_stimm_field_crate_deployable_unit_template

@@ -12,13 +12,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			3,
-		},
+			3
+		}
 	},
 	title = {
 		horizontal_alignment = "center",
@@ -26,13 +26,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			1920,
-			50,
+			50
 		},
 		position = {
 			0,
 			100,
-			0,
-		},
+			0
+		}
 	},
 	sub_title = {
 		horizontal_alignment = "center",
@@ -40,13 +40,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			1920,
-			50,
+			50
 		},
 		position = {
 			0,
 			160,
-			0,
-		},
+			0
+		}
 	},
 	options_area = {
 		horizontal_alignment = "center",
@@ -54,13 +54,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	option = {
 		horizontal_alignment = "center",
@@ -68,14 +68,14 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
-	},
+			0
+		}
+	}
 }
 local title_style = {
 	font_size = 46,
@@ -88,8 +88,8 @@ local title_style = {
 	offset = {
 		0,
 		0,
-		0,
-	},
+		0
+	}
 }
 local sub_title_style = table.clone(title_style)
 
@@ -102,8 +102,8 @@ local widget_definitions = {
 			style_id = "text",
 			value = "",
 			value_id = "text",
-			style = title_style,
-		},
+			style = title_style
+		}
 	}, "title"),
 	sub_title = UIWidget.create_definition({
 		{
@@ -111,9 +111,9 @@ local widget_definitions = {
 			style_id = "text",
 			value = "",
 			value_id = "text",
-			style = sub_title_style,
-		},
-	}, "sub_title"),
+			style = sub_title_style
+		}
+	}, "sub_title")
 }
 local animations = {
 	on_option_enter = {
@@ -146,7 +146,7 @@ local animations = {
 						widget.alpha_multiplier = 0
 					end
 				end
-			end,
+			end
 		},
 		{
 			end_time = 0.3,
@@ -168,7 +168,7 @@ local animations = {
 						widget.alpha_multiplier = anim_progress
 					end
 				end
-			end,
+			end
 		},
 		{
 			end_time = 0.4,
@@ -187,8 +187,8 @@ local animations = {
 						style.description.text_color[1] = anim_progress * 255
 					end
 				end
-			end,
-		},
+			end
+		}
 	},
 	on_option_exit = {
 		{
@@ -218,7 +218,7 @@ local animations = {
 						widget.alpha_multiplier = 1
 					end
 				end
-			end,
+			end
 		},
 		{
 			end_time = 0.4,
@@ -237,7 +237,7 @@ local animations = {
 						style.description.text_color[1] = (1 - anim_progress) * 255
 					end
 				end
-			end,
+			end
 		},
 		{
 			end_time = 0.4,
@@ -259,8 +259,8 @@ local animations = {
 						widget.alpha_multiplier = 1 - anim_progress
 					end
 				end
-			end,
-		},
+			end
+		}
 	},
 	on_text_enter = {
 		{
@@ -270,7 +270,7 @@ local animations = {
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				widgets.title.style.text.text_color[1] = 0
 				widgets.sub_title.style.text.text_color[1] = 0
-			end,
+			end
 		},
 		{
 			end_time = 0.3,
@@ -281,8 +281,8 @@ local animations = {
 
 				widgets.title.style.text.text_color[1] = anim_progress * 255
 				widgets.sub_title.style.text.text_color[1] = anim_progress * 255
-			end,
-		},
+			end
+		}
 	},
 	on_text_exit = {
 		{
@@ -292,7 +292,7 @@ local animations = {
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				widgets.title.style.text.text_color[1] = 255
 				widgets.sub_title.style.text.text_color[1] = 255
-			end,
+			end
 		},
 		{
 			end_time = 0.3,
@@ -303,13 +303,13 @@ local animations = {
 
 				widgets.title.style.text.text_color[1] = 255 * (1 - anim_progress)
 				widgets.sub_title.style.text.text_color[1] = 255 * (1 - anim_progress)
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
 	scenegraph_definition = scenegraph_definition,
 	widget_definitions = widget_definitions,
-	animations = animations,
+	animations = animations
 }

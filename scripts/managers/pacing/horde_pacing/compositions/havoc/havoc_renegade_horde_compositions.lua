@@ -8,24 +8,24 @@ local horde_compositions = {
 					name = "chaos_poxwalker",
 					amount = {
 						9,
-						12,
-					},
+						12
+					}
 				},
 				{
 					name = "chaos_mutated_poxwalker",
 					amount = {
 						9,
-						12,
-					},
+						12
+					}
 				},
 				{
 					name = "chaos_lesser_mutated_poxwalker",
 					amount = {
 						9,
-						12,
-					},
-				},
-			},
+						12
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -33,24 +33,24 @@ local horde_compositions = {
 					name = "chaos_poxwalker",
 					amount = {
 						10,
-						14,
-					},
+						14
+					}
 				},
 				{
 					name = "chaos_mutated_poxwalker",
 					amount = {
 						10,
-						14,
-					},
+						14
+					}
 				},
 				{
 					name = "chaos_lesser_mutated_poxwalker",
 					amount = {
 						10,
-						14,
-					},
-				},
-			},
+						14
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -58,24 +58,24 @@ local horde_compositions = {
 					name = "chaos_poxwalker",
 					amount = {
 						15,
-						19,
-					},
+						19
+					}
 				},
 				{
 					name = "chaos_mutated_poxwalker",
 					amount = {
 						15,
-						19,
-					},
+						19
+					}
 				},
 				{
 					name = "chaos_lesser_mutated_poxwalker",
 					amount = {
 						15,
-						19,
-					},
-				},
-			},
+						19
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -83,24 +83,24 @@ local horde_compositions = {
 					name = "chaos_poxwalker",
 					amount = {
 						15,
-						19,
-					},
+						19
+					}
 				},
 				{
 					name = "chaos_mutated_poxwalker",
 					amount = {
 						15,
-						19,
-					},
+						19
+					}
 				},
 				{
 					name = "chaos_lesser_mutated_poxwalker",
 					amount = {
 						15,
-						19,
-					},
-				},
-			},
+						19
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -108,25 +108,25 @@ local horde_compositions = {
 					name = "chaos_poxwalker",
 					amount = {
 						15,
-						19,
-					},
+						19
+					}
 				},
 				{
 					name = "chaos_mutated_poxwalker",
 					amount = {
 						15,
-						19,
-					},
+						19
+					}
 				},
 				{
 					name = "chaos_lesser_mutated_poxwalker",
 					amount = {
 						15,
-						19,
-					},
-				},
-			},
-		},
+						19
+					}
+				}
+			}
+		}
 	},
 	havoc_infected_medium = {
 		{
@@ -135,24 +135,24 @@ local horde_compositions = {
 					name = "chaos_poxwalker",
 					amount = {
 						5,
-						7,
-					},
+						7
+					}
 				},
 				{
 					name = "chaos_mutated_poxwalker",
 					amount = {
 						5,
-						7,
-					},
+						7
+					}
 				},
 				{
 					name = "chaos_lesser_mutated_poxwalker",
 					amount = {
 						5,
-						7,
-					},
-				},
-			},
+						7
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -160,24 +160,24 @@ local horde_compositions = {
 					name = "chaos_poxwalker",
 					amount = {
 						7,
-						9,
-					},
+						9
+					}
 				},
 				{
 					name = "chaos_mutated_poxwalker",
 					amount = {
 						7,
-						9,
-					},
+						9
+					}
 				},
 				{
 					name = "chaos_lesser_mutated_poxwalker",
 					amount = {
 						7,
-						9,
-					},
-				},
-			},
+						9
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -185,24 +185,24 @@ local horde_compositions = {
 					name = "chaos_poxwalker",
 					amount = {
 						9,
-						11,
-					},
+						11
+					}
 				},
 				{
 					name = "chaos_mutated_poxwalker",
 					amount = {
 						9,
-						11,
-					},
+						11
+					}
 				},
 				{
 					name = "chaos_lesser_mutated_poxwalker",
 					amount = {
 						9,
-						11,
-					},
-				},
-			},
+						11
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -210,24 +210,24 @@ local horde_compositions = {
 					name = "chaos_poxwalker",
 					amount = {
 						11,
-						13,
-					},
+						13
+					}
 				},
 				{
 					name = "chaos_mutated_poxwalker",
 					amount = {
 						11,
-						13,
-					},
+						13
+					}
 				},
 				{
 					name = "chaos_lesser_mutated_poxwalker",
 					amount = {
 						11,
-						13,
-					},
-				},
-			},
+						13
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -235,25 +235,25 @@ local horde_compositions = {
 					name = "chaos_poxwalker",
 					amount = {
 						13,
-						15,
-					},
+						15
+					}
 				},
 				{
 					name = "chaos_mutated_poxwalker",
 					amount = {
 						13,
-						15,
-					},
+						15
+					}
 				},
 				{
 					name = "chaos_lesser_mutated_poxwalker",
 					amount = {
 						13,
-						15,
-					},
-				},
-			},
-		},
+						15
+					}
+				}
+			}
+		}
 	},
 	havoc_renegade_flood = {
 		{
@@ -262,17 +262,17 @@ local horde_compositions = {
 					name = "chaos_poxwalker",
 					amount = {
 						15,
-						19,
-					},
+						19
+					}
 				},
 				{
 					name = "chaos_mutated_poxwalker",
 					amount = {
 						15,
-						19,
-					},
-				},
-			},
+						19
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -280,17 +280,17 @@ local horde_compositions = {
 					name = "chaos_poxwalker",
 					amount = {
 						19,
-						21,
-					},
+						21
+					}
 				},
 				{
 					name = "chaos_mutated_poxwalker",
 					amount = {
 						19,
-						21,
-					},
-				},
-			},
+						21
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -298,17 +298,17 @@ local horde_compositions = {
 					name = "chaos_poxwalker",
 					amount = {
 						20,
-						23,
-					},
+						23
+					}
 				},
 				{
 					name = "chaos_mutated_poxwalker",
 					amount = {
 						20,
-						23,
-					},
-				},
-			},
+						23
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -316,17 +316,17 @@ local horde_compositions = {
 					name = "chaos_poxwalker",
 					amount = {
 						23,
-						25,
-					},
+						25
+					}
 				},
 				{
 					name = "chaos_mutated_poxwalker",
 					amount = {
 						23,
-						25,
-					},
-				},
-			},
+						25
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -334,18 +334,18 @@ local horde_compositions = {
 					name = "chaos_poxwalker",
 					amount = {
 						25,
-						27,
-					},
+						27
+					}
 				},
 				{
 					name = "chaos_mutated_poxwalker",
 					amount = {
 						25,
-						27,
-					},
-				},
-			},
-		},
+						27
+					}
+				}
+			}
+		}
 	},
 	havoc_renegade_medium = {
 		{
@@ -354,17 +354,17 @@ local horde_compositions = {
 					name = "chaos_poxwalker",
 					amount = {
 						5,
-						10,
-					},
+						10
+					}
 				},
 				{
 					name = "chaos_mutated_poxwalker",
 					amount = {
 						5,
-						10,
-					},
-				},
-			},
+						10
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -372,17 +372,17 @@ local horde_compositions = {
 					name = "chaos_poxwalker",
 					amount = {
 						8,
-						14,
-					},
+						14
+					}
 				},
 				{
 					name = "chaos_mutated_poxwalker",
 					amount = {
 						8,
-						14,
-					},
-				},
-			},
+						14
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -390,17 +390,17 @@ local horde_compositions = {
 					name = "chaos_poxwalker",
 					amount = {
 						11,
-						15,
-					},
+						15
+					}
 				},
 				{
 					name = "chaos_mutated_poxwalker",
 					amount = {
 						11,
-						15,
-					},
-				},
-			},
+						15
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -408,17 +408,17 @@ local horde_compositions = {
 					name = "chaos_poxwalker",
 					amount = {
 						13,
-						17,
-					},
+						17
+					}
 				},
 				{
 					name = "chaos_mutated_poxwalker",
 					amount = {
 						13,
-						17,
-					},
-				},
-			},
+						17
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -426,18 +426,18 @@ local horde_compositions = {
 					name = "chaos_poxwalker",
 					amount = {
 						15,
-						19,
-					},
+						19
+					}
 				},
 				{
 					name = "chaos_mutated_poxwalker",
 					amount = {
 						15,
-						19,
-					},
-				},
-			},
-		},
+						19
+					}
+				}
+			}
+		}
 	},
 	havoc_renegade_coordinated_ranged_mixed_horde = {
 		{
@@ -446,17 +446,17 @@ local horde_compositions = {
 					name = "renegade_vanguard",
 					amount = {
 						1,
-						1,
-					},
+						1
+					}
 				},
 				{
 					name = "renegade_gunner",
 					amount = {
 						2,
-						4,
-					},
-				},
-			},
+						4
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -464,24 +464,24 @@ local horde_compositions = {
 					name = "chaos_ogryn_bulwark",
 					amount = {
 						1,
-						1,
-					},
+						1
+					}
 				},
 				{
 					name = "renegade_vanguard",
 					amount = {
 						1,
-						2,
-					},
+						2
+					}
 				},
 				{
 					name = "renegade_gunner",
 					amount = {
 						4,
-						6,
-					},
-				},
-			},
+						6
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -489,49 +489,49 @@ local horde_compositions = {
 					name = "chaos_ogryn_bulwark",
 					amount = {
 						1,
-						1,
-					},
+						1
+					}
 				},
 				{
 					name = "renegade_vanguard",
 					amount = {
 						2,
+						3
+					}
+				},
+				{
+					name = "renegade_gunner",
+					amount = {
+						4,
+						6
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						1,
+						2
+					}
+				},
+				{
+					name = "renegade_vanguard",
+					amount = {
 						3,
-					},
-				},
-				{
-					name = "renegade_gunner",
-					amount = {
-						4,
-						6,
-					},
-				},
-			},
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_ogryn_bulwark",
-					amount = {
-						1,
-						2,
-					},
-				},
-				{
-					name = "renegade_vanguard",
-					amount = {
-						3,
-						4,
-					},
+						4
+					}
 				},
 				{
 					name = "renegade_gunner",
 					amount = {
 						8,
-						10,
-					},
-				},
-			},
+						10
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -539,25 +539,25 @@ local horde_compositions = {
 					name = "chaos_ogryn_bulwark",
 					amount = {
 						2,
-						2,
-					},
+						2
+					}
 				},
 				{
 					name = "renegade_vanguard",
 					amount = {
 						4,
-						6,
-					},
+						6
+					}
 				},
 				{
 					name = "renegade_gunner",
 					amount = {
 						10,
-						12,
-					},
-				},
-			},
-		},
+						12
+					}
+				}
+			}
+		}
 	},
 	havoc_renegade_coordinated_blockade_behind = {
 		{
@@ -566,10 +566,10 @@ local horde_compositions = {
 					name = "renegade_gunner",
 					amount = {
 						1,
-						1,
-					},
-				},
-			},
+						1
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -577,10 +577,10 @@ local horde_compositions = {
 					name = "renegade_gunner",
 					amount = {
 						1,
-						1,
-					},
-				},
-			},
+						1
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -588,24 +588,24 @@ local horde_compositions = {
 					name = "chaos_ogryn_bulwark",
 					amount = {
 						1,
-						1,
-					},
+						1
+					}
 				},
 				{
 					name = "renegade_vanguard",
 					amount = {
 						2,
-						3,
-					},
+						3
+					}
 				},
 				{
 					name = "chaos_ogryn_gunner",
 					amount = {
 						2,
-						3,
-					},
-				},
-			},
+						3
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -613,31 +613,31 @@ local horde_compositions = {
 					name = "chaos_ogryn_bulwark",
 					amount = {
 						2,
-						2,
-					},
+						2
+					}
 				},
 				{
 					name = "renegade_vanguard",
 					amount = {
 						3,
-						5,
-					},
+						5
+					}
 				},
 				{
 					name = "chaos_ogryn_gunner",
 					amount = {
 						1,
-						3,
-					},
+						3
+					}
 				},
 				{
 					name = "renegade_executor",
 					amount = {
 						1,
-						3,
-					},
-				},
-			},
+						3
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -645,39 +645,39 @@ local horde_compositions = {
 					name = "chaos_ogryn_bulwark",
 					amount = {
 						2,
-						2,
-					},
+						2
+					}
 				},
 				{
 					name = "renegade_vanguard",
 					amount = {
 						4,
-						6,
-					},
+						6
+					}
 				},
 				{
 					name = "chaos_ogryn_gunner",
 					amount = {
 						1,
-						3,
-					},
+						3
+					}
 				},
 				{
 					name = "renegade_executor",
 					amount = {
 						1,
-						3,
-					},
+						3
+					}
 				},
 				{
 					name = "renegade_berzerker",
 					amount = {
 						1,
-						3,
-					},
-				},
-			},
-		},
+						3
+					}
+				}
+			}
+		}
 	},
 	havoc_renegade_coordinated_blockade_ahead = {
 		{
@@ -686,10 +686,10 @@ local horde_compositions = {
 					name = "renegade_gunner",
 					amount = {
 						1,
-						1,
-					},
-				},
-			},
+						1
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -697,88 +697,49 @@ local horde_compositions = {
 					name = "renegade_gunner",
 					amount = {
 						1,
-						2,
-					},
-				},
-			},
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_ogryn_bulwark",
-					amount = {
-						1,
-						1,
-					},
-				},
-				{
-					name = "renegade_vanguard",
-					amount = {
-						2,
-						3,
-					},
-				},
-				{
-					name = "renegade_shocktrooper",
-					amount = {
-						2,
-						3,
-					},
-				},
-				{
-					name = "renegade_rifleman",
-					amount = {
-						6,
-						7,
-					},
-				},
-				{
-					name = "renegade_gunner",
-					amount = {
-						3,
-						4,
-					},
-				},
-			},
+						2
+					}
+				}
+			}
 		},
 		{
 			breeds = {
 				{
 					name = "chaos_ogryn_bulwark",
 					amount = {
-						2,
-						2,
-					},
+						1,
+						1
+					}
 				},
 				{
 					name = "renegade_vanguard",
 					amount = {
-						3,
-						5,
-					},
+						2,
+						3
+					}
 				},
 				{
 					name = "renegade_shocktrooper",
 					amount = {
 						2,
-						3,
-					},
+						3
+					}
 				},
 				{
 					name = "renegade_rifleman",
 					amount = {
 						6,
-						7,
-					},
+						7
+					}
 				},
 				{
 					name = "renegade_gunner",
 					amount = {
 						3,
-						4,
-					},
-				},
-			},
+						4
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -786,40 +747,79 @@ local horde_compositions = {
 					name = "chaos_ogryn_bulwark",
 					amount = {
 						2,
-						2,
-					},
+						2
+					}
 				},
 				{
 					name = "renegade_vanguard",
 					amount = {
-						4,
-						6,
-					},
+						3,
+						5
+					}
 				},
 				{
 					name = "renegade_shocktrooper",
 					amount = {
 						2,
-						3,
-					},
+						3
+					}
 				},
 				{
 					name = "renegade_rifleman",
 					amount = {
 						6,
-						7,
-					},
+						7
+					}
 				},
 				{
 					name = "renegade_gunner",
 					amount = {
 						3,
-						4,
-					},
-				},
-			},
+						4
+					}
+				}
+			}
 		},
-	},
+		{
+			breeds = {
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						2,
+						2
+					}
+				},
+				{
+					name = "renegade_vanguard",
+					amount = {
+						4,
+						6
+					}
+				},
+				{
+					name = "renegade_shocktrooper",
+					amount = {
+						2,
+						3
+					}
+				},
+				{
+					name = "renegade_rifleman",
+					amount = {
+						6,
+						7
+					}
+				},
+				{
+					name = "renegade_gunner",
+					amount = {
+						3,
+						4
+					}
+				}
+			}
+		}
+	}
 }
 
 return horde_compositions

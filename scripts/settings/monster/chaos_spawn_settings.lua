@@ -15,7 +15,7 @@ local chaos_spawn_settings = {
 	trajectory_acceptable_accuracy = 0.1,
 	trajectory_collision_filter = "filter_minion_mover",
 	trajectory_num_sections = 15,
-	trajectory_radius = 1.5,
+	trajectory_radius = 1.5
 }
 
 return settings("ChaosSpawnSettings", chaos_spawn_settings)

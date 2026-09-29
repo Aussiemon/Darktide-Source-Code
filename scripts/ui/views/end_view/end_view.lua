@@ -7,6 +7,7 @@ local Breeds = require("scripts/settings/breed/breeds")
 local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
 local EndViewSettings = require("scripts/ui/views/end_view/end_view_settings")
 local EndViewTestify = GameParameters.testify and require("scripts/ui/views/end_view/end_view_testify")
+local InputUtils = require("scripts/managers/input/input_utils")
 local LoadingStateData = require("scripts/ui/loading_state_data")
 local MasterItems = require("scripts/backend/master_items")
 local Missions = require("scripts/settings/mission/mission_templates")
@@ -16,8 +17,10 @@ local SocialConstants = require("scripts/managers/data_service/services/social/s
 local Text = require("scripts/utilities/ui/text")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local UISettings = require("scripts/settings/ui/ui_settings")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
+local ViewElementSessionStats = require("scripts/ui/view_elements/view_element_session_stats/view_element_session_stats")
 local ViewStyles = require("scripts/ui/views/end_view/end_view_styles")
 local PartyStatus = SocialConstants.PartyStatus
 local _math_clamp01 = math.clamp01
@@ -26,8 +29,12 @@ local _math_max = math.max
 local _math_min = math.min
 local _continue_button_action = "continue_end_view"
 local _vote_button_action = EndViewSettings.stay_in_party_vote_button
+local _session_stats_toggle_action = EndViewSettings.session_stats_toggle_button
 local SUMMARY_VIEW_NAME = "end_player_view"
 local STAY_IN_PARTY = table.enum("yes", "no")
+local _rate_positive_action = EndViewSettings.rate_match_positive_button
+local _rate_negative_action = EndViewSettings.rate_match_negative_button
+local RATING = table.enum("positive", "negative")
 local EndView = class("EndView", "BaseView")
 
 EndView.init = function (self, settings, context)
@@ -52,7 +59,8 @@ EndView.init = function (self, settings, context)
 	self._all_in_same_party = false
 	self._all_voted_yes = false
 	self._num_members_in_my_party = 1
-	self._has_shown_summary_view = false
+	self._summary_finished = false
+	self._session_report_failed = false
 	self._fetch_party_done = false
 
 	local level, dynamic_level_package = self:select_target_level()
@@ -102,6 +110,21 @@ EndView.on_enter = function (self)
 	continue_button.content.hotspot.pressed_callback = callback(self, "_cb_on_continue_pressed")
 
 	self:_setup_stay_in_party_vote()
+	self:_setup_rate_match()
+
+	local team_session_report = self._session_report and self._session_report.team
+	local session_stats_context = {
+		session_time_seconds = team_session_report and (team_session_report.game_mode_completion_time_seconds or team_session_report.play_time_seconds)
+	}
+	local session_stats_element = self:_add_element(ViewElementSessionStats, "session_stats", 1, session_stats_context, "session_stats_pivot")
+
+	self:_update_element_position("session_stats_pivot", session_stats_element)
+
+	self._session_stats_element = session_stats_element
+	self._widgets_by_name.session_stats_prompt.content.hotspot.pressed_callback = callback(self, "_toggle_session_stats")
+
+	session_stats_element:set_collapse_prompt_text(EndViewSettings.session_stats_collapse_text, _session_stats_toggle_action)
+	session_stats_element:set_collapse_callback(callback(self, "_toggle_session_stats"))
 	self:_setup_background_world()
 	self:_on_navigation_input_changed()
 end
@@ -177,10 +200,11 @@ EndView.update = function (self, dt, t, input_service)
 	local end_time = self._end_time
 	local show_player_view_time = self._show_player_view_time
 	local server_time = Managers.backend:get_server_time(t)
-	local has_shown_summary_view = not show_player_view_time and not is_showing_player_view
+	local report_failed = self._session_report_failed
+	local summary_finished = (not show_player_view_time or report_failed) and not is_showing_player_view
 
-	if has_shown_summary_view ~= self._has_shown_summary_view then
-		self._has_shown_summary_view = has_shown_summary_view
+	if summary_finished ~= self._summary_finished then
+		self._summary_finished = summary_finished
 		self._skip_grace_time = EndViewSettings.skip_grace_time
 	end
 
@@ -194,7 +218,7 @@ EndView.update = function (self, dt, t, input_service)
 
 	local expected_vote = STAY_IN_PARTY.yes
 	local is_waiting_for_vote_to_end = self._stay_in_party_voting_active and self._stay_in_party == expected_vote
-	local can_skip = not has_shown_summary_view or not is_waiting_for_vote_to_end
+	local can_skip = not summary_finished or not is_waiting_for_vote_to_end
 
 	if can_skip ~= self._can_skip and (not can_skip or grace_time == 0) then
 		self._can_skip = can_skip
@@ -202,7 +226,7 @@ EndView.update = function (self, dt, t, input_service)
 		self:_update_buttons()
 	end
 
-	local waiting = not session_report or not end_time
+	local waiting = not session_report and not report_failed or not end_time
 
 	if self._waiting ~= waiting then
 		if waiting then
@@ -237,7 +261,7 @@ EndView.update = function (self, dt, t, input_service)
 		end
 	end
 
-	if not session_report then
+	if not session_report and not report_failed then
 		Managers.event:trigger("event_set_waiting_state", LoadingStateData.WAIT_REASON.backend)
 
 		local progression_manager = Managers.progression
@@ -254,6 +278,12 @@ EndView.update = function (self, dt, t, input_service)
 
 				self:_set_mission_key(played_mission, session_report, render_scale)
 			end
+		elseif progression_manager:session_report_fail() then
+			Log.error("EndView", "Getting session report failed, skipping summary")
+
+			self._session_report_failed = true
+
+			self:_update_buttons()
 		end
 	end
 
@@ -423,10 +453,22 @@ EndView._handle_input = function (self, input_service, dt, t)
 		self:_cb_on_stay_in_party_pressed()
 	end
 
+	if input_service:get(_session_stats_toggle_action) then
+		self:_toggle_session_stats()
+	end
+
+	if input_service:get(_rate_positive_action) then
+		self:rate_match(RATING.positive)
+	elseif input_service:get(_rate_negative_action) then
+		self:rate_match(RATING.negative)
+	end
+
 	return EndView.super._handle_input(self, input_service, dt, t)
 end
 
 EndView._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
+	self._widgets_by_name.session_stats_prompt.alpha_multiplier = self._widget_alpha
+
 	EndView.super._draw_widgets(self, dt, t, input_service, ui_renderer, render_settings)
 
 	local camera = self._world_spawner:camera()
@@ -510,6 +552,9 @@ EndView._update_voting_button_visibility = function (self, dt)
 end
 
 EndView._update_buttons = function (self)
+	self:_update_rate_match_keybinds()
+	self:_update_session_stats_prompt()
+
 	local service_type = DefaultViewInputSettings.service_type
 	local vote_completed = not self._stay_in_party_voting_active
 	local player_voted_yes = self._stay_in_party == STAY_IN_PARTY.yes
@@ -524,7 +569,7 @@ EndView._update_buttons = function (self)
 	local button_text = Text.localize_with_button_hint(continue_button_action, continue_button_loc_string, nil, service_type, input_legend_text_template)
 	local time = continue_button_content.time
 
-	if time and self._has_shown_summary_view then
+	if time and self._summary_finished then
 		local timer_text = self:_get_timer_text(time)
 
 		button_text = button_text .. " (" .. timer_text .. ")"
@@ -565,7 +610,7 @@ EndView._trigger_current_presentation_skip = function (self)
 		return
 	end
 
-	if not self._has_shown_summary_view then
+	if not self._summary_finished then
 		Managers.event:trigger("event_trigger_current_end_presentation_skip")
 	elseif not self._can_exit then
 		Managers.multiplayer_session:leave("skip_end_of_round")
@@ -591,6 +636,76 @@ EndView._setup_stay_in_party_vote = function (self)
 	hotspot.pressed_callback = callback(self, "_cb_on_stay_in_party_pressed")
 end
 
+EndView._setup_rate_match = function (self)
+	local content = self._widgets_by_name.rate_match.content
+
+	content.positive_hotspot.pressed_callback = callback(self, "rate_match", RATING.positive)
+	content.negative_hotspot.pressed_callback = callback(self, "rate_match", RATING.negative)
+end
+
+EndView.rate_match = function (self, rating)
+	if self._match_rating then
+		return
+	end
+
+	self._match_rating = rating
+
+	local content = self._widgets_by_name.rate_match.content
+
+	content.rated = rating
+	content.positive_hotspot.disabled = true
+	content.negative_hotspot.disabled = true
+
+	Managers.telemetry_events:end_of_round_match_rated(Managers.player:local_player(1), rating == RATING.positive)
+end
+
+EndView.match_rating = function (self)
+	return self._match_rating
+end
+
+EndView._update_rate_match_keybinds = function (self)
+	local service_type = DefaultViewInputSettings.service_type
+	local content = self._widgets_by_name.rate_match.content
+	local ui_manager = Managers.ui
+
+	content.positive_keybind = InputUtils.input_text_for_current_input_device(service_type, ui_manager:get_input_alias_key(_rate_positive_action, service_type))
+	content.negative_keybind = InputUtils.input_text_for_current_input_device(service_type, ui_manager:get_input_alias_key(_rate_negative_action, service_type))
+end
+
+EndView._toggle_session_stats = function (self)
+	local element = self._session_stats_element
+
+	if not element then
+		return
+	end
+
+	element:set_expand_time(nil)
+	element:set_expanded(not element:expanded())
+	self:_play_sound(UISoundEvents.default_click)
+	self:_update_session_stats_prompt()
+end
+
+EndView._update_session_stats_prompt = function (self)
+	local element = self._session_stats_element
+
+	if not element then
+		return
+	end
+
+	local expanded = element:expanded()
+	local loc_string = expanded and EndViewSettings.session_stats_collapse_text or EndViewSettings.session_stats_expand_text
+	local service_type = DefaultViewInputSettings.service_type
+	local text = Text.localize_with_button_hint(_session_stats_toggle_action, loc_string, nil, service_type, Localize("loc_input_legend_text_template"))
+	local prompt_widget = self._widgets_by_name.session_stats_prompt
+
+	prompt_widget.content.text = text
+	prompt_widget.visible = not expanded
+
+	if expanded then
+		element:set_collapse_prompt_text(EndViewSettings.session_stats_collapse_text, _session_stats_toggle_action)
+	end
+end
+
 EndView.select_target_level = function (self)
 	local level_name = "default"
 	local played_mission = self._context.played_mission
@@ -606,7 +721,7 @@ EndView.select_target_level = function (self)
 	local level = EndViewSettings.levels_by_id[level_name] or EndViewSettings.levels_by_id.default
 	local level_packages = {
 		is_level_package = true,
-		name = level.level_name,
+		name = level.level_name
 	}
 
 	return level, level_packages
@@ -711,7 +826,7 @@ EndView._setup_spawn_slots = function (self, players)
 			index = player_index,
 			profile_spawner = profile_spawner,
 			ogryn_spawn_point_unit = self._ogryn_spawn_point_units[player_index],
-			human_spawn_point_unit = self._human_spawn_point_units[player_index],
+			human_spawn_point_unit = self._human_spawn_point_units[player_index]
 		}
 
 		spawn_slots[player_index] = spawn_slot
@@ -761,7 +876,7 @@ local function _companion_data_from_end_of_round_pose_item(end_of_round_pose_ite
 		position = nil,
 		rotation = nil,
 		state_machine = companion_state_machine and companion_state_machine ~= "" and companion_state_machine,
-		animation_event = item_animation_event and item_animation_event ~= "" and item_animation_event,
+		animation_event = item_animation_event and item_animation_event ~= "" and item_animation_event
 	}
 
 	return companion_data
@@ -952,7 +1067,7 @@ EndView._set_character_names = function (self)
 				local presentation_state = slot.presentation_state
 				local new_presentation_state
 
-				new_presentation_state = report and not self._has_shown_summary_view and "report_summary_presentation" or report and self._has_shown_summary_view and "report_end_presentation" or "report_empty"
+				new_presentation_state = report and not self._summary_finished and "report_summary_presentation" or report and self._summary_finished and "report_end_presentation" or "report_empty"
 
 				if new_presentation_state ~= presentation_state then
 					slot.presentation_state = new_presentation_state
@@ -1034,7 +1149,7 @@ EndView._get_live_event_header = function (self, team_session_report, stat_color
 		end
 
 		entries[i] = Localize(c.loc_key, true, {
-			value = value,
+			value = value
 		})
 	end
 
@@ -1053,27 +1168,19 @@ EndView._set_mission_key = function (self, mission_key, session_report, render_s
 
 	widget_content.mission_header = self:_localize(display_name)
 
-	local mission_sub_header_style = widget.style.mission_sub_header
-	local stats_text_color = mission_sub_header_style.stats_text_color
 	local team_session_report = session_report and session_report.team
 
 	if self._round_won and team_session_report then
 		local mission_time_in_sec = team_session_report.play_time_seconds
 		local game_mode_completion_time_seconds = team_session_report.game_mode_completion_time_seconds or nil
-		local text_params = {
-			total_kills = team_session_report.team_kills,
-			total_deaths = team_session_report.team_deaths,
-			mission_time = Text.format_time_span_long_form_localized(game_mode_completion_time_seconds or mission_time_in_sec),
-			font_size = mission_sub_header_style.stats_font_size * render_scale,
-			font_color = string.format("%d,%d,%d", stats_text_color[2], stats_text_color[3], stats_text_color[4]),
-		}
 
-		widget_content.mission_sub_header = Localize("loc_end_view_mission_sub_header_victory", true, text_params)
+		widget_content.mission_sub_header = Localize("loc_victory_sub_title", true)
+		widget.style.mission_sub_header = ViewStyles.mission_header_victory.mission_sub_header
 
-		local live_event_header = self:_get_live_event_header(team_session_report, stats_text_color)
+		local session_stats_element = self._session_stats_element
 
-		if live_event_header then
-			widget_content.mission_sub_header = string.format("%s\n%s", widget_content.mission_sub_header or "", live_event_header)
+		if session_stats_element then
+			session_stats_element:set_mission_time(game_mode_completion_time_seconds or mission_time_in_sec)
 		end
 
 		local narrative_story = mission_settings.narrative_story

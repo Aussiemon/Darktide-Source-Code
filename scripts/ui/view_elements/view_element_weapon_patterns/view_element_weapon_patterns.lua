@@ -44,23 +44,23 @@ ViewElementWeaponPatterns.present_item = function (self, item)
 	local layout = {
 		{
 			widget_type = "attack_pattern_header",
-			item = item,
+			item = item
 		},
 		{
 			widget_type = "pattern_type_breakdown",
-			item = item,
+			item = item
 		},
 		{
 			widget_type = "dynamic_spacing",
 			size = {
 				self._default_grid_size[1],
-				40,
-			},
+				40
+			}
 		},
 		{
 			widget_type = "damage_grid",
-			item = item,
-		},
+			item = item
+		}
 	}
 
 	self:present_grid_layout(layout, item)

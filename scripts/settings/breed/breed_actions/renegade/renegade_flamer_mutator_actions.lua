@@ -16,19 +16,19 @@ local action_data = {
 	idle = {
 		rotate_towards_target = true,
 		anim_events = {
-			"idle",
-		},
+			"idle"
+		}
 	},
 	weapon_malfunction_loop = {
 		rotate_towards_target = false,
 		weapon_malfunction_time = 12,
 		anim_events = {
-			"suppressed_loop_01",
+			"suppressed_loop_01"
 		},
 		end_anim_events = {
 			"stagger_finished",
-			"idle",
-		},
+			"idle"
+		}
 	},
 	weapon_malfunction_run_to_spawner = {
 		count_as_done_on_fail = true,
@@ -38,13 +38,13 @@ local action_data = {
 		move_anim_event = "move_fwd",
 		move_to_closest_minion_spawner = true,
 		remove_loot = false,
-		target_spawner_type = "default",
+		target_spawner_type = "default"
 	},
 	alerted = {
 		alerted_duration = 0.75,
 		alerted_anim_events = {
-			"idle",
-		},
+			"idle"
+		}
 	},
 	death = {
 		instant_ragdoll_chance = 0.5,
@@ -55,7 +55,7 @@ local action_data = {
 				"death_shot_head_left",
 				"death_shot_head_right",
 				"death_shot_head_bwd",
-				"death_decapitate_3",
+				"death_decapitate_3"
 			},
 			[hit_zone_names.torso] = {
 				"death_stab_chest_front",
@@ -65,40 +65,40 @@ local action_data = {
 				"death_strike_chest_front",
 				"death_strike_chest_back",
 				"death_strike_chest_left",
-				"death_strike_chest_right",
+				"death_strike_chest_right"
 			},
 			[hit_zone_names.upper_left_arm] = {
 				"death_arm_left",
 				"death_arm_left_2",
-				"death_arm_left_3",
+				"death_arm_left_3"
 			},
 			[hit_zone_names.lower_left_arm] = {
 				"death_arm_left",
 				"death_arm_left_2",
-				"death_arm_left_3",
+				"death_arm_left_3"
 			},
 			[hit_zone_names.upper_right_arm] = {
 				"death_arm_right",
 				"death_arm_right_2",
-				"death_arm_right_3",
+				"death_arm_right_3"
 			},
 			[hit_zone_names.lower_right_arm] = {
 				"death_arm_right",
 				"death_arm_right_2",
-				"death_arm_right_3",
+				"death_arm_right_3"
 			},
 			[hit_zone_names.upper_left_leg] = {
-				"death_leg_left",
+				"death_leg_left"
 			},
 			[hit_zone_names.lower_left_leg] = {
-				"death_leg_left",
+				"death_leg_left"
 			},
 			[hit_zone_names.upper_right_leg] = {
-				"death_leg_right",
+				"death_leg_right"
 			},
 			[hit_zone_names.lower_right_leg] = {
-				"death_leg_right",
-			},
+				"death_leg_right"
+			}
 		},
 		ragdoll_timings = {
 			death_arm_left = 3.033333333333333,
@@ -122,8 +122,8 @@ local action_data = {
 			death_strike_chest_back = 3.1666666666666665,
 			death_strike_chest_front = 1.6666666666666667,
 			death_strike_chest_left = 3.2,
-			death_strike_chest_right = 1.2666666666666666,
-		},
+			death_strike_chest_right = 1.2666666666666666
+		}
 	},
 	climb = {
 		rotation_duration = 0.1,
@@ -137,7 +137,7 @@ local action_data = {
 			jump_up_5m = 4.166666666666667,
 			jump_up_fence_1m = 0.6,
 			jump_up_fence_3m = 1.4,
-			jump_up_fence_5m = 1.3,
+			jump_up_fence_5m = 1.3
 		},
 		land_timings = {
 			jump_down_1m = 0.2,
@@ -146,7 +146,7 @@ local action_data = {
 			jump_down_3m_2 = 0.5,
 			jump_down_fence_1m = 0.26666666666666666,
 			jump_down_fence_3m = 0.3333333333333333,
-			jump_down_fence_5m = 0.3333333333333333,
+			jump_down_fence_5m = 0.3333333333333333
 		},
 		ending_move_states = {
 			jump_down_land = "jumping",
@@ -154,7 +154,7 @@ local action_data = {
 			jump_up_1m_2 = "jumping",
 			jump_up_3m = "jumping",
 			jump_up_3m_2 = "jumping",
-			jump_up_5m = "jumping",
+			jump_up_5m = "jumping"
 		},
 		blend_timings = {
 			jump_down_1m = 0.1,
@@ -169,42 +169,42 @@ local action_data = {
 			jump_up_5m = 0.1,
 			jump_up_fence_1m = 0.2,
 			jump_up_fence_3m = 0.2,
-			jump_up_fence_5m = 0.2,
-		},
+			jump_up_fence_5m = 0.2
+		}
 	},
 	disable = {
 		disable_anims = {
 			pounced = {
 				fwd = {
-					"dog_leap_pinned",
+					"dog_leap_pinned"
 				},
 				bwd = {
-					"dog_leap_pinned",
+					"dog_leap_pinned"
 				},
 				left = {
-					"dog_leap_pinned",
+					"dog_leap_pinned"
 				},
 				right = {
-					"dog_leap_pinned",
-				},
-			},
+					"dog_leap_pinned"
+				}
+			}
 		},
 		stand_anim = {
 			duration = 4,
-			name = "dog_leap_pinned_stand",
-		},
+			name = "dog_leap_pinned_stand"
+		}
 	},
 	jump_across = {
 		rotation_duration = 0.1,
 		stagger_immune = true,
 		anim_timings = {
 			jump_over_gap_4m = 1.1666666666666667,
-			jump_over_gap_4m_2 = 1.1333333333333333,
+			jump_over_gap_4m_2 = 1.1333333333333333
 		},
 		ending_move_states = {
 			jump_over_gap_4m = "jumping",
-			jump_over_gap_4m_2 = "jumping",
-		},
+			jump_over_gap_4m_2 = "jumping"
+		}
 	},
 	follow = {
 		clear_shot_line_of_sight_id = "gun",
@@ -221,8 +221,8 @@ local action_data = {
 		wanted_distance = 16,
 		stagger_type_reduction = {
 			killshot = 20,
-			ranged = 20,
-		},
+			ranged = 20
+		}
 	},
 	shoot = {
 		aoe_bot_threat_duration = 2,
@@ -257,21 +257,21 @@ local action_data = {
 		strafe_speed = 2.3,
 		vo_event = "start_shooting",
 		aim_anim_events = {
-			"hip_fire",
+			"hip_fire"
 		},
 		aim_duration = {
-			hip_fire = shooting_difficulty_settings.aim_durations,
+			hip_fire = shooting_difficulty_settings.aim_durations
 		},
 		aim_stances = {
-			hip_fire = "standing",
+			hip_fire = "standing"
 		},
 		aim_rotation_anims = {
 			fwd = "hip_fire",
 			left = "aim_turn_left",
-			right = "aim_turn_right",
+			right = "aim_turn_right"
 		},
 		attack_intensities = {
-			ranged = 0.1,
+			ranged = 0.1
 		},
 		inventory_slot = RenegadeFlamerSettings.inventory_slot,
 		fx_source_name = RenegadeFlamerSettings.fx_source_name,
@@ -283,7 +283,7 @@ local action_data = {
 		trajectory_config = RenegadeFlamerSettings.trajectory_config,
 		stagger_type_reduction = {
 			killshot = 20,
-			ranged = 20,
+			ranged = 20
 		},
 		push_minions_damage_profile = DamageProfileTemplates.beast_of_nurgle_push_minion,
 		aoe_bot_threat_size = Vector3Box(1.5, 4, 2),
@@ -291,27 +291,27 @@ local action_data = {
 			bwd = "walk_aim_bwd",
 			fwd = "walk_aim_fwd",
 			left = "walk_aim_left",
-			right = "walk_aim_right",
-		},
+			right = "walk_aim_right"
+		}
 	},
 	melee_attack = {
 		ignore_blocked = true,
 		weapon_reach = 4,
 		attack_anim_events = {
-			"attack_push_kick_01",
+			"attack_push_kick_01"
 		},
 		attack_anim_damage_timings = {
-			attack_push_kick_01 = 0.3950617283950617,
+			attack_push_kick_01 = 0.3950617283950617
 		},
 		attack_anim_durations = {
-			attack_push_kick_01 = 1.1111111111111112,
+			attack_push_kick_01 = 1.1111111111111112
 		},
 		attack_intensities = {
 			melee = 0.5,
-			ranged = 2,
+			ranged = 2
 		},
 		damage_profile = DamageProfileTemplates.chaos_ogryn_gunner_melee,
-		damage_type = damage_types.minion_ogryn_kick,
+		damage_type = damage_types.minion_ogryn_kick
 	},
 	aggroed_patrol = {
 		aoe_bot_threat_duration = 2,
@@ -348,27 +348,27 @@ local action_data = {
 		strafe_speed = 2.3,
 		vo_event = "start_shooting",
 		idle_anim_events = {
-			"idle",
+			"idle"
 		},
 		anim_events = {
-			"walk_aim_fwd",
+			"walk_aim_fwd"
 		},
 		speeds = {
-			walk_aim_fwd = 2,
+			walk_aim_fwd = 2
 		},
 		aim_anim_events = {
-			"hip_fire",
+			"hip_fire"
 		},
 		aim_duration = {
-			hip_fire = shooting_difficulty_settings.aim_durations,
+			hip_fire = shooting_difficulty_settings.aim_durations
 		},
 		aim_stances = {
-			hip_fire = "standing",
+			hip_fire = "standing"
 		},
 		aim_rotation_anims = {
 			fwd = "hip_fire",
 			left = "aim_turn_left",
-			right = "aim_turn_right",
+			right = "aim_turn_right"
 		},
 		inventory_slot = RenegadeFlamerSettings.inventory_slot,
 		fx_source_name = RenegadeFlamerSettings.fx_source_name,
@@ -380,7 +380,7 @@ local action_data = {
 		trajectory_config = RenegadeFlamerSettings.trajectory_config,
 		stagger_type_reduction = {
 			killshot = 20,
-			ranged = 20,
+			ranged = 20
 		},
 		push_minions_damage_profile = DamageProfileTemplates.beast_of_nurgle_push_minion,
 		aoe_bot_threat_size = Vector3Box(1.5, 4, 2),
@@ -388,12 +388,12 @@ local action_data = {
 			bwd = "walk_aim_bwd",
 			fwd = "walk_aim_fwd",
 			left = "walk_aim_left",
-			right = "walk_aim_right",
-		},
+			right = "walk_aim_right"
+		}
 	},
 	stagger = {
 		stagger_duration_mods = {
-			stagger_explosion_front_2 = 0.8,
+			stagger_explosion_front_2 = 0.8
 		},
 		stagger_anims = {
 			light = {
@@ -403,7 +403,7 @@ local action_data = {
 					"stagger_fwd_light_3",
 					"stagger_fwd_light_4",
 					"stagger_fwd_light_5",
-					"stagger_fwd_light_6",
+					"stagger_fwd_light_6"
 				},
 				bwd = {
 					"stagger_bwd_light",
@@ -413,63 +413,63 @@ local action_data = {
 					"stagger_bwd_light_5",
 					"stagger_bwd_light_6",
 					"stagger_bwd_light_7",
-					"stagger_bwd_light_8",
+					"stagger_bwd_light_8"
 				},
 				left = {
 					"stagger_left_light",
 					"stagger_left_light_2",
 					"stagger_left_light_3",
-					"stagger_left_light_4",
+					"stagger_left_light_4"
 				},
 				right = {
 					"stagger_right_light",
 					"stagger_right_light_2",
 					"stagger_right_light_3",
-					"stagger_right_light_4",
+					"stagger_right_light_4"
 				},
 				dwn = {
-					"stun_down",
-				},
+					"stun_down"
+				}
 			},
 			medium = {
 				fwd = {
 					"stagger_fwd",
 					"stagger_fwd_2",
 					"stagger_fwd_3",
-					"stagger_fwd_4",
+					"stagger_fwd_4"
 				},
 				bwd = {
 					"stagger_bwd",
 					"stagger_bwd_2",
 					"stagger_bwd_3",
-					"stagger_bwd_4",
+					"stagger_bwd_4"
 				},
 				left = {
 					"stagger_left",
 					"stagger_left_2",
 					"stagger_left_3",
 					"stagger_left_4",
-					"stagger_left_5",
+					"stagger_left_5"
 				},
 				right = {
 					"stagger_right",
 					"stagger_right_2",
 					"stagger_right_3",
 					"stagger_right_4",
-					"stagger_right_5",
+					"stagger_right_5"
 				},
 				dwn = {
 					"stagger_medium_downward",
 					"stagger_medium_downward_2",
-					"stagger_medium_downward_3",
-				},
+					"stagger_medium_downward_3"
+				}
 			},
 			heavy = {
 				fwd = {
 					"stagger_fwd_heavy",
 					"stagger_fwd_heavy_2",
 					"stagger_fwd_heavy_3",
-					"stagger_fwd_heavy_4",
+					"stagger_fwd_heavy_4"
 				},
 				bwd = {
 					"stagger_up_heavy",
@@ -478,133 +478,133 @@ local action_data = {
 					"stagger_bwd_heavy",
 					"stagger_bwd_heavy_2",
 					"stagger_bwd_heavy_3",
-					"stagger_bwd_heavy_4",
+					"stagger_bwd_heavy_4"
 				},
 				left = {
 					"stagger_left_heavy",
 					"stagger_left_heavy_2",
 					"stagger_left_heavy_3",
-					"stagger_left_heavy_4",
+					"stagger_left_heavy_4"
 				},
 				right = {
 					"stagger_right_heavy",
 					"stagger_right_heavy_2",
 					"stagger_right_heavy_3",
-					"stagger_right_heavy_4",
+					"stagger_right_heavy_4"
 				},
 				dwn = {
 					"stagger_dwn_heavy",
 					"stagger_dwn_heavy_2",
-					"stagger_dwn_heavy_3",
-				},
+					"stagger_dwn_heavy_3"
+				}
 			},
 			light_ranged = {
 				fwd = {
 					"stun_fwd_ranged_light",
 					"stun_fwd_ranged_light_2",
-					"stun_fwd_ranged_light_3",
+					"stun_fwd_ranged_light_3"
 				},
 				bwd = {
 					"stun_bwd_ranged_light",
 					"stun_bwd_ranged_light_2",
-					"stun_bwd_ranged_light_3",
+					"stun_bwd_ranged_light_3"
 				},
 				left = {
 					"stun_left_ranged_light",
 					"stun_left_ranged_light_2",
-					"stun_left_ranged_light_3",
+					"stun_left_ranged_light_3"
 				},
 				right = {
 					"stun_right_ranged_light",
 					"stun_right_ranged_light_2",
-					"stun_right_ranged_light_3",
-				},
+					"stun_right_ranged_light_3"
+				}
 			},
 			explosion = {
 				fwd = {
 					"stagger_explosion_front",
-					"stagger_explosion_front_2",
+					"stagger_explosion_front_2"
 				},
 				bwd = {
-					"stagger_explosion_back",
+					"stagger_explosion_back"
 				},
 				left = {
-					"stagger_explosion_left",
+					"stagger_explosion_left"
 				},
 				right = {
-					"stagger_explosion_right",
-				},
+					"stagger_explosion_right"
+				}
 			},
 			killshot = {
 				fwd = {
-					"stagger_fwd_killshot_1",
+					"stagger_fwd_killshot_1"
 				},
 				bwd = {
-					"stagger_bwd_killshot_1",
+					"stagger_bwd_killshot_1"
 				},
 				left = {
-					"stagger_left_killshot_1",
+					"stagger_left_killshot_1"
 				},
 				right = {
-					"stagger_right_killshot_1",
+					"stagger_right_killshot_1"
 				},
 				dwn = {
-					"stagger_bwd_killshot_1",
-				},
+					"stagger_bwd_killshot_1"
+				}
 			},
 			sticky = {
 				bwd = {
 					"stagger_front_sticky",
 					"stagger_front_sticky_2",
-					"stagger_front_sticky_3",
+					"stagger_front_sticky_3"
 				},
 				fwd = {
 					"stagger_bwd_sticky",
 					"stagger_bwd_sticky_2",
-					"stagger_bwd_sticky_3",
+					"stagger_bwd_sticky_3"
 				},
 				left = {
 					"stagger_left_sticky",
 					"stagger_left_sticky_2",
-					"stagger_left_sticky_3",
+					"stagger_left_sticky_3"
 				},
 				right = {
 					"stagger_right_sticky",
 					"stagger_right_sticky_2",
-					"stagger_right_sticky_3",
+					"stagger_right_sticky_3"
 				},
 				dwn = {
 					"stagger_bwd_sticky",
 					"stagger_bwd_sticky_2",
-					"stagger_bwd_sticky_3",
-				},
+					"stagger_bwd_sticky_3"
+				}
 			},
 			electrocuted = {
 				bwd = {
 					"stagger_front_sticky",
 					"stagger_front_sticky_2",
-					"stagger_front_sticky_3",
+					"stagger_front_sticky_3"
 				},
 				fwd = {
 					"stagger_bwd_sticky",
 					"stagger_bwd_sticky_2",
-					"stagger_bwd_sticky_3",
+					"stagger_bwd_sticky_3"
 				},
 				left = {
 					"stagger_left_sticky",
 					"stagger_left_sticky_2",
-					"stagger_left_sticky_3",
+					"stagger_left_sticky_3"
 				},
 				right = {
 					"stagger_right_sticky",
 					"stagger_right_sticky_2",
-					"stagger_right_sticky_3",
+					"stagger_right_sticky_3"
 				},
 				dwn = {
 					"stagger_bwd_sticky",
 					"stagger_bwd_sticky_2",
-					"stagger_bwd_sticky_3",
-				},
+					"stagger_bwd_sticky_3"
+				}
 			},
 			blinding = {
 				fwd = {
@@ -613,7 +613,7 @@ local action_data = {
 					"stagger_fwd_light_3",
 					"stagger_fwd_light_4",
 					"stagger_fwd_light_5",
-					"stagger_fwd_light_6",
+					"stagger_fwd_light_6"
 				},
 				bwd = {
 					"stagger_bwd_light",
@@ -623,33 +623,33 @@ local action_data = {
 					"stagger_bwd_light_5",
 					"stagger_bwd_light_6",
 					"stagger_bwd_light_7",
-					"stagger_bwd_light_8",
+					"stagger_bwd_light_8"
 				},
 				left = {
 					"stagger_left_light",
 					"stagger_left_light_2",
 					"stagger_left_light_3",
-					"stagger_left_light_4",
+					"stagger_left_light_4"
 				},
 				right = {
 					"stagger_right_light",
 					"stagger_right_light_2",
 					"stagger_right_light_3",
-					"stagger_right_light_4",
+					"stagger_right_light_4"
 				},
 				dwn = {
-					"stun_down",
-				},
-			},
-		},
+					"stun_down"
+				}
+			}
+		}
 	},
 	open_door = {
 		rotation_duration = 0.1,
-		stagger_immune = true,
+		stagger_immune = true
 	},
 	exit_spawner = {
-		run_anim_event = "move_fwd",
-	},
+		run_anim_event = "move_fwd"
+	}
 }
 
 return action_data

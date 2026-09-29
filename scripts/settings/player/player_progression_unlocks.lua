@@ -29,16 +29,16 @@ local player_progression_unlocks = {
 			1,
 			3,
 			9,
-			15,
+			15
 		},
 		auric = {
 			[4] = 30,
-			[5] = 30,
-		},
+			[5] = 30
+		}
 	},
 	mission_type_unlocks = {
 		auric = 30,
-		normal = 1,
+		normal = 1
 	},
 	shooting_range_breed_unlocks = {
 		chaos_hound = "all_chaos_specials_killed",
@@ -56,8 +56,8 @@ local player_progression_unlocks = {
 		renegade_grenadier = "all_renegade_specials_killed",
 		renegade_netgunner = "all_renegade_specials_killed",
 		renegade_shocktrooper = "all_renegade_elites_killed",
-		renegade_sniper = "all_renegade_specials_killed",
-	},
+		renegade_sniper = "all_renegade_specials_killed"
+	}
 }
 
 return settings("PlayerProgressionUnlocks", player_progression_unlocks)

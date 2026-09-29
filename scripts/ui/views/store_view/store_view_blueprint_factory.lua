@@ -11,7 +11,7 @@ local group_header_font_style = table.clone(UIFontSettings.header_3)
 group_header_font_style.offset = {
 	0,
 	0,
-	3,
+	3
 }
 group_header_font_style.text_horizontal_alignment = "center"
 group_header_font_style.text_vertical_alignment = "center"
@@ -22,7 +22,7 @@ local sub_header_font_style = table.clone(UIFontSettings.header_3)
 sub_header_font_style.offset = {
 	0,
 	0,
-	3,
+	3
 }
 sub_header_font_style.font_size = 18
 sub_header_font_style.text_horizontal_alignment = "center"
@@ -38,11 +38,11 @@ item_header_text_style.vertical_alignment = "center"
 item_header_text_style.offset = {
 	10,
 	-55,
-	4,
+	4
 }
 item_header_text_style.size_addition = {
 	-20,
-	0,
+	0
 }
 item_header_text_style.text_color = Color.terminal_text_header(255, true)
 item_header_text_style.font_size = 24
@@ -56,11 +56,11 @@ aquila_header_text_style.font_size = 36
 aquila_header_text_style.offset = {
 	0,
 	3,
-	4,
+	4
 }
 aquila_header_text_style.size_addition = {
 	0,
-	0,
+	0
 }
 
 local item_header_premium_text_style = table.clone(item_header_text_style)
@@ -77,11 +77,11 @@ item_sub_header_text_style.vertical_alignment = "center"
 item_sub_header_text_style.offset = {
 	10,
 	-10,
-	4,
+	4
 }
 item_sub_header_text_style.size_addition = {
 	-20,
-	0,
+	0
 }
 item_sub_header_text_style.text_color = Color.terminal_text_body(255, true)
 item_sub_header_text_style.font_size = 24
@@ -95,11 +95,11 @@ item_description_text_style.vertical_alignment = "bottom"
 item_description_text_style.offset = {
 	0,
 	-60,
-	5,
+	5
 }
 item_description_text_style.size_addition = {
 	-30,
-	-30,
+	-30
 }
 item_description_text_style.text_color = Color.terminal_text_body(255, true)
 
@@ -112,7 +112,7 @@ item_price_text_style.vertical_alignment = "center"
 item_price_text_style.offset = {
 	-30,
 	-10,
-	4,
+	4
 }
 item_price_text_style.text_color = Color.white(255, true)
 
@@ -122,7 +122,7 @@ aquila_price_text_style.text_horizontal_alignment = "center"
 aquila_price_text_style.offset = {
 	0,
 	-10,
-	4,
+	4
 }
 
 local aquila_price_discounted_text_style = table.clone(aquila_price_text_style)
@@ -132,7 +132,7 @@ aquila_price_discounted_text_style.text_horizontal_alignment = "left"
 aquila_price_discounted_text_style.offset = {
 	10,
 	-10,
-	4,
+	4
 }
 aquila_price_discounted_text_style.font_size = 20
 
@@ -146,12 +146,12 @@ timer_text_style.hover_color = {
 	255,
 	255,
 	255,
-	255,
+	255
 }
 timer_text_style.offset = {
 	30,
 	-15,
-	5,
+	5
 }
 timer_text_style.horizontal_alignment = "center"
 timer_text_style.vertical_alignment = "center"
@@ -162,11 +162,11 @@ best_offer_text_style.text_color = Color.white(255, true)
 best_offer_text_style.offset = {
 	-20,
 	-35,
-	3,
+	3
 }
 best_offer_text_style.size = {
 	200,
-	100,
+	100
 }
 best_offer_text_style.horizontal_alignment = "right"
 best_offer_text_style.vertical_alignment = "top"
@@ -179,8 +179,8 @@ local _colors = {
 		255,
 		172,
 		136,
-		84,
-	},
+		84
+	}
 }
 
 local function _icon_change_function(content, style)
@@ -203,12 +203,12 @@ local _button_base_passes = {
 		content_id = "hotspot",
 		pass_type = "hotspot",
 		content = {
-			use_is_focused = true,
+			use_is_focused = true
 		},
 		style = {
 			on_hover_sound = UISoundEvents.default_mouse_hover,
-			on_pressed_sound = UISoundEvents.default_click,
-		},
+			on_pressed_sound = UISoundEvents.default_click
+		}
 	},
 	{
 		pass_type = "texture",
@@ -221,12 +221,12 @@ local _button_base_passes = {
 			offset = {
 				0,
 				0,
-				0,
+				0
 			},
 			size_addition = {
 				12,
-				12,
-			},
+				12
+			}
 		},
 		change_function = function (content, style, _, dt)
 			local hotspot = content.hotspot
@@ -238,7 +238,7 @@ local _button_base_passes = {
 
 			style_size_additon[1] = 12 + 20 * math.easeInCubic(1 - progress)
 			style_size_additon[2] = 12 + 20 * math.easeInCubic(1 - progress)
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -253,12 +253,12 @@ local _button_base_passes = {
 			offset = {
 				0,
 				0,
-				5,
+				5
 			},
 			size_addition = {
 				0,
-				-8,
-			},
+				-8
+			}
 		},
 		change_function = function (content, style, _, dt)
 			local hotspot = content.hotspot
@@ -268,7 +268,7 @@ local _button_base_passes = {
 			local color = style.color
 
 			Colors.color_lerp(default_color, hover_color, progress, color)
-		end,
+		end
 	},
 	{
 		pass_type = "texture_uv",
@@ -282,26 +282,26 @@ local _button_base_passes = {
 			offset = {
 				0,
 				0,
-				1,
+				1
 			},
 			uvs = {
 				{
 					0,
-					0,
+					0
 				},
 				{
 					1,
-					1,
-				},
+					1
+				}
 			},
 			material_values = {
-				shine = 0,
-			},
+				shine = 0
+			}
 		},
 		visibility_function = function (content, style)
 			return not not style.material_values and not not style.material_values.main_texture
 		end,
-		change_function = _icon_change_function,
+		change_function = _icon_change_function
 	},
 	{
 		pass_type = "texture",
@@ -312,25 +312,25 @@ local _button_base_passes = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
 			material_values = {
-				use_placeholder_texture = 1,
+				use_placeholder_texture = 1
 			},
 			offset = {
 				0,
 				0,
-				1,
+				1
 			},
 			size = {
 				192,
-				128,
+				128
 			},
 			size_addition = {
 				0,
-				0,
-			},
+				0
+			}
 		},
 		visibility_function = function (content, style)
 			return content.item
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -345,17 +345,17 @@ local _button_base_passes = {
 			offset = {
 				0,
 				0,
-				0,
+				0
 			},
 			color = Color.terminal_frame(255, true),
 			size_addition = {
 				25,
-				20,
-			},
+				20
+			}
 		},
 		visibility_function = function (content, style)
 			return not content.element._is_image_loaded
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -365,20 +365,20 @@ local _button_base_passes = {
 			vertical_alignment = "bottom",
 			size = {
 				nil,
-				50,
+				50
 			},
 			offset = {
 				0,
 				0,
-				3,
+				3
 			},
 			color = {
 				180,
 				0,
 				0,
-				0,
-			},
-		},
+				0
+			}
+		}
 	},
 	{
 		pass_type = "text",
@@ -388,7 +388,7 @@ local _button_base_passes = {
 		style = item_price_text_style,
 		visibility_function = function (content, style)
 			return not content.element.owned and content.element.discount
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -400,38 +400,38 @@ local _button_base_passes = {
 			vertical_alignment = "bottom",
 			size = {
 				40,
-				28,
+				28
 			},
 			offset = {
 				-5,
 				-10,
-				4,
-			},
+				4
+			}
 		},
 		visibility_function = function (content, style)
 			return not content.element.owned and not content.element.formattedPrice
-		end,
+		end
 	},
 	{
 		pass_type = "text",
 		style_id = "price",
 		value = "??? ",
 		value_id = "price",
-		style = item_price_text_style,
+		style = item_price_text_style
 	},
 	{
 		pass_type = "text",
 		style_id = "title",
 		value = "<Title>",
 		value_id = "title",
-		style = item_header_text_style,
+		style = item_header_text_style
 	},
 	{
 		pass_type = "text",
 		style_id = "sub_title",
 		value = "<Sub Title>",
 		value_id = "sub_title",
-		style = item_sub_header_text_style,
+		style = item_sub_header_text_style
 	},
 	{
 		pass_type = "rotated_texture",
@@ -443,19 +443,19 @@ local _button_base_passes = {
 			vertical_alignment = "center",
 			size = {
 				80,
-				80,
+				80
 			},
 			color = {
 				60,
 				160,
 				160,
-				160,
+				160
 			},
 			offset = {
 				0,
 				0,
-				2,
-			},
+				2
+			}
 		},
 		visibility_function = function (content, style)
 			return not content.element._is_image_loaded
@@ -465,7 +465,7 @@ local _button_base_passes = {
 
 			style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
 			style.angle = style.rotation_progress * math.pi * 2
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -474,8 +474,8 @@ local _button_base_passes = {
 		style = timer_text_style,
 		visibility_function = function (content, style)
 			return content.timer_text
-		end,
-	},
+		end
+	}
 }
 
 local function _base_init(parent, widget, element, callback_name)
@@ -514,7 +514,7 @@ local function _base_init(parent, widget, element, callback_name)
 	local price_style = style.price
 	local price_width, price_height = parent:_text_size(content.price, price_style, {
 		title_width,
-		1080,
+		1080
 	})
 
 	style.price.offset[1] = element.owned and style.price_icon.offset[1] or style.price_icon.offset[1] - style.price_icon.size[1]
@@ -537,7 +537,7 @@ local function _base_init(parent, widget, element, callback_name)
 	if element.discount then
 		local text_width, _ = parent:_text_size(content.price, price_style, {
 			title_width,
-			1080,
+			1080
 		})
 		local discount_margin = 20
 		local price_style = style.price
@@ -548,7 +548,7 @@ local function _base_init(parent, widget, element, callback_name)
 		local discount_style = style.discount_price
 		local discount_width, discount_height = parent:_text_size(content.discount_price, discount_style, {
 			title_width,
-			1080,
+			1080
 		})
 
 		style.discount_price.offset[1] = style.price.offset[1] - discount_margin - price_width
@@ -559,15 +559,15 @@ local function _base_button_blueprint()
 	return {
 		pass_template = table.clone(_button_base_passes),
 		init_functions = {
-			_base_init,
+			_base_init
 		},
-		destroy_functions = {},
+		destroy_functions = {}
 	}
 end
 
 local _original_banner_size = {
 	352,
-	572,
+	572
 }
 
 local function _add_platform_banner(icon_size, horizontal_alignment)
@@ -577,14 +577,14 @@ local function _add_platform_banner(icon_size, horizontal_alignment)
 	local wanted_height = is_component_wide and icon_size[2] or icon_size[2] * 0.66
 	local wanted_size = {
 		ratio * wanted_height,
-		wanted_height,
+		wanted_height
 	}
 	local base_x_offset = is_component_wide and 48 or icon_size[1] * 0.15
 	local base_y_offset = is_component_wide and -23 or -icon_size[2] * 0.073
 	local offset = {
 		is_flipped and base_x_offset or -base_x_offset,
 		base_y_offset,
-		8,
+		8
 	}
 	local style = {
 		vertical_alignment = "top",
@@ -592,28 +592,28 @@ local function _add_platform_banner(icon_size, horizontal_alignment)
 		size = wanted_size,
 		size_addition = {
 			0,
-			0,
+			0
 		},
 		horizontal_alignment = horizontal_alignment,
 		uvs = horizontal_alignment == "left" and {
 			{
 				0,
-				0,
+				0
 			},
 			{
 				1,
-				1,
-			},
+				1
+			}
 		} or {
 			{
 				1,
-				0,
+				0
 			},
 			{
 				0,
-				1,
-			},
-		},
+				1
+			}
+		}
 	}
 
 	return function (blueprint)
@@ -621,8 +621,8 @@ local function _add_platform_banner(icon_size, horizontal_alignment)
 			{
 				pass_type = "texture_uv",
 				value = "content/ui/materials/frames/premium_store/offer_card_best_value_banner",
-				style = style,
-			},
+				style = style
+			}
 		})
 
 		return blueprint
@@ -640,16 +640,16 @@ local function _add_decorator_line(vertical_alignment, offset)
 					scale_to_material = true,
 					size = {
 						nil,
-						30,
+						30
 					},
 					vertical_alignment = vertical_alignment,
 					offset = offset,
 					size_addition = {
 						40,
-						0,
-					},
-				},
-			},
+						0
+					}
+				}
+			}
 		})
 
 		return blueprint
@@ -663,13 +663,13 @@ local _frame_mapping = {
 		offset_top = {
 			0,
 			-15,
-			6,
+			6
 		},
 		offset_bottom = {
 			0,
 			15,
-			6,
-		},
+			6
+		}
 	},
 	special_offer_1 = {
 		bottom = "content/ui/materials/frames/premium_store/offer_card_lower_special_1",
@@ -677,13 +677,13 @@ local _frame_mapping = {
 		offset_top = {
 			0,
 			-10,
-			6,
+			6
 		},
 		offset_bottom = {
 			0,
 			10,
-			6,
-		},
+			6
+		}
 	},
 	special_offer_2 = {
 		bottom = "content/ui/materials/frames/premium_store/offer_card_lower_golden_1",
@@ -692,14 +692,14 @@ local _frame_mapping = {
 		offset_top = {
 			0,
 			-10,
-			6,
+			6
 		},
 		offset_bottom = {
 			0,
 			10,
-			6,
-		},
-	},
+			6
+		}
+	}
 }
 
 local function _add_frame(offer_presentation_type)
@@ -718,14 +718,14 @@ local function _add_frame(offer_presentation_type)
 					vertical_alignment = "top",
 					size = {
 						nil,
-						30,
+						30
 					},
 					offset = frame.offset_top,
 					size_addition = {
 						20,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -738,15 +738,15 @@ local function _add_frame(offer_presentation_type)
 					vertical_alignment = "bottom",
 					size = {
 						nil,
-						30,
+						30
 					},
 					offset = frame.offset_bottom,
 					size_addition = {
 						20,
-						0,
-					},
-				},
-			},
+						0
+					}
+				}
+			}
 		})
 
 		if frame.has_decorations then
@@ -809,7 +809,7 @@ local function offer_button_template_factory(component_size, offer_config)
 	end
 
 	table.append(button_components, {
-		_add_frame(metadata_presentation_data),
+		_add_frame(metadata_presentation_data)
 	})
 
 	for i = 1, #button_components do
@@ -834,5 +834,5 @@ local function offer_button_template_factory(component_size, offer_config)
 end
 
 return {
-	create_blueprint = offer_button_template_factory,
+	create_blueprint = offer_button_template_factory
 }

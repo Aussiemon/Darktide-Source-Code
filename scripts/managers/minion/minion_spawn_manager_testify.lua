@@ -11,7 +11,7 @@ local MinionSpawnManagerTestify = {
 		local spawned_minions = minion_spawn_manager:spawned_minions()
 
 		return spawned_minions
-	end,
+	end
 }
 
 return MinionSpawnManagerTestify

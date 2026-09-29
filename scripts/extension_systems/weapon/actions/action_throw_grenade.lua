@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_throw_grenade.lua
 
-require("scripts/extension_systems/weapon/actions/action_ability_base")
+require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
 local AimProjectile = require("scripts/utilities/aim_projectile")
@@ -28,9 +28,10 @@ ActionThrowGrenade.init = function (self, action_context, action_params, action_
 end
 
 ActionThrowGrenade.start = function (self, action_settings, t, ...)
+	ActionThrowGrenade.super.start(self, action_settings, t, ...)
 	self:_check_for_critical_strike(false, true)
 
-	local projectile_template = ActionUtility.projectile_template(action_settings, self._weapon_template, self._ability_extension)
+	local projectile_template = ActionUtility.projectile_template(self._ability_type, action_settings, self._weapon_template, self._ability_extension)
 
 	if projectile_template then
 		Vo.throwing_item_event(self._player_unit, projectile_template.name)
@@ -41,21 +42,19 @@ ActionThrowGrenade.start = function (self, action_settings, t, ...)
 	self:_set_haptic_trigger_template(self._action_settings, self._weapon_template)
 end
 
-local LAG_COMPENSATION_MULTIPLIER = 0.0005
-
 ActionThrowGrenade.fixed_update = function (self, dt, t, time_in_action)
-	local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player) * LAG_COMPENSATION_MULTIPLIER
+	local lag_compensation_halved = LagCompensation.rewind_seconds(self._is_server, self._is_local_unit, self._player) / 2
 
-	if self._spawn_at_time and t + rewind_ms > self._spawn_at_time then
+	if self._spawn_at_time and t + lag_compensation_halved > self._spawn_at_time then
 		self._spawn_at_time = nil
 
 		self:_spawn_projectile()
 
 		local action_settings = self._action_settings
-		local use_ability_charge = action_settings.use_ability_charge
+		local consume_ability_usage_cost = action_settings.consume_ability_usage_cost
 
-		if use_ability_charge then
-			self:_use_ability_charge()
+		if consume_ability_usage_cost then
+			self:_consume_ability_usage_cost()
 		end
 
 		local ammunition_usage = action_settings.ammunition_usage
@@ -82,13 +81,13 @@ ActionThrowGrenade._spawn_projectile = function (self)
 	local item, origin_item_slot
 
 	if self._ability_type ~= nil then
-		item, origin_item_slot = ActionUtility.ability_item(action_settings, ability_extension)
+		item, origin_item_slot = ActionUtility.ability_item(self._ability_type, ability_extension)
 	else
 		item = self._weapon.item
 		origin_item_slot = self._wielded_slot
 	end
 
-	local projectile_template = ActionUtility.projectile_template(action_settings, weapon_template, ability_extension)
+	local projectile_template = ActionUtility.projectile_template(self._ability_type, action_settings, weapon_template, ability_extension)
 	local locomotion_template = projectile_template.locomotion_template
 	local owner_unit = self._player_unit
 	local material

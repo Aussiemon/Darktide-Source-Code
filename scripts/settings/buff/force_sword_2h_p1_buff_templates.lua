@@ -63,7 +63,7 @@ local function _collect_forcesword_wind_slash_hits(template_data, template_conte
 		local position = start_position + slash_direction * range
 		local player = template_context.player
 		local is_local_unit = not player.remote
-		local rewind_ms = LagCompensation.rewind_ms(true, is_local_unit, player)
+		local rewind_ms = LagCompensation.rewind_miliseconds(true, is_local_unit, player)
 		local world = template_context.world
 		local physics_world = World.physics_world(world)
 		local hit_actors, num_hit_actors = PhysicsWorld.immediate_overlap(physics_world, "shape", "sphere", "position", position, "size", slice_radius, "collision_filter", "filter_player_character_shooting_raycast_dynamics", "rewind_ms", rewind_ms)
@@ -229,7 +229,7 @@ local function _forcesword_wind_slash_trigger_generator_func(level)
 		predicted = false,
 		proc_events = {
 			[proc_events.on_sweep_start] = 1,
-			[proc_events.on_weapon_special_deactivate] = 1,
+			[proc_events.on_weapon_special_deactivate] = 1
 		},
 		conditional_exit_func = function (template_data, template_context)
 			local special_active = template_data.inventory_slot_component.special_active
@@ -255,7 +255,7 @@ local function _forcesword_wind_slash_trigger_generator_func(level)
 
 			buff_extension:add_internally_controlled_buff(buff_to_add, t, "item_slot_name", template_context.item_slot_name)
 			template_data.weapon_extension:set_wielded_weapon_weapon_special_active(t, false, "max_activations")
-		end,
+		end
 	}
 end
 
@@ -361,7 +361,7 @@ local function _forcesword_wind_slash_effect_generator_func(level)
 			end
 
 			_update_forcesword_wind_slash(template_data, template_context, dt, t)
-		end,
+		end
 	}
 end
 
@@ -370,7 +370,7 @@ templates.forcesword_wind_slash_weapon_special_primer = {
 	force_predicted_proc = true,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_weapon_special_activate] = 1,
+		[proc_events.on_weapon_special_activate] = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	start_func = function (template_data, template_context)
@@ -400,7 +400,7 @@ templates.forcesword_wind_slash_weapon_special_primer = {
 
 			template_data.trigger_buff_id = buff_id
 		end
-	end,
+	end
 }
 templates.forcesword_wind_slash_weapon_special_trigger_low = _forcesword_wind_slash_trigger_generator_func("low")
 templates.forcesword_wind_slash_weapon_special_trigger_middle = _forcesword_wind_slash_trigger_generator_func("middle")

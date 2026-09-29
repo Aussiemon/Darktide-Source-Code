@@ -49,26 +49,26 @@ Broadphase.component_data = {
 		ui_type = "combo_box",
 		value = "doors",
 		options_keys = {
-			"doors",
+			"doors"
 		},
 		options_values = {
-			"doors",
-		},
+			"doors"
+		}
 	},
 	broadphase_radius = {
 		decimals = 2,
 		ui_name = "Broadphase Radius",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	broadphase_node_name = {
 		ui_name = "Broadphase Node Name",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	extensions = {
-		"BroadphaseExtension",
-	},
+		"BroadphaseExtension"
+	}
 }
 
 return Broadphase

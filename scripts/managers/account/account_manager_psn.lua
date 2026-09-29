@@ -18,7 +18,7 @@ local SIGNIN_STATES = {
 	idle = "",
 	loading_save = "loc_signin_load_save",
 	querying_storage = "loc_signin_query_storage",
-	signin_profile = "loc_signin_acquiring_user_profile",
+	signin_profile = "loc_signin_acquiring_user_profile"
 }
 local FRIEND_REQUEST_STATES = table.enum("idle", "fetching_friends")
 local BLOCKED_PROFILES_REQUEST_STATES = table.enum("idle", "fetching_blocked_profiles")
@@ -207,15 +207,15 @@ AccountManagerPSN._check_input = function (self)
 			description_text = description_text,
 			priority_order = math.huge,
 			description_text_params = {
-				gamertag = online_id,
+				gamertag = online_id
 			},
 			options = {
 				{
 					close_on_pressed = true,
 					text = "loc_alias_view_close_view",
-					callback = callback(self, "cb_validate_input_reconnected"),
-				},
-			},
+					callback = callback(self, "cb_validate_input_reconnected")
+				}
+			}
 		}
 
 		Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -264,9 +264,9 @@ AccountManagerPSN._show_fatal_error = function (self, title_text, description_te
 			{
 				close_on_pressed = true,
 				text = "loc_popup_button_close",
-				callback = callback(self, "return_to_title_screen"),
-			},
-		},
+				callback = callback(self, "return_to_title_screen")
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -402,9 +402,10 @@ AccountManagerPSN._fetch_friends = function (self, num_to_fetch, offset, result_
 		else
 			Promise.all(self:_fetch_public_profiles(table.clone_instance(target_account_ids_array)), self:_fetch_profile_presences(table.clone_instance(target_account_ids_array))):next(function (result)
 				local public_profiles_by_account_id, presences_by_account_id = unpack(result)
-				local profiles = {}
+				local num_account_ids = #target_account_ids_array
+				local profiles = Script.new_array(num_account_ids)
 
-				for i = 1, #target_account_ids_array do
+				for i = 1, num_account_ids do
 					local account_id = target_account_ids_array[i]
 					local profile = public_profiles_by_account_id[account_id]
 					local presence = presences_by_account_id[account_id]
@@ -412,7 +413,7 @@ AccountManagerPSN._fetch_friends = function (self, num_to_fetch, offset, result_
 
 					table.merge_recursive(profile_data, presence)
 
-					profiles[#profiles + 1] = profile_data
+					profiles[i] = profile_data
 				end
 
 				result_promise:resolve(profiles)
@@ -909,7 +910,7 @@ AccountManagerPSN.is_owner_of = function (self, entitlement_key)
 		return PlaystationDLC.has_fetched_dlcs()
 	end):next(function ()
 		return {
-			is_owner = PlaystationDLC.has_dlc(entitlement_key),
+			is_owner = PlaystationDLC.has_dlc(entitlement_key)
 		}
 	end)
 end

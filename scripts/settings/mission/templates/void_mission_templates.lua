@@ -2,7 +2,6 @@
 
 local mission_templates = {
 	core_research = {
-		coordinates = "loc_mission_coordinates_core_research",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/void/missions/mission_core_research",
@@ -21,23 +20,23 @@ local mission_templates = {
 		testify_flags = {},
 		cinematics = {
 			intro_abc = {
-				"c_cam",
+				"c_cam"
 			},
 			outro_fail = {
-				"outro_fail",
+				"outro_fail"
 			},
 			outro_win = {
-				"outro_win",
-			},
+				"outro_win"
+			}
 		},
 		pickup_settings = {},
 		hazard_prop_settings = {
 			explosion = 0.1,
 			fire = 0.08,
-			none = 0.45,
+			none = 0.45
 		},
 		terror_event_templates = {
-			"terror_events_core_research",
+			"terror_events_core_research"
 		},
 		health_station = {},
 		mission_brief_vo = {
@@ -46,25 +45,28 @@ local mission_templates = {
 			vo_events = {
 				"mission_core_briefing_a",
 				"mission_core_briefing_b",
-				"mission_core_briefing_c",
+				"mission_core_briefing_c"
 			},
 			mission_giver_packs = {
 				tech_priest_a = {
-					"tech_priest",
+					"tech_priest"
 				},
 				interrogator_a = {
-					"interrogator",
-				},
-			},
+					"interrogator"
+				}
+			}
 		},
 		dialogue_settings = {
 			short_story_ticker_enabled = true,
-			story_ticker_enabled = true,
+			story_ticker_enabled = true
 		},
 		spawn_settings = {
-			next_mission = "recent_mission",
+			next_mission = "recent_mission"
 		},
-	},
+		controllable_object_set_prefixes = {
+			"flow"
+		}
+	}
 }
 
 return mission_templates

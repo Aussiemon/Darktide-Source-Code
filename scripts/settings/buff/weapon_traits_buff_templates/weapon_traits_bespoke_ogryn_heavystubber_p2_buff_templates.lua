@@ -15,9 +15,9 @@ templates.weapon_trait_bespoke_ogryn_heavystubber_p2_consecutive_hits_increases_
 templates.weapon_trait_bespoke_ogryn_heavystubber_p2_consecutive_hits_increases_ranged_power_parent.child_buff_template = "weapon_trait_bespoke_ogryn_heavystubber_p2_consecutive_hits_increases_ranged_power_child"
 templates.weapon_trait_bespoke_ogryn_heavystubber_p2_power_bonus_on_continuous_fire = table.merge({
 	conditional_stat_buffs = {
-		[stat_buffs.power_level_modifier] = 0.02,
+		[stat_buffs.power_level_modifier] = 0.02
 	},
-	continuous_fire_step_func = FireStepFunctions.default_continuous_fire_step_func,
+	continuous_fire_step_func = FireStepFunctions.default_continuous_fire_step_func
 }, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire)
 templates.weapon_trait_bespoke_ogryn_heavystubber_p2_toughness_on_continuous_fire = table.merge({
 	toughness_fixed_percentage = 0.1,
@@ -35,21 +35,21 @@ templates.weapon_trait_bespoke_ogryn_heavystubber_p2_toughness_on_continuous_fir
 		local max_ammunition_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
 
 		return math.max(1, math.floor(max_ammunition_clip * 0.05))
-	end,
+	end
 }, BaseWeaponTraitBuffTemplates.toughness_on_continuous_fire)
 templates.weapon_trait_bespoke_ogryn_heavystubber_p2_increased_suppression_on_continuous_fire = table.merge({
 	conditional_stat_buffs = {
 		[stat_buffs.suppression_dealt] = 0.5,
-		[stat_buffs.damage_vs_suppressed] = 0.06,
+		[stat_buffs.damage_vs_suppressed] = 0.06
 	},
-	continuous_fire_step_func = FireStepFunctions.suppression_continuous_fire_step_func,
+	continuous_fire_step_func = FireStepFunctions.suppression_continuous_fire_step_func
 }, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire)
 templates.weapon_trait_bespoke_ogryn_heavystubber_p2_movement_speed_on_continous_fire = table.merge({
 	conditional_stat_buffs = {
 		[stat_buffs.alternate_fire_movement_speed_reduction_modifier] = 0.5,
-		[stat_buffs.weapon_action_movespeed_reduction_multiplier] = 0.5,
+		[stat_buffs.weapon_action_movespeed_reduction_multiplier] = 0.5
 	},
-	continuous_fire_step_func = FireStepFunctions.movement_speed_continuous_fire_step_func,
+	continuous_fire_step_func = FireStepFunctions.movement_speed_continuous_fire_step_func
 }, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire)
 templates.weapon_trait_bespoke_ogryn_heavystubber_p2_suppression_on_close_kill = table.clone(BaseWeaponTraitBuffTemplates.suppression_on_close_kill)
 templates.weapon_trait_bespoke_ogryn_heavystubber_p2_increase_power_on_close_kill_parent = table.clone(BaseWeaponTraitBuffTemplates.increase_power_on_close_kill_parent)
@@ -75,9 +75,9 @@ templates.weapon_trait_bespoke_ogryn_heavystubber_p2_power_bonus_on_first_shot =
 templates.weapon_trait_bespoke_ogryn_heavystubber_p2_toughness_on_elite_kills = table.clone(BaseWeaponTraitBuffTemplates.toughness_on_elite_kills)
 templates.weapon_trait_bespoke_ogryn_heavystubber_p2_stacking_crit_bonus_on_continuous_fire = table.merge({
 	conditional_stat_buffs = {
-		[stat_buffs.critical_strike_chance] = 0.01,
+		[stat_buffs.critical_strike_chance] = 0.01
 	},
-	continuous_fire_step_func = FireStepFunctions.default_continuous_fire_step_func,
+	continuous_fire_step_func = FireStepFunctions.default_continuous_fire_step_func
 }, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire)
 
 return templates

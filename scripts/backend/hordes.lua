@@ -32,7 +32,7 @@ Hordes.get_horde_setting_from_the_backend = function (self)
 		if result.deactivatedBuffs and result.deactivatedBuffs.deactivatedBuffsList then
 			result.deactivated_buffs = {
 				deactivated_buffs_enabled = result.deactivatedBuffs.deactivatedBuffsEnabled,
-				deactivated_buffs_list = result.deactivatedBuffs.deactivatedBuffsList,
+				deactivated_buffs_list = result.deactivatedBuffs.deactivatedBuffsList
 			}
 			result.deactivatedBuffs = nil
 		end

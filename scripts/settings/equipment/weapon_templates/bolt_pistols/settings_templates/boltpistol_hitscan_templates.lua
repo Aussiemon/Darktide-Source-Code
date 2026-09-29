@@ -16,28 +16,28 @@ hitscan_templates.default_boltpistol_hitscan = {
 			damage_profile = DamageProfileTemplates.default_boltpistol_damage,
 			hitmass_consumed_explosion = {
 				kill_explosion_template = ExplosionTemplates.boltpistol_shell_kill,
-				stop_explosion_template = ExplosionTemplates.boltpistol_shell_stop,
-			},
+				stop_explosion_template = ExplosionTemplates.boltpistol_shell_stop
+			}
 		},
 		penetration = {
 			depth = 0.75,
 			target_index_increase = 2,
-			stop_explosion_template = ExplosionTemplates.boltpistol_shell_stop,
-		},
+			stop_explosion_template = ExplosionTemplates.boltpistol_shell_stop
+		}
 	},
 	collision_tests = {
 		{
 			against = "statics",
 			collision_filter = "filter_player_character_shooting_raycast_statics",
-			test = "ray",
+			test = "ray"
 		},
 		{
 			against = "dynamics",
 			collision_filter = "filter_player_character_shooting_raycast_dynamics",
 			radius = 0.1,
-			test = "sphere",
-		},
-	},
+			test = "sphere"
+		}
+	}
 }
 hitscan_templates.boltpistol_m2_hitscan = {
 	range = 75,
@@ -47,31 +47,31 @@ hitscan_templates.boltpistol_m2_hitscan = {
 			damage_profile = DamageProfileTemplates.boltpistol_m2_damage,
 			hitmass_consumed_explosion = {
 				kill_explosion_template = ExplosionTemplates.boltpistol_m2_shell_kill,
-				stop_explosion_template = ExplosionTemplates.boltpistol_m2_shell_stop,
-			},
+				stop_explosion_template = ExplosionTemplates.boltpistol_m2_shell_stop
+			}
 		},
 		penetration = {
 			depth = 0.1,
 			target_index_increase = 2,
-			stop_explosion_template = ExplosionTemplates.boltpistol_m2_shell_stop,
-		},
+			stop_explosion_template = ExplosionTemplates.boltpistol_m2_shell_stop
+		}
 	},
 	collision_tests = {
 		{
 			against = "statics",
 			collision_filter = "filter_player_character_shooting_raycast_statics",
-			test = "ray",
+			test = "ray"
 		},
 		{
 			against = "dynamics",
 			collision_filter = "filter_player_character_shooting_raycast_dynamics",
 			radius = 0.1,
-			test = "sphere",
-		},
-	},
+			test = "sphere"
+		}
+	}
 }
 
 return {
 	base_templates = hitscan_templates,
-	overrides = overrides,
+	overrides = overrides
 }

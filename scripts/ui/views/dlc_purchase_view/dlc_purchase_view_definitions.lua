@@ -11,7 +11,7 @@ local group_header_font_style = table.clone(UIFontSettings.header_3)
 group_header_font_style.offset = {
 	0,
 	0,
-	3,
+	3
 }
 group_header_font_style.text_horizontal_alignment = "center"
 group_header_font_style.text_vertical_alignment = "center"
@@ -22,7 +22,7 @@ local sub_header_font_style = table.clone(UIFontSettings.header_3)
 sub_header_font_style.offset = {
 	0,
 	0,
-	3,
+	3
 }
 sub_header_font_style.font_size = 18
 sub_header_font_style.text_horizontal_alignment = "center"
@@ -38,11 +38,11 @@ item_header_text_style.vertical_alignment = "center"
 item_header_text_style.offset = {
 	10,
 	-55,
-	4,
+	4
 }
 item_header_text_style.size_addition = {
 	-20,
-	0,
+	0
 }
 item_header_text_style.text_color = Color.terminal_text_header(255, true)
 item_header_text_style.font_size = 24
@@ -56,11 +56,11 @@ aquila_header_text_style.font_size = 36
 aquila_header_text_style.offset = {
 	0,
 	3,
-	4,
+	4
 }
 aquila_header_text_style.size_addition = {
 	0,
-	0,
+	0
 }
 
 local item_header_premium_text_style = table.clone(UIFontSettings.header_1)
@@ -74,11 +74,11 @@ item_header_premium_text_style.vertical_alignment = "center"
 item_header_premium_text_style.offset = {
 	-20,
 	-50,
-	4,
+	4
 }
 item_header_premium_text_style.size_addition = {
 	-20,
-	0,
+	0
 }
 item_header_premium_text_style.font_size = 48
 
@@ -91,11 +91,11 @@ item_sub_header_text_style.vertical_alignment = "center"
 item_sub_header_text_style.offset = {
 	-20,
 	-25,
-	4,
+	4
 }
 item_sub_header_text_style.size_addition = {
 	-20,
-	0,
+	0
 }
 item_sub_header_text_style.text_color = Color.ui_grey_light(255, true)
 item_sub_header_text_style.font_size = 32
@@ -107,11 +107,11 @@ emporium_font_style.text_vertical_alignment = "center"
 emporium_font_style.offset = {
 	0,
 	0,
-	1,
+	1
 }
 emporium_font_style.size = {
 	nil,
-	85,
+	85
 }
 
 local timer_text_style = table.clone(UIFontSettings.body_small)
@@ -124,12 +124,12 @@ timer_text_style.hover_color = {
 	255,
 	255,
 	255,
-	255,
+	255
 }
 timer_text_style.offset = {
 	30,
 	-15,
-	5,
+	5
 }
 timer_text_style.horizontal_alignment = "center"
 timer_text_style.vertical_alignment = "center"
@@ -142,7 +142,7 @@ wait_reason_style.text_vertical_alignment = "center"
 wait_reason_style.offset = {
 	0,
 	100,
-	0,
+	0
 }
 
 local scenegraph_definition = {
@@ -155,13 +155,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			background_icon_size,
-			background_icon_size,
+			background_icon_size
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	center = {
 		horizontal_alignment = "center",
@@ -169,13 +169,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			300,
-			300,
+			300
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	corner_top_left = {
 		horizontal_alignment = "left",
@@ -183,13 +183,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			84,
-			224,
+			224
 		},
 		position = {
 			0,
 			0,
-			62,
-		},
+			62
+		}
 	},
 	corner_top_right = {
 		horizontal_alignment = "right",
@@ -197,13 +197,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			120,
-			224,
+			224
 		},
 		position = {
 			0,
 			0,
-			62,
-		},
+			62
+		}
 	},
 	corner_bottom_left = {
 		horizontal_alignment = "left",
@@ -211,13 +211,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			84,
-			224,
+			224
 		},
 		position = {
 			0,
 			0,
-			62,
-		},
+			62
+		}
 	},
 	corner_bottom_right = {
 		horizontal_alignment = "right",
@@ -225,13 +225,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			84,
-			224,
+			224
 		},
 		position = {
 			0,
 			0,
-			62,
-		},
+			62
+		}
 	},
 	category_panel_pivot = {
 		horizontal_alignment = "center",
@@ -239,13 +239,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			-70,
-			1,
-		},
+			1
+		}
 	},
 	category_panel_background = {
 		horizontal_alignment = "center",
@@ -253,13 +253,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			500,
-			61,
+			61
 		},
 		position = {
 			0,
 			-12,
-			1,
-		},
+			1
+		}
 	},
 	standard_dlc_button_area = {
 		horizontal_alignment = "center",
@@ -267,13 +267,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			688,
-			632,
+			632
 		},
 		position = {
 			-377,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	deluxe_dlc_button_area = {
 		horizontal_alignment = "center",
@@ -281,13 +281,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			688,
-			632,
+			632
 		},
 		position = {
 			377,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	loading = {
 		horizontal_alignment = "center",
@@ -295,26 +295,26 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			200,
-		},
-	},
+			200
+		}
+	}
 }
 local dlc_button_pass_template = {
 	{
 		content_id = "hotspot",
 		pass_type = "hotspot",
 		content = {
-			use_is_focused = true,
+			use_is_focused = true
 		},
 		style = {
 			on_hover_sound = UISoundEvents.default_mouse_hover,
-			on_pressed_sound = UISoundEvents.default_click,
-		},
+			on_pressed_sound = UISoundEvents.default_click
+		}
 	},
 	{
 		pass_type = "texture",
@@ -327,12 +327,12 @@ local dlc_button_pass_template = {
 			offset = {
 				0,
 				0,
-				0,
+				0
 			},
 			size_addition = {
 				20,
-				20,
-			},
+				20
+			}
 		},
 		change_function = function (content, style, _, dt)
 			local hotspot = content.hotspot
@@ -344,7 +344,7 @@ local dlc_button_pass_template = {
 
 			style_size_additon[1] = 20 + 20 * math.easeInCubic(1 - progress)
 			style_size_additon[2] = 20 + 20 * math.easeInCubic(1 - progress)
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -359,12 +359,12 @@ local dlc_button_pass_template = {
 			offset = {
 				0,
 				0,
-				5,
+				5
 			},
 			size_addition = {
 				0,
-				-8,
-			},
+				-8
+			}
 		},
 		change_function = function (content, style, _, dt)
 			local hotspot = content.hotspot
@@ -374,7 +374,7 @@ local dlc_button_pass_template = {
 			local color = style.color
 
 			Colors.color_lerp(default_color, hover_color, progress, color)
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -388,28 +388,28 @@ local dlc_button_pass_template = {
 			color = Color.black(153, true),
 			size = {
 				nil,
-				0,
+				0
 			},
 			offset = {
 				0,
 				20,
-				3,
-			},
-		},
+				3
+			}
+		}
 	},
 	{
 		pass_type = "text",
 		style_id = "title",
 		value = "<Title>",
 		value_id = "title",
-		style = item_header_premium_text_style,
+		style = item_header_premium_text_style
 	},
 	{
 		pass_type = "text",
 		style_id = "sub_title",
 		value = "<Sub Title>",
 		value_id = "sub_title",
-		style = item_sub_header_text_style,
+		style = item_sub_header_text_style
 	},
 	{
 		pass_type = "texture",
@@ -422,24 +422,24 @@ local dlc_button_pass_template = {
 			vertical_alignment = "top",
 			size = {
 				nil,
-				46.199999999999996,
+				46.199999999999996
 			},
 			offset = {
 				0,
 				-20,
-				6,
+				6
 			},
 			size_addition = {
 				8,
-				0,
+				0
 			},
 			material_values = {
 				gunge_size = {
 					147,
-					46.199999999999996,
-				},
-			},
-		},
+					46.199999999999996
+				}
+			}
+		}
 	},
 	{
 		pass_type = "texture",
@@ -452,18 +452,18 @@ local dlc_button_pass_template = {
 			vertical_alignment = "bottom",
 			size = {
 				nil,
-				42,
+				42
 			},
 			offset = {
 				0,
 				14,
-				6,
+				6
 			},
 			size_addition = {
 				8,
-				0,
-			},
-		},
+				0
+			}
+		}
 	},
 	{
 		pass_type = "texture",
@@ -478,17 +478,17 @@ local dlc_button_pass_template = {
 			offset = {
 				0,
 				0,
-				0,
+				0
 			},
 			color = Color.terminal_frame(255, true),
 			size_addition = {
 				25,
-				20,
-			},
+				20
+			}
 		},
 		visibility_function = function (content, style)
 			return not content.has_media
-		end,
+		end
 	},
 	{
 		pass_type = "texture_uv",
@@ -502,21 +502,21 @@ local dlc_button_pass_template = {
 			offset = {
 				0,
 				0,
-				1,
+				1
 			},
 			uvs = {
 				{
 					0,
-					0,
+					0
 				},
 				{
 					1,
-					1,
-				},
+					1
+				}
 			},
 			material_values = {
-				shine = 0,
-			},
+				shine = 0
+			}
 		},
 		visibility_function = function (content, style)
 			return not not style.material_values and not not style.material_values.main_texture
@@ -534,7 +534,7 @@ local dlc_button_pass_template = {
 			style.uvs[1][2] = start_uv + current_uv
 			style.uvs[2][1] = end_uv - current_uv
 			style.uvs[2][2] = end_uv - current_uv
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -545,26 +545,26 @@ local dlc_button_pass_template = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
 			material_values = {
-				use_placeholder_texture = 1,
+				use_placeholder_texture = 1
 			},
 			offset = {
 				0,
 				0,
-				1,
+				1
 			},
 			size = {
 				192,
-				128,
+				128
 			},
 			size_addition = {
 				0,
-				0,
-			},
+				0
+			}
 		},
 		visibility_function = function (content, style)
 			return content.item
-		end,
-	},
+		end
+	}
 }
 local widget_definitions = {
 	background = UIWidget.create_definition({
@@ -577,16 +577,16 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					40,
-					40,
+					40
 				},
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
-				color = Color.terminal_grid_background_gradient(255, true),
-			},
-		},
+				color = Color.terminal_grid_background_gradient(255, true)
+			}
+		}
 	}, "screen"),
 	background_icon = UIWidget.create_definition({
 		{
@@ -596,22 +596,22 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				color = {
 					40,
 					0,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "background_icon"),
 	corner_top_left = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/premium_upper_left",
-		},
+			value = "content/ui/materials/frames/screen/premium_upper_left"
+		}
 	}, "corner_top_left"),
 	corner_top_right = UIWidget.create_definition({
 		{
@@ -621,27 +621,27 @@ local widget_definitions = {
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
-				},
-			},
-		},
+						1
+					}
+				}
+			}
+		}
 	}, "corner_top_right"),
 	corner_bottom_left = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/premium_lower_left",
-		},
+			value = "content/ui/materials/frames/screen/premium_lower_left"
+		}
 	}, "corner_bottom_left"),
 	corner_bottom_right = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/premium_lower_right",
-		},
+			value = "content/ui/materials/frames/screen/premium_lower_right"
+		}
 	}, "corner_bottom_right"),
 	dlc_name_title = UIWidget.create_definition({
 		{
@@ -654,18 +654,18 @@ local widget_definitions = {
 				color = Color.terminal_frame(255, true),
 				size_addition = {
 					0,
-					30,
+					30
 				},
 				size = {
 					nil,
-					85,
+					85
 				},
 				offset = {
 					0,
 					-15,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -673,15 +673,15 @@ local widget_definitions = {
 			style = {
 				horizontal_alignment = "center",
 				vertical_alignment = "center",
-				color = Color.terminal_frame(255, true),
-			},
+				color = Color.terminal_frame(255, true)
+			}
 		},
 		{
 			pass_type = "text",
 			value = "DLC NAME",
 			value_id = "text",
-			style = emporium_font_style,
-		},
+			style = emporium_font_style
+		}
 	}, "screen"),
 	standard_dlc_button = UIWidget.create_definition(table.clone(dlc_button_pass_template), "standard_dlc_button_area"),
 	deluxe_dlc_button = UIWidget.create_definition(table.clone(dlc_button_pass_template), "deluxe_dlc_button_area"),
@@ -689,8 +689,8 @@ local widget_definitions = {
 		{
 			pass_type = "rect",
 			style = {
-				color = Color.black(127.5, true),
-			},
+				color = Color.black(127.5, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -700,25 +700,25 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					256,
-					256,
+					256
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "text",
 			style_id = "text",
 			value = "",
 			value_id = "text",
-			style = wait_reason_style,
-		},
+			style = wait_reason_style
+		}
 	}, "loading", {
-		visible = false,
-	}),
+		visible = false
+	})
 }
 local legend_inputs = {
 	{
@@ -728,7 +728,7 @@ local legend_inputs = {
 		on_pressed_callback = "_cb_on_back_pressed",
 		visibility_function = function (parent)
 			return true
-		end,
+		end
 	},
 	{
 		alignment = "left_alignment",
@@ -736,8 +736,8 @@ local legend_inputs = {
 		input_action = "confirm_pressed",
 		visibility_function = function (parent)
 			return not parent._using_cursor_navigation
-		end,
-	},
+		end
+	}
 }
 local animations = {
 	on_hover = {
@@ -747,7 +747,7 @@ local animations = {
 			start_time = 0,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				params.widget.style.texture.material_values.shine = 0
-			end,
+			end
 		},
 		{
 			end_time = 2,
@@ -757,14 +757,14 @@ local animations = {
 				local anim_progress = math.easeOutCubic(progress)
 
 				params.widget.style.texture.material_values.shine = anim_progress
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
 	animations = animations,
 	legend_inputs = legend_inputs,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

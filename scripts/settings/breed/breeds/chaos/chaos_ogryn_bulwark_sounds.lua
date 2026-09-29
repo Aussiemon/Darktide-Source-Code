@@ -16,14 +16,14 @@ local sound_data = {
 		vce_long_attack = "wwise/events/minions/play_enemy_chaos_ogryn_bulwark_a__special_attack_vce",
 		vce_running_breaths = "wwise/events/minions/play_enemy_chaos_ogryn_bulwark_a__running_breath_vce",
 		vce_short_attack = "wwise/events/minions/play_enemy_chaos_ogryn_bulwark_a__melee_attack_vce",
-		vce_special_attack = "wwise/events/minions/play_enemy_chaos_ogryn_bulwark_a__special_attack_vce",
+		vce_special_attack = "wwise/events/minions/play_enemy_chaos_ogryn_bulwark_a__special_attack_vce"
 	},
 	use_proximity_culling = {
 		foley_drastic = false,
 		vce_long_attack = false,
 		vce_short_attack = false,
-		vce_special_attack = false,
-	},
+		vce_special_attack = false
+	}
 }
 
 table.add_missing(sound_data.events, ChaosOgrynCommonSounds.events)

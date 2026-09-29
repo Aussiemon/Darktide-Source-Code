@@ -5,14 +5,14 @@ local MonsterInjectionTemplates = {}
 MonsterInjectionTemplates.backend_twins = {
 	breed_names = {
 		"renegade_twin_captain",
-		"renegade_twin_captain_two",
+		"renegade_twin_captain_two"
 	},
 	difficulties = {
 		false,
 		false,
 		true,
 		true,
-		true,
+		true
 	},
 	should_inject = function ()
 		local pacing_manager = Managers.state.pacing
@@ -32,8 +32,8 @@ MonsterInjectionTemplates.backend_twins = {
 		event = "wwise/events/minions/play_minion_special_twins_ambush_spawn",
 		vo_event = "cult_pre_ambush_a",
 		voice_profile = "captain_twin_female_a",
-		distance = math.random(25, 45),
-	},
+		distance = math.random(25, 45)
+	}
 }
 
 do
@@ -41,14 +41,14 @@ do
 
 	single_twin.breed_names = {
 		"renegade_twin_captain",
-		"renegade_twin_captain_two",
+		"renegade_twin_captain_two"
 	}
 	single_twin.difficulties = {
 		true,
 		true,
 		true,
 		true,
-		true,
+		true
 	}
 
 	single_twin.should_inject = function ()

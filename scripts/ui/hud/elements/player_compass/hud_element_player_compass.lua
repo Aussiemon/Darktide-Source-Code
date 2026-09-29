@@ -99,8 +99,8 @@ HudElementPlayerCompass._get_party_icons = function (self, dt, t, ui_renderer)
 					text_color = player_slot_color,
 					size = {
 						50,
-						50,
-					},
+						50
+					}
 				}
 			end
 		end
@@ -140,9 +140,9 @@ HudElementPlayerCompass._get_expedition_navigation_icons = function (self, dt, t
 					title_icon = string.format("content/ui/materials/backgrounds/scanner/scanner_map_%d", location_id % 9),
 					size = {
 						20,
-						20,
+						20
 					},
-					opportunity_id = id,
+					opportunity_id = id
 				}
 			end
 
@@ -163,8 +163,8 @@ HudElementPlayerCompass._get_expedition_navigation_icons = function (self, dt, t
 					position = position_box:unbox(),
 					size = {
 						20,
-						20,
-					},
+						20
+					}
 				}
 			end
 		end
@@ -183,8 +183,8 @@ HudElementPlayerCompass._get_expedition_navigation_icons = function (self, dt, t
 					position = position_box:unbox(),
 					size = {
 						20,
-						20,
-					},
+						20
+					}
 				}
 			end
 		end
@@ -200,7 +200,7 @@ HudElementPlayerCompass._get_expedition_navigation_icons = function (self, dt, t
 		255,
 		114,
 		247,
-		119,
+		119
 	}
 	local visible_marked_animation = {}
 	local local_player = Managers.player:local_player(1)
@@ -276,7 +276,7 @@ HudElementPlayerCompass._get_expedition_navigation_icons = function (self, dt, t
 				at_opportunity = at_opportunity,
 				marked = is_marked,
 				marked_by_local_player = is_marked_by_local_player,
-				level_index = index,
+				level_index = index
 			}
 		end
 	end
@@ -289,7 +289,7 @@ HudElementPlayerCompass._get_expedition_navigation_icons = function (self, dt, t
 
 	for index in pairs(visible_marked_animation) do
 		self._marked_animations[index] = self._marked_animations[index] or {
-			timer = 0,
+			timer = 0
 		}
 	end
 
@@ -548,7 +548,7 @@ HudElementPlayerCompass._draw_widgets = function (self, dt, t, input_service, ui
 				text = text,
 				font_size = font_size,
 				text_color = step_color_table,
-				size = size,
+				size = size
 			}
 
 			draw_layer = self:_draw_compass_coordinate(dt, t, ui_renderer, icon_data, position[1], position[2], alpha, draw_layer)

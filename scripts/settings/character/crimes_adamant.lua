@@ -9,20 +9,20 @@ local crime_options = {
 		unlocks = {
 			{
 				text = "loc_character_precinct_01_unlocks",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		slot_items = {
 			slot_gear_head = "content/items/characters/player/human/gear_head/adamant_headgear_01_var_01",
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/adamant_lowerbody_a_var_01",
 			slot_gear_material_override_decal = "content/items/characters/player/human/gear_material_override_decal/decal_atlas_adamant_precincts_01_decal_01",
-			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/adamant_upperbody_a_var_01",
+			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/adamant_upperbody_a_var_01"
 		},
 		visibility = {
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		description = "loc_character_precinct_02_description",
@@ -32,20 +32,20 @@ local crime_options = {
 		unlocks = {
 			{
 				text = "loc_character_precinct_02_unlocks",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		slot_items = {
 			slot_gear_head = "content/items/characters/player/human/gear_head/adamant_headgear_01_var_01",
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/adamant_lowerbody_a_var_01",
 			slot_gear_material_override_decal = "content/items/characters/player/human/gear_material_override_decal/decal_atlas_adamant_precincts_01_decal_02",
-			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/adamant_upperbody_a_var_01",
+			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/adamant_upperbody_a_var_01"
 		},
 		visibility = {
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		description = "loc_character_precinct_03_description",
@@ -55,20 +55,20 @@ local crime_options = {
 		unlocks = {
 			{
 				text = "loc_character_precinct_03_unlocks",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		slot_items = {
 			slot_gear_head = "content/items/characters/player/human/gear_head/adamant_headgear_01_var_01",
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/adamant_lowerbody_a_var_01",
 			slot_gear_material_override_decal = "content/items/characters/player/human/gear_material_override_decal/decal_atlas_adamant_precincts_01_decal_03",
-			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/adamant_upperbody_a_var_01",
+			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/adamant_upperbody_a_var_01"
 		},
 		visibility = {
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		description = "loc_character_precinct_04_description",
@@ -78,21 +78,21 @@ local crime_options = {
 		unlocks = {
 			{
 				text = "loc_character_precinct_04_unlocks",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		slot_items = {
 			slot_gear_head = "content/items/characters/player/human/gear_head/adamant_headgear_01_var_01",
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/adamant_lowerbody_a_var_01",
 			slot_gear_material_override_decal = "content/items/characters/player/human/gear_material_override_decal/decal_atlas_adamant_precincts_01_decal_04",
-			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/adamant_upperbody_a_var_01",
+			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/adamant_upperbody_a_var_01"
 		},
 		visibility = {
 			archetypes = {
-				"adamant",
-			},
-		},
-	},
+				"adamant"
+			}
+		}
+	}
 }
 
 return crime_options

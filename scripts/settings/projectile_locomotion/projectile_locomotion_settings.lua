@@ -10,12 +10,12 @@ projectile_locomotion_settings.states = locomotion_states
 projectile_locomotion_settings.moving_states = {
 	[locomotion_states.manual_physics] = true,
 	[locomotion_states.true_flight] = true,
-	[locomotion_states.engine_physics] = true,
+	[locomotion_states.engine_physics] = true
 }
 projectile_locomotion_settings.valid_interaction_states = {
 	[locomotion_states.sleep] = true,
 	[locomotion_states.manual_physics] = true,
-	[locomotion_states.engine_physics] = true,
+	[locomotion_states.engine_physics] = true
 }
 projectile_locomotion_settings.MINIMUM_SPEED_TO_SLEEP = 0.1
 projectile_locomotion_settings.MAX_SYNCHRONIZE_COUNTER = 0

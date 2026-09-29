@@ -2,7 +2,7 @@
 
 local MinionSuppressionHuskExtension = class("MinionSuppressionHuskExtension")
 local CLIENT_RPCS = {
-	"rpc_server_reported_unit_suppression",
+	"rpc_server_reported_unit_suppression"
 }
 
 MinionSuppressionHuskExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, game_object_id)

@@ -16,7 +16,7 @@ local sound_events = {
 	tg_objective_new = "wwise/events/ui/play_hud_tg_new_objective",
 	tg_objective_progress = "wwise/events/ui/play_hud_objective_part_done",
 	tg_scenario_complete = "wwise/events/ui/play_ui_silence",
-	tg_teleport_player = "wwise/events/ui/play_hud_tg_teleport_player",
+	tg_teleport_player = "wwise/events/ui/play_hud_tg_teleport_player"
 }
 
 return sound_events

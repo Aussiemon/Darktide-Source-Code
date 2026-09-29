@@ -49,8 +49,8 @@ BtCompanionHubInteractionWithPlayerAction.enter = function (self, unit, breed, b
 		snap_to_perfect_position = false,
 		pose_correction = {
 			animation_driven_started = false,
-			animation_driven_start_time = t + 1,
-		},
+			animation_driven_start_time = t + 1
+		}
 	}
 
 	local hub_interaction_component = Blackboard.write_component(blackboard, "hub_interaction_with_player")

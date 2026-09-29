@@ -47,18 +47,18 @@ MarksVendorView._on_purchase_complete = function (self, items)
 
 	if randomize_vo < 0.2 then
 		self._parent:play_vo_events({
-			"credit_store_servitor_purchase_c",
+			"credit_store_servitor_purchase_c"
 		}, "credit_store_servitor_c", nil, 1.4)
 	elseif randomize_vo > 0.85 then
 		self._parent:play_vo_events({
-			"credit_store_servitor_purchase_c",
+			"credit_store_servitor_purchase_c"
 		}, "credit_store_servitor_c", nil, 1.4)
 		self._parent:play_vo_events({
-			"contract_vendor_servitor_purchase_b",
+			"contract_vendor_servitor_purchase_b"
 		}, "contract_vendor_a", nil, 1)
 	else
 		self._parent:play_vo_events({
-			"contract_vendor_purchase_a",
+			"contract_vendor_purchase_a"
 		}, "contract_vendor_a", nil, 1.4)
 	end
 end

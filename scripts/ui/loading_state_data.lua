@@ -9,7 +9,7 @@ local REASON_LOOKUP = {
 	dedicated_server = "loc_wait_reason_dedicated_server",
 	other_player = "loc_wait_reason_other_player",
 	read_disk = "loc_wait_reason_read_from_disk",
-	store = "loc_wait_reason_store",
+	store = "loc_wait_reason_store"
 }
 
 if IS_GDK then
@@ -37,7 +37,7 @@ LoadingStateData._event_start_waiting = function (self, promise, reason)
 	if promise then
 		table.insert(self._tracked_promises, {
 			promise = promise,
-			reason = reason,
+			reason = reason
 		})
 	end
 

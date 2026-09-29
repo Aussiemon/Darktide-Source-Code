@@ -2,7 +2,7 @@
 
 local shield_size = {
 	31,
-	38,
+	38
 }
 local hud_element_overcharge_settings = {
 	center_offset = 200,
@@ -12,12 +12,12 @@ local hud_element_overcharge_settings = {
 	size = shield_size,
 	area_size = {
 		shield_size[1] * 12,
-		shield_size[2],
+		shield_size[2]
 	},
 	glow_size = {
 		29,
-		29,
-	},
+		29
+	}
 }
 
 return settings("HudElementOverchargeSettings", hud_element_overcharge_settings)

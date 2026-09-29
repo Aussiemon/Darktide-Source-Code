@@ -8,7 +8,9 @@ local LUA_TYPES = {
 	Vector3 = "Vector3",
 	ability_charges = "number",
 	ability_cooldown_buffer = "number",
+	ability_resource_value = "number",
 	action_combo_count = "number",
+	action_context_id = "number",
 	action_time_scale = "number",
 	actor_node_index = "number",
 	aim_assist_multiplier = "number",
@@ -79,12 +81,12 @@ local LUA_TYPES = {
 	weapon_sway = "number",
 	weapon_sway_offset = "number",
 	weapon_view_lock = "number",
-	wounds = "number",
+	wounds = "number"
 }
 local HUSK_NETWORK_TYPE_CONVERSION = {
 	Quaternion = "quaternion_17bit",
 	Vector3 = "position",
-	locomotion_position = "position",
+	locomotion_position = "position"
 }
 
 UnitDataComponentConfigFormatter.format = function (config, gameobject_name, husk_config, husk_gameobject_name, husk_hud_config, husk_hud_gameobject_name)
@@ -162,15 +164,15 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 				locomotion_parent.component_name = component_name
 				locomotion_parent.field_name = field_name
 				additional_data = {
-					children = locomotion_children,
+					children = locomotion_children
 				}
 			elseif field_network_type == "locomotion_position" or field_network_type == "locomotion_rotation" then
 				locomotion_children[#locomotion_children + 1] = {
 					component_name = component_name,
-					field_name = field_name,
+					field_name = field_name
 				}
 				additional_data = {
-					parent = locomotion_parent,
+					parent = locomotion_parent
 				}
 			end
 
@@ -182,13 +184,13 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 				field_network_type,
 				lookup,
 				skip_predict_verification,
-				use_network_lookup,
+				use_network_lookup
 			}
 			component_config[field_name] = {
 				type = field_type,
 				lookup_index = lookup_index,
 				field_network_type = field_network_type,
-				additional_data = additional_data,
+				additional_data = additional_data
 			}
 		end
 	end

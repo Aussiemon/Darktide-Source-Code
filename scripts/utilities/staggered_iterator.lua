@@ -40,7 +40,7 @@ StaggeredIterator.add_element = function (self, value, iteration_time)
 			array = {
 				budget = 0,
 				last_index = 0,
-				size = 0,
+				size = 0
 			}
 		end
 
@@ -64,7 +64,7 @@ StaggeredIterator.add_element = function (self, value, iteration_time)
 		value_data = {
 			value = value,
 			last_tick_t = self._internal_t,
-			base_iteration_time = iteration_time,
+			base_iteration_time = iteration_time
 		}
 	end
 

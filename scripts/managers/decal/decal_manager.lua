@@ -96,8 +96,8 @@ DecalManager.remove_linked_decals = function (self, parent_unit)
 end
 
 DecalManager.register_decal_unit_ids = function (self, unit_ids)
-	for i = 1, #unit_ids do
-		local unit_id = unit_ids[i]
+	for ii = 1, #unit_ids do
+		local unit_id = unit_ids[ii]
 
 		self._decal_unit_id_reference_counts[unit_id] = (self._decal_unit_id_reference_counts[unit_id] or 0) + 1
 	end
@@ -106,8 +106,8 @@ end
 local _unregister_decal_unit_ids_scratch = {}
 
 DecalManager.unregister_decal_unit_ids = function (self, unit_ids)
-	for i = 1, #unit_ids do
-		local unit_id = unit_ids[i]
+	for ii = 1, #unit_ids do
+		local unit_id = unit_ids[ii]
 		local reference_count = self._decal_unit_id_reference_counts[unit_id]
 		local new_reference_count = reference_count - 1
 
@@ -130,8 +130,8 @@ DecalManager._destroy_and_release_units = function (self, units)
 	local pinned_packages = self._pinned_packages
 	local n_destroyed_units, destroyed_units = EngineOptimizedManagers.decal_manager_destroy_decal_ids(self._decal_system, units)
 
-	for i = 1, n_destroyed_units do
-		local destroyed_unit = destroyed_units[i]
+	for ii = 1, n_destroyed_units do
+		local destroyed_unit = destroyed_units[ii]
 		local pinned_package = pinned_packages[destroyed_unit]
 
 		pinned_packages[destroyed_unit] = nil

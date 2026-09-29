@@ -10,7 +10,7 @@ ViewElementPlayerPanel.init = function (self, parent, draw_layer, start_scale, c
 
 	self._pivot_offset = {
 		0,
-		0,
+		0
 	}
 	self._preview_profile = context.preview_profile
 	self._widgets_by_name.character_insigna.content.visible = false
@@ -64,7 +64,7 @@ ViewElementPlayerPanel._load_insignia = function (self, item)
 	local icon_load_id = Managers.ui:load_item_icon(item, cb)
 
 	self._insignia_loaded_info = {
-		icon_load_id = icon_load_id,
+		icon_load_id = icon_load_id
 	}
 end
 
@@ -117,7 +117,7 @@ ViewElementPlayerPanel._load_portrait_frame = function (self, item)
 	local icon_load_id = Managers.ui:load_item_icon(item, cb)
 
 	self._frame_loaded_info = {
-		icon_load_id = icon_load_id,
+		icon_load_id = icon_load_id
 	}
 end
 
@@ -194,7 +194,7 @@ ViewElementPlayerPanel._load_portrait_icon = function (self)
 	local icon_load_id = Managers.ui:load_profile_portrait(profile, load_cb, nil, unload_cb)
 
 	self._portrait_loaded_info = {
-		icon_load_id = icon_load_id,
+		icon_load_id = icon_load_id
 	}
 end
 

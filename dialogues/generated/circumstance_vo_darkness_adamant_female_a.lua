@@ -8,16 +8,16 @@ local circumstance_vo_darkness_adamant_female_a = {
 			"loc_adamant_female_a__power_circumstance_start_b_01",
 			"loc_adamant_female_a__power_circumstance_start_b_02",
 			"loc_adamant_female_a__power_circumstance_start_b_03",
-			"loc_adamant_female_a__power_circumstance_start_b_04",
+			"loc_adamant_female_a__power_circumstance_start_b_04"
 		},
 		sound_events_duration = {
 			2.437438,
 			2.491938,
 			2.32776,
-			3.44951,
+			3.44951
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("circumstance_vo_darkness_adamant_female_a", circumstance_vo_darkness_adamant_female_a)

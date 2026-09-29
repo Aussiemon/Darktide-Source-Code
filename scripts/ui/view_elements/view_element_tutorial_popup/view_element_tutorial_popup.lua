@@ -15,7 +15,7 @@ local ViewElementTutorialPopup = class("ViewElementTutorialPopup", "ViewElementB
 ViewElementTutorialPopup.init = function (self, parent, draw_layer, start_scale, context)
 	self._pivot_offset = {
 		0,
-		0,
+		0
 	}
 
 	ViewElementTutorialPopup.super.init(self, parent, draw_layer, start_scale, Definitions)
@@ -50,13 +50,13 @@ ViewElementTutorialPopup._setup_tutorial_grid = function (self)
 			widget_icon_load_margin = 0,
 			grid_spacing = {
 				0,
-				0,
+				0
 			},
 			grid_size = grid_size,
 			mask_size = {
 				grid_size[1] + 20,
-				grid_size[2] + mask_padding_size,
-			},
+				grid_size[2] + mask_padding_size
+			}
 		}
 		local layer = (self._draw_layer or 0) + 10
 
@@ -101,7 +101,7 @@ ViewElementTutorialPopup._present_tutorial_popup_page = function (self, page_ind
 
 	widgets_by_name.tutorial_window.style.image.size = {
 		image_size[1],
-		image_size[2],
+		image_size[2]
 	}
 
 	local grid = self._tutorial_grid

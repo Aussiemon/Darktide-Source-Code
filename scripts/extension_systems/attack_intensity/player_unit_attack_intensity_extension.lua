@@ -57,7 +57,7 @@ PlayerUnitAttackIntensityExtension._setup_intensities = function (self)
 			attack_allowed_decay_multiplier = difficulty_settings.attack_allowed_decay_multiplier,
 			ignored_movement_states = difficulty_settings.ignored_movement_states,
 			locked_in_melee_check = difficulty_settings.locked_in_melee_check,
-			attack_intensity_clamp = difficulty_settings.attack_intensity_clamp,
+			attack_intensity_clamp = difficulty_settings.attack_intensity_clamp
 		}
 	end
 end
@@ -66,7 +66,7 @@ local DISALLOWED_CHARACTER_STATES = {
 	consumed = true,
 	grabbed = true,
 	mutant_charged = true,
-	pounced = true,
+	pounced = true
 }
 
 PlayerUnitAttackIntensityExtension.update = function (self, unit, dt, t, context)
@@ -311,7 +311,7 @@ end
 
 local non_aggressive_level_names = {
 	om_basic_combat_01 = true,
-	tg_shooting_range = true,
+	tg_shooting_range = true
 }
 
 PlayerUnitAttackIntensityExtension.in_combat_for_companion = function (self, companion_buff_extension)

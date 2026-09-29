@@ -21,13 +21,17 @@ local MainPathManagerTestify = {
 	end,
 	check_isolated_islands = function (main_path_manager)
 		if not MainPathQueries.is_main_path_registered() then
+			if not main_path_manager:has_main_path_resource() then
+				return true
+			end
+
 			return Testify.RETRY
 		end
 
 		local isolated_islands = main_path_manager:find_isolated_islands()
 
 		return table.is_empty(isolated_islands)
-	end,
+	end
 }
 
 return MainPathManagerTestify

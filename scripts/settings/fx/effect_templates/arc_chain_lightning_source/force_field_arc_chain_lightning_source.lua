@@ -12,10 +12,10 @@ local JUMP_VALIDATION = ChainLightning.jump_validation_functions
 local FX_SOURCE_NAME = ChainLightningSourceUtils.FX_SOURCE_NAME
 local link_particle_name = "content/fx/particles/abilities/chainlightning/cryptic_arc_chainlightning_attack_looping"
 local resources = {
-	link_particle_name = link_particle_name,
+	link_particle_name = link_particle_name
 }
 local vfx = {
-	link_to_source = link_particle_name,
+	link_to_source = link_particle_name
 }
 local sfx = {}
 local chain_settings_spread = {
@@ -29,14 +29,14 @@ local chain_settings_spread = {
 	radius = 12,
 	staff = false,
 	max_targets = {
-		num_targets = 1,
+		num_targets = 1
 	},
-	max_angle = math.degrees_to_radians(135),
+	max_angle = math.degrees_to_radians(135)
 }
 local arc_chain_damage_settings = {
 	damage_profile = DamageProfileTemplates.force_field_chain_jump_damage,
 	damage_type = damage_types.arc_chain,
-	attack_type = attack_types.arc,
+	attack_type = attack_types.arc
 }
 
 local function _on_chain_node_add_func(node, context)
@@ -91,7 +91,7 @@ local function _init_chain(chain_lightning_data, template_context, is_server, pl
 		buff_extension = buff_extension,
 		hit_units = chain_lightning_data.chain_lightning_hit_units,
 		player_unit = player_unit,
-		is_server = is_server,
+		is_server = is_server
 	}
 
 	local depth, use_random = 0, false
@@ -179,7 +179,7 @@ local effect_template = {
 		end
 
 		ChainLightningSourceUtils.reset_chain_lightning(template_data.chain_lightning_data, template_data, template_context)
-	end,
+	end
 }
 
 return effect_template

@@ -90,12 +90,12 @@ SweepTrail.component_data = {
 	critical_strike_variable_name = {
 		ui_name = "Critical Variable",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	powered_variable_name = {
 		ui_name = "Powered Variable",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	critical_material_slot_name = {
 		ui_name = "Critical Material Slot Name",
@@ -104,12 +104,12 @@ SweepTrail.component_data = {
 			slot_name = {
 				ui_name = "Slot Name",
 				ui_type = "text_box",
-				value = "",
-			},
+				value = ""
+			}
 		},
 		control_order = {
-			"slot_name",
-		},
+			"slot_name"
+		}
 	},
 	powered_material_slot_name = {
 		ui_name = "Powered Material Slot Name",
@@ -118,18 +118,18 @@ SweepTrail.component_data = {
 			slot_name = {
 				ui_name = "Slot Name",
 				ui_type = "text_box",
-				value = "",
-			},
+				value = ""
+			}
 		},
 		control_order = {
-			"slot_name",
-		},
+			"slot_name"
+		}
 	},
 	powered = {
 		ui_name = "Powered",
 		ui_type = "check_box",
-		value = false,
-	},
+		value = false
+	}
 }
 
 return SweepTrail

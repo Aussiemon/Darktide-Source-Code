@@ -27,11 +27,11 @@ damage_templates.broker_flash_grenade_impact = {
 	suppression_value = 4,
 	cleave_distribution = {
 		attack = 0.1,
-		impact = 0.1,
+		impact = 0.1
 	},
 	ranges = {
 		max = 20,
-		min = 10,
+		min = 10
 	},
 	armor_damage_modifier_ranged = {
 		near = {
@@ -43,7 +43,7 @@ damage_templates.broker_flash_grenade_impact = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 0.75,
-				[armor_types.void_shield] = 0.75,
+				[armor_types.void_shield] = 0.75
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -53,8 +53,8 @@ damage_templates.broker_flash_grenade_impact = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 2.5,
-				[armor_types.void_shield] = 2.5,
-			},
+				[armor_types.void_shield] = 2.5
+			}
 		},
 		far = {
 			attack = {
@@ -65,7 +65,7 @@ damage_templates.broker_flash_grenade_impact = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 0.75,
-				[armor_types.void_shield] = 0.75,
+				[armor_types.void_shield] = 0.75
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -75,30 +75,30 @@ damage_templates.broker_flash_grenade_impact = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 2.5,
-				[armor_types.void_shield] = 2.5,
-			},
-		},
+				[armor_types.void_shield] = 2.5
+			}
+		}
 	},
 	power_distribution = {
 		attack = 2,
-		impact = 3,
+		impact = 3
 	},
 	on_kill_area_suppression = {
 		distance = 8,
-		suppression_value = 10,
+		suppression_value = 10
 	},
 	targets = {
 		default_target = {
 			boost_curve_multiplier_finesse = 1.2,
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			finesse_boost = {
-				[armor_types.unarmored] = 0.75,
-			},
-		},
+				[armor_types.unarmored] = 0.75
+			}
+		}
 	},
 	breed_instakill_overrides = {
-		corruptor_body = true,
-	},
+		corruptor_body = true
+	}
 }
 damage_templates.broker_flash_grenade_close = {
 	damage_type = "grenade",
@@ -119,7 +119,7 @@ damage_templates.broker_flash_grenade_close = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -129,18 +129,18 @@ damage_templates.broker_flash_grenade_close = {
 			[armor_types.berserker] = 2,
 			[armor_types.super_armor] = 2,
 			[armor_types.disgustingly_resilient] = 2,
-			[armor_types.void_shield] = 2,
-		},
+			[armor_types.void_shield] = 2
+		}
 	},
 	power_distribution = {
 		attack = 0,
-		impact = 200,
+		impact = 200
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 overrides.broker_flash_grenade = {
 	parent_template_name = "broker_flash_grenade_close",
@@ -148,9 +148,9 @@ overrides.broker_flash_grenade = {
 		{
 			"power_distribution",
 			"impact",
-			100,
-		},
-	},
+			100
+		}
+	}
 }
 
 local broker_missile_launcher_impact_adm = {
@@ -161,7 +161,7 @@ local broker_missile_launcher_impact_adm = {
 	[armor_types.berserker] = 0.9,
 	[armor_types.super_armor] = 1.1,
 	[armor_types.disgustingly_resilient] = 0.25,
-	[armor_types.void_shield] = 1,
+	[armor_types.void_shield] = 1
 }
 
 damage_templates.broker_missile_launcher_explosion_close = {
@@ -171,7 +171,7 @@ damage_templates.broker_missile_launcher_explosion_close = {
 	suppression_value = 10,
 	cleave_distribution = {
 		attack = 1,
-		impact = 1,
+		impact = 1
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -182,7 +182,7 @@ damage_templates.broker_missile_launcher_explosion_close = {
 			[armor_types.berserker] = 1.35,
 			[armor_types.super_armor] = 2.4,
 			[armor_types.disgustingly_resilient] = 0.75,
-			[armor_types.void_shield] = 1.1,
+			[armor_types.void_shield] = 1.1
 		},
 		impact = {
 			[armor_types.unarmored] = 2,
@@ -192,22 +192,22 @@ damage_templates.broker_missile_launcher_explosion_close = {
 			[armor_types.berserker] = 2,
 			[armor_types.super_armor] = 2,
 			[armor_types.disgustingly_resilient] = 2,
-			[armor_types.void_shield] = 2,
-		},
+			[armor_types.void_shield] = 2
+		}
 	},
 	power_distribution = {
 		attack = 2800,
-		impact = 600,
+		impact = 600
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	damage_type = damage_types.grenade_frag,
 	gibbing_type = gibbing_types.explosion,
 	gibbing_power = gibbing_power.infinite,
-	gib_push_force = gib_push_force.explosive_heavy,
+	gib_push_force = gib_push_force.explosive_heavy
 }
 overrides.broker_missile_launcher_explosion = {
 	parent_template_name = "broker_missile_launcher_explosion_close",
@@ -215,22 +215,22 @@ overrides.broker_missile_launcher_explosion = {
 		{
 			"power_distribution",
 			"attack",
-			1300,
+			1300
 		},
 		{
 			"power_distribution",
 			"impact",
-			150,
+			150
 		},
 		{
 			"gibbing_power",
-			gibbing_power.heavy,
+			gibbing_power.heavy
 		},
 		{
 			"gib_push_force",
-			gib_push_force.explosive,
-		},
-	},
+			gib_push_force.explosive
+		}
+	}
 }
 damage_templates.broker_missile_launcher_impact = {
 	ignore_shield = true,
@@ -241,25 +241,25 @@ damage_templates.broker_missile_launcher_impact = {
 	suppression_value = 12,
 	cleave_distribution = {
 		attack = 2.5,
-		impact = 2.5,
+		impact = 2.5
 	},
 	ranges = {
 		max = 4,
-		min = 0.5,
+		min = 0.5
 	},
 	armor_damage_modifier_ranged = {
 		near = {
 			attack = broker_missile_launcher_impact_adm,
-			impact = broker_missile_launcher_impact_adm,
+			impact = broker_missile_launcher_impact_adm
 		},
 		far = {
 			attack = broker_missile_launcher_impact_adm,
-			impact = broker_missile_launcher_impact_adm,
-		},
+			impact = broker_missile_launcher_impact_adm
+		}
 	},
 	power_distribution = {
 		attack = 1800,
-		impact = 800,
+		impact = 800
 	},
 	damage_type = damage_types.grenade_frag,
 	gibbing_type = gibbing_types.explosion,
@@ -267,17 +267,17 @@ damage_templates.broker_missile_launcher_impact = {
 	gib_push_force = gib_push_force.ranged_heavy,
 	on_kill_area_suppression = {
 		distance = 16,
-		suppression_value = 12,
+		suppression_value = 12
 	},
 	targets = {
 		default_target = {
 			boost_curve_multiplier_finesse = 1.2,
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	breed_instakill_overrides = {
-		corruptor_body = true,
-	},
+		corruptor_body = true
+	}
 }
 damage_templates.missile_launcher_knockback = {
 	ignore_stagger_reduction = true,
@@ -285,7 +285,7 @@ damage_templates.missile_launcher_knockback = {
 	suppression_value = 200,
 	ranges = {
 		max = 12,
-		min = 6,
+		min = 6
 	},
 	armor_damage_modifier_ranged = {
 		near = {
@@ -297,7 +297,7 @@ damage_templates.missile_launcher_knockback = {
 				[armor_types.berserker] = 0.75,
 				[armor_types.super_armor] = 0.25,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0,
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 1.6,
@@ -307,8 +307,8 @@ damage_templates.missile_launcher_knockback = {
 				[armor_types.berserker] = 0.6,
 				[armor_types.super_armor] = 0.6,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 0,
-			},
+				[armor_types.void_shield] = 0
+			}
 		},
 		far = {
 			attack = {
@@ -319,7 +319,7 @@ damage_templates.missile_launcher_knockback = {
 				[armor_types.berserker] = 0.75,
 				[armor_types.super_armor] = 0.25,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0,
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 1.6,
@@ -329,28 +329,28 @@ damage_templates.missile_launcher_knockback = {
 				[armor_types.berserker] = 0.6,
 				[armor_types.super_armor] = 0.6,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 0,
-			},
-		},
+				[armor_types.void_shield] = 0
+			}
+		}
 	},
 	power_distribution_ranged = {
 		attack = {
 			far = 50,
-			near = 100,
+			near = 100
 		},
 		impact = {
 			far = 100,
-			near = 200,
-		},
+			near = 200
+		}
 	},
 	buffs = {
 		on_damage_dealt = {
-			flamer_assault = 1,
-		},
+			flamer_assault = 1
+		}
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.broker_tox_grenade = {
 	gibbing_power = 0,
@@ -360,7 +360,7 @@ damage_templates.broker_tox_grenade = {
 	suppression_value = 10,
 	cleave_distribution = {
 		attack = 0.15,
-		impact = 0.15,
+		impact = 0.15
 	},
 	armor_damage_modifier_ranged = {
 		near = {
@@ -372,7 +372,7 @@ damage_templates.broker_tox_grenade = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 1,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
+				[armor_types.void_shield] = 1
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -382,8 +382,8 @@ damage_templates.broker_tox_grenade = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 1,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-			},
+				[armor_types.void_shield] = 1
+			}
 		},
 		far = {
 			attack = {
@@ -394,7 +394,7 @@ damage_templates.broker_tox_grenade = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 1,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
+				[armor_types.void_shield] = 1
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -404,26 +404,26 @@ damage_templates.broker_tox_grenade = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 1,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-			},
-		},
+				[armor_types.void_shield] = 1
+			}
+		}
 	},
 	power_distribution_ranged = {
 		attack = {
 			far = 1,
-			near = 2,
+			near = 2
 		},
 		impact = {
 			far = 2.5,
-			near = 5,
-		},
+			near = 5
+		}
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
-	gibbing_type = gibbing_types.explosion,
+	gibbing_type = gibbing_types.explosion
 }
 damage_templates.broker_stimm_field = {
 	ignore_stagger_reduction = true,
@@ -432,7 +432,7 @@ damage_templates.broker_stimm_field = {
 	suppression_value = 10,
 	cleave_distribution = {
 		attack = 0.15,
-		impact = 0.15,
+		impact = 0.15
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -443,7 +443,7 @@ damage_templates.broker_stimm_field = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0.75,
+			[armor_types.void_shield] = 0.75
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -453,25 +453,25 @@ damage_templates.broker_stimm_field = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-		},
+			[armor_types.void_shield] = 1
+		}
 	},
 	power_distribution = {
 		attack = 200,
-		impact = 30,
+		impact = 30
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	buffs = {
 		on_damage_dealt = {
-			neurotoxin_interval_buff3 = 7,
-		},
+			neurotoxin_interval_buff3 = 7
+		}
 	},
 	gibbing_type = gibbing_types.explosion,
-	gibbing_power = gibbing_power.light,
+	gibbing_power = gibbing_power.light
 }
 overrides.broker_stimm_field_close = {
 	parent_template_name = "broker_stimm_field",
@@ -479,29 +479,29 @@ overrides.broker_stimm_field_close = {
 		{
 			"power_distribution",
 			"attack",
-			300,
+			300
 		},
 		{
 			"power_distribution",
 			"impact",
-			55,
+			55
 		},
 		{
 			"suppression_value",
-			30,
+			30
 		},
 		{
 			"ragdoll_push_force",
-			250,
-		},
-	},
+			250
+		}
+	}
 }
 damage_templates.broker_vultures_mark_aoe_stagger = {
 	stagger_category = "ranged",
 	stagger_override = "medium",
 	power_distribution = {
 		attack = 0,
-		impact = 0.55,
+		impact = 0.55
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -512,7 +512,7 @@ damage_templates.broker_vultures_mark_aoe_stagger = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -522,12 +522,12 @@ damage_templates.broker_vultures_mark_aoe_stagger = {
 			[armor_types.berserker] = 0.4,
 			[armor_types.super_armor] = 0.1,
 			[armor_types.disgustingly_resilient] = 0.4,
-			[armor_types.void_shield] = 0.1,
-		},
+			[armor_types.void_shield] = 0.1
+		}
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.broker_passive_knockback_on_taking_melee_damage = {
 	ignore_stagger_reduction = true,
@@ -535,7 +535,7 @@ damage_templates.broker_passive_knockback_on_taking_melee_damage = {
 	stagger_override = "medium",
 	power_distribution = {
 		attack = 0,
-		impact = 1,
+		impact = 1
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -546,7 +546,7 @@ damage_templates.broker_passive_knockback_on_taking_melee_damage = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -556,12 +556,12 @@ damage_templates.broker_passive_knockback_on_taking_melee_damage = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 0.1,
 			[armor_types.disgustingly_resilient] = 0.4,
-			[armor_types.void_shield] = 0.1,
-		},
+			[armor_types.void_shield] = 0.1
+		}
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.broker_punk_rage_shout = {
 	gibbing_power = 0,
@@ -571,7 +571,7 @@ damage_templates.broker_punk_rage_shout = {
 	suppression_value = 30,
 	power_distribution = {
 		attack = 0,
-		impact = 15,
+		impact = 15
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -582,7 +582,7 @@ damage_templates.broker_punk_rage_shout = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 5,
@@ -592,15 +592,15 @@ damage_templates.broker_punk_rage_shout = {
 			[armor_types.berserker] = 5,
 			[armor_types.super_armor] = 5,
 			[armor_types.disgustingly_resilient] = 5,
-			[armor_types.void_shield] = 5,
-		},
+			[armor_types.void_shield] = 5
+		}
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 
 return {
 	base_templates = damage_templates,
-	overrides = overrides,
+	overrides = overrides
 }

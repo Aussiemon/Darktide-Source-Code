@@ -26,6 +26,7 @@ PickupSpawnerExtension.setup_from_component = function (self, component, spawn_m
 	local component_guid = component.guid
 	local num_components = #self._components
 	local components = self._components
+	local level = Unit.level(self._unit)
 	local pool_spawner = false
 	local data = {}
 
@@ -41,7 +42,7 @@ PickupSpawnerExtension.setup_from_component = function (self, component, spawn_m
 		data.distribution_type = DISTRIBUTION_TYPES.side_mission
 		data.is_side_mission = true
 	else
-		Log.error("PickupSpawnerExtension", "[setup_from_component][Unit: %s] PickupSpawner invalid spawn method: %s.", Unit.id_string(self._unit), spawn_method)
+		Log.error("PickupSpawnerExtension", "[setup_from_component][Level: %s][Unit: %s] PickupSpawner invalid spawn method: %s.", level, Unit.id_string(self._unit), spawn_method)
 
 		data.distribution_type = DISTRIBUTION_TYPES.manual
 	end
@@ -181,7 +182,7 @@ PickupSpawnerExtension.register_spawn_locations = function (self, node_list, dis
 			node_list[#node_list + 1] = {
 				extension = self,
 				index = i,
-				chest = self._chest_extension ~= nil,
+				chest = self._chest_extension ~= nil
 			}
 		end
 	end
@@ -288,11 +289,14 @@ PickupSpawnerExtension.spawn_specific_item = function (self, component_index, pi
 
 	unit_item, unit_item_id = pickup_system:spawn_pickup(pickup_name, position, rotation, self)
 
-	Unit.flow_event(self._unit, "lua_item_spawned")
+	if unit_item then
+		Unit.flow_event(self._unit, "lua_item_spawned")
+		Unit.set_data(unit_item, "pickup_spawner_unit", self._unit)
 
-	local component_spawn_list = self._components[component_index].spawned_items
+		local component_spawn_list = self._components[component_index].spawned_items
 
-	component_spawn_list[#component_spawn_list + 1] = unit_item
+		component_spawn_list[#component_spawn_list + 1] = unit_item
+	end
 
 	return unit_item, unit_item_id
 end
@@ -333,7 +337,7 @@ PickupSpawnerExtension.despawn_items = function (self)
 			local item = items[p]
 
 			if ALIVE[item] then
-				self:despawn_item(item)
+				self:_despawn_item(item)
 			end
 		end
 
@@ -341,7 +345,25 @@ PickupSpawnerExtension.despawn_items = function (self)
 	end
 end
 
-PickupSpawnerExtension.despawn_item = function (self, item_unit)
+PickupSpawnerExtension.despawn_item_unit = function (self, item_unit)
+	self:_despawn_item(item_unit)
+
+	local components = self._components
+	local num_components = #self._components
+
+	for i = 1, num_components do
+		local items = components[i].spawned_items
+		local deleted_index = table.index_of(items, item_unit)
+
+		if deleted_index ~= -1 then
+			table.swap_delete(items, deleted_index)
+
+			break
+		end
+	end
+end
+
+PickupSpawnerExtension._despawn_item = function (self, item_unit)
 	local pickup_system = self._pickup_system
 
 	pickup_system:despawn_pickup(item_unit)

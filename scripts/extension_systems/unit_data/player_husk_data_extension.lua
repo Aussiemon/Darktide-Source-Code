@@ -60,7 +60,7 @@ local FIXED_FRAME_OFFSET_NETWORK_TYPES = {
 	fixed_frame_offset_small = true,
 	fixed_frame_offset_start_t_6bit = true,
 	fixed_frame_offset_start_t_7bit = true,
-	fixed_frame_offset_start_t_9bit = true,
+	fixed_frame_offset_start_t_9bit = true
 }
 local _game_object_field = GameSession.game_object_field
 local _game_object_fields_array = GameSession.game_object_fields_array
@@ -273,7 +273,7 @@ local READ_ONLY_META = {
 	end,
 	__newindex = function (t, field_name, value)
 		ferror("Trying to write to %q in a read only component %q", field_name, rawget(t, "__name"))
-	end,
+	end
 }
 
 PlayerHuskDataExtension._create_read_component = function (self, component_name)
@@ -283,7 +283,7 @@ PlayerHuskDataExtension._create_read_component = function (self, component_name)
 		__data = self._components[component_name],
 		__config = config,
 		__name = component_name,
-		__husk_config = husk_config,
+		__husk_config = husk_config
 	}
 
 	setmetatable(component, READ_ONLY_META)

@@ -391,7 +391,7 @@ local MAX_STEPS, MAX_TIME = 20, 1.25
 local THROW_TELEPORT_UP_OFFSET = {
 	cryptic = 0.75,
 	human = 0.75,
-	ogryn = 0,
+	ogryn = 0
 }
 
 BtBeastOfNurgleConsumeAction._test_throw_trajectory = function (self, unit, scratchpad, action_data, test_direction, to)

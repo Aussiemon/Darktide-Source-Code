@@ -8,7 +8,7 @@ return {
 	name = "cryptic_tree",
 	node_points = 30,
 	talent_points = 30,
-	version = 17,
+	version = 18,
 	nodes = {
 		{
 			cost = 0,
@@ -22,18 +22,18 @@ return {
 				"node_6561d779-b477-4e35-a588-e74c910e92c9",
 				"node_04679cd0-b399-4ced-a6e8-e655bf0c3b06",
 				"node_baf3690d-c727-4388-ba24-bb4c55ef6699",
-				"node_cde25ce6-426b-4efa-891d-739c3293f86e",
+				"node_cde25ce6-426b-4efa-891d-739c3293f86e"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 0,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -47,18 +47,18 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_4f58a882-02f4-4d7d-99f4-d2f5a996a632",
-				"node_1133b775-c6f7-4318-80a3-657a19b46604",
+				"node_1133b775-c6f7-4318-80a3-657a19b46604"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "aura",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -71,25 +71,25 @@ return {
 			y = 950.0000131980232,
 			children = {
 				"node_2da404f3-b540-4bfd-bdda-0ad5654eafce",
-				"node_f8cb2f49-4d9d-4b86-90fb-d0446febb49d",
+				"node_f8cb2f49-4d9d-4b86-90fb-d0446febb49d"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_f8cb2f49-4d9d-4b86-90fb-d0446febb49d",
 				"node_a615c4c7-47ca-4039-8649-58f9fbf10d17",
 				"node_7d5dc6be-b293-4831-a12c-d79c725e5b7a",
 				"node_29b1d9ec-b4e1-4045-a28d-45732f7521a8",
-				"node_2da404f3-b540-4bfd-bdda-0ad5654eafce",
+				"node_2da404f3-b540-4bfd-bdda-0ad5654eafce"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "aura",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -104,23 +104,23 @@ return {
 				"node_aafbd29f-1545-4e6c-bcee-660f62f96f95",
 				"node_dcc243dd-aaf5-41cd-be8c-5db40d46967f",
 				"node_ce7afddd-b252-4604-a423-da685ffa5410",
-				"node_dc1911a1-3b00-44d2-b830-00c0b18ed2e9",
+				"node_dc1911a1-3b00-44d2-b830-00c0b18ed2e9"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_8ed6b0bc-2308-4f95-af4e-4a0c955cd364",
 				"node_cf6f52f6-9bb1-4d59-b97e-ea5ac469e698",
-				"node_3215cbda-7600-4e99-85d5-b29a6a22bc08",
+				"node_3215cbda-7600-4e99-85d5-b29a6a22bc08"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "keystone",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -135,21 +135,21 @@ return {
 				"node_3257b11f-d4b3-4657-9a70-e6ca255c1a73",
 				"node_251b440a-215d-43dd-971f-a57d019e75ad",
 				"node_ba657afe-4100-4881-98a2-20c43f4e0a16",
-				"node_d8193dca-b6d3-428a-b970-654b16fda839",
+				"node_d8193dca-b6d3-428a-b970-654b16fda839"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_f7b75f2e-e6df-4be2-855c-c05da6151f7b",
+				"node_f7b75f2e-e6df-4be2-855c-c05da6151f7b"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "keystone",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -164,27 +164,28 @@ return {
 				"node_18456fa4-d46f-4a4e-ae55-1c1e9c09befd",
 				"node_2296b656-a1b9-42b7-8b38-32801a972c29",
 				"node_50941b31-87cd-4b4e-86f1-25c09ee86bb5",
-				"node_1291b67e-1c33-4fc0-833a-7656d99a79d4",
+				"node_1291b67e-1c33-4fc0-833a-7656d99a79d4"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_fc9c8c0d-a7fc-4c81-8e39-bdddf1b0078c",
+				"node_fc9c8c0d-a7fc-4c81-8e39-bdddf1b0078c"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "keystone",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
 			icon = "content/ui/textures/icons/talents/cryptic/cryptic_grenade_ability_force_field",
 			max_points = 1,
 			talent = "cryptic_grenade_ability_force_field",
+			target_slot = "slot_grenade_ability",
 			type = "tactical",
 			widget_name = "node_17da808e-f2f1-4684-8bc9-dce16aa14756",
 			x = 1309.9998964251895,
@@ -192,28 +193,29 @@ return {
 			children = {
 				"node_4a240e77-1a0d-4833-ad5c-82bec1eca8c2",
 				"node_c462607d-3464-41ba-b43c-6d210aa1d65f",
-				"node_a2f854fa-6833-41cb-8022-e5a4617d8646",
+				"node_a2f854fa-6833-41cb-8022-e5a4617d8646"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_d994641d-8ecc-44f0-82f9-cb16beef27ec",
-				"node_987f94ff-7679-4651-8217-d9592c83efe3",
+				"node_987f94ff-7679-4651-8217-d9592c83efe3"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "tactical",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
 			icon = "content/ui/textures/icons/talents/cryptic/cryptic_flamethrower",
 			max_points = 1,
 			talent = "cryptic_flamethrower",
+			target_slot = "slot_grenade_ability",
 			type = "tactical_modifier",
 			widget_name = "node_5b3ac425-e484-4aeb-83c9-19ceefa75f2d",
 			x = 397.50000171204795,
@@ -221,22 +223,23 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_15960c27-305b-4ad6-8cb9-1ceec79789b9",
+				"node_15960c27-305b-4ad6-8cb9-1ceec79789b9"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
 			icon = "content/ui/textures/icons/talents/cryptic/cryptic_chordclaw",
 			max_points = 1,
 			talent = "cryptic_chordclaw",
+			target_slot = "slot_combat_ability",
 			type = "ability",
 			widget_name = "node_2214fc60-12a4-4108-84e4-64b146f9b86b",
 			x = 459.00000045090195,
@@ -245,21 +248,21 @@ return {
 				"node_9d962b30-33ec-48bc-915f-f19f4a2d8ed2",
 				"node_bf90aeb2-d7bf-4f42-86ea-ecbc7f9f163c",
 				"node_fef9bd81-9333-4292-877d-95a71f773931",
-				"node_5313efe8-b680-4879-8b64-65e9996ff694",
+				"node_5313efe8-b680-4879-8b64-65e9996ff694"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_898ff194-0732-4782-b33a-f24581ca52d0",
+				"node_898ff194-0732-4782-b33a-f24581ca52d0"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "ability",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -273,20 +276,20 @@ return {
 			children = {
 				"node_6e6089cb-eef5-4d79-af92-27af4666a13d",
 				"node_1a138503-24e5-4a0f-8a07-9b311df58558",
-				"node_4d6556fa-f80a-4e6d-9c7d-a217abe950ee",
+				"node_4d6556fa-f80a-4e6d-9c7d-a217abe950ee"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_43567fd7-f7c3-4b73-9cb5-3fb72af27a23",
+				"node_43567fd7-f7c3-4b73-9cb5-3fb72af27a23"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -300,28 +303,27 @@ return {
 			children = {
 				"node_cf6f52f6-9bb1-4d59-b97e-ea5ac469e698",
 				"node_8ed6b0bc-2308-4f95-af4e-4a0c955cd364",
-				"node_99899d45-4249-4113-8f2a-4e126a692a7b",
+				"node_99899d45-4249-4113-8f2a-4e126a692a7b"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_f5562b92-4ae9-48d4-8334-06be09bef3ca",
 				"node_231eefb6-059b-4bb2-a656-a9bf662486d0",
 				"node_987f94ff-7679-4651-8217-d9592c83efe3",
 				"node_8ed6b0bc-2308-4f95-af4e-4a0c955cd364",
-				"node_cf6f52f6-9bb1-4d59-b97e-ea5ac469e698",
+				"node_cf6f52f6-9bb1-4d59-b97e-ea5ac469e698"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
-			gradient_color = "content/ui/textures/color_ramps/class_node_colors/cryptic_02",
 			icon = "content/ui/textures/icons/talents/cryptic/cryptic_successful_dodge_stamina",
 			max_points = 1,
 			talent = "cryptic_successful_dodge_stamina",
@@ -330,21 +332,21 @@ return {
 			x = 545.0000425396546,
 			y = 1084.999983354048,
 			children = {
-				"node_15960c27-305b-4ad6-8cb9-1ceec79789b9",
+				"node_15960c27-305b-4ad6-8cb9-1ceec79789b9"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_a33d4e99-fff1-4e68-a431-b76674437dfd",
-				"node_15960c27-305b-4ad6-8cb9-1ceec79789b9",
+				"node_15960c27-305b-4ad6-8cb9-1ceec79789b9"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -358,22 +360,22 @@ return {
 			children = {
 				"node_2c6fb874-3909-4aca-a12c-3f1b362aff55",
 				"node_a33d4e99-fff1-4e68-a431-b76674437dfd",
-				"node_15960c27-305b-4ad6-8cb9-1ceec79789b9",
+				"node_15960c27-305b-4ad6-8cb9-1ceec79789b9"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_1a138503-24e5-4a0f-8a07-9b311df58558",
 				"node_2c6fb874-3909-4aca-a12c-3f1b362aff55",
-				"node_a33d4e99-fff1-4e68-a431-b76674437dfd",
+				"node_a33d4e99-fff1-4e68-a431-b76674437dfd"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -388,22 +390,22 @@ return {
 				"node_3dfdfc48-08a2-428d-8e64-f2a7d9e8a3d0",
 				"node_15960c27-305b-4ad6-8cb9-1ceec79789b9",
 				"node_f064bf43-9846-4821-8001-0d4b1fcaa4f2",
-				"node_898ff194-0732-4782-b33a-f24581ca52d0",
+				"node_898ff194-0732-4782-b33a-f24581ca52d0"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_4d6556fa-f80a-4e6d-9c7d-a217abe950ee",
 				"node_1a138503-24e5-4a0f-8a07-9b311df58558",
-				"node_3dfdfc48-08a2-428d-8e64-f2a7d9e8a3d0",
+				"node_3dfdfc48-08a2-428d-8e64-f2a7d9e8a3d0"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -418,22 +420,22 @@ return {
 				"node_76a64310-9630-49a6-b807-e3ea8456b402",
 				"node_1133b775-c6f7-4318-80a3-657a19b46604",
 				"node_e725d712-ad48-46eb-b3a4-e760e83e2e9b",
-				"node_e58ba04c-1e81-4f25-bea9-38a0ee1e62f5",
+				"node_e58ba04c-1e81-4f25-bea9-38a0ee1e62f5"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_44c50f39-8997-4a6f-9676-16bac022defb",
 				"node_e725d712-ad48-46eb-b3a4-e760e83e2e9b",
-				"node_1133b775-c6f7-4318-80a3-657a19b46604",
+				"node_1133b775-c6f7-4318-80a3-657a19b46604"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -446,21 +448,21 @@ return {
 			y = 424.99999907522493,
 			children = {
 				"node_202342c8-045c-486b-aa66-75d636866621",
-				"node_e58ba04c-1e81-4f25-bea9-38a0ee1e62f5",
+				"node_e58ba04c-1e81-4f25-bea9-38a0ee1e62f5"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_1133b775-c6f7-4318-80a3-657a19b46604",
-				"node_e58ba04c-1e81-4f25-bea9-38a0ee1e62f5",
+				"node_e58ba04c-1e81-4f25-bea9-38a0ee1e62f5"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -475,22 +477,22 @@ return {
 				"node_ade5d487-8fea-4bdd-8a72-ee470110c2a9",
 				"node_853d22e7-bdc0-495e-ab44-7c5699dcf0f6",
 				"node_d994641d-8ecc-44f0-82f9-cb16beef27ec",
-				"node_987f94ff-7679-4651-8217-d9592c83efe3",
+				"node_987f94ff-7679-4651-8217-d9592c83efe3"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_cde25ce6-426b-4efa-891d-739c3293f86e",
 				"node_ade5d487-8fea-4bdd-8a72-ee470110c2a9",
-				"node_853d22e7-bdc0-495e-ab44-7c5699dcf0f6",
+				"node_853d22e7-bdc0-495e-ab44-7c5699dcf0f6"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -505,22 +507,22 @@ return {
 				"node_17b66510-2729-4d8a-98a2-646758b5b00c",
 				"node_44c50f39-8997-4a6f-9676-16bac022defb",
 				"node_1133b775-c6f7-4318-80a3-657a19b46604",
-				"node_4f58a882-02f4-4d7d-99f4-d2f5a996a632",
+				"node_4f58a882-02f4-4d7d-99f4-d2f5a996a632"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_17b66510-2729-4d8a-98a2-646758b5b00c",
 				"node_04679cd0-b399-4ced-a6e8-e655bf0c3b06",
-				"node_44c50f39-8997-4a6f-9676-16bac022defb",
+				"node_44c50f39-8997-4a6f-9676-16bac022defb"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -532,21 +534,21 @@ return {
 			x = 1624.999988902699,
 			y = 1084.999992601799,
 			children = {
-				"node_4d9ce721-2e3e-4c09-8fa2-345ff9c390bc",
+				"node_4d9ce721-2e3e-4c09-8fa2-345ff9c390bc"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_29b1d9ec-b4e1-4045-a28d-45732f7521a8",
-				"node_4d9ce721-2e3e-4c09-8fa2-345ff9c390bc",
+				"node_4d9ce721-2e3e-4c09-8fa2-345ff9c390bc"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -562,22 +564,22 @@ return {
 				"node_4efd9db8-0341-428b-9220-2c7aa8ff5de7",
 				"node_f5562b92-4ae9-48d4-8334-06be09bef3ca",
 				"node_231eefb6-059b-4bb2-a656-a9bf662486d0",
-				"node_987f94ff-7679-4651-8217-d9592c83efe3",
+				"node_987f94ff-7679-4651-8217-d9592c83efe3"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_cde25ce6-426b-4efa-891d-739c3293f86e",
 				"node_ec45bdd9-6470-4bfb-85de-26897fdaac5c",
-				"node_4efd9db8-0341-428b-9220-2c7aa8ff5de7",
+				"node_4efd9db8-0341-428b-9220-2c7aa8ff5de7"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -591,24 +593,24 @@ return {
 			children = {
 				"node_e0953fb3-717d-40b6-9af8-c3dc03597315",
 				"node_3e6adc1b-2f91-43a9-9653-c2fa76c19f0b",
-				"node_202342c8-045c-486b-aa66-75d636866621",
+				"node_202342c8-045c-486b-aa66-75d636866621"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_cd91dbac-9a28-4af5-ae75-7c8022169f5b",
 				"node_1133b775-c6f7-4318-80a3-657a19b46604",
 				"node_e725d712-ad48-46eb-b3a4-e760e83e2e9b",
 				"node_3e6adc1b-2f91-43a9-9653-c2fa76c19f0b",
-				"node_e0953fb3-717d-40b6-9af8-c3dc03597315",
+				"node_e0953fb3-717d-40b6-9af8-c3dc03597315"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -623,22 +625,22 @@ return {
 				"node_7d5dc6be-b293-4831-a12c-d79c725e5b7a",
 				"node_4d9ce721-2e3e-4c09-8fa2-345ff9c390bc",
 				"node_2da404f3-b540-4bfd-bdda-0ad5654eafce",
-				"node_ea18c305-acab-479a-8fd9-3c700199f611",
+				"node_ea18c305-acab-479a-8fd9-3c700199f611"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_7d5dc6be-b293-4831-a12c-d79c725e5b7a",
 				"node_d9ef86eb-7750-4ede-8067-2bea7a6a996f",
-				"node_8bd02750-e89f-4b2c-8de2-ba4ccba29e99",
+				"node_8bd02750-e89f-4b2c-8de2-ba4ccba29e99"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -652,20 +654,20 @@ return {
 			children = {
 				"node_3d85c249-b115-4ae9-8601-3c529b91c855",
 				"node_44c50f39-8997-4a6f-9676-16bac022defb",
-				"node_b15d80d0-fe7e-4552-a519-65dc496b9157",
+				"node_b15d80d0-fe7e-4552-a519-65dc496b9157"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_43567fd7-f7c3-4b73-9cb5-3fb72af27a23",
+				"node_43567fd7-f7c3-4b73-9cb5-3fb72af27a23"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -680,22 +682,22 @@ return {
 				"node_a33d4e99-fff1-4e68-a431-b76674437dfd",
 				"node_654b8382-1628-45b9-9379-b264757a9191",
 				"node_fd9cf282-8e86-4503-acfe-f8a3841e535e",
-				"node_1a138503-24e5-4a0f-8a07-9b311df58558",
+				"node_1a138503-24e5-4a0f-8a07-9b311df58558"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_6561d779-b477-4e35-a588-e74c910e92c9",
 				"node_654b8382-1628-45b9-9379-b264757a9191",
-				"node_1a138503-24e5-4a0f-8a07-9b311df58558",
+				"node_1a138503-24e5-4a0f-8a07-9b311df58558"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -710,22 +712,22 @@ return {
 				"node_cd91dbac-9a28-4af5-ae75-7c8022169f5b",
 				"node_e58ba04c-1e81-4f25-bea9-38a0ee1e62f5",
 				"node_3e6adc1b-2f91-43a9-9653-c2fa76c19f0b",
-				"node_a09226d4-6e29-4806-982f-f00da2c2ec60",
+				"node_a09226d4-6e29-4806-982f-f00da2c2ec60"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_44c50f39-8997-4a6f-9676-16bac022defb",
 				"node_b15d80d0-fe7e-4552-a519-65dc496b9157",
-				"node_cd91dbac-9a28-4af5-ae75-7c8022169f5b",
+				"node_cd91dbac-9a28-4af5-ae75-7c8022169f5b"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -737,20 +739,20 @@ return {
 			x = 845.0000184955021,
 			y = 1324.9999574603457,
 			children = {
-				"node_9317a30a-682c-4b3f-ac86-83a2bf829f87",
+				"node_9317a30a-682c-4b3f-ac86-83a2bf829f87"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_ec45bdd9-6470-4bfb-85de-26897fdaac5c",
+				"node_ec45bdd9-6470-4bfb-85de-26897fdaac5c"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -762,21 +764,21 @@ return {
 			x = 545,
 			y = 845,
 			children = {
-				"node_15960c27-305b-4ad6-8cb9-1ceec79789b9",
+				"node_15960c27-305b-4ad6-8cb9-1ceec79789b9"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_2c6fb874-3909-4aca-a12c-3f1b362aff55",
-				"node_15960c27-305b-4ad6-8cb9-1ceec79789b9",
+				"node_15960c27-305b-4ad6-8cb9-1ceec79789b9"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -788,20 +790,20 @@ return {
 			x = 1324.9998964251895,
 			y = 1324.9999574603457,
 			children = {
-				"node_17da808e-f2f1-4684-8bc9-dce16aa14756",
+				"node_17da808e-f2f1-4684-8bc9-dce16aa14756"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_4efd9db8-0341-428b-9220-2c7aa8ff5de7",
+				"node_4efd9db8-0341-428b-9220-2c7aa8ff5de7"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -815,20 +817,20 @@ return {
 			children = {
 				"node_d9ef86eb-7750-4ede-8067-2bea7a6a996f",
 				"node_ab833650-8296-4bca-b5ac-b347ca72b960",
-				"node_8bd02750-e89f-4b2c-8de2-ba4ccba29e99",
+				"node_8bd02750-e89f-4b2c-8de2-ba4ccba29e99"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_43567fd7-f7c3-4b73-9cb5-3fb72af27a23",
+				"node_43567fd7-f7c3-4b73-9cb5-3fb72af27a23"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -842,22 +844,22 @@ return {
 			children = {
 				"node_987f94ff-7679-4651-8217-d9592c83efe3",
 				"node_f5562b92-4ae9-48d4-8334-06be09bef3ca",
-				"node_3215cbda-7600-4e99-85d5-b29a6a22bc08",
+				"node_3215cbda-7600-4e99-85d5-b29a6a22bc08"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_987f94ff-7679-4651-8217-d9592c83efe3",
 				"node_f5562b92-4ae9-48d4-8334-06be09bef3ca",
-				"node_853d22e7-bdc0-495e-ab44-7c5699dcf0f6",
+				"node_853d22e7-bdc0-495e-ab44-7c5699dcf0f6"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -869,21 +871,21 @@ return {
 			x = 1625,
 			y = 845,
 			children = {
-				"node_4d9ce721-2e3e-4c09-8fa2-345ff9c390bc",
+				"node_4d9ce721-2e3e-4c09-8fa2-345ff9c390bc"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_a615c4c7-47ca-4039-8649-58f9fbf10d17",
-				"node_4d9ce721-2e3e-4c09-8fa2-345ff9c390bc",
+				"node_4d9ce721-2e3e-4c09-8fa2-345ff9c390bc"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -896,21 +898,21 @@ return {
 			y = 1505,
 			children = {
 				"node_99899d45-4249-4113-8f2a-4e126a692a7b",
-				"node_3215cbda-7600-4e99-85d5-b29a6a22bc08",
+				"node_3215cbda-7600-4e99-85d5-b29a6a22bc08"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_987f94ff-7679-4651-8217-d9592c83efe3",
-				"node_3215cbda-7600-4e99-85d5-b29a6a22bc08",
+				"node_3215cbda-7600-4e99-85d5-b29a6a22bc08"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -919,21 +921,21 @@ return {
 			talent = "cryptic_precision_stance_toughness_suppression",
 			type = "ability_modifier",
 			widget_name = "node_1f07ccdc-f96c-4700-ac3f-13fb3244419d",
-			x = 1804.9999330131568,
-			y = 1205.0000131828158,
+			x = 1805.000004605371,
+			y = 1235.0000018495502,
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_c465a486-1c34-40e4-a34f-84b020753a16",
+				"node_c465a486-1c34-40e4-a34f-84b020753a16"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -942,44 +944,21 @@ return {
 			talent = "cryptic_precision_stance_fire_rate_increased",
 			type = "ability_modifier",
 			widget_name = "node_9f2a7af2-4bde-47c2-a856-379c9ca8e034",
-			x = 1834.9999330131568,
-			y = 1294.9999826652377,
+			x = 1835.000004605371,
+			y = 1355.0000018495502,
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_c465a486-1c34-40e4-a34f-84b020753a16",
+				"node_c465a486-1c34-40e4-a34f-84b020753a16"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
-		},
-		{
-			cost = 1,
-			icon = "content/ui/textures/icons/talents/cryptic/cryptic_precision_stance_reload_speed_delayed",
-			max_points = 1,
-			talent = "cryptic_precision_stance_reload_speed_delayed",
-			type = "ability_modifier",
-			widget_name = "node_27a8c62c-2939-47b9-b819-f6a84325ee7a",
-			x = 1715.0000550834693,
-			y = 1414.9999826652377,
-			children = {},
-			connector_offset = {
-				0,
-				0,
-			},
-			parents = {
-				"node_c465a486-1c34-40e4-a34f-84b020753a16",
-			},
-			requirements = {
-				all_parents_chosen = false,
-				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -993,16 +972,16 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_2b657eae-4687-4860-a0c8-d87ac8266e32",
+				"node_2b657eae-4687-4860-a0c8-d87ac8266e32"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1016,16 +995,16 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_2b657eae-4687-4860-a0c8-d87ac8266e32",
+				"node_2b657eae-4687-4860-a0c8-d87ac8266e32"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1039,16 +1018,16 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_2b657eae-4687-4860-a0c8-d87ac8266e32",
+				"node_2b657eae-4687-4860-a0c8-d87ac8266e32"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1062,16 +1041,16 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_202342c8-045c-486b-aa66-75d636866621",
+				"node_202342c8-045c-486b-aa66-75d636866621"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1085,16 +1064,16 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_202342c8-045c-486b-aa66-75d636866621",
+				"node_202342c8-045c-486b-aa66-75d636866621"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1108,16 +1087,16 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_202342c8-045c-486b-aa66-75d636866621",
+				"node_202342c8-045c-486b-aa66-75d636866621"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1131,16 +1110,16 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_99899d45-4249-4113-8f2a-4e126a692a7b",
+				"node_99899d45-4249-4113-8f2a-4e126a692a7b"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1154,16 +1133,16 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_99899d45-4249-4113-8f2a-4e126a692a7b",
+				"node_99899d45-4249-4113-8f2a-4e126a692a7b"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1177,17 +1156,17 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_2214fc60-12a4-4108-84e4-64b146f9b86b",
+				"node_2214fc60-12a4-4108-84e4-64b146f9b86b"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "chordclaw_attack",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1201,17 +1180,17 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_2214fc60-12a4-4108-84e4-64b146f9b86b",
+				"node_2214fc60-12a4-4108-84e4-64b146f9b86b"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "chordclaw_attack",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1225,16 +1204,16 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_4c399707-0cd3-4618-af06-a16a6cf05d28",
+				"node_4c399707-0cd3-4618-af06-a16a6cf05d28"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1248,16 +1227,16 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_4c399707-0cd3-4618-af06-a16a6cf05d28",
+				"node_4c399707-0cd3-4618-af06-a16a6cf05d28"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1271,16 +1250,16 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_4c399707-0cd3-4618-af06-a16a6cf05d28",
+				"node_4c399707-0cd3-4618-af06-a16a6cf05d28"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1292,21 +1271,21 @@ return {
 			x = 1565,
 			y = 725,
 			children = {
-				"node_2b657eae-4687-4860-a0c8-d87ac8266e32",
+				"node_2b657eae-4687-4860-a0c8-d87ac8266e32"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_43262e68-cd8e-491e-8bd5-f0b4164fa561",
-				"node_a615c4c7-47ca-4039-8649-58f9fbf10d17",
+				"node_a615c4c7-47ca-4039-8649-58f9fbf10d17"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1319,21 +1298,21 @@ return {
 			y = 424.99999907522493,
 			children = {
 				"node_202342c8-045c-486b-aa66-75d636866621",
-				"node_e58ba04c-1e81-4f25-bea9-38a0ee1e62f5",
+				"node_e58ba04c-1e81-4f25-bea9-38a0ee1e62f5"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_e725d712-ad48-46eb-b3a4-e760e83e2e9b",
-				"node_e58ba04c-1e81-4f25-bea9-38a0ee1e62f5",
+				"node_e58ba04c-1e81-4f25-bea9-38a0ee1e62f5"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1348,22 +1327,22 @@ return {
 				"node_231eefb6-059b-4bb2-a656-a9bf662486d0",
 				"node_cf6f52f6-9bb1-4d59-b97e-ea5ac469e698",
 				"node_3215cbda-7600-4e99-85d5-b29a6a22bc08",
-				"node_9317a30a-682c-4b3f-ac86-83a2bf829f87",
+				"node_9317a30a-682c-4b3f-ac86-83a2bf829f87"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_231eefb6-059b-4bb2-a656-a9bf662486d0",
 				"node_ec45bdd9-6470-4bfb-85de-26897fdaac5c",
-				"node_853d22e7-bdc0-495e-ab44-7c5699dcf0f6",
+				"node_853d22e7-bdc0-495e-ab44-7c5699dcf0f6"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1376,21 +1355,21 @@ return {
 			y = 1175,
 			children = {
 				"node_4d6556fa-f80a-4e6d-9c7d-a217abe950ee",
-				"node_ec45bdd9-6470-4bfb-85de-26897fdaac5c",
+				"node_ec45bdd9-6470-4bfb-85de-26897fdaac5c"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_4d6556fa-f80a-4e6d-9c7d-a217abe950ee",
-				"node_ec45bdd9-6470-4bfb-85de-26897fdaac5c",
+				"node_ec45bdd9-6470-4bfb-85de-26897fdaac5c"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1405,22 +1384,22 @@ return {
 				"node_44c50f39-8997-4a6f-9676-16bac022defb",
 				"node_e725d712-ad48-46eb-b3a4-e760e83e2e9b",
 				"node_a3520b96-61cf-4da2-9b35-e4846de85f5e",
-				"node_b540e7b8-df34-4676-b412-e95eec0b05b0",
+				"node_b540e7b8-df34-4676-b412-e95eec0b05b0"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_04679cd0-b399-4ced-a6e8-e655bf0c3b06",
 				"node_44c50f39-8997-4a6f-9676-16bac022defb",
-				"node_b540e7b8-df34-4676-b412-e95eec0b05b0",
+				"node_b540e7b8-df34-4676-b412-e95eec0b05b0"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1432,20 +1411,20 @@ return {
 			x = 1444.999988902699,
 			y = 1204.999992601799,
 			children = {
-				"node_ea18c305-acab-479a-8fd9-3c700199f611",
+				"node_ea18c305-acab-479a-8fd9-3c700199f611"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_d9ef86eb-7750-4ede-8067-2bea7a6a996f",
+				"node_d9ef86eb-7750-4ede-8067-2bea7a6a996f"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1458,21 +1437,21 @@ return {
 			y = 1175,
 			children = {
 				"node_4efd9db8-0341-428b-9220-2c7aa8ff5de7",
-				"node_d9ef86eb-7750-4ede-8067-2bea7a6a996f",
+				"node_d9ef86eb-7750-4ede-8067-2bea7a6a996f"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_4efd9db8-0341-428b-9220-2c7aa8ff5de7",
-				"node_d9ef86eb-7750-4ede-8067-2bea7a6a996f",
+				"node_d9ef86eb-7750-4ede-8067-2bea7a6a996f"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1487,22 +1466,22 @@ return {
 				"node_7bd9f7a4-3ccb-4339-9b40-eeb24cfba4b5",
 				"node_a615c4c7-47ca-4039-8649-58f9fbf10d17",
 				"node_4d9ce721-2e3e-4c09-8fa2-345ff9c390bc",
-				"node_29b1d9ec-b4e1-4045-a28d-45732f7521a8",
+				"node_29b1d9ec-b4e1-4045-a28d-45732f7521a8"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_a615c4c7-47ca-4039-8649-58f9fbf10d17",
 				"node_29b1d9ec-b4e1-4045-a28d-45732f7521a8",
-				"node_8bd02750-e89f-4b2c-8de2-ba4ccba29e99",
+				"node_8bd02750-e89f-4b2c-8de2-ba4ccba29e99"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1515,21 +1494,21 @@ return {
 			y = 755,
 			children = {
 				"node_ab833650-8296-4bca-b5ac-b347ca72b960",
-				"node_b15d80d0-fe7e-4552-a519-65dc496b9157",
+				"node_b15d80d0-fe7e-4552-a519-65dc496b9157"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_ab833650-8296-4bca-b5ac-b347ca72b960",
-				"node_b15d80d0-fe7e-4552-a519-65dc496b9157",
+				"node_b15d80d0-fe7e-4552-a519-65dc496b9157"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1544,22 +1523,22 @@ return {
 				"node_cd91dbac-9a28-4af5-ae75-7c8022169f5b",
 				"node_e58ba04c-1e81-4f25-bea9-38a0ee1e62f5",
 				"node_e0953fb3-717d-40b6-9af8-c3dc03597315",
-				"node_e9138b1a-56be-4048-bdfa-e8c1e7ede57d",
+				"node_e9138b1a-56be-4048-bdfa-e8c1e7ede57d"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_44c50f39-8997-4a6f-9676-16bac022defb",
 				"node_3d85c249-b115-4ae9-8601-3c529b91c855",
-				"node_cd91dbac-9a28-4af5-ae75-7c8022169f5b",
+				"node_cd91dbac-9a28-4af5-ae75-7c8022169f5b"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1572,21 +1551,21 @@ return {
 			y = 755,
 			children = {
 				"node_6e6089cb-eef5-4d79-af92-27af4666a13d",
-				"node_3d85c249-b115-4ae9-8601-3c529b91c855",
+				"node_3d85c249-b115-4ae9-8601-3c529b91c855"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_6e6089cb-eef5-4d79-af92-27af4666a13d",
-				"node_3d85c249-b115-4ae9-8601-3c529b91c855",
+				"node_3d85c249-b115-4ae9-8601-3c529b91c855"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1601,22 +1580,22 @@ return {
 				"node_29b1d9ec-b4e1-4045-a28d-45732f7521a8",
 				"node_35eda8e9-ea9c-40b7-9ed5-85474173f23e",
 				"node_ade5d487-8fea-4bdd-8a72-ee470110c2a9",
-				"node_8bd02750-e89f-4b2c-8de2-ba4ccba29e99",
+				"node_8bd02750-e89f-4b2c-8de2-ba4ccba29e99"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_ade5d487-8fea-4bdd-8a72-ee470110c2a9",
 				"node_baf3690d-c727-4388-ba24-bb4c55ef6699",
-				"node_8bd02750-e89f-4b2c-8de2-ba4ccba29e99",
+				"node_8bd02750-e89f-4b2c-8de2-ba4ccba29e99"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1630,24 +1609,25 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_1c3959c9-9a0a-428b-9064-e5dd92d9044a",
-				"node_f5562b92-4ae9-48d4-8334-06be09bef3ca",
+				"node_f5562b92-4ae9-48d4-8334-06be09bef3ca"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "aura",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
 			icon = "content/ui/textures/icons/talents/cryptic/cryptic_servo_skull_inject_ally",
 			max_points = 1,
 			talent = "cryptic_servo_skull_inject_ally",
+			target_slot = "slot_grenade_ability",
 			type = "tactical_modifier",
 			widget_name = "node_f09fc8b6-be58-4bca-8d9c-b4ed66c72473",
 			x = 427.50000171204795,
@@ -1655,50 +1635,52 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_15960c27-305b-4ad6-8cb9-1ceec79789b9",
+				"node_15960c27-305b-4ad6-8cb9-1ceec79789b9"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
 			icon = "content/ui/textures/icons/talents/cryptic/cryptic_grenade_ability_arc_grenade",
 			max_points = 1,
 			talent = "cryptic_grenade_ability_arc_grenade",
+			target_slot = "slot_grenade_ability",
 			type = "tactical",
 			widget_name = "node_a09226d4-6e29-4806-982f-f00da2c2ec60",
 			x = 1309.9999408143942,
 			y = 469.99999907522493,
 			children = {
 				"node_d609f926-8570-41c2-9d4f-2954298c8f73",
-				"node_6810a9ea-3e9e-4b7f-8b19-576d774fea40",
+				"node_6810a9ea-3e9e-4b7f-8b19-576d774fea40"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_e725d712-ad48-46eb-b3a4-e760e83e2e9b",
-				"node_a3520b96-61cf-4da2-9b35-e4846de85f5e",
+				"node_a3520b96-61cf-4da2-9b35-e4846de85f5e"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "tactical",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
 			icon = "content/ui/textures/icons/talents/cryptic/cryptic_servo_skull_improved",
 			max_points = 1,
 			talent = "cryptic_servo_skull_improved",
+			target_slot = "slot_grenade_ability",
 			type = "tactical",
 			widget_name = "node_15960c27-305b-4ad6-8cb9-1ceec79789b9",
 			x = 530.000001712048,
@@ -1708,31 +1690,32 @@ return {
 				"node_f09fc8b6-be58-4bca-8d9c-b4ed66c72473",
 				"node_cc688d42-e7dd-45bb-81ec-df7c8d772e3f",
 				"node_942817f8-a5de-4c69-9f24-bd1865adea98",
-				"node_f064bf43-9846-4821-8001-0d4b1fcaa4f2",
+				"node_f064bf43-9846-4821-8001-0d4b1fcaa4f2"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_3dfdfc48-08a2-428d-8e64-f2a7d9e8a3d0",
 				"node_2c6fb874-3909-4aca-a12c-3f1b362aff55",
 				"node_a33d4e99-fff1-4e68-a431-b76674437dfd",
 				"node_942817f8-a5de-4c69-9f24-bd1865adea98",
-				"node_f064bf43-9846-4821-8001-0d4b1fcaa4f2",
+				"node_f064bf43-9846-4821-8001-0d4b1fcaa4f2"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "tactical",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
 			icon = "content/ui/textures/icons/talents/cryptic/cryptic_discharge",
 			max_points = 1,
 			talent = "cryptic_discharge",
+			target_slot = "slot_combat_ability",
 			type = "ability",
 			widget_name = "node_202342c8-045c-486b-aa66-75d636866621",
 			x = 1059,
@@ -1740,53 +1723,53 @@ return {
 			children = {
 				"node_d155b2e2-8498-41eb-81ed-4fa5b708132e",
 				"node_1ce53612-4ce0-40b6-8769-abcae20328b9",
-				"node_76d47f27-b1fe-4614-a013-9cdcfb6ac12b",
+				"node_76d47f27-b1fe-4614-a013-9cdcfb6ac12b"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_3e6adc1b-2f91-43a9-9653-c2fa76c19f0b",
 				"node_e0953fb3-717d-40b6-9af8-c3dc03597315",
-				"node_e58ba04c-1e81-4f25-bea9-38a0ee1e62f5",
+				"node_e58ba04c-1e81-4f25-bea9-38a0ee1e62f5"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "ability",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
 			icon = "content/ui/textures/icons/talents/cryptic/cryptic_precision_stance",
 			max_points = 1,
 			talent = "cryptic_precision_stance",
+			target_slot = "slot_combat_ability",
 			type = "ability",
 			widget_name = "node_c465a486-1c34-40e4-a34f-84b020753a16",
-			x = 1658.9998460791383,
-			y = 1238.9999434204003,
+			x = 1659.000004605371,
+			y = 1269.0000018495502,
 			children = {
-				"node_27a8c62c-2939-47b9-b819-f6a84325ee7a",
 				"node_1f07ccdc-f96c-4700-ac3f-13fb3244419d",
 				"node_9f2a7af2-4bde-47c2-a856-379c9ca8e034",
 				"node_bbc91e02-a605-4136-8d58-f767ac08da21",
-				"node_b983128b-a5ad-487d-9fdd-66656de8ffb4",
+				"node_b983128b-a5ad-487d-9fdd-66656de8ffb4"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_ea18c305-acab-479a-8fd9-3c700199f611",
+				"node_ea18c305-acab-479a-8fd9-3c700199f611"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "ability",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1800,16 +1783,16 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_99899d45-4249-4113-8f2a-4e126a692a7b",
+				"node_99899d45-4249-4113-8f2a-4e126a692a7b"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1823,16 +1806,16 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_2b657eae-4687-4860-a0c8-d87ac8266e32",
+				"node_2b657eae-4687-4860-a0c8-d87ac8266e32"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1846,16 +1829,16 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_99899d45-4249-4113-8f2a-4e126a692a7b",
+				"node_99899d45-4249-4113-8f2a-4e126a692a7b"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1869,16 +1852,16 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_a09226d4-6e29-4806-982f-f00da2c2ec60",
+				"node_a09226d4-6e29-4806-982f-f00da2c2ec60"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1892,16 +1875,16 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_a09226d4-6e29-4806-982f-f00da2c2ec60",
+				"node_a09226d4-6e29-4806-982f-f00da2c2ec60"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1915,22 +1898,22 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_17da808e-f2f1-4684-8bc9-dce16aa14756",
+				"node_17da808e-f2f1-4684-8bc9-dce16aa14756"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
 			icon = "content/ui/textures/icons/talents/cryptic/cryptic_force_field_health_damage_limit",
 			max_points = 1,
-			talent = "cryptic_force_field_health_damage_limit",
+			talent = "cryptic_force_field_capacitance_restore",
 			type = "tactical_modifier",
 			widget_name = "node_4a240e77-1a0d-4833-ad5c-82bec1eca8c2",
 			x = 1327.5,
@@ -1938,16 +1921,17 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_17da808e-f2f1-4684-8bc9-dce16aa14756",
+				"node_17da808e-f2f1-4684-8bc9-dce16aa14756"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				exclusive_group = "force_field_1",
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1959,21 +1943,21 @@ return {
 			x = 605,
 			y = 1205,
 			children = {
-				"node_2214fc60-12a4-4108-84e4-64b146f9b86b",
+				"node_2214fc60-12a4-4108-84e4-64b146f9b86b"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_a33d4e99-fff1-4e68-a431-b76674437dfd",
-				"node_fd9cf282-8e86-4503-acfe-f8a3841e535e",
+				"node_fd9cf282-8e86-4503-acfe-f8a3841e535e"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1985,20 +1969,20 @@ return {
 			x = 725.0000425396546,
 			y = 725.0000138716262,
 			children = {
-				"node_f7b75f2e-e6df-4be2-855c-c05da6151f7b",
+				"node_f7b75f2e-e6df-4be2-855c-c05da6151f7b"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_6e6089cb-eef5-4d79-af92-27af4666a13d",
+				"node_6e6089cb-eef5-4d79-af92-27af4666a13d"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2010,21 +1994,21 @@ return {
 			x = 1565,
 			y = 1205,
 			children = {
-				"node_c465a486-1c34-40e4-a34f-84b020753a16",
+				"node_c465a486-1c34-40e4-a34f-84b020753a16"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_29b1d9ec-b4e1-4045-a28d-45732f7521a8",
-				"node_35eda8e9-ea9c-40b7-9ed5-85474173f23e",
+				"node_35eda8e9-ea9c-40b7-9ed5-85474173f23e"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2038,16 +2022,16 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_4c399707-0cd3-4618-af06-a16a6cf05d28",
+				"node_4c399707-0cd3-4618-af06-a16a6cf05d28"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2062,22 +2046,22 @@ return {
 				"node_17da808e-f2f1-4684-8bc9-dce16aa14756",
 				"node_231eefb6-059b-4bb2-a656-a9bf662486d0",
 				"node_3215cbda-7600-4e99-85d5-b29a6a22bc08",
-				"node_8ed6b0bc-2308-4f95-af4e-4a0c955cd364",
+				"node_8ed6b0bc-2308-4f95-af4e-4a0c955cd364"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_4efd9db8-0341-428b-9220-2c7aa8ff5de7",
 				"node_231eefb6-059b-4bb2-a656-a9bf662486d0",
-				"node_853d22e7-bdc0-495e-ab44-7c5699dcf0f6",
+				"node_853d22e7-bdc0-495e-ab44-7c5699dcf0f6"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2093,22 +2077,22 @@ return {
 				"node_b15d80d0-fe7e-4552-a519-65dc496b9157",
 				"node_1133b775-c6f7-4318-80a3-657a19b46604",
 				"node_cd91dbac-9a28-4af5-ae75-7c8022169f5b",
-				"node_e725d712-ad48-46eb-b3a4-e760e83e2e9b",
+				"node_e725d712-ad48-46eb-b3a4-e760e83e2e9b"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_04679cd0-b399-4ced-a6e8-e655bf0c3b06",
 				"node_b15d80d0-fe7e-4552-a519-65dc496b9157",
-				"node_3d85c249-b115-4ae9-8601-3c529b91c855",
+				"node_3d85c249-b115-4ae9-8601-3c529b91c855"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2123,22 +2107,22 @@ return {
 				"node_b540e7b8-df34-4676-b412-e95eec0b05b0",
 				"node_43262e68-cd8e-491e-8bd5-f0b4164fa561",
 				"node_a615c4c7-47ca-4039-8649-58f9fbf10d17",
-				"node_8bd02750-e89f-4b2c-8de2-ba4ccba29e99",
+				"node_8bd02750-e89f-4b2c-8de2-ba4ccba29e99"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_b540e7b8-df34-4676-b412-e95eec0b05b0",
 				"node_baf3690d-c727-4388-ba24-bb4c55ef6699",
-				"node_8bd02750-e89f-4b2c-8de2-ba4ccba29e99",
+				"node_8bd02750-e89f-4b2c-8de2-ba4ccba29e99"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2152,20 +2136,20 @@ return {
 			children = {
 				"node_853d22e7-bdc0-495e-ab44-7c5699dcf0f6",
 				"node_4efd9db8-0341-428b-9220-2c7aa8ff5de7",
-				"node_ec45bdd9-6470-4bfb-85de-26897fdaac5c",
+				"node_ec45bdd9-6470-4bfb-85de-26897fdaac5c"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_43567fd7-f7c3-4b73-9cb5-3fb72af27a23",
+				"node_43567fd7-f7c3-4b73-9cb5-3fb72af27a23"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2180,22 +2164,22 @@ return {
 				"node_654b8382-1628-45b9-9379-b264757a9191",
 				"node_853d22e7-bdc0-495e-ab44-7c5699dcf0f6",
 				"node_f5562b92-4ae9-48d4-8334-06be09bef3ca",
-				"node_1c3959c9-9a0a-428b-9064-e5dd92d9044a",
+				"node_1c3959c9-9a0a-428b-9064-e5dd92d9044a"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_cde25ce6-426b-4efa-891d-739c3293f86e",
 				"node_654b8382-1628-45b9-9379-b264757a9191",
-				"node_853d22e7-bdc0-495e-ab44-7c5699dcf0f6",
+				"node_853d22e7-bdc0-495e-ab44-7c5699dcf0f6"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2211,22 +2195,22 @@ return {
 				"node_3dfdfc48-08a2-428d-8e64-f2a7d9e8a3d0",
 				"node_2c6fb874-3909-4aca-a12c-3f1b362aff55",
 				"node_6e6089cb-eef5-4d79-af92-27af4666a13d",
-				"node_4d6556fa-f80a-4e6d-9c7d-a217abe950ee",
+				"node_4d6556fa-f80a-4e6d-9c7d-a217abe950ee"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_6561d779-b477-4e35-a588-e74c910e92c9",
 				"node_4d6556fa-f80a-4e6d-9c7d-a217abe950ee",
-				"node_6e6089cb-eef5-4d79-af92-27af4666a13d",
+				"node_6e6089cb-eef5-4d79-af92-27af4666a13d"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2241,22 +2225,22 @@ return {
 				"node_fc9c8c0d-a7fc-4c81-8e39-bdddf1b0078c",
 				"node_f8cb2f49-4d9d-4b86-90fb-d0446febb49d",
 				"node_4d9ce721-2e3e-4c09-8fa2-345ff9c390bc",
-				"node_7d5dc6be-b293-4831-a12c-d79c725e5b7a",
+				"node_7d5dc6be-b293-4831-a12c-d79c725e5b7a"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_ab833650-8296-4bca-b5ac-b347ca72b960",
 				"node_7d5dc6be-b293-4831-a12c-d79c725e5b7a",
-				"node_8bd02750-e89f-4b2c-8de2-ba4ccba29e99",
+				"node_8bd02750-e89f-4b2c-8de2-ba4ccba29e99"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2270,17 +2254,17 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_2214fc60-12a4-4108-84e4-64b146f9b86b",
+				"node_2214fc60-12a4-4108-84e4-64b146f9b86b"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "chordclaw_2",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2294,17 +2278,17 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_2214fc60-12a4-4108-84e4-64b146f9b86b",
+				"node_2214fc60-12a4-4108-84e4-64b146f9b86b"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "chordclaw_2",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2318,16 +2302,16 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_15960c27-305b-4ad6-8cb9-1ceec79789b9",
+				"node_15960c27-305b-4ad6-8cb9-1ceec79789b9"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2342,22 +2326,22 @@ return {
 				"node_2c6fb874-3909-4aca-a12c-3f1b362aff55",
 				"node_17b66510-2729-4d8a-98a2-646758b5b00c",
 				"node_f274c4fb-a29e-497a-a783-08f5ee20f839",
-				"node_1a138503-24e5-4a0f-8a07-9b311df58558",
+				"node_1a138503-24e5-4a0f-8a07-9b311df58558"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_6561d779-b477-4e35-a588-e74c910e92c9",
 				"node_17b66510-2729-4d8a-98a2-646758b5b00c",
-				"node_1a138503-24e5-4a0f-8a07-9b311df58558",
+				"node_1a138503-24e5-4a0f-8a07-9b311df58558"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2370,20 +2354,20 @@ return {
 			y = 1204.999983354048,
 			children = {
 				"node_66a5e980-df8d-4d0d-8afc-b00e6f1aa241",
-				"node_898ff194-0732-4782-b33a-f24581ca52d0",
+				"node_898ff194-0732-4782-b33a-f24581ca52d0"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_4d6556fa-f80a-4e6d-9c7d-a217abe950ee",
+				"node_4d6556fa-f80a-4e6d-9c7d-a217abe950ee"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2395,21 +2379,21 @@ return {
 			x = 605,
 			y = 725,
 			children = {
-				"node_4c399707-0cd3-4618-af06-a16a6cf05d28",
+				"node_4c399707-0cd3-4618-af06-a16a6cf05d28"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_2c6fb874-3909-4aca-a12c-3f1b362aff55",
-				"node_f274c4fb-a29e-497a-a783-08f5ee20f839",
+				"node_f274c4fb-a29e-497a-a783-08f5ee20f839"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2424,22 +2408,22 @@ return {
 				"node_3dfdfc48-08a2-428d-8e64-f2a7d9e8a3d0",
 				"node_15960c27-305b-4ad6-8cb9-1ceec79789b9",
 				"node_942817f8-a5de-4c69-9f24-bd1865adea98",
-				"node_f7b75f2e-e6df-4be2-855c-c05da6151f7b",
+				"node_f7b75f2e-e6df-4be2-855c-c05da6151f7b"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_6e6089cb-eef5-4d79-af92-27af4666a13d",
 				"node_1a138503-24e5-4a0f-8a07-9b311df58558",
-				"node_3dfdfc48-08a2-428d-8e64-f2a7d9e8a3d0",
+				"node_3dfdfc48-08a2-428d-8e64-f2a7d9e8a3d0"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2452,21 +2436,21 @@ return {
 			y = 1505,
 			children = {
 				"node_99899d45-4249-4113-8f2a-4e126a692a7b",
-				"node_3215cbda-7600-4e99-85d5-b29a6a22bc08",
+				"node_3215cbda-7600-4e99-85d5-b29a6a22bc08"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_f5562b92-4ae9-48d4-8334-06be09bef3ca",
-				"node_3215cbda-7600-4e99-85d5-b29a6a22bc08",
+				"node_3215cbda-7600-4e99-85d5-b29a6a22bc08"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2478,20 +2462,20 @@ return {
 			x = 1445,
 			y = 725,
 			children = {
-				"node_fc9c8c0d-a7fc-4c81-8e39-bdddf1b0078c",
+				"node_fc9c8c0d-a7fc-4c81-8e39-bdddf1b0078c"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_ab833650-8296-4bca-b5ac-b347ca72b960",
+				"node_ab833650-8296-4bca-b5ac-b347ca72b960"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2503,20 +2487,20 @@ return {
 			x = 845.0000018495504,
 			y = 605.0000295928031,
 			children = {
-				"node_e9138b1a-56be-4048-bdfa-e8c1e7ede57d",
+				"node_e9138b1a-56be-4048-bdfa-e8c1e7ede57d"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_3d85c249-b115-4ae9-8601-3c529b91c855",
+				"node_3d85c249-b115-4ae9-8601-3c529b91c855"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2528,20 +2512,20 @@ return {
 			x = 1324.9999408143942,
 			y = 605.0000295928031,
 			children = {
-				"node_a09226d4-6e29-4806-982f-f00da2c2ec60",
+				"node_a09226d4-6e29-4806-982f-f00da2c2ec60"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_b15d80d0-fe7e-4552-a519-65dc496b9157",
+				"node_b15d80d0-fe7e-4552-a519-65dc496b9157"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2555,16 +2539,17 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_17da808e-f2f1-4684-8bc9-dce16aa14756",
+				"node_17da808e-f2f1-4684-8bc9-dce16aa14756"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				exclusive_group = "force_field_1",
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2573,21 +2558,21 @@ return {
 			talent = "cryptic_precision_stance_crit_cleave",
 			type = "ability_modifier",
 			widget_name = "node_bbc91e02-a605-4136-8d58-f767ac08da21",
-			x = 1804.9999330131568,
-			y = 1384.9999826652377,
+			x = 1745.000004605371,
+			y = 1445.0000018495502,
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_c465a486-1c34-40e4-a34f-84b020753a16",
+				"node_c465a486-1c34-40e4-a34f-84b020753a16"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2596,21 +2581,21 @@ return {
 			talent = "cryptic_precision_stance_damage_on_elite_kill",
 			type = "ability_modifier",
 			widget_name = "node_b983128b-a5ad-487d-9fdd-66656de8ffb4",
-			x = 1625.0000550834693,
-			y = 1384.9999826652377,
+			x = 1625.000004605371,
+			y = 1415.0000018495502,
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_c465a486-1c34-40e4-a34f-84b020753a16",
+				"node_c465a486-1c34-40e4-a34f-84b020753a16"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2626,30 +2611,30 @@ return {
 				"node_a615c4c7-47ca-4039-8649-58f9fbf10d17",
 				"node_7d5dc6be-b293-4831-a12c-d79c725e5b7a",
 				"node_29b1d9ec-b4e1-4045-a28d-45732f7521a8",
-				"node_d9ef86eb-7750-4ede-8067-2bea7a6a996f",
+				"node_d9ef86eb-7750-4ede-8067-2bea7a6a996f"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_d9ef86eb-7750-4ede-8067-2bea7a6a996f",
 				"node_ab833650-8296-4bca-b5ac-b347ca72b960",
-				"node_baf3690d-c727-4388-ba24-bb4c55ef6699",
+				"node_baf3690d-c727-4388-ba24-bb4c55ef6699"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
-		},
+				min_points_spent = 0
+			}
+		}
 	},
 	offset = {
 		0,
-		0,
+		0
 	},
 	size = {
 		4096,
-		5000,
-	},
+		5000
+	}
 }

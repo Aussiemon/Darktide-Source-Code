@@ -59,13 +59,14 @@ AutoEvent.start_auto_event = function (self, unit)
 	local auto_event_context = {
 		worldposition = position,
 		intial_cooldown_multiplier_value = self:get_data(unit, "inital_cooldown_type"),
+		spawner_groups = self:get_data(unit, "spawner_groups"),
 		size = self:get_data(unit, "size"),
 		composition = self:get_data(unit, "composition"),
 		node_id = self._node_id,
 		owning_level = self._owning_level,
 		inject_captain = should_inject_captain,
 		inject_monster = should_inject_monster,
-		inject_twin = should_inject_twin,
+		inject_twin = should_inject_twin
 	}
 
 	self._auto_event_id = Managers.state.pacing:request_auto_event(auto_event_context)
@@ -178,17 +179,17 @@ AutoEvent.component_data = {
 	start_enabled = {
 		ui_name = "start_enabled",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	force_inject_captain = {
 		ui_name = "force_inject_captain",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	force_inject_monster = {
 		ui_name = "force_inject_monster",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	force_inject_twins = {
 		ui_name = "force_inject_twins",
@@ -197,18 +198,18 @@ AutoEvent.component_data = {
 		options_keys = {
 			0,
 			1,
-			2,
+			2
 		},
 		options_values = {
 			0,
 			1,
-			2,
-		},
+			2
+		}
 	},
 	expedition_extraction_event = {
 		ui_name = "expedition_extraction_event",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	size = {
 		ui_name = "Size",
@@ -217,13 +218,13 @@ AutoEvent.component_data = {
 		options_keys = {
 			"default",
 			"small",
-			"large",
+			"large"
 		},
 		options_values = {
 			"default",
 			"small",
-			"large",
-		},
+			"large"
+		}
 	},
 	composition = {
 		ui_name = "composition",
@@ -232,13 +233,13 @@ AutoEvent.component_data = {
 		options_keys = {
 			"default",
 			"melee",
-			"ranged",
+			"ranged"
 		},
 		options_values = {
 			"default",
 			"melee",
-			"ranged",
-		},
+			"ranged"
+		}
 	},
 	inital_cooldown_type = {
 		ui_name = "Inital Cooldown Type",
@@ -247,24 +248,30 @@ AutoEvent.component_data = {
 		options_keys = {
 			"default",
 			"extraction",
-			"safe_room",
+			"safe_room"
 		},
 		options_values = {
 			"default",
 			"extraction",
-			"safe_room",
-		},
+			"safe_room"
+		}
+	},
+	spawner_groups = {
+		category = "Spawner Groups",
+		size = 0,
+		ui_name = "Spawner Groups",
+		ui_type = "text_box_array"
 	},
 	inputs = {
 		start_auto_event = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		stop_auto_event = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return AutoEvent

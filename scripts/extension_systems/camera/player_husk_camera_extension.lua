@@ -14,10 +14,10 @@ PlayerHuskCameraExtension.init = function (self, extension_init_context, unit, e
 end
 
 local NODE_IGNORE_SCALED_TRANSFORM_OFFSETS = {
-	consumed = true,
+	consumed = true
 }
 local NODE_OBJECT_NAMES = {
-	consumed = "j_hips",
+	consumed = "j_hips"
 }
 
 PlayerHuskCameraExtension.camera_tree_node = function (self)

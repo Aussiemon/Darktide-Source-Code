@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/smart_tag/smart_tag_extension.lua
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local DoubleTagSettings = require("scripts/settings/smart_tag/double_tag_settings")
 local SmartTag = require("scripts/extension_systems/smart_tag/smart_tag")
 local SmartTagSettings = require("scripts/settings/smart_tag/smart_tag_settings")
 local buff_keywords = BuffSettings.keywords
@@ -73,16 +74,26 @@ SmartTagExtension._set_tag_on_spawn = function (self)
 	end
 end
 
+local NON_BREED_TARGET_TYPES = {
+	hack = true,
+	health_station = true,
+	medical_crate_deployable = true,
+	pickup = true
+}
+local BREED_TARGET_TYPES = {
+	breed = true
+}
+
 SmartTagExtension._setup_display_name = function (self, unit)
 	local target_type = self._target_type
 
-	if target_type == "pickup" or target_type == "health_station" or target_type == "hack" then
+	if NON_BREED_TARGET_TYPES[target_type] then
 		local interactee_extension = ScriptUnit.has_extension(unit, "interactee_system")
 
 		if interactee_extension then
 			self._display_name = interactee_extension:description()
 		end
-	elseif target_type == "breed" then
+	elseif BREED_TARGET_TYPES[target_type] then
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local breed = unit_data_extension:breed()
 
@@ -91,14 +102,14 @@ SmartTagExtension._setup_display_name = function (self, unit)
 	end
 end
 
-SmartTagExtension.can_tag = function (self, tagger_unit, alternate)
-	local template_name = self:_contextual_tag_template_name(tagger_unit, alternate)
+SmartTagExtension.can_tag = function (self, tagger_unit, is_double_tag)
+	local template_name = self:_contextual_tag_template_name(tagger_unit, is_double_tag)
 
 	return template_name ~= nil
 end
 
-SmartTagExtension.contextual_tag_template = function (self, tagger_unit, alternate)
-	local template_name = self:_contextual_tag_template_name(tagger_unit, alternate)
+SmartTagExtension.contextual_tag_template = function (self, tagger_unit, is_double_tag)
+	local template_name = self:_contextual_tag_template_name(tagger_unit, is_double_tag)
 	local template = template_name and smart_tag_templates[template_name]
 
 	return template
@@ -152,10 +163,10 @@ local _pickup_name_to_tag_template_name = {
 	syringe_corruption_pocketable = "syringe_corruption_over_here",
 	syringe_power_boost_pocketable = "syringe_power_boost_over_here",
 	syringe_speed_boost_pocketable = "syringe_speed_boost_over_here",
-	tome = "side_mission_tome_over_here",
+	tome = "side_mission_tome_over_here"
 }
 
-SmartTagExtension._contextual_tag_template_name = function (self, tagger_unit, alternate)
+SmartTagExtension._contextual_tag_template_name = function (self, tagger_unit, is_double_tag)
 	local target_type = self._target_type
 
 	if not target_type then
@@ -172,6 +183,14 @@ SmartTagExtension._contextual_tag_template_name = function (self, tagger_unit, a
 
 	if not is_valid then
 		return nil
+	end
+
+	if is_double_tag then
+		local double_tag_template_name = self:_double_tag_template_name(tagger_unit)
+
+		if double_tag_template_name then
+			return double_tag_template_name
+		end
 	end
 
 	if target_type == "pickup" then
@@ -194,26 +213,9 @@ SmartTagExtension._contextual_tag_template_name = function (self, tagger_unit, a
 				return "enemy_over_here_veteran"
 			end
 
-			local companion_order = alternate
-
-			if companion_order then
-				local companion_spawner_extension = ScriptUnit.has_extension(tagger_unit, "companion_spawner_system")
-				local companions = companion_spawner_extension and companion_spawner_extension:companion_units()
-
-				if companions and #companions > 0 then
-					local companion_unit = companions[1]
-					local unit_data_extension = ScriptUnit.has_extension(companion_unit, "unit_data_system")
-					local breed = unit_data_extension and unit_data_extension:breed()
-
-					if breed then
-						return breed.companion_double_tag_template_name
-					end
-				end
-
-				return nil
-			end
-
 			return "enemy_over_here"
+		else
+			return nil
 		end
 	elseif target_type == "health_station" then
 		local health_station_extension = ScriptUnit.extension(unit, "health_station_system")
@@ -225,38 +227,7 @@ SmartTagExtension._contextual_tag_template_name = function (self, tagger_unit, a
 			return "health_station_without_battery_over_here"
 		end
 	elseif target_type == "hack" then
-		local companion_order = alternate
-
-		if companion_order then
-			local companion_spawner_extension = ScriptUnit.has_extension(tagger_unit, "companion_spawner_system")
-			local companions = companion_spawner_extension and companion_spawner_extension:companion_units()
-
-			if companions and #companions > 0 then
-				local companion_unit = companions[1]
-				local unit_data_extension = ScriptUnit.has_extension(companion_unit, "unit_data_system")
-				local breed = unit_data_extension and unit_data_extension:breed()
-
-				if breed and breed.companion_allow_hack_double_tag then
-					local interactee_extension = ScriptUnit.has_extension(unit, "interactee_system")
-
-					if interactee_extension then
-						local interactee_interaction_type = interactee_extension:interaction_type()
-
-						if interactee_extension and interactee_interaction_type == "decoding" then
-							local can_interact = interactee_extension:can_interact(unit, interactee_interaction_type)
-
-							if can_interact then
-								return "hacking_over_here_companion"
-							end
-						end
-					end
-				else
-					return "hacking_over_here"
-				end
-			end
-		else
-			return "hacking_over_here"
-		end
+		return "hacking_over_here"
 	elseif target_type == "live_event_objective" then
 		return "live_event_objective_over_here"
 	elseif target_type == "live_event_interest_point" then
@@ -264,8 +235,27 @@ SmartTagExtension._contextual_tag_template_name = function (self, tagger_unit, a
 	end
 end
 
-SmartTagExtension.is_particular_target_type = function (self, other_target_type)
-	return self._target_type == other_target_type
+SmartTagExtension._double_tag_template_name = function (self, tagger_unit)
+	local target_type = self._target_type
+	local unit = self._unit
+
+	if target_type == "breed" then
+		local side_system = Managers.state.extension:system("side_system")
+
+		if not side_system:is_enemy(tagger_unit, unit) then
+			return nil
+		end
+	end
+
+	local unit_data_extension = ScriptUnit.has_extension(tagger_unit, "unit_data_system")
+	local archetype_name = unit_data_extension and unit_data_extension:archetype_name()
+	local double_tag_settings = archetype_name and DoubleTagSettings[archetype_name]
+
+	if not double_tag_settings then
+		return nil
+	end
+
+	return double_tag_settings.resolve(tagger_unit, unit, target_type)
 end
 
 SmartTagExtension.register_owned_tag = function (self, tag_id)
@@ -295,6 +285,10 @@ SmartTagExtension.unregister_tag = function (self, tag_id)
 	end
 end
 
+SmartTagExtension.tag_id = function (self)
+	return self._tag_id
+end
+
 SmartTagExtension.display_name = function (self, tagger_unit)
 	if self._display_name then
 		return self._display_name
@@ -315,10 +309,6 @@ end
 
 SmartTagExtension.replied_tag_ids = function (self)
 	return self._replied_tag_ids
-end
-
-SmartTagExtension.tag_id = function (self)
-	return self._tag_id
 end
 
 SmartTagExtension.target_actor = function (self)

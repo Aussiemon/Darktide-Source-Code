@@ -12,10 +12,6 @@ AbilityReporter.destroy = function (self)
 	return
 end
 
-AbilityReporter.update = function (self, dt, t)
-	return
-end
-
 AbilityReporter.report = function (self)
 	if table.is_empty(self._reports) then
 		return
@@ -35,14 +31,14 @@ AbilityReporter.register_event = function (self, player, ability_name)
 		local player_data = {
 			telemetry_subject = subject,
 			telemetry_game_session = player:telemetry_game_session(),
-			telemetry_current_instance = player:telemetry_current_instance(),
+			telemetry_current_instance = player:telemetry_current_instance()
 		}
 
 		self._reports[player_key] = {
 			player_data = player_data,
 			entries = {
-				[ability_name] = 1,
-			},
+				[ability_name] = 1
+			}
 		}
 	end
 end

@@ -18,8 +18,8 @@ local companion_servo_skull_default = {
 	damage_falloff = {
 		falloff_range = 15,
 		max_power_reduction = 0.6,
-		max_range = 15,
-	},
+		max_range = 15
+	}
 }
 local companion_servo_skull_improved = {
 	collision_filter = "filter_minion_shooting_no_blockers",
@@ -35,12 +35,12 @@ local companion_servo_skull_improved = {
 	damage_falloff = {
 		falloff_range = 15,
 		max_power_reduction = 0.6,
-		max_range = 15,
-	},
+		max_range = 15
+	}
 }
 local shoot_templates = {
 	companion_servo_skull_default = companion_servo_skull_default,
-	companion_servo_skull_improved = companion_servo_skull_improved,
+	companion_servo_skull_improved = companion_servo_skull_improved
 }
 
 return shoot_templates

@@ -54,12 +54,12 @@ NavGraph._fetch_smart_object = function (self, unit, index)
 		entrance_position = {
 			self:get_data_raw(unit, "smart_objects", index, "entrance_position", 1),
 			self:get_data_raw(unit, "smart_objects", index, "entrance_position", 2),
-			(self:get_data_raw(unit, "smart_objects", index, "entrance_position", 3)),
+			(self:get_data_raw(unit, "smart_objects", index, "entrance_position", 3))
 		},
 		exit_position = {
 			self:get_data_raw(unit, "smart_objects", index, "exit_position", 1),
 			self:get_data_raw(unit, "smart_objects", index, "exit_position", 2),
-			(self:get_data_raw(unit, "smart_objects", index, "exit_position", 3)),
+			(self:get_data_raw(unit, "smart_objects", index, "exit_position", 3))
 		},
 		data = {
 			is_bidirectional = self:get_data_raw(unit, "smart_objects", index, "data", "is_bidirectional"),
@@ -68,19 +68,19 @@ NavGraph._fetch_smart_object = function (self, unit, index)
 			ledge_position = {
 				self:get_data_raw(unit, "smart_objects", index, "data", "ledge_position", 1),
 				self:get_data_raw(unit, "smart_objects", index, "data", "ledge_position", 2),
-				(self:get_data_raw(unit, "smart_objects", index, "data", "ledge_position", 3)),
+				(self:get_data_raw(unit, "smart_objects", index, "data", "ledge_position", 3))
 			},
 			ledge_position1 = {
 				self:get_data_raw(unit, "smart_objects", index, "data", "ledge_position1", 1),
 				self:get_data_raw(unit, "smart_objects", index, "data", "ledge_position1", 2),
-				(self:get_data_raw(unit, "smart_objects", index, "data", "ledge_position1", 3)),
+				(self:get_data_raw(unit, "smart_objects", index, "data", "ledge_position1", 3))
 			},
 			ledge_position2 = {
 				self:get_data_raw(unit, "smart_objects", index, "data", "ledge_position2", 1),
 				self:get_data_raw(unit, "smart_objects", index, "data", "ledge_position2", 2),
-				(self:get_data_raw(unit, "smart_objects", index, "data", "ledge_position2", 3)),
-			},
-		},
+				(self:get_data_raw(unit, "smart_objects", index, "data", "ledge_position2", 3))
+			}
+		}
 	}
 
 	return smart_object
@@ -269,7 +269,7 @@ NavGraph._generate_positions = function (self, unit)
 			local debug_data_smart_object = {
 				entrance_position = Vector3Box(entrance_position),
 				exit_position = Vector3Box(exit_position),
-				is_one_way = is_one_way,
+				is_one_way = is_one_way
 			}
 
 			debug_data_smart_objects[i] = debug_data_smart_object
@@ -297,17 +297,17 @@ NavGraph.component_data = {
 	is_one_way = {
 		ui_name = "Is One Way",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	enabled_on_spawn = {
 		ui_name = "Navigation Enabled on Spawn",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	pregenerate_smart_objects = {
 		ui_name = "Pregenerate Smart Objects",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	layer_type = {
 		ui_name = "Layer Type",
@@ -316,13 +316,13 @@ NavGraph.component_data = {
 		options_keys = {
 			"auto_detect",
 			"teleporters",
-			"monster_walls",
+			"monster_walls"
 		},
 		options_values = {
 			"auto_detect",
 			"teleporters",
-			"monster_walls",
-		},
+			"monster_walls"
+		}
 	},
 	smart_object_calculation_method = {
 		ui_name = "Smart Object Calculation Method",
@@ -332,64 +332,64 @@ NavGraph.component_data = {
 			"use_node_pair",
 			"use_offset_node",
 			"calculate_from_node_pair",
-			"calculate_from_node_list",
+			"calculate_from_node_list"
 		},
 		options_values = {
 			"use_node_pair",
 			"use_offset_node",
 			"calculate_from_node_pair",
-			"calculate_from_node_list",
-		},
+			"calculate_from_node_list"
+		}
 	},
 	node_a_name = {
 		category = "Node Pair",
 		ui_name = "Node A Name",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	node_b_name = {
 		category = "Node Pair",
 		ui_name = "Node B Name",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	offset_node_name = {
 		category = "Offset Node",
 		ui_name = "Offset Node Name",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	entrance_offset = {
 		category = "Offset Node",
 		ui_name = "Entrance Offset",
 		ui_type = "vector",
-		value = Vector3Box(0, 0, 0),
+		value = Vector3Box(0, 0, 0)
 	},
 	exit_offset = {
 		category = "Offset Node",
 		ui_name = "Exit Offset",
 		ui_type = "vector",
-		value = Vector3Box(0, 0, 0),
+		value = Vector3Box(0, 0, 0)
 	},
 	node_list = {
 		category = "Node List",
 		size = 0,
 		ui_name = "Nodes",
-		ui_type = "text_box_array",
+		ui_type = "text_box_array"
 	},
 	inputs = {
 		flow_nav_enable = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		flow_nav_disable = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"NavGraphExtension",
-	},
+		"NavGraphExtension"
+	}
 }
 
 return NavGraph

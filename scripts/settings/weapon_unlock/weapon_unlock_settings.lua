@@ -7,7 +7,7 @@ local unlock_config = {
 	ogryn = require("scripts/settings/weapon_unlock/weapon_unlock_settings_ogryn"),
 	psyker = require("scripts/settings/weapon_unlock/weapon_unlock_settings_psyker"),
 	veteran = require("scripts/settings/weapon_unlock/weapon_unlock_settings_veteran"),
-	zealot = require("scripts/settings/weapon_unlock/weapon_unlock_settings_zealot"),
+	zealot = require("scripts/settings/weapon_unlock/weapon_unlock_settings_zealot")
 }
 local weapon_unlock_settings = {}
 

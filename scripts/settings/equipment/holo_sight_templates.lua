@@ -8,7 +8,7 @@ holo_sight_templates.default = {
 	hide_delay = 0.1,
 	hip_dot = 1.8,
 	hip_ring = 1.2,
-	show_delay = 0.1,
+	show_delay = 0.1
 }
 holo_sight_templates.lasgun = {
 	ads_dot = 7,
@@ -16,7 +16,7 @@ holo_sight_templates.lasgun = {
 	hide_delay = 0.1,
 	hip_dot = 1.8,
 	hip_ring = 1.2,
-	show_delay = 0.1,
+	show_delay = 0.1
 }
 holo_sight_templates.laspistol = {
 	ads_dot = 0,
@@ -24,7 +24,7 @@ holo_sight_templates.laspistol = {
 	hide_delay = 0.1,
 	hip_dot = 0.2,
 	hip_ring = 0.5,
-	show_delay = 0.1,
+	show_delay = 0.1
 }
 
 for name, template in pairs(holo_sight_templates) do

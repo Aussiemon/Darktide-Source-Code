@@ -16,7 +16,7 @@ local _render_settings = {
 	viewport_type = "ui_watermark_offscreen",
 	world_layer = 999,
 	world_name = "watermark_world",
-	size = ConstantElementWatermarkSettings.size,
+	size = ConstantElementWatermarkSettings.size
 }
 local ConstantElementWatermark = class("ConstantElementWatermark", "ConstantElementBase")
 
@@ -125,12 +125,12 @@ end
 
 local temp_size = {
 	0,
-	0,
+	0
 }
 local temp_position = {
 	0,
 	0,
-	0,
+	0
 }
 local qr_color_alpha = 255
 local qr_color_black = Color.black(qr_color_alpha, true)
@@ -149,12 +149,12 @@ ConstantElementWatermark._render_qr_grid = function (self, ui_renderer)
 		255,
 		255,
 		255,
-		255,
+		255
 	}
 	local text_options = {
 		shadow = true,
 		horizontal_alignment = Gui.HorizontalAlignRight,
-		vertical_alignment = Gui.VerticalAlignBottom,
+		vertical_alignment = Gui.VerticalAlignBottom
 	}
 
 	font_size = math.floor(16 * scale)

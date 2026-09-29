@@ -14,14 +14,14 @@ local view_settings = {
 	state_bound = false,
 	use_transition_ui = false,
 	enter_sound_events = {
-		UISoundEvents.aquilas_vendor_on_enter,
+		UISoundEvents.aquilas_vendor_on_enter
 	},
 	exit_sound_events = {
-		UISoundEvents.aquilas_vendor_on_exit,
+		UISoundEvents.aquilas_vendor_on_exit
 	},
 	wwise_states = {
-		options = WwiseGameSyncSettings.state_groups.options.credit_store_menu,
-	},
+		options = WwiseGameSyncSettings.state_groups.options.credit_store_menu
+	}
 }
 
 return settings("PremiumCurrencyViewDeclarationSettings", view_settings)

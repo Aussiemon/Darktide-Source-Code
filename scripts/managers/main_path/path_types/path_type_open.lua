@@ -3,7 +3,7 @@
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local PathTypeOpen = class("PathTypeOpen")
 
-PathTypeOpen.init = function (self, world, nav_world, num_sides, is_server, use_nav_point_time_slice)
+PathTypeOpen.init = function (self, world, nav_world, num_sides)
 	self._world = world
 	self._nav_world = nav_world
 
@@ -21,7 +21,7 @@ PathTypeOpen.init = function (self, world, nav_world, num_sides, is_server, use_
 			furthest_travel_distance = 0,
 			furthest_worst_travel_distance = 0,
 			ahead_path_position = Vector3Box(invalid_vector),
-			behind_path_position = Vector3Box(invalid_vector),
+			behind_path_position = Vector3Box(invalid_vector)
 		}
 	end
 

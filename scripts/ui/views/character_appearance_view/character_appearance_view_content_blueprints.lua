@@ -36,8 +36,8 @@ local function _load_appearance_icon(parent, widget, element)
 	local render_context = {
 		size = {
 			128,
-			192,
-		},
+			192
+		}
 	}
 	local icon_load_id = Managers.ui:load_profile_portrait(profile, cb, render_context)
 
@@ -87,13 +87,13 @@ local blueprints = {
 	spacing_vertical = {
 		size = {
 			grid_width,
-			20,
-		},
+			20
+		}
 	},
 	name_input = {
 		size = {
 			400,
-			60,
+			60
 		},
 		pass_template = TextInputPassTemplates.terminal_input_field,
 		init = function (parent, widget, element)
@@ -133,12 +133,12 @@ local blueprints = {
 			else
 				barber_view_settings.close_on_hotkey_pressed = true
 			end
-		end,
+		end
 	},
 	button = {
 		size = {
 			450,
-			60,
+			60
 		},
 		pass_template = ButtonPassTemplates.terminal_list_button,
 		init = function (parent, widget, element, option, grid_index, callback_name)
@@ -158,19 +158,19 @@ local blueprints = {
 			end
 
 			content.element = element
-		end,
+		end
 	},
 	divider = {
 		size = {
 			450,
-			12,
+			12
 		},
-		pass_template = ButtonPassTemplates.terminal_list_divider,
+		pass_template = ButtonPassTemplates.terminal_list_divider
 	},
 	category_button = {
 		size = {
 			450,
-			60,
+			60
 		},
 		pass_template = {
 			{
@@ -180,8 +180,8 @@ local blueprints = {
 				content = {
 					on_hover_sound = UiSoundEvents.default_mouse_hover,
 					on_pressed_sound = UiSoundEvents.default_click,
-					on_select_sound = UiSoundEvents.default_click,
-				},
+					on_select_sound = UiSoundEvents.default_click
+				}
 			},
 			{
 				pass_type = "texture",
@@ -195,18 +195,18 @@ local blueprints = {
 					color = Color.terminal_background_selected(nil, true),
 					size_addition = {
 						0,
-						-2 * ButtonPassTemplates.terminal_list_divider_height,
+						-2 * ButtonPassTemplates.terminal_list_divider_height
 					},
 					offset = {
 						0,
 						ButtonPassTemplates.terminal_list_divider_height,
-						0,
-					},
+						0
+					}
 				},
 				change_function = ButtonPassTemplates.terminal_list_button_background_change_function,
 				visibility_function = function (content, style)
 					return content.hotspot.is_selected
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -222,16 +222,16 @@ local blueprints = {
 					selected_color = Color.terminal_background_selected(nil, true),
 					size_addition = {
 						0,
-						-2 * ButtonPassTemplates.terminal_list_divider_height,
+						-2 * ButtonPassTemplates.terminal_list_divider_height
 					},
 					offset = {
 						0,
 						ButtonPassTemplates.terminal_list_divider_height,
-						1,
-					},
+						1
+					}
 				},
 				change_function = ButtonPassTemplates.terminal_list_button_frame_hover_change_function,
-				visibility_function = ButtonPassTemplates.list_button_focused_visibility_function,
+				visibility_function = ButtonPassTemplates.list_button_focused_visibility_function
 			},
 			{
 				pass_type = "texture",
@@ -248,11 +248,11 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						6,
-					},
+						6
+					}
 				},
 				change_function = ButtonPassTemplates.terminal_list_button_frame_hover_change_function,
-				visibility_function = ButtonPassTemplates.list_button_focused_visibility_function,
+				visibility_function = ButtonPassTemplates.list_button_focused_visibility_function
 			},
 			{
 				pass_type = "texture",
@@ -269,11 +269,11 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						9,
-					},
+						9
+					}
 				},
 				change_function = ButtonPassTemplates.terminal_list_button_frame_hover_change_function,
-				visibility_function = ButtonPassTemplates.list_button_focused_visibility_function,
+				visibility_function = ButtonPassTemplates.list_button_focused_visibility_function
 			},
 			{
 				pass_type = "texture",
@@ -284,14 +284,14 @@ local blueprints = {
 					color = Color.terminal_frame(255, true),
 					size = {
 						nil,
-						2,
+						2
 					},
 					offset = {
 						0,
 						0,
-						1,
-					},
-				},
+						1
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -302,7 +302,7 @@ local blueprints = {
 					vertical_alignment = "center",
 					size = {
 						40,
-						40,
+						40
 					},
 					color = Color.terminal_text_body(255, true),
 					default_color = Color.terminal_text_body(255, true),
@@ -311,13 +311,13 @@ local blueprints = {
 					offset = {
 						15,
 						0,
-						3,
-					},
+						3
+					}
 				},
 				visibility_function = function (content, style)
 					return content.icon
 				end,
-				change_function = ButtonPassTemplates.terminal_list_button_text_change_function,
+				change_function = ButtonPassTemplates.terminal_list_button_text_change_function
 			},
 			{
 				pass_type = "text",
@@ -325,7 +325,7 @@ local blueprints = {
 				value = "n/a",
 				value_id = "text",
 				style = CharacterAppearanceViewFontStyle.category_button_font_style,
-				change_function = ButtonPassTemplates.terminal_list_button_text_change_function,
+				change_function = ButtonPassTemplates.terminal_list_button_text_change_function
 			},
 			{
 				pass_type = "rect",
@@ -334,16 +334,16 @@ local blueprints = {
 					offset = {
 						0,
 						2,
-						3,
+						3
 					},
 					size = {
-						5,
-					},
+						5
+					}
 				},
 				visibility_function = function (content, style)
 					return content.show_warning
-				end,
-			},
+				end
+			}
 		},
 		init = function (parent, widget, element, option, grid_index, callback_name)
 			local content = widget.content
@@ -361,12 +361,12 @@ local blueprints = {
 			end
 
 			content.element = element
-		end,
+		end
 	},
 	slot_item_button = {
 		size = {
 			460,
-			80,
+			80
 		},
 		pass_template = {
 			{
@@ -375,8 +375,8 @@ local blueprints = {
 				content = {
 					on_released_sound = nil,
 					on_hover_sound = UiSoundEvents.default_mouse_hover,
-					on_pressed_sound = UiSoundEvents.character_appearance_change,
-				},
+					on_pressed_sound = UiSoundEvents.character_appearance_change
+				}
 			},
 			{
 				pass_type = "texture",
@@ -390,12 +390,12 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						2,
+						2
 					},
 					size_addition = {
 						0,
-						0,
-					},
+						0
+					}
 				},
 				change_function = function (content, style, _, dt)
 					local hotspot = content.hotspot
@@ -414,7 +414,7 @@ local blueprints = {
 					offset[1] = -size_addition
 					offset[2] = -size_addition
 					style.hdr = progress == 1
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -429,8 +429,8 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						1,
-					},
+						1
+					}
 				},
 				change_function = function (content, style)
 					ButtonPassTemplates.terminal_button_change_function(content, style)
@@ -438,7 +438,7 @@ local blueprints = {
 				end,
 				visibility_function = function (content, style)
 					return content.hotspot.is_hover or content.hotspot.is_focused
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -449,12 +449,12 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						0,
-					},
+						0
+					}
 				},
 				visibility_function = function (content, style)
 					return content.hotspot.is_selected
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -471,7 +471,7 @@ local blueprints = {
 					for i = 2, 4 do
 						text_color[i] = (hover_text_color[i] - default_text_color[i]) * progress + default_text_color[i]
 					end
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -488,8 +488,8 @@ local blueprints = {
 					for i = 2, 4 do
 						text_color[i] = (hover_text_color[i] - default_text_color[i]) * progress + default_text_color[i]
 					end
-				end,
-			},
+				end
+			}
 		},
 		init = function (parent, widget, element, option, grid_index, callback_name)
 			local content = widget.content
@@ -499,7 +499,7 @@ local blueprints = {
 			content.text = option.value.display_name and option.value.display_name
 			content.description = option.value.description and option.value.description
 			content.element = element
-		end,
+		end
 	},
 	slot_icon = {
 		size = CharacterAppearanceViewSettings.slot_icon_size,
@@ -510,8 +510,8 @@ local blueprints = {
 				content = {
 					on_released_sound = nil,
 					on_hover_sound = UiSoundEvents.default_mouse_hover,
-					on_pressed_sound = UiSoundEvents.character_appearance_change,
-				},
+					on_pressed_sound = UiSoundEvents.character_appearance_change
+				}
 			},
 			{
 				pass_type = "texture",
@@ -523,16 +523,16 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						2,
+						2
 					},
 					size = CharacterAppearanceViewSettings.slot_icon_size,
 					material_values = {
 						columns = 1,
 						grid_index = 1,
 						rows = 1,
-						use_placeholder_texture = 1,
-					},
-				},
+						use_placeholder_texture = 1
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -552,10 +552,10 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						6,
-					},
+						6
+					}
 				},
-				change_function = ButtonPassTemplates.terminal_button_change_function,
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
 				pass_type = "texture",
@@ -575,10 +575,10 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						9,
-					},
+						9
+					}
 				},
-				change_function = ButtonPassTemplates.terminal_button_change_function,
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
 				pass_type = "texture",
@@ -593,8 +593,8 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						10,
-					},
+						10
+					}
 				},
 				change_function = function (content, style)
 					ButtonPassTemplates.terminal_button_change_function(content, style)
@@ -602,7 +602,7 @@ local blueprints = {
 				end,
 				visibility_function = function (content, style)
 					return content.hotspot.is_hover or content.hotspot.is_focused
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -613,17 +613,17 @@ local blueprints = {
 					vertical_alignment = "top",
 					size = {
 						32,
-						32,
+						32
 					},
 					offset = {
 						0,
 						0,
-						8,
-					},
+						8
+					}
 				},
 				visibility_function = function (content, style)
 					return content.hotspot.is_selected
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -636,18 +636,18 @@ local blueprints = {
 					offset = {
 						5,
 						-5,
-						3,
+						3
 					},
 					color = Color.ui_terminal(255, true),
 					size = {
 						16,
-						16,
-					},
+						16
+					}
 				},
 				visibility_function = function (content)
 					return content.use_choice_icon
-				end,
-			},
+				end
+			}
 		},
 		init = function (parent, widget, element, option, grid_index, callback_name)
 			local content = widget.content
@@ -677,12 +677,12 @@ local blueprints = {
 
 				Managers.event:trigger("event_player_profile_character_appearance_update", profile)
 			end
-		end,
+		end
 	},
 	icon = {
 		size = {
 			90,
-			90,
+			90
 		},
 		pass_template = {
 			{
@@ -691,8 +691,8 @@ local blueprints = {
 				content = {
 					on_released_sound = nil,
 					on_hover_sound = UiSoundEvents.default_mouse_hover,
-					on_pressed_sound = UiSoundEvents.character_appearance_change,
-				},
+					on_pressed_sound = UiSoundEvents.character_appearance_change
+				}
 			},
 			{
 				pass_type = "rect",
@@ -702,9 +702,9 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						1,
-					},
-				},
+						1
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -715,17 +715,17 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						2,
+						2
 					},
 					color = Color.terminal_frame(nil, true),
 					default_color = Color.terminal_frame(nil, true),
 					hover_color = Color.terminal_frame(nil, true),
-					selected_color = Color.terminal_frame_selected(nil, true),
+					selected_color = Color.terminal_frame_selected(nil, true)
 				},
 				change_function = _item_change_function,
 				visibility_function = function (content, style)
 					return style.material_values.texture_map
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -740,8 +740,8 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						4,
-					},
+						4
+					}
 				},
 				change_function = function (content, style)
 					ButtonPassTemplates.terminal_button_change_function(content, style)
@@ -749,7 +749,7 @@ local blueprints = {
 				end,
 				visibility_function = function (content, style)
 					return content.hotspot.is_hover or content.hotspot.is_focused
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -760,16 +760,16 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						3,
+						3
 					},
 					color = Color.terminal_text_body(nil, true),
 					default_color = Color.terminal_text_body(nil, true),
-					selected_color = Color.terminal_icon_selected(nil, true),
+					selected_color = Color.terminal_icon_selected(nil, true)
 				},
 				change_function = _item_change_function,
 				visibility_function = function (content, style)
 					return style.material_values.texture_map
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -780,12 +780,12 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						2,
-					},
+						2
+					}
 				},
 				visibility_function = function (content, style)
 					return not content.icon_texture
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -805,10 +805,10 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						6,
-					},
+						6
+					}
 				},
-				change_function = ButtonPassTemplates.terminal_button_change_function,
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
 				max_alpha = 255,
@@ -828,10 +828,10 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						9,
-					},
+						9
+					}
 				},
-				change_function = ButtonPassTemplates.terminal_button_change_function,
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
 				pass_type = "texture",
@@ -842,17 +842,17 @@ local blueprints = {
 					vertical_alignment = "top",
 					size = {
 						32,
-						32,
+						32
 					},
 					offset = {
 						0,
 						0,
-						8,
-					},
+						8
+					}
 				},
 				visibility_function = function (content, style)
 					return content.hotspot.is_selected
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -865,18 +865,18 @@ local blueprints = {
 					offset = {
 						5,
 						-5,
-						3,
+						3
 					},
 					color = Color.ui_terminal(255, true),
 					size = {
 						16,
-						16,
-					},
+						16
+					}
 				},
 				visibility_function = function (content)
 					return content.use_choice_icon
-				end,
-			},
+				end
+			}
 		},
 		init = function (parent, widget, element, option, grid_index, callback_name)
 			local content = widget.content
@@ -886,19 +886,19 @@ local blueprints = {
 			content.icon_background = element.icon_background
 			content.icon_texture = option.icon_texture
 			style.icon.material_values = {
-				texture_map = content.icon_texture,
+				texture_map = content.icon_texture
 			}
 			style.icon_background.material_values = {
-				texture_map = content.icon_background,
+				texture_map = content.icon_background
 			}
 			content.element = element
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, option, grid_index)
-		end,
+		end
 	},
 	icon_small_texture = {
 		size = {
 			40,
-			40,
+			40
 		},
 		pass_template = {
 			{
@@ -907,8 +907,8 @@ local blueprints = {
 				content = {
 					on_released_sound = nil,
 					on_hover_sound = UiSoundEvents.default_mouse_hover,
-					on_pressed_sound = UiSoundEvents.character_appearance_change,
-				},
+					on_pressed_sound = UiSoundEvents.character_appearance_change
+				}
 			},
 			{
 				pass_type = "texture",
@@ -920,12 +920,12 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						1,
-					},
+						1
+					}
 				},
 				visibility_function = function (content, style)
 					return content.texture and (not style.material_values or not style.material_values.texture_map)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -945,10 +945,10 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						6,
-					},
+						6
+					}
 				},
-				change_function = ButtonPassTemplates.terminal_button_change_function,
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
 				max_alpha = 255,
@@ -968,10 +968,10 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						9,
-					},
+						9
+					}
 				},
-				change_function = ButtonPassTemplates.terminal_button_change_function,
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
 				pass_type = "texture",
@@ -986,8 +986,8 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						4,
-					},
+						4
+					}
 				},
 				change_function = function (content, style)
 					ButtonPassTemplates.terminal_button_change_function(content, style)
@@ -995,7 +995,7 @@ local blueprints = {
 				end,
 				visibility_function = function (content, style)
 					return content.hotspot.is_hover or content.hotspot.is_focused
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1006,16 +1006,16 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						3,
+						3
 					},
 					color = Color.terminal_text_body(nil, true),
 					default_color = Color.terminal_text_body(nil, true),
-					selected_color = Color.terminal_icon_selected(nil, true),
+					selected_color = Color.terminal_icon_selected(nil, true)
 				},
 				change_function = _item_change_function,
 				visibility_function = function (content, style)
 					return style.material_values and style.material_values.texture_map
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1028,18 +1028,18 @@ local blueprints = {
 					offset = {
 						5,
 						-5,
-						3,
+						3
 					},
 					color = Color.ui_terminal(255, true),
 					size = {
 						16,
-						16,
-					},
+						16
+					}
 				},
 				visibility_function = function (content)
 					return content.use_choice_icon
-				end,
-			},
+				end
+			}
 		},
 		init = function (parent, widget, element, option, grid_index, callback_name)
 			local content = widget.content
@@ -1052,25 +1052,25 @@ local blueprints = {
 			if option.icon_texture then
 				content.icon_texture = option.icon_texture
 				style.icon.material_values = {
-					texture_map = content.icon_texture,
+					texture_map = content.icon_texture
 				}
 			end
 
 			if element.icon_background then
 				content.icon_background = element.icon_background
 				style.icon_background.material_values = {
-					texture_map = content.icon_background,
+					texture_map = content.icon_background
 				}
 			end
 
 			content.texture = element.texture
 			style.texture.color = option.color
-		end,
+		end
 	},
 	icon_small_texture_hsv = {
 		size = {
 			40,
-			40,
+			40
 		},
 		pass_template = {
 			{
@@ -1079,8 +1079,8 @@ local blueprints = {
 				content = {
 					on_released_sound = nil,
 					on_hover_sound = UiSoundEvents.default_mouse_hover,
-					on_pressed_sound = UiSoundEvents.character_appearance_change,
-				},
+					on_pressed_sound = UiSoundEvents.character_appearance_change
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1092,16 +1092,16 @@ local blueprints = {
 						hsv_skin = {
 							0,
 							0,
-							0,
-						},
+							0
+						}
 					},
 					color = Color.terminal_corner(255, true),
 					offset = {
 						0,
 						0,
-						1,
-					},
-				},
+						1
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1121,10 +1121,10 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						6,
-					},
+						6
+					}
 				},
-				change_function = ButtonPassTemplates.terminal_button_change_function,
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
 				max_alpha = 255,
@@ -1144,10 +1144,10 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						9,
-					},
+						9
+					}
 				},
-				change_function = ButtonPassTemplates.terminal_button_change_function,
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
 				pass_type = "texture",
@@ -1162,8 +1162,8 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						4,
-					},
+						4
+					}
 				},
 				change_function = function (content, style)
 					ButtonPassTemplates.terminal_button_change_function(content, style)
@@ -1171,7 +1171,7 @@ local blueprints = {
 				end,
 				visibility_function = function (content, style)
 					return content.hotspot.is_hover or content.hotspot.is_focused
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1184,18 +1184,18 @@ local blueprints = {
 					offset = {
 						5,
 						-5,
-						3,
+						3
 					},
 					color = Color.ui_terminal(255, true),
 					size = {
 						16,
-						16,
-					},
+						16
+					}
 				},
 				visibility_function = function (content)
 					return content.use_choice_icon
-				end,
-			},
+				end
+			}
 		},
 		init = function (parent, widget, element, option, grid_index, callback_name)
 			local content = widget.content
@@ -1208,33 +1208,33 @@ local blueprints = {
 			style.texture.material_values.hsv_skin = option.color
 			style.texture.material_values.oxid_color = option.oxidation_texture
 			style.texture.material_values.oxid_level = option.oxidation_level
-		end,
+		end
 	},
 	vertical_slider = {
 		size = {
 			140,
-			580,
+			580
 		},
 		pass_template = {
 			{
 				content_id = "hotspot",
-				pass_type = "hotspot",
+				pass_type = "hotspot"
 			},
 			{
 				content_id = "hotspot_handle",
-				pass_type = "hotspot",
+				pass_type = "hotspot"
 			},
 			{
 				pass_type = "text",
 				value_id = "value_text_top",
 				style = CharacterAppearanceViewFontStyle.slider_top_font_style,
-				value = Localize("loc_character_create_height_max"),
+				value = Localize("loc_character_create_height_max")
 			},
 			{
 				pass_type = "text",
 				value_id = "value_text_bottom",
 				style = CharacterAppearanceViewFontStyle.slider_bottom_font_style,
-				value = Localize("loc_character_create_height_min"),
+				value = Localize("loc_character_create_height_min")
 			},
 			{
 				pass_type = "texture",
@@ -1247,13 +1247,13 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						0,
+						0
 					},
 					size = {
 						20,
-						460,
-					},
-				},
+						460
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1265,15 +1265,15 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						2,
+						2
 					},
 					size = {
 						6,
-						460,
+						460
 					},
 					disabled_color = Color.terminal_text_body_dark(255, true),
 					default_color = Color.terminal_corner(255, true),
-					hover_color = Color.terminal_corner_hover(255, true),
+					hover_color = Color.terminal_corner_hover(255, true)
 				},
 				change_function = function (content, style)
 					local default_color = style.default_color
@@ -1285,7 +1285,7 @@ local blueprints = {
 					Colors.color_lerp(default_color, hover_color, progress, color)
 
 					style.hdr = progress == 1
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1298,13 +1298,13 @@ local blueprints = {
 					offset = {
 						0,
 						-230,
-						2,
+						2
 					},
 					size = {
 						20,
-						3,
-					},
-				},
+						3
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1317,13 +1317,13 @@ local blueprints = {
 					offset = {
 						0,
 						230,
-						2,
+						2
 					},
 					size = {
 						20,
-						3,
-					},
-				},
+						3
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1334,15 +1334,15 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						7,
+						7
 					},
 					size = {
 						38,
-						38,
+						38
 					},
 					disabled_color = Color.terminal_text_body_dark(255, true),
 					default_color = Color.terminal_corner(255, true),
-					hover_color = Color.terminal_corner_hover(255, true),
+					hover_color = Color.terminal_corner_hover(255, true)
 				},
 				change_function = function (content, style)
 					local size = 460
@@ -1360,7 +1360,7 @@ local blueprints = {
 					Colors.color_lerp(default_color, hover_color, progress, color)
 
 					style.hdr = progress == 1
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1371,13 +1371,13 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						6,
+						6
 					},
 					size = {
 						38,
-						38,
+						38
 					},
-					color = Color.black(255, true),
+					color = Color.black(255, true)
 				},
 				change_function = function (content, style)
 					local size = 460
@@ -1388,7 +1388,7 @@ local blueprints = {
 
 					style.offset[2] = value * size - position_diff
 					style.hdr = progress == 1
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1400,13 +1400,13 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						9,
+						9
 					},
 					size = {
 						38,
-						38,
+						38
 					},
-					color = Color.terminal_corner_hover(255, true),
+					color = Color.terminal_corner_hover(255, true)
 				},
 				change_function = function (content, style)
 					local size = 460
@@ -1425,7 +1425,7 @@ local blueprints = {
 
 					style_size[1] = new_size
 					style_size[2] = new_size
-				end,
+				end
 			},
 			{
 				pass_type = "logic",
@@ -1485,8 +1485,8 @@ local blueprints = {
 							content.option.on_value_updated(inverted_value)
 						end
 					end
-				end,
-			},
+				end
+			}
 		},
 		init = function (parent, widget, element, option, grid_index, callback_name)
 			local content = widget.content
@@ -1511,12 +1511,12 @@ local blueprints = {
 			local value = parent._character_create:height()
 
 			content.slider_value = 1 - math.ilerp(min_height, max_height, value)
-		end,
+		end
 	},
 	personality_button = {
 		size = {
 			450,
-			60,
+			60
 		},
 		pass_template = {
 			{
@@ -1525,8 +1525,8 @@ local blueprints = {
 				content = {
 					on_released_sound = nil,
 					on_hover_sound = UiSoundEvents.default_mouse_hover,
-					on_pressed_sound = UiSoundEvents.character_appearence_option_pressed,
-				},
+					on_pressed_sound = UiSoundEvents.character_appearence_option_pressed
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1540,18 +1540,18 @@ local blueprints = {
 					color = Color.terminal_background_selected(nil, true),
 					size_addition = {
 						0,
-						-2 * ButtonPassTemplates.terminal_list_divider_height,
+						-2 * ButtonPassTemplates.terminal_list_divider_height
 					},
 					offset = {
 						0,
 						ButtonPassTemplates.terminal_list_divider_height,
-						0,
-					},
+						0
+					}
 				},
 				change_function = ButtonPassTemplates.terminal_list_button_background_change_function,
 				visibility_function = function (content, style)
 					return content.hotspot.is_selected
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1568,16 +1568,16 @@ local blueprints = {
 					selected_color = Color.terminal_background_selected(nil, true),
 					size_addition = {
 						0,
-						-2 * ButtonPassTemplates.terminal_list_divider_height,
+						-2 * ButtonPassTemplates.terminal_list_divider_height
 					},
 					offset = {
 						0,
 						ButtonPassTemplates.terminal_list_divider_height,
-						1,
-					},
+						1
+					}
 				},
 				change_function = ButtonPassTemplates.terminal_list_button_frame_hover_change_function,
-				visibility_function = ButtonPassTemplates.list_button_focused_visibility_function,
+				visibility_function = ButtonPassTemplates.list_button_focused_visibility_function
 			},
 			{
 				pass_type = "texture",
@@ -1595,11 +1595,11 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						6,
-					},
+						6
+					}
 				},
 				change_function = ButtonPassTemplates.terminal_button_change_function,
-				visibility_function = ButtonPassTemplates.list_button_focused_visibility_function,
+				visibility_function = ButtonPassTemplates.list_button_focused_visibility_function
 			},
 			{
 				pass_type = "texture",
@@ -1617,11 +1617,11 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						9,
-					},
+						9
+					}
 				},
 				change_function = ButtonPassTemplates.terminal_button_change_function,
-				visibility_function = ButtonPassTemplates.list_button_focused_visibility_function,
+				visibility_function = ButtonPassTemplates.list_button_focused_visibility_function
 			},
 			{
 				pass_type = "texture",
@@ -1634,15 +1634,15 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						1,
+						1
 					},
 					size = {
-						[2] = ButtonPassTemplates.terminal_list_divider_height,
-					},
+						[2] = ButtonPassTemplates.terminal_list_divider_height
+					}
 				},
 				visibility_function = function (content, style)
 					return content.show_top_divider
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1655,12 +1655,12 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						2,
+						2
 					},
 					size = {
-						[2] = ButtonPassTemplates.terminal_list_divider_height,
-					},
-				},
+						[2] = ButtonPassTemplates.terminal_list_divider_height
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1672,19 +1672,19 @@ local blueprints = {
 					vertical_alignment = "center",
 					size = {
 						32,
-						32,
+						32
 					},
 					offset = {
 						15,
 						0,
-						3,
+						3
 					},
 					color = Color.terminal_text_body(255, true),
 					default_color = Color.terminal_text_body(255, true),
 					hover_color = Color.terminal_text_header(255, true),
-					selected_color = Color.terminal_text_header_selected(255, true),
+					selected_color = Color.terminal_text_header_selected(255, true)
 				},
-				change_function = ButtonPassTemplates.terminal_list_button_text_change_function,
+				change_function = ButtonPassTemplates.terminal_list_button_text_change_function
 			},
 			{
 				pass_type = "texture",
@@ -1698,17 +1698,17 @@ local blueprints = {
 					vertical_alignment = "center",
 					size = {
 						32,
-						32,
+						32
 					},
 					offset = {
 						15,
 						0,
-						4,
+						4
 					},
 					color = Color.terminal_text_body(255, true),
 					default_color = Color.terminal_text_body(255, true),
 					hover_color = Color.terminal_text_header(255, true),
-					selected_color = Color.terminal_text_header_selected(255, true),
+					selected_color = Color.terminal_text_header_selected(255, true)
 				},
 				change_function = ButtonPassTemplates.terminal_list_button_frame_hover_change_function,
 				visibility_function = function (content, style)
@@ -1717,7 +1717,7 @@ local blueprints = {
 					local was_hovered = hotspot.anim_hover_progress > 0 or hotspot.anim_select_progress > 0
 
 					return is_hovered or was_hovered
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -1725,7 +1725,7 @@ local blueprints = {
 				value = "",
 				value_id = "text",
 				style = table.clone(UiFontSettings.list_button),
-				change_function = ButtonPassTemplates.terminal_list_button_text_change_function,
+				change_function = ButtonPassTemplates.terminal_list_button_text_change_function
 			},
 			{
 				pass_type = "rect",
@@ -1734,15 +1734,15 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						1,
+						1
 					},
 					size = {
-						5,
-					},
+						5
+					}
 				},
 				visibility_function = function (content, style)
 					return content.show_warning
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1755,37 +1755,37 @@ local blueprints = {
 					offset = {
 						5,
 						-5,
-						3,
+						3
 					},
 					color = Color.ui_terminal(255, true),
 					size = {
 						16,
-						16,
-					},
+						16
+					}
 				},
 				visibility_function = function (content)
 					return content.use_choice_icon
-				end,
+				end
 			},
 			{
 				content_id = "voice_hotspot",
 				pass_type = "hotspot",
 				content = {
-					hover_type = "circle",
+					hover_type = "circle"
 				},
 				style = {
 					horizontal_alignment = "right",
 					vertical_alignment = "center",
 					size = {
 						40,
-						40,
+						40
 					},
 					offset = {
 						-20,
 						0,
-						1,
-					},
-				},
+						1
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1796,7 +1796,7 @@ local blueprints = {
 					offset = {
 						-20,
 						0,
-						3,
+						3
 					},
 					color = Color.terminal_text_body(255, true),
 					default_color = Color.terminal_text_body(255, true),
@@ -1804,8 +1804,8 @@ local blueprints = {
 					hover_color = Color.terminal_text_header_selected(255, true),
 					size = {
 						40,
-						40,
-					},
+						40
+					}
 				},
 				visibility_function = function (content, style)
 					return not content.sound_id
@@ -1818,7 +1818,7 @@ local blueprints = {
 					local progress = math.max(math.max(hotspot.anim_select_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
 					Colors.color_lerp(default_color, hover_color, progress, color)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1830,7 +1830,7 @@ local blueprints = {
 					offset = {
 						-12,
 						0,
-						3,
+						3
 					},
 					color = Color.terminal_text_body(255, true),
 					default_color = Color.terminal_text_body(255, true),
@@ -1838,8 +1838,8 @@ local blueprints = {
 					hover_color = Color.terminal_text_header_selected(255, true),
 					size = {
 						6,
-						40,
-					},
+						40
+					}
 				},
 				change_function = function (content, style)
 					local hotspot = content.hotspot
@@ -1852,7 +1852,7 @@ local blueprints = {
 				end,
 				visibility_function = function (content, style)
 					return content.sound_id
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1864,7 +1864,7 @@ local blueprints = {
 					offset = {
 						-22,
 						0,
-						3,
+						3
 					},
 					color = Color.terminal_text_body(255, true),
 					default_color = Color.terminal_text_body(255, true),
@@ -1872,8 +1872,8 @@ local blueprints = {
 					hover_color = Color.terminal_text_header_selected(255, true),
 					size = {
 						6,
-						40,
-					},
+						40
+					}
 				},
 				change_function = function (content, style)
 					local hotspot = content.hotspot
@@ -1886,7 +1886,7 @@ local blueprints = {
 				end,
 				visibility_function = function (content, style)
 					return content.sound_id
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1898,7 +1898,7 @@ local blueprints = {
 					offset = {
 						-32,
 						0,
-						3,
+						3
 					},
 					color = Color.terminal_text_body(255, true),
 					default_color = Color.terminal_text_body(255, true),
@@ -1906,8 +1906,8 @@ local blueprints = {
 					hover_color = Color.terminal_text_header_selected(255, true),
 					size = {
 						6,
-						40,
-					},
+						40
+					}
 				},
 				change_function = function (content, style)
 					local hotspot = content.hotspot
@@ -1920,7 +1920,7 @@ local blueprints = {
 				end,
 				visibility_function = function (content, style)
 					return content.sound_id
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1932,7 +1932,7 @@ local blueprints = {
 					offset = {
 						-42,
 						0,
-						3,
+						3
 					},
 					color = Color.terminal_text_body(255, true),
 					default_color = Color.terminal_text_body(255, true),
@@ -1940,8 +1940,8 @@ local blueprints = {
 					hover_color = Color.terminal_text_header_selected(255, true),
 					size = {
 						6,
-						40,
-					},
+						40
+					}
 				},
 				change_function = function (content, style)
 					local hotspot = content.hotspot
@@ -1954,7 +1954,7 @@ local blueprints = {
 				end,
 				visibility_function = function (content, style)
 					return content.sound_id
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1966,7 +1966,7 @@ local blueprints = {
 					offset = {
 						-52,
 						0,
-						3,
+						3
 					},
 					color = Color.terminal_text_body(255, true),
 					default_color = Color.terminal_text_body(255, true),
@@ -1974,8 +1974,8 @@ local blueprints = {
 					hover_color = Color.terminal_text_header_selected(255, true),
 					size = {
 						6,
-						40,
-					},
+						40
+					}
 				},
 				change_function = function (content, style)
 					local hotspot = content.hotspot
@@ -1988,7 +1988,7 @@ local blueprints = {
 				end,
 				visibility_function = function (content, style)
 					return content.sound_id
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2000,7 +2000,7 @@ local blueprints = {
 					offset = {
 						-62,
 						0,
-						3,
+						3
 					},
 					color = Color.terminal_text_body(255, true),
 					default_color = Color.terminal_text_body(255, true),
@@ -2008,8 +2008,8 @@ local blueprints = {
 					hover_color = Color.terminal_text_header_selected(255, true),
 					size = {
 						6,
-						40,
-					},
+						40
+					}
 				},
 				change_function = function (content, style)
 					local hotspot = content.hotspot
@@ -2022,8 +2022,8 @@ local blueprints = {
 				end,
 				visibility_function = function (content, style)
 					return content.sound_id
-				end,
-			},
+				end
+			}
 		},
 		init = function (parent, widget, element, option, grid_index, callback_name)
 			local content = widget.content
@@ -2071,12 +2071,12 @@ local blueprints = {
 			elseif not widget.content.sound_id and widget.content.pulse_progress then
 				widget.content.pulse_progress = nil
 			end
-		end,
+		end
 	},
 	voice_slider_matrix = {
 		size = {
 			340,
-			300,
+			300
 		},
 		pass_template = {
 			{
@@ -2086,9 +2086,9 @@ local blueprints = {
 					offset = {
 						0,
 						15,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				content_id = "hotspot_handle",
@@ -2097,9 +2097,9 @@ local blueprints = {
 					offset = {
 						0,
 						15,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -2111,13 +2111,13 @@ local blueprints = {
 					offset = {
 						0,
 						20,
-						5,
+						5
 					},
 					size = {
 						2,
-						355,
+						355
 					},
-					color = Color.terminal_corner_hover(180, true),
+					color = Color.terminal_corner_hover(180, true)
 				},
 				change_function = function (content, style)
 					local size_x = 340
@@ -2130,7 +2130,7 @@ local blueprints = {
 					local progress = hotspot.hold and 1 or math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress)
 
 					style.color[1] = math.max(70, 180 * math.easeOutCubic(progress))
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2142,13 +2142,13 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						5,
+						5
 					},
 					size = {
 						420,
-						2,
+						2
 					},
-					color = Color.terminal_corner_hover(180, true),
+					color = Color.terminal_corner_hover(180, true)
 				},
 				change_function = function (content, style)
 					local size_y = 270
@@ -2161,7 +2161,7 @@ local blueprints = {
 					local progress = hotspot.hold and 1 or math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress)
 
 					style.color[1] = math.max(70, 180 * math.easeOutCubic(progress))
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2173,15 +2173,15 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						6,
+						6
 					},
 					size = {
 						38,
-						38,
+						38
 					},
 					color = Color.black(255, true),
 					min_color = Color.black(255, true),
-					max_color = Color.terminal_corner_hover(255, true),
+					max_color = Color.terminal_corner_hover(255, true)
 				},
 				change_function = function (content, style)
 					local size_x = 340
@@ -2196,7 +2196,7 @@ local blueprints = {
 					style.offset[1] = value_x * size_x - position_diff_x
 					style.offset[2] = value_y * size_y - position_diff_y + 15
 					style.hdr = progress == 1
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2208,18 +2208,18 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						0,
+						0
 					},
 					size = {
 						800,
-						800,
+						800
 					},
 					material_values = {
 						texture_map = "content/ui/textures/backgrounds/voice_matrix_fluff",
 						ui_size = 0,
 						uv_offset_x = 0,
-						uv_offset_y = 0,
-					},
+						uv_offset_y = 0
+					}
 				},
 				change_function = function (content, style)
 					local size_x = 340
@@ -2244,7 +2244,7 @@ local blueprints = {
 					local progress = hotspot.hold and 1 or math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress)
 
 					style.material_values.ui_size = math.max(0.14, 0.18 * math.easeOutCubic(progress))
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2255,15 +2255,15 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						7,
+						7
 					},
 					size = {
 						52,
-						76,
+						76
 					},
 					disabled_color = Color.terminal_text_body_dark(255, true),
 					default_color = Color.terminal_corner_hover(255, true),
-					hover_color = Color.terminal_corner_hover_bright(255, true),
+					hover_color = Color.terminal_corner_hover_bright(255, true)
 				},
 				change_function = function (content, style)
 					local size_x = 340
@@ -2285,7 +2285,7 @@ local blueprints = {
 					Colors.color_lerp(default_color, hover_color, progress, color)
 
 					style.hdr = progress == 1
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2297,13 +2297,13 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						9,
+						9
 					},
 					size = {
 						54,
-						78,
+						78
 					},
-					color = Color.terminal_corner_hover(255, true),
+					color = Color.terminal_corner_hover(255, true)
 				},
 				change_function = function (content, style)
 					local size_x = 340
@@ -2327,7 +2327,7 @@ local blueprints = {
 
 					size[1] = new_size_x
 					size[2] = new_sie_y
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -2360,7 +2360,7 @@ local blueprints = {
 				end,
 				visibility_function = function (content, style)
 					return Managers.input:device_in_use("gamepad")
-				end,
+				end
 			},
 			{
 				pass_type = "logic",
@@ -2471,8 +2471,8 @@ local blueprints = {
 					local is_disabled = element.disabled or false
 
 					content.disabled = is_disabled
-				end,
-			},
+				end
+			}
 		},
 		init = function (parent, widget, element, option, grid_index, callback_name)
 			local content = widget.content
@@ -2521,8 +2521,8 @@ local blueprints = {
 				pass_multiplier_iterative_offset = {
 					0,
 					0,
-					0,
-				},
+					0
+				}
 			},
 			{
 				horizontal_alignment = "center",
@@ -2532,20 +2532,20 @@ local blueprints = {
 				pass_multiplier_iterative_offset = {
 					0,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	},
 	voice_slider = {
 		size = {
 			340,
-			120,
+			120
 		},
 		size_function = function (parent, element)
 			return {
 				element.size and element.size[1],
-				element.size and element.size[2],
+				element.size and element.size[2]
 			}
 		end,
 		pass_template = {
@@ -2563,9 +2563,9 @@ local blueprints = {
 					on_pressed_sound = UiSoundEvents.default_click,
 					size = {
 						340,
-						38,
-					},
-				},
+						38
+					}
+				}
 			},
 			{
 				pass_type = "logic",
@@ -2589,7 +2589,7 @@ local blueprints = {
 					end
 
 					content.anim_exclusive_focus_progress = anim_exclusive_focus_progress
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2600,12 +2600,12 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						0,
+						0
 					},
 					size = {
 						-80,
-						38,
-					},
+						38
+					}
 				},
 				change_function = function (content, style)
 					style.color[1] = 255 * content.highlight_progress
@@ -2614,7 +2614,7 @@ local blueprints = {
 					local hotspot = content.hotspot or content.parent and content.parent.hotspot
 
 					return hotspot and ((hotspot.is_hover or hotspot.is_selected) and not content.disabled or hotspot.is_focused)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2625,15 +2625,15 @@ local blueprints = {
 					vertical_alignment = "center",
 					size = {
 						340,
-						20,
+						20
 					},
 					color = Color.terminal_corner_hover(255, true),
 					offset = {
 						0,
 						0,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -2644,7 +2644,7 @@ local blueprints = {
 					vertical_alignment = "center",
 					size = {
 						4,
-						20,
+						20
 					},
 					disabled_color = Color.terminal_text_body_dark(255, true),
 					default_color = Color.terminal_corner(255, true),
@@ -2652,8 +2652,8 @@ local blueprints = {
 					offset = {
 						-4,
 						0,
-						2,
-					},
+						2
+					}
 				},
 				change_function = function (content, style)
 					local default_color = content.disabled and style.disabled_color or style.default_color
@@ -2666,7 +2666,7 @@ local blueprints = {
 					Colors.color_lerp(default_color, hover_color, progress, color)
 
 					style.hdr = progress == 1
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2677,7 +2677,7 @@ local blueprints = {
 					vertical_alignment = "center",
 					size = {
 						4,
-						20,
+						20
 					},
 					disabled_color = Color.terminal_text_body_dark(255, true),
 					default_color = Color.terminal_corner(255, true),
@@ -2685,8 +2685,8 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						2,
-					},
+						2
+					}
 				},
 				change_function = function (content, style)
 					local default_color = content.disabled and style.disabled_color or style.default_color
@@ -2699,7 +2699,7 @@ local blueprints = {
 					Colors.color_lerp(default_color, hover_color, progress, color)
 
 					style.hdr = progress == 1
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2710,7 +2710,7 @@ local blueprints = {
 					vertical_alignment = "center",
 					size = {
 						294,
-						4,
+						4
 					},
 					disabled_color = Color.terminal_text_body_dark(255, true),
 					default_color = Color.terminal_corner(255, true),
@@ -2718,8 +2718,8 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						2,
-					},
+						2
+					}
 				},
 				change_function = function (content, style)
 					style.size[1] = content.slider_value * 294 + 5
@@ -2734,7 +2734,7 @@ local blueprints = {
 					Colors.color_lerp(default_color, hover_color, progress, color)
 
 					style.hdr = progress == 1
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2745,7 +2745,7 @@ local blueprints = {
 					vertical_alignment = "center",
 					size = {
 						294,
-						4,
+						4
 					},
 					disabled_color = Color.terminal_text_body_dark(255, true),
 					default_color = Color.terminal_corner(255, true),
@@ -2753,8 +2753,8 @@ local blueprints = {
 					offset = {
 						-4,
 						0,
-						2,
-					},
+						2
+					}
 				},
 				change_function = function (content, style)
 					style.size[1] = (1 - content.slider_value) * 294 + 5
@@ -2769,7 +2769,7 @@ local blueprints = {
 					Colors.color_lerp(default_color, hover_color, progress, color)
 
 					style.hdr = progress == 1
-				end,
+				end
 			},
 			{
 				pass_type = "logic",
@@ -2837,7 +2837,7 @@ local blueprints = {
 					end
 
 					content.slider_value = slider_value
-				end,
+				end
 			},
 			{
 				pass_type = "logic",
@@ -2892,7 +2892,7 @@ local blueprints = {
 
 						content.slider_value = math.clamp(input_slider_value + step, 0, 1)
 					end
-				end,
+				end
 			},
 			{
 				content_id = "track_hotspot",
@@ -2907,13 +2907,13 @@ local blueprints = {
 					vertical_alignment = "center",
 					size = {
 						340,
-						38,
+						38
 					},
 					offset = {
 						0,
 						0,
-						3,
-					},
+						3
+					}
 				},
 				visibility_function = function (content, style)
 					return not content.parent.hotspot.disabled
@@ -2922,7 +2922,7 @@ local blueprints = {
 					local slider_value = content.parent.slider_value or 0
 
 					content.parent.slider_horizontal_offset = slider_value * 294
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2933,15 +2933,15 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						7,
+						7
 					},
 					size = {
 						38,
-						38,
+						38
 					},
 					disabled_color = Color.terminal_text_body_dark(255, true),
 					default_color = Color.terminal_corner(255, true),
-					hover_color = Color.terminal_corner_hover(255, true),
+					hover_color = Color.terminal_corner_hover(255, true)
 				},
 				change_function = function (content, style)
 					if content.parent then
@@ -2962,7 +2962,7 @@ local blueprints = {
 					Colors.color_lerp(default_color, hover_color, progress, color)
 
 					style.hdr = progress == 1
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2972,13 +2972,13 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						6,
+						6
 					},
 					size = {
 						38,
-						38,
+						38
 					},
-					color = Color.black(255, true),
+					color = Color.black(255, true)
 				},
 				change_function = function (content, style)
 					if content.parent then
@@ -2988,7 +2988,7 @@ local blueprints = {
 					local slider_horizontal_offset = content.slider_horizontal_offset or 0
 
 					style.offset[1] = slider_horizontal_offset
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2999,13 +2999,13 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						9,
+						9
 					},
 					size = {
 						38,
-						38,
+						38
 					},
-					color = Color.terminal_corner_hover(255, true),
+					color = Color.terminal_corner_hover(255, true)
 				},
 				change_function = function (content, style)
 					if content.parent then
@@ -3033,8 +3033,8 @@ local blueprints = {
 
 					style.offset[axis] = style.offset[axis] - offset_addition
 					style.hdr = progress == 1
-				end,
-			},
+				end
+			}
 		},
 		init = function (parent, widget, element, option, grid_index, callback_name)
 			local content = widget.content
@@ -3181,8 +3181,8 @@ local blueprints = {
 			end
 
 			return pass_input
-		end,
-	},
+		end
+	}
 }
 
 return blueprints

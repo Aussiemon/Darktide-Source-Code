@@ -19,7 +19,7 @@ _system_require("behavior", "behavior_system")
 _system_require("blackboard", "blackboard_system")
 _system_require("boss", "boss_system")
 _system_require("broadphase", "broadphase_system")
-_system_require("buff", "minion_buff_extension", "player_unit_buff_extension", "player_husk_buff_extension", "projectile_unit_buff_extension")
+_system_require("buff", "minion_buff_extension", "player_unit_buff_extension", "player_husk_buff_extension", "player_projectile_unit_buff_extension")
 _system_require("camera", "camera_system")
 _system_require("character_state_machine", "character_state_machine_extension")
 _system_require("chest", "chest_system")
@@ -73,6 +73,7 @@ _system_require("mood", "player_unit_mood_extension")
 _system_require("moveable_platform", "moveable_platform_system")
 _system_require("music_parameter", "player_unit_music_parameter_extension", "player_husk_music_parameter_extension")
 _system_require("nav_block", "nav_block_extension")
+_system_require("nav_spawn_block", "nav_crossroad_spawn_block_extension")
 _system_require("nav_box_obstacle", "nav_box_obstacle_extension")
 _system_require("nav_graph", "nav_graph_system")
 _system_require("navigation", "navigation_system")
@@ -89,6 +90,7 @@ _system_require("pickups", "pickup_system")
 _system_require("player_spawner", "player_spawner_system")
 _system_require("player_visibility", "player_visibility_extension")
 _system_require("point_of_interest", "point_of_interest_system")
+_system_require("predicted_unit_spawner", "predicted_unit_spawner_system", "predicted_unit_extension")
 _system_require("projectile_damage", "projectile_damage_extension")
 _system_require("prop_collision", "prop_collision_extension")
 _system_require("proximity", "proximity_system", "side_relation_proximity_extension")
@@ -118,6 +120,7 @@ _system_require("token", "token_system")
 _system_require("toughness", "player_unit_toughness_extension", "player_husk_toughness_extension", "player_hub_toughness_extension", "minion_toughness_extension", "minion_toughness_husk_extension")
 _system_require("unit_data", "minion_unit_data_extension", "player_unit_data_extension", "player_husk_data_extension", "prop_unit_data_extension")
 _system_require("visual_loadout", "visual_loadout_system")
+_system_require("vector_fields", "vector_fields_system")
 _system_require("volume_event", "volume_event_system")
 _system_require("weakspot", "weakspot_extension")
 _system_require("weapon", "weapon_system")
@@ -134,8 +137,8 @@ local systems = {
 		true,
 		false,
 		{
-			"SideExtension",
-		},
+			"SideExtension"
+		}
 	},
 	{
 		"companion_spawner_system",
@@ -146,8 +149,8 @@ local systems = {
 		true,
 		false,
 		{
-			"CompanionSpawnerExtension",
-		},
+			"CompanionSpawnerExtension"
+		}
 	},
 	{
 		"token_system",
@@ -158,8 +161,8 @@ local systems = {
 		true,
 		false,
 		{
-			"TokenExtension",
-		},
+			"TokenExtension"
+		}
 	},
 	{
 		"player_spawner_system",
@@ -170,8 +173,8 @@ local systems = {
 		true,
 		false,
 		{
-			"PlayerSpawnerExtension",
-		},
+			"PlayerSpawnerExtension"
+		}
 	},
 	{
 		"group_system",
@@ -183,8 +186,8 @@ local systems = {
 		false,
 		{
 			"MinionGroupExtension",
-			"PlayerGroupExtension",
-		},
+			"PlayerGroupExtension"
+		}
 	},
 	{
 		"perception_system",
@@ -197,8 +200,8 @@ local systems = {
 		{
 			"BotPerceptionExtension",
 			"CompanionPerceptionExtension",
-			"MinionPerceptionExtension",
-		},
+			"MinionPerceptionExtension"
+		}
 	},
 	{
 		"cover_system",
@@ -210,8 +213,8 @@ local systems = {
 		false,
 		{
 			"CoverExtension",
-			"CoverUserExtension",
-		},
+			"CoverUserExtension"
+		}
 	},
 	{
 		"combat_vector_system",
@@ -222,8 +225,8 @@ local systems = {
 		true,
 		false,
 		{
-			"CombatVectorUserExtension",
-		},
+			"CombatVectorUserExtension"
+		}
 	},
 	{
 		"behavior_system",
@@ -237,8 +240,8 @@ local systems = {
 			"BotBehaviorExtension",
 			"CombatRangeUserBehaviorExtension",
 			"CompanionBehaviorExtension",
-			"MinionBehaviorExtension",
-		},
+			"MinionBehaviorExtension"
+		}
 	},
 	{
 		"input_system",
@@ -249,8 +252,8 @@ local systems = {
 		true,
 		false,
 		{
-			"PlayerUnitInputExtension",
-		},
+			"PlayerUnitInputExtension"
+		}
 	},
 	{
 		"first_person_system",
@@ -262,8 +265,8 @@ local systems = {
 		false,
 		{
 			"PlayerUnitFirstPersonExtension",
-			"PlayerHuskFirstPersonExtension",
-		},
+			"PlayerHuskFirstPersonExtension"
+		}
 	},
 	{
 		"smart_targeting_system",
@@ -274,8 +277,8 @@ local systems = {
 		true,
 		false,
 		{
-			"PlayerUnitSmartTargetingExtension",
-		},
+			"PlayerUnitSmartTargetingExtension"
+		}
 	},
 	{
 		"talent_system",
@@ -287,8 +290,8 @@ local systems = {
 		false,
 		{
 			"PlayerUnitTalentExtension",
-			"PlayerHuskTalentExtension",
-		},
+			"PlayerHuskTalentExtension"
+		}
 	},
 	{
 		"broadphase_system",
@@ -299,8 +302,8 @@ local systems = {
 		true,
 		false,
 		{
-			"BroadphaseExtension",
-		},
+			"BroadphaseExtension"
+		}
 	},
 	{
 		"buff_system",
@@ -314,8 +317,8 @@ local systems = {
 			"PlayerUnitBuffExtension",
 			"PlayerHuskBuffExtension",
 			"MinionBuffExtension",
-			"ProjectileUnitBuffExtension",
-		},
+			"PlayerProjectileUnitBuffExtension"
+		}
 	},
 	{
 		"area_of_effect",
@@ -326,8 +329,8 @@ local systems = {
 		true,
 		false,
 		{
-			"AreaOfEffectUnitSpawnerExtension",
-		},
+			"AreaOfEffectUnitSpawnerExtension"
+		}
 	},
 	{
 		"action_input_system",
@@ -338,8 +341,8 @@ local systems = {
 		true,
 		false,
 		{
-			"PlayerUnitActionInputExtension",
-		},
+			"PlayerUnitActionInputExtension"
+		}
 	},
 	{
 		"interactee_system",
@@ -351,8 +354,8 @@ local systems = {
 		false,
 		{
 			"InteracteeExtension",
-			"PlayerInteracteeExtension",
-		},
+			"PlayerInteracteeExtension"
+		}
 	},
 	{
 		"interactor_system",
@@ -363,8 +366,8 @@ local systems = {
 		true,
 		false,
 		{
-			"InteractorExtension",
-		},
+			"InteractorExtension"
+		}
 	},
 	{
 		"ledge_finder_system",
@@ -375,8 +378,8 @@ local systems = {
 		true,
 		false,
 		{
-			"PlayerUnitLedgeFinderExtension",
-		},
+			"PlayerUnitLedgeFinderExtension"
+		}
 	},
 	{
 		"light_controller_system",
@@ -387,8 +390,8 @@ local systems = {
 		true,
 		true,
 		{
-			"LightControllerExtension",
-		},
+			"LightControllerExtension"
+		}
 	},
 	{
 		"character_state_machine_system",
@@ -399,8 +402,8 @@ local systems = {
 		true,
 		false,
 		{
-			"CharacterStateMachineExtension",
-		},
+			"CharacterStateMachineExtension"
+		}
 	},
 	{
 		"shield_system",
@@ -413,8 +416,8 @@ local systems = {
 		{
 			"MinionShieldExtension",
 			"MinionHuskShieldExtension",
-			"PropShieldExtension",
-		},
+			"PropShieldExtension"
+		}
 	},
 	{
 		"summon_minions_system",
@@ -425,8 +428,8 @@ local systems = {
 		true,
 		false,
 		{
-			"SummonedMinionsExtension",
-		},
+			"SummonedMinionsExtension"
+		}
 	},
 	{
 		"health_system",
@@ -446,8 +449,8 @@ local systems = {
 			"PlayerHuskHealthExtension",
 			"PlayerHubHealthExtension",
 			"PsykerForceFieldUnitHealthExtension",
-			"PsykerForceFieldHuskHealthExtension",
-		},
+			"PsykerForceFieldHuskHealthExtension"
+		}
 	},
 	{
 		"weakspot_system",
@@ -458,8 +461,8 @@ local systems = {
 		true,
 		false,
 		{
-			"WeakspotExtension",
-		},
+			"WeakspotExtension"
+		}
 	},
 	{
 		"toughness_system",
@@ -474,8 +477,8 @@ local systems = {
 			"PlayerHuskToughnessExtension",
 			"PlayerHubToughnessExtension",
 			"MinionToughnessExtension",
-			"MinionToughnessHuskExtension",
-		},
+			"MinionToughnessHuskExtension"
+		}
 	},
 	{
 		"visual_loadout_system",
@@ -489,8 +492,8 @@ local systems = {
 			"CompanionVisualLoadoutExtension",
 			"MinionVisualLoadoutExtension",
 			"PlayerUnitVisualLoadoutExtension",
-			"PlayerHuskVisualLoadoutExtension",
-		},
+			"PlayerHuskVisualLoadoutExtension"
+		}
 	},
 	{
 		"ability_system",
@@ -502,8 +505,8 @@ local systems = {
 		false,
 		{
 			"PlayerUnitAbilityExtension",
-			"PlayerHuskAbilityExtension",
-		},
+			"PlayerHuskAbilityExtension"
+		}
 	},
 	{
 		"weapon_system",
@@ -515,8 +518,8 @@ local systems = {
 		false,
 		{
 			"PlayerUnitWeaponExtension",
-			"ProjectileUnitWeaponExtension",
-		},
+			"ProjectileUnitWeaponExtension"
+		}
 	},
 	{
 		"weapon_spread_system",
@@ -527,8 +530,8 @@ local systems = {
 		true,
 		false,
 		{
-			"PlayerUnitWeaponSpreadExtension",
-		},
+			"PlayerUnitWeaponSpreadExtension"
+		}
 	},
 	{
 		"weapon_recoil_system",
@@ -539,8 +542,8 @@ local systems = {
 		true,
 		false,
 		{
-			"PlayerUnitWeaponRecoilExtension",
-		},
+			"PlayerUnitWeaponRecoilExtension"
+		}
 	},
 	{
 		"suppression_system",
@@ -553,8 +556,8 @@ local systems = {
 		{
 			"PlayerSuppressionExtension",
 			"MinionSuppressionExtension",
-			"MinionSuppressionHuskExtension",
-		},
+			"MinionSuppressionHuskExtension"
+		}
 	},
 	{
 		"attack_intensity_system",
@@ -566,8 +569,8 @@ local systems = {
 		false,
 		{
 			"PlayerUnitAttackIntensityExtension",
-			"MinionAttackIntensityExtension",
-		},
+			"MinionAttackIntensityExtension"
+		}
 	},
 	{
 		"music_parameter_system",
@@ -579,8 +582,8 @@ local systems = {
 		false,
 		{
 			"PlayerUnitMusicParameterExtension",
-			"PlayerHuskMusicParameterExtension",
-		},
+			"PlayerHuskMusicParameterExtension"
+		}
 	},
 	{
 		"gadget_system",
@@ -591,8 +594,8 @@ local systems = {
 		true,
 		false,
 		{
-			"PlayerUnitGadgetExtension",
-		},
+			"PlayerUnitGadgetExtension"
+		}
 	},
 	{
 		"payload_path_system",
@@ -603,8 +606,8 @@ local systems = {
 		true,
 		false,
 		{
-			"PayloadPathNodeExtension",
-		},
+			"PayloadPathNodeExtension"
+		}
 	},
 	{
 		"flying_navigation_system",
@@ -614,7 +617,7 @@ local systems = {
 		false,
 		true,
 		false,
-		{},
+		{}
 	},
 	{
 		"navigation_system",
@@ -627,8 +630,8 @@ local systems = {
 		{
 			"BotNavigationExtension",
 			"MinionNavigationExtension",
-			"MinionHuskNavigationExtension",
-		},
+			"MinionHuskNavigationExtension"
+		}
 	},
 	{
 		"payload_system",
@@ -639,8 +642,8 @@ local systems = {
 		true,
 		false,
 		{
-			"PayloadExtension",
-		},
+			"PayloadExtension"
+		}
 	},
 	{
 		"moveable_platform_system",
@@ -651,8 +654,8 @@ local systems = {
 		true,
 		false,
 		{
-			"MoveablePlatformExtension",
-		},
+			"MoveablePlatformExtension"
+		}
 	},
 	{
 		"networked_timer_system",
@@ -663,8 +666,8 @@ local systems = {
 		true,
 		false,
 		{
-			"NetworkedTimerExtension",
-		},
+			"NetworkedTimerExtension"
+		}
 	},
 	{
 		"decoder_device_system",
@@ -675,8 +678,8 @@ local systems = {
 		true,
 		false,
 		{
-			"DecoderDeviceExtension",
-		},
+			"DecoderDeviceExtension"
+		}
 	},
 	{
 		"luggable_system",
@@ -687,8 +690,8 @@ local systems = {
 		true,
 		false,
 		{
-			"LuggableExtension",
-		},
+			"LuggableExtension"
+		}
 	},
 	{
 		"luggable_socket_system",
@@ -699,8 +702,8 @@ local systems = {
 		true,
 		false,
 		{
-			"LuggableSocketExtension",
-		},
+			"LuggableSocketExtension"
+		}
 	},
 	{
 		"event_synchronizer_system",
@@ -717,8 +720,8 @@ local systems = {
 			"MissionObjectiveZoneSynchronizerExtension",
 			"KillSynchronizerExtension",
 			"SideMissionPickupSynchronizerExtension",
-			"TimedSynchronizerExtension",
-		},
+			"TimedSynchronizerExtension"
+		}
 	},
 	{
 		"spline_group_system",
@@ -729,8 +732,8 @@ local systems = {
 		true,
 		false,
 		{
-			"SplineGroupExtension",
-		},
+			"SplineGroupExtension"
+		}
 	},
 	{
 		"spline_follower_system",
@@ -741,8 +744,8 @@ local systems = {
 		true,
 		false,
 		{
-			"SplineFollowerExtension",
-		},
+			"SplineFollowerExtension"
+		}
 	},
 	{
 		"scanning_event_system",
@@ -753,8 +756,8 @@ local systems = {
 		true,
 		false,
 		{
-			"ScanningDeviceExtension",
-		},
+			"ScanningDeviceExtension"
+		}
 	},
 	{
 		"servo_skull_system",
@@ -766,8 +769,8 @@ local systems = {
 		false,
 		{
 			"ServoSkullExtension",
-			"ServoSkullActivatorExtension",
-		},
+			"ServoSkullActivatorExtension"
+		}
 	},
 	{
 		"mission_objective_target_system",
@@ -778,8 +781,8 @@ local systems = {
 		true,
 		false,
 		{
-			"MissionObjectiveTargetExtension",
-		},
+			"MissionObjectiveTargetExtension"
+		}
 	},
 	{
 		"prop_collision_system",
@@ -790,8 +793,8 @@ local systems = {
 		true,
 		false,
 		{
-			"PropCollisionExtension",
-		},
+			"PropCollisionExtension"
+		}
 	},
 	{
 		"locomotion_system",
@@ -809,8 +812,17 @@ local systems = {
 			"PlayerUnitLocomotionExtension",
 			"PlayerHuskLocomotionExtension",
 			"DeployableUnitLocomotionExtension",
-			"DeployableHuskLocomotionExtension",
-		},
+			"DeployableHuskLocomotionExtension"
+		}
+	},
+	{
+		"vector_fields_system",
+		"VectorFieldsSystem",
+		true,
+		true,
+		true,
+		true,
+		false
 	},
 	{
 		"projectile_damage_system",
@@ -821,8 +833,20 @@ local systems = {
 		true,
 		false,
 		{
-			"ProjectileDamageExtension",
-		},
+			"ProjectileDamageExtension"
+		}
+	},
+	{
+		"predicted_unit_spawner_system",
+		"PredictedUnitSpawnerSystem",
+		false,
+		false,
+		false,
+		true,
+		false,
+		{
+			"PredictedUnitExtension"
+		}
 	},
 	{
 		"scanner_display_system",
@@ -833,8 +857,8 @@ local systems = {
 		true,
 		false,
 		{
-			"ScannerDisplayExtension",
-		},
+			"ScannerDisplayExtension"
+		}
 	},
 	{
 		"force_field_system",
@@ -846,8 +870,8 @@ local systems = {
 		false,
 		{
 			"CrypticPersonalForceFieldUnitExtension",
-			"PsykerForceFieldUnitExtension",
-		},
+			"PsykerForceFieldUnitExtension"
+		}
 	},
 	{
 		"smoke_fog_system",
@@ -859,8 +883,8 @@ local systems = {
 		false,
 		{
 			"SmokeFogExtension",
-			"SmokeFogHuskExtension",
-		},
+			"SmokeFogHuskExtension"
+		}
 	},
 	{
 		"darkness_system",
@@ -869,7 +893,7 @@ local systems = {
 		false,
 		false,
 		true,
-		false,
+		false
 	},
 	{
 		"component_system",
@@ -880,8 +904,8 @@ local systems = {
 		true,
 		true,
 		{
-			"ComponentExtension",
-		},
+			"ComponentExtension"
+		}
 	},
 	{
 		"animation_system",
@@ -896,8 +920,8 @@ local systems = {
 			"MinionAnimationExtension",
 			"PlayerUnitAnimationExtension",
 			"PlayerHuskAnimationExtension",
-			"PropAnimationExtension",
-		},
+			"PropAnimationExtension"
+		}
 	},
 	{
 		"scripted_animation_system",
@@ -908,8 +932,8 @@ local systems = {
 		true,
 		false,
 		{
-			"ScriptedFlyingAnimationExtension",
-		},
+			"ScriptedFlyingAnimationExtension"
+		}
 	},
 	{
 		"aim_system",
@@ -925,8 +949,8 @@ local systems = {
 			"PlayerUnitHubAimExtension",
 			"PlayerHuskHubAimExtension",
 			"MinionRangedAimExtension",
-			"MinionRangedHuskAimExtension",
-		},
+			"MinionRangedHuskAimExtension"
+		}
 	},
 	{
 		"hologram_system",
@@ -937,8 +961,8 @@ local systems = {
 		true,
 		false,
 		{
-			"PlayerUnitHologramExtension",
-		},
+			"PlayerUnitHologramExtension"
+		}
 	},
 	{
 		"camera_system",
@@ -950,8 +974,8 @@ local systems = {
 		false,
 		{
 			"PlayerUnitCameraExtension",
-			"PlayerHuskCameraExtension",
-		},
+			"PlayerHuskCameraExtension"
+		}
 	},
 	{
 		"player_visibility_system",
@@ -962,8 +986,8 @@ local systems = {
 		true,
 		false,
 		{
-			"PlayerVisibilityExtension",
-		},
+			"PlayerVisibilityExtension"
+		}
 	},
 	{
 		"nav_graph_system",
@@ -974,8 +998,8 @@ local systems = {
 		true,
 		false,
 		{
-			"NavGraphExtension",
-		},
+			"NavGraphExtension"
+		}
 	},
 	{
 		"volume_event_system",
@@ -988,8 +1012,8 @@ local systems = {
 		{
 			"PlayerVolumeEventExtension",
 			"MinionVolumeEventExtension",
-			"TriggerVolumeEventExtension",
-		},
+			"TriggerVolumeEventExtension"
+		}
 	},
 	{
 		"nav_block_system",
@@ -1000,8 +1024,8 @@ local systems = {
 		true,
 		false,
 		{
-			"NavBlockExtension",
-		},
+			"NavBlockExtension"
+		}
 	},
 	{
 		"nav_box_obstacle_system",
@@ -1012,8 +1036,20 @@ local systems = {
 		true,
 		false,
 		{
-			"NavBoxObstacleExtension",
-		},
+			"NavBoxObstacleExtension"
+		}
+	},
+	{
+		"nav_spawn_block_system",
+		"ExtensionSystemBase",
+		false,
+		false,
+		false,
+		true,
+		false,
+		{
+			"NavCrossroadSpawnBlockExtension"
+		}
 	},
 	{
 		"door_system",
@@ -1024,8 +1060,8 @@ local systems = {
 		true,
 		false,
 		{
-			"DoorExtension",
-		},
+			"DoorExtension"
+		}
 	},
 	{
 		"door_control_panel_system",
@@ -1036,8 +1072,8 @@ local systems = {
 		true,
 		false,
 		{
-			"DoorControlPanelExtension",
-		},
+			"DoorControlPanelExtension"
+		}
 	},
 	{
 		"fx_system",
@@ -1050,8 +1086,8 @@ local systems = {
 		{
 			"MinionFxExtension",
 			"PlayerUnitFxExtension",
-			"ProjectileFxExtension",
-		},
+			"ProjectileFxExtension"
+		}
 	},
 	{
 		"wounds_system",
@@ -1062,8 +1098,8 @@ local systems = {
 		true,
 		false,
 		{
-			"WoundsExtension",
-		},
+			"WoundsExtension"
+		}
 	},
 	{
 		"minion_spawner_system",
@@ -1074,8 +1110,8 @@ local systems = {
 		true,
 		false,
 		{
-			"MinionSpawnerExtension",
-		},
+			"MinionSpawnerExtension"
+		}
 	},
 	{
 		"minion_nurgle_flies_system",
@@ -1086,8 +1122,8 @@ local systems = {
 		true,
 		false,
 		{
-			"MinionNurgleFliesExtension",
-		},
+			"MinionNurgleFliesExtension"
+		}
 	},
 	{
 		"minion_vortex_system",
@@ -1098,8 +1134,8 @@ local systems = {
 		true,
 		false,
 		{
-			"MinionVortexExtension",
-		},
+			"MinionVortexExtension"
+		}
 	},
 	{
 		"point_of_interest_system",
@@ -1111,8 +1147,8 @@ local systems = {
 		false,
 		{
 			"PointOfInterestObserverExtension",
-			"PointOfInterestTargetExtension",
-		},
+			"PointOfInterestTargetExtension"
+		}
 	},
 	{
 		"dialogue_system",
@@ -1123,8 +1159,8 @@ local systems = {
 		true,
 		true,
 		{
-			"DialogueExtension",
-		},
+			"DialogueExtension"
+		}
 	},
 	{
 		"dialogue_context_system",
@@ -1133,7 +1169,7 @@ local systems = {
 		false,
 		false,
 		true,
-		true,
+		true
 	},
 	{
 		"legacy_v2_proximity_system",
@@ -1145,20 +1181,20 @@ local systems = {
 		false,
 		{
 			"MinionProximityExtension",
-			"PlayerProximityExtension",
-		},
+			"PlayerProximityExtension"
+		}
 	},
 	{
 		"proximity_system",
 		"ProximitySystem",
 		false,
 		false,
-		true,
+		false,
 		true,
 		false,
 		{
-			"SideRelationProximityExtension",
-		},
+			"SideRelationProximityExtension"
+		}
 	},
 	{
 		"coherency_system",
@@ -1172,8 +1208,8 @@ local systems = {
 			"UnitCoherencyExtension",
 			"HuskCoherencyExtension",
 			"MedicalCrateCoherencyExtension",
-			"CompanionCoherencyExtension",
-		},
+			"CompanionCoherencyExtension"
+		}
 	},
 	{
 		"pickup_system",
@@ -1184,8 +1220,8 @@ local systems = {
 		true,
 		false,
 		{
-			"PickupSpawnerExtension",
-		},
+			"PickupSpawnerExtension"
+		}
 	},
 	{
 		"pickup_animation_system",
@@ -1196,8 +1232,8 @@ local systems = {
 		true,
 		false,
 		{
-			"PickupAnimationExtension",
-		},
+			"PickupAnimationExtension"
+		}
 	},
 	{
 		"side_mission_spawner_system",
@@ -1208,8 +1244,8 @@ local systems = {
 		true,
 		false,
 		{
-			"SideMissionPickupExtension",
-		},
+			"SideMissionPickupExtension"
+		}
 	},
 	{
 		"chest_system",
@@ -1220,8 +1256,8 @@ local systems = {
 		true,
 		false,
 		{
-			"ChestExtension",
-		},
+			"ChestExtension"
+		}
 	},
 	{
 		"mission_objective_zone_system",
@@ -1235,8 +1271,8 @@ local systems = {
 			"MissionObjectiveZoneBaseExtension",
 			"MissionObjectiveZoneCaptureExtension",
 			"MissionObjectiveZoneFlowExtension",
-			"MissionObjectiveZoneScanExtension",
-		},
+			"MissionObjectiveZoneScanExtension"
+		}
 	},
 	{
 		"mission_objective_zone_scannable_system",
@@ -1247,8 +1283,8 @@ local systems = {
 		true,
 		false,
 		{
-			"MissionObjectiveZoneScannableExtension",
-		},
+			"MissionObjectiveZoneScannableExtension"
+		}
 	},
 	{
 		"physics_unit_proximity_system",
@@ -1260,8 +1296,8 @@ local systems = {
 		false,
 		{
 			"PhysicsUnitProximityActorExtension",
-			"PhysicsUnitProximityObserverExtension",
-		},
+			"PhysicsUnitProximityObserverExtension"
+		}
 	},
 	{
 		"fade_system",
@@ -1270,7 +1306,7 @@ local systems = {
 		false,
 		false,
 		true,
-		false,
+		false
 	},
 	{
 		"outline_system",
@@ -1279,7 +1315,7 @@ local systems = {
 		false,
 		false,
 		false,
-		false,
+		false
 	},
 	{
 		"dissolve_system",
@@ -1290,8 +1326,8 @@ local systems = {
 		false,
 		false,
 		{
-			"MinionDissolveExtension",
-		},
+			"MinionDissolveExtension"
+		}
 	},
 	{
 		"shading_environment_system",
@@ -1302,8 +1338,8 @@ local systems = {
 		true,
 		false,
 		{
-			"ShadingEnvironmentExtension",
-		},
+			"ShadingEnvironmentExtension"
+		}
 	},
 	{
 		"mood_system",
@@ -1314,8 +1350,8 @@ local systems = {
 		true,
 		false,
 		{
-			"PlayerUnitMoodExtension",
-		},
+			"PlayerUnitMoodExtension"
+		}
 	},
 	{
 		"respawn_beacon_system",
@@ -1326,8 +1362,8 @@ local systems = {
 		true,
 		false,
 		{
-			"RespawnBeaconExtension",
-		},
+			"RespawnBeaconExtension"
+		}
 	},
 	{
 		"mission_objective_system",
@@ -1336,7 +1372,7 @@ local systems = {
 		false,
 		false,
 		true,
-		false,
+		false
 	},
 	{
 		"minigame_system",
@@ -1347,8 +1383,8 @@ local systems = {
 		true,
 		false,
 		{
-			"MinigameExtension",
-		},
+			"MinigameExtension"
+		}
 	},
 	{
 		"trigger_system",
@@ -1359,8 +1395,8 @@ local systems = {
 		true,
 		false,
 		{
-			"TriggerExtension",
-		},
+			"TriggerExtension"
+		}
 	},
 	{
 		"health_station_system",
@@ -1371,8 +1407,8 @@ local systems = {
 		true,
 		false,
 		{
-			"HealthStationExtension",
-		},
+			"HealthStationExtension"
+		}
 	},
 	{
 		"destructible_system",
@@ -1383,8 +1419,8 @@ local systems = {
 		true,
 		false,
 		{
-			"DestructibleExtension",
-		},
+			"DestructibleExtension"
+		}
 	},
 	{
 		"hazard_prop_system",
@@ -1395,8 +1431,8 @@ local systems = {
 		true,
 		false,
 		{
-			"HazardPropExtension",
-		},
+			"HazardPropExtension"
+		}
 	},
 	{
 		"corruptor_system",
@@ -1407,8 +1443,8 @@ local systems = {
 		true,
 		false,
 		{
-			"CorruptorExtension",
-		},
+			"CorruptorExtension"
+		}
 	},
 	{
 		"boss_system",
@@ -1419,8 +1455,8 @@ local systems = {
 		true,
 		false,
 		{
-			"BossExtension",
-		},
+			"BossExtension"
+		}
 	},
 	{
 		"cutscene_character_system",
@@ -1432,8 +1468,8 @@ local systems = {
 		true,
 		{
 			"CutsceneCharacterExtension",
-			"CutsceneCompanionExtension",
-		},
+			"CutsceneCompanionExtension"
+		}
 	},
 	{
 		"cinematic_scene_system",
@@ -1444,8 +1480,8 @@ local systems = {
 		true,
 		true,
 		{
-			"CinematicSceneExtension",
-		},
+			"CinematicSceneExtension"
+		}
 	},
 	{
 		"corruptor_arm_system",
@@ -1456,8 +1492,8 @@ local systems = {
 		true,
 		false,
 		{
-			"CorruptorArmExtension",
-		},
+			"CorruptorArmExtension"
+		}
 	},
 	{
 		"liquid_area_system",
@@ -1469,8 +1505,8 @@ local systems = {
 		false,
 		{
 			"LiquidAreaExtension",
-			"HuskLiquidAreaExtension",
-		},
+			"HuskLiquidAreaExtension"
+		}
 	},
 	{
 		"smart_tag_system",
@@ -1481,8 +1517,8 @@ local systems = {
 		true,
 		false,
 		{
-			"SmartTagExtension",
-		},
+			"SmartTagExtension"
+		}
 	},
 	{
 		"scripted_scenario_system",
@@ -1493,8 +1529,8 @@ local systems = {
 		true,
 		false,
 		{
-			"ScriptableScenarioDirectionalUnitExtension",
-		},
+			"ScriptableScenarioDirectionalUnitExtension"
+		}
 	},
 	{
 		"flee_system",
@@ -1505,8 +1541,8 @@ local systems = {
 		false,
 		false,
 		{
-			"FleeExtension",
-		},
+			"FleeExtension"
+		}
 	},
 	{
 		"unit_data_system",
@@ -1520,8 +1556,8 @@ local systems = {
 			"MinionUnitDataExtension",
 			"PlayerUnitDataExtension",
 			"PlayerHuskDataExtension",
-			"PropUnitDataExtension",
-		},
+			"PropUnitDataExtension"
+		}
 	},
 	{
 		"weather_system",
@@ -1532,8 +1568,8 @@ local systems = {
 		false,
 		false,
 		{
-			"WeatherExtension",
-		},
+			"WeatherExtension"
+		}
 	},
 	{
 		"slot_system",
@@ -1545,8 +1581,8 @@ local systems = {
 		false,
 		{
 			"SlotExtension",
-			"SlotUserExtension",
-		},
+			"SlotUserExtension"
+		}
 	},
 	{
 		"blackboard_system",
@@ -1557,8 +1593,8 @@ local systems = {
 		true,
 		false,
 		{
-			"BlackboardExtension",
-		},
+			"BlackboardExtension"
+		}
 	},
 	{
 		"expedition_loot_converter_system",
@@ -1569,8 +1605,8 @@ local systems = {
 		true,
 		false,
 		{
-			"ExpeditionLootConverterExtension",
-		},
+			"ExpeditionLootConverterExtension"
+		}
 	},
 	{
 		"flying_companion_movement_system",
@@ -1582,8 +1618,8 @@ local systems = {
 		false,
 		{
 			"FlyingCompanionMovementExtension",
-			"FlyingCompanionHuskMovementExtension",
-		},
+			"FlyingCompanionHuskMovementExtension"
+		}
 	},
 	{
 		"companion_tag_manager_system",
@@ -1596,9 +1632,9 @@ local systems = {
 		{
 			"CompanionTagManagerBaseExtension",
 			"CompanionTagManagerServoSkullExtension",
-			"CompanionTagManagerDogExtension",
-		},
-	},
+			"CompanionTagManagerDogExtension"
+		}
+	}
 }
 
 return systems

@@ -1,22 +1,22 @@
 ﻿-- chunkname: @scripts/ui/views/end_player_view/end_player_view_blueprints.lua
 
 local Colors = require("scripts/utilities/ui/colors")
+local ExpeditionService = require("scripts/managers/data_service/services/expedition_service")
 local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local RaritySettings = require("scripts/settings/item/rarity_settings")
+local Text = require("scripts/utilities/ui/text")
+local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewSettings = require("scripts/ui/views/end_player_view/end_player_view_settings")
 local ViewStyles = require("scripts/ui/views/end_player_view/end_player_view_styles")
 local WalletSettings = require("scripts/settings/wallet_settings")
-local Text = require("scripts/utilities/ui/text")
-local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
-local ExpeditionService = require("scripts/managers/data_service/services/expedition_service")
 local blueprint_styles = ViewStyles.blueprints
 local ITEM_TYPES = UISettings.ITEM_TYPES
 local folded_card_size = {
 	ViewStyles.card_width,
-	ViewStyles.card_folded_height,
+	ViewStyles.card_folded_height
 }
 local EXPEDITION_UNLOCK_TYPE = ExpeditionService.UNLOCK_TYPE
 local end_player_view_blueprints = {}
@@ -32,38 +32,38 @@ local function _get_card_default_frame_pass_template()
 			style_id = "frame_default_top",
 			value = "content/ui/materials/frames/end_of_round/reward_default_upper",
 			value_id = "frame_default_top",
-			visibility_function = _card_default_frame_visibility_function,
+			visibility_function = _card_default_frame_visibility_function
 		},
 		{
 			pass_type = "texture",
 			style_id = "frame_default_middle",
 			value = "content/ui/materials/frames/end_of_round/reward_default_middle",
 			value_id = "frame_default_middle",
-			visibility_function = _card_default_frame_visibility_function,
+			visibility_function = _card_default_frame_visibility_function
 		},
 		{
 			pass_type = "texture",
 			style_id = "frame_default_bottom",
 			value = "content/ui/materials/frames/end_of_round/reward_default_lower",
 			value_id = "frame_default_bottom",
-			visibility_function = _card_default_frame_visibility_function,
+			visibility_function = _card_default_frame_visibility_function
 		},
 		{
 			pass_type = "rect",
-			style_id = "background_rect",
+			style_id = "background_rect"
 		},
 		{
 			pass_type = "texture",
 			style_id = "background",
 			value = "content/ui/materials/backgrounds/terminal_basic",
-			value_id = "background",
+			value_id = "background"
 		},
 		{
 			pass_type = "text",
 			style_id = "label",
 			value = "",
-			value_id = "label",
-		},
+			value_id = "label"
+		}
 	}
 
 	return card_frame_pass_template
@@ -92,34 +92,34 @@ local function _get_card_levelup_frame_pass_template()
 			style_id = "frame_levelup_top",
 			value = "content/ui/materials/frames/end_of_round/reward_levelup_upper",
 			value_id = "frame_levelup_top",
-			visibility_function = _card_default_frame_visibility_function,
+			visibility_function = _card_default_frame_visibility_function
 		},
 		{
 			pass_type = "texture",
 			style_id = "frame_levelup_bottom",
 			value = "content/ui/materials/frames/end_of_round/reward_levelup_lower",
 			value_id = "frame_levelup_bottom",
-			visibility_function = _card_default_frame_visibility_function,
+			visibility_function = _card_default_frame_visibility_function
 		},
 		{
 			pass_type = "texture",
 			style_id = "frame_levelup_effect",
 			value = "content/ui/materials/effects/end_of_round/level_up_frame",
 			value_id = "frame_levelup_effect",
-			visibility_function = _card_default_frame_visibility_function,
+			visibility_function = _card_default_frame_visibility_function
 		},
 		{
 			pass_type = "texture",
 			style_id = "spires",
 			value = "content/ui/materials/frames/end_of_round/reward_levelup_upper_spikes",
-			value_id = "spires",
+			value_id = "spires"
 		},
 		{
 			pass_type = "texture",
 			style_id = "frame_detail",
 			value = "content/ui/materials/frames/end_of_round/reward_levelup_upper_skull",
-			value_id = "frame_detail",
-		},
+			value_id = "frame_detail"
+		}
 	}
 
 	table.append(card_frame_pass_template, levelup_frame_pass_template)
@@ -163,13 +163,13 @@ local function _get_currency_icon(pass_template, currency)
 		pass_type = "texture",
 		value = "content/ui/materials/effects/end_of_round/reward_background",
 		value_id = "icon_background",
-		style_id = background_id,
+		style_id = background_id
 	}
 	pass_template[#pass_template + 1] = {
 		pass_type = "texture",
 		value_id = icon_id,
 		style_id = icon_id,
-		value = icon_material,
+		value = icon_material
 	}
 end
 
@@ -192,7 +192,7 @@ local function _get_stat_pass_template(pass_template, stat, label, row_type, off
 		value_id = stat .. "_label",
 		style_id = stat .. "_label",
 		value = Localize(label),
-		style = label_style,
+		style = label_style
 	}
 
 	local value_style = table.clone(label_style)
@@ -204,7 +204,7 @@ local function _get_stat_pass_template(pass_template, stat, label, row_type, off
 		value = "0",
 		value_id = stat .. "_text",
 		style_id = stat,
-		style = value_style,
+		style = value_style
 	}
 end
 
@@ -222,31 +222,31 @@ local function _get_item_pass_templates(pass_template, item_data)
 		{
 			pass_type = "text",
 			style_id = "item_display_name",
-			value_id = "item_display_name",
+			value_id = "item_display_name"
 		},
 		{
 			pass_type = "texture",
 			style_id = "item_icon",
 			value = "content/ui/materials/icons/items/containers/item_container_landscape",
-			value_id = "item_icon",
+			value_id = "item_icon"
 		},
 		{
 			pass_type = "text",
 			style_id = "item_sub_display_name",
-			value_id = "item_sub_display_name",
+			value_id = "item_sub_display_name"
 		},
 		{
 			pass_type = "text",
 			style_id = "item_level",
 			value = "",
-			value_id = "item_level",
+			value_id = "item_level"
 		},
 		{
 			pass_type = "text",
 			style_id = "added_to_inventory_text",
 			value_id = "added_to_inventory_text",
-			value = Localize("loc_notification_desc_added_to_inventory"),
-		},
+			value = Localize("loc_notification_desc_added_to_inventory")
+		}
 	})
 end
 
@@ -409,7 +409,7 @@ local function _reward_load_icon_func(parent, widget, config, optional_icon_size
 			camera_focus_slot_name = slot_name,
 			state_machine = item_state_machine,
 			animation_event = item_animation_event,
-			size = optional_icon_size,
+			size = optional_icon_size
 		}
 		local item_group = content.item_group
 		local cb
@@ -438,13 +438,13 @@ local function _get_level_up_label_pass_template(pass_template)
 		pass_type = "text",
 		style_id = "level_up_label",
 		value = "",
-		value_id = "level_up_label",
+		value_id = "level_up_label"
 	}
 	pass_template[#pass_template + 1] = {
 		pass_type = "texture",
 		style_id = "level_up_label_divider",
 		value = "content/ui/materials/dividers/skull_center_02",
-		value_id = "level_up_label_divider",
+		value_id = "level_up_label_divider"
 	}
 end
 
@@ -452,7 +452,7 @@ local function _insert_empty_row(pass_template)
 	local previous_row_style = pass_template[#pass_template].style
 	local offset_y = previous_row_style.offset[2] + previous_row_style.size[2]
 	local size = {
-		[2] = ViewStyles.card_content_empty_row_height,
+		[2] = ViewStyles.card_content_empty_row_height
 	}
 	local pass_type = "rect"
 
@@ -463,16 +463,16 @@ local function _insert_empty_row(pass_template)
 			offset = {
 				0,
 				offset_y,
-				0,
+				0
 			},
 			size = size,
 			color = {
 				0,
 				0,
 				0,
-				0,
-			},
-		},
+				0
+			}
+		}
 	}
 end
 
@@ -519,7 +519,7 @@ end_player_view_blueprints.experience = {
 		content.total_xp_gained = total_xp_gained
 		content.content_animation = "experience_card_show_content"
 		content.dim_out_animation = "experience_card_dim_out_content"
-	end,
+	end
 }
 
 local function _add_currency_passes(pass_template, currency, rewards, optional_offset_y)
@@ -606,7 +606,7 @@ end_player_view_blueprints.salary = {
 		content.update_progress_func = callback(parent, "belate_wallet_update")
 		content.content_animation = "salary_card_show_content"
 		content.dim_out_animation = "salary_card_dim_out_content"
-	end,
+	end
 }
 end_player_view_blueprints.level_up = {
 	pass_template_function = function (parent, config)
@@ -649,7 +649,7 @@ end_player_view_blueprints.level_up = {
 
 			content.icon_load_id = nil
 		end
-	end,
+	end
 }
 end_player_view_blueprints.weapon_unlock = {
 	pass_template_function = function (parent, config)
@@ -660,31 +660,31 @@ end_player_view_blueprints.weapon_unlock = {
 			{
 				pass_type = "text",
 				style_id = "item_display_name",
-				value_id = "item_display_name",
+				value_id = "item_display_name"
 			},
 			{
 				pass_type = "rect",
 				style_id = "item_icon_background",
-				value_id = "item_icon_background",
+				value_id = "item_icon_background"
 			},
 			{
 				pass_type = "texture",
 				style_id = "item_icon_frame",
 				value = "content/ui/materials/frames/eor_weapon_frame",
-				value_id = "item_icon_frame",
+				value_id = "item_icon_frame"
 			},
 			{
 				pass_type = "texture",
 				style_id = "item_icon",
 				value = "content/ui/materials/icons/items/containers/item_container_landscape",
-				value_id = "item_icon",
+				value_id = "item_icon"
 			},
 			{
 				pass_type = "text",
 				style_id = "weapon_unlocked_text",
 				value_id = "weapon_unlocked_text",
-				value = Localize("loc_eor_weapon_unlocked_desc"),
-			},
+				value = Localize("loc_eor_weapon_unlocked_desc")
+			}
 		})
 
 		return pass_template
@@ -724,7 +724,7 @@ end_player_view_blueprints.weapon_unlock = {
 
 			content.icon_load_id = nil
 		end
-	end,
+	end
 }
 end_player_view_blueprints.item_reward = {
 	pass_template_function = function (parent, config)
@@ -734,38 +734,38 @@ end_player_view_blueprints.item_reward = {
 				style_id = "frame_top",
 				value = "content/ui/materials/frames/end_of_round/reward_random_item_upper",
 				value_id = "frame_top",
-				visibility_function = _card_default_frame_visibility_function,
+				visibility_function = _card_default_frame_visibility_function
 			},
 			{
 				pass_type = "texture",
 				style_id = "frame_middle",
 				value = "content/ui/materials/frames/end_of_round/reward_random_item_middle",
 				value_id = "frame_middle",
-				visibility_function = _card_default_frame_visibility_function,
+				visibility_function = _card_default_frame_visibility_function
 			},
 			{
 				pass_type = "texture",
 				style_id = "frame_bottom",
 				value = "content/ui/materials/frames/end_of_round/reward_random_item_lower",
 				value_id = "frame_bottom",
-				visibility_function = _card_default_frame_visibility_function,
+				visibility_function = _card_default_frame_visibility_function
 			},
 			{
 				pass_type = "rect",
-				style_id = "background",
+				style_id = "background"
 			},
 			{
 				pass_type = "texture",
 				style_id = "rarity_background",
 				value = "content/ui/materials/gradients/gradient_vertical",
-				value_id = "rarity_background",
+				value_id = "rarity_background"
 			},
 			{
 				pass_type = "text",
 				style_id = "label",
 				value = "",
-				value_id = "label",
-			},
+				value_id = "label"
+			}
 		}
 
 		_get_item_pass_templates(pass_template, config)
@@ -826,7 +826,7 @@ end_player_view_blueprints.item_reward = {
 
 			content.icon_load_id = nil
 		end
-	end,
+	end
 }
 end_player_view_blueprints.empty_test_card = {
 	pass_template_function = function (parent, config)
@@ -844,7 +844,7 @@ end_player_view_blueprints.empty_test_card = {
 		content.label = config.label or "Test"
 		content.content_animation = "test"
 		content.dim_out_animation = "test"
-	end,
+	end
 }
 
 local weapon_size = folded_card_size
@@ -855,11 +855,11 @@ end_player_view_blueprints.weapon = {
 		local card_size = folded_card_size
 		local area_size = {
 			folded_card_size[1],
-			folded_card_size[2] * 0.5,
+			folded_card_size[2] * 0.5
 		}
 		local icon_size = {
 			150,
-			50,
+			50
 		}
 		local bar_width = area_size[1] * 0.7
 		local weapon_pass_template = {
@@ -875,9 +875,9 @@ end_player_view_blueprints.weapon = {
 					offset = {
 						0,
 						30,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "text",
@@ -895,14 +895,14 @@ end_player_view_blueprints.weapon = {
 					offset = {
 						0,
 						55,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "texture",
 				style_id = "icon",
-				value = "content/ui/materials/icons/weapons/hud/combat_blade_01",
+				value = "content/ui/materials/icons/weapons/hud/debug_primary",
 				value_id = "icon",
 				style = {
 					horizontal_alignment = "center",
@@ -912,13 +912,13 @@ end_player_view_blueprints.weapon = {
 					offset = {
 						0,
 						95,
-						5,
+						5
 					},
 					size = {
 						icon_size[1] * 0.8,
-						icon_size[2] * 0.8,
-					},
-				},
+						icon_size[2] * 0.8
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -931,10 +931,10 @@ end_player_view_blueprints.weapon = {
 					offset = {
 						0,
 						90,
-						0,
+						0
 					},
-					size = icon_size,
-				},
+					size = icon_size
+				}
 			},
 			{
 				pass_type = "texture",
@@ -946,27 +946,27 @@ end_player_view_blueprints.weapon = {
 						100,
 						33,
 						35,
-						37,
+						37
 					},
 					in_focus_color = {
 						100,
 						33,
 						35,
-						37,
+						37
 					},
 					color = {
 						0,
 						33,
 						35,
-						37,
+						37
 					},
 					offset = {
 						0,
 						90,
-						1,
+						1
 					},
-					size = icon_size,
-				},
+					size = icon_size
+				}
 			},
 			{
 				pass_type = "texture",
@@ -979,10 +979,10 @@ end_player_view_blueprints.weapon = {
 					offset = {
 						0,
 						90,
-						1,
+						1
 					},
-					size = icon_size,
-				},
+					size = icon_size
+				}
 			},
 			{
 				pass_type = "texture",
@@ -996,10 +996,10 @@ end_player_view_blueprints.weapon = {
 					offset = {
 						0,
 						90,
-						6,
+						6
 					},
-					size = icon_size,
-				},
+					size = icon_size
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1013,10 +1013,10 @@ end_player_view_blueprints.weapon = {
 					offset = {
 						0,
 						90,
-						7,
+						7
 					},
-					size = icon_size,
-				},
+					size = icon_size
+				}
 			},
 			{
 				pass_type = "text",
@@ -1029,14 +1029,14 @@ end_player_view_blueprints.weapon = {
 					in_focus_color = Color.terminal_text_body(255, true),
 					text_color = Color.terminal_text_body(0, true),
 					size = {
-						bar_width,
+						bar_width
 					},
 					offset = {
 						0,
 						140,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "rect",
@@ -1048,14 +1048,14 @@ end_player_view_blueprints.weapon = {
 					default_color = Color.terminal_icon(255, true),
 					size = {
 						0,
-						10,
+						10
 					},
 					offset = {
 						(area_size[1] - bar_width) * 0.5,
 						170,
-						4,
-					},
-				},
+						4
+					}
+				}
 			},
 			{
 				pass_type = "rect",
@@ -1066,14 +1066,14 @@ end_player_view_blueprints.weapon = {
 					in_focus_color = Color.black(255, true),
 					size = {
 						bar_width,
-						10,
+						10
 					},
 					offset = {
 						(area_size[1] - bar_width) * 0.5,
 						170,
-						3,
-					},
-				},
+						3
+					}
+				}
 			},
 			{
 				pass_type = "rect",
@@ -1084,18 +1084,18 @@ end_player_view_blueprints.weapon = {
 					color = Color.terminal_text_body(0, true),
 					size = {
 						bar_width,
-						10,
+						10
 					},
 					offset = {
 						(area_size[1] - bar_width) * 0.5 - 2,
 						168,
-						2,
+						2
 					},
 					size_addition = {
 						4,
-						4,
-					},
-				},
+						4
+					}
+				}
 			},
 			{
 				pass_type = "text",
@@ -1108,20 +1108,20 @@ end_player_view_blueprints.weapon = {
 					text_color = Color.terminal_text_body(0, true),
 					in_focus_color = Color.terminal_text_body(255, true),
 					size = {
-						bar_width,
+						bar_width
 					},
 					offset = {
 						0,
 						185,
-						0,
-					},
-				},
-			},
+						0
+					}
+				}
+			}
 		}
 		local full_pass = _get_card_default_frame_pass_template()
 		local slots = {
 			"slot_primary",
-			"slot_secondary",
+			"slot_secondary"
 		}
 
 		for i = 1, #slots do
@@ -1144,7 +1144,7 @@ end_player_view_blueprints.weapon = {
 				pass.style.offset = pass.style.offset or {
 					0,
 					0,
-					0,
+					0
 				}
 				pass.style.offset[2] = pass.style.offset[2] + offset * (i - 1)
 				pass.style.offset[3] = pass.style.offset[3] + 7
@@ -1172,7 +1172,7 @@ end_player_view_blueprints.weapon = {
 
 		local slots = {
 			"slot_primary",
-			"slot_secondary",
+			"slot_secondary"
 		}
 
 		for f = 1, #slots do
@@ -1219,14 +1219,14 @@ end_player_view_blueprints.weapon = {
 
 				widget.content["weapon_total_exp_" .. slot] = Localize("loc_mastery_exp_current_next", true, {
 					current = diff_exp_level,
-					next = diff_exp_level,
+					next = diff_exp_level
 				})
 
 				local style = widget.style["weapon_experience_bar_" .. slot]
 				local background_style = widget.style["weapon_experience_bar_background_" .. slot]
 
 				widget.content["weapon_level_" .. slot] = Localize("loc_mastery_level_current", true, {
-					level = max_level,
+					level = max_level
 				})
 				style.size[1] = background_style.size[1]
 			else
@@ -1238,12 +1238,12 @@ end_player_view_blueprints.weapon = {
 
 				widget.content["weapon_total_exp_" .. slot] = Localize("loc_mastery_exp_current_next", true, {
 					current = new_exp,
-					next = diff_exp_level,
+					next = diff_exp_level
 				})
 				widget.content["weapon_current_exp_level_" .. slot] = new_exp or 0
 				widget.content["weapon_current_mastery_level_" .. slot] = current_mastery_level or 0
 				widget.content["weapon_level_" .. slot] = Localize("loc_mastery_level_current", true, {
-					level = current_mastery_level,
+					level = current_mastery_level
 				})
 
 				local bar_style = widget.style["weapon_experience_bar_" .. slot]
@@ -1255,42 +1255,42 @@ end_player_view_blueprints.weapon = {
 				bar_style.size[1] = bar_background_style.size[1] * bar_progress
 			end
 		end
-	end,
+	end
 }
 
 local rank_badges = {
 	{
 		level = 1,
-		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_1",
+		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_1"
 	},
 	{
 		level = 5,
-		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_2",
+		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_2"
 	},
 	{
 		level = 10,
-		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_3",
+		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_3"
 	},
 	{
 		level = 15,
-		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_4",
+		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_4"
 	},
 	{
 		level = 20,
-		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_5",
+		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_5"
 	},
 	{
 		level = 25,
-		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_6",
+		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_6"
 	},
 	{
 		level = 30,
-		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_7",
+		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_7"
 	},
 	{
 		level = 35,
-		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_8",
-	},
+		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_8"
+	}
 }
 
 end_player_view_blueprints.havoc = {
@@ -1299,15 +1299,15 @@ end_player_view_blueprints.havoc = {
 		local full_pass = _get_card_default_frame_pass_template()
 		local icon_size = {
 			75,
-			75,
+			75
 		}
 		local badge_size = {
 			210,
-			168,
+			168
 		}
 		local letter_size = {
 			43,
-			43,
+			43
 		}
 		local letter_margin = 9
 		local current_charges = config.order_reward and config.order_reward.current_charges
@@ -1362,17 +1362,17 @@ end_player_view_blueprints.havoc = {
 					offset = {
 						0,
 						badge_start_y_offset - 20,
-						4,
+						4
 					},
 					size = {
 						icon_size[1],
-						icon_size[2],
+						icon_size[2]
 					},
 					color = Color.black(0, true),
 					start_color = Color.black(0, true),
-					in_focus_color = Color.black(nil, true),
-				},
-			},
+					in_focus_color = Color.black(nil, true)
+				}
+			}
 		}
 
 		pass_templates[#pass_templates + 1] = {
@@ -1389,21 +1389,21 @@ end_player_view_blueprints.havoc = {
 				offset = {
 					0,
 					badge_start_y_offset,
-					10,
+					10
 				},
 				size = {
 					badge_size[1],
-					badge_size[2],
+					badge_size[2]
 				},
 				material_values = {
 					AnimationSpeedFireAmountt = {
 						previous_rank and current_rank and current_rank < previous_rank and 1 or 0,
-						0.045,
+						0.045
 					},
 					beforeTexure = previous_rank and current_rank and current_rank < previous_rank and current_rank_badge.texture or previous_rank_badge.texture,
-					afterTexture = previous_rank and current_rank and current_rank < previous_rank and previous_rank_badge.texture or current_rank_badge.texture,
-				},
-			},
+					afterTexture = previous_rank and current_rank and current_rank < previous_rank and previous_rank_badge.texture or current_rank_badge.texture
+				}
+			}
 		}
 
 		if use_charges and not is_min then
@@ -1431,25 +1431,25 @@ end_player_view_blueprints.havoc = {
 							255,
 							74,
 							21,
-							21,
+							21
 						},
 						offset = {
 							current_x_offset,
 							badge_start_y_offset + 120,
-							1,
+							1
 						},
 						size = {
 							charge_size,
-							charge_size,
+							charge_size
 						},
 						default_size = {
 							charge_size,
-							charge_size,
+							charge_size
 						},
 						material_values = {
-							texture_map = "content/ui/textures/icons/generic/havoc_strike",
-						},
-					},
+							texture_map = "content/ui/textures/icons/generic/havoc_strike"
+						}
+					}
 				}
 				pass_templates[#pass_templates + 1] = {
 					pass_type = "texture",
@@ -1463,20 +1463,20 @@ end_player_view_blueprints.havoc = {
 						offset = {
 							current_x_offset,
 							badge_start_y_offset + 120,
-							0,
+							0
 						},
 						size = {
 							charge_size,
-							charge_size,
+							charge_size
 						},
 						default_size = {
 							charge_size,
-							charge_size,
+							charge_size
 						},
 						material_values = {
-							texture_map = "content/ui/textures/icons/generic/havoc_strike",
-						},
-					},
+							texture_map = "content/ui/textures/icons/generic/havoc_strike"
+						}
+					}
 				}
 			end
 		end
@@ -1502,18 +1502,18 @@ end_player_view_blueprints.havoc = {
 					in_focus_color = Color.white(nil, true),
 					size = {
 						letter_size[1],
-						letter_size[2],
+						letter_size[2]
 					},
 					offset = {
 						x_offset,
 						badge_start_y_offset - 12,
-						5,
+						5
 					},
 					start_offset_y = badge_start_y_offset - 12,
 					material_values = {
-						number = rank_number,
-					},
-				},
+						number = rank_number
+					}
+				}
 			}
 		end
 
@@ -1535,7 +1535,7 @@ end_player_view_blueprints.havoc = {
 					vertical_alignment = "center",
 					size = {
 						letter_size[1],
-						letter_size[2],
+						letter_size[2]
 					},
 					color = Color.white(0, true),
 					start_color = Color.white(0, true),
@@ -1543,13 +1543,13 @@ end_player_view_blueprints.havoc = {
 					offset = {
 						x_offset,
 						badge_start_y_offset - 12,
-						6,
+						6
 					},
 					start_offset_y = badge_start_y_offset - 12,
 					material_values = {
-						number = rank_number,
-					},
-				},
+						number = rank_number
+					}
+				}
 			}
 		end
 
@@ -1569,13 +1569,13 @@ end_player_view_blueprints.havoc = {
 				offset = {
 					20,
 					badge_start_y_offset - 120,
-					5,
+					5
 				},
 				size = {
 					folded_card_size[1] - 40,
-					30,
-				},
-			},
+					30
+				}
+			}
 		}
 		pass_templates[#pass_templates + 1] = {
 			pass_type = "text",
@@ -1593,13 +1593,13 @@ end_player_view_blueprints.havoc = {
 				offset = {
 					-30,
 					-40,
-					5,
+					5
 				},
 				size = {
 					folded_card_size[1],
-					50,
-				},
-			},
+					50
+				}
+			}
 		}
 		pass_templates[#pass_templates + 1] = {
 			pass_type = "text",
@@ -1618,13 +1618,13 @@ end_player_view_blueprints.havoc = {
 				offset = {
 					30,
 					-40,
-					5,
+					5
 				},
 				size = {
 					folded_card_size[1],
-					50,
-				},
-			},
+					50
+				}
+			}
 		}
 		pass_templates[#pass_templates + 1] = {
 			pass_type = "text",
@@ -1642,13 +1642,13 @@ end_player_view_blueprints.havoc = {
 				offset = {
 					20,
 					40,
-					5,
+					5
 				},
 				size = {
 					folded_card_size[1] - 40,
-					30,
-				},
-			},
+					30
+				}
+			}
 		}
 		pass_templates[#pass_templates + 1] = {
 			pass_type = "text",
@@ -1666,13 +1666,13 @@ end_player_view_blueprints.havoc = {
 				offset = {
 					20,
 					-120,
-					5,
+					5
 				},
 				size = {
 					folded_card_size[1] - 40,
-					30,
-				},
-			},
+					30
+				}
+			}
 		}
 		pass_templates[#pass_templates + 1] = {
 			pass_type = "texture",
@@ -1686,18 +1686,18 @@ end_player_view_blueprints.havoc = {
 				start_color = Color.item_rarity_1(0, true),
 				size = {
 					165,
-					165,
+					165
 				},
 				start_size = {
 					165,
-					165,
+					165
 				},
 				offset = {
 					0,
 					-20,
-					6,
-				},
-			},
+					6
+				}
+			}
 		}
 		pass_templates[#pass_templates + 1] = {
 			pass_type = "texture",
@@ -1711,21 +1711,21 @@ end_player_view_blueprints.havoc = {
 				start_color = Color.white(0, true),
 				size = {
 					192,
-					128,
+					128
 				},
 				start_size = {
 					192,
-					128,
+					128
 				},
 				offset = {
 					0,
 					-20,
-					7,
+					7
 				},
 				material_values = {
-					texture_map = "content/ui/textures/icons/engrams/engram_rarity_01",
-				},
-			},
+					texture_map = "content/ui/textures/icons/engrams/engram_rarity_01"
+				}
+			}
 		}
 		pass_templates[#pass_templates + 1] = {
 			pass_type = "text",
@@ -1740,7 +1740,7 @@ end_player_view_blueprints.havoc = {
 				vertical_alignment = "center",
 				size = {
 					folded_card_size[1],
-					50,
+					50
 				},
 				start_color = Color.white(0, true),
 				text_color = Color.white(0, true),
@@ -1748,9 +1748,9 @@ end_player_view_blueprints.havoc = {
 				offset = {
 					-20,
 					90,
-					5,
-				},
-			},
+					5
+				}
+			}
 		}
 		pass_templates[#pass_templates + 1] = {
 			pass_type = "text",
@@ -1766,7 +1766,7 @@ end_player_view_blueprints.havoc = {
 				vertical_alignment = "center",
 				size = {
 					folded_card_size[1],
-					50,
+					50
 				},
 				start_color = Color.terminal_text_header(0, true),
 				text_color = Color.terminal_text_header(0, true),
@@ -1774,9 +1774,9 @@ end_player_view_blueprints.havoc = {
 				offset = {
 					20,
 					90,
-					5,
-				},
-			},
+					5
+				}
+			}
 		}
 
 		table.append(full_pass, pass_templates)
@@ -1871,7 +1871,7 @@ end_player_view_blueprints.havoc = {
 		if week_rank_reward then
 			content.week_rank = week_rank_reward
 		end
-	end,
+	end
 }
 end_player_view_blueprints.expedition = {
 	size = folded_card_size,
@@ -1893,18 +1893,18 @@ end_player_view_blueprints.expedition = {
 				offset = {
 					10,
 					offset_y - 15 - 5,
-					1,
+					1
 				},
 				size_addition = {
 					-20,
-					10,
+					10
 				},
 				color = Color.white(0, true),
 				size = {
 					nil,
-					80,
-				},
-			},
+					80
+				}
+			}
 		}
 
 		local next_index = #pass_template + 1
@@ -1917,14 +1917,14 @@ end_player_view_blueprints.expedition = {
 			style = {
 				size = {
 					170,
-					170,
+					170
 				},
 				offset = {
 					offset_x + 20 - 60,
 					offset_y - 60,
-					1,
-				},
-			},
+					1
+				}
+			}
 		}
 
 		local next_index = #pass_template + 1
@@ -1937,14 +1937,14 @@ end_player_view_blueprints.expedition = {
 			style = {
 				size = {
 					52,
-					44,
+					44
 				},
 				offset = {
 					offset_x + 20,
 					offset_y,
-					2,
-				},
-			},
+					2
+				}
+			}
 		}
 
 		local next_index = #pass_template + 1
@@ -1955,13 +1955,13 @@ end_player_view_blueprints.expedition = {
 			255,
 			133,
 			216,
-			158,
+			158
 		}
 		local new_body_color = {
 			255,
 			225,
 			222,
-			207,
+			207
 		}
 		local new_body_color_glow = Color.white(255, true)
 		local next_index = #pass_template + 1
@@ -1971,7 +1971,7 @@ end_player_view_blueprints.expedition = {
 		label_style.offset = {
 			offset_x + 110,
 			offset_y - 24,
-			3,
+			3
 		}
 		label_style.text_color = table.clone(new_main_color)
 		label_style.font_size = 24
@@ -1980,7 +1980,7 @@ end_player_view_blueprints.expedition = {
 			style_id = "currency_label",
 			value_id = "currency_label",
 			value = Localize("loc_expedition_eor_collected"),
-			style = label_style,
+			style = label_style
 		}
 		next_index = next_index + 1
 		card_content_styles = blueprint_styles.card_content
@@ -1990,7 +1990,7 @@ end_player_view_blueprints.expedition = {
 		value_style.offset = {
 			offset_x + 110,
 			offset_y + 8,
-			3,
+			3
 		}
 		value_style.font_size = 36
 		value_style.text_color = table.clone(new_body_color)
@@ -2000,14 +2000,14 @@ end_player_view_blueprints.expedition = {
 			style_id = "currency_text",
 			value = "0",
 			value_id = "currency_text",
-			style = value_style,
+			style = value_style
 		}
 		next_index = next_index + 1
 		offset_y = offset_y + 70
 
 		local complete_remaining_space = ViewStyles.card_fully_expanded_height - offset_y - 15
 		local remaining_space = complete_remaining_space
-		local remaining_all_progress_count = #all_unlock_progress
+		local remaining_all_progress_count = all_unlock_progress and #all_unlock_progress or 0
 		local used_indexes = {}
 		local affected_nodes = {}
 
@@ -2021,7 +2021,7 @@ end_player_view_blueprints.expedition = {
 				if affected_node then
 					progress_by_unlocked_node[affected_node] = progress_by_unlocked_node[affected_node] or {
 						affected_node_name = unlock_progress.affected_node_name,
-						indexes = {},
+						indexes = {}
 					}
 					progress_by_unlocked_node[affected_node].indexes[#progress_by_unlocked_node[affected_node].indexes + 1] = i
 				end
@@ -2038,13 +2038,13 @@ end_player_view_blueprints.expedition = {
 				node_text_style.offset = {
 					offset_x,
 					offset_y,
-					3,
+					3
 				}
 				node_text_style.font_size = 18
 
 				local node_id_height = Text.text_height(parent._ui_renderer, node_id, node_text_style, {
 					ViewStyles.card_width,
-					ViewStyles.card_fully_expanded_height,
+					ViewStyles.card_fully_expanded_height
 				}, true)
 
 				remaining_space = remaining_space - 25 - node_id_height
@@ -2064,7 +2064,7 @@ end_player_view_blueprints.expedition = {
 					value_id = node_name_id,
 					style_id = node_name_id,
 					value = node_name,
-					style = node_text_style,
+					style = node_text_style
 				}
 				offset_y = offset_y + node_id_height
 				next_index = next_index + 1
@@ -2084,7 +2084,7 @@ end_player_view_blueprints.expedition = {
 					local context = {
 						node_name = progress_node_name and Localize(progress_node_name) or "",
 						gathered = unlock_progress.previous_progress,
-						goal = unlock_progress.limit,
+						goal = unlock_progress.limit
 					}
 
 					if unlock_type == EXPEDITION_UNLOCK_TYPE.personal_best_loot then
@@ -2106,7 +2106,7 @@ end_player_view_blueprints.expedition = {
 
 					local checkbox_size = {
 						20,
-						20,
+						20
 					}
 					local checkbox_color = table.clone(new_main_color)
 
@@ -2125,10 +2125,10 @@ end_player_view_blueprints.expedition = {
 							offset = {
 								offset_x + 0.5,
 								offset_y + 2.5,
-								4,
+								4
 							},
-							size = checkbox_size,
-						},
+							size = checkbox_size
+						}
 					}
 					next_index = next_index + 1
 
@@ -2145,10 +2145,10 @@ end_player_view_blueprints.expedition = {
 							offset = {
 								offset_x,
 								offset_y + 2,
-								5,
+								5
 							},
-							size = checkbox_size,
-						},
+							size = checkbox_size
+						}
 					}
 					next_index = next_index + 1
 
@@ -2167,13 +2167,13 @@ end_player_view_blueprints.expedition = {
 							offset = {
 								offset_x + 5,
 								offset_y + 7,
-								5,
+								5
 							},
 							size = {
 								checkbox_size[1] - 10,
-								checkbox_size[2] - 10,
-							},
-						},
+								checkbox_size[2] - 10
+							}
+						}
 					}
 					next_index = next_index + 1
 
@@ -2182,13 +2182,13 @@ end_player_view_blueprints.expedition = {
 					progress_text_style.offset = {
 						offset_x + 30,
 						offset_y,
-						3,
+						3
 					}
 					progress_text_style.font_size = 20
 
 					local text_height = Text.text_height(parent._ui_renderer, progress_text, progress_text_style, {
 						ViewStyles.card_width - offset_x * 2,
-						ViewStyles.card_fully_expanded_height,
+						ViewStyles.card_fully_expanded_height
 					}, true)
 
 					pass_template[next_index] = {
@@ -2196,7 +2196,7 @@ end_player_view_blueprints.expedition = {
 						value_id = progress_text_id,
 						style_id = progress_text_id,
 						value = progress_text,
-						style = progress_text_style,
+						style = progress_text_style
 					}
 					next_index = next_index + 1
 					offset_y = offset_y + text_height + 5
@@ -2206,17 +2206,17 @@ end_player_view_blueprints.expedition = {
 					value_text_style.offset = {
 						offset_x + 30,
 						offset_y,
-						3,
+						3
 					}
 					value_text_style.font_size = 24
 					value_text_style.size = {
-						ViewStyles.card_width - offset_x * 2,
+						ViewStyles.card_width - offset_x * 2
 					}
 					value_text_style.text_color = Color.terminal_text_header(255, true)
 
 					local value_height = Text.text_height(parent._ui_renderer, progress_value, value_text_style, {
 						ViewStyles.card_width - offset_x * 2,
-						ViewStyles.card_fully_expanded_height,
+						ViewStyles.card_fully_expanded_height
 					}, true)
 					local progress_value_id = "progress_value_" .. pass_index
 
@@ -2225,7 +2225,7 @@ end_player_view_blueprints.expedition = {
 						value_id = progress_value_id,
 						style_id = progress_value_id,
 						value = progress_value,
-						style = value_text_style,
+						style = value_text_style
 					}
 					next_index = next_index + 1
 
@@ -2239,13 +2239,13 @@ end_player_view_blueprints.expedition = {
 							offset = {
 								offset_x,
 								offset_y,
-								4,
+								4
 							},
 							size = {
 								0,
-								text_height,
-							},
-						},
+								text_height
+							}
+						}
 					}
 					next_index = next_index + 1
 					offset_y = offset_y + value_height
@@ -2262,17 +2262,17 @@ end_player_view_blueprints.expedition = {
 							offset = {
 								10,
 								progress_text_style.offset[2] - 5,
-								1,
+								1
 							},
 							size_addition = {
 								-20,
-								10,
+								10
 							},
 							color = Color.white(0, true),
 							size = {
-								[2] = text_height + 5 + value_height,
-							},
-						},
+								[2] = text_height + 5 + value_height
+							}
+						}
 					}
 					next_index = #pass_template + 1
 					remaining_space = remaining_space - text_height - 5 - value_height - 10
@@ -2292,13 +2292,13 @@ end_player_view_blueprints.expedition = {
 			resume_text_style.offset = {
 				offset_x,
 				-30,
-				3,
+				3
 			}
 			resume_text_style.vertical_alignment = "bottom"
 			resume_text_style.text_vertical_alignment = "bottom"
 			resume_text_style.text_horizontal_alignment = "center"
 			resume_text_style.size = {
-				ViewStyles.card_width - offset_x * 2,
+				ViewStyles.card_width - offset_x * 2
 			}
 			resume_text_style.text_color = Color.terminal_text_body(255, true)
 			pass_template[next_index] = {
@@ -2306,9 +2306,9 @@ end_player_view_blueprints.expedition = {
 				style_id = "expedition_resume_text",
 				value_id = "expedition_resume_text",
 				value = remaining_all_progress_count > 0 and Localize("loc_expedition_eor_additional", true, {
-					requirements = remaining_all_progress_count,
+					requirements = remaining_all_progress_count
 				}) or "",
-				style = resume_text_style,
+				style = resume_text_style
 			}
 		end
 
@@ -2325,7 +2325,7 @@ end_player_view_blueprints.expedition = {
 		local style = widget.style
 		local node_name_played = config.node_name_played and Localize(config.node_name_played)
 
-		content.label = string.format("%s\n%s %s", Localize("loc_expedition_eor_title"), Localize("loc_grid_point"), node_name_played)
+		content.label = node_name_played and string.format("%s\n%s %s", Localize("loc_expedition_eor_title"), Localize("loc_grid_point"), node_name_played) or ""
 
 		local all_unlock_progress = config.all_unlock_progress
 		local loot_collected = config.loot_collected
@@ -2338,22 +2338,22 @@ end_player_view_blueprints.expedition = {
 		content.dim_out_animation = "expedition_card_dim_out_content"
 
 		local pass_styles = {
-			widget.style.currency_icon_background,
-			widget.style.currency_icon,
-			widget.style.currency_label,
-			widget.style.currency_text,
-			widget.style.expedition_resume_text,
+			style.currency_icon_background,
+			style.currency_icon,
+			style.currency_label,
+			style.currency_text,
+			style.expedition_resume_text
 		}
 
 		for i = 1, #config.affected_nodes do
 			local affected_node = config.affected_nodes[i]
 
-			pass_styles[#pass_styles + 1] = widget.style["node_name_" .. affected_node]
+			pass_styles[#pass_styles + 1] = style["node_name_" .. affected_node]
 		end
 
 		for i = 1, #config.used_indexes do
-			pass_styles[#pass_styles + 1] = widget.style["progress_text_" .. i]
-			pass_styles[#pass_styles + 1] = widget.style["progress_value_" .. i]
+			pass_styles[#pass_styles + 1] = style["progress_text_" .. i]
+			pass_styles[#pass_styles + 1] = style["progress_value_" .. i]
 		end
 
 		for i = 1, #pass_styles do
@@ -2367,7 +2367,7 @@ end_player_view_blueprints.expedition = {
 				pass_style.text_color[1] = 0
 			end
 		end
-	end,
+	end
 }
 
 return settings("EndPlayerViewBlueprints", end_player_view_blueprints)

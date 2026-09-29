@@ -8,7 +8,7 @@ local DISABLE = {
 		"BtMinionVortexGrabbedAction",
 		condition = "vortex_grabbed",
 		name = "vortex_grabbed",
-		action_data = action_data.vortex_grabbed,
+		action_data = action_data.vortex_grabbed
 	},
 	{
 		"BtDisableAction",
@@ -16,9 +16,9 @@ local DISABLE = {
 		exit_state = "base",
 		name = "disable",
 		state = "disabled",
-		action_data = action_data.disable,
+		action_data = action_data.disable
 	},
-	name = "disable_actions",
+	name = "disable_actions"
 }
 local WEAPON_MALFUNCTION = {
 	"BtConditionalSequenceNode",
@@ -26,24 +26,24 @@ local WEAPON_MALFUNCTION = {
 		"BtRunAwayAction",
 		condition = "has_combat_vector_position",
 		name = "run_away_weapon_malfunction",
-		action_data = action_data.run_away_weapon_malfunction,
+		action_data = action_data.run_away_weapon_malfunction
 	},
 	{
 		"BtWeaponMalfunctionAction",
 		name = "weapon_malfunction_loop",
 		action_data = action_data.weapon_malfunction_loop,
 		enter_hook = {
-			hook = "weapon_malfunction_enter",
+			hook = "weapon_malfunction_enter"
 		},
 		leave_hook = {
 			hook = "weapon_malfunction_leave",
 			args = {
-				reset_net_cooldown = true,
-			},
-		},
+				reset_net_cooldown = true
+			}
+		}
 	},
 	condition = "has_weapon_malfunction",
-	name = "weapon_malfunction",
+	name = "weapon_malfunction"
 }
 local behavior_tree = {
 	"BtSelectorNode",
@@ -51,7 +51,7 @@ local behavior_tree = {
 		"BtDieAction",
 		name = "death",
 		state = "dead",
-		action_data = action_data.death,
+		action_data = action_data.death
 	},
 	DISABLE,
 	{
@@ -60,41 +60,41 @@ local behavior_tree = {
 		exit_state = "base",
 		name = "exit_spawner",
 		state = "exiting_spawner",
-		action_data = action_data.exit_spawner,
+		action_data = action_data.exit_spawner
 	},
 	{
 		"BtSelectorNode",
 		{
 			"BtTeleportAction",
 			condition = "at_teleport_smart_object",
-			name = "teleport",
+			name = "teleport"
 		},
 		{
 			"BtClimbAction",
 			condition = "at_climb_smart_object",
 			name = "climb",
-			action_data = action_data.climb,
+			action_data = action_data.climb
 		},
 		{
 			"BtJumpAcrossAction",
 			condition = "at_jump_smart_object",
 			name = "jump_across",
-			action_data = action_data.jump_across,
+			action_data = action_data.jump_across
 		},
 		{
 			"BtOpenDoorAction",
 			condition = "at_door_smart_object",
 			name = "open_door",
-			action_data = action_data.open_door,
+			action_data = action_data.open_door
 		},
 		condition = "at_smart_object",
-		name = "smart_object",
+		name = "smart_object"
 	},
 	{
 		"BtStaggerAction",
 		condition = "is_staggered",
 		name = "stagger",
-		action_data = action_data.stagger,
+		action_data = action_data.stagger
 	},
 	WEAPON_MALFUNCTION,
 	{
@@ -104,47 +104,47 @@ local behavior_tree = {
 			{
 				"BtRenegadeNetgunnerApproachAction",
 				name = "approach_target",
-				action_data = action_data.approach_target,
+				action_data = action_data.approach_target
 			},
 			{
 				"BtShootNetAction",
 				name = "shoot_net",
-				action_data = action_data.shoot_net,
+				action_data = action_data.shoot_net
 			},
 			condition = "can_shoot_net",
-			name = "net_sequence",
+			name = "net_sequence"
 		},
 		{
 			"BtSequenceNode",
 			{
 				"BtReloadAction",
 				name = "reload",
-				action_data = action_data.reload,
+				action_data = action_data.reload
 			},
 			{
 				"BtRunAwayAction",
 				leave_hook = "netgunner_reset_cooldown",
 				name = "run_away",
-				action_data = action_data.run_away,
+				action_data = action_data.run_away
 			},
 			condition = "netgunner_hit_target_with_alt_conditions",
-			name = "reload_then_run_sequence_alt_mode",
+			name = "reload_then_run_sequence_alt_mode"
 		},
 		{
 			"BtSequenceNode",
 			{
 				"BtReloadAction",
 				name = "reload",
-				action_data = action_data.reload,
+				action_data = action_data.reload
 			},
 			{
 				"BtRunAwayAction",
 				leave_hook = "netgunner_reset_cooldown",
 				name = "run_away",
-				action_data = action_data.run_away,
+				action_data = action_data.run_away
 			},
 			condition = "netgunner_hit_target",
-			name = "reload_then_run_sequence",
+			name = "reload_then_run_sequence"
 		},
 		{
 			"BtSelectorNode",
@@ -152,25 +152,25 @@ local behavior_tree = {
 				"BtRunAwayAction",
 				condition = "netgunner_is_on_cooldown",
 				name = "run_away",
-				action_data = action_data.run_away,
+				action_data = action_data.run_away
 			},
 			{
 				"BtReloadAction",
 				leave_hook = "netgunner_reset_cooldown",
 				name = "reload",
-				action_data = action_data.reload,
+				action_data = action_data.reload
 			},
-			name = "run_then_reload",
+			name = "run_then_reload"
 		},
 		condition = "is_aggroed",
-		name = "attack_target",
+		name = "attack_target"
 	},
 	{
 		"BtIdleAction",
 		name = "idle",
-		action_data = action_data.idle,
+		action_data = action_data.idle
 	},
-	name = "renegade_netgunner",
+	name = "renegade_netgunner"
 }
 
 return behavior_tree

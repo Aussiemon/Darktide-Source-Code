@@ -7,7 +7,7 @@ local inventory_weapon_cosmetics_view_settings = {
 	viewport_layer = 1,
 	viewport_type = "default",
 	weapon_spawn_depth = 1.2,
-	world_layer = 35,
+	world_layer = 35
 }
 
 return settings("InventoryWeaponCosmeticsViewSettings", inventory_weapon_cosmetics_view_settings)

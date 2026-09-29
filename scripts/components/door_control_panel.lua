@@ -38,13 +38,13 @@ DoorControlPanel.destroy = function (self, unit)
 end
 
 DoorControlPanel.activate = function (self)
-	if self._door_control_panel_extension then
+	if self.is_server and self._door_control_panel_extension then
 		self._door_control_panel_extension:set_active(true)
 	end
 end
 
 DoorControlPanel.deactivate = function (self)
-	if self._door_control_panel_extension then
+	if self.is_server and self._door_control_panel_extension then
 		self._door_control_panel_extension:set_active(false)
 	end
 end
@@ -53,27 +53,27 @@ DoorControlPanel.component_data = {
 	start_active = {
 		ui_name = "Start Active",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	interaction_interlude = {
 		min = 0,
 		ui_name = "Interaction Interlude (sec.)",
 		ui_type = "number",
-		value = 0.75,
+		value = 0.75
 	},
 	inputs = {
 		activate = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		deactivate = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"DoorControlPanelExtension",
-	},
+		"DoorControlPanelExtension"
+	}
 }
 
 return DoorControlPanel

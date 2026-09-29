@@ -5,46 +5,46 @@ local psyker_female_a_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_ogryn_b__bonding_conversation_round_three_scowl_b_01",
+			[1] = "loc_ogryn_b__bonding_conversation_round_three_scowl_b_01"
 		},
 		sound_events_duration = {
-			[1] = 6.305813,
+			[1] = 6.305813
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	bonding_conversation_round_three_scowl_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_ogryn_b__bonding_conversation_round_three_scowl_d_01",
+			[1] = "loc_ogryn_b__bonding_conversation_round_three_scowl_d_01"
 		},
 		sound_events_duration = {
-			[1] = 4.240104,
+			[1] = 4.240104
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	oval_world_conversation_cumbernauld_brahms_eleven_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_ogryn_b__oval_world_conversation_cumbernauld_brahms_eleven_b_01",
+			[1] = "loc_ogryn_b__oval_world_conversation_cumbernauld_brahms_eleven_b_01"
 		},
 		sound_events_duration = {
-			[1] = 1.137188,
+			[1] = 1.137188
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	oval_world_conversation_cumbernauld_brahms_eleven_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_ogryn_b__oval_world_conversation_cumbernauld_brahms_eleven_d_01",
+			[1] = "loc_ogryn_b__oval_world_conversation_cumbernauld_brahms_eleven_d_01"
 		},
 		sound_events_duration = {
-			[1] = 2.624646,
+			[1] = 2.624646
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("psyker_female_a_ogryn_b", psyker_female_a_ogryn_b)

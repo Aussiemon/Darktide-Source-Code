@@ -11,7 +11,7 @@ amount_style.text_color = Color.terminal_icon(nil, true)
 amount_style.offset = {
 	0,
 	-1,
-	3,
+	3
 }
 amount_style.text_horizontal_alignment = "center"
 amount_style.text_vertical_alignment = "bottom"
@@ -21,7 +21,7 @@ local unknown_style = table.clone(amount_style)
 unknown_style.offset = {
 	0,
 	-5,
-	3,
+	3
 }
 unknown_style.font_size = 10
 unknown_style.text_color[1] = 60
@@ -31,19 +31,19 @@ local ViewElementTraitInventoryBlueprints = {}
 ViewElementTraitInventoryBlueprints.spacing_vertical_small = {
 	size = {
 		430,
-		5,
-	},
+		5
+	}
 }
 ViewElementTraitInventoryBlueprints.spacing_vertical = {
 	size = {
 		430,
-		20,
-	},
+		20
+	}
 }
 ViewElementTraitInventoryBlueprints.trait = {
 	size = {
 		110,
-		110,
+		110
 	},
 	pass_template = {
 		{
@@ -52,7 +52,7 @@ ViewElementTraitInventoryBlueprints.trait = {
 			content = {
 				on_released_sound = nil,
 				on_hover_sound = UISoundEvents.default_mouse_hover,
-				on_pressed_sound = UISoundEvents.default_click,
+				on_pressed_sound = UISoundEvents.default_click
 			},
 			change_function = function (content, style, animations, dt)
 				local parent_content = content.parent
@@ -82,7 +82,7 @@ ViewElementTraitInventoryBlueprints.trait = {
 				local lerp_direction = is_hover and 1 or -1
 
 				content.parent.progress = math.clamp((content.parent.progress or 0) + dt * lerp_direction * 6, 0, 1)
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -95,14 +95,14 @@ ViewElementTraitInventoryBlueprints.trait = {
 				color = Color.black(100, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					7,
-				},
-			},
+					7
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -110,9 +110,9 @@ ViewElementTraitInventoryBlueprints.trait = {
 			value = "content/ui/materials/backgrounds/default_square",
 			style = {
 				default_color = Color.terminal_background(nil, true),
-				selected_color = Color.terminal_background_selected(nil, true),
+				selected_color = Color.terminal_background_selected(nil, true)
 			},
-			change_function = ButtonPassTemplates.terminal_button_change_function,
+			change_function = ButtonPassTemplates.terminal_button_change_function
 		},
 		{
 			pass_type = "texture",
@@ -128,10 +128,10 @@ ViewElementTraitInventoryBlueprints.trait = {
 				offset = {
 					0,
 					0,
-					2,
-				},
+					2
+				}
 			},
-			change_function = ButtonPassTemplates.terminal_button_change_function,
+			change_function = ButtonPassTemplates.terminal_button_change_function
 		},
 		{
 			style = {
@@ -142,8 +142,8 @@ ViewElementTraitInventoryBlueprints.trait = {
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
 			{
 				pass_type = "texture",
@@ -157,10 +157,10 @@ ViewElementTraitInventoryBlueprints.trait = {
 					offset = {
 						0,
 						0,
-						6,
-					},
+						6
+					}
 				},
-				change_function = ButtonPassTemplates.terminal_button_change_function,
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			pass_type = "texture",
 			style_id = "background_gradient",
@@ -168,7 +168,7 @@ ViewElementTraitInventoryBlueprints.trait = {
 			change_function = function (content, style)
 				ButtonPassTemplates.terminal_button_change_function(content, style)
 				ButtonPassTemplates.terminal_button_hover_change_function(content, style)
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -180,15 +180,15 @@ ViewElementTraitInventoryBlueprints.trait = {
 				offset = {
 					0,
 					0,
-					8,
+					8
 				},
 				color = Color.terminal_corner_selected(nil, true),
 				default_color = Color.terminal_corner_selected(0, true),
-				selected_color = Color.terminal_corner_selected(nil, true),
+				selected_color = Color.terminal_corner_selected(nil, true)
 			},
 			visibility_function = function (content, style)
 				return content.marked
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -199,10 +199,10 @@ ViewElementTraitInventoryBlueprints.trait = {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
-				color = Color.terminal_frame(128, true),
-			},
+				color = Color.terminal_frame(128, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -214,18 +214,18 @@ ViewElementTraitInventoryBlueprints.trait = {
 				material_values = {},
 				size = {
 					64,
-					64,
+					64
 				},
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
-				color = Color.terminal_icon(255, true),
+				color = Color.terminal_icon(255, true)
 			},
 			change_function = function (content, style)
 				style.color[1] = (content.is_wasteful or content.is_unseen) and 60 or 255
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -241,11 +241,11 @@ ViewElementTraitInventoryBlueprints.trait = {
 				offset = {
 					-5,
 					-5,
-					6,
+					6
 				},
-				text_color = Color.terminal_corner(255, true),
-			},
-		},
+				text_color = Color.terminal_corner(255, true)
+			}
+		}
 	},
 	init = function (parent, widget, config, callback_name)
 		local content = widget.content
@@ -322,12 +322,12 @@ ViewElementTraitInventoryBlueprints.trait = {
 				content.is_wasteful = true
 			end
 		end
-	end,
+	end
 }
 ViewElementTraitInventoryBlueprints.unknown_trait = {
 	size = {
 		110,
-		110,
+		110
 	},
 	pass_template = {
 		{
@@ -339,10 +339,10 @@ ViewElementTraitInventoryBlueprints.unknown_trait = {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
-				color = Color.terminal_frame(255, true),
-			},
+				color = Color.terminal_frame(255, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -352,21 +352,21 @@ ViewElementTraitInventoryBlueprints.unknown_trait = {
 				horizontal_alignment = "center",
 				vertical_alignment = "center",
 				material_values = {
-					icon = "content/ui/textures/icons/traits/weapon_trait_unknown",
+					icon = "content/ui/textures/icons/traits/weapon_trait_unknown"
 				},
 				size = {
 					64,
-					64,
+					64
 				},
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
-				color = Color.terminal_icon(100, true),
-			},
-		},
-	},
+				color = Color.terminal_icon(100, true)
+			}
+		}
+	}
 }
 
 return ViewElementTraitInventoryBlueprints

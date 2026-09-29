@@ -13,8 +13,8 @@ local scenegraph_definition = {
 		parent = "screen",
 		vertical_alignment = "bottom",
 		size = size_size,
-		position = screen_offset,
-	},
+		position = screen_offset
+	}
 }
 local widget_definitions = {}
 local position_x = 0
@@ -26,7 +26,7 @@ for i = 1, max_slots do
 	local position = {
 		screen_offset[1] + position_x,
 		screen_offset[2] + position_y,
-		0,
+		0
 	}
 
 	scenegraph_definition[scenegraph_id] = {
@@ -34,7 +34,7 @@ for i = 1, max_slots do
 		parent = "screen",
 		vertical_alignment = "bottom",
 		size = size_size,
-		position = position,
+		position = position
 	}
 	position_x = position_x + weapon_spacing[1]
 	position_y = position_y - (size_size[2] + weapon_spacing[2])
@@ -42,5 +42,5 @@ end
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

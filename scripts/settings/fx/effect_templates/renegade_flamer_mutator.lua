@@ -9,7 +9,7 @@ local sfx = RenegadeFlamerMutatorSettings.sfx
 local _switch_state, _get_state_and_aim_position, _get_control_positions, _get_attachment_unit_and_node_index
 local resources = {
 	resources_vfx = vfx,
-	resources_sfx = sfx,
+	resources_sfx = sfx
 }
 local effect_template = {
 	name = "renegade_flamer_mutator",
@@ -35,7 +35,7 @@ local effect_template = {
 			from_node = source_node_index,
 			radius = RenegadeFlamerMutatorSettings.radius,
 			range = RenegadeFlamerMutatorSettings.range,
-			set_muzzle_as_control_point_1 = RenegadeFlamerMutatorSettings.set_muzzle_as_control_point_1,
+			set_muzzle_as_control_point_1 = RenegadeFlamerMutatorSettings.set_muzzle_as_control_point_1
 		}
 
 		_switch_state(nil, state, template_data, template_context)
@@ -69,7 +69,7 @@ local effect_template = {
 		local unit = template_data.unit
 
 		Flamer.stop_fx(unit, vfx, sfx, wwise_world, world, flamer_data)
-	end,
+	end
 }
 
 function _get_state_and_aim_position(game_session, game_object_id)

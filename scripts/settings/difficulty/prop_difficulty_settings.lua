@@ -7,7 +7,7 @@ prop_difficulty_settings.health_scaling = {
 	0.6,
 	0.75,
 	1,
-	1,
+	1
 }
 
 return settings("PropDifficultySettings", prop_difficulty_settings)

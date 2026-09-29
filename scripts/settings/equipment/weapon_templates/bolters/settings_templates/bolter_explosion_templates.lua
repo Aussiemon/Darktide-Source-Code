@@ -21,7 +21,7 @@ explosion_templates.bolt_shell_kill = {
 	static_power_level = 500,
 	explosion_area_suppression = {
 		distance = 4,
-		suppression_value = 4,
+		suppression_value = 4
 	},
 	close_damage_profile = DamageProfileTemplates.bolter_kill_explosion,
 	close_damage_type = damage_types.boltshell,
@@ -30,11 +30,11 @@ explosion_templates.bolt_shell_kill = {
 	broadphase_explosion_filter = {
 		"heroes",
 		"villains",
-		"destructibles",
+		"destructibles"
 	},
 	vfx = {
-		"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
-	},
+		"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact"
+	}
 }
 explosion_templates.bolt_shell_stop = {
 	close_radius = 0.75,
@@ -53,15 +53,15 @@ explosion_templates.bolt_shell_stop = {
 	broadphase_explosion_filter = {
 		"heroes",
 		"villains",
-		"destructibles",
+		"destructibles"
 	},
 	explosion_area_suppression = {
 		distance = 4,
-		suppression_value = 4,
+		suppression_value = 4
 	},
 	vfx = {
-		"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
-	},
+		"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact"
+	}
 }
 explosion_templates.bolt_shell_kill_m2 = {
 	close_radius = 1.8,
@@ -75,7 +75,7 @@ explosion_templates.bolt_shell_kill_m2 = {
 	static_power_level = 500,
 	explosion_area_suppression = {
 		distance = 4,
-		suppression_value = 6,
+		suppression_value = 6
 	},
 	close_damage_profile = DamageProfileTemplates.bolter_m2_kill_explosion,
 	close_damage_type = damage_types.boltshell,
@@ -84,11 +84,11 @@ explosion_templates.bolt_shell_kill_m2 = {
 	broadphase_explosion_filter = {
 		"heroes",
 		"villains",
-		"destructibles",
+		"destructibles"
 	},
 	vfx = {
-		"content/fx/particles/weapons/rifles/bolter/bolter_m2_impact",
-	},
+		"content/fx/particles/weapons/rifles/bolter/bolter_m2_impact"
+	}
 }
 explosion_templates.bolt_shell_stop_m2 = {
 	close_radius = 1.8,
@@ -107,15 +107,15 @@ explosion_templates.bolt_shell_stop_m2 = {
 	broadphase_explosion_filter = {
 		"heroes",
 		"villains",
-		"destructibles",
+		"destructibles"
 	},
 	explosion_area_suppression = {
 		distance = 4,
-		suppression_value = 6,
+		suppression_value = 6
 	},
 	vfx = {
-		"content/fx/particles/weapons/rifles/bolter/bolter_m2_impact",
-	},
+		"content/fx/particles/weapons/rifles/bolter/bolter_m2_impact"
+	}
 }
 explosion_templates.boltpistol_shell_kill = {
 	close_radius = 0.75,
@@ -134,15 +134,15 @@ explosion_templates.boltpistol_shell_kill = {
 	broadphase_explosion_filter = {
 		"heroes",
 		"villains",
-		"destructibles",
+		"destructibles"
 	},
 	vfx = {
-		"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
+		"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact"
 	},
 	explosion_area_suppression = {
 		distance = 4,
-		suppression_value = 4,
-	},
+		suppression_value = 4
+	}
 }
 explosion_templates.boltpistol_shell_stop = {
 	close_radius = 0.75,
@@ -161,15 +161,15 @@ explosion_templates.boltpistol_shell_stop = {
 	broadphase_explosion_filter = {
 		"heroes",
 		"villains",
-		"destructibles",
+		"destructibles"
 	},
 	explosion_area_suppression = {
 		distance = 4,
-		suppression_value = 4,
+		suppression_value = 4
 	},
 	vfx = {
-		"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
-	},
+		"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact"
+	}
 }
 explosion_templates.bolt_close_explosion = {
 	close_radius = 0.75,
@@ -188,15 +188,15 @@ explosion_templates.bolt_close_explosion = {
 	broadphase_explosion_filter = {
 		"heroes",
 		"villains",
-		"destructibles",
+		"destructibles"
 	},
 	explosion_area_suppression = {
 		distance = 4,
-		suppression_value = 4,
+		suppression_value = 4
 	},
 	vfx = {
-		"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
-	},
+		"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact"
+	}
 }
 explosion_templates.bolt_close_kill_explosion = table.clone(explosion_templates.bolt_close_explosion)
 explosion_templates.bolt_close_kill_explosion.close_damage_profile = DamageProfileTemplates.bolter_kill_explosion
@@ -218,15 +218,15 @@ explosion_templates.boltpistol_m2_shell_kill = {
 	broadphase_explosion_filter = {
 		"heroes",
 		"villains",
-		"destructibles",
+		"destructibles"
 	},
 	vfx = {
-		"content/fx/particles/weapons/pistols/boltpistol/boltpistol_m2_impact",
+		"content/fx/particles/weapons/pistols/boltpistol/boltpistol_m2_impact"
 	},
 	explosion_area_suppression = {
 		distance = 4,
-		suppression_value = 6,
-	},
+		suppression_value = 6
+	}
 }
 explosion_templates.boltpistol_m2_shell_stop = {
 	close_radius = 1.75,
@@ -245,18 +245,18 @@ explosion_templates.boltpistol_m2_shell_stop = {
 	broadphase_explosion_filter = {
 		"heroes",
 		"villains",
-		"destructibles",
+		"destructibles"
 	},
 	explosion_area_suppression = {
 		distance = 4,
-		suppression_value = 6,
+		suppression_value = 6
 	},
 	vfx = {
-		"content/fx/particles/weapons/pistols/boltpistol/boltpistol_m2_impact",
-	},
+		"content/fx/particles/weapons/pistols/boltpistol/boltpistol_m2_impact"
+	}
 }
 
 return {
 	base_templates = explosion_templates,
-	overrides = overrides,
+	overrides = overrides
 }

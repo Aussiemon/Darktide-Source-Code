@@ -37,9 +37,9 @@ weapon_template.action_inputs.vent = {
 	input_sequence = {
 		{
 			input = "weapon_reload_hold",
-			value = true,
-		},
-	},
+			value = true
+		}
+	}
 }
 weapon_template.action_inputs.vent_release = {
 	buffer_time = 0.1,
@@ -47,28 +47,20 @@ weapon_template.action_inputs.vent_release = {
 		{
 			input = "weapon_reload_hold",
 			value = false,
-			time_window = math.huge,
-		},
-	},
+			time_window = math.huge
+		}
+	}
 }
 
 ActionInputHierarchy.update_hierarchy_entry(weapon_template.action_input_hierarchy, "vent", {
 	{
 		input = "vent_release",
-		transition = "base",
+		transition = "base"
 	},
 	{
 		input = "wield",
-		transition = "base",
-	},
-	{
-		input = "combat_ability",
-		transition = "base",
-	},
-	{
-		input = "grenade_ability",
-		transition = "base",
-	},
+		transition = "base"
+	}
 })
 
 weapon_template.action_inputs.block.buffer_time = 0.1
@@ -78,12 +70,12 @@ weapon_template.action_inputs.start_attack.buffer_time = 0.4
 local base_sweep_box = {
 	0.15,
 	0.15,
-	1.2,
+	1.2
 }
 local stab_sweep_box = {
 	0.15,
 	0.15,
-	1.2,
+	1.2
 }
 local hit_zone_priority = {
 	[hit_zone_names.head] = 1,
@@ -91,59 +83,45 @@ local hit_zone_priority = {
 	[hit_zone_names.upper_left_arm] = 3,
 	[hit_zone_names.upper_right_arm] = 3,
 	[hit_zone_names.upper_left_leg] = 3,
-	[hit_zone_names.upper_right_leg] = 3,
+	[hit_zone_names.upper_right_leg] = 3
 }
 
 table.add_missing(hit_zone_priority, default_hit_zone_priority)
 
 weapon_template.actions = {
-	action_unwield = {
-		allowed_during_sprint = true,
-		kind = "unwield",
-		start_input = "wield",
-		total_time = 0,
-		uninterruptible = true,
-		allowed_chain_actions = {},
-	},
 	action_wield = {
 		allowed_during_sprint = true,
 		anim_event = "equip",
 		kind = "wield",
 		sprint_ready_up_time = 0,
-		total_time = 0.3,
+		total_time = 0.5,
 		uninterruptible = true,
 		action_movement_curve = {
 			{
 				modifier = 1.2,
-				t = 0.3,
+				t = 0.3
 			},
 			{
 				modifier = 1,
-				t = 0.4,
+				t = 0.4
 			},
-			start_modifier = 0.8,
+			start_modifier = 0.8
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			start_attack = {
-				action_name = "action_melee_start_wield",
+				action_name = "action_melee_start_wield"
 			},
 			block = {
-				action_name = "action_block",
+				action_name = "action_block"
 			},
 			special_action = {
-				action_name = "action_activate_special",
+				action_name = "action_activate_special"
 			},
 			vent = {
-				action_name = "action_vent",
-			},
-		},
+				action_name = "action_vent"
+			}
+		}
 	},
 	action_melee_start_left = {
 		action_priority = 2,
@@ -162,62 +140,56 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 0.75,
-				t = 0.05,
+				t = 0.05
 			},
 			{
 				modifier = 0.65,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.5,
-				t = 0.25,
+				t = 0.25
 			},
 			{
 				modifier = 0.65,
-				t = 0.4,
+				t = 0.4
 			},
 			{
 				modifier = 0.65,
-				t = 0.5,
+				t = 0.5
 			},
 			{
 				modifier = 0.635,
-				t = 0.55,
+				t = 0.55
 			},
 			{
 				modifier = 0.8,
-				t = 1.5,
+				t = 1.5
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			light_attack = {
-				action_name = "action_light_1",
+				action_name = "action_light_1"
 			},
 			heavy_attack = {
 				action_name = "action_heavy_1",
-				chain_time = 0.55,
+				chain_time = 0.55
 			},
 			block = {
-				action_name = "action_block",
+				action_name = "action_block"
 			},
 			special_action = {
-				action_name = "action_activate_special",
+				action_name = "action_activate_special"
 			},
 			vent = {
-				action_name = "action_vent",
-			},
+				action_name = "action_vent"
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
-		end,
+		end
 	},
 	action_melee_start_wield = {
 		action_priority = 1,
@@ -233,62 +205,82 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 0.75,
-				t = 0.05,
+				t = 0.05
 			},
 			{
 				modifier = 0.65,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.5,
-				t = 0.25,
+				t = 0.25
 			},
 			{
 				modifier = 0.65,
-				t = 0.4,
+				t = 0.4
 			},
 			{
 				modifier = 0.65,
-				t = 0.5,
+				t = 0.5
 			},
 			{
 				modifier = 0.635,
-				t = 0.55,
+				t = 0.55
 			},
 			{
 				modifier = 0.8,
-				t = 1.5,
+				t = 1.5
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			light_attack = {
-				action_name = "action_light_wield",
+				action_name = "action_light_wield"
 			},
 			heavy_attack = {
 				action_name = "action_heavy_sprint",
-				chain_time = 0.62,
+				chain_time = 0.62
 			},
 			block = {
-				action_name = "action_block",
+				action_name = "action_block"
 			},
 			special_action = {
-				action_name = "action_activate_special",
+				action_name = "action_activate_special"
 			},
 			vent = {
-				action_name = "action_vent",
-			},
+				action_name = "action_vent"
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
+		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
+			if not condition_func_params then
+				return true
+			end
+
+			local weapon_extension = condition_func_params.weapon_extension
+			local last_sweep_action_t = weapon_extension.last_sweep_action_t
+			local next_allowed_sweep_action_t = last_sweep_action_t + 0.6
+
+			if next_allowed_sweep_action_t <= t then
+				return true
+			end
+
+			return false
+		end,
+		action_finish_func = function (reason, data, condition_func_params, t)
+			if not condition_func_params then
+				return
+			end
+
+			local weapon_extension = condition_func_params.weapon_extension
+			local weapon_action_component = condition_func_params.weapon_action_component
+			local start_t = weapon_action_component.start_t
+
+			weapon_extension.last_sweep_action_t = start_t
+		end
 	},
 	action_melee_start_sprint = {
 		action_priority = 3,
@@ -305,69 +297,63 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 0.95,
-				t = 0.05,
+				t = 0.05
 			},
 			{
 				modifier = 0.8,
-				t = 0.25,
+				t = 0.25
 			},
 			{
 				modifier = 0.9,
-				t = 0.35,
+				t = 0.35
 			},
 			{
 				modifier = 1,
-				t = 0.5,
+				t = 0.5
 			},
 			{
 				modifier = 1.1,
-				t = 0.6,
+				t = 0.6
 			},
 			{
 				modifier = 1.2,
-				t = 0.75,
+				t = 0.75
 			},
 			{
 				modifier = 1.1,
-				t = 1,
+				t = 1
 			},
 			{
 				modifier = 1,
-				t = 1.5,
+				t = 1.5
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			light_attack = {
-				action_name = "action_light_2",
+				action_name = "action_light_2"
 			},
 			heavy_attack = {
 				action_name = "action_heavy_sprint",
-				chain_time = 0.62,
+				chain_time = 0.62
 			},
 			block = {
-				action_name = "action_block",
+				action_name = "action_block"
 			},
 			special_action = {
-				action_name = "action_activate_special",
+				action_name = "action_activate_special"
 			},
 			vent = {
-				action_name = "action_vent",
-			},
+				action_name = "action_vent"
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 			return condition_func_params.sprint_character_state_component.is_sprinting
-		end,
+		end
 	},
 	action_melee_start_slide = {
 		action_priority = 4,
@@ -384,62 +370,56 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 0.75,
-				t = 0.05,
+				t = 0.05
 			},
 			{
 				modifier = 0.65,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.5,
-				t = 0.25,
+				t = 0.25
 			},
 			{
 				modifier = 0.65,
-				t = 0.4,
+				t = 0.4
 			},
 			{
 				modifier = 0.75,
-				t = 0.5,
+				t = 0.5
 			},
 			{
 				modifier = 1,
-				t = 1.5,
+				t = 1.5
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			light_attack = {
 				action_name = "action_light_slide",
-				chain_time = 0.15,
+				chain_time = 0.15
 			},
 			heavy_attack = {
 				action_name = "action_heavy_sprint",
-				chain_time = 0.62,
+				chain_time = 0.62
 			},
 			block = {
-				action_name = "action_block",
+				action_name = "action_block"
 			},
 			special_action = {
-				action_name = "action_activate_special",
+				action_name = "action_activate_special"
 			},
 			vent = {
-				action_name = "action_vent",
-			},
+				action_name = "action_vent"
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 			return condition_func_params.movement_state_component.method == "sliding"
-		end,
+		end
 	},
 	action_light_1 = {
 		allowed_during_sprint = true,
@@ -462,58 +442,52 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 1.15,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.8,
-				t = 0.35,
+				t = 0.35
 			},
 			{
 				modifier = 0.5,
-				t = 0.5,
+				t = 0.5
 			},
 			{
 				modifier = 0.45,
-				t = 0.55,
+				t = 0.55
 			},
 			{
 				modifier = 0.65,
-				t = 0.6,
+				t = 0.6
 			},
 			{
 				modifier = 0.7,
-				t = 1,
+				t = 1
 			},
 			{
 				modifier = 1,
-				t = 1.3,
+				t = 1.3
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			start_attack = {
 				action_name = "action_melee_start_right",
-				chain_time = 0.61,
+				chain_time = 0.61
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.38,
+				chain_time = 0.38
 			},
 			special_action = {
 				action_name = "action_activate_special",
-				chain_time = 0.38,
+				chain_time = 0.38
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.38,
-			},
+				chain_time = 0.38
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
@@ -526,17 +500,17 @@ weapon_template.actions = {
 				anchor_point_offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		damage_profile = DamageProfileTemplates.light_force_sword_2h_linesman,
 		damage_type = damage_types.metal_slashing_light,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
-			buff_stat_buffs.melee_attack_speed,
+			buff_stat_buffs.melee_attack_speed
 		},
-		wounds_shape = wounds_shapes.left_45_slash_clean,
+		wounds_shape = wounds_shapes.left_45_slash_clean
 	},
 	action_heavy_1 = {
 		allowed_during_sprint = true,
@@ -559,46 +533,40 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 1.3,
-				t = 0.15,
+				t = 0.15
 			},
 			{
 				modifier = 1.25,
-				t = 0.4,
+				t = 0.4
 			},
 			{
 				modifier = 0.5,
-				t = 0.6,
+				t = 0.6
 			},
 			{
 				modifier = 1,
-				t = 1,
+				t = 1
 			},
-			start_modifier = 1.5,
+			start_modifier = 1.5
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			start_attack = {
 				action_name = "action_melee_start_right_stab",
-				chain_time = 0.52,
+				chain_time = 0.52
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.45,
+				chain_time = 0.45
 			},
 			special_action = {
 				action_name = "action_activate_special",
-				chain_time = 0.45,
+				chain_time = 0.45
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.45,
-			},
+				chain_time = 0.45
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
@@ -611,17 +579,17 @@ weapon_template.actions = {
 				anchor_point_offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		damage_profile = DamageProfileTemplates.heavy_force_sword_2h_smiter,
 		damage_type = damage_types.metal_slashing_light,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
-			buff_stat_buffs.melee_attack_speed,
+			buff_stat_buffs.melee_attack_speed
 		},
-		wounds_shape = wounds_shapes.vertical_slash_clean,
+		wounds_shape = wounds_shapes.vertical_slash_clean
 	},
 	action_light_wield = {
 		allowed_during_sprint = true,
@@ -644,58 +612,52 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 1.15,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.8,
-				t = 0.35,
+				t = 0.35
 			},
 			{
 				modifier = 0.5,
-				t = 0.5,
+				t = 0.5
 			},
 			{
 				modifier = 0.45,
-				t = 0.55,
+				t = 0.55
 			},
 			{
 				modifier = 0.65,
-				t = 0.6,
+				t = 0.6
 			},
 			{
 				modifier = 0.7,
-				t = 1,
+				t = 1
 			},
 			{
 				modifier = 1,
-				t = 1.3,
+				t = 1.3
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.58,
+				chain_time = 0.58
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.38,
+				chain_time = 0.38
 			},
 			special_action = {
 				action_name = "action_activate_special",
-				chain_time = 0.38,
+				chain_time = 0.38
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.38,
-			},
+				chain_time = 0.38
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
@@ -708,17 +670,28 @@ weapon_template.actions = {
 				anchor_point_offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		damage_profile = DamageProfileTemplates.light_force_sword_2h_linesman,
 		damage_type = damage_types.metal_slashing_light,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
-			buff_stat_buffs.melee_attack_speed,
+			buff_stat_buffs.melee_attack_speed
 		},
 		wounds_shape = wounds_shapes.right_45_slash_clean,
+		action_finish_func = function (reason, data, condition_func_params, t)
+			if not condition_func_params then
+				return
+			end
+
+			local weapon_extension = condition_func_params.weapon_extension
+			local weapon_action_component = condition_func_params.weapon_action_component
+			local start_t = weapon_action_component.start_t
+
+			weapon_extension.last_sweep_action_t = start_t
+		end
 	},
 	action_heavy_sprint = {
 		allowed_during_sprint = true,
@@ -740,71 +713,65 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 0.5,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 1.15,
-				t = 0.15,
+				t = 0.15
 			},
 			{
 				modifier = 1.25,
-				t = 0.25,
+				t = 0.25
 			},
 			{
 				modifier = 1.3,
-				t = 0.35,
+				t = 0.35
 			},
 			{
 				modifier = 1.25,
-				t = 0.45,
+				t = 0.45
 			},
 			{
 				modifier = 0.5,
-				t = 0.47,
+				t = 0.47
 			},
 			{
 				modifier = 0.45,
-				t = 0.6,
+				t = 0.6
 			},
 			{
 				modifier = 0.45,
-				t = 0.65,
+				t = 0.65
 			},
 			{
 				modifier = 0.9,
-				t = 0.8,
+				t = 0.8
 			},
 			{
 				modifier = 1,
-				t = 1,
+				t = 1
 			},
-			start_modifier = 0.4,
+			start_modifier = 0.4
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			start_attack = {
 				action_name = "action_melee_start_left_2",
-				chain_time = 0.55,
+				chain_time = 0.55
 			},
 			block = {
 				action_name = "action_block",
 				chain_time = 0.5,
-				chain_until = 0.2,
+				chain_until = 0.2
 			},
 			special_action = {
 				action_name = "action_activate_special",
-				chain_time = 0.5,
+				chain_time = 0.5
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.5,
-			},
+				chain_time = 0.5
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
@@ -816,17 +783,17 @@ weapon_template.actions = {
 				anchor_point_offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		damage_profile = DamageProfileTemplates.heavy_force_sword_2h_smiter,
 		damage_type = damage_types.metal_slashing_heavy,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
-			buff_stat_buffs.melee_attack_speed,
+			buff_stat_buffs.melee_attack_speed
 		},
-		wounds_shape = wounds_shapes.vertical_slash_clean,
+		wounds_shape = wounds_shapes.vertical_slash_clean
 	},
 	action_light_slide = {
 		allowed_during_sprint = true,
@@ -849,58 +816,52 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 1.15,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.8,
-				t = 0.35,
+				t = 0.35
 			},
 			{
 				modifier = 0.5,
-				t = 0.5,
+				t = 0.5
 			},
 			{
 				modifier = 0.45,
-				t = 0.55,
+				t = 0.55
 			},
 			{
 				modifier = 0.65,
-				t = 0.6,
+				t = 0.6
 			},
 			{
 				modifier = 0.7,
-				t = 1,
+				t = 1
 			},
 			{
 				modifier = 1,
-				t = 1.3,
+				t = 1.3
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			start_attack = {
 				action_name = "action_melee_start_left_2",
-				chain_time = 0.58,
+				chain_time = 0.58
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.38,
+				chain_time = 0.38
 			},
 			special_action = {
 				action_name = "action_activate_special",
-				chain_time = 0.38,
+				chain_time = 0.38
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.38,
-			},
+				chain_time = 0.38
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
@@ -913,17 +874,17 @@ weapon_template.actions = {
 				anchor_point_offset = {
 					0,
 					0,
-					-0.15,
-				},
-			},
+					-0.15
+				}
+			}
 		},
 		damage_profile = DamageProfileTemplates.light_force_sword_2h_uppercut,
 		damage_type = damage_types.metal_slashing_heavy,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
-			buff_stat_buffs.melee_attack_speed,
+			buff_stat_buffs.melee_attack_speed
 		},
-		wounds_shape = wounds_shapes.right_45_slash_clean,
+		wounds_shape = wounds_shapes.right_45_slash_clean
 	},
 	action_melee_start_right = {
 		allowed_during_sprint = true,
@@ -939,62 +900,56 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 0.75,
-				t = 0.05,
+				t = 0.05
 			},
 			{
 				modifier = 0.65,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.5,
-				t = 0.25,
+				t = 0.25
 			},
 			{
 				modifier = 0.65,
-				t = 0.4,
+				t = 0.4
 			},
 			{
 				modifier = 0.65,
-				t = 0.5,
+				t = 0.5
 			},
 			{
 				modifier = 0.635,
-				t = 0.55,
+				t = 0.55
 			},
 			{
 				modifier = 0.8,
-				t = 1.5,
+				t = 1.5
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			light_attack = {
-				action_name = "action_light_2",
+				action_name = "action_light_2"
 			},
 			heavy_attack = {
 				action_name = "action_heavy_2",
-				chain_time = 0.3,
+				chain_time = 0.3
 			},
 			block = {
-				action_name = "action_block",
+				action_name = "action_block"
 			},
 			special_action = {
-				action_name = "action_activate_special",
+				action_name = "action_activate_special"
 			},
 			vent = {
-				action_name = "action_vent",
-			},
+				action_name = "action_vent"
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
-		end,
+		end
 	},
 	action_light_2 = {
 		allowed_during_sprint = true,
@@ -1017,58 +972,52 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 1.15,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.8,
-				t = 0.35,
+				t = 0.35
 			},
 			{
 				modifier = 0.5,
-				t = 0.5,
+				t = 0.5
 			},
 			{
 				modifier = 0.45,
-				t = 0.55,
+				t = 0.55
 			},
 			{
 				modifier = 0.65,
-				t = 0.6,
+				t = 0.6
 			},
 			{
 				modifier = 0.7,
-				t = 1,
+				t = 1
 			},
 			{
 				modifier = 1,
-				t = 1.3,
+				t = 1.3
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			start_attack = {
 				action_name = "action_melee_start_left_2",
-				chain_time = 0.58,
+				chain_time = 0.58
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.38,
+				chain_time = 0.38
 			},
 			special_action = {
 				action_name = "action_activate_special",
-				chain_time = 0.38,
+				chain_time = 0.38
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.38,
-			},
+				chain_time = 0.38
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
@@ -1081,17 +1030,17 @@ weapon_template.actions = {
 				anchor_point_offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		damage_profile = DamageProfileTemplates.light_force_sword_2h_linesman,
 		damage_type = damage_types.metal_slashing_light,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
-			buff_stat_buffs.melee_attack_speed,
+			buff_stat_buffs.melee_attack_speed
 		},
-		wounds_shape = wounds_shapes.right_45_slash_clean,
+		wounds_shape = wounds_shapes.right_45_slash_clean
 	},
 	action_heavy_2 = {
 		allowed_during_sprint = true,
@@ -1115,47 +1064,42 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 1.3,
-				t = 0.15,
+				t = 0.15
 			},
 			{
 				modifier = 1.25,
-				t = 0.4,
+				t = 0.4
 			},
 			{
 				modifier = 0.5,
-				t = 0.6,
+				t = 0.6
 			},
 			{
 				modifier = 1,
-				t = 1,
+				t = 1
 			},
-			start_modifier = 1.5,
+			start_modifier = 1.5
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-				chain_time = 0.2,
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions({
+				chain_time = 0.2
+			}),
 			start_attack = {
 				action_name = "action_melee_start_left_alt",
-				chain_time = 0.53,
+				chain_time = 0.53
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.45,
+				chain_time = 0.45
 			},
 			special_action = {
 				action_name = "action_activate_special",
-				chain_time = 0.45,
+				chain_time = 0.45
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.45,
-			},
+				chain_time = 0.45
+			}
 		},
 		hit_zone_priority = hit_zone_priority,
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -1168,16 +1112,16 @@ weapon_template.actions = {
 				anchor_point_offset = {
 					0,
 					0,
-					-0.075,
-				},
-			},
+					-0.075
+				}
+			}
 		},
 		damage_profile = DamageProfileTemplates.heavy_force_sword_stab_2h,
 		damage_type = damage_types.metal_slashing_light,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
-			buff_stat_buffs.melee_attack_speed,
-		},
+			buff_stat_buffs.melee_attack_speed
+		}
 	},
 	action_melee_start_left_alt = {
 		allowed_during_sprint = true,
@@ -1194,63 +1138,57 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 0.75,
-				t = 0.05,
+				t = 0.05
 			},
 			{
 				modifier = 0.65,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.5,
-				t = 0.25,
+				t = 0.25
 			},
 			{
 				modifier = 0.65,
-				t = 0.4,
+				t = 0.4
 			},
 			{
 				modifier = 0.65,
-				t = 0.5,
+				t = 0.5
 			},
 			{
 				modifier = 0.635,
-				t = 0.55,
+				t = 0.55
 			},
 			{
 				modifier = 0.8,
-				t = 1.5,
+				t = 1.5
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			light_attack = {
 				action_name = "action_light_4",
-				chain_time = 0,
+				chain_time = 0
 			},
 			heavy_attack = {
 				action_name = "action_heavy_1",
-				chain_time = 0.5,
+				chain_time = 0.5
 			},
 			block = {
-				action_name = "action_block",
+				action_name = "action_block"
 			},
 			special_action = {
-				action_name = "action_activate_special",
+				action_name = "action_activate_special"
 			},
 			vent = {
-				action_name = "action_vent",
-			},
+				action_name = "action_vent"
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
-		end,
+		end
 	},
 	action_melee_start_right_stab = {
 		allowed_during_sprint = true,
@@ -1266,62 +1204,56 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 0.75,
-				t = 0.05,
+				t = 0.05
 			},
 			{
 				modifier = 0.65,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.5,
-				t = 0.25,
+				t = 0.25
 			},
 			{
 				modifier = 0.65,
-				t = 0.4,
+				t = 0.4
 			},
 			{
 				modifier = 0.65,
-				t = 0.5,
+				t = 0.5
 			},
 			{
 				modifier = 0.635,
-				t = 0.55,
+				t = 0.55
 			},
 			{
 				modifier = 0.8,
-				t = 1.5,
+				t = 1.5
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			light_attack = {
-				action_name = "action_light_4",
+				action_name = "action_light_4"
 			},
 			heavy_attack = {
 				action_name = "action_heavy_2",
-				chain_time = 0.6,
+				chain_time = 0.6
 			},
 			block = {
-				action_name = "action_block",
+				action_name = "action_block"
 			},
 			special_action = {
-				action_name = "action_activate_special",
+				action_name = "action_activate_special"
 			},
 			vent = {
-				action_name = "action_vent",
-			},
+				action_name = "action_vent"
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
-		end,
+		end
 	},
 	action_melee_start_left_2 = {
 		allowed_during_sprint = true,
@@ -1338,63 +1270,57 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 0.75,
-				t = 0.05,
+				t = 0.05
 			},
 			{
 				modifier = 0.65,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.5,
-				t = 0.25,
+				t = 0.25
 			},
 			{
 				modifier = 0.65,
-				t = 0.4,
+				t = 0.4
 			},
 			{
 				modifier = 0.65,
-				t = 0.5,
+				t = 0.5
 			},
 			{
 				modifier = 0.635,
-				t = 0.55,
+				t = 0.55
 			},
 			{
 				modifier = 0.8,
-				t = 1.5,
+				t = 1.5
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			light_attack = {
 				action_name = "action_light_3",
-				chain_time = 0,
+				chain_time = 0
 			},
 			heavy_attack = {
 				action_name = "action_heavy_1",
-				chain_time = 0.5,
+				chain_time = 0.5
 			},
 			block = {
-				action_name = "action_block",
+				action_name = "action_block"
 			},
 			special_action = {
-				action_name = "action_activate_special",
+				action_name = "action_activate_special"
 			},
 			vent = {
-				action_name = "action_vent",
-			},
+				action_name = "action_vent"
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
-		end,
+		end
 	},
 	action_light_3 = {
 		allowed_during_sprint = true,
@@ -1417,58 +1343,52 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 1.15,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.8,
-				t = 0.35,
+				t = 0.35
 			},
 			{
 				modifier = 0.5,
-				t = 0.5,
+				t = 0.5
 			},
 			{
 				modifier = 0.45,
-				t = 0.55,
+				t = 0.55
 			},
 			{
 				modifier = 1,
-				t = 0.6,
+				t = 0.6
 			},
 			{
 				modifier = 1,
-				t = 1,
+				t = 1
 			},
 			{
 				modifier = 1.6,
-				t = 1.3,
+				t = 1.3
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			start_attack = {
 				action_name = "action_melee_start_right_2",
-				chain_time = 0.57,
+				chain_time = 0.57
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.38,
+				chain_time = 0.38
 			},
 			special_action = {
 				action_name = "action_activate_special",
-				chain_time = 0.38,
+				chain_time = 0.38
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.38,
-			},
+				chain_time = 0.38
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
@@ -1481,17 +1401,17 @@ weapon_template.actions = {
 				anchor_point_offset = {
 					0,
 					0,
-					-0.05,
-				},
-			},
+					-0.05
+				}
+			}
 		},
 		damage_profile = DamageProfileTemplates.light_force_sword_2h_uppercut,
 		damage_type = damage_types.metal_slashing_light,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
-			buff_stat_buffs.melee_attack_speed,
+			buff_stat_buffs.melee_attack_speed
 		},
-		wounds_shape = wounds_shapes.right_45_slash_clean,
+		wounds_shape = wounds_shapes.right_45_slash_clean
 	},
 	action_melee_start_right_2 = {
 		allowed_during_sprint = true,
@@ -1507,62 +1427,56 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 0.75,
-				t = 0.05,
+				t = 0.05
 			},
 			{
 				modifier = 0.65,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.5,
-				t = 0.25,
+				t = 0.25
 			},
 			{
 				modifier = 0.65,
-				t = 0.4,
+				t = 0.4
 			},
 			{
 				modifier = 0.65,
-				t = 0.5,
+				t = 0.5
 			},
 			{
 				modifier = 0.635,
-				t = 0.55,
+				t = 0.55
 			},
 			{
 				modifier = 0.8,
-				t = 1.5,
+				t = 1.5
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			light_attack = {
-				action_name = "action_light_4",
+				action_name = "action_light_4"
 			},
 			heavy_attack = {
 				action_name = "action_heavy_3",
-				chain_time = 0.45,
+				chain_time = 0.45
 			},
 			block = {
-				action_name = "action_block",
+				action_name = "action_block"
 			},
 			special_action = {
-				action_name = "action_activate_special",
+				action_name = "action_activate_special"
 			},
 			vent = {
-				action_name = "action_vent",
-			},
+				action_name = "action_vent"
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
-		end,
+		end
 	},
 	action_light_4 = {
 		allowed_during_sprint = true,
@@ -1585,58 +1499,52 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 1.15,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.8,
-				t = 0.35,
+				t = 0.35
 			},
 			{
 				modifier = 0.5,
-				t = 0.5,
+				t = 0.5
 			},
 			{
 				modifier = 0.45,
-				t = 0.55,
+				t = 0.55
 			},
 			{
 				modifier = 0.65,
-				t = 0.6,
+				t = 0.6
 			},
 			{
 				modifier = 0.7,
-				t = 1,
+				t = 1
 			},
 			{
 				modifier = 1,
-				t = 1.3,
+				t = 1.3
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.55,
+				chain_time = 0.55
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.4,
+				chain_time = 0.4
 			},
 			special_action = {
 				action_name = "action_activate_special",
-				chain_time = 0.4,
+				chain_time = 0.4
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.4,
-			},
+				chain_time = 0.4
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
@@ -1649,17 +1557,17 @@ weapon_template.actions = {
 				anchor_point_offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		damage_profile = DamageProfileTemplates.light_force_sword_2h_smiter,
 		damage_type = damage_types.metal_slashing_heavy,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
-			buff_stat_buffs.melee_attack_speed,
+			buff_stat_buffs.melee_attack_speed
 		},
-		wounds_shape = wounds_shapes.vertical_slash_clean,
+		wounds_shape = wounds_shapes.vertical_slash_clean
 	},
 	action_heavy_3 = {
 		allowed_during_sprint = true,
@@ -1682,71 +1590,65 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 0.5,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 1.15,
-				t = 0.15,
+				t = 0.15
 			},
 			{
 				modifier = 1.25,
-				t = 0.25,
+				t = 0.25
 			},
 			{
 				modifier = 1.3,
-				t = 0.35,
+				t = 0.35
 			},
 			{
 				modifier = 1.25,
-				t = 0.45,
+				t = 0.45
 			},
 			{
 				modifier = 0.5,
-				t = 0.47,
+				t = 0.47
 			},
 			{
 				modifier = 0.45,
-				t = 0.6,
+				t = 0.6
 			},
 			{
 				modifier = 0.45,
-				t = 0.65,
+				t = 0.65
 			},
 			{
 				modifier = 0.9,
-				t = 0.8,
+				t = 0.8
 			},
 			{
 				modifier = 1,
-				t = 1,
+				t = 1
 			},
-			start_modifier = 0.4,
+			start_modifier = 0.4
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.65,
+				chain_time = 0.65
 			},
 			block = {
 				action_name = "action_block",
 				chain_time = 0.68,
-				chain_until = 0.2,
+				chain_until = 0.2
 			},
 			special_action = {
 				action_name = "action_activate_special",
-				chain_time = 0.68,
+				chain_time = 0.68
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.68,
-			},
+				chain_time = 0.68
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
@@ -1758,17 +1660,17 @@ weapon_template.actions = {
 				anchor_point_offset = {
 					0,
 					0,
-					-0.2,
-				},
-			},
+					-0.2
+				}
+			}
 		},
 		damage_profile = DamageProfileTemplates.heavy_force_sword_2h_linesman,
 		damage_type = damage_types.metal_slashing_heavy,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
-			buff_stat_buffs.melee_attack_speed,
+			buff_stat_buffs.melee_attack_speed
 		},
-		wounds_shape = wounds_shapes.right_45_slash_clean,
+		wounds_shape = wounds_shapes.right_45_slash_clean
 	},
 	action_block = {
 		anim_end_event = "parry_finished",
@@ -1782,50 +1684,44 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 0.75,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.62,
-				t = 0.3,
+				t = 0.3
 			},
 			{
 				modifier = 0.6,
-				t = 0.325,
+				t = 0.325
 			},
 			{
 				modifier = 0.61,
-				t = 0.35,
+				t = 0.35
 			},
 			{
 				modifier = 0.75,
-				t = 0.5,
+				t = 0.5
 			},
 			{
 				modifier = 0.85,
-				t = 1,
+				t = 1
 			},
 			{
 				modifier = 0.8,
-				t = 2,
+				t = 2
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			push = {
-				action_name = "action_push",
+				action_name = "action_push"
 			},
 			special_action = {
 				action_name = "action_activate_special",
-				chain_time = 0.3,
-			},
-		},
+				chain_time = 0.3
+			}
+		}
 	},
 	action_push = {
 		anim_event = "attack_push",
@@ -1838,52 +1734,46 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 1.2,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.8,
-				t = 0.25,
+				t = 0.25
 			},
 			{
 				modifier = 0.5,
-				t = 0.4,
+				t = 0.4
 			},
 			{
 				modifier = 1,
-				t = 1,
+				t = 1
 			},
-			start_modifier = 1.4,
+			start_modifier = 1.4
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			push_follow_up = {
 				action_name = "action_find_target",
-				chain_time = 0.1,
+				chain_time = 0.1
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.4,
+				chain_time = 0.4
 			},
 			special_action = {
 				action_name = "action_activate_special",
-				chain_time = 0.4,
+				chain_time = 0.4
 			},
 			start_attack = {
 				{
 					action_name = "action_melee_start_special",
-					chain_time = 0.45,
+					chain_time = 0.45
 				},
 				{
 					action_name = "action_melee_start_push_combo",
-					chain_time = 0.45,
-				},
-			},
+					chain_time = 0.45
+				}
+			}
 		},
 		inner_push_rad = math.pi * 0.25,
 		outer_push_rad = math.pi * 1,
@@ -1893,9 +1783,9 @@ weapon_template.actions = {
 		outer_damage_type = damage_types.warp,
 		fx = {
 			fx_source = "fx_left_hand_offset_fwd",
-			vfx_effect = "content/fx/particles/weapons/swords/forcesword/psyker_parry",
+			vfx_effect = "content/fx/particles/weapons/swords/forcesword/psyker_parry"
 		},
-		haptic_trigger_template = HapticTriggerTemplates.melee.push,
+		haptic_trigger_template = HapticTriggerTemplates.melee.push
 	},
 	action_find_target = {
 		allowed_during_sprint = false,
@@ -1910,21 +1800,21 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 0.4,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.4,
-				t = 0.15,
+				t = 0.15
 			},
 			{
 				modifier = 0.6,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.4,
-				t = 1,
+				t = 1
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		targeting_fx = {
 			effect_name = "content/fx/particles/weapons/force_staff/force_staff_channel_charge",
@@ -1932,30 +1822,24 @@ weapon_template.actions = {
 			husk_effect_name = "content/fx/particles/weapons/force_staff/force_staff_channel_charge_husk",
 			wwise_event_start = "wwise/events/weapon/play_force_staff_single_target",
 			wwise_event_stop = "wwise/events/weapon/stop_force_staff_single_target",
-			wwise_parameter_name = "charge_level",
+			wwise_parameter_name = "charge_level"
 		},
 		smart_targeting_template = SmartTargetingTemplates.force_sword_single_target,
 		conditional_state_to_action_input = {
 			action_end = {
-				input_name = "fling_target",
-			},
+				input_name = "fling_target"
+			}
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			fling_target = {
 				action_name = "action_fling_target",
-				chain_time = 0.1,
+				chain_time = 0.1
 			},
 			block = {
-				action_name = "action_block",
-			},
-		},
+				action_name = "action_block"
+			}
+		}
 	},
 	action_fling_target = {
 		anim_event = "parry_push_finish",
@@ -1969,56 +1853,50 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 1.4,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.5,
-				t = 0.25,
+				t = 0.25
 			},
 			{
 				modifier = 0.5,
-				t = 0.4,
+				t = 0.4
 			},
 			{
 				modifier = 1,
-				t = 1,
+				t = 1
 			},
-			start_modifier = 1.4,
+			start_modifier = 1.4
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			start_attack = {
 				{
 					action_name = "action_melee_start_special",
-					chain_time = 0.45,
+					chain_time = 0.45
 				},
 				{
 					action_name = "action_melee_start_push_combo",
-					chain_time = 0.55,
-				},
+					chain_time = 0.55
+				}
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.45,
+				chain_time = 0.45
 			},
 			special_action = {
 				action_name = "action_activate_special",
-				chain_time = 0.45,
-			},
+				chain_time = 0.45
+			}
 		},
 		damage_profile = DamageProfileTemplates.force_sword_push_followup_fling,
 		damage_type = damage_types.warp,
 		herding_template = HerdingTemplates.force_push,
 		fx = {
 			fx_source = "fx_left_hand_offset_fwd",
-			vfx_effect = "content/fx/particles/weapons/swords/forcesword/psyker_push",
-		},
+			vfx_effect = "content/fx/particles/weapons/swords/forcesword/psyker_push"
+		}
 	},
 	action_melee_start_push_combo = {
 		allowed_during_sprint = true,
@@ -2035,59 +1913,53 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 0.75,
-				t = 0.05,
+				t = 0.05
 			},
 			{
 				modifier = 0.65,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.5,
-				t = 0.25,
+				t = 0.25
 			},
 			{
 				modifier = 0.65,
-				t = 0.4,
+				t = 0.4
 			},
 			{
 				modifier = 0.65,
-				t = 0.5,
+				t = 0.5
 			},
 			{
 				modifier = 0.635,
-				t = 0.55,
+				t = 0.55
 			},
 			{
 				modifier = 0.8,
-				t = 1.5,
+				t = 1.5
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			light_attack = {
-				action_name = "action_light_push_follow_combo",
+				action_name = "action_light_push_follow_combo"
 			},
 			heavy_attack = {
 				action_name = "action_heavy_1",
-				chain_time = 0.4,
+				chain_time = 0.4
 			},
 			block = {
-				action_name = "action_block",
+				action_name = "action_block"
 			},
 			special_action = {
-				action_name = "action_activate_special",
-			},
+				action_name = "action_activate_special"
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
-		end,
+		end
 	},
 	action_light_push_follow_combo = {
 		allowed_during_sprint = true,
@@ -2110,58 +1982,52 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 1.15,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.8,
-				t = 0.35,
+				t = 0.35
 			},
 			{
 				modifier = 0.5,
-				t = 0.5,
+				t = 0.5
 			},
 			{
 				modifier = 0.45,
-				t = 0.55,
+				t = 0.55
 			},
 			{
 				modifier = 0.65,
-				t = 0.6,
+				t = 0.6
 			},
 			{
 				modifier = 0.7,
-				t = 1,
+				t = 1
 			},
 			{
 				modifier = 1,
-				t = 1.3,
+				t = 1.3
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			start_attack = {
 				action_name = "action_melee_start_right_2",
-				chain_time = 0.53,
+				chain_time = 0.53
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.38,
+				chain_time = 0.38
 			},
 			special_action = {
 				action_name = "action_activate_special",
-				chain_time = 0.38,
+				chain_time = 0.38
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.38,
-			},
+				chain_time = 0.38
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
@@ -2174,17 +2040,17 @@ weapon_template.actions = {
 				anchor_point_offset = {
 					0,
 					0,
-					-0.1,
-				},
-			},
+					-0.1
+				}
+			}
 		},
 		damage_profile = DamageProfileTemplates.light_force_sword_2h_linesman,
 		damage_type = damage_types.metal_slashing_light,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
-			buff_stat_buffs.melee_attack_speed,
+			buff_stat_buffs.melee_attack_speed
 		},
-		wounds_shape = wounds_shapes.horizontal_slash_clean,
+		wounds_shape = wounds_shapes.horizontal_slash_clean
 	},
 	action_vent = {
 		abort_sprint = true,
@@ -2204,38 +2070,33 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 0.4,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.3,
-				t = 0.15,
+				t = 0.15
 			},
 			{
 				modifier = 0.5,
-				t = 0.4,
+				t = 0.4
 			},
 			{
 				modifier = 0.85,
-				t = 5,
+				t = 5
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		running_action_state_to_action_input = {
 			fully_vented = {
-				input_name = "vent_release",
-			},
+				input_name = "vent_release"
+			}
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-				chain_time = 0.15,
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions({
+				chain_time = 0.15
+			})
 		},
-		haptic_trigger_template = HapticTriggerTemplates.melee.none,
+		haptic_trigger_template = HapticTriggerTemplates.melee.none
 	},
 	action_activate_special = {
 		activation_cooldown = 3,
@@ -2249,23 +2110,18 @@ weapon_template.actions = {
 		start_input = "special_action",
 		total_time = 2.1,
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-				chain_time = 0.15,
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions({
+				chain_time = 0.15
+			}),
 			start_attack = {
 				action_name = "action_melee_start_special",
-				chain_time = 0.7,
+				chain_time = 0.7
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.6,
-			},
-		},
+				chain_time = 0.6
+			}
+		}
 	},
 	action_melee_start_special = {
 		action_priority = 5,
@@ -2285,62 +2141,56 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 0.75,
-				t = 0.05,
+				t = 0.05
 			},
 			{
 				modifier = 0.65,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.5,
-				t = 0.25,
+				t = 0.25
 			},
 			{
 				modifier = 0.65,
-				t = 0.4,
+				t = 0.4
 			},
 			{
 				modifier = 0.65,
-				t = 0.5,
+				t = 0.5
 			},
 			{
 				modifier = 0.635,
-				t = 0.55,
+				t = 0.55
 			},
 			{
 				modifier = 0.8,
-				t = 1.5,
+				t = 1.5
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			light_attack = {
-				action_name = "action_left_light_special",
+				action_name = "action_left_light_special"
 			},
 			heavy_attack = {
 				action_name = "action_left_heavy_special",
-				chain_time = 0.6,
+				chain_time = 0.6
 			},
 			block = {
-				action_name = "action_block",
+				action_name = "action_block"
 			},
 			special_action = {
-				action_name = "action_activate_special",
-			},
+				action_name = "action_activate_special"
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 			return condition_func_params.inventory_slot_component.special_active
-		end,
+		end
 	},
 	action_left_light_special = {
 		allowed_during_sprint = true,
@@ -2364,58 +2214,52 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 1.15,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.8,
-				t = 0.35,
+				t = 0.35
 			},
 			{
 				modifier = 0.5,
-				t = 0.5,
+				t = 0.5
 			},
 			{
 				modifier = 0.45,
-				t = 0.55,
+				t = 0.55
 			},
 			{
 				modifier = 0.65,
-				t = 0.6,
+				t = 0.6
 			},
 			{
 				modifier = 0.7,
-				t = 1,
+				t = 1
 			},
 			{
 				modifier = 1,
-				t = 1.3,
+				t = 1.3
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			start_attack = {
 				action_name = "action_melee_start_right",
-				chain_time = 0.85,
+				chain_time = 0.85
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.85,
+				chain_time = 0.85
 			},
 			special_action = {
 				action_name = "action_activate_special",
-				chain_time = 0.95,
+				chain_time = 0.95
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.85,
-			},
+				chain_time = 0.85
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
@@ -2428,18 +2272,18 @@ weapon_template.actions = {
 				anchor_point_offset = {
 					0,
 					0,
-					-0.125,
-				},
-			},
+					-0.125
+				}
+			}
 		},
 		damage_profile = DamageProfileTemplates.light_force_sword_2h_special,
 		damage_type = damage_types.force_sword_cleave,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
-			buff_stat_buffs.melee_attack_speed,
+			buff_stat_buffs.melee_attack_speed
 		},
 		wounds_shape = wounds_shapes.horizontal_slash_clean,
-		wounds_shape_special_active = wounds_shapes.horizontal_slash_clean,
+		wounds_shape_special_active = wounds_shapes.horizontal_slash_clean
 	},
 	action_left_heavy_special = {
 		allowed_during_sprint = true,
@@ -2463,46 +2307,40 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 1.3,
-				t = 0.15,
+				t = 0.15
 			},
 			{
 				modifier = 1.25,
-				t = 0.4,
+				t = 0.4
 			},
 			{
 				modifier = 0.5,
-				t = 0.6,
+				t = 0.6
 			},
 			{
 				modifier = 1,
-				t = 1,
+				t = 1
 			},
-			start_modifier = 1.5,
+			start_modifier = 1.5
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			start_attack = {
 				action_name = "action_melee_start_right",
-				chain_time = 0.87,
+				chain_time = 0.87
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.87,
+				chain_time = 0.87
 			},
 			special_action = {
 				action_name = "action_activate_special",
-				chain_time = 0.95,
+				chain_time = 0.95
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.87,
-			},
+				chain_time = 0.87
+			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
@@ -2515,69 +2353,21 @@ weapon_template.actions = {
 				anchor_point_offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		damage_profile = DamageProfileTemplates.heavy_force_sword_2h_special,
 		damage_type = damage_types.force_sword_cleave,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
-			buff_stat_buffs.melee_attack_speed,
+			buff_stat_buffs.melee_attack_speed
 		},
 		wounds_shape = wounds_shapes.horizontal_slash_clean,
-		wounds_shape_special_active = wounds_shapes.horizontal_slash_clean,
+		wounds_shape_special_active = wounds_shapes.horizontal_slash_clean
 	},
-	action_inspect_3p = {
-		action_prevents_jump = true,
-		block_first_person_rotation = true,
-		can_crouch = false,
-		can_jump = false,
-		force_look = true,
-		kind = "inspect_3p",
-		lock_view = false,
-		skip_3p_anims = false,
-		stop_input = "inspect_stop",
-		total_time = math.huge,
-		anim_end_event_condition_func = function (unit, data, end_reason)
-			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
-		end,
-		crosshair = {
-			crosshair_type = "inspect",
-		},
-		allowed_chain_actions = {
-			inspect_3p_stop = {
-				action_name = "action_inspect",
-				chain_time = 1.1,
-			},
-		},
-		action_movement_curve = {
-			{
-				modifier = 0,
-				t = 0,
-			},
-			start_modifier = 0,
-		},
-	},
-	action_inspect = {
-		anim_end_event = "inspect_end",
-		anim_event = "inspect_start",
-		kind = "inspect",
-		lock_view = true,
-		skip_3p_anims = false,
-		start_input = "inspect_start",
-		stop_input = "inspect_stop",
-		total_time = math.huge,
-		crosshair = {
-			crosshair_type = "inspect",
-		},
-		allowed_chain_actions = {
-			inspect_3p_start = {
-				action_name = "action_inspect_3p",
-				chain_time = 0.75,
-			},
-		},
-	},
+	action_inspect = BaseTemplateSettings.generate_inspect_action(),
+	action_inspect_3p = BaseTemplateSettings.generate_inspect_3p_action()
 }
 
 table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
@@ -2587,7 +2377,7 @@ weapon_template.anim_state_machine_1p = "content/characters/player/human/first_p
 weapon_template.weapon_box = base_sweep_box
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
-	uses_overheat = false,
+	uses_overheat = false
 }
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
@@ -2619,16 +2409,16 @@ weapon_template.weapon_special_tweak_data = {
 	thresholds = {
 		{
 			name = "low",
-			threshold = 0,
+			threshold = 0
 		},
 		{
 			name = "middle",
-			threshold = 10,
+			threshold = 10
 		},
 		{
 			name = "high",
-			threshold = 20,
-		},
+			threshold = 20
+		}
 	},
 	slash_settings = {
 		attack_type = "shout",
@@ -2645,20 +2435,20 @@ weapon_template.weapon_special_tweak_data = {
 			low = {
 				buff_to_add = "forcesword_wind_slash_weapon_special_trigger_low",
 				damage_profile = DamageProfileTemplates.forcesword_force_slash_low,
-				damage_type = damage_types.forcesword_force_slash_low,
+				damage_type = damage_types.forcesword_force_slash_low
 			},
 			middle = {
 				buff_to_add = "forcesword_wind_slash_weapon_special_trigger_middle",
 				damage_profile = DamageProfileTemplates.forcesword_force_slash_middle,
-				damage_type = damage_types.forcesword_force_slash_middle,
+				damage_type = damage_types.forcesword_force_slash_middle
 			},
 			high = {
 				buff_to_add = "forcesword_wind_slash_weapon_special_trigger_high",
 				damage_profile = DamageProfileTemplates.forcesword_force_slash_high,
-				damage_type = damage_types.forcesword_force_slash_high,
-			},
-		},
-	},
+				damage_type = damage_types.forcesword_force_slash_high
+			}
+		}
+	}
 }
 weapon_template.damage_window_start_sweep_trail_offset = -0.45
 weapon_template.damage_window_end_sweep_trail_offset = 0.45
@@ -2666,21 +2456,21 @@ weapon_template.ammo_template = "no_ammo"
 weapon_template.fx_sources = {
 	_block = "fx_block",
 	_special_active = "fx_special_active",
-	_sweep = "fx_sweep",
+	_sweep = "fx_sweep"
 }
 weapon_template.crosshair = {
-	crosshair_type = "dot",
+	crosshair_type = "dot"
 }
 weapon_template.hit_marker_type = "center"
 weapon_template.weapon_counter = {
 	show_when_unwielded = false,
-	weapon_counter_type = "kill_charges",
+	weapon_counter_type = "kill_charges"
 }
 weapon_template.keywords = {
 	"melee",
 	"force_sword",
 	"p1",
-	"activated",
+	"activated"
 }
 weapon_template.dodge_template = "psyker_heavy"
 weapon_template.sprint_template = "default"
@@ -2694,24 +2484,24 @@ weapon_template.haptic_trigger_template = HapticTriggerTemplates.melee.medium
 weapon_template.overclocks = {
 	warp_charge_cost_up_dps_down = {
 		forcesword_p1_m1_dps_stat = -0.1,
-		forcesword_p1_m1_warp_charge_cost_stat = 0.1,
+		forcesword_p1_m1_warp_charge_cost_stat = 0.1
 	},
 	finesse_up_warp_charge_cost_down = {
 		forcesword_p1_m1_finesse_stat = 0.2,
-		forcesword_p1_m1_warp_charge_cost_stat = -0.2,
+		forcesword_p1_m1_warp_charge_cost_stat = -0.2
 	},
 	first_target_up_warp_charge_cost_down = {
 		forcesword_p1_m1_first_target_stat = 0.1,
-		forcesword_p1_m1_warp_charge_cost_stat = -0.1,
+		forcesword_p1_m1_warp_charge_cost_stat = -0.1
 	},
 	mobility_up_first_target_down = {
 		forcesword_p1_m1_first_target_stat = -0.1,
-		forcesword_p1_m1_mobility_stat = 0.1,
+		forcesword_p1_m1_mobility_stat = 0.1
 	},
 	dps_up_mobility_down = {
 		forcesword_p1_m1_dps_stat = 0.1,
-		forcesword_p1_m1_mobility_stat = -0.1,
-	},
+		forcesword_p1_m1_mobility_stat = -0.1
+	}
 }
 
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
@@ -2730,13 +2520,13 @@ weapon_template.base_stats = {
 							{
 								power_distribution = {
 									attack = {
-										display_name = "loc_weapon_stats_display_base_damage",
-									},
-								},
-							},
-						},
-					},
-				},
+										display_name = "loc_weapon_stats_display_base_damage"
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_heavy_1 = {
 				damage_trait_templates.default_melee_dps_stat,
@@ -2747,48 +2537,48 @@ weapon_template.base_stats = {
 							{
 								power_distribution = {
 									attack = {
-										display_name = "loc_weapon_stats_display_base_damage",
-									},
-								},
-							},
-						},
-					},
-				},
+										display_name = "loc_weapon_stats_display_base_damage"
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_light_2 = {
-				damage_trait_templates.default_melee_dps_stat,
+				damage_trait_templates.default_melee_dps_stat
 			},
 			action_heavy_2 = {
-				damage_trait_templates.default_melee_dps_stat,
+				damage_trait_templates.default_melee_dps_stat
 			},
 			action_light_3 = {
-				damage_trait_templates.default_melee_dps_stat,
+				damage_trait_templates.default_melee_dps_stat
 			},
 			action_heavy_3 = {
-				damage_trait_templates.default_melee_dps_stat,
+				damage_trait_templates.default_melee_dps_stat
 			},
 			action_light_4 = {
-				damage_trait_templates.default_melee_dps_stat,
+				damage_trait_templates.default_melee_dps_stat
 			},
 			action_left_light_special = {
-				damage_trait_templates.default_melee_dps_stat,
+				damage_trait_templates.default_melee_dps_stat
 			},
 			action_left_heavy_special = {
-				damage_trait_templates.default_melee_dps_stat,
+				damage_trait_templates.default_melee_dps_stat
 			},
 			action_light_wield = {
-				damage_trait_templates.default_melee_dps_stat,
+				damage_trait_templates.default_melee_dps_stat
 			},
 			action_light_slide = {
-				damage_trait_templates.default_melee_dps_stat,
+				damage_trait_templates.default_melee_dps_stat
 			},
 			action_heavy_sprint = {
-				damage_trait_templates.default_melee_dps_stat,
+				damage_trait_templates.default_melee_dps_stat
 			},
 			action_light_push_follow_combo = {
-				damage_trait_templates.default_melee_dps_stat,
-			},
-		},
+				damage_trait_templates.default_melee_dps_stat
+			}
+		}
 	},
 	forcesword_2h_p1_m1_weapon_special_warp_charge_cost = {
 		display_name = "loc_stats_display_warp_resist_stat",
@@ -2796,9 +2586,9 @@ weapon_template.base_stats = {
 		charge = {
 			action_activate_special = {
 				charge_trait_templates.forcesword_2h_p1_m1_weapon_special_warp_charge_cost,
-				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats,
-			},
-		},
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
+			}
+		}
 	},
 	forcesword_2h_p1_m1_finesse_stat = {
 		display_name = "loc_stats_display_finesse_stat",
@@ -2811,11 +2601,11 @@ weapon_template.base_stats = {
 					display_stats = {
 						targets = {
 							{
-								boost_curve_multiplier_finesse = {},
-							},
-						},
-					},
-				},
+								boost_curve_multiplier_finesse = {}
+							}
+						}
+					}
+				}
 			},
 			action_heavy_1 = {
 				damage_trait_templates.default_melee_finesse_stat,
@@ -2824,45 +2614,45 @@ weapon_template.base_stats = {
 					display_stats = {
 						targets = {
 							{
-								boost_curve_multiplier_finesse = {},
-							},
-						},
-					},
-				},
+								boost_curve_multiplier_finesse = {}
+							}
+						}
+					}
+				}
 			},
 			action_light_2 = {
-				damage_trait_templates.default_melee_finesse_stat,
+				damage_trait_templates.default_melee_finesse_stat
 			},
 			action_heavy_2 = {
-				damage_trait_templates.default_melee_finesse_stat,
+				damage_trait_templates.default_melee_finesse_stat
 			},
 			action_light_3 = {
-				damage_trait_templates.default_melee_finesse_stat,
+				damage_trait_templates.default_melee_finesse_stat
 			},
 			action_heavy_3 = {
-				damage_trait_templates.default_melee_finesse_stat,
+				damage_trait_templates.default_melee_finesse_stat
 			},
 			action_light_4 = {
-				damage_trait_templates.default_melee_finesse_stat,
+				damage_trait_templates.default_melee_finesse_stat
 			},
 			action_left_light_special = {
-				damage_trait_templates.default_melee_finesse_stat,
+				damage_trait_templates.default_melee_finesse_stat
 			},
 			action_left_heavy_special = {
-				damage_trait_templates.default_melee_finesse_stat,
+				damage_trait_templates.default_melee_finesse_stat
 			},
 			action_light_wield = {
-				damage_trait_templates.default_melee_finesse_stat,
+				damage_trait_templates.default_melee_finesse_stat
 			},
 			action_light_slide = {
-				damage_trait_templates.default_melee_finesse_stat,
+				damage_trait_templates.default_melee_finesse_stat
 			},
 			action_heavy_sprint = {
-				damage_trait_templates.default_melee_finesse_stat,
+				damage_trait_templates.default_melee_finesse_stat
 			},
 			action_light_push_follow_combo = {
-				damage_trait_templates.default_melee_finesse_stat,
-			},
+				damage_trait_templates.default_melee_finesse_stat
+			}
 		},
 		weapon_handling = {
 			action_light_1 = {
@@ -2870,53 +2660,53 @@ weapon_template.base_stats = {
 				display_data = {
 					prefix = "loc_weapon_action_title_light",
 					display_stats = {
-						time_scale = {},
-					},
-				},
+						time_scale = {}
+					}
+				}
 			},
 			action_heavy_1 = {
 				weapon_handling_trait_templates.default_finesse_stat,
 				display_data = {
 					prefix = "loc_weapon_action_title_heavy",
 					display_stats = {
-						time_scale = {},
-					},
-				},
+						time_scale = {}
+					}
+				}
 			},
 			action_light_2 = {
-				weapon_handling_trait_templates.default_finesse_stat,
+				weapon_handling_trait_templates.default_finesse_stat
 			},
 			action_heavy_2 = {
-				weapon_handling_trait_templates.default_finesse_stat,
+				weapon_handling_trait_templates.default_finesse_stat
 			},
 			action_heavy_3 = {
-				weapon_handling_trait_templates.default_finesse_stat,
+				weapon_handling_trait_templates.default_finesse_stat
 			},
 			action_light_3 = {
-				weapon_handling_trait_templates.default_finesse_stat,
+				weapon_handling_trait_templates.default_finesse_stat
 			},
 			action_light_4 = {
-				weapon_handling_trait_templates.default_finesse_stat,
+				weapon_handling_trait_templates.default_finesse_stat
 			},
 			action_left_light_special = {
-				weapon_handling_trait_templates.default_finesse_stat,
+				weapon_handling_trait_templates.default_finesse_stat
 			},
 			action_left_heavy_special = {
-				weapon_handling_trait_templates.default_finesse_stat,
+				weapon_handling_trait_templates.default_finesse_stat
 			},
 			action_light_wield = {
-				weapon_handling_trait_templates.default_finesse_stat,
+				weapon_handling_trait_templates.default_finesse_stat
 			},
 			action_light_slide = {
-				weapon_handling_trait_templates.default_finesse_stat,
+				weapon_handling_trait_templates.default_finesse_stat
 			},
 			action_heavy_sprint = {
-				weapon_handling_trait_templates.default_finesse_stat,
+				weapon_handling_trait_templates.default_finesse_stat
 			},
 			action_light_push_follow_combo = {
-				weapon_handling_trait_templates.default_finesse_stat,
-			},
-		},
+				weapon_handling_trait_templates.default_finesse_stat
+			}
+		}
 	},
 	forcesword_2h_p1_m1_cleave_damage_stat = {
 		display_name = "loc_stats_display_cleave_damage_stat",
@@ -2927,53 +2717,53 @@ weapon_template.base_stats = {
 				display_data = {
 					prefix = "loc_weapon_action_title_heavy",
 					display_stats = {
-						__all_basic_stats = true,
-					},
-				},
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_heavy_2 = {
-				damage_trait_templates.powersword_cleave_damage_stat,
+				damage_trait_templates.powersword_cleave_damage_stat
 			},
 			action_heavy_3 = {
-				damage_trait_templates.powersword_cleave_damage_stat,
+				damage_trait_templates.powersword_cleave_damage_stat
 			},
 			action_light_1 = {
 				damage_trait_templates.powersword_cleave_damage_stat,
 				display_data = {
 					prefix = "loc_weapon_action_title_light",
 					display_stats = {
-						__all_basic_stats = true,
-					},
-				},
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_light_2 = {
-				damage_trait_templates.powersword_cleave_damage_stat,
+				damage_trait_templates.powersword_cleave_damage_stat
 			},
 			action_light_3 = {
-				damage_trait_templates.powersword_cleave_damage_stat,
+				damage_trait_templates.powersword_cleave_damage_stat
 			},
 			action_light_4 = {
-				damage_trait_templates.powersword_cleave_damage_stat,
+				damage_trait_templates.powersword_cleave_damage_stat
 			},
 			action_left_light_special = {
-				damage_trait_templates.powersword_cleave_damage_stat,
+				damage_trait_templates.powersword_cleave_damage_stat
 			},
 			action_left_heavy_special = {
-				damage_trait_templates.powersword_cleave_damage_stat,
+				damage_trait_templates.powersword_cleave_damage_stat
 			},
 			action_light_wield = {
-				damage_trait_templates.powersword_cleave_damage_stat,
+				damage_trait_templates.powersword_cleave_damage_stat
 			},
 			action_light_slide = {
-				damage_trait_templates.powersword_cleave_damage_stat,
+				damage_trait_templates.powersword_cleave_damage_stat
 			},
 			action_heavy_sprint = {
-				damage_trait_templates.powersword_cleave_damage_stat,
+				damage_trait_templates.powersword_cleave_damage_stat
 			},
 			action_light_push_follow_combo = {
-				damage_trait_templates.powersword_cleave_damage_stat,
-			},
-		},
+				damage_trait_templates.powersword_cleave_damage_stat
+			}
+		}
 	},
 	forcesword_2h_p1_m1_defence_stat = {
 		display_name = "loc_stats_display_defense_stat",
@@ -2981,8 +2771,8 @@ weapon_template.base_stats = {
 		stamina = {
 			base = {
 				stamina_trait_templates.thunderhammer_p1_m1_defence_stat,
-				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats,
-			},
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
+			}
 		},
 		dodge = {
 			base = {
@@ -2993,12 +2783,12 @@ weapon_template.base_stats = {
 						diminishing_return_distance_modifier = {},
 						diminishing_return_start = {},
 						diminishing_return_limit = {},
-						speed_modifier = {},
-					},
-				},
-			},
-		},
-	},
+						speed_modifier = {}
+					}
+				}
+			}
+		}
+	}
 }
 weapon_template.traits = {}
 
@@ -3008,16 +2798,16 @@ table.append(weapon_template.traits, bespoke_forcesword_2h_p1_traits)
 
 weapon_template.buffs = {
 	on_equip = {
-		"forcesword_wind_slash_weapon_special_primer",
-	},
+		"forcesword_wind_slash_weapon_special_primer"
+	}
 }
 weapon_template.displayed_keywords = {
 	{
-		display_name = "loc_weapon_keyword_crowd_control",
+		display_name = "loc_weapon_keyword_crowd_control"
 	},
 	{
-		display_name = "loc_weapon_keyword_warp_weapon",
-	},
+		display_name = "loc_weapon_keyword_warp_weapon"
+	}
 }
 weapon_template.displayed_attacks = {
 	primary = {
@@ -3027,40 +2817,40 @@ weapon_template.displayed_attacks = {
 			"linesman",
 			"linesman",
 			"linesman",
-			"smiter",
-		},
+			"smiter"
+		}
 	},
 	secondary = {
 		display_name = "loc_gestalt_smiter",
 		type = "smiter",
 		attack_chain = {
 			"smiter",
-			"smiter",
-		},
+			"smiter"
+		}
 	},
 	special = {
 		desc = "loc_stats_special_action_powerup_forcesword_2h_desc",
 		display_name = "loc_forcesword_2h_weapon_special",
-		type = "activate",
-	},
+		type = "activate"
+	}
 }
 weapon_template.weapon_card_data = {
 	main = {
 		{
 			header = "light",
 			icon = "linesman",
-			value_func = "primary_attack",
+			value_func = "primary_attack"
 		},
 		{
 			header = "heavy",
 			icon = "smiter",
-			value_func = "secondary_attack",
-		},
+			value_func = "secondary_attack"
+		}
 	},
 	weapon_special = {
 		header = "activate",
-		icon = "activate",
-	},
+		icon = "activate"
+	}
 }
 
 weapon_template.weapon_special_action_none_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)

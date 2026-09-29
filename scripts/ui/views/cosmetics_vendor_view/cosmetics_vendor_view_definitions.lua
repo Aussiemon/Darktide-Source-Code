@@ -9,15 +9,15 @@ local grid_width = 448
 local grid_height = 780
 local grid_size = {
 	grid_width - edge_padding,
-	grid_height,
+	grid_height
 }
 local grid_spacing = {
 	10,
-	10,
+	10
 }
 local mask_size = {
 	grid_width + 40,
-	grid_height,
+	grid_height
 }
 local grid_settings = {
 	cache_loaded_icons = true,
@@ -34,11 +34,11 @@ local grid_settings = {
 	grid_size = grid_size,
 	mask_size = mask_size,
 	title_height = title_height,
-	edge_padding = edge_padding,
+	edge_padding = edge_padding
 }
 local category_button_size = {
 	100,
-	100,
+	100
 }
 local wallet_text_font_style = table.clone(UIFontSettings.currency_title)
 
@@ -47,7 +47,7 @@ wallet_text_font_style.text_vertical_alignment = "center"
 wallet_text_font_style.original_offset = {
 	0,
 	0,
-	1,
+	1
 }
 
 local scenegraph_definition = {
@@ -58,13 +58,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	item_grid_pivot = {
 		horizontal_alignment = "left",
@@ -72,13 +72,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			grid_width,
-			grid_height,
+			grid_height
 		},
 		position = {
 			category_button_size[1] + 50 + 50,
 			170,
-			1,
-		},
+			1
+		}
 	},
 	grid_tab_panel = {
 		horizontal_alignment = "center",
@@ -86,13 +86,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			-50,
-			1,
-		},
+			1
+		}
 	},
 	button_pivot = {
 		horizontal_alignment = "left",
@@ -100,13 +100,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			-120,
 			40,
-			3,
-		},
+			3
+		}
 	},
 	button_pivot_background = {
 		horizontal_alignment = "left",
@@ -114,13 +114,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			120,
-			520,
+			520
 		},
 		position = {
 			-20,
 			-20,
-			3,
-		},
+			3
+		}
 	},
 	weapon_stats_pivot = {
 		horizontal_alignment = "right",
@@ -128,13 +128,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			-1140,
 			40,
-			3,
-		},
+			3
+		}
 	},
 	weapon_compare_stats_pivot = {
 		horizontal_alignment = "right",
@@ -142,13 +142,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			-1140 + (grid_size[1] - 50),
 			40,
-			3,
-		},
+			3
+		}
 	},
 	item_name_pivot = {
 		horizontal_alignment = "right",
@@ -156,13 +156,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			-80,
 			-220,
-			3,
-		},
+			3
+		}
 	},
 	purchase_button = {
 		horizontal_alignment = "right",
@@ -170,13 +170,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			374,
-			76,
+			76
 		},
 		position = {
 			-80,
 			-90,
-			1,
-		},
+			1
+		}
 	},
 	item_restrictions_background = {
 		horizontal_alignment = "right",
@@ -184,13 +184,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			350,
-			0,
+			0
 		},
 		position = {
 			400,
 			-90,
-			1,
-		},
+			1
+		}
 	},
 	item_restrictions = {
 		horizontal_alignment = "left",
@@ -198,13 +198,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			500,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	side_panel_area = {
 		horizontal_alignment = "right",
@@ -212,13 +212,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			350,
-			0,
+			0
 		},
 		position = {
 			400,
 			-90,
-			1,
-		},
+			1
+		}
 	},
 	set_item_parts_representation = {
 		horizontal_alignment = "left",
@@ -226,13 +226,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			50,
-			50,
+			50
 		},
 		position = {
 			0,
 			80,
-			1,
-		},
+			1
+		}
 	},
 	title_text = {
 		horizontal_alignment = "left",
@@ -240,13 +240,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			grid_size[1] + edge_padding,
-			90,
+			90
 		},
 		position = {
 			0,
 			8,
-			15,
-		},
+			15
+		}
 	},
 	divider = {
 		horizontal_alignment = "left",
@@ -254,13 +254,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			grid_size[1] + edge_padding,
-			50,
+			50
 		},
 		position = {
 			0,
 			17,
-			1,
-		},
+			1
+		}
 	},
 	info_text = {
 		horizontal_alignment = "right",
@@ -268,13 +268,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			grid_width,
-			50,
+			50
 		},
 		position = {
 			-70,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	wallet_pivot = {
 		horizontal_alignment = "right",
@@ -282,13 +282,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			-20,
 			50,
-			60,
-		},
+			60
+		}
 	},
 	corner_top_right = {
 		horizontal_alignment = "right",
@@ -296,14 +296,14 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			540,
-			224,
+			224
 		},
 		position = {
 			0,
 			-65,
-			55,
-		},
-	},
+			55
+		}
+	}
 }
 local item_restrictions_title_style = {
 	drop_shadow = true,
@@ -317,8 +317,8 @@ local item_restrictions_title_style = {
 	offset = {
 		0,
 		0,
-		1,
-	},
+		1
+	}
 }
 local owned_item_text_style = table.clone(UIFontSettings.body)
 
@@ -329,7 +329,7 @@ owned_item_text_style.vertical_alignment = "center"
 owned_item_text_style.offset = {
 	0,
 	0,
-	2,
+	2
 }
 owned_item_text_style.text_color = Color.terminal_text_header(255, true)
 
@@ -345,8 +345,8 @@ local item_restrictions_body_style = {
 	offset = {
 		0,
 		0,
-		1,
-	},
+		1
+	}
 }
 local widget_definitions = {
 	corner_top_right = UIWidget.create_definition({
@@ -358,10 +358,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					-1,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "corner_top_right"),
 	button_pivot_background = UIWidget.create_definition({
 		{
@@ -376,14 +376,14 @@ local widget_definitions = {
 				color = Color.terminal_grid_background(255, true),
 				size_addition = {
 					30,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -394,14 +394,14 @@ local widget_definitions = {
 				color = Color.white(255, true),
 				size = {
 					136,
-					14,
+					14
 				},
 				offset = {
 					0,
 					-5,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -412,15 +412,15 @@ local widget_definitions = {
 				color = Color.white(255, true),
 				size = {
 					135,
-					14,
+					14
 				},
 				offset = {
 					0,
 					5,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "button_pivot_background"),
 	title_text = UIWidget.create_definition({
 		{
@@ -439,14 +439,14 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size = {
 					grid_size[1],
-					10,
-				},
-			},
-		},
+					10
+				}
+			}
+		}
 	}, "title_text"),
 	divider = UIWidget.create_definition({
 		{
@@ -458,10 +458,10 @@ local widget_definitions = {
 				color = Color.terminal_text_body_dark(255, true),
 				size = {
 					468,
-					22,
-				},
-			},
-		},
+					22
+				}
+			}
+		}
 	}, "divider"),
 	owned_info_text = UIWidget.create_definition({
 		{
@@ -469,10 +469,10 @@ local widget_definitions = {
 			style_id = "text",
 			value_id = "text",
 			style = owned_item_text_style,
-			value = string.format("%s ", Localize("loc_premium_store_owned_note")),
-		},
+			value = string.format("%s ", Localize("loc_premium_store_owned_note"))
+		}
 	}, "info_text", {
-		visible = false,
+		visible = false
 	}),
 	no_class_info_text = UIWidget.create_definition({
 		{
@@ -480,11 +480,11 @@ local widget_definitions = {
 			style_id = "text",
 			value_id = "text",
 			style = owned_item_text_style,
-			value = Localize("loc_cosmetic_vendor_no_operative_of_class"),
-		},
+			value = Localize("loc_cosmetic_vendor_no_operative_of_class")
+		}
 	}, "info_text", {
-		visible = false,
-	}),
+		visible = false
+	})
 }
 local wallet_definitions = UIWidget.create_definition({
 	{
@@ -497,27 +497,27 @@ local wallet_definitions = UIWidget.create_definition({
 			vertical_alignment = "center",
 			size = {
 				42,
-				30,
+				30
 			},
 			offset = {
 				0,
 				0,
-				1,
+				1
 			},
 			original_offset = {
 				0,
 				0,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	{
 		pass_type = "text",
 		style_id = "text",
 		value = "0",
 		value_id = "text",
-		style = wallet_text_font_style,
-	},
+		style = wallet_text_font_style
+	}
 }, "wallet_pivot")
 local animations = {
 	on_enter = {
@@ -530,7 +530,7 @@ local animations = {
 			end,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, parent)
 				return
-			end,
+			end
 		},
 		{
 			end_time = 0.8,
@@ -550,7 +550,7 @@ local animations = {
 				parent:_set_scenegraph_position("button_pivot", scenegraph_definition.button_pivot.position[1] - x_anim_distance)
 				parent:_set_scenegraph_position("item_grid_pivot", scenegraph_definition.item_grid_pivot.position[1] - x_anim_distance)
 				parent:_force_update_scenegraph()
-			end,
+			end
 		},
 		{
 			end_time = 0.8,
@@ -558,9 +558,9 @@ local animations = {
 			start_time = 0.8,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, parent)
 				parent.enter_animation_done = true
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 local item_sub_title_pass = {
 	{
@@ -568,8 +568,8 @@ local item_sub_title_pass = {
 		style_id = "text",
 		value = "",
 		value_id = "text",
-		style = item_restrictions_title_style,
-	},
+		style = item_restrictions_title_style
+	}
 }
 local item_text_pass = {
 	{
@@ -577,8 +577,8 @@ local item_text_pass = {
 		style_id = "text",
 		value = "",
 		value_id = "text",
-		style = item_restrictions_body_style,
-	},
+		style = item_restrictions_body_style
+	}
 }
 
 return {
@@ -588,5 +588,5 @@ return {
 	scenegraph_definition = scenegraph_definition,
 	wallet_definitions = wallet_definitions,
 	item_sub_title_pass = item_sub_title_pass,
-	item_text_pass = item_text_pass,
+	item_text_pass = item_text_pass
 }

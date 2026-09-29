@@ -2,7 +2,7 @@
 
 local DialogueContextExtension = require("scripts/extension_systems/dialogue/dialogue_context_extension")
 local extensions = {
-	"DialogueContextExtension",
+	"DialogueContextExtension"
 }
 local DialogueContextSystem = class("DialogueContextSystem", "ExtensionSystemBase")
 

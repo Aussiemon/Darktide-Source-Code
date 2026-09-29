@@ -18,18 +18,18 @@ weapon_template.action_inputs = {
 		input_sequence = {
 			{
 				input = "action_two_pressed",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	push = {
 		buffer_time = 0.4,
 		input_sequence = {
 			{
 				input = "action_one_pressed",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	wield_previous = {
 		buffer_time = 0,
@@ -37,24 +37,24 @@ weapon_template.action_inputs = {
 		input_sequence = {
 			{
 				input = "wield_5",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	wield = {
 		buffer_time = 0,
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				inputs = wield_inputs,
-			},
-		},
+				inputs = wield_inputs
+			}
+		}
 	},
 	unwield = {
 		buffer_time = 0,
 		clear_input_queue = true,
-		input_sequence = nil,
-	},
+		input_sequence = nil
+	}
 }
 
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
@@ -62,64 +62,56 @@ table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inp
 weapon_template.action_input_hierarchy = {
 	{
 		input = "toggle_auspex_focus",
-		transition = "stay",
+		transition = "stay"
 	},
 	{
 		input = "inspect_start",
 		transition = {
 			{
 				input = "inspect_stop",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "wield_previous",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "wield",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "unwield",
-				transition = "base",
-			},
-		},
+				transition = "base"
+			}
+		}
 	},
 	{
 		input = "push",
-		transition = "stay",
+		transition = "stay"
 	},
 	{
 		input = "wield_previous",
-		transition = "stay",
+		transition = "stay"
 	},
 	{
 		input = "wield",
-		transition = "stay",
+		transition = "stay"
 	},
 	{
 		input = "unwield",
-		transition = "stay",
-	},
+		transition = "stay"
+	}
 }
 
 ActionInputHierarchy.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
-	action_unwield = {
-		allowed_during_sprint = true,
-		kind = "unwield",
-		start_input = "wield",
-		total_time = 0,
-		uninterruptible = true,
-		allowed_chain_actions = {},
-	},
 	action_wield = {
 		allowed_during_sprint = true,
 		anim_event = "equip_scanner",
 		kind = "wield",
 		total_time = 0,
-		uninterruptible = true,
+		uninterruptible = true
 	},
 	action_push = {
 		anim_end_event = "attack_finished",
@@ -132,21 +124,21 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 1.2,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 1.15,
-				t = 0.25,
+				t = 0.25
 			},
 			{
 				modifier = 0.5,
-				t = 0.4,
+				t = 0.4
 			},
 			{
 				modifier = 1,
-				t = 0.67,
+				t = 0.67
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		inner_push_rad = math.pi * 0.25,
 		outer_push_rad = math.pi * 1,
@@ -155,17 +147,15 @@ weapon_template.actions = {
 		outer_damage_profile = DamageProfileTemplates.light_push,
 		outer_damage_type = damage_types.physical,
 		allowed_chain_actions = {
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			push = {
 				action_name = "action_push",
-				chain_time = 0.4,
-			},
+				chain_time = 0.4
+			}
 		},
 		action_condition_func = function (condition_func_params, action_params, remaining_time, t)
 			return not Auspex.in_focus(action_params.unit)
-		end,
+		end
 	},
 	action_toggle_auspex_focus = {
 		allowed_during_sprint = true,
@@ -173,38 +163,7 @@ weapon_template.actions = {
 		remove_item_from_inventory = false,
 		self_use = true,
 		start_input = "toggle_auspex_focus",
-		total_time = 0,
-	},
-	action_inspect_3p = {
-		action_prevents_jump = true,
-		block_first_person_rotation = true,
-		can_crouch = false,
-		can_jump = false,
-		force_look = true,
-		kind = "inspect_3p",
-		lock_view = false,
-		skip_3p_anims = false,
-		stop_input = "inspect_stop",
-		total_time = math.huge,
-		anim_end_event_condition_func = function (unit, data, end_reason)
-			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
-		end,
-		crosshair = {
-			crosshair_type = "inspect",
-		},
-		allowed_chain_actions = {
-			inspect_3p_stop = {
-				action_name = "action_inspect",
-				chain_time = 1.1,
-			},
-		},
-		action_movement_curve = {
-			{
-				modifier = 0,
-				t = 0,
-			},
-			start_modifier = 0,
-		},
+		total_time = 0
 	},
 	action_inspect = {
 		anim_end_event = "inspect_end",
@@ -216,27 +175,27 @@ weapon_template.actions = {
 		stop_input = "inspect_stop",
 		total_time = math.huge,
 		crosshair = {
-			crosshair_type = "inspect",
+			crosshair_type = "inspect"
 		},
 		allowed_chain_actions = {
 			inspect_3p_start = {
 				action_name = "action_inspect_3p",
-				chain_time = 0.75,
-			},
+				chain_time = 0.75
+			}
 		},
 		action_condition_func = function (condition_func_params, action_params, remaining_time, t)
 			return not Auspex.in_focus(action_params.unit)
-		end,
+		end
 	},
+	action_inspect_3p = BaseTemplateSettings.generate_inspect_3p_action(),
 	action_unwield_to_previous = {
 		allowed_during_sprint = true,
 		kind = "unwield_to_previous",
 		start_input = "wield_previous",
 		total_time = 0,
 		uninterruptible = true,
-		unwield_to_weapon = true,
-		allowed_chain_actions = {},
-	},
+		allowed_chain_actions = {}
+	}
 }
 
 table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
@@ -244,29 +203,29 @@ table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
 weapon_template.conditional_state_to_action_input = {
 	{
 		conditional_state = "no_mission_zone",
-		input_name = "unwield",
-	},
+		input_name = "unwield"
+	}
 }
 weapon_template.crosshair = {
-	crosshair_type = "ironsight",
+	crosshair_type = "ironsight"
 }
 weapon_template.keywords = {
-	"pocketable",
+	"pocketable"
 }
 weapon_template.ammo_template = "no_ammo"
 weapon_template.breed_anim_state_machine_3p = {
 	cryptic = "content/characters/player/human/third_person/animations/pocketables_2h",
 	human = "content/characters/player/human/third_person/animations/pocketables_2h",
-	ogryn = "content/characters/player/ogryn/third_person/animations/pocketables_2h",
+	ogryn = "content/characters/player/ogryn/third_person/animations/pocketables_2h"
 }
 weapon_template.breed_anim_state_machine_1p = {
 	cryptic = "content/characters/player/human/first_person/animations/scanner_equip",
 	human = "content/characters/player/human/first_person/animations/scanner_equip",
-	ogryn = "content/characters/player/ogryn/first_person/animations/scanner_equip",
+	ogryn = "content/characters/player/ogryn/first_person/animations/scanner_equip"
 }
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.fx_sources = {
-	_speaker = "fx_speaker",
+	_speaker = "fx_speaker"
 }
 weapon_template.dodge_template = "default"
 weapon_template.sprint_template = "default"
@@ -277,12 +236,12 @@ weapon_template.require_minigame = true
 weapon_template.auto_start_minigame = false
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
-	uses_overheat = false,
+	uses_overheat = false
 }
 weapon_template.breed_footstep_intervals = {
 	cryptic = FootstepIntervalsTemplates.pocketable_human,
 	human = FootstepIntervalsTemplates.pocketable_human,
-	ogryn = FootstepIntervalsTemplates.luggable_ogryn,
+	ogryn = FootstepIntervalsTemplates.luggable_ogryn
 }
 weapon_template.action_none_screen_ui_validation = Auspex.idle_out_of_focus_ui_validation
 weapon_template.action_scan_on_screen_ui_validation = Auspex.idle_out_of_focus_ui_validation

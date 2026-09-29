@@ -15,25 +15,25 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"access_elevator",
+				"access_elevator"
 			},
 			{
 				"query_context",
 				"distance",
 				OP.GT,
-				1,
+				1
 			},
 			{
 				"query_context",
 				"distance",
 				OP.LT,
-				17,
+				17
 			},
 			{
 				"user_context",
@@ -42,27 +42,27 @@ return function ()
 				args = {
 					"explicator",
 					"sergeant",
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"access_elevator",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"access_elevator",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -78,13 +78,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"cmd_deploy_skull",
+				"cmd_deploy_skull"
 			},
 			{
 				"user_context",
@@ -94,28 +94,28 @@ return function ()
 					"sergeant",
 					"tech_priest",
 					"explicator",
-					"enginseer",
-				},
+					"enginseer"
+				}
 			},
 			{
 				"user_memory",
 				"cmd_deploy_skull",
 				OP.TIMEDIFF,
 				OP.GT,
-				60,
-			},
+				60
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"cmd_deploy_skull",
 				OP.TIMESET,
-				0,
-			},
+				0
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -130,40 +130,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"cmd_mission_completed_response",
+				"cmd_mission_completed_response"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
+					"pilot"
+				}
 			},
 			{
 				"faction_memory",
 				"cmd_mission_completed_response",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"cmd_mission_completed_response",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -179,13 +179,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"door_release",
+				"door_release"
 			},
 			{
 				"user_context",
@@ -194,27 +194,27 @@ return function ()
 				args = {
 					"pilot",
 					"sergeant",
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"door_release",
 				OP.TIMEDIFF,
 				OP.GT,
-				10,
-			},
+				10
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"door_release",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -230,27 +230,27 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"info_air_strike_a",
+				"info_air_strike_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -266,13 +266,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"info_all_players_required",
+				"info_all_players_required"
 			},
 			{
 				"user_context",
@@ -284,27 +284,27 @@ return function ()
 					"sergeant",
 					"tech_priest",
 					"purser",
-					"contract_vendor",
-				},
+					"contract_vendor"
+				}
 			},
 			{
 				"faction_memory",
 				"time_since_info_all_players_required",
 				OP.TIMEDIFF,
 				OP.GT,
-				25,
-			},
+				25
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_info_all_players_required",
-				OP.TIMESET,
-			},
+				OP.TIMESET
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -320,13 +320,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"info_bypass",
+				"info_bypass"
 			},
 			{
 				"user_context",
@@ -335,27 +335,27 @@ return function ()
 				args = {
 					"pilot",
 					"sergeant",
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"user_memory",
 				"info_bypass",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"info_bypass",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -371,13 +371,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"info_bypass_pressure",
+				"info_bypass_pressure"
 			},
 			{
 				"user_context",
@@ -386,27 +386,27 @@ return function ()
 				args = {
 					"explicator",
 					"sergeant",
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"user_memory",
 				"info_bypass_pressure",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"info_bypass_pressure",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -422,13 +422,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"info_event_almost_done_mg",
+				"info_event_almost_done_mg"
 			},
 			{
 				"user_context",
@@ -441,27 +441,27 @@ return function ()
 					"explicator",
 					"purser",
 					"contract_vendor",
-					"barber",
-				},
+					"barber"
+				}
 			},
 			{
 				"faction_memory",
 				"info_event_almost_done_mg",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"info_event_almost_done_mg",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -477,13 +477,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"info_event_one_down",
+				"info_event_one_down"
 			},
 			{
 				"user_context",
@@ -497,27 +497,27 @@ return function ()
 					"contract_vendor",
 					"purser",
 					"barber",
-					"training_ground_psyker",
-				},
+					"training_ground_psyker"
+				}
 			},
 			{
 				"user_memory",
 				"info_event_one_down",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"info_event_one_down",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -533,13 +533,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"info_extraction",
+				"info_extraction"
 			},
 			{
 				"user_context",
@@ -548,27 +548,27 @@ return function ()
 				args = {
 					"pilot",
 					"sergeant",
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"user_memory",
 				"info_extraction",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"info_extraction",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -584,13 +584,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"info_first_bypass",
+				"info_first_bypass"
 			},
 			{
 				"user_context",
@@ -599,28 +599,28 @@ return function ()
 				args = {
 					"pilot",
 					"tech_priest",
-					"sergeant",
-				},
+					"sergeant"
+				}
 			},
 			{
 				"faction_memory",
 				"info_first_bypass",
 				OP.EQ,
 				OP.GT,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"info_first_bypass",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -636,13 +636,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"info_get_out",
+				"info_get_out"
 			},
 			{
 				"user_context",
@@ -652,27 +652,27 @@ return function ()
 					"sergeant",
 					"explicator",
 					"tech_priest",
-					"pilot",
-				},
+					"pilot"
+				}
 			},
 			{
 				"user_memory",
 				"info_get_out",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"info_get_out",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -688,13 +688,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"info_get_out_nearby",
+				"info_get_out_nearby"
 			},
 			{
 				"user_context",
@@ -704,27 +704,27 @@ return function ()
 					"pilot",
 					"sergeant",
 					"explicator",
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"user_memory",
 				"info_get_out_nearby",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"info_get_out_nearby",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -740,13 +740,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"info_get_out_no_reply",
+				"info_get_out_no_reply"
 			},
 			{
 				"user_context",
@@ -756,27 +756,27 @@ return function ()
 					"sergeant",
 					"explicator",
 					"tech_priest",
-					"pilot",
-				},
+					"pilot"
+				}
 			},
 			{
 				"user_memory",
 				"info_get_out_no_reply",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"info_get_out_no_reply",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -792,13 +792,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"info_get_out_simple",
+				"info_get_out_simple"
 			},
 			{
 				"user_context",
@@ -808,27 +808,27 @@ return function ()
 					"sergeant",
 					"explicator",
 					"tech_priest",
-					"pilot",
-				},
+					"pilot"
+				}
 			},
 			{
 				"user_memory",
 				"info_get_out_simple",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"info_get_out_simple",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -844,40 +844,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"info_scan_batch_done",
+				"info_scan_batch_done"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"user_memory",
 				"info_scan_batch_done",
 				OP.GTEQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"info_scan_batch_done",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -893,40 +893,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"info_scan_completed",
+				"info_scan_completed"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"user_memory",
 				"info_scan_completed",
 				OP.GTEQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"info_scan_completed",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -942,40 +942,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"info_scan_target_located",
+				"info_scan_target_located"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"user_memory",
 				"info_scan_target_located",
 				OP.GTEQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"info_scan_target_located",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -990,34 +990,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"info_servo_skull_deployed_tech_priest_intro",
-				},
+					"info_servo_skull_deployed_tech_priest_intro"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.24,
-			},
-		},
+				duration = 0.24
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1032,45 +1032,45 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"info_servo_skull_deployed_tech_priest_intro",
+				"info_servo_skull_deployed_tech_priest_intro"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"user_memory",
 				"info_servo_skull_deployed",
 				OP.GTEQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"info_servo_skull_deployed",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1086,34 +1086,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"almost_there",
-				},
+					"almost_there"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.5,
-			},
-		},
+				duration = 0.5
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1129,13 +1129,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_agnostic_dropship_deploy_a",
+				"mission_agnostic_dropship_deploy_a"
 			},
 			{
 				"user_context",
@@ -1143,27 +1143,27 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"sergeant",
-					"enginseer",
-				},
+					"enginseer"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_agnostic_dropship_deploy_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_agnostic_dropship_deploy_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "level_event",
-		},
+			target = "level_event"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1179,40 +1179,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_agnostic_dropship_withdraw_a",
+				"mission_agnostic_dropship_withdraw_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"cargo_pilot",
-				},
+					"cargo_pilot"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_agnostic_dropship_withdraw_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_agnostic_dropship_withdraw_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1228,45 +1228,45 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_scan_new_target",
+				"mission_scan_new_target"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"user_memory",
 				"mission_scan_new_target",
 				OP.GTEQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"mission_scan_new_target",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1,
-			},
-		},
+				duration = 1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1281,34 +1281,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_01_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_01_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1323,34 +1323,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_02_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_02_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1365,34 +1365,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_03_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_03_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1407,34 +1407,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_04_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_04_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1449,34 +1449,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_05_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_05_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1491,34 +1491,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_06_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_06_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1533,34 +1533,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_07_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_07_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1575,34 +1575,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_08_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_08_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1617,34 +1617,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_09_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_09_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1659,34 +1659,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_10_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_10_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1701,34 +1701,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_11_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_11_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1743,34 +1743,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_12_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_12_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1785,34 +1785,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_13_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_13_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1827,34 +1827,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_14_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_14_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1869,34 +1869,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_15_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_15_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1911,34 +1911,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_16_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_16_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1953,34 +1953,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_17_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_17_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1995,34 +1995,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_18_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_18_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2037,34 +2037,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_19_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_19_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2079,34 +2079,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_20_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_20_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2121,34 +2121,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_21_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_21_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2163,34 +2163,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_22_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_22_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2205,34 +2205,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_23_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_23_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2247,34 +2247,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_24_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_24_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2289,34 +2289,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_25_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_25_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2331,34 +2331,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_26_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_26_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2373,34 +2373,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_27_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_27_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2415,34 +2415,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_28_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_28_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2457,34 +2457,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_29_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_29_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2499,34 +2499,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_31_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_31_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2541,34 +2541,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_32_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_32_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2583,34 +2583,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_33_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_33_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2625,34 +2625,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_34_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_34_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2667,34 +2667,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_35_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_35_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2709,34 +2709,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_36_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_36_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2751,34 +2751,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_37_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_37_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2793,34 +2793,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_38_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_38_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2835,34 +2835,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_39_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_39_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2877,34 +2877,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_40_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_40_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2919,34 +2919,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_41_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_41_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2961,34 +2961,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_42_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_42_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3003,34 +3003,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_43_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_43_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3045,34 +3045,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_44_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_44_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3087,34 +3087,34 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_sergeant_a__start_zone_direction_45_a_01",
-				},
+					"loc_sergeant_a__start_zone_direction_45_a_01"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.1,
-			},
-		},
+				duration = 0.1
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -3129,39 +3129,39 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"start_zone_direction_a",
+				"start_zone_direction_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
+					"sergeant"
+				}
 			},
 			{
 				"faction_memory",
 				"start_zone_direction_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"start_zone_direction_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
-		},
+			target = "self"
+		}
 	})
 end

@@ -66,8 +66,8 @@ templates.hordes_buff_weakspot_damage_increase = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	stat_buffs = {
-		[stat_buffs.weakspot_damage] = percent_weakspot_damage_increase,
-	},
+		[stat_buffs.weakspot_damage] = percent_weakspot_damage_increase
+	}
 }
 
 local percent_increase_melee_crit_damage = HordesBuffsData.hordes_buff_melee_critical_damage_increase.buff_stats.crit_damage.value
@@ -79,8 +79,8 @@ templates.hordes_buff_melee_critical_damage_increase = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	stat_buffs = {
-		[stat_buffs.melee_critical_strike_damage] = percent_increase_melee_crit_damage,
-	},
+		[stat_buffs.melee_critical_strike_damage] = percent_increase_melee_crit_damage
+	}
 }
 
 local percent_increase_super_armor_impact_on_crit = HordesBuffsData.hordes_buff_increase_super_armor_impact_on_crit.buff_stats.impact.value
@@ -92,8 +92,8 @@ templates.hordes_buff_increase_super_armor_impact_on_crit = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	stat_buffs = {
-		[stat_buffs.super_armor_crit_impact_modifier] = percent_increase_super_armor_impact_on_crit,
-	},
+		[stat_buffs.super_armor_crit_impact_modifier] = percent_increase_super_armor_impact_on_crit
+	}
 }
 
 local percent_crit_chance_on_dodge = HordesBuffsData.hordes_buff_critical_chance_on_dodge.buff_stats.crit_chance.value
@@ -109,15 +109,15 @@ templates.hordes_buff_critical_chance_on_dodge = {
 	active_duration = crit_chance_on_dodge_duration,
 	proc_effects = {
 		player_effects = {
-			on_screen_effect = "content/fx/particles/screenspace/screen_critical_dodge",
-		},
+			on_screen_effect = "content/fx/particles/screenspace/screen_critical_dodge"
+		}
 	},
 	proc_events = {
-		[proc_events.on_successful_dodge] = 1,
+		[proc_events.on_successful_dodge] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.critical_strike_chance] = percent_crit_chance_on_dodge,
-	},
+		[stat_buffs.critical_strike_chance] = percent_crit_chance_on_dodge
+	}
 }
 
 local percent_rending_on_ranged_critical_hit = HordesBuffsData.hordes_buff_rending_on_ranged_critical_hit.buff_stats.rending.value
@@ -132,12 +132,12 @@ templates.hordes_buff_rending_on_ranged_critical_hit = {
 	buff_category = buff_categories.hordes_buff,
 	active_duration = rending_on_ranged_critical_hit_duration,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.rending_multiplier] = percent_rending_on_ranged_critical_hit,
+		[stat_buffs.rending_multiplier] = percent_rending_on_ranged_critical_hit
 	},
-	check_proc_func = CheckProcFunctions.on_crit_ranged,
+	check_proc_func = CheckProcFunctions.on_crit_ranged
 }
 templates.hordes_buff_critical_melee_hit_infinite_cleave = {
 	class_name = "server_only_proc_buff",
@@ -147,10 +147,10 @@ templates.hordes_buff_critical_melee_hit_infinite_cleave = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	keywords = {
-		buff_keywords.critical_melee_hit_infinite_cleave,
+		buff_keywords.critical_melee_hit_infinite_cleave
 	},
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_crit_melee,
 	proc_func = function (params, template_data, template_context, t)
@@ -159,7 +159,7 @@ templates.hordes_buff_critical_melee_hit_infinite_cleave = {
 
 			WwiseWorld.trigger_resource_event(wwise_world, SFX_NAMES.infinite_cleave_hit, template_context.unit)
 		end
-	end,
+	end
 }
 
 local percent_melee_damage_on_melee_critical_hit = HordesBuffsData.hordes_buff_melee_damage_on_melee_critical_hit.buff_stats.damage.value
@@ -175,18 +175,18 @@ templates.hordes_buff_melee_damage_on_melee_critical_hit = {
 		template_data.melee_damage_boost_active = false
 	end,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_melee_hit,
 	proc_func = function (params, template_data, template_context, t)
 		template_data.melee_damage_boost_active = CheckProcFunctions.on_crit_melee(params, template_data, template_context, t)
 	end,
 	conditional_stat_buffs = {
-		[stat_buffs.melee_damage] = percent_melee_damage_on_melee_critical_hit,
+		[stat_buffs.melee_damage] = percent_melee_damage_on_melee_critical_hit
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.melee_damage_boost_active
-	end,
+	end
 }
 
 local percent_crit_damage_per_critical_hit = HordesBuffsData.hordes_buff_stacking_crit_damage_on_critical_hit.buff_stats.crit_damage.value
@@ -213,14 +213,14 @@ templates.hordes_buff_stacking_crit_damage_on_critical_hit = {
 	lerped_stat_buffs = {
 		[stat_buffs.critical_strike_damage] = {
 			min = 0,
-			max = max_crit_damage_stacked_from_critical_hit,
-		},
+			max = max_crit_damage_stacked_from_critical_hit
+		}
 	},
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		return template_data.lerp_t_value
 	end,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_crit,
 	proc_func = function (params, template_data, template_context, t)
@@ -229,7 +229,7 @@ templates.hordes_buff_stacking_crit_damage_on_critical_hit = {
 
 		template_data.crit_count = math.min(template_data.crit_count + 1, stacks_needed_for_max)
 		template_data.lerp_t_value = math.min(template_data.crit_count / stacks_needed_for_max, 1)
-	end,
+	end
 }
 
 local percent_damage_reduction_on_critical_hit = HordesBuffsData.hordes_buff_damage_reduction_on_critical_hit.buff_stats.damage_reduction.value
@@ -245,16 +245,16 @@ templates.hordes_buff_damage_reduction_on_critical_hit = {
 	active_duration = damage_reduction_on_critical_hit_duration,
 	proc_effects = {
 		player_effects = {
-			on_screen_effect = "content/fx/particles/screenspace/screen_buff_less_damage",
-		},
+			on_screen_effect = "content/fx/particles/screenspace/screen_buff_less_damage"
+		}
 	},
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.damage_taken_modifier] = percent_damage_reduction_on_critical_hit,
+		[stat_buffs.damage_taken_modifier] = percent_damage_reduction_on_critical_hit
 	},
-	check_proc_func = CheckProcFunctions.on_crit,
+	check_proc_func = CheckProcFunctions.on_crit
 }
 
 local crit_chance_gained_per_missing_stamina_bar = HordesBuffsData.hordes_buff_crit_chance_per_missing_stamina_bar.buff_stats.crit_chance.value
@@ -281,8 +281,8 @@ templates.hordes_buff_crit_chance_per_missing_stamina_bar = {
 	lerped_stat_buffs = {
 		[stat_buffs.critical_strike_chance] = {
 			min = 0,
-			max = crit_chance_gained_per_missing_stamina_bar * crit_chance_per_missing_stamina_bar_max_num_bars,
-		},
+			max = crit_chance_gained_per_missing_stamina_bar * crit_chance_per_missing_stamina_bar_max_num_bars
+		}
 	},
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		local unit = template_context.unit
@@ -291,7 +291,7 @@ templates.hordes_buff_crit_chance_per_missing_stamina_bar = {
 		local lerp_t = math.min(missing_stamina_bars / crit_chance_per_missing_stamina_bar_max_num_bars, 1)
 
 		return lerp_t
-	end,
+	end
 }
 templates.hordes_buff_explode_enemies_on_critical_kill = {
 	class_name = "server_only_proc_buff",
@@ -301,7 +301,7 @@ templates.hordes_buff_explode_enemies_on_critical_kill = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_crit,
 	proc_func = function (params, template_data, template_context)
@@ -310,7 +310,7 @@ templates.hordes_buff_explode_enemies_on_critical_kill = {
 		local explosion_template = ExplosionTemplates.hordes_buff_critical_kill_explosion
 
 		Explosion.create_explosion(template_context.world, template_context.physics_world, explosion_position, Quaternion.identity(), template_context.unit, explosion_template, DEFAULT_POWER_LEVEL, 0.8, attack_types.explosion)
-	end,
+	end
 }
 
 local melee_crit_chance_gained_after_ranged_crit_kill = HordesBuffsData.hordes_buff_increase_melee_crit_chance_on_ranged_critical_kill.buff_stats.crit_chance.value
@@ -326,16 +326,16 @@ templates.hordes_buff_increase_melee_crit_chance_on_ranged_critical_kill = {
 	active_duration = damage_reduction_on_critical_hit_duration,
 	proc_effects = {
 		player_effects = {
-			on_screen_effect = "content/fx/particles/screenspace/screen_buff_less_damage",
-		},
+			on_screen_effect = "content/fx/particles/screenspace/screen_buff_less_damage"
+		}
 	},
 	proc_stat_buffs = {
-		[stat_buffs.melee_critical_strike_chance] = duration_melee_crit_chance_gained_after_ranged_crit_kill,
+		[stat_buffs.melee_critical_strike_chance] = duration_melee_crit_chance_gained_after_ranged_crit_kill
 	},
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
-	check_proc_func = CheckProcFunctions.on_ranged_crit_hit,
+	check_proc_func = CheckProcFunctions.on_ranged_crit_hit
 }
 
 local ranged_crit_chance_gained_after_ranged_crit_kill = HordesBuffsData.hordes_buff_increase_ranged_crit_chance_on_melee_critical_kill.buff_stats.crit_chance.value
@@ -351,16 +351,16 @@ templates.hordes_buff_increase_ranged_crit_chance_on_melee_critical_kill = {
 	active_duration = duration_ranged_crit_chance_gained_after_ranged_crit_kill,
 	proc_effects = {
 		player_effects = {
-			on_screen_effect = "content/fx/particles/screenspace/screen_buff_less_damage",
-		},
+			on_screen_effect = "content/fx/particles/screenspace/screen_buff_less_damage"
+		}
 	},
 	proc_stat_buffs = {
-		[stat_buffs.ranged_critical_strike_chance] = ranged_crit_chance_gained_after_ranged_crit_kill,
+		[stat_buffs.ranged_critical_strike_chance] = ranged_crit_chance_gained_after_ranged_crit_kill
 	},
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
-	check_proc_func = CheckProcFunctions.on_melee_crit_hit,
+	check_proc_func = CheckProcFunctions.on_melee_crit_hit
 }
 templates.hordes_buff_guaranteed_next_melee_attack_on_ranged_critical_hit = {
 	class_name = "proc_buff",
@@ -373,14 +373,14 @@ templates.hordes_buff_guaranteed_next_melee_attack_on_ranged_critical_hit = {
 		template_data.guaranteed_melee_crit_buff = false
 	end,
 	conditional_keywords = {
-		buff_keywords.guaranteed_melee_critical_strike,
+		buff_keywords.guaranteed_melee_critical_strike
 	},
 	conditional_keywords_func = function (template_data, template_context)
 		return template_data.guaranteed_melee_crit_buff
 	end,
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_crit,
 	specific_proc_func = {
@@ -397,8 +397,8 @@ templates.hordes_buff_guaranteed_next_melee_attack_on_ranged_critical_hit = {
 			if is_range_hit and not template_data.guaranteed_melee_crit_buff then
 				template_data.guaranteed_melee_crit_buff = true
 			end
-		end,
-	},
+		end
+	}
 }
 templates.hordes_buff_guaranteed_next_ranged_attack_on_melee_critical_hit = {
 	class_name = "proc_buff",
@@ -411,14 +411,14 @@ templates.hordes_buff_guaranteed_next_ranged_attack_on_melee_critical_hit = {
 		template_data.guaranteed_range_crit_buff = false
 	end,
 	conditional_keywords = {
-		buff_keywords.guaranteed_ranged_critical_strike,
+		buff_keywords.guaranteed_ranged_critical_strike
 	},
 	conditional_keywords_func = function (template_data, template_context)
 		return template_data.guaranteed_range_crit_buff
 	end,
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_crit,
 	specific_proc_func = {
@@ -435,8 +435,8 @@ templates.hordes_buff_guaranteed_next_ranged_attack_on_melee_critical_hit = {
 			if is_melee_hit and not template_data.guaranteed_range_crit_buff then
 				template_data.guaranteed_range_crit_buff = true
 			end
-		end,
-	},
+		end
+	}
 }
 
 local crit_damage_gained_per_critical_hit = HordesBuffsData.hordes_buff_critical_damage_from_consecutive_critical_hits.buff_stats.crit_damage.value
@@ -459,8 +459,8 @@ templates.hordes_buff_critical_damage_from_consecutive_critical_hits = {
 	lerped_stat_buffs = {
 		[stat_buffs.critical_strike_damage] = {
 			min = 0,
-			max = max_crit_damage_gained_from_critical_hit,
-		},
+			max = max_crit_damage_gained_from_critical_hit
+		}
 	},
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		local consecutive_critical_hits = template_data.consecutive_critical_hits
@@ -469,7 +469,7 @@ templates.hordes_buff_critical_damage_from_consecutive_critical_hits = {
 		return lerp_t
 	end,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_crit,
 	proc_func = function (params, template_data, template_context, t)
@@ -488,7 +488,7 @@ templates.hordes_buff_critical_damage_from_consecutive_critical_hits = {
 			template_data.is_active = false
 			template_data.consecutive_critical_hits = 0
 		end
-	end,
+	end
 }
 
 return templates

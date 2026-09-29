@@ -7,7 +7,7 @@ local CommunicationHackInterfaceDevice = class("CommunicationHackInterfaceDevice
 local SOUND_LOOP_ALIASES = {
 	"sfx_minigame_sinus_loop",
 	"sfx_minigame_sinus_loop",
-	"sfx_minigame_sinus_loop_b",
+	"sfx_minigame_sinus_loop_b"
 }
 local FX_SOURCE_NAME = "_speaker"
 

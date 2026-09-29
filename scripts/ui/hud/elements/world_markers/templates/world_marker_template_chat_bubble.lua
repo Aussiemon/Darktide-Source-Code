@@ -8,7 +8,7 @@ local ChatSettings = require("scripts/ui/constant_elements/elements/chat/constan
 local template = {}
 local size = {
 	600,
-	100,
+	100
 }
 
 template.size = size
@@ -16,14 +16,14 @@ template.name = "chat_bubble"
 template.position_offset = {
 	0,
 	0,
-	0.2,
+	0.2
 }
 template.check_line_of_sight = true
 template.max_distance = 20
 template.screen_clamp = false
 template.pixel_offset = {
 	0,
-	0,
+	0
 }
 template.life_time = 8
 template.min_life_time = 3
@@ -33,7 +33,7 @@ template.scale_settings = {
 	distance_max = 30,
 	distance_min = 20,
 	scale_from = 0.5,
-	scale_to = 1,
+	scale_to = 1
 }
 template.fade_settings = {
 	default_fade = 1,
@@ -41,7 +41,7 @@ template.fade_settings = {
 	fade_to = 1,
 	distance_max = template.max_distance,
 	distance_min = template.max_distance * 0.5,
-	easing_function = math.ease_exp,
+	easing_function = math.ease_exp
 }
 
 local template_visual_definitions = {
@@ -53,39 +53,39 @@ local template_visual_definitions = {
 				fade_to = 1,
 				distance_max = template.max_distance,
 				distance_min = template.max_distance * 0.5,
-				easing_function = math.ease_exp,
+				easing_function = math.ease_exp
 			},
 			scale_settings = {
 				distance_max = 20,
 				distance_min = 10,
 				scale_from = 0.5,
-				scale_to = 1,
-			},
+				scale_to = 1
+			}
 		},
 		template_settings_overrides_by_breed = {
 			human = {
 				position_offset = {
 					0,
 					0,
-					2.2,
-				},
+					2.2
+				}
 			},
 			ogryn = {
 				position_offset = {
 					0,
 					0,
-					2.8,
-				},
+					2.8
+				}
 			},
 			cryptic = {
 				position_offset = {
 					0,
 					0,
-					2.4,
-				},
-			},
-		},
-	},
+					2.4
+				}
+			}
+		}
+	}
 }
 
 local function get_interactee_unit_breed(marker)
@@ -162,18 +162,18 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					5,
 					-5,
-					2,
+					2
 				},
 				size_addition = {
 					-10,
-					-10,
+					-10
 				},
 				font_type = header_font_settings.font_type,
 				font_size = font_size,
 				default_font_size = font_size,
 				text_color = header_font_color,
-				default_text_color = header_font_color,
-			},
+				default_text_color = header_font_color
+			}
 		},
 		{
 			pass_type = "rect",
@@ -186,18 +186,18 @@ template.create_widget_defintion = function (template, scenegraph_id)
 					180,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size_addition = {
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -211,14 +211,14 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				color = Color.white(200, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					10,
-					2,
-				},
-			},
+					2
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -230,15 +230,15 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				vertical_alignment = "center",
 				size = {
 					30,
-					26,
+					26
 				},
 				color = Color.black(180, true),
 				offset = {
 					0,
 					12,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -250,16 +250,16 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				vertical_alignment = "center",
 				size = {
 					30,
-					26,
+					26
 				},
 				color = Color.white(200, true),
 				offset = {
 					0,
 					12,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, scenegraph_id, nil)
 end
 
@@ -330,7 +330,7 @@ end
 
 local temp_text_box_size = {
 	0,
-	0,
+	0
 }
 
 template.update_function = function (parent, ui_renderer, widget, marker, self, dt, t)

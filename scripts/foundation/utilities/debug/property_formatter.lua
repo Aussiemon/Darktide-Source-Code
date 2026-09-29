@@ -10,7 +10,7 @@ local NAMEDSPACED_ACCESSORS = {
 	end,
 	GAME = function (key)
 		return GameParameters[key]
-	end,
+	end
 }
 
 local function _is_falsy(v)

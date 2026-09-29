@@ -15,6 +15,8 @@ MutatorBase.init = function (self, is_server, network_event_delegate, mutator_te
 	self._world = world
 	self._physics_world = World.physics_world(world)
 	self._seed = level_seed
+	self._required_packages = {}
+	self._is_loaded = false
 	self._package_scope = PackageScope:new(self.__class_name)
 
 	self:_load_all_asset_packages()
@@ -26,6 +28,10 @@ MutatorBase.destroy = function (self)
 	if is_server then
 		self:_remove_buffs()
 	end
+
+	table.clear(self._required_packages)
+
+	self._is_loaded = false
 
 	self._package_scope:delete()
 end
@@ -50,18 +56,55 @@ MutatorBase.is_active = function (self)
 	return self._is_active
 end
 
+MutatorBase.is_loading_done = function (self)
+	return self._is_loaded
+end
+
 MutatorBase.is_loading = function (self)
-	return not self._package_scope:are_all_packages_loaded()
+	if self._is_loaded then
+		return false
+	end
+
+	local package_manager = Managers.package
+
+	for i = 1, #self._required_packages do
+		if not package_manager:has_loaded(self._required_packages[i]) then
+			return true
+		end
+	end
+
+	if not self._is_loaded and self._template.activate_on_load then
+		self:activate()
+	end
+
+	self._is_loaded = true
+
+	return false
 end
 
 MutatorBase._load_all_asset_packages = function (self)
-	local package_scope = self._package_scope
+	local root_package = self._template.asset_package
+	local required_packages = {}
+	local package_collector = {
+		add_package = function (_, package_name)
+			required_packages[#required_packages + 1] = package_name
+		end
+	}
 
-	if self._template.asset_package then
-		package_scope:add_package(self._template.asset_package)
+	if root_package then
+		package_collector:add_package(root_package)
 	end
 
-	self:_load_subnode_packages(package_scope)
+	self:_load_subnode_packages(package_collector)
+
+	self._required_packages = required_packages
+	self._is_loaded = #self._required_packages == 0
+
+	if root_package then
+		self._package_scope:add_package(root_package, callback(self, "_load_subnode_packages", self._package_scope))
+	else
+		self:_load_subnode_packages(self._package_scope)
+	end
 end
 
 MutatorBase._load_subnode_packages = function (self, package_scope)
@@ -98,6 +141,10 @@ MutatorBase._add_buffs = function (self, buff_template_names)
 end
 
 MutatorBase._add_buffs_on_unit = function (self, buff_template_names, unit, optional_ignored_keyword, optional_internally_controlled)
+	if self:_is_breed_excluded(unit) then
+		return
+	end
+
 	local buff_extension = ScriptUnit.extension(unit, "buff_system")
 
 	if optional_ignored_keyword and buff_extension:has_keyword(optional_ignored_keyword) then
@@ -125,13 +172,44 @@ MutatorBase._add_buffs_on_unit = function (self, buff_template_names, unit, opti
 
 				buff_ids[#buff_ids + 1] = {
 					local_index = local_index,
-					component_index = component_index,
+					component_index = component_index
 				}
 			end
 
 			buff_extension:_update_stat_buffs_and_keywords(current_time)
 		end
 	end
+end
+
+MutatorBase._is_breed_excluded = function (self, unit)
+	local excluded_breed_tags = self._template.excluded_breed_tags
+	local excluded_breeds = self._template.excluded_breeds
+
+	if excluded_breed_tags == nil and excluded_breeds == nil then
+		return false
+	end
+
+	local breed = Breed.unit_breed_or_nil(unit)
+
+	if not breed then
+		return false
+	end
+
+	if excluded_breeds and table.contains(excluded_breeds, breed.name) then
+		return true
+	end
+
+	if excluded_breed_tags then
+		local tags = breed.tags
+
+		for i = 1, #excluded_breed_tags do
+			if tags[excluded_breed_tags[i]] then
+				return true
+			end
+		end
+	end
+
+	return false
 end
 
 MutatorBase.deactivate = function (self)
@@ -213,8 +291,13 @@ MutatorBase._on_minion_unit_spawned = function (self, unit)
 
 		if breed_chance and breed_chance > math.random() then
 			self:_add_buffs_on_unit(buffs, unit, random_spawn_buff_templates.ignored_buff_keyword)
+			self:_on_random_spawn_buff_triggered(unit)
 		end
 	end
+end
+
+MutatorBase._on_random_spawn_buff_triggered = function (self, unit)
+	return
 end
 
 MutatorBase._register_event_listeners = function (self)

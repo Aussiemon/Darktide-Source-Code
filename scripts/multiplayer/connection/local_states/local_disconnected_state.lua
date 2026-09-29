@@ -33,7 +33,7 @@ LocalDisconnectedState.enter = function (self, reason)
 	reason.channel_id = shared_state.channel_id
 	shared_state.event_list[#shared_state.event_list + 1] = {
 		name = "disconnected",
-		parameters = reason,
+		parameters = reason
 	}
 end
 

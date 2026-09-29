@@ -49,7 +49,7 @@ ActionUtility.is_within_trigger_time = function (time_in_action, dt, first_trigg
 	return false
 end
 
-ActionUtility.projectile_template = function (action_settings, weapon_template, ability_extension)
+ActionUtility.projectile_template = function (ability_type, action_settings, weapon_template, ability_extension)
 	local fire_config = action_settings and action_settings.fire_configuration
 	local fire_config_projectile_template = fire_config and fire_config.projectile
 
@@ -63,7 +63,7 @@ ActionUtility.projectile_template = function (action_settings, weapon_template, 
 		return weapon_template_projectile_template
 	end
 
-	local ability_item = action_settings and ability_extension and ActionUtility.ability_item(action_settings, ability_extension)
+	local ability_item = ability_type and ability_extension and ActionUtility.ability_item(ability_type, ability_extension)
 	local ability_weapon_template = ability_item and WeaponTemplate.weapon_template_from_item(ability_item)
 	local ability_weapon_template_projectile_template = ability_weapon_template.projectile_template
 
@@ -74,11 +74,10 @@ ActionUtility.projectile_template = function (action_settings, weapon_template, 
 	return nil
 end
 
-ActionUtility.ability_item = function (action_settings, ability_extension)
-	local ability_type = action_settings.ability_type
+ActionUtility.ability_item = function (ability_type, ability_extension)
 	local equipped_abilities = ability_extension:equipped_abilities()
-	local grenade_ability = equipped_abilities[ability_type]
-	local inventory_item_name = grenade_ability.inventory_item_name
+	local ability = equipped_abilities[ability_type]
+	local inventory_item_name = ability.inventory_item_name or ability.inventory_item_reference
 	local slot_name = ability_extension:get_slot_name(ability_type)
 	local item_definitions = MasterItems.get_cached()
 	local item = item_definitions[inventory_item_name]

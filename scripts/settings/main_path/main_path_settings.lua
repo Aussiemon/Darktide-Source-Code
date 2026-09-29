@@ -11,7 +11,7 @@ local main_path_settings = {
 	triangle_group_cutoff_values = {
 		25,
 		50,
-		75,
+		75
 	},
 	triangle_group_forbidden_nav_tag_layers = {
 		"bot_damage_drops",
@@ -19,15 +19,15 @@ local main_path_settings = {
 		"bot_jumps",
 		"bot_ladders",
 		"bot_leap_of_faith",
-		"teleporters",
+		"teleporters"
 	},
 	spawn_point_forbidden_nav_tag_volume_types = {
-		"content/volume_types/nav_tag_volumes/no_spawn",
+		"content/volume_types/nav_tag_volumes/no_spawn"
 	},
 	path_types = {
 		linear = "scripts/managers/main_path/path_types/path_type_linear",
-		open = "scripts/managers/main_path/path_types/path_type_open",
-	},
+		open = "scripts/managers/main_path/path_types/path_type_open"
+	}
 }
 
 return settings("MainPathSettings", main_path_settings)

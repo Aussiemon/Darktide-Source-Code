@@ -73,7 +73,7 @@ MinionPerceptionExtension.init = function (self, extension_init_context, unit, e
 	self._processing_line_of_sight_data = {
 		main_index = 1,
 		offset_index = 1,
-		num_blocked_per_main_index = num_blocked_per_main_index,
+		num_blocked_per_main_index = num_blocked_per_main_index
 	}
 	self._line_of_sight_lookup_by_id = line_of_sight_lookup_by_id
 	self._last_los_positions = {}
@@ -128,6 +128,8 @@ MinionPerceptionExtension.extensions_ready = function (self, world, unit)
 	if breed.aggro_inventory_slot then
 		self._visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 	end
+
+	self._behavior_extension = ScriptUnit.extension(unit, "behavior_system")
 end
 
 MinionPerceptionExtension.game_object_initialized = function (self, session, game_object_id)
@@ -323,7 +325,7 @@ MinionPerceptionExtension.aggro = function (self)
 	if perception_component.aggro_state ~= aggro_states.aggroed then
 		perception_component.aggro_state = aggro_states.aggroed
 
-		if self._animation_extension then
+		if self._animation_extension:has_anim_event("to_combat") then
 			self._animation_extension:anim_event("to_combat")
 		end
 
@@ -347,6 +349,7 @@ MinionPerceptionExtension.aggro = function (self)
 		end
 
 		Managers.state.pacing:add_aggroed_minion(unit)
+		self._behavior_extension:prioritize_staggered_update()
 	end
 end
 
@@ -387,6 +390,8 @@ MinionPerceptionExtension.alert = function (self, enemy_unit, force_alert)
 
 			Vo.enemy_generic_vo_event(unit, vo_event, breed_name, target_distance)
 		end
+
+		self._behavior_extension:prioritize_staggered_update()
 	end
 end
 
@@ -652,6 +657,7 @@ MinionPerceptionExtension._on_target_change = function (self, old_target_unit, n
 	local target_unit_id = new_target_unit and Managers.state.unit_spawner:game_object_id(new_target_unit) or NetworkConstants.invalid_game_object_id
 
 	GameSession.set_game_object_field(game_session, game_object_id, "target_unit_id", target_unit_id)
+	self._behavior_extension:prioritize_staggered_update()
 end
 
 MinionPerceptionExtension._update_priority_blackboard_status = function (self, unit)
@@ -770,7 +776,7 @@ local DARKNESS_LOS_MODIFIER_NAME = "mutator_darkness_los"
 local VENTILATION_PURGE_LOS_MODIFIER_NAME = "mutator_ventilation_purge_los"
 local CIRCUMSTANCE_DETECTION_DISTANCE_LOS_REQUIREMENTS = {
 	mutator_darkness_los = 15,
-	mutator_ventilation_purge_los = 30,
+	mutator_ventilation_purge_los = 30
 }
 
 for i = 1, #MutatorSettings.dark_mutators do
@@ -778,7 +784,7 @@ for i = 1, #MutatorSettings.dark_mutators do
 end
 
 local BUFF_KEYWORD_DISTANCE_LOS_REQUIREMENT = {
-	concealed = 5,
+	concealed = 5
 }
 
 MinionPerceptionExtension._within_detection_los_range = function (self, unit, unit_position, target_unit, target_position)

@@ -64,18 +64,18 @@ PlayerSpawner.component_data = {
 	active = {
 		ui_name = "Active",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	player_side = {
 		ui_name = "Player Side",
 		ui_type = "combo_box",
 		value = "heroes",
 		options_keys = {
-			"Heroes",
+			"Heroes"
 		},
 		options_values = {
-			"heroes",
-		},
+			"heroes"
+		}
 	},
 	spawn_identifier = {
 		ui_name = "Spawn Identifier",
@@ -87,7 +87,7 @@ PlayerSpawner.component_data = {
 			"Recent Mission",
 			"Shooting Range",
 			"Expedition Recent",
-			"Expedition Store",
+			"Expedition Store"
 		},
 		options_values = {
 			"default",
@@ -95,8 +95,8 @@ PlayerSpawner.component_data = {
 			"recent_mission",
 			"tg_shooting_range",
 			"recent_expedition_mission",
-			"expedition_store",
-		},
+			"expedition_store"
+		}
 	},
 	spawn_priority = {
 		decimals = 0,
@@ -104,26 +104,26 @@ PlayerSpawner.component_data = {
 		step = 1,
 		ui_name = "Spawn Priority",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	parent_spawned = {
 		ui_name = "Parent Spawned",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	inputs = {
 		player_spawner_activate = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		player_spawner_deactivate = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"PlayerSpawnerExtension",
-	},
+		"PlayerSpawnerExtension"
+	}
 }
 
 return PlayerSpawner

@@ -12,8 +12,8 @@ local horde_template = {
 		8,
 		12,
 		15,
-		25,
-	},
+		25
+	}
 }
 local breeds_to_spawn = {}
 
@@ -96,7 +96,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	local horde = {
 		template_name = horde_template.name,
 		side = side,
-		target_side = target_side,
+		target_side = target_side
 	}
 
 	table.clear(nearby_spawners)

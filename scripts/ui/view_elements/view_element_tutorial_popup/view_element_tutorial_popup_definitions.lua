@@ -16,13 +16,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	pivot = {
 		horizontal_alignment = "center",
@@ -30,13 +30,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	tutorial_window = {
 		horizontal_alignment = "center",
@@ -46,8 +46,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			30,
-			170,
-		},
+			170
+		}
 	},
 	tutorial_grid = {
 		horizontal_alignment = "left",
@@ -57,8 +57,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	tutorial_button_1 = {
 		horizontal_alignment = "center",
@@ -66,13 +66,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			300,
-			40,
+			40
 		},
 		position = {
 			-170,
 			-40,
-			3,
-		},
+			3
+		}
 	},
 	tutorial_button_2 = {
 		horizontal_alignment = "center",
@@ -80,13 +80,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			300,
-			40,
+			40
 		},
 		position = {
 			170,
 			-40,
-			3,
-		},
+			3
+		}
 	},
 	tutorial_button_center = {
 		horizontal_alignment = "center",
@@ -94,14 +94,14 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			300,
-			40,
+			40
 		},
 		position = {
 			0,
 			-40,
-			3,
-		},
-	},
+			3
+		}
+	}
 }
 local widget_definitions = {
 	tutorial_window = UIWidget.create_definition({
@@ -113,14 +113,14 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					10,
-				},
-			},
+					10
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -132,20 +132,20 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					tutorial_window_size[1] - (tutorial_grid_size[1] + 60),
-					tutorial_window_size[2],
+					tutorial_window_size[2]
 				},
 				color = {
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				offset = {
 					0,
 					0,
-					2,
-				},
-			},
+					2
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -158,18 +158,18 @@ local widget_definitions = {
 					100,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					169,
+					169
 				},
 				size_addition = {
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -181,14 +181,14 @@ local widget_definitions = {
 					100,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					168,
-				},
-			},
+					168
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -200,18 +200,18 @@ local widget_definitions = {
 					100,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					-1,
+					-1
 				},
 				size_addition = {
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -223,10 +223,10 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					24,
-					24,
+					24
 				},
-				color = Color.terminal_grid_background(nil, true),
-			},
+				color = Color.terminal_grid_background(nil, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -239,9 +239,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -254,14 +254,14 @@ local widget_definitions = {
 				color = Color.black(200, true),
 				size_addition = {
 					96,
-					96,
+					96
 				},
 				offset = {
 					0,
 					0,
-					5,
-				},
-			},
+					5
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -274,9 +274,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					4,
-				},
-			},
+					4
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -289,9 +289,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
-				},
-			},
+					5
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -302,19 +302,19 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					nil,
-					10,
+					10
 				},
 				size_addition = {
 					10,
-					0,
+					0
 				},
 				color = Color.terminal_text_header(255, true),
 				offset = {
 					0,
 					-4,
-					14,
-				},
-			},
+					14
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -325,29 +325,29 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					nil,
-					10,
+					10
 				},
 				size_addition = {
 					10,
-					0,
+					0
 				},
 				color = Color.terminal_text_header(255, true),
 				offset = {
 					0,
 					4,
-					14,
-				},
-			},
-		},
+					14
+				}
+			}
+		}
 	}, "tutorial_window"),
 	tutorial_button_1 = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "tutorial_button_1", {
 		text = "tutorial_button_1",
-		visible = true,
+		visible = true
 	}),
 	tutorial_button_2 = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "tutorial_button_2", {
 		text = "tutorial_button_2",
-		visible = true,
-	}),
+		visible = true
+	})
 }
 local tutorial_window_open_delay = 0.5
 local animations = {
@@ -378,7 +378,7 @@ local animations = {
 						grid_widgets[i].alpha_multiplier = 0
 					end
 				end
-			end,
+			end
 		},
 		{
 			end_time = 1.2,
@@ -391,7 +391,7 @@ local animations = {
 
 				tutorial_window.style.screen_background.color[1] = alpha
 				tutorial_window.style.screen_background_vignette.color[1] = alpha
-			end,
+			end
 		},
 		{
 			name = "fade_in_window",
@@ -411,7 +411,7 @@ local animations = {
 				window_style.edge_top.color[1] = alpha
 				window_style.edge_bottom.color[1] = alpha
 				window_style.window_background.color[1] = alpha
-			end,
+			end
 		},
 		{
 			name = "fade_in_content",
@@ -435,7 +435,7 @@ local animations = {
 				local tutorial_window = widgets.tutorial_window
 
 				tutorial_window.style.image.color[1] = alpha
-			end,
+			end
 		},
 		{
 			name = "move",
@@ -450,13 +450,13 @@ local animations = {
 				local y_anim_distance = y_anim_distance_max - y_anim_distance_max * anim_progress
 
 				parent:_set_scenegraph_size("tutorial_window", nil, 100 + (scenegraph_definition.tutorial_window.size[2] - 100) * anim_progress)
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
 	animations = animations,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

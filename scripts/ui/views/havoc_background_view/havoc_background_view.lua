@@ -47,12 +47,12 @@ HavocBackgroundView.auto_cancel_mission = function (self)
 		type = "promotion",
 		current = {
 			charges = nil,
-			rank = nil,
+			rank = nil
 		},
 		previous = {
 			rank = self.havoc_order.data.rank,
-			charges = self.havoc_order.charges,
-		},
+			charges = self.havoc_order.charges
+		}
 	}
 
 	local function on_complete_callback()
@@ -82,12 +82,12 @@ HavocBackgroundView.revoke_mission = function (self)
 		type = "promotion",
 		current = {
 			charges = nil,
-			rank = nil,
+			rank = nil
 		},
 		previous = {
 			rank = self.havoc_order.data.rank,
-			charges = self.havoc_order.charges,
-		},
+			charges = self.havoc_order.charges
+		}
 	}
 
 	self:_close_active_view()
@@ -118,7 +118,7 @@ HavocBackgroundView.revoke_mission = function (self)
 		self._rewards = nil
 
 		Managers.event:trigger("event_add_notification_message", "alert", {
-			text = Localize("loc_popup_description_backend_error"),
+			text = Localize("loc_popup_description_backend_error")
 		})
 
 		local starting_option_index = self._base_definitions.starting_option_index
@@ -166,7 +166,7 @@ end
 
 HavocBackgroundView._setup_core_ui = function (self, state)
 	self:_setup_tab_bar({
-		tabs_params = {},
+		tabs_params = {}
 	})
 
 	local button_options_definitions = self._base_definitions.button_options_definitions[state]
@@ -285,8 +285,8 @@ HavocBackgroundView._initialize_havoc_state = function (self, on_complete_callba
 						type = "week",
 						rewards = {},
 						previous = {
-							rank = week_rank,
-						},
+							rank = week_rank
+						}
 					}
 
 					for i = 1, #rewards_data.rewards do
@@ -305,7 +305,7 @@ HavocBackgroundView._initialize_havoc_state = function (self, on_complete_callba
 				local parsed_week_data = {
 					week_rank = 0,
 					all_time = all_time_rank,
-					rewards = {},
+					rewards = {}
 				}
 
 				if havoc_week_data.rewards then
@@ -334,7 +334,7 @@ HavocBackgroundView._initialize_havoc_state = function (self, on_complete_callba
 				local parsed_week_data = {
 					week_rank = week_rank,
 					all_time = all_time_rank,
-					rewards = {},
+					rewards = {}
 				}
 
 				if havoc_week_data.rewards then
@@ -417,7 +417,7 @@ HavocBackgroundView._initialize_havoc_state = function (self, on_complete_callba
 	end):catch(function (error)
 		Managers.ui:close_view(self.view_name)
 		Managers.event:trigger("event_add_notification_message", "alert", {
-			text = Localize("loc_popup_description_backend_error"),
+			text = Localize("loc_popup_description_backend_error")
 		})
 	end)
 end
@@ -516,7 +516,7 @@ HavocBackgroundView._set_off_cadence_description_text_with_timer = function (sel
 		local loc_string = self._base_definitions.intro_texts.off_cadence.description_text
 
 		self._widgets_by_name.description_text.content.text = Localize(loc_string, true, {
-			time = timer_text,
+			time = timer_text
 		})
 	else
 		self._widgets_by_name.description_text.content.text = Localize("loc_havoc_off_season_description_no_time")

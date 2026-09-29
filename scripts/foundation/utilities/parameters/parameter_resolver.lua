@@ -5,6 +5,7 @@ local DefaultDevParameters = require("scripts/foundation/utilities/parameters/de
 
 GameParameters = GameParameters or {}
 DevParameters = DevParameters or {}
+WINDOW_RECT_OVERRIDE = WINDOW_RECT_OVERRIDE or false
 ParameterResolver = ParameterResolver or {}
 ParameterResolver.DEBUG_TAG = "ParameterResolver"
 
@@ -14,7 +15,7 @@ end
 
 ParameterResolver.resolve_command_line = function ()
 	local args = {
-		Application.argv(),
+		Application.argv()
 	}
 
 	ParameterResolver._command_line_parameters = {}
@@ -66,7 +67,7 @@ ParameterResolver.resolve_command_line = function ()
 	local function warn_multiple_definitions(parameter_name, old)
 		local value = parameters[parameter_name]
 		local t = type(value) == "table" and value or {
-			value,
+			value
 		}
 
 		debug("Multiple defintions of '%s'\nUsing [%s].\nold value [%s]", parameter_name, table.tostring(t), table.tostring(old))
@@ -150,13 +151,43 @@ ParameterResolver.resolve_command_line = function ()
 					else
 						local value_table = {
 							current_value,
-							value,
+							value
 						}
 
 						parameters[param] = value_table
 					end
 				end
 			end
+		end
+	end
+
+	WINDOW_RECT_OVERRIDE = false
+
+	for arg_index = 1, num_args do
+		local arg = args[arg_index]
+
+		if arg == "--rect" or arg == "-rect" then
+			local x = tonumber(args[arg_index + 1])
+			local y = tonumber(args[arg_index + 2])
+			local width = tonumber(args[arg_index + 3])
+			local height = tonumber(args[arg_index + 4])
+
+			if x and y and width and height then
+				WINDOW_RECT_OVERRIDE = {
+					x = x,
+					y = y,
+					width = width,
+					height = height
+				}
+
+				debug("Window rect override detected: x=%s y=%s width=%s height=%s", tostring(x), tostring(y), tostring(width), tostring(height))
+
+				break
+			end
+
+			debug("Found rect parameter but could not parse four numeric values, ignoring it")
+
+			break
 		end
 	end
 end
@@ -320,7 +351,7 @@ ParameterResolver.resolve_dev_parameters = function ()
 
 		local defaults = DefaultDevParameters
 		local saved_profile = {
-			mode = mode,
+			mode = mode
 		}
 
 		for param, value in pairs(dev_parameters) do

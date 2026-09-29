@@ -7,26 +7,26 @@ local default_ingame_input_filters = {
 			back = "keyboard_move_backward",
 			forward = "keyboard_move_forward",
 			left = "keyboard_move_left",
-			right = "keyboard_move_right",
-		},
+			right = "keyboard_move_right"
+		}
 	},
 	axis_virtual_move_forward = {
 		filter_type = "vector_y",
-		input_mappings = "move_controller",
+		input_mappings = "move_controller"
 	},
 	axis_virtual_move_backward = {
 		filter_type = "vector_y",
 		input_mappings = "move_controller",
-		scale = -1,
+		scale = -1
 	},
 	axis_virtual_move_right = {
 		filter_type = "vector_x",
-		input_mappings = "move_controller",
+		input_mappings = "move_controller"
 	},
 	axis_virtual_move_left = {
 		filter_type = "vector_x",
 		input_mappings = "move_controller",
-		scale = -1,
+		scale = -1
 	},
 	move_forward = {
 		filter_type = "scalar_combine",
@@ -35,8 +35,8 @@ local default_ingame_input_filters = {
 		to_bool = false,
 		input_mappings = {
 			button_1 = "axis_virtual_move_forward",
-			button_2 = "keyboard_move_forward",
-		},
+			button_2 = "keyboard_move_forward"
+		}
 	},
 	move_backward = {
 		filter_type = "scalar_combine",
@@ -45,8 +45,8 @@ local default_ingame_input_filters = {
 		to_bool = false,
 		input_mappings = {
 			button_1 = "axis_virtual_move_backward",
-			button_2 = "keyboard_move_backward",
-		},
+			button_2 = "keyboard_move_backward"
+		}
 	},
 	move_right = {
 		filter_type = "scalar_combine",
@@ -55,8 +55,8 @@ local default_ingame_input_filters = {
 		to_bool = false,
 		input_mappings = {
 			button_1 = "axis_virtual_move_right",
-			button_2 = "keyboard_move_right",
-		},
+			button_2 = "keyboard_move_right"
+		}
 	},
 	move_left = {
 		filter_type = "scalar_combine",
@@ -65,33 +65,33 @@ local default_ingame_input_filters = {
 		to_bool = false,
 		input_mappings = {
 			button_1 = "axis_virtual_move_left",
-			button_2 = "keyboard_move_left",
-		},
+			button_2 = "keyboard_move_left"
+		}
 	},
 	move = {
 		filter_type = "axis_combine",
 		input_mappings = {
 			source1 = "move_keys",
-			source2 = "move_controller",
-		},
+			source2 = "move_controller"
+		}
 	},
 	look = {
 		filter_type = "scale_vector3",
 		input_mappings = "look_raw",
 		invert_look_y = "mouse_invert_look_y",
-		scale = "mouse_look_scale",
+		scale = "mouse_look_scale"
 	},
 	look_ranged = {
 		filter_type = "scale_vector3",
 		input_mappings = "look_raw",
 		invert_look_y = "mouse_invert_look_y",
-		scale = "mouse_look_scale_ranged",
+		scale = "mouse_look_scale_ranged"
 	},
 	look_ranged_alternate_fire = {
 		filter_type = "scale_vector3",
 		input_mappings = "look_raw",
 		invert_look_y = "mouse_invert_look_y",
-		scale = "mouse_look_scale_ranged_alternate_fire",
+		scale = "mouse_look_scale_ranged_alternate_fire"
 	},
 	look_controller = {
 		accelerate_time_ref = 0.5,
@@ -108,7 +108,7 @@ local default_ingame_input_filters = {
 		response_curve_strength = "controller_response_curve_strength",
 		scale = "controller_look_scale",
 		scale_y = "controller_look_scale_vertical",
-		threshold = 0.925,
+		threshold = 0.925
 	},
 	look_controller_improved = {
 		accelerate_time_ref = 0.2,
@@ -126,7 +126,7 @@ local default_ingame_input_filters = {
 		scale = "controller_look_scale",
 		scale_y = "controller_look_scale_vertical",
 		threshold = 0.925,
-		x_acceleration_threshold = 0.4,
+		x_acceleration_threshold = 0.4
 	},
 	look_controller_lunging = {
 		accelerate_time_ref = 0.5,
@@ -143,7 +143,7 @@ local default_ingame_input_filters = {
 		response_curve_strength = "controller_response_curve_strength",
 		scale = "controller_look_scale",
 		scale_y = "controller_look_scale_vertical",
-		threshold = 0.925,
+		threshold = 0.925
 	},
 	look_controller_ranged = {
 		accelerate_time_ref = 0.6,
@@ -165,7 +165,7 @@ local default_ingame_input_filters = {
 		turnaround_multiplier_x = 12,
 		turnaround_power_of = 2,
 		turnaround_threshold = 0.925,
-		turnaround_time_ref = 0.75,
+		turnaround_time_ref = 0.75
 	},
 	look_controller_ranged_improved = {
 		accelerate_time_ref = 0.2,
@@ -183,7 +183,7 @@ local default_ingame_input_filters = {
 		scale = "controller_look_scale_ranged",
 		scale_y = "controller_look_scale_vertical_ranged",
 		threshold = 0.925,
-		x_acceleration_threshold = 0.4,
+		x_acceleration_threshold = 0.4
 	},
 	look_controller_ranged_alternate_fire = {
 		accelerate_time_ref = 0.3,
@@ -200,7 +200,7 @@ local default_ingame_input_filters = {
 		response_curve_strength = "controller_response_curve_strength_ranged",
 		scale = "controller_look_scale_ranged_alternate_fire",
 		scale_y = "controller_look_scale_vertical_ranged_alternate_fire",
-		threshold = 0.8,
+		threshold = 0.8
 	},
 	look_controller_ranged_alternate_fire_improved = {
 		accelerate_time_ref = 0.1,
@@ -218,7 +218,7 @@ local default_ingame_input_filters = {
 		scale = "controller_look_scale_ranged_alternate_fire",
 		scale_y = "controller_look_scale_vertical_ranged_alternate_fire",
 		threshold = 0.925,
-		x_acceleration_threshold = 0.4,
+		x_acceleration_threshold = 0.4
 	},
 	look_controller_melee = {
 		accelerate_time_ref = 0.15,
@@ -240,7 +240,7 @@ local default_ingame_input_filters = {
 		turnaround_multiplier_x = 3,
 		turnaround_power_of = 2,
 		turnaround_threshold = 0.925,
-		turnaround_time_ref = 0.75,
+		turnaround_time_ref = 0.75
 	},
 	look_controller_melee_sticky = {
 		accelerate_time_ref = 0.3,
@@ -262,8 +262,40 @@ local default_ingame_input_filters = {
 		turnaround_multiplier_x = 3,
 		turnaround_power_of = 2,
 		turnaround_threshold = 0.925,
-		turnaround_time_ref = 0.75,
+		turnaround_time_ref = 0.75
 	},
+	look_controller_angular_velocity = {
+		filter_type = "scale_vector3_angular_velocity",
+		input_mappings = "angular_velocity",
+		invert_look_y = "controller_motion_invert_look_y",
+		scale = "controller_motion_look_scale",
+		sensitivity_modifier = 1,
+		state = "look"
+	},
+	look_controller_angular_velocity_ranged = {
+		filter_type = "scale_vector3_angular_velocity",
+		input_mappings = "angular_velocity",
+		invert_look_y = "controller_motion_invert_look_y",
+		scale = "controller_motion_look_scale",
+		sensitivity_modifier = "controller_motion_look_ranged_multiplier",
+		state = "ranged"
+	},
+	look_controller_angular_velocity_ranged_alternate_fire = {
+		filter_type = "scale_vector3_angular_velocity",
+		input_mappings = "angular_velocity",
+		invert_look_y = "controller_motion_invert_look_y",
+		scale = "controller_motion_look_scale",
+		sensitivity_modifier = "controller_motion_look_ranged_alternate_fire_multiplier",
+		state = "ranged_alternate_fire"
+	},
+	look_controller_angular_velocity_melee = {
+		filter_type = "scale_vector3_angular_velocity",
+		input_mappings = "angular_velocity",
+		invert_look_y = "controller_motion_invert_look_y",
+		scale = "controller_motion_look_scale",
+		sensitivity_modifier = 1,
+		state = "melee"
+	}
 }
 
 return settings("DefaultIngameInputFilters", default_ingame_input_filters)

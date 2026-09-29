@@ -12,10 +12,10 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger"
+				}
+			}
+		}
 	},
 	lasbeam_pistol = {
 		keep_aligned = true,
@@ -29,10 +29,10 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger"
+				}
+			}
+		}
 	},
 	lasbeam_pistol_ads = {
 		keep_aligned = true,
@@ -46,10 +46,10 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger"
+				}
+			}
+		}
 	},
 	lasbeam_heavy_pistol = {
 		keep_aligned = true,
@@ -63,22 +63,22 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger",
-				},
+					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger"
+				}
 			},
 			critical_strike = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger",
+					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger"
 				},
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/laspistol/lasgun_heavy_beam_crit_trail",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/laspistol/lasgun_heavy_beam_crit_trail"
+				}
+			}
+		}
 	},
 	lasbeam_killshot = {
 		keep_aligned = true,
@@ -91,22 +91,22 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger",
-				},
+					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger"
+				}
 			},
 			critical_strike = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger",
+					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger"
 				},
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_crit_trail",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_crit_trail"
+				}
+			}
+		}
 	},
 	lasbeam_elysian = {
 		keep_aligned = true,
@@ -120,22 +120,22 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger",
-				},
+					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger"
+				}
 			},
 			critical_strike = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger",
+					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger"
 				},
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_crit_trail",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_crit_trail"
+				}
+			}
+		}
 	},
 	lasbeam_charged = {
 		keep_aligned = true,
@@ -149,22 +149,22 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_krieg_linger",
-				},
+					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_krieg_linger"
+				}
 			},
 			critical_strike = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_krieg_linger",
+					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_krieg_linger"
 				},
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_crit_trail",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_crit_trail"
+				}
+			}
+		}
 	},
 	lasbeam_bfg = {
 		keep_aligned = true,
@@ -178,22 +178,22 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_krieg_linger_bfg",
-				},
+					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_krieg_linger_bfg"
+				}
 			},
 			critical_strike = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_krieg_linger_bfg",
+					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_krieg_linger_bfg"
 				},
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_crit_trail",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_crit_trail"
+				}
+			}
+		}
 	},
 	heavy_stubpistol_bullet = {
 		keep_aligned = true,
@@ -205,29 +205,29 @@ local line_effects = {
 			duration = 0.8,
 			early_stop_event_alias = "flyby_stop",
 			event_alias = "flyby",
-			husk_only = true,
+			husk_only = true
 		},
 		emitters = {
 			default = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail",
-				},
+					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail"
+				}
 			},
 			critical_strike = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail",
+					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail"
 				},
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/pistols/stubrevolver/stubrevolver_heavy_trail",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/pistols/stubrevolver/stubrevolver_heavy_trail"
+				}
+			}
+		}
 	},
 	autogun_bullet = {
 		keep_aligned = true,
@@ -239,29 +239,29 @@ local line_effects = {
 			duration = 0.8,
 			early_stop_event_alias = "flyby_stop",
 			event_alias = "flyby",
-			husk_only = true,
+			husk_only = true
 		},
 		emitters = {
 			default = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail",
-				},
+					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail"
+				}
 			},
 			critical_strike = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail",
+					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail"
 				},
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail_3p",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail_3p"
+				}
+			}
+		}
 	},
 	heavy_stubber_bullet = {
 		keep_aligned = true,
@@ -272,29 +272,29 @@ local line_effects = {
 			duration = 0.8,
 			early_stop_event_alias = "flyby_stop",
 			event_alias = "flyby",
-			husk_only = true,
+			husk_only = true
 		},
 		emitters = {
 			default = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail",
-				},
+					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail"
+				}
 			},
 			critical_strike = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail",
+					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail"
 				},
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail_3p",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail_3p"
+				}
+			}
+		}
 	},
 	pellet_trail = {
 		keep_aligned = true,
@@ -303,10 +303,10 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/shotgun/shotgun_trail_smoke",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/shotgun/shotgun_trail_smoke"
+				}
+			}
+		}
 	},
 	shotgun_slug_trail = {
 		keep_aligned = true,
@@ -317,10 +317,10 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/shotgun/shotgun_slug_trail",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/shotgun/shotgun_slug_trail"
+				}
+			}
+		}
 	},
 	shotgun_incendiary_trail = {
 		emitters = {
@@ -328,10 +328,10 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/shotgun/shotgun_incendiary_trail_smoke",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/shotgun/shotgun_incendiary_trail_smoke"
+				}
+			}
+		}
 	},
 	pellet_trail_shock = {
 		keep_aligned = true,
@@ -340,10 +340,10 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/shotgun/shotgun_trail_smoke",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/shotgun/shotgun_trail_smoke"
+				}
+			}
+		}
 	},
 	ripper_trail = {
 		keep_aligned = true,
@@ -354,10 +354,10 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/shotgun/shotgun_trail_smoke",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/shotgun/shotgun_trail_smoke"
+				}
+			}
+		}
 	},
 	boltshell = {
 		sfx = "wwise/events/weapon/play_shared_combat_weapon_bolter_bullet_flyby",
@@ -368,10 +368,10 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/bolter/bolter_smoke_trail",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/bolter/bolter_smoke_trail"
+				}
+			}
+		}
 	},
 	plasma_beam = {
 		keep_aligned = true,
@@ -383,10 +383,10 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/plasma_gun/plasma_beam_linger",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/plasma_gun/plasma_beam_linger"
+				}
+			}
+		}
 	},
 	arc_beam = {
 		keep_aligned = true,
@@ -398,21 +398,21 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/arc_rifle/arc_rifle_beamlinger",
+					vfx = "content/fx/particles/weapons/rifles/arc_rifle/arc_rifle_beamlinger"
 				},
 				{
 					emitter_type = "fill",
 					particle_length = 1,
-					vfx = "content/fx/particles/weapons/rifles/arc_rifle/arc_rifle_lightning",
+					vfx = "content/fx/particles/weapons/rifles/arc_rifle/arc_rifle_lightning"
 				},
 				{
 					emitter_type = "random",
 					end_offset_percentage = 9,
 					start_offset_percentage = 0,
-					vfx = "content/fx/particles/weapons/rifles/arc_rifle/arc_rifle_lightning",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/arc_rifle/arc_rifle_lightning"
+				}
+			}
+		}
 	},
 	phosphor_beam = {
 		keep_aligned = true,
@@ -422,16 +422,16 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/bolter/bolter_smoke_trail",
+					vfx = "content/fx/particles/weapons/rifles/bolter/bolter_smoke_trail"
 				},
 				{
 					emitter_type = "random",
 					end_offset_percentage = 0.1,
 					start_offset_percentage = 0,
-					vfx = "content/fx/particles/weapons/pistols/phosphorpistol/phosphor_pistol_shot_trail",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/pistols/phosphorpistol/phosphor_pistol_shot_trail"
+				}
+			}
+		}
 	},
 	galvanic_beam = {
 		keep_aligned = true,
@@ -441,16 +441,16 @@ local line_effects = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/bolter/bolter_smoke_trail",
+					vfx = "content/fx/particles/weapons/rifles/bolter/bolter_smoke_trail"
 				},
 				{
 					emitter_type = "random",
 					end_offset_percentage = 0.1,
 					start_offset_percentage = 0,
-					vfx = "content/fx/particles/weapons/rifles/galvanic/galvanic_rifle_shot_trail",
-				},
-			},
-		},
+					vfx = "content/fx/particles/weapons/rifles/galvanic/galvanic_rifle_shot_trail"
+				}
+			}
+		}
 	},
 	needle_trail = {
 		keep_aligned = true,
@@ -462,30 +462,30 @@ local line_effects = {
 			duration = 0.8,
 			early_stop_event_alias = "flyby_stop",
 			event_alias = "flyby",
-			husk_only = true,
+			husk_only = true
 		},
 		emitters = {
 			default = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail",
-				},
+					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail"
+				}
 			},
 			critical_strike = {
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail",
+					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail"
 				},
 				{
 					emitter_type = "fill",
 					particle_length = 5,
-					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail_3p",
-				},
-			},
-		},
-	},
+					vfx = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail_3p"
+				}
+			}
+		}
+	}
 }
 
 return line_effects

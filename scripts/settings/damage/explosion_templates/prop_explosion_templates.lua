@@ -20,15 +20,15 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/explosions/frag_grenade_01",
+			"content/fx/particles/explosions/frag_grenade_01"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_barrel_explosion",
-			"wwise/events/weapon/play_explosion_refl_gen",
-		},
+			"wwise/events/weapon/play_explosion_refl_gen"
+		}
 	},
 	decoy_landmine = {
 		close_damage_type = nil,
@@ -47,15 +47,15 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/explosions/frag_grenade_01",
+			"content/fx/particles/explosions/frag_grenade_01"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_barrel_explosion",
-			"wwise/events/weapon/play_explosion_refl_gen",
-		},
+			"wwise/events/weapon/play_explosion_refl_gen"
+		}
 	},
 	fire_barrel = {
 		close_radius = 0.5,
@@ -72,15 +72,15 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/destructibles/explosive_barrel_explosion",
+			"content/fx/particles/destructibles/explosive_barrel_explosion"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_barrel_flame",
-			"wwise/events/weapon/play_explosion_refl_small",
-		},
+			"wwise/events/weapon/play_explosion_refl_small"
+		}
 	},
 	breach_charge_explosion = {
 		close_radius = 2,
@@ -96,8 +96,8 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
-		},
+			"destructibles"
+		}
 	},
 	corruptor_emerge = {
 		close_radius = 2,
@@ -113,11 +113,11 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/enemies/corruptor/corruptor_core_erupt",
-		},
+			"content/fx/particles/enemies/corruptor/corruptor_core_erupt"
+		}
 	},
 	heresy_shield_1_explosion = {
 		close_radius = 2,
@@ -131,8 +131,8 @@ local explosion_templates = {
 		close_damage_profile = DamageProfileTemplates.corruptor_emerge_explosion,
 		damage_profile = DamageProfileTemplates.corruptor_emerge_explosion,
 		broadphase_explosion_filter = {
-			"heroes",
-		},
+			"heroes"
+		}
 	},
 	heresy_shield_2_explosion = {
 		close_radius = 2,
@@ -146,8 +146,8 @@ local explosion_templates = {
 		close_damage_profile = DamageProfileTemplates.corruptor_emerge_explosion,
 		damage_profile = DamageProfileTemplates.corruptor_emerge_explosion,
 		broadphase_explosion_filter = {
-			"heroes",
-		},
+			"heroes"
+		}
 	},
 	heresy_shield_3_explosion = {
 		close_radius = 2,
@@ -161,8 +161,8 @@ local explosion_templates = {
 		close_damage_profile = DamageProfileTemplates.corruptor_emerge_explosion,
 		damage_profile = DamageProfileTemplates.corruptor_emerge_explosion,
 		broadphase_explosion_filter = {
-			"heroes",
-		},
+			"heroes"
+		}
 	},
 	tank_wall_explosion = {
 		close_damage_type = nil,
@@ -180,9 +180,9 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
-		},
-	},
+			"destructibles"
+		}
+	}
 }
 
 return explosion_templates

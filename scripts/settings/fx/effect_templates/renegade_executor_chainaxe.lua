@@ -10,7 +10,7 @@ local START_SOUND_EVENT = "wwise/events/weapon/play_combat_weapon_chainaxe_chaos
 local STOP_SOUND_EVENT = "wwise/events/weapon/stop_combat_weapon_chainaxe_chaos"
 local resources = {
 	start_sound_event = START_SOUND_EVENT,
-	stop_sound_event = STOP_SOUND_EVENT,
+	stop_sound_event = STOP_SOUND_EVENT
 }
 local effect_template = {
 	name = "renegade_executor_chainaxe",
@@ -67,7 +67,7 @@ local effect_template = {
 
 		WwiseWorld.trigger_resource_event(wwise_world, STOP_SOUND_EVENT, source_id)
 		WwiseWorld.destroy_manual_source(wwise_world, source_id)
-	end,
+	end
 }
 
 return effect_template

@@ -9,17 +9,17 @@ local companion_hub_interactions_settings = {
 	interactions = {
 		{
 			animation_name = "interaction_01_sit",
-			duration = 12,
+			duration = 12
 		},
 		{
 			animation_name = "interaction_02_pet",
-			duration = 6,
+			duration = 6
 		},
 		{
 			animation_name = "interaction_03_pet",
-			duration = 10,
-		},
-	},
+			duration = 10
+		}
+	}
 }
 
 return settings("CompanionHubInteractionsSettings", companion_hub_interactions_settings)

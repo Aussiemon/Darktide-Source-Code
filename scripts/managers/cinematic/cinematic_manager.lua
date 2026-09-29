@@ -11,15 +11,15 @@ local CinematicManager = class("CinematicManager")
 local CINEMATIC_NAMES = CinematicSceneSettings.CINEMATIC_NAMES
 local CLIENT_RPCS = {
 	"rpc_cinematic_story_sync",
-	"rpc_cinematic_load_levels",
+	"rpc_cinematic_load_levels"
 }
 local SERVER_RPCS = {
-	"rpc_cinematic_loaded",
+	"rpc_cinematic_loaded"
 }
 local device_list = {
 	Keyboard,
 	Mouse,
-	Pad1,
+	Pad1
 }
 
 CinematicManager.init = function (self, world, is_server, network_event_delegate)
@@ -145,7 +145,10 @@ CinematicManager.hot_join_sync = function (self, sender, channel)
 	local intro_played = self:_mission_intro_played()
 
 	if intro_played then
-		RPC.rpc_cinematic_intro_played(channel)
+		local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
+		local scene_unit_origin_level_id, scene_unit_destination_level_id = cinematic_scene_system:intro_played_unit_ids()
+
+		RPC.rpc_cinematic_intro_played(channel, scene_unit_origin_level_id, scene_unit_destination_level_id)
 	end
 
 	if self._active_story then
@@ -171,9 +174,8 @@ CinematicManager._mission_intro_played = function (self)
 	end
 
 	local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
-	local intro_played = cinematic_scene_system:intro_played()
 
-	return intro_played
+	return cinematic_scene_system:intro_played()
 end
 
 CinematicManager.update = function (self, dt, t)
@@ -292,9 +294,9 @@ CinematicManager.update = function (self, dt, t)
 
 									self:_play_next_in_queue()
 									Vo.stop_all_currently_playing_vo()
-								end),
-							},
-						},
+								end)
+							}
+						}
 					}
 
 					Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -650,7 +652,7 @@ CinematicManager.load_levels = function (self, cinematic_name, level_names, on_l
 	local loader_context = {
 		cinematic_name = cinematic_name,
 		level_names = level_names,
-		callback = on_levels_loaded,
+		callback = on_levels_loaded
 	}
 
 	self._cinematic_level_loader:start_loading(loader_context)
@@ -868,7 +870,19 @@ CinematicManager.rpc_cinematic_loaded = function (self, channel_id)
 	end
 end
 
+CinematicManager.active_story_name = function (self)
+	if self._active_story then
+		local story_name = self._active_story.name
+
+		return story_name
+	end
+end
+
 CinematicManager.mission_intro_played = function (self)
+	if self:is_loading_cinematic_levels() then
+		return false
+	end
+
 	return self:_mission_intro_played()
 end
 

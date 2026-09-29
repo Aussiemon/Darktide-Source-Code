@@ -26,6 +26,8 @@ dialogue_breed_settings.voice_classes_2d = {
 	"commissar",
 	"adamant_officer",
 	"tank_commander",
+	"armourer",
+	"ragged_king"
 }
 dialogue_breed_settings.voice_classes_npc = dialogue_breed_settings.voice_classes_2d
 dialogue_breed_settings.chaos_hound = {
@@ -37,7 +39,7 @@ dialogue_breed_settings.chaos_hound = {
 	vo_class_name = "chaos_hound",
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = nil,
-	wwise_voices = nil,
+	wwise_voices = nil
 }
 dialogue_breed_settings.chaos_hound_mutator = table.clone(dialogue_breed_settings.chaos_hound)
 dialogue_breed_settings.chaos_armored_hound = table.clone(dialogue_breed_settings.chaos_hound)
@@ -50,7 +52,7 @@ dialogue_breed_settings.chaos_plague_ogryn = {
 	vo_class_name = "chaos_plague_ogryn",
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = nil,
-	wwise_voices = nil,
+	wwise_voices = nil
 }
 dialogue_breed_settings.chaos_beast_of_nurgle = {
 	dialogue_memory_faction_name = "enemy",
@@ -61,7 +63,7 @@ dialogue_breed_settings.chaos_beast_of_nurgle = {
 	vo_class_name = "chaos_beast_of_nurgle",
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = nil,
-	wwise_voices = nil,
+	wwise_voices = nil
 }
 dialogue_breed_settings.chaos_poxwalker = {
 	dialogue_memory_faction_name = "enemy",
@@ -72,7 +74,7 @@ dialogue_breed_settings.chaos_poxwalker = {
 	vo_class_name = "chaos_poxwalker",
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = nil,
-	wwise_voices = nil,
+	wwise_voices = nil
 }
 dialogue_breed_settings.chaos_mutated_poxwalker = {
 	dialogue_memory_faction_name = "enemy",
@@ -83,7 +85,7 @@ dialogue_breed_settings.chaos_mutated_poxwalker = {
 	vo_class_name = "chaos_poxwalker",
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = nil,
-	wwise_voices = nil,
+	wwise_voices = nil
 }
 dialogue_breed_settings.chaos_lesser_mutated_poxwalker = {
 	dialogue_memory_faction_name = "enemy",
@@ -94,7 +96,7 @@ dialogue_breed_settings.chaos_lesser_mutated_poxwalker = {
 	vo_class_name = "chaos_poxwalker",
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = nil,
-	wwise_voices = nil,
+	wwise_voices = nil
 }
 dialogue_breed_settings.voice_preview = {
 	dialogue_memory_faction_name = "npc",
@@ -107,8 +109,8 @@ dialogue_breed_settings.voice_preview = {
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = nil,
 	wwise_voices = {
-		"voice_preview",
-	},
+		"voice_preview"
+	}
 }
 dialogue_breed_settings.chaos_poxwalker_bomber = {
 	dialogue_memory_faction_name = "enemy",
@@ -119,7 +121,7 @@ dialogue_breed_settings.chaos_poxwalker_bomber = {
 	vo_class_name = "chaos_poxwalker_bomber",
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = nil,
-	wwise_voices = nil,
+	wwise_voices = nil
 }
 dialogue_breed_settings.chaos_newly_infected = {
 	dialogue_memory_faction_name = "enemy",
@@ -135,8 +137,8 @@ dialogue_breed_settings.chaos_newly_infected = {
 		"enemy_chaos_newly_infected_male_f",
 		"enemy_chaos_newly_infected_male_g",
 		"enemy_chaos_newly_infected_male_h",
-		"enemy_chaos_newly_infected_male_i",
-	},
+		"enemy_chaos_newly_infected_male_i"
+	}
 }
 dialogue_breed_settings.chaos_armored_infected = {
 	dialogue_memory_faction_name = "enemy",
@@ -155,8 +157,8 @@ dialogue_breed_settings.chaos_armored_infected = {
 		"enemy_chaos_newly_infected_male_f",
 		"enemy_chaos_newly_infected_male_g",
 		"enemy_chaos_newly_infected_male_h",
-		"enemy_chaos_newly_infected_male_i",
-	},
+		"enemy_chaos_newly_infected_male_i"
+	}
 }
 dialogue_breed_settings.chaos_daemonhost = {
 	dialogue_memory_faction_name = "enemy",
@@ -168,9 +170,10 @@ dialogue_breed_settings.chaos_daemonhost = {
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = "switch_voice_enemy_chaos_daemonhost",
 	wwise_voices = {
-		"enemy_daemonhost_a",
-	},
+		"enemy_daemonhost_a"
+	}
 }
+dialogue_breed_settings.chaos_daemonhost_torment = table.clone(dialogue_breed_settings.chaos_daemonhost)
 dialogue_breed_settings.chaos_mutator_daemonhost = {
 	dialogue_memory_faction_name = "enemy",
 	has_dialogue_extension = true,
@@ -181,8 +184,8 @@ dialogue_breed_settings.chaos_mutator_daemonhost = {
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = "switch_voice_enemy_chaos_daemonhost",
 	wwise_voices = {
-		"enemy_daemonhost_a",
-	},
+		"enemy_daemonhost_a"
+	}
 }
 dialogue_breed_settings.chaos_spawn = {
 	dialogue_memory_faction_name = "enemy",
@@ -193,7 +196,7 @@ dialogue_breed_settings.chaos_spawn = {
 	vo_class_name = "chaos_spawn",
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = nil,
-	wwise_voices = nil,
+	wwise_voices = nil
 }
 
 local function _generate_player_settings(wwise_voices, vo_class_name)
@@ -206,7 +209,7 @@ local function _generate_player_settings(wwise_voices, vo_class_name)
 		vo_triggers_enemy_kill_query = false,
 		wwise_voice_switch_group = "voice_profile",
 		wwise_voices = wwise_voices,
-		vo_class_name = vo_class_name,
+		vo_class_name = vo_class_name
 	}
 
 	return settings
@@ -250,21 +253,21 @@ local HUMAN_WWISE_VOICES = {
 	"zealot_female_c",
 	"zealot_male_a",
 	"zealot_male_b",
-	"zealot_male_c",
+	"zealot_male_c"
 }
 
 dialogue_breed_settings.cryptic = _generate_player_settings({
 	"cryptic_a",
 	"cryptic_b",
 	"cryptic_c",
-	"cryptic_d",
+	"cryptic_d"
 }, "veteran")
 dialogue_breed_settings.human = _generate_player_settings(HUMAN_WWISE_VOICES, "veteran")
 dialogue_breed_settings.ogryn = _generate_player_settings({
 	"ogryn_a",
 	"ogryn_b",
 	"ogryn_c",
-	"ogryn_d",
+	"ogryn_d"
 }, "ogryn")
 dialogue_breed_settings.mission_giver = {
 	dialogue_memory_faction_name = "mission_giver",
@@ -286,6 +289,7 @@ dialogue_breed_settings.mission_giver = {
 		"purser_a",
 		"contract_vendor_a",
 		"shipmistress_a",
+		"shipmistress_s",
 		"enemy_nemesis_wolfer_a",
 		"enemy_ritualist_a",
 		"enemy_wolfer_adjutant_a",
@@ -300,8 +304,10 @@ dialogue_breed_settings.mission_giver = {
 		"enginseer_a",
 		"barber_a",
 		"boon_vendor_a",
+		"boon_vendor_s",
 		"tertium_noble_a",
 		"tertium_noble_b",
+		"tertium_noble_male_s",
 		"travelling_salesman_a",
 		"travelling_salesman_b",
 		"travelling_salesman_c",
@@ -310,7 +316,11 @@ dialogue_breed_settings.mission_giver = {
 		"adamant_officer_a",
 		"traitor_gunner_a",
 		"tank_commander_a",
-	},
+		"armourer_a",
+		"armourer_b",
+		"ragged_king_a",
+		"ragged_king_b"
+	}
 }
 dialogue_breed_settings.sergeant = {
 	dialogue_memory_faction_name = "npc",
@@ -325,8 +335,8 @@ dialogue_breed_settings.sergeant = {
 	wwise_voices = {
 		"sergeant_a",
 		"sergeant_b",
-		"sergeant_c",
-	},
+		"sergeant_c"
+	}
 }
 dialogue_breed_settings.explicator = {
 	dialogue_memory_faction_name = "npc",
@@ -340,8 +350,23 @@ dialogue_breed_settings.explicator = {
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
-		"explicator_a",
-	},
+		"explicator_a"
+	}
+}
+dialogue_breed_settings.fx = {
+	dialogue_memory_faction_name = "npc",
+	has_dialogue_extension = true,
+	is_network_synced = true,
+	level_requirement = 0,
+	prop_name = "voice_over_2d",
+	trigger_heard_vo = false,
+	trigger_seen_vo = false,
+	vo_class_name = "fx",
+	vo_triggers_enemy_kill_query = false,
+	wwise_voice_switch_group = "voice_profile",
+	wwise_voices = {
+		"fx"
+	}
 }
 dialogue_breed_settings.pilot = {
 	dialogue_memory_faction_name = "npc",
@@ -354,8 +379,8 @@ dialogue_breed_settings.pilot = {
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
-		"pilot_a",
-	},
+		"pilot_a"
+	}
 }
 dialogue_breed_settings.tech_priest = {
 	dialogue_memory_faction_name = "npc",
@@ -370,7 +395,7 @@ dialogue_breed_settings.tech_priest = {
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
 		"tech_priest_a",
-		"tech_priest_b",
+		"tech_priest_b"
 	},
 	opinion_settings = {
 		adamant_female_a = "dislikes_character",
@@ -410,8 +435,8 @@ dialogue_breed_settings.tech_priest = {
 		zealot_female_c = "dislikes_character",
 		zealot_male_a = "dislikes_character",
 		zealot_male_b = "dislikes_character",
-		zealot_male_c = "dislikes_character",
-	},
+		zealot_male_c = "dislikes_character"
+	}
 }
 dialogue_breed_settings.enginseer = {
 	dialogue_memory_faction_name = "npc",
@@ -424,8 +449,8 @@ dialogue_breed_settings.enginseer = {
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
-		"enginseer_a",
-	},
+		"enginseer_a"
+	}
 }
 dialogue_breed_settings.purser = {
 	dialogue_memory_faction_name = "npc",
@@ -439,7 +464,7 @@ dialogue_breed_settings.purser = {
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
-		"purser_a",
+		"purser_a"
 	},
 	opinion_settings = {
 		adamant_female_a = "likes_character",
@@ -479,8 +504,8 @@ dialogue_breed_settings.purser = {
 		zealot_female_c = "likes_character",
 		zealot_male_a = "likes_character",
 		zealot_male_b = "likes_character",
-		zealot_male_c = "likes_character",
-	},
+		zealot_male_c = "likes_character"
+	}
 }
 dialogue_breed_settings.interrogator = {
 	dialogue_memory_faction_name = "npc",
@@ -493,8 +518,8 @@ dialogue_breed_settings.interrogator = {
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
-		"interrogator_a",
-	},
+		"interrogator_a"
+	}
 }
 dialogue_breed_settings.shipmistress = {
 	dialogue_memory_faction_name = "npc",
@@ -508,7 +533,8 @@ dialogue_breed_settings.shipmistress = {
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
 		"shipmistress_a",
-	},
+		"shipmistress_s"
+	}
 }
 dialogue_breed_settings.boon_vendor = {
 	dialogue_memory_faction_name = "npc",
@@ -522,6 +548,7 @@ dialogue_breed_settings.boon_vendor = {
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
 		"boon_vendor_a",
+		"boon_vendor_s"
 	},
 	opinion_settings = {
 		adamant_female_a = "likes_character",
@@ -561,8 +588,8 @@ dialogue_breed_settings.boon_vendor = {
 		zealot_female_c = "likes_character",
 		zealot_male_a = "likes_character",
 		zealot_male_b = "likes_character",
-		zealot_male_c = "likes_character",
-	},
+		zealot_male_c = "likes_character"
+	}
 }
 dialogue_breed_settings.tertium_noble = {
 	dialogue_memory_faction_name = "npc",
@@ -577,7 +604,8 @@ dialogue_breed_settings.tertium_noble = {
 	wwise_voices = {
 		"tertium_noble_a",
 		"tertium_noble_b",
-	},
+		"tertium_noble_male_s"
+	}
 }
 dialogue_breed_settings.enemy_nemesis_wolfer = {
 	dialogue_memory_faction_name = "npc",
@@ -590,8 +618,8 @@ dialogue_breed_settings.enemy_nemesis_wolfer = {
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
-		"enemy_nemesis_wolfer_a",
-	},
+		"enemy_nemesis_wolfer_a"
+	}
 }
 dialogue_breed_settings.enemy_wolfer_adjutant = {
 	dialogue_memory_faction_name = "npc",
@@ -609,8 +637,8 @@ dialogue_breed_settings.enemy_wolfer_adjutant = {
 		"enemy_wolfer_adjutant_c",
 		"enemy_wolfer_adjutant_d",
 		"enemy_wolfer_adjutant_e",
-		"traitor_gunner_a",
-	},
+		"traitor_gunner_a"
+	}
 }
 dialogue_breed_settings.dreg_lector = {
 	dialogue_memory_faction_name = "npc",
@@ -623,8 +651,8 @@ dialogue_breed_settings.dreg_lector = {
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
-		"dreg_lector_a",
-	},
+		"dreg_lector_a"
+	}
 }
 dialogue_breed_settings.dreg_report = {
 	dialogue_memory_faction_name = "npc",
@@ -637,8 +665,8 @@ dialogue_breed_settings.dreg_report = {
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
-		"dreg_report_a",
-	},
+		"dreg_report_a"
+	}
 }
 dialogue_breed_settings.enemy_ritualist = {
 	dialogue_memory_faction_name = "npc",
@@ -651,8 +679,8 @@ dialogue_breed_settings.enemy_ritualist = {
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
-		"enemy_ritualist_a",
-	},
+		"enemy_ritualist_a"
+	}
 }
 dialogue_breed_settings.confessional = {
 	dialogue_memory_faction_name = "npc",
@@ -664,8 +692,8 @@ dialogue_breed_settings.confessional = {
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
-		"confessional_a",
-	},
+		"confessional_a"
+	}
 }
 dialogue_breed_settings.vocator = {
 	dialogue_memory_faction_name = "npc",
@@ -683,15 +711,15 @@ dialogue_breed_settings.vocator = {
 		"mourningstar_confessor_a",
 		"mourningstar_wing_commander_a",
 		"shipmistress_a",
-		"sergeant_a",
+		"sergeant_a"
 	},
 	random_talk_settings = {
 		enabled = true,
 		mission_update_enabled = false,
 		random_talk_start_delay_t = 131,
 		random_talk_tick_time_t = 67,
-		trigger_id = "random_talk",
-	},
+		trigger_id = "random_talk"
+	}
 }
 dialogue_breed_settings.mourningstar_servitor = {
 	dialogue_memory_faction_name = "npc",
@@ -707,15 +735,15 @@ dialogue_breed_settings.mourningstar_servitor = {
 		"mourningstar_servitor_a",
 		"mourningstar_servitor_b",
 		"mourningstar_servitor_c",
-		"mourningstar_servitor_d",
+		"mourningstar_servitor_d"
 	},
 	random_talk_settings = {
 		enabled = true,
 		mission_update_enabled = true,
 		random_talk_start_delay_t = 131,
 		random_talk_tick_time_t = 67,
-		trigger_id = "random_talk",
-	},
+		trigger_id = "random_talk"
+	}
 }
 dialogue_breed_settings.renegade_assault = {
 	dialogue_memory_faction_name = "enemy",
@@ -728,8 +756,8 @@ dialogue_breed_settings.renegade_assault = {
 	wwise_voice_switch_group = "switch_voice_enemy_traitor_guard_smg_rusher",
 	wwise_voices = {
 		"enemy_traitor_guard_smg_rusher_a",
-		"enemy_traitor_guard_smg_rusher_b",
-	},
+		"enemy_traitor_guard_smg_rusher_b"
+	}
 }
 dialogue_breed_settings.renegade_executor = {
 	dialogue_memory_faction_name = "enemy",
@@ -742,8 +770,8 @@ dialogue_breed_settings.renegade_executor = {
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = "switch_voice_enemy_traitor_enforcer_executor",
 	wwise_voices = {
-		"enemy_traitor_enforcer_executor_a",
-	},
+		"enemy_traitor_enforcer_executor_a"
+	}
 }
 dialogue_breed_settings.renegade_grenadier = {
 	dialogue_memory_faction_name = "enemy",
@@ -756,8 +784,20 @@ dialogue_breed_settings.renegade_grenadier = {
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = "switch_voice_enemy_traitor_grenadier",
 	wwise_voices = {
-		"enemy_grenadier_a",
-	},
+		"enemy_grenadier_a"
+	}
+}
+dialogue_breed_settings.renegade_wizard = {
+	dialogue_memory_faction_name = "enemy",
+	has_dialogue_extension = true,
+	is_network_synced = false,
+	trigger_heard_vo = false,
+	trigger_seen_vo = false,
+	vo_class_name = "psyker_boss",
+	wwise_voice_switch_group = "switch_voice_enemy_captain",
+	wwise_voices = {
+		"psyker_boss_a"
+	}
 }
 dialogue_breed_settings.renegade_gunner = {
 	dialogue_memory_faction_name = "enemy",
@@ -769,8 +809,8 @@ dialogue_breed_settings.renegade_gunner = {
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = "switch_voice_enemy_traitor_gunner",
 	wwise_voices = {
-		"enemy_traitor_gunner_a",
-	},
+		"enemy_traitor_gunner_a"
+	}
 }
 dialogue_breed_settings.renegade_radio_operator = {
 	dialogue_memory_faction_name = "enemy",
@@ -782,8 +822,8 @@ dialogue_breed_settings.renegade_radio_operator = {
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = "switch_voice_enemy_traitor_gunner",
 	wwise_voices = {
-		"enemy_traitor_gunner_a",
-	},
+		"enemy_traitor_gunner_a"
+	}
 }
 dialogue_breed_settings.renegade_melee = {
 	dialogue_memory_faction_name = "enemy",
@@ -796,8 +836,8 @@ dialogue_breed_settings.renegade_melee = {
 	wwise_voice_switch_group = "switch_voice_enemy_traitor_trenchfighter",
 	wwise_voices = {
 		"enemy_traitor_trenchfighter_a",
-		"enemy_traitor_trenchfighter_b",
-	},
+		"enemy_traitor_trenchfighter_b"
+	}
 }
 dialogue_breed_settings.renegade_vanguard = table.clone(dialogue_breed_settings.renegade_melee)
 dialogue_breed_settings.chaos_ogryn_executor = {
@@ -812,8 +852,8 @@ dialogue_breed_settings.chaos_ogryn_executor = {
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = "switch_voice_enemy_chaos_ogryn_armoured_executor",
 	wwise_voices = {
-		"enemy_chaos_ogryn_armoured_executor_a",
-	},
+		"enemy_chaos_ogryn_armoured_executor_a"
+	}
 }
 dialogue_breed_settings.chaos_ogryn_houndmaster = {
 	dialogue_memory_faction_name = "enemy",
@@ -827,8 +867,8 @@ dialogue_breed_settings.chaos_ogryn_houndmaster = {
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = "switch_voice_enemy_chaos_ogryn_houndmaster",
 	wwise_voices = {
-		"enemy_hound_master_a",
-	},
+		"enemy_hound_master_a"
+	}
 }
 dialogue_breed_settings.chaos_ogryn_bulwark = {
 	dialogue_memory_faction_name = "enemy",
@@ -840,8 +880,8 @@ dialogue_breed_settings.chaos_ogryn_bulwark = {
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = "enemy_voice_profile",
 	wwise_voices = {
-		"enemy_chaos_ogryn_bulwark_a",
-	},
+		"enemy_chaos_ogryn_bulwark_a"
+	}
 }
 dialogue_breed_settings.chaos_ogryn_gunner = {
 	dialogue_memory_faction_name = "enemy",
@@ -853,8 +893,8 @@ dialogue_breed_settings.chaos_ogryn_gunner = {
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = "enemy_voice_profile",
 	wwise_voices = {
-		"enemy_chaos_ogryn_heavy_gunner_a",
-	},
+		"enemy_chaos_ogryn_heavy_gunner_a"
+	}
 }
 dialogue_breed_settings.renegade_captain = {
 	dialogue_memory_faction_name = "enemy",
@@ -872,11 +912,11 @@ dialogue_breed_settings.renegade_captain = {
 		"enemy_captain_maniac_a",
 		"enemy_captain_brute_a",
 		"enemy_captain_sadist_b",
-		"enemy_captain_spiritual_b",
+		"enemy_captain_spiritual_b"
 	},
 	vo_events = {
-		event_trickle_wave_spawned = "reinforcements",
-	},
+		event_trickle_wave_spawned = "reinforcements"
+	}
 }
 dialogue_breed_settings.cultist_captain = {
 	dialogue_memory_faction_name = "enemy",
@@ -892,11 +932,11 @@ dialogue_breed_settings.cultist_captain = {
 	wwise_voices = {
 		"enemy_champion_infested_a",
 		"enemy_champion_brute_a",
-		"enemy_champion_preacher_a",
+		"enemy_champion_preacher_a"
 	},
 	vo_events = {
-		event_trickle_wave_spawned = "reinforcements",
-	},
+		event_trickle_wave_spawned = "reinforcements"
+	}
 }
 dialogue_breed_settings.renegade_twin_captain = {
 	dialogue_memory_faction_name = "enemy",
@@ -911,11 +951,11 @@ dialogue_breed_settings.renegade_twin_captain = {
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = "switch_voice_enemy_captain",
 	wwise_voices = {
-		"captain_twin_male_a",
+		"captain_twin_male_a"
 	},
 	vo_events = {
-		event_trickle_wave_spawned = "reinforcements",
-	},
+		event_trickle_wave_spawned = "reinforcements"
+	}
 }
 dialogue_breed_settings.renegade_twin_captain_two = {
 	dialogue_memory_faction_name = "enemy",
@@ -930,11 +970,11 @@ dialogue_breed_settings.renegade_twin_captain_two = {
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = "switch_voice_enemy_captain",
 	wwise_voices = {
-		"captain_twin_female_a",
+		"captain_twin_female_a"
 	},
 	vo_events = {
-		event_trickle_wave_spawned = "reinforcements",
-	},
+		event_trickle_wave_spawned = "reinforcements"
+	}
 }
 dialogue_breed_settings.renegade_rifleman = {
 	dialogue_memory_faction_name = "enemy",
@@ -949,8 +989,8 @@ dialogue_breed_settings.renegade_rifleman = {
 		"enemy_traitor_guard_rifleman_male_a",
 		"enemy_traitor_guard_rifleman_male_b",
 		"enemy_traitor_guard_rifleman_female_a",
-		"enemy_traitor_guard_rifleman_female_b",
-	},
+		"enemy_traitor_guard_rifleman_female_b"
+	}
 }
 dialogue_breed_settings.renegade_netgunner = {
 	dialogue_memory_faction_name = "enemy",
@@ -963,8 +1003,8 @@ dialogue_breed_settings.renegade_netgunner = {
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = "switch_voice_enemy_traitor_netgunner",
 	wwise_voices = {
-		"enemy_traitor_netgunner_a",
-	},
+		"enemy_traitor_netgunner_a"
+	}
 }
 dialogue_breed_settings.renegade_sniper = {
 	dialogue_memory_faction_name = "enemy",
@@ -976,8 +1016,8 @@ dialogue_breed_settings.renegade_sniper = {
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = "switch_voice_enemy_traitor_sniper",
 	wwise_voices = {
-		"enemy_traitor_guard_sniper_a",
-	},
+		"enemy_traitor_guard_sniper_a"
+	}
 }
 dialogue_breed_settings.renegade_shocktrooper = {
 	dialogue_memory_faction_name = "enemy",
@@ -989,8 +1029,8 @@ dialogue_breed_settings.renegade_shocktrooper = {
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = "switch_voice_enemy_traitor_shocktrooper",
 	wwise_voices = {
-		"enemy_traitor_scout_shocktrooper_a",
-	},
+		"enemy_traitor_scout_shocktrooper_a"
+	}
 }
 dialogue_breed_settings.renegade_plasma_gunner = {
 	dialogue_memory_faction_name = "enemy",
@@ -1002,8 +1042,8 @@ dialogue_breed_settings.renegade_plasma_gunner = {
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = "switch_voice_enemy_traitor_plasma_gunner",
 	wwise_voices = {
-		"enemy_plasma_gunner_a",
-	},
+		"enemy_plasma_gunner_a"
+	}
 }
 dialogue_breed_settings.renegade_flamer = {
 	dialogue_memory_faction_name = "enemy",
@@ -1016,8 +1056,8 @@ dialogue_breed_settings.renegade_flamer = {
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = "switch_voice_enemy_traitor_flamer",
 	wwise_voices = {
-		"enemy_traitor_guard_flamer_a",
-	},
+		"enemy_traitor_guard_flamer_a"
+	}
 }
 dialogue_breed_settings.renegade_flamer_mutator = {
 	dialogue_memory_faction_name = "enemy",
@@ -1033,8 +1073,8 @@ dialogue_breed_settings.renegade_flamer_mutator = {
 		"enemy_traitor_guard_flamer_a",
 		"enemy_traitor_guard_flamer_mutator_b",
 		"enemy_traitor_guard_flamer_mutator_c",
-		"enemy_traitor_guard_flamer_mutator_d",
-	},
+		"enemy_traitor_guard_flamer_mutator_d"
+	}
 }
 dialogue_breed_settings.unknown_breed_name = {
 	dialogue_memory_faction_name = nil,
@@ -1045,7 +1085,7 @@ dialogue_breed_settings.unknown_breed_name = {
 	vo_class_name = "unknown",
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = nil,
-	wwise_voices = nil,
+	wwise_voices = nil
 }
 dialogue_breed_settings.cultist_shocktrooper = {
 	dialogue_memory_faction_name = "enemy",
@@ -1057,8 +1097,8 @@ dialogue_breed_settings.cultist_shocktrooper = {
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = "switch_voice_enemy_cultist_shocktrooper",
 	wwise_voices = {
-		"enemy_cultist_shocktrooper_a",
-	},
+		"enemy_cultist_shocktrooper_a"
+	}
 }
 dialogue_breed_settings.cultist_melee = {
 	dialogue_memory_faction_name = "enemy",
@@ -1072,8 +1112,8 @@ dialogue_breed_settings.cultist_melee = {
 	wwise_voices = {
 		"enemy_cultist_melee_fighter_a",
 		"enemy_cultist_melee_fighter_b",
-		"enemy_cultist_melee_fighter_c",
-	},
+		"enemy_cultist_melee_fighter_c"
+	}
 }
 dialogue_breed_settings.cultist_vanguard = table.clone(dialogue_breed_settings.cultist_melee)
 dialogue_breed_settings.cultist_ritualist = table.clone(dialogue_breed_settings.cultist_melee)
@@ -1089,8 +1129,8 @@ dialogue_breed_settings.cultist_assault = {
 	wwise_voice_switch_group = "switch_voice_enemy_cultist_rusher",
 	wwise_voices = {
 		"enemy_cultist_rusher_male_a",
-		"enemy_cultist_rusher_male_b",
-	},
+		"enemy_cultist_rusher_male_b"
+	}
 }
 dialogue_breed_settings.cultist_gunner = {
 	dialogue_memory_faction_name = "enemy",
@@ -1102,8 +1142,8 @@ dialogue_breed_settings.cultist_gunner = {
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = "switch_enemy_cultist_gunner",
 	wwise_voices = {
-		"enemy_cultist_gunner_a",
-	},
+		"enemy_cultist_gunner_a"
+	}
 }
 dialogue_breed_settings.cultist_grenadier = {
 	dialogue_memory_faction_name = "enemy",
@@ -1117,8 +1157,8 @@ dialogue_breed_settings.cultist_grenadier = {
 	wwise_voice_switch_group = "switch_voice_enemy_cultist_grenadier",
 	wwise_voices = {
 		"enemy_cultist_grenadier_a",
-		"enemy_cultist_grenadier_b",
-	},
+		"enemy_cultist_grenadier_b"
+	}
 }
 dialogue_breed_settings.cultist_flamer = {
 	dialogue_memory_faction_name = "enemy",
@@ -1131,8 +1171,8 @@ dialogue_breed_settings.cultist_flamer = {
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = "switch_voice_enemy_cultist_flamer",
 	wwise_voices = {
-		"enemy_cultist_flamer_a",
-	},
+		"enemy_cultist_flamer_a"
+	}
 }
 dialogue_breed_settings.cultist_mutant = {
 	dialogue_memory_faction_name = "enemy",
@@ -1143,7 +1183,7 @@ dialogue_breed_settings.cultist_mutant = {
 	vo_class_name = "cultist_mutant",
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = "enemy_voice_profile",
-	wwise_voices = nil,
+	wwise_voices = nil
 }
 dialogue_breed_settings.cultist_mutant_mutator = table.clone(dialogue_breed_settings.cultist_mutant)
 dialogue_breed_settings.cultist_berzerker = {
@@ -1157,8 +1197,8 @@ dialogue_breed_settings.cultist_berzerker = {
 	wwise_voice_switch_group = "switch_voice_enemy_cultist_berzerker",
 	wwise_voices = {
 		"enemy_cultist_berzerker_a",
-		"enemy_cultist_berzerker_b",
-	},
+		"enemy_cultist_berzerker_b"
+	}
 }
 dialogue_breed_settings.renegade_berzerker = {
 	dialogue_memory_faction_name = "enemy",
@@ -1171,8 +1211,8 @@ dialogue_breed_settings.renegade_berzerker = {
 	wwise_voice_switch_group = "switch_voice_enemy_traitor_berzerker",
 	wwise_voices = {
 		"enemy_traitor_berzerker_a",
-		"enemy_traitor_berzerker_b",
-	},
+		"enemy_traitor_berzerker_b"
+	}
 }
 dialogue_breed_settings.contract_vendor = {
 	dialogue_memory_faction_name = "npc",
@@ -1186,7 +1226,7 @@ dialogue_breed_settings.contract_vendor = {
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
-		"contract_vendor_a",
+		"contract_vendor_a"
 	},
 	opinion_settings = {
 		adamant_female_a = "likes_character",
@@ -1226,8 +1266,8 @@ dialogue_breed_settings.contract_vendor = {
 		zealot_female_c = "dislikes_character",
 		zealot_male_a = "likes_character",
 		zealot_male_b = "dislikes_character",
-		zealot_male_c = "dislikes_character",
-	},
+		zealot_male_c = "dislikes_character"
+	}
 }
 dialogue_breed_settings.credit_store_servitor = {
 	dialogue_memory_faction_name = "npc",
@@ -1242,8 +1282,8 @@ dialogue_breed_settings.credit_store_servitor = {
 	wwise_voices = {
 		"credit_store_servitor_a",
 		"credit_store_servitor_b",
-		"credit_store_servitor_c",
-	},
+		"credit_store_servitor_c"
+	}
 }
 dialogue_breed_settings.tank_commander = {
 	dialogue_memory_faction_name = "npc",
@@ -1256,8 +1296,38 @@ dialogue_breed_settings.tank_commander = {
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
-		"tank_commander_a",
-	},
+		"tank_commander_a"
+	}
+}
+dialogue_breed_settings.armourer = {
+	dialogue_memory_faction_name = "npc",
+	has_dialogue_extension = true,
+	is_network_synced = true,
+	prop_name = "voice_over_2d",
+	trigger_heard_vo = false,
+	trigger_seen_vo = false,
+	vo_class_name = "armourer",
+	vo_triggers_enemy_kill_query = false,
+	wwise_voice_switch_group = "voice_profile",
+	wwise_voices = {
+		"armourer_a",
+		"armourer_b"
+	}
+}
+dialogue_breed_settings.ragged_king = {
+	dialogue_memory_faction_name = "npc",
+	has_dialogue_extension = true,
+	is_network_synced = true,
+	prop_name = "voice_over_2d",
+	trigger_heard_vo = false,
+	trigger_seen_vo = false,
+	vo_class_name = "ragged_king",
+	vo_triggers_enemy_kill_query = false,
+	wwise_voice_switch_group = "voice_profile",
+	wwise_voices = {
+		"ragged_king_a",
+		"ragged_king_b"
+	}
 }
 dialogue_breed_settings.training_ground_psyker = {
 	dialogue_memory_faction_name = "npc",
@@ -1271,7 +1341,7 @@ dialogue_breed_settings.training_ground_psyker = {
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
-		"training_ground_psyker_a",
+		"training_ground_psyker_a"
 	},
 	opinion_settings = {
 		adamant_female_a = "dislikes_character",
@@ -1311,8 +1381,8 @@ dialogue_breed_settings.training_ground_psyker = {
 		zealot_female_c = "likes_character",
 		zealot_male_a = "dislikes_character",
 		zealot_male_b = "dislikes_character",
-		zealot_male_c = "likes_character",
-	},
+		zealot_male_c = "likes_character"
+	}
 }
 dialogue_breed_settings.medicae_servitor = {
 	dialogue_memory_faction_name = "npc",
@@ -1325,8 +1395,8 @@ dialogue_breed_settings.medicae_servitor = {
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
 		"medicae_servitor_a",
-		"medicae_servitor_b",
-	},
+		"medicae_servitor_b"
+	}
 }
 dialogue_breed_settings.archive_servitor = {
 	dialogue_memory_faction_name = "npc",
@@ -1338,8 +1408,8 @@ dialogue_breed_settings.archive_servitor = {
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
-		"archive_servitor_a",
-	},
+		"archive_servitor_a"
+	}
 }
 dialogue_breed_settings.mourningstar_soldier = {
 	dialogue_memory_faction_name = "npc",
@@ -1369,8 +1439,24 @@ dialogue_breed_settings.mourningstar_soldier = {
 		"steelhead_c",
 		"steelhead_d",
 		"steelhead_e",
-		"steelhead_f",
-	},
+		"steelhead_f"
+	}
+}
+dialogue_breed_settings.cartel = {
+	dialogue_memory_faction_name = "npc",
+	has_dialogue_extension = true,
+	is_network_synced = true,
+	trigger_heard_vo = false,
+	trigger_seen_vo = false,
+	vo_class_name = "cartel",
+	vo_triggers_enemy_kill_query = false,
+	wwise_voice_switch_group = "voice_profile",
+	wwise_voices = {
+		"cartel_female_a",
+		"cartel_female_b",
+		"cartel_male_a",
+		"cartel_male_b"
+	}
 }
 dialogue_breed_settings.barber = {
 	dialogue_memory_faction_name = "npc",
@@ -1384,8 +1470,8 @@ dialogue_breed_settings.barber = {
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
-		"barber_a",
-	},
+		"barber_a"
+	}
 }
 dialogue_breed_settings.reject_npc = {
 	dialogue_memory_faction_name = "npc",
@@ -1399,8 +1485,8 @@ dialogue_breed_settings.reject_npc = {
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
 		"reject_npc_a",
-		"reject_npc_servitor_a",
-	},
+		"reject_npc_servitor_a"
+	}
 }
 dialogue_breed_settings.mourningstar_hadron_servitor = {
 	dialogue_memory_faction_name = "npc",
@@ -1412,8 +1498,8 @@ dialogue_breed_settings.mourningstar_hadron_servitor = {
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
-		"mourningstar_hadron_servitor_a",
-	},
+		"mourningstar_hadron_servitor_a"
+	}
 }
 dialogue_breed_settings.warp_echo = {
 	dialogue_memory_faction_name = "npc",
@@ -1427,8 +1513,8 @@ dialogue_breed_settings.warp_echo = {
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
 		"warp_echo_moebian_a",
-		"warp_echo_moebian_b",
-	},
+		"warp_echo_moebian_b"
+	}
 }
 dialogue_breed_settings.past = {
 	dialogue_memory_faction_name = "npc",
@@ -1476,8 +1562,8 @@ dialogue_breed_settings.past = {
 		"past_tertium_enforcer_b",
 		"past_world_eater_a",
 		"past_young_explicator_a",
-		"past_young_sergeant_a",
-	},
+		"past_young_sergeant_a"
+	}
 }
 dialogue_breed_settings.cargo_pilot = {
 	dialogue_memory_faction_name = "npc",
@@ -1490,8 +1576,8 @@ dialogue_breed_settings.cargo_pilot = {
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
-		"cargo_pilot_a",
-	},
+		"cargo_pilot_a"
+	}
 }
 dialogue_breed_settings.travelling_salesman = {
 	dialogue_memory_faction_name = "npc",
@@ -1506,8 +1592,8 @@ dialogue_breed_settings.travelling_salesman = {
 	wwise_voices = {
 		"travelling_salesman_a",
 		"travelling_salesman_b",
-		"travelling_salesman_c",
-	},
+		"travelling_salesman_c"
+	}
 }
 dialogue_breed_settings.commissar = {
 	dialogue_memory_faction_name = "npc",
@@ -1520,8 +1606,8 @@ dialogue_breed_settings.commissar = {
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
-		"commissar_a",
-	},
+		"commissar_a"
+	}
 }
 dialogue_breed_settings.adamant_officer = {
 	dialogue_memory_faction_name = "npc",
@@ -1534,7 +1620,7 @@ dialogue_breed_settings.adamant_officer = {
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
-		"adamant_officer_a",
+		"adamant_officer_a"
 	},
 	opinion_settings = {
 		adamant_female_a = "likes_character",
@@ -1574,8 +1660,8 @@ dialogue_breed_settings.adamant_officer = {
 		zealot_female_c = "dislikes_character",
 		zealot_male_a = "dislikes_character",
 		zealot_male_b = "dislikes_character",
-		zealot_male_c = "dislikes_character",
-	},
+		zealot_male_c = "dislikes_character"
+	}
 }
 dialogue_breed_settings.companion_dog = {
 	dialogue_memory_faction_name = "npc",
@@ -1586,7 +1672,7 @@ dialogue_breed_settings.companion_dog = {
 	vo_class_name = "companion_dog",
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = nil,
-	wwise_voices = nil,
+	wwise_voices = nil
 }
 dialogue_breed_settings.sand_vortex = {
 	dialogue_memory_faction_name = "npc",
@@ -1596,7 +1682,7 @@ dialogue_breed_settings.sand_vortex = {
 	trigger_seen_vo = true,
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = nil,
-	wwise_voices = nil,
+	wwise_voices = nil
 }
 dialogue_breed_settings.attack_valkyrie = {
 	dialogue_memory_faction_name = "npc",
@@ -1606,7 +1692,7 @@ dialogue_breed_settings.attack_valkyrie = {
 	trigger_seen_vo = false,
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = nil,
-	wwise_voices = nil,
+	wwise_voices = nil
 }
 
 return settings("DialogueBreedSettings", dialogue_breed_settings)

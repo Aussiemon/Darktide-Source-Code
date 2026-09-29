@@ -31,6 +31,8 @@ PowerWeaponChargesEffects.init = function (self, context, slot, weapon_template,
 	self._state = STATE.charges_available
 	self._current_state = nil
 	self._current_num_charges = self._inventory_slot_component.num_special_charges
+	self._is_in_first_person = nil
+	self._is_playing_in_first_person = nil
 	self._looping_effect_ids = {}
 	self._looping_playing_ids = {}
 	self._looping_stop_event_names = {}
@@ -87,6 +89,14 @@ PowerWeaponChargesEffects.update = function (self, unit, dt, t)
 end
 
 PowerWeaponChargesEffects._update_looping_effects = function (self, state, state_changed)
+	local is_in_first_person = self._is_in_first_person
+
+	if self._is_playing_in_first_person ~= is_in_first_person then
+		self:_restart_looping_vfx()
+	end
+
+	self._is_playing_in_first_person = is_in_first_person
+
 	if not state_changed then
 		return
 	end
@@ -100,6 +110,18 @@ PowerWeaponChargesEffects._update_looping_effects = function (self, state, state
 	elseif state == STATE.charges_available then
 		self:_stop_looping_effect(EFFECTS_TYPES.on_cooldown, false)
 		self:_start_looping_effect(EFFECTS_TYPES.charges_available)
+	end
+end
+
+PowerWeaponChargesEffects._restart_looping_vfx = function (self, effect_type)
+	local current_state = self._current_state
+
+	if current_state == STATE.on_cooldown then
+		self:_stop_vfx_loop(EFFECTS_TYPES.on_cooldown, true)
+		self:_start_vfx_loop(EFFECTS_TYPES.on_cooldown)
+	elseif current_state == STATE.charges_available then
+		self:_stop_vfx_loop(EFFECTS_TYPES.charges_available, true)
+		self:_start_vfx_loop(EFFECTS_TYPES.charges_available)
 	end
 end
 
@@ -228,7 +250,7 @@ PowerWeaponChargesEffects._stop_vfx_loop = function (self, effect_type, force_st
 end
 
 PowerWeaponChargesEffects.update_first_person_mode = function (self, first_person_mode)
-	return
+	self._is_in_first_person = first_person_mode
 end
 
 implements(PowerWeaponChargesEffects, WieldableSlotScriptInterface)

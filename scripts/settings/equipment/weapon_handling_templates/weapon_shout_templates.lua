@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_handling_templates/weapon_shout_templates.lua
 
+local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local weapon_shout_templates = {}
 
 weapon_shout_templates.powermaul_shield_p1_block_special = {
@@ -7,36 +8,36 @@ weapon_shout_templates.powermaul_shield_p1_block_special = {
 	shape = "cone",
 	range = {
 		lerp_basic = 8,
-		lerp_perfect = 26.46,
+		lerp_perfect = 26.46
 	},
 	dot = {
 		lerp_basic = 0.35,
-		lerp_perfect = 0.85,
-	},
+		lerp_perfect = 0.85
+	}
 }
 weapon_shout_templates.missile_launcher_knockback = {
 	close_radius = 0,
 	shape = "cone",
 	range = {
 		lerp_basic = 6,
-		lerp_perfect = 6,
+		lerp_perfect = 6
 	},
 	dot = {
 		lerp_basic = 0.5,
-		lerp_perfect = 0.5,
-	},
+		lerp_perfect = 0.5
+	}
 }
 weapon_shout_templates.powermaul_p3_pushfollow = {
 	close_radius = 4,
 	shape = "cone",
 	range = {
 		lerp_basic = 7,
-		lerp_perfect = 7,
+		lerp_perfect = 7
 	},
 	dot = {
 		lerp_basic = 0.6,
-		lerp_perfect = 0.6,
-	},
+		lerp_perfect = 0.6
+	}
 }
 
 return settings("WeaponShoutTemplates", weapon_shout_templates)

@@ -51,7 +51,7 @@ MinionCustomization._construct_attach_settings = function (self, unit, world, in
 		in_editor = in_editor,
 		is_first_person = is_first_person,
 		lod_group = Unit.has_lod_group(unit, "lod") and Unit.lod_group(unit, "lod"),
-		lod_shadow_group = Unit.has_lod_group(unit, "lod_shadow") and Unit.lod_group(unit, "lod_shadow"),
+		lod_shadow_group = Unit.has_lod_group(unit, "lod_shadow") and Unit.lod_group(unit, "lod_shadow")
 	}
 
 	if not in_editor then
@@ -207,62 +207,63 @@ end
 MinionCustomization.component_config = {
 	disable_event_public = false,
 	enable_event_public = false,
-	starts_enabled_default = true,
+	starts_enabled_default = true
 }
 MinionCustomization.component_data = {
 	editor_only = {
 		category = "Settings",
 		ui_name = "Editor Only",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	is_first_person = {
 		category = "Settings",
 		ui_name = "Is First Person",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	is_corpse = {
 		category = "Settings",
 		ui_name = "Is Corpse",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	attachment_items = {
 		category = "Attachments",
 		filter = "item",
 		size = 3,
 		ui_name = "Item",
-		ui_type = "resource_array",
+		ui_type = "resource_array"
 	},
 	attachment_material_override_items = {
 		category = "Attachments",
+		filter = "item",
 		ui_name = "Item Material Overrides",
 		ui_type = "struct_array",
 		definition = {
 			item_no = {
 				ui_name = "Item Number",
 				ui_type = "number",
-				value = 1,
+				value = 1
 			},
 			material_override_item = {
 				filter = "item",
 				ui_name = "Material Override Item",
-				ui_type = "resource",
-			},
+				ui_type = "resource"
+			}
 		},
 		control_order = {
 			"item_no",
-			"material_override_item",
-		},
+			"material_override_item"
+		}
 	},
 	global_material_override_items = {
 		category = "Attachments",
 		filter = "item",
 		size = 1,
 		ui_name = "Global Material Override Items",
-		ui_type = "resource_array",
-	},
+		ui_type = "resource_array"
+	}
 }
 
 return MinionCustomization

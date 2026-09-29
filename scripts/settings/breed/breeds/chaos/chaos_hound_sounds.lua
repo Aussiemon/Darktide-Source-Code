@@ -12,7 +12,7 @@ local sound_data = {
 		sfx_growl = "wwise/events/minions/play_enemy_chaos_hound_vce_growl",
 		sfx_growl_probability = "wwise/events/minions/play_enemy_chaos_hound_vce_growl_probability",
 		sfx_hurt = "wwise/events/minions/play_enemy_chaos_hound_hurt",
-		sfx_leap = "wwise/events/minions/play_enemy_chaos_hound_vce_leap",
+		sfx_leap = "wwise/events/minions/play_enemy_chaos_hound_vce_leap"
 	},
 	use_proximity_culling = {
 		foley = false,
@@ -25,8 +25,8 @@ local sound_data = {
 		sfx_growl = false,
 		sfx_growl_probability = false,
 		sfx_hurt = false,
-		sfx_leap = false,
-	},
+		sfx_leap = false
+	}
 }
 
 return sound_data

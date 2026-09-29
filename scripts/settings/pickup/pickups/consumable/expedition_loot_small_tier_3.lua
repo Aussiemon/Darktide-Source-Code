@@ -15,7 +15,7 @@ local pickup_data = {
 
 		Managers.event:trigger("event_expedition_loot_collected", interactor_unit, loot_type, loot_tier)
 		Managers.state.pacing:add_heat_by_type("small", pickup_unit, "pickups", interactor_unit)
-	end,
+	end
 }
 
 return pickup_data

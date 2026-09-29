@@ -39,7 +39,7 @@ BtValkyrieShootAction.enter = function (self, unit, breed, blackboard, scratchpa
 
 	scratchpad.weapon_nodes = {
 		Unit.node(unit, "fx_wpn_node_1"),
-		Unit.node(unit, "fx_wpn_node_2"),
+		Unit.node(unit, "fx_wpn_node_2")
 	}
 	scratchpad.next_weapon_node = 1
 
@@ -65,7 +65,7 @@ BtValkyrieShootAction.enter = function (self, unit, breed, blackboard, scratchpa
 		next_salvo_time = 0,
 		next_shot_time = 0,
 		num_salvo_shots_fired = 0,
-		ready_sfx_played = false,
+		ready_sfx_played = false
 	}
 
 	navigation_extension:set_acceleration(acceleration)
@@ -250,7 +250,7 @@ end
 local strafe_distances = {
 	3.5,
 	2.5,
-	1.75,
+	1.75
 }
 
 BtValkyrieShootAction._find_strafe_point = function (self, unit, blackboard, scratchpad, action_data, force_move)

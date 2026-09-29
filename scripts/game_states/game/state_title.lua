@@ -36,7 +36,7 @@ local function _create_player(account_id, selected_profile)
 		local slot = 0
 		local telemetry_ids = {
 			instance = nil,
-			session = telemetry_game_session,
+			session = telemetry_game_session
 		}
 
 		local_player = Managers.player:add_human_player(HumanPlayer, nil, Network.peer_id(), local_player_id, selected_profile, slot, account_id, "player1", telemetry_ids)
@@ -101,7 +101,7 @@ StateTitle.on_enter = function (self, parent, params, creation_context)
 		self:_continue_cb(raw_input_device)
 	else
 		local context = {
-			parent = self,
+			parent = self
 		}
 		local view_name = "title_view"
 
@@ -167,7 +167,7 @@ StateTitle._legal_verification = function (self)
 
 	local legal_promises = {
 		Managers.backend.interfaces.account:get_data("legal", "eula"),
-		Managers.backend.interfaces.account:get_data("legal", "privacy_policy"),
+		Managers.backend.interfaces.account:get_data("legal", "privacy_policy")
 	}
 
 	legal_promises[#legal_promises + 1] = Managers.backend.interfaces.account:get_data("legal", "cross_play_support")
@@ -205,7 +205,7 @@ StateTitle._legal_verification = function (self)
 				options[#options + 1] = {
 					margin_bottom = 20,
 					template_type = "text",
-					text = "loc_privacy_policy_privacy_url",
+					text = "loc_privacy_policy_privacy_url"
 				}
 			else
 				options[#options + 1] = {
@@ -214,7 +214,7 @@ StateTitle._legal_verification = function (self)
 					text = "loc_privacy_policy_read_privacy_policy",
 					callback = function ()
 						Application.open_url_in_browser(Localize("loc_privacy_policy_privacy_url"))
-					end,
+					end
 				}
 			end
 
@@ -223,16 +223,16 @@ StateTitle._legal_verification = function (self)
 				text = "loc_privacy_policy_accept_button_label",
 				callback = function ()
 					Managers.backend.interfaces.account:set_data("legal", {
-						privacy_policy = privacy_policy_status and privacy_policy_status + 1 or 1,
+						privacy_policy = privacy_policy_status and privacy_policy_status + 1 or 1
 					}):next(function ()
 						self:_legal_verification()
 					end):catch(function (error)
 						Managers.event:trigger("event_add_notification_message", "alert", {
-							text = Localize("loc_popup_description_backend_error"),
+							text = Localize("loc_popup_description_backend_error")
 						})
 						self:_on_error()
 					end)
-				end,
+				end
 			}
 			options[#options + 1] = {
 				close_on_pressed = true,
@@ -244,13 +244,13 @@ StateTitle._legal_verification = function (self)
 					else
 						self:_reset_state()
 					end
-				end,
+				end
 			}
 
 			local context = {
 				description_text = "loc_privacy_policy_information_01b",
 				title_text = "loc_privacy_policy_title",
-				options = options,
+				options = options
 			}
 
 			Managers.event:trigger("event_show_ui_popup", context)
@@ -261,7 +261,7 @@ StateTitle._legal_verification = function (self)
 				options[#options + 1] = {
 					margin_bottom = 20,
 					template_type = "text",
-					text = "loc_privacy_policy_eula_url",
+					text = "loc_privacy_policy_eula_url"
 				}
 			else
 				options[#options + 1] = {
@@ -270,7 +270,7 @@ StateTitle._legal_verification = function (self)
 					text = "loc_privacy_policy_read_eula",
 					callback = function ()
 						Application.open_url_in_browser(Localize("loc_privacy_policy_eula_url"))
-					end,
+					end
 				}
 			end
 
@@ -279,16 +279,16 @@ StateTitle._legal_verification = function (self)
 				text = "loc_privacy_policy_accept_eula_button_label",
 				callback = function ()
 					Managers.backend.interfaces.account:set_data("legal", {
-						eula = eula_status and eula_status + 1 or 1,
+						eula = eula_status and eula_status + 1 or 1
 					}):next(function ()
 						self:_legal_verification()
 					end):catch(function (error)
 						Managers.event:trigger("event_add_notification_message", "alert", {
-							text = Localize("loc_popup_description_backend_error"),
+							text = Localize("loc_popup_description_backend_error")
 						})
 						self:_on_error()
 					end)
-				end,
+				end
 			}
 			options[#options + 1] = {
 				close_on_pressed = true,
@@ -300,13 +300,13 @@ StateTitle._legal_verification = function (self)
 					else
 						self:_reset_state()
 					end
-				end,
+				end
 			}
 
 			local context = {
 				description_text = "loc_privacy_policy_information_01c",
 				title_text = "loc_eula_title",
-				options = options,
+				options = options
 			}
 
 			Managers.event:trigger("event_show_ui_popup", context)
@@ -324,16 +324,16 @@ StateTitle._legal_verification = function (self)
 					end
 
 					Managers.backend.interfaces.account:set_data("legal", {
-						cross_play_support = cross_play_support_status and cross_play_support_status + 1 or 1,
+						cross_play_support = cross_play_support_status and cross_play_support_status + 1 or 1
 					})
 					self:_legal_verification()
-				end,
+				end
 			}
 
 			local context = {
 				description_text = "loc_cross_play_support_information",
 				title_text = "loc_cross_play_support_title",
-				options = options,
+				options = options
 			}
 
 			Managers.event:trigger("event_show_ui_popup", context)
@@ -342,7 +342,7 @@ StateTitle._legal_verification = function (self)
 		end
 	end):catch(function (error)
 		Managers.event:trigger("event_add_notification_message", "alert", {
-			text = Localize("loc_popup_description_backend_error"),
+			text = Localize("loc_popup_description_backend_error")
 		})
 		self:_on_error()
 	end)
@@ -365,7 +365,7 @@ StateTitle._verify_name = function (self)
 		end
 	end):catch(function (_)
 		Managers.event:trigger("event_add_notification_message", "alert", {
-			text = Localize("loc_popup_description_backend_error"),
+			text = Localize("loc_popup_description_backend_error")
 		})
 		self:_on_error()
 	end)
@@ -619,7 +619,6 @@ StateTitle._signin = function (self)
 		end
 
 		Managers.event:trigger("event_player_authenticated")
-		Managers.input:load_settings()
 
 		local local_player = _create_player(account_id, selected_profile)
 
@@ -642,7 +641,7 @@ StateTitle._signin = function (self)
 			self._backend_data_synced = true
 		end):catch(function ()
 			Managers.event:trigger("event_add_notification_message", "alert", {
-				text = Localize("loc_popup_description_backend_error"),
+				text = Localize("loc_popup_description_backend_error")
 			})
 			self:_on_error()
 		end)

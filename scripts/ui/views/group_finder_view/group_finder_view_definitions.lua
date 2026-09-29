@@ -8,20 +8,20 @@ local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local group_window_size = {
 	1000,
-	600,
+	600
 }
 local group_list_height = 0
 local group_list_spacing_top = 0
 local group_list_spacing_bottom = 55
 local group_grid_size = {
 	group_window_size[1] - 40,
-	group_window_size[2] - (0 + group_list_height + group_list_spacing_top + group_list_spacing_bottom),
+	group_window_size[2] - (0 + group_list_height + group_list_spacing_top + group_list_spacing_bottom)
 }
 local GroupFinderBlueprintsGenerateFunction = require("scripts/ui/views/group_finder_view/group_finder_blueprints")
 local groups_blueprints = GroupFinderBlueprintsGenerateFunction(group_grid_size)
 local tag_window_size = {
 	600,
-	905,
+	905
 }
 local tag_window_header_height = 180
 local tag_list_height = 40
@@ -29,25 +29,25 @@ local tag_list_spacing_top = 10
 local tag_list_spacing_bottom = 220
 local tag_grid_size = {
 	tag_window_size[1] - 40,
-	tag_window_size[2] - (tag_window_header_height + tag_list_height + tag_list_spacing_top + tag_list_spacing_bottom),
+	tag_window_size[2] - (tag_window_header_height + tag_list_height + tag_list_spacing_top + tag_list_spacing_bottom)
 }
 local preview_window_size = {
 	800,
-	905,
+	905
 }
 local preview_grid_size = {
 	preview_window_size[1],
-	preview_window_size[2] - 40,
+	preview_window_size[2] - 40
 }
 local player_window_size = {
 	800,
-	530,
+	530
 }
 local player_grid_height_spacing = 0
 local player_grid_bottom_spacing = 60
 local player_grid_size = {
 	player_window_size[1] - 40,
-	player_window_size[2] - (player_grid_height_spacing + player_grid_bottom_spacing),
+	player_window_size[2] - (player_grid_height_spacing + player_grid_bottom_spacing)
 }
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
@@ -57,13 +57,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			3,
-		},
+			3
+		}
 	},
 	page_header = {
 		horizontal_alignment = "center",
@@ -71,13 +71,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			1300,
-			80,
+			80
 		},
 		position = {
 			0,
 			20,
-			0,
-		},
+			0
+		}
 	},
 	tag_window = {
 		horizontal_alignment = "left",
@@ -87,8 +87,8 @@ local scenegraph_definition = {
 		position = {
 			30,
 			20,
-			10,
-		},
+			10
+		}
 	},
 	tags_grid = {
 		horizontal_alignment = "center",
@@ -98,8 +98,8 @@ local scenegraph_definition = {
 		position = {
 			-5,
 			-(20 + tag_list_spacing_bottom + 60 - 40),
-			1,
-		},
+			1
+		}
 	},
 	category_description = {
 		horizontal_alignment = "center",
@@ -107,13 +107,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			tag_grid_size[1],
-			70,
+			70
 		},
 		position = {
 			0,
 			85,
-			1,
-		},
+			1
+		}
 	},
 	previous_filter_button = {
 		horizontal_alignment = "center",
@@ -121,13 +121,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			220,
-			40,
+			40
 		},
 		position = {
 			0,
 			-160,
-			1,
-		},
+			1
+		}
 	},
 	start_group_header = {
 		horizontal_alignment = "center",
@@ -135,13 +135,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			player_window_size[1],
-			100,
+			100
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	start_group_button = {
 		horizontal_alignment = "center",
@@ -149,13 +149,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			300,
-			40,
+			40
 		},
 		position = {
 			0,
 			5,
-			1,
-		},
+			1
+		}
 	},
 	start_group_button_header = {
 		horizontal_alignment = "center",
@@ -163,13 +163,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			player_window_size[1],
-			40,
+			40
 		},
 		position = {
 			0,
 			-60,
-			1,
-		},
+			1
+		}
 	},
 	start_group_button_level_warning = {
 		horizontal_alignment = "center",
@@ -177,13 +177,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			player_window_size[1] - 140,
-			40,
+			40
 		},
 		position = {
 			0,
 			75,
-			1,
-		},
+			1
+		}
 	},
 	start_group_button_party_full_warning = {
 		horizontal_alignment = "center",
@@ -191,13 +191,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			player_window_size[1] - 140,
-			40,
+			40
 		},
 		position = {
 			0,
 			75,
-			1,
-		},
+			1
+		}
 	},
 	filter_page_divider_bottom = {
 		horizontal_alignment = "center",
@@ -205,13 +205,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			468,
-			16,
+			16
 		},
 		position = {
 			0,
 			35,
-			1,
-		},
+			1
+		}
 	},
 	filter_page_divider_top = {
 		horizontal_alignment = "center",
@@ -219,13 +219,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			468,
-			16,
+			16
 		},
 		position = {
 			0,
 			-10,
-			1,
-		},
+			1
+		}
 	},
 	created_group_party_title = {
 		horizontal_alignment = "left",
@@ -233,13 +233,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			player_window_size[1],
-			40,
+			40
 		},
 		position = {
 			110,
 			300,
-			1,
-		},
+			1
+		}
 	},
 	own_group_presentation = {
 		horizontal_alignment = "center",
@@ -249,8 +249,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			-90,
-			1,
-		},
+			1
+		}
 	},
 	team_member_1 = {
 		horizontal_alignment = "center",
@@ -258,13 +258,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			player_window_size[1] - 40,
-			110,
+			110
 		},
 		position = {
 			0,
 			60,
-			1,
-		},
+			1
+		}
 	},
 	team_member_2 = {
 		horizontal_alignment = "center",
@@ -272,13 +272,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			player_window_size[1] - 40,
-			110,
+			110
 		},
 		position = {
 			0,
 			140,
-			1,
-		},
+			1
+		}
 	},
 	team_member_3 = {
 		horizontal_alignment = "center",
@@ -286,13 +286,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			player_window_size[1] - 40,
-			110,
+			110
 		},
 		position = {
 			0,
 			140,
-			1,
-		},
+			1
+		}
 	},
 	team_member_4 = {
 		horizontal_alignment = "center",
@@ -300,13 +300,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			player_window_size[1] - 40,
-			110,
+			110
 		},
 		position = {
 			0,
 			140,
-			1,
-		},
+			1
+		}
 	},
 	player_request_grid_title = {
 		horizontal_alignment = "right",
@@ -314,13 +314,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			player_window_size[1],
-			40,
+			40
 		},
 		position = {
 			-110,
 			300,
-			1,
-		},
+			1
+		}
 	},
 	player_request_window = {
 		horizontal_alignment = "center",
@@ -330,8 +330,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			60,
-			1,
-		},
+			1
+		}
 	},
 	player_request_grid = {
 		horizontal_alignment = "center",
@@ -341,8 +341,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			player_grid_height_spacing,
-			1,
-		},
+			1
+		}
 	},
 	player_request_button_accept = {
 		horizontal_alignment = "right",
@@ -350,13 +350,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			400,
-			40,
+			40
 		},
 		position = {
 			-10,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	player_request_button_decline = {
 		horizontal_alignment = "right",
@@ -364,13 +364,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			400,
-			40,
+			40
 		},
 		position = {
 			-10,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	cancel_group_button = {
 		horizontal_alignment = "center",
@@ -378,13 +378,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			340,
-			45,
+			45
 		},
 		position = {
 			0,
 			90,
-			1,
-		},
+			1
+		}
 	},
 	player_searching_indication = {
 		horizontal_alignment = "center",
@@ -392,13 +392,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			800,
-			500,
+			500
 		},
 		position = {
 			0,
 			-30,
-			1,
-		},
+			1
+		}
 	},
 	group_window = {
 		horizontal_alignment = "right",
@@ -408,8 +408,8 @@ local scenegraph_definition = {
 		position = {
 			-45,
 			205,
-			10,
-		},
+			10
+		}
 	},
 	group_grid = {
 		horizontal_alignment = "center",
@@ -419,8 +419,8 @@ local scenegraph_definition = {
 		position = {
 			-5,
 			-(group_list_spacing_bottom + 5),
-			3,
-		},
+			3
+		}
 	},
 	group_window_info = {
 		horizontal_alignment = "center",
@@ -428,13 +428,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			group_window_size[1] - 40,
-			group_window_size[2],
+			group_window_size[2]
 		},
 		position = {
 			0,
 			2,
-			1,
-		},
+			1
+		}
 	},
 	group_loading = {
 		horizontal_alignment = "center",
@@ -444,8 +444,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			50,
-		},
+			50
+		}
 	},
 	join_button = {
 		horizontal_alignment = "right",
@@ -453,13 +453,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			300,
-			60,
+			60
 		},
 		position = {
 			0,
 			80,
-			1,
-		},
+			1
+		}
 	},
 	join_button_level_warning = {
 		horizontal_alignment = "right",
@@ -467,13 +467,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			560,
-			100,
+			100
 		},
 		position = {
 			0,
 			90,
-			1,
-		},
+			1
+		}
 	},
 	preview_input_text = {
 		horizontal_alignment = "left",
@@ -481,13 +481,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			400,
-			40,
+			40
 		},
 		position = {
 			10,
 			40,
-			1,
-		},
+			1
+		}
 	},
 	refresh_button = {
 		horizontal_alignment = "right",
@@ -495,13 +495,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			400,
-			40,
+			40
 		},
 		position = {
 			-10,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	group_list_time_stamp = {
 		horizontal_alignment = "left",
@@ -509,13 +509,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			800,
-			40,
+			40
 		},
 		position = {
 			10,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	preview_window = {
 		horizontal_alignment = "left",
@@ -525,8 +525,8 @@ local scenegraph_definition = {
 		position = {
 			30,
 			0,
-			60,
-		},
+			60
+		}
 	},
 	preview_grid = {
 		horizontal_alignment = "center",
@@ -536,9 +536,9 @@ local scenegraph_definition = {
 		position = {
 			0,
 			-15,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local terminal_button_highlighted_pass_template = table.clone_instance(ButtonPassTemplates.terminal_button)
 
@@ -553,13 +553,13 @@ terminal_button_highlighted_pass_template[#terminal_button_highlighted_pass_temp
 		color = Color.terminal_text_body(200, true),
 		size_addition = {
 			20,
-			20,
+			20
 		},
 		offset = {
 			0,
 			0,
-			4,
-		},
+			4
+		}
 	},
 	change_function = function (content, style, _, dt)
 		local hotspot = content.hotspot
@@ -583,7 +583,7 @@ terminal_button_highlighted_pass_template[#terminal_button_highlighted_pass_temp
 
 			style.color[1] = (50 + 100 * pulse_progress) * anim_highlight_progress
 		end
-	end,
+	end
 }
 
 local function team_member_definition(scenegraph_id)
@@ -591,7 +591,7 @@ local function team_member_definition(scenegraph_id)
 		{
 			content_id = "hotspot",
 			pass_type = "hotspot",
-			content = {},
+			content = {}
 		},
 		{
 			pass_type = "rect",
@@ -600,9 +600,9 @@ local function team_member_definition(scenegraph_id)
 				offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -614,13 +614,13 @@ local function team_member_definition(scenegraph_id)
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				default_color = Color.terminal_frame(nil, true),
 				selected_color = Color.terminal_frame_selected(nil, true),
-				hover_color = Color.terminal_frame_hover(nil, true),
+				hover_color = Color.terminal_frame_hover(nil, true)
 			},
-			change_function = ButtonPassTemplates.default_button_hover_change_function,
+			change_function = ButtonPassTemplates.default_button_hover_change_function
 		},
 		{
 			pass_type = "texture",
@@ -632,13 +632,13 @@ local function team_member_definition(scenegraph_id)
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
 				default_color = Color.terminal_corner(nil, true),
 				selected_color = Color.terminal_corner_selected(nil, true),
-				hover_color = Color.terminal_corner_hover(nil, true),
+				hover_color = Color.terminal_corner_hover(nil, true)
 			},
-			change_function = ButtonPassTemplates.default_button_hover_change_function,
+			change_function = ButtonPassTemplates.default_button_hover_change_function
 		},
 		{
 			pass_type = "texture",
@@ -650,14 +650,14 @@ local function team_member_definition(scenegraph_id)
 				color = Color.black(200, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -669,16 +669,16 @@ local function team_member_definition(scenegraph_id)
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
 				default_color = Color.terminal_corner(nil, true),
 				selected_color = Color.terminal_corner_selected(nil, true),
-				hover_color = Color.terminal_corner_hover(nil, true),
+				hover_color = Color.terminal_corner_hover(nil, true)
 			},
 			change_function = ButtonPassTemplates.default_button_hover_change_function,
 			visibility_function = function (content, style)
 				return content.slot_filled
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -696,25 +696,25 @@ local function team_member_definition(scenegraph_id)
 					255,
 					70,
 					70,
-					70,
+					70
 				},
 				disabled_color = {
 					255,
 					70,
 					70,
-					70,
+					70
 				},
 				default_color = Color.terminal_frame(nil, true),
 				hover_color = Color.terminal_frame_hover(nil, true),
 				offset = {
 					0,
 					0,
-					6,
-				},
+					6
+				}
 			},
 			visibility_function = function (content, style)
 				return not content.slot_filled
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -725,26 +725,26 @@ local function team_member_definition(scenegraph_id)
 				vertical_alignment = "center",
 				size = {
 					40,
-					100,
+					100
 				},
 				offset = {
 					20,
 					0,
-					5,
+					5
 				},
 				material_values = {
-					texture_map = nil,
+					texture_map = nil
 				},
 				color = {
 					0,
 					255,
 					255,
-					255,
-				},
+					255
+				}
 			},
 			visibility_function = function (content, style)
 				return content.slot_filled
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -755,20 +755,20 @@ local function team_member_definition(scenegraph_id)
 				vertical_alignment = "center",
 				size = {
 					90,
-					100,
+					100
 				},
 				offset = {
 					60,
 					0,
-					6,
+					6
 				},
 				material_values = {
-					use_placeholder_texture = 1,
-				},
+					use_placeholder_texture = 1
+				}
 			},
 			visibility_function = function (content, style)
 				return content.slot_filled
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -781,21 +781,21 @@ local function team_member_definition(scenegraph_id)
 				vertical_alignment = "center",
 				size = {
 					120,
-					120,
+					120
 				},
 				offset = {
 					-15,
 					0,
-					4,
+					4
 				},
 				default_color = Color.terminal_frame(nil, true),
 				selected_color = Color.terminal_frame_selected(nil, true),
-				hover_color = Color.terminal_frame_hover(nil, true),
+				hover_color = Color.terminal_frame_hover(nil, true)
 			},
 			change_function = ButtonPassTemplates.default_button_hover_change_function,
 			visibility_function = function (content, style)
 				return content.slot_filled
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -813,25 +813,25 @@ local function team_member_definition(scenegraph_id)
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				disabled_color = {
 					255,
 					120,
 					120,
-					120,
+					120
 				},
 				default_color = Color.terminal_text_header(nil, true),
 				hover_color = Color.terminal_text_header_selected(nil, true),
 				size = {
 					nil,
-					30,
+					30
 				},
 				offset = {
 					180,
 					-30,
-					3,
-				},
+					3
+				}
 			},
 			change_function = function (content, style)
 				local hotspot = content.hotspot
@@ -844,7 +844,7 @@ local function team_member_definition(scenegraph_id)
 			end,
 			visibility_function = function (content, style)
 				return content.slot_filled
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -862,25 +862,25 @@ local function team_member_definition(scenegraph_id)
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				disabled_color = {
 					255,
 					120,
 					120,
-					120,
+					120
 				},
 				default_color = Color.terminal_text_body(nil, true),
 				hover_color = Color.terminal_text_header(nil, true),
 				size = {
 					nil,
-					54,
+					54
 				},
 				offset = {
 					180,
 					-16,
-					3,
-				},
+					3
+				}
 			},
 			change_function = function (content, style)
 				local hotspot = content.hotspot
@@ -893,7 +893,7 @@ local function team_member_definition(scenegraph_id)
 			end,
 			visibility_function = function (content, style)
 				return content.slot_filled
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -911,25 +911,25 @@ local function team_member_definition(scenegraph_id)
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				disabled_color = {
 					255,
 					120,
 					120,
-					120,
+					120
 				},
 				default_color = Color.terminal_text_body(nil, true),
 				hover_color = Color.terminal_text_body_sub_header(nil, true),
 				size = {
 					nil,
-					54,
+					54
 				},
 				offset = {
 					180,
 					12,
-					3,
-				},
+					3
+				}
 			},
 			change_function = function (content, style)
 				local hotspot = content.hotspot
@@ -942,7 +942,7 @@ local function team_member_definition(scenegraph_id)
 			end,
 			visibility_function = function (content, style)
 				return content.slot_filled
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -955,15 +955,15 @@ local function team_member_definition(scenegraph_id)
 				color = Color.black(200, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, scenegraph_id)
 end
 
@@ -985,11 +985,11 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
-			value = Localize("loc_group_finder_menu_title"),
-		},
+			value = Localize("loc_group_finder_menu_title")
+		}
 	}, "page_header"),
 	background = UIWidget.create_definition({
 		{
@@ -999,15 +999,15 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				color = {
 					160,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -1016,55 +1016,55 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				color = {
 					60,
 					0,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "screen"),
 	previous_filter_button = UIWidget.create_definition(terminal_button_highlighted_pass_template, "previous_filter_button", {
 		gamepad_action = "back",
 		original_text = Utf8.upper(Localize("loc_group_finder_navigation_back_button")),
 		hotspot = {
-			on_pressed_sound = nil,
-		},
+			on_pressed_sound = nil
+		}
 	}, nil, {
 		text = {
-			line_spacing = 1,
-		},
+			line_spacing = 1
+		}
 	}),
 	join_button = UIWidget.create_definition(terminal_button_highlighted_pass_template, "join_button", {
 		gamepad_action = "confirm_pressed",
 		highlighted = true,
 		original_text = Utf8.upper(Localize("loc_group_finder_join_request_button")),
 		hotspot = {
-			on_pressed_sound = nil,
-		},
+			on_pressed_sound = nil
+		}
 	}, nil, {
 		text = {
-			line_spacing = 1,
-		},
+			line_spacing = 1
+		}
 	}),
 	refresh_button = UIWidget.create_definition(ButtonPassTemplates.input_legend_button, "refresh_button", {
 		text = "",
-		visible = true,
+		visible = true
 	}),
 	preview_input_text = UIWidget.create_definition(ButtonPassTemplates.input_legend_button, "preview_input_text", {
 		text = "",
-		visible = true,
+		visible = true
 	}),
 	player_request_button_accept = UIWidget.create_definition(ButtonPassTemplates.input_legend_button, "player_request_button_accept", {
 		visible = true,
-		text = Localize("loc_group_finder_player_request_action_accept"),
+		text = Localize("loc_group_finder_player_request_action_accept")
 	}),
 	player_request_button_decline = UIWidget.create_definition(ButtonPassTemplates.input_legend_button, "player_request_button_decline", {
 		visible = true,
-		text = Localize("loc_group_finder_player_request_action_decline"),
+		text = Localize("loc_group_finder_player_request_action_decline")
 	}),
 	group_list_time_stamp = UIWidget.create_definition({
 		{
@@ -1082,37 +1082,37 @@ local widget_definitions = {
 					255,
 					120,
 					120,
-					120,
+					120
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "group_list_time_stamp"),
 	cancel_group_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button_hold_small, "cancel_group_button", {
 		gamepad_action = "hotkey_menu_special_2",
 		original_text = Utf8.upper(Localize("loc_group_finder_cancel_group_button")),
 		hotspot = {
-			on_pressed_sound = nil,
-		},
+			on_pressed_sound = nil
+		}
 	}, scenegraph_definition.cancel_group_button.size, {
 		text = {
-			line_spacing = 1,
-		},
+			line_spacing = 1
+		}
 	}),
 	start_group_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "start_group_button", {
 		gamepad_action = "hotkey_menu_special_2",
 		original_text = Utf8.upper(Localize("loc_group_finder_create_group_button")),
 		hotspot = {
-			on_pressed_sound = nil,
-		},
+			on_pressed_sound = nil
+		}
 	}, nil, {
 		text = {
-			line_spacing = 1,
-		},
+			line_spacing = 1
+		}
 	}),
 	start_group_button_header = UIWidget.create_definition({
 		{
@@ -1124,15 +1124,15 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					380,
-					30,
+					30
 				},
 				color = Color.terminal_corner(255, true),
 				offset = {
 					0,
 					25,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -1150,10 +1150,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					-10,
-					3,
-				},
-			},
-		},
+					3
+				}
+			}
+		}
 	}, "start_group_button_header"),
 	start_group_button_level_warning = UIWidget.create_definition({
 		{
@@ -1172,18 +1172,18 @@ local widget_definitions = {
 					255,
 					159,
 					67,
-					67,
+					67
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
+					3
+				}
 			},
 			visibility_function = function (content, style)
 				return not content.level_requirement_met
-			end,
-		},
+			end
+		}
 	}, "start_group_button_level_warning"),
 	start_group_button_party_full_warning = UIWidget.create_definition({
 		{
@@ -1202,18 +1202,18 @@ local widget_definitions = {
 					255,
 					159,
 					67,
-					67,
+					67
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
+					3
+				}
 			},
 			visibility_function = function (content, style)
 				return content.is_party_full
-			end,
-		},
+			end
+		}
 	}, "start_group_button_party_full_warning"),
 	join_button_level_warning = UIWidget.create_definition({
 		{
@@ -1232,15 +1232,15 @@ local widget_definitions = {
 					255,
 					159,
 					67,
-					67,
+					67
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
-		},
+					3
+				}
+			}
+		}
 	}, "join_button_level_warning"),
 	category_description = UIWidget.create_definition({
 		{
@@ -1258,10 +1258,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "category_description"),
 	filter_page_divider_top = UIWidget.create_definition({
 		{
@@ -1274,21 +1274,21 @@ local widget_definitions = {
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
+						1
+					}
 				},
 				color = Color.terminal_corner(255, true),
 				offset = {
 					0,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "filter_page_divider_top"),
 	filter_page_divider_bottom = UIWidget.create_definition({
 		{
@@ -1301,21 +1301,21 @@ local widget_definitions = {
 				uvs = {
 					{
 						0,
-						1,
+						1
 					},
 					{
 						1,
-						0,
-					},
+						0
+					}
 				},
 				color = Color.terminal_corner(255, true),
 				offset = {
 					0,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "filter_page_divider_bottom"),
 	group_window_info = UIWidget.create_definition({
 		{
@@ -1334,10 +1334,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					-(group_grid_size[2] / 2 + 25),
-					1,
-				},
+					1
+				}
 			},
-			value = Localize("loc_group_finder_no_groups_found_title"),
+			value = Localize("loc_group_finder_no_groups_found_title")
 		},
 		{
 			pass_type = "text",
@@ -1356,11 +1356,11 @@ local widget_definitions = {
 				offset = {
 					0,
 					group_grid_size[2] / 2 + 25,
-					1,
-				},
+					1
+				}
 			},
-			value = Localize("loc_group_finder_no_groups_found_desc"),
-		},
+			value = Localize("loc_group_finder_no_groups_found_desc")
+		}
 	}, "group_window_info"),
 	group_window = UIWidget.create_definition({
 		{
@@ -1372,9 +1372,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1386,10 +1386,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
-				color = Color.terminal_frame(nil, true),
-			},
+				color = Color.terminal_frame(nil, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1402,15 +1402,15 @@ local widget_definitions = {
 				color = Color.black(200, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "group_window"),
 	preview_window = UIWidget.create_definition({
 		{
@@ -1422,9 +1422,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1436,10 +1436,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					9,
+					9
 				},
-				color = Color.terminal_frame(nil, true),
-			},
+				color = Color.terminal_frame(nil, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1451,10 +1451,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					10,
+					10
 				},
-				color = Color.terminal_corner(nil, true),
-			},
+				color = Color.terminal_corner(nil, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1467,14 +1467,14 @@ local widget_definitions = {
 				color = Color.black(200, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1487,14 +1487,14 @@ local widget_definitions = {
 				color = Color.terminal_text_body(200, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					4,
-				},
-			},
+					4
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1507,10 +1507,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "preview_window"),
 	player_request_window = UIWidget.create_definition({
 		{
@@ -1522,9 +1522,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1536,10 +1536,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
-				color = Color.terminal_frame(nil, true),
-			},
+				color = Color.terminal_frame(nil, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1552,15 +1552,15 @@ local widget_definitions = {
 				color = Color.black(200, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "player_request_window"),
 	created_group_party_title = UIWidget.create_definition({
 		{
@@ -1578,15 +1578,15 @@ local widget_definitions = {
 				text_color = Color.terminal_text_body(255, true),
 				size = {
 					nil,
-					40,
+					40
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
-		},
+					3
+				}
+			}
+		}
 	}, "created_group_party_title"),
 	player_request_grid_title = UIWidget.create_definition({
 		{
@@ -1604,35 +1604,35 @@ local widget_definitions = {
 				text_color = Color.terminal_text_body(255, true),
 				size = {
 					nil,
-					40,
+					40
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
-		},
+					3
+				}
+			}
+		}
 	}, "player_request_grid_title"),
 	team_member_1 = team_member_definition("team_member_1"),
 	team_member_2 = team_member_definition("team_member_2"),
 	team_member_3 = team_member_definition("team_member_3"),
-	team_member_4 = team_member_definition("team_member_4"),
+	team_member_4 = team_member_definition("team_member_4")
 }
 local item_category_tabs_content = {
 	{
 		hide_display_name = true,
 		icon = "content/ui/materials/icons/categories/melee",
 		slot_types = {
-			"slot_primary",
-		},
+			"slot_primary"
+		}
 	},
 	{
 		hide_display_name = true,
 		icon = "content/ui/materials/icons/categories/ranged",
 		slot_types = {
-			"slot_secondary",
-		},
+			"slot_secondary"
+		}
 	},
 	{
 		hide_display_name = true,
@@ -1640,9 +1640,9 @@ local item_category_tabs_content = {
 		slot_types = {
 			"slot_attachment_1",
 			"slot_attachment_2",
-			"slot_attachment_3",
-		},
-	},
+			"slot_attachment_3"
+		}
+	}
 }
 
 local function player_request_terminal_button_change_function_accept(content, style)
@@ -1674,11 +1674,11 @@ local terminal_button_text_style = table.clone(UIFontSettings.button_primary)
 terminal_button_text_style.offset = {
 	70,
 	0,
-	6,
+	6
 }
 terminal_button_text_style.size_addition = {
 	-90,
-	0,
+	0
 }
 terminal_button_text_style.text_horizontal_alignment = "left"
 terminal_button_text_style.text_vertical_alignment = "center"
@@ -1686,26 +1686,26 @@ terminal_button_text_style.text_color = {
 	255,
 	216,
 	229,
-	207,
+	207
 }
 terminal_button_text_style.default_color = {
 	255,
 	216,
 	229,
-	207,
+	207
 }
 
 local grid_blueprints = {
 	player_request_entry = {
 		size = {
 			player_grid_size[1],
-			110,
+			110
 		},
 		pass_template = {
 			{
 				content_id = "hotspot",
 				pass_type = "hotspot",
-				content = {},
+				content = {}
 			},
 			{
 				pass_type = "rect",
@@ -1714,9 +1714,9 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1728,13 +1728,13 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						2,
+						2
 					},
 					default_color = Color.terminal_frame(nil, true),
 					selected_color = Color.terminal_frame_selected(nil, true),
-					hover_color = Color.terminal_frame_hover(nil, true),
+					hover_color = Color.terminal_frame_hover(nil, true)
 				},
-				change_function = ButtonPassTemplates.default_button_hover_change_function,
+				change_function = ButtonPassTemplates.default_button_hover_change_function
 			},
 			{
 				pass_type = "texture",
@@ -1746,13 +1746,13 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						3,
+						3
 					},
 					default_color = Color.terminal_corner(nil, true),
 					selected_color = Color.terminal_corner_selected(nil, true),
-					hover_color = Color.terminal_corner_hover(nil, true),
+					hover_color = Color.terminal_corner_hover(nil, true)
 				},
-				change_function = ButtonPassTemplates.default_button_hover_change_function,
+				change_function = ButtonPassTemplates.default_button_hover_change_function
 			},
 			{
 				pass_type = "texture",
@@ -1764,14 +1764,14 @@ local grid_blueprints = {
 					color = Color.black(200, true),
 					size_addition = {
 						20,
-						20,
+						20
 					},
 					offset = {
 						0,
 						0,
-						3,
-					},
-				},
+						3
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1782,23 +1782,23 @@ local grid_blueprints = {
 					vertical_alignment = "center",
 					size = {
 						40,
-						100,
+						100
 					},
 					offset = {
 						20,
 						0,
-						5,
+						5
 					},
 					material_values = {
-						texture_map = nil,
+						texture_map = nil
 					},
 					color = {
 						0,
 						255,
 						255,
-						255,
-					},
-				},
+						255
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1809,17 +1809,17 @@ local grid_blueprints = {
 					vertical_alignment = "center",
 					size = {
 						90,
-						100,
+						100
 					},
 					offset = {
 						60,
 						0,
-						6,
+						6
 					},
 					material_values = {
-						use_placeholder_texture = 1,
-					},
-				},
+						use_placeholder_texture = 1
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1832,18 +1832,18 @@ local grid_blueprints = {
 					vertical_alignment = "center",
 					size = {
 						120,
-						120,
+						120
 					},
 					offset = {
 						-130,
 						0,
-						4,
+						4
 					},
 					default_color = Color.terminal_frame(nil, true),
 					selected_color = Color.terminal_frame_selected(nil, true),
-					hover_color = Color.terminal_frame_hover(nil, true),
+					hover_color = Color.terminal_frame_hover(nil, true)
 				},
-				change_function = ButtonPassTemplates.default_button_hover_change_function,
+				change_function = ButtonPassTemplates.default_button_hover_change_function
 			},
 			{
 				pass_type = "text",
@@ -1861,25 +1861,25 @@ local grid_blueprints = {
 						255,
 						255,
 						255,
-						255,
+						255
 					},
 					disabled_color = {
 						255,
 						120,
 						120,
-						120,
+						120
 					},
 					default_color = Color.terminal_text_header(nil, true),
 					hover_color = Color.terminal_text_header_selected(nil, true),
 					size = {
 						nil,
-						30,
+						30
 					},
 					offset = {
 						180,
 						-30,
-						5,
-					},
+						5
+					}
 				},
 				change_function = function (content, style)
 					local hotspot = content.hotspot
@@ -1889,7 +1889,7 @@ local grid_blueprints = {
 					local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
 					ColorUtilities.color_lerp(default_color, hover_color, progress, text_color)
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -1907,25 +1907,25 @@ local grid_blueprints = {
 						255,
 						255,
 						255,
-						255,
+						255
 					},
 					disabled_color = {
 						255,
 						120,
 						120,
-						120,
+						120
 					},
 					default_color = Color.terminal_text_body(nil, true),
 					hover_color = Color.terminal_text_header(nil, true),
 					size = {
 						nil,
-						54,
+						54
 					},
 					offset = {
 						180,
 						-16,
-						5,
-					},
+						5
+					}
 				},
 				change_function = function (content, style)
 					local hotspot = content.hotspot
@@ -1935,7 +1935,7 @@ local grid_blueprints = {
 					local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
 					ColorUtilities.color_lerp(default_color, hover_color, progress, text_color)
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -1953,25 +1953,25 @@ local grid_blueprints = {
 						255,
 						255,
 						255,
-						255,
+						255
 					},
 					disabled_color = {
 						255,
 						120,
 						120,
-						120,
+						120
 					},
 					default_color = Color.terminal_text_body(nil, true),
 					hover_color = Color.terminal_text_body_sub_header(nil, true),
 					size = {
 						nil,
-						54,
+						54
 					},
 					offset = {
 						180,
 						12,
-						5,
-					},
+						5
+					}
 				},
 				change_function = function (content, style)
 					local hotspot = content.hotspot
@@ -1981,7 +1981,7 @@ local grid_blueprints = {
 					local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
 					ColorUtilities.color_lerp(default_color, hover_color, progress, text_color)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1994,13 +1994,13 @@ local grid_blueprints = {
 					color = Color.terminal_text_body(200, true),
 					size_addition = {
 						20,
-						20,
+						20
 					},
 					offset = {
 						0,
 						0,
-						4,
-					},
+						4
+					}
 				},
 				change_function = function (content, style, _, dt)
 					local hotspot = content.hotspot
@@ -2026,7 +2026,7 @@ local grid_blueprints = {
 				end,
 				visibility_function = function (content, style)
 					return not content.element.is_preview
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2039,14 +2039,14 @@ local grid_blueprints = {
 					color = Color.black(200, true),
 					size_addition = {
 						20,
-						20,
+						20
 					},
 					offset = {
 						0,
 						0,
-						1,
-					},
-				},
+						1
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -2061,13 +2061,13 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						1,
-					},
+						1
+					}
 				},
 				change_function = function (content, style)
 					ButtonPassTemplates.terminal_button_change_function(content, style)
 					ButtonPassTemplates.terminal_button_hover_change_function(content, style)
-				end,
+				end
 			},
 			{
 				content_id = "accept_hotspot",
@@ -2080,16 +2080,16 @@ local grid_blueprints = {
 					offset = {
 						-80,
 						0,
-						5,
+						5
 					},
 					size = {
 						40,
-						40,
-					},
+						40
+					}
 				},
 				visibility_function = function (content, style)
 					return not content.parent.element.is_preview and Managers.ui:using_cursor_navigation()
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2101,19 +2101,19 @@ local grid_blueprints = {
 					offset = {
 						-80,
 						0,
-						5,
+						5
 					},
 					size = {
 						40,
-						40,
+						40
 					},
 					default_color = Color.terminal_background(nil, true),
-					selected_color = Color.terminal_background_selected(nil, true),
+					selected_color = Color.terminal_background_selected(nil, true)
 				},
 				change_function = player_request_terminal_button_change_function_accept,
 				visibility_function = function (content, style)
 					return not content.element.is_preview and Managers.ui:using_cursor_navigation()
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2125,18 +2125,18 @@ local grid_blueprints = {
 					offset = {
 						-80,
 						0,
-						6,
+						6
 					},
 					size = {
 						40,
-						40,
+						40
 					},
-					color = Color.terminal_background_gradient(nil, true),
+					color = Color.terminal_background_gradient(nil, true)
 				},
 				change_function = player_request_terminal_button_hover_change_function_accept,
 				visibility_function = function (content, style)
 					return not content.element.is_preview and Managers.ui:using_cursor_navigation()
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2148,16 +2148,16 @@ local grid_blueprints = {
 					offset = {
 						-80,
 						0,
-						7,
+						7
 					},
 					size = {
 						40,
-						40,
-					},
+						40
+					}
 				},
 				visibility_function = function (content, style)
 					return not content.element.is_preview and Managers.ui:using_cursor_navigation()
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2170,19 +2170,19 @@ local grid_blueprints = {
 					offset = {
 						-80,
 						0,
-						7,
+						7
 					},
 					size = {
 						40,
-						40,
+						40
 					},
 					default_color = Color.terminal_frame(nil, true),
-					selected_color = Color.terminal_frame_selected(nil, true),
+					selected_color = Color.terminal_frame_selected(nil, true)
 				},
 				change_function = player_request_terminal_button_change_function_accept,
 				visibility_function = function (content, style)
 					return not content.element.is_preview and Managers.ui:using_cursor_navigation()
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2195,19 +2195,19 @@ local grid_blueprints = {
 					offset = {
 						-80,
 						0,
-						8,
+						8
 					},
 					size = {
 						40,
-						40,
+						40
 					},
 					default_color = Color.terminal_corner(nil, true),
-					selected_color = Color.terminal_corner_selected(nil, true),
+					selected_color = Color.terminal_corner_selected(nil, true)
 				},
 				change_function = player_request_terminal_button_change_function_accept,
 				visibility_function = function (content, style)
 					return not content.element.is_preview and Managers.ui:using_cursor_navigation()
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2220,21 +2220,21 @@ local grid_blueprints = {
 					offset = {
 						-70,
 						0,
-						8,
+						8
 					},
 					size = {
 						40,
-						40,
+						40
 					},
 					size_addition = {
 						20,
-						20,
+						20
 					},
-					color = Color.black(200, true),
+					color = Color.black(200, true)
 				},
 				visibility_function = function (content, style)
 					return not content.element.is_preview and Managers.ui:using_cursor_navigation()
-				end,
+				end
 			},
 			{
 				content_id = "decline_hotspot",
@@ -2247,16 +2247,16 @@ local grid_blueprints = {
 					offset = {
 						-20,
 						0,
-						5,
+						5
 					},
 					size = {
 						40,
-						40,
-					},
+						40
+					}
 				},
 				visibility_function = function (content, style)
 					return not content.parent.element.is_preview and Managers.ui:using_cursor_navigation()
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2268,19 +2268,19 @@ local grid_blueprints = {
 					offset = {
 						-20,
 						0,
-						5,
+						5
 					},
 					size = {
 						40,
-						40,
+						40
 					},
 					default_color = Color.terminal_background(nil, true),
-					selected_color = Color.terminal_background_selected(nil, true),
+					selected_color = Color.terminal_background_selected(nil, true)
 				},
 				change_function = player_request_terminal_button_change_function_decline,
 				visibility_function = function (content, style)
 					return not content.element.is_preview and Managers.ui:using_cursor_navigation()
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2292,18 +2292,18 @@ local grid_blueprints = {
 					offset = {
 						-20,
 						0,
-						6,
+						6
 					},
 					size = {
 						40,
-						40,
+						40
 					},
-					color = Color.terminal_background_gradient(nil, true),
+					color = Color.terminal_background_gradient(nil, true)
 				},
 				change_function = player_request_terminal_button_hover_change_function_decline,
 				visibility_function = function (content, style)
 					return not content.element.is_preview and Managers.ui:using_cursor_navigation()
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2315,16 +2315,16 @@ local grid_blueprints = {
 					offset = {
 						-20,
 						0,
-						7,
+						7
 					},
 					size = {
 						40,
-						40,
-					},
+						40
+					}
 				},
 				visibility_function = function (content, style)
 					return not content.element.is_preview and Managers.ui:using_cursor_navigation()
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2337,19 +2337,19 @@ local grid_blueprints = {
 					offset = {
 						-20,
 						0,
-						7,
+						7
 					},
 					size = {
 						40,
-						40,
+						40
 					},
 					default_color = Color.terminal_frame(nil, true),
-					selected_color = Color.terminal_frame_selected(nil, true),
+					selected_color = Color.terminal_frame_selected(nil, true)
 				},
 				change_function = player_request_terminal_button_change_function_decline,
 				visibility_function = function (content, style)
 					return not content.element.is_preview and Managers.ui:using_cursor_navigation()
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2362,19 +2362,19 @@ local grid_blueprints = {
 					offset = {
 						-20,
 						0,
-						8,
+						8
 					},
 					size = {
 						40,
-						40,
+						40
 					},
 					default_color = Color.terminal_corner(nil, true),
-					selected_color = Color.terminal_corner_selected(nil, true),
+					selected_color = Color.terminal_corner_selected(nil, true)
 				},
 				change_function = player_request_terminal_button_change_function_decline,
 				visibility_function = function (content, style)
 					return not content.element.is_preview and Managers.ui:using_cursor_navigation()
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2387,22 +2387,22 @@ local grid_blueprints = {
 					offset = {
 						-10,
 						0,
-						8,
+						8
 					},
 					size = {
 						40,
-						40,
+						40
 					},
 					size_addition = {
 						20,
-						20,
+						20
 					},
-					color = Color.black(200, true),
+					color = Color.black(200, true)
 				},
 				visibility_function = function (content, style)
 					return not content.element.is_preview and Managers.ui:using_cursor_navigation()
-				end,
-			},
+				end
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -2597,8 +2597,8 @@ local grid_blueprints = {
 
 				icon_style.color[1] = 0
 			end
-		end,
-	},
+		end
+	}
 }
 
 table.merge_recursive(grid_blueprints, groups_blueprints)
@@ -2616,7 +2616,7 @@ local animations = {
 				local anim_progress = 1 - math.easeInCubic(progress)
 
 				widget.alpha_multiplier = math.min(anim_progress, widget.alpha_multiplier or 1)
-			end,
+			end
 		},
 		{
 			end_time = 0.2,
@@ -2633,7 +2633,7 @@ local animations = {
 				else
 					widget.content.text = new_text
 				end
-			end,
+			end
 		},
 		{
 			end_time = 0.5,
@@ -2646,8 +2646,8 @@ local animations = {
 				local anim_progress = math.easeOutCubic(progress)
 
 				widget.alpha_multiplier = math.max(anim_progress, widget.alpha_multiplier or 0)
-			end,
-		},
+			end
+		}
 	},
 	tag_grid_entry = {
 		{
@@ -2670,8 +2670,8 @@ local animations = {
 
 					widget.offset[1] = x_anim_distance
 				end
-			end,
-		},
+			end
+		}
 	},
 	on_enter = {
 		{
@@ -2684,7 +2684,7 @@ local animations = {
 				for _, widget in pairs(widgets) do
 					widget.alpha_multiplier = 0
 				end
-			end,
+			end
 		},
 		{
 			end_time = 0.45,
@@ -2708,9 +2708,9 @@ local animations = {
 				parent:_set_scenegraph_position("player_request_window", scenegraph_definition.player_request_window.position[1] - x_anim_distance)
 				parent:_set_scenegraph_position("group_window", nil, scenegraph_definition.group_window.position[2] + x_anim_distance)
 				parent:_set_scenegraph_position("preview_window", scenegraph_definition.preview_window.position[1] + x_anim_distance)
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 local background_world_params = {
 	level_name = "content/levels/ui/group_finder/group_finder",
@@ -2722,7 +2722,7 @@ local background_world_params = {
 	viewport_name = "group_finder_world_viewport",
 	viewport_type = "default",
 	world_layer = 1,
-	world_name = "group_finder_world",
+	world_name = "group_finder_world"
 }
 local input_legend_params = {
 	buttons_params = {
@@ -2730,7 +2730,7 @@ local input_legend_params = {
 			alignment = "left_alignment",
 			display_name = "loc_settings_menu_close_menu",
 			input_action = "back",
-			on_pressed_callback = "cb_handle_back_pressed",
+			on_pressed_callback = "cb_handle_back_pressed"
 		},
 		{
 			alignment = "right_alignment",
@@ -2745,9 +2745,9 @@ local input_legend_params = {
 				end
 
 				return false
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
@@ -2758,5 +2758,5 @@ return {
 	scenegraph_definition = scenegraph_definition,
 	widget_definitions = widget_definitions,
 	grid_blueprints = grid_blueprints,
-	item_category_tabs_content = item_category_tabs_content,
+	item_category_tabs_content = item_category_tabs_content
 }

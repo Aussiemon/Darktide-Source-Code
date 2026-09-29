@@ -11,7 +11,7 @@ local VotingManagerImmateriumPartyTestify = {
 		if not voting_manager_immaterium_party:current_vote().state == "ONGOING" then
 			return Testify.RETRY
 		end
-	end,
+	end
 }
 
 return VotingManagerImmateriumPartyTestify

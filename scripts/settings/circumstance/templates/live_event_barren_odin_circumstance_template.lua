@@ -4,7 +4,7 @@ local BaseLiveEventTemplate = require("scripts/settings/circumstance/templates/b
 local CircumstanceUtils = require("scripts/settings/circumstance/utilities/circumstance_utils")
 local MissionOverrides = require("scripts/settings/circumstance/mission_overrides")
 local core_mutators = {
-	"mutator_gameplay_barren_odin",
+	"mutator_gameplay_barren_odin"
 }
 local templates = table.clone(BaseLiveEventTemplate)
 
@@ -13,10 +13,10 @@ templates["<ID>_gas"] = nil
 local base_templates = CircumstanceUtils.inherit(templates, core_mutators, {
 	"stats_live_event_barren",
 	"no_resource_pickups",
-	"health_disable_all_stations",
+	"health_disable_all_stations"
 }, "barren_odin")
 local circumstance_templates = table.reduce({
-	base_templates,
+	base_templates
 }, table.merge, {})
 
 circumstance_templates.barren_odin.ui.display_name = "loc_circumstance_barren_odin_default_title"

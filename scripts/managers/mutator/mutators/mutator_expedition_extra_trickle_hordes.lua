@@ -15,7 +15,7 @@ MutatorExpeditionExtraTrickleHordes.init = function (self, is_server, network_ev
 		failed_num = 0,
 		patrol = nil,
 		target_unit = nil,
-		wanted_position = Vector3Box(0, 0, 0),
+		wanted_position = Vector3Box(0, 0, 0)
 	}
 	self._valid_levels_in_current_section = {}
 end
@@ -54,7 +54,7 @@ end
 local VALID_TYPES = {
 	type_arrival = true,
 	type_extraction = true,
-	type_opportunity = true,
+	type_opportunity = true
 }
 
 MutatorExpeditionExtraTrickleHordes.setup_valid_levels = function (self)

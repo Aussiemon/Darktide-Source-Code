@@ -8,11 +8,11 @@ local VFX = {
 	"content/fx/particles/enemies/rotten_armor_ambient",
 	"content/fx/particles/enemies/rotten_armor_ambient_lvl2",
 	"content/fx/particles/enemies/rotten_armor_ambient_lvl3",
-	"content/fx/particles/enemies/rotten_armor_ambient_lvl4",
+	"content/fx/particles/enemies/rotten_armor_ambient_lvl4"
 }
 local ogryn_node_names = {
 	"j_rightarm",
-	"j_leftarm",
+	"j_leftarm"
 }
 local server_fallback_names = {}
 local resources = {}
@@ -20,7 +20,7 @@ local _create_particles, _destroy_particles, _effect_id_length
 local damage_thresholds = {
 	0.75,
 	0.5,
-	0.25,
+	0.25
 }
 local effect_template = {
 	name = "mutator_rotten_armor_stages",
@@ -72,7 +72,7 @@ local effect_template = {
 	end,
 	stop = function (template_data, template_context)
 		_destroy_particles(template_data, template_context)
-	end,
+	end
 }
 
 function _create_particles(template_data, template_context, index)

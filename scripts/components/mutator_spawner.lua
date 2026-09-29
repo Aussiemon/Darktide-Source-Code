@@ -13,7 +13,7 @@ local SIZE_LOOKUP = {
 	level_size_2 = 2,
 	level_size_4 = 4,
 	level_size_6 = 6,
-	level_size_8 = 8,
+	level_size_8 = 8
 }
 
 local function _calculate_positions(unit)
@@ -51,7 +51,7 @@ MutatorSpawner.get_position_data = function (self)
 			path_position = path_position,
 			travel_distance = travel_distance,
 			section = section,
-			level_size = level_size,
+			level_size = level_size
 		}
 
 		return position_data
@@ -241,33 +241,33 @@ local section_colors = {
 	{
 		0,
 		255,
-		255,
+		255
 	},
 	{
 		0,
 		255,
-		0,
+		0
 	},
 	{
 		255,
 		255,
-		255,
+		255
 	},
 	{
 		255,
 		125,
-		0,
+		0
 	},
 	{
 		255,
 		20,
-		147,
+		147
 	},
 	{
 		93,
 		0,
-		9,
-	},
+		9
+	}
 }
 
 MutatorSpawner._editor_debug_draw = function (self, unit, show_main_path_connection)
@@ -399,12 +399,12 @@ MutatorSpawner.component_data = {
 		step = 1,
 		ui_name = "Section Id",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	show_main_path_connection = {
 		ui_name = "Show Main Path Connection",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	level_size = {
 		ui_name = "Level Size",
@@ -415,16 +415,16 @@ MutatorSpawner.component_data = {
 			"2",
 			"4",
 			"6",
-			"8",
+			"8"
 		},
 		options_values = {
 			"level_size_1",
 			"level_size_2",
 			"level_size_4",
 			"level_size_6",
-			"level_size_8",
-		},
-	},
+			"level_size_8"
+		}
+	}
 }
 
 return MutatorSpawner

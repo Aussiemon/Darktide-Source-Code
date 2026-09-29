@@ -10,24 +10,24 @@ local end_player_view_settings = {
 			retract_duration = 0.25,
 			update_func_name = "carousel_state_slide_cards_to_the_left",
 			sound_event = UISoundEvents.end_screen_summary_card_slide_left,
-			sound_event_on_retract = UISoundEvents.end_screen_summary_card_retract,
+			sound_event_on_retract = UISoundEvents.end_screen_summary_card_retract
 		},
 		{
 			duration = 0.3,
 			name = "expand_current_card",
 			sound_event = nil,
-			update_func_name = "carousel_state_expand_current_card",
+			update_func_name = "carousel_state_expand_current_card"
 		},
 		{
 			animation_id = nil,
 			name = "show_fade_in_content",
-			update_func_name = "carousel_state_fade_in_card_content",
+			update_func_name = "carousel_state_fade_in_card_content"
 		},
 		{
 			duration = 3,
 			name = "show_card_content",
-			update_func_name = "carousel_state_show_card_content",
-		},
+			update_func_name = "carousel_state_show_card_content"
+		}
 	},
 	animation_times = {
 		card_compress_content_time = 0.25,
@@ -35,7 +35,7 @@ local end_player_view_settings = {
 		currency_gain_visibility_time = 10,
 		text_row_fade_in_time = 0.1,
 		timed_widget_fade_time = 0.25,
-		xp_gain_visibility_time = 2,
+		xp_gain_visibility_time = 2
 	},
 	item_rarity_sounds = {
 		UISoundEvents.end_screen_summary_reward_in_rarity_1,
@@ -43,34 +43,34 @@ local end_player_view_settings = {
 		UISoundEvents.end_screen_summary_reward_in_rarity_3,
 		UISoundEvents.end_screen_summary_reward_in_rarity_4,
 		UISoundEvents.end_screen_summary_reward_in_rarity_5,
-		UISoundEvents.end_screen_summary_reward_in_rarity_6,
+		UISoundEvents.end_screen_summary_reward_in_rarity_6
 	},
 	currency_sounds = {
 		experience = {
 			start = UISoundEvents.end_screen_summary_experience_start,
 			stop = UISoundEvents.end_screen_summary_experience_stop,
 			progress = UISoundEvents.end_screen_summary_experience_progress,
-			zero = UISoundEvents.end_screen_summary_experience_zero,
+			zero = UISoundEvents.end_screen_summary_experience_zero
 		},
 		credits = {
 			start = UISoundEvents.end_screen_summary_credits_start,
 			stop = UISoundEvents.end_screen_summary_credits_stop,
 			progress = UISoundEvents.end_screen_summary_credits_progress,
-			zero = UISoundEvents.end_screen_summary_credits_zero,
+			zero = UISoundEvents.end_screen_summary_credits_zero
 		},
 		plasteel = {
 			start = UISoundEvents.end_screen_summary_plasteel_start,
 			stop = UISoundEvents.end_screen_summary_plasteel_stop,
 			progress = UISoundEvents.end_screen_summary_plasteel_progress,
-			zero = UISoundEvents.end_screen_summary_plasteel_zero,
+			zero = UISoundEvents.end_screen_summary_plasteel_zero
 		},
 		diamantine = {
 			start = UISoundEvents.end_screen_summary_diamantine_start,
 			stop = UISoundEvents.end_screen_summary_diamantine_stop,
 			progress = UISoundEvents.end_screen_summary_diamantine_progress,
-			zero = UISoundEvents.end_screen_summary_diamantine_zero,
-		},
-	},
+			zero = UISoundEvents.end_screen_summary_diamantine_zero
+		}
+	}
 }
 
 local function _calculate_fixed_card_time(card_states)

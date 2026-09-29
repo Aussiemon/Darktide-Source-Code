@@ -12,7 +12,7 @@ NameGenerator.generate_lobby_name = function ()
 		"Scary",
 		"Humdrum",
 		"Crazy",
-		"Intense",
+		"Intense"
 	}
 	local loc = {
 		"Beach",
@@ -24,7 +24,7 @@ NameGenerator.generate_lobby_name = function ()
 		"Castle",
 		"Lava",
 		"Winter",
-		"Desert",
+		"Desert"
 	}
 	local act = {
 		"Fight",
@@ -35,7 +35,7 @@ NameGenerator.generate_lobby_name = function ()
 		"Dance",
 		"Showdown",
 		"Trouble",
-		"Conundrum",
+		"Conundrum"
 	}
 
 	local function r(t)

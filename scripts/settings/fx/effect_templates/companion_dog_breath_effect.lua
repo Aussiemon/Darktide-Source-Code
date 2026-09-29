@@ -41,7 +41,7 @@ local effect_template = {
 		template_data.source_id = nil
 		template_data.playing_id = nil
 		template_data.stop_event_name = nil
-	end,
+	end
 }
 
 return effect_template

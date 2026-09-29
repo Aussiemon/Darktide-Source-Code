@@ -11,28 +11,28 @@ local DLCSettings = {
 	steam_dlc_target = STEAM_APP_ID,
 	ids = {
 		[Backend.AUTH_METHOD_NONE] = {
-			id = STEAM_APP_ID,
+			id = STEAM_APP_ID
 		},
 		[Backend.AUTH_METHOD_STEAM] = {
-			id = STEAM_APP_ID,
+			id = STEAM_APP_ID
 		},
 		[Backend.AUTH_METHOD_XBOXLIVE] = {
-			id = XBOX_APP_ID,
+			id = XBOX_APP_ID
 		},
 		[Backend.AUTH_METHOD_PSN] = {
-			id = PSN_APP_ID,
+			id = PSN_APP_ID
 		},
 		[Backend.AUTH_METHOD_DEV_USER] = {
-			id = STEAM_APP_ID,
+			id = STEAM_APP_ID
 		},
 		[Backend.AUTH_METHOD_AWS] = {
-			id = STEAM_APP_ID,
-		},
+			id = STEAM_APP_ID
+		}
 	},
 	includes = {
 		"cryptic",
-		"cryptic_cosmetic",
-	},
+		"cryptic_cosmetic"
+	}
 }
 
 return DLCSettings

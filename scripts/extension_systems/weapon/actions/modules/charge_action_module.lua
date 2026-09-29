@@ -93,7 +93,7 @@ local DEFAULT_RESET_CHARGE_ACTION_KINDS = {
 	unaim = true,
 	unwield = true,
 	unwield_to_specific = true,
-	vent_warp_charge = true,
+	vent_warp_charge = true
 }
 local DEFAULT_INTERRUPT_REASONS = {
 	catapulted = true,
@@ -104,7 +104,7 @@ local DEFAULT_INTERRUPT_REASONS = {
 	ledge_hanging = true,
 	pounced = true,
 	stunned = true,
-	unwield = true,
+	unwield = true
 }
 
 ChargeActionModule.finish = function (self, reason, data, t, force_reset, ignore_reset, reset_action_kinds)

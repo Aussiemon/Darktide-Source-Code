@@ -11,64 +11,64 @@ local hub_aim_constraint_settings = {
 		rate_of_change = 10,
 		idle = {
 			head = 6,
-			torso = 2,
+			torso = 2
 		},
 		passive = {
 			head = 2,
-			torso = 1,
+			torso = 1
 		},
 		moving = {
 			head = 10,
-			torso = 9,
+			torso = 9
 		},
 		moving_passive = {
 			head = 6,
-			torso = 3,
-		},
+			torso = 3
+		}
 	},
 	horizontal_weight = {
 		idle = {
 			head = 0.9,
-			torso = 0.7,
+			torso = 0.7
 		},
 		passive = {
 			head = 0.7,
-			torso = 0.5,
+			torso = 0.5
 		},
 		moving = {
 			head = 0.7,
-			torso = 0.3,
+			torso = 0.3
 		},
 		moving_passive = {
 			head = 0.7,
-			torso = 0.3,
-		},
+			torso = 0.3
+		}
 	},
 	vertical_weight = {
 		idle = {
 			head = 0.8,
-			torso = 0.4,
+			torso = 0.4
 		},
 		passive = {
 			head = 0.7,
-			torso = 0.5,
+			torso = 0.5
 		},
 		moving = {
 			head = 0.6,
-			torso = 0.2,
+			torso = 0.2
 		},
 		moving_passive = {
 			head = 0.6,
-			torso = 0.2,
+			torso = 0.2
 		},
 		moving_passive_turn = {
 			head = 0.6,
-			torso = 0.2,
-		},
+			torso = 0.2
+		}
 	},
 	height_adjustment = {
 		head = 1.5,
-		torso = 0.9,
+		torso = 0.9
 	},
 	aim_weight = {
 		head = {
@@ -76,16 +76,16 @@ local hub_aim_constraint_settings = {
 			jog = 0.4,
 			passive = 0,
 			sprint = 0.5,
-			walk = 1,
+			walk = 1
 		},
 		torso = {
 			idle = 0.25,
 			jog = 0.4,
 			passive = 0,
 			sprint = 0.3,
-			walk = 1,
-		},
-	},
+			walk = 1
+		}
+	}
 }
 
 return settings("HubAimConstraintSettings", hub_aim_constraint_settings)

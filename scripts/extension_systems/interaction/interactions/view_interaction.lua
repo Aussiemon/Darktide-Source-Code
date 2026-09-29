@@ -2,23 +2,32 @@
 
 require("scripts/extension_systems/interaction/interactions/ui_interaction")
 
+local DifficultySettings = require("scripts/settings/difficulty/difficulty_settings")
 local HubLocationIntroductionSettings = require("scripts/settings/cinematic_video/hub_location_introduction_settings")
 local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
 local ViewInteraction = class("ViewInteraction", "UIInteraction")
 local ui_view_level_requirement = {
-	havoc_background_view = PlayerProgressionUnlocks.havoc_missions,
+	havoc_background_view = PlayerProgressionUnlocks.havoc_missions
 }
 local ui_view_progression_requirement = {
 	hub_facility = {
 		credits_vendor_background_view = PlayerProgressionUnlocks.credits_vendor,
 		crafting_view = PlayerProgressionUnlocks.crafting,
 		contracts_background_view = PlayerProgressionUnlocks.contracts,
-		cosmetics_vendor_background_view = PlayerProgressionUnlocks.cosmetics_vendor,
+		cosmetics_vendor_background_view = PlayerProgressionUnlocks.cosmetics_vendor
 	},
 	game_mode = {
-		expedition_view = PlayerProgressionUnlocks.expeditions,
-	},
+		expedition_view = PlayerProgressionUnlocks.expeditions
+	}
 }
+local difficulty_mapping = DifficultySettings.difficulty_mapping
+local ui_view_difficulty_requirement = {
+	expedition_view = "malice"
+}
+
+for _, mapping in pairs(ui_view_difficulty_requirement) do
+	-- Nothing
+end
 
 ViewInteraction.init = function (self, ...)
 	ViewInteraction.super.init(self, ...)
@@ -40,7 +49,7 @@ ViewInteraction._set_cache = function (self, interactor_unit, interactee_unit, .
 	cache[interactor_unit] = cache[interactor_unit] or {}
 	cache[interactor_unit][interactee_unit] = cache[interactor_unit][interactee_unit] or {}
 	cache[interactor_unit][interactee_unit] = {
-		...,
+		...
 	}
 
 	return ...
@@ -73,8 +82,16 @@ ViewInteraction._is_blocked = function (self, interactor_unit, interactee_unit)
 
 	if level_requirement and level_requirement > player_profile.current_level then
 		return self:_set_cache(interactor_unit, interactee_unit, true, "loc_requires_level", {
-			level = level_requirement,
+			level = level_requirement
 		})
+	end
+
+	local character_id = player_profile.character_id
+	local highest_difficulty_unlocked = Managers.data_service.mission_board:get_highest_difficulty_unlocked(character_id)
+	local difficulty_requirement = ui_view_difficulty_requirement[ui_interaction]
+
+	if difficulty_requirement and (difficulty_mapping[highest_difficulty_unlocked] or -1) < difficulty_mapping[difficulty_requirement] then
+		return self:_set_cache(interactor_unit, interactee_unit, true, "loc_hub_expedition_deadside_interaction_requirement")
 	end
 
 	local hub_facility_progression_requirement = ui_view_progression_requirement.hub_facility[ui_interaction]
@@ -119,7 +136,7 @@ ViewInteraction._start = function (self, interactor_unit, interactee_unit)
 	local narrative_event = hli_settings and Managers.narrative.EVENTS[hli_settings.narrative_event_name]
 	local hli_seen = hli_settings and Managers.narrative:is_event_complete(narrative_event)
 	local context = {
-		hub_interaction = true,
+		hub_interaction = true
 	}
 
 	if hli_settings and not hli_seen then
@@ -128,7 +145,7 @@ ViewInteraction._start = function (self, interactor_unit, interactee_unit)
 		ui_interaction, context = "video_view", {
 			allow_skip_input = true,
 			template = video_template,
-			narrative_event = hli_settings.narrative_event_name,
+			narrative_event = hli_settings.narrative_event_name
 		}
 	end
 

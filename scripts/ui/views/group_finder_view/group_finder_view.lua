@@ -21,27 +21,27 @@ local GroupFinderView = class("GroupFinderView", "BaseView")
 local STATE = table.enum("idle", "fetching_tags", "browsing", "advertising")
 local settings_by_category = {
 	start_group = {
-		text = Localize("loc_group_finder_category_start_group"),
+		text = Localize("loc_group_finder_category_start_group")
 	},
 	game_mode = {
 		description_sort_order = 3,
-		text = Localize("loc_group_finder_category_game_mode"),
+		text = Localize("loc_group_finder_category_game_mode")
 	},
 	difficulty = {
 		description_sort_order = 4,
-		text = Localize("loc_group_finder_category_difficulty"),
+		text = Localize("loc_group_finder_category_difficulty")
 	},
 	language = {
 		description_sort_order = 1,
-		text = Localize("loc_group_finder_category_language"),
+		text = Localize("loc_group_finder_category_language")
 	},
 	key_words = {
 		description_sort_order = 2,
-		text = Localize("loc_group_finder_category_key_words"),
+		text = Localize("loc_group_finder_category_key_words")
 	},
 	havoc_threshold = {
-		text = Localize("loc_group_finder_subcategory_havoc_thresholds"),
-	},
+		text = Localize("loc_group_finder_subcategory_havoc_thresholds")
+	}
 }
 
 local function _tags_sort_function(a, b)
@@ -78,7 +78,7 @@ GroupFinderView.init = function (self, settings, context)
 	self._highest_tag_level_requirement = 0
 	self._anim_preview_progress = 1
 	self._visited_tag_pages = {
-		{},
+		{}
 	}
 	self._initial_party_id = self:party_id()
 	self._promise_container = PromiseContainer:new()
@@ -146,7 +146,7 @@ GroupFinderView._setup_widgets_stating_states = function (self)
 		text = Utf8.upper(Localize("loc_group_finder_cancel_group_button")),
 		complete_function = callback(self, "_cb_on_cancel_group_button_pressed"),
 		input_action = self._cancel_group_button_input_action .. "_hold",
-		start_input_action = self._cancel_group_button_input_action,
+		start_input_action = self._cancel_group_button_input_action
 	})
 
 	widgets_by_name.join_button_level_warning.content.text = ""
@@ -162,7 +162,7 @@ GroupFinderView._setup_widgets_stating_states = function (self)
 			widgets_by_name.start_group_button_header,
 			widgets_by_name.category_description,
 			widgets_by_name.filter_page_divider_top,
-			widgets_by_name.filter_page_divider_bottom,
+			widgets_by_name.filter_page_divider_bottom
 		},
 		[STATE.advertising] = {
 			widgets_by_name.player_request_window,
@@ -174,8 +174,8 @@ GroupFinderView._setup_widgets_stating_states = function (self)
 			widgets_by_name.team_member_4,
 			widgets_by_name.own_group_presentation,
 			widgets_by_name.player_request_button_accept,
-			widgets_by_name.player_request_button_decline,
-		},
+			widgets_by_name.player_request_button_decline
+		}
 	}
 end
 
@@ -228,8 +228,8 @@ GroupFinderView._create_group_loading_widget = function (self)
 		{
 			pass_type = "rect",
 			style = {
-				color = Color.black(127.5, true),
-			},
+				color = Color.black(127.5, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -239,15 +239,15 @@ GroupFinderView._create_group_loading_widget = function (self)
 				vertical_alignment = "center",
 				size = {
 					256,
-					256,
+					256
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "group_loading")
 
 	self._group_loading_widget = self:_create_widget("loading", widget_definition)
@@ -340,7 +340,7 @@ local function _format_group_finder_tags(backend_data)
 			header = tag.display and tag.display.header,
 			text = tag.display and tag.display.text and Localize(tag.display.text) or "",
 			background_texture = tag.display and tag.display.backgroundTexture,
-			difficulty = tag.display and tag.display.difficulty,
+			difficulty = tag.display and tag.display.difficulty
 		}
 
 		if tag.unlocks then
@@ -530,8 +530,8 @@ GroupFinderView._get_layout_by_tags = function (self, tags, grid_size, tags_layo
 			widget_type = "dynamic_spacing",
 			size = {
 				grid_size[1],
-				15,
-			},
+				15
+			}
 		}
 	end
 
@@ -554,15 +554,15 @@ GroupFinderView._get_layout_by_tags = function (self, tags, grid_size, tags_layo
 					text = Localize(header),
 					size = {
 						grid_size[1],
-						100,
-					},
+						100
+					}
 				}
 				tags_layout[#tags_layout + 1] = {
 					widget_type = "dynamic_spacing",
 					size = {
 						grid_size[1],
-						30,
-					},
+						30
+					}
 				}
 			end
 		end
@@ -583,7 +583,7 @@ GroupFinderView._get_layout_by_tags = function (self, tags, grid_size, tags_layo
 
 		if not level_requirement_met and not layout_data.block_reason then
 			layout_data.block_reason = Localize("loc_group_finder_tag_level_requirement", true, {
-				level = level_requirement,
+				level = level_requirement
 			})
 		end
 
@@ -612,7 +612,7 @@ GroupFinderView._get_layout_by_tags = function (self, tags, grid_size, tags_layo
 		layout_data.dynamic_size = false
 		layout_data.size = {
 			grid_size[1],
-			small_spacing and 40 or nil,
+			small_spacing and 40 or nil
 		}
 
 		if not is_preview then
@@ -632,8 +632,8 @@ GroupFinderView._get_layout_by_tags = function (self, tags, grid_size, tags_layo
 				widget_type = "dynamic_spacing",
 				size = {
 					10,
-					small_spacing and 15 or 30,
-				},
+					small_spacing and 15 or 30
+				}
 			}
 		end
 	end
@@ -643,8 +643,8 @@ GroupFinderView._get_layout_by_tags = function (self, tags, grid_size, tags_layo
 			widget_type = "dynamic_spacing",
 			size = {
 				grid_size[1],
-				15,
-			},
+				15
+			}
 		}
 	end
 
@@ -829,7 +829,7 @@ GroupFinderView._block_reason_for_group = function (self, group_id)
 
 		if not level_requirement_met then
 			block_reason = block_reason or Localize("loc_group_finder_tag_level_requirement", true, {
-				level = level_requirement,
+				level = level_requirement
 			})
 		end
 
@@ -1219,7 +1219,7 @@ GroupFinderView._generate_tags_description = function (self, tags)
 		local new_text = text .. "[" .. tag.text .. "] "
 		local width, _ = self:_text_size(new_text, description_text_style, {
 			max_length + max_length,
-			5,
+			5
 		})
 
 		if width <= max_length then
@@ -1323,8 +1323,8 @@ GroupFinderView._setup_group_preview = function (self, group_id)
 			widget_type = "dynamic_spacing",
 			size = {
 				preview_grid_size[1],
-				60,
-			},
+				60
+			}
 		}
 
 		local group_width = group_grid_size[1] * 0.5 - 5
@@ -1333,8 +1333,8 @@ GroupFinderView._setup_group_preview = function (self, group_id)
 			widget_type = "dynamic_spacing",
 			size = {
 				(preview_grid_size[1] - group_width) * 0.5,
-				20,
-			},
+				20
+			}
 		}
 
 		local group_entry = {
@@ -1345,7 +1345,7 @@ GroupFinderView._setup_group_preview = function (self, group_id)
 			description = group.description,
 			group_id = group.id,
 			tags = tags,
-			metadata = group.metadata,
+			metadata = group.metadata
 		}
 
 		layout[#layout + 1] = group_entry
@@ -1353,8 +1353,8 @@ GroupFinderView._setup_group_preview = function (self, group_id)
 			widget_type = "dynamic_spacing",
 			size = {
 				preview_grid_size[1],
-				30,
-			},
+				30
+			}
 		}
 		layout[#layout + 1] = {
 			horizontal_alignment = "center",
@@ -1363,13 +1363,13 @@ GroupFinderView._setup_group_preview = function (self, group_id)
 			widget_type = "texture",
 			texture_size = {
 				380,
-				30,
+				30
 			},
 			color = Color.terminal_text_body_sub_header(nil, true),
 			size = {
 				preview_grid_size[1],
-				30,
-			},
+				30
+			}
 		}
 
 		local group_members = group.members
@@ -1379,23 +1379,23 @@ GroupFinderView._setup_group_preview = function (self, group_id)
 				widget_type = "dynamic_spacing",
 				size = {
 					preview_grid_size[1],
-					30,
-				},
+					30
+				}
 			}
 			layout[#layout + 1] = {
 				widget_type = "header",
 				text = Localize("loc_group_finder_group_player_title"),
 				size = {
 					preview_grid_size[1],
-					30,
-				},
+					30
+				}
 			}
 			layout[#layout + 1] = {
 				widget_type = "dynamic_spacing",
 				size = {
 					preview_grid_size[1],
-					10,
-				},
+					10
+				}
 			}
 
 			for _, member in ipairs(group_members) do
@@ -1407,15 +1407,15 @@ GroupFinderView._setup_group_preview = function (self, group_id)
 						widget_type = "dynamic_spacing",
 						size = {
 							preview_grid_size[1] * 0.5 - player_request_grid_size[1] * 0.5,
-							50,
-						},
+							50
+						}
 					}
 
 					local entry = {
 						is_preview = true,
 						widget_type = "player_request_entry",
 						presence_info = presence_info,
-						account_id = member_account_id,
+						account_id = member_account_id
 					}
 
 					layout[#layout + 1] = entry
@@ -1423,15 +1423,15 @@ GroupFinderView._setup_group_preview = function (self, group_id)
 						widget_type = "dynamic_spacing",
 						size = {
 							preview_grid_size[1] * 0.5 - player_request_grid_size[1] * 0.5,
-							50,
-						},
+							50
+						}
 					}
 					layout[#layout + 1] = {
 						widget_type = "dynamic_spacing",
 						size = {
 							preview_grid_size[1],
-							10,
-						},
+							10
+						}
 					}
 				end
 			end
@@ -1442,30 +1442,30 @@ GroupFinderView._setup_group_preview = function (self, group_id)
 			local preview_tag_row_width = player_request_grid_size[1]
 			local preview_tag_size = {
 				(preview_tag_row_width - spacing) * 0.5,
-				45,
+				45
 			}
 
 			layout[#layout + 1] = {
 				widget_type = "dynamic_spacing",
 				size = {
 					preview_grid_size[1],
-					45,
-				},
+					45
+				}
 			}
 			layout[#layout + 1] = {
 				widget_type = "header",
 				text = Localize("loc_group_finder_category_option_key_words"),
 				size = {
 					preview_grid_size[1],
-					45,
-				},
+					45
+				}
 			}
 			layout[#layout + 1] = {
 				widget_type = "dynamic_spacing",
 				size = {
 					preview_grid_size[1],
-					10,
-				},
+					10
+				}
 			}
 
 			local tag_layout = self:_get_layout_by_tags(tags, preview_tag_size, nil, true)
@@ -1478,8 +1478,8 @@ GroupFinderView._setup_group_preview = function (self, group_id)
 						widget_type = "dynamic_spacing",
 						size = {
 							(preview_grid_size[1] - preview_tag_row_width) * 0.5,
-							10,
-						},
+							10
+						}
 					}
 				end
 
@@ -1490,8 +1490,8 @@ GroupFinderView._setup_group_preview = function (self, group_id)
 						widget_type = "dynamic_spacing",
 						size = {
 							spacing,
-							10,
-						},
+							10
+						}
 					}
 				end
 
@@ -1500,15 +1500,15 @@ GroupFinderView._setup_group_preview = function (self, group_id)
 						widget_type = "dynamic_spacing",
 						size = {
 							(preview_grid_size[1] - preview_tag_row_width) * 0.5,
-							10,
-						},
+							10
+						}
 					}
 					layout[#layout + 1] = {
 						widget_type = "dynamic_spacing",
 						size = {
 							preview_grid_size[1],
-							10,
-						},
+							10
+						}
 					}
 				end
 			end
@@ -1518,8 +1518,8 @@ GroupFinderView._setup_group_preview = function (self, group_id)
 			widget_type = "dynamic_spacing",
 			size = {
 				preview_grid_size[1],
-				45,
-			},
+				45
+			}
 		}
 
 		self:_populate_preview_grid(layout)
@@ -1845,7 +1845,7 @@ GroupFinderView._update_tag_grid = function (self)
 	end
 
 	self._category_description_animation_id = self:_start_animation("update_widget_text_fade", self._widgets_by_name.category_description, {
-		new_text = description_text or "",
+		new_text = description_text or ""
 	})
 
 	local tags_grid_size = self._ui_scenegraph.tags_grid.size
@@ -1951,9 +1951,9 @@ GroupFinderView._show_error = function (self)
 				text = "loc_popup_button_close",
 				callback = function ()
 					Managers.ui:close_view(self.view_name)
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context)
@@ -2052,7 +2052,7 @@ GroupFinderView._init_own_group_presentation = function (self, listed_group)
 		local metadata = {
 			havoc_order_rank = metadata_config.havoc_order_rank,
 			havoc_mission_template = metadata_config.havoc_mission_template,
-			havoc_theme = metadata_config.havoc_theme,
+			havoc_theme = metadata_config.havoc_theme
 		}
 		local havoc_circumstances = {}
 
@@ -2076,7 +2076,7 @@ GroupFinderView._init_own_group_presentation = function (self, listed_group)
 			local mission_name = Localize(mission_template.mission_name)
 
 			tags[#tags + 1] = {
-				text = mission_name,
+				text = mission_name
 			}
 		end
 
@@ -2088,7 +2088,7 @@ GroupFinderView._init_own_group_presentation = function (self, listed_group)
 				local circumstance_name = Localize(circumstance_template.ui.display_name)
 
 				tags[#tags + 1] = {
-					text = circumstance_name,
+					text = circumstance_name
 				}
 			end
 		end
@@ -2152,7 +2152,7 @@ GroupFinderView._update_group_list_time_stamp = function (self, dt, t)
 		local time_text = Text.format_time_span_localized(current_time, false, true)
 
 		presentation_text = Localize(time_loc_string, true, {
-			time = time_text,
+			time = time_text
 		})
 	end
 
@@ -2613,7 +2613,7 @@ GroupFinderView._update_listed_group = function (self)
 
 			if not members[i] then
 				members[i] = {
-					presence_info = {},
+					presence_info = {}
 				}
 			end
 
@@ -2940,7 +2940,7 @@ GroupFinderView._handle_incoming_advertisement_events = function (self)
 							havoc_order_rank = entry_metadata.havoc_order_rank,
 							havoc_mission_template = entry_metadata.havoc_mission_template,
 							havoc_theme = entry_metadata.havoc_theme,
-							havoc_circumstances = havoc_circumstances,
+							havoc_circumstances = havoc_circumstances
 						}
 					end
 
@@ -2952,7 +2952,7 @@ GroupFinderView._handle_incoming_advertisement_events = function (self)
 							local mission_name = Localize(mission_template.mission_name)
 
 							filtered_tags[#filtered_tags + 1] = {
-								text = mission_name,
+								text = mission_name
 							}
 						end
 
@@ -2963,7 +2963,7 @@ GroupFinderView._handle_incoming_advertisement_events = function (self)
 								local circumstance_name = Localize(circumstance_template.ui.display_name)
 
 								filtered_tags[#filtered_tags + 1] = {
-									text = circumstance_name,
+									text = circumstance_name
 								}
 							end
 						end
@@ -2988,7 +2988,7 @@ GroupFinderView._handle_incoming_advertisement_events = function (self)
 						version = entry.version,
 						description = description,
 						required_level = required_level,
-						level_requirement_met = level_requirement_met,
+						level_requirement_met = level_requirement_met
 					}
 
 					groups[#groups + 1] = group
@@ -3045,7 +3045,7 @@ GroupFinderView._handle_incoming_advertisement_events = function (self)
 							if not group_member then
 								group_member = {
 									account_id = member_account_id,
-									presence_info = {},
+									presence_info = {}
 								}
 								group_members[#group_members + 1] = group_member
 							end
@@ -3156,12 +3156,12 @@ GroupFinderView._populate_preview_grid = function (self, layout)
 			grid_size = grid_size,
 			mask_size = {
 				grid_size[1] + 200,
-				grid_size[2] - 20,
+				grid_size[2] - 20
 			},
 			grid_spacing = {
 				0,
-				0,
-			},
+				0
+			}
 		}
 		local layer = (self._draw_layer or 0) + 40
 
@@ -3207,12 +3207,12 @@ GroupFinderView._populate_tags_grid = function (self, layout, optional_grid_spac
 			grid_size = grid_size,
 			mask_size = {
 				grid_size[1] + 20,
-				grid_size[2] + mask_padding_size,
+				grid_size[2] + mask_padding_size
 			},
 			grid_spacing = {
 				0,
-				0,
-			},
+				0
+			}
 		}
 		local layer = (self._draw_layer or 0) + 10
 
@@ -3291,12 +3291,12 @@ GroupFinderView._populate_group_grid = function (self, groups, optional_complete
 			grid_size = grid_size,
 			mask_size = {
 				grid_size[1] + 20,
-				grid_size[2] + mask_padding_size,
+				grid_size[2] + mask_padding_size
 			},
 			grid_spacing = {
 				0,
-				10,
-			},
+				10
+			}
 		}
 		local layer = (self._draw_layer or 0) + 10
 
@@ -3313,8 +3313,8 @@ GroupFinderView._populate_group_grid = function (self, groups, optional_complete
 		widget_type = "dynamic_spacing",
 		size = {
 			grid_size[1],
-			10,
-		},
+			10
+		}
 	}
 
 	for i = 1, #groups do
@@ -3330,7 +3330,7 @@ GroupFinderView._populate_group_grid = function (self, groups, optional_complete
 			level_requirement_met = group.level_requirement_met,
 			group_request_status_callback = function ()
 				return self:_get_group_request_status(group.id)
-			end,
+			end
 		}
 
 		entry.pressed_callback = callback(self, "_cb_on_list_group_pressed", entry, i)
@@ -3341,8 +3341,8 @@ GroupFinderView._populate_group_grid = function (self, groups, optional_complete
 				widget_type = "dynamic_spacing",
 				size = {
 					10,
-					10,
-				},
+					10
+				}
 			}
 		end
 	end
@@ -3351,8 +3351,8 @@ GroupFinderView._populate_group_grid = function (self, groups, optional_complete
 		widget_type = "dynamic_spacing",
 		size = {
 			grid_size[1],
-			10,
-		},
+			10
+		}
 	}
 
 	grid:present_grid_layout(layout, GroupFinderViewDefinitions.grid_blueprints, nil, nil, nil, nil, optional_complete_callback)
@@ -3380,12 +3380,12 @@ GroupFinderView._populate_player_request_grid = function (self, join_requests)
 			grid_size = grid_size,
 			mask_size = {
 				grid_size[1] + 20,
-				grid_size[2] + mask_padding_size,
+				grid_size[2] + mask_padding_size
 			},
 			grid_spacing = {
 				0,
-				10,
-			},
+				10
+			}
 		}
 		local layer = (self._draw_layer or 0) + 10
 
@@ -3402,8 +3402,8 @@ GroupFinderView._populate_player_request_grid = function (self, join_requests)
 		widget_type = "dynamic_spacing",
 		size = {
 			grid_size[1],
-			15,
-		},
+			15
+		}
 	}
 
 	for i = 1, #join_requests do
@@ -3422,13 +3422,13 @@ GroupFinderView._populate_player_request_grid = function (self, join_requests)
 				level = current_level,
 				archetype = archetype_name,
 				profile = profile,
-				havoc_rank_cadence_high = havoc_rank_cadence_high,
+				havoc_rank_cadence_high = havoc_rank_cadence_high
 			}
 			local entry = {
 				widget_type = "player_request_entry",
 				presence_info = presence_info,
 				join_request = join_request,
-				account_id = join_request.account_id,
+				account_id = join_request.account_id
 			}
 
 			entry.accept_callback = callback(self, "_cb_on_player_request_accept_pressed", entry)
@@ -3441,8 +3441,8 @@ GroupFinderView._populate_player_request_grid = function (self, join_requests)
 		widget_type = "dynamic_spacing",
 		size = {
 			grid_size[1],
-			15,
-		},
+			15
+		}
 	}
 
 	local current_selected_grid_index = grid:selected_grid_index()
@@ -3478,7 +3478,7 @@ end
 
 local _dummy_text_size = {
 	800,
-	50,
+	50
 }
 
 GroupFinderView._update_player_request_button_decline = function (self)
@@ -3632,7 +3632,7 @@ GroupFinderView.get_havoc_order_metadata = function (self)
 			havoc_order_owner = self:_player():account_id(),
 			havoc_order_id = havoc_order_id,
 			havoc_order_rank = havoc_order_rank,
-			havoc_mission_template = havoc_mission_template,
+			havoc_mission_template = havoc_mission_template
 		}
 		local circ_counter = 1
 

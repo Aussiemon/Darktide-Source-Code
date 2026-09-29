@@ -9,7 +9,7 @@ local EVENT_NAME = "leftover"
 local RESOURCE_TYPE = "artifacts"
 local PLEDGE_RESULT_EVENT = "event_leftover_pledge_result"
 local SERVER_RPCS = {
-	"rpc_live_event_pledge_resources",
+	"rpc_live_event_pledge_resources"
 }
 local EVENT_SETTINGS = LiveEvents[EVENT_NAME]
 local FACTION_NETWORK_LOOKUP = EVENT_SETTINGS and EVENT_SETTINGS.faction_network_lookup
@@ -142,8 +142,8 @@ MutatorGameplayLiveEventLeftoverHub.pledge_resources = function (self, player, t
 	local distribute_data = {
 		action = "distribute",
 		payload = {
-			faction = faction_key,
-		},
+			faction = faction_key
+		}
 	}
 
 	self._pledges_in_flight[in_flight_key] = true

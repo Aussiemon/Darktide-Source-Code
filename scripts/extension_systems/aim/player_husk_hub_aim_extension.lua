@@ -11,7 +11,7 @@ PlayerHuskHubAimExtension.init = function (self, extension_init_context, unit, e
 		aim_constraint_target_torso_name = extension_init_data.aim_constraint_target_torso_name,
 		aim_constraint_distance = extension_init_data.aim_constraint_distance,
 		head_aim_weight_name = extension_init_data.head_aim_weight_name,
-		torso_aim_weight_name = extension_init_data.torso_aim_weight_name,
+		torso_aim_weight_name = extension_init_data.torso_aim_weight_name
 	}
 	self._hub_aim_constraints = nil
 end

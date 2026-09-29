@@ -9,36 +9,36 @@ local chaos_hound = {
 		lock_combat_range_switch = "boolean",
 		move_medium = "string",
 		move_state = "string",
-		restricted_combat_range = "string",
+		restricted_combat_range = "string"
 	},
 	aim = {
 		controlled_aim_position = "Vector3Box",
 		controlled_aiming = "boolean",
-		lean_dot = "number",
+		lean_dot = "number"
 	},
 	pounce = {
 		pounce_cooldown = "number",
 		pounce_target = "Unit",
-		started_leap = "boolean",
+		started_leap = "boolean"
 	},
 	combat_vector = {
 		combat_vector_is_closer = "boolean",
 		distance = "number",
 		has_position = "boolean",
-		position = "Vector3Box",
+		position = "Vector3Box"
 	},
 	weapon_switch = {
 		is_switching_weapons = "boolean",
 		last_weapon_switch_t = "number",
 		wanted_combat_range = "string",
-		wanted_weapon_slot = "string",
+		wanted_weapon_slot = "string"
 	},
 	record_state = {
-		has_disabled_player = "boolean",
+		has_disabled_player = "boolean"
 	},
 	summon_unit = {
 		last_owner_position = "Vector3Box",
-		owner = "Unit",
+		owner = "Unit"
 	},
 	patrol = {
 		auto_patrol = "boolean",
@@ -46,14 +46,14 @@ local chaos_hound = {
 		patrol_index = "number",
 		patrol_leader_unit = "Unit",
 		should_patrol = "boolean",
-		walk_position = "Vector3Box",
-	},
+		walk_position = "Vector3Box"
+	}
 }
 
 table.merge(chaos_hound, base_template)
 
 local templates = {
-	chaos_hound = chaos_hound,
+	chaos_hound = chaos_hound
 }
 
 return templates

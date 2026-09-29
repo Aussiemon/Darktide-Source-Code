@@ -6,7 +6,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local WalletSettings = require("scripts/settings/wallet_settings")
 local scenegraph_definition = {
-	screen = UIWorkspaceSettings.screen,
+	screen = UIWorkspaceSettings.screen
 }
 local widget_definitions = {}
 local input_legend_params = {
@@ -19,13 +19,13 @@ local input_legend_params = {
 			on_pressed_callback = "cb_on_close_pressed",
 			visibility_function = function (parent)
 				return parent._presenting_options
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 local intro_texts = {
 	description_text = "loc_barber_vendor_view_intro_description",
-	title_text = "loc_barber_vendor_view_intro_title",
+	title_text = "loc_barber_vendor_view_intro_title"
 }
 
 local function button_options_definitions()
@@ -46,17 +46,17 @@ local function button_options_definitions()
 								return {
 									is_barber_appearance = true,
 									pass_draw = false,
-									pass_input = true,
+									pass_input = true
 								}
-							end,
-						},
-					},
+							end
+						}
+					}
 				}
 
 				self:_setup_tab_bar(tab_bar_params, {
-					fetch_store_items_on_enter = true,
+					fetch_store_items_on_enter = true
 				})
-			end,
+			end
 		},
 		{
 			display_name = "loc_barber_vendor_view_option_mindwipe",
@@ -75,15 +75,15 @@ local function button_options_definitions()
 									return {
 										is_barber_mindwipe = true,
 										pass_draw = false,
-										pass_input = true,
+										pass_input = true
 									}
-								end,
-							},
-						},
+								end
+							}
+						}
 					}
 
 					self:_setup_tab_bar(tab_bar_params, {
-						fetch_store_items_on_enter = true,
+						fetch_store_items_on_enter = true
 					})
 				elseif self._operations then
 					local context = {
@@ -91,15 +91,15 @@ local function button_options_definitions()
 						title_text = "loc_mindwipe_insufficient_funds_popup_title",
 						description_text_params = {
 							cost = self._cost,
-							balance = self._balance,
+							balance = self._balance
 						},
 						options = {
 							{
 								close_on_pressed = true,
 								text = "loc_popup_button_close",
-								on_pressed_sound = UISoundEvents.default_click,
-							},
-						},
+								on_pressed_sound = UISoundEvents.default_click
+							}
+						}
 					}
 
 					Managers.event:trigger("event_show_ui_popup", context)
@@ -115,9 +115,9 @@ local function button_options_definitions()
 							{
 								close_on_pressed = true,
 								text = "loc_barber_vendor_confirm_button",
-								on_pressed_sound = UISoundEvents.default_click,
-							},
-						},
+								on_pressed_sound = UISoundEvents.default_click
+							}
+						}
 					}
 
 					Managers.event:trigger("event_show_ui_popup", context)
@@ -126,8 +126,8 @@ local function button_options_definitions()
 
 					return result
 				end
-			end,
-		},
+			end
+		}
 	}
 	local player = Managers.player:local_player(1)
 	local real_profile = player:profile()
@@ -150,17 +150,17 @@ local function button_options_definitions()
 								return {
 									is_barber_companion_appearance = true,
 									pass_draw = false,
-									pass_input = true,
+									pass_input = true
 								}
-							end,
-						},
-					},
+							end
+						}
+					}
 				}
 
 				self:_setup_tab_bar(tab_bar_params, {
-					fetch_store_items_on_enter = true,
+					fetch_store_items_on_enter = true
 				})
-			end,
+			end
 		})
 	end
 
@@ -177,7 +177,7 @@ local background_world_params = {
 	viewport_name = "ui_credits_vendor_world_viewport",
 	viewport_type = "default",
 	world_layer = 1,
-	world_name = "ui_credits_vendor_world",
+	world_name = "ui_credits_vendor_world"
 }
 
 return {
@@ -186,5 +186,5 @@ return {
 	scenegraph_definition = scenegraph_definition,
 	button_options_definitions = button_options_definitions,
 	input_legend_params = input_legend_params,
-	background_world_params = background_world_params,
+	background_world_params = background_world_params
 }

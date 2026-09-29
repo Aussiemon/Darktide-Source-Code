@@ -14,7 +14,7 @@ local settings = {
 		"loading",
 		"in_game",
 		"leaving_game",
-		"training_complete",
+		"training_complete"
 	},
 	side_compositions = {
 		{
@@ -22,41 +22,41 @@ local settings = {
 			name = "heroes",
 			relations = {
 				enemy = {
-					"villains",
-				},
-			},
+					"villains"
+				}
+			}
 		},
 		{
 			color_name = "red",
 			name = "villains",
 			relations = {
 				enemy = {
-					"heroes",
-				},
-			},
-		},
+					"heroes"
+				}
+			}
+		}
 	},
 	side_sub_faction_types = {
 		villains = {
 			"chaos",
 			"cultist",
-			"renegade",
-		},
+			"renegade"
+		}
 	},
 	hud_settings = {
-		player_composition = "party",
+		player_composition = "party"
 	},
 	hotkeys = {
 		hotkey_inventory = "inventory_background_view",
-		hotkey_system = "system_view",
+		hotkey_system = "system_view"
 	},
 	hotkeys_disabled_on_gamepad = {
-		hotkey_inventory = true,
+		hotkey_inventory = true
 	},
 	default_init_scripted_scenario = {
 		alias = "shooting_range",
-		name = "init",
-	},
+		name = "init"
+	}
 }
 
 return settings

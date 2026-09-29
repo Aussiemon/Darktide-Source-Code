@@ -16,7 +16,7 @@ RemoteLeaveSessionState.enter = function (self, reason)
 	if shared_state.has_been_in_session then
 		shared_state.event_list[#shared_state.event_list + 1] = {
 			name = "session_left",
-			parameters = reason,
+			parameters = reason
 		}
 		shared_state.has_been_in_session = false
 	end

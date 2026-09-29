@@ -8,43 +8,43 @@ local constant_element_notification_feed_settings = {
 	text_height_spacing = 15,
 	header_size = {
 		470,
-		44,
+		44
 	},
 	events = {
 		{
 			"event_add_notification_message",
-			"event_add_notification_message",
+			"event_add_notification_message"
 		},
 		{
 			"event_update_notification_message",
-			"event_update_notification_message",
+			"event_update_notification_message"
 		},
 		{
 			"event_remove_notification",
-			"event_remove_notification",
+			"event_remove_notification"
 		},
 		{
 			"event_clear_notifications",
-			"event_clear_notifications",
+			"event_clear_notifications"
 		},
 		{
 			"event_update_assist_notification_type",
-			"event_update_assist_notification_type",
+			"event_update_assist_notification_type"
 		},
 		{
 			"event_update_crafting_pickup_notification_type",
-			"event_update_crafting_pickup_notification_type",
+			"event_update_crafting_pickup_notification_type"
 		},
 		{
 			"event_update_notification_progress",
-			"event_update_notification_progress",
-		},
+			"event_update_notification_progress"
+		}
 	},
 	trait_sound_events_by_rarity = {
 		UiSoundEvents.notification_trait_received_rarity_1,
 		UiSoundEvents.notification_trait_received_rarity_2,
 		UiSoundEvents.notification_trait_received_rarity_3,
-		UiSoundEvents.notification_trait_received_rarity_4,
+		UiSoundEvents.notification_trait_received_rarity_4
 	},
 	sound_event_by_item_type = {
 		WEAPON_SKIN = UiSoundEvents.notification_weapon_skin_received,
@@ -69,8 +69,8 @@ local constant_element_notification_feed_settings = {
 		HAIR_COLOR = UiSoundEvents.notification_cosmetic_received,
 		EYE_COLOR = UiSoundEvents.notification_cosmetic_received,
 		LENS_COLOR = UiSoundEvents.notification_cosmetic_received,
-		METAL_COLOR = UiSoundEvents.notification_cosmetic_received,
-	},
+		METAL_COLOR = UiSoundEvents.notification_cosmetic_received
+	}
 }
 
 return settings("ConstantElementNotificationFeedSettings", constant_element_notification_feed_settings)

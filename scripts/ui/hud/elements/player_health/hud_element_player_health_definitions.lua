@@ -16,8 +16,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			HudElementPlayerHealthSettings.edge_offset,
-			0,
-		},
+			0
+		}
 	},
 	toughness_bar = {
 		horizontal_alignment = "center",
@@ -27,9 +27,9 @@ local scenegraph_definition = {
 		position = {
 			0,
 			HudElementPlayerToughnessSettings.edge_offset,
-			0,
-		},
-	},
+			0
+		}
+	}
 }
 local widget_definitions = {
 	health = UIWidget.create_definition({
@@ -43,12 +43,12 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
 				size = bar_size,
-				color = UIHudSettings.color_tint_1,
-			},
-		},
+				color = UIHudSettings.color_tint_1
+			}
+		}
 	}, "bar"),
 	health_ghost = UIWidget.create_definition({
 		{
@@ -61,12 +61,12 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				size = bar_size,
-				color = UIHudSettings.color_tint_5,
-			},
-		},
+				color = UIHudSettings.color_tint_5
+			}
+		}
 	}, "bar"),
 	health_max = UIWidget.create_definition({
 		{
@@ -79,12 +79,12 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size = bar_size,
-				color = UIHudSettings.color_tint_3,
-			},
-		},
+				color = UIHudSettings.color_tint_3
+			}
+		}
 	}, "bar"),
 	frame = UIWidget.create_definition({
 		{
@@ -97,15 +97,15 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				size = {
 					bar_size[1],
-					bar_size[2],
+					bar_size[2]
 				},
-				color = UIHudSettings.color_tint_5,
-			},
-		},
+				color = UIHudSettings.color_tint_5
+			}
+		}
 	}, "bar"),
 	death_pulse = UIWidget.create_definition({
 		{
@@ -118,20 +118,20 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				size = {
 					bar_size[1],
-					bar_size[2] + 10,
+					bar_size[2] + 10
 				},
 				color = {
 					255,
 					255,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "bar"),
 	frame_shadow = UIWidget.create_definition({
 		{
@@ -144,15 +144,15 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				size = {
 					bar_size[1] + 10,
-					bar_size[2] + 10,
+					bar_size[2] + 10
 				},
-				color = UIHudSettings.color_tint_0,
-			},
-		},
+				color = UIHudSettings.color_tint_0
+			}
+		}
 	}, "bar"),
 	background = UIWidget.create_definition({
 		{
@@ -163,9 +163,9 @@ local widget_definitions = {
 				horizontal_alignment = "left",
 				vertical_alignment = "center",
 				size = bar_size,
-				color = UIHudSettings.color_tint_0,
-			},
-		},
+				color = UIHudSettings.color_tint_0
+			}
+		}
 	}, "bar"),
 	toughness = UIWidget.create_definition({
 		{
@@ -178,12 +178,12 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
 				size = bar_size,
-				color = UIHudSettings.color_tint_6,
-			},
-		},
+				color = UIHudSettings.color_tint_6
+			}
+		}
 	}, "toughness_bar"),
 	toughness_ghost = UIWidget.create_definition({
 		{
@@ -196,12 +196,12 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				size = bar_size,
-				color = UIHudSettings.color_tint_6,
-			},
-		},
+				color = UIHudSettings.color_tint_6
+			}
+		}
 	}, "toughness_bar"),
 	toughness_max = UIWidget.create_definition({
 		{
@@ -214,12 +214,12 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size = bar_size,
-				color = UIHudSettings.color_tint_3,
-			},
-		},
+				color = UIHudSettings.color_tint_3
+			}
+		}
 	}, "toughness_bar"),
 	toughness_frame = UIWidget.create_definition({
 		{
@@ -232,15 +232,15 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				size = {
 					bar_size[1],
-					bar_size[2],
+					bar_size[2]
 				},
-				color = UIHudSettings.color_tint_5,
-			},
-		},
+				color = UIHudSettings.color_tint_5
+			}
+		}
 	}, "toughness_bar"),
 	toughness_death_pulse = UIWidget.create_definition({
 		{
@@ -253,20 +253,20 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				size = {
 					bar_size[1],
-					bar_size[2] + 10,
+					bar_size[2] + 10
 				},
 				color = {
 					255,
 					255,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "toughness_bar"),
 	toughness_frame_shadow = UIWidget.create_definition({
 		{
@@ -279,15 +279,15 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				size = {
 					bar_size[1] + 10,
-					bar_size[2] + 10,
+					bar_size[2] + 10
 				},
-				color = UIHudSettings.color_tint_0,
-			},
-		},
+				color = UIHudSettings.color_tint_0
+			}
+		}
 	}, "toughness_bar"),
 	toughness_background = UIWidget.create_definition({
 		{
@@ -298,13 +298,13 @@ local widget_definitions = {
 				horizontal_alignment = "left",
 				vertical_alignment = "center",
 				size = bar_size,
-				color = UIHudSettings.color_tint_0,
-			},
-		},
-	}, "toughness_bar"),
+				color = UIHudSettings.color_tint_0
+			}
+		}
+	}, "toughness_bar")
 }
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

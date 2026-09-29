@@ -10,7 +10,7 @@ Expedition.reset = function (self, reset_type)
 		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/expedition/reset/"):path(reset_type)
 
 		return Managers.backend:title_request(builder:to_string(), {
-			method = "DELETE",
+			method = "DELETE"
 		})
 	end)
 end
@@ -19,7 +19,7 @@ Expedition.settings_by_template = function (self, template_name, optional_node_i
 	local builder = BackendUtilities.url_builder():path("/data/expedition/settings/"):path(template_name):query("nodeId", optional_node_id):query("version", optional_settings_version)
 
 	return Managers.backend:title_request(builder:to_string(), {
-		method = "GET",
+		method = "GET"
 	}):next(function (data)
 		return data.body
 	end):catch(function (error)

@@ -14,11 +14,11 @@ local chaos_ogryn_gunner = {
 	damage_falloff = {
 		falloff_range = 30,
 		max_power_reduction = 0.2,
-		max_range = 30,
-	},
+		max_range = 30
+	}
 }
 local shoot_templates = {
-	chaos_ogryn_gunner = chaos_ogryn_gunner,
+	chaos_ogryn_gunner = chaos_ogryn_gunner
 }
 
 return shoot_templates

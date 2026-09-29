@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/difficulty/danger_settings.lua
 
-local DangerSettings = {
+local danger_levels = {
 	{
 		challenge = 2,
 		difficulty = 2,
@@ -15,8 +15,8 @@ local DangerSettings = {
 			255,
 			151,
 			247,
-			164,
-		},
+			164
+		}
 	},
 	{
 		challenge = 3,
@@ -32,8 +32,8 @@ local DangerSettings = {
 			255,
 			76,
 			198,
-			93,
-		},
+			93
+		}
 	},
 	{
 		challenge = 4,
@@ -49,8 +49,8 @@ local DangerSettings = {
 			255,
 			255,
 			193,
-			6,
-		},
+			6
+		}
 	},
 	{
 		challenge = 5,
@@ -66,8 +66,8 @@ local DangerSettings = {
 			255,
 			255,
 			134,
-			21,
-		},
+			21
+		}
 	},
 	{
 		challenge = 5,
@@ -83,13 +83,39 @@ local DangerSettings = {
 			255,
 			255,
 			83,
-			44,
-		},
-	},
+			44
+		}
+	}
 }
+local default_danger_level = {
+	challenge = nil,
+	difficulty = -1,
+	digital_icon = "content/ui/materials/icons/difficulty/difficulty_skull_default",
+	display_name = "loc_group_finder_difficulty_undefined",
+	icon = "content/ui/materials/icons/difficulty/flat/difficulty_skull_default",
+	index = -1,
+	is_auric = false,
+	name = "undefined",
+	resistance = nil,
+	unlocks_at = 1,
+	color = {
+		255,
+		255,
+		0,
+		255
+	}
+}
+local danger_levels_by_name = {}
 
-for i, data in ipairs(DangerSettings) do
-	data.index = i
+for ii, data in ipairs(danger_levels) do
+	data.index = ii
+	danger_levels_by_name[data.name] = data
 end
 
-return settings("DangerSettings", DangerSettings)
+local danger_settings = {
+	danger_levels = danger_levels,
+	danger_levels_by_name = danger_levels_by_name,
+	default_danger_level = default_danger_level
+}
+
+return settings("DangerSettings", danger_settings)

@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/grenades/psyker_chain_lightning.lua
 
+local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
@@ -21,36 +22,36 @@ local chain_settings_spread = {
 	max_targets_at_time = {
 		{
 			num_targets = 1,
-			t = 0,
+			t = 0
 		},
 		{
 			num_targets = 2,
-			t = 1,
+			t = 1
 		},
 		{
 			num_targets = 3,
-			t = 2,
-		},
+			t = 2
+		}
 	},
 	max_jumps_at_time = {
 		{
 			num_jumps = 0,
-			t = 0,
+			t = 0
 		},
 		{
 			num_jumps = 1,
-			t = 1.2,
+			t = 1.2
 		},
 		{
 			num_jumps = 2,
-			t = 1.8,
+			t = 1.8
 		},
 		{
 			num_jumps = 3,
-			t = 2.7,
-		},
+			t = 2.7
+		}
 	},
-	max_angle = math.pi * 0.35,
+	max_angle = math.pi * 0.35
 }
 local chain_settings_spread_targeting = {
 	extra_angle_stat_buff = "chain_lightning_max_angle",
@@ -65,18 +66,18 @@ local chain_settings_spread_targeting = {
 	max_targets_at_time = {
 		{
 			num_targets = 1,
-			t = 0,
+			t = 0
 		},
 		{
 			num_targets = 2,
-			t = 1,
+			t = 1
 		},
 		{
 			num_targets = 3,
-			t = 2,
-		},
+			t = 2
+		}
 	},
-	max_angle = math.pi * 0.05,
+	max_angle = math.pi * 0.05
 }
 local chain_settings_spread_charge = {
 	extra_angle_stat_buff = "chain_lightning_max_angle",
@@ -91,36 +92,36 @@ local chain_settings_spread_charge = {
 	max_targets_at_time = {
 		{
 			num_targets = 1,
-			t = 0,
+			t = 0
 		},
 		{
 			num_targets = 2,
-			t = 0.15,
+			t = 0.15
 		},
 		{
 			num_targets = 3,
-			t = 0.3,
-		},
+			t = 0.3
+		}
 	},
 	max_jumps_at_time = {
 		{
 			num_jumps = 0,
-			t = 0,
+			t = 0
 		},
 		{
 			num_jumps = 1,
-			t = 0.4,
+			t = 0.4
 		},
 		{
 			num_jumps = 2,
-			t = 0.6,
+			t = 0.6
 		},
 		{
 			num_jumps = 3,
-			t = 0.9,
-		},
+			t = 0.9
+		}
 	},
-	max_angle = math.pi * 0.35,
+	max_angle = math.pi * 0.35
 }
 local chain_settings_spread_charge_targeting = {
 	extra_angle_stat_buff = "chain_lightning_max_angle",
@@ -135,18 +136,18 @@ local chain_settings_spread_charge_targeting = {
 	max_targets_at_time = {
 		{
 			num_targets = 1,
-			t = 0,
+			t = 0
 		},
 		{
 			num_targets = 2,
-			t = 0.3,
+			t = 0.3
 		},
 		{
 			num_targets = 3,
-			t = 0.6,
-		},
+			t = 0.6
+		}
 	},
-	max_angle = math.pi * 0.25,
+	max_angle = math.pi * 0.25
 }
 
 weapon_template.action_inputs = {
@@ -155,13 +156,13 @@ weapon_template.action_inputs = {
 		input_sequence = {
 			{
 				input = "action_one_pressed",
-				value = true,
+				value = true
 			},
 			{
 				input = "action_one_hold",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	shoot_light_hold_release = {
 		buffer_time = 0.76,
@@ -169,27 +170,27 @@ weapon_template.action_inputs = {
 			{
 				input = "action_one_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				time_window = math.huge
+			}
+		}
 	},
 	charge_heavy = {
 		buffer_time = 0.5,
 		input_sequence = {
 			{
 				input = "action_two_hold",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	charge_heavy_cancel = {
 		buffer_time = 0.4,
 		input_sequence = {
 			{
 				input = "action_two_hold",
-				value = false,
-			},
-		},
+				value = false
+			}
+		}
 	},
 	shoot_heavy_hold = {
 		buffer_time = 0.5,
@@ -197,14 +198,14 @@ weapon_template.action_inputs = {
 			{
 				input = "action_one_pressed",
 				value = true,
-				time_window = math.huge,
+				time_window = math.huge
 			},
 			{
 				input = "action_one_hold",
 				value = true,
-				time_window = math.huge,
-			},
-		},
+				time_window = math.huge
+			}
+		}
 	},
 	shoot_heavy_hold_release = {
 		buffer_time = 0.76,
@@ -213,25 +214,25 @@ weapon_template.action_inputs = {
 				inputs = {
 					{
 						input = "action_two_hold",
-						value = false,
+						value = false
 					},
 					{
 						input = "action_one_hold",
-						value = false,
-					},
+						value = false
+					}
 				},
-				time_window = math.huge,
-			},
-		},
+				time_window = math.huge
+			}
+		}
 	},
 	charge = {
 		buffer_time = 0.1,
 		input_sequence = {
 			{
 				input = "action_two_hold",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	vent = {
 		buffer_time = 0,
@@ -239,9 +240,9 @@ weapon_template.action_inputs = {
 		input_sequence = {
 			{
 				input = "weapon_reload_hold",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	vent_release = {
 		buffer_time = 0.1,
@@ -249,14 +250,14 @@ weapon_template.action_inputs = {
 			{
 				input = "weapon_reload_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				time_window = math.huge
+			}
+		}
 	},
 	force_vent = {
 		buffer_time = 0,
 		clear_input_queue = true,
-		input_sequence = nil,
+		input_sequence = nil
 	},
 	force_vent_release = {
 		buffer_time = 0.8,
@@ -264,27 +265,27 @@ weapon_template.action_inputs = {
 			{
 				input = "weapon_reload_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				time_window = math.huge
+			}
+		}
 	},
 	wield = {
-		buffer_time = 0,
+		buffer_time = 0.4,
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				inputs = wield_inputs,
-			},
-		},
+				inputs = wield_inputs
+			}
+		}
 	},
 	inspect_start = {
 		buffer_time = 0,
 		input_sequence = {
 			{
 				input = "weapon_inspect_hold",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	inspect_stop = {
 		buffer_time = 0.02,
@@ -292,9 +293,9 @@ weapon_template.action_inputs = {
 			{
 				input = "weapon_inspect_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				time_window = math.huge
+			}
+		}
 	},
 	inspect_3p_start = {
 		buffer_time = 0,
@@ -302,9 +303,9 @@ weapon_template.action_inputs = {
 			{
 				hold_input = "weapon_inspect_hold",
 				input = "action_two_pressed",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	inspect_3p_stop = {
 		buffer_time = 0,
@@ -312,21 +313,14 @@ weapon_template.action_inputs = {
 			{
 				hold_input = "weapon_inspect_hold",
 				input = "action_two_pressed",
-				value = true,
-			},
-		},
-	},
-	combat_ability = {
-		buffer_time = 0,
-		clear_input_queue = true,
-		input_sequence = {
-			{
-				input = "combat_ability_pressed",
-				value = true,
-			},
-		},
-	},
+				value = true
+			}
+		}
+	}
 }
+
+table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
+
 weapon_template.action_input_hierarchy = {
 	{
 		input = "charge_heavy",
@@ -336,131 +330,99 @@ weapon_template.action_input_hierarchy = {
 				transition = {
 					{
 						input = "shoot_heavy_hold_release",
-						transition = "base",
+						transition = "base"
 					},
 					{
 						input = "wield",
-						transition = "base",
-					},
-					{
-						input = "combat_ability",
-						transition = "base",
+						transition = "base"
 					},
 					{
 						input = "force_vent",
-						transition = "base",
-					},
-				},
+						transition = "base"
+					}
+				}
 			},
 			{
 				input = "charge_heavy_cancel",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "wield",
-				transition = "base",
-			},
-			{
-				input = "combat_ability",
-				transition = "base",
-			},
-		},
+				transition = "base"
+			}
+		}
 	},
 	{
 		input = "shoot_light_pressed",
 		transition = {
 			{
 				input = "shoot_light_hold_release",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "wield",
-				transition = "base",
-			},
-			{
-				input = "combat_ability",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "force_vent",
-				transition = "base",
-			},
-		},
+				transition = "base"
+			}
+		}
 	},
 	{
 		input = "vent",
 		transition = {
 			{
 				input = "vent_release",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "wield",
-				transition = "base",
-			},
-			{
-				input = "combat_ability",
-				transition = "base",
-			},
-		},
+				transition = "base"
+			}
+		}
 	},
 	{
 		input = "force_vent",
 		transition = {
 			{
 				input = "force_vent_release",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "wield",
-				transition = "base",
-			},
-			{
-				input = "combat_ability",
-				transition = "base",
-			},
-		},
+				transition = "base"
+			}
+		}
 	},
 	{
 		input = "inspect_start",
 		transition = {
 			{
 				input = "inspect_stop",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "inspect_3p_start",
 				transition = {
 					{
 						input = "inspect_3p_stop",
-						transition = "previous",
+						transition = "previous"
 					},
 					{
 						input = "inspect_stop",
-						transition = "base",
-					},
-				},
-			},
-		},
+						transition = "base"
+					}
+				}
+			}
+		}
 	},
 	{
 		input = "wield",
-		transition = "stay",
-	},
-	{
-		input = "combat_ability",
-		transition = "base",
-	},
+		transition = "stay"
+	}
 }
 weapon_template.actions = {
-	action_unwield = {
-		allowed_during_sprint = true,
-		kind = "unwield",
-		start_input = "wield",
-		total_time = 0,
-		uninterruptible = true,
-		allowed_chain_actions = {},
-	},
 	action_wield = {
 		allowed_during_sprint = true,
 		anim_event = "equip_chainlightning",
@@ -468,27 +430,21 @@ weapon_template.actions = {
 		total_time = 0.5,
 		uninterruptible = true,
 		allowed_chain_actions = {
-			wield = {
-				action_name = "action_unwield",
-			},
-			combat_ability = {
-				action_name = "combat_ability",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			shoot_light_pressed = {
 				action_name = "action_spread",
-				chain_time = 0.01,
+				chain_time = 0.01
 			},
 			charge_heavy = {
 				action_name = "action_charge",
-				chain_time = 0.01,
+				chain_time = 0.01
 			},
 			vent = {
-				action_name = "action_vent",
-			},
-		},
+				action_name = "action_vent"
+			}
+		}
 	},
 	action_spread = {
-		ability_type = "grenade_ability",
 		allowed_during_sprint = false,
 		anim_end_event = "attack_spread_damage",
 		anim_end_event_3p = "attack_shoot_right",
@@ -511,57 +467,51 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 0.6,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.5,
-				t = 0.3,
+				t = 0.3
 			},
 			{
 				modifier = 0.3,
-				t = 0.6,
+				t = 0.6
 			},
-			start_modifier = 0.8,
+			start_modifier = 0.8
 		},
 		chain_lightning_link_effects = {
-			power = "low",
+			power = "low"
 		},
 		running_action_state_to_action_input = {
 			force_vent = {
-				input_name = "force_vent",
-			},
+				input_name = "force_vent"
+			}
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			vent = {
-				action_name = "action_vent",
+				action_name = "action_vent"
 			},
 			force_vent = {
-				action_name = "action_force_vent",
-			},
+				action_name = "action_force_vent"
+			}
 		},
 		fx = {
 			fx_hand = "left",
 			jump_sfx_alias = "ranged_single_shot_special_extra",
-			looping_shoot_sfx_alias = "ranged_shooting",
+			looping_shoot_sfx_alias = "ranged_shooting"
 		},
 		charge_effects = {
 			sfx_parameter = "charge_level",
 			sfx_source_name = "_left",
-			use_chain_jumping_as_charge = true,
+			use_chain_jumping_as_charge = true
 		},
 		damage_profile = DamageProfileTemplates.psyker_protectorate_channel_chain_lightning_activated,
 		damage_type = damage_types.electrocution,
 		chain_settings = chain_settings_spread,
-		chain_settings_targeting = chain_settings_spread_targeting,
+		chain_settings_targeting = chain_settings_spread_targeting
 	},
 	action_charge = {
-		ability_type = "grenade_ability",
 		allowed_during_sprint = true,
 		anim_end_event = "attack_charge_cancel",
 		anim_event = "attack_charge_fast",
@@ -578,26 +528,26 @@ weapon_template.actions = {
 		target_missing_anim_event = "attack_charge_cancel",
 		total_time = math.huge,
 		crosshair = {
-			crosshair_type = "charge_up",
+			crosshair_type = "charge_up"
 		},
 		action_movement_curve = {
 			{
 				modifier = 0.85,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.84,
-				t = 0.3,
+				t = 0.3
 			},
 			{
 				modifier = 0.86,
-				t = 0.5,
+				t = 0.5
 			},
 			{
 				modifier = 0.87,
-				t = 1.5,
+				t = 1.5
 			},
-			start_modifier = 0.8,
+			start_modifier = 0.8
 		},
 		smart_targeting_template = SmartTargetingTemplates.chain_lightning_single_target,
 		charge_effects = {
@@ -607,7 +557,7 @@ weapon_template.actions = {
 			looping_sound_alias = "ranged_charging",
 			sfx_parameter = "charge_level",
 			sfx_source_name = "_charge",
-			vfx_source_name = "_charge",
+			vfx_source_name = "_charge"
 		},
 		targeting_fx = {
 			effect_name = "content/fx/particles/abilities/chainlightning/protectorate_chainlightning_single_targeting",
@@ -617,30 +567,24 @@ weapon_template.actions = {
 			target_node = "j_spine",
 			wwise_event_start = "wwise/events/weapon/play_psyker_lightning_bolt_target",
 			wwise_event_stop = "wwise/events/weapon/stop_psyker_lightning_bolt_target",
-			wwise_parameter_name = "charge_level",
+			wwise_parameter_name = "charge_level"
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			shoot_heavy_hold = {
 				action_name = "action_spread_charged",
-				chain_time = 0.75,
+				chain_time = 0.75
 			},
 			vent = {
-				action_name = "action_vent",
-			},
+				action_name = "action_vent"
+			}
 		},
 		fx = {
-			fx_hand = "right",
+			fx_hand = "right"
 		},
-		chain_settings_targeting = chain_settings_spread_charge_targeting,
+		chain_settings_targeting = chain_settings_spread_charge_targeting
 	},
 	action_spread_charged = {
-		ability_type = "grenade_ability",
 		allowed_during_sprint = false,
 		anim_end_event = "attack_spread_damage",
 		anim_end_event_3p = "attack_shoot_right",
@@ -664,54 +608,49 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 0.6,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.5,
-				t = 0.3,
+				t = 0.3
 			},
 			{
 				modifier = 0.3,
-				t = 0.6,
+				t = 0.6
 			},
-			start_modifier = 0.8,
+			start_modifier = 0.8
 		},
 		chain_lightning_link_effects = {
-			power = "high",
+			power = "high"
 		},
 		running_action_state_to_action_input = {
 			force_vent = {
-				input_name = "force_vent",
-			},
+				input_name = "force_vent"
+			}
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			vent = {
-				action_name = "action_vent",
+				action_name = "action_vent"
 			},
 			force_vent = {
-				action_name = "action_force_vent",
-			},
+				action_name = "action_force_vent"
+			}
 		},
 		fx = {
 			fx_hand = "right",
 			jump_sfx_alias = "ranged_single_shot_special_extra",
-			looping_shoot_sfx_alias = "ranged_braced_shooting",
+			looping_shoot_sfx_alias = "ranged_braced_shooting"
 		},
 		charge_effects = {
 			sfx_parameter = "charge_level",
 			sfx_source_name = "_right",
-			use_chain_jumping_as_charge = true,
+			use_chain_jumping_as_charge = true
 		},
 		damage_profile = DamageProfileTemplates.psyker_protectorate_channel_chain_lightning_activated,
 		damage_type = damage_types.electrocution,
 		chain_settings = chain_settings_spread_charge,
-		chain_settings_targeting = chain_settings_spread_charge_targeting,
+		chain_settings_targeting = chain_settings_spread_charge_targeting
 	},
 	action_force_vent = {
 		additional_vent_source_name = "fx_right_hand",
@@ -731,36 +670,32 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 0.4,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.4,
-				t = 0.15,
+				t = 0.15
 			},
 			{
 				modifier = 0.6,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.4,
-				t = 1,
+				t = 1
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		running_action_state_to_action_input = {
 			fully_vented = {
-				input_name = "vent_release",
-			},
+				input_name = "vent_release"
+			}
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			wield = {
-				action_name = "action_unwield",
-				chain_time = 0.15,
-			},
-		},
+			wield = BaseTemplateSettings.generate_wield_chain_actions({
+				chain_time = 0.15
+			})
+		}
 	},
 	action_vent = {
 		additional_vent_source_name = "fx_right_hand",
@@ -778,98 +713,41 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 0.4,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.4,
-				t = 0.15,
+				t = 0.15
 			},
 			{
 				modifier = 0.6,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.4,
-				t = 1,
+				t = 1
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		running_action_state_to_action_input = {
 			fully_vented = {
-				input_name = "vent_release",
-			},
+				input_name = "vent_release"
+			}
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			wield = {
-				action_name = "action_unwield",
-				chain_time = 0.15,
-			},
-		},
+			wield = BaseTemplateSettings.generate_wield_chain_actions({
+				chain_time = 0.15
+			})
+		}
 	},
-	combat_ability = {
-		kind = "unwield_to_specific",
-		slot_to_wield = "slot_combat_ability",
-		start_input = "combat_ability",
-		total_time = 0,
-		uninterruptible = true,
-		allowed_chain_actions = {},
-	},
-	action_inspect_3p = {
-		action_prevents_jump = true,
-		block_first_person_rotation = true,
-		can_crouch = false,
-		can_jump = false,
-		force_look = true,
-		kind = "inspect_3p",
-		lock_view = false,
-		skip_3p_anims = false,
-		stop_input = "inspect_stop",
-		total_time = math.huge,
-		anim_end_event_condition_func = function (unit, data, end_reason)
-			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
-		end,
-		crosshair = {
-			crosshair_type = "inspect",
-		},
-		allowed_chain_actions = {
-			inspect_3p_stop = {
-				action_name = "action_inspect",
-				chain_time = 1.1,
-			},
-		},
-		action_movement_curve = {
-			{
-				modifier = 0,
-				t = 0,
-			},
-			start_modifier = 0,
-		},
-	},
-	action_inspect = {
-		anim_end_event = "inspect_end",
-		anim_event = "inspect_start",
-		kind = "inspect",
-		lock_view = true,
-		skip_3p_anims = true,
-		start_input = "inspect_start",
-		stop_input = "inspect_stop",
-		total_time = math.huge,
-		crosshair = {
-			crosshair_type = "inspect",
-		},
-		allowed_chain_actions = {
-			inspect_3p_start = {
-				action_name = "action_inspect_3p",
-				chain_time = 0.75,
-			},
-		},
-	},
+	action_inspect = BaseTemplateSettings.generate_inspect_action(),
+	action_inspect_3p = BaseTemplateSettings.generate_inspect_3p_action()
 }
+
+table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
+
 weapon_template.keywords = {
-	"psyker",
+	"psyker"
 }
 weapon_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/psyker_smite"
 weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/chain_lightning"
@@ -878,24 +756,24 @@ weapon_template.ammo_template = "no_ammo"
 weapon_template.psyker_smite = true
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
-	uses_overheat = false,
+	uses_overheat = false
 }
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.crosshair = {
-	crosshair_type = "dot",
+	crosshair_type = "dot"
 }
 weapon_template.hit_marker_type = "center"
 weapon_template.fx_sources = {
 	_both = "fx_both",
 	_charge = "fx_charge",
 	_left = "fx_left",
-	_right = "fx_right",
+	_right = "fx_right"
 }
 weapon_template.chain_settings = {
 	left_fx_source_name = "_left",
-	right_fx_source_name = "_right",
+	right_fx_source_name = "_right"
 }
 weapon_template.dodge_template = "default"
 weapon_template.sprint_template = "default"

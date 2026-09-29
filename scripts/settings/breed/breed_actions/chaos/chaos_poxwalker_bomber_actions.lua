@@ -6,16 +6,16 @@ local UtilityConsiderations = require("scripts/extension_systems/behavior/utilit
 local action_data = {
 	name = "chaos_poxwalker_bomber",
 	idle = {
-		anim_events = "idle",
+		anim_events = "idle"
 	},
 	death = {
-		instant_ragdoll_chance = 1,
+		instant_ragdoll_chance = 1
 	},
 	combat_idle = {
 		anim_events = "idle",
 		rotate_towards_target = true,
 		utility_weight = 2,
-		considerations = UtilityConsiderations.melee_combat_idle,
+		considerations = UtilityConsiderations.melee_combat_idle
 	},
 	climb = {
 		rotation_duration = 0.1,
@@ -30,7 +30,7 @@ local action_data = {
 			jump_up_5m = 5,
 			jump_up_fence_1m = 0.4666666666666667,
 			jump_up_fence_3m = 1.4,
-			jump_up_fence_5m = 1.2,
+			jump_up_fence_5m = 1.2
 		},
 		ending_move_states = {
 			jump_down_fence_land_1m = "jumping",
@@ -40,7 +40,7 @@ local action_data = {
 			jump_down_land_5m = "jumping",
 			jump_up_1m = "jumping",
 			jump_up_3m = "jumping",
-			jump_up_5m = "jumping",
+			jump_up_5m = "jumping"
 		},
 		blend_timings = {
 			jump_down = 0.2,
@@ -55,20 +55,20 @@ local action_data = {
 			jump_up_5m = 0,
 			jump_up_fence_1m = 0.2,
 			jump_up_fence_3m = 0.1,
-			jump_up_fence_5m = 0.1,
-		},
+			jump_up_fence_5m = 0.1
+		}
 	},
 	jump_across = {
 		rotation_duration = 0.1,
 		stagger_immune = true,
 		anim_timings = {
 			jump_over_gap_4m = 1.2333333333333334,
-			jump_over_gap_4m_2 = 1.4,
+			jump_over_gap_4m_2 = 1.4
 		},
 		ending_move_states = {
 			jump_over_gap_4m = "jumping",
-			jump_over_gap_4m_2 = "jumping",
-		},
+			jump_over_gap_4m_2 = "jumping"
+		}
 	},
 	approach = {
 		controlled_stagger = true,
@@ -95,24 +95,24 @@ local action_data = {
 		walk_anim_event = "walk_fwd",
 		stagger_type_reduction = {
 			melee = -200,
-			ranged = 20,
+			ranged = 20
 		},
 		running_stagger_anim_left = {
 			"run_stagger_1",
 			"run_stagger_2",
-			"run_stagger_3",
+			"run_stagger_3"
 		},
 		running_stagger_anim_right = {
 			"run_stagger_1",
 			"run_stagger_2",
-			"run_stagger_3",
+			"run_stagger_3"
 		},
 		running_stagger_duration = {
 			run_stagger_1 = 1.3666666666666667,
 			run_stagger_2 = 1.4333333333333333,
-			run_stagger_3 = 1.4333333333333333,
+			run_stagger_3 = 1.4333333333333333
 		},
-		push_enemies_damage_profile = DamageProfileTemplates.chaos_hound_push,
+		push_enemies_damage_profile = DamageProfileTemplates.chaos_hound_push
 	},
 	explode = {
 		explode_position_node = "j_spine2",
@@ -120,193 +120,193 @@ local action_data = {
 		utility_weight = 1,
 		considerations = UtilityConsiderations.chaos_poxwalker_bomber_explode,
 		explosion_template = ExplosionTemplates.poxwalker_bomber,
-		explosion_template_mild = ExplosionTemplates.poxwalker_bomber_mild,
+		explosion_template_mild = ExplosionTemplates.poxwalker_bomber_mild
 	},
 	stagger = {
 		ignore_extra_stagger_duration = true,
 		stagger_anims = {
 			light = {
 				fwd = {
-					"stagger_fwd",
+					"stagger_fwd"
 				},
 				bwd = {
-					"stagger_bwd",
+					"stagger_bwd"
 				},
 				left = {
-					"stagger_left",
+					"stagger_left"
 				},
 				right = {
-					"stagger_right",
+					"stagger_right"
 				},
 				dwn = {
-					"stun_down",
-				},
+					"stun_down"
+				}
 			},
 			medium = {
 				fwd = {
-					"stagger_fwd",
+					"stagger_fwd"
 				},
 				bwd = {
-					"stagger_bwd",
+					"stagger_bwd"
 				},
 				left = {
-					"stagger_left",
+					"stagger_left"
 				},
 				right = {
-					"stagger_right",
+					"stagger_right"
 				},
 				dwn = {
-					"stun_down",
-				},
+					"stun_down"
+				}
 			},
 			heavy = {
 				fwd = {
-					"stagger_fwd",
+					"stagger_fwd"
 				},
 				bwd = {
-					"stagger_bwd",
+					"stagger_bwd"
 				},
 				left = {
-					"stagger_left",
+					"stagger_left"
 				},
 				right = {
-					"stagger_right",
+					"stagger_right"
 				},
 				dwn = {
-					"stun_down",
-				},
+					"stun_down"
+				}
 			},
 			light_ranged = {
 				fwd = {
-					"stagger_fwd",
+					"stagger_fwd"
 				},
 				bwd = {
-					"stagger_bwd",
+					"stagger_bwd"
 				},
 				left = {
-					"stagger_left",
+					"stagger_left"
 				},
 				right = {
-					"stagger_right",
+					"stagger_right"
 				},
 				dwn = {
-					"stun_down",
-				},
+					"stun_down"
+				}
 			},
 			explosion = {
 				fwd = {
-					"stagger_fwd",
+					"stagger_fwd"
 				},
 				bwd = {
-					"stagger_bwd",
+					"stagger_bwd"
 				},
 				left = {
-					"stagger_left",
+					"stagger_left"
 				},
 				right = {
-					"stagger_right",
-				},
+					"stagger_right"
+				}
 			},
 			killshot = {
 				fwd = {
-					"stagger_fwd",
+					"stagger_fwd"
 				},
 				bwd = {
-					"stagger_bwd",
+					"stagger_bwd"
 				},
 				left = {
-					"stagger_left",
+					"stagger_left"
 				},
 				right = {
-					"stagger_right",
+					"stagger_right"
 				},
 				dwn = {
-					"stun_down",
-				},
+					"stun_down"
+				}
 			},
 			sticky = {
 				fwd = {
-					"stagger_fwd",
+					"stagger_fwd"
 				},
 				bwd = {
-					"stagger_bwd",
+					"stagger_bwd"
 				},
 				left = {
-					"stagger_left",
+					"stagger_left"
 				},
 				right = {
-					"stagger_right",
+					"stagger_right"
 				},
 				dwn = {
-					"stun_down",
-				},
+					"stun_down"
+				}
 			},
 			electrocuted = {
 				fwd = {
-					"stagger_fwd",
+					"stagger_fwd"
 				},
 				bwd = {
-					"stagger_bwd",
+					"stagger_bwd"
 				},
 				left = {
-					"stagger_left",
+					"stagger_left"
 				},
 				right = {
-					"stagger_right",
+					"stagger_right"
 				},
 				dwn = {
-					"stun_down",
-				},
+					"stun_down"
+				}
 			},
 			blinding = {
 				fwd = {
-					"stagger_fwd",
+					"stagger_fwd"
 				},
 				bwd = {
-					"stagger_bwd",
+					"stagger_bwd"
 				},
 				left = {
-					"stagger_left",
+					"stagger_left"
 				},
 				right = {
-					"stagger_right",
+					"stagger_right"
 				},
 				dwn = {
-					"stun_down",
-				},
-			},
-		},
+					"stun_down"
+				}
+			}
+		}
 	},
 	smash_obstacle = {
 		damage_type = nil,
 		rotation_duration = 0.1,
 		attack_anim_events = {
-			"attack_01",
+			"attack_01"
 		},
 		attack_anim_damage_timings = {
-			attack_01 = 0.6,
+			attack_01 = 0.6
 		},
 		attack_anim_durations = {
-			attack_01 = 1.2,
+			attack_01 = 1.2
 		},
 		attack_intensities = {
 			melee = 0.25,
-			ranged = 1,
+			ranged = 1
 		},
-		damage_profile = DamageProfileTemplates.default,
+		damage_profile = DamageProfileTemplates.default
 	},
 	open_door = {
 		open_door_time = 2.5,
 		rotation_duration = 0.1,
-		stagger_immune = true,
+		stagger_immune = true
 	},
 	exit_spawner = {
-		run_anim_event = "move_fwd",
+		run_anim_event = "move_fwd"
 	},
 	teleport = {
 		max_wait_time = 8,
-		min_wait_time = 6,
-	},
+		min_wait_time = 6
+	}
 }
 
 return action_data

@@ -10,26 +10,26 @@ local home_planet_options = {
 		unlocks = {
 			{
 				text = "loc_character_gang_unlocks",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		rotation = {
 			0,
 			0,
-			0,
+			0
 		},
 		on_pressed_sound = UISoundEvents.play_ui_character_create_select_cartel_water,
 		page_leave_sound = UISoundEvents.stop_ui_character_create_select_cartel_loops,
 		slot_items = {
 			slot_gear_head = "content/items/characters/player/human/gear_head/broker_headgear_15_var_04",
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/broker_lowerbody_progression_a_var_04",
-			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/broker_upperbody_progression_a_var_04",
+			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/broker_upperbody_progression_a_var_04"
 		},
 		visibility = {
 			archetypes = {
-				"broker",
-			},
-		},
+				"broker"
+			}
+		}
 	},
 	{
 		description = "loc_character_gang_02_description",
@@ -39,26 +39,26 @@ local home_planet_options = {
 		unlocks = {
 			{
 				text = "loc_character_gang_unlocks",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		rotation = {
 			0,
 			0,
-			90,
+			90
 		},
 		on_pressed_sound = UISoundEvents.play_ui_character_create_select_cartel_iron,
 		page_leave_sound = UISoundEvents.stop_ui_character_create_select_cartel_loops,
 		slot_items = {
 			slot_gear_head = "content/items/characters/player/human/gear_head/broker_headgear_15_var_03",
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/broker_lowerbody_progression_a_var_03",
-			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/broker_upperbody_progression_a_var_03",
+			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/broker_upperbody_progression_a_var_03"
 		},
 		visibility = {
 			archetypes = {
-				"broker",
-			},
-		},
+				"broker"
+			}
+		}
 	},
 	{
 		description = "loc_character_gang_03_description",
@@ -68,26 +68,26 @@ local home_planet_options = {
 		unlocks = {
 			{
 				text = "loc_character_gang_unlocks",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		rotation = {
 			0,
 			0,
-			180,
+			180
 		},
 		on_pressed_sound = UISoundEvents.play_ui_character_create_select_cartel_show,
 		page_leave_sound = UISoundEvents.stop_ui_character_create_select_cartel_loops,
 		slot_items = {
 			slot_gear_head = "content/items/characters/player/human/gear_head/broker_headgear_15_var_02",
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/broker_lowerbody_progression_a_var_02",
-			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/broker_upperbody_progression_a_var_02",
+			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/broker_upperbody_progression_a_var_02"
 		},
 		visibility = {
 			archetypes = {
-				"broker",
-			},
-		},
+				"broker"
+			}
+		}
 	},
 	{
 		description = "loc_character_gang_04_description",
@@ -97,27 +97,27 @@ local home_planet_options = {
 		unlocks = {
 			{
 				text = "loc_character_gang_unlocks",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		rotation = {
 			0,
 			0,
-			270,
+			270
 		},
 		on_pressed_sound = UISoundEvents.play_ui_character_create_select_cartel_threadlighties,
 		page_leave_sound = UISoundEvents.stop_ui_character_create_select_cartel_loops,
 		slot_items = {
 			slot_gear_head = "content/items/characters/player/human/gear_head/broker_headgear_15_var_01",
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/broker_lowerbody_progression_a_var_01",
-			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/broker_upperbody_progression_a_var_01",
+			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/broker_upperbody_progression_a_var_01"
 		},
 		visibility = {
 			archetypes = {
-				"broker",
-			},
-		},
-	},
+				"broker"
+			}
+		}
+	}
 }
 
 return home_planet_options

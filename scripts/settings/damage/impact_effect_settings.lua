@@ -10,7 +10,7 @@ impact_effect_settings.impact_anim = {
 	bwd = "hit_reaction_backward",
 	fwd = "hit_reaction_forward",
 	left = "hit_reaction_left",
-	right = "hit_reaction_right",
+	right = "hit_reaction_right"
 }
 
 return settings("ImpactEffectSettings", impact_effect_settings)

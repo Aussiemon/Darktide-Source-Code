@@ -13,27 +13,27 @@ local _, health_bar_size_y = health_bar_size[1], health_bar_size[2]
 local health_bar_position = {
 	0,
 	HudElementBossHealthSettings.edge_offset,
-	0,
+	0
 }
 local toughness_bar_size = HudElementBossToughnessSettings.size
 local toughness_bar_size_small = HudElementBossToughnessSettings.size_small
 local toughness_bar_position = {
 	0,
 	-13 - (health_bar_size_y + 6),
-	0,
+	0
 }
 local name_text_size = HudElementBossNameSettings.size
 local name_text_position = {
 	0,
 	health_bar_size_y + 10,
-	0,
+	0
 }
 local name_text_style = table.clone(HudElementBossNameSettings.style)
 
 name_text_style.offset = {
 	0,
 	15,
-	2,
+	2
 }
 
 local scenegraph_definition = {
@@ -44,9 +44,9 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			748,
-			130,
+			130
 		},
-		position = health_bar_position,
+		position = health_bar_position
 	},
 	health_bar = {
 		horizontal_alignment = "center",
@@ -56,16 +56,16 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	toughness_bar = {
 		horizontal_alignment = "center",
 		parent = "health_bar",
 		vertical_alignment = "top",
 		size = toughness_bar_size,
-		position = toughness_bar_position,
-	},
+		position = toughness_bar_position
+	}
 }
 local widget_definitions = {}
 local single_target_widget_definitions = {
@@ -80,16 +80,16 @@ local single_target_widget_definitions = {
 				offset = {
 					0,
 					-13,
-					4,
+					4
 				},
 				size = health_bar_size,
 				color = {
 					255,
 					255,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -101,16 +101,16 @@ local single_target_widget_definitions = {
 				offset = {
 					0,
 					-13,
-					3,
+					3
 				},
 				size = health_bar_size,
 				color = {
 					25,
 					255,
 					255,
-					255,
-				},
-			},
+					255
+				}
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -122,11 +122,11 @@ local single_target_widget_definitions = {
 				offset = {
 					0,
 					-13,
-					2,
+					2
 				},
 				size = health_bar_size,
-				color = UIHudSettings.color_tint_8,
-			},
+				color = UIHudSettings.color_tint_8
+			}
 		},
 		{
 			pass_type = "texture",
@@ -138,27 +138,27 @@ local single_target_widget_definitions = {
 				offset = {
 					0,
 					-13,
-					1,
+					1
 				},
 				size = {
 					health_bar_size[1] + 4,
-					health_bar_size[2] + 4,
+					health_bar_size[2] + 4
 				},
 				color = {
 					255,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
 			style_id = "text",
 			value = "<N/A>",
 			value_id = "text",
-			style = name_text_style,
-		},
+			style = name_text_style
+		}
 	}, "health_bar"),
 	toughness = UIWidget.create_definition({
 		{
@@ -171,11 +171,11 @@ local single_target_widget_definitions = {
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				size = toughness_bar_size,
-				color = UIHudSettings.color_tint_secondary_1,
-			},
+				color = UIHudSettings.color_tint_secondary_1
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -187,16 +187,16 @@ local single_target_widget_definitions = {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
 				size = toughness_bar_size,
 				color = {
 					25,
 					255,
 					255,
-					255,
-				},
-			},
+					255
+				}
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -208,11 +208,11 @@ local single_target_widget_definitions = {
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				size = toughness_bar_size,
-				color = UIHudSettings.color_tint_3,
-			},
+				color = UIHudSettings.color_tint_3
+			}
 		},
 		{
 			pass_type = "texture",
@@ -224,21 +224,21 @@ local single_target_widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size = {
 					toughness_bar_size[1] + 4,
-					toughness_bar_size[2] + 4,
+					toughness_bar_size[2] + 4
 				},
 				color = {
 					255,
 					0,
 					0,
-					0,
-				},
-			},
-		},
-	}, "toughness_bar"),
+					0
+				}
+			}
+		}
+	}, "toughness_bar")
 }
 local left_double_target_widget_definitions = {
 	health = UIWidget.create_definition({
@@ -252,16 +252,16 @@ local left_double_target_widget_definitions = {
 				offset = {
 					0,
 					-13,
-					4,
+					4
 				},
 				size = health_bar_size_small,
 				color = {
 					255,
 					255,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -273,16 +273,16 @@ local left_double_target_widget_definitions = {
 				offset = {
 					0,
 					-13,
-					3,
+					3
 				},
 				size = health_bar_size_small,
 				color = {
 					25,
 					255,
 					255,
-					255,
-				},
-			},
+					255
+				}
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -294,11 +294,11 @@ local left_double_target_widget_definitions = {
 				offset = {
 					0,
 					-13,
-					2,
+					2
 				},
 				size = health_bar_size_small,
-				color = UIHudSettings.color_tint_8,
-			},
+				color = UIHudSettings.color_tint_8
+			}
 		},
 		{
 			pass_type = "texture",
@@ -310,19 +310,19 @@ local left_double_target_widget_definitions = {
 				offset = {
 					-2,
 					-13,
-					1,
+					1
 				},
 				size = {
 					health_bar_size_small[1] + 4,
-					health_bar_size_small[2] + 4,
+					health_bar_size_small[2] + 4
 				},
 				color = {
 					255,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -333,10 +333,10 @@ local left_double_target_widget_definitions = {
 				offset = {
 					-(health_bar_size_small[1] + small_bar_spacing) * 0.5,
 					15,
-					3,
-				},
-			}),
-		},
+					3
+				}
+			})
+		}
 	}, "health_bar"),
 	toughness = UIWidget.create_definition({
 		{
@@ -349,11 +349,11 @@ local left_double_target_widget_definitions = {
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				size = toughness_bar_size_small,
-				color = UIHudSettings.color_tint_secondary_1,
-			},
+				color = UIHudSettings.color_tint_secondary_1
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -365,16 +365,16 @@ local left_double_target_widget_definitions = {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
 				size = toughness_bar_size_small,
 				color = {
 					25,
 					255,
 					255,
-					255,
-				},
-			},
+					255
+				}
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -386,11 +386,11 @@ local left_double_target_widget_definitions = {
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				size = toughness_bar_size_small,
-				color = UIHudSettings.color_tint_3,
-			},
+				color = UIHudSettings.color_tint_3
+			}
 		},
 		{
 			pass_type = "texture",
@@ -402,21 +402,21 @@ local left_double_target_widget_definitions = {
 				offset = {
 					-2,
 					0,
-					1,
+					1
 				},
 				size = {
 					toughness_bar_size_small[1] + 4,
-					toughness_bar_size_small[2] + 4,
+					toughness_bar_size_small[2] + 4
 				},
 				color = {
 					255,
 					0,
 					0,
-					0,
-				},
-			},
-		},
-	}, "toughness_bar"),
+					0
+				}
+			}
+		}
+	}, "toughness_bar")
 }
 local right_double_target_widget_definitions = {
 	health = UIWidget.create_definition({
@@ -430,16 +430,16 @@ local right_double_target_widget_definitions = {
 				offset = {
 					health_bar_size_small[1] + small_bar_spacing,
 					-13,
-					4,
+					4
 				},
 				size = health_bar_size_small,
 				color = {
 					255,
 					255,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -451,16 +451,16 @@ local right_double_target_widget_definitions = {
 				offset = {
 					health_bar_size_small[1] + small_bar_spacing,
 					-13,
-					3,
+					3
 				},
 				size = health_bar_size_small,
 				color = {
 					25,
 					255,
 					255,
-					255,
-				},
-			},
+					255
+				}
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -472,11 +472,11 @@ local right_double_target_widget_definitions = {
 				offset = {
 					health_bar_size_small[1] + small_bar_spacing,
 					-13,
-					2,
+					2
 				},
 				size = health_bar_size_small,
-				color = UIHudSettings.color_tint_8,
-			},
+				color = UIHudSettings.color_tint_8
+			}
 		},
 		{
 			pass_type = "texture",
@@ -488,19 +488,19 @@ local right_double_target_widget_definitions = {
 				offset = {
 					(health_bar_size_small[1] + small_bar_spacing) * 0.5,
 					-13,
-					1,
+					1
 				},
 				size = {
 					health_bar_size_small[1] + 4,
-					health_bar_size_small[2] + 4,
+					health_bar_size_small[2] + 4
 				},
 				color = {
 					255,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -511,10 +511,10 @@ local right_double_target_widget_definitions = {
 				offset = {
 					(health_bar_size_small[1] + small_bar_spacing) * 0.5,
 					15,
-					3,
-				},
-			}),
-		},
+					3
+				}
+			})
+		}
 	}, "health_bar"),
 	toughness = UIWidget.create_definition({
 		{
@@ -527,11 +527,11 @@ local right_double_target_widget_definitions = {
 				offset = {
 					toughness_bar_size_small[1] + small_bar_spacing,
 					0,
-					3,
+					3
 				},
 				size = toughness_bar_size_small,
-				color = UIHudSettings.color_tint_secondary_1,
-			},
+				color = UIHudSettings.color_tint_secondary_1
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -543,16 +543,16 @@ local right_double_target_widget_definitions = {
 				offset = {
 					toughness_bar_size_small[1] + small_bar_spacing,
 					0,
-					2,
+					2
 				},
 				size = toughness_bar_size_small,
 				color = {
 					25,
 					255,
 					255,
-					255,
-				},
-			},
+					255
+				}
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -564,11 +564,11 @@ local right_double_target_widget_definitions = {
 				offset = {
 					toughness_bar_size_small[1] + small_bar_spacing,
 					0,
-					1,
+					1
 				},
 				size = toughness_bar_size_small,
-				color = UIHudSettings.color_tint_3,
-			},
+				color = UIHudSettings.color_tint_3
+			}
 		},
 		{
 			pass_type = "texture",
@@ -580,21 +580,21 @@ local right_double_target_widget_definitions = {
 				offset = {
 					toughness_bar_size_small[1] + small_bar_spacing - 2,
 					0,
-					1,
+					1
 				},
 				size = {
 					toughness_bar_size_small[1] + 4,
-					toughness_bar_size_small[2] + 4,
+					toughness_bar_size_small[2] + 4
 				},
 				color = {
 					255,
 					0,
 					0,
-					0,
-				},
-			},
-		},
-	}, "toughness_bar"),
+					0
+				}
+			}
+		}
+	}, "toughness_bar")
 }
 
 return {
@@ -602,5 +602,5 @@ return {
 	left_double_target_widget_definitions = left_double_target_widget_definitions,
 	right_double_target_widget_definitions = right_double_target_widget_definitions,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

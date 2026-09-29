@@ -139,7 +139,7 @@ PlayerUnitGadgetExtension._add_gadget_buff = function (self, master_item_id, ler
 		local index = gadget_system:add_meta_buff(player, trait_name, t, lerp_value, slot_name)
 
 		buff_data = {
-			meta_buff_index = index,
+			meta_buff_index = index
 		}
 	else
 		local buff_extension = self._buff_extension
@@ -148,7 +148,7 @@ PlayerUnitGadgetExtension._add_gadget_buff = function (self, master_item_id, ler
 		if not client_tried_adding_rpc_buff then
 			buff_data = {
 				local_index = local_index,
-				component_index = component_index,
+				component_index = component_index
 			}
 		end
 	end

@@ -7,7 +7,7 @@ local MISSION_SKIP_TESTIFY = {
 	km_enforcer_twins = true,
 	op_no_mans_land = true,
 	op_train = true,
-	psykhanium = true,
+	psykhanium = true
 }
 
 MutatorSpawnerLocationSources.mission_provided_gizmo = function ()
@@ -63,7 +63,7 @@ MutatorSpawnerLocationSources.main_path_locations = function ()
 
 				table.insert(processed_locations, {
 					position = nodes[j],
-					section = i,
+					section = i
 				})
 			end
 		end

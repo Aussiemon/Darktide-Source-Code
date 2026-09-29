@@ -3,7 +3,7 @@
 local Crosshair = require("scripts/ui/utilities/crosshair")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local template = {
-	name = "dot",
+	name = "dot"
 }
 
 template.create_widget_defintion = function (template, scenegraph_id)
@@ -16,7 +16,7 @@ template.create_widget_defintion = function (template, scenegraph_id)
 		Crosshair.weakspot_hit_indicator_segment("top_left"),
 		Crosshair.weakspot_hit_indicator_segment("bottom_left"),
 		Crosshair.weakspot_hit_indicator_segment("top_right"),
-		Crosshair.weakspot_hit_indicator_segment("bottom_right"),
+		Crosshair.weakspot_hit_indicator_segment("bottom_right")
 	}, scenegraph_id)
 end
 

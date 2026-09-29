@@ -20,31 +20,31 @@ local main_menu_background_view_settings = {
 		"slot_pocketable_small",
 		"slot_luggable",
 		"slot_combat_ability",
-		"slot_grenade_ability",
+		"slot_grenade_ability"
 	},
 	animations_per_archetype = {
 		adamant = {
-			initial_event = "main_menu_idle",
+			initial_event = "main_menu_idle"
 		},
 		cryptic = {
-			initial_event = "main_menu_idle",
+			initial_event = "main_menu_idle"
 		},
 		ogryn = {
-			initial_event = "main_menu_idle",
+			initial_event = "main_menu_idle"
 		},
 		psyker = {
-			initial_event = "main_menu_idle",
+			initial_event = "main_menu_idle"
 		},
 		veteran = {
-			initial_event = "main_menu_idle",
+			initial_event = "main_menu_idle"
 		},
 		zealot = {
-			initial_event = "main_menu_idle",
+			initial_event = "main_menu_idle"
 		},
 		broker = {
-			initial_event = "main_menu_idle",
-		},
-	},
+			initial_event = "main_menu_idle"
+		}
+	}
 }
 
 return settings("MainMenuBackgroundViewSettings", main_menu_background_view_settings)

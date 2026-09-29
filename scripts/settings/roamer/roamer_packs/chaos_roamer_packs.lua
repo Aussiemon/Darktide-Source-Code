@@ -7,8 +7,8 @@ local roamer_packs = {
 			breeds = {
 				"chaos_poxwalker",
 				"chaos_poxwalker",
-				"chaos_poxwalker",
-			},
+				"chaos_poxwalker"
+			}
 		},
 		{
 			weight = 0.2,
@@ -16,8 +16,8 @@ local roamer_packs = {
 				"chaos_poxwalker",
 				"chaos_poxwalker",
 				"chaos_poxwalker",
-				"chaos_poxwalker",
-			},
+				"chaos_poxwalker"
+			}
 		},
 		{
 			weight = 0.2,
@@ -25,51 +25,51 @@ local roamer_packs = {
 				"chaos_poxwalker",
 				"chaos_poxwalker",
 				"chaos_mutated_poxwalker",
+				"chaos_mutated_poxwalker"
+			}
+		},
+		{
+			weight = 0.2,
+			breeds = {
+				"chaos_poxwalker",
+				"chaos_poxwalker",
+				"chaos_lesser_mutated_poxwalker",
+				"chaos_lesser_mutated_poxwalker"
+			}
+		},
+		{
+			weight = 0.2,
+			breeds = {
+				"chaos_poxwalker",
+				"chaos_poxwalker",
+				"chaos_poxwalker",
+				"chaos_poxwalker",
+				"chaos_poxwalker"
+			}
+		},
+		{
+			weight = 0.2,
+			breeds = {
+				"chaos_poxwalker",
+				"chaos_poxwalker",
+				"chaos_poxwalker",
+				"chaos_poxwalker",
+				"chaos_poxwalker",
+				"chaos_poxwalker",
+				"chaos_poxwalker"
+			}
+		},
+		{
+			weight = 0.2,
+			breeds = {
+				"chaos_poxwalker",
+				"chaos_poxwalker",
+				"chaos_poxwalker",
+				"chaos_poxwalker",
+				"chaos_poxwalker",
 				"chaos_mutated_poxwalker",
-			},
-		},
-		{
-			weight = 0.2,
-			breeds = {
-				"chaos_poxwalker",
-				"chaos_poxwalker",
-				"chaos_lesser_mutated_poxwalker",
-				"chaos_lesser_mutated_poxwalker",
-			},
-		},
-		{
-			weight = 0.2,
-			breeds = {
-				"chaos_poxwalker",
-				"chaos_poxwalker",
-				"chaos_poxwalker",
-				"chaos_poxwalker",
-				"chaos_poxwalker",
-			},
-		},
-		{
-			weight = 0.2,
-			breeds = {
-				"chaos_poxwalker",
-				"chaos_poxwalker",
-				"chaos_poxwalker",
-				"chaos_poxwalker",
-				"chaos_poxwalker",
-				"chaos_poxwalker",
-				"chaos_poxwalker",
-			},
-		},
-		{
-			weight = 0.2,
-			breeds = {
-				"chaos_poxwalker",
-				"chaos_poxwalker",
-				"chaos_poxwalker",
-				"chaos_poxwalker",
-				"chaos_poxwalker",
-				"chaos_mutated_poxwalker",
-				"chaos_mutated_poxwalker",
-			},
+				"chaos_mutated_poxwalker"
+			}
 		},
 		{
 			weight = 0.2,
@@ -80,10 +80,10 @@ local roamer_packs = {
 				"chaos_poxwalker",
 				"chaos_poxwalker",
 				"chaos_lesser_mutated_poxwalker",
-				"chaos_lesser_mutated_poxwalker",
-			},
-		},
-	},
+				"chaos_lesser_mutated_poxwalker"
+			}
+		}
+	}
 }
 
 return roamer_packs

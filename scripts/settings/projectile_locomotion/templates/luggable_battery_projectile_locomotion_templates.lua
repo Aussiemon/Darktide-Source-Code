@@ -22,13 +22,13 @@ local luggable_projectile_locomotion_templates = {
 				locomotion_state = locomotion_states.manual_physics,
 				rotation_offset_initial = Vector3Box(0, 0.53, 0),
 				rotation_offset_maximal = Vector3Box(0, 0.53, 0),
-				initial_angular_velocity = Vector3Box(1.22, 1.22, 0),
+				initial_angular_velocity = Vector3Box(1.22, 1.22, 0)
 			},
 			drop = {
 				inherit_owner_velocity_percentage = 1,
 				speed = 1,
-				locomotion_state = locomotion_states.engine_physics,
-			},
+				locomotion_state = locomotion_states.engine_physics
+			}
 		},
 		integrator_parameters = {
 			air_density = 1.29,
@@ -40,15 +40,15 @@ local luggable_projectile_locomotion_templates = {
 			mass = 5,
 			max_hit_count = 2,
 			radius = 5,
-			use_actor_mass_radius = true,
+			use_actor_mass_radius = true
 		},
 		vfx = {
 			trajectory = {
 				material_name = "content/fx/materials/master/trajectory",
-				radius = 0.025,
-			},
-		},
-	},
+				radius = 0.025
+			}
+		}
+	}
 }
 
 return luggable_projectile_locomotion_templates

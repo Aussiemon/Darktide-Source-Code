@@ -15,17 +15,17 @@ local view_settings = {
 	state_bound = true,
 	use_transition_ui = true,
 	levels = {
-		"content/levels/ui/crafting_view_itemization/crafting_view_itemization",
+		"content/levels/ui/crafting_view_itemization/crafting_view_itemization"
 	},
 	enter_sound_events = {
-		UISoundEvents.crafting_view_on_enter,
+		UISoundEvents.crafting_view_on_enter
 	},
 	exit_sound_events = {
-		UISoundEvents.crafting_view_on_exit,
+		UISoundEvents.crafting_view_on_exit
 	},
 	wwise_states = {
-		options = WwiseGameSyncSettings.state_groups.options.vendor_menu,
-	},
+		options = WwiseGameSyncSettings.state_groups.options.vendor_menu
+	}
 }
 
 return settings("CraftingViewDeclarationSettings", view_settings)

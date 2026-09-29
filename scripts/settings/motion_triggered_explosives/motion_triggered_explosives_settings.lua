@@ -20,7 +20,7 @@ motion_triggered_explosives_settings.explosive_trap = {
 		"elite",
 		"monster",
 		"special",
-		"captain",
+		"captain"
 	}),
 	cluster_settings = {
 		amount = 5,
@@ -28,9 +28,9 @@ motion_triggered_explosives_settings.explosive_trap = {
 		projectile_template_name = "expedition_trap_explosive_cluster",
 		start_speed = {
 			max = 12,
-			min = 8,
-		},
-	},
+			min = 8
+		}
+	}
 }
 motion_triggered_explosives_settings.fire_trap = {
 	activation_delay = 1,
@@ -43,7 +43,7 @@ motion_triggered_explosives_settings.fire_trap = {
 	on_destroy_explosion_template_name = "expedition_trap_explosive",
 	start_flow_event = "mine_dropped",
 	triggered_flow_event = "mine_triggered",
-	detection_radius = DETECTION_RADIUS,
+	detection_radius = DETECTION_RADIUS
 }
 motion_triggered_explosives_settings.shock_trap = {
 	activation_delay = 1,
@@ -56,7 +56,7 @@ motion_triggered_explosives_settings.shock_trap = {
 	on_destroy_explosion_template_name = "expedition_trap_explosive",
 	start_flow_event = "mine_dropped",
 	triggered_flow_event = "mine_triggered",
-	detection_radius = DETECTION_RADIUS,
+	detection_radius = DETECTION_RADIUS
 }
 
 return settings("MotionTriggeredExplosivesSettings", motion_triggered_explosives_settings)

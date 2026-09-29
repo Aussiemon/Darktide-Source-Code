@@ -20,7 +20,7 @@ local _trigger_training_grounds_events
 local TRAINING_GROUNDS_GAME_MODE_NAME = "training_grounds"
 local CLIENT_RPCS = {
 	"rpc_player_blocked_attack",
-	"rpc_trigger_husk_explosion",
+	"rpc_trigger_husk_explosion"
 }
 
 WeaponSystem.init = function (self, ...)
@@ -34,7 +34,7 @@ WeaponSystem.init = function (self, ...)
 	if self._is_server then
 		self._queued_explosion_request_index = 1
 		self._queued_explosions = {
-			[0] = 1,
+			[0] = 1
 		}
 
 		self:_preallocate_queued_explosions(1, 1028)
@@ -220,6 +220,7 @@ WeaponSystem._update_queued_explosions = function (self, dt, t)
 		local attacking_unit_owner_unit = data.attacking_unit_owner_unit
 		local is_critical_strike = data.is_critical_strike
 		local item_or_nil = data.item_or_nil
+		local slot_name_or_nil = data.slot_name_or_nil
 		local result = data.result
 		local sticking_to_unit = data.sticking_to_unit
 		local optional_attacking_unit_owner_unit = data.optional_attacking_unit_owner_unit
@@ -308,7 +309,7 @@ WeaponSystem._update_queued_explosions = function (self, dt, t)
 								attack_power_level = attack_power_level * explosion_template.boss_power_level_modifier
 							end
 
-							local _, attack_result = Attack.execute(hit_unit, damage_profile, "power_level", attack_power_level, "charge_level", charge_level, "attack_direction", direction, "dropoff_scalar", dropoff_scalar, "hit_zone_name", hit_zone_name_or_nil, "hit_actor", hit_actor, "attack_type", attack_type, "attacking_unit", attacking_unit, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "item", item_or_nil, "hit_world_position", source_position, "attacking_unit_owner_unit", optional_attacking_unit_owner_unit, "apply_owner_buffs", optional_apply_owner_buffs, "close_explosion_hit", close_hit, "target_number", target_number)
+							local _, attack_result = Attack.execute(hit_unit, damage_profile, "power_level", attack_power_level, "charge_level", charge_level, "attack_direction", direction, "dropoff_scalar", dropoff_scalar, "hit_zone_name", hit_zone_name_or_nil, "hit_actor", hit_actor, "attack_type", attack_type, "attacking_unit", attacking_unit, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "item", item_or_nil, "slot_name", slot_name_or_nil, "hit_world_position", source_position, "attacking_unit_owner_unit", optional_attacking_unit_owner_unit, "apply_owner_buffs", optional_apply_owner_buffs, "close_explosion_hit", close_hit, "target_number", target_number)
 
 							target_number = target_number + 1
 
@@ -414,18 +415,34 @@ WeaponSystem._update_perils_of_the_warp_elite_kills_achievement = function (self
 	end
 end
 
+local EMPTY_TABLE = {}
+
 WeaponSystem._handle_explosion_on_hit_buffs = function (self, explosion_template, attacking_unit_owner_unit, hit_unit, item_or_nil, t, optional_attacking_unit_owner_unit)
 	local on_hit_buff_template_name = explosion_template.on_hit_buff_template_name
+	local on_hit_buff_num_stacks_per_template = explosion_template.on_hit_buff_num_stacks_per_template or EMPTY_TABLE
 	local enemy_buff_extension = ScriptUnit.has_extension(hit_unit, "buff_system")
 	local can_add_on_hit_buffs = HEALTH_ALIVE[hit_unit] and ALIVE[attacking_unit_owner_unit] and enemy_buff_extension
 
 	if can_add_on_hit_buffs and on_hit_buff_template_name then
 		if type(on_hit_buff_template_name) == "table" then
 			for i = 1, #on_hit_buff_template_name do
-				enemy_buff_extension:add_internally_controlled_buff(on_hit_buff_template_name[i], t, "owner_unit", attacking_unit_owner_unit, "source_item", item_or_nil)
+				local template_name = on_hit_buff_template_name[i]
+				local num_stacks = on_hit_buff_num_stacks_per_template[template_name] or 1
+
+				if num_stacks == 1 then
+					enemy_buff_extension:add_internally_controlled_buff(on_hit_buff_template_name[i], t, "owner_unit", attacking_unit_owner_unit, "source_item", item_or_nil)
+				else
+					enemy_buff_extension:add_internally_controlled_buff_with_stacks(on_hit_buff_template_name[i], num_stacks, t, "owner_unit", attacking_unit_owner_unit, "source_item", item_or_nil)
+				end
 			end
 		else
-			enemy_buff_extension:add_internally_controlled_buff(on_hit_buff_template_name, t, "owner_unit", attacking_unit_owner_unit, "source_item", item_or_nil)
+			local num_stacks = on_hit_buff_num_stacks_per_template[on_hit_buff_template_name] or 1
+
+			if num_stacks == 1 then
+				enemy_buff_extension:add_internally_controlled_buff(on_hit_buff_template_name, t, "owner_unit", attacking_unit_owner_unit, "source_item", item_or_nil)
+			else
+				enemy_buff_extension:add_internally_controlled_buff_with_stacks(on_hit_buff_template_name, num_stacks, t, "owner_unit", attacking_unit_owner_unit, "source_item", item_or_nil)
+			end
 		end
 	end
 end
@@ -482,7 +499,7 @@ WeaponSystem.queue_perils_of_the_warp_elite_kills_achievement = function (self, 
 		account_id = account_id,
 		character_id = player:character_id(),
 		player = player,
-		explosion_queue_index = explosion_queue_index,
+		explosion_queue_index = explosion_queue_index
 	}
 end
 

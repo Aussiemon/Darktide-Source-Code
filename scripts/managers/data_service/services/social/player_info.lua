@@ -153,9 +153,9 @@ PlayerInfo.is_friend = function (self)
 	local platform_social = self._platform_social
 
 	if platform_social then
-		return not self._is_blocked and not platform_social:is_blocked() and (self._friend_status == FriendStatus.friend or platform_social and platform_social:is_friend()) or false
+		return not self._is_blocked and not platform_social:is_blocked() and (self._friend_status == FriendStatus.friend or platform_social:is_friend())
 	else
-		return not self._is_blocked and self._friend_status == FriendStatus.friend or false
+		return not self._is_blocked and self._friend_status == FriendStatus.friend
 	end
 end
 

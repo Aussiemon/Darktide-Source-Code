@@ -12,17 +12,17 @@ local shrine_spawn_enemy_composition = {
 					name = "cultist_ritualist",
 					amount = {
 						4,
-						4,
-					},
+						4
+					}
 				},
 				{
 					name = "chaos_poxwalker",
 					amount = {
 						10,
-						15,
-					},
-				},
-			},
+						15
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -30,17 +30,17 @@ local shrine_spawn_enemy_composition = {
 					name = "cultist_ritualist",
 					amount = {
 						4,
-						4,
-					},
+						4
+					}
 				},
 				{
 					name = "chaos_poxwalker",
 					amount = {
 						12,
-						15,
-					},
-				},
-			},
+						15
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -48,17 +48,17 @@ local shrine_spawn_enemy_composition = {
 					name = "cultist_ritualist",
 					amount = {
 						4,
-						4,
-					},
+						4
+					}
 				},
 				{
 					name = "chaos_poxwalker",
 					amount = {
 						12,
-						18,
-					},
-				},
-			},
+						18
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -66,17 +66,17 @@ local shrine_spawn_enemy_composition = {
 					name = "cultist_ritualist",
 					amount = {
 						4,
-						4,
-					},
+						4
+					}
 				},
 				{
 					name = "chaos_poxwalker",
 					amount = {
 						15,
-						20,
-					},
-				},
-			},
+						20
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -84,17 +84,17 @@ local shrine_spawn_enemy_composition = {
 					name = "cultist_ritualist",
 					amount = {
 						4,
-						4,
-					},
+						4
+					}
 				},
 				{
 					name = "chaos_poxwalker",
 					amount = {
 						18,
-						25,
-					},
-				},
-			},
+						25
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -102,19 +102,19 @@ local shrine_spawn_enemy_composition = {
 					name = "chaos_mutator_ritualist",
 					amount = {
 						4,
-						4,
-					},
+						4
+					}
 				},
 				{
 					name = "chaos_poxwalker",
 					amount = {
 						20,
-						25,
-					},
-				},
-			},
-		},
-	},
+						25
+					}
+				}
+			}
+		}
+	}
 }
 local mutator_templates = {
 	mutator_live_event_saints_shrine_spawns = {
@@ -130,17 +130,17 @@ local mutator_templates = {
 					use_raycast = false,
 					levels = {
 						level_size_4 = {
-							"content/levels/live_events/saints/live_event_saints_shrine_01",
-						},
+							"content/levels/live_events/saints/live_event_saints_shrine_01"
+						}
 					},
 					placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
 					size_lookup = {
-						"level_size_4",
+						"level_size_4"
 					},
 					spawn_settings = {
-						randomize_rotation = true,
-					},
-				},
+						randomize_rotation = true
+					}
+				}
 			},
 			{
 				class = "scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node_enemy_template",
@@ -148,12 +148,12 @@ local mutator_templates = {
 					placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
 					composition = {
 						renegade = shrine_spawn_enemy_composition,
-						cultist = shrine_spawn_enemy_composition,
+						cultist = shrine_spawn_enemy_composition
 					},
-					enemy_placement_method = MutatorSpawnerNode.CIRCLE_PLACEMENT,
-				},
-			},
-		},
+					enemy_placement_method = MutatorSpawnerNode.CIRCLE_PLACEMENT
+				}
+			}
+		}
 	},
 	mutator_saints_main_path_pickup_spawns = {
 		class = "scripts/managers/mutator/mutators/mutator_spawner",
@@ -177,27 +177,27 @@ local mutator_templates = {
 							"content/levels/live_events/saints/live_event_saints_pickup_spawn_small",
 							"content/levels/live_events/saints/live_event_saints_pickup_spawn_small",
 							"content/levels/live_events/saints/live_event_saints_pickup_spawn_small",
-							"content/levels/live_events/saints/live_event_saints_pickup_spawn_small",
-						},
+							"content/levels/live_events/saints/live_event_saints_pickup_spawn_small"
+						}
 					},
 					placement_method = MutatorSpawnerNode.CIRCLE_PLACEMENT,
 					size_lookup = {
-						"level_size_2",
+						"level_size_2"
 					},
 					spawn_settings = {
 						count = 3,
 						position_offset = 5,
-						randomize_rotation = true,
-					},
-				},
-			},
-		},
+						randomize_rotation = true
+					}
+				}
+			}
+		}
 	},
 	mutator_live_event_saints_auto_events = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 		modify_pacing = {
-			auto_event_template = "live_event_saints_auto_event_template",
-		},
+			auto_event_template = "live_event_saints_auto_event_template"
+		}
 	},
 	mutator_live_event_saints_shrine_gameplay = {
 		activate_on_load = true,
@@ -212,50 +212,50 @@ local mutator_templates = {
 						style = "alert",
 						subtitle = "loc_saints_event_wave_progress_subtitle_01",
 						title = "loc_saints_event_objective_notification_title",
-						sound_event = UISoundEvents.notification_warning,
+						sound_event = UISoundEvents.notification_warning
 					},
 					wave_progress_notification_02 = {
 						style = "alert",
 						subtitle = "loc_saints_event_wave_progress_subtitle_02",
 						title = "loc_saints_event_objective_notification_title",
-						sound_event = UISoundEvents.notification_warning,
+						sound_event = UISoundEvents.notification_warning
 					},
 					wave_progress_notification_03 = {
 						style = "alert",
 						subtitle = "loc_saints_event_wave_progress_subtitle_03",
 						title = "loc_saints_event_objective_notification_title",
-						sound_event = UISoundEvents.notification_warning,
+						sound_event = UISoundEvents.notification_warning
 					},
 					wave_progress_notification_04 = {
 						style = "alert",
 						subtitle = "loc_saints_event_wave_progress_subtitle_04",
 						title = "loc_saints_event_objective_notification_title",
-						sound_event = UISoundEvents.notification_warning,
+						sound_event = UISoundEvents.notification_warning
 					},
 					wave_progress_notification_05 = {
 						style = "alert",
 						subtitle = "loc_saints_event_wave_progress_subtitle_05",
 						title = "loc_saints_event_objective_notification_title",
-						sound_event = UISoundEvents.notification_warning,
-					},
-				},
-			},
+						sound_event = UISoundEvents.notification_warning
+					}
+				}
+			}
 		},
 		side_notification = {
 			interaction_type_loc_strings = {
-				"loc_player_saints_relic_pickup_notification",
+				"loc_player_saints_relic_pickup_notification"
 			},
 			pickup_localization_by_size = {
 				large = "loc_saints_relic_pickup_large",
 				medium = "loc_saints_relic_pickup_medium",
-				small = "loc_saints_relic_pickup_small",
+				small = "loc_saints_relic_pickup_small"
 			},
 			pickup_icon_by_size = {
 				large = "content/ui/materials/icons/currencies/live_events/saints_live_event_large",
 				medium = "content/ui/materials/icons/currencies/live_events/saints_live_event_medium",
-				small = "content/ui/materials/icons/currencies/live_events/saints_live_event_small",
-			},
-		},
+				small = "content/ui/materials/icons/currencies/live_events/saints_live_event_small"
+			}
+		}
 	},
 	mutator_live_event_saints_mission_buffs = {
 		activate_on_load = true,
@@ -270,11 +270,11 @@ local mutator_templates = {
 							trigger_amount = 1,
 							trigger_once = false,
 							on_trigger = {
-								MutatorGameplayLiveEventSaints.on_global_stat_trigger_apply_player_buff_stacks("live_event_saints_buff_saint_red"),
-							},
-						},
-					},
-				},
+								MutatorGameplayLiveEventSaints.on_global_stat_trigger_apply_player_buff_stacks("live_event_saints_buff_saint_red")
+							}
+						}
+					}
+				}
 			},
 			saint_blue_victories = {
 				triggers = {
@@ -284,20 +284,21 @@ local mutator_templates = {
 							trigger_amount = 1,
 							trigger_once = false,
 							on_trigger = {
-								MutatorGameplayLiveEventSaints.on_global_stat_trigger_apply_player_buff_stacks("live_event_saints_buff_saint_blue"),
-							},
-						},
-					},
-				},
-			},
-		},
+								MutatorGameplayLiveEventSaints.on_global_stat_trigger_apply_player_buff_stacks("live_event_saints_buff_saint_blue")
+							}
+						}
+					}
+				}
+			}
+		}
 	},
 	mutator_saints_headshot_parasite_enemies = {
+		activate_on_load = true,
 		class = "scripts/managers/mutator/mutators/mutator_minion_visual_override",
 		template_name = "head_parasite",
 		random_spawn_buff_templates = {
 			buffs = {
-				"headshot_parasite_enemies",
+				"headshot_parasite_enemies"
 			},
 			breed_chances = {
 				chaos_armored_infected = 0.5,
@@ -333,25 +334,25 @@ local mutator_templates = {
 				renegade_netgunner = 0,
 				renegade_rifleman = 0,
 				renegade_shocktrooper = 0,
-				renegade_sniper = 0,
-			},
-		},
+				renegade_sniper = 0
+			}
+		}
 	},
 	mutator_saints_nurgle_hordes = {
 		class = "scripts/managers/mutator/mutators/mutator_replace_breed",
 		init_replacement_breed = {
 			breed_replacement = {
 				chaos_newly_infected = "chaos_lesser_mutated_poxwalker",
-				chaos_poxwalker = "chaos_mutated_poxwalker",
-			},
-		},
+				chaos_poxwalker = "chaos_mutated_poxwalker"
+			}
+		}
 	},
 	mutator_saints_horde_pacing = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 		modify_pacing = {
-			required_horde_travel_distance = 25,
-		},
-	},
+			required_horde_travel_distance = 25
+		}
+	}
 }
 
 return mutator_templates

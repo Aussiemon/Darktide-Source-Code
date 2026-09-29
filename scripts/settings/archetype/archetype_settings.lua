@@ -7,7 +7,7 @@ local archetype_names = table.enum(unpack({
 	"ogryn",
 	"psyker",
 	"veteran",
-	"zealot",
+	"zealot"
 }))
 local ui_selection_order = {
 	archetype_names.veteran,
@@ -16,7 +16,7 @@ local ui_selection_order = {
 	archetype_names.ogryn,
 	archetype_names.adamant,
 	archetype_names.broker,
-	archetype_names.cryptic,
+	archetype_names.cryptic
 }
 local ui_selection_order_lookup = {}
 
@@ -41,9 +41,9 @@ local archetype_settings = {
 		[archetype_names.ogryn] = true,
 		[archetype_names.psyker] = true,
 		[archetype_names.veteran] = true,
-		[archetype_names.zealot] = true,
+		[archetype_names.zealot] = true
 	},
-	archetype_ui_selection_order = ui_selection_order_lookup,
+	archetype_ui_selection_order = ui_selection_order_lookup
 }
 
 return settings("ArchetypeSettings", archetype_settings)

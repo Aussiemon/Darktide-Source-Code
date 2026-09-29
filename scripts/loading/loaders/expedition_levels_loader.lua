@@ -66,7 +66,7 @@ ExpeditionLevelsLoader.start_loading = function (self, context)
 					level_editor_level = level_editor_level,
 					circumstance_name = circumstance_name,
 					theme_tag = theme_tag,
-					dont_load_theme = not level_data.is_location and not level_data.is_safe_zone,
+					dont_load_theme = not level_data.is_location and not level_data.is_safe_zone
 				}
 
 				level_loader:start_loading(level_loader_context)

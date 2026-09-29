@@ -12,7 +12,7 @@ LevelGridUtilities.create_level_grid = function (grid_settings)
 	local start_pos_y = -(grid_height * 0.5)
 	local cell_size = {
 		grid_width / num_rows,
-		grid_height / num_columns,
+		grid_height / num_columns
 	}
 	local grid, cells_per_depth = LevelGridUtilities.create_grid(num_rows, num_columns, cell_size, start_pos_x, start_pos_y, cell_depth, nil)
 
@@ -38,7 +38,7 @@ LevelGridUtilities.create_grid = function (num_rows, num_columns, grid_slot_size
 		end
 
 		depth_cells = {
-			coordinates_lookup = coordinates_lookup,
+			coordinates_lookup = coordinates_lookup
 		}
 		cells_per_depth[depth_count] = depth_cells
 	end
@@ -54,12 +54,12 @@ LevelGridUtilities.create_grid = function (num_rows, num_columns, grid_slot_size
 			local position = {
 				start_x + slot_x,
 				start_y + slot_y,
-				-100,
+				-100
 			}
 			local color = {
 				math.random(0, 255),
 				math.random(0, 255),
-				math.random(0, 255),
+				math.random(0, 255)
 			}
 			local color_name = Color.list[math.random(1, #Color.list)]
 			local slot = {
@@ -73,7 +73,7 @@ LevelGridUtilities.create_grid = function (num_rows, num_columns, grid_slot_size
 				color_name = color_name,
 				height = 100 + 2 * depth_count,
 				row = r,
-				column = c,
+				column = c
 			}
 
 			depth_cells[#depth_cells + 1] = slot
@@ -85,7 +85,7 @@ LevelGridUtilities.create_grid = function (num_rows, num_columns, grid_slot_size
 			if depth_count < max_depth then
 				local child_slot_size = {
 					grid_slot_size[1] / num_rows,
-					grid_slot_size[2] / num_columns,
+					grid_slot_size[2] / num_columns
 				}
 				local child_grid = LevelGridUtilities.create_grid(num_rows, num_columns, child_slot_size, position[1] - grid_slot_size[1] * 0.5, position[2] - grid_slot_size[2] * 0.5, max_depth, depth_count + 1, cells_per_depth, slot)
 

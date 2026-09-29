@@ -118,11 +118,11 @@ ConstantElementExpeditionContinue._generate_option_widgets = function (self, lay
 
 	local card_size = {
 		450,
-		335,
+		335
 	}
 	local grid_size = {
 		total_width,
-		card_size[2],
+		card_size[2]
 	}
 
 	self:_set_scenegraph_size("options_area", grid_size[1], grid_size[2])
@@ -283,21 +283,21 @@ ConstantElementExpeditionContinue.update = function (self, dt, t, ui_renderer, r
 				sub_title = "Explore another location",
 				title = "KEEP EXPLORING",
 				vote_value = "yes",
-				widget_type = "option_card",
+				widget_type = "option_card"
 			},
 			{
 				description = "Return to the Mourningstar bringing all you have found.\n\nRations and a chair will be provided.",
 				sub_title = "End the expedition now",
 				title = "EXTRACT",
 				vote_value = "no",
-				widget_type = "option_card",
-			},
+				widget_type = "option_card"
+			}
 		}
 
 		self:_generate_option_widgets(layout, ui_renderer)
 
 		self._on_option_enter_anim_id = self:_start_animation("on_option_enter", self._widgets_by_name, {
-			option_widgets = self._option_widgets,
+			option_widgets = self._option_widgets
 		})
 	end
 

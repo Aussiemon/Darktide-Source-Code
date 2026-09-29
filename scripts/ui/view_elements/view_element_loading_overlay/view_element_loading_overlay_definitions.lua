@@ -11,19 +11,19 @@ wait_reason_style.text_vertical_alignment = "center"
 wait_reason_style.offset = {
 	0,
 	100,
-	0,
+	0
 }
 
 local scenegraph_definition = {
-	screen = UIWorkspaceSettings.screen,
+	screen = UIWorkspaceSettings.screen
 }
 local widget_definitions = {
 	loading = UIWidget.create_definition({
 		{
 			pass_type = "rect",
 			style = {
-				color = Color.black(127.5, true),
-			},
+				color = Color.black(127.5, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -33,26 +33,26 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					256,
-					256,
+					256
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "text",
 			style_id = "text",
 			value = "",
 			value_id = "text",
-			style = wait_reason_style,
-		},
-	}, "screen"),
+			style = wait_reason_style
+		}
+	}, "screen")
 }
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

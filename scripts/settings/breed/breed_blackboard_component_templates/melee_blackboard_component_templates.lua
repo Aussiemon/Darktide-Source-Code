@@ -9,41 +9,41 @@ local melee_base = {
 		lock_combat_range_switch = "boolean",
 		move_medium = "string",
 		move_state = "string",
-		restricted_combat_range = "string",
+		restricted_combat_range = "string"
 	},
 	slot = {
 		has_ghost_slot = "boolean",
 		has_slot = "boolean",
 		is_waiting_on_slot = "boolean",
 		slot_distance = "number",
-		wait_slot_distance = "number",
+		wait_slot_distance = "number"
 	},
 	blocked = {
-		is_blocked = "boolean",
+		is_blocked = "boolean"
 	},
 	weapon_switch = {
 		is_switching_weapons = "boolean",
 		last_weapon_switch_t = "number",
 		wanted_combat_range = "string",
-		wanted_weapon_slot = "string",
+		wanted_weapon_slot = "string"
 	},
 	gib_override = {
 		override_hit_zone_name = "string",
 		should_override = "boolean",
-		target_template = "string",
+		target_template = "string"
 	},
 	disable = {
 		attacker_unit = "Unit",
 		is_disabled = "boolean",
-		type = "string",
+		type = "string"
 	},
 	vortex_grabbed = {
 		eject_height = "number",
 		ejected_from_vortex = "Vector3Box",
 		in_vortex = "boolean",
 		in_vortex_state = "string",
-		landing_finished = "boolean",
-	},
+		landing_finished = "boolean"
+	}
 }
 
 table.merge(melee_base, base_template)
@@ -52,7 +52,7 @@ local melee_shield = table.clone(melee_base)
 
 melee_shield.shield = {
 	is_alive = "boolean",
-	is_blocking = "boolean",
+	is_blocking = "boolean"
 }
 
 local melee_shield_patroller = table.clone(melee_shield)
@@ -63,12 +63,12 @@ melee_shield_patroller.patrol = {
 	patrol_index = "number",
 	patrol_leader_unit = "Unit",
 	should_patrol = "boolean",
-	walk_position = "Vector3Box",
+	walk_position = "Vector3Box"
 }
 melee_shield_patroller.stim = {
 	can_use_stim = "boolean",
 	currently_using_stim = "boolean",
-	t_til_use = "number",
+	t_til_use = "number"
 }
 
 local melee_patroller = table.clone(melee_base)
@@ -79,12 +79,12 @@ melee_patroller.patrol = {
 	patrol_index = "number",
 	patrol_leader_unit = "Unit",
 	should_patrol = "boolean",
-	walk_position = "Vector3Box",
+	walk_position = "Vector3Box"
 }
 melee_patroller.stim = {
 	can_use_stim = "boolean",
 	currently_using_stim = "boolean",
-	t_til_use = "number",
+	t_til_use = "number"
 }
 
 local melee_summoner_patroller = table.clone(melee_patroller)
@@ -92,7 +92,7 @@ local melee_summoner_patroller = table.clone(melee_patroller)
 melee_summoner_patroller.summon = {
 	amount = "number",
 	next_summon_t = "number",
-	num_pounced = "number",
+	num_pounced = "number"
 }
 melee_summoner_patroller.stim = nil
 
@@ -101,7 +101,7 @@ local melee_can_be_suppressed = table.clone(melee_base)
 melee_can_be_suppressed.suppression = {
 	direction = "Vector3Box",
 	is_suppressed = "boolean",
-	suppress_value = "number",
+	suppress_value = "number"
 }
 
 local melee_patroller_can_be_suppressed = table.clone(melee_base)
@@ -109,7 +109,7 @@ local melee_patroller_can_be_suppressed = table.clone(melee_base)
 melee_patroller_can_be_suppressed.suppression = {
 	direction = "Vector3Box",
 	is_suppressed = "boolean",
-	suppress_value = "number",
+	suppress_value = "number"
 }
 melee_patroller_can_be_suppressed.patrol = {
 	auto_patrol = "boolean",
@@ -117,19 +117,19 @@ melee_patroller_can_be_suppressed.patrol = {
 	patrol_index = "number",
 	patrol_leader_unit = "Unit",
 	should_patrol = "boolean",
-	walk_position = "Vector3Box",
+	walk_position = "Vector3Box"
 }
 
 local unarmed = {
 	behavior = {
 		move_medium = "string",
-		move_state = "string",
+		move_state = "string"
 	},
 	disable = {
 		attacker_unit = "Unit",
 		is_disabled = "boolean",
-		type = "string",
-	},
+		type = "string"
+	}
 }
 
 table.merge(unarmed, base_template)
@@ -142,7 +142,7 @@ local templates = {
 	melee_shield_patroller = melee_shield_patroller,
 	melee_can_be_suppressed = melee_can_be_suppressed,
 	melee_patroller_can_be_suppressed = melee_patroller_can_be_suppressed,
-	unarmed = unarmed,
+	unarmed = unarmed
 }
 
 return templates

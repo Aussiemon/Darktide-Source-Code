@@ -16,7 +16,7 @@ local minigame_classes = {
 	drill = _require_minigame_class("drill"),
 	expedition_map = _require_minigame_class("expedition_map"),
 	frequency = _require_minigame_class("frequency"),
-	scan = _require_minigame_class("scan"),
+	scan = _require_minigame_class("scan")
 }
 
 return minigame_classes

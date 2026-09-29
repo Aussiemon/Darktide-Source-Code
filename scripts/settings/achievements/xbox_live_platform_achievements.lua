@@ -38,7 +38,7 @@ XboxLivePlatformAchievements.backend_to_platform = {
 	veteran_2_weakspot_hits_during_volley_fire_alternate_fire = 30,
 	zealot_2_kills_of_shocked_enemies_last_15 = 37,
 	zealot_2_stagger_sniper_with_grenade_distance = 36,
-	zelot_2_kill_mutant_charger_with_melee_while_dashing = 35,
+	zelot_2_kill_mutant_charger_with_melee_while_dashing = 35
 }
 XboxLivePlatformAchievements.show_progress = {
 	nil,
@@ -74,7 +74,7 @@ XboxLivePlatformAchievements.show_progress = {
 	nil,
 	true,
 	[36] = true,
-	[37] = true,
+	[37] = true
 }
 XboxLivePlatformAchievements.platform_to_backend = {}
 

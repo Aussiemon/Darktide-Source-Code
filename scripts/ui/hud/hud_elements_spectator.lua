@@ -9,15 +9,15 @@ local elements = {
 		visibility_groups = {
 			"dead",
 			"alive",
-			"cutscene",
-		},
+			"cutscene"
+		}
 	},
 	{
 		class_name = "HudElementNameplates",
 		filename = "scripts/ui/hud/elements/nameplates/hud_element_nameplates",
 		visibility_groups = {
-			"alive",
-		},
+			"alive"
+		}
 	},
 	{
 		class_name = "HudElementSpectatorText",
@@ -25,8 +25,8 @@ local elements = {
 		package = "packages/ui/hud/spactator_text/spactator_text",
 		visibility_groups = {
 			"dead",
-			"alive",
-		},
+			"alive"
+		}
 	},
 	{
 		class_name = "HudElementTeamPanelHandler",
@@ -38,8 +38,8 @@ local elements = {
 			"dead",
 			"alive",
 			"communication_wheel",
-			"tactical_overlay",
-		},
+			"tactical_overlay"
+		}
 	},
 	{
 		class_name = "HudElementBossHealth",
@@ -49,8 +49,8 @@ local elements = {
 		visibility_groups = {
 			"dead",
 			"alive",
-			"communication_wheel",
-		},
+			"communication_wheel"
+		}
 	},
 	{
 		class_name = "HudElementMissionObjectiveFeed",
@@ -61,8 +61,8 @@ local elements = {
 			"dead",
 			"alive",
 			"communication_wheel",
-			"tactical_overlay",
-		},
+			"tactical_overlay"
+		}
 	},
 	{
 		class_name = "HudElementMissionObjectivePopup",
@@ -73,8 +73,8 @@ local elements = {
 			"dead",
 			"alive",
 			"communication_wheel",
-			"tactical_overlay",
-		},
+			"tactical_overlay"
+		}
 	},
 	{
 		class_name = "HudElementCombatFeed",
@@ -84,8 +84,8 @@ local elements = {
 			"dead",
 			"alive",
 			"communication_wheel",
-			"tactical_overlay",
-		},
+			"tactical_overlay"
+		}
 	},
 	{
 		class_name = "HudElementAreaNotificationPopup",
@@ -96,16 +96,16 @@ local elements = {
 			"dead",
 			"alive",
 			"communication_wheel",
-			"tactical_overlay",
-		},
+			"tactical_overlay"
+		}
 	},
 	{
 		class_name = "HudElementCharacterNewsFeed",
 		filename = "scripts/ui/hud/elements/character_news_feed/hud_element_character_news_feed",
 		visibility_groups = {
 			"alive",
-			"communication_wheel",
-		},
+			"communication_wheel"
+		}
 	},
 	{
 		class_name = "HudElementTacticalOverlay",
@@ -115,16 +115,16 @@ local elements = {
 		visibility_groups = {
 			"tactical_overlay",
 			"alive",
-			"communication_wheel",
-		},
+			"communication_wheel"
+		}
 	},
 	{
 		class_name = "HudElementCutsceneOverlay",
 		filename = "scripts/ui/hud/elements/cutscene_overlay/hud_element_cutscene_overlay",
 		visibility_groups = {
 			"prologue_cutscene",
-			"cutscene",
-		},
+			"cutscene"
+		}
 	},
 	{
 		class_name = "HudElementCutsceneFading",
@@ -138,8 +138,8 @@ local elements = {
 			"communication_wheel",
 			"testify",
 			"dead",
-			"alive",
-		},
+			"alive"
+		}
 	},
 	{
 		class_name = "HudElementSpectateFading",
@@ -153,9 +153,9 @@ local elements = {
 			"communication_wheel",
 			"testify",
 			"dead",
-			"alive",
-		},
-	},
+			"alive"
+		}
+	}
 }
 
 return elements

@@ -24,14 +24,14 @@ Styles.objectives_panel.background = {
 	offset = {
 		0,
 		0,
-		0,
+		0
 	},
 	color = {
 		255,
 		0,
 		0,
-		0,
-	},
+		0
+	}
 }
 Styles.objectives_panel.frame = {
 	horizontal_alignment = "left",
@@ -40,9 +40,9 @@ Styles.objectives_panel.frame = {
 	offset = {
 		0,
 		0,
-		5,
+		5
 	},
-	color = table.shallow_copy(default_colors.terminal_frame),
+	color = table.shallow_copy(default_colors.terminal_frame)
 }
 Styles.objectives_panel.sub_title = {
 	font_size = 14,
@@ -55,8 +55,8 @@ Styles.objectives_panel.sub_title = {
 	offset = {
 		68,
 		16,
-		5,
-	},
+		5
+	}
 }
 Styles.objectives_panel.title = {
 	font_size = 16,
@@ -69,34 +69,34 @@ Styles.objectives_panel.title = {
 	offset = {
 		68,
 		34,
-		5,
-	},
+		5
+	}
 }
 Styles.objectives_panel.icon = {
 	horizontal_alignment = "left",
 	vertical_alignment = "center",
 	size = {
 		55.199999999999996,
-		55.199999999999996,
+		55.199999999999996
 	},
 	active_size = {
 		55.199999999999996,
-		55.199999999999996,
+		55.199999999999996
 	},
 	inactive_size = {
 		36,
-		36,
+		36
 	},
 	size_addition = {
 		-4,
-		-4,
+		-4
 	},
 	color = Color.white(255, true),
 	offset = {
 		10,
 		0,
-		5,
-	},
+		5
+	}
 }
 Styles.objectives_panel.background_gradient = {
 	horizontal_alignment = "left",
@@ -104,9 +104,9 @@ Styles.objectives_panel.background_gradient = {
 	offset = {
 		0,
 		0,
-		2,
+		2
 	},
-	color = table.shallow_copy(default_colors.terminal_header_text),
+	color = table.shallow_copy(default_colors.terminal_header_text)
 }
 Styles.objectives_panel.hotspot = {
 	anim_select_speed = 5,
@@ -115,10 +115,10 @@ Styles.objectives_panel.hotspot = {
 	offset = {
 		0,
 		0,
-		1,
+		1
 	},
 	on_hover_sound = UISoundEvents.default_mouse_hover,
-	on_pressed_sound = UISoundEvents.default_click,
+	on_pressed_sound = UISoundEvents.default_click
 }
 Styles.mission_objective_info = {}
 Styles.mission_objective_info.frame = {
@@ -126,9 +126,9 @@ Styles.mission_objective_info.frame = {
 	offset = {
 		0,
 		0,
-		20,
+		20
 	},
-	color = table.shallow_copy(default_colors.terminal_frame),
+	color = table.shallow_copy(default_colors.terminal_frame)
 }
 Styles.mission_objective_info.objective_description = {
 	font_size = 16,
@@ -140,12 +140,12 @@ Styles.mission_objective_info.objective_description = {
 	offset = {
 		20,
 		20,
-		7,
+		7
 	},
 	size_addition = {
 		-40,
-		0,
-	},
+		0
+	}
 }
 Styles.mission_objective_info.background = {
 	horizontal_alignment = "center",
@@ -153,14 +153,14 @@ Styles.mission_objective_info.background = {
 	offset = {
 		0,
 		0,
-		1,
+		1
 	},
 	color = {
 		255,
 		0,
 		0,
-		0,
-	},
+		0
+	}
 }
 Styles.mission_objective_info.mission_giver_background = {
 	horizontal_alignment = "right",
@@ -168,14 +168,14 @@ Styles.mission_objective_info.mission_giver_background = {
 	vertical_alignment = "bottom",
 	size = {
 		Dimensions.details_width * 0.52,
-		Dimensions.rewards_height,
+		Dimensions.rewards_height
 	},
 	offset = {
 		0,
 		0,
-		5,
+		5
 	},
-	color = Color.black(255, true),
+	color = Color.black(255, true)
 }
 Styles.mission_objective_info.mission_giver_frame = {
 	horizontal_alignment = "right",
@@ -183,14 +183,14 @@ Styles.mission_objective_info.mission_giver_frame = {
 	vertical_alignment = "bottom",
 	size = {
 		Dimensions.details_width * 0.52,
-		Dimensions.rewards_height,
+		Dimensions.rewards_height
 	},
 	offset = {
 		0,
 		0,
-		5,
+		5
 	},
-	color = table.shallow_copy(default_colors.terminal_frame),
+	color = table.shallow_copy(default_colors.terminal_frame)
 }
 Styles.mission_objective_info.mission_giver_name = {
 	font_size = 12,
@@ -201,28 +201,28 @@ Styles.mission_objective_info.mission_giver_name = {
 	vertical_alignment = "bottom",
 	size = {
 		Dimensions.details_width * 0.52,
-		Dimensions.rewards_height,
+		Dimensions.rewards_height
 	},
 	text_color = table.shallow_copy(default_colors.terminal_text_dark),
 	offset = {
 		-36,
 		0,
-		5,
-	},
+		5
+	}
 }
 Styles.mission_objective_info.mission_giver_icon = {
 	horizontal_alignment = "right",
 	vertical_alignment = "bottom",
 	size = {
 		26.8,
-		32.160000000000004,
+		32.160000000000004
 	},
 	color = Color.white(255, true),
 	offset = {
 		-2,
 		-2,
-		30,
-	},
+		30
+	}
 }
 Styles.mission_objective_info.background_fade = {
 	horizontal_alignment = "left",
@@ -231,32 +231,32 @@ Styles.mission_objective_info.background_fade = {
 		255,
 		101,
 		145,
-		102,
+		102
 	},
 	uvs = {
 		{
 			0,
-			0,
+			0
 		},
 		{
 			1,
-			1,
-		},
+			1
+		}
 	},
 	pivot = {
 		0,
-		0,
+		0
 	},
 	offset = {
 		0,
 		Dimensions.details_width,
-		2,
+		2
 	},
 	size = {
 		Dimensions.details_height * 0.5,
-		Dimensions.details_width,
+		Dimensions.details_width
 	},
-	angle = math.degrees_to_radians(90),
+	angle = math.degrees_to_radians(90)
 }
 Styles.mission_objective_info.reward = {}
 Styles.mission_objective_info.reward.background = {
@@ -266,17 +266,17 @@ Styles.mission_objective_info.reward.background = {
 	offset = {
 		0,
 		0,
-		4,
-	},
+		4
+	}
 }
 Styles.mission_objective_info.reward.frame = {
 	scale_to_material = true,
 	offset = {
 		0,
 		0,
-		5,
+		5
 	},
-	color = table.shallow_copy(default_colors.terminal_frame),
+	color = table.shallow_copy(default_colors.terminal_frame)
 }
 Styles.mission_objective_info.reward.amount = {
 	font_size = 16,
@@ -289,26 +289,26 @@ Styles.mission_objective_info.reward.amount = {
 	offset = {
 		10,
 		0,
-		5,
-	},
+		5
+	}
 }
 Styles.mission_objective_info.reward.icon = {
 	horizontal_alignment = "right",
 	vertical_alignment = "center",
 	size = {
 		32,
-		32,
+		32
 	},
 	size_addition = {
 		-4,
-		-4,
+		-4
 	},
 	color = Color.white(255, true),
 	offset = {
 		-6,
 		0,
-		5,
-	},
+		5
+	}
 }
 
 return settings("ViewElementMissionBoardObjectivesInfoStyles", Styles)

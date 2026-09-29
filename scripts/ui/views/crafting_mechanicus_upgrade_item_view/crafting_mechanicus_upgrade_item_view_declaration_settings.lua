@@ -10,17 +10,17 @@ local view_settings = {
 	preload_in_hub = "not_ps5",
 	state_bound = true,
 	levels = {
-		"content/levels/ui/crafting_view_itemization/crafting_view_itemization",
+		"content/levels/ui/crafting_view_itemization/crafting_view_itemization"
 	},
 	enter_sound_events = {
-		UISoundEvents.default_menu_enter,
+		UISoundEvents.default_menu_enter
 	},
 	exit_sound_events = {
-		UISoundEvents.default_menu_exit,
+		UISoundEvents.default_menu_exit
 	},
 	testify_flags = {
-		ui_views = false,
-	},
+		ui_views = false
+	}
 }
 
 return settings("CraftingMechanicusUpgradeItemViewDeclarationSettings", view_settings)

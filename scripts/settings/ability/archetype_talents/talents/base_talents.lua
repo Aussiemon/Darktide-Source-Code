@@ -19,18 +19,18 @@ local base_talents = {
 						prefix = "+",
 						path = {
 							"stat_buffs",
-							stat_buffs.stamina_regeneration_delay,
-						},
+							stat_buffs.stamina_regeneration_delay
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value)
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "reduced_stamina_regen_delay_1",
-				identifier = "reduced_stamina_regen_delay_1",
-			},
+				identifier = "reduced_stamina_regen_delay_1"
+			}
 		},
 		base_stamina_regen_delay_2 = {
 			description = "loc_talent_stamina_regen_delay_desc",
@@ -46,18 +46,18 @@ local base_talents = {
 						prefix = "+",
 						path = {
 							"stat_buffs",
-							stat_buffs.stamina_regeneration_delay,
-						},
+							stat_buffs.stamina_regeneration_delay
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value)
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "reduced_stamina_regen_delay_2",
-				identifier = "reduced_stamina_regen_delay_2",
-			},
+				identifier = "reduced_stamina_regen_delay_2"
+			}
 		},
 		base_toughness_node_buff_low_1 = {
 			description = "loc_talent_toughness_boost_low_desc",
@@ -73,15 +73,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness,
-						},
-					},
-				},
+							stat_buffs.toughness
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_toughness_node_buff_low_1",
-				identifier = "player_toughness_node_buff_low_1",
-			},
+				identifier = "player_toughness_node_buff_low_1"
+			}
 		},
 		base_toughness_node_buff_low_2 = {
 			description = "loc_talent_toughness_boost_low_desc",
@@ -97,15 +97,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness,
-						},
-					},
-				},
+							stat_buffs.toughness
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_toughness_node_buff_low_2",
-				identifier = "player_toughness_node_buff_low_2",
-			},
+				identifier = "player_toughness_node_buff_low_2"
+			}
 		},
 		base_toughness_node_buff_low_3 = {
 			description = "loc_talent_toughness_boost_low_desc",
@@ -121,15 +121,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness,
-						},
-					},
-				},
+							stat_buffs.toughness
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_toughness_node_buff_low_3",
-				identifier = "player_toughness_node_buff_low_3",
-			},
+				identifier = "player_toughness_node_buff_low_3"
+			}
 		},
 		base_toughness_node_buff_low_4 = {
 			description = "loc_talent_toughness_boost_low_desc",
@@ -145,15 +145,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness,
-						},
-					},
-				},
+							stat_buffs.toughness
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_toughness_node_buff_low_4",
-				identifier = "player_toughness_node_buff_low_4",
-			},
+				identifier = "player_toughness_node_buff_low_4"
+			}
 		},
 		base_toughness_node_buff_low_5 = {
 			description = "loc_talent_toughness_boost_low_desc",
@@ -169,15 +169,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness,
-						},
-					},
-				},
+							stat_buffs.toughness
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_toughness_node_buff_low_5",
-				identifier = "player_toughness_node_buff_low_5",
-			},
+				identifier = "player_toughness_node_buff_low_5"
+			}
 		},
 		base_toughness_node_buff_medium_1 = {
 			description = "loc_talent_toughness_boost_medium_desc",
@@ -193,15 +193,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness,
-						},
-					},
-				},
+							stat_buffs.toughness
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_toughness_node_buff_medium_1",
-				identifier = "player_toughness_node_buff_medium_1",
-			},
+				identifier = "player_toughness_node_buff_medium_1"
+			}
 		},
 		base_toughness_node_buff_medium_2 = {
 			description = "loc_talent_toughness_boost_medium_desc",
@@ -217,15 +217,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness,
-						},
-					},
-				},
+							stat_buffs.toughness
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_toughness_node_buff_medium_2",
-				identifier = "player_toughness_node_buff_medium_2",
-			},
+				identifier = "player_toughness_node_buff_medium_2"
+			}
 		},
 		base_toughness_node_buff_medium_3 = {
 			description = "loc_talent_toughness_boost_medium_desc",
@@ -241,15 +241,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness,
-						},
-					},
-				},
+							stat_buffs.toughness
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_toughness_node_buff_medium_3",
-				identifier = "player_toughness_node_buff_medium_3",
-			},
+				identifier = "player_toughness_node_buff_medium_3"
+			}
 		},
 		base_toughness_node_buff_medium_4 = {
 			description = "loc_talent_toughness_boost_medium_desc",
@@ -265,15 +265,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness,
-						},
-					},
-				},
+							stat_buffs.toughness
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_toughness_node_buff_medium_4",
-				identifier = "player_toughness_node_buff_medium_4",
-			},
+				identifier = "player_toughness_node_buff_medium_4"
+			}
 		},
 		base_toughness_node_buff_medium_5 = {
 			description = "loc_talent_toughness_boost_medium_desc",
@@ -289,15 +289,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness,
-						},
-					},
-				},
+							stat_buffs.toughness
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_toughness_node_buff_medium_5",
-				identifier = "player_toughness_node_buff_medium_5",
-			},
+				identifier = "player_toughness_node_buff_medium_5"
+			}
 		},
 		base_toughness_damage_reduction_node_buff_low_1 = {
 			description = "loc_talent_toughness_damage_reduction_low_desc",
@@ -313,18 +313,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness_damage_taken_modifier,
-						},
+							stat_buffs.toughness_damage_taken_modifier
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_toughness_damage_reduction_node_buff_low_1",
-				identifier = "player_toughness_damage_reduction_node_buff_low_1",
-			},
+				identifier = "player_toughness_damage_reduction_node_buff_low_1"
+			}
 		},
 		base_toughness_damage_reduction_node_buff_low_2 = {
 			description = "loc_talent_toughness_damage_reduction_low_desc",
@@ -340,18 +340,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness_damage_taken_modifier,
-						},
+							stat_buffs.toughness_damage_taken_modifier
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_toughness_damage_reduction_node_buff_low_2",
-				identifier = "player_toughness_damage_reduction_node_buff_low_2",
-			},
+				identifier = "player_toughness_damage_reduction_node_buff_low_2"
+			}
 		},
 		base_toughness_damage_reduction_node_buff_low_3 = {
 			description = "loc_talent_toughness_damage_reduction_low_desc",
@@ -367,18 +367,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness_damage_taken_modifier,
-						},
+							stat_buffs.toughness_damage_taken_modifier
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_toughness_damage_reduction_node_buff_low_3",
-				identifier = "player_toughness_damage_reduction_node_buff_low_3",
-			},
+				identifier = "player_toughness_damage_reduction_node_buff_low_3"
+			}
 		},
 		base_toughness_damage_reduction_node_buff_low_4 = {
 			description = "loc_talent_toughness_damage_reduction_low_desc",
@@ -394,18 +394,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness_damage_taken_modifier,
-						},
+							stat_buffs.toughness_damage_taken_modifier
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_toughness_damage_reduction_node_buff_low_4",
-				identifier = "player_toughness_damage_reduction_node_buff_low_4",
-			},
+				identifier = "player_toughness_damage_reduction_node_buff_low_4"
+			}
 		},
 		base_toughness_damage_reduction_node_buff_low_5 = {
 			description = "loc_talent_toughness_damage_reduction_low_desc",
@@ -421,18 +421,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness_damage_taken_modifier,
-						},
+							stat_buffs.toughness_damage_taken_modifier
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_toughness_damage_reduction_node_buff_low_5",
-				identifier = "player_toughness_damage_reduction_node_buff_low_5",
-			},
+				identifier = "player_toughness_damage_reduction_node_buff_low_5"
+			}
 		},
 		base_toughness_damage_reduction_node_buff_medium_1 = {
 			description = "loc_talent_toughness_damage_reduction_medium_desc",
@@ -448,18 +448,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness_damage_taken_modifier,
-						},
+							stat_buffs.toughness_damage_taken_modifier
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_toughness_damage_reduction_node_buff_medium_1",
-				identifier = "player_toughness_damage_reduction_node_buff_medium_1",
-			},
+				identifier = "player_toughness_damage_reduction_node_buff_medium_1"
+			}
 		},
 		base_toughness_damage_reduction_node_buff_medium_2 = {
 			description = "loc_talent_toughness_damage_reduction_medium_desc",
@@ -475,18 +475,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness_damage_taken_modifier,
-						},
+							stat_buffs.toughness_damage_taken_modifier
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_toughness_damage_reduction_node_buff_medium_2",
-				identifier = "player_toughness_damage_reduction_node_buff_medium_2",
-			},
+				identifier = "player_toughness_damage_reduction_node_buff_medium_2"
+			}
 		},
 		base_toughness_damage_reduction_node_buff_medium_3 = {
 			description = "loc_talent_toughness_damage_reduction_medium_desc",
@@ -502,18 +502,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness_damage_taken_modifier,
-						},
+							stat_buffs.toughness_damage_taken_modifier
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_toughness_damage_reduction_node_buff_medium_3",
-				identifier = "player_toughness_damage_reduction_node_buff_medium_3",
-			},
+				identifier = "player_toughness_damage_reduction_node_buff_medium_3"
+			}
 		},
 		base_toughness_damage_reduction_node_buff_medium_4 = {
 			description = "loc_talent_toughness_damage_reduction_medium_desc",
@@ -529,18 +529,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness_damage_taken_modifier,
-						},
+							stat_buffs.toughness_damage_taken_modifier
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_toughness_damage_reduction_node_buff_medium_4",
-				identifier = "player_toughness_damage_reduction_node_buff_medium_4",
-			},
+				identifier = "player_toughness_damage_reduction_node_buff_medium_4"
+			}
 		},
 		base_toughness_damage_reduction_node_buff_medium_5 = {
 			description = "loc_talent_toughness_damage_reduction_medium_desc",
@@ -556,18 +556,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness_damage_taken_modifier,
-						},
+							stat_buffs.toughness_damage_taken_modifier
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_toughness_damage_reduction_node_buff_medium_5",
-				identifier = "player_toughness_damage_reduction_node_buff_medium_5",
-			},
+				identifier = "player_toughness_damage_reduction_node_buff_medium_5"
+			}
 		},
 		base_ranged_toughness_damage_reduction_node_buff_medium_1 = {
 			description = "loc_talent_ranged_toughness_damage_reduction_medium_desc",
@@ -583,18 +583,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.ranged_toughness_damage_taken_modifier,
-						},
+							stat_buffs.ranged_toughness_damage_taken_modifier
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_ranged_toughness_damage_reduction_node_buff_medium_1",
-				identifier = "player_ranged_toughness_damage_reduction_node_buff_medium_1",
-			},
+				identifier = "player_ranged_toughness_damage_reduction_node_buff_medium_1"
+			}
 		},
 		base_ranged_toughness_damage_reduction_node_buff_medium_2 = {
 			description = "loc_talent_ranged_toughness_damage_reduction_medium_desc",
@@ -610,18 +610,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.ranged_toughness_damage_taken_modifier,
-						},
+							stat_buffs.ranged_toughness_damage_taken_modifier
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_ranged_toughness_damage_reduction_node_buff_medium_2",
-				identifier = "player_ranged_toughness_damage_reduction_node_buff_medium_2",
-			},
+				identifier = "player_ranged_toughness_damage_reduction_node_buff_medium_2"
+			}
 		},
 		base_ranged_toughness_damage_reduction_node_buff_medium_3 = {
 			description = "loc_talent_ranged_toughness_damage_reduction_medium_desc",
@@ -637,18 +637,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.ranged_toughness_damage_taken_modifier,
-						},
+							stat_buffs.ranged_toughness_damage_taken_modifier
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_ranged_toughness_damage_reduction_node_buff_medium_3",
-				identifier = "player_ranged_toughness_damage_reduction_node_buff_medium_3",
-			},
+				identifier = "player_ranged_toughness_damage_reduction_node_buff_medium_3"
+			}
 		},
 		base_ranged_toughness_damage_reduction_node_buff_medium_4 = {
 			description = "loc_talent_ranged_toughness_damage_reduction_medium_desc",
@@ -664,18 +664,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.ranged_toughness_damage_taken_modifier,
-						},
+							stat_buffs.ranged_toughness_damage_taken_modifier
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_ranged_toughness_damage_reduction_node_buff_medium_4",
-				identifier = "player_ranged_toughness_damage_reduction_node_buff_medium_4",
-			},
+				identifier = "player_ranged_toughness_damage_reduction_node_buff_medium_4"
+			}
 		},
 		base_ranged_toughness_damage_reduction_node_buff_medium_5 = {
 			description = "loc_talent_ranged_toughness_damage_reduction_medium_desc",
@@ -691,18 +691,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.ranged_toughness_damage_taken_modifier,
-						},
+							stat_buffs.ranged_toughness_damage_taken_modifier
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_toughness_damage_reduction_node_buff_medium_5",
-				identifier = "player_toughness_damage_reduction_node_buff_medium_5",
-			},
+				identifier = "player_toughness_damage_reduction_node_buff_medium_5"
+			}
 		},
 		base_melee_toughness_damage_reduction_node_buff_medium_1 = {
 			description = "loc_talent_melee_toughness_damage_reduction_medium_desc",
@@ -718,18 +718,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness_damage_taken_modifier,
-						},
+							stat_buffs.toughness_damage_taken_modifier
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_toughness_damage_reduction_node_buff_medium_1",
-				identifier = "player_melee_toughness_damage_reduction_node_buff_medium_1",
-			},
+				identifier = "player_melee_toughness_damage_reduction_node_buff_medium_1"
+			}
 		},
 		base_melee_toughness_damage_reduction_node_buff_medium_2 = {
 			description = "loc_talent_melee_toughness_damage_reduction_medium_desc",
@@ -745,18 +745,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness_damage_taken_modifier,
-						},
+							stat_buffs.toughness_damage_taken_modifier
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_toughness_damage_reduction_node_buff_medium_2",
-				identifier = "player_melee_toughness_damage_reduction_node_buff_medium_2",
-			},
+				identifier = "player_melee_toughness_damage_reduction_node_buff_medium_2"
+			}
 		},
 		base_melee_toughness_damage_reduction_node_buff_medium_3 = {
 			description = "loc_talent_melee_toughness_damage_reduction_medium_desc",
@@ -772,18 +772,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness_damage_taken_modifier,
-						},
+							stat_buffs.toughness_damage_taken_modifier
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_toughness_damage_reduction_node_buff_medium_3",
-				identifier = "player_melee_toughness_damage_reduction_node_buff_medium_3",
-			},
+				identifier = "player_melee_toughness_damage_reduction_node_buff_medium_3"
+			}
 		},
 		base_melee_toughness_damage_reduction_node_buff_medium_4 = {
 			description = "loc_talent_melee_toughness_damage_reduction_medium_desc",
@@ -799,18 +799,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness_damage_taken_modifier,
-						},
+							stat_buffs.toughness_damage_taken_modifier
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_toughness_damage_reduction_node_buff_medium_4",
-				identifier = "player_melee_toughness_damage_reduction_node_buff_medium_4",
-			},
+				identifier = "player_melee_toughness_damage_reduction_node_buff_medium_4"
+			}
 		},
 		base_melee_toughness_damage_reduction_node_buff_medium_5 = {
 			description = "loc_talent_melee_toughness_damage_reduction_medium_desc",
@@ -826,18 +826,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness_damage_taken_modifier,
-						},
+							stat_buffs.toughness_damage_taken_modifier
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_toughness_damage_reduction_node_buff_medium_5",
-				identifier = "player_toughness_damage_reduction_node_buff_medium_5",
-			},
+				identifier = "player_toughness_damage_reduction_node_buff_medium_5"
+			}
 		},
 		base_melee_toughness_damage_reduction_node_buff_medium_old = {
 			description = "loc_talent_melee_toughness_damage_reduction_medium_desc",
@@ -853,18 +853,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_toughness_damage_taken_multiplier,
-						},
+							stat_buffs.melee_toughness_damage_taken_multiplier
+						}
 					},
 					value_manipulation = function (value)
 						return math.abs(1 - value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_toughness_damage_reduction_node_buff_medium_old",
-				identifier = "player_melee_toughness_damage_reduction_node_buff_medium_old",
-			},
+				identifier = "player_melee_toughness_damage_reduction_node_buff_medium_old"
+			}
 		},
 		base_melee_damage_node_buff_low_1 = {
 			description = "loc_talent_melee_damage_boost_low_desc",
@@ -880,15 +880,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_damage,
-						},
-					},
-				},
+							stat_buffs.melee_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_damage_node_buff_low_1",
-				identifier = "player_melee_damage_node_buff_low_1",
-			},
+				identifier = "player_melee_damage_node_buff_low_1"
+			}
 		},
 		base_melee_damage_node_buff_low_2 = {
 			description = "loc_talent_melee_damage_boost_low_desc",
@@ -904,15 +904,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_damage,
-						},
-					},
-				},
+							stat_buffs.melee_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_damage_node_buff_low_2",
-				identifier = "player_melee_damage_node_buff_low_2",
-			},
+				identifier = "player_melee_damage_node_buff_low_2"
+			}
 		},
 		base_melee_damage_node_buff_low_3 = {
 			description = "loc_talent_melee_damage_boost_low_desc",
@@ -928,15 +928,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_damage,
-						},
-					},
-				},
+							stat_buffs.melee_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_damage_node_buff_low_3",
-				identifier = "player_melee_damage_node_buff_low_3",
-			},
+				identifier = "player_melee_damage_node_buff_low_3"
+			}
 		},
 		base_melee_damage_node_buff_low_4 = {
 			description = "loc_talent_melee_damage_boost_low_desc",
@@ -952,15 +952,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_damage,
-						},
-					},
-				},
+							stat_buffs.melee_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_damage_node_buff_low_4",
-				identifier = "player_melee_damage_node_buff_low_4",
-			},
+				identifier = "player_melee_damage_node_buff_low_4"
+			}
 		},
 		base_melee_damage_node_buff_low_5 = {
 			description = "loc_talent_melee_damage_boost_low_desc",
@@ -976,15 +976,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_damage,
-						},
-					},
-				},
+							stat_buffs.melee_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_damage_node_buff_low_5",
-				identifier = "player_melee_damage_node_buff_low_5",
-			},
+				identifier = "player_melee_damage_node_buff_low_5"
+			}
 		},
 		base_impact_node_buff_medium_1 = {
 			description = "loc_talent_impact_boost_medium_desc",
@@ -1000,15 +1000,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.impact_modifier,
-						},
-					},
-				},
+							stat_buffs.impact_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_impact_node_buff_medium_1",
-				identifier = "player_impact_node_buff_medium_1",
-			},
+				identifier = "player_impact_node_buff_medium_1"
+			}
 		},
 		base_cleave_node_buff_medium_1 = {
 			description = "loc_talent_cleave_boost_medium_desc",
@@ -1024,15 +1024,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.max_hit_mass_attack_modifier,
-						},
-					},
-				},
+							stat_buffs.max_hit_mass_attack_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_cleave_node_buff_medium_1",
-				identifier = "player_cleave_node_buff_medium_1",
-			},
+				identifier = "player_cleave_node_buff_medium_1"
+			}
 		},
 		base_melee_damage_node_buff_medium_1 = {
 			description = "loc_talent_melee_damage_boost_medium_desc",
@@ -1048,15 +1048,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_damage,
-						},
-					},
-				},
+							stat_buffs.melee_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_damage_node_buff_medium_1",
-				identifier = "player_melee_damage_node_buff_medium_1",
-			},
+				identifier = "player_melee_damage_node_buff_medium_1"
+			}
 		},
 		base_melee_damage_node_buff_medium_2 = {
 			description = "loc_talent_melee_damage_boost_medium_desc",
@@ -1072,15 +1072,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_damage,
-						},
-					},
-				},
+							stat_buffs.melee_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_damage_node_buff_medium_2",
-				identifier = "player_melee_damage_node_buff_medium_2",
-			},
+				identifier = "player_melee_damage_node_buff_medium_2"
+			}
 		},
 		base_melee_damage_node_buff_medium_3 = {
 			description = "loc_talent_melee_damage_boost_medium_desc",
@@ -1096,15 +1096,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_damage,
-						},
-					},
-				},
+							stat_buffs.melee_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_damage_node_buff_medium_3",
-				identifier = "player_melee_damage_node_buff_medium_3",
-			},
+				identifier = "player_melee_damage_node_buff_medium_3"
+			}
 		},
 		base_melee_damage_node_buff_medium_4 = {
 			description = "loc_talent_melee_damage_boost_medium_desc",
@@ -1120,15 +1120,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_damage,
-						},
-					},
-				},
+							stat_buffs.melee_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_damage_node_buff_medium_4",
-				identifier = "player_melee_damage_node_buff_medium_4",
-			},
+				identifier = "player_melee_damage_node_buff_medium_4"
+			}
 		},
 		base_melee_damage_node_buff_medium_5 = {
 			description = "loc_talent_melee_damage_boost_medium_desc",
@@ -1144,15 +1144,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_damage,
-						},
-					},
-				},
+							stat_buffs.melee_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_damage_node_buff_medium_5",
-				identifier = "player_melee_damage_node_buff_medium_5",
-			},
+				identifier = "player_melee_damage_node_buff_medium_5"
+			}
 		},
 		base_melee_damage_node_buff_high_1 = {
 			description = "loc_talent_melee_damage_boost_medium_desc",
@@ -1168,15 +1168,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_damage,
-						},
-					},
-				},
+							stat_buffs.melee_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_damage_node_buff_high_1",
-				identifier = "player_melee_damage_node_buff_high_1",
-			},
+				identifier = "player_melee_damage_node_buff_high_1"
+			}
 		},
 		base_melee_damage_node_buff_high_2 = {
 			description = "loc_talent_melee_damage_boost_medium_desc",
@@ -1192,15 +1192,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_damage,
-						},
-					},
-				},
+							stat_buffs.melee_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_damage_node_buff_high_2",
-				identifier = "player_melee_damage_node_buff_high_2",
-			},
+				identifier = "player_melee_damage_node_buff_high_2"
+			}
 		},
 		base_melee_damage_node_buff_high_3 = {
 			description = "loc_talent_melee_damage_boost_medium_desc",
@@ -1216,15 +1216,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_damage,
-						},
-					},
-				},
+							stat_buffs.melee_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_damage_node_buff_high_3",
-				identifier = "player_melee_damage_node_buff_high_3",
-			},
+				identifier = "player_melee_damage_node_buff_high_3"
+			}
 		},
 		base_melee_damage_node_buff_high_4 = {
 			description = "loc_talent_melee_damage_boost_medium_desc",
@@ -1240,15 +1240,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_damage,
-						},
-					},
-				},
+							stat_buffs.melee_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_damage_node_buff_high_4",
-				identifier = "player_melee_damage_node_buff_high_4",
-			},
+				identifier = "player_melee_damage_node_buff_high_4"
+			}
 		},
 		base_melee_damage_node_buff_high_5 = {
 			description = "loc_talent_melee_damage_boost_medium_desc",
@@ -1264,15 +1264,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_damage,
-						},
-					},
-				},
+							stat_buffs.melee_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_damage_node_buff_high_5",
-				identifier = "player_melee_damage_node_buff_high_5",
-			},
+				identifier = "player_melee_damage_node_buff_high_5"
+			}
 		},
 		base_melee_heavy_damage_node_buff_low_1 = {
 			description = "loc_talent_melee_heavy_damage_low_desc",
@@ -1288,15 +1288,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_heavy_damage,
-						},
-					},
-				},
+							stat_buffs.melee_heavy_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_heavy_damage_node_buff_low_1",
-				identifier = "player_melee_heavy_damage_node_buff_low_1",
-			},
+				identifier = "player_melee_heavy_damage_node_buff_low_1"
+			}
 		},
 		base_melee_heavy_damage_node_buff_low_2 = {
 			description = "loc_talent_melee_heavy_damage_low_desc",
@@ -1312,15 +1312,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_heavy_damage,
-						},
-					},
-				},
+							stat_buffs.melee_heavy_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_heavy_damage_node_buff_low_2",
-				identifier = "player_melee_heavy_damage_node_buff_low_2",
-			},
+				identifier = "player_melee_heavy_damage_node_buff_low_2"
+			}
 		},
 		base_melee_heavy_damage_node_buff_low_3 = {
 			description = "loc_talent_melee_heavy_damage_low_desc",
@@ -1336,15 +1336,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_heavy_damage,
-						},
-					},
-				},
+							stat_buffs.melee_heavy_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_heavy_damage_node_buff_low_3",
-				identifier = "player_melee_heavy_damage_node_buff_low_3",
-			},
+				identifier = "player_melee_heavy_damage_node_buff_low_3"
+			}
 		},
 		base_melee_heavy_damage_node_buff_low_4 = {
 			description = "loc_talent_melee_heavy_damage_low_desc",
@@ -1360,15 +1360,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_heavy_damage,
-						},
-					},
-				},
+							stat_buffs.melee_heavy_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_heavy_damage_node_buff_low_4",
-				identifier = "player_melee_heavy_damage_node_buff_low_4",
-			},
+				identifier = "player_melee_heavy_damage_node_buff_low_4"
+			}
 		},
 		base_melee_heavy_damage_node_buff_low_5 = {
 			description = "loc_talent_melee_heavy_damage_low_desc",
@@ -1384,15 +1384,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_heavy_damage,
-						},
-					},
-				},
+							stat_buffs.melee_heavy_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_heavy_damage_node_buff_low_5",
-				identifier = "player_melee_heavy_damage_node_buff_low_5",
-			},
+				identifier = "player_melee_heavy_damage_node_buff_low_5"
+			}
 		},
 		base_melee_heavy_damage_node_buff_medium_1 = {
 			description = "loc_talent_melee_heavy_damage_medium_desc",
@@ -1408,15 +1408,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_heavy_damage,
-						},
-					},
-				},
+							stat_buffs.melee_heavy_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_heavy_damage_node_buff_medium_1",
-				identifier = "player_melee_heavy_damage_node_buff_medium_1",
-			},
+				identifier = "player_melee_heavy_damage_node_buff_medium_1"
+			}
 		},
 		base_melee_heavy_damage_node_buff_medium_2 = {
 			description = "loc_talent_melee_heavy_damage_medium_desc",
@@ -1432,15 +1432,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_heavy_damage,
-						},
-					},
-				},
+							stat_buffs.melee_heavy_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_heavy_damage_node_buff_medium_2",
-				identifier = "player_melee_heavy_damage_node_buff_medium_2",
-			},
+				identifier = "player_melee_heavy_damage_node_buff_medium_2"
+			}
 		},
 		base_melee_heavy_damage_node_buff_medium_3 = {
 			description = "loc_talent_melee_heavy_damage_medium_desc",
@@ -1456,15 +1456,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_heavy_damage,
-						},
-					},
-				},
+							stat_buffs.melee_heavy_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_heavy_damage_node_buff_medium_3",
-				identifier = "player_melee_heavy_damage_node_buff_medium_3",
-			},
+				identifier = "player_melee_heavy_damage_node_buff_medium_3"
+			}
 		},
 		base_melee_heavy_damage_node_buff_medium_4 = {
 			description = "loc_talent_melee_heavy_damage_medium_desc",
@@ -1480,15 +1480,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_heavy_damage,
-						},
-					},
-				},
+							stat_buffs.melee_heavy_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_heavy_damage_node_buff_medium_4",
-				identifier = "player_melee_heavy_damage_node_buff_medium_4",
-			},
+				identifier = "player_melee_heavy_damage_node_buff_medium_4"
+			}
 		},
 		base_melee_heavy_damage_node_buff_medium_5 = {
 			description = "loc_talent_melee_heavy_damage_medium_desc",
@@ -1504,15 +1504,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.melee_heavy_damage,
-						},
-					},
-				},
+							stat_buffs.melee_heavy_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_melee_heavy_damage_node_buff_medium_5",
-				identifier = "player_melee_heavy_damage_node_buff_medium_5",
-			},
+				identifier = "player_melee_heavy_damage_node_buff_medium_5"
+			}
 		},
 		base_ranged_damage_node_buff_low_1 = {
 			description = "loc_talent_ranged_damage_low_desc",
@@ -1528,15 +1528,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.ranged_damage,
-						},
-					},
-				},
+							stat_buffs.ranged_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_ranged_damage_node_buff_low_1",
-				identifier = "player_ranged_damage_node_buff_low_1",
-			},
+				identifier = "player_ranged_damage_node_buff_low_1"
+			}
 		},
 		base_ranged_damage_node_buff_low_2 = {
 			description = "loc_talent_ranged_damage_low_desc",
@@ -1552,15 +1552,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.ranged_damage,
-						},
-					},
-				},
+							stat_buffs.ranged_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_ranged_damage_node_buff_low_2",
-				identifier = "player_ranged_damage_node_buff_low_2",
-			},
+				identifier = "player_ranged_damage_node_buff_low_2"
+			}
 		},
 		base_ranged_damage_node_buff_low_3 = {
 			description = "loc_talent_ranged_damage_low_desc",
@@ -1576,15 +1576,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.ranged_damage,
-						},
-					},
-				},
+							stat_buffs.ranged_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_ranged_damage_node_buff_low_3",
-				identifier = "player_ranged_damage_node_buff_low_3",
-			},
+				identifier = "player_ranged_damage_node_buff_low_3"
+			}
 		},
 		base_ranged_damage_node_buff_low_4 = {
 			description = "loc_talent_ranged_damage_low_desc",
@@ -1600,15 +1600,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.ranged_damage,
-						},
-					},
-				},
+							stat_buffs.ranged_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_ranged_damage_node_buff_low_4",
-				identifier = "player_ranged_damage_node_buff_low_4",
-			},
+				identifier = "player_ranged_damage_node_buff_low_4"
+			}
 		},
 		base_ranged_damage_node_buff_low_5 = {
 			description = "loc_talent_ranged_damage_low_desc",
@@ -1624,15 +1624,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.ranged_damage,
-						},
-					},
-				},
+							stat_buffs.ranged_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_ranged_damage_node_buff_low_5",
-				identifier = "player_ranged_damage_node_buff_low_5",
-			},
+				identifier = "player_ranged_damage_node_buff_low_5"
+			}
 		},
 		base_ranged_damage_node_buff_medium_1 = {
 			description = "loc_talent_ranged_damage_medium_desc",
@@ -1648,15 +1648,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.ranged_damage,
-						},
-					},
-				},
+							stat_buffs.ranged_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_ranged_damage_node_buff_medium_1",
-				identifier = "player_ranged_damage_node_buff_medium_1",
-			},
+				identifier = "player_ranged_damage_node_buff_medium_1"
+			}
 		},
 		base_ranged_damage_node_buff_medium_2 = {
 			description = "loc_talent_ranged_damage_medium_desc",
@@ -1672,15 +1672,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.ranged_damage,
-						},
-					},
-				},
+							stat_buffs.ranged_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_ranged_damage_node_buff_medium_2",
-				identifier = "player_ranged_damage_node_buff_medium_2",
-			},
+				identifier = "player_ranged_damage_node_buff_medium_2"
+			}
 		},
 		base_ranged_damage_node_buff_medium_3 = {
 			description = "loc_talent_ranged_damage_medium_desc",
@@ -1696,15 +1696,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.ranged_damage,
-						},
-					},
-				},
+							stat_buffs.ranged_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_ranged_damage_node_buff_medium_3",
-				identifier = "player_ranged_damage_node_buff_medium_3",
-			},
+				identifier = "player_ranged_damage_node_buff_medium_3"
+			}
 		},
 		base_ranged_damage_node_buff_medium_4 = {
 			description = "loc_talent_ranged_damage_medium_desc",
@@ -1720,15 +1720,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.ranged_damage,
-						},
-					},
-				},
+							stat_buffs.ranged_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_ranged_damage_node_buff_medium_4",
-				identifier = "player_ranged_damage_node_buff_medium_4",
-			},
+				identifier = "player_ranged_damage_node_buff_medium_4"
+			}
 		},
 		base_ranged_damage_node_buff_medium_5 = {
 			description = "loc_talent_ranged_damage_medium_desc",
@@ -1744,15 +1744,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.ranged_damage,
-						},
-					},
-				},
+							stat_buffs.ranged_damage
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_ranged_damage_node_buff_medium_5",
-				identifier = "player_ranged_damage_node_buff_medium_5",
-			},
+				identifier = "player_ranged_damage_node_buff_medium_5"
+			}
 		},
 		base_toxin_power_boost_1 = {
 			description = "loc_talent_toxin_damage_boost_desc",
@@ -1769,15 +1769,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toxin_power,
-						},
-					},
-				},
+							stat_buffs.toxin_power
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "base_toxin_power_boost_1",
-				identifier = "base_toxin_power_boost_1",
-			},
+				identifier = "base_toxin_power_boost_1"
+			}
 		},
 		base_armor_pen_node_buff_low_1 = {
 			description = "loc_talent_armor_pen_low_desc",
@@ -1793,15 +1793,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.rending_multiplier,
-						},
-					},
-				},
+							stat_buffs.rending_multiplier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_armor_pen_node_buff_low_1",
-				identifier = "player_armor_pen_node_buff_low_1",
-			},
+				identifier = "player_armor_pen_node_buff_low_1"
+			}
 		},
 		base_armor_pen_node_buff_low_2 = {
 			description = "loc_talent_armor_pen_low_desc",
@@ -1817,15 +1817,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.rending_multiplier,
-						},
-					},
-				},
+							stat_buffs.rending_multiplier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_armor_pen_node_buff_low_2",
-				identifier = "player_armor_pen_node_buff_low_2",
-			},
+				identifier = "player_armor_pen_node_buff_low_2"
+			}
 		},
 		base_armor_pen_node_buff_low_3 = {
 			description = "loc_talent_armor_pen_low_desc",
@@ -1841,15 +1841,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.rending_multiplier,
-						},
-					},
-				},
+							stat_buffs.rending_multiplier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_armor_pen_node_buff_low_3",
-				identifier = "player_armor_pen_node_buff_low_3",
-			},
+				identifier = "player_armor_pen_node_buff_low_3"
+			}
 		},
 		base_armor_pen_node_buff_low_4 = {
 			description = "loc_talent_armor_pen_low_desc",
@@ -1865,15 +1865,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.rending_multiplier,
-						},
-					},
-				},
+							stat_buffs.rending_multiplier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_armor_pen_node_buff_low_4",
-				identifier = "player_armor_pen_node_buff_low_4",
-			},
+				identifier = "player_armor_pen_node_buff_low_4"
+			}
 		},
 		base_armor_pen_node_buff_low_5 = {
 			description = "loc_talent_armor_pen_low_desc",
@@ -1889,15 +1889,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.rending_multiplier,
-						},
-					},
-				},
+							stat_buffs.rending_multiplier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_armor_pen_node_buff_low_5",
-				identifier = "player_armor_pen_node_buff_low_5",
-			},
+				identifier = "player_armor_pen_node_buff_low_5"
+			}
 		},
 		base_reload_speed_node_buff_low_1 = {
 			description = "loc_talent_reload_speed_low_desc",
@@ -1913,15 +1913,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.reload_speed,
-						},
-					},
-				},
+							stat_buffs.reload_speed
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_reload_speed_node_buff_low_1",
-				identifier = "player_reload_speed_node_buff_low_1",
-			},
+				identifier = "player_reload_speed_node_buff_low_1"
+			}
 		},
 		base_reload_speed_node_buff_low_2 = {
 			description = "loc_talent_reload_speed_low_desc",
@@ -1937,15 +1937,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.reload_speed,
-						},
-					},
-				},
+							stat_buffs.reload_speed
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_reload_speed_node_buff_low_2",
-				identifier = "player_reload_speed_node_buff_low_2",
-			},
+				identifier = "player_reload_speed_node_buff_low_2"
+			}
 		},
 		base_reload_speed_node_buff_low_3 = {
 			description = "loc_talent_reload_speed_low_desc",
@@ -1961,15 +1961,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.reload_speed,
-						},
-					},
-				},
+							stat_buffs.reload_speed
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_reload_speed_node_buff_low_3",
-				identifier = "player_reload_speed_node_buff_low_3",
-			},
+				identifier = "player_reload_speed_node_buff_low_3"
+			}
 		},
 		base_reload_speed_node_buff_low_4 = {
 			description = "loc_talent_reload_speed_low_desc",
@@ -1985,15 +1985,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.reload_speed,
-						},
-					},
-				},
+							stat_buffs.reload_speed
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_reload_speed_node_buff_low_4",
-				identifier = "player_reload_speed_node_buff_low_4",
-			},
+				identifier = "player_reload_speed_node_buff_low_4"
+			}
 		},
 		base_reload_speed_node_buff_low_5 = {
 			description = "loc_talent_reload_speed_low_desc",
@@ -2009,15 +2009,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.reload_speed,
-						},
-					},
-				},
+							stat_buffs.reload_speed
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_reload_speed_node_buff_low_5",
-				identifier = "player_reload_speed_node_buff_low_5",
-			},
+				identifier = "player_reload_speed_node_buff_low_5"
+			}
 		},
 		base_reload_speed_node_buff_medium_1 = {
 			description = "loc_talent_reload_speed_medium_desc",
@@ -2033,15 +2033,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.reload_speed,
-						},
-					},
-				},
+							stat_buffs.reload_speed
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_reload_speed_node_buff_medium_1",
-				identifier = "player_reload_speed_node_buff_medium_1",
-			},
+				identifier = "player_reload_speed_node_buff_medium_1"
+			}
 		},
 		base_reload_speed_node_buff_medium_2 = {
 			description = "loc_talent_reload_speed_medium_desc",
@@ -2057,15 +2057,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.reload_speed,
-						},
-					},
-				},
+							stat_buffs.reload_speed
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_reload_speed_node_buff_medium_2",
-				identifier = "player_reload_speed_node_buff_medium_2",
-			},
+				identifier = "player_reload_speed_node_buff_medium_2"
+			}
 		},
 		base_reload_speed_node_buff_medium_3 = {
 			description = "loc_talent_reload_speed_medium_desc",
@@ -2081,15 +2081,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.reload_speed,
-						},
-					},
-				},
+							stat_buffs.reload_speed
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_reload_speed_node_buff_medium_3",
-				identifier = "player_reload_speed_node_buff_medium_3",
-			},
+				identifier = "player_reload_speed_node_buff_medium_3"
+			}
 		},
 		base_reload_speed_node_buff_medium_4 = {
 			description = "loc_talent_reload_speed_medium_desc",
@@ -2105,15 +2105,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.reload_speed,
-						},
-					},
-				},
+							stat_buffs.reload_speed
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_reload_speed_node_buff_medium_4",
-				identifier = "player_reload_speed_node_buff_medium_4",
-			},
+				identifier = "player_reload_speed_node_buff_medium_4"
+			}
 		},
 		base_reload_speed_node_buff_medium_5 = {
 			description = "loc_talent_reload_speed_medium_desc",
@@ -2129,15 +2129,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.reload_speed,
-						},
-					},
-				},
+							stat_buffs.reload_speed
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_ranged_damage_node_buff_medium_5",
-				identifier = "player_ranged_damage_node_buff_medium_5",
-			},
+				identifier = "player_ranged_damage_node_buff_medium_5"
+			}
 		},
 		base_suppression_node_buff_low_1 = {
 			description = "loc_talent_suppression_low_desc",
@@ -2153,15 +2153,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.suppression_dealt,
-						},
-					},
-				},
+							stat_buffs.suppression_dealt
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_suppression_node_buff_low_1",
-				identifier = "player_suppression_node_buff_low_1",
-			},
+				identifier = "player_suppression_node_buff_low_1"
+			}
 		},
 		base_suppression_node_buff_low_2 = {
 			description = "loc_talent_suppression_low_desc",
@@ -2177,15 +2177,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.suppression_dealt,
-						},
-					},
-				},
+							stat_buffs.suppression_dealt
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_suppression_node_buff_low_2",
-				identifier = "player_suppression_node_buff_low_2",
-			},
+				identifier = "player_suppression_node_buff_low_2"
+			}
 		},
 		base_suppression_node_buff_low_3 = {
 			description = "loc_talent_suppression_low_desc",
@@ -2201,15 +2201,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.suppression_dealt,
-						},
-					},
-				},
+							stat_buffs.suppression_dealt
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_suppression_node_buff_low_3",
-				identifier = "player_suppression_node_buff_low_3",
-			},
+				identifier = "player_suppression_node_buff_low_3"
+			}
 		},
 		base_suppression_node_buff_low_4 = {
 			description = "loc_talent_suppression_low_desc",
@@ -2225,15 +2225,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.suppression_dealt,
-						},
-					},
-				},
+							stat_buffs.suppression_dealt
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_suppression_node_buff_low_4",
-				identifier = "player_suppression_node_buff_low_4",
-			},
+				identifier = "player_suppression_node_buff_low_4"
+			}
 		},
 		base_suppression_node_buff_low_5 = {
 			description = "loc_talent_suppression_low_desc",
@@ -2249,15 +2249,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.suppression_dealt,
-						},
-					},
-				},
+							stat_buffs.suppression_dealt
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_suppression_node_buff_low_5",
-				identifier = "player_suppression_node_buff_low_5",
-			},
+				identifier = "player_suppression_node_buff_low_5"
+			}
 		},
 		base_stamina_node_buff_low_1 = {
 			description = "loc_talent_stamina_low_desc",
@@ -2273,15 +2273,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.stamina_modifier,
-						},
-					},
-				},
+							stat_buffs.stamina_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_stamina_node_buff_low_1",
-				identifier = "player_stamina_node_buff_low_1",
-			},
+				identifier = "player_stamina_node_buff_low_1"
+			}
 		},
 		base_stamina_node_buff_low_2 = {
 			description = "loc_talent_stamina_low_desc",
@@ -2297,15 +2297,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.stamina_modifier,
-						},
-					},
-				},
+							stat_buffs.stamina_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_stamina_node_buff_low_2",
-				identifier = "player_stamina_node_buff_low_2",
-			},
+				identifier = "player_stamina_node_buff_low_2"
+			}
 		},
 		base_stamina_node_buff_low_3 = {
 			description = "loc_talent_stamina_low_desc",
@@ -2321,15 +2321,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.stamina_modifier,
-						},
-					},
-				},
+							stat_buffs.stamina_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_stamina_node_buff_low_3",
-				identifier = "player_stamina_node_buff_low_3",
-			},
+				identifier = "player_stamina_node_buff_low_3"
+			}
 		},
 		base_stamina_node_buff_low_4 = {
 			description = "loc_talent_stamina_low_desc",
@@ -2345,15 +2345,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.stamina_modifier,
-						},
-					},
-				},
+							stat_buffs.stamina_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_stamina_node_buff_low_4",
-				identifier = "player_stamina_node_buff_low_4",
-			},
+				identifier = "player_stamina_node_buff_low_4"
+			}
 		},
 		base_stamina_node_buff_low_5 = {
 			description = "loc_talent_stamina_low_desc",
@@ -2369,15 +2369,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.stamina_modifier,
-						},
-					},
-				},
+							stat_buffs.stamina_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_stamina_node_buff_low_5",
-				identifier = "player_stamina_node_buff_low_5",
-			},
+				identifier = "player_stamina_node_buff_low_5"
+			}
 		},
 		base_health_node_buff_low_1 = {
 			description = "loc_talent_health_low_desc",
@@ -2393,15 +2393,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.max_health_modifier,
-						},
-					},
-				},
+							stat_buffs.max_health_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_health_node_buff_low_1",
-				identifier = "player_health_node_buff_low_1",
-			},
+				identifier = "player_health_node_buff_low_1"
+			}
 		},
 		base_health_node_buff_low_2 = {
 			description = "loc_talent_health_low_desc",
@@ -2417,15 +2417,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.max_health_modifier,
-						},
-					},
-				},
+							stat_buffs.max_health_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_health_node_buff_low_2",
-				identifier = "player_health_node_buff_low_2",
-			},
+				identifier = "player_health_node_buff_low_2"
+			}
 		},
 		base_health_node_buff_low_3 = {
 			description = "loc_talent_health_low_desc",
@@ -2441,15 +2441,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.max_health_modifier,
-						},
-					},
-				},
+							stat_buffs.max_health_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_health_node_buff_low_3",
-				identifier = "player_health_node_buff_low_3",
-			},
+				identifier = "player_health_node_buff_low_3"
+			}
 		},
 		base_health_node_buff_low_4 = {
 			description = "loc_talent_health_low_desc",
@@ -2465,15 +2465,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.max_health_modifier,
-						},
-					},
-				},
+							stat_buffs.max_health_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_health_node_buff_low_4",
-				identifier = "player_health_node_buff_low_4",
-			},
+				identifier = "player_health_node_buff_low_4"
+			}
 		},
 		base_health_node_buff_low_5 = {
 			description = "loc_talent_health_low_desc",
@@ -2489,15 +2489,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.max_health_modifier,
-						},
-					},
-				},
+							stat_buffs.max_health_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_health_node_buff_low_5",
-				identifier = "player_health_node_buff_low_5",
-			},
+				identifier = "player_health_node_buff_low_5"
+			}
 		},
 		base_health_node_buff_medium_1 = {
 			description = "loc_talent_health_medium_desc",
@@ -2513,15 +2513,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.max_health_modifier,
-						},
-					},
-				},
+							stat_buffs.max_health_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_health_node_buff_medium_1",
-				identifier = "player_health_node_buff_medium_1",
-			},
+				identifier = "player_health_node_buff_medium_1"
+			}
 		},
 		base_health_node_buff_medium_2 = {
 			description = "loc_talent_health_medium_desc",
@@ -2537,15 +2537,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.max_health_modifier,
-						},
-					},
-				},
+							stat_buffs.max_health_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_health_node_buff_medium_2",
-				identifier = "player_health_node_buff_medium_2",
-			},
+				identifier = "player_health_node_buff_medium_2"
+			}
 		},
 		base_health_node_buff_medium_3 = {
 			description = "loc_talent_health_medium_desc",
@@ -2561,15 +2561,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.max_health_modifier,
-						},
-					},
-				},
+							stat_buffs.max_health_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_health_node_buff_medium_3",
-				identifier = "player_health_node_buff_medium_3",
-			},
+				identifier = "player_health_node_buff_medium_3"
+			}
 		},
 		base_health_node_buff_medium_4 = {
 			description = "loc_talent_health_medium_desc",
@@ -2585,15 +2585,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.max_health_modifier,
-						},
-					},
-				},
+							stat_buffs.max_health_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_health_node_buff_medium_4",
-				identifier = "player_health_node_buff_medium_4",
-			},
+				identifier = "player_health_node_buff_medium_4"
+			}
 		},
 		base_health_node_buff_medium_5 = {
 			description = "loc_talent_health_medium_desc",
@@ -2609,15 +2609,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.max_health_modifier,
-						},
-					},
-				},
+							stat_buffs.max_health_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_health_node_buff_medium_5",
-				identifier = "player_health_node_buff_medium_5",
-			},
+				identifier = "player_health_node_buff_medium_5"
+			}
 		},
 		base_crit_chance_node_buff_low_1 = {
 			description = "loc_talent_crit_chance_low_desc",
@@ -2633,15 +2633,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.critical_strike_chance,
-						},
-					},
-				},
+							stat_buffs.critical_strike_chance
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_crit_chance_node_buff_low_1",
-				identifier = "player_crit_chance_node_buff_low_1",
-			},
+				identifier = "player_crit_chance_node_buff_low_1"
+			}
 		},
 		base_crit_chance_node_buff_low_2 = {
 			description = "loc_talent_crit_chance_low_desc",
@@ -2657,15 +2657,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.critical_strike_chance,
-						},
-					},
-				},
+							stat_buffs.critical_strike_chance
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_crit_chance_node_buff_low_2",
-				identifier = "player_crit_chance_node_buff_low_2",
-			},
+				identifier = "player_crit_chance_node_buff_low_2"
+			}
 		},
 		base_crit_chance_node_buff_low_3 = {
 			description = "loc_talent_crit_chance_low_desc",
@@ -2681,15 +2681,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.critical_strike_chance,
-						},
-					},
-				},
+							stat_buffs.critical_strike_chance
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_crit_chance_node_buff_low_3",
-				identifier = "player_crit_chance_node_buff_low_3",
-			},
+				identifier = "player_crit_chance_node_buff_low_3"
+			}
 		},
 		base_crit_chance_node_buff_low_4 = {
 			description = "loc_talent_crit_chance_low_desc",
@@ -2705,15 +2705,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.critical_strike_chance,
-						},
-					},
-				},
+							stat_buffs.critical_strike_chance
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_crit_chance_node_buff_low_4",
-				identifier = "player_crit_chance_node_buff_low_4",
-			},
+				identifier = "player_crit_chance_node_buff_low_4"
+			}
 		},
 		base_crit_chance_node_buff_low_5 = {
 			description = "loc_talent_crit_chance_low_desc",
@@ -2729,15 +2729,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.critical_strike_chance,
-						},
-					},
-				},
+							stat_buffs.critical_strike_chance
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_crit_chance_node_buff_low_5",
-				identifier = "player_crit_chance_node_buff_low_5",
-			},
+				identifier = "player_crit_chance_node_buff_low_5"
+			}
 		},
 		base_movement_speed_node_buff_low_1 = {
 			description = "loc_talent_movement_speed_low_desc",
@@ -2753,15 +2753,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.movement_speed,
-						},
-					},
-				},
+							stat_buffs.movement_speed
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_movement_speed_node_buff_low_1",
-				identifier = "player_movement_speed_node_buff_low_1",
-			},
+				identifier = "player_movement_speed_node_buff_low_1"
+			}
 		},
 		base_movement_speed_node_buff_low_2 = {
 			description = "loc_talent_movement_speed_low_desc",
@@ -2777,15 +2777,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.movement_speed,
-						},
-					},
-				},
+							stat_buffs.movement_speed
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_movement_speed_node_buff_low_2",
-				identifier = "player_movement_speed_node_buff_low_2",
-			},
+				identifier = "player_movement_speed_node_buff_low_2"
+			}
 		},
 		base_movement_speed_node_buff_low_3 = {
 			description = "loc_talent_movement_speed_low_desc",
@@ -2801,15 +2801,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.movement_speed,
-						},
-					},
-				},
+							stat_buffs.movement_speed
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_movement_speed_node_buff_low_3",
-				identifier = "player_movement_speed_node_buff_low_3",
-			},
+				identifier = "player_movement_speed_node_buff_low_3"
+			}
 		},
 		base_movement_speed_node_buff_low_4 = {
 			description = "loc_talent_movement_speed_low_desc",
@@ -2825,15 +2825,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.movement_speed,
-						},
-					},
-				},
+							stat_buffs.movement_speed
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_movement_speed_node_buff_low_4",
-				identifier = "player_movement_speed_node_buff_low_4",
-			},
+				identifier = "player_movement_speed_node_buff_low_4"
+			}
 		},
 		base_movement_speed_node_buff_low_5 = {
 			description = "loc_talent_movement_speed_low_desc",
@@ -2849,15 +2849,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.movement_speed,
-						},
-					},
-				},
+							stat_buffs.movement_speed
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_movement_speed_node_buff_low_5",
-				identifier = "player_movement_speed_node_buff_low_5",
-			},
+				identifier = "player_movement_speed_node_buff_low_5"
+			}
 		},
 		base_coherency_regen_node_buff_low_1 = {
 			description = "loc_talent_coherency_regen_low_desc",
@@ -2873,15 +2873,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness_regen_rate_modifier,
-						},
-					},
-				},
+							stat_buffs.toughness_regen_rate_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_coherency_regen_node_buff_low_1",
-				identifier = "player_coherency_regen_node_buff_low_1",
-			},
+				identifier = "player_coherency_regen_node_buff_low_1"
+			}
 		},
 		base_coherency_regen_node_buff_low_2 = {
 			description = "loc_talent_coherency_regen_low_desc",
@@ -2897,15 +2897,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness_regen_rate_modifier,
-						},
-					},
-				},
+							stat_buffs.toughness_regen_rate_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_coherency_regen_node_buff_low_2",
-				identifier = "player_coherency_regen_node_buff_low_2",
-			},
+				identifier = "player_coherency_regen_node_buff_low_2"
+			}
 		},
 		base_coherency_regen_node_buff_low_3 = {
 			description = "loc_talent_coherency_regen_low_desc",
@@ -2921,15 +2921,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness_regen_rate_modifier,
-						},
-					},
-				},
+							stat_buffs.toughness_regen_rate_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_coherency_regen_node_buff_low_3",
-				identifier = "player_coherency_regen_node_buff_low_3",
-			},
+				identifier = "player_coherency_regen_node_buff_low_3"
+			}
 		},
 		base_coherency_regen_node_buff_low_4 = {
 			description = "loc_talent_coherency_regen_low_desc",
@@ -2945,15 +2945,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness_regen_rate_modifier,
-						},
-					},
-				},
+							stat_buffs.toughness_regen_rate_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_coherency_regen_node_buff_low_4",
-				identifier = "player_coherency_regen_node_buff_low_4",
-			},
+				identifier = "player_coherency_regen_node_buff_low_4"
+			}
 		},
 		base_coherency_regen_node_buff_low_5 = {
 			description = "loc_talent_coherency_regen_low_desc",
@@ -2969,15 +2969,15 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness_regen_rate_modifier,
-						},
-					},
-				},
+							stat_buffs.toughness_regen_rate_modifier
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_coherency_regen_node_buff_low_5",
-				identifier = "player_coherency_regen_node_buff_low_5",
-			},
+				identifier = "player_coherency_regen_node_buff_low_5"
+			}
 		},
 		base_warp_charge_node_buff_low_1 = {
 			description = "loc_talent_warp_charge_low_desc",
@@ -2993,18 +2993,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.warp_charge_amount,
-						},
+							stat_buffs.warp_charge_amount
+						}
 					},
 					value_manipulation = function (value)
 						return (1 - value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_warp_charge_node_buff_low_1",
-				identifier = "player_warp_charge_node_buff_low_1",
-			},
+				identifier = "player_warp_charge_node_buff_low_1"
+			}
 		},
 		base_warp_charge_node_buff_low_2 = {
 			description = "loc_talent_warp_charge_low_desc",
@@ -3020,18 +3020,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.warp_charge_amount,
-						},
+							stat_buffs.warp_charge_amount
+						}
 					},
 					value_manipulation = function (value)
 						return (1 - value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_warp_charge_node_buff_low_2",
-				identifier = "player_warp_charge_node_buff_low_2",
-			},
+				identifier = "player_warp_charge_node_buff_low_2"
+			}
 		},
 		base_warp_charge_node_buff_low_3 = {
 			description = "loc_talent_warp_charge_low_desc",
@@ -3047,18 +3047,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.warp_charge_amount,
-						},
+							stat_buffs.warp_charge_amount
+						}
 					},
 					value_manipulation = function (value)
 						return (1 - value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_warp_charge_node_buff_low_3",
-				identifier = "player_warp_charge_node_buff_low_3",
-			},
+				identifier = "player_warp_charge_node_buff_low_3"
+			}
 		},
 		base_warp_charge_node_buff_low_4 = {
 			description = "loc_talent_warp_charge_low_desc",
@@ -3074,18 +3074,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.warp_charge_amount,
-						},
+							stat_buffs.warp_charge_amount
+						}
 					},
 					value_manipulation = function (value)
 						return (1 - value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_warp_charge_node_buff_low_4",
-				identifier = "player_warp_charge_node_buff_low_4",
-			},
+				identifier = "player_warp_charge_node_buff_low_4"
+			}
 		},
 		base_warp_charge_node_buff_low_5 = {
 			description = "loc_talent_warp_charge_low_desc",
@@ -3101,18 +3101,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.warp_charge_amount,
-						},
+							stat_buffs.warp_charge_amount
+						}
 					},
 					value_manipulation = function (value)
 						return (1 - value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_warp_charge_node_buff_low_5",
-				identifier = "player_warp_charge_node_buff_low_5",
-			},
+				identifier = "player_warp_charge_node_buff_low_5"
+			}
 		},
 		base_warp_charge_node_buff_medium_1 = {
 			description = "loc_talent_warp_charge_low_desc",
@@ -3128,18 +3128,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.warp_charge_amount,
-						},
+							stat_buffs.warp_charge_amount
+						}
 					},
 					value_manipulation = function (value)
 						return (1 - value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_warp_charge_node_buff_medium_1",
-				identifier = "player_warp_charge_node_buff_medium_1",
-			},
+				identifier = "player_warp_charge_node_buff_medium_1"
+			}
 		},
 		base_warp_charge_node_buff_medium_2 = {
 			description = "loc_talent_warp_charge_low_desc",
@@ -3155,18 +3155,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.warp_charge_amount,
-						},
+							stat_buffs.warp_charge_amount
+						}
 					},
 					value_manipulation = function (value)
 						return (1 - value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_warp_charge_node_buff_medium_2",
-				identifier = "player_warp_charge_node_buff_medium_2",
-			},
+				identifier = "player_warp_charge_node_buff_medium_2"
+			}
 		},
 		base_warp_charge_node_buff_medium_3 = {
 			description = "loc_talent_warp_charge_low_desc",
@@ -3182,18 +3182,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.warp_charge_amount,
-						},
+							stat_buffs.warp_charge_amount
+						}
 					},
 					value_manipulation = function (value)
 						return (1 - value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_warp_charge_node_buff_medium_3",
-				identifier = "player_warp_charge_node_buff_medium_3",
-			},
+				identifier = "player_warp_charge_node_buff_medium_3"
+			}
 		},
 		base_warp_charge_node_buff_medium_4 = {
 			description = "loc_talent_warp_charge_low_desc",
@@ -3209,18 +3209,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.warp_charge_amount,
-						},
+							stat_buffs.warp_charge_amount
+						}
 					},
 					value_manipulation = function (value)
 						return (1 - value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_warp_charge_node_buff_medium_4",
-				identifier = "player_warp_charge_node_buff_medium_4",
-			},
+				identifier = "player_warp_charge_node_buff_medium_4"
+			}
 		},
 		base_warp_charge_node_buff_medium_5 = {
 			description = "loc_talent_warp_charge_low_desc",
@@ -3236,18 +3236,18 @@ local base_talents = {
 						tier = true,
 						path = {
 							"stat_buffs",
-							stat_buffs.warp_charge_amount,
-						},
+							stat_buffs.warp_charge_amount
+						}
 					},
 					value_manipulation = function (value)
 						return (1 - value) * 100
-					end,
-				},
+					end
+				}
 			},
 			passive = {
 				buff_template_name = "player_warp_charge_node_buff_medium_5",
-				identifier = "player_warp_charge_node_buff_medium_5",
-			},
+				identifier = "player_warp_charge_node_buff_medium_5"
+			}
 		},
 		base_wounds_node_buff_1 = {
 			description = "",
@@ -3255,8 +3255,8 @@ local base_talents = {
 			name = "",
 			passive = {
 				buff_template_name = "player_wounds_node_buff_1",
-				identifier = "base_wounds_node_buff",
-			},
+				identifier = "base_wounds_node_buff"
+			}
 		},
 		base_wounds_node_buff_2 = {
 			description = "",
@@ -3264,8 +3264,8 @@ local base_talents = {
 			name = "",
 			passive = {
 				buff_template_name = "player_wounds_node_buff_2",
-				identifier = "base_wounds_node_buff",
-			},
+				identifier = "base_wounds_node_buff"
+			}
 		},
 		base_max_warp_charge_node_buff_1 = {
 			description = "",
@@ -3273,8 +3273,8 @@ local base_talents = {
 			name = "",
 			passive = {
 				buff_template_name = "player_max_warp_charge_node_buff_1",
-				identifier = "base_max_warp_charge_node_buff",
-			},
+				identifier = "base_max_warp_charge_node_buff"
+			}
 		},
 		base_max_warp_charge_node_buff_2 = {
 			description = "",
@@ -3282,8 +3282,8 @@ local base_talents = {
 			name = "",
 			passive = {
 				buff_template_name = "player_max_warp_charge_node_buff_2",
-				identifier = "base_max_warp_charge_node_buff",
-			},
+				identifier = "base_max_warp_charge_node_buff"
+			}
 		},
 		base_dodge_count_node_buff_1 = {
 			description = "",
@@ -3291,8 +3291,8 @@ local base_talents = {
 			name = "",
 			passive = {
 				buff_template_name = "player_dodge_count_node_buff_1",
-				identifier = "base_dodge_count_node_buff",
-			},
+				identifier = "base_dodge_count_node_buff"
+			}
 		},
 		base_dodge_count_node_buff_2 = {
 			description = "",
@@ -3300,8 +3300,8 @@ local base_talents = {
 			name = "",
 			passive = {
 				buff_template_name = "player_dodge_count_node_buff_2",
-				identifier = "base_dodge_count_node_buff",
-			},
+				identifier = "base_dodge_count_node_buff"
+			}
 		},
 		base_max_ammo_node_buff_1 = {
 			description = "loc_talent_max_ammo_low_desc",
@@ -3316,15 +3316,15 @@ local base_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.ammo_reserve_capacity,
-						},
-					},
-				},
+							stat_buffs.ammo_reserve_capacity
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_max_ammo_node_buff_1",
-				identifier = "base_max_ammo_node_buff",
-			},
+				identifier = "base_max_ammo_node_buff"
+			}
 		},
 		base_max_ammo_node_buff_2 = {
 			description = "loc_talent_max_ammo_low_desc",
@@ -3339,15 +3339,15 @@ local base_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.ammo_reserve_capacity,
-						},
-					},
-				},
+							stat_buffs.ammo_reserve_capacity
+						}
+					}
+				}
 			},
 			passive = {
 				buff_template_name = "player_max_ammo_node_buff_2",
-				identifier = "base_max_ammo_node_buff",
-			},
+				identifier = "base_max_ammo_node_buff"
+			}
 		},
 		base_coherency_regen_node_buff_1 = {
 			description = "",
@@ -3355,8 +3355,8 @@ local base_talents = {
 			name = "",
 			passive = {
 				buff_template_name = "player_coherency_regen_node_buff_1",
-				identifier = "coherency_regen_node_buff",
-			},
+				identifier = "coherency_regen_node_buff"
+			}
 		},
 		base_coherency_regen_node_buff_2 = {
 			description = "",
@@ -3364,10 +3364,10 @@ local base_talents = {
 			name = "",
 			passive = {
 				buff_template_name = "player_coherency_regen_node_buff_2",
-				identifier = "coherency_regen_node_buff",
-			},
-		},
-	},
+				identifier = "coherency_regen_node_buff"
+			}
+		}
+	}
 }
 
 return base_talents

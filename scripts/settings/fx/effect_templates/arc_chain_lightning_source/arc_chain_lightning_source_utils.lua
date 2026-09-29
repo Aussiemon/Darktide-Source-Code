@@ -8,7 +8,7 @@ local PowerLevelSettings = require("scripts/settings/damage/power_level_settings
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local DEFAULT_POWER_LEVEL_RANDOM_RANGE = {
 	max = 1.25,
-	min = 0.75,
+	min = 0.75
 }
 local BREADTH_FIRST_VALIDATION = ChainLightning.breadth_first_validation_functions
 local DEPTH_FIRST_VALIDATION = ChainLightning.depth_first_validation_functions

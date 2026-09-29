@@ -22,13 +22,13 @@ local scenegraph_definition = {
 	screen = {
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			200,
-		},
+			200
+		}
 	},
 	canvas = {
 		horizontal_alignment = "center",
@@ -36,13 +36,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	_sidebar = {
 		horizontal_alignment = "right",
@@ -50,13 +50,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			details_width,
-			mission_area_height - 200,
+			mission_area_height - 200
 		},
 		position = {
 			-side_buffer,
 			top_buffer,
-			0,
-		},
+			0
+		}
 	},
 	_sidebar_content = {
 		horizontal_alignment = "center",
@@ -64,13 +64,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			details_width - 2 * sidebar_buffer,
-			mission_area_height - 200,
+			mission_area_height - 200
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	_mission_area_info = {
 		horizontal_alignment = "center",
@@ -78,13 +78,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			details_width,
-			360,
+			360
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	_mission_area_timer = {
 		horizontal_alignment = "center",
@@ -92,13 +92,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			details_width,
-			20,
+			20
 		},
 		position = {
 			0,
 			92,
-			10,
-		},
+			10
+		}
 	},
 	_mission_area_circumstance = {
 		horizontal_alignment = "center",
@@ -106,13 +106,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			details_width - 2,
-			100,
+			100
 		},
 		position = {
 			0,
 			-2,
-			20,
-		},
+			20
+		}
 	},
 	_mission_objective_info = {
 		horizontal_alignment = "center",
@@ -120,13 +120,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			details_width,
-			200,
+			200
 		},
 		position = {
 			0,
 			280,
-			2,
-		},
+			2
+		}
 	},
 	_mission_objectives_panel = {
 		horizontal_alignment = "center",
@@ -134,13 +134,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			details_width,
-			Settings.panel_height,
+			Settings.panel_height
 		},
 		position = {
 			0,
 			-Settings.panel_height,
-			10,
-		},
+			10
+		}
 	},
 	_mission_rewards_panel = {
 		horizontal_alignment = "center",
@@ -148,14 +148,14 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			details_width,
-			Dimensions.rewards_height,
+			Dimensions.rewards_height
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
-	},
+			2
+		}
+	}
 }
 
 local function panel_element_visibility_function(content, style)
@@ -176,13 +176,13 @@ Definitions.create_objectives_panel_widget = function (scenegraph_id, title, sub
 		{
 			pass_type = "rect",
 			style_id = "background",
-			style = Styles.objectives_panel.background,
+			style = Styles.objectives_panel.background
 		},
 		{
 			pass_type = "texture",
 			style_id = "frame",
 			value = "content/ui/materials/frames/frame_tile_2px",
-			style = Styles.objectives_panel.frame,
+			style = Styles.objectives_panel.frame
 		},
 		{
 			pass_type = "text",
@@ -190,7 +190,7 @@ Definitions.create_objectives_panel_widget = function (scenegraph_id, title, sub
 			value_id = "objectives_panel_title",
 			value = title,
 			style = Styles.objectives_panel.title,
-			visibility_function = panel_element_visibility_function,
+			visibility_function = panel_element_visibility_function
 		},
 		{
 			pass_type = "text",
@@ -198,20 +198,20 @@ Definitions.create_objectives_panel_widget = function (scenegraph_id, title, sub
 			value_id = "objectives_panel_sub_title",
 			value = sub_title,
 			style = Styles.objectives_panel.sub_title,
-			visibility_function = panel_element_visibility_function,
+			visibility_function = panel_element_visibility_function
 		},
 		{
 			pass_type = "texture",
 			style_id = "icon",
 			value_id = "icon",
 			value = icon,
-			style = Styles.objectives_panel.icon,
+			style = Styles.objectives_panel.icon
 		},
 		{
 			content_id = "hotspot",
 			pass_type = "hotspot",
 			style_id = "hotspot",
-			style = Styles.objectives_panel.hotspot,
+			style = Styles.objectives_panel.hotspot
 		},
 		{
 			pass_type = "texture",
@@ -224,17 +224,17 @@ Definitions.create_objectives_panel_widget = function (scenegraph_id, title, sub
 				else
 					style.color[1] = 100 * (1 - content.hotspot.anim_select_progress)
 				end
-			end,
-		},
+			end
+		}
 	}, scenegraph_id, {
 		default_size = default_size,
 		active_size = active_size,
 		default_title_text = title,
-		default_sub_title_text = sub_title,
+		default_sub_title_text = sub_title
 	}, default_size, {
 		objectives_panel_title = {
-			text_color = Styles.colors.default.terminal_header_text,
-		},
+			text_color = Styles.colors.default.terminal_header_text
+		}
 	})
 end
 
@@ -243,28 +243,28 @@ Definitions.create_reward_widget = function (scenegraph_id, amount, icon, size)
 		{
 			pass_type = "rect",
 			style_id = "background",
-			style = Styles.mission_objective_info.reward.background,
+			style = Styles.mission_objective_info.reward.background
 		},
 		{
 			pass_type = "texture",
 			style_id = "frame",
 			value = "content/ui/materials/frames/frame_tile_2px",
-			style = Styles.mission_objective_info.reward.frame,
+			style = Styles.mission_objective_info.reward.frame
 		},
 		{
 			pass_type = "text",
 			style_id = "amount",
 			value_id = "amount",
 			value = amount,
-			style = Styles.mission_objective_info.reward.amount,
+			style = Styles.mission_objective_info.reward.amount
 		},
 		{
 			pass_type = "texture",
 			style_id = "icon",
 			value_id = "icon",
 			value = icon,
-			style = Styles.mission_objective_info.reward.icon,
-		},
+			style = Styles.mission_objective_info.reward.icon
+		}
 	}, scenegraph_id, nil, size)
 end
 
@@ -275,19 +275,19 @@ widget_definitions.mission_objective_info = UIWidget.create_definition({
 		pass_type = "texture",
 		style_id = "frame",
 		value = "content/ui/materials/frames/frame_tile_2px",
-		style = Styles.mission_objective_info.frame,
+		style = Styles.mission_objective_info.frame
 	},
 	{
 		pass_type = "rect",
 		style_id = "background",
-		style = Styles.mission_objective_info.background,
+		style = Styles.mission_objective_info.background
 	},
 	{
 		pass_type = "text",
 		style_id = "objective_description",
 		value = "Objective Description",
 		value_id = "objective_description",
-		style = Styles.mission_objective_info.objective_description,
+		style = Styles.mission_objective_info.objective_description
 	},
 	{
 		pass_type = "rect",
@@ -295,7 +295,7 @@ widget_definitions.mission_objective_info = UIWidget.create_definition({
 		style = Styles.mission_objective_info.mission_giver_background,
 		visibility_function = function (content, style)
 			return not content.is_quickplay_mission and content.has_mission_giver
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -304,7 +304,7 @@ widget_definitions.mission_objective_info = UIWidget.create_definition({
 		style = Styles.mission_objective_info.mission_giver_frame,
 		visibility_function = function (content, style)
 			return not content.is_quickplay_mission and content.has_mission_giver
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -314,7 +314,7 @@ widget_definitions.mission_objective_info = UIWidget.create_definition({
 		style = Styles.mission_objective_info.mission_giver_name,
 		visibility_function = function (content, style)
 			return content.has_mission_giver
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -323,15 +323,15 @@ widget_definitions.mission_objective_info = UIWidget.create_definition({
 		style = Styles.mission_objective_info.mission_giver_icon,
 		visibility_function = function (content, style)
 			return content.has_mission_giver
-		end,
+		end
 	},
 	{
 		pass_type = "rotated_texture",
 		style_id = "background_fade",
 		value = "content/ui/materials/hud/backgrounds/fade_horizontal",
 		value_id = "background_fade",
-		style = Styles.mission_objective_info.background_fade,
-	},
+		style = Styles.mission_objective_info.background_fade
+	}
 }, "_mission_objective_info")
 
 local animations = {}
@@ -382,7 +382,7 @@ animations.info_description_enter = {
 		end,
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 			parent._description_enter_anim_id = nil
-		end,
+		end
 	},
 	{
 		end_time = 0.3,
@@ -436,8 +436,8 @@ animations.info_description_enter = {
 		end,
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 			return
-		end,
-	},
+		end
+	}
 }
 Definitions.scenegraph_definition = scenegraph_definition
 Definitions.widget_definitions = widget_definitions

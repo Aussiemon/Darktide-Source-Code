@@ -10,15 +10,15 @@ local childhood_options = {
 		visibility = {
 			home_planets = {
 				"option_1",
-				"option_7",
+				"option_7"
 			},
 			archetypes = {
 				"psyker",
 				"zealot",
 				"veteran",
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_childhood_02_description",
@@ -28,15 +28,15 @@ local childhood_options = {
 		visibility = {
 			home_planets = {
 				"option_1",
-				"option_6",
+				"option_6"
 			},
 			archetypes = {
 				"psyker",
 				"zealot",
 				"veteran",
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_childhood_03_description",
@@ -46,15 +46,15 @@ local childhood_options = {
 		visibility = {
 			home_planets = {
 				"option_5",
-				"option_6",
+				"option_6"
 			},
 			archetypes = {
 				"psyker",
 				"zealot",
 				"veteran",
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_childhood_04_description",
@@ -63,15 +63,15 @@ local childhood_options = {
 		story_snippet = "loc_character_childhood_04_description_snippet",
 		visibility = {
 			home_planets = {
-				"option_4",
+				"option_4"
 			},
 			archetypes = {
 				"psyker",
 				"zealot",
 				"veteran",
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_childhood_05_description",
@@ -81,15 +81,15 @@ local childhood_options = {
 		visibility = {
 			home_planets = {
 				"option_3",
-				"option_6",
+				"option_6"
 			},
 			archetypes = {
 				"psyker",
 				"zealot",
 				"veteran",
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_childhood_06_description",
@@ -105,15 +105,15 @@ local childhood_options = {
 				"option_5",
 				"option_6",
 				"option_7",
-				"option_8",
+				"option_8"
 			},
 			archetypes = {
 				"psyker",
 				"zealot",
 				"veteran",
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_childhood_07_description",
@@ -123,15 +123,15 @@ local childhood_options = {
 		visibility = {
 			home_planets = {
 				"option_1",
-				"option_6",
+				"option_6"
 			},
 			archetypes = {
 				"psyker",
 				"zealot",
 				"veteran",
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_childhood_08_description",
@@ -140,15 +140,15 @@ local childhood_options = {
 		story_snippet = "loc_character_childhood_08_description_snippet",
 		visibility = {
 			home_planets = {
-				"option_5",
+				"option_5"
 			},
 			archetypes = {
 				"psyker",
 				"zealot",
 				"veteran",
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_childhood_09_description",
@@ -157,15 +157,15 @@ local childhood_options = {
 		story_snippet = "loc_character_childhood_09_description_snippet",
 		visibility = {
 			home_planets = {
-				"option_5",
+				"option_5"
 			},
 			archetypes = {
 				"psyker",
 				"zealot",
 				"veteran",
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_childhood_10_description",
@@ -175,15 +175,15 @@ local childhood_options = {
 		visibility = {
 			home_planets = {
 				"option_2",
-				"option_8",
+				"option_8"
 			},
 			archetypes = {
 				"psyker",
 				"zealot",
 				"veteran",
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_childhood_11_description",
@@ -192,15 +192,15 @@ local childhood_options = {
 		story_snippet = "loc_character_childhood_11_description_snippet",
 		visibility = {
 			home_planets = {
-				"option_1",
+				"option_1"
 			},
 			archetypes = {
 				"psyker",
 				"zealot",
 				"veteran",
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_childhood_12_description",
@@ -210,15 +210,15 @@ local childhood_options = {
 		visibility = {
 			home_planets = {
 				"option_2",
-				"option_8",
+				"option_8"
 			},
 			archetypes = {
 				"psyker",
 				"zealot",
 				"veteran",
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_childhood_13_description",
@@ -228,15 +228,15 @@ local childhood_options = {
 		visibility = {
 			home_planets = {
 				"option_1",
-				"option_4",
+				"option_4"
 			},
 			archetypes = {
 				"psyker",
 				"zealot",
 				"veteran",
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_childhood_14_description",
@@ -245,15 +245,15 @@ local childhood_options = {
 		story_snippet = "loc_character_childhood_14_description_snippet",
 		visibility = {
 			home_planets = {
-				"option_3",
+				"option_3"
 			},
 			archetypes = {
 				"psyker",
 				"zealot",
 				"veteran",
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_childhood_15_description",
@@ -262,15 +262,15 @@ local childhood_options = {
 		story_snippet = "loc_character_childhood_15_description_snippet",
 		visibility = {
 			home_planets = {
-				"option_4",
+				"option_4"
 			},
 			archetypes = {
 				"psyker",
 				"zealot",
 				"veteran",
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_childhood_16_description",
@@ -279,15 +279,15 @@ local childhood_options = {
 		story_snippet = "loc_character_childhood_16_description_snippet",
 		visibility = {
 			home_planets = {
-				"option_7",
+				"option_7"
 			},
 			archetypes = {
 				"psyker",
 				"zealot",
 				"veteran",
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_childhood_17_description",
@@ -297,15 +297,15 @@ local childhood_options = {
 		visibility = {
 			home_planets = {
 				"option_1",
-				"option_2",
+				"option_2"
 			},
 			archetypes = {
 				"psyker",
 				"zealot",
 				"veteran",
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_childhood_18_description",
@@ -315,15 +315,15 @@ local childhood_options = {
 		visibility = {
 			home_planets = {
 				"option_1",
-				"option_4",
+				"option_4"
 			},
 			archetypes = {
 				"psyker",
 				"zealot",
 				"veteran",
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_early_life_01_description",
@@ -332,9 +332,9 @@ local childhood_options = {
 		story_snippet = "loc_character_early_life_01_description_snippet",
 		visibility = {
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		description = "loc_character_early_life_02_description",
@@ -343,9 +343,9 @@ local childhood_options = {
 		story_snippet = "loc_character_early_life_02_description_snippet",
 		visibility = {
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		description = "loc_character_early_life_03_description",
@@ -354,9 +354,9 @@ local childhood_options = {
 		story_snippet = "loc_character_early_life_03_description_snippet",
 		visibility = {
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		description = "loc_character_early_life_04_description",
@@ -365,9 +365,9 @@ local childhood_options = {
 		story_snippet = "loc_character_early_life_04_description_snippet",
 		visibility = {
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		description = "loc_character_early_life_05_description",
@@ -376,9 +376,9 @@ local childhood_options = {
 		story_snippet = "loc_character_early_life_05_description_snippet",
 		visibility = {
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		description = "loc_character_early_life_06_description",
@@ -387,9 +387,9 @@ local childhood_options = {
 		story_snippet = "loc_character_early_life_06_description_snippet",
 		visibility = {
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		description = "loc_character_early_life_07_description",
@@ -398,9 +398,9 @@ local childhood_options = {
 		story_snippet = "loc_character_early_life_07_description_snippet",
 		visibility = {
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		description = "loc_character_childhood_19_description",
@@ -409,9 +409,9 @@ local childhood_options = {
 		story_snippet = "loc_character_childhood_19_description_snippet",
 		visibility = {
 			archetypes = {
-				"broker",
-			},
-		},
+				"broker"
+			}
+		}
 	},
 	{
 		description = "loc_character_childhood_20_description",
@@ -420,9 +420,9 @@ local childhood_options = {
 		story_snippet = "loc_character_childhood_20_description_snippet",
 		visibility = {
 			archetypes = {
-				"broker",
-			},
-		},
+				"broker"
+			}
+		}
 	},
 	{
 		description = "loc_character_childhood_21_description",
@@ -431,9 +431,9 @@ local childhood_options = {
 		story_snippet = "loc_character_childhood_21_description_snippet",
 		visibility = {
 			archetypes = {
-				"broker",
-			},
-		},
+				"broker"
+			}
+		}
 	},
 	{
 		description = "loc_character_childhood_22_description",
@@ -442,9 +442,9 @@ local childhood_options = {
 		story_snippet = "loc_character_childhood_22_description_snippet",
 		visibility = {
 			archetypes = {
-				"broker",
-			},
-		},
+				"broker"
+			}
+		}
 	},
 	{
 		description = "loc_character_childhood_23_description",
@@ -453,9 +453,9 @@ local childhood_options = {
 		story_snippet = "loc_character_childhood_23_description_snippet",
 		visibility = {
 			archetypes = {
-				"broker",
-			},
-		},
+				"broker"
+			}
+		}
 	},
 	{
 		description = "loc_character_childhood_24_description",
@@ -464,9 +464,9 @@ local childhood_options = {
 		story_snippet = "loc_character_childhood_24_description_snippet",
 		visibility = {
 			archetypes = {
-				"broker",
-			},
-		},
+				"broker"
+			}
+		}
 	},
 	{
 		description = "loc_character_childhood_25_description",
@@ -475,10 +475,10 @@ local childhood_options = {
 		story_snippet = "loc_character_childhood_25_description_snippet",
 		visibility = {
 			archetypes = {
-				"broker",
-			},
-		},
-	},
+				"broker"
+			}
+		}
+	}
 }
 
 table.append(childhood_options, CHILDHOOD_CRYPTIC)

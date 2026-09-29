@@ -12,7 +12,7 @@ ChunkLodManager.init = function (self, world, mission, local_player)
 	self._raycast_timer = 0
 	self._raycast_lengths = {
 		first_person = 10,
-		free_flight = 10,
+		free_flight = 10
 	}
 	self._current_level_name = nil
 	self._show_all = false

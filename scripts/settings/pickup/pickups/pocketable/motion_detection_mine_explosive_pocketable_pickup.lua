@@ -12,7 +12,7 @@ local pickup_data = {
 	name = "motion_detection_mine_explosive_pocketable",
 	pickup_sound = "wwise/events/player/play_pickup_metal_object",
 	smart_tag_target_type = "pickup",
-	unit_name = "content/weapons/player/pickups/pup_landmine_explosive/pickup_landmine_explosive",
+	unit_name = "content/weapons/player/pickups/pup_landmine_explosive/pickup_landmine_explosive"
 }
 
 return pickup_data

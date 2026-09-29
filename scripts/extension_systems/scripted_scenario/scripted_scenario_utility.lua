@@ -33,12 +33,12 @@ ScriptedScenarioUtility.parse_condition_steps = function (steps)
 		name = "condition_else",
 		condition_func = function ()
 			return true
-		end,
+		end
 	}
 	steps.condition_end = {
 		condition_type = "end",
 		is_condition = true,
-		name = "condition_end",
+		name = "condition_end"
 	}
 end
 
@@ -47,7 +47,7 @@ ScriptedScenarioUtility.validate_steps = function (steps)
 		_condition = true,
 		condition_elseif = true,
 		condition_if = true,
-		dynamic = true,
+		dynamic = true
 	}
 
 	for name, template in pairs(ShootingRangeSteps) do

@@ -12,7 +12,7 @@ local CLIENT_RPCS = {
 	"rpc_mission_objective_zone_set_waiting_for_confirmation",
 	"rpc_event_mission_objective_zone_activate_zone",
 	"rpc_event_mission_objective_zone_follow_spline",
-	"rpc_mission_objective_zone_finished",
+	"rpc_mission_objective_zone_finished"
 }
 
 MissionObjectiveZoneSystem.init = function (self, context, system_init_data, ...)

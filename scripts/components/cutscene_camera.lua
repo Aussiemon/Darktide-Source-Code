@@ -137,7 +137,7 @@ CutsceneCamera.component_data = {
 			"Hub Location Intro Training Grounds",
 			"Hub Location Intro Contracts",
 			"Hub Location Intro Crafting",
-			"Hub Location Intro Gun Shop",
+			"Hub Location Intro Gun Shop"
 		},
 		options_values = {
 			"none",
@@ -190,9 +190,9 @@ CutsceneCamera.component_data = {
 			"hub_location_intro_training_grounds",
 			"hub_location_intro_contracts",
 			"hub_location_intro_crafting",
-			"hub_location_intro_gun_shop",
-		},
-	},
+			"hub_location_intro_gun_shop"
+		}
+	}
 }
 
 return CutsceneCamera

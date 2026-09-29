@@ -19,7 +19,7 @@ local pickup_data = {
 
 			Managers.event:trigger("event_expedition_currency_collected", interactor_unit, currency_type, currency_tier)
 		end
-	end,
+	end
 }
 
 return pickup_data

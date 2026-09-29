@@ -10,7 +10,7 @@ local core_mutators = {
 	"mutator_live_event_barren_grenadier_drops",
 	"mutator_live_event_barren_ranged_elite_drops",
 	"mutator_live_event_barren_drop_small_metal_on_death",
-	"mutator_live_event_barren_drop_small_platinum_on_death",
+	"mutator_live_event_barren_drop_small_platinum_on_death"
 }
 local templates = table.clone(BaseLiveEventTemplate)
 
@@ -19,10 +19,10 @@ templates["<ID>_gas"] = nil
 local base_templates = CircumstanceUtils.inherit(templates, core_mutators, {
 	"stats_live_event_barren",
 	"no_resource_pickups",
-	"health_disable_all_stations",
+	"health_disable_all_stations"
 }, "barren")
 local circumstance_templates = table.reduce({
-	base_templates,
+	base_templates
 }, table.merge, {})
 
 circumstance_templates.barren.ui.display_name = "loc_circumstance_barren_default_title"

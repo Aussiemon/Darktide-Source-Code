@@ -4,7 +4,7 @@ local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_l
 local SawCoatingEffects = class("SawCoatingEffects")
 local VFX_LOOP_ALIASES = {
 	cloud_alias = "weapon_special_custom",
-	slash_drips_alias = "weapon_special_custom_sweep",
+	slash_drips_alias = "weapon_special_custom_sweep"
 }
 local FX_IDLE_SOURCE_NAME = "_idle_drips"
 local FX_SLASH_SOURCE_NAME = "_slash_drips"

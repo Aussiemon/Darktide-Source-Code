@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/network_lookup/network_lookup.lua
 
+local Archetypes = require("scripts/settings/archetype/archetypes")
 local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
 local AreaOfEffectUnitSpawnerTemplates = require("scripts/extension_systems/area_of_effect/area_of_effect_unit_spawner_templates")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
@@ -48,7 +49,7 @@ local MissionsObjectiveUiStrings = require("scripts/settings/mission_objective/m
 local MissionSoundEvents = require("scripts/settings/sound/mission_sound_events")
 local MoodSettings = require("scripts/settings/camera/mood/mood_settings")
 local MotionTriggeredExplosivesSettings = require("scripts/settings/motion_triggered_explosives/motion_triggered_explosives_settings")
-local MutatorMinionVisualOverrideSettings = require("scripts/settings/mutator/mutator_mininion_visual_overrides_settings")
+local MutatorMinionVisualOverrideSettings = require("scripts/settings/mutator/mutator_minion_visual_overrides_settings")
 local OutlineSettings = require("scripts/settings/outline/outline_settings")
 local PackagePrioritizationTemplates = require("scripts/loading/package_prioritization_templates")
 local PartyConstants = require("scripts/settings/network/party_constants")
@@ -70,6 +71,7 @@ local SoundEvents = require("scripts/settings/sound/sound_events")
 local SoundEvents2d = require("scripts/settings/sound/2d_sound_events")
 local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
+local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
 local TimedExplosivesSettings = require("scripts/settings/timed_explosives/timed_explosives_settings")
 local VfxNames = require("scripts/settings/fx/vfx_names")
 local VisualLoadoutExtractData = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_extract_data")
@@ -114,13 +116,31 @@ for _, archetype_talents in pairs(ArchetypeTalents) do
 end
 
 NetworkLookup.archetype_talent_names = _create_lookup({
-	"n/a",
+	"n/a"
 }, archetype_talent_names)
+
+local talent_node_names = {}
+
+for archetype_name, archetype in pairs(Archetypes) do
+	local layouts = TalentLayoutParser.archetype_layouts(archetype)
+
+	for i = 1, #layouts do
+		local layout = layouts[i]
+
+		for _, node in ipairs(layout.nodes) do
+			talent_node_names[node.widget_name] = true
+		end
+	end
+end
+
+NetworkLookup.talent_node_names = _create_lookup({
+	"none"
+}, talent_node_names)
 NetworkLookup.attack_results = _create_lookup({}, AttackSettings.attack_results)
 NetworkLookup.attack_types = _create_lookup({}, AttackSettings.attack_types)
 NetworkLookup.bot_orders = {
 	"drop",
-	"pickup",
+	"pickup"
 }
 NetworkLookup.heat_stages = {
 	"none",
@@ -129,6 +149,7 @@ NetworkLookup.heat_stages = {
 	"detected",
 	"max",
 	"safe_room",
+	"off"
 }
 
 local no_item_definitions = {}
@@ -143,7 +164,7 @@ NetworkLookup.camera_shake_events = _create_lookup({}, CameraEffectSettings.shak
 NetworkLookup.chest_states = {
 	"closed",
 	"locked",
-	"opened",
+	"opened"
 }
 NetworkLookup.cinematic_scene_names = _create_lookup({}, CinematicSceneSettings.CINEMATIC_NAMES)
 NetworkLookup.circumstance_templates = _create_lookup({}, CircumstanceTemplates)
@@ -153,7 +174,7 @@ NetworkLookup.corruptor_arm_animation_speed_types = _create_lookup({}, Corruptor
 NetworkLookup.damage_efficiencies = _create_lookup({}, AttackSettings.damage_efficiencies)
 NetworkLookup.damage_profile_templates = _create_lookup({}, DamageProfileTemplates)
 NetworkLookup.damage_types = _create_lookup({
-	"nil",
+	"nil"
 }, DamageSettings.damage_types)
 NetworkLookup.dialogue_names = DialogueLookup
 NetworkLookup.dialogues_all_concepts = table.clone(DialogueLookupConcepts.all_concepts)
@@ -164,14 +185,14 @@ NetworkLookup.backend_vo_groups = _create_lookup({}, DialogueSettings.backend_vo
 NetworkLookup.horde_mode_vo = _create_lookup({}, DialogueSettings.horde_mode)
 NetworkLookup.door_control_panel_states = {
 	"active",
-	"inactive",
+	"inactive"
 }
 NetworkLookup.door_states = {
 	"none",
 	"open",
 	"open_fwd",
 	"open_bwd",
-	"closed",
+	"closed"
 }
 NetworkLookup.effect_templates = _create_lookup({}, EffectTemplates)
 NetworkLookup.explosion_templates = _create_lookup({}, ExplosionTemplates)
@@ -180,19 +201,19 @@ NetworkLookup.emote_slots = {
 	"slot_animation_emote_2",
 	"slot_animation_emote_3",
 	"slot_animation_emote_4",
-	"slot_animation_emote_5",
+	"slot_animation_emote_5"
 }
 NetworkLookup.expedition_collectibles = _create_lookup({}, ExpeditionCollectibles)
 NetworkLookup.expedition_airstrikes = _create_lookup({}, ExpeditionAirstrikes)
 NetworkLookup.expedition_dropped_loot_mark_types = {
 	"luggable",
-	"default",
+	"default"
 }
 NetworkLookup.flow_events = FlowEvents
 NetworkLookup.game_mode_outcomes = {
 	"n/a",
 	"won",
-	"lost",
+	"lost"
 }
 NetworkLookup.game_object_types = {
 	"unit_template",
@@ -202,7 +223,7 @@ NetworkLookup.game_object_types = {
 	"scanning_device",
 	"server_unit_data_state",
 	"server_husk_data_state",
-	"server_husk_hud_data_state",
+	"server_husk_hud_data_state"
 }
 NetworkLookup.hazard_prop_content = _create_lookup({}, HazardPropSettings.hazard_content)
 NetworkLookup.hazard_prop_states = _create_lookup({}, HazardPropSettings.hazard_state)
@@ -215,19 +236,19 @@ NetworkLookup.hordes_build_families = {
 	"unkillable",
 	"cowboy",
 	"critical",
-	"unstoppable",
+	"unstoppable"
 }
 NetworkLookup.hordes_island_names = {
 	"island_void",
 	"island_rooftops",
-	"island_machine",
+	"island_machine"
 }
 NetworkLookup.host_types = _create_lookup({}, MatchmakingConstants.HOST_TYPES)
 NetworkLookup.impact_fx_names = _create_lookup({}, ImpactEffectSettings.impact_fx_templates)
 NetworkLookup.interaction_result = {
 	"success",
 	"stopped_holding",
-	"interaction_cancelled",
+	"interaction_cancelled"
 }
 NetworkLookup.interaction_type_strings = InteractionTypeStrings
 NetworkLookup.level_props_names = _create_lookup({}, LevelProps)
@@ -237,21 +258,21 @@ NetworkLookup.liquid_area_template_names = _create_lookup({}, LiquidAreaTemplate
 NetworkLookup.material_type_lookup = {
 	"diamantine",
 	"plasteel",
-	"event_material",
+	"event_material"
 }
 NetworkLookup.material_size_lookup = {
 	"large",
 	"small",
-	"medium",
+	"medium"
 }
 NetworkLookup.collectible_type_lookup = {
 	"collectible",
-	"destructible",
+	"destructible"
 }
 NetworkLookup.moveable_platform_direction = {
 	"none",
 	"forward",
-	"backward",
+	"backward"
 }
 NetworkLookup.outline_types = _create_lookup({}, OutlineSettings.outline_types)
 NetworkLookup.assist_type_lookup = {
@@ -261,7 +282,7 @@ NetworkLookup.assist_type_lookup = {
 	"rescued",
 	"cleansed",
 	"gifted",
-	"stimmed",
+	"stimmed"
 }
 NetworkLookup.payload_states = _create_lookup({}, PayloadSettings.states)
 NetworkLookup.payload_speed_controllers = _create_lookup({}, PayloadSettings.payload_speed_controllers)
@@ -272,7 +293,7 @@ local minion_attack_selection_template_names = {}
 NetworkLookup.minion_attack_selection_template_names = _create_lookup(minion_attack_selection_template_names, MinionAttackSelectionTemplates)
 NetworkLookup.minion_fx_source_names = {
 	"muzzle",
-	"fx_muzzle",
+	"fx_muzzle"
 }
 
 local minion_inventory_slot_names = {}
@@ -308,7 +329,7 @@ NetworkLookup.mission_objective_target_ui_types = MissionsObjectiveTargetUiTypeS
 NetworkLookup.mission_objective_ui_states = {
 	"default",
 	"alert",
-	"critical",
+	"critical"
 }
 NetworkLookup.mission_giver_vo_overrides = _create_lookup({}, MissionGiverVoSettings.overrides)
 NetworkLookup.missions = _create_lookup({}, Missions)
@@ -320,17 +341,17 @@ NetworkLookup.pickup_names = _create_lookup({}, Pickups.by_name)
 NetworkLookup.player_character_genders = {
 	"female",
 	"male",
-	"ogryn",
+	"ogryn"
 }
 NetworkLookup.player_character_fx_sources = _create_lookup({
-	"n/a",
+	"n/a"
 }, PlayerCharacterFxSourceNames)
 NetworkLookup.player_character_looping_particle_aliases = _create_lookup({}, PlayerCharacterLoopingParticleAliases)
 NetworkLookup.player_character_looping_sound_aliases = _create_lookup({}, PlayerCharacterLoopingSoundAliases)
 NetworkLookup.player_character_particle_variable_names = {
 	"radius",
 	"size",
-	"intensity",
+	"intensity"
 }
 NetworkLookup.player_character_particles = table.clone(PlayerCharacterParticleNames)
 NetworkLookup.player_character_decals = table.clone(PlayerCharacterDecalNames)
@@ -356,8 +377,10 @@ local player_character_sounds = {
 	["wwise/events/player/play_horde_mode_buff_rock_charge_finish"] = true,
 	["wwise/events/player/play_horde_mode_buff_rock_charge_loop"] = true,
 	["wwise/events/player/play_horde_mode_buff_self_damage_negated"] = true,
+	["wwise/events/player/play_horde_mode_buff_shield"] = true,
 	["wwise/events/player/play_horde_mode_buff_shield_hit"] = true,
 	["wwise/events/player/play_horde_mode_buff_super_crit"] = true,
+	["wwise/events/player/play_horde_mode_heal_self_confirmation"] = true,
 	["wwise/events/player/play_pick_up_ammo_01"] = true,
 	["wwise/events/player/play_player_dodge_melee_success"] = true,
 	["wwise/events/player/play_player_dodge_ranged_success"] = true,
@@ -391,12 +414,10 @@ local player_character_sounds = {
 	["wwise/events/weapon/play_explosion_flamer_tank"] = true,
 	["wwise/events/weapon/play_explosion_force_med"] = true,
 	["wwise/events/weapon/play_horde_mode_buff_fire_burst"] = true,
-	["wwise/events/weapon/play_horde_mode_buff_shield"] = true,
-	["wwise/events/weapon/play_horde_mode_heal_self_confirmation"] = true,
 	["wwise/events/weapon/play_indicator_crit"] = true,
 	["wwise/events/weapon/play_indicator_weakspot"] = true,
 	["wwise/events/weapon/play_shared_combat_weapon_bolter_bullet_flyby"] = true,
-	["wwise/events/weapon/play_weapon_lasgun_crack_beam_nearby"] = true,
+	["wwise/events/weapon/play_weapon_lasgun_crack_beam_nearby"] = true
 }
 
 for event_name, _ in pairs(PlayerCharacterSounds.resource_events) do
@@ -404,15 +425,18 @@ for event_name, _ in pairs(PlayerCharacterSounds.resource_events) do
 end
 
 NetworkLookup.player_character_sounds = _create_lookup({
-	"n/a",
+	"n/a"
 }, player_character_sounds)
 NetworkLookup.player_abilities = _create_lookup({
-	"not_equipped",
+	"not_equipped"
 }, PlayerAbilities)
-NetworkLookup.player_inventory_slot_names = _create_lookup({}, PlayerCharacterConstants.slot_configuration)
+NetworkLookup.player_inventory_slot_names = _create_lookup({
+	"none"
+}, PlayerCharacterConstants.slot_configuration)
 NetworkLookup.presence_names = _create_lookup({}, PresenceSettings.settings)
 NetworkLookup.projectile_locomotion_states = _create_lookup({}, ProjectileLocomotionSettings.states)
 NetworkLookup.projectile_template_names = _create_lookup({}, ProjectileTemplates)
+NetworkLookup.action_handler_component_names = _create_lookup({}, PlayerCharacterConstants.action_handler_component_names)
 
 local projectile_template_effects = {}
 
@@ -432,23 +456,23 @@ NetworkLookup.projectile_template_effects = _create_lookup({}, projectile_templa
 NetworkLookup.respawn_beacon_states = {
 	"none",
 	"activating",
-	"spawning",
+	"spawning"
 }
 NetworkLookup.force_field_unit_names = {
 	"content/characters/player/human/attachments_combat/cryptic_force_field/cryptic_force_field_personal_functional",
 	"content/characters/player/human/attachments_combat/psyker_shield/psyker_shield_flat_functional",
 	"content/characters/player/human/attachments_combat/psyker_shield/shield_wall_functional",
 	"content/characters/player/human/attachments_combat/psyker_shield/shield_sphere_functional",
-	"content/pickups/pocketables/void_shield/void_shell_sphere_expeditions",
+	"content/pickups/pocketables/void_shield/void_shell_sphere_expeditions"
 }
 NetworkLookup.force_field_shape_overrides = {
 	"none",
 	"flat",
-	"sphere",
+	"sphere"
 }
 NetworkLookup.smoke_fog_unit = {
 	"content/characters/player/human/attachments_combat/smoke_fog/smoke_fog_volume",
-	"content/smoke_fog/empty_unit/empty_unit",
+	"content/smoke_fog/empty_unit/empty_unit"
 }
 NetworkLookup.smart_tag_replies = _create_lookup({}, SmartTagSettings.replies)
 NetworkLookup.smart_tag_templates = _create_lookup({}, SmartTagSettings.templates)
@@ -472,13 +496,13 @@ NetworkLookup.sound_parameters = {
 	"auspex_b_h",
 	"auspex_b_w",
 	"auspex_b_goal",
-	"ability_duration",
+	"ability_duration"
 }
 NetworkLookup.sound_switches = {
-	"surface_material",
+	"surface_material"
 }
 NetworkLookup.sound_switch_values = {
-	"default",
+	"default"
 }
 
 table.append(NetworkLookup.sound_switch_values, MaterialQuerySettings.surface_materials)
@@ -505,7 +529,7 @@ for _, voting_template in pairs(VotingTemplates.network) do
 end
 
 NetworkLookup.voting_options = _create_lookup({
-	"nil",
+	"nil"
 }, voting_options)
 NetworkLookup.voting_results = _create_lookup({}, voting_results)
 NetworkLookup.voting_templates = _create_lookup({}, VotingTemplates.network)
@@ -538,14 +562,14 @@ NetworkLookup.weapon_modifier_override_type = _create_lookup({}, {
 	base_stats = true,
 	perks = true,
 	traits = true,
-	weapon_skin = true,
+	weapon_skin = true
 })
 NetworkLookup.weapon_modifier_override_keys = _create_lookup({}, {
 	id = true,
 	name = true,
 	rarity = true,
 	value = true,
-	weapon_skin_item_name = true,
+	weapon_skin_item_name = true
 })
 NetworkLookup.weapon_templates = _create_lookup({}, WeaponTemplates)
 NetworkLookup.wounds_templates = _create_lookup({}, WoundsTemplates)
@@ -567,7 +591,7 @@ end
 
 NetworkLookup.havoc_modifiers = _create_lookup({}, hash_table)
 NetworkLookup.deployable_settings = _create_lookup({
-	"n/a",
+	"n/a"
 }, Deployables)
 NetworkLookup.area_of_effect_unit_spawner_templates = _create_lookup({}, AreaOfEffectUnitSpawnerTemplates)
 
@@ -581,7 +605,7 @@ local function _init(name, lookup_table)
 		__index = function (_, key)
 			table.dump(lookup_table)
 			error(index_error_print .. tostring(key))
-		end,
+		end
 	}
 
 	setmetatable(lookup_table, meta)
@@ -593,12 +617,12 @@ end
 
 local DynamicLookup = {
 	player_attachment_names = "player_attachment_names",
-	player_item_names = "player_item_names",
+	player_item_names = "player_item_names"
 }
 
 NetworkLookup._create_dynamic_lookup = function (name, hashtable, ...)
 	local lookup = {
-		...,
+		...
 	}
 
 	_create_lookup(lookup, hashtable)

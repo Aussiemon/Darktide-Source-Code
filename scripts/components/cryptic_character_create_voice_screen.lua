@@ -17,10 +17,10 @@ CrypticCharacterCreateVoiceScreen.init = function (self, unit)
 	local world_name = "voice_screen_ui_world"
 	local parameters = {
 		layer = 20,
-		timer_name = "ui",
+		timer_name = "ui"
 	}
 	local flags = {
-		Application.DISABLE_PHYSICS,
+		Application.DISABLE_PHYSICS
 	}
 	local world_manager = Managers.world
 	local world = world_manager:create_world(world_name, parameters, unpack(flags))
@@ -31,7 +31,7 @@ CrypticCharacterCreateVoiceScreen.init = function (self, unit)
 		height = 512,
 		immediate = true,
 		use_custom_dimension = true,
-		width = 512,
+		width = 512
 	})
 
 	self._gui = gui
@@ -96,36 +96,36 @@ local FONT_SIZE = 22
 CrypticCharacterCreateVoiceScreen._init_texts = function (self, matrix_x, matrix_y, slider_x)
 	self:_add_text_to_buffer("VOX UNIT MODULATION", HEADER_FONT_SIZE, {
 		5,
-		15,
+		15
 	})
 
 	self._start_anim_index = self:_add_text_to_buffer("BINHARIC ATTUNEMENT:", FONT_SIZE, {
 		5,
-		235,
+		235
 	})
 	self._vox_effect_index_lookup[MATRIX_X] = self:_add_text_to_buffer(_format_value(MATRIX_X, matrix_x), VALUE_FONT_SIZE, {
 		5,
-		265,
+		265
 	})
 
 	self:_add_text_to_buffer("ARRAY DEPTH:", FONT_SIZE, {
 		5,
-		305,
+		305
 	})
 
 	self._vox_effect_index_lookup[MATRIX_Y] = self:_add_text_to_buffer(_format_value(MATRIX_Y, matrix_y), VALUE_FONT_SIZE, {
 		5,
-		335,
+		335
 	})
 
 	self:_add_text_to_buffer("DECRYPTION COMPLEXITY:", FONT_SIZE, {
 		5,
-		375,
+		375
 	})
 
 	self._vox_effect_index_lookup[SLIDER_X] = self:_add_text_to_buffer(_format_value(SLIDER_X, slider_x), VALUE_FONT_SIZE, {
 		5,
-		405,
+		405
 	})
 end
 
@@ -217,7 +217,7 @@ CrypticCharacterCreateVoiceScreen.update = function (self, unit, dt, t)
 		snap_pixel_positions = true,
 		render_pass = render_target_name,
 		color = Color(255, 0, 255, 76.5),
-		flags = self._font_flags,
+		flags = self._font_flags
 	}
 
 	self._time = self._time + dt
@@ -328,7 +328,7 @@ end
 local FORMAT_STRINGS = {
 	[MATRIX_X] = "%.2f index",
 	[MATRIX_Y] = "%.1f mm",
-	[SLIDER_X] = "%d%%",
+	[SLIDER_X] = "%d%%"
 }
 local VALUE_TRANSFORM_FUNCS = {
 	[MATRIX_X] = function (value)
@@ -341,7 +341,7 @@ local VALUE_TRANSFORM_FUNCS = {
 		local epsilon = 1e-06
 
 		return (value + epsilon) * 100
-	end,
+	end
 }
 
 function _format_value(index, value)
@@ -352,17 +352,17 @@ CrypticCharacterCreateVoiceScreen.component_data = {
 	inputs = {
 		start = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		stop = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		reset = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return CrypticCharacterCreateVoiceScreen

@@ -37,7 +37,7 @@ templates.hordes_buff_adamant_stance_immunity = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	conditional_keywords = {
-		buff_keywords.invulnerable,
+		buff_keywords.invulnerable
 	},
 	start_func = function (template_data, template_context)
 		local buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
@@ -46,7 +46,7 @@ templates.hordes_buff_adamant_stance_immunity = {
 	end,
 	conditional_keywords_func = function (template_data, template_context)
 		return template_data.buff_extension:has_unique_buff_id("adamant_hunt_stance")
-	end,
+	end
 }
 templates.hordes_buff_adamant_mine_explosion = {
 	class_name = "buff",
@@ -55,8 +55,8 @@ templates.hordes_buff_adamant_mine_explosion = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	keywords = {
-		buff_keywords.adamant_mine_explode_on_finish,
-	},
+		buff_keywords.adamant_mine_explode_on_finish
+	}
 }
 templates.hordes_buff_adamant_drone_stun = {
 	class_name = "buff",
@@ -65,8 +65,8 @@ templates.hordes_buff_adamant_drone_stun = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	keywords = {
-		buff_keywords.adamant_drone_shocks_enemies_in_range,
-	},
+		buff_keywords.adamant_drone_shocks_enemies_in_range
+	}
 }
 
 local adamant_target_num_enemies_killed_from_grenade = HordesBuffsData.hordes_buff_adamant_grenade_multi.buff_stats.amount.value
@@ -78,7 +78,7 @@ templates.hordes_buff_adamant_grenade_multi = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.last_grenade_kill_t = 0
@@ -120,7 +120,7 @@ templates.hordes_buff_adamant_grenade_multi = {
 
 			template_data.cluster_reached_minimum = true
 		end
-	end,
+	end
 }
 
 local adamant_auto_detonate_cooldown = HordesBuffsData.hordes_buff_adamant_auto_detonate.buff_stats.time.value
@@ -134,7 +134,7 @@ templates.hordes_buff_adamant_auto_detonate = {
 	cooldown_duration = adamant_auto_detonate_cooldown,
 	proc_events = {
 		[proc_events.on_player_companion_pounce] = 1,
-		[proc_events.on_player_companion_knock_away] = 1,
+		[proc_events.on_player_companion_knock_away] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.fx_extension = ScriptUnit.has_extension(template_context.unit, "fx_system")
@@ -169,22 +169,22 @@ templates.hordes_buff_adamant_auto_detonate = {
 		local explosion_template = ExplosionTemplates.adamant_whistle_explosion
 
 		Explosion.create_explosion(template_context.world, template_context.physics_world, companion_position, Quaternion.identity(), player_unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
-	end,
+	end
 }
 
 local adamant_bash_random_ailment_effects = {
 	{
 		buff_to_add = "flamer_assault",
-		sfx = SFX_NAMES.burning_proc,
+		sfx = SFX_NAMES.burning_proc
 	},
 	{
 		buff_to_add = "warp_fire",
-		sfx = SFX_NAMES.burning_proc,
+		sfx = SFX_NAMES.burning_proc
 	},
 	{
 		buff_to_add = "bleed",
-		sfx = nil,
-	},
+		sfx = nil
+	}
 }
 
 templates.hordes_buff_adamant_random_bash = {
@@ -194,7 +194,7 @@ templates.hordes_buff_adamant_random_bash = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.hit_units = {}
@@ -239,7 +239,7 @@ templates.hordes_buff_adamant_random_bash = {
 				end
 			end
 		end
-	end,
+	end
 }
 
 return templates

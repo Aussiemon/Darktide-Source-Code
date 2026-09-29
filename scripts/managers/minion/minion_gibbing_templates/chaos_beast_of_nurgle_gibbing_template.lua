@@ -13,19 +13,19 @@ local gibbing_template = {
 				vfx = {
 					linked = true,
 					node_name = "fx_blood",
-					particle_effect = "content/fx/particles/enemies/beast_of_nurgle/bon_death_torso_fountain_stream",
+					particle_effect = "content/fx/particles/enemies/beast_of_nurgle/bon_death_torso_fountain_stream"
 				},
 				sfx = {
 					node_name = "fx_blood",
-					sound_event = "wwise/events/weapon/play_combat_shared_gore_blood_fountain_neck",
-				},
+					sound_event = "wwise/events/weapon/play_combat_shared_gore_blood_fountain_neck"
+				}
 			},
 			gibbing_threshold = GibbingThresholds.impossible,
 			material_overrides = {
 				"slot_body",
-				"environmental_override",
-			},
-		},
+				"environmental_override"
+			}
+		}
 	},
 	head = {
 		default = {
@@ -37,11 +37,11 @@ local gibbing_template = {
 				gib_unit = "content/characters/enemy/chaos_beast_of_nurgle/gibbing/bon_head_gib",
 				override_push_force = {
 					2000,
-					3000,
-				},
+					3000
+				}
 			},
-			gibbing_threshold = GibbingThresholds.impossible,
-		},
+			gibbing_threshold = GibbingThresholds.impossible
+		}
 	},
 	tongue = {
 		default = {
@@ -53,11 +53,11 @@ local gibbing_template = {
 				gib_unit = "content/characters/enemy/chaos_beast_of_nurgle/gibbing/bon_tongue_gib",
 				override_push_force = {
 					2000,
-					3000,
-				},
+					3000
+				}
 			},
-			gibbing_threshold = GibbingThresholds.impossible,
-		},
+			gibbing_threshold = GibbingThresholds.impossible
+		}
 	},
 	lower_left_arm = {
 		default = {
@@ -69,11 +69,11 @@ local gibbing_template = {
 				gib_unit = "content/characters/enemy/chaos_beast_of_nurgle/gibbing/bon_left_arm_gib",
 				override_push_force = {
 					2000,
-					3000,
-				},
+					3000
+				}
 			},
-			gibbing_threshold = GibbingThresholds.impossible,
-		},
+			gibbing_threshold = GibbingThresholds.impossible
+		}
 	},
 	lower_right_arm = {
 		default = {
@@ -85,12 +85,12 @@ local gibbing_template = {
 				gib_unit = "content/characters/enemy/chaos_beast_of_nurgle/gibbing/bon_right_arm_gib",
 				override_push_force = {
 					2000,
-					3000,
-				},
+					3000
+				}
 			},
-			gibbing_threshold = GibbingThresholds.impossible,
-		},
-	},
+			gibbing_threshold = GibbingThresholds.impossible
+		}
+	}
 }
 
 return gibbing_template

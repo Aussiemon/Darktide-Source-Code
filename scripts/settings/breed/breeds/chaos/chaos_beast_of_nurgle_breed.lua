@@ -20,6 +20,7 @@ local TargetSelectionTemplates = require("scripts/extension_systems/perception/t
 local TargetSelectionWeights = require("scripts/settings/minion_target_selection/minion_target_selection_weights")
 local WeakspotSettings = require("scripts/settings/damage/weakspot_settings")
 local armor_types = ArmorSettings.types
+local breed_tags = BreedSettings.tags
 local breed_types = BreedSettings.types
 local damage_types = DamageSettings.damage_types
 local hit_zone_names = HitZone.hit_zone_names
@@ -71,11 +72,11 @@ local breed_data = {
 	breed_type = breed_types.minion,
 	power_level_type = {
 		melee = "chaos_beast_of_nurgle_melee",
-		ranged = "chaos_beast_of_nurgle_ranged",
+		ranged = "chaos_beast_of_nurgle_ranged"
 	},
 	tags = {
-		minion = true,
-		monster = true,
+		[breed_tags.monster] = true,
+		[breed_tags.minion] = true
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.resistant,
@@ -87,8 +88,8 @@ local breed_data = {
 		choose_furthest_away = true,
 		default_combat_range = "far",
 		valid_combat_ranges = {
-			far = true,
-		},
+			far = true
+		}
 	},
 	gib_template = MinionGibbingTemplates.chaos_beast_of_nurgle,
 	stagger_durations = {
@@ -99,14 +100,14 @@ local breed_data = {
 		[stagger_types.explosion] = 2,
 		[stagger_types.killshot] = 2,
 		[stagger_types.sticky] = 1.6666666666666667,
-		[stagger_types.wall_collision] = 2,
+		[stagger_types.wall_collision] = 2
 	},
 	stagger_immune_times = {
 		[stagger_types.light] = 5,
 		[stagger_types.medium] = 5,
 		[stagger_types.heavy] = 10,
 		[stagger_types.explosion] = 10,
-		[stagger_types.light_ranged] = 5,
+		[stagger_types.light_ranged] = 5
 	},
 	stagger_thresholds = {
 		[stagger_types.light] = -1,
@@ -115,7 +116,7 @@ local breed_data = {
 		[stagger_types.explosion] = 200,
 		[stagger_types.light_ranged] = -1,
 		[stagger_types.killshot] = -1,
-		[stagger_types.sticky] = -1,
+		[stagger_types.sticky] = -1
 	},
 	hit_zone_hit_reactions = {
 		head = "hit_reaction_bwd",
@@ -126,20 +127,20 @@ local breed_data = {
 		weakspot = "hit_reaction_blob",
 		lower_tail = {
 			left = "hit_reaction_tail_lower_left",
-			right = "hit_reaction_tail_lower_right",
+			right = "hit_reaction_tail_lower_right"
 		},
 		upper_tail = {
 			left = "hit_reaction_tail_upper_left",
-			right = "hit_reaction_tail_upper_right",
+			right = "hit_reaction_tail_upper_right"
 		},
 		torso = {
 			left = "hit_reaction_left",
-			right = "hit_reaction_right",
-		},
+			right = "hit_reaction_right"
+		}
 	},
 	hit_reacts_ignored_actions = {
 		consume = true,
-		vomit = true,
+		vomit = true
 	},
 	inventory = MinionVisualLoadoutTemplates.chaos_beast_of_nurgle,
 	sounds = require("scripts/settings/breed/breeds/chaos/chaos_beast_of_nurgle_sounds"),
@@ -158,53 +159,53 @@ local breed_data = {
 			"beast_of_nurgle_lowerbody",
 			"beast_of_nurgle_arms",
 			"beast_of_nurgle_appendages",
-			"bon_gib_cap",
-		},
+			"bon_gib_cap"
+		}
 	},
 	behavior_tree_name = breed_name,
 	animation_variables = {
 		"tongue_length",
-		"anim_move_speed",
+		"anim_move_speed"
 	},
 	spawn_buffs = {
-		"beast_of_nurgle_liquid_immunity",
+		"beast_of_nurgle_liquid_immunity"
 	},
 	attack_intensity_cooldowns = {
 		melee = {
 			0,
-			0,
+			0
 		},
 		moving_melee = {
 			0,
-			0,
-		},
+			0
+		}
 	},
 	target_changed_attack_intensities = {
-		disabling = 5,
+		disabling = 5
 	},
 	line_of_sight_data = {
 		{
 			from_node = "j_head",
 			id = "eyes",
 			to_node = "enemy_aim_target_03",
-			offsets = PerceptionSettings.chaos_beast_of_nurgle_minion_line_of_sight_offsets,
+			offsets = PerceptionSettings.chaos_beast_of_nurgle_minion_line_of_sight_offsets
 		},
 		{
 			from_node = "j_spine",
 			id = "vomit",
 			to_node = "enemy_aim_target_03",
 			offsets = {
-				Vector3Box(0, 0, -0.5),
+				Vector3Box(0, 0, -0.5)
 			},
-			from_offsets = Vector3Box(0, -1, 0),
-		},
+			from_offsets = Vector3Box(0, -1, 0)
+		}
 	},
 	target_selection_template = TargetSelectionTemplates.chaos_beast_of_nurgle,
 	target_selection_weights = TargetSelectionWeights.chaos_beast_of_nurgle,
 	threat_config = {
 		max_threat = 50,
 		threat_decay_per_second = 5,
-		threat_multiplier = 0.1,
+		threat_multiplier = 0.1
 	},
 	aim_config = {
 		aim_on_target = true,
@@ -212,7 +213,7 @@ local breed_data = {
 		lerp_speed = 200,
 		node = "j_neck",
 		target = "aim_target",
-		target_node = "enemy_aim_target_03",
+		target_node = "enemy_aim_target_03"
 	},
 	nearby_units_broadphase_config = {
 		interval = 0.133,
@@ -221,8 +222,8 @@ local breed_data = {
 		angle = math.degrees_to_radians(100),
 		valid_breeds = {
 			chaos_newly_infected = true,
-			chaos_poxwalker = true,
-		},
+			chaos_poxwalker = true
+		}
 	},
 	navigation_path_spline_config = {
 		channel_smoothing_angle = 15,
@@ -233,7 +234,7 @@ local breed_data = {
 		spline_distance_to_borders = 2,
 		spline_length = 100,
 		spline_recomputation_ratio = 0.5,
-		turn_sampling_angle = 30,
+		turn_sampling_angle = 30
 	},
 	nav_tag_allowed_layers = {
 		cover_ledges = 8000,
@@ -241,29 +242,29 @@ local breed_data = {
 		ledges = 8000,
 		ledges_with_fence = 8000,
 		monster_walls = 1.5,
-		teleporters = 0.5,
+		teleporters = 0.5
 	},
 	smart_object_template = SmartObjectSettings.templates.chaos_beast_of_nurgle,
 	fade = {
 		max_distance = 1.6,
 		max_height_difference = 2,
-		min_distance = 1.1,
+		min_distance = 1.1
 	},
 	hit_zones = {
 		{
 			name = hit_zone_names.head,
 			actors = {
 				"c_neck",
-				"c_head",
-			},
+				"c_head"
+			}
 		},
 		{
 			name = hit_zone_names.center_mass,
 			actors = {
 				"c_gut",
 				"c_spine",
-				"c_spine1",
-			},
+				"c_spine1"
+			}
 		},
 		{
 			name = hit_zone_names.upper_left_arm,
@@ -271,8 +272,8 @@ local breed_data = {
 				"c_leftshoulder",
 				"c_leftarmspline01",
 				"c_leftarmspline02",
-				"c_leftarmspline03",
-			},
+				"c_leftarmspline03"
+			}
 		},
 		{
 			name = hit_zone_names.lower_left_arm,
@@ -280,8 +281,8 @@ local breed_data = {
 				"c_leftarmspline04",
 				"c_leftarmspline05",
 				"c_leftarmspline06",
-				"c_lefthand",
-			},
+				"c_lefthand"
+			}
 		},
 		{
 			name = hit_zone_names.upper_right_arm,
@@ -289,8 +290,8 @@ local breed_data = {
 				"c_rightshoulder",
 				"c_rightarmspline01",
 				"c_rightarmspline02",
-				"c_rightarmspline03",
-			},
+				"c_rightarmspline03"
+			}
 		},
 		{
 			name = hit_zone_names.lower_right_arm,
@@ -298,8 +299,8 @@ local breed_data = {
 				"c_rightarmspline04",
 				"c_rightarmspline05",
 				"c_rightarmspline06",
-				"c_righthand",
-			},
+				"c_righthand"
+			}
 		},
 		{
 			name = hit_zone_names.upper_tail,
@@ -307,8 +308,8 @@ local breed_data = {
 				"c_tail_anim_01",
 				"c_tail_anim_02",
 				"c_tail_anim_03",
-				"c_tail_anim_04",
-			},
+				"c_tail_anim_04"
+			}
 		},
 		{
 			name = hit_zone_names.lower_tail,
@@ -316,8 +317,8 @@ local breed_data = {
 				"c_tail_anim_05",
 				"c_tail_anim_06",
 				"c_tail_anim_07",
-				"c_tail_anim_08",
-			},
+				"c_tail_anim_08"
+			}
 		},
 		{
 			name = hit_zone_names.tongue,
@@ -329,46 +330,46 @@ local breed_data = {
 				"c_tonguespline04",
 				"c_tonguespline05",
 				"c_tonguespline06",
-				"c_tonguespline_end",
-			},
+				"c_tonguespline_end"
+			}
 		},
 		{
 			name = hit_zone_names.afro,
 			actors = {
-				"r_afro",
-			},
+				"r_afro"
+			}
 		},
 		{
 			name = hit_zone_names.weakspot,
 			actors = {
-				"c_weakspot",
-			},
-		},
+				"c_weakspot"
+			}
+		}
 	},
 	hit_zone_ragdoll_pushes = {
 		[hit_zone_names.head] = {
 			j_head = 0.15,
 			j_neck = 0.1,
 			j_spine = 0.4,
-			j_spine1 = 0.4,
+			j_spine1 = 0.4
 		},
 		[hit_zone_names.torso] = {
 			j_head = 0.1,
 			j_neck = 0.1,
 			j_spine = 0.4,
-			j_spine1 = 0.4,
+			j_spine1 = 0.4
 		},
 		[hit_zone_names.upper_left_arm] = {
 			j_head = 0.1,
 			j_neck = 0.1,
 			j_spine = 0.4,
-			j_spine1 = 0.4,
+			j_spine1 = 0.4
 		},
 		[hit_zone_names.upper_right_arm] = {
 			j_head = 0.1,
 			j_neck = 0.1,
 			j_spine = 0.4,
-			j_spine1 = 0.4,
+			j_spine1 = 0.4
 		},
 		[hit_zone_names.upper_left_leg] = {
 			j_hips = 0.25,
@@ -376,7 +377,7 @@ local breed_data = {
 			j_leftleg = 0.4,
 			j_leftupleg = 0.25,
 			j_spine = 0.3,
-			j_spine1 = 0.3,
+			j_spine1 = 0.3
 		},
 		[hit_zone_names.upper_right_leg] = {
 			j_hips = 0.25,
@@ -384,19 +385,19 @@ local breed_data = {
 			j_rightleg = 0.4,
 			j_rightupleg = 0.25,
 			j_spine = 0.3,
-			j_spine1 = 0.3,
+			j_spine1 = 0.3
 		},
 		[hit_zone_names.lower_left_arm] = {
 			j_head = 0.1,
 			j_neck = 0.1,
 			j_spine = 0.4,
-			j_spine1 = 0.4,
+			j_spine1 = 0.4
 		},
 		[hit_zone_names.lower_right_arm] = {
 			j_head = 0.1,
 			j_neck = 0.1,
 			j_spine = 0.4,
-			j_spine1 = 0.4,
+			j_spine1 = 0.4
 		},
 		[hit_zone_names.lower_left_leg] = {
 			j_hips = 0.25,
@@ -404,7 +405,7 @@ local breed_data = {
 			j_leftleg = 0.4,
 			j_leftupleg = 0.25,
 			j_spine = 0.3,
-			j_spine1 = 0.3,
+			j_spine1 = 0.3
 		},
 		[hit_zone_names.lower_right_leg] = {
 			j_hips = 0.25,
@@ -412,28 +413,28 @@ local breed_data = {
 			j_rightleg = 0.4,
 			j_rightupleg = 0.25,
 			j_spine = 0.3,
-			j_spine1 = 0.3,
+			j_spine1 = 0.3
 		},
 		[hit_zone_names.center_mass] = {
 			j_hips = 0.5,
-			j_spine = 0.5,
+			j_spine = 0.5
 		},
 		[hit_zone_names.weakspot] = {
 			j_hips = 0.5,
-			j_spine = 0.5,
+			j_spine = 0.5
 		},
 		[hit_zone_names.tongue] = {
 			j_hips = 0.5,
-			j_spine = 0.5,
+			j_spine = 0.5
 		},
 		[hit_zone_names.upper_tail] = {
 			j_hips = 0.5,
-			j_spine = 0.5,
+			j_spine = 0.5
 		},
 		[hit_zone_names.lower_tail] = {
 			j_hips = 0.5,
-			j_spine = 0.5,
-		},
+			j_spine = 0.5
+		}
 	},
 	hitzone_damage_multiplier = {
 		melee = {
@@ -449,7 +450,7 @@ local breed_data = {
 			[hit_zone_names.upper_right_leg] = 0.7,
 			[hit_zone_names.center_mass] = 0.7,
 			[hit_zone_names.upper_tail] = 0.2,
-			[hit_zone_names.lower_tail] = 0.2,
+			[hit_zone_names.lower_tail] = 0.2
 		},
 		ranged = {
 			[hit_zone_names.weakspot] = 1,
@@ -464,17 +465,17 @@ local breed_data = {
 			[hit_zone_names.upper_right_leg] = 0.4,
 			[hit_zone_names.center_mass] = 0.4,
 			[hit_zone_names.upper_tail] = 0.1,
-			[hit_zone_names.lower_tail] = 0.1,
-		},
+			[hit_zone_names.lower_tail] = 0.1
+		}
 	},
 	hit_zone_weakspot_types = {
 		[hit_zone_names.weakspot] = weakspot_types.weakspot,
-		[hit_zone_names.tongue] = weakspot_types.weakspot,
+		[hit_zone_names.tongue] = weakspot_types.weakspot
 	},
 	weakspot_config = {
 		impact_fx = {
-			damage_type = damage_types.minion_beast_of_nurgle_weakspot_hit,
-		},
+			damage_type = damage_types.minion_beast_of_nurgle_weakspot_hit
+		}
 	},
 	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.chaos_beast_of_nurgle,
@@ -491,17 +492,17 @@ local breed_data = {
 				"dog_target_position_back_01",
 				"dog_target_position_back_02",
 				"dog_target_position_front_01",
-				"dog_target_position_front_02",
-			},
+				"dog_target_position_front_02"
+			}
 		},
 		land_anim_events = {
 			{
 				duration = 0.8333333333333334,
-				name = "attack_leap_nonhuman_land_02",
-			},
+				name = "attack_leap_nonhuman_land_02"
+			}
 		},
-		damage_profile = DamageProfileTemplates.adamant_companion_monster_pounce,
-	},
+		damage_profile = DamageProfileTemplates.adamant_companion_monster_pounce
+	}
 }
 
 return breed_data

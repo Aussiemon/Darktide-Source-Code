@@ -12,22 +12,22 @@ local view_settings = {
 	state_bound = true,
 	use_transition_ui = true,
 	levels = {
-		"content/levels/ui/penances/world",
+		"content/levels/ui/penances/world"
 	},
 	enter_sound_events = {
-		UISoundEvents.penance_menu_enter,
+		UISoundEvents.penance_menu_enter
 	},
 	exit_sound_events = {
-		UISoundEvents.penance_menu_exit,
+		UISoundEvents.penance_menu_exit
 	},
 	wwise_states = {
-		options = WwiseGameSyncSettings.state_groups.options.vendor_menu,
+		options = WwiseGameSyncSettings.state_groups.options.vendor_menu
 	},
 	testify_flags = {
 		ui_views = function ()
 			return table.nested_get(Managers, "achievements", "_initialized")
-		end,
-	},
+		end
+	}
 }
 
 return settings("PenanceOverviewViewDeclarationSettings", view_settings)

@@ -8,11 +8,11 @@ local TextUtils = require("scripts/utilities/ui/text")
 local _size_multiplier = 0.525
 local _button_size = {
 	432 * _size_multiplier,
-	728 * _size_multiplier,
+	728 * _size_multiplier
 }
 local _preview_size = {
-	432 * _size_multiplier,
-	728 * _size_multiplier,
+	200 * _size_multiplier,
+	200 * _size_multiplier
 }
 local button_background_glow = {
 	pass_type = "texture",
@@ -23,7 +23,7 @@ local button_background_glow = {
 		horizontal_alignment = "center",
 		vertical_alignment = "center",
 		material_values = {
-			texture_map = "content/ui/textures/live_events/skulls_guns/live_event_skulls_guns_button_frame_glow",
+			texture_map = "content/ui/textures/live_events/skulls_guns/live_event_skulls_guns_button_frame_glow"
 		},
 		default_color = Color.terminal_corner_selected(0, true),
 		hover_color = Color.terminal_corner_selected(128, true),
@@ -31,8 +31,8 @@ local button_background_glow = {
 		size = _button_size,
 		size_addition = {
 			5,
-			5,
-		},
+			5
+		}
 	},
 	change_function = function (content, style)
 		local hotspot = content.hotspot
@@ -44,7 +44,7 @@ local button_background_glow = {
 		local progress = math.max(math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress), hotspot.anim_input_progress), hotspot.anim_select_progress)
 
 		ColorUtilities.color_lerp(style.default_color, style.hover_color, progress, style.color)
-	end,
+	end
 }
 local button_background_pass = {
 	pass_type = "texture",
@@ -60,9 +60,9 @@ local button_background_pass = {
 			frame_intensity = 1,
 			frame_tier = "content/ui/textures/live_events/skulls_guns/live_event_skulls_guns_metal_frame_locked",
 			icon = nil,
-			icon_texture = "content/ui/textures/live_events/skulls_guns/live_event_skulls_guns_metal_frame",
+			icon_texture = "content/ui/textures/live_events/skulls_guns/live_event_skulls_guns_metal_frame"
 		},
-		size = _button_size,
+		size = _button_size
 	},
 	change_function = function (content, style)
 		local hotspot = content.hotspot
@@ -78,15 +78,15 @@ local button_background_pass = {
 		local progress = math.max(math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress), hotspot.anim_input_progress), hotspot.anim_select_progress)
 
 		style.material_values.frame_intensity = math.lerp(default_frame_intensity, hover_intensity, progress)
-	end,
+	end
 }
 local hotspot_pass = {
 	content_id = "hotspot",
 	pass_type = "hotspot",
 	content = {
 		on_hover_sound = UISoundEvents.default_mouse_hover,
-		on_pressed_sound = UISoundEvents.default_button_pressed,
-	},
+		on_pressed_sound = UISoundEvents.default_button_pressed
+	}
 }
 local button_preview_image_pass = {
 	pass_type = "texture_uv",
@@ -102,26 +102,26 @@ local button_preview_image_pass = {
 		offset = {
 			0,
 			0,
-			1,
+			1
 		},
 		material_values = {
 			fps = 0,
-			texture_map = nil,
+			texture_map = nil
 		},
 		uvs = {
 			{
 				0,
-				0,
+				0
 			},
 			{
 				1,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	visibility_function = function (content, style)
 		return not not style.material_values.texture_map
-	end,
+	end
 }
 local loading_icon_pass = {
 	pass_type = "rotated_texture",
@@ -136,13 +136,13 @@ local loading_icon_pass = {
 			60,
 			160,
 			160,
-			160,
+			160
 		},
 		offset = {
 			0,
 			20,
-			1,
-		},
+			1
+		}
 	},
 	visibility_function = function (content, style)
 		return not content._is_preview_image_loaded and not content.element.data_entry.locked
@@ -152,7 +152,7 @@ local loading_icon_pass = {
 
 		style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
 		style.angle = style.rotation_progress * math.pi * 2
-	end,
+	end
 }
 local unread_entry_pass = {
 	pass_type = "rotated_texture",
@@ -164,18 +164,18 @@ local unread_entry_pass = {
 		offset = {
 			0,
 			-10,
-			3,
+			3
 		},
 		color = {
 			218,
 			255,
 			218,
-			137,
+			137
 		},
 		size = {
 			500,
-			500,
-		},
+			500
+		}
 	},
 	change_function = function (content, style, _, dt)
 		local add = -0.5 * dt
@@ -197,15 +197,15 @@ local unread_entry_pass = {
 		end
 
 		return false
-	end,
+	end
 }
 local _progress_bar_size = {
 	_button_size[1] * 0.825,
-	20,
+	20
 }
 local _progress_bar_offset = {
 	20,
-	-65,
+	-65
 }
 
 local function _progress_bar_visibility_function(content, style)
@@ -230,16 +230,16 @@ local button_progress_passes = {
 			vertical_alignment = "bottom",
 			size = {
 				_progress_bar_size[1],
-				_progress_bar_size[2],
+				_progress_bar_size[2]
 			},
 			offset = {
 				_progress_bar_offset[1],
 				_progress_bar_offset[2],
-				3,
+				3
 			},
-			color = Color.terminal_background_dark(255, true),
+			color = Color.terminal_background_dark(255, true)
 		},
-		visibility_function = _progress_bar_visibility_function,
+		visibility_function = _progress_bar_visibility_function
 	},
 	{
 		pass_type = "texture",
@@ -250,21 +250,21 @@ local button_progress_passes = {
 			vertical_alignment = "bottom",
 			size = {
 				_progress_bar_size[1],
-				_progress_bar_size[2],
+				_progress_bar_size[2]
 			},
 			offset = {
 				_progress_bar_offset[1],
 				_progress_bar_offset[2],
-				5,
+				5
 			},
 			color = Color.terminal_frame(nil, true),
 			default_color = Color.terminal_frame(nil, true),
 			selected_color = Color.terminal_frame_selected(nil, true),
 			disabled_color = Color.ui_grey_medium(255, true),
-			hover_color = Color.terminal_frame_hover(nil, true),
+			hover_color = Color.terminal_frame_hover(nil, true)
 		},
 		visibility_function = _progress_bar_visibility_function,
-		change_function = ButtonPassTemplates.terminal_button_change_function,
+		change_function = ButtonPassTemplates.terminal_button_change_function
 	},
 	{
 		pass_type = "texture",
@@ -275,20 +275,20 @@ local button_progress_passes = {
 			vertical_alignment = "bottom",
 			size = {
 				_progress_bar_size[1] * 0.33,
-				_progress_bar_size[2],
+				_progress_bar_size[2]
 			},
 			default_size = {
 				_progress_bar_size[1],
-				_progress_bar_size[2],
+				_progress_bar_size[2]
 			},
 			offset = {
 				_progress_bar_offset[1],
 				_progress_bar_offset[2],
-				4,
+				4
 			},
-			color = Color.terminal_text_body(255, true),
+			color = Color.terminal_text_body(255, true)
 		},
-		visibility_function = _progress_bar_visibility_function,
+		visibility_function = _progress_bar_visibility_function
 	},
 	{
 		pass_type = "text",
@@ -306,16 +306,16 @@ local button_progress_passes = {
 			offset = {
 				_progress_bar_offset[1] - 57,
 				_progress_bar_offset[2] + 30,
-				3,
+				3
 			},
 			size = {
 				300,
-				24,
+				24
 			},
-			text_color = Color.terminal_text_body(255, true),
+			text_color = Color.terminal_text_body(255, true)
 		},
-		visibility_function = _progress_bar_visibility_function,
-	},
+		visibility_function = _progress_bar_visibility_function
+	}
 }
 
 local function _currency_visibility_function(content, style)
@@ -350,21 +350,21 @@ local unclaimed_currency_passes = {
 			vertical_alignment = "center",
 			size = {
 				104,
-				88,
+				88
 			},
 			offset = {
 				0,
 				-30,
-				3,
+				3
 			},
 			color = {
 				255,
 				255,
 				255,
-				255,
-			},
+				255
+			}
 		},
-		visibility_function = _currency_visibility_function,
+		visibility_function = _currency_visibility_function
 	},
 	{
 		pass_type = "text",
@@ -381,25 +381,25 @@ local unclaimed_currency_passes = {
 			offset = {
 				0,
 				30,
-				3,
+				3
 			},
 			size = {
 				300,
-				24,
+				24
 			},
-			text_color = Color.terminal_text_body(255, true),
+			text_color = Color.terminal_text_body(255, true)
 		},
-		visibility_function = _currency_visibility_function,
-	},
+		visibility_function = _currency_visibility_function
+	}
 }
 local _fake_screen_size = {
 	195,
-	68,
+	68
 }
 local _fake_screen_offset = {
 	0,
 	-27,
-	1,
+	1
 }
 local button_fake_screen_passes = {
 	{
@@ -410,9 +410,9 @@ local button_fake_screen_passes = {
 			vertical_alignment = "bottom",
 			color = Color.terminal_grid_background(255, true),
 			size = _fake_screen_size,
-			offset = _fake_screen_offset,
+			offset = _fake_screen_offset
 		},
-		visibility_function = _progress_bar_visibility_function,
+		visibility_function = _progress_bar_visibility_function
 	},
 	{
 		pass_type = "texture",
@@ -424,9 +424,9 @@ local button_fake_screen_passes = {
 			vertical_alignment = "bottom",
 			offset = _fake_screen_offset,
 			size = _fake_screen_size,
-			color = Color.ui_hud_green_light(255, true),
+			color = Color.ui_hud_green_light(255, true)
 		},
-		visibility_function = _progress_bar_visibility_function,
+		visibility_function = _progress_bar_visibility_function
 	},
 	{
 		pass_type = "texture",
@@ -438,10 +438,10 @@ local button_fake_screen_passes = {
 			vertical_alignment = "bottom",
 			offset = _fake_screen_offset,
 			size = _fake_screen_size,
-			color = Color.ui_hud_green_light(63.75, true),
+			color = Color.ui_hud_green_light(63.75, true)
 		},
-		visibility_function = _progress_bar_visibility_function,
-	},
+		visibility_function = _progress_bar_visibility_function
+	}
 }
 local blueprints = {
 	button = {
@@ -452,7 +452,7 @@ local blueprints = {
 				button_background_pass,
 				loading_icon_pass,
 				unread_entry_pass,
-				button_preview_image_pass,
+				button_preview_image_pass
 			}
 
 			table.append(passes, button_progress_passes)
@@ -489,7 +489,7 @@ local blueprints = {
 					if reward.type == "currency" then
 						currency_reward = {
 							currency = reward.currency,
-							amount = reward.amount,
+							amount = reward.amount
 						}
 
 						break
@@ -515,13 +515,13 @@ local blueprints = {
 				widget.offset = {
 					widget.default_offset[1] + _button_size[1] * 0.5 + 15,
 					widget.default_offset[2] - 15,
-					widget.default_offset[3],
+					widget.default_offset[3]
 				}
 			else
 				widget.offset = {
 					widget.default_offset[1],
 					widget.default_offset[2],
-					widget.default_offset[3],
+					widget.default_offset[3]
 				}
 			end
 
@@ -541,8 +541,8 @@ local blueprints = {
 		end,
 		destroy = function (self, widget, element, ui_renderer)
 			return
-		end,
-	},
+		end
+	}
 }
 
 return blueprints

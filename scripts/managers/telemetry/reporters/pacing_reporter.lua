@@ -10,7 +10,7 @@ PacingReporter.init = function (self, params)
 	self._entries = {
 		timestamp = {},
 		tension = {},
-		progress = {},
+		progress = {}
 	}
 end
 

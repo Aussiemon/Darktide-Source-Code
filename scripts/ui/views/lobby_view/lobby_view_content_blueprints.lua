@@ -1,23 +1,23 @@
 ﻿-- chunkname: @scripts/ui/views/lobby_view/lobby_view_content_blueprints.lua
 
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
+local Colors = require("scripts/utilities/ui/colors")
 local LobbyViewSettings = require("scripts/ui/views/lobby_view/lobby_view_settings")
 local MasterItems = require("scripts/backend/master_items")
-local ColorUtilities = require("scripts/utilities/ui/colors")
 local grid_width = LobbyViewSettings.grid_size[1]
 local blueprints = {}
 
 blueprints.spacing_vertical = {
 	size = {
 		grid_width,
-		LobbyViewSettings.list_button_spacing,
-	},
+		LobbyViewSettings.list_button_spacing
+	}
 }
 blueprints.spacing_horizontal = {
 	size = {
 		(ButtonPassTemplates.ready_button.size[1] - ButtonPassTemplates.default_button_small.size[1]) * 0.5,
-		ButtonPassTemplates.default_button_small.size[2],
-	},
+		ButtonPassTemplates.default_button_small.size[2]
+	}
 }
 blueprints.ready_button = {
 	size = ButtonPassTemplates.ready_button.size,
@@ -33,7 +33,7 @@ blueprints.ready_button = {
 		content.original_text = Localize(display_name)
 		content.icon = entry.icon
 		content.hotspot.use_is_focused = true
-	end,
+	end
 }
 blueprints.secondary_button = {
 	size = ButtonPassTemplates.default_button_small.size,
@@ -53,14 +53,14 @@ blueprints.secondary_button = {
 		style.offset = {
 			60,
 			0,
-			0,
+			0
 		}
-	end,
+	end
 }
 blueprints.button = {
 	size = {
 		grid_width,
-		ButtonPassTemplates.list_button_default_height,
+		ButtonPassTemplates.list_button_default_height
 	},
 	pass_template = ButtonPassTemplates.list_button,
 	init = function (parent, widget, entry, callback_name)
@@ -73,17 +73,17 @@ blueprints.button = {
 
 		content.text = Localize(display_name)
 		content.icon = entry.icon
-	end,
+	end
 }
 blueprints.item_icon = {
 	size = {
 		128,
-		48,
+		48
 	},
 	pass_template = {
 		{
 			content_id = "hotspot",
-			pass_type = "hotspot",
+			pass_type = "hotspot"
 		},
 		{
 			pass_type = "texture",
@@ -96,14 +96,14 @@ blueprints.item_icon = {
 				color = Color.black(200, true),
 				size_addition = {
 					20,
-					20,
-				},
-			},
+					20
+				}
+			}
 		},
 		{
 			pass_type = "texture",
 			style_id = "icon",
-			value = "content/ui/materials/icons/weapons/hud/combat_blade_01",
+			value = "content/ui/materials/icons/weapons/hud/debug_primary",
 			value_id = "icon",
 			style = {
 				horizontal_alignment = "center",
@@ -114,13 +114,13 @@ blueprints.item_icon = {
 				offset = {
 					0,
 					4,
-					5,
+					5
 				},
 				size = {
 					128,
-					48,
-				},
-			},
+					48
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -132,9 +132,9 @@ blueprints.item_icon = {
 				offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -147,20 +147,20 @@ blueprints.item_icon = {
 					100,
 					33,
 					35,
-					37,
+					37
 				},
 				color = {
 					100,
 					33,
 					35,
-					37,
+					37
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -173,10 +173,10 @@ blueprints.item_icon = {
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
-			change_function = ButtonPassTemplates.terminal_button_hover_change_function,
+			change_function = ButtonPassTemplates.terminal_button_hover_change_function
 		},
 		{
 			pass_type = "texture",
@@ -192,8 +192,8 @@ blueprints.item_icon = {
 				offset = {
 					0,
 					0,
-					6,
-				},
+					6
+				}
 			},
 			change_function = function (content, style)
 				local hotspot = content.hotspot
@@ -213,9 +213,9 @@ blueprints.item_icon = {
 				end
 
 				if color then
-					ColorUtilities.color_copy(color, style.color)
+					Colors.color_copy(color, style.color)
 				end
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -231,8 +231,8 @@ blueprints.item_icon = {
 				offset = {
 					0,
 					0,
-					7,
-				},
+					7
+				}
 			},
 			change_function = function (content, style)
 				local hotspot = content.hotspot
@@ -252,16 +252,16 @@ blueprints.item_icon = {
 				end
 
 				if color then
-					ColorUtilities.color_copy(color, style.color)
+					Colors.color_copy(color, style.color)
 				end
-			end,
-		},
+			end
+		}
 	},
 	init = function (parent, widget, entry)
 		local item = entry.item
 		local id = item.name
 		local master_item = MasterItems.get_item(id)
-		local hud_icon = "content/ui/materials/icons/weapons/hud/combat_blade_01"
+		local hud_icon = "content/ui/materials/icons/weapons/hud/debug_primary"
 
 		if master_item and master_item.hud_icon then
 			hud_icon = master_item.hud_icon
@@ -270,12 +270,12 @@ blueprints.item_icon = {
 		widget.content.icon = hud_icon
 		widget.content.item = item
 		widget.content.slot = entry.slot
-	end,
+	end
 }
 blueprints.talent = {
 	size = {
 		64,
-		64,
+		64
 	},
 	pass_template = {
 		{
@@ -289,14 +289,14 @@ blueprints.talent = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				color = Color.white(255, true),
-				material_values = {},
+				material_values = {}
 			},
 			visibility_function = function (content, style)
 				return true
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -309,29 +309,29 @@ blueprints.talent = {
 				color = Color.ui_terminal(255, true),
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					2,
-				},
+					2
+				}
 			},
 			visibility_function = function (content)
 				return content.hotspot.is_hover or content.hotspot.is_selected
-			end,
+			end
 		},
 		{
 			content_id = "hotspot",
 			pass_type = "hotspot",
 			content = {
-				disabled = false,
+				disabled = false
 			},
 			style = {
 				horizontal_alignment = "center",
-				vertical_alignment = "bottom",
-			},
-		},
+				vertical_alignment = "bottom"
+			}
+		}
 	},
 	init = function (parent, widget, entry)
 		local style = widget.style
@@ -345,7 +345,7 @@ blueprints.talent = {
 		content.frame_selected_talent = entry.node_type_settings.selected_material
 		content.loadout_id = entry.loadout_id
 		content.icon = entry.loadout.icon
-	end,
+	end
 }
 
 return blueprints

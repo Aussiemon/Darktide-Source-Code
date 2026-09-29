@@ -14,12 +14,12 @@ local _arc_grenade_targeted_template_effect_data = {
 	num_final_targets = 0,
 	num_secondary_targets = 0,
 	stop_sorting = false,
-	max_targets = arc_grenade_talent_settings.base_num_arcs,
+	max_targets = arc_grenade_talent_settings.base_num_arcs
 }
 local _arc_grenade_targeted_template_effect_results = {
 	final_targets = TARGETED_TEMPLATE_EFFECT_FINAL_TARGETS,
 	secondary_targets = TARGETED_TEMPLATE_EFFECT_SECONDARY,
-	backup_targets = TARGETED_TEMPLATE_EFFECT_BACKUP,
+	backup_targets = TARGETED_TEMPLATE_EFFECT_BACKUP
 }
 local explosion_templates = {
 	frag_grenade = {
@@ -38,30 +38,30 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		explosion_area_suppression = {
 			distance = 15,
 			instant_aggro = true,
 			suppression_falloff = true,
-			suppression_value = 20,
+			suppression_value = 20
 		},
 		radius_stat_buffs = {
-			"explosion_radius_modifier_frag",
+			"explosion_radius_modifier_frag"
 		},
 		scalable_vfx = {
 			{
 				min_radius = 5,
 				radius_variable_name = "radius",
 				effects = {
-					"content/fx/particles/explosions/frag_grenade_01",
-				},
-			},
+					"content/fx/particles/explosions/frag_grenade_01"
+				}
+			}
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_grenade_frag",
-			"wwise/events/weapon/play_explosion_refl_gen",
-		},
+			"wwise/events/weapon/play_explosion_refl_gen"
+		}
 	},
 	shock_grenade = {
 		close_radius = 2,
@@ -80,24 +80,24 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		explosion_area_suppression = {
 			distance = 15,
 			instant_aggro = true,
 			suppression_falloff = true,
-			suppression_value = 20,
+			suppression_value = 20
 		},
 		radius_stat_buffs = {
-			"explosion_radius_modifier_shock",
+			"explosion_radius_modifier_shock"
 		},
 		vfx = {
-			"content/fx/particles/weapons/grenades/stumm_grenade/stumm_grenade",
+			"content/fx/particles/weapons/grenades/stumm_grenade/stumm_grenade"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_grenade_shock",
-			"wwise/events/weapon/play_explosion_refl_gen",
-		},
+			"wwise/events/weapon/play_explosion_refl_gen"
+		}
 	},
 	fire_grenade = {
 		collision_filter = "filter_player_character_explosion",
@@ -110,21 +110,21 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		explosion_area_suppression = {
 			distance = 10,
 			instant_aggro = true,
 			suppression_falloff = true,
-			suppression_value = 12,
+			suppression_value = 12
 		},
 		vfx = {
-			"content/fx/particles/weapons/grenades/fire_grenade/fire_grenade_player_initial_blast",
+			"content/fx/particles/weapons/grenades/fire_grenade/fire_grenade_player_initial_blast"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_grenade_flame",
-			"wwise/events/weapon/play_explosion_refl_small",
-		},
+			"wwise/events/weapon/play_explosion_refl_small"
+		}
 	},
 	broker_flash_grenade = {
 		close_radius = 2.25,
@@ -142,20 +142,20 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		explosion_area_suppression = {
 			distance = 12,
 			instant_aggro = true,
 			suppression_falloff = true,
-			suppression_value = 30,
+			suppression_value = 30
 		},
 		vfx = {
-			"content/fx/particles/weapons/grenades/broker_flash_grenade/broker_flash_grenade",
+			"content/fx/particles/weapons/grenades/broker_flash_grenade/broker_flash_grenade"
 		},
 		sfx = {
-			"wwise/events/weapon/play_explosion_flash_player",
-		},
+			"wwise/events/weapon/play_explosion_flash_player"
+		}
 	},
 	broker_tox_grenade = {
 		collision_filter = "filter_player_character_explosion",
@@ -168,21 +168,21 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		explosion_area_suppression = {
 			distance = 10,
 			instant_aggro = true,
 			suppression_falloff = true,
-			suppression_value = 4,
+			suppression_value = 4
 		},
 		vfx = {
-			"content/fx/particles/weapons/grenades/chem_grenade/chem_grenade_player_initial_blast",
+			"content/fx/particles/weapons/grenades/chem_grenade/chem_grenade_player_initial_blast"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_chem_grenade_player",
-			"wwise/events/weapon/play_explosion_refl_small",
-		},
+			"wwise/events/weapon/play_explosion_refl_small"
+		}
 	},
 	broker_missile_launcher = {
 		close_radius = 4,
@@ -200,27 +200,27 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		explosion_area_suppression = {
 			distance = 25,
 			instant_aggro = true,
 			suppression_falloff = true,
-			suppression_value = 25,
+			suppression_value = 25
 		},
 		scalable_vfx = {
 			{
 				min_radius = 2.5,
 				radius_variable_name = "radius",
 				effects = {
-					"content/fx/particles/weapons/grenades/broker_boom_bringer_impact_explosion",
-				},
-			},
+					"content/fx/particles/weapons/grenades/broker_boom_bringer_impact_explosion"
+				}
+			}
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_grenade_frag",
-			"wwise/events/weapon/play_explosion_refl_gen",
-		},
+			"wwise/events/weapon/play_explosion_refl_gen"
+		}
 	},
 	krak_grenade = {
 		boss_power_level_modifier = 0.8,
@@ -239,21 +239,21 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		explosion_area_suppression = {
 			distance = 6,
 			instant_aggro = true,
 			suppression_falloff = true,
-			suppression_value = 8,
+			suppression_value = 8
 		},
 		vfx = {
-			"content/fx/particles/weapons/grenades/krak_grenade/krak_grenade_explosion",
+			"content/fx/particles/weapons/grenades/krak_grenade/krak_grenade_explosion"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_grenade_krak",
-			"wwise/events/weapon/play_explosion_refl_gen",
-		},
+			"wwise/events/weapon/play_explosion_refl_gen"
+		}
 	},
 	smoke_grenade = {
 		close_radius = 2,
@@ -272,21 +272,21 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		explosion_area_suppression = {
 			distance = 15,
 			instant_aggro = true,
 			suppression_falloff = true,
-			suppression_value = 20,
+			suppression_value = 20
 		},
 		vfx = {
-			"content/fx/particles/weapons/grenades/smoke_grenade/smoke_grenade_initial_blast",
+			"content/fx/particles/weapons/grenades/smoke_grenade/smoke_grenade_initial_blast"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_grenade_smoke",
-			"wwise/events/weapon/play_explosion_refl_small",
-		},
+			"wwise/events/weapon/play_explosion_refl_small"
+		}
 	},
 	ogryn_grenade_frag = {
 		close_radius = 2,
@@ -304,34 +304,34 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		explosion_area_suppression = {
 			distance = 25,
 			instant_aggro = true,
 			suppression_falloff = true,
-			suppression_value = 25,
+			suppression_value = 25
 		},
 		scalable_vfx = {
 			{
 				min_radius = 10,
 				radius_variable_name = "radius",
 				effects = {
-					"content/fx/particles/explosions/frag_grenade_ogryn",
-				},
+					"content/fx/particles/explosions/frag_grenade_ogryn"
+				}
 			},
 			{
 				min_radius = 31,
 				radius_variable_name = "radius",
 				effects = {
-					"content/fx/particles/player_buffs/buff_ogryn_biggest_boom_grenade",
-				},
-			},
+					"content/fx/particles/player_buffs/buff_ogryn_biggest_boom_grenade"
+				}
+			}
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_grenade_frag_ogryn",
-			"wwise/events/weapon/play_explosion_refl_huge",
-		},
+			"wwise/events/weapon/play_explosion_refl_huge"
+		}
 	},
 	ogryn_box_cluster_frag = {
 		close_radius = 2,
@@ -349,30 +349,30 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		explosion_area_suppression = {
 			distance = 15,
 			instant_aggro = true,
 			suppression_falloff = true,
-			suppression_value = 20,
+			suppression_value = 20
 		},
 		radius_stat_buffs = {
-			"explosion_radius_modifier_frag",
+			"explosion_radius_modifier_frag"
 		},
 		scalable_vfx = {
 			{
 				min_radius = 5,
 				radius_variable_name = "radius",
 				effects = {
-					"content/fx/particles/explosions/box_grenade_ogryn",
-				},
-			},
+					"content/fx/particles/explosions/box_grenade_ogryn"
+				}
+			}
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_grenade_frag",
-			"wwise/events/weapon/play_explosion_refl_gen",
-		},
+			"wwise/events/weapon/play_explosion_refl_gen"
+		}
 	},
 	adamant_grenade = {
 		close_radius = 2.5,
@@ -390,30 +390,30 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		explosion_area_suppression = {
 			distance = 15,
 			instant_aggro = true,
 			suppression_falloff = true,
-			suppression_value = 20,
+			suppression_value = 20
 		},
 		radius_stat_buffs = {
-			"explosion_radius_modifier_frag",
+			"explosion_radius_modifier_frag"
 		},
 		scalable_vfx = {
 			{
 				min_radius = 5,
 				radius_variable_name = "radius",
 				effects = {
-					"content/fx/particles/explosions/frag_grenade_01",
-				},
-			},
+					"content/fx/particles/explosions/frag_grenade_01"
+				}
+			}
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_grenade_frag",
-			"wwise/events/weapon/play_explosion_refl_gen",
-		},
+			"wwise/events/weapon/play_explosion_refl_gen"
+		}
 	},
 	adamant_whistle_explosion = {
 		close_radius = 2,
@@ -431,29 +431,29 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		explosion_area_suppression = {
 			distance = 15,
 			instant_aggro = true,
 			suppression_falloff = true,
-			suppression_value = 20,
+			suppression_value = 20
 		},
 		radius_stat_buffs = {
-			"explosion_radius_modifier_frag",
+			"explosion_radius_modifier_frag"
 		},
 		scalable_vfx = {
 			{
 				min_radius = 5,
 				radius_variable_name = "radius",
 				effects = {
-					"content/fx/particles/explosions/frag_grenade_01",
-				},
-			},
+					"content/fx/particles/explosions/frag_grenade_01"
+				}
+			}
 		},
 		sfx = {
-			"wwise/events/player/play_player_ability_adamant_dog_explosion",
-		},
+			"wwise/events/player/play_player_ability_adamant_dog_explosion"
+		}
 	},
 	shock_mine_self_destruct = {
 		collision_filter = "filter_player_character_explosion",
@@ -467,17 +467,17 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		explosion_area_suppression = {
 			distance = 5,
 			instant_aggro = true,
 			suppression_falloff = true,
-			suppression_value = 5,
+			suppression_value = 5
 		},
 		vfx = {
-			"content/fx/particles/weapons/grenades/shock_mine/shock_mine_self_destruct_01",
-		},
+			"content/fx/particles/weapons/grenades/shock_mine/shock_mine_self_destruct_01"
+		}
 	},
 	arc_grenade = {
 		collision_filter = "filter_player_character_explosion",
@@ -492,16 +492,16 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		explosion_area_suppression = {
 			distance = 15,
 			instant_aggro = true,
 			suppression_falloff = true,
-			suppression_value = 20,
+			suppression_value = 20
 		},
 		radius_stat_buffs = {
-			"explosion_radius_modifier_frag",
+			"explosion_radius_modifier_frag"
 		},
 		targeted_template_effect = {
 			template_effect_name = "arc_grenade_chain_lightning_source",
@@ -602,15 +602,15 @@ local explosion_templates = {
 				end
 
 				return final_targets
-			end,
+			end
 		},
 		vfx = {
-			"content/fx/particles/weapons/grenades/arc_grenade/arc_grenade_01",
+			"content/fx/particles/weapons/grenades/arc_grenade/arc_grenade_01"
 		},
 		sfx = {
-			"wwise/events/weapon/play_explosion_arc_grenade",
-		},
-	},
+			"wwise/events/weapon/play_explosion_arc_grenade"
+		}
+	}
 }
 
 return explosion_templates

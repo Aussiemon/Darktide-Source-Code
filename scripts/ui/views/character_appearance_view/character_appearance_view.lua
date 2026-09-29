@@ -12,7 +12,7 @@ local Definitions = require("scripts/ui/views/character_appearance_view/characte
 local HomePlanets = require("scripts/settings/character/home_planets")
 local Items = require("scripts/utilities/items")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
-local ItemSourceSettings = require("scripts/settings/item/item_source_settings_new")
+local ItemSourceSettings = require("scripts/settings/item/item_source_settings")
 local MasterItems = require("scripts/backend/master_items")
 local PlayerHeight = require("scripts/utilities/player_height")
 local Popups = require("scripts/utilities/ui/popups")
@@ -38,11 +38,11 @@ local MINDWIPE_CHAIR_PAGES = {
 	crime = true,
 	name = true,
 	personality = true,
-	voice = true,
+	voice = true
 }
 local MINDWIPEABLE_PAGES = {
 	personality = true,
-	voice = true,
+	voice = true
 }
 local RTPC_EFFECT_X = "vox_effect_01"
 local RTPC_EFFECT_Y = "vox_effect_02"
@@ -122,7 +122,7 @@ CharacterAppearanceView.on_enter = function (self)
 			if pre_character_creation_video_template_name then
 				Managers.ui:open_view("video_view", nil, nil, nil, nil, {
 					allow_skip_input = true,
-					template = pre_character_creation_video_template_name,
+					template = pre_character_creation_video_template_name
 				})
 			end
 		end
@@ -141,17 +141,17 @@ CharacterAppearanceView.on_enter = function (self)
 		self._character_name_status = {
 			archetype = nil,
 			custom = false,
-			gender = nil,
+			gender = nil
 		}
 		self._companion_name_status = {
-			custom = false,
+			custom = false
 		}
 
 		if self._is_barber_mindwipe then
 			self._page_open_vo = {
 				[2] = VO_EVENTS.mindwipe_backstory,
 				[5] = VO_EVENTS.mindwipe_body_type,
-				[6] = VO_EVENTS.mindwipe_personality,
+				[6] = VO_EVENTS.mindwipe_personality
 			}
 
 			local parent = self._parent
@@ -178,7 +178,9 @@ CharacterAppearanceView.on_enter = function (self)
 
 		self._original_name = player:name()
 		self._original_companion_name = player:companion_name()
-		self._fetch_all_profiles_promise = Managers.data_service.profiles:fetch_all_profiles():next(function (data)
+		self._fetch_all_profiles_promise = Managers.data_service.profiles:fetch_all_profiles()
+
+		self._fetch_all_profiles_promise:next(function (data)
 			self._character_create = CharacterCreate:new(item_definitions, data.gear, profile)
 
 			self._character_create_promise:resolve()
@@ -284,9 +286,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									0,
-									2,
-								},
-							},
+									2
+								}
+							}
 						},
 						{
 							pass_type = "texture",
@@ -299,9 +301,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									0,
-									2,
-								},
-							},
+									2
+								}
+							}
 						},
 						{
 							pass_type = "text",
@@ -312,9 +314,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									150,
-									3,
-								},
-							}),
+									3
+								}
+							})
 						},
 						{
 							pass_type = "texture",
@@ -326,33 +328,33 @@ CharacterAppearanceView._get_pages = function (self)
 								vertical_alignment = "top",
 								size = {
 									100,
-									100,
+									100
 								},
 								offset = {
 									0,
 									30,
-									2,
-								},
-							},
-						},
+									2
+								}
+							}
+						}
 					}
 					local size = {
 						485,
-						230,
+						230
 					}
 					local offset = {
 						-(size[1] - grid_size[1]) * 0.5,
 						25 - size[2],
-						0,
+						0
 					}
 					local definition = UIWidget.create_definition(passes, grid_scenegraph, nil, size)
 
 					definition.offset = offset
 
 					return definition
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 	local planet_page_side_scroll = {
 		name = "home_planet",
@@ -370,9 +372,7 @@ CharacterAppearanceView._get_pages = function (self)
 				end
 			end
 
-			local valid_archetype = archetype == "broker"
-
-			valid_archetype = valid_archetype or archetype == "cryptic"
+			local valid_archetype = archetype == "broker" or archetype == "cryptic"
 
 			if valid_archetype and previous_page.index > page.index then
 				self:_trigger_transition_fade_animation(true)
@@ -415,9 +415,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									0,
-									2,
-								},
-							},
+									2
+								}
+							}
 						},
 						{
 							pass_type = "texture",
@@ -430,9 +430,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									0,
-									2,
-								},
-							},
+									2
+								}
+							}
 						},
 						{
 							pass_type = "text",
@@ -443,9 +443,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									150,
-									3,
-								},
-							}),
+									3
+								}
+							})
 						},
 						{
 							pass_type = "texture",
@@ -457,33 +457,33 @@ CharacterAppearanceView._get_pages = function (self)
 								vertical_alignment = "top",
 								size = {
 									100,
-									100,
+									100
 								},
 								offset = {
 									0,
 									30,
-									2,
-								},
-							},
-						},
+									2
+								}
+							}
+						}
 					}
 					local size = {
 						485,
-						230,
+						230
 					}
 					local offset = {
 						-(size[1] - grid_size[1]) * 0.5,
 						25 - size[2],
-						0,
+						0
 					}
 					local definition = UIWidget.create_definition(passes, grid_scenegraph, nil, size)
 
 					definition.offset = offset
 
 					return definition
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 	local childhood_page = {
 		name = "childhood",
@@ -541,9 +541,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									0,
-									2,
-								},
-							},
+									2
+								}
+							}
 						},
 						{
 							pass_type = "texture",
@@ -556,9 +556,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									0,
-									2,
-								},
-							},
+									2
+								}
+							}
 						},
 						{
 							pass_type = "text",
@@ -569,9 +569,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									150,
-									3,
-								},
-							}),
+									3
+								}
+							})
 						},
 						{
 							pass_type = "texture",
@@ -583,33 +583,33 @@ CharacterAppearanceView._get_pages = function (self)
 								vertical_alignment = "top",
 								size = {
 									100,
-									100,
+									100
 								},
 								offset = {
 									0,
 									30,
-									2,
-								},
-							},
-						},
+									2
+								}
+							}
+						}
 					}
 					local size = {
 						485,
-						230,
+						230
 					}
 					local offset = {
 						-(size[1] - grid_size[1]) * 0.5,
 						25 - size[2],
-						0,
+						0
 					}
 					local definition = UIWidget.create_definition(passes, grid_scenegraph, nil, size)
 
 					definition.offset = offset
 
 					return definition
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 	local growing_up_page = {
 		name = "growing_up",
@@ -667,9 +667,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									0,
-									2,
-								},
-							},
+									2
+								}
+							}
 						},
 						{
 							pass_type = "texture",
@@ -682,9 +682,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									0,
-									2,
-								},
-							},
+									2
+								}
+							}
 						},
 						{
 							pass_type = "text",
@@ -695,9 +695,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									150,
-									3,
-								},
-							}),
+									3
+								}
+							})
 						},
 						{
 							pass_type = "texture",
@@ -709,33 +709,33 @@ CharacterAppearanceView._get_pages = function (self)
 								vertical_alignment = "top",
 								size = {
 									100,
-									100,
+									100
 								},
 								offset = {
 									0,
 									30,
-									2,
-								},
-							},
-						},
+									2
+								}
+							}
+						}
 					}
 					local size = {
 						485,
-						230,
+						230
 					}
 					local offset = {
 						-(size[1] - grid_size[1]) * 0.5,
 						25 - size[2],
-						0,
+						0
 					}
 					local definition = UIWidget.create_definition(passes, grid_scenegraph, nil, size)
 
 					definition.offset = offset
 
 					return definition
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 	local formative_event_page = {
 		name = "formative_event",
@@ -793,9 +793,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									0,
-									2,
-								},
-							},
+									2
+								}
+							}
 						},
 						{
 							pass_type = "texture",
@@ -808,9 +808,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									0,
-									2,
-								},
-							},
+									2
+								}
+							}
 						},
 						{
 							pass_type = "text",
@@ -821,9 +821,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									150,
-									3,
-								},
-							}),
+									3
+								}
+							})
 						},
 						{
 							pass_type = "texture",
@@ -835,33 +835,33 @@ CharacterAppearanceView._get_pages = function (self)
 								vertical_alignment = "top",
 								size = {
 									100,
-									100,
+									100
 								},
 								offset = {
 									0,
 									30,
-									2,
-								},
-							},
-						},
+									2
+								}
+							}
+						}
 					}
 					local size = {
 						485,
-						230,
+						230
 					}
 					local offset = {
 						-(size[1] - grid_size[1]) * 0.5,
 						25 - size[2],
-						0,
+						0
 					}
 					local definition = UIWidget.create_definition(passes, grid_scenegraph, nil, size)
 
 					definition.offset = offset
 
 					return definition
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 	local appearance_page = {
 		name = "appearance",
@@ -908,7 +908,7 @@ CharacterAppearanceView._get_pages = function (self)
 					local real_profile = player:profile()
 					local has_modifications = self._character_create:has_modifications(real_profile, {
 						"loadout",
-						"height",
+						"height"
 					})
 
 					is_disabled = not has_modifications
@@ -958,9 +958,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									0,
-									2,
-								},
-							},
+									2
+								}
+							}
 						},
 						{
 							pass_type = "texture",
@@ -973,9 +973,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									0,
-									2,
-								},
-							},
+									2
+								}
+							}
 						},
 						{
 							pass_type = "text",
@@ -986,9 +986,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									150,
-									3,
-								},
-							}),
+									3
+								}
+							})
 						},
 						{
 							pass_type = "texture",
@@ -1000,33 +1000,33 @@ CharacterAppearanceView._get_pages = function (self)
 								vertical_alignment = "top",
 								size = {
 									100,
-									100,
+									100
 								},
 								offset = {
 									0,
 									30,
-									2,
-								},
-							},
-						},
+									2
+								}
+							}
+						}
 					}
 					local size = {
 						485,
-						230,
+						230
 					}
 					local offset = {
 						-(size[1] - grid_size[1]) * 0.5,
 						25 - size[2],
-						0,
+						0
 					}
 					local definition = UIWidget.create_definition(passes, grid_scenegraph, nil, size)
 
 					definition.offset = offset
 
 					return definition
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 	local companion_appearance_page = {
 		name = "companion_appearance",
@@ -1067,7 +1067,7 @@ CharacterAppearanceView._get_pages = function (self)
 					local real_profile = player:profile()
 
 					has_modifications = self._character_create:has_modifications(real_profile, {
-						"loadout",
+						"loadout"
 					})
 				end
 
@@ -1102,9 +1102,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									0,
-									2,
-								},
-							},
+									2
+								}
+							}
 						},
 						{
 							pass_type = "texture",
@@ -1117,9 +1117,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									0,
-									2,
-								},
-							},
+									2
+								}
+							}
 						},
 						{
 							pass_type = "text",
@@ -1130,9 +1130,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									150,
-									3,
-								},
-							}),
+									3
+								}
+							})
 						},
 						{
 							pass_type = "texture",
@@ -1144,33 +1144,33 @@ CharacterAppearanceView._get_pages = function (self)
 								vertical_alignment = "top",
 								size = {
 									100,
-									100,
+									100
 								},
 								offset = {
 									0,
 									30,
-									2,
-								},
-							},
-						},
+									2
+								}
+							}
+						}
 					}
 					local size = {
 						485,
-						230,
+						230
 					}
 					local offset = {
 						-(size[1] - grid_size[1]) * 0.5,
 						25 - size[2],
-						0,
+						0
 					}
 					local definition = UIWidget.create_definition(passes, grid_scenegraph, nil, size)
 
 					definition.offset = offset
 
 					return definition
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 	local personality_page = {
 		name = "personality",
@@ -1237,9 +1237,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									0,
-									2,
-								},
-							},
+									2
+								}
+							}
 						},
 						{
 							pass_type = "texture",
@@ -1252,9 +1252,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									0,
-									2,
-								},
-							},
+									2
+								}
+							}
 						},
 						{
 							pass_type = "text",
@@ -1265,9 +1265,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									150,
-									3,
-								},
-							}),
+									3
+								}
+							})
 						},
 						{
 							pass_type = "texture",
@@ -1279,33 +1279,33 @@ CharacterAppearanceView._get_pages = function (self)
 								vertical_alignment = "top",
 								size = {
 									100,
-									100,
+									100
 								},
 								offset = {
 									0,
 									30,
-									2,
-								},
-							},
-						},
+									2
+								}
+							}
+						}
 					}
 					local size = {
 						485,
-						230,
+						230
 					}
 					local offset = {
 						-(size[1] - grid_size[1]) * 0.5,
 						25 - size[2],
-						0,
+						0
 					}
 					local definition = UIWidget.create_definition(passes, grid_scenegraph, nil, size)
 
 					definition.offset = offset
 
 					return definition
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 	local voice_page = {
 		name = "voice",
@@ -1386,8 +1386,8 @@ CharacterAppearanceView._get_pages = function (self)
 			self:_play_sound(UISoundEvents.character_appearence_stop_voice_preview)
 
 			if self._voice_sample_source then
-				local world = Managers.ui:world()
-				local wwise_world = Managers.world:wwise_world(world)
+				local ui_world = Managers.ui:world()
+				local wwise_world = Managers.world:wwise_world(ui_world)
 
 				WwiseWorld.destroy_manual_source(wwise_world, self._voice_sample_source)
 
@@ -1398,6 +1398,32 @@ CharacterAppearanceView._get_pages = function (self)
 
 			if archetype == "cryptic" then
 				return self:_fetch_suggested_names()
+			end
+		end,
+		update = function ()
+			if self._voice_sample_source then
+				local world = Managers.ui:world()
+				local wwise_world = Managers.world:wwise_world(world)
+				local sound_id
+
+				for i = 1, #self._page_grids[1].widgets do
+					local grid_widget = self._page_grids[1].widgets[i]
+
+					sound_id = grid_widget.content.sound_id
+
+					if sound_id and WwiseWorld.is_playing(wwise_world, sound_id) then
+						break
+					end
+				end
+
+				if sound_id and self._waveform_screen_unit then
+					local parameter_name = "cryptic_voice_meter"
+					local meter_value = WwiseWorld.get_source_parameter(wwise_world, parameter_name, self._voice_sample_source) + 48
+
+					meter_value = meter_value > 0 and meter_value / 48 or 0
+
+					Unit.set_scalar_for_materials(self._waveform_screen_unit, "volume", meter_value)
+				end
 			end
 		end,
 		grids = {
@@ -1432,13 +1458,13 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									210,
-									0,
+									0
 								},
 								size = {
 									470,
-									415,
-								},
-							},
+									415
+								}
+							}
 						},
 						{
 							pass_type = "texture",
@@ -1450,15 +1476,15 @@ CharacterAppearanceView._get_pages = function (self)
 								vertical_alignment = "top",
 								size = {
 									470,
-									410,
+									410
 								},
 								offset = {
 									0,
 									210,
-									3,
+									3
 								},
-								color = Color.black(255, true),
-							},
+								color = Color.black(255, true)
+							}
 						},
 						{
 							pass_type = "texture",
@@ -1471,13 +1497,13 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									210,
-									0,
+									0
 								},
 								size = {
 									480,
-									2,
-								},
-							},
+									2
+								}
+							}
 						},
 						{
 							pass_type = "texture",
@@ -1490,9 +1516,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									0,
-									2,
-								},
-							},
+									2
+								}
+							}
 						},
 						{
 							pass_type = "texture",
@@ -1505,9 +1531,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									0,
-									2,
-								},
-							},
+									2
+								}
+							}
 						},
 						{
 							pass_type = "text",
@@ -1518,9 +1544,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									150,
-									3,
-								},
-							}),
+									3
+								}
+							})
 						},
 						{
 							pass_type = "texture",
@@ -1532,14 +1558,14 @@ CharacterAppearanceView._get_pages = function (self)
 								vertical_alignment = "top",
 								size = {
 									100,
-									100,
+									100
 								},
 								offset = {
 									0,
 									30,
-									2,
-								},
-							},
+									2
+								}
+							}
 						},
 						{
 							pass_type = "texture",
@@ -1552,13 +1578,13 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									388,
-									0,
+									0
 								},
 								size = {
 									480,
-									2,
-								},
-							},
+									2
+								}
+							}
 						},
 						{
 							pass_type = "texture",
@@ -1568,33 +1594,33 @@ CharacterAppearanceView._get_pages = function (self)
 								vertical_alignment = "bottom",
 								size = {
 									485,
-									44,
+									44
 								},
 								offset = {
 									0,
 									415,
-									1,
-								},
-							},
-						},
+									1
+								}
+							}
+						}
 					}
 					local size = {
 						485,
-						230,
+						230
 					}
 					local offset = {
 						-(size[1] - grid_size[1]) * 0.5,
 						25 - size[2],
-						0,
+						0
 					}
 					local definition = UIWidget.create_definition(passes, grid_scenegraph, nil, size)
 
 					definition.offset = offset
 
 					return definition
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 	local crime_page = {
 		name = "crime",
@@ -1658,9 +1684,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									0,
-									2,
-								},
-							},
+									2
+								}
+							}
 						},
 						{
 							pass_type = "texture",
@@ -1673,9 +1699,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									0,
-									2,
-								},
-							},
+									2
+								}
+							}
 						},
 						{
 							pass_type = "text",
@@ -1686,9 +1712,9 @@ CharacterAppearanceView._get_pages = function (self)
 								offset = {
 									0,
 									150,
-									3,
-								},
-							}),
+									3
+								}
+							})
 						},
 						{
 							pass_type = "texture",
@@ -1700,33 +1726,33 @@ CharacterAppearanceView._get_pages = function (self)
 								vertical_alignment = "top",
 								size = {
 									100,
-									100,
+									100
 								},
 								offset = {
 									0,
 									30,
-									2,
-								},
-							},
-						},
+									2
+								}
+							}
+						}
 					}
 					local size = {
 						485,
-						230,
+						230
 					}
 					local offset = {
 						-(size[1] - grid_size[1]) * 0.5,
 						25 - size[2],
-						0,
+						0
 					}
 					local definition = UIWidget.create_definition(passes, grid_scenegraph, nil, size)
 
 					definition.offset = offset
 
 					return definition
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 	local name_page = {
 		name = "name",
@@ -1735,12 +1761,12 @@ CharacterAppearanceView._get_pages = function (self)
 		spawn_position_offset = not self._is_barber_mindwipe and archetype == "cryptic" and {
 			0,
 			0,
-			-0.3,
+			-0.3
 		},
 		camera_position_offset = not self._is_barber_mindwipe and archetype == "cryptic" and {
 			0,
 			0,
-			-0.3,
+			-0.3
 		},
 		on_enter = function (page, previous_page)
 			self._character_create:set_gear_visible(true)
@@ -1847,9 +1873,9 @@ CharacterAppearanceView._get_pages = function (self)
 			{
 				init = function (grid_index, grid_data)
 					return self:_generate_final_page_widgets(grid_index, grid_data)
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 	local name_companion_page = {
 		name = "name_companion",
@@ -1931,19 +1957,19 @@ CharacterAppearanceView._get_pages = function (self)
 			{
 				init = function (grid_index, grid_data)
 					return self:_generate_final_page_widgets(grid_index, grid_data, true)
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 	local pages
 
 	if self._is_barber_appearance then
 		pages = {
-			appearance_page,
+			appearance_page
 		}
 	elseif self._is_barber_companion_appearance then
 		pages = {
-			companion_appearance_page,
+			companion_appearance_page
 		}
 	elseif archetype == "adamant" and self._is_barber_mindwipe then
 		pages = {
@@ -1955,7 +1981,7 @@ CharacterAppearanceView._get_pages = function (self)
 			personality_page,
 			crime_page,
 			name_page,
-			name_companion_page,
+			name_companion_page
 		}
 	elseif archetype == "adamant" then
 		pages = {
@@ -1968,7 +1994,7 @@ CharacterAppearanceView._get_pages = function (self)
 			companion_appearance_page,
 			crime_page,
 			name_page,
-			name_companion_page,
+			name_companion_page
 		}
 	elseif archetype == "broker" then
 		pages = {
@@ -1977,7 +2003,7 @@ CharacterAppearanceView._get_pages = function (self)
 			planet_page_side_scroll,
 			appearance_page,
 			personality_page,
-			name_page,
+			name_page
 		}
 	elseif archetype == "cryptic" then
 		pages = {
@@ -1988,7 +2014,7 @@ CharacterAppearanceView._get_pages = function (self)
 			planet_page_side_scroll,
 			appearance_page,
 			voice_page,
-			name_page,
+			name_page
 		}
 	else
 		pages = {
@@ -1999,7 +2025,7 @@ CharacterAppearanceView._get_pages = function (self)
 			appearance_page,
 			personality_page,
 			crime_page,
-			name_page,
+			name_page
 		}
 	end
 
@@ -2024,46 +2050,46 @@ CharacterAppearanceView._create_planet_widgets = function (self)
 			value = "content/ui/textures/backgrounds/backstory/home_planet_1",
 			position = {
 				0,
-				0,
+				0
 			},
 			size = {
 				2754,
-				1600,
-			},
+				1600
+			}
 		},
 		{
 			value = "content/ui/textures/backgrounds/backstory/home_planet_2",
 			position = {
 				2754,
-				0,
+				0
 			},
 			size = {
 				2754,
-				1600,
-			},
+				1600
+			}
 		},
 		{
 			value = "content/ui/textures/backgrounds/backstory/home_planet_3",
 			position = {
 				0,
-				1600,
+				1600
 			},
 			size = {
 				2754,
-				1600,
-			},
+				1600
+			}
 		},
 		{
 			value = "content/ui/textures/backgrounds/backstory/home_planet_4",
 			position = {
 				2754,
-				1600,
+				1600
 			},
 			size = {
 				2754,
-				1600,
-			},
-		},
+				1600
+			}
+		}
 	}
 	local background_planet_passes = {}
 
@@ -2080,18 +2106,18 @@ CharacterAppearanceView._create_planet_widgets = function (self)
 				offset = {
 					texture.position[1],
 					texture.position[2],
-					0,
+					0
 				},
 				material_values = {
-					texture_map = texture.value,
-				},
-			},
+					texture_map = texture.value
+				}
+			}
 		}
 	end
 
 	local background_planet_definitions = UIWidget.create_definition(background_planet_passes, "screen", nil, {
 		5508,
-		3200,
+		3200
 	})
 	local background_planet_widget = self:_create_widget("background_planet", background_planet_definitions)
 	local planet_passes = {}
@@ -2112,17 +2138,17 @@ CharacterAppearanceView._create_planet_widgets = function (self)
 					offset = {
 						planet_position[1],
 						planet_position[2],
-						3,
+						3
 					},
 					size = planet_size,
 					size_addition = {
 						-planet_size[1],
-						-planet_size[2],
+						-planet_size[2]
 					},
 					material_values = {
-						texture_map = planet_image.path,
-					},
-				},
+						texture_map = planet_image.path
+					}
+				}
 			}
 
 			planet_passes[#planet_passes + 1] = planet_pass
@@ -2133,11 +2159,11 @@ CharacterAppearanceView._create_planet_widgets = function (self)
 	local planet_widget = self:_create_widget("home_planets", planets_definition)
 	local widgets = {
 		background_planet_widget,
-		planet_widget,
+		planet_widget
 	}
 	local widgets_by_name = {
 		background = background_planet_widget,
-		planets = planet_widget,
+		planets = planet_widget
 	}
 
 	return widgets, widgets_by_name
@@ -2149,21 +2175,21 @@ CharacterAppearanceView._create_childhood_widgets = function (self)
 		{
 			size = {
 				1920,
-				1080,
+				1080
 			},
 			position = {
 				0,
-				0,
-			},
-		},
+				0
+			}
+		}
 	}
 	local background_passes = {}
 
 	background_passes[#background_passes + 1] = {
 		pass_type = "rect",
 		style = {
-			color = Color.black(255, true),
-		},
+			color = Color.black(255, true)
+		}
 	}
 
 	for ii = 1, #textures do
@@ -2181,19 +2207,19 @@ CharacterAppearanceView._create_childhood_widgets = function (self)
 				offset = {
 					texture.position[1],
 					texture.position[2],
-					0,
-				},
-			},
+					0
+				}
+			}
 		}
 	end
 
 	local background_definitions = UIWidget.create_definition(background_passes, "screen")
 	local widget = self:_create_widget("background_page", background_definitions)
 	local widgets = {
-		widget,
+		widget
 	}
 	local widgets_by_name = {
-		background = widget,
+		background = widget
 	}
 
 	return widgets, widgets_by_name
@@ -2205,21 +2231,21 @@ CharacterAppearanceView._create_growing_up_widgets = function (self)
 		{
 			size = {
 				1920,
-				1080,
+				1080
 			},
 			position = {
 				0,
-				0,
-			},
-		},
+				0
+			}
+		}
 	}
 	local background_passes = {}
 
 	background_passes[#background_passes + 1] = {
 		pass_type = "rect",
 		style = {
-			color = Color.black(255, true),
-		},
+			color = Color.black(255, true)
+		}
 	}
 
 	for ii = 1, #textures do
@@ -2237,16 +2263,16 @@ CharacterAppearanceView._create_growing_up_widgets = function (self)
 				offset = {
 					texture.position[1],
 					texture.position[2],
-					0,
-				},
-			},
+					0
+				}
+			}
 		}
 	end
 
 	local background_definitions = UIWidget.create_definition(background_passes, "screen")
 	local widget = self:_create_widget("background_page", background_definitions)
 	local widgets = {
-		widget,
+		widget
 	}
 
 	return widgets
@@ -2258,21 +2284,21 @@ CharacterAppearanceView._create_crime_widgets = function (self)
 		{
 			size = {
 				1920,
-				1080,
+				1080
 			},
 			position = {
 				0,
-				0,
-			},
-		},
+				0
+			}
+		}
 	}
 	local background_passes = {}
 
 	background_passes[#background_passes + 1] = {
 		pass_type = "rect",
 		style = {
-			color = Color.black(255, true),
-		},
+			color = Color.black(255, true)
+		}
 	}
 
 	for ii = 1, #textures do
@@ -2290,16 +2316,16 @@ CharacterAppearanceView._create_crime_widgets = function (self)
 				offset = {
 					texture.position[1],
 					texture.position[2],
-					0,
-				},
-			},
+					0
+				}
+			}
 		}
 	end
 
 	local background_definitions = UIWidget.create_definition(background_passes, "screen")
 	local widget = self:_create_widget("background_page", background_definitions)
 	local widgets = {
-		widget,
+		widget
 	}
 
 	return widgets
@@ -2311,21 +2337,21 @@ CharacterAppearanceView._create_formative_event_widgets = function (self)
 		{
 			size = {
 				1920,
-				1080,
+				1080
 			},
 			position = {
 				0,
-				0,
-			},
-		},
+				0
+			}
+		}
 	}
 	local background_passes = {}
 
 	background_passes[#background_passes + 1] = {
 		pass_type = "rect",
 		style = {
-			color = Color.black(255, true),
-		},
+			color = Color.black(255, true)
+		}
 	}
 
 	for ii = 1, #textures do
@@ -2343,16 +2369,16 @@ CharacterAppearanceView._create_formative_event_widgets = function (self)
 				offset = {
 					texture.position[1],
 					texture.position[2],
-					0,
-				},
-			},
+					0
+				}
+			}
 		}
 	end
 
 	local background_definitions = UIWidget.create_definition(background_passes, "screen")
 	local widget = self:_create_widget("background_page", background_definitions)
 	local widgets = {
-		widget,
+		widget
 	}
 
 	return widgets
@@ -2370,14 +2396,14 @@ CharacterAppearanceView._create_appearance_widgets = function (self)
 				vertical_alignment = "top",
 				size = {
 					nil,
-					36,
+					36
 				},
 				offset = {
 					0,
 					-18,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -2391,14 +2417,14 @@ CharacterAppearanceView._create_appearance_widgets = function (self)
 				color = Color.terminal_grid_background(nil, true),
 				size_addition = {
 					20,
-					30,
+					30
 				},
 				offset = {
 					0,
 					-15,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -2408,25 +2434,25 @@ CharacterAppearanceView._create_appearance_widgets = function (self)
 				vertical_alignment = "bottom",
 				size = {
 					nil,
-					36,
+					36
 				},
 				offset = {
 					0,
 					18,
-					2,
-				},
-			},
-		},
+					2
+				}
+			}
+		}
 	}, "grid_2_pivot", nil, {
 		0,
-		0,
+		0
 	})
 	local widget = self:_create_widget("background_appearance", background_definiton)
 	local widgets = {
-		widget,
+		widget
 	}
 	local widgets_by_name = {
-		background = widget,
+		background = widget
 	}
 
 	return widgets, widgets_by_name
@@ -2462,11 +2488,11 @@ CharacterAppearanceView._get_childhood_options = function (self)
 				local grid_data = {
 					init = function ()
 						return self:_generate_backstory_grid_widgets(grid_index, option)
-					end,
+					end
 				}
 
 				self:_populate_page_grid(grid_index, grid_data)
-			end,
+			end
 		}
 	end
 
@@ -2489,11 +2515,11 @@ CharacterAppearanceView._get_growing_up_options = function (self)
 				local grid_data = {
 					init = function ()
 						return self:_generate_backstory_grid_widgets(grid_index, option)
-					end,
+					end
 				}
 
 				self:_populate_page_grid(grid_index, grid_data)
-			end,
+			end
 		}
 	end
 
@@ -2516,11 +2542,11 @@ CharacterAppearanceView._get_formative_event_options = function (self)
 				local grid_data = {
 					init = function ()
 						return self:_generate_backstory_grid_widgets(grid_index, option)
-					end,
+					end
 				}
 
 				self:_populate_page_grid(grid_index, grid_data)
-			end,
+			end
 		}
 	end
 
@@ -2544,7 +2570,7 @@ CharacterAppearanceView._create_offscreen_renderer = function (self)
 		world = world,
 		viewport = viewport,
 		viewport_name = viewport_name,
-		renderer_name = renderer_name,
+		renderer_name = renderer_name
 	}
 end
 
@@ -2569,11 +2595,13 @@ CharacterAppearanceView._setup_profile_background = function (self)
 	local profile = self._character_create:profile()
 	local selected_archetype = profile.archetype
 	local selected_archetype_name = selected_archetype.name
+	local corner_frames = UISettings.inventory_frames_by_archetype[selected_archetype_name]
+	local corners_widget_content = self._widgets_by_name.corners.content
 
-	self._widgets_by_name.corners.content.left_upper = UISettings.inventory_frames_by_archetype[selected_archetype_name].right_upper
-	self._widgets_by_name.corners.content.right_upper = UISettings.inventory_frames_by_archetype[selected_archetype_name].right_upper
-	self._widgets_by_name.corners.content.left_lower = UISettings.inventory_frames_by_archetype[selected_archetype_name].left_lower
-	self._widgets_by_name.corners.content.right_lower = UISettings.inventory_frames_by_archetype[selected_archetype_name].right_lower
+	corners_widget_content.left_lower = corner_frames.left_lower
+	corners_widget_content.left_upper = corner_frames.left_upper
+	corners_widget_content.right_lower = corner_frames.right_lower
+	corners_widget_content.right_upper = corner_frames.right_upper
 end
 
 CharacterAppearanceView.event_register_character_spawn_point = function (self, spawn_point_unit)
@@ -2637,7 +2665,7 @@ CharacterAppearanceView._spawn_profile = function (self, spawn_point_unit, optio
 			position = spawn_position,
 			rotation = spawn_rotation,
 			state_machine = companion_state_machine,
-			animation_event = companion_animation_event,
+			animation_event = companion_animation_event
 		}
 		local height = self:_is_in_barber_chair() and 1 or self._character_create:height()
 		local scale = Vector3.one() * height
@@ -2711,7 +2739,7 @@ CharacterAppearanceView._show_final_popup = function (self)
 			title_text = "loc_popup_header_barber_finalise_mindwipe",
 			description_text_params = {
 				cost = mindwipe_cost,
-				balance = balance_amount,
+				balance = balance_amount
 			},
 			options = {
 				{
@@ -2733,7 +2761,7 @@ CharacterAppearanceView._show_final_popup = function (self)
 
 							self._waiting_for_transform = true
 						end
-					end,
+					end
 				},
 				{
 					close_on_pressed = true,
@@ -2742,9 +2770,9 @@ CharacterAppearanceView._show_final_popup = function (self)
 					text = "loc_popup_button_cancel",
 					callback = function ()
 						self._confirm_popup_id = nil
-					end,
-				},
-			},
+					end
+				}
+			}
 		}
 	elseif self._is_barber_appearance or self._is_barber_companion_appearance then
 		local player = Managers.player:local_player(1)
@@ -2780,11 +2808,11 @@ CharacterAppearanceView._show_final_popup = function (self)
 								local character_id = real_profile.character_id
 
 								if self._character_create:has_modifications(real_profile, {
-									"height",
+									"height"
 								}) then
 									Managers.data_service.profiles:set_character_height(character_id, profile_character_height)
 
-									real_profile.personal.character_height = profile_character_height
+									real_profile.character_height = profile_character_height
 
 									local breed_name = archetype.breed
 									local breed = Breeds[breed_name]
@@ -2807,7 +2835,7 @@ CharacterAppearanceView._show_final_popup = function (self)
 
 							self._confirm_popup_id = nil
 						end
-					end,
+					end
 				},
 				{
 					close_on_pressed = true,
@@ -2816,9 +2844,9 @@ CharacterAppearanceView._show_final_popup = function (self)
 					text = "loc_popup_button_cancel",
 					callback = function ()
 						self._confirm_popup_id = nil
-					end,
-				},
-			},
+					end
+				}
+			}
 		}
 	else
 		context = {
@@ -2838,9 +2866,9 @@ CharacterAppearanceView._show_final_popup = function (self)
 
 							Managers.event:trigger("event_create_new_character_continue", skip_onboarding)
 						end
-					end,
-				},
-			},
+					end
+				}
+			}
 		}
 
 		local profile = self._character_create:profile()
@@ -2861,7 +2889,7 @@ CharacterAppearanceView._show_final_popup = function (self)
 
 						Managers.event:trigger("event_create_new_character_continue", skip_onboarding)
 					end
-				end,
+				end
 			}
 		end
 
@@ -2874,7 +2902,7 @@ CharacterAppearanceView._show_final_popup = function (self)
 				if not self.__deleted then
 					self._confirm_popup_id = nil
 				end
-			end,
+			end
 		}
 	end
 
@@ -2886,7 +2914,7 @@ end
 CharacterAppearanceView._open_page = function (self, index)
 	self._navigation = {
 		grid = nil,
-		index = nil,
+		index = nil
 	}
 
 	local current_page = self._pages[self._active_page_number]
@@ -2963,7 +2991,7 @@ CharacterAppearanceView._move_background_to_position = function (self, planet, s
 			start_background_position = {},
 			end_background_position = {},
 			start_planet_position = {},
-			end_planet_position = {},
+			end_planet_position = {}
 		}
 		self._home_planet_animation_params = animation_params
 	end
@@ -3030,7 +3058,7 @@ CharacterAppearanceView._move_background_to_position = function (self, planet, s
 
 		self._planet_background_animation_id = self:_start_animation("on_planet_select", {
 			home_planets = planets_widget,
-			background_planet = background_widget,
+			background_planet = background_widget
 		}, animation_params)
 	end
 end
@@ -3061,24 +3089,24 @@ CharacterAppearanceView._create_page_indicators = function (self)
 				vertical_alignment = "center",
 				size = {
 					78,
-					18,
+					18
 				},
 				offset = {
 					-78,
 					0,
-					indicator_z_index,
+					indicator_z_index
 				},
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
-				},
-			},
+						1
+					}
+				}
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -3088,15 +3116,15 @@ CharacterAppearanceView._create_page_indicators = function (self)
 				vertical_alignment = "center",
 				size = {
 					78,
-					18,
+					18
 				},
 				offset = {
 					78,
 					0,
-					indicator_z_index,
-				},
-			},
-		},
+					indicator_z_index
+				}
+			}
+		}
 	}, "page_indicator")
 	local page_indicator_frame_widget = self:_create_widget("page_indicator_frame", page_indicator_frame_definition)
 
@@ -3107,7 +3135,7 @@ CharacterAppearanceView._create_page_indicators = function (self)
 	local total_width = spacing
 	local page_indicator_definition = UIWidget.create_definition(ButtonPassTemplates.page_indicator_terminal, "page_indicator", nil, {
 		20,
-		20,
+		20
 	})
 
 	for ii = 1, num_pages do
@@ -3355,9 +3383,9 @@ CharacterAppearanceView.update = function (self, dt, t, input_service)
 							close_on_pressed = true,
 							stop_exit_sound = true,
 							text = "loc_barber_vendor_confirm_button",
-							on_pressed_sound = UISoundEvents.default_click,
-						},
-					},
+							on_pressed_sound = UISoundEvents.default_click
+						}
+					}
 				}
 
 				Managers.event:trigger("event_show_ui_popup", context)
@@ -3422,6 +3450,16 @@ CharacterAppearanceView._update_continue_button = function (self, check_id, disa
 	if previous_active_error_id ~= active_error_id then
 		widget.content.active_error_id = active_error_id
 		self._widgets_by_name.error_continue.content.text = active_error_id and widget.content.disabled_by_id and widget.content.disabled_by_id[active_error_id] or ""
+
+		local scenegraph_width = self:_scenegraph_size("error_input")
+		local error_width, error_height = Text.text_size(self._ui_renderer, self._widgets_by_name.error_continue.content.text, self._widgets_by_name.error_continue.style.text, {
+			scenegraph_width,
+			0
+		})
+		local margin = 20
+
+		self:_set_scenegraph_size("error_input", nil, error_height + margin)
+		self:_set_scenegraph_size("error_input_content", math.min(error_width + margin, scenegraph_width), error_height + margin)
 	end
 
 	local is_continue_disabled = widget.content.disabled_by_id and not table.is_empty(widget.content.disabled_by_id)
@@ -3642,11 +3680,12 @@ CharacterAppearanceView._get_planet_options = function (self)
 
 				if frames_by_planet then
 					local frames = frames_by_planet[id]
+					local corners_widget_content = self._widgets_by_name.corners.content
 
-					self._widgets_by_name.corners.content.left_upper = frames.right_upper
-					self._widgets_by_name.corners.content.right_upper = frames.right_upper
-					self._widgets_by_name.corners.content.left_lower = frames.left_lower
-					self._widgets_by_name.corners.content.right_lower = frames.right_lower
+					corners_widget_content.left_lower = frames.left_lower
+					corners_widget_content.left_upper = frames.left_upper
+					corners_widget_content.right_lower = frames.right_lower
+					corners_widget_content.right_upper = frames.right_upper
 				end
 
 				if option.rotation then
@@ -3663,11 +3702,11 @@ CharacterAppearanceView._get_planet_options = function (self)
 				local grid_data = {
 					init = function ()
 						return self:_generate_backstory_grid_widgets(grid_index, option)
-					end,
+					end
 				}
 
 				self:_populate_page_grid(grid_index, grid_data)
-			end,
+			end
 		}
 	end
 
@@ -3688,7 +3727,7 @@ CharacterAppearanceView._generate_appearance_grid_widgets = function (self, grid
 	local scrollbar_added_width = 15
 	local grid_spacing = {
 		10,
-		10,
+		10
 	}
 	local grid_width = template.size[1] * grid_columns + grid_spacing[1] * (grid_columns - 1)
 	local grids_margin = grid_index > 2 and 0 or 20
@@ -3714,7 +3753,7 @@ CharacterAppearanceView._generate_appearance_grid_widgets = function (self, grid
 
 		visible = visible and parent_available
 
-		if mute_unique_icon and reason and RESTRICTION_DATAS[reason].unique_reason then
+		if mute_unique_icon and reason and RESTRICTION_DATAS[reason] and RESTRICTION_DATAS[reason].unique_reason then
 			reason = nil
 			reason_display_name = nil
 		end
@@ -3732,7 +3771,7 @@ CharacterAppearanceView._generate_appearance_grid_widgets = function (self, grid
 			widget.offset = {
 				0,
 				0,
-				4,
+				4
 			}
 			widget.content.option = option
 
@@ -3741,7 +3780,7 @@ CharacterAppearanceView._generate_appearance_grid_widgets = function (self, grid
 			if last_option_available ~= nil and last_option_available and not available then
 				local divider_widget_definition = UIWidget.create_definition(CharacterAppearanceViewContentBlueprints.divider.pass_template, grid_content_scenegraph, nil, {
 					grid_width,
-					2,
+					2
 				})
 				local divider_widget = self:_create_widget(grid_start_name .. "_availability_divider", divider_widget_definition)
 
@@ -3757,11 +3796,11 @@ CharacterAppearanceView._generate_appearance_grid_widgets = function (self, grid
 
 	local prev_grid_size = {
 		0,
-		0,
+		0
 	}
 	local prev_grid_position = {
 		0,
-		0,
+		0
 	}
 	local prev_grid_margin = grids_margin
 
@@ -3779,21 +3818,21 @@ CharacterAppearanceView._generate_appearance_grid_widgets = function (self, grid
 	local start_y_position = prev_grid_position[2] + position_margin
 	local grid_position = {
 		start_x_position,
-		start_y_position,
+		start_y_position
 	}
 	local grid_size = {
 		grid_width + scrollbar_added_width,
-		math.max(400, prev_grid_size[2]) - grid_height_reduction,
+		math.max(400, prev_grid_size[2]) - grid_height_reduction
 	}
 	local support_widget_definitions = {
 		scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, grid_scrollbar_scenegraph, {
-			using_custom_gamepad_navigation = true,
+			using_custom_gamepad_navigation = true
 		}),
 		interaction = UIWidget.create_definition({
 			{
 				content_id = "hotspot",
-				pass_type = "hotspot",
-			},
+				pass_type = "hotspot"
+			}
 		}, grid_area_scenegraph),
 		mask = UIWidget.create_definition({
 			{
@@ -3806,20 +3845,20 @@ CharacterAppearanceView._generate_appearance_grid_widgets = function (self, grid
 						255,
 						255,
 						255,
-						255,
+						255
 					},
 					offset = {
 						0,
 						0,
-						5,
+						5
 					},
 					size_addition = {
 						10,
-						10,
-					},
-				},
-			},
-		}, grid_area_scenegraph),
+						10
+					}
+				}
+			}
+		}, grid_area_scenegraph)
 	}
 	local support_widgets = {}
 
@@ -3836,14 +3875,14 @@ CharacterAppearanceView._generate_appearance_grid_widgets = function (self, grid
 			widget.offset = {
 				widget.offset[1] - 10,
 				widget.offset[2] - 10,
-				widget.offset[3],
+				widget.offset[3]
 			}
 		end
 
 		widget.offset = {
 			widget.offset[1],
 			widget.offset[2],
-			widget.offset[3] + 4,
+			widget.offset[3] + 4
 		}
 		support_widgets[name] = widget
 	end
@@ -3861,8 +3900,8 @@ CharacterAppearanceView._generate_appearance_grid_widgets = function (self, grid
 			grid_scrollbar_scenegraph = grid_scrollbar_scenegraph,
 			grid_position = grid_position,
 			grid_spacing = grid_spacing,
-			grids_margin = grids_margin,
-		},
+			grids_margin = grids_margin
+		}
 	}
 
 	return grid_widgets.widgets, grid_widgets.alignment_list, grid_widgets.support_widgets, grid_widgets.grid_data
@@ -3874,7 +3913,7 @@ CharacterAppearanceView._update_appearance_background = function (self)
 	if widget then
 		local size = {
 			0,
-			0,
+			0
 		}
 		local prev_x_position
 		local x_margin = 0
@@ -3885,11 +3924,11 @@ CharacterAppearanceView._update_appearance_background = function (self)
 			if not table.is_empty(page_grid) then
 				local grid_size = page_grid.size or {
 					0,
-					0,
+					0
 				}
 				local grid_position = page_grid.position or {
 					0,
-					0,
+					0
 				}
 
 				size[1] = size[1] + grid_size[1]
@@ -3915,7 +3954,7 @@ CharacterAppearanceView._update_appearance_background = function (self)
 		widget.offset = {
 			-20,
 			-20,
-			0,
+			0
 		}
 	end
 end
@@ -3933,32 +3972,32 @@ CharacterAppearanceView._generate_backstory_grid_widgets = function (self, grid_
 	local content_width = 440
 	local background_margin = {
 		40,
-		40,
+		40
 	}
 	local background_size = {
 		content_width + background_margin[1] * 2,
-		0,
+		0
 	}
 	local title_height = Text.text_height(self._ui_renderer, option_title, title_font_style, {
 		content_width,
-		0,
+		0
 	})
 	local description_height = Text.text_height(self._ui_renderer, option_description, description_font_style, {
 		content_width,
-		0,
+		0
 	})
 	local backstory_info_templates = {}
 
 	backstory_info_templates[#backstory_info_templates + 1] = {
 		size = {
 			background_size[1],
-			20,
-		},
+			20
+		}
 	}
 	backstory_info_templates[#backstory_info_templates + 1] = {
 		size = {
 			background_size[1],
-			title_height,
+			title_height
 		},
 		pass_template = {
 			{
@@ -3969,27 +4008,27 @@ CharacterAppearanceView._generate_backstory_grid_widgets = function (self, grid_
 				style = table.merge(table.clone(title_font_style), {
 					size = {
 						content_width,
-						title_height,
+						title_height
 					},
 					offset = {
 						background_margin[1],
 						0,
-						1,
-					},
-				}),
-			},
-		},
+						1
+					}
+				})
+			}
+		}
 	}
 	backstory_info_templates[#backstory_info_templates + 1] = {
 		size = {
 			background_size[1],
-			20,
-		},
+			20
+		}
 	}
 	backstory_info_templates[#backstory_info_templates + 1] = {
 		size = {
 			background_size[1],
-			description_height,
+			description_height
 		},
 		pass_template = {
 			{
@@ -4000,16 +4039,16 @@ CharacterAppearanceView._generate_backstory_grid_widgets = function (self, grid_
 				style = table.merge(table.clone(description_font_style), {
 					size = {
 						content_width,
-						description_height,
+						description_height
 					},
 					offset = {
 						background_margin[1],
 						0,
-						1,
-					},
-				}),
-			},
-		},
+						1
+					}
+				})
+			}
+		}
 	}
 
 	if grid_data.unlocks then
@@ -4017,19 +4056,19 @@ CharacterAppearanceView._generate_backstory_grid_widgets = function (self, grid_
 		local option_effect_title = Localize("loc_character_title_unlocks")
 		local effect_title_height = Text.text_height(self._ui_renderer, option_effect_title, effect_title_font_style, {
 			content_width,
-			0,
+			0
 		})
 
 		backstory_info_templates[#backstory_info_templates + 1] = {
 			size = {
 				background_size[1],
-				40,
-			},
+				40
+			}
 		}
 		backstory_info_templates[#backstory_info_templates + 1] = {
 			size = {
 				background_size[1],
-				effect_title_height + 15,
+				effect_title_height + 15
 			},
 			pass_template = {
 				{
@@ -4040,14 +4079,14 @@ CharacterAppearanceView._generate_backstory_grid_widgets = function (self, grid_
 					style = table.merge(table.clone(effect_title_font_style), {
 						size = {
 							content_width,
-							effect_title_height,
+							effect_title_height
 						},
 						offset = {
 							background_margin[1],
 							0,
-							1,
-						},
-					}),
+							1
+						}
+					})
 				},
 				{
 					pass_type = "rect",
@@ -4057,22 +4096,22 @@ CharacterAppearanceView._generate_backstory_grid_widgets = function (self, grid_
 						color = Color.terminal_corner(255, true),
 						size = {
 							content_width,
-							2,
+							2
 						},
 						offset = {
 							background_margin[1],
 							0,
-							1,
-						},
-					},
-				},
-			},
+							1
+						}
+					}
+				}
+			}
 		}
 		backstory_info_templates[#backstory_info_templates + 1] = {
 			size = {
 				background_size[1],
-				20,
-			},
+				20
+			}
 		}
 
 		for ii = 1, #grid_data.unlocks do
@@ -4080,13 +4119,13 @@ CharacterAppearanceView._generate_backstory_grid_widgets = function (self, grid_
 			local text_style = CharacterAppearanceViewFontStyle.reward_description_no_icon_style
 			local text_height = Text.text_height(self._ui_renderer, Localize(unlock.text), text_style, {
 				content_width,
-				2000,
+				2000
 			})
 
 			backstory_info_templates[#backstory_info_templates + 1] = {
 				size = {
 					background_size[1],
-					text_height,
+					text_height
 				},
 				pass_template = {
 					{
@@ -4097,16 +4136,16 @@ CharacterAppearanceView._generate_backstory_grid_widgets = function (self, grid_
 						style = table.merge(table.clone(text_style), {
 							size = {
 								content_width,
-								text_height,
+								text_height
 							},
 							offset = {
 								background_margin[1],
 								0,
-								1,
-							},
-						}),
-					},
-				},
+								1
+							}
+						})
+					}
+				}
 			}
 		end
 	end
@@ -4114,8 +4153,8 @@ CharacterAppearanceView._generate_backstory_grid_widgets = function (self, grid_
 	backstory_info_templates[#backstory_info_templates + 1] = {
 		size = {
 			background_margin[1],
-			30,
-		},
+			30
+		}
 	}
 
 	local total_height = 0
@@ -4139,7 +4178,7 @@ CharacterAppearanceView._generate_backstory_grid_widgets = function (self, grid_
 		else
 			widgets[#widgets + 1] = nil
 			alignment_list[#alignment_list + 1] = {
-				size = size,
+				size = size
 			}
 		end
 	end
@@ -4158,14 +4197,14 @@ CharacterAppearanceView._generate_backstory_grid_widgets = function (self, grid_
 					vertical_alignment = "top",
 					size = {
 						nil,
-						36,
+						36
 					},
 					offset = {
 						0,
 						-18,
-						1,
-					},
-				},
+						1
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -4179,14 +4218,14 @@ CharacterAppearanceView._generate_backstory_grid_widgets = function (self, grid_
 					color = Color.terminal_grid_background(nil, true),
 					size_addition = {
 						20,
-						30,
+						30
 					},
 					offset = {
 						0,
 						-15,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -4198,15 +4237,15 @@ CharacterAppearanceView._generate_backstory_grid_widgets = function (self, grid_
 					vertical_alignment = "bottom",
 					size = {
 						nil,
-						36,
+						36
 					},
 					offset = {
 						0,
 						18,
-						1,
-					},
-				},
-			},
+						1
+					}
+				}
+			}
 		}, grid_scenegraph, nil, background_size),
 		mask = UIWidget.create_definition({
 			{
@@ -4219,20 +4258,20 @@ CharacterAppearanceView._generate_backstory_grid_widgets = function (self, grid_
 						255,
 						255,
 						255,
-						255,
+						255
 					},
 					offset = {
 						0,
 						0,
-						5,
+						5
 					},
 					size_addition = {
 						10,
-						10,
-					},
-				},
-			},
-		}, grid_area_scenegraph, nil, background_size),
+						10
+					}
+				}
+			}
+		}, grid_area_scenegraph, nil, background_size)
 	}
 	local support_widgets = {}
 
@@ -4242,29 +4281,29 @@ CharacterAppearanceView._generate_backstory_grid_widgets = function (self, grid_
 		widget.offset = {
 			widget.offset[1],
 			widget.offset[2],
-			widget.offset[3] + 4,
+			widget.offset[3] + 4
 		}
 		support_widgets[name] = widget
 	end
 
 	local grid_1_size = self._page_grids[1] and self._page_grids[1].size or {
 		0,
-		0,
+		0
 	}
 	local grid_1_position = self._page_grids[1] and self._page_grids[1].position or {
 		0,
-		0,
+		0
 	}
 	local start_x_position = grid_1_position[1] + grid_1_size[1] + 40
 	local start_y_position = grid_1_position[2] + grid_1_size[2] - background_size[2]
 	local grid_position = {
 		start_x_position,
-		start_y_position,
+		start_y_position
 	}
 	local return_grid_data = {
 		size = background_size,
 		grid_scenegraph = grid_scenegraph,
-		grid_position = grid_position,
+		grid_position = grid_position
 	}
 
 	return widgets, alignment_list, support_widgets, return_grid_data
@@ -4287,7 +4326,7 @@ CharacterAppearanceView._generate_main_grid_widgets = function (self, grid_index
 	local alignment_list = {}
 	local grid_size = {
 		480,
-		grid_data.height or 600,
+		grid_data.height or 600
 	}
 
 	for ii = 1, num_widgets do
@@ -4315,7 +4354,7 @@ CharacterAppearanceView._generate_main_grid_widgets = function (self, grid_index
 		widget.offset = {
 			0,
 			0,
-			4,
+			4
 		}
 		widget.content.option = option
 
@@ -4330,9 +4369,9 @@ CharacterAppearanceView._generate_main_grid_widgets = function (self, grid_index
 			horizontal_alignment = "center",
 			size = {
 				grid_size[1],
-				option_size[2],
+				option_size[2]
 			},
-			name = name,
+			name = name
 		}
 
 		local additional_widgets = template.additional_widgets
@@ -4354,7 +4393,7 @@ CharacterAppearanceView._generate_main_grid_widgets = function (self, grid_index
 					local iterative_offset = {
 						0,
 						0,
-						3,
+						3
 					}
 					local multiply_template = table.clone(CharacterAppearanceViewContentBlueprints[multiplied_widget_id])
 					local multiply_pass_template_function = multiply_template.pass_template_function
@@ -4396,10 +4435,10 @@ CharacterAppearanceView._generate_main_grid_widgets = function (self, grid_index
 						alignment_list[#alignment_list + 1] = {
 							size = {
 								grid_size[1],
-								iterative_size[2],
+								iterative_size[2]
 							},
 							horizontal_alignment = additional_template.horizontal_alignment,
-							name = iterative_name,
+							name = iterative_name
 						}
 						iterative_offset = additional_template.pass_multiplier_iterative_offset
 					end
@@ -4412,13 +4451,13 @@ CharacterAppearanceView._generate_main_grid_widgets = function (self, grid_index
 	local selected_archetype = profile.archetype
 	local widget_definitions = {
 		scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, grid_scrollbar_scenegraph, {
-			using_custom_gamepad_navigation = true,
+			using_custom_gamepad_navigation = true
 		}),
 		interaction = UIWidget.create_definition({
 			{
 				content_id = "hotspot",
-				pass_type = "hotspot",
-			},
+				pass_type = "hotspot"
+			}
 		}, grid_area_scenegraph),
 		mask = UIWidget.create_definition({
 			{
@@ -4431,19 +4470,19 @@ CharacterAppearanceView._generate_main_grid_widgets = function (self, grid_index
 						255,
 						255,
 						255,
-						255,
+						255
 					},
 					offset = {
 						0,
 						0,
-						5,
+						5
 					},
 					size_addition = {
 						10,
-						10,
-					},
-				},
-			},
+						10
+					}
+				}
+			}
 		}, grid_area_scenegraph),
 		grid_background = UIWidget.create_definition({
 			{
@@ -4458,14 +4497,14 @@ CharacterAppearanceView._generate_main_grid_widgets = function (self, grid_index
 					color = Color.terminal_grid_background(nil, true),
 					size_addition = {
 						20,
-						30,
+						30
 					},
 					offset = {
 						0,
 						-15,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -4478,14 +4517,14 @@ CharacterAppearanceView._generate_main_grid_widgets = function (self, grid_index
 					color = Color.black(80, true),
 					size = {
 						nil,
-						480,
+						480
 					},
 					offset = {
 						0,
 						0,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -4495,16 +4534,16 @@ CharacterAppearanceView._generate_main_grid_widgets = function (self, grid_index
 					vertical_alignment = "bottom",
 					size = {
 						nil,
-						36,
+						36
 					},
 					offset = {
 						0,
 						18,
-						2,
-					},
-				},
-			},
-		}, grid_scenegraph, nil, grid_size),
+						2
+					}
+				}
+			}
+		}, grid_scenegraph, nil, grid_size)
 	}
 
 	if grid_data.description then
@@ -4514,7 +4553,7 @@ CharacterAppearanceView._generate_main_grid_widgets = function (self, grid_index
 				style_id = "text",
 				value = "",
 				value_id = "text",
-				style = CharacterAppearanceViewFontStyle.list_description_style,
+				style = CharacterAppearanceViewFontStyle.list_description_style
 			},
 			{
 				pass_type = "texture",
@@ -4524,18 +4563,18 @@ CharacterAppearanceView._generate_main_grid_widgets = function (self, grid_index
 					vertical_alignment = "bottom",
 					size = {
 						nil,
-						44,
+						44
 					},
 					offset = {
 						0,
 						22,
-						1,
-					},
-				},
-			},
+						1
+					}
+				}
+			}
 		}, grid_scenegraph, nil, {
 			grid_size[1],
-			40,
+			40
 		})
 	end
 
@@ -4553,18 +4592,18 @@ CharacterAppearanceView._generate_main_grid_widgets = function (self, grid_index
 					vertical_alignment = "top",
 					size = {
 						nil,
-						36,
+						36
 					},
 					offset = {
 						0,
 						-18,
-						2,
-					},
-				},
-			},
+						2
+					}
+				}
+			}
 		}, grid_scenegraph, nil, {
 			grid_size[1],
-			36,
+			36
 		})
 	end
 
@@ -4587,7 +4626,7 @@ CharacterAppearanceView._generate_main_grid_widgets = function (self, grid_index
 		widget.offset = {
 			widget.offset[1],
 			widget.offset[2],
-			widget.offset[3] + 4,
+			widget.offset[3] + 4
 		}
 		support_widgets[name] = widget
 	end
@@ -4601,7 +4640,7 @@ CharacterAppearanceView._generate_main_grid_widgets = function (self, grid_index
 		local x_offset = 20
 		local text_size = {
 			grid_description_widget.content.size[1] - x_offset * 2,
-			grid_description_widget.content.size[2],
+			grid_description_widget.content.size[2]
 		}
 		local _, text_height = Text.text_size(self._ui_renderer, text, font_style, text_size)
 		local text_margin = 15
@@ -4610,7 +4649,7 @@ CharacterAppearanceView._generate_main_grid_widgets = function (self, grid_index
 		grid_description_widget.content.size[2] = text_height
 		grid_description_widget.style.text.size = {
 			text_size[1],
-			text_height,
+			text_height
 		}
 		grid_description_widget.content.text = text
 		description_text_size = text_height
@@ -4625,9 +4664,9 @@ CharacterAppearanceView._generate_main_grid_widgets = function (self, grid_index
 		grid_scrollbar_scenegraph = grid_scrollbar_scenegraph,
 		grid_position = {
 			25,
-			200,
+			200
 		},
-		focused_on_gamepad_navigation = focused_on_gamepad_navigation,
+		focused_on_gamepad_navigation = focused_on_gamepad_navigation
 	}
 
 	return widgets, alignment_list, support_widgets, return_grid_data
@@ -4655,7 +4694,7 @@ CharacterAppearanceView._update_widget_restrictions = function (self, widget, av
 		if widget.style.choice_icon then
 			widget.content.use_choice_icon = true
 			widget.style.choice_icon.material_values = {
-				texture_map = choice_info.icon_texture,
+				texture_map = choice_info.icon_texture
 			}
 		end
 
@@ -4663,7 +4702,7 @@ CharacterAppearanceView._update_widget_restrictions = function (self, widget, av
 			visible = not not reason,
 			available = available,
 			reason = reason,
-			reason_display_name = reason_display_name,
+			reason_display_name = reason_display_name
 		}
 	end
 end
@@ -4736,12 +4775,12 @@ CharacterAppearanceView._populate_page_grid = function (self, index, grid_data, 
 	local direction = generated_data and generated_data.grid_direction or grid_data.grid_direction or "down"
 	local spacing = generated_data and generated_data.grid_spacing or grid_data.grid_spacing or {
 		0,
-		0,
+		0
 	}
 	local top_padding = generated_data and generated_data.grid_top_padding or grid_data.grid_top_padding or 0
 	local size = generated_data and generated_data.grid_size or grid_data.grid_size or {
 		0,
-		0,
+		0
 	}
 	local focused_on_gamepad_navigation = generated_data and generated_data.focused_on_gamepad_navigation
 
@@ -4755,7 +4794,7 @@ CharacterAppearanceView._populate_page_grid = function (self, index, grid_data, 
 
 	local grid_size = {
 		size[1],
-		size[2] - top_padding,
+		size[2] - top_padding
 	}
 
 	if grid_area_scenegraph then
@@ -4795,11 +4834,11 @@ CharacterAppearanceView._populate_page_grid = function (self, index, grid_data, 
 		size = size,
 		position = {
 			position_x,
-			position_y,
+			position_y
 		},
 		grid_data = grid_data,
 		focused_on_gamepad_navigation = focused_on_gamepad_navigation,
-		grids_margin = generated_data.grids_margin,
+		grids_margin = generated_data.grids_margin
 	}
 
 	local options = grid_data.options and grid_data.options()
@@ -4841,7 +4880,7 @@ CharacterAppearanceView._populate_page_grid = function (self, index, grid_data, 
 
 			local pressed_options = {
 				initialization_press = true,
-				ignore_navigation_update = not first_page_grid_generated,
+				ignore_navigation_update = not first_page_grid_generated
 			}
 
 			if grid_data.init_pressed_options and type(grid_data.init_pressed_options) == "table" then
@@ -4859,7 +4898,7 @@ end
 
 local select_path = {
 	"option",
-	"value",
+	"value"
 }
 
 CharacterAppearanceView._on_entry_pressed = function (self, current_widget, option, grid_index, pressed_options)
@@ -5081,8 +5120,8 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						slot_name = "slot_body",
 						template = "icon",
 						type = "gender",
-						options = gender_options,
-					},
+						options = gender_options
+					}
 				})
 
 				for ii = 1, #options do
@@ -5099,12 +5138,12 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						end,
 						options = function ()
 							return option.options
-						end,
+						end
 					}
 
 					self:_populate_page_grid(grid_index, grid_data)
 				end
-			end,
+			end
 		}
 	end
 
@@ -5122,7 +5161,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 					"slot_body_face",
 					"slot_body_skin_color",
 					"slot_body_skin_color_secondary",
-					"slot_body_skin_discoloration",
+					"slot_body_skin_discoloration"
 				}
 
 				return _continue_validation_item_slots(self, slots)
@@ -5134,7 +5173,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						grid_columns = 3,
 						slot_name = "slot_body_face",
 						template = "slot_icon",
-						options = face_item_options,
+						options = face_item_options
 					},
 					{
 						ignore_fallback_in_sorting = true,
@@ -5142,7 +5181,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						template = "icon_small_texture_hsv",
 						type = "skin_color",
 						grid_columns = archetype_name == "cryptic" and 1 or 2,
-						options = skin_color_options,
+						options = skin_color_options
 					},
 					{
 						ignore_fallback_in_sorting = true,
@@ -5150,15 +5189,15 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						template = "icon_small_texture_hsv",
 						type = "skin_color",
 						grid_columns = archetype_name == "cryptic" and 1 or 2,
-						options = skin_color_secondary_options,
+						options = skin_color_secondary_options
 					},
 					{
 						ignore_fallback_in_sorting = true,
 						slot_name = "slot_body_skin_discoloration",
 						template = "icon_small_texture",
 						grid_columns = archetype_name == "cryptic" and 1 or 2,
-						options = skin_discoloration_options,
-					},
+						options = skin_discoloration_options
+					}
 				})
 
 				for ii = 1, #options do
@@ -5175,24 +5214,24 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						end,
 						options = function ()
 							return option.options
-						end,
+						end
 					}
 
 					self:_populate_page_grid(grid_index, grid_data)
 				end
-			end,
+			end
 		}
 	end
 
 	local body_options = self._character_create:slot_item_options("slot_body_torso")
 
-	if #body_options > 1 then
+	if #body_options > 1 and archetype_name == "cryptic" then
 		appearance_options[#appearance_options + 1] = {
 			camera_focus = "slot_body_torso",
 			icon = "content/ui/materials/icons/item_types/cryptic_torso",
 			continue_validation = function ()
 				local slots = {
-					"slot_body_torso",
+					"slot_body_torso"
 				}
 
 				return _continue_validation_item_slots(self, slots)
@@ -5206,8 +5245,8 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						slot_name = "slot_body_torso",
 						template = "icon",
 						options = body_options,
-						mute_unique_icon = archetype_name == "cryptic",
-					},
+						mute_unique_icon = archetype_name == "cryptic"
+					}
 				})
 
 				for ii = 1, #options do
@@ -5224,12 +5263,12 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						end,
 						options = function ()
 							return option.options
-						end,
+						end
 					}
 
 					self:_populate_page_grid(grid_index, grid_data)
 				end
-			end,
+			end
 		}
 	end
 
@@ -5265,7 +5304,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 			blind_left = colors_eye_blind_left,
 			blind_right = colors_eye_blind_right,
 			blind_both = colors_eye_blind_both,
-			black_scalera = colors_eye_black_scalera,
+			black_scalera = colors_eye_black_scalera
 		}
 
 		return result
@@ -5277,7 +5316,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 			continue_validation = function ()
 				local slots = {
 					"slot_body_eye_color",
-					"slot_body_eye_color_secondary",
+					"slot_body_eye_color_secondary"
 				}
 
 				return _continue_validation_item_slots(self, slots)
@@ -5309,7 +5348,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						slot_name = "slot_body_eye_color",
 						template = "icon",
 						type = "eye_type",
-						options = #filtered_eye_types > 1 and filtered_eye_types or {},
+						options = #filtered_eye_types > 1 and filtered_eye_types or {}
 					},
 					{
 						grid_columns = 2,
@@ -5318,7 +5357,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						template = "icon_small_texture_hsv",
 						type = "eye_color",
 						options = filtered_eye_colors,
-						mute_unique_icon = archetype_name == "cryptic",
+						mute_unique_icon = archetype_name == "cryptic"
 					},
 					{
 						grid_columns = 2,
@@ -5327,8 +5366,8 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						template = "icon_small_texture_hsv",
 						type = "eye_color",
 						options = eye_color_secondary_options,
-						mute_unique_icon = archetype_name == "cryptic",
-					},
+						mute_unique_icon = archetype_name == "cryptic"
+					}
 				})
 
 				for ii = 1, #options do
@@ -5345,13 +5384,13 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						end,
 						options = function ()
 							return option.options
-						end,
+						end
 					}
 
 					self:_populate_page_grid(grid_index, grid_data)
 				end
 			end,
-			icon = archetype_name == "cryptic" and "content/ui/materials/icons/item_types/cryptic_lens_color" or "content/ui/materials/icons/item_types/eye_color",
+			icon = archetype_name == "cryptic" and "content/ui/materials/icons/item_types/cryptic_lens_color" or "content/ui/materials/icons/item_types/eye_color"
 		}
 	end
 
@@ -5365,7 +5404,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 			continue_validation = function ()
 				local slots = {
 					"slot_body_hair",
-					"slot_body_hair_color",
+					"slot_body_hair_color"
 				}
 
 				return _continue_validation_item_slots(self, slots)
@@ -5378,7 +5417,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						slot_name = "slot_body_hair",
 						template = "slot_icon",
 						options = hair_item_options,
-						mute_unique_icon = archetype_name == "ogryn",
+						mute_unique_icon = archetype_name == "ogryn"
 					},
 					{
 						grid_columns = 2,
@@ -5386,8 +5425,8 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						slot_name = "slot_body_hair_color",
 						template = "icon_small_texture",
 						type = "hair_color",
-						options = hair_color_options,
-					},
+						options = hair_color_options
+					}
 				})
 
 				for ii = 1, #options do
@@ -5404,12 +5443,12 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						end,
 						options = function ()
 							return option.options
-						end,
+						end
 					}
 
 					self:_populate_page_grid(grid_index, grid_data)
 				end
-			end,
+			end
 		}
 	end
 
@@ -5428,7 +5467,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 				local slots = {
 					"slot_body_face_hair",
 					"slot_body_hair_color",
-					"slot_body_face_hair_color",
+					"slot_body_face_hair_color"
 				}
 
 				return _continue_validation_item_slots(self, slots)
@@ -5441,7 +5480,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						slot_name = "slot_body_face_hair",
 						template = "slot_icon",
 						options = face_hair_options,
-						mute_unique_icon = archetype_name == "ogryn",
+						mute_unique_icon = archetype_name == "ogryn"
 					},
 					{
 						force_nil_item = true,
@@ -5450,8 +5489,8 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						slot_name = "slot_body_face_hair_color",
 						template = "icon_small_texture",
 						type = "hair_color",
-						options = facial_hair_color_options,
-					},
+						options = facial_hair_color_options
+					}
 				})
 
 				for ii = 1, #options do
@@ -5468,12 +5507,12 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						end,
 						options = function ()
 							return option.options
-						end,
+						end
 					}
 
 					self:_populate_page_grid(grid_index, grid_data)
 				end
-			end,
+			end
 		}
 	end
 
@@ -5485,7 +5524,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 			icon = "content/ui/materials/icons/item_types/facial_makeup",
 			continue_validation = function ()
 				local slots = {
-					"slot_body_face_makeup",
+					"slot_body_face_makeup"
 				}
 
 				return _continue_validation_item_slots(self, slots)
@@ -5497,8 +5536,8 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						grid_columns = 3,
 						slot_name = "slot_body_face_makeup",
 						template = "slot_icon",
-						options = face_makeup_options,
-					},
+						options = face_makeup_options
+					}
 				})
 
 				for ii = 1, #options do
@@ -5515,24 +5554,24 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						end,
 						options = function ()
 							return option.options
-						end,
+						end
 					}
 
 					self:_populate_page_grid(grid_index, grid_data)
 				end
-			end,
+			end
 		}
 	end
 
 	local arm_options = self._character_create:slot_item_options("slot_body_arms")
 
-	if #arm_options > 1 then
+	if #arm_options > 1 and archetype_name == "cryptic" then
 		appearance_options[#appearance_options + 1] = {
 			camera_focus = "slot_body_arms",
 			icon = "content/ui/materials/icons/item_types/cryptic_arms",
 			continue_validation = function ()
 				local slots = {
-					"slot_body_arms",
+					"slot_body_arms"
 				}
 
 				return _continue_validation_item_slots(self, slots)
@@ -5546,7 +5585,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						slot_name = "slot_body_arms",
 						template = "icon",
 						options = arm_options,
-						mute_unique_icon = archetype_name == "cryptic",
+						mute_unique_icon = archetype_name == "cryptic"
 					},
 					{
 						ignore_fallback_in_sorting = true,
@@ -5555,7 +5594,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						type = "skin_color",
 						grid_columns = archetype_name == "cryptic" and 1 or 2,
 						options = skin_color_options,
-						mute_unique_icon = archetype_name == "cryptic",
+						mute_unique_icon = archetype_name == "cryptic"
 					},
 					{
 						ignore_fallback_in_sorting = true,
@@ -5564,7 +5603,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						type = "skin_color",
 						grid_columns = archetype_name == "cryptic" and 1 or 2,
 						options = skin_color_secondary_options,
-						mute_unique_icon = archetype_name == "cryptic",
+						mute_unique_icon = archetype_name == "cryptic"
 					},
 					{
 						ignore_fallback_in_sorting = true,
@@ -5572,8 +5611,8 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						template = "icon_small_texture",
 						grid_columns = archetype_name == "cryptic" and 1 or 2,
 						options = skin_discoloration_options,
-						mute_unique_icon = archetype_name == "cryptic",
-					},
+						mute_unique_icon = archetype_name == "cryptic"
+					}
 				})
 
 				for ii = 1, #options do
@@ -5590,24 +5629,24 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						end,
 						options = function ()
 							return option.options
-						end,
+						end
 					}
 
 					self:_populate_page_grid(grid_index, grid_data)
 				end
-			end,
+			end
 		}
 	end
 
 	local leg_options = self._character_create:slot_item_options("slot_body_legs")
 
-	if #leg_options > 1 then
+	if #leg_options > 1 and archetype_name == "cryptic" then
 		appearance_options[#appearance_options + 1] = {
 			camera_focus = "slot_body_legs",
 			icon = "content/ui/materials/icons/item_types/cryptic_legs",
 			continue_validation = function ()
 				local slots = {
-					"slot_body_legs",
+					"slot_body_legs"
 				}
 
 				return _continue_validation_item_slots(self, slots)
@@ -5621,7 +5660,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						slot_name = "slot_body_legs",
 						template = "icon",
 						options = leg_options,
-						mute_unique_icon = archetype_name == "cryptic",
+						mute_unique_icon = archetype_name == "cryptic"
 					},
 					{
 						ignore_fallback_in_sorting = true,
@@ -5630,7 +5669,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						type = "skin_color",
 						grid_columns = archetype_name == "cryptic" and 1 or 2,
 						options = skin_color_options,
-						mute_unique_icon = archetype_name == "cryptic",
+						mute_unique_icon = archetype_name == "cryptic"
 					},
 					{
 						ignore_fallback_in_sorting = true,
@@ -5639,7 +5678,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						type = "skin_color",
 						grid_columns = archetype_name == "cryptic" and 1 or 2,
 						options = skin_color_secondary_options,
-						mute_unique_icon = archetype_name == "cryptic",
+						mute_unique_icon = archetype_name == "cryptic"
 					},
 					{
 						ignore_fallback_in_sorting = true,
@@ -5647,8 +5686,8 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						template = "icon_small_texture",
 						grid_columns = archetype_name == "cryptic" and 1 or 2,
 						options = skin_discoloration_options,
-						mute_unique_icon = archetype_name == "cryptic",
-					},
+						mute_unique_icon = archetype_name == "cryptic"
+					}
 				})
 
 				for ii = 1, #options do
@@ -5665,12 +5704,12 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						end,
 						options = function ()
 							return option.options
-						end,
+						end
 					}
 
 					self:_populate_page_grid(grid_index, grid_data)
 				end
-			end,
+			end
 		}
 	end
 
@@ -5699,7 +5738,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 			icon = "content/ui/materials/icons/item_types/face_tattoos",
 			continue_validation = function ()
 				local slots = {
-					"slot_body_face_tattoo",
+					"slot_body_face_tattoo"
 				}
 
 				return _continue_validation_item_slots(self, slots)
@@ -5715,8 +5754,8 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						template = "icon",
 						type = "face_tattoo",
 						options = face_tattoos,
-						mute_unique_icon = archetype_name == "ogryn",
-					},
+						mute_unique_icon = archetype_name == "ogryn"
+					}
 				})
 
 				for ii = 1, #options do
@@ -5733,12 +5772,12 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						end,
 						options = function ()
 							return option.options
-						end,
+						end
 					}
 
 					self:_populate_page_grid(grid_index, grid_data)
 				end
-			end,
+			end
 		}
 	end
 
@@ -5747,7 +5786,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 			icon = "content/ui/materials/icons/item_types/body_tattoos",
 			continue_validation = function ()
 				local slots = {
-					"slot_body_tattoo",
+					"slot_body_tattoo"
 				}
 
 				return _continue_validation_item_slots(self, slots)
@@ -5763,8 +5802,8 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						template = "icon",
 						type = "body_tattoo",
 						options = body_tattoos,
-						mute_unique_icon = archetype_name == "ogryn",
-					},
+						mute_unique_icon = archetype_name == "ogryn"
+					}
 				})
 
 				for ii = 1, #options do
@@ -5781,12 +5820,12 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						end,
 						options = function ()
 							return option.options
-						end,
+						end
 					}
 
 					self:_populate_page_grid(grid_index, grid_data)
 				end
-			end,
+			end
 		}
 	end
 
@@ -5798,7 +5837,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 		local slot = option.slots[1]
 
 		tattoo_groups[tattoo_group] = tattoo_groups[tattoo_group] or {
-			item_group = true,
+			item_group = true
 		}
 		tattoo_groups[tattoo_group][slot] = option
 	end
@@ -5813,7 +5852,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 			continue_validation = function ()
 				local slots = {
 					"slot_body_tattoo",
-					"slot_body_face_tattoo",
+					"slot_body_face_tattoo"
 				}
 
 				return _continue_validation_item_slots(self, slots)
@@ -5830,9 +5869,9 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						options = tattoo_groups,
 						slot_name = {
 							"slot_body_tattoo",
-							"slot_body_face_tattoo",
-						},
-					},
+							"slot_body_face_tattoo"
+						}
+					}
 				})
 
 				for ii = 1, #options do
@@ -5849,12 +5888,12 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						end,
 						options = function ()
 							return option.options
-						end,
+						end
 					}
 
 					self:_populate_page_grid(grid_index, grid_data)
 				end
-			end,
+			end
 		}
 	end
 
@@ -5866,7 +5905,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 			icon = "content/ui/materials/icons/item_types/scars",
 			continue_validation = function ()
 				local slots = {
-					"slot_body_face_scar",
+					"slot_body_face_scar"
 				}
 
 				return _continue_validation_item_slots(self, slots)
@@ -5880,8 +5919,8 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						no_option = true,
 						slot_name = "slot_body_face_scar",
 						template = "icon",
-						options = face_scar_options,
-					},
+						options = face_scar_options
+					}
 				})
 
 				for ii = 1, #options do
@@ -5898,12 +5937,12 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						end,
 						options = function ()
 							return option.options
-						end,
+						end
 					}
 
 					self:_populate_page_grid(grid_index, grid_data)
 				end
-			end,
+			end
 		}
 	end
 
@@ -5915,8 +5954,8 @@ CharacterAppearanceView._get_appearance_options = function (self)
 				{
 					grid_columns = 1,
 					template = "vertical_slider",
-					type = "height",
-				},
+					type = "height"
+				}
 			})
 
 			for ii = 1, #options do
@@ -5928,14 +5967,14 @@ CharacterAppearanceView._get_appearance_options = function (self)
 					end,
 					options = function ()
 						return option.options
-					end,
+					end
 				}
 
 				self:_populate_page_grid(grid_index, grid_data, function ()
 					self:_set_camera_height_option(nil)
 				end)
 			end
-		end,
+		end
 	}
 
 	for ii = 1, #appearance_options do
@@ -6011,7 +6050,7 @@ CharacterAppearanceView._get_companion_appearance_options = function (self)
 					slot_name = "slot_companion_body_fur_color",
 					template = "icon",
 					type = "dog_fur",
-					options = filtered_dog_fur_options,
+					options = filtered_dog_fur_options
 				},
 				{
 					grid_columns = 2,
@@ -6019,8 +6058,8 @@ CharacterAppearanceView._get_companion_appearance_options = function (self)
 					slot_name = "slot_companion_body_skin_color",
 					template = "icon_small_texture_hsv",
 					type = "dog_skin",
-					options = filtered_dog_skin_options,
-				},
+					options = filtered_dog_skin_options
+				}
 			})
 
 			for ii = 1, #options do
@@ -6037,12 +6076,12 @@ CharacterAppearanceView._get_companion_appearance_options = function (self)
 					end,
 					options = function ()
 						return option.options
-					end,
+					end
 				}
 
 				self:_populate_page_grid(grid_index, grid_data)
 			end
-		end,
+		end
 	}
 
 	local dog_coat_options = self._character_create:slot_item_options("slot_companion_body_coat_pattern")
@@ -6060,8 +6099,8 @@ CharacterAppearanceView._get_companion_appearance_options = function (self)
 					slot_name = "slot_companion_body_coat_pattern",
 					template = "icon",
 					type = "dog_coat",
-					options = dog_coat_options,
-				},
+					options = dog_coat_options
+				}
 			})
 
 			for ii = 1, #options do
@@ -6078,12 +6117,12 @@ CharacterAppearanceView._get_companion_appearance_options = function (self)
 					end,
 					options = function ()
 						return option.options
-					end,
+					end
 				}
 
 				self:_populate_page_grid(grid_index, grid_data)
 			end
-		end,
+		end
 	}
 
 	for ii = 1, #appearance_options do
@@ -6122,7 +6161,7 @@ local HSV_PROPERTY_NAMES = table.set({
 	"emissive_color_hsv_2",
 	"hsv_skin",
 	"metal1_hsv_tint",
-	"metal2_hsv_tint",
+	"metal2_hsv_tint"
 })
 
 CharacterAppearanceView._hsv_from_item = function (self, item)
@@ -6149,7 +6188,7 @@ CharacterAppearanceView._hsv_from_item = function (self, item)
 end
 
 local OXIDATION_LEVEL_PROPERTY_NAMES = table.set({
-	"oxid_level",
+	"oxid_level"
 })
 
 CharacterAppearanceView._oxidation_level_from_item = function (self, item)
@@ -6177,7 +6216,7 @@ end
 
 local OXIDATION_TEXTURE_SLOTS = table.set({
 	"metal1_oxid_gradient",
-	"metal2_oxid_gradient",
+	"metal2_oxid_gradient"
 })
 
 CharacterAppearanceView._oxidation_texture_from_item = function (self, item)
@@ -6221,8 +6260,8 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 				slot_name = "slot_body_eye_color",
 				template = "icon_small_texture_hsv",
 				type = "eye_color",
-				options = eye_color_options,
-			},
+				options = eye_color_options
+			}
 		})
 
 		for ii = 1, #options do
@@ -6240,7 +6279,7 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 				options = function ()
 					return option.options
 				end,
-				init_pressed_options = init_pressed_options,
+				init_pressed_options = init_pressed_options
 			}
 
 			self:_populate_page_grid(grid_index, grid_data)
@@ -6252,7 +6291,8 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 		local selected_option = eye_options[1]
 		local ignored_params = current_option.search_params
 		local current_override_data = {}
-		local current_material_override_items = current_option.material_override_items
+		local current_eye_option = self._character_create:slot_item("slot_body_eye_color")
+		local current_material_override_items = current_eye_option.material_override_items
 
 		if current_material_override_items then
 			for ii = 1, #current_material_override_items do
@@ -6281,8 +6321,8 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 		for ii = 1, #eye_options do
 			local found = true
 			local eye_option = eye_options[ii]
-			local material_override_items = eye_option.material_override_items
 			local override_data = {}
+			local material_override_items = eye_option.material_override_items
 
 			if material_override_items then
 				for jj = 1, #material_override_items do
@@ -6312,7 +6352,21 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 				if not ignored_params[name] then
 					local current_eye_override_value = current_override_data[name]
 
-					if not current_eye_override_value or override_value and current_eye_override_value ~= override_value then
+					if not current_eye_override_value then
+						found = false
+
+						break
+					end
+
+					if type(override_value) == "table" then
+						for jj = 1, #override_value do
+							if current_eye_override_value[jj] ~= override_value[jj] then
+								found = false
+
+								break
+							end
+						end
+					elseif current_eye_override_value ~= override_value then
 						found = false
 
 						break
@@ -6335,11 +6389,12 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 			{
 				grid_columns = 2,
 				icon_background = "content/ui/textures/icons/appearances/backgrounds/scars",
+				mute_unique_icon = true,
 				slot_name = "slot_companion_body_skin_color",
 				template = "icon_small_texture_hsv",
 				type = "dog_skin",
-				options = dog_skin_options,
-			},
+				options = dog_skin_options
+			}
 		})
 
 		for ii = 1, #options do
@@ -6357,7 +6412,7 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 				options = function ()
 					return option.options
 				end,
-				init_pressed_options = init_pressed_options,
+				init_pressed_options = init_pressed_options
 			}
 
 			self:_populate_page_grid(grid_index, grid_data)
@@ -6401,9 +6456,9 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 		local ignore_fallback_in_sorting = category_entry_option.ignore_fallback_in_sorting
 		local force_nil_item = category_entry_option.force_nil_item
 		local temp_option_a, temp_option_b = {
-			value = nil,
+			value = nil
 		}, {
-			value = nil,
+			value = nil
 		}
 
 		if entry_options then
@@ -6425,7 +6480,7 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 
 			if entry_no_option and not table.find_func_array(entry_options, _is_fallback_item) then
 				table.insert(entry_options, 1, {
-					is_nil_item = true,
+					is_nil_item = true
 				})
 			end
 
@@ -6557,13 +6612,13 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 			no_option = entry_no_option,
 			icon_background = entry_icon_background,
 			type = entry_type,
-			mute_unique_icon = mute_unique_icon,
+			mute_unique_icon = mute_unique_icon
 		}
 
 		if entry_type == "gender" then
 			local gender_presentation = {
 				female = "content/ui/textures/icons/appearances/body_types/feminine",
-				male = "content/ui/textures/icons/appearances/body_types/masculine",
+				male = "content/ui/textures/icons/appearances/body_types/masculine"
 			}
 
 			for jj = 1, #entry_options do
@@ -6590,7 +6645,7 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 					icon_texture = gender_presentation[option],
 					on_focused_function = function (grid_index, widget)
 						return
-					end,
+					end
 				}
 			end
 
@@ -6616,7 +6671,7 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 					end,
 					on_focused_function = function (grid_index, widget)
 						_add_gamepad_focused_slots(self, entry_slot_name, option)
-					end,
+					end
 				}
 			end
 
@@ -6661,14 +6716,14 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 
 							if new_selected_option then
 								add_eye_color_grid(new_eye_options, {
-									force_focus_navigation = self._navigation.previous_grid ~= self._navigation.grid and self._navigation.grid == 3,
+									force_focus_navigation = self._navigation.previous_grid ~= self._navigation.grid and self._navigation.grid == 3
 								})
 							end
 						end)
 						add_eye_color_grid(eye_options, {
-							from_eye_type_focused = true,
+							from_eye_type_focused = true
 						})
-					end,
+					end
 				}
 			end
 
@@ -6716,7 +6771,7 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 						end
 
 						_add_gamepad_focused_slots(self, entry_slot_name, option)
-					end,
+					end
 				}
 			end
 
@@ -6738,7 +6793,7 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 					255,
 					255,
 					255,
-					255,
+					255
 				}
 				local material_override_items = option.material_override_items
 
@@ -6769,7 +6824,7 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 						0,
 						255,
 						255,
-						255,
+						255
 					},
 					value = option,
 					on_pressed_function = function (widget, pressed_options)
@@ -6779,7 +6834,7 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 					end,
 					on_focused_function = function (grid_index, widget)
 						_add_gamepad_focused_slots(self, entry_slot_name, option)
-					end,
+					end
 				}
 			end
 
@@ -6827,16 +6882,16 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 
 							_remove_gamepad_focused_slots(self, "slot_companion_body_skin_color")
 							add_dog_skin_grid(skin_options, {
-								force_focus_navigation = self._navigation.previous_grid ~= self._navigation.grid and self._navigation.grid == 3,
+								force_focus_navigation = self._navigation.previous_grid ~= self._navigation.grid and self._navigation.grid == 3
 							})
 						end)
 
 						local skin_options = dog_skin_items_by_selected_pattern(option)
 
 						add_dog_skin_grid(skin_options, {
-							from_dog_fur_focused = true,
+							from_dog_fur_focused = true
 						})
-					end,
+					end
 				}
 			end
 
@@ -6848,7 +6903,7 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 				local color = {
 					255,
 					255,
-					255,
+					255
 				}
 				local material_override_items = option.material_override_items
 
@@ -6900,7 +6955,7 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 						end
 
 						_add_gamepad_focused_slots(self, entry_slot_name, option)
-					end,
+					end
 				}
 			end
 
@@ -6922,7 +6977,7 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 
 					self:_set_character_height(scale_factor)
 					self:_set_camera_height_option(0.5)
-				end,
+				end
 			}
 		elseif entry_type == "dog_coat" then
 			for name, option in pairs(entry_options) do
@@ -6948,7 +7003,7 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 					end,
 					on_focused_function = function (grid_index, widget)
 						_add_gamepad_focused_slots(self, entry_slot_name, option)
-					end,
+					end
 				}
 			end
 
@@ -7038,7 +7093,7 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 						end
 
 						_add_gamepad_focused_slots(self, entry_slot_name, option, nil, nil, true)
-					end,
+					end
 				}
 			end
 
@@ -7088,7 +7143,7 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 					end,
 					on_focused_function = function (grid_index, widget)
 						_add_gamepad_focused_slots(self, entry_slot_name, option)
-					end,
+					end
 				}
 			end
 
@@ -7113,7 +7168,7 @@ CharacterAppearanceView._check_valid_option = function (self, option)
 
 	if value and value.value and value.value.item_group then
 		local temp_option = {
-			value = nil,
+			value = nil
 		}
 
 		for slot_id, sub_option in pairs(value.value) do
@@ -7289,11 +7344,11 @@ CharacterAppearanceView._get_personality_options = function (self)
 				local grid_data = {
 					init = function ()
 						return self:_generate_backstory_grid_widgets(grid_index, option)
-					end,
+					end
 				}
 
 				self:_populate_page_grid(grid_index, grid_data)
-			end,
+			end
 		}
 	end
 
@@ -7314,16 +7369,14 @@ CharacterAppearanceView._get_voice_options = function (self)
 	_set_initial_voice_screen_component_values(self._voice_screen_component, voice_effects[RTPC_EFFECT_X], voice_effects[RTPC_EFFECT_Y], voice_effects[RTPC_EFFECT_SLIDER])
 
 	local function on_voice_value_updated(value_x, value_y)
-		for ii = 1, #self._page_grids[1].widgets do
-			if value_y then
-				_set_voice_character_create_values(self._character_create, value_x, value_y, nil)
-				_set_voice_wwise_values(self._voice_sample_source, value_x, value_y, nil)
-				_set_voice_screen_component_values(self._voice_screen_component, value_x, value_y, nil)
-			else
-				_set_voice_character_create_values(self._character_create, nil, nil, value_x)
-				_set_voice_wwise_values(self._voice_sample_source, nil, nil, value_x)
-				_set_voice_screen_component_values(self._voice_screen_component, nil, nil, value_x)
-			end
+		if value_y then
+			_set_voice_character_create_values(self._character_create, value_x, value_y, nil)
+			_set_voice_wwise_values(self._voice_sample_source, value_x, value_y, nil)
+			_set_voice_screen_component_values(self._voice_screen_component, value_x, value_y, nil)
+		else
+			_set_voice_character_create_values(self._character_create, nil, nil, value_x)
+			_set_voice_wwise_values(self._voice_sample_source, nil, nil, value_x)
+			_set_voice_screen_component_values(self._voice_screen_component, nil, nil, value_x)
 		end
 	end
 
@@ -7336,7 +7389,7 @@ CharacterAppearanceView._get_voice_options = function (self)
 			local floor_y = value_y and math.floor(value_y)
 
 			on_voice_value_updated(floor_x, floor_y)
-		end,
+		end
 	}
 
 	local voice_matrix = voice_template[1]
@@ -7372,11 +7425,11 @@ CharacterAppearanceView._get_crime_options = function (self)
 				local grid_data = {
 					init = function ()
 						return self:_generate_backstory_grid_widgets(grid_index, option)
-					end,
+					end
 				}
 
 				self:_populate_page_grid(grid_index, grid_data)
-			end,
+			end
 		}
 	end
 
@@ -7385,12 +7438,12 @@ end
 
 local DX = {
 	default = 1.2,
-	ogryn = 1.7,
+	ogryn = 1.7
 }
 local MINDWIPE_DX = {
 	cryptic = 1.2,
 	default = 0.85,
-	ogryn = 1.5,
+	ogryn = 1.5
 }
 
 CharacterAppearanceView._pan_camera = function (self, revert)
@@ -7443,26 +7496,26 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 	local templates = {}
 	local background_size = {
 		660,
-		0,
+		0
 	}
 	local grid_margin = 30
 	local grid_size = {
 		background_size[1] - grid_margin * 2,
-		0,
+		0
 	}
 	local spacing = {
 		10,
-		0,
+		0
 	}
 	local text_style = CharacterAppearanceViewFontStyle.randomize_button_text_style
 	local randomize_text = Utf8.upper(Localize("loc_randomize"))
 	local text_width, _ = Text.text_size(self._ui_renderer, randomize_text, text_style, {
 		math.huge,
-		500,
+		500
 	})
 	local randomize_size = {
 		text_width + 100,
-		60,
+		60
 	}
 	local input_width = grid_size[1] - randomize_size[1] - spacing[1]
 	local input_name_template, input_template
@@ -7471,7 +7524,7 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 		input_name_template = {
 			size = {
 				grid_size[1],
-				30,
+				30
 			},
 			pass_template = {
 				{
@@ -7479,7 +7532,7 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 					style_id = "text",
 					value_id = "text",
 					value = Localize("loc_character_create_title_name"),
-					style = CharacterAppearanceViewFontStyle.header_final_title_style,
+					style = CharacterAppearanceViewFontStyle.header_final_title_style
 				},
 				{
 					pass_type = "rect",
@@ -7489,11 +7542,11 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 						color = Color.terminal_corner(255, true),
 						size = {
 							nil,
-							2,
-						},
-					},
-				},
-			},
+							2
+						}
+					}
+				}
+			}
 		}
 
 		local template_type = "name_input"
@@ -7521,7 +7574,7 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 			support_widget_name = "name_input",
 			size = {
 				input_width,
-				60,
+				60
 			},
 			pass_template = template.pass_template,
 			init = function (parent, widget, element)
@@ -7539,14 +7592,14 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 					if self._character_create:name() ~= name then
 						parent:_update_character_custom_name(widget, name)
 					end
-				end,
-			},
+				end
+			}
 		}
 	else
 		input_name_template = {
 			size = {
 				grid_size[1],
-				30,
+				30
 			},
 			pass_template = {
 				{
@@ -7554,7 +7607,7 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 					style_id = "text",
 					value_id = "text",
 					value = Localize("loc_character_creator_mastiff_name"),
-					style = CharacterAppearanceViewFontStyle.header_final_title_style,
+					style = CharacterAppearanceViewFontStyle.header_final_title_style
 				},
 				{
 					pass_type = "rect",
@@ -7564,11 +7617,11 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 						color = Color.terminal_corner(255, true),
 						size = {
 							nil,
-							2,
-						},
-					},
-				},
-			},
+							2
+						}
+					}
+				}
+			}
 		}
 
 		local template_type = "name_input"
@@ -7596,7 +7649,7 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 			support_widget_name = "companion_name_input",
 			size = {
 				input_width,
-				60,
+				60
 			},
 			pass_template = template.pass_template,
 			init = function (parent, widget, element)
@@ -7614,8 +7667,8 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 					if self._character_create:companion_name() ~= name then
 						parent:_update_companion_custom_name(widget, name)
 					end
-				end,
-			},
+				end
+			}
 		}
 	end
 
@@ -7629,8 +7682,8 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 					content = {
 						on_released_sound = nil,
 						on_hover_sound = UISoundEvents.default_mouse_hover,
-						on_pressed_sound = UISoundEvents.default_click,
-					},
+						on_pressed_sound = UISoundEvents.default_click
+					}
 				},
 				{
 					pass_type = "texture",
@@ -7644,16 +7697,16 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 						color = Color.terminal_text_body(255, true),
 						size = {
 							30,
-							30,
+							30
 						},
 						material_values = {
-							texture_map = "content/ui/textures/icons/generic/randomize",
+							texture_map = "content/ui/textures/icons/generic/randomize"
 						},
 						offset = {
 							20,
 							0,
-							2,
-						},
+							2
+						}
 					},
 					change_function = function (content, style, _, dt)
 						local default_color = style.default_color
@@ -7668,7 +7721,7 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 					end,
 					visibility_function = function (content, style)
 						return self._using_cursor_navigation
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -7679,15 +7732,15 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 						offset = {
 							0,
 							0,
-							3,
+							3
 						},
 						size_addition = {
 							-10,
-							0,
+							0
 						},
 						default_color = Color.terminal_frame(nil, true),
 						hover_color = Color.terminal_frame_selected(nil, true),
-						color = Color.terminal_text_body(255, true),
+						color = Color.terminal_text_body(255, true)
 					},
 					change_function = function (content, style, _, dt)
 						local default_color = style.default_color
@@ -7702,7 +7755,7 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 					end,
 					visibility_function = function (content, style)
 						return content.hotspot.is_focused or content.hotspot.is_hover
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -7714,7 +7767,7 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 						vertical_alignment = "center",
 						size_addition = {
 							-10,
-							0,
+							0
 						},
 						default_color = Color.terminal_frame(nil, true),
 						hover_color = Color.terminal_frame_selected(nil, true),
@@ -7722,8 +7775,8 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 						offset = {
 							0,
 							0,
-							4,
-						},
+							4
+						}
 					},
 					change_function = function (content, style, _, dt)
 						local default_color = style.default_color
@@ -7735,7 +7788,7 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 						Colors.color_lerp(default_color, hover_color, progress, color)
 
 						style.hdr = progress == 1
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -7747,7 +7800,7 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 						vertical_alignment = "center",
 						size_addition = {
 							-10,
-							0,
+							0
 						},
 						default_color = Color.terminal_corner(nil, true),
 						hover_color = Color.terminal_corner_selected(nil, true),
@@ -7755,8 +7808,8 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 						offset = {
 							0,
 							0,
-							5,
-						},
+							5
+						}
 					},
 					change_function = function (content, style, _, dt)
 						local default_color = style.default_color
@@ -7768,7 +7821,7 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 						Colors.color_lerp(default_color, hover_color, progress, color)
 
 						style.hdr = progress == 1
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -7782,8 +7835,8 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 						local original_offset = CharacterAppearanceViewFontStyle.randomize_button_text_style.offset[1]
 
 						style.offset[1] = self._using_cursor_navigation and original_offset or 24
-					end,
-				},
+					end
+				}
 			},
 			init = function (parent, widget, element)
 				widget.content.ignore_navigation = true
@@ -7808,8 +7861,8 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 			end,
 			content = {
 				gamepad_action = "hotkey_menu_special_2",
-				original_text = randomize_text,
-			},
+				original_text = randomize_text
+			}
 		}
 	end
 
@@ -7817,11 +7870,11 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 	local backstory_font_style = CharacterAppearanceViewFontStyle.description_style
 	local _, backstory_text_height = Text.text_size(self._ui_renderer, backstory_text, backstory_font_style, {
 		grid_size[1],
-		0,
+		0
 	})
 	local backstory_size = {
 		grid_size[1],
-		backstory_text_height + 10,
+		backstory_text_height + 10
 	}
 	local backstory_text_template = {
 		size = backstory_size,
@@ -7831,25 +7884,25 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 				style_id = "text",
 				value_id = "text",
 				value = backstory_text,
-				style = backstory_font_style,
-			},
-		},
+				style = backstory_font_style
+			}
+		}
 	}
 
 	templates[#templates + 1] = input_name_template
 	templates[#templates + 1] = {
 		size = {
 			grid_size[1],
-			15,
-		},
+			15
+		}
 	}
 	templates[#templates + 1] = input_template
 	templates[#templates + 1] = randomize_button_template()
 	templates[#templates + 1] = {
 		size = {
 			grid_size[1],
-			20,
-		},
+			20
+		}
 	}
 
 	if not is_companion then
@@ -7903,7 +7956,7 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 		else
 			widgets[#widgets + 1] = nil
 			alignment_list[#alignment_list + 1] = {
-				size = size,
+				size = size
 			}
 		end
 	end
@@ -7927,14 +7980,14 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 					vertical_alignment = "top",
 					size = {
 						nil,
-						36,
+						36
 					},
 					offset = {
 						0,
 						-18,
-						1,
-					},
-				},
+						1
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -7948,14 +8001,14 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 					color = Color.terminal_grid_background(nil, true),
 					size_addition = {
 						20,
-						30,
+						30
 					},
 					offset = {
 						0,
 						-15,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -7967,15 +8020,15 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 					vertical_alignment = "bottom",
 					size = {
 						nil,
-						36,
+						36
 					},
 					offset = {
 						0,
 						18,
-						1,
-					},
-				},
-			},
+						1
+					}
+				}
+			}
 		}, grid_scenegraph, nil, background_size),
 		mask = UIWidget.create_definition({
 			{
@@ -7988,20 +8041,20 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 						255,
 						255,
 						255,
-						255,
+						255
 					},
 					offset = {
 						0,
 						0,
-						5,
+						5
 					},
 					size_addition = {
 						20,
-						20,
-					},
-				},
-			},
-		}, grid_area_scenegraph, nil, background_size),
+						20
+					}
+				}
+			}
+		}, grid_area_scenegraph, nil, background_size)
 	}
 
 	for name, definition in pairs(support_widget_definitions) do
@@ -8011,21 +8064,21 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 			widget.offset = {
 				widget.offset[1] - grid_margin,
 				widget.offset[2] - grid_margin,
-				widget.offset[3] + 4,
+				widget.offset[3] + 4
 			}
 		end
 
 		widget.offset = {
 			widget.offset[1],
 			widget.offset[2],
-			widget.offset[3] + 4,
+			widget.offset[3] + 4
 		}
 		support_widgets[name] = widget
 	end
 
 	local grid_position = {
 		self._ui_scenegraph.canvas.size[1] - background_size[1] + grid_margin,
-		50 + grid_margin,
+		50 + grid_margin
 	}
 	local return_grid_data = {
 		grid_size = background_size,
@@ -8033,7 +8086,7 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 		grid_scenegraph = grid_scenegraph,
 		grid_area_scenegraph = grid_area_scenegraph,
 		grid_content_scenegraph = grid_content_scenegraph,
-		grid_spacing = spacing,
+		grid_spacing = spacing
 	}
 
 	return widgets, alignment_list, support_widgets, return_grid_data
@@ -8213,16 +8266,16 @@ CharacterAppearanceView._check_widget_choice_detail_visibility = function (self,
 	if choice_info then
 		self._widgets_by_name.choice_detail.content.use_choice_icon = true
 		self._widgets_by_name.choice_detail.style.choice_icon.material_values = {
-			texture_map = choice_info.icon_texture,
+			texture_map = choice_info.icon_texture
 		}
 
 		if choice_info.disabling_reason then
 			self._widgets_by_name.choice_detail.content.text = Localize("loc_character_create_disabled_reason", true, {
-				reason = reason_display_name,
+				reason = reason_display_name
 			})
 		elseif choice_info.unique_reason then
 			self._widgets_by_name.choice_detail.content.text = Localize("loc_character_create_unique_reason", true, {
-				reason = reason_display_name,
+				reason = reason_display_name
 			})
 		elseif choice_info.uses_source then
 			local item = widget.content.option.value
@@ -8241,12 +8294,12 @@ CharacterAppearanceView._check_widget_choice_detail_visibility = function (self,
 
 			self._widgets_by_name.choice_detail.content.text = Localize("loc_character_create_choice_reason", true, {
 				description = description or "",
-				choice = title,
+				choice = title
 			})
 		elseif reason_display_name then
 			self._widgets_by_name.choice_detail.content.text = Localize("loc_character_create_choice_reason", true, {
 				description = Localize(choice_info.title),
-				choice = reason_display_name,
+				choice = reason_display_name
 			})
 		else
 			self._widgets_by_name.choice_detail.content.text = ""
@@ -8285,7 +8338,7 @@ CharacterAppearanceView._fetch_suggested_names = function (self)
 				self._character_create:set_name(random_name)
 			end
 
-			if not self._companion_name_status.custom then
+			if not self._companion_name_status.custom and not self._is_barber_mindwipe then
 				local random_name = self._character_create:randomize_companion_name()
 
 				self._character_create:set_companion_name(random_name)
@@ -8299,7 +8352,7 @@ CharacterAppearanceView._fetch_suggested_names = function (self)
 				self._character_create:set_name(random_name)
 			end
 
-			if not self._companion_name_status.custom then
+			if not self._companion_name_status.custom and not self._is_barber_mindwipe then
 				local random_name = self._character_create:randomize_companion_name()
 
 				self._character_create:set_companion_name(random_name)
@@ -8332,7 +8385,7 @@ CharacterAppearanceView._update_character_name = function (self, widget, name, i
 
 	if self._is_barber_mindwipe and not is_initial_setup then
 		self:_check_mindwipe_changes({
-			"name",
+			"name"
 		})
 	end
 end
@@ -8351,7 +8404,7 @@ CharacterAppearanceView._update_companion_name = function (self, widget, name, i
 
 	if self._is_barber_mindwipe and not is_initial_setup then
 		self:_check_mindwipe_changes({
-			"companion_name",
+			"companion_name"
 		})
 	end
 end
@@ -8363,7 +8416,7 @@ local ALL_CHANGES = {
 	"height",
 	"name",
 	"companion_name",
-	"voice_effects",
+	"voice_effects"
 }
 
 CharacterAppearanceView._check_mindwipe_changes = function (self, change_list)
@@ -8459,9 +8512,9 @@ CharacterAppearanceView._grid_navigation = function (self, direction)
 						widget_index = jj,
 						position = {
 							grid_position[1] + offset[1] + size[1] * 0.5,
-							grid_position[2] + offset[2] + size[2] * 0.5,
+							grid_position[2] + offset[2] + size[2] * 0.5
 						},
-						size = size,
+						size = size
 					}
 
 					if ii == current_grid_index and jj == current_widget_index then
@@ -8644,7 +8697,7 @@ CharacterAppearanceView._grid_navigation = function (self, direction)
 		if not widget.content.ignore_navigation then
 			if widget.content.hotspot.pressed_callback and not widget.content.ignore_pressed_on_navigation then
 				widget.content.hotspot.pressed_callback({
-					from_navigation = true,
+					from_navigation = true
 				})
 			elseif widget.content.ignore_pressed_on_navigation then
 				self:_update_navigation(grid_index, widget_index)
@@ -8799,7 +8852,7 @@ function _continue_validation_item_slots(self, slots)
 		local slot = slots[ii]
 		local selected_option = self._gamepad_focused_loadout and self._gamepad_focused_loadout[slot] and self._gamepad_focused_loadout[slot].original_value or self._character_create:slot_item(slot)
 		local option = {
-			value = selected_option,
+			value = selected_option
 		}
 		local available = self._character_create:is_option_available(option)
 
@@ -8847,7 +8900,7 @@ function _add_gamepad_focused_slots(self, slot_array, option_map, optional_rever
 					self._character_create:set_item_per_slot(slot, original_option)
 				end
 			end,
-			callback_function = optional_callback_function,
+			callback_function = optional_callback_function
 		}
 
 		if not option and peek_shelf then

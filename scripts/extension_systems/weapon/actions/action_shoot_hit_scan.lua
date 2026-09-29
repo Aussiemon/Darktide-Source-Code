@@ -21,7 +21,7 @@ local buff_keywords = BuffSettings.keywords
 local buff_group_keywords = BuffSettings.group_keywords
 local ActionShootHitScan = class("ActionShootHitScan", "ActionShoot")
 local IMPACT_FX_DATA = {
-	will_be_predicted = true,
+	will_be_predicted = true
 }
 local ALL_HITS = {}
 local INDEX_DISTANCE = 2

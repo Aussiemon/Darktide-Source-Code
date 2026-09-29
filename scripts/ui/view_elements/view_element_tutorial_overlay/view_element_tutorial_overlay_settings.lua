@@ -5,7 +5,7 @@ local view_element_tutorial_overlay_settings = {
 	mask_padding_pixel_size = 40,
 	window_margins_height = 30,
 	window_margins_width = 75,
-	window_max_width = 225,
+	window_max_width = 225
 }
 
 return settings("ViewElementTutorialOverlaySettings", view_element_tutorial_overlay_settings)

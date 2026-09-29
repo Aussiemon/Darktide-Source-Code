@@ -112,9 +112,11 @@ Dodge.is_dodging = function (unit, attack_type)
 
 	local is_melee = attack_type == attack_types.melee
 	local is_ranged = attack_type == attack_types.ranged
+	local is_grab = attack_type == attack_types.incapacitating_grab
+	local uses_melee_dodge_rules = is_melee or is_grab
 	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 
-	if buff_extension and (buff_extension:has_keyword(buff_keywords.count_as_dodge_vs_all) or is_melee and buff_extension:has_keyword(buff_keywords.count_as_dodge_vs_melee) or is_ranged and buff_extension:has_keyword(buff_keywords.count_as_dodge_vs_ranged)) then
+	if buff_extension and (buff_extension:has_keyword(buff_keywords.count_as_dodge_vs_all) or uses_melee_dodge_rules and buff_extension:has_keyword(buff_keywords.count_as_dodge_vs_melee) or is_ranged and buff_extension:has_keyword(buff_keywords.count_as_dodge_vs_ranged)) then
 		return true, dodge_types.buff
 	end
 
@@ -143,14 +145,14 @@ Dodge.is_dodging = function (unit, attack_type)
 
 		if is_ranged then
 			dodge_linger_time_bonus = dodge_linger_time_bonus + (stat_buffs.dodge_linger_time_vs_ranged or 0)
-		elseif is_melee then
+		elseif uses_melee_dodge_rules then
 			dodge_linger_time_bonus = dodge_linger_time_bonus + (stat_buffs.dodge_linger_time_vs_melee or 0)
 		end
 	end
 
 	local dodge_linger_time
 
-	if is_melee then
+	if uses_melee_dodge_rules then
 		dodge_linger_time = base_dodge_template.dodge_linger_time * dodge_linger_time_modifier
 	else
 		dodge_linger_time = 0

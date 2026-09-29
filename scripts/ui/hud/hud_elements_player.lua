@@ -8,8 +8,8 @@ local elements = {
 		use_hud_scale = true,
 		visibility_groups = {
 			"alive",
-			"player_in_danger_zone",
-		},
+			"player_in_danger_zone"
+		}
 	},
 	{
 		class_name = "HudElementCharacterNewsFeed",
@@ -17,8 +17,8 @@ local elements = {
 		visibility_groups = {
 			"alive",
 			"communication_wheel",
-			"player_in_danger_zone",
-		},
+			"player_in_danger_zone"
+		}
 	},
 	{
 		class_name = "HudElementTeamPanelHandler",
@@ -31,8 +31,8 @@ local elements = {
 			"alive",
 			"communication_wheel",
 			"tactical_overlay",
-			"player_in_danger_zone",
-		},
+			"player_in_danger_zone"
+		}
 	},
 	{
 		class_name = "HudElementBossHealth",
@@ -43,8 +43,8 @@ local elements = {
 			"dead",
 			"alive",
 			"communication_wheel",
-			"player_in_danger_zone",
-		},
+			"player_in_danger_zone"
+		}
 	},
 	{
 		class_name = "HudElementPlayerAbilityHandler",
@@ -56,8 +56,8 @@ local elements = {
 			"alive",
 			"communication_wheel",
 			"tactical_overlay",
-			"player_in_danger_zone",
-		},
+			"player_in_danger_zone"
+		}
 	},
 	{
 		class_name = "HudElementPlayerWeaponHandler",
@@ -69,8 +69,8 @@ local elements = {
 			"alive",
 			"communication_wheel",
 			"tactical_overlay",
-			"player_in_danger_zone",
-		},
+			"player_in_danger_zone"
+		}
 	},
 	{
 		class_name = "HudElementDamageIndicator",
@@ -80,8 +80,8 @@ local elements = {
 		visibility_groups = {
 			"alive",
 			"communication_wheel",
-			"player_in_danger_zone",
-		},
+			"player_in_danger_zone"
+		}
 	},
 	{
 		class_name = "HudElementStamina",
@@ -91,8 +91,8 @@ local elements = {
 		visibility_groups = {
 			"alive",
 			"communication_wheel",
-			"player_in_danger_zone",
-		},
+			"player_in_danger_zone"
+		}
 	},
 	{
 		class_name = "HudElementDodgeCounter",
@@ -102,8 +102,8 @@ local elements = {
 		visibility_groups = {
 			"alive",
 			"communication_wheel",
-			"player_in_danger_zone",
-		},
+			"player_in_danger_zone"
+		}
 	},
 	{
 		class_name = "HudElementOvercharge",
@@ -113,8 +113,8 @@ local elements = {
 		use_retained_mode = true,
 		visibility_groups = {
 			"alive",
-			"player_in_danger_zone",
-		},
+			"player_in_danger_zone"
+		}
 	},
 	{
 		class_name = "HudElementWeaponCounter",
@@ -123,8 +123,8 @@ local elements = {
 		use_hud_scale = true,
 		visibility_groups = {
 			"alive",
-			"player_in_danger_zone",
-		},
+			"player_in_danger_zone"
+		}
 	},
 	{
 		class_name = "HudElementPlayerCompass",
@@ -134,11 +134,11 @@ local elements = {
 		visibility_groups = {
 			"alive",
 			"communication_wheel",
-			"player_in_danger_zone",
+			"player_in_danger_zone"
 		},
 		allowed_game_modes = {
-			"expedition",
-		},
+			"expedition"
+		}
 	},
 	{
 		class_name = "HudElementTacticalOverlay",
@@ -148,8 +148,8 @@ local elements = {
 		visibility_groups = {
 			"tactical_overlay",
 			"alive",
-			"communication_wheel",
-		},
+			"communication_wheel"
+		}
 	},
 	{
 		class_name = "HudElementCrosshair",
@@ -158,8 +158,8 @@ local elements = {
 		use_hud_scale = false,
 		visibility_groups = {
 			"alive",
-			"player_in_danger_zone",
-		},
+			"player_in_danger_zone"
+		}
 	},
 	{
 		class_name = "HudElementMinionShieldHealth",
@@ -168,8 +168,8 @@ local elements = {
 		use_hud_scale = false,
 		visibility_groups = {
 			"alive",
-			"player_in_danger_zone",
-		},
+			"player_in_danger_zone"
+		}
 	},
 	{
 		class_name = "HudElementSmartTagging",
@@ -179,8 +179,8 @@ local elements = {
 		visibility_groups = {
 			"alive",
 			"communication_wheel",
-			"player_in_danger_zone",
-		},
+			"player_in_danger_zone"
+		}
 	},
 	{
 		class_name = "HudElementMissionObjectiveFeed",
@@ -192,8 +192,8 @@ local elements = {
 			"alive",
 			"communication_wheel",
 			"tactical_overlay",
-			"player_in_danger_zone",
-		},
+			"player_in_danger_zone"
+		}
 	},
 	{
 		class_name = "HudElementMissionObjectivePopup",
@@ -205,8 +205,8 @@ local elements = {
 			"alive",
 			"communication_wheel",
 			"tactical_overlay",
-			"player_in_danger_zone",
-		},
+			"player_in_danger_zone"
+		}
 	},
 	{
 		class_name = "HudElementObjectiveProgressBar",
@@ -217,8 +217,8 @@ local elements = {
 			"dead",
 			"alive",
 			"communication_wheel",
-			"player_in_danger_zone",
-		},
+			"player_in_danger_zone"
+		}
 	},
 	{
 		class_name = "HudElementCombatFeed",
@@ -229,8 +229,8 @@ local elements = {
 			"alive",
 			"communication_wheel",
 			"tactical_overlay",
-			"player_in_danger_zone",
-		},
+			"player_in_danger_zone"
+		}
 	},
 	{
 		class_name = "HudElementAreaNotificationPopup",
@@ -242,8 +242,8 @@ local elements = {
 			"alive",
 			"communication_wheel",
 			"tactical_overlay",
-			"player_in_danger_zone",
-		},
+			"player_in_danger_zone"
+		}
 	},
 	{
 		class_name = "HudElementMissionSpeakerPopup",
@@ -256,8 +256,8 @@ local elements = {
 			"cutscene",
 			"communication_wheel",
 			"tactical_overlay",
-			"player_in_danger_zone",
-		},
+			"player_in_danger_zone"
+		}
 	},
 	{
 		class_name = "HudElementPlayerBuffs",
@@ -269,8 +269,8 @@ local elements = {
 			"dead",
 			"alive",
 			"communication_wheel",
-			"player_in_danger_zone",
-		},
+			"player_in_danger_zone"
+		}
 	},
 	{
 		class_name = "HudElementWorldMarkers",
@@ -280,8 +280,8 @@ local elements = {
 		visibility_groups = {
 			"alive",
 			"communication_wheel",
-			"player_in_danger_zone",
-		},
+			"player_in_danger_zone"
+		}
 	},
 	{
 		class_name = "HudElementInteraction",
@@ -291,8 +291,8 @@ local elements = {
 		visibility_groups = {
 			"alive",
 			"communication_wheel",
-			"player_in_danger_zone",
-		},
+			"player_in_danger_zone"
+		}
 	},
 	{
 		class_name = "HudElementNameplates",
@@ -301,16 +301,16 @@ local elements = {
 		visibility_groups = {
 			"alive",
 			"communication_wheel",
-			"player_in_danger_zone",
-		},
+			"player_in_danger_zone"
+		}
 	},
 	{
 		class_name = "HudElementCutsceneOverlay",
 		filename = "scripts/ui/hud/elements/cutscene_overlay/hud_element_cutscene_overlay",
 		visibility_groups = {
 			"prologue_cutscene",
-			"cutscene",
-		},
+			"cutscene"
+		}
 	},
 	{
 		class_name = "HudElementCutsceneFading",
@@ -324,8 +324,8 @@ local elements = {
 			"communication_wheel",
 			"testify",
 			"dead",
-			"alive",
-		},
+			"alive"
+		}
 	},
 	{
 		class_name = "HudElementPrologueTutorialInfoBox",
@@ -336,17 +336,17 @@ local elements = {
 			"dead",
 			"alive",
 			"communication_wheel",
-			"player_in_danger_zone",
-		},
+			"player_in_danger_zone"
+		}
 	},
 	{
 		class_name = "HudElementDangerZoneOverlay",
 		filename = "scripts/ui/hud/elements/danger_zone_overlay/hud_element_danger_zone_overlay",
 		package = "packages/ui/hud/danger_zone_overlay/danger_zone_overlay",
 		visibility_groups = {
-			"player_in_danger_zone",
-		},
-	},
+			"player_in_danger_zone"
+		}
+	}
 }
 
 return elements

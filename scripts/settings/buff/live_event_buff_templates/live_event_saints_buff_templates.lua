@@ -49,14 +49,14 @@ templates.live_event_saints_buff_revive = {
 				vfx = {
 					orphaned_policy = "destroy",
 					particle_effect = "content/fx/particles/player_buffs/saints_revive_01",
-					stop_type = "destroy",
-				},
-			},
-		},
+					stop_type = "destroy"
+				}
+			}
+		}
 	},
 	player_effects = {
-		on_screen_effect = "content/fx/particles/player_buffs/player_screen_saints_revive",
-	},
+		on_screen_effect = "content/fx/particles/player_buffs/player_screen_saints_revive"
+	}
 }
 templates.live_event_saints_buff_saint_red = {
 	always_show_in_hud = true,
@@ -77,17 +77,17 @@ templates.live_event_saints_buff_saint_red = {
 		[stat_buffs.attack_speed] = 0.01,
 		[stat_buffs.burning_damage] = 0.01,
 		[stat_buffs.burning_duration] = 0.01,
-		[stat_buffs.toughness_bonus] = 0.01,
+		[stat_buffs.toughness_bonus] = 0.01
 	},
 	keywords = {
 		keywords.burning,
-		keywords.melee_infinite_cleave,
+		keywords.melee_infinite_cleave
 	},
 	start_func = function (template_data, template_context)
 		local buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
 
 		template_data.buff_extension = buff_extension
-	end,
+	end
 }
 templates.live_event_saints_buff_saint_blue = {
 	always_show_in_hud = true,
@@ -107,17 +107,17 @@ templates.live_event_saints_buff_saint_blue = {
 	stat_buffs = {
 		[stat_buffs.reload_speed] = 0.01,
 		[stat_buffs.damage_vs_electrocuted] = 0.01,
-		[stat_buffs.toughness_bonus] = 0.01,
+		[stat_buffs.toughness_bonus] = 0.01
 	},
 	keywords = {
 		keywords.electrocuted,
-		keywords.reduced_ammo_consumption,
+		keywords.reduced_ammo_consumption
 	},
 	start_func = function (template_data, template_context)
 		local buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
 
 		template_data.buff_extension = buff_extension
-	end,
+	end
 }
 
 local corruption_self_damage_power_level = 3
@@ -142,7 +142,7 @@ templates.live_event_saints_out_of_area_debuff = {
 	keywords = {
 		keywords.prevent_healing_corruption,
 		keywords.prevent_healing_health,
-		keywords.corrupted,
+		keywords.corrupted
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -186,7 +186,7 @@ templates.live_event_saints_out_of_area_debuff = {
 				Attack.execute(player_unit, damage_profile, "power_level", corruption_self_damage_power_level, "is_critical_strike", false, "attack_type", attack_types.buff, "damage_type", DamageSettings.damage_types.corruption)
 			end
 		end
-	end,
+	end
 }
 templates.live_event_saints_in_area_buff = {
 	always_show_in_hud = true,
@@ -209,8 +209,8 @@ templates.live_event_saints_in_area_buff = {
 		[stat_buffs.reload_speed] = 0.15,
 		[stat_buffs.dodge_speed_multiplier] = 1.1,
 		[stat_buffs.dodge_distance_modifier] = 0.2,
-		[stat_buffs.stamina_modifier] = 1,
-	},
+		[stat_buffs.stamina_modifier] = 1
+	}
 }
 
 return templates

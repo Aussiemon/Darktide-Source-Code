@@ -8,12 +8,12 @@ local highlight_color = {
 	255,
 	239,
 	193,
-	82,
+	82
 }
 local yes_color = {
 	yes_color_b = 255,
 	yes_color_g = 255,
-	yes_color_r = 255,
+	yes_color_r = 255
 }
 
 local function _cast_vote(voting_id, vote)
@@ -45,7 +45,7 @@ local function _instructions_text(params)
 	local no_input = InputUtils.input_text_for_current_input_device("View", "notification_option_b", false)
 	local context = {
 		yes_input = InputUtils.apply_color_to_input_text(yes_input, highlight_color),
-		no_input = InputUtils.apply_color_to_input_text(no_input, highlight_color),
+		no_input = InputUtils.apply_color_to_input_text(no_input, highlight_color)
 	}
 
 	return Localize(VotingFlowSettings[params.flow_settings_name].instructions_text, true, context)
@@ -60,8 +60,8 @@ local function _show_voting_popup(voting_id, params)
 		description = instructions_text,
 		inputs = {
 			notification_option_a = callback(_cast_vote, voting_id, OPTIONS.yes),
-			notification_option_b = callback(_cast_vote, voting_id, OPTIONS.no),
-		},
+			notification_option_b = callback(_cast_vote, voting_id, OPTIONS.no)
+		}
 	}
 
 	Managers.voting:set_notification(voting_id, data)
@@ -74,7 +74,7 @@ local function _update_voting_popup(voting_id, params)
 		show_timer = true,
 		title = Localize(VotingFlowSettings[params.flow_settings_name].title),
 		description = post_vote_message,
-		inputs = {},
+		inputs = {}
 	}
 
 	Managers.voting:set_notification(voting_id, data)
@@ -92,23 +92,23 @@ local flow_voting_template = {
 	voting_impl = "network",
 	options = {
 		OPTIONS.yes,
-		OPTIONS.no,
+		OPTIONS.no
 	},
 	results = {
 		RESULTS.approved,
-		RESULTS.rejected,
+		RESULTS.rejected
 	},
 	timeout_option = OPTIONS.yes,
 	required_params = {
 		"node_id",
-		"flow_settings_name",
+		"flow_settings_name"
 	},
 	pack_params = function (params)
 		return NetworkLookup.voting_flow_settings[params.flow_settings_name]
 	end,
 	unpack_params = function (flow_template_id)
 		return {
-			flow_settings_name = NetworkLookup.voting_flow_settings[flow_template_id],
+			flow_settings_name = NetworkLookup.voting_flow_settings[flow_template_id]
 		}
 	end,
 	evaluate = function (votes)
@@ -145,7 +145,7 @@ local flow_voting_template = {
 
 		if initiator_peer then
 			return {
-				[initiator_peer] = OPTIONS.yes,
+				[initiator_peer] = OPTIONS.yes
 			}
 		else
 			return {}
@@ -179,7 +179,7 @@ local flow_voting_template = {
 		if voter_peer_id == Network.peer_id() and vote_option == OPTIONS.yes then
 			_update_voting_popup(voting_id, params)
 		end
-	end,
+	end
 }
 
 return flow_voting_template

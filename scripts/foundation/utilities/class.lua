@@ -16,7 +16,7 @@ local special_functions = {
 	__interfaces = true,
 	delete = true,
 	new = true,
-	super = true,
+	super = true
 }
 
 CLASSES = CLASSES or {}
@@ -66,7 +66,7 @@ function class(class_name, super_name)
 	if not class_table then
 		class_table = {
 			super = super,
-			__class_name = class_name,
+			__class_name = class_name
 		}
 		class_table.__index = class_table
 		class_table.__interfaces = {}

@@ -12,43 +12,43 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"guidance_correct_doorway",
+				"guidance_correct_doorway"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				5,
+				5
 			},
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				30,
-			},
+				30
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -61,55 +61,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"guidance_correct_path",
+				"guidance_correct_path"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				5,
+				5
 			},
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				30,
+				30
 			},
 			{
 				"faction_memory",
 				"guidance_correct_path",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"guidance_correct_path",
 				OP.ADD,
-				0,
-			},
-		},
+				0
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -122,55 +122,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"guidance_correct_path_1",
+				"guidance_correct_path_1"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				5,
+				5
 			},
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				30,
+				30
 			},
 			{
 				"faction_memory",
 				"guidance_correct_path_1",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"guidance_correct_path_1",
 				OP.ADD,
-				0,
-			},
-		},
+				0
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -183,55 +183,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"guidance_correct_path_2",
+				"guidance_correct_path_2"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				5,
+				5
 			},
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				30,
+				30
 			},
 			{
 				"faction_memory",
 				"guidance_correct_path_2",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"guidance_correct_path_2",
 				OP.ADD,
-				0,
-			},
-		},
+				0
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -244,55 +244,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"guidance_correct_path_3",
+				"guidance_correct_path_3"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				5,
+				5
 			},
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				30,
+				30
 			},
 			{
 				"faction_memory",
 				"guidance_correct_path_3",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"guidance_correct_path_3",
 				OP.ADD,
-				0,
-			},
-		},
+				0
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -305,55 +305,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"guidance_correct_path_drop",
+				"guidance_correct_path_drop"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				5,
+				5
 			},
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				30,
+				30
 			},
 			{
 				"faction_memory",
 				"guidance_correct_path_drop",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"guidance_correct_path_drop",
 				OP.ADD,
-				0,
-			},
-		},
+				0
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -366,55 +366,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"guidance_correct_path_drop_1",
+				"guidance_correct_path_drop_1"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				5,
+				5
 			},
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"guidance_correct_path_drop_1",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"guidance_correct_path_drop_1",
 				OP.ADD,
-				1,
-			},
-		},
+				1
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -427,55 +427,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"guidance_correct_path_drop_2",
+				"guidance_correct_path_drop_2"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				5,
+				5
 			},
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"guidance_correct_path_drop_2",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"guidance_correct_path_drop_2",
 				OP.ADD,
-				1,
-			},
-		},
+				1
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -488,55 +488,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"guidance_correct_path_drop_3",
+				"guidance_correct_path_drop_3"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				5,
+				5
 			},
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"guidance_correct_path_drop_3",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"guidance_correct_path_drop_3",
 				OP.ADD,
-				1,
-			},
-		},
+				1
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -549,55 +549,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"guidance_correct_path_drop_4",
+				"guidance_correct_path_drop_4"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				5,
+				5
 			},
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"guidance_correct_path_drop_4",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"guidance_correct_path_drop_4",
 				OP.ADD,
-				1,
-			},
-		},
+				1
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -610,55 +610,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"guidance_correct_path_drop_5",
+				"guidance_correct_path_drop_5"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				5,
+				5
 			},
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"guidance_correct_path_drop_5",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"guidance_correct_path_drop_5",
 				OP.ADD,
-				1,
-			},
-		},
+				1
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -671,55 +671,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"guidance_correct_path_drop_6",
+				"guidance_correct_path_drop_6"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				5,
+				5
 			},
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				0,
+				0
 			},
 			{
 				"faction_memory",
 				"guidance_correct_path_drop_6",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"guidance_correct_path_drop_6",
 				OP.ADD,
-				1,
-			},
-		},
+				1
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -732,43 +732,43 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"guidance_correct_path_up",
+				"guidance_correct_path_up"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				5,
+				5
 			},
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -781,43 +781,43 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"guidance_correct_path_ladder_down",
+				"guidance_correct_path_ladder_down"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				5,
+				5
 			},
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				30,
-			},
+				30
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -830,44 +830,44 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"guidance_ladder_sighted",
+				"guidance_ladder_sighted"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				5,
+				5
 			},
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				20,
-			},
+				20
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMESET,
-				"0",
-			},
-		},
+				"0"
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -880,43 +880,43 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"guidance_correct_path_ladder_up",
+				"guidance_correct_path_ladder_up"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				5,
+				5
 			},
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				30,
-			},
+				30
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -929,43 +929,43 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"guidance_correct_path_stairs_down",
+				"guidance_correct_path_stairs_down"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				5,
+				5
 			},
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				30,
-			},
+				30
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -978,55 +978,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"guidance_stairs_sighted",
+				"guidance_stairs_sighted"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				5,
+				5
 			},
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				30,
+				30
 			},
 			{
 				"faction_memory",
 				"guidance_stairs_sighted",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"guidance_stairs_sighted",
 				OP.ADD,
-				0,
-			},
-		},
+				0
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -1039,55 +1039,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"guidance_stairs_sighted_1",
+				"guidance_stairs_sighted_1"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				30,
+				30
 			},
 			{
 				"faction_memory",
 				"guidance_stairs_sighted_1",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"guidance_stairs_sighted_1",
 				OP.ADD,
-				1,
-			},
-		},
+				1
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -1100,55 +1100,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"guidance_stairs_sighted_2",
+				"guidance_stairs_sighted_2"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				30,
+				30
 			},
 			{
 				"faction_memory",
 				"guidance_stairs_sighted_2",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"guidance_stairs_sighted_2",
 				OP.ADD,
-				1,
-			},
-		},
+				1
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -1161,55 +1161,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"guidance_stairs_sighted_3",
+				"guidance_stairs_sighted_3"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				30,
+				30
 			},
 			{
 				"faction_memory",
 				"guidance_stairs_sighted_3",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"guidance_stairs_sighted_3",
 				OP.ADD,
-				1,
-			},
-		},
+				1
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -1222,55 +1222,55 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"guidance_stairs_sighted_4",
+				"guidance_stairs_sighted_4"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				10,
+				10
 			},
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				30,
+				30
 			},
 			{
 				"faction_memory",
 				"guidance_stairs_sighted_4",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
-				OP.TIMESET,
+				OP.TIMESET
 			},
 			{
 				"faction_memory",
 				"guidance_stairs_sighted_4",
 				OP.ADD,
-				1,
-			},
-		},
+				1
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -1283,43 +1283,43 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"guidance_correct_path_stairs_up",
+				"guidance_correct_path_stairs_up"
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
-					"low",
-				},
+					"low"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				5,
+				5
 			},
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				30,
-			},
+				30
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		category = "player_prio_0",
@@ -1332,32 +1332,32 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo",
+				"generic_mission_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"guidance_starting_area",
+				"guidance_starting_area"
 			},
 			{
 				"faction_memory",
 				"guidance_starting_area",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"guidance_starting_area",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "player_prio_2",
@@ -1370,13 +1370,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at",
+				"look_at"
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"guidance_switch",
+				"guidance_switch"
 			},
 			{
 				"user_context",
@@ -1385,29 +1385,29 @@ return function ()
 				args = {
 					"low",
 					"medium",
-					"high",
-				},
+					"high"
+				}
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				15,
+				15
 			},
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMEDIFF,
 				OP.GT,
-				30,
-			},
+				30
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
-				OP.TIMESET,
-			},
-		},
+				OP.TIMESET
+			}
+		}
 	})
 end

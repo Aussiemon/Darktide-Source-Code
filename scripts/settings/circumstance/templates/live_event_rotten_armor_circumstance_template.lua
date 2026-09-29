@@ -9,14 +9,14 @@ circumstance_templates.rotten_armor = {
 	mutators = {
 		"mutator_only_traitor_guard_faction",
 		"mutator_rotten_armor",
-		"mutator_live_rotten_armor_trickle_horde",
+		"mutator_live_rotten_armor_trickle_horde"
 	},
 	ui = {
 		description = "loc_circumstance_live_rotten_armor_description",
 		display_name = "loc_circumstance_live_rotten_armor_title",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
-		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
-	},
+		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01"
+	}
 }
 circumstance_templates.rotten_armor_hunt_grou = {
 	dialogue_id = "circumstance_vo_hunting_grounds",
@@ -29,14 +29,14 @@ circumstance_templates.rotten_armor_hunt_grou = {
 		"mutator_add_resistance",
 		"mutator_only_traitor_guard_faction",
 		"mutator_rotten_armor",
-		"mutator_live_rotten_armor_trickle_horde",
+		"mutator_live_rotten_armor_trickle_horde"
 	},
 	ui = {
 		description = "loc_circumstance_live_rotten_armor_hunt_grou_description",
 		display_name = "loc_circumstance_live_rotten_armor_hunt_grou_title",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
-		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
-	},
+		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01"
+	}
 }
 circumstance_templates.rotten_armor_more_res = {
 	theme_tag = "default",
@@ -45,14 +45,14 @@ circumstance_templates.rotten_armor_more_res = {
 		description = "loc_circumstance_live_rotten_armor_more_res_description",
 		display_name = "loc_circumstance_live_rotten_armor_more_res_title",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
-		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
+		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01"
 	},
 	mutators = {
 		"mutator_add_resistance",
 		"mutator_only_traitor_guard_faction",
 		"mutator_rotten_armor",
-		"mutator_live_rotten_armor_trickle_horde",
-	},
+		"mutator_live_rotten_armor_trickle_horde"
+	}
 }
 circumstance_templates.rotten_armor_darkness = {
 	dialogue_id = "circumstance_vo_darkness",
@@ -62,7 +62,7 @@ circumstance_templates.rotten_armor_darkness = {
 		description = "loc_circumstance_live_rotten_armor_darkness_description",
 		display_name = "loc_circumstance_live_rotten_armor_darkness_title",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
-		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
+		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01"
 	},
 	mutators = {
 		"mutator_more_witches",
@@ -71,8 +71,8 @@ circumstance_templates.rotten_armor_darkness = {
 		"mutator_darkness_los",
 		"mutator_only_traitor_guard_faction",
 		"mutator_rotten_armor",
-		"mutator_live_rotten_armor_trickle_horde",
-	},
+		"mutator_live_rotten_armor_trickle_horde"
+	}
 }
 circumstance_templates.rotten_armor_gas = {
 	dialogue_id = "circumstance_vo_toxic_gas",
@@ -83,15 +83,15 @@ circumstance_templates.rotten_armor_gas = {
 		"mutator_add_resistance",
 		"mutator_only_traitor_guard_faction",
 		"mutator_rotten_armor",
-		"mutator_live_rotten_armor_trickle_horde",
+		"mutator_live_rotten_armor_trickle_horde"
 	},
 	ui = {
 		description = "loc_circumstance_live_rotten_armor_gas_description",
 		display_name = "loc_circumstance_live_rotten_armor_gas_title",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
-		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
+		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01"
 	},
-	mission_overrides = MissionOverrides.more_corruption_syringes,
+	mission_overrides = MissionOverrides.more_corruption_syringes
 }
 circumstance_templates.rotten_armor_waves_spec = {
 	theme_tag = "default",
@@ -100,7 +100,7 @@ circumstance_templates.rotten_armor_waves_spec = {
 		description = "loc_circumstance_live_rotten_armor_waves_spec_description",
 		display_name = "loc_circumstance_live_rotten_armor_waves_spec_title",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
-		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
+		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01"
 	},
 	mutators = {
 		"mutator_waves_of_specials",
@@ -110,8 +110,8 @@ circumstance_templates.rotten_armor_waves_spec = {
 		"mutator_auric_tension_modifier",
 		"mutator_only_traitor_guard_faction",
 		"mutator_rotten_armor",
-		"mutator_live_rotten_armor_trickle_horde",
-	},
+		"mutator_live_rotten_armor_trickle_horde"
+	}
 }
 circumstance_templates.rotten_armor_ventilation = {
 	dialogue_id = "circumstance_vo_ventilation_purge",
@@ -121,7 +121,7 @@ circumstance_templates.rotten_armor_ventilation = {
 		description = "loc_circumstance_live_rotten_armor_ventilation_description",
 		display_name = "loc_circumstance_live_rotten_armor_ventilation_title",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
-		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
+		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01"
 	},
 	mutators = {
 		"mutator_snipers",
@@ -129,8 +129,8 @@ circumstance_templates.rotten_armor_ventilation = {
 		"mutator_add_resistance",
 		"mutator_only_traitor_guard_faction",
 		"mutator_rotten_armor",
-		"mutator_live_rotten_armor_trickle_horde",
-	},
+		"mutator_live_rotten_armor_trickle_horde"
+	}
 }
 
 return circumstance_templates

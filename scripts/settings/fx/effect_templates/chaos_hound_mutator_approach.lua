@@ -16,7 +16,7 @@ local PARTICLE_3_NODE = "j_righteye"
 local resources = {
 	approach_sound_event = APPROACH_SOUND_EVENT,
 	approach_vfx = PARTICLE_NAME,
-	eye_vfx = PARTICLE_2_NAME,
+	eye_vfx = PARTICLE_2_NAME
 }
 local _trigger_sound
 local effect_template = {
@@ -89,7 +89,7 @@ local effect_template = {
 		local vfx_particle_3_id = template_data.particle_3_id
 
 		World.stop_spawning_particles(world, vfx_particle_3_id)
-	end,
+	end
 }
 
 function _trigger_sound(unit, target_unit, template_data, template_context, t)

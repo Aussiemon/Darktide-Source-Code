@@ -5,7 +5,7 @@ local component_interface = {
 	"init",
 	"enable",
 	"disable",
-	"destroy",
+	"destroy"
 }
 
 Component.event_lookup = {}

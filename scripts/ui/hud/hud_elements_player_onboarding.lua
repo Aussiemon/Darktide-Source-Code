@@ -7,8 +7,8 @@ local elements = {
 		package = "packages/ui/hud/wield_info/wield_info",
 		use_hud_scale = true,
 		visibility_groups = {
-			"alive",
-		},
+			"alive"
+		}
 	},
 	{
 		class_name = "HudElementTeamPanelHandler",
@@ -20,8 +20,8 @@ local elements = {
 			"dead",
 			"alive",
 			"communication_wheel",
-			"tactical_overlay",
-		},
+			"tactical_overlay"
+		}
 	},
 	{
 		class_name = "HudElementBossHealth",
@@ -31,8 +31,8 @@ local elements = {
 		visibility_groups = {
 			"dead",
 			"alive",
-			"communication_wheel",
-		},
+			"communication_wheel"
+		}
 	},
 	{
 		class_name = "HudElementPlayerAbilityHandler",
@@ -43,8 +43,8 @@ local elements = {
 		visibility_groups = {
 			"alive",
 			"communication_wheel",
-			"tactical_overlay",
-		},
+			"tactical_overlay"
+		}
 	},
 	{
 		class_name = "HudElementPlayerWeaponHandler",
@@ -55,8 +55,8 @@ local elements = {
 		visibility_groups = {
 			"alive",
 			"communication_wheel",
-			"tactical_overlay",
-		},
+			"tactical_overlay"
+		}
 	},
 	{
 		class_name = "HudElementDamageIndicator",
@@ -65,8 +65,8 @@ local elements = {
 		use_hud_scale = true,
 		visibility_groups = {
 			"alive",
-			"communication_wheel",
-		},
+			"communication_wheel"
+		}
 	},
 	{
 		class_name = "HudElementStamina",
@@ -75,8 +75,8 @@ local elements = {
 		use_hud_scale = true,
 		visibility_groups = {
 			"alive",
-			"communication_wheel",
-		},
+			"communication_wheel"
+		}
 	},
 	{
 		class_name = "HudElementDodgeCounter",
@@ -85,8 +85,8 @@ local elements = {
 		use_hud_scale = true,
 		visibility_groups = {
 			"alive",
-			"communication_wheel",
-		},
+			"communication_wheel"
+		}
 	},
 	{
 		class_name = "HudElementOvercharge",
@@ -95,8 +95,8 @@ local elements = {
 		use_hud_scale = true,
 		use_retained_mode = true,
 		visibility_groups = {
-			"alive",
-		},
+			"alive"
+		}
 	},
 	{
 		class_name = "HudElementWeaponCounter",
@@ -104,8 +104,8 @@ local elements = {
 		package = "packages/ui/hud/weapon_counter/weapon_counter",
 		use_hud_scale = true,
 		visibility_groups = {
-			"alive",
-		},
+			"alive"
+		}
 	},
 	{
 		class_name = "HudElementTacticalOverlay",
@@ -115,12 +115,12 @@ local elements = {
 		visibility_groups = {
 			"tactical_overlay",
 			"alive",
-			"communication_wheel",
+			"communication_wheel"
 		},
 		context = {
 			show_left_side_details = false,
-			show_right_side = false,
-		},
+			show_right_side = false
+		}
 	},
 	{
 		class_name = "HudElementCrosshair",
@@ -128,8 +128,8 @@ local elements = {
 		package = "packages/ui/hud/crosshair/crosshair",
 		use_hud_scale = false,
 		visibility_groups = {
-			"alive",
-		},
+			"alive"
+		}
 	},
 	{
 		class_name = "HudElementSmartTagging",
@@ -138,8 +138,8 @@ local elements = {
 		use_hud_scale = true,
 		visibility_groups = {
 			"alive",
-			"communication_wheel",
-		},
+			"communication_wheel"
+		}
 	},
 	{
 		class_name = "HudElementMissionObjectiveFeed",
@@ -150,8 +150,8 @@ local elements = {
 			"dead",
 			"alive",
 			"communication_wheel",
-			"tactical_overlay",
-		},
+			"tactical_overlay"
+		}
 	},
 	{
 		class_name = "HudElementMissionObjectivePopup",
@@ -162,8 +162,8 @@ local elements = {
 			"dead",
 			"alive",
 			"communication_wheel",
-			"tactical_overlay",
-		},
+			"tactical_overlay"
+		}
 	},
 	{
 		class_name = "HudElementObjectiveProgressBar",
@@ -173,8 +173,8 @@ local elements = {
 		visibility_groups = {
 			"dead",
 			"alive",
-			"communication_wheel",
-		},
+			"communication_wheel"
+		}
 	},
 	{
 		class_name = "HudElementPrologueStepTracker",
@@ -184,8 +184,8 @@ local elements = {
 		visibility_groups = {
 			"dead",
 			"alive",
-			"communication_wheel",
-		},
+			"communication_wheel"
+		}
 	},
 	{
 		class_name = "HudElementPrologueTutorialSequenceTransitionEnd",
@@ -194,8 +194,8 @@ local elements = {
 		visibility_groups = {
 			"dead",
 			"alive",
-			"communication_wheel",
-		},
+			"communication_wheel"
+		}
 	},
 	{
 		class_name = "HudElementPrologueTutorialInfoBox",
@@ -205,8 +205,8 @@ local elements = {
 		visibility_groups = {
 			"dead",
 			"alive",
-			"communication_wheel",
-		},
+			"communication_wheel"
+		}
 	},
 	{
 		class_name = "HudElementAreaNotificationPopup",
@@ -217,8 +217,8 @@ local elements = {
 			"dead",
 			"alive",
 			"communication_wheel",
-			"tactical_overlay",
-		},
+			"tactical_overlay"
+		}
 	},
 	{
 		class_name = "HudElementMissionSpeakerPopup",
@@ -230,8 +230,8 @@ local elements = {
 			"alive",
 			"cutscene",
 			"communication_wheel",
-			"tactical_overlay",
-		},
+			"tactical_overlay"
+		}
 	},
 	{
 		class_name = "HudElementPlayerBuffs",
@@ -242,8 +242,8 @@ local elements = {
 		visibility_groups = {
 			"dead",
 			"alive",
-			"communication_wheel",
-		},
+			"communication_wheel"
+		}
 	},
 	{
 		class_name = "HudElementWorldMarkers",
@@ -252,8 +252,8 @@ local elements = {
 		use_hud_scale = true,
 		visibility_groups = {
 			"alive",
-			"communication_wheel",
-		},
+			"communication_wheel"
+		}
 	},
 	{
 		class_name = "HudElementInteraction",
@@ -262,24 +262,24 @@ local elements = {
 		use_hud_scale = true,
 		visibility_groups = {
 			"alive",
-			"communication_wheel",
-		},
+			"communication_wheel"
+		}
 	},
 	{
 		class_name = "HudElementNameplates",
 		filename = "scripts/ui/hud/elements/nameplates/hud_element_nameplates",
 		visibility_groups = {
 			"alive",
-			"communication_wheel",
-		},
+			"communication_wheel"
+		}
 	},
 	{
 		class_name = "HudElementCutsceneOverlay",
 		filename = "scripts/ui/hud/elements/cutscene_overlay/hud_element_cutscene_overlay",
 		visibility_groups = {
 			"prologue_cutscene",
-			"cutscene",
-		},
+			"cutscene"
+		}
 	},
 	{
 		class_name = "HudElementCutsceneFading",
@@ -293,9 +293,9 @@ local elements = {
 			"communication_wheel",
 			"testify",
 			"dead",
-			"alive",
-		},
-	},
+			"alive"
+		}
+	}
 }
 
 return elements

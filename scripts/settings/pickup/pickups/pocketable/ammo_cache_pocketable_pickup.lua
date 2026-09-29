@@ -11,7 +11,7 @@ local pickup_data = {
 	name = "ammo_cache_pocketable",
 	pickup_sound = "wwise/events/player/play_pick_up_ammopack",
 	smart_tag_target_type = "pickup",
-	unit_name = "content/pickups/pocketables/ammo_crate/pickup_ammo_crate",
+	unit_name = "content/pickups/pocketables/ammo_crate/pickup_ammo_crate"
 }
 
 return pickup_data

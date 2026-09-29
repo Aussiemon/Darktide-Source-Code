@@ -15,7 +15,7 @@ local PlayerVoiceGrunts = require("scripts/utilities/player_voice_grunts")
 local SFX_SOURCE = "head"
 local STINGER_ALIAS = "disabled_enter"
 local STINGER_PROPERTIES = {
-	stinger_type = "mutant_charge",
+	stinger_type = "mutant_charge"
 }
 local VCE = "scream_long_vce"
 local PlayerCharacterStateConsumed = class("PlayerCharacterStateConsumed", "PlayerCharacterStateBase")
@@ -41,7 +41,7 @@ local DISABLED_UNIT_LINK_NODE = "j_hips"
 local SET_CONSUMED_TIMING = {
 	cryptic = 3.8,
 	human = 3.566666666666667,
-	ogryn = 3.8,
+	ogryn = 3.8
 }
 local FOLLOW_CONSUMED_TARGET_CAMERA_TIMING = 0.5
 
@@ -124,15 +124,15 @@ end
 local THROW_TELEPORT_UP_OFFSET = {
 	cryptic = 1.5,
 	human = 1.5,
-	ogryn = 1.5,
+	ogryn = 1.5
 }
 local THROW_TELEPORT_FWD_OFFSET = {
 	cryptic = 3.2,
 	human = 3.2,
-	ogryn = 3.2,
+	ogryn = 3.2
 }
 local INVERT_DIRECTION = {
-	ogryn = true,
+	ogryn = true
 }
 
 PlayerCharacterStateConsumed.on_exit = function (self, unit, t, next_state)
@@ -163,9 +163,9 @@ PlayerCharacterStateConsumed.on_exit = function (self, unit, t, next_state)
 	end
 
 	local first_person_mode_component = self._first_person_mode_component
-	local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player)
+	local rewind_seconds = LagCompensation.rewind_seconds(self._is_server, self._is_local_unit, self._player)
 
-	FirstPersonView.enter(t, first_person_mode_component, rewind_ms)
+	FirstPersonView.enter(t, first_person_mode_component, rewind_seconds)
 
 	if next_state ~= "dead" then
 		local inventory_component = self._inventory_component
@@ -248,7 +248,7 @@ PlayerCharacterStateConsumed._add_buffs = function (self, t)
 
 		self._buff_indexes = {
 			local_index = local_index,
-			component_index = component_index,
+			component_index = component_index
 		}
 	end
 end
@@ -270,7 +270,7 @@ end
 local CONSUMED_ANIM_EVENTS = {
 	cryptic = "player_human_consumed",
 	human = "player_human_consumed",
-	ogryn = "player_ogryn_consumed",
+	ogryn = "player_ogryn_consumed"
 }
 
 PlayerCharacterStateConsumed.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)

@@ -41,21 +41,21 @@ local contracts_view_settings = {
 		renegade = "loc_contract_task_enemy_type_renegade",
 		tome = "loc_contract_task_pickup_type_tome",
 		tome_or_grimoire = "loc_contract_task_pickup_type_grimoire_or_tome",
-		traitor = "loc_contract_task_enemy_type_traitor",
+		traitor = "loc_contract_task_enemy_type_traitor"
 	},
 	vo_event_replacing_task = {
-		"contract_vendor_replacing_task",
+		"contract_vendor_replacing_task"
 	},
 	vo_event_vendor_greeting = {
-		"hub_interact_contract_vendor",
+		"hub_interact_contract_vendor"
 	},
 	vo_event_vendor_first_interaction = {
 		"npc_first_interaction_contract_vendor_a",
 		"npc_first_interaction_contract_vendor_b",
 		"npc_first_interaction_contract_vendor_c",
 		"npc_first_interaction_contract_vendor_d",
-		"npc_first_interaction_contract_vendor_e",
-	},
+		"npc_first_interaction_contract_vendor_e"
+	}
 }
 
 return settings("ContractsViewSettings", contracts_view_settings)

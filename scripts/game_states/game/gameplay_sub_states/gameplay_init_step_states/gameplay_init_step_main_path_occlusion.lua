@@ -30,7 +30,7 @@ GameplayInitStepMainPathOcclusion.update = function (self, main_dt, main_t)
 	self._shared_state.initialized_steps.GameplayInitStepMainPathOcclusion = true
 
 	local next_step_params = {
-		shared_state = self._shared_state,
+		shared_state = self._shared_state
 	}
 
 	return GameplayInitStepFinalizeNavigation, next_step_params

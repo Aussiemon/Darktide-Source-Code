@@ -59,7 +59,7 @@ DialogueQueries = {
 		dialogue.last_variation = dialogue.randomize_indexes[current_index]
 
 		return dialogue.randomize_indexes[current_index]
-	end,
+	end
 }
 
 return DialogueQueries

@@ -18,11 +18,11 @@ local renegade_rifleman_default = {
 	damage_falloff = {
 		falloff_range = 15,
 		max_power_reduction = 0.6,
-		max_range = 15,
-	},
+		max_range = 15
+	}
 }
 local shoot_templates = {
-	renegade_rifleman_default = renegade_rifleman_default,
+	renegade_rifleman_default = renegade_rifleman_default
 }
 
 return shoot_templates

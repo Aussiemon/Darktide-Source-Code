@@ -30,7 +30,7 @@ local experience_per_level_array = {
 	2600,
 	2700,
 	2800,
-	2900,
+	2900
 }
 local num_defined_levels = #experience_per_level_array
 local total_defined_experience = 0
@@ -42,7 +42,7 @@ end
 local experience_settings = {
 	experience_per_level_array = experience_per_level_array,
 	max_level_experience = total_defined_experience,
-	max_level = num_defined_levels,
+	max_level = num_defined_levels
 }
 
 return settings("ExperienceSettings", experience_settings)

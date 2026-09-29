@@ -15,35 +15,35 @@ local prop_data = {
 		{
 			name = hit_zone_names.head,
 			actors = {
-				"c_eye",
-			},
+				"c_eye"
+			}
 		},
 		{
 			name = hit_zone_names.center_mass,
 			actors = {
-				"c_flesh",
-			},
+				"c_flesh"
+			}
 		},
 		{
 			name = hit_zone_names.corruptor_armor,
 			actors = {
 				"c_hatch",
-				"c_metal",
-			},
-		},
+				"c_metal"
+			}
+		}
 	},
 	hitzone_armor_override = {
-		[hit_zone_names.corruptor_armor] = armor_types.super_armor,
+		[hit_zone_names.corruptor_armor] = armor_types.super_armor
 	},
 	hitzone_damage_multiplier = {
 		melee = {
 			[hit_zone_names.head] = 5,
-			[hit_zone_names.center_mass] = 5,
-		},
+			[hit_zone_names.center_mass] = 5
+		}
 	},
 	tags = {
-		objective = true,
-	},
+		objective = true
+	}
 }
 
 return prop_data

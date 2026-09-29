@@ -3,16 +3,16 @@
 local _rename_states = {
 	initial = {
 		text = "loc_rename_account_state_initial_label",
-		color = Color.text_default(255, true),
+		color = Color.text_default(255, true)
 	},
 	pending = {
 		text = "loc_rename_account_state_pending_label",
-		color = Color.text_default(255, true),
+		color = Color.text_default(255, true)
 	},
 	error = {
 		text = "loc_rename_account_state_error_label",
-		color = Color.ui_red_medium(255, true),
-	},
+		color = Color.ui_red_medium(255, true)
+	}
 }
 
 local function show_failure()
@@ -22,9 +22,9 @@ local function show_failure()
 		options = {
 			{
 				close_on_pressed = true,
-				text = "loc_rename_account_cancel_label",
-			},
-		},
+				text = "loc_rename_account_cancel_label"
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context)
@@ -43,7 +43,7 @@ local function show_popup(on_success, is_forced)
 			margin_bottom = -4,
 			max_length = 18,
 			template_type = "terminal_input_field",
-			width = 512,
+			width = 512
 		},
 		{
 			font_name = "body_small",
@@ -56,7 +56,7 @@ local function show_popup(on_success, is_forced)
 
 					return _text, _color
 				end
-			end,
+			end
 		},
 		{
 			template_type = "terminal_button_hold_small",
@@ -83,21 +83,21 @@ local function show_popup(on_success, is_forced)
 
 					next_state = "error"
 				end)
-			end,
-		},
+			end
+		}
 	}
 
 	if not is_forced then
 		options[#options + 1] = {
 			close_on_pressed = true,
 			force_same_row = true,
-			text = "loc_rename_account_cancel_label",
+			text = "loc_rename_account_cancel_label"
 		}
 	else
 		options[#options + 1] = {
 			margin_bottom = 20,
 			template_type = "text",
-			text = "loc_forced_rename_note",
+			text = "loc_forced_rename_note"
 		}
 	end
 
@@ -114,7 +114,7 @@ local function show_popup(on_success, is_forced)
 	local context = {
 		title_text = title_text,
 		description_text = description_text,
-		options = options,
+		options = options
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (_popup_id)

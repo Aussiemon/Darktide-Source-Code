@@ -57,7 +57,7 @@ InputAliases.save = function (self, service_name)
 	local save_manager = Managers.save
 	local save_data = save_manager:account_data()
 
-	save_data.key_bindings[service_name] = self:overrides()
+	save_data.key_bindings.by_service[service_name] = self:overrides()
 
 	save_manager:queue_save()
 end
@@ -69,7 +69,7 @@ InputAliases.load = function (self, service_name)
 
 	local save_manager = Managers.save
 	local save_data = save_manager:account_data()
-	local service_overrides = save_data.key_bindings[service_name]
+	local service_overrides = save_data.key_bindings.by_service[service_name]
 
 	if service_overrides then
 		for alias, alias_table in pairs(service_overrides) do
@@ -164,7 +164,7 @@ InputAliases.set_keys_for_alias = function (self, name, device_types, new_key_in
 	local value = new_key_info and InputUtils.make_string(new_key_info)
 	local pc_device_types = {
 		"mouse",
-		"keyboard",
+		"keyboard"
 	}
 
 	if col then

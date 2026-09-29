@@ -15,4 +15,16 @@ MutatorMinionNurgleBlessing.init = function (self, is_server, network_event_dele
 	end
 end
 
+MutatorMinionNurgleBlessing._on_boss_encounter_started = function (self, event_settings, breed_data)
+	if not event_settings or not event_settings.deactivate_on_breed then
+		return
+	end
+
+	if event_settings.deactivate_on_breed.name ~= breed_data.name then
+		return
+	end
+
+	self:deactivate()
+end
+
 return MutatorMinionNurgleBlessing

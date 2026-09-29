@@ -13,24 +13,24 @@ Styles.top_detail.detail_texture = {
 		255,
 		255,
 		88,
-		27,
+		27
 	},
 	offset = {
 		0,
 		0,
-		2,
+		2
 	},
 	size_addition = {
 		0,
-		0,
+		0
 	},
 	size = {
 		100,
-		100,
+		100
 	},
 	material_values = {
-		gradient_map = "content/ui/textures/mission_board/gradient_digital_frame_red",
-	},
+		gradient_map = "content/ui/textures/mission_board/gradient_digital_frame_red"
+	}
 }
 Styles.list_background = {}
 Styles.list_background.list_background_fade = {
@@ -40,17 +40,17 @@ Styles.list_background.list_background_fade = {
 		90,
 		255,
 		88,
-		27,
+		27
 	},
 	size = {
 		1120,
-		692,
+		692
 	},
 	offset = {
 		0,
 		-20,
-		0,
-	},
+		0
+	}
 }
 Styles.bottom_detail = {}
 Styles.bottom_detail.background = {
@@ -58,17 +58,17 @@ Styles.bottom_detail.background = {
 		255,
 		0,
 		0,
-		0,
+		0
 	},
 	offset = {
 		0,
 		0,
-		0,
+		0
 	},
 	size_addition = {
 		0,
-		0,
-	},
+		0
+	}
 }
 Styles.bottom_detail.frame = {
 	horizontal_alignment = "center",
@@ -77,17 +77,17 @@ Styles.bottom_detail.frame = {
 		255,
 		255,
 		88,
-		27,
+		27
 	},
 	offset = {
 		0,
 		0,
-		10,
+		10
 	},
 	size_addition = {
 		0,
-		0,
-	},
+		0
+	}
 }
 Styles.bottom_detail.flavor_text_1 = {
 	font_size = 22,
@@ -100,17 +100,17 @@ Styles.bottom_detail.flavor_text_1 = {
 		255,
 		255,
 		88,
-		27,
+		27
 	},
 	offset = {
 		770,
 		0,
-		10,
+		10
 	},
 	size = {
 		300,
-		38,
-	},
+		38
+	}
 }
 Styles.campaign_header = {}
 Styles.campaign_header.header_text = {
@@ -124,13 +124,13 @@ Styles.campaign_header.header_text = {
 		255,
 		255,
 		88,
-		27,
+		27
 	},
 	offset = {
 		0,
 		0,
-		10,
-	},
+		10
+	}
 }
 Styles.debrief_video = {}
 Styles.debrief_video.background = {
@@ -140,15 +140,15 @@ Styles.debrief_video.background = {
 		255,
 		0,
 		0,
-		0,
+		0
 	},
 	offset = {
 		0,
 		0,
-		10,
+		10
 	},
 	default_size = DebriefSettings.size,
-	size = DebriefSettings.size,
+	size = DebriefSettings.size
 }
 Styles.debrief_video.hotspot = {
 	anim_hover_speed = 10,
@@ -157,12 +157,12 @@ Styles.debrief_video.hotspot = {
 	offset = {
 		0,
 		0,
-		10,
+		10
 	},
 	size = DebriefSettings.size,
 	default_size = DebriefSettings.size,
 	on_hover_sound = UISoundEvents.default_mouse_hover,
-	on_pressed_sound = UISoundEvents.default_click,
+	on_pressed_sound = UISoundEvents.default_click
 }
 Styles.debrief_video.debrief_icon = {
 	horizontal_alignment = "center",
@@ -172,30 +172,30 @@ Styles.debrief_video.debrief_icon = {
 		255,
 		255,
 		255,
-		255,
+		255
 	},
 	default_color = {
 		255,
 		255,
 		255,
-		255,
+		255
 	},
 	disabled_color = {
 		165,
 		255,
 		255,
-		255,
+		255
 	},
 	offset = {
 		0,
 		0,
-		12,
+		12
 	},
 	size = DebriefSettings.icon_size,
 	default_size = DebriefSettings.icon_size,
 	material_values = {
-		enable_animation = 0,
-	},
+		enable_animation = 0
+	}
 }
 Styles.debrief_video.frame = {
 	horizontal_alignment = "center",
@@ -204,27 +204,27 @@ Styles.debrief_video.frame = {
 		255,
 		255,
 		88,
-		27,
+		27
 	},
 	default_color = {
 		255,
 		255,
 		88,
-		27,
+		27
 	},
 	disabled_color = {
 		165,
 		255,
 		88,
-		27,
+		27
 	},
 	offset = {
 		0,
 		0,
-		14,
+		14
 	},
 	size = DebriefSettings.size,
-	default_size = DebriefSettings.size,
+	default_size = DebriefSettings.size
 }
 Styles.debrief_video.line = {
 	horizontal_alignment = "center",
@@ -233,29 +233,29 @@ Styles.debrief_video.line = {
 		255,
 		255,
 		88,
-		27,
+		27
 	},
 	default_color = {
 		255,
 		255,
 		88,
-		27,
+		27
 	},
 	disabled_color = {
 		165,
 		255,
 		88,
-		27,
+		27
 	},
 	offset = {
 		-DebriefSettings.size[1],
 		0,
-		-20,
+		-20
 	},
 	size = {
 		DebriefSettings.size[1],
-		2,
-	},
+		2
+	}
 }
 Styles.debrief_video.gamepad_input_hint = {
 	font_size = 32,
@@ -268,17 +268,17 @@ Styles.debrief_video.gamepad_input_hint = {
 		255,
 		255,
 		88,
-		27,
+		27
 	},
 	offset = {
 		0,
 		DebriefSettings.size[2] - 16,
-		12,
+		12
 	},
 	size = {
 		40,
-		40,
-	},
+		40
+	}
 }
 Styles.list_panel = {}
 Styles.list_panel.panel_button_hotspot = {
@@ -289,10 +289,10 @@ Styles.list_panel.panel_button_hotspot = {
 	offset = {
 		0,
 		0,
-		2,
+		2
 	},
 	on_hover_sound = UISoundEvents.default_mouse_hover,
-	on_pressed_sound = UISoundEvents.default_click,
+	on_pressed_sound = UISoundEvents.default_click
 }
 Styles.list_panel.panel_button_background = {
 	horizontal_alignment = "left",
@@ -301,13 +301,13 @@ Styles.list_panel.panel_button_background = {
 		255,
 		0,
 		0,
-		0,
+		0
 	},
 	offset = {
 		0,
 		0,
-		1,
-	},
+		1
+	}
 }
 Styles.list_panel.panel_button_highlight = {
 	horizontal_alignment = "left",
@@ -316,16 +316,16 @@ Styles.list_panel.panel_button_highlight = {
 		255,
 		255,
 		88,
-		27,
+		27
 	},
 	offset = {
 		0,
 		0,
-		2,
-	},
+		2
+	}
 }
 Styles.list_panel.panel_button_campaign_title = {
-	font_size = 22,
+	font_size = 18,
 	font_type = "mono_tide_medium",
 	horizontal_alignment = "left",
 	text_horizontal_alignment = "center",
@@ -335,25 +335,25 @@ Styles.list_panel.panel_button_campaign_title = {
 		255,
 		255,
 		88,
-		27,
+		27
 	},
 	selected_color = {
 		255,
 		0,
 		0,
-		0,
+		0
 	},
 	default_color = {
 		255,
 		255,
 		88,
-		27,
+		27
 	},
 	offset = {
 		0,
 		0,
-		3,
-	},
+		3
+	}
 }
 Styles.panel_stepper = {}
 Styles.panel_stepper.hotpsot = {
@@ -362,10 +362,10 @@ Styles.panel_stepper.hotpsot = {
 	offset = {
 		0,
 		0,
-		1,
+		1
 	},
 	on_hover_sound = UISoundEvents.default_mouse_hover,
-	on_pressed_sound = UISoundEvents.default_click,
+	on_pressed_sound = UISoundEvents.default_click
 }
 Styles.panel_stepper.button_icon = {
 	horizontal_alignment = "center",
@@ -375,21 +375,21 @@ Styles.panel_stepper.button_icon = {
 		255,
 		255,
 		88,
-		27,
+		27
 	},
 	offset = {
 		0,
 		0,
-		2,
+		2
 	},
 	size = {
 		68,
-		68,
+		68
 	},
 	default_size = {
 		68,
-		68,
-	},
+		68
+	}
 }
 Styles.panel_stepper.button_icon_glow = {
 	horizontal_alignment = "center",
@@ -399,21 +399,21 @@ Styles.panel_stepper.button_icon_glow = {
 		255,
 		255,
 		88,
-		27,
+		27
 	},
 	offset = {
 		0,
 		0,
-		2,
+		2
 	},
 	size = {
 		68,
-		68,
+		68
 	},
 	default_size = {
 		68,
-		68,
-	},
+		68
+	}
 }
 Styles.panel_stepper.button_input = {
 	font_size = 32,
@@ -426,17 +426,17 @@ Styles.panel_stepper.button_input = {
 		255,
 		255,
 		88,
-		27,
+		27
 	},
 	offset = {
 		0,
 		0,
-		3,
+		3
 	},
 	size = {
 		68,
-		68,
-	},
+		68
+	}
 }
 
 return settings("ViewElementCampaignMissionListStyles", Styles)

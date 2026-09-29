@@ -8,6 +8,9 @@ local BotPerceptionExtension = class("BotPerceptionExtension")
 local IN_PROXIMITY_DISTANCE = 5
 local MINION_BREED_TYPE = BreedSettings.types.minion
 local MAX_PROXIMITY_ENEMIES = 10
+local INCOMING_PROJECTILE_MELEE_RANGE = 2.5
+local MAXIMUM_PROJECTILE_TARGET_RANGE = 30
+local MINIMUM_PROJECTILE_TARGET_RANGE = 2
 
 BotPerceptionExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)
 	local blackboard = BLACKBOARDS[unit]
@@ -40,6 +43,8 @@ end
 BotPerceptionExtension._init_blackboard_components = function (self, blackboard)
 	local perception_component = Blackboard.write_component(blackboard, "perception")
 
+	perception_component.incoming_projectile = nil
+	perception_component.projectile_target_range = 0
 	perception_component.aggro_target_enemy = nil
 	perception_component.aggro_target_enemy_distance = 0
 	perception_component.aggressive_mode = false
@@ -202,6 +207,24 @@ BotPerceptionExtension._update_target_enemy = function (self, self_unit, self_po
 	local template = self._target_selection_template
 
 	template(self_unit, self_position, side, perception_component, behavior_component, breed, target_units, t, self._threat_units, bot_group, self._target_selection_debug_info)
+	self:_update_incoming_projectile(self_unit, self_position, perception_component, bot_group)
+end
+
+BotPerceptionExtension._update_incoming_projectile = function (self, self_unit, self_position, perception_component, bot_group)
+	local projectile_unit, projectile_distance = bot_group:incoming_projectile_for(self_unit)
+
+	if perception_component.incoming_projectile ~= projectile_unit then
+		perception_component.incoming_projectile = projectile_unit
+		perception_component.projectile_target_range = math.max(math.random() * MAXIMUM_PROJECTILE_TARGET_RANGE, MINIMUM_PROJECTILE_TARGET_RANGE)
+	end
+
+	if projectile_unit and projectile_distance < perception_component.projectile_target_range then
+		local engage_type = projectile_distance <= INCOMING_PROJECTILE_MELEE_RANGE and "melee" or "ranged"
+
+		perception_component.target_enemy = projectile_unit
+		perception_component.target_enemy_distance = projectile_distance
+		perception_component.target_enemy_type = engage_type
+	end
 end
 
 BotPerceptionExtension._decay_threat = function (self, unit, dt)
@@ -271,7 +294,7 @@ end
 local PRIORITY_AID_TYPES = {
 	knocked_down = true,
 	ledge = true,
-	netted = true,
+	netted = true
 }
 
 BotPerceptionExtension._update_target_ally = function (self, self_unit, self_position, perception_component, side, bot_group, t)

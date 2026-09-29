@@ -84,7 +84,7 @@ MutatorGameplayLiveEventSkullsGunsFull._on_event_skulls_totem_damaged = function
 		intial_cooldown_multiplier_value = 0,
 		size = "default",
 		worldposition = position,
-		node_id = math.uuid(),
+		node_id = math.uuid()
 	}
 	local auto_event_data = self._active_auto_events[unit]
 
@@ -96,7 +96,7 @@ MutatorGameplayLiveEventSkullsGunsFull._on_event_skulls_totem_damaged = function
 
 	self._active_auto_events[unit] = {
 		duration = self._min_auto_event_duration,
-		auto_event_id = auto_event_id,
+		auto_event_id = auto_event_id
 	}
 
 	self:show_objective_popup_notification("event_start")

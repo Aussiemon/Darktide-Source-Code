@@ -8,31 +8,31 @@ ability_template.action_inputs = {
 		buffer_time = 0.2,
 		input_sequence = {
 			{
-				input = "combat_ability_pressed",
-				value = true,
-			},
-		},
+				input_alias = "wielded_input_pressed",
+				value = true
+			}
+		}
 	},
 	shout_released = {
 		buffer_time = 0.1,
 		input_sequence = {
 			{
-				input = "combat_ability_hold",
+				input_alias = "wielded_input_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				time_window = math.huge
+			}
+		}
 	},
 	block_cancel = {
 		buffer_time = 0,
 		input_sequence = {
 			{
-				hold_input = "combat_ability_hold",
+				hold_input_alias = "wielded_input_hold",
 				input = "action_two_pressed",
-				value = true,
-			},
-		},
-	},
+				value = true
+			}
+		}
+	}
 }
 ability_template.action_input_hierarchy = {
 	{
@@ -40,18 +40,17 @@ ability_template.action_input_hierarchy = {
 		transition = {
 			{
 				input = "shout_released",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "block_cancel",
-				transition = "base",
-			},
-		},
-	},
+				transition = "base"
+			}
+		}
+	}
 }
 ability_template.actions = {
 	action_aim = {
-		ability_type = "combat_ability",
 		allowed_during_lunge = true,
 		allowed_during_sprint = true,
 		kind = "shout_aim",
@@ -64,14 +63,15 @@ ability_template.actions = {
 		radius = RADIUS,
 		allowed_chain_actions = {
 			shout_released = {
-				action_name = "action_shout",
-			},
-		},
+				action_name = "action_shout"
+			}
+		}
 	},
 	action_shout = {
-		ability_type = "combat_ability",
 		allowed_during_sprint = true,
 		anim = "ability_shout",
+		consume_ability_usage_cost = true,
+		consume_usage_cost_at_start = true,
 		has_husk_sound = true,
 		kind = "ogryn_shout",
 		recover_toughness_effect = "content/fx/particles/abilities/squad_leader_ability_toughness_buff",
@@ -81,21 +81,19 @@ ability_template.actions = {
 		total_time = 0.75,
 		toughness_replenish_percent = 1,
 		uninterruptible = true,
-		use_ability_charge = true,
-		use_charge_at_start = true,
 		vo_tag = "ability_bullgryn",
-		radius = RADIUS,
-	},
+		radius = RADIUS
+	}
 }
 ability_template.fx_sources = {}
 ability_template.equipped_ability_effect_scripts = {
-	"ShoutEffects",
+	"ShoutEffects"
 }
 ability_template.equipped_ability_effect_scripts_tweak_data = {
 	vfx = {
 		delay = 0.2,
-		name = "content/fx/particles/abilities/ogryn_ability_shout_activate",
-	},
+		name = "content/fx/particles/abilities/ogryn_ability_shout_activate"
+	}
 }
 
 return ability_template

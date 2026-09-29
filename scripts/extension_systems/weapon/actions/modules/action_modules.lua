@@ -26,7 +26,7 @@ local action_modules = {
 	multi_targeting = MultiTargetingActionModule,
 	charge = ChargeActionModule,
 	overheat = OverheatActionModule,
-	warp_charge = WarpChargeActionModule,
+	warp_charge = WarpChargeActionModule
 }
 
 return settings("ActionModules", action_modules)

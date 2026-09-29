@@ -51,12 +51,12 @@ sway_templates.phosphor_pistol_p1_m1_sway = {
 		max_sway = {
 			pitch = {
 				lerp_basic = 0.11,
-				lerp_perfect = 0.0002,
+				lerp_perfect = 0.0002
 			},
 			yaw = {
 				lerp_basic = 0.11,
-				lerp_perfect = 0.0002,
-			},
+				lerp_perfect = 0.0002
+			}
 		},
 		decay = {
 			crouch_transition_grace_time = 0.5,
@@ -64,51 +64,51 @@ sway_templates.phosphor_pistol_p1_m1_sway = {
 			shooting = {
 				pitch = {
 					lerp_basic = 0.1,
-					lerp_perfect = 0.5,
+					lerp_perfect = 0.5
 				},
 				yaw = {
 					lerp_basic = 0.1,
-					lerp_perfect = 0.5,
-				},
+					lerp_perfect = 0.5
+				}
 			},
 			idle = {
 				pitch = {
 					lerp_basic = 0.75,
-					lerp_perfect = 2,
+					lerp_perfect = 2
 				},
 				yaw = {
 					lerp_basic = 0.75,
-					lerp_perfect = 2,
-				},
+					lerp_perfect = 2
+				}
 			},
 			player_event = {
 				pitch = {
 					lerp_basic = 0.25,
-					lerp_perfect = 0.5,
+					lerp_perfect = 0.5
 				},
 				yaw = {
 					lerp_basic = 0.25,
-					lerp_perfect = 0.5,
-				},
+					lerp_perfect = 0.5
+				}
 			},
 			enter_alternate_fire_grace_time = {
 				lerp_basic = 0.45,
-				lerp_perfect = 0,
+				lerp_perfect = 0
 			},
 			from_shooting_grace_time = {
 				lerp_basic = 1,
-				lerp_perfect = 0,
-			},
+				lerp_perfect = 0
+			}
 		},
 		continuous_sway = {
 			pitch = {
 				lerp_basic = 0.2,
-				lerp_perfect = 0.02,
+				lerp_perfect = 0.02
 			},
 			yaw = {
 				lerp_basic = 0.2,
-				lerp_perfect = 0.02,
-			},
+				lerp_perfect = 0.02
+			}
 		},
 		immediate_sway = {
 			num_shots_clear_time = 2,
@@ -117,128 +117,128 @@ sway_templates.phosphor_pistol_p1_m1_sway = {
 					cap = true,
 					pitch = {
 						lerp_basic = 0.1,
-						lerp_perfect = 0.025,
+						lerp_perfect = 0.025
 					},
 					yaw = {
 						lerp_basic = 0.1,
-						lerp_perfect = 0.025,
-					},
-				},
+						lerp_perfect = 0.025
+					}
+				}
 			},
 			alternate_fire_start = {
 				{
 					cap = true,
 					pitch = {
 						lerp_basic = 0.5,
-						lerp_perfect = 0,
+						lerp_perfect = 0
 					},
 					yaw = {
 						lerp_basic = 0.5,
-						lerp_perfect = 0,
-					},
-				},
+						lerp_perfect = 0
+					}
+				}
 			},
 			damage_hit = {
 				{
 					pitch = {
 						lerp_basic = 1.2,
-						lerp_perfect = 0.6,
+						lerp_perfect = 0.6
 					},
 					yaw = {
 						lerp_basic = 1.2,
-						lerp_perfect = 0.6,
-					},
-				},
+						lerp_perfect = 0.6
+					}
+				}
 			},
 			shooting = {
 				{
 					pitch = {
 						lerp_basic = 0.001,
-						lerp_perfect = 0,
+						lerp_perfect = 0
 					},
 					yaw = {
 						lerp_basic = 0.001,
-						lerp_perfect = 0,
-					},
+						lerp_perfect = 0
+					}
 				},
 				{
 					pitch = {
 						lerp_basic = 0.001,
-						lerp_perfect = 0,
+						lerp_perfect = 0
 					},
 					yaw = {
 						lerp_basic = 0.001,
-						lerp_perfect = 0,
-					},
+						lerp_perfect = 0
+					}
 				},
 				{
 					pitch = {
 						lerp_basic = 0.001,
-						lerp_perfect = 0,
+						lerp_perfect = 0
 					},
 					yaw = {
 						lerp_basic = 0.001,
-						lerp_perfect = 0,
-					},
+						lerp_perfect = 0
+					}
 				},
 				{
 					pitch = {
 						lerp_basic = 0.002,
-						lerp_perfect = 0.001,
+						lerp_perfect = 0.001
 					},
 					yaw = {
 						lerp_basic = 0.002,
-						lerp_perfect = 0.001,
-					},
+						lerp_perfect = 0.001
+					}
 				},
 				{
 					pitch = {
 						lerp_basic = 0.003,
-						lerp_perfect = 0.0015,
+						lerp_perfect = 0.0015
 					},
 					yaw = {
 						lerp_basic = 0.003,
-						lerp_perfect = 0.0015,
-					},
+						lerp_perfect = 0.0015
+					}
 				},
 				{
 					pitch = {
 						lerp_basic = 0.004,
-						lerp_perfect = 0.002,
+						lerp_perfect = 0.002
 					},
 					yaw = {
 						lerp_basic = 0.004,
-						lerp_perfect = 0.002,
-					},
+						lerp_perfect = 0.002
+					}
 				},
 				{
 					pitch = {
 						lerp_basic = 0.006,
-						lerp_perfect = 0.003,
+						lerp_perfect = 0.003
 					},
 					yaw = {
 						lerp_basic = 0.006,
-						lerp_perfect = 0.003,
-					},
-				},
-			},
+						lerp_perfect = 0.003
+					}
+				}
+			}
 		},
-		sway_pattern = phosphor_pistol_p1_m1_sway,
+		sway_pattern = phosphor_pistol_p1_m1_sway
 	},
 	moving = {
 		inherits = {
 			"phosphor_pistol_p1_m1_sway",
-			"still",
+			"still"
 		},
 		continuous_sway = {
 			pitch = {
 				lerp_basic = 0.45,
-				lerp_perfect = 0.1,
+				lerp_perfect = 0.1
 			},
 			yaw = {
 				lerp_basic = 0.45,
-				lerp_perfect = 0.1,
-			},
+				lerp_perfect = 0.1
+			}
 		},
 		decay = {
 			crouch_transition_grace_time = 0.5,
@@ -246,57 +246,57 @@ sway_templates.phosphor_pistol_p1_m1_sway = {
 			shooting = {
 				pitch = {
 					lerp_basic = 0.1,
-					lerp_perfect = 0.25,
+					lerp_perfect = 0.25
 				},
 				yaw = {
 					lerp_basic = 0.1,
-					lerp_perfect = 0.25,
-				},
+					lerp_perfect = 0.25
+				}
 			},
 			idle = {
 				pitch = {
 					lerp_basic = 0.75,
-					lerp_perfect = 1,
+					lerp_perfect = 1
 				},
 				yaw = {
 					lerp_basic = 0.75,
-					lerp_perfect = 1,
-				},
+					lerp_perfect = 1
+				}
 			},
 			player_event = {
 				pitch = {
 					lerp_basic = 0.25,
-					lerp_perfect = 0.5,
+					lerp_perfect = 0.5
 				},
 				yaw = {
 					lerp_basic = 0.25,
-					lerp_perfect = 0.5,
-				},
+					lerp_perfect = 0.5
+				}
 			},
 			enter_alternate_fire_grace_time = {
 				lerp_basic = 0.45,
-				lerp_perfect = 0,
+				lerp_perfect = 0
 			},
 			from_shooting_grace_time = {
 				lerp_basic = 1,
-				lerp_perfect = 0,
-			},
-		},
+				lerp_perfect = 0
+			}
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"phosphor_pistol_p1_m1_sway",
-			"still",
+			"still"
 		},
 		continuous_sway = {
 			pitch = {
 				lerp_basic = 0.1,
-				lerp_perfect = 0.01,
+				lerp_perfect = 0.01
 			},
 			yaw = {
 				lerp_basic = 0.1,
-				lerp_perfect = 0.01,
-			},
+				lerp_perfect = 0.01
+			}
 		},
 		decay = {
 			crouch_transition_grace_time = 0.5,
@@ -305,54 +305,54 @@ sway_templates.phosphor_pistol_p1_m1_sway = {
 			shooting = {
 				pitch = {
 					lerp_basic = 0.001,
-					lerp_perfect = 0.001,
+					lerp_perfect = 0.001
 				},
 				yaw = {
 					lerp_basic = 0.001,
-					lerp_perfect = 0.001,
-				},
+					lerp_perfect = 0.001
+				}
 			},
 			idle = {
 				pitch = {
 					lerp_basic = 1.5,
-					lerp_perfect = 3.5,
+					lerp_perfect = 3.5
 				},
 				yaw = {
 					lerp_basic = 1.5,
-					lerp_perfect = 3.5,
-				},
+					lerp_perfect = 3.5
+				}
 			},
 			player_event = {
 				pitch = {
 					lerp_basic = 0.1,
-					lerp_perfect = 0.1,
+					lerp_perfect = 0.1
 				},
 				yaw = {
 					lerp_basic = 0.1,
-					lerp_perfect = 0.1,
-				},
+					lerp_perfect = 0.1
+				}
 			},
 			from_shooting_grace_time = {
 				lerp_basic = 1,
-				lerp_perfect = 0,
-			},
+				lerp_perfect = 0
+			}
 		},
-		sway_pattern = phosphor_pistol_p1_m1_crouch_sway,
+		sway_pattern = phosphor_pistol_p1_m1_crouch_sway
 	},
 	crouch_moving = {
 		inherits = {
 			"phosphor_pistol_p1_m1_sway",
-			"still",
+			"still"
 		},
 		continuous_sway = {
 			pitch = {
 				lerp_basic = 0.12,
-				lerp_perfect = 0.0125,
+				lerp_perfect = 0.0125
 			},
 			yaw = {
 				lerp_basic = 0.12,
-				lerp_perfect = 0.0125,
-			},
+				lerp_perfect = 0.0125
+			}
 		},
 		decay = {
 			crouch_transition_grace_time = 0.5,
@@ -361,43 +361,43 @@ sway_templates.phosphor_pistol_p1_m1_sway = {
 			shooting = {
 				pitch = {
 					lerp_basic = 0.1,
-					lerp_perfect = 0.1,
+					lerp_perfect = 0.1
 				},
 				yaw = {
 					lerp_basic = 0.1,
-					lerp_perfect = 0.1,
-				},
+					lerp_perfect = 0.1
+				}
 			},
 			idle = {
 				pitch = {
 					lerp_basic = 1.25,
-					lerp_perfect = 3,
+					lerp_perfect = 3
 				},
 				yaw = {
 					lerp_basic = 1.25,
-					lerp_perfect = 3,
-				},
+					lerp_perfect = 3
+				}
 			},
 			player_event = {
 				pitch = {
 					lerp_basic = 0.1,
-					lerp_perfect = 0.1,
+					lerp_perfect = 0.1
 				},
 				yaw = {
 					lerp_basic = 0.1,
-					lerp_perfect = 0.1,
-				},
+					lerp_perfect = 0.1
+				}
 			},
 			from_shooting_grace_time = {
 				lerp_basic = 1,
-				lerp_perfect = 0,
-			},
+				lerp_perfect = 0
+			}
 		},
-		sway_pattern = phosphor_pistol_p1_m1_crouch_sway,
-	},
+		sway_pattern = phosphor_pistol_p1_m1_crouch_sway
+	}
 }
 
 return {
 	base_templates = sway_templates,
-	overrides = overrides,
+	overrides = overrides
 }

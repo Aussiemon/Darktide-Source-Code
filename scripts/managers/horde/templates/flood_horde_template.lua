@@ -14,23 +14,23 @@ local horde_template = {
 		8,
 		12,
 		15,
-		25,
+		25
 	},
 	spawn_frequency = {
 		0.5,
-		3,
+		3
 	},
 	num_minion_per_spawn = {
 		1,
-		3,
+		3
 	},
 	num_minions_for_pause = {
 		60,
 		75,
 		85,
 		95,
-		110,
-	},
+		110
+	}
 }
 local breeds_to_spawn = {}
 
@@ -272,7 +272,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 		composition = composition,
 		nav_world = nav_world,
 		num_to_spawn = total_num_to_spawn,
-		physics_world = physics_world,
+		physics_world = physics_world
 	}
 	local group_system = Managers.state.extension:system("group_system")
 	local group_id = group_system:generate_group_id()

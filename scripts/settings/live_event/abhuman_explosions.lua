@@ -9,8 +9,8 @@ local abhuman_explosions = {
 	name = "loc_abhuman_explosions_name",
 	stat = "abhuman_explosions_mission_won",
 	item_rewards = {
-		"content/items/2d/insignias/insignia_event_abhuman_explosions",
-	},
+		"content/items/2d/insignias/insignia_event_abhuman_explosions"
+	}
 }
 
 return abhuman_explosions

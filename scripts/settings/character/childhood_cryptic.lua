@@ -8,9 +8,9 @@ local childhood_options = {
 		story_snippet = "loc_character_bio_origin_01_description_snippet",
 		visibility = {
 			archetypes = {
-				"cryptic",
-			},
-		},
+				"cryptic"
+			}
+		}
 	},
 	{
 		description = "loc_character_bio_origin_02_description",
@@ -19,9 +19,9 @@ local childhood_options = {
 		story_snippet = "loc_character_bio_origin_02_description_snippet",
 		visibility = {
 			archetypes = {
-				"cryptic",
-			},
-		},
+				"cryptic"
+			}
+		}
 	},
 	{
 		description = "loc_character_bio_origin_03_description",
@@ -30,9 +30,9 @@ local childhood_options = {
 		story_snippet = "loc_character_bio_origin_03_description_snippet",
 		visibility = {
 			archetypes = {
-				"cryptic",
-			},
-		},
+				"cryptic"
+			}
+		}
 	},
 	{
 		description = "loc_character_bio_origin_04_description",
@@ -41,9 +41,9 @@ local childhood_options = {
 		story_snippet = "loc_character_bio_origin_04_description_snippet",
 		visibility = {
 			archetypes = {
-				"cryptic",
-			},
-		},
+				"cryptic"
+			}
+		}
 	},
 	{
 		description = "loc_character_bio_origin_05_description",
@@ -52,9 +52,9 @@ local childhood_options = {
 		story_snippet = "loc_character_bio_origin_05_description_snippet",
 		visibility = {
 			archetypes = {
-				"cryptic",
-			},
-		},
+				"cryptic"
+			}
+		}
 	},
 	{
 		description = "loc_character_bio_origin_06_description",
@@ -63,9 +63,9 @@ local childhood_options = {
 		story_snippet = "loc_character_bio_origin_06_description_snippet",
 		visibility = {
 			archetypes = {
-				"cryptic",
-			},
-		},
+				"cryptic"
+			}
+		}
 	},
 	{
 		description = "loc_character_bio_origin_07_description",
@@ -74,10 +74,10 @@ local childhood_options = {
 		story_snippet = "loc_character_bio_origin_07_description_snippet",
 		visibility = {
 			archetypes = {
-				"cryptic",
-			},
-		},
-	},
+				"cryptic"
+			}
+		}
+	}
 }
 
 return childhood_options

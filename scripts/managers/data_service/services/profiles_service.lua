@@ -37,7 +37,7 @@ local function _fetch_all_backend_profiles(backend_interface)
 			return Promise.resolved({
 				selected_profile = nil,
 				profiles = {},
-				gear = gear_list,
+				gear = gear_list
 			})
 		end
 
@@ -69,7 +69,7 @@ local function _fetch_all_backend_profiles(backend_interface)
 		return Promise.resolved({
 			profiles = profiles,
 			selected_profile = selected_profile,
-			gear = gear_list,
+			gear = gear_list
 		})
 	end)
 end
@@ -185,7 +185,7 @@ ProfilesService.fetch_suggested_names_by_archetype = function (self, archetype_n
 	return Managers.backend.interfaces.social:suggested_names_by_archetype(archetype_name, gender, planet):next(function (result)
 		local names = {
 			character = result.names,
-			companion = result.companionNames,
+			companion = result.companionNames
 		}
 
 		return Promise.resolved(names)
@@ -197,7 +197,7 @@ ProfilesService.fetch_suggested_names_by_archetype = function (self, archetype_n
 				"Thomas",
 				"Jane",
 				"Niki",
-				"Marie",
+				"Marie"
 			},
 			companion = {
 				"Alex",
@@ -205,8 +205,8 @@ ProfilesService.fetch_suggested_names_by_archetype = function (self, archetype_n
 				"Thomas",
 				"Jane",
 				"Niki",
-				"Marie",
-			},
+				"Marie"
+			}
 		})
 	end)
 end

@@ -10,14 +10,14 @@ circumstance_templates.abhuman_01 = {
 		"mutator_live_abhuman_trickle",
 		"mutator_live_abhuman_monster",
 		"mutator_only_traitor_guard_faction",
-		"mutator_live_abhuman_replacement",
+		"mutator_live_abhuman_replacement"
 	},
 	ui = {
 		description = "loc_circumstance_live_abhuman_01_description",
 		display_name = "loc_circumstance_live_abhuman_01_title",
 		happening_display_name = "loc_happening_assault",
-		icon = "content/ui/materials/icons/circumstances/live_event_01",
-	},
+		icon = "content/ui/materials/icons/circumstances/live_event_01"
+	}
 }
 circumstance_templates.abhuman_02 = {
 	dialogue_id = "circumstance_vo_hunting_grounds",
@@ -31,14 +31,14 @@ circumstance_templates.abhuman_02 = {
 		"mutator_live_abhuman_trickle",
 		"mutator_live_abhuman_monster",
 		"mutator_only_traitor_guard_faction",
-		"mutator_live_abhuman_replacement",
+		"mutator_live_abhuman_replacement"
 	},
 	ui = {
 		description = "loc_circumstance_live_abhuman_02_description",
 		display_name = "loc_circumstance_live_abhuman_02_title",
 		happening_display_name = "loc_happening_hunting_grounds",
-		icon = "content/ui/materials/icons/circumstances/live_event_01",
-	},
+		icon = "content/ui/materials/icons/circumstances/live_event_01"
+	}
 }
 circumstance_templates.abhuman_03 = {
 	theme_tag = "default",
@@ -46,15 +46,15 @@ circumstance_templates.abhuman_03 = {
 	ui = {
 		description = "loc_circumstance_live_abhuman_03_description",
 		display_name = "loc_circumstance_live_abhuman_03_title",
-		icon = "content/ui/materials/icons/circumstances/live_event_01",
+		icon = "content/ui/materials/icons/circumstances/live_event_01"
 	},
 	mutators = {
 		"mutator_add_resistance",
 		"mutator_live_abhuman_trickle",
 		"mutator_live_abhuman_monster",
 		"mutator_only_traitor_guard_faction",
-		"mutator_live_abhuman_replacement",
-	},
+		"mutator_live_abhuman_replacement"
+	}
 }
 circumstance_templates.abhuman_04 = {
 	dialogue_id = "circumstance_vo_darkness",
@@ -64,7 +64,7 @@ circumstance_templates.abhuman_04 = {
 		description = "loc_circumstance_live_abhuman_04_description",
 		display_name = "loc_circumstance_live_abhuman_04_title",
 		happening_display_name = "loc_happening_darkness",
-		icon = "content/ui/materials/icons/circumstances/live_event_01",
+		icon = "content/ui/materials/icons/circumstances/live_event_01"
 	},
 	mutators = {
 		"mutator_more_witches",
@@ -74,8 +74,8 @@ circumstance_templates.abhuman_04 = {
 		"mutator_live_abhuman_trickle",
 		"mutator_live_abhuman_monster",
 		"mutator_only_traitor_guard_faction",
-		"mutator_live_abhuman_replacement",
-	},
+		"mutator_live_abhuman_replacement"
+	}
 }
 circumstance_templates.abhuman_05 = {
 	dialogue_id = "circumstance_vo_toxic_gas",
@@ -87,15 +87,15 @@ circumstance_templates.abhuman_05 = {
 		"mutator_live_abhuman_trickle",
 		"mutator_live_abhuman_monster",
 		"mutator_only_traitor_guard_faction",
-		"mutator_live_abhuman_replacement",
+		"mutator_live_abhuman_replacement"
 	},
 	ui = {
 		description = "loc_circumstance_live_abhuman_05_description",
 		display_name = "loc_circumstance_live_abhuman_05_title",
 		happening_display_name = "loc_happening_ventilation_purge",
-		icon = "content/ui/materials/icons/circumstances/live_event_01",
+		icon = "content/ui/materials/icons/circumstances/live_event_01"
 	},
-	mission_overrides = MissionOverrides.more_corruption_syringes,
+	mission_overrides = MissionOverrides.more_corruption_syringes
 }
 circumstance_templates.abhuman_06 = {
 	dialogue_id = "circumstance_vo_ventilation_purge",
@@ -108,14 +108,14 @@ circumstance_templates.abhuman_06 = {
 		"mutator_live_abhuman_trickle",
 		"mutator_live_abhuman_monster",
 		"mutator_only_traitor_guard_faction",
-		"mutator_live_abhuman_replacement",
+		"mutator_live_abhuman_replacement"
 	},
 	ui = {
 		description = "loc_circumstance_live_abhuman_06_description",
 		display_name = "loc_circumstance_live_abhuman_06_title",
 		happening_display_name = "loc_happening_ventilation_purge",
-		icon = "content/ui/materials/icons/circumstances/live_event_01",
-	},
+		icon = "content/ui/materials/icons/circumstances/live_event_01"
+	}
 }
 circumstance_templates.abhuman_07 = {
 	theme_tag = "default",
@@ -123,7 +123,7 @@ circumstance_templates.abhuman_07 = {
 	ui = {
 		description = "loc_circumstance_live_abhuman_07_description",
 		display_name = "loc_circumstance_live_abhuman_07_title",
-		icon = "content/ui/materials/icons/circumstances/live_event_01",
+		icon = "content/ui/materials/icons/circumstances/live_event_01"
 	},
 	mutators = {
 		"mutator_waves_of_specials",
@@ -134,8 +134,8 @@ circumstance_templates.abhuman_07 = {
 		"mutator_live_abhuman_trickle",
 		"mutator_live_abhuman_monster",
 		"mutator_only_traitor_guard_faction",
-		"mutator_live_abhuman_replacement",
-	},
+		"mutator_live_abhuman_replacement"
+	}
 }
 
 return circumstance_templates

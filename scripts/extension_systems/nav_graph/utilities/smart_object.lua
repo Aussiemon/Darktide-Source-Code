@@ -30,7 +30,7 @@ SmartObject.init = function (self)
 		ledge_type = "",
 		ledge_position = Vector3Box(),
 		ledge_position1 = Vector3Box(),
-		ledge_position2 = Vector3Box(),
+		ledge_position2 = Vector3Box()
 	}
 
 	return smart_object_id
@@ -53,8 +53,8 @@ SmartObject.to_simple = function (self)
 			ledge_type = data.ledge_type,
 			ledge_position = Vector3.to_array(ledge_position),
 			ledge_position1 = Vector3.to_array(ledge_position1),
-			ledge_position2 = Vector3.to_array(ledge_position2),
-		},
+			ledge_position2 = Vector3.to_array(ledge_position2)
+		}
 	}
 
 	return smart_object
@@ -75,6 +75,23 @@ SmartObject.from_simple = function (self, simple_smart_object)
 	data.ledge_position:store(Vector3.from_array(simple_smart_object_data.ledge_position))
 	data.ledge_position1:store(Vector3.from_array(simple_smart_object_data.ledge_position1))
 	data.ledge_position2:store(Vector3.from_array(simple_smart_object_data.ledge_position2))
+end
+
+SmartObject.from_simple_with_pose = function (self, simple_smart_object, level_pose)
+	self._layer_type = simple_smart_object.layer_type
+
+	self._entrance_position:store(Vector3.from_array_with_pose(simple_smart_object.entrance_position, level_pose))
+	self._exit_position:store(Vector3.from_array_with_pose(simple_smart_object.exit_position, level_pose))
+
+	local data, simple_smart_object_data = self._data, simple_smart_object.data
+
+	data.is_bidirectional = simple_smart_object_data.is_bidirectional
+	data.jump_flat_distance = simple_smart_object_data.jump_flat_distance
+	data.ledge_type = simple_smart_object_data.ledge_type
+
+	data.ledge_position:store(Vector3.from_array_with_pose(simple_smart_object_data.ledge_position, level_pose))
+	data.ledge_position1:store(Vector3.from_array_with_pose(simple_smart_object_data.ledge_position1, level_pose))
+	data.ledge_position2:store(Vector3.from_array_with_pose(simple_smart_object_data.ledge_position2, level_pose))
 end
 
 SmartObject.id = function (self)

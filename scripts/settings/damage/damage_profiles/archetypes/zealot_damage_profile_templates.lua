@@ -30,10 +30,10 @@ damage_templates.zealot_channel_stagger = {
 	suppression_value = 200,
 	power_distribution = {
 		attack = 0,
-		impact = 1,
+		impact = 1
 	},
 	no_stagger_breed_tags = {
-		"ogryn",
+		"ogryn"
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -44,7 +44,7 @@ damage_templates.zealot_channel_stagger = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -54,12 +54,12 @@ damage_templates.zealot_channel_stagger = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-		},
+			[armor_types.void_shield] = 1
+		}
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.zealot_dash_impact = {
 	ignore_stagger_reduction = true,
@@ -68,11 +68,11 @@ damage_templates.zealot_dash_impact = {
 	stagger_override = "killshot",
 	power_distribution = {
 		attack = 0,
-		impact = 8,
+		impact = 8
 	},
 	cleave_distribution = {
 		attack = 0,
-		impact = 0.01,
+		impact = 0.01
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -83,7 +83,7 @@ damage_templates.zealot_dash_impact = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.5,
-			[armor_types.void_shield] = 0.5,
+			[armor_types.void_shield] = 0.5
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -93,23 +93,23 @@ damage_templates.zealot_dash_impact = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-		},
+			[armor_types.void_shield] = 1
+		}
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.zealot_dash_health_to_damage_transfer = {
 	is_push = true,
 	stagger_category = "explosion",
 	power_distribution = {
 		attack = 0.5,
-		impact = 0,
+		impact = 0
 	},
 	cleave_distribution = {
 		impact = 0,
-		attack = math.huge,
+		attack = math.huge
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -120,7 +120,7 @@ damage_templates.zealot_dash_health_to_damage_transfer = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.1,
 			[armor_types.disgustingly_resilient] = 0.5,
-			[armor_types.void_shield] = 0.5,
+			[armor_types.void_shield] = 0.5
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -130,12 +130,12 @@ damage_templates.zealot_dash_health_to_damage_transfer = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-		},
+			[armor_types.void_shield] = 1
+		}
 	},
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.zealot_preacher_ability_close = {
 	damage_type = "kinetic",
@@ -145,7 +145,7 @@ damage_templates.zealot_preacher_ability_close = {
 	suppression_value = 10,
 	cleave_distribution = {
 		attack = 0.15,
-		impact = 0.15,
+		impact = 0.15
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -156,7 +156,7 @@ damage_templates.zealot_preacher_ability_close = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
+			[armor_types.void_shield] = 1
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -166,18 +166,18 @@ damage_templates.zealot_preacher_ability_close = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-		},
+			[armor_types.void_shield] = 1
+		}
 	},
 	power_distribution = {
 		attack = 75,
-		impact = 75,
+		impact = 75
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.zealot_preacher_ability_far = {
 	damage_type = "kinetic",
@@ -187,7 +187,7 @@ damage_templates.zealot_preacher_ability_far = {
 	suppression_value = 10,
 	cleave_distribution = {
 		attack = 0.15,
-		impact = 0.15,
+		impact = 0.15
 	},
 	armor_damage_modifier_ranged = {
 		near = {
@@ -199,7 +199,7 @@ damage_templates.zealot_preacher_ability_far = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 1,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
+				[armor_types.void_shield] = 1
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -209,8 +209,8 @@ damage_templates.zealot_preacher_ability_far = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 1,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-			},
+				[armor_types.void_shield] = 1
+			}
 		},
 		far = {
 			attack = {
@@ -221,7 +221,7 @@ damage_templates.zealot_preacher_ability_far = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.5,
+				[armor_types.void_shield] = 0.5
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -231,25 +231,25 @@ damage_templates.zealot_preacher_ability_far = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 1,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-			},
-		},
+				[armor_types.void_shield] = 1
+			}
+		}
 	},
 	power_distribution_ranged = {
 		attack = {
 			far = 10,
-			near = 50,
+			near = 50
 		},
 		impact = {
 			far = 2,
-			near = 30,
-		},
+			near = 30
+		}
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.zealot_throwing_knives = {
 	stagger_category = "killshot",
@@ -263,7 +263,7 @@ damage_templates.zealot_throwing_knives = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1_5,
 			[armor_types.super_armor] = damage_lerp_values.no_damage,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1_5,
-			[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 		},
 		impact = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_0_75,
@@ -273,16 +273,16 @@ damage_templates.zealot_throwing_knives = {
 			[armor_types.berserker] = damage_lerp_values.lerp_0_75,
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-			[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-		},
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_75
+		}
 	},
 	cleave_distribution = {
 		attack = 2,
-		impact = 1.25,
+		impact = 1.25
 	},
 	power_distribution = {
 		attack = 585,
-		impact = 5,
+		impact = 5
 	},
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.ballistic,
@@ -292,13 +292,13 @@ damage_templates.zealot_throwing_knives = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			finesse_boost = {
 				[armor_types.unarmored] = 0.75,
-				[armor_types.armored] = 0.75,
-			},
-		},
-	},
+				[armor_types.armored] = 0.75
+			}
+		}
+	}
 }
 
 return {
 	base_templates = damage_templates,
-	overrides = overrides,
+	overrides = overrides
 }

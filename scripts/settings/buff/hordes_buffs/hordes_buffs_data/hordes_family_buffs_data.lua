@@ -11,7 +11,7 @@ hordes_family_buffs_data.hordes_family_fire = {
 	id = "fire",
 	is_family = true,
 	sfx = "wwise/events/ui/play_horde_mode_buff_family_fire",
-	title = "Ignitor",
+	title = "Ignitor"
 }
 hordes_family_buffs_data.hordes_family_electric = {
 	description = "Build specialized at dealing electric damage, or improved capactiy in some ways while shooting targets being electrified.",
@@ -20,7 +20,7 @@ hordes_family_buffs_data.hordes_family_electric = {
 	id = "electric",
 	is_family = true,
 	sfx = "wwise/events/ui/play_horde_mode_buff_family_electric",
-	title = "Electromania",
+	title = "Electromania"
 }
 hordes_family_buffs_data.hordes_family_elementalist = {
 	description = "Mix of electric and fire families. Applies both electric and fire on enemies and has some bonuses when fighting among electrified or burned enemies.",
@@ -29,7 +29,7 @@ hordes_family_buffs_data.hordes_family_elementalist = {
 	id = "elementalist",
 	is_family = true,
 	sfx = "wwise/events/ui/play_horde_mode_buff_family_elemental",
-	title = "Blaze and Thunder",
+	title = "Blaze and Thunder"
 }
 hordes_family_buffs_data.hordes_family_cowboy = {
 	description = "Close quarters shooting and melee. Quick swapping between weapons and quicker reloads.",
@@ -38,7 +38,7 @@ hordes_family_buffs_data.hordes_family_cowboy = {
 	id = "cowboy",
 	is_family = true,
 	sfx = "wwise/events/ui/play_horde_mode_buff_family_cowboy",
-	title = "All Master",
+	title = "All Master"
 }
 hordes_family_buffs_data.hordes_family_unkillable = {
 	description = "Survivability focused around close quarters melee combat.",
@@ -47,7 +47,7 @@ hordes_family_buffs_data.hordes_family_unkillable = {
 	id = "unkillable",
 	is_family = true,
 	sfx = "wwise/events/ui/play_horde_mode_buff_family_unkillable",
-	title = "Panzer",
+	title = "Panzer"
 }
 hordes_family_buffs_data.hordes_family_critical = {
 	description = "Focuses on critical hits and critical damage",
@@ -56,7 +56,7 @@ hordes_family_buffs_data.hordes_family_critical = {
 	id = "critical",
 	is_family = true,
 	sfx = "wwise/events/ui/play_horde_mode_buff_family_critical",
-	title = "Lucky Roll",
+	title = "Lucky Roll"
 }
 hordes_family_buffs_data.hordes_family_unstoppable = {
 	description = "Focuses on movement restriction immunities",
@@ -65,7 +65,7 @@ hordes_family_buffs_data.hordes_family_unstoppable = {
 	id = "unstoppable",
 	is_family = true,
 	sfx = "wwise/events/ui/play_horde_mode_buff_family_unstoppable",
-	title = "Bulldozer",
+	title = "Bulldozer"
 }
 hordes_family_buffs_data.hordes_buff_burning_on_ranged_hit = {
 	description = "Ranged attacks apply 1 stack of burn",
@@ -75,9 +75,9 @@ hordes_family_buffs_data.hordes_buff_burning_on_ranged_hit = {
 	buff_stats = {
 		stacks = {
 			format_type = "number",
-			value = 2,
-		},
-	},
+			value = 2
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_burning_on_melee_hit_taken = {
 	description = "Puts a stacks fire to enemies hitting you in melee",
@@ -87,9 +87,9 @@ hordes_family_buffs_data.hordes_buff_burning_on_melee_hit_taken = {
 	buff_stats = {
 		stacks = {
 			format_type = "number",
-			value = 5,
-		},
-	},
+			value = 5
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_burning_on_melee_hit = {
 	description = "Puts a stack of fire when hitting ennemies in melee",
@@ -99,9 +99,9 @@ hordes_family_buffs_data.hordes_buff_burning_on_melee_hit = {
 	buff_stats = {
 		stacks = {
 			format_type = "number",
-			value = 1,
-		},
-	},
+			value = 1
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_damage_vs_burning = {
 	description = "Deals 70% more damage against target on fire",
@@ -112,9 +112,9 @@ hordes_family_buffs_data.hordes_buff_damage_vs_burning = {
 		damage = {
 			format_type = "percentage",
 			prefix = "+",
-			value = 0.7,
-		},
-	},
+			value = 0.7
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_fire_pulse = {
 	description = "A red pulse is activated in a 360 angle around the player every 20 seconds. It applies 2 burning stacks on all target being touched",
@@ -124,9 +124,9 @@ hordes_family_buffs_data.hordes_buff_fire_pulse = {
 	buff_stats = {
 		stacks = {
 			format_type = "number",
-			value = 5,
-		},
-	},
+			value = 5
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_toughness_on_fire_damage_dealt = {
 	description = "Gain 1% toughness back from dealt fire damage",
@@ -136,9 +136,9 @@ hordes_family_buffs_data.hordes_buff_toughness_on_fire_damage_dealt = {
 	buff_stats = {
 		thoughness_regen = {
 			format_type = "percentage",
-			value = 0.02,
-		},
-	},
+			value = 0.02
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_burning_damage_per_burning_enemy = {
 	description = "Burning damage are improved by the amount of targets being on fire, up to 50%",
@@ -148,9 +148,9 @@ hordes_family_buffs_data.hordes_buff_burning_damage_per_burning_enemy = {
 	buff_stats = {
 		damage = {
 			format_type = "percentage",
-			value = 0.9,
-		},
-	},
+			value = 0.9
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_damage_taken_by_flamers_and_grenadier_reduced = {
 	description = "flamethrower and grenadier deals 50% less damage to you",
@@ -160,9 +160,9 @@ hordes_family_buffs_data.hordes_buff_damage_taken_by_flamers_and_grenadier_reduc
 	buff_stats = {
 		damage_reduce = {
 			format_type = "percentage",
-			value = 0.7,
-		},
-	},
+			value = 0.7
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_coherency_damage_vs_burning = {
 	description = "Allies has 8% improved damage against target being on fire",
@@ -172,9 +172,9 @@ hordes_family_buffs_data.hordes_buff_coherency_damage_vs_burning = {
 	buff_stats = {
 		damage = {
 			format_type = "percentage",
-			value = 0.2,
-		},
-	},
+			value = 0.2
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_coherency_burning_duration = {
 	description = "Fire stacks linger 40% longer on target while on coherency",
@@ -184,9 +184,9 @@ hordes_family_buffs_data.hordes_buff_coherency_burning_duration = {
 	buff_stats = {
 		linger = {
 			format_type = "percentage",
-			value = 0.4,
-		},
-	},
+			value = 0.4
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_shock_on_melee_hit = {
 	description = "20% to shock enemy on melee hit for 2 seconds",
@@ -196,13 +196,13 @@ hordes_family_buffs_data.hordes_buff_shock_on_melee_hit = {
 	buff_stats = {
 		shock_chance = {
 			format_type = "percentage",
-			value = 0.2,
+			value = 0.2
 		},
 		time = {
 			format_type = "number",
-			value = 2,
-		},
-	},
+			value = 2
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_damage_vs_electrocuted = {
 	description = "Deals 10% more damage against electrocuted target",
@@ -213,9 +213,9 @@ hordes_family_buffs_data.hordes_buff_damage_vs_electrocuted = {
 		damage = {
 			format_type = "percentage",
 			prefix = "+",
-			value = 0.5,
-		},
-	},
+			value = 0.5
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_shock_pulse_on_toughness_broken = {
 	description = "When your toughness is being broken, shocked every enemies in a 5m area",
@@ -225,9 +225,9 @@ hordes_family_buffs_data.hordes_buff_shock_pulse_on_toughness_broken = {
 	buff_stats = {
 		range = {
 			format_type = "number",
-			value = 5,
-		},
-	},
+			value = 5
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_instakill_melee_hit_on_electrocuted_enemy = {
 	description = "1 % chance of instantaneously killing a shock enemie when being hit in melee ",
@@ -237,9 +237,9 @@ hordes_family_buffs_data.hordes_buff_instakill_melee_hit_on_electrocuted_enemy =
 	buff_stats = {
 		kill_chance = {
 			format_type = "percentage",
-			value = 0.05,
-		},
-	},
+			value = 0.05
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_shock_on_ranged_hit = {
 	description = "5% to shock enemy on ranged hit",
@@ -249,9 +249,9 @@ hordes_family_buffs_data.hordes_buff_shock_on_ranged_hit = {
 	buff_stats = {
 		shock_chance = {
 			format_type = "percentage",
-			value = 0.05,
-		},
-	},
+			value = 0.05
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_improved_dodge_speed_and_distance = {
 	description = "Dodge is 15% faster and have 10% more range",
@@ -261,13 +261,13 @@ hordes_family_buffs_data.hordes_buff_improved_dodge_speed_and_distance = {
 	buff_stats = {
 		fast = {
 			format_type = "percentage",
-			value = 0.2,
+			value = 0.2
 		},
 		range = {
 			format_type = "percentage",
-			value = 0.15,
-		},
-	},
+			value = 0.15
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_shock_on_hit_after_dodge = {
 	description = "If being hit 3 seconds after a sucessful dodge, shock the assaillant",
@@ -277,9 +277,9 @@ hordes_family_buffs_data.hordes_buff_shock_on_hit_after_dodge = {
 	buff_stats = {
 		time = {
 			format_type = "number",
-			value = 2,
-		},
-	},
+			value = 2
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_shock_closest_enemy_on_interval = {
 	description = "All grenades apply shock on hit",
@@ -289,9 +289,9 @@ hordes_family_buffs_data.hordes_buff_shock_closest_enemy_on_interval = {
 	buff_stats = {
 		time = {
 			format_type = "number",
-			value = 2,
-		},
-	},
+			value = 2
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_damage_taken_close_to_electrocuted_enemy = {
 	description = "Take 25% less damage from enemies if one target is still being in shock state",
@@ -301,9 +301,9 @@ hordes_family_buffs_data.hordes_buff_damage_taken_close_to_electrocuted_enemy = 
 	buff_stats = {
 		damage_reduce = {
 			format_type = "percentage",
-			value = 0.25,
-		},
-	},
+			value = 0.25
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_coherency_damage_taken_close_to_electrocuted_enemy = {
 	description = "Your team take 5% less damage from enemies if one enemy is still in shock state",
@@ -313,9 +313,9 @@ hordes_family_buffs_data.hordes_buff_coherency_damage_taken_close_to_electrocute
 	buff_stats = {
 		damage_reduce = {
 			format_type = "percentage",
-			value = 0.25,
-		},
-	},
+			value = 0.25
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_extra_toughness_near_burning_shocked_enemies = {
 	description = "For each enemy on fire or shocked in close range, you gain 8 extra toughness",
@@ -326,9 +326,9 @@ hordes_family_buffs_data.hordes_buff_extra_toughness_near_burning_shocked_enemie
 		extra_thoughness = {
 			format_type = "number",
 			prefix = "+",
-			value = 8,
-		},
-	},
+			value = 8
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_shock_on_blocking_melee_attack = {
 	description = "Blocking an attack in melee shock the target for {time} sc",
@@ -338,9 +338,9 @@ hordes_family_buffs_data.hordes_buff_shock_on_blocking_melee_attack = {
 	buff_stats = {
 		time = {
 			format_type = "number",
-			value = 3,
-		},
-	},
+			value = 3
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_toughness_regen_in_melee_range = {
 	description = "replenish 2.5% toughness per second while with 5 meters of at least 3 enemies",
@@ -350,17 +350,17 @@ hordes_family_buffs_data.hordes_buff_toughness_regen_in_melee_range = {
 	buff_stats = {
 		thoughness_regen = {
 			format_type = "percentage",
-			value = 0.025,
+			value = 0.025
 		},
 		range = {
 			format_type = "number",
-			value = 5,
+			value = 5
 		},
 		ennemies_count = {
 			format_type = "number",
-			value = 3,
-		},
-	},
+			value = 3
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_reduce_damage_taken_on_disabled_allies = {
 	description = "20% damage reduction for each knocked down or incapacitated ally within 20m",
@@ -370,13 +370,13 @@ hordes_family_buffs_data.hordes_buff_reduce_damage_taken_on_disabled_allies = {
 	buff_stats = {
 		damage = {
 			format_type = "percentage",
-			value = 0.2,
+			value = 0.2
 		},
 		range = {
 			format_type = "number",
-			value = 20,
-		},
-	},
+			value = 20
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_coherency_corruption_healing = {
 	description = "Heal 3s corruption from the current wound for you and allies in coherency",
@@ -386,9 +386,9 @@ hordes_family_buffs_data.hordes_buff_coherency_corruption_healing = {
 	buff_stats = {
 		heal = {
 			format_type = "number",
-			value = 3,
-		},
-	},
+			value = 3
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_combat_ability_cooldown_on_damage_taken = {
 	description = "20% of damage taken is converted to ability cooldown reduction",
@@ -399,9 +399,9 @@ hordes_family_buffs_data.hordes_buff_combat_ability_cooldown_on_damage_taken = {
 		damage_to_cooldown = {
 			format_type = "percentage",
 			prefix = "+",
-			value = 0.2,
-		},
-	},
+			value = 0.2
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_two_extra_wounds = {
 	description = "Give 2 additional wounds",
@@ -411,9 +411,9 @@ hordes_family_buffs_data.hordes_buff_two_extra_wounds = {
 	buff_stats = {
 		wounds = {
 			format_type = "number",
-			value = 2,
-		},
-	},
+			value = 2
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_toughness_damage_taken_above_threshold = {
 	description = "Boosts toughness damage reduction by 50% while above 75% toughness",
@@ -424,13 +424,13 @@ hordes_family_buffs_data.hordes_buff_toughness_damage_taken_above_threshold = {
 		damage_reduce = {
 			format_type = "percentage",
 			prefix = "+",
-			value = 0.5,
+			value = 0.5
 		},
 		toughness = {
 			format_type = "percentage",
-			value = 0.75,
-		},
-	},
+			value = 0.75
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_health_regen = {
 	description = "Regenerate 1% Hp every 5 seconds. Does not heals corruption",
@@ -440,13 +440,13 @@ hordes_family_buffs_data.hordes_buff_health_regen = {
 	buff_stats = {
 		hp_regen = {
 			format_type = "percentage",
-			value = 0.01,
+			value = 0.01
 		},
 		time = {
 			format_type = "number",
-			value = 5,
-		},
-	},
+			value = 5
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_damage_increase_on_toughness_broken = {
 	description = "When your toughness is being broken, deal 10% more damage for 10s",
@@ -456,9 +456,9 @@ hordes_family_buffs_data.hordes_buff_damage_increase_on_toughness_broken = {
 	buff_stats = {
 		damage = {
 			format_type = "percentage",
-			value = 0.6,
-		},
-	},
+			value = 0.6
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_damage_increase = {
 	description = "Additional 25% damage from all sources",
@@ -469,9 +469,9 @@ hordes_family_buffs_data.hordes_buff_damage_increase = {
 		damage = {
 			format_type = "percentage",
 			prefix = "+",
-			value = 0.25,
-		},
-	},
+			value = 0.25
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_reduce_swap_time = {
 	description = "Reduce swap time by 25%",
@@ -482,16 +482,16 @@ hordes_family_buffs_data.hordes_buff_reduce_swap_time = {
 		swap_time = {
 			format_type = "percentage",
 			prefix = "+",
-			value = 0.25,
-		},
-	},
+			value = 0.25
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_no_ammo_consumption_on_crits = {
 	description = "No ammo consumption on critical hits",
 	gradient = "content/ui/textures/color_ramps/talent_ability",
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_no_ammo_consumption_on_crits",
 	title = "Crits does not count right ?",
-	buff_stats = {},
+	buff_stats = {}
 }
 hordes_family_buffs_data.hordes_buff_toughness_on_ranged_kill = {
 	description = "Replenish 5% toughness on ranged kill",
@@ -501,9 +501,9 @@ hordes_family_buffs_data.hordes_buff_toughness_on_ranged_kill = {
 	buff_stats = {
 		thoughness_regen = {
 			format_type = "percentage",
-			value = 0.05,
-		},
-	},
+			value = 0.05
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_increased_damage_after_reload = {
 	description = "+80% ranged damage for 5s after reload",
@@ -514,13 +514,13 @@ hordes_family_buffs_data.hordes_buff_increased_damage_after_reload = {
 		range = {
 			format_type = "percentage",
 			prefix = "+",
-			value = 0.8,
+			value = 0.8
 		},
 		time = {
 			format_type = "number",
-			value = 5,
-		},
-	},
+			value = 5
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_improved_weapon_reload_on_melee_kill = {
 	description = "6% reload speed on melee kill. Stacks 5 times",
@@ -530,14 +530,14 @@ hordes_family_buffs_data.hordes_buff_improved_weapon_reload_on_melee_kill = {
 	buff_stats = {
 		time = {
 			format_type = "number",
-			value = 5,
+			value = 5
 		},
 		reload_speed = {
 			format_type = "percentage",
 			prefix = "+",
-			value = 0.07,
-		},
-	},
+			value = 0.07
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_bonus_crit_chance_on_ammo = {
 	description = "The first 35% ammo after a reload has +30% ranged critical hit chance",
@@ -547,14 +547,14 @@ hordes_family_buffs_data.hordes_buff_bonus_crit_chance_on_ammo = {
 	buff_stats = {
 		ammo = {
 			format_type = "percentage",
-			value = 0.35,
+			value = 0.35
 		},
 		crit_chance = {
 			format_type = "percentage",
 			prefix = "+",
-			value = 0.3,
-		},
-	},
+			value = 0.3
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_other_slot_damage_increase_on_kill = {
 	description = "25% Melee damage on ranged kill/25% Range damage on melee kill Lasts 5s",
@@ -565,13 +565,13 @@ hordes_family_buffs_data.hordes_buff_other_slot_damage_increase_on_kill = {
 		dammage = {
 			format_type = "percentage",
 			prefix = "+",
-			value = 0.25,
+			value = 0.25
 		},
 		range = {
 			format_type = "percentage",
-			value = 0.25,
-		},
-	},
+			value = 0.25
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_weakspot_ranged_hit_gives_infinite_ammo = {
 	description = "Landing 2 Headshots in a row with a ranged weapon gives 6s of infinite ammo. Has a 10s cooldown.",
@@ -581,17 +581,17 @@ hordes_family_buffs_data.hordes_buff_weakspot_ranged_hit_gives_infinite_ammo = {
 	buff_stats = {
 		headshot = {
 			format_type = "number",
-			value = 2,
+			value = 2
 		},
 		time = {
 			format_type = "number",
-			value = 6,
+			value = 6
 		},
 		cooldown = {
 			format_type = "number",
-			value = 10,
-		},
-	},
+			value = 10
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_ranged_attacks_hit_mass_penetration_increased = {
 	description = "50% increase of max hit mass penetration for ranged attacks.",
@@ -601,9 +601,9 @@ hordes_family_buffs_data.hordes_buff_ranged_attacks_hit_mass_penetration_increas
 	buff_stats = {
 		increase_hitmass = {
 			format_type = "percentage",
-			value = 1,
-		},
-	},
+			value = 1
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_melee_damage_missing_ammo_in_clip = {
 	description = "For every missing ammo in clip, gain 1% melee damage.",
@@ -613,9 +613,9 @@ hordes_family_buffs_data.hordes_buff_melee_damage_missing_ammo_in_clip = {
 	buff_stats = {
 		dammage = {
 			format_type = "percentage",
-			value = 0.01,
-		},
-	},
+			value = 0.01
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_weakspot_damage_increase = {
 	description = "Increases weakspot damage by 50%.",
@@ -625,9 +625,9 @@ hordes_family_buffs_data.hordes_buff_weakspot_damage_increase = {
 	buff_stats = {
 		damage = {
 			format_type = "percentage",
-			value = 0.5,
-		},
-	},
+			value = 0.5
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_melee_critical_damage_increase = {
 	description = "Increases melee critical damage by 70%.",
@@ -637,9 +637,9 @@ hordes_family_buffs_data.hordes_buff_melee_critical_damage_increase = {
 	buff_stats = {
 		crit_damage = {
 			format_type = "percentage",
-			value = 0.7,
-		},
-	},
+			value = 0.7
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_critical_chance_on_dodge = {
 	description = "Increases critical chance by 30% on successful dodge.",
@@ -649,12 +649,12 @@ hordes_family_buffs_data.hordes_buff_critical_chance_on_dodge = {
 	buff_stats = {
 		crit_chance = {
 			format_type = "percentage",
-			value = 0.2,
+			value = 0.2
 		},
 		time = {
-			value = 3,
-		},
-	},
+			value = 3
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_rending_on_ranged_critical_hit = {
 	description = "Increases rending by 60% on ranged critical hit.",
@@ -664,19 +664,19 @@ hordes_family_buffs_data.hordes_buff_rending_on_ranged_critical_hit = {
 	buff_stats = {
 		rending = {
 			format_type = "percentage",
-			value = 0.6,
+			value = 0.6
 		},
 		time = {
-			value = 5,
-		},
-	},
+			value = 5
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_critical_melee_hit_infinite_cleave = {
 	description = "Critical hits have infinite cleave.",
 	gradient = "content/ui/textures/color_ramps/talent_ability",
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_critical_melee_hit_infinite_cleave",
 	title = "Critical Cleave",
-	buff_stats = {},
+	buff_stats = {}
 }
 hordes_family_buffs_data.hordes_buff_melee_damage_on_melee_critical_hit = {
 	description = "After a melee critical hit, the next melee hit gets it's damage boosted by 100%.",
@@ -686,9 +686,9 @@ hordes_family_buffs_data.hordes_buff_melee_damage_on_melee_critical_hit = {
 	buff_stats = {
 		damage = {
 			format_type = "percentage",
-			value = 1,
-		},
-	},
+			value = 1
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_increase_super_armor_impact_on_crit = {
 	description = "Critical hits on Carapaced Armoured enemies gain 65% more Impact..",
@@ -698,9 +698,9 @@ hordes_family_buffs_data.hordes_buff_increase_super_armor_impact_on_crit = {
 	buff_stats = {
 		impact = {
 			format_type = "percentage",
-			value = 0.65,
-		},
-	},
+			value = 0.65
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_stacking_crit_damage_on_critical_hit = {
 	description = "Gain 0.01% critical strike damage after a critical strike. Up to 100%.",
@@ -710,13 +710,13 @@ hordes_family_buffs_data.hordes_buff_stacking_crit_damage_on_critical_hit = {
 	buff_stats = {
 		crit_damage = {
 			format_type = "percentage",
-			value = 0.01,
+			value = 0.01
 		},
 		max_crit_damage = {
 			format_type = "percentage",
-			value = 2.5,
-		},
-	},
+			value = 2.5
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_damage_reduction_on_critical_hit = {
 	description = "Gain 30% damage reduction after a critical strike for 3sc.",
@@ -726,33 +726,33 @@ hordes_family_buffs_data.hordes_buff_damage_reduction_on_critical_hit = {
 	buff_stats = {
 		damage_reduction = {
 			format_type = "percentage",
-			value = 0.4,
+			value = 0.4
 		},
 		time = {
-			value = 3,
-		},
-	},
+			value = 3
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_explode_enemies_on_critical_kill = {
 	description = "Enemies killed by a critical hit explode.",
 	gradient = "content/ui/textures/color_ramps/talent_ability",
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_explode_enemies_on_critical_kill",
 	title = "Critical Explosion",
-	buff_stats = {},
+	buff_stats = {}
 }
 hordes_family_buffs_data.hordes_buff_guaranteed_next_melee_attack_on_ranged_critical_hit = {
 	description = "When killing an enemy with a Ranged Critical Attack, the next Melee Attack will be a guaranteed Critical Attack.",
 	gradient = "content/ui/textures/color_ramps/talent_ability",
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_guaranteed_next_melee_attack_on_ranged_critical_hit",
 	title = "Melee Crit on Ranged Crit",
-	buff_stats = {},
+	buff_stats = {}
 }
 hordes_family_buffs_data.hordes_buff_guaranteed_next_ranged_attack_on_melee_critical_hit = {
 	description = "When killing an enemy with a Melee Critical Attack, the next Range Attack will be a guaranteed Critical Attack.",
 	gradient = "content/ui/textures/color_ramps/talent_ability",
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_guaranteed_next_ranged_attack_on_melee_critical_hit",
 	title = "Ranged Crit on Melee Crit",
-	buff_stats = {},
+	buff_stats = {}
 }
 hordes_family_buffs_data.hordes_buff_increase_melee_crit_chance_on_ranged_critical_kill = {
 	description = "When killing an enemy with a Ranged Critical Attack, gain 60% Melee Crit Chance for 5s.",
@@ -762,12 +762,12 @@ hordes_family_buffs_data.hordes_buff_increase_melee_crit_chance_on_ranged_critic
 	buff_stats = {
 		crit_chance = {
 			format_type = "percentage",
-			value = 0.6,
+			value = 0.6
 		},
 		time = {
-			value = 5,
-		},
-	},
+			value = 5
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_increase_ranged_crit_chance_on_melee_critical_kill = {
 	description = "When killing an enemy with a Melee Critical Attack, gain 60% ranged Crit Chance for 5s.",
@@ -777,12 +777,12 @@ hordes_family_buffs_data.hordes_buff_increase_ranged_crit_chance_on_melee_critic
 	buff_stats = {
 		crit_chance = {
 			format_type = "percentage",
-			value = 0.6,
+			value = 0.6
 		},
 		time = {
-			value = 5,
-		},
-	},
+			value = 5
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_crit_chance_per_missing_stamina_bar = {
 	description = "Gain 5% Critical Strike Chance per missing stamina bar.",
@@ -792,9 +792,9 @@ hordes_family_buffs_data.hordes_buff_crit_chance_per_missing_stamina_bar = {
 	buff_stats = {
 		crit_chance = {
 			format_type = "percentage",
-			value = 0.04,
-		},
-	},
+			value = 0.04
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_critical_damage_from_consecutive_critical_hits = {
 	description = "Gain 10% Critical Strike Damage after a Critical Strike. Up to 100%. Loses all stacks if 2.5s pass before your next Critical Strike.",
@@ -804,38 +804,38 @@ hordes_family_buffs_data.hordes_buff_critical_damage_from_consecutive_critical_h
 	buff_stats = {
 		crit_damage = {
 			format_type = "percentage",
-			value = 0.1,
+			value = 0.1
 		},
 		max_crit_damage = {
 			format_type = "percentage",
-			value = 1,
+			value = 1
 		},
 		time = {
 			format_type = "number",
-			value = 2.5,
-		},
-	},
+			value = 2.5
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_dodge_staggers = {
 	description = "Dodging staggers nearby Non Elite/Specialist, human-sized, enemies.",
 	gradient = "content/ui/textures/color_ramps/talent_ability",
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_dodge_staggers",
 	title = "Wrecking Ball",
-	buff_stats = {},
+	buff_stats = {}
 }
 hordes_family_buffs_data.hordes_buff_sprinting_staggers = {
 	description = "Sprinting staggers nearby Non Elite/Specialist, human-sized, enemies.",
 	gradient = "content/ui/textures/color_ramps/talent_ability",
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_sprinting_staggers",
 	title = "Bulldozer",
-	buff_stats = {},
+	buff_stats = {}
 }
 hordes_family_buffs_data.hordes_buff_uninterruptible_while_aiming_and_shooting = {
 	description = "Becomes Uninterruptible while aiming or shooting.",
 	gradient = "content/ui/textures/color_ramps/talent_ability",
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_uninterruptible_while_aiming_and_shooting",
 	title = "Relentless Shooting",
-	buff_stats = {},
+	buff_stats = {}
 }
 hordes_family_buffs_data.hordes_buff_replenish_stamina_from_ranged_or_melee_hit = {
 	description = "Regain 1% stamina per 100 damage dealt with melee or ranged attacks.",
@@ -845,9 +845,9 @@ hordes_family_buffs_data.hordes_buff_replenish_stamina_from_ranged_or_melee_hit 
 	buff_stats = {
 		stamina = {
 			format_type = "percentage",
-			value = 0.009,
-		},
-	},
+			value = 0.009
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_toughness_coherency_regen_increase = {
 	description = "Toughness Regeneration in coherency is increased by 50%",
@@ -857,9 +857,9 @@ hordes_family_buffs_data.hordes_buff_toughness_coherency_regen_increase = {
 	buff_stats = {
 		toughness = {
 			format_type = "percentage",
-			value = 0.5,
-		},
-	},
+			value = 0.5
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_toughness_on_melee_kills = {
 	description = "Replenish an additional 7% toughness from melee kills.",
@@ -869,9 +869,9 @@ hordes_family_buffs_data.hordes_buff_toughness_on_melee_kills = {
 	buff_stats = {
 		toughness = {
 			format_type = "percentage",
-			value = 0.07,
-		},
-	},
+			value = 0.07
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_movement_bonuses_on_toughness_broken = {
 	description = "Stun immunity, slow immunity for 6sc and restore 50% stamina when your toughness is broken",
@@ -881,41 +881,41 @@ hordes_family_buffs_data.hordes_buff_movement_bonuses_on_toughness_broken = {
 	buff_stats = {
 		stamina = {
 			format_type = "percentage",
-			value = 0.5,
+			value = 0.5
 		},
 		time = {
 			format_type = "number",
-			value = 4,
-		},
-	},
+			value = 4
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_suppression_immunity = {
 	description = "Gain suppression immunity",
 	gradient = "content/ui/textures/color_ramps/talent_ability",
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_suppression_immunity",
 	title = "Unfaced",
-	buff_stats = {},
+	buff_stats = {}
 }
 hordes_family_buffs_data.hordes_buff_windup_is_uninterruptible = {
 	description = "Become uninterruptible while charging heavy attack.",
 	gradient = "content/ui/textures/color_ramps/talent_ability",
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_windup_is_uninterruptible",
 	title = "No stopping me either.",
-	buff_stats = {},
+	buff_stats = {}
 }
 hordes_family_buffs_data.hordes_buff_no_movement_speed_reduction_on_aim_and_windup = {
 	description = "Remove Movement Speed Penalty from Aiming and Charging Melee Attacks",
 	gradient = "content/ui/textures/color_ramps/talent_ability",
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_no_movement_speed_reduction_on_aim_and_windup",
 	title = "Speedy Gonazales",
-	buff_stats = {},
+	buff_stats = {}
 }
 hordes_family_buffs_data.hordes_buff_increase_impact_on_push_attacks = {
 	description = "Doubles staggering strength of Push Attacks",
 	gradient = "content/ui/textures/color_ramps/talent_ability",
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_increase_impact_on_push_attacks",
 	title = "PUSH PUSH PUSH",
-	buff_stats = {},
+	buff_stats = {}
 }
 hordes_family_buffs_data.hordes_buff_dodge_incapacitating_attacks = {
 	description = "Automatically nullifies a Netgunner and Chaos Hound incapacitating attack. 30s Cooldown.",
@@ -925,9 +925,9 @@ hordes_family_buffs_data.hordes_buff_dodge_incapacitating_attacks = {
 	buff_stats = {
 		cooldown = {
 			format_type = "number",
-			value = 30,
-		},
-	},
+			value = 30
+		}
+	}
 }
 hordes_family_buffs_data.hordes_buff_damage_per_full_stamina_bar = {
 	description = "Gain 2 Stamina. Increase Damage by 5% per full stamina bar.",
@@ -937,13 +937,13 @@ hordes_family_buffs_data.hordes_buff_damage_per_full_stamina_bar = {
 	buff_stats = {
 		stamina = {
 			format_type = "number",
-			value = 2,
+			value = 2
 		},
 		damage = {
 			format_type = "percentage",
-			value = 0.05,
-		},
-	},
+			value = 0.05
+		}
+	}
 }
 
 return hordes_family_buffs_data

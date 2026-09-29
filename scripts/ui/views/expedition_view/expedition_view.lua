@@ -14,6 +14,7 @@ local Settings = require("scripts/ui/views/expedition_view/expedition_view_setti
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementTutorialPopup = require("scripts/ui/view_elements/view_element_tutorial_popup/view_element_tutorial_popup")
+local DANGER_LEVELS = DangerSettings.danger_levels
 local MATCH_VISIBILITY = ExpeditionViewDefinitions.MATCH_VISIBILITY
 local UNLOCK_STATUS = ExpeditionService.UNLOCK_STATUS
 local UNLOCK_TYPE = ExpeditionService.UNLOCK_TYPE
@@ -23,7 +24,7 @@ ExpeditionView.init = function (self, settings, context)
 	self._expedition_service = Managers.data_service.expedition
 	self.save_data = self._expedition_service:get_character_mission_board_save_data()
 	self._current_match_visibility = self:_get_saved_match_visibility()
-	self._page_index = self.save_data.page_index and math.clamp(self.save_data.page_index - 1, 1, #DangerSettings - 1) or 1
+	self._page_index = self.save_data.page_index and math.clamp(self.save_data.page_index - 1, 1, #DANGER_LEVELS - 1) or 1
 	self._party_manager = Managers.party_immaterium
 	self._player_level = self:_player():profile().current_level
 	self._enable_input_delay = Settings.enable_input_delay
@@ -88,7 +89,7 @@ ExpeditionView._fetch_data = function (self)
 		Managers.data_service.region_latency:fetch_regions_latency(),
 		self._expedition_service:fetch_nodes(),
 		self._expedition_service:get_quickplay_bonus(),
-		self._expedition_service:fetch_player_journey_data(account_id, character_id, false),
+		self._expedition_service:fetch_player_journey_data(account_id, character_id, false)
 	}
 
 	self._promise_container:cancel_on_destroy(Promise.all(unpack(promises))):next(function (data)
@@ -132,7 +133,7 @@ ExpeditionView._fetch_data = function (self)
 
 		Log.exception("ExpeditionView", "Exception fetching data: ", error)
 		Managers.event:trigger("event_add_notification_message", "alert", {
-			text = error,
+			text = error
 		})
 
 		if Managers.ui:view_active(self.view_name) then
@@ -307,7 +308,7 @@ ExpeditionView.update = function (self, dt, t, input_service)
 				personal_stats = self._personal_stats,
 				quickplay_bonus_range = self._quickplay_bonus_range,
 				ui_scenegraph = self._ui_scenegraph,
-				quickplay_unlocked = self._quickplay_unlocked,
+				quickplay_unlocked = self._quickplay_unlocked
 			})
 			self._initialized = true
 		end
@@ -383,7 +384,7 @@ ExpeditionView._show_tutorial_popup = function (self)
 
 			self:_set_block_input(false)
 		end,
-		popup_pages = Settings.popup_pages,
+		popup_pages = Settings.popup_pages
 	}
 
 	self._tutorial_popup = self:_add_element(ViewElementTutorialPopup, "tutorial_popup", 90, context, "tutorial_popup_pivot")
@@ -790,7 +791,7 @@ ExpeditionView._unlock_node_if_eligible = function (self, node)
 
 		Log.exception("ExpeditionView", "Exception claiming node: ", error_message)
 		Managers.event:trigger("event_add_notification_message", "alert", {
-			text = error_message,
+			text = error_message
 		})
 	end)
 end
@@ -808,7 +809,7 @@ ExpeditionView._get_node_screenspace = function (self, node, camera)
 
 	local screen_size = {
 		math.abs(half_extents_screen_size.x * 2),
-		math.abs(half_extents_screen_size.y * 2),
+		math.abs(half_extents_screen_size.y * 2)
 	}
 	local screen_upper_left_corner = Vector2(screen_position.x - screen_size[1] / 2, screen_position.y - screen_size[2] / 2)
 
@@ -816,7 +817,7 @@ ExpeditionView._get_node_screenspace = function (self, node, camera)
 end
 
 local _required_level_loc_table = {
-	required_level = -1,
+	required_level = -1
 }
 
 ExpeditionView._update_can_start_mission = function (self)
@@ -1042,7 +1043,7 @@ ExpeditionView.cb_start_selected_mission = function (self)
 
 		qp_settings = table.clone(qp_settings)
 		qp_settings.category = {
-			"expedition",
+			"expedition"
 		}
 
 		local qp_string = QPCode.encode(qp_settings)
@@ -1100,7 +1101,7 @@ ExpeditionView._create_page_settings = function (self, difficulty_progress_data)
 	local pages = {}
 	local current_difficulty = difficulty_progress_data.current
 
-	for i, difficulty in ipairs(DangerSettings) do
+	for ii, difficulty in ipairs(DANGER_LEVELS) do
 		local is_uprising = difficulty.name == "uprising"
 
 		if not is_uprising then
@@ -1115,15 +1116,15 @@ ExpeditionView._create_page_settings = function (self, difficulty_progress_data)
 					challenge = difficulty.challenge,
 					resistance = difficulty.resistance,
 					category = {
-						"expedition",
-					},
+						"expedition"
+					}
 				},
 				qp = {
 					challenge = difficulty.challenge,
-					resistance = difficulty.resistance,
+					resistance = difficulty.resistance
 				},
 				color = difficulty.color,
-				icon = difficulty.icon,
+				icon = difficulty.icon
 			})
 		end
 	end
@@ -1151,7 +1152,7 @@ ExpeditionView.get_threat_level_progress = function (self)
 		current = current_progress,
 		target = target_progress,
 		current_difficulty = current_difficulty and current_difficulty.name or "n/a",
-		next_difficulty = next_difficulty and next_difficulty.name or "n/a",
+		next_difficulty = next_difficulty and next_difficulty.name or "n/a"
 	}
 end
 

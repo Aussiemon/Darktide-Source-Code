@@ -15,7 +15,7 @@ HudElementStamina.init = function (self, parent, draw_layer, start_scale)
 	self._spent_stamina_animation = {
 		running = false,
 		stamina = 1,
-		starting_stamina = 1,
+		starting_stamina = 1
 	}
 	self._stamina_nodge_widget = self:_create_widget("stamina_nodge", hud_element_stamina_definitions.stamina_nodges_definition)
 

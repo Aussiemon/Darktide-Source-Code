@@ -14,7 +14,7 @@ local STIMMED_PARAMETER_NAME = "minion_stimmed"
 local resources = {
 	shoot_vfx = SHOOT_VFX,
 	start_shoot_sound_event = START_SHOOT_SOUND_EVENT,
-	stop_shoot_sound_event = STOP_SHOOT_SOUND_EVENT,
+	stop_shoot_sound_event = STOP_SHOOT_SOUND_EVENT
 }
 local effect_template = {
 	name = "renegade_assault_lasgun_smg",
@@ -89,7 +89,7 @@ local effect_template = {
 		local unit = template_data.unit
 
 		Unit.animation_event(unit, "shoot_finished")
-	end,
+	end
 }
 
 return effect_template

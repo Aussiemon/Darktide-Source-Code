@@ -11,17 +11,17 @@ local view_settings = {
 	state_bound = true,
 	use_transition_ui = true,
 	levels = {
-		"content/levels/ui/havoc/havoc",
+		"content/levels/ui/havoc/havoc"
 	},
 	enter_sound_events = {
-		UISoundEvents.havoc_terminal_enter,
+		UISoundEvents.havoc_terminal_enter
 	},
 	exit_sound_events = {
-		UISoundEvents.havoc_terminal_exit,
+		UISoundEvents.havoc_terminal_exit
 	},
 	wwise_states = {
-		options = WwiseGameSyncSettings.state_groups.options.vendor_menu,
-	},
+		options = WwiseGameSyncSettings.state_groups.options.vendor_menu
+	}
 }
 
 return settings("HavocBackgroundViewDeclarationSettings", view_settings)

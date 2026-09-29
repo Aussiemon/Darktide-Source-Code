@@ -25,13 +25,13 @@ shotshell_templates.default_thumper_assault = {
 		[armor_types.player] = 1,
 		[armor_types.berserker] = 12,
 		[armor_types.super_armor] = 12,
-		[armor_types.disgustingly_resilient] = 12,
+		[armor_types.disgustingly_resilient] = 12
 	},
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.default_ogryn_shotgun_assault,
-		},
-	},
+			damage_profile = DamageProfileTemplates.default_ogryn_shotgun_assault
+		}
+	}
 }
 shotshell_templates.default_thumper_assault_ads = {
 	bullseye = true,
@@ -49,16 +49,16 @@ shotshell_templates.default_thumper_assault_ads = {
 		[armor_types.player] = 1,
 		[armor_types.berserker] = 12,
 		[armor_types.super_armor] = 12,
-		[armor_types.disgustingly_resilient] = 12,
+		[armor_types.disgustingly_resilient] = 12
 	},
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.default_ogryn_shotgun_assault,
-		},
-	},
+			damage_profile = DamageProfileTemplates.default_ogryn_shotgun_assault
+		}
+	}
 }
 
 return {
 	base_templates = shotshell_templates,
-	overrides = overrides,
+	overrides = overrides
 }

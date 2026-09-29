@@ -87,7 +87,7 @@ Social.fetch_blocked_accounts = function (self)
 end
 
 local _add_blocked_account_options = {
-	method = "PUT",
+	method = "PUT"
 }
 
 Social.add_blocked_account = function (self, account_id)
@@ -97,7 +97,7 @@ Social.add_blocked_account = function (self, account_id)
 end
 
 local _remove_blocked_account_options = {
-	method = "DELETE",
+	method = "DELETE"
 }
 
 Social.remove_blocked_account = function (self, account_id)

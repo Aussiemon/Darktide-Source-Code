@@ -3,7 +3,7 @@
 local CharacterSheet = require("scripts/utilities/character_sheet")
 local WarpCharge = require("scripts/utilities/warp_charge")
 local RPCS = {
-	"rpc_update_talents",
+	"rpc_update_talents"
 }
 local PlayerHuskTalentExtension = class("PlayerHuskTalentExtension")
 
@@ -106,7 +106,7 @@ local class_loadout = {
 	passives = {},
 	coherency = {},
 	special_rules = {},
-	buff_template_tiers = {},
+	buff_template_tiers = {}
 }
 
 PlayerHuskTalentExtension._update_talents = function (self, talents)
@@ -145,19 +145,23 @@ PlayerHuskTalentExtension._update_talents = function (self, talents)
 	end
 end
 
-local temp_talent_name_set = {}
-
-PlayerHuskTalentExtension.rpc_update_talents = function (self, channel_id, unit_id, talent_id_array, talent_tier_array)
-	table.clear(temp_talent_name_set)
+PlayerHuskTalentExtension.rpc_update_talents = function (self, channel_id, unit_id, talent_id_array, talent_slot_array, talent_tier_array, talent_node_name_array)
+	local talents = {}
 
 	for ii = 1, #talent_id_array do
 		local talent_name_id = talent_id_array[ii]
 		local talent_name = NetworkLookup.archetype_talent_names[talent_name_id]
+		local slot_name = NetworkLookup.player_inventory_slot_names[talent_slot_array[ii]]
+		local node_name = NetworkLookup.talent_node_names[talent_node_name_array[ii]]
 
-		temp_talent_name_set[talent_name] = talent_tier_array[ii]
+		talents[talent_name] = {
+			target_slot = slot_name ~= "none" and slot_name or nil,
+			tier = talent_tier_array[ii],
+			node_name = node_name ~= "none" and node_name or nil
+		}
 	end
 
-	self:_update_talents(temp_talent_name_set)
+	self:_update_talents(talents)
 end
 
 return PlayerHuskTalentExtension

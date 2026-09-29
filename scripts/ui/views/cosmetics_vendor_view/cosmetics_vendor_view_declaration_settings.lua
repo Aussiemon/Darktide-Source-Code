@@ -16,17 +16,17 @@ local view_settings = {
 	use_transition_ui = true,
 	levels = {
 		"content/levels/ui/vendor_cosmetics_preview_gear/vendor_cosmetics_preview_gear",
-		"content/levels/ui/vendor_cosmetics_preview_weapon/vendor_cosmetics_preview_weapon",
+		"content/levels/ui/vendor_cosmetics_preview_weapon/vendor_cosmetics_preview_weapon"
 	},
 	enter_sound_events = {
-		UISoundEvents.default_menu_enter,
+		UISoundEvents.default_menu_enter
 	},
 	exit_sound_events = {
-		UISoundEvents.default_menu_exit,
+		UISoundEvents.default_menu_exit
 	},
 	wwise_states = {
-		options = WwiseGameSyncSettings.state_groups.options.vendor_menu,
-	},
+		options = WwiseGameSyncSettings.state_groups.options.vendor_menu
+	}
 }
 
 return settings("CosmeticsVendorViewDeclarationSettings", view_settings)

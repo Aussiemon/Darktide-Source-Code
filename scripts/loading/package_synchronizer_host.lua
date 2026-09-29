@@ -14,7 +14,7 @@ local unit_alive = Unit.alive
 local PackageSynchronizerHost = class("PackageSynchronizerHost")
 local RPCS = {
 	"rpc_package_synchronizer_ready_peer",
-	"rpc_alias_loading_complete",
+	"rpc_alias_loading_complete"
 }
 
 PackageSynchronizerHost.DEBUG_TAG = "PackageSynchronizerHost"
@@ -108,8 +108,8 @@ PackageSynchronizerHost._reevaluate_all_profile_packages = function (self)
 				for sync_local_player_id, player_data in pairs(player_states) do
 					local alias_states = player_data.alias_states
 
-					for i = 1, num_player_package_aliases do
-						local alias = player_package_aliases[i]
+					for ii = 1, num_player_package_aliases do
+						local alias = player_package_aliases[ii]
 
 						alias_states[alias] = SYNC_STATES.not_synced
 					end
@@ -129,8 +129,8 @@ PackageSynchronizerHost._set_prioritization_template = function (self, template_
 	local template_id = NetworkLookup.package_synchronization_template_names[template_name]
 	local alias_states = {}
 
-	for i = 1, #PlayerPackageAliases do
-		local alias = PlayerPackageAliases[i]
+	for ii = 1, #PlayerPackageAliases do
+		local alias = PlayerPackageAliases[ii]
 
 		alias_states[alias] = SYNC_STATES.not_synced
 	end
@@ -227,7 +227,7 @@ PackageSynchronizerHost._player_profile_changed = function (self, sync_peer_id, 
 		handled_profile_changes = false,
 		wield_slot_after_sync = nil,
 		sync_change_id = sync_change_id,
-		changed_profile_fields = changed_profile_fields,
+		changed_profile_fields = changed_profile_fields
 	}
 
 	syncs[sync_peer_id][sync_local_player_id] = sync_data
@@ -240,7 +240,7 @@ PackageSynchronizerHost._player_profile_changed = function (self, sync_peer_id, 
 		else
 			local temp_sync_data = {
 				changed_profile_fields = self:_collect_new_changes_between_sync_data(old_sync_data, sync_data),
-				wield_slot_after_sync = old_sync_data.wield_slot_after_sync,
+				wield_slot_after_sync = old_sync_data.wield_slot_after_sync
 			}
 
 			self:_handle_profile_changes_before_sync(player, temp_sync_data)
@@ -308,17 +308,11 @@ PackageSynchronizerHost._calculate_player_unit_respawn = function (self, profile
 		return true
 	end
 
-	local personal = profile.personal or EMPTY_TABLE
-	local new_personal = profile.personal or EMPTY_TABLE
-	local old_character_height = personal.character_height or 1
-	local new_character_height = new_personal.character_height or 1
+	local old_character_height = profile.character_height or 1
+	local new_character_height = profile.character_height or 1
 	local character_height_diff = math.abs(new_character_height - old_character_height)
 
-	if character_height_diff > 0.01 then
-		return true
-	end
-
-	return false
+	return character_height_diff > 0.01
 end
 
 PackageSynchronizerHost._calculate_changed_inventory_items = function (self, profile, new_profile)
@@ -338,7 +332,7 @@ PackageSynchronizerHost._calculate_changed_inventory_items = function (self, pro
 
 			if not new_item then
 				changed_loadout_items[slot_name] = {
-					reason = "item_removed",
+					reason = "item_removed"
 				}
 
 				break
@@ -350,7 +344,7 @@ PackageSynchronizerHost._calculate_changed_inventory_items = function (self, pro
 			if item_gear_id ~= new_item_gear_id then
 				changed_loadout_items[slot_name] = {
 					reason = "item_replaced",
-					new_item = new_item,
+					new_item = new_item
 				}
 
 				break
@@ -383,7 +377,7 @@ PackageSynchronizerHost._calculate_changed_inventory_items = function (self, pro
 			if item_altered then
 				changed_loadout_items[slot_name] = {
 					reason = "item_altered",
-					new_item = new_item,
+					new_item = new_item
 				}
 			end
 
@@ -400,7 +394,7 @@ PackageSynchronizerHost._calculate_changed_inventory_items = function (self, pro
 					if not item then
 						changed_loadout_items[slot_name] = {
 							reason = "item_added",
-							new_item = new_item,
+							new_item = new_item
 						}
 					end
 
@@ -519,8 +513,8 @@ PackageSynchronizerHost._instance_or_dependency_items_altered = function (self, 
 	local slot_dependencies = slot_configuration[slot_name].slot_dependencies
 
 	if slot_dependencies then
-		for i = 1, #slot_dependencies do
-			local slot_dependency = slot_dependencies[i]
+		for ii = 1, #slot_dependencies do
+			local slot_dependency = slot_dependencies[ii]
 
 			altered = altered or self:_instance_or_dependency_items_altered(slot_dependency, profile, new_profile, checked_slots)
 
@@ -538,8 +532,8 @@ PackageSynchronizerHost._calculate_changed_talents = function (self, old_profile
 	local new_talents = new_profile.talents
 	local talents_changed = false
 
-	for talent_name, tier in pairs(old_talents) do
-		if not new_talents[talent_name] or new_talents[talent_name] ~= tier then
+	for talent_name, talent_data in pairs(old_talents) do
+		if not new_talents[talent_name] or new_talents[talent_name].tier ~= talent_data.tier or new_talents[talent_name].target_slot ~= talent_data.target_slot then
 			talents_changed = true
 
 			break
@@ -547,8 +541,8 @@ PackageSynchronizerHost._calculate_changed_talents = function (self, old_profile
 	end
 
 	if not talents_changed then
-		for talent_name, tier in pairs(new_talents) do
-			if not old_talents[talent_name] or old_talents[talent_name] ~= tier then
+		for talent_name, talent_data in pairs(new_talents) do
+			if not old_talents[talent_name] or old_talents[talent_name].tier ~= talent_data.tier or old_talents[talent_name].target_slot ~= talent_data.target_slot then
 				talents_changed = true
 
 				break
@@ -558,7 +552,7 @@ PackageSynchronizerHost._calculate_changed_talents = function (self, old_profile
 
 	if talents_changed then
 		local changes = {
-			talents = new_talents,
+			talents = new_talents
 		}
 
 		return changes
@@ -577,7 +571,7 @@ PackageSynchronizerHost._update_alias_version = function (self, peer_id, sync_pe
 
 	data.alias_versions[new_alias_version] = {
 		sync_peer_id = sync_peer_id,
-		sync_local_player_id = sync_local_player_id,
+		sync_local_player_id = sync_local_player_id
 	}
 	self._alias_version_counter = self._alias_version_counter + 1
 	player_data.alias_version = new_alias_version
@@ -904,8 +898,8 @@ PackageSynchronizerHost.is_peer_synced = function (self, peer_id, peers_filter_m
 				if not sync_states[sync_peer_id] or sync_states[sync_peer_id].enabled then
 					local synced = true
 
-					for i = 1, #required_package_aliases do
-						local alias = required_package_aliases[i]
+					for ii = 1, #required_package_aliases do
+						local alias = required_package_aliases[ii]
 						local alias_state = alias_states[alias]
 
 						if alias_state ~= SYNC_STATES.synced then
@@ -941,8 +935,8 @@ PackageSynchronizerHost.is_peer_synced = function (self, peer_id, peers_filter_m
 			for _, player_data in pairs(player_states) do
 				local alias_states = player_data.alias_states
 
-				for i = 1, #required_package_aliases do
-					local alias = required_package_aliases[i]
+				for ii = 1, #required_package_aliases do
+					local alias = required_package_aliases[ii]
 					local alias_state = alias_states[alias]
 
 					if alias_state ~= SYNC_STATES.synced then
@@ -981,8 +975,8 @@ PackageSynchronizerHost._is_player_synced_by_all = function (self, peer_id, loca
 
 			local alias_states = data.peer_states[peer_id].player_states[local_player_id].alias_states
 
-			for i = 1, #required_package_aliases do
-				local alias = required_package_aliases[i]
+			for ii = 1, #required_package_aliases do
+				local alias = required_package_aliases[ii]
 				local alias_state = alias_states[alias]
 
 				if alias_state ~= SYNC_STATES.synced then
@@ -1014,7 +1008,7 @@ end
 
 local temp_non_synced_peers_map = {
 	peer_to_others = Script.new_array(8),
-	others_to_peer = Script.new_array(8),
+	others_to_peer = Script.new_array(8)
 }
 
 PackageSynchronizerHost.peers_not_synced_with = function (self, peer_id, peers_filter_map)
@@ -1043,8 +1037,8 @@ PackageSynchronizerHost.peers_not_synced_with = function (self, peer_id, peers_f
 				local alias_states = player_data.alias_states
 
 				if not sync_states[sync_peer_id] or sync_states[sync_peer_id].enabled then
-					for i = 1, #required_package_aliases do
-						local alias = required_package_aliases[i]
+					for ii = 1, #required_package_aliases do
+						local alias = required_package_aliases[ii]
 						local alias_state = alias_states[alias]
 
 						if alias_state ~= SYNC_STATES.synced then
@@ -1082,8 +1076,8 @@ PackageSynchronizerHost.peers_not_synced_with = function (self, peer_id, peers_f
 			for _, player_data in pairs(player_states) do
 				local alias_states = player_data.alias_states
 
-				for i = 1, #required_package_aliases do
-					local alias = required_package_aliases[i]
+				for ii = 1, #required_package_aliases do
+					local alias = required_package_aliases[ii]
 					local alias_state = alias_states[alias]
 
 					if alias_state ~= SYNC_STATES.synced then
@@ -1133,8 +1127,8 @@ PackageSynchronizerHost.add_peer = function (self, new_peer_id)
 	local new_peer_states = {}
 	local alias_states = {}
 
-	for i = 1, #PlayerPackageAliases do
-		local alias = PlayerPackageAliases[i]
+	for ii = 1, #PlayerPackageAliases do
+		local alias = PlayerPackageAliases[ii]
 
 		alias_states[alias] = SYNC_STATES.not_synced
 	end
@@ -1145,18 +1139,18 @@ PackageSynchronizerHost.add_peer = function (self, new_peer_id)
 		local peer_states = data.peer_states
 
 		peer_states[new_peer_id] = {
-			player_states = {},
+			player_states = {}
 		}
 
 		for local_player_id, _ in pairs(players) do
 			peer_states[new_peer_id].player_states[local_player_id] = {
 				alias_version = "",
-				alias_states = table.clone(alias_states),
+				alias_states = table.clone(alias_states)
 			}
 		end
 
 		new_peer_states[peer_id] = {
-			player_states = {},
+			player_states = {}
 		}
 
 		local player_states = peer_states[peer_id].player_states
@@ -1164,20 +1158,20 @@ PackageSynchronizerHost.add_peer = function (self, new_peer_id)
 		for local_player_id, _ in pairs(player_states) do
 			new_peer_states[peer_id].player_states[local_player_id] = {
 				alias_version = "",
-				alias_states = table.clone(alias_states),
+				alias_states = table.clone(alias_states)
 			}
 		end
 	end
 
 	new_peer_states[new_peer_id] = {
-		player_states = {},
+		player_states = {}
 	}
 
 	if players then
 		for local_player_id, _ in pairs(players) do
 			new_peer_states[new_peer_id].player_states[local_player_id] = {
 				alias_version = "",
-				alias_states = table.clone(alias_states),
+				alias_states = table.clone(alias_states)
 			}
 		end
 	end
@@ -1187,7 +1181,7 @@ PackageSynchronizerHost.add_peer = function (self, new_peer_id)
 		enabled = false,
 		ready = false,
 		peer_states = new_peer_states,
-		alias_versions = {},
+		alias_versions = {}
 	}
 
 	self._sync_states[new_peer_id] = data
@@ -1206,8 +1200,8 @@ end
 PackageSynchronizerHost.add_bot = function (self, local_player_id)
 	local alias_states = {}
 
-	for i = 1, #PlayerPackageAliases do
-		local alias = PlayerPackageAliases[i]
+	for ii = 1, #PlayerPackageAliases do
+		local alias = PlayerPackageAliases[ii]
 
 		alias_states[alias] = SYNC_STATES.not_synced
 	end
@@ -1221,7 +1215,7 @@ PackageSynchronizerHost.add_bot = function (self, local_player_id)
 
 		player_states[local_player_id] = {
 			alias_version = "",
-			alias_states = table.clone(alias_states),
+			alias_states = table.clone(alias_states)
 		}
 
 		if data.ready and data.channel_id then
@@ -1297,8 +1291,8 @@ PackageSynchronizerHost.alias_loading_complete = function (self, peer_id, loaded
 	local prioritization_template = self._prioritization_template
 	local required_package_aliases = prioritization_template.required_package_aliases
 
-	for i = 1, #required_package_aliases do
-		local alias = required_package_aliases[i]
+	for ii = 1, #required_package_aliases do
+		local alias = required_package_aliases[ii]
 
 		alias_states[alias] = SYNC_STATES.synced
 	end

@@ -2,21 +2,22 @@
 
 local WarpCharge = require("scripts/utilities/warp_charge")
 local mood_settings = {}
-local types = table.enum("corruption_taken", "corruption", "corruptor_proximity", "critical_health", "damage_taken", "expeditions_death_imminent", "knocked_down", "last_wound", "no_toughness", "sprinting_overtime", "sprinting", "suppression_high", "suppression_low", "suppression_ongoing", "toughness_absorbed_melee", "toughness_absorbed", "toughness_broken", "warped_critical", "warped_high_to_critical", "warped_low_to_high", "warped", "adamant_combat_ability_charge", "broker_combat_ability_focus", "broker_combat_ability_punk_rage", "cryptic_grenade_ability_force_field", "ogryn_combat_ability_charge", "ogryn_combat_ability_shout", "ogryn_combat_ability_stance", "psyker_combat_ability_shout", "psyker_force_field_sphere", "stealth", "veteran_combat_ability_stance", "veteran_stealth_and_stance", "veteran_stealth", "zealot_combat_ability_dash", "generic_stealth", "story_echo", "syringe_ability", "syringe_power", "syringe_speed", "syringe_broker")
+local types = table.enum("corruption_taken", "corruption", "corruptor_proximity", "critical_health", "damage_taken", "expeditions_death_imminent", "knocked_down", "last_wound", "no_toughness", "sprinting_overtime", "sprinting", "suppression_high", "suppression_low", "suppression_ongoing", "toughness_absorbed_melee", "toughness_absorbed", "toughness_broken", "warped_critical", "warped_high_to_critical", "warped_low_to_high", "warped", "adamant_combat_ability_charge", "broker_combat_ability_focus", "broker_combat_ability_punk_rage", "cryptic_grenade_ability_force_field", "ogryn_combat_ability_charge", "ogryn_combat_ability_shout", "ogryn_combat_ability_stance", "psyker_combat_ability_shout", "psyker_force_field_sphere", "stealth", "veteran_combat_ability_stance", "veteran_stealth_and_stance", "veteran_stealth", "zealot_combat_ability_dash", "generic_stealth", "story_echo", "spillway_nurgle_transition", "syringe_ability", "syringe_power", "syringe_speed", "syringe_broker")
 local status = table.enum("active", "inactive", "removing")
 local PULSING = {
 	pulsing_animation_duration = 3,
 	variable_names = {
 		pulse = "pulse_on_off",
 		pulse_intensity = "pulse_intensity",
-		redness = "redness",
-	},
+		redness = "redness"
+	}
 }
 local SHIELD_SCREENSPACE_PARTICLE = "content/fx/particles/screenspace/screen_cryptic_force_field"
 
 mood_settings.mood_types = types
 mood_settings.status = status
 mood_settings.priority = {
+	types.spillway_nurgle_transition,
 	types.stealth,
 	types.veteran_stealth,
 	types.veteran_stealth_and_stance,
@@ -55,7 +56,7 @@ mood_settings.priority = {
 	types.syringe_power,
 	types.syringe_speed,
 	types.syringe_broker,
-	types.story_echo,
+	types.story_echo
 }
 mood_settings.moods = {
 	[types.stealth] = {
@@ -64,14 +65,14 @@ mood_settings.moods = {
 		shading_environment = "content/shading_environments/moods/stealth_mood",
 		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
 		particle_effects_looping = {
-			"content/fx/particles/screenspace/screen_zealot_stealth",
+			"content/fx/particles/screenspace/screen_zealot_stealth"
 		},
 		looping_sound_start_events = {
-			"wwise/events/player/play_zealot_ability_invisible_on",
+			"wwise/events/player/play_zealot_ability_invisible_on"
 		},
 		looping_sound_stop_events = {
-			"wwise/events/player/play_zealot_ability_invisible_off",
-		},
+			"wwise/events/player/play_zealot_ability_invisible_off"
+		}
 	},
 	[types.veteran_stealth] = {
 		blend_in_time = 0.35,
@@ -79,14 +80,14 @@ mood_settings.moods = {
 		shading_environment = "content/shading_environments/moods/veteran_stealth_mood",
 		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
 		particle_effects_looping = {
-			"content/fx/particles/screenspace/screen_veteran_stealth",
+			"content/fx/particles/screenspace/screen_veteran_stealth"
 		},
 		looping_sound_start_events = {
-			"wwise/events/player/play_veteran_ability_stealth_on",
+			"wwise/events/player/play_veteran_ability_stealth_on"
 		},
 		looping_sound_stop_events = {
-			"wwise/events/player/play_veteran_ability_stealth_off",
-		},
+			"wwise/events/player/play_veteran_ability_stealth_off"
+		}
 	},
 	[types.veteran_stealth_and_stance] = {
 		blend_in_time = 0.35,
@@ -94,14 +95,14 @@ mood_settings.moods = {
 		shading_environment = "content/shading_environments/moods/stealth_mood",
 		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
 		particle_effects_looping = {
-			"content/fx/particles/screenspace/screen_veteran_stealth",
+			"content/fx/particles/screenspace/screen_veteran_stealth"
 		},
 		looping_sound_start_events = {
-			"wwise/events/player/play_veteran_ability_stealth_and_stance_on",
+			"wwise/events/player/play_veteran_ability_stealth_and_stance_on"
 		},
 		looping_sound_stop_events = {
-			"wwise/events/player/play_veteran_ability_stealth_and_stance_off",
-		},
+			"wwise/events/player/play_veteran_ability_stealth_and_stance_off"
+		}
 	},
 	[types.generic_stealth] = {
 		blend_in_time = 0.35,
@@ -109,35 +110,35 @@ mood_settings.moods = {
 		shading_environment = "content/shading_environments/moods/veteran_stealth_mood",
 		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
 		particle_effects_looping = {
-			"content/fx/particles/screenspace/screen_veteran_stealth",
+			"content/fx/particles/screenspace/screen_veteran_stealth"
 		},
 		looping_sound_start_events = {
-			"wwise/events/player/play_veteran_ability_stealth_on",
+			"wwise/events/player/play_veteran_ability_stealth_on"
 		},
 		looping_sound_stop_events = {
-			"wwise/events/player/play_veteran_ability_stealth_off",
-		},
+			"wwise/events/player/play_veteran_ability_stealth_off"
+		}
 	},
 	[types.last_wound] = {
 		blend_in_time = 0.35,
 		blend_out_time = 0.8,
 		shading_environment = "content/shading_environments/moods/last_wound_mood",
-		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES
 	},
 	[types.knocked_down] = {
 		blend_in_time = 0.35,
 		blend_out_time = 0.8,
 		shading_environment = "content/shading_environments/moods/knocked_down_mood",
 		particle_effects_on_enter = {
-			"content/fx/particles/screenspace/player_damage",
+			"content/fx/particles/screenspace/player_damage"
 		},
 		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
 		looping_sound_start_events = {
-			"wwise/events/player/play_player_experience_heart_beat",
+			"wwise/events/player/play_player_experience_heart_beat"
 		},
 		looping_sound_stop_events = {
-			"wwise/events/player/stop_player_experience_heart_beat",
-		},
+			"wwise/events/player/stop_player_experience_heart_beat"
+		}
 	},
 	[types.toughness_broken] = {
 		active_time = 0.5,
@@ -146,9 +147,9 @@ mood_settings.moods = {
 		shading_environment = "content/shading_environments/moods/thoughness_broken_mood",
 		sound_start_event = "wwise/events/player/play_toughness_break",
 		particle_effects_on_enter = {
-			"content/fx/particles/screenspace/toughness_break",
+			"content/fx/particles/screenspace/toughness_break"
 		},
-		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES
 	},
 	[types.no_toughness] = {
 		blend_in_time = 0.35,
@@ -156,7 +157,7 @@ mood_settings.moods = {
 		shading_environment = "content/shading_environments/moods/no_toughness_mood",
 		sound_stop_event = "wwise/events/player/play_toughness_regen",
 		particle_effects_on_exit = {
-			"content/fx/particles/screenspace/toughness_restored",
+			"content/fx/particles/screenspace/toughness_restored"
 		},
 		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
 		sound_stop_event_func = function (unit)
@@ -164,42 +165,42 @@ mood_settings.moods = {
 			local current_toughness = toughness_extension and toughness_extension:current_toughness_percent() or 0
 
 			return current_toughness > 0
-		end,
+		end
 	},
 	[types.suppression_ongoing] = {
 		blend_in_time = 0.1,
 		blend_out_time = 1.2,
 		shading_environment = "content/shading_environments/moods/suppression_mood",
-		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES
 	},
 	[types.suppression_low] = {
 		active_time = 0.05,
 		blend_in_time = 0.025,
 		blend_out_time = 0.05,
 		shading_environment = "content/shading_environments/moods/suppression_low_mood",
-		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES
 	},
 	[types.suppression_high] = {
 		active_time = 0.05,
 		blend_in_time = 0.025,
 		blend_out_time = 0.05,
 		shading_environment = "content/shading_environments/moods/suppression_high_mood",
-		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES
 	},
 	[types.critical_health] = {
 		blend_in_time = 0.025,
 		blend_out_time = 0.5,
 		shading_environment = "content/shading_environments/moods/critical_health_mood",
 		particle_effects_on_enter = {
-			"content/fx/particles/screenspace/player_damage_critical",
+			"content/fx/particles/screenspace/player_damage_critical"
 		},
 		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
 		looping_sound_start_events = {
-			"wwise/events/player/play_player_experience_heart_beat",
+			"wwise/events/player/play_player_experience_heart_beat"
 		},
 		looping_sound_stop_events = {
-			"wwise/events/player/stop_player_experience_heart_beat",
-		},
+			"wwise/events/player/stop_player_experience_heart_beat"
+		}
 	},
 	[types.damage_taken] = {
 		active_time = 0.05,
@@ -207,68 +208,68 @@ mood_settings.moods = {
 		blend_out_time = 0.2,
 		shading_environment = "content/shading_environments/moods/damage_hit_mood",
 		particle_effects_on_enter = {
-			"content/fx/particles/screenspace/player_damage",
+			"content/fx/particles/screenspace/player_damage"
 		},
-		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES
 	},
 	[types.toughness_absorbed] = {
 		active_time = 0.1,
 		blend_in_time = 0.1,
 		blend_out_time = 0.1,
 		particle_effects_on_enter = {
-			"content/fx/particles/screenspace/toughness",
-		},
+			"content/fx/particles/screenspace/toughness"
+		}
 	},
 	[types.toughness_absorbed_melee] = {
 		active_time = 0.1,
 		blend_in_time = 0.1,
 		blend_out_time = 0.1,
 		particle_effects_on_enter = {
-			"content/fx/particles/screenspace/toughness",
-		},
+			"content/fx/particles/screenspace/toughness"
+		}
 	},
 	[types.expeditions_death_imminent] = {
 		blend_in_time = 0.35,
 		blend_out_time = 0.8,
 		particle_effects_looping = {
-			"content/fx/particles/screenspace/player_screen_exp_death_imminent",
-		},
+			"content/fx/particles/screenspace/player_screen_exp_death_imminent"
+		}
 	},
 	[types.corruption_taken] = {
 		active_time = 0.05,
 		blend_in_time = 0.01,
 		blend_out_time = 0.01,
 		particle_effects_on_enter = {
-			"content/fx/particles/screenspace/screen_corruption_hit",
-		},
+			"content/fx/particles/screenspace/screen_corruption_hit"
+		}
 	},
 	[types.corruption] = {
 		blend_in_time = 0.35,
 		blend_out_time = 0.8,
 		particle_effects_looping = {
-			"content/fx/particles/screenspace/screen_corruption_persistant",
-		},
+			"content/fx/particles/screenspace/screen_corruption_persistant"
+		}
 	},
 	[types.sprinting] = {
 		blend_in_time = 0.1,
-		blend_out_time = 0.2,
+		blend_out_time = 0.2
 	},
 	[types.sprinting_overtime] = {
 		blend_in_time = 0.1,
 		blend_out_time = 0.1,
-		particle_effects_on_enter = nil,
+		particle_effects_on_enter = nil
 	},
 	[types.zealot_combat_ability_dash] = {
 		blend_in_time = 0.1,
 		blend_out_time = 0.2,
 		shading_environment = "content/shading_environments/moods/zealot_dash_mood",
-		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES
 	},
 	[types.adamant_combat_ability_charge] = {
 		blend_in_time = 0.1,
 		blend_out_time = 0.2,
 		shading_environment = "content/shading_environments/moods/adamant_charge_mood",
-		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES
 	},
 	[types.broker_combat_ability_focus] = {
 		blend_in_time = 0.1,
@@ -276,39 +277,39 @@ mood_settings.moods = {
 		shading_environment = "content/shading_environments/moods/broker_gunslinger_focus_mood",
 		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
 		particle_effects_looping = {
-			"content/fx/particles/screenspace/screen_broker_focus",
+			"content/fx/particles/screenspace/screen_broker_focus"
 		},
 		looping_sound_start_events = {
-			"wwise/events/player/play_player_ability_broker_focus_start",
+			"wwise/events/player/play_player_ability_broker_focus_start"
 		},
 		looping_sound_stop_events = {
-			"wwise/events/player/play_player_ability_broker_focus_stop",
+			"wwise/events/player/play_player_ability_broker_focus_stop"
 		},
 		wwise_state = {
 			group = "player_ability",
 			off_state = "none",
-			on_state = "broker_focus",
-		},
+			on_state = "broker_focus"
+		}
 	},
 	[types.broker_combat_ability_punk_rage] = {
 		blend_in_time = 0.03,
 		blend_out_time = 0.03,
 		shading_environment = "content/shading_environments/moods/broker_punk_rage_mood",
 		looping_sound_start_events = {
-			"wwise/events/player/play_player_ability_broker_rage_start",
+			"wwise/events/player/play_player_ability_broker_rage_start"
 		},
 		looping_sound_stop_events = {
-			"wwise/events/player/play_player_ability_broker_rage_stop",
+			"wwise/events/player/play_player_ability_broker_rage_stop"
 		},
 		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
 		particle_effects_looping = {
-			"content/fx/particles/screenspace/screen_broker_punk_rage",
+			"content/fx/particles/screenspace/screen_broker_punk_rage"
 		},
 		wwise_state = {
 			group = "player_ability",
 			off_state = "none",
-			on_state = "broker_punkrage",
-		},
+			on_state = "broker_punkrage"
+		}
 	},
 	[types.cryptic_grenade_ability_force_field] = {
 		blend_in_time = 0.1,
@@ -316,12 +317,12 @@ mood_settings.moods = {
 		shading_environment = "content/shading_environments/moods/cryptic_personal_force_field_mood",
 		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
 		particle_effects_looping = {
-			SHIELD_SCREENSPACE_PARTICLE,
+			SHIELD_SCREENSPACE_PARTICLE
 		},
 		wwise_state = {
 			group = "player_ability",
 			off_state = "none",
-			on_state = "cryptic_shield",
+			on_state = "cryptic_shield"
 		},
 		particle_material_scalar_funcs = {
 			function (world, particle_id, player, previous_values)
@@ -380,20 +381,20 @@ mood_settings.moods = {
 					World.set_particles_material_scalar(world, particle_id, "middle_thinner_force_field", PULSING.variable_names.redness, pulsing_time_left_percentage)
 					World.set_particles_material_scalar(world, particle_id, "middle_thinner_force_field", PULSING.variable_names.pulse_intensity, pulsing_time_left_percentage)
 				end
-			end,
-		},
+			end
+		}
 	},
 	[types.ogryn_combat_ability_charge] = {
 		blend_in_time = 0.1,
 		blend_out_time = 0.2,
 		shading_environment = "content/shading_environments/moods/ogryn_charge_mood",
-		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES
 	},
 	[types.ogryn_combat_ability_shout] = {
 		blend_in_time = 0.1,
 		blend_out_time = 0.2,
 		shading_environment = "content/shading_environments/moods/ogryn_taunt_mood",
-		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES
 	},
 	[types.ogryn_combat_ability_stance] = {
 		blend_in_time = 0.03,
@@ -401,49 +402,49 @@ mood_settings.moods = {
 		shading_environment = "content/shading_environments/moods/ogryn_taunt_mood",
 		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
 		particle_effects_looping = {
-			"content/fx/particles/screenspace/screen_ogryn_gunlugger",
+			"content/fx/particles/screenspace/screen_ogryn_gunlugger"
 		},
 		looping_sound_start_events = {
-			"wwise/events/player/play_ability_ogryn_speshul_ammo",
+			"wwise/events/player/play_ability_ogryn_speshul_ammo"
 		},
 		looping_sound_stop_events = {
-			"wwise/events/player/stop_ability_ogryn_speshul_ammo",
+			"wwise/events/player/stop_ability_ogryn_speshul_ammo"
 		},
 		wwise_state = {
 			group = "player_ability",
 			off_state = "none",
-			on_state = "ogryn_stance",
-		},
+			on_state = "ogryn_stance"
+		}
 	},
 	[types.veteran_combat_ability_stance] = {
 		blend_in_time = 0.1,
 		blend_out_time = 0.2,
 		shading_environment = "content/shading_environments/moods/veteran_combat_ability_mood",
-		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES
 	},
 	[types.psyker_combat_ability_shout] = {
 		blend_in_time = 0.03,
 		blend_out_time = 0.15,
 		shading_environment = "content/shading_environments/moods/psyker_shout_mood",
 		particle_effects_on_enter = {
-			"content/fx/particles/screenspace/screen_psyker_shout",
+			"content/fx/particles/screenspace/screen_psyker_shout"
 		},
-		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES
 	},
 	[types.corruptor_proximity] = {
 		blend_in_time = 0.15,
 		blend_out_time = 0.15,
 		shading_environment = "content/shading_environments/moods/corruptor_proximity_mood",
-		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES
 	},
 	[types.warped] = {
 		blend_in_time = 0.03,
 		blend_out_time = 0.03,
 		looping_sound_start_events = {
-			"wwise/events/player/play_warp_charge_build_up_loop",
+			"wwise/events/player/play_warp_charge_build_up_loop"
 		},
 		looping_sound_stop_events = {
-			"wwise/events/player/stop_warp_charge_build_up_loop",
+			"wwise/events/player/stop_warp_charge_build_up_loop"
 		},
 		source_parameter_funcs = {
 			function (wwise_world, source_id, player)
@@ -470,14 +471,14 @@ mood_settings.moods = {
 				local options_peril_slider = Application.user_setting("interface_settings", "psyker_overload_intensity") or 100
 
 				WwiseWorld.set_global_parameter(wwise_world, "options_peril_slider", options_peril_slider / 100)
-			end,
-		},
+			end
+		}
 	},
 	[types.warped_low_to_high] = {
 		blend_in_time = 0.03,
 		blend_out_time = 0.03,
 		particle_effects_looping = {
-			"content/fx/particles/screenspace/screen_psyker_overheat",
+			"content/fx/particles/screenspace/screen_psyker_overheat"
 		},
 		particle_material_scalar_funcs = {
 			function (world, particle_id, player, previous_values)
@@ -516,119 +517,135 @@ mood_settings.moods = {
 
 					World.set_particles_material_scalar(world, particle_id, "warp", "options_peril_slider_vfx", options_peril_slider / 100)
 				end
-			end,
-		},
+			end
+		}
 	},
 	[types.warped_high_to_critical] = {
 		blend_in_time = 0.03,
 		blend_out_time = 0.03,
-		sound_start_event = "wwise/events/player/play_warp_charge_build_up_warning",
+		sound_start_event = "wwise/events/player/play_warp_charge_build_up_warning"
 	},
 	[types.warped_critical] = {
 		blend_in_time = 0.03,
 		blend_out_time = 0.03,
 		sound_start_event = "wwise/events/player/play_warp_charge_build_up_critical",
 		particle_effects_looping = {
-			"content/fx/particles/screenspace/screen_psyker_overheat_critical",
-		},
+			"content/fx/particles/screenspace/screen_psyker_overheat_critical"
+		}
 	},
 	[types.psyker_force_field_sphere] = {
 		blend_in_time = 0,
 		blend_out_time = 0.01,
 		looping_sound_start_events = {
-			"wwise/events/player/play_psyker_shield_dome_enter",
+			"wwise/events/player/play_psyker_shield_dome_enter"
 		},
 		looping_sound_stop_events = {
-			"wwise/events/player/play_psyker_shield_dome_exit",
-		},
+			"wwise/events/player/play_psyker_shield_dome_exit"
+		}
 	},
 	[types.syringe_ability] = {
 		blend_in_time = 0.1,
 		blend_out_time = 0.2,
 		shading_environment = "content/shading_environments/moods/stimms_concentration_yellow_mood_01",
 		looping_sound_start_events = {
-			"wwise/events/player/play_syringe_ability_start",
+			"wwise/events/player/play_syringe_ability_start"
 		},
 		looping_sound_stop_events = {
-			"wwise/events/player/play_syringe_ability_stop",
+			"wwise/events/player/play_syringe_ability_stop"
 		},
 		particle_effects_looping = {
-			"content/fx/particles/screenspace/player_screen_stimms_concentration_yellow_01",
+			"content/fx/particles/screenspace/player_screen_stimms_concentration_yellow_01"
 		},
 		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
 		wwise_state = {
 			group = "player_ability",
 			off_state = "none",
-			on_state = "syringe_ability",
-		},
+			on_state = "syringe_ability"
+		}
 	},
 	[types.syringe_power] = {
 		blend_in_time = 0.1,
 		blend_out_time = 0.2,
 		shading_environment = "content/shading_environments/moods/stimms_power_red_mood_01",
 		looping_sound_start_events = {
-			"wwise/events/player/play_syringe_power_start",
+			"wwise/events/player/play_syringe_power_start"
 		},
 		looping_sound_stop_events = {
-			"wwise/events/player/play_syringe_power_stop",
+			"wwise/events/player/play_syringe_power_stop"
 		},
 		particle_effects_looping = {
-			"content/fx/particles/screenspace/player_screen_stimms_power_red_01",
+			"content/fx/particles/screenspace/player_screen_stimms_power_red_01"
 		},
 		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
 		wwise_state = {
 			group = "player_ability",
 			off_state = "none",
-			on_state = "syringe_power",
-		},
+			on_state = "syringe_power"
+		}
 	},
 	[types.syringe_speed] = {
 		blend_in_time = 0.1,
 		blend_out_time = 0.2,
 		shading_environment = "content/shading_environments/moods/stimms_speed_blue_mood_01",
 		looping_sound_start_events = {
-			"wwise/events/player/play_syringe_speed_start",
+			"wwise/events/player/play_syringe_speed_start"
 		},
 		looping_sound_stop_events = {
-			"wwise/events/player/play_syringe_speed_stop",
+			"wwise/events/player/play_syringe_speed_stop"
 		},
 		particle_effects_looping = {
-			"content/fx/particles/screenspace/player_screen_stimms_speed_blue",
+			"content/fx/particles/screenspace/player_screen_stimms_speed_blue"
 		},
 		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
 		wwise_state = {
 			group = "player_ability",
 			off_state = "none",
-			on_state = "syringe_speed",
-		},
+			on_state = "syringe_speed"
+		}
 	},
 	[types.syringe_broker] = {
 		blend_in_time = 0.1,
 		blend_out_time = 0.2,
 		shading_environment = "content/shading_environments/moods/stimms_concentration_yellow_mood_01",
 		looping_sound_start_events = {
-			"wwise/events/player/play_syringe_broker_start",
+			"wwise/events/player/play_syringe_broker_start"
 		},
 		looping_sound_stop_events = {
-			"wwise/events/player/play_syringe_broker_stop",
+			"wwise/events/player/play_syringe_broker_stop"
 		},
 		particle_effects_looping = {
-			"content/fx/particles/screenspace/player_screen_broker_stimm_syringe",
+			"content/fx/particles/screenspace/player_screen_broker_stimm_syringe"
 		},
 		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
 		wwise_state = {
 			group = "player_ability",
 			off_state = "none",
-			on_state = "syringe_broker",
-		},
+			on_state = "syringe_broker"
+		}
 	},
 	[types.story_echo] = {
 		active_time = 60,
 		blend_in_time = 2.3,
 		blend_out_time = 1.5,
 		shading_environment = "content/shading_environments/moods/horde_story_echo_mood",
-		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES
 	},
+	[types.spillway_nurgle_transition] = {
+		active_time = 3.5,
+		blend_in_time = 1.5,
+		blend_out_time = 2.5,
+		shading_environment = "content/shading_environments/moods/spillway_nurgle_transition",
+		looping_sound_start_events = {
+			"wwise/events/world/play_spillway_event_nurgle_curse_loop"
+		},
+		looping_sound_stop_events = {
+			"wwise/events/world/stop_spillway_event_nurgle_curse_loop"
+		},
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		particle_effects_looping = {
+			"content/fx/particles/screenspace/screen_spillway_nurgle_transition"
+		}
+	}
 }
 
 local num_moods = 0

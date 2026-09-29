@@ -95,7 +95,7 @@ ViewElementNewsSlide._initialize_slides = function (self, backend_data)
 					action = content.action,
 					target = content.target,
 					data = content.data,
-					style = content.style,
+					style = content.style
 				}
 				slide_button_cta = slide_button_cta or slide_action.data
 
@@ -123,7 +123,7 @@ ViewElementNewsSlide._initialize_slides = function (self, backend_data)
 				backend_index = i,
 				sort_index = raw_data.displayPriority and tonumber(raw_data.displayPriority) or 0,
 				action = slide_action,
-				button_cta = slide_button_cta,
+				button_cta = slide_button_cta
 			}
 		end
 	end
@@ -471,9 +471,9 @@ ViewElementNewsSlide.view_requested = function (self)
 			slide_data = {
 				starting_slide_index = 1,
 				slides = {
-					backend_data,
-				},
-			},
+					backend_data
+				}
+			}
 		})
 	end
 end

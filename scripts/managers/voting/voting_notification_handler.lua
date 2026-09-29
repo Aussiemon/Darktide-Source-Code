@@ -29,7 +29,7 @@ VotingNotificationHandler._empty_notification = function (self, voting_id, confi
 		time_left = nil,
 		config = table.clone(config),
 		voting_id = voting_id,
-		text_cache = {},
+		text_cache = {}
 	}
 end
 
@@ -109,7 +109,7 @@ VotingNotificationHandler._create = function (self, voting_id, config, sound_eve
 
 	self:_update_text_cache(voting_id)
 	Managers.event:trigger("event_add_notification_message", "voting", {
-		texts = notification.text_cache,
+		texts = notification.text_cache
 	}, function (id)
 		notification.notification_id = id
 	end, sound_event)

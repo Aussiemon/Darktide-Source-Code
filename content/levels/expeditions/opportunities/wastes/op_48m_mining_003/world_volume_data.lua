@@ -8,49 +8,49 @@ local volume_data = {
 		alt_max_vector = {
 			0,
 			-1,
-			3.5,
+			3.5
 		},
 		alt_min_vector = {
 			0,
 			-1,
-			1.5,
+			1.5
 		},
 		bottom_points = {
 			{
 				-4,
 				-3,
-				1.5,
+				1.5
 			},
 			{
 				4,
 				-3,
-				1.5,
+				1.5
 			},
 			{
 				4,
 				1,
-				1.5,
+				1.5
 			},
 			{
 				-4,
 				1,
-				1.5,
-			},
+				1.5
+			}
 		},
 		color = {
 			255,
 			255,
 			125,
-			0,
+			0
 		},
 		up_vector = {
 			0,
 			0,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 
 return {
-	volume_data = volume_data,
+	volume_data = volume_data
 }

@@ -36,8 +36,8 @@ templates.hordes_buff_psyker_smite_always_max_damage = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	keywords = {
-		buff_keywords.psyker_chain_lightning_full_charge,
-	},
+		buff_keywords.psyker_chain_lightning_full_charge
+	}
 }
 templates.hordes_buff_psyker_shout_always_stagger = {
 	class_name = "buff",
@@ -46,8 +46,8 @@ templates.hordes_buff_psyker_shout_always_stagger = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	keywords = {
-		buff_keywords.shout_forces_strong_stagger,
-	},
+		buff_keywords.shout_forces_strong_stagger
+	}
 }
 
 local percent_damage_taken_reduction_during_overcharge = HordesBuffsData.hordes_buff_psyker_overcharge_reduced_damage_taken.buff_stats.dammage.value
@@ -60,10 +60,10 @@ templates.hordes_buff_psyker_overcharge_reduced_damage_taken = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_damage_taken] = 1,
+		[proc_events.on_damage_taken] = 1
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = percent_damage_taken_reduction_during_overcharge,
+		[stat_buffs.damage_taken_multiplier] = percent_damage_taken_reduction_during_overcharge
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.is_active
@@ -83,7 +83,7 @@ templates.hordes_buff_psyker_overcharge_reduced_damage_taken = {
 	end,
 	proc_func = function (params, template_data, template_context, t)
 		template_data.player_fx_extension:trigger_wwise_events_local_only(SFX_NAMES.reduced_damage_hit, false, template_context.unit)
-	end,
+	end
 }
 
 local burn_bleed_stacks_on_psyker_brain_burst = HordesBuffsData.hordes_buff_psyker_brain_burst_burns_and_bleeds_on_hit.buff_stats.stack.value
@@ -95,7 +95,7 @@ templates.hordes_buff_psyker_brain_burst_burns_and_bleeds_on_hit = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_smite_attack,
 	proc_func = function (params, template_data, template_context)
@@ -116,7 +116,7 @@ templates.hordes_buff_psyker_brain_burst_burns_and_bleeds_on_hit = {
 				buff_extension:add_internally_controlled_buff_with_stacks("bleed", burn_bleed_stacks_on_psyker_brain_burst, t, "owner_unit", player_unit)
 			end
 		end
-	end,
+	end
 }
 
 local max_num_enemies_hit_by_brain_burst = HordesBuffsData.hordes_buff_psyker_brain_burst_hits_nearby_enemies.buff_stats.ennemies.value
@@ -128,7 +128,7 @@ templates.hordes_buff_psyker_brain_burst_hits_nearby_enemies = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	start_func = function (template_data, template_context)
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -235,7 +235,7 @@ templates.hordes_buff_psyker_brain_burst_hits_nearby_enemies = {
 		local damage_dealt, attack_result, damage_efficiency = Attack.execute(target_unit, damage_profile, "power_level", 500, "charge_level", 1, "hit_zone_name", hit_zone_name, "hit_actor", hit_actor, "attacking_unit", player_unit, "attack_type", attack_types.buff, "damage_type", damage_types.smite)
 
 		ImpactEffect.play(target_unit, hit_actor, damage_dealt, damage_types.smite, hit_zone_name, attack_result, hit_world_position, nil, attack_direction, player_unit, nil, nil, nil, damage_efficiency, damage_profile)
-	end,
+	end
 }
 
 local function _spread_fire_to_nearby_units(broadphase, query_side_name, query_results, player_unit, origin_unit, origin_position, range, max_units_to_spread, fire_stacks, warp_fire_stacks)
@@ -277,7 +277,7 @@ templates.hordes_buff_psyker_brain_burst_spreads_fire_on_hit = {
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	start_func = function (template_data, template_context)
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -327,8 +327,8 @@ templates.hordes_buff_psyker_brain_burst_spreads_fire_on_hit = {
 			local range = 5
 
 			_spread_fire_to_nearby_units(broadphase, enemy_side_names, BROADPHASE_RESULTS, player_unit, target_unit, enemy_position, range, 100, fire_stacks, warp_fire_stacks)
-		end,
-	},
+		end
+	}
 }
 
 local percent_stat_value_from_psyker_shout = HordesBuffsData.hordes_buff_psyker_shout_boosts_allies.buff_stats.dammage.value
@@ -341,7 +341,7 @@ templates.hordes_buff_psyker_shout_boosts_allies = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_psyker_shout_hit_ally] = 1,
+		[proc_events.on_psyker_shout_hit_ally] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		if not template_context.is_server then
@@ -359,7 +359,7 @@ templates.hordes_buff_psyker_shout_boosts_allies = {
 				buff_extension:add_internally_controlled_buff("hordes_buff_psyker_shout_boosts_allies_effect", t)
 			end
 		end
-	end,
+	end
 }
 templates.hordes_buff_psyker_shout_boosts_allies_effect = {
 	class_name = "buff",
@@ -371,8 +371,8 @@ templates.hordes_buff_psyker_shout_boosts_allies_effect = {
 	duration = psyker_shout_ally_boost_duration,
 	stat_buffs = {
 		[stat_buffs.damage] = percent_stat_value_from_psyker_shout,
-		[stat_buffs.toughness_damage_taken_multiplier] = percent_stat_value_from_psyker_shout,
-	},
+		[stat_buffs.toughness_damage_taken_multiplier] = percent_stat_value_from_psyker_shout
+	}
 }
 templates.hordes_buff_psyker_burning_on_throwing_knife_hit = {
 	class_name = "proc_buff",
@@ -381,7 +381,7 @@ templates.hordes_buff_psyker_burning_on_throwing_knife_hit = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		return params.damage_type == damage_types.throwing_knife
@@ -396,7 +396,7 @@ templates.hordes_buff_psyker_burning_on_throwing_knife_hit = {
 
 			victim_buff_extension:add_internally_controlled_buff_with_stacks("flamer_assault", 2, t, "owner_unit", player_unit)
 		end
-	end,
+	end
 }
 templates.hordes_buff_psyker_recover_knife_on_knife_kill = {
 	class_name = "proc_buff",
@@ -405,7 +405,7 @@ templates.hordes_buff_psyker_recover_knife_on_knife_kill = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -436,7 +436,7 @@ templates.hordes_buff_psyker_recover_knife_on_knife_kill = {
 		if player_fx_extension then
 			player_fx_extension:trigger_wwise_events_local_only(SFX_NAMES.grenade_refil, nil, player_unit)
 		end
-	end,
+	end
 }
 templates.hordes_buff_psyker_shock_on_touch_force_field = {
 	class_name = "proc_buff",
@@ -445,7 +445,7 @@ templates.hordes_buff_psyker_shock_on_touch_force_field = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_unit_touch_force_field] = 1,
+		[proc_events.on_unit_touch_force_field] = 1
 	},
 	proc_func = function (params, template_data, template_context, t)
 		if not template_context.is_server then
@@ -471,7 +471,7 @@ templates.hordes_buff_psyker_shock_on_touch_force_field = {
 			fx_system:trigger_wwise_event(SFX_NAMES.shock_proc, enemy_position)
 			fx_system:trigger_vfx(VFX_NAMES.single_target_shock, enemy_position)
 		end
-	end,
+	end
 }
 
 return templates

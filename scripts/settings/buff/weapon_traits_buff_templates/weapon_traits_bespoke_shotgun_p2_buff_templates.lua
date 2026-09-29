@@ -35,12 +35,12 @@ templates.weapon_trait_bespoke_shotgun_p2_crit_chance_on_reload = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_reload] = 1,
+		[proc_events.on_reload] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.ranged_critical_strike_chance] = 0.01,
+		[stat_buffs.ranged_critical_strike_chance] = 0.01
 	},
-	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded
 }
 templates.weapon_trait_bespoke_shotgun_p2_reload_speed_on_ranged_weapon_special_kill = {
 	class_name = "proc_buff",
@@ -48,10 +48,10 @@ templates.weapon_trait_bespoke_shotgun_p2_reload_speed_on_ranged_weapon_special_
 	max_stacks = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.reload_speed] = 0.5,
+		[stat_buffs.reload_speed] = 0.5
 	},
 	check_proc_func = CheckProcFunctions.on_ranged_kill,
 	start_func = function (template_data, template_context)
@@ -79,14 +79,14 @@ templates.weapon_trait_bespoke_shotgun_p2_reload_speed_on_ranged_weapon_special_
 		local buff_extension = ScriptUnit.has_extension(owner_unit, "buff_system")
 
 		return not not buff_extension and not not buff_extension:has_buff_using_buff_template("weapon_trait_bespoke_shotgun_p2_reload_speed_on_ranged_weapon_special_kill_effect")
-	end,
+	end
 }
 templates.weapon_trait_bespoke_shotgun_p2_reload_speed_on_ranged_weapon_special_kill_effect = {
 	class_name = "proc_buff",
 	max_stacks = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_reload] = 1,
+		[proc_events.on_reload] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -111,7 +111,7 @@ templates.weapon_trait_bespoke_shotgun_p2_reload_speed_on_ranged_weapon_special_
 		local is_reloading = action_kind and (action_kind == "reload_shotgun" or action_kind == "reload_state" or action_kind == "ranged_load_special")
 
 		return template_data.done and not is_reloading
-	end,
+	end
 }
 
 return templates

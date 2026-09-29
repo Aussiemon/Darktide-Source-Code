@@ -8,22 +8,22 @@ SessionStats.team_kills = {
 	always_push = true,
 	type = BackendTypes.statistic_by,
 	stats = {
-		none = "session_team_kills",
-	},
+		none = "session_team_kills"
+	}
 }
 SessionStats.team_deaths = {
 	always_push = true,
 	type = BackendTypes.statistic_by,
 	stats = {
-		none = "team_deaths",
-	},
+		none = "team_deaths"
+	}
 }
 SessionStats.team_expedition_loot_retrieved = {
 	always_push = false,
 	type = BackendTypes.statistic_by,
 	stats = {
-		none = "session_team_expedition_loot_retrieved",
-	},
+		none = "session_team_expedition_loot_retrieved"
+	}
 }
 
 do
@@ -31,7 +31,7 @@ do
 
 	for _, value in pairs({
 		"plasteel",
-		"diamantine",
+		"diamantine"
 	}) do
 		local stat_id = string.format("seen_%s_collected", value)
 		local specifier = string.format("type:%s", value)
@@ -41,21 +41,21 @@ do
 
 	SessionStats.collect_resource = {
 		type = BackendTypes.ephemeral,
-		stats = stats,
+		stats = stats
 	}
 end
 
 SessionStats.blocked_damage = {
 	type = BackendTypes.ephemeral,
 	stats = {
-		none = "session_my_blocked_damage",
-	},
+		none = "session_my_blocked_damage"
+	}
 }
 SessionStats.contract_team_blocked_damage = {
 	type = BackendTypes.ephemeral,
 	stats = {
-		none = "session_team_blocked_damage",
-	},
+		none = "session_team_blocked_damage"
+	}
 }
 
 do
@@ -64,12 +64,12 @@ do
 	for _, sub_faction_name in pairs({
 		"chaos",
 		"renegade",
-		"cultist",
+		"cultist"
 	}) do
 		for _, attack_type in pairs({
 			"melee",
 			"ranged",
-			"explosion",
+			"explosion"
 		}) do
 			local specifier = string.format("type:%s|name:%s", attack_type, sub_faction_name)
 			local stat_name = string.format("%s_killed_with_%s", sub_faction_name, attack_type)
@@ -80,7 +80,7 @@ do
 
 	SessionStats.kill_minion = {
 		type = BackendTypes.statistic_by,
-		stats = stats,
+		stats = stats
 	}
 end
 
@@ -90,12 +90,12 @@ do
 	for _, sub_faction_name in pairs({
 		"chaos",
 		"renegade",
-		"cultist",
+		"cultist"
 	}) do
 		for _, attack_type in pairs({
 			"melee",
 			"ranged",
-			"explosion",
+			"explosion"
 		}) do
 			local specifier = string.format("type:%s|name:%s", attack_type, sub_faction_name)
 			local stat_name = string.format("team_%s_killed_with_%s", sub_faction_name, attack_type)
@@ -106,30 +106,37 @@ do
 
 	SessionStats.contract_team_kills = {
 		type = BackendTypes.ephemeral,
-		stats = stats,
+		stats = stats
 	}
 end
 
 SessionStats.kill_boss = {
 	type = BackendTypes.statistic_by,
 	stats = {
-		none = "session_boss_kills",
-	},
+		none = "session_boss_kills"
+	}
 }
 SessionStats.rations = {
 	fill_with_default = true,
 	type = BackendTypes.statistic_by,
 	stats = {
 		destroyed = "stolen_rations_destroyed",
-		recovered = "stolen_rations_recovered",
-	},
+		recovered = "stolen_rations_recovered"
+	}
 }
 SessionStats.skulls_guns = {
 	fill_with_default = true,
 	type = BackendTypes.statistic_by,
 	stats = {
-		recovered = "live_event_skulls_guns_recovered",
-	},
+		recovered = "live_event_skulls_guns_recovered"
+	}
+}
+SessionStats.torment = {
+	fill_with_default = true,
+	type = BackendTypes.statistic_by,
+	stats = {
+		witch_damage_dealt = "live_event_torment_witch_damage_dealt"
+	}
 }
 
 return SessionStats

@@ -5,19 +5,19 @@ local NetworkedFlowStateManager = class("NetworkedFlowStateManager")
 local FLOW_STATE_TYPES = {
 	boolean = {
 		rpcs = {
-			change = "rpc_flow_state_bool_changed",
-		},
+			change = "rpc_flow_state_bool_changed"
+		}
 	},
 	number = {
 		network_constant = "number",
 		rpcs = {
-			change = "rpc_flow_state_number_changed",
-		},
-	},
+			change = "rpc_flow_state_number_changed"
+		}
+	}
 }
 local CLIENT_RPCS = {
 	"rpc_flow_state_story_played",
-	"rpc_flow_state_story_stopped",
+	"rpc_flow_state_story_stopped"
 }
 
 for _, config in pairs(FLOW_STATE_TYPES) do
@@ -65,7 +65,7 @@ NetworkedFlowStateManager.flow_cb_create_story = function (self, node_id)
 	local story_data = {
 		flow_state_id = flow_state_id,
 		level = level,
-		node_id = node_id,
+		node_id = node_id
 	}
 
 	lookup[node_id] = story_data
@@ -106,7 +106,7 @@ NetworkedFlowStateManager.flow_cb_play_networked_story = function (self, client_
 			length = nil,
 			stop_time = nil,
 			stopped = nil,
-			start_time = start_time,
+			start_time = start_time
 		}
 	end
 
@@ -276,7 +276,7 @@ NetworkedFlowStateManager.flow_cb_create_state = function (self, unit, state_nam
 	local states = self._object_states
 	local unit_states = states[unit] or {
 		lookup = {},
-		states = {},
+		states = {}
 	}
 	local state_network_id = #unit_states.lookup + 1
 
@@ -288,7 +288,7 @@ NetworkedFlowStateManager.flow_cb_create_state = function (self, unit, state_nam
 		client_state_changed_event = client_data_changed_event,
 		client_state_set_event = hot_join_sync_event,
 		state_network_id = state_network_id,
-		is_game_object = is_game_object or false,
+		is_game_object = is_game_object or false
 	}
 	states[unit] = unit_states
 	self._num_states = self._num_states + 1

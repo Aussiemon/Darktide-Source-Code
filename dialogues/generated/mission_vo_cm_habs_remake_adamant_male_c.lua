@@ -6,13 +6,13 @@ local mission_vo_cm_habs_remake_adamant_male_c = {
 		sound_events_n = 2,
 		sound_events = {
 			[1] = "loc_adamant_male_c__info_extraction_response_01",
-			[2] = "loc_adamant_male_c__info_extraction_response_02",
+			[2] = "loc_adamant_male_c__info_extraction_response_02"
 		},
 		sound_events_duration = {
 			[1] = 1.584677,
-			[2] = 1.772146,
+			[2] = 1.772146
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	mission_habs_redux_start_zone_response = {
 		randomize_indexes_n = 0,
@@ -25,7 +25,7 @@ local mission_vo_cm_habs_remake_adamant_male_c = {
 			"loc_adamant_male_c__guidance_starting_area_05",
 			"loc_adamant_male_c__guidance_starting_area_06",
 			"loc_adamant_male_c__guidance_starting_area_07",
-			"loc_adamant_male_c__guidance_starting_area_08",
+			"loc_adamant_male_c__guidance_starting_area_08"
 		},
 		sound_events_duration = {
 			2.312833,
@@ -35,7 +35,7 @@ local mission_vo_cm_habs_remake_adamant_male_c = {
 			1.900979,
 			2.532229,
 			2.363865,
-			2.993396,
+			2.993396
 		},
 		sound_event_weights = {
 			0.125,
@@ -45,10 +45,10 @@ local mission_vo_cm_habs_remake_adamant_male_c = {
 			0.125,
 			0.125,
 			0.125,
-			0.125,
+			0.125
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_cm_habs_remake_adamant_male_c", mission_vo_cm_habs_remake_adamant_male_c)

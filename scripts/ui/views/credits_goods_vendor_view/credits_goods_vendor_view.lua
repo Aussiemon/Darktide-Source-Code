@@ -6,10 +6,10 @@ local Definitions = require("scripts/ui/views/credits_goods_vendor_view/credits_
 local InputUtils = require("scripts/managers/input/input_utils")
 local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
-local ViewElementItemResultOverlay = require("scripts/ui/view_elements/view_element_item_result_overlay/view_element_item_result_overlay")
-local WeaponUnlockSettings = require("scripts/settings/weapon_unlock/weapon_unlock_settings")
 local Text = require("scripts/utilities/ui/text")
+local ViewElementItemResultOverlay = require("scripts/ui/view_elements/view_element_item_result_overlay/view_element_item_result_overlay")
 local WalletSettings = require("scripts/settings/wallet_settings")
+local WeaponUnlockSettings = require("scripts/settings/weapon_unlock/weapon_unlock_settings")
 local CreditsGoodsVendorView = class("CreditsGoodsVendorView", "VendorViewBase")
 
 CreditsGoodsVendorView.init = function (self, settings, context)
@@ -56,11 +56,11 @@ CreditsGoodsVendorView.on_enter = function (self)
 	CreditsGoodsVendorView.super.on_enter(self)
 	self._item_grid:update_dividers("content/ui/materials/frames/item_list_top_hollow", {
 		652,
-		118,
+		118
 	}, {
 		0,
 		-18,
-		20,
+		20
 	})
 end
 
@@ -207,7 +207,7 @@ CreditsGoodsVendorView._convert_offers_to_layout_entries = function (self, item_
 			if master_item then
 				local hud_icon = master_item.hud_icon
 
-				hud_icon = hud_icon or "content/ui/materials/icons/weapons/hud/combat_blade_01"
+				hud_icon = hud_icon or "content/ui/materials/icons/weapons/hud/debug_primary"
 
 				local display_name = Items.weapon_card_display_name(master_item) or "n/a"
 				local sub_display_name = Items.weapon_card_sub_display_name(master_item) or "n/a"
@@ -238,7 +238,7 @@ CreditsGoodsVendorView._convert_offers_to_layout_entries = function (self, item_
 						display_name = display_name,
 						sub_display_name = sub_display_name,
 						item = master_item,
-						weapon_level_requirement = weapon_level_requirement,
+						weapon_level_requirement = weapon_level_requirement
 					})
 				end
 			end
@@ -255,7 +255,7 @@ end
 CreditsGoodsVendorView._present_purchase_result = function (self, item)
 	local result_data = {
 		type = "item",
-		item = item,
+		item = item
 	}
 
 	self:_setup_result_overlay(result_data)
@@ -315,7 +315,7 @@ end
 local _device_list = {
 	Keyboard,
 	Mouse,
-	Pad1,
+	Pad1
 }
 
 CreditsGoodsVendorView._check_for_input = function (self, input_service)
@@ -361,7 +361,7 @@ CreditsGoodsVendorView._on_purchase_complete = function (self, items)
 	end
 
 	self._parent:play_vo_events({
-		"credit_store_servitor_purchase_b",
+		"credit_store_servitor_purchase_b"
 	}, "credit_store_servitor_b", nil, 1.4)
 end
 
@@ -472,7 +472,7 @@ CreditsGoodsVendorView._set_display_price = function (self, price_data)
 
 	local text_width, _ = self:_text_size(price_text, price_text_style, {
 		1920,
-		1080,
+		1080
 	})
 	local price_icon_widget = widgets_by_name.price_icon
 	local price_icon_scenegraph_id = price_icon_widget.scenegraph_id

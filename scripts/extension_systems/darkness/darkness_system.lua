@@ -3,7 +3,7 @@
 local DarknessSystem = class("DarknessSystem", "ExtensionSystemBase")
 local extensions = {
 	"LightSourceExtension",
-	"PlayerUnitDarknessExtension",
+	"PlayerUnitDarknessExtension"
 }
 
 DarknessSystem.DARKNESS_THRESHOLD = 0.025
@@ -47,12 +47,12 @@ DarknessSystem.on_add_extension = function (self, world, unit, extension_name, e
 
 	if extension_name == "LightSourceExtension" then
 		extension = {
-			intensity = extension_init_data and extension_init_data.intensity or 1,
+			intensity = extension_init_data and extension_init_data.intensity or 1
 		}
 	elseif extension_name == "PlayerUnitDarknessExtension" then
 		extension = {
 			darkness_intensity = 0,
-			intensity = extension_init_data and extension_init_data.intensity or 1,
+			intensity = extension_init_data and extension_init_data.intensity or 1
 		}
 	end
 

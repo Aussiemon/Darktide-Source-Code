@@ -5,112 +5,112 @@ local broker_male_c_adamant_female_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_female_c__broker_male_c_adamant_bonding_conversation_31_b_01",
+			[1] = "loc_adamant_female_c__broker_male_c_adamant_bonding_conversation_31_b_01"
 		},
 		sound_events_duration = {
-			[1] = 1.611667,
+			[1] = 1.611667
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	broker_male_c_adamant_bonding_conversation_31_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_female_c__broker_male_c_adamant_bonding_conversation_31_d_01",
+			[1] = "loc_adamant_female_c__broker_male_c_adamant_bonding_conversation_31_d_01"
 		},
 		sound_events_duration = {
-			[1] = 2.007677,
+			[1] = 2.007677
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	broker_male_c_adamant_bonding_conversation_32_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_female_c__broker_male_c_adamant_bonding_conversation_32_b_01",
+			[1] = "loc_adamant_female_c__broker_male_c_adamant_bonding_conversation_32_b_01"
 		},
 		sound_events_duration = {
-			[1] = 3.278583,
+			[1] = 3.278583
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	broker_male_c_adamant_bonding_conversation_32_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_female_c__broker_male_c_adamant_bonding_conversation_32_d_01",
+			[1] = "loc_adamant_female_c__broker_male_c_adamant_bonding_conversation_32_d_01"
 		},
 		sound_events_duration = {
-			[1] = 2.477354,
+			[1] = 2.477354
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	broker_male_c_adamant_bonding_conversation_34_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_female_c__broker_male_c_adamant_bonding_conversation_34_a_01",
+			[1] = "loc_adamant_female_c__broker_male_c_adamant_bonding_conversation_34_a_01"
 		},
 		sound_events_duration = {
-			[1] = 2.523406,
+			[1] = 2.523406
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	broker_male_c_adamant_bonding_conversation_34_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_female_c__broker_male_c_adamant_bonding_conversation_34_c_01",
+			[1] = "loc_adamant_female_c__broker_male_c_adamant_bonding_conversation_34_c_01"
 		},
 		sound_events_duration = {
-			[1] = 3.094396,
+			[1] = 3.094396
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	broker_male_c_adamant_bonding_conversation_35_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_female_c__broker_male_c_adamant_bonding_conversation_35_a_01",
+			[1] = "loc_adamant_female_c__broker_male_c_adamant_bonding_conversation_35_a_01"
 		},
 		sound_events_duration = {
-			[1] = 4.973115,
+			[1] = 4.973115
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	broker_male_c_adamant_bonding_conversation_35_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_female_c__broker_male_c_adamant_bonding_conversation_35_c_01",
+			[1] = "loc_adamant_female_c__broker_male_c_adamant_bonding_conversation_35_c_01"
 		},
 		sound_events_duration = {
-			[1] = 4.798146,
+			[1] = 4.798146
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	broker_male_c_adamant_bonding_conversation_36_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_female_c__broker_male_c_adamant_bonding_conversation_36_a_01",
+			[1] = "loc_adamant_female_c__broker_male_c_adamant_bonding_conversation_36_a_01"
 		},
 		sound_events_duration = {
-			[1] = 3.020719,
+			[1] = 3.020719
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	broker_male_c_adamant_bonding_conversation_36_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_female_c__broker_male_c_adamant_bonding_conversation_36_c_01",
+			[1] = "loc_adamant_female_c__broker_male_c_adamant_bonding_conversation_36_c_01"
 		},
 		sound_events_duration = {
-			[1] = 2.744427,
+			[1] = 2.744427
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("broker_male_c_adamant_female_c", broker_male_c_adamant_female_c)

@@ -11,17 +11,17 @@ spawn_settings.eaters = {
 						name = "chaos_spawn",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_mutated_poxwalker",
 						amount = {
 							15,
-							20,
-						},
-					},
-				},
+							20
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -29,17 +29,17 @@ spawn_settings.eaters = {
 						name = "chaos_spawn",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_mutated_poxwalker",
 						amount = {
 							15,
-							20,
-						},
-					},
-				},
+							20
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -47,17 +47,17 @@ spawn_settings.eaters = {
 						name = "chaos_spawn",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_mutated_poxwalker",
 						amount = {
 							15,
-							20,
-						},
-					},
-				},
+							20
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -65,24 +65,24 @@ spawn_settings.eaters = {
 						name = "chaos_spawn",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_ogryn_bulwark",
 						amount = {
 							2,
-							4,
-						},
+							4
+						}
 					},
 					{
 						name = "chaos_mutated_poxwalker",
 						amount = {
 							15,
-							20,
-						},
-					},
-				},
+							20
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -90,24 +90,24 @@ spawn_settings.eaters = {
 						name = "chaos_spawn",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_mutated_poxwalker",
 						amount = {
 							15,
-							20,
-						},
+							20
+						}
 					},
 					{
 						name = "chaos_ogryn_bulwark",
 						amount = {
 							3,
-							5,
-						},
-					},
-				},
+							5
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -115,33 +115,33 @@ spawn_settings.eaters = {
 						name = "chaos_spawn",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_mutated_poxwalker",
 						amount = {
 							15,
-							20,
-						},
+							20
+						}
 					},
 					{
 						name = "cultist_mutant",
 						amount = {
 							3,
-							6,
-						},
+							6
+						}
 					},
 					{
 						name = "chaos_ogryn_bulwark",
 						amount = {
 							3,
-							5,
-						},
-					},
-				},
-			},
-		},
+							5
+						}
+					}
+				}
+			}
+		}
 	},
 	cultist = {
 		{
@@ -151,17 +151,17 @@ spawn_settings.eaters = {
 						name = "chaos_spawn",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_mutated_poxwalker",
 						amount = {
 							15,
-							20,
-						},
-					},
-				},
+							20
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -169,17 +169,17 @@ spawn_settings.eaters = {
 						name = "chaos_spawn",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_mutated_poxwalker",
 						amount = {
 							15,
-							20,
-						},
-					},
-				},
+							20
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -187,17 +187,17 @@ spawn_settings.eaters = {
 						name = "chaos_spawn",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_mutated_poxwalker",
 						amount = {
 							15,
-							20,
-						},
-					},
-				},
+							20
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -205,24 +205,24 @@ spawn_settings.eaters = {
 						name = "chaos_spawn",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_ogryn_bulwark",
 						amount = {
 							2,
-							4,
-						},
+							4
+						}
 					},
 					{
 						name = "chaos_mutated_poxwalker",
 						amount = {
 							15,
-							20,
-						},
-					},
-				},
+							20
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -230,24 +230,24 @@ spawn_settings.eaters = {
 						name = "chaos_spawn",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_mutated_poxwalker",
 						amount = {
 							15,
-							20,
-						},
+							20
+						}
 					},
 					{
 						name = "chaos_ogryn_bulwark",
 						amount = {
 							3,
-							5,
-						},
-					},
-				},
+							5
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -255,34 +255,34 @@ spawn_settings.eaters = {
 						name = "chaos_spawn",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_mutated_poxwalker",
 						amount = {
 							15,
-							20,
-						},
+							20
+						}
 					},
 					{
 						name = "cultist_mutant",
 						amount = {
 							3,
-							6,
-						},
+							6
+						}
 					},
 					{
 						name = "chaos_ogryn_bulwark",
 						amount = {
 							3,
-							5,
-						},
-					},
-				},
-			},
-		},
-	},
+							5
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 return spawn_settings

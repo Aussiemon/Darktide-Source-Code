@@ -158,21 +158,21 @@ Cover.component_data = {
 		value = "high",
 		options_keys = {
 			"high",
-			"low",
+			"low"
 		},
 		options_values = {
 			"high",
-			"low",
-		},
+			"low"
+		}
 	},
 	enabled = {
 		ui_name = "Enabled",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	extensions = {
-		"CoverExtension",
-	},
+		"CoverExtension"
+	}
 }
 
 return Cover

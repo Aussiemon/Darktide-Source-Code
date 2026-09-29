@@ -8,7 +8,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local template = {}
 local size = {
 	120,
-	6,
+	6
 }
 local damage_number_types = table.enum("readable", "floating", "flashy")
 
@@ -25,7 +25,7 @@ template.unit_node = "root_point"
 template.position_offset = {
 	0,
 	0,
-	0,
+	0
 }
 template.check_line_of_sight = true
 template.max_distance = 200
@@ -57,12 +57,12 @@ template.damage_number_settings = {
 	y_offset = 15,
 	flashy_font_size_dmg_multiplier = {
 		1,
-		2,
+		2
 	},
 	flashy_font_size_dmg_scale_range = {
 		100,
-		600,
-	},
+		600
+	}
 }
 template.bar_settings = {
 	alpha_fade_delay = 0.5,
@@ -72,7 +72,7 @@ template.bar_settings = {
 	bar_spacing = 2,
 	duration_health = 0.5,
 	duration_health_ghost = 0.2,
-	health_animation_threshold = 0.1,
+	health_animation_threshold = 0.1
 }
 
 local armor_type_string_lookup = {
@@ -81,7 +81,7 @@ local armor_type_string_lookup = {
 	disgustingly_resilient = "loc_weapon_stats_display_disgustingly_resilient",
 	resistant = "loc_glossary_armour_type_resistant",
 	super_armor = "loc_weapon_stats_display_super_armor",
-	unarmored = "loc_weapon_stats_display_unarmored",
+	unarmored = "loc_weapon_stats_display_unarmored"
 }
 
 template.fade_settings = {
@@ -90,7 +90,7 @@ template.fade_settings = {
 	fade_to = 1,
 	distance_max = template.max_distance,
 	distance_min = template.max_distance * 0.5,
-	easing_function = math.ease_exp,
+	easing_function = math.ease_exp
 }
 
 local function _readable_damage_number_function(ui_content, ui_renderer, ui_style, damage_number_settings, damage_numbers, num_damage_numbers, position, default_color, text_color, crit_color, weakspot_color, default_font_size, hundreds_font_size, font_type)
@@ -454,12 +454,12 @@ template.create_widget_defintion = function (temp, scenegraph_id)
 	local header_font_color = header_font_settings.text_color
 	local bar_size = {
 		size[1],
-		size[2],
+		size[2]
 	}
 	local bar_offset = {
 		-size[1] * 0.5,
 		0,
-		0,
+		0
 	}
 
 	if template.show_health_bar and template.show_numbers then
@@ -476,15 +476,15 @@ template.create_widget_defintion = function (temp, scenegraph_id)
 					offset = {
 						-size[1] * 0.5,
 						-size[2],
-						2,
+						2
 					},
 					font_type = header_font_settings.font_type,
 					text_color = header_font_color,
 					size = {
 						600,
-						size[2],
-					},
-				},
+						size[2]
+					}
+				}
 			},
 			{
 				pass_type = "rect",
@@ -494,8 +494,8 @@ template.create_widget_defintion = function (temp, scenegraph_id)
 					vertical_alignment = "center",
 					offset = bar_offset,
 					size = bar_size,
-					color = UIHudSettings.color_tint_0,
-				},
+					color = UIHudSettings.color_tint_0
+				}
 			},
 			{
 				pass_type = "rect",
@@ -506,16 +506,16 @@ template.create_widget_defintion = function (temp, scenegraph_id)
 					offset = {
 						bar_offset[1],
 						bar_offset[2],
-						2,
+						2
 					},
 					size = bar_size,
 					color = {
 						255,
 						220,
 						100,
-						100,
-					},
-				},
+						100
+					}
+				}
 			},
 			{
 				pass_type = "rect",
@@ -527,16 +527,16 @@ template.create_widget_defintion = function (temp, scenegraph_id)
 					offset = {
 						bar_offset[1],
 						bar_offset[2],
-						1,
+						1
 					},
 					size = bar_size,
 					color = {
 						200,
 						255,
 						255,
-						255,
-					},
-				},
+						255
+					}
+				}
 			},
 			{
 				pass_type = "rect",
@@ -547,16 +547,16 @@ template.create_widget_defintion = function (temp, scenegraph_id)
 					offset = {
 						bar_offset[1],
 						bar_offset[2],
-						3,
+						3
 					},
 					size = bar_size,
 					color = {
 						255,
 						220,
 						20,
-						20,
-					},
-				},
+						20
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -568,20 +568,20 @@ template.create_widget_defintion = function (temp, scenegraph_id)
 					offset = {
 						bar_offset[1],
 						bar_offset[2],
-						4,
+						4
 					},
 					size = {
 						12,
-						bar_size[2] + 12,
+						bar_size[2] + 12
 					},
 					color = {
 						255,
 						255,
 						255,
-						255,
-					},
-				},
-			},
+						255
+					}
+				}
+			}
 		}, scenegraph_id)
 	elseif not template.show_health_bar and template.show_numbers then
 		return UIWidget.create_definition({
@@ -597,16 +597,16 @@ template.create_widget_defintion = function (temp, scenegraph_id)
 					offset = {
 						-size[1] * 0.5,
 						-size[2],
-						2,
+						2
 					},
 					font_type = header_font_settings.font_type,
 					text_color = header_font_color,
 					size = {
 						600,
-						size[2],
-					},
-				},
-			},
+						size[2]
+					}
+				}
+			}
 		}, scenegraph_id)
 	elseif template.show_health_bar and not template.show_numbers then
 		return UIWidget.create_definition({
@@ -618,8 +618,8 @@ template.create_widget_defintion = function (temp, scenegraph_id)
 					vertical_alignment = "center",
 					offset = bar_offset,
 					size = bar_size,
-					color = UIHudSettings.color_tint_0,
-				},
+					color = UIHudSettings.color_tint_0
+				}
 			},
 			{
 				pass_type = "rect",
@@ -630,16 +630,16 @@ template.create_widget_defintion = function (temp, scenegraph_id)
 					offset = {
 						bar_offset[1],
 						bar_offset[2],
-						2,
+						2
 					},
 					size = bar_size,
 					color = {
 						255,
 						220,
 						100,
-						100,
-					},
-				},
+						100
+					}
+				}
 			},
 			{
 				pass_type = "rect",
@@ -651,16 +651,16 @@ template.create_widget_defintion = function (temp, scenegraph_id)
 					offset = {
 						bar_offset[1],
 						bar_offset[2],
-						1,
+						1
 					},
 					size = bar_size,
 					color = {
 						200,
 						255,
 						255,
-						255,
-					},
-				},
+						255
+					}
+				}
 			},
 			{
 				pass_type = "rect",
@@ -671,16 +671,16 @@ template.create_widget_defintion = function (temp, scenegraph_id)
 					offset = {
 						bar_offset[1],
 						bar_offset[2],
-						3,
+						3
 					},
 					size = bar_size,
 					color = {
 						255,
 						220,
 						20,
-						20,
-					},
-				},
+						20
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -692,20 +692,20 @@ template.create_widget_defintion = function (temp, scenegraph_id)
 					offset = {
 						bar_offset[1],
 						bar_offset[2],
-						4,
+						4
 					},
 					size = {
 						12,
-						bar_size[2] + 12,
+						bar_size[2] + 12
 					},
 					color = {
 						255,
 						255,
 						255,
-						255,
-					},
-				},
-			},
+						255
+					}
+				}
+			}
 		}, scenegraph_id)
 	end
 end
@@ -826,7 +826,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 					value = damage_diff,
 					expand_duration = damage_number_settings.expand_duration,
 					random_number = math.random(),
-					float_right = math.random() > 0.5,
+					float_right = math.random() > 0.5
 				}
 				local breed = content.breed
 				local hit_zone_weakspot_types = breed.hit_zone_weakspot_types

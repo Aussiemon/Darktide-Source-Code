@@ -7,7 +7,7 @@ local CoverSystem = class("CoverSystem", "ExtensionSystemBase")
 local BROADPHASE_CELL_RADIUS = 50
 local MAX_EXPECTED_ENTITIES = 256
 local BROADPHASE_CATEGORIES = {
-	"cover",
+	"cover"
 }
 
 CoverSystem.init = function (self, extension_system_creation_context, ...)
@@ -77,7 +77,7 @@ CoverSystem.on_remove_extension = function (self, unit, extension_name)
 			self._current_update_unit, self._current_update_extension = next(cover_user_unit_extension_data, current_update_unit)
 		end
 
-		local cover_user_extension = cover_user_unit_extension_data[unit]
+		local cover_user_extension = self._unit_to_extension_map[unit]
 
 		cover_user_extension:release_cover_slot()
 

@@ -20,7 +20,7 @@ local function create_definitions(settings)
 	local using_custom_gamepad_navigation = settings.using_custom_gamepad_navigation
 	local background_size = {
 		grid_size[1] + edge_padding,
-		grid_size[2],
+		grid_size[2]
 	}
 	local scrollbar_height = use_horizontal_scrollbar and scrollbar_width or background_size[2] - scrollbar_vertical_margin - 20
 
@@ -30,12 +30,12 @@ local function create_definitions(settings)
 
 	local scrollbar_size = {
 		scrollbar_width,
-		scrollbar_height,
+		scrollbar_height
 	}
 	local scrollbar_position = {
 		settings.scrollbar_position and settings.scrollbar_position[1] or 0,
 		settings.scrollbar_position and settings.scrollbar_position[2] or 0,
-		13,
+		13
 	}
 	local background_icon_width = math.min(grid_size[1], 480)
 	local background_icon_height = math.min(grid_size[2], 480)
@@ -49,7 +49,7 @@ local function create_definitions(settings)
 
 	local background_icon_size = {
 		background_icon_width,
-		background_icon_height,
+		background_icon_height
 	}
 	local use_terminal_background = settings.use_terminal_background
 	local use_solid_terminal_background = settings.use_solid_terminal_background
@@ -64,13 +64,13 @@ local function create_definitions(settings)
 			vertical_alignment = "top",
 			size = {
 				0,
-				0,
+				0
 			},
 			position = {
 				0,
 				0,
-				1,
-			},
+				1
+			}
 		},
 		grid_divider_top = {
 			horizontal_alignment = "left",
@@ -78,13 +78,13 @@ local function create_definitions(settings)
 			vertical_alignment = "top",
 			size = {
 				background_size[1],
-				36,
+				36
 			},
 			position = {
 				0,
 				0,
-				10,
-			},
+				10
+			}
 		},
 		grid_title_background = {
 			horizontal_alignment = "center",
@@ -92,13 +92,13 @@ local function create_definitions(settings)
 			vertical_alignment = "top",
 			size = {
 				background_size[1],
-				title_height,
+				title_height
 			},
 			position = {
 				0,
 				13,
-				-1,
-			},
+				-1
+			}
 		},
 		grid_divider_title = {
 			horizontal_alignment = "center",
@@ -106,13 +106,13 @@ local function create_definitions(settings)
 			vertical_alignment = "bottom",
 			size = {
 				background_size[1],
-				44,
+				44
 			},
 			position = {
 				0,
 				22,
-				2,
-			},
+				2
+			}
 		},
 		grid_background_pivot = {
 			horizontal_alignment = "left",
@@ -120,13 +120,13 @@ local function create_definitions(settings)
 			vertical_alignment = "top",
 			size = {
 				0,
-				0,
+				0
 			},
 			position = {
 				0,
 				13,
-				0,
-			},
+				0
+			}
 		},
 		grid_background = {
 			horizontal_alignment = "left",
@@ -136,8 +136,8 @@ local function create_definitions(settings)
 			position = {
 				0,
 				title_height,
-				0,
-			},
+				0
+			}
 		},
 		grid_divider_bottom = {
 			horizontal_alignment = "center",
@@ -145,13 +145,13 @@ local function create_definitions(settings)
 			vertical_alignment = "bottom",
 			size = {
 				background_size[1],
-				36,
+				36
 			},
 			position = {
 				0,
 				16,
-				3,
-			},
+				3
+			}
 		},
 		grid_content_pivot = {
 			horizontal_alignment = "left",
@@ -159,20 +159,20 @@ local function create_definitions(settings)
 			vertical_alignment = "top",
 			size = {
 				0,
-				0,
+				0
 			},
 			position = {
 				edge_padding * 0.5,
 				0,
-				3,
-			},
+				3
+			}
 		},
 		grid_scrollbar = {
 			parent = "grid_background",
 			size = scrollbar_size,
 			position = scrollbar_position,
 			horizontal_alignment = settings.scrollbar_horizontal_alignment or "right",
-			vertical_alignment = settings.scrollbar_vertical_alignment or "center",
+			vertical_alignment = settings.scrollbar_vertical_alignment or "center"
 		},
 		grid_mask = {
 			horizontal_alignment = "center",
@@ -182,8 +182,8 @@ local function create_definitions(settings)
 			position = {
 				0,
 				0,
-				2,
-			},
+				2
+			}
 		},
 		grid_interaction = {
 			horizontal_alignment = "left",
@@ -193,8 +193,8 @@ local function create_definitions(settings)
 			position = {
 				0,
 				0,
-				0,
-			},
+				0
+			}
 		},
 		title_text = {
 			horizontal_alignment = "center",
@@ -202,13 +202,13 @@ local function create_definitions(settings)
 			vertical_alignment = "center",
 			size = {
 				960,
-				50,
+				50
 			},
 			position = {
 				0,
 				0,
-				3,
-			},
+				3
+			}
 		},
 		sort_button = {
 			horizontal_alignment = "left",
@@ -216,13 +216,13 @@ local function create_definitions(settings)
 			vertical_alignment = "bottom",
 			size = {
 				background_size[1],
-				20,
+				20
 			},
 			position = {
 				10,
 				20,
-				1,
-			},
+				1
+			}
 		},
 		timer_text = {
 			horizontal_alignment = "right",
@@ -230,14 +230,14 @@ local function create_definitions(settings)
 			vertical_alignment = "bottom",
 			size = {
 				background_size[1] / 2,
-				20,
+				20
 			},
 			position = {
 				-10,
 				20,
-				1,
-			},
-		},
+				1
+			}
+		}
 	}
 	local title_text_font_style = table.clone(UIFontSettings.grid_title)
 	local sort_button_style = table.clone(UIFontSettings.body_small)
@@ -267,8 +267,8 @@ local function create_definitions(settings)
 				style_id = "text",
 				value = "",
 				value_id = "text",
-				style = title_text_font_style,
-			},
+				style = title_text_font_style
+			}
 		}, "title_text"),
 		grid_divider_title = UIWidget.create_definition({
 			{
@@ -279,9 +279,9 @@ local function create_definitions(settings)
 				style = {
 					horizontal_alignment = "center",
 					scale_to_material = true,
-					vertical_alignment = "bottom",
-				},
-			},
+					vertical_alignment = "bottom"
+				}
+			}
 		}, "grid_divider_title"),
 		grid_title_background = UIWidget.create_definition({
 			{
@@ -292,15 +292,15 @@ local function create_definitions(settings)
 					vertical_alignment = "center",
 					size_addition = {
 						-4,
-						0,
+						0
 					},
 					color = Color.terminal_grid_background(100, true),
 					offset = {
 						0,
 						0,
-						1,
-					},
-				},
+						1
+					}
+				}
 			},
 			{
 				pass_type = "rect",
@@ -309,11 +309,11 @@ local function create_definitions(settings)
 					vertical_alignment = "center",
 					size_addition = {
 						-4,
-						0,
+						0
 					},
-					color = Color.terminal_background(nil, true),
-				},
-			},
+					color = Color.terminal_background(nil, true)
+				}
+			}
 		}, "grid_title_background"),
 		grid_background = UIWidget.create_definition(settings.background_passes or use_terminal_background and {
 			{
@@ -325,10 +325,10 @@ local function create_definitions(settings)
 					vertical_alignment = "center",
 					size_addition = {
 						18,
-						24,
+						24
 					},
-					color = Color.terminal_grid_background(hide_background and 0 or nil, true),
-				},
+					color = Color.terminal_grid_background(hide_background and 0 or nil, true)
+				}
 			},
 			terminal_background_icon and {
 				pass_type = "texture",
@@ -337,9 +337,9 @@ local function create_definitions(settings)
 					horizontal_alignment = "center",
 					vertical_alignment = "center",
 					color = Color.terminal_grid_background_icon(nil, true),
-					size = background_icon_size,
-				},
-			},
+					size = background_icon_size
+				}
+			}
 		} or use_solid_terminal_background and {
 			{
 				pass_type = "texture",
@@ -352,13 +352,13 @@ local function create_definitions(settings)
 					color = Color.ui_terminal(nil, true),
 					size_addition = {
 						23,
-						24,
+						24
 					},
 					offset = {
 						0,
 						0,
-						-1,
-					},
+						-1
+					}
 				},
 				change_function = function (content, style, _, dt)
 					local anim_speed = 5
@@ -372,7 +372,7 @@ local function create_definitions(settings)
 
 					style.anim_hover_progress = anim_hover_progress
 					style.color[1] = 255 * anim_hover_progress
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -387,8 +387,8 @@ local function create_definitions(settings)
 					offset = {
 						0,
 						0,
-						2,
-					},
+						2
+					}
 				},
 				change_function = function (content, style, _, dt)
 					local anim_speed = 5
@@ -422,7 +422,7 @@ local function create_definitions(settings)
 					local ignore_alpha = true
 
 					ColorUtilities.color_copy(color, style_color, ignore_alpha)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -432,15 +432,15 @@ local function create_definitions(settings)
 					vertical_alignment = "center",
 					size_addition = {
 						0,
-						0,
+						0
 					},
 					color = {
 						hide_background and 0 or 255,
 						0,
 						0,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -451,15 +451,15 @@ local function create_definitions(settings)
 					vertical_alignment = "center",
 					size_addition = {
 						28,
-						24,
+						24
 					},
 					color = Color.terminal_grid_background(hide_background and 0 or nil, true),
 					offset = {
 						0,
 						0,
-						1,
-					},
-				},
+						1
+					}
+				}
 			},
 			terminal_background_icon and {
 				pass_type = "texture",
@@ -468,9 +468,9 @@ local function create_definitions(settings)
 					horizontal_alignment = "center",
 					vertical_alignment = "center",
 					color = Color.terminal_grid_background_icon(nil, true),
-					size = background_icon_size,
-				},
-			},
+					size = background_icon_size
+				}
+			}
 		} or {
 			{
 				pass_type = "rect",
@@ -479,16 +479,16 @@ local function create_definitions(settings)
 					vertical_alignment = "center",
 					size_addition = {
 						-4,
-						0,
+						0
 					},
 					color = {
 						hide_background and 0 or 100,
 						0,
 						0,
-						0,
-					},
-				},
-			},
+						0
+					}
+				}
+			}
 		}, "grid_background"),
 		grid_loading = UIWidget.create_definition({
 			{
@@ -498,23 +498,23 @@ local function create_definitions(settings)
 					vertical_alignment = "center",
 					size_addition = {
 						-8,
-						0,
+						0
 					},
 					color = {
 						100,
 						0,
 						0,
-						0,
+						0
 					},
 					offset = {
 						0,
 						0,
-						2,
-					},
+						2
+					}
 				},
 				visibility_function = function (content, style)
 					return content.is_loading
-				end,
+				end
 			},
 			{
 				pass_type = "rotated_texture",
@@ -525,14 +525,14 @@ local function create_definitions(settings)
 					vertical_alignment = "center",
 					size = {
 						60,
-						60,
+						60
 					},
 					color = Color.terminal_corner_hover(255, true),
 					offset = {
 						0,
 						0,
-						3,
-					},
+						3
+					}
 				},
 				change_function = function (content, style, _, dt)
 					local add = -0.5 * dt
@@ -542,8 +542,8 @@ local function create_definitions(settings)
 				end,
 				visibility_function = function (content, style)
 					return content.is_loading
-				end,
-			},
+				end
+			}
 		}, "grid_background"),
 		grid_empty = UIWidget.create_definition({
 			{
@@ -551,20 +551,20 @@ local function create_definitions(settings)
 				style_id = "text",
 				value_id = "text",
 				style = empty_message_style,
-				value = Localize("loc_item_grid_empty"),
-			},
+				value = Localize("loc_item_grid_empty")
+			}
 		}, "grid_background", {
-			visible = false,
+			visible = false
 		}),
 		grid_scrollbar = UIWidget.create_definition(scrollbar_pass_templates, "grid_scrollbar", {
 			axis = use_horizontal_scrollbar and 1 or 2,
-			using_custom_gamepad_navigation = using_custom_gamepad_navigation,
+			using_custom_gamepad_navigation = using_custom_gamepad_navigation
 		}),
 		grid_interaction = UIWidget.create_definition({
 			{
 				content_id = "hotspot",
-				pass_type = "hotspot",
-			},
+				pass_type = "hotspot"
+			}
 		}, "grid_interaction"),
 		sort_button = UIWidget.create_definition({
 			{
@@ -582,7 +582,7 @@ local function create_definitions(settings)
 					for i = 2, 4 do
 						text_color[i] = (hover_color[i] - default_text_color[i]) * progress + default_text_color[i]
 					end
-				end,
+				end
 			},
 			{
 				content_id = "hotspot",
@@ -590,9 +590,9 @@ local function create_definitions(settings)
 				content = {
 					on_released_sound = nil,
 					on_hover_sound = UISoundEvents.default_mouse_hover,
-					on_pressed_sound = UISoundEvents.default_click,
-				},
-			},
+					on_pressed_sound = UISoundEvents.default_click
+				}
+			}
 		}, "sort_button"),
 		timer_text = UIWidget.create_definition({
 			{
@@ -600,9 +600,9 @@ local function create_definitions(settings)
 				style_id = "text",
 				value = "text",
 				value_id = "text",
-				style = timer_text_style,
-			},
-		}, "timer_text"),
+				style = timer_text_style
+			}
+		}, "timer_text")
 	}
 
 	if not hide_dividers then
@@ -618,9 +618,9 @@ local function create_definitions(settings)
 					style = {
 						horizontal_alignment = "center",
 						scale_to_material = true,
-						vertical_alignment = "top",
-					},
-				},
+						vertical_alignment = "top"
+					}
+				}
 			}
 
 			if settings.top_divider_passes then
@@ -642,9 +642,9 @@ local function create_definitions(settings)
 					style = {
 						horizontal_alignment = "center",
 						scale_to_material = true,
-						vertical_alignment = "center",
-					},
-				},
+						vertical_alignment = "center"
+					}
+				}
 			}
 
 			if settings.bottom_divider_passes then
@@ -665,7 +665,7 @@ local function create_definitions(settings)
 
 	return {
 		widget_definitions = widget_definitions,
-		scenegraph_definition = scenegraph_definition,
+		scenegraph_definition = scenegraph_definition
 	}
 end
 

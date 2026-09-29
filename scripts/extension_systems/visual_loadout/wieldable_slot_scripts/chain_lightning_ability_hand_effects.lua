@@ -12,12 +12,12 @@ local DEFAULT_HAND = "both"
 local CAGE_FX_SOURCE_LOOKUP = {
 	right = {
 		elbow = "fx_right_elbow",
-		hand = "fx_right_hand",
+		hand = "fx_right_hand"
 	},
 	left = {
 		elbow = "fx_left_elbow",
-		hand = "fx_left_hand",
-	},
+		hand = "fx_left_hand"
+	}
 }
 local CHARGE_FX_TARGET_LOOKUP = "_charge"
 local CHARGE_FX_SOURCE_LOOKUP = {
@@ -25,7 +25,7 @@ local CHARGE_FX_SOURCE_LOOKUP = {
 	middle = "fx_right_finger_tip_middle",
 	pinky = "fx_right_finger_tip_pinky",
 	ring = "fx_right_finger_tip_ring",
-	thumb = "fx_right_finger_tip_thumb",
+	thumb = "fx_right_finger_tip_thumb"
 }
 local _vfx_external_properties = {}
 
@@ -47,14 +47,14 @@ ChainLightningAbilityHandEffects.init = function (self, context, slot, weapon_te
 	self._is_in_first_person = nil
 	self._cage_particle_ids = {
 		left = nil,
-		right = nil,
+		right = nil
 	}
 	self._charge_particle_ids = {
 		index = nil,
 		middle = nil,
 		pinky = nil,
 		ring = nil,
-		thumb = nil,
+		thumb = nil
 	}
 
 	local owner_unit = context.owner_unit

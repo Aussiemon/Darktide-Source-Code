@@ -28,7 +28,7 @@ FlyingNavigationSystem.register = function (self, nav_bot, position, radius, max
 		velocity = Vector3Box(),
 		real_position = Vector3Box(position),
 		max_speed = max_speed,
-		radius = radius,
+		radius = radius
 	}
 end
 
@@ -366,6 +366,12 @@ end
 
 FlyingNavigationSystem.ray_can_go = function (self, from_position, to_position, radius)
 	return not self._shared_svo:overlap_capsule(from_position, to_position, radius)
+end
+
+FlyingNavigationSystem.destroy = function (self)
+	if NavSVO.destroy then
+		NavSVO.destroy(self._shared_svo)
+	end
 end
 
 return FlyingNavigationSystem

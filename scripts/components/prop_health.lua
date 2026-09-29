@@ -87,80 +87,80 @@ PropHealth.component_data = {
 		step = 1,
 		ui_name = "Base Health",
 		ui_type = "number",
-		value = 100,
+		value = 100
 	},
 	difficulty_scaling = {
 		category = "Base Data",
 		ui_name = "Difficulty Scaling",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	create_game_object = {
 		category = "Base Data",
 		ui_name = "Sync Health to Clients",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	invulnerable = {
 		category = "Base Data",
 		ui_name = "Invulnerable",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	unkillable = {
 		category = "Base Data",
 		ui_name = "Unkillable",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	regenerate_health = {
 		category = "DO NOT USE - IS HACK",
 		ui_name = "Regenerate Health",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	hit_mass = {
 		category = "Base Data",
 		ui_name = "Hit Mass",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	breed_white_list = {
 		category = "Ignores",
 		is_optional = true,
 		ui_name = "Breed Whitelist",
-		ui_type = "text_box_array",
+		ui_type = "text_box_array"
 	},
 	ignored_colliders = {
 		category = "Ignores",
 		is_optional = true,
 		ui_name = "Ignored Colliders",
-		ui_type = "text_box_array",
+		ui_type = "text_box_array"
 	},
 	speed_on_hit = {
 		category = "Debris",
 		min = 0,
 		ui_name = "Impulse Speed on Hit",
 		ui_type = "number",
-		value = 5,
+		value = 5
 	},
 	inputs = {
 		prop_health_set_invulnerable = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		prop_health_set_vulnerable = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		prop_health_kill = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"PropHealthExtension",
-	},
+		"PropHealthExtension"
+	}
 }
 
 return PropHealth

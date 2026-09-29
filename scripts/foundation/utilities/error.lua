@@ -18,7 +18,7 @@ Application.warning = function (...)
 			level = "warning",
 			system = "Lua",
 			type = "message",
-			message = _format_error_message(...),
+			message = _format_error_message(...)
 		})
 	end
 end
@@ -29,7 +29,7 @@ Application.error = function (...)
 			level = "error",
 			system = "Lua",
 			type = "message",
-			message = _format_error_message(...),
+			message = _format_error_message(...)
 		})
 	end
 end

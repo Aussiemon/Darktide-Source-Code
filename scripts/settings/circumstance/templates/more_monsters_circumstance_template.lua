@@ -5,14 +5,14 @@ local circumstance_templates = {
 		theme_tag = "default",
 		wwise_state = "more_monsters_01",
 		mutators = {
-			"mutator_more_monsters",
+			"mutator_more_monsters"
 		},
 		ui = {
 			description = "loc_circumstance_more_monsters_description",
 			display_name = "loc_circumstance_more_monsters_title",
-			icon = "content/ui/materials/icons/circumstances/placeholder",
-		},
-	},
+			icon = "content/ui/materials/icons/circumstances/placeholder"
+		}
+	}
 }
 
 return circumstance_templates

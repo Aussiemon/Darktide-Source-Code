@@ -2,6 +2,7 @@
 
 local Definitions = require("scripts/ui/views/node_builder_view_base/node_builder_view_base_definitions")
 local Colors = require("scripts/utilities/ui/colors")
+local DataHistory = require("scripts/utilities/data_history")
 local NodeLayout = require("scripts/ui/views/node_builder_view_base/utilities/node_layout")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
@@ -25,7 +26,7 @@ NodeBuilderViewBase.init = function (self, definitions, settings, context)
 	self._render_cache_data = {}
 	self._global_node_offset = {
 		0,
-		0,
+		0
 	}
 	self._nodes_render_order_list = {}
 	self._nodes_render_scale = 1
@@ -83,12 +84,7 @@ NodeBuilderViewBase.on_enter = function (self)
 end
 
 NodeBuilderViewBase._setup_node_connection_widget = function (self)
-	local widget = self:_create_widget("node_connection", self._definitions.default_node_connection_definition)
-
-	widget.content.player_mode = self._player_mode
-	self._node_connection_widgets = {
-		widget,
-	}
+	self._node_connection_widgets = {}
 end
 
 NodeBuilderViewBase._setup_layouts = function (self)
@@ -102,7 +98,7 @@ end
 NodeBuilderViewBase._init_node = function (self, node)
 	node.connector_offset = node.connector_offset or {
 		0,
-		0,
+		0
 	}
 end
 
@@ -114,6 +110,26 @@ NodeBuilderViewBase._destroy_node_widgets = function (self)
 
 			self:_destroy_node_widget(widget_name)
 		end
+	end
+end
+
+NodeBuilderViewBase._create_node_widgets = function (self)
+	local nodes_render_order_list = {}
+	local nodes = self._active_layout.nodes
+
+	for i = 1, #nodes do
+		local node = nodes[i]
+
+		self._node_widgets[#self._node_widgets + 1] = self:_create_node_widget(node)
+		nodes_render_order_list[i] = node
+	end
+
+	self._nodes_render_order_list = nodes_render_order_list
+
+	self:_refresh_all_nodes()
+
+	for _, settings in pairs(self._saved_scenegraph_settings) do
+		self:_refresh_coordinates(settings, settings.is_node)
 	end
 end
 
@@ -159,8 +175,8 @@ NodeBuilderViewBase._create_node_widget = function (self, node)
 	local hotspot = widget.content.hotspot
 
 	if hotspot then
-		widget.content.hotspot.released_callback = callback(self, "_on_node_widget_left_pressed", widget)
-		widget.content.hotspot.right_pressed_callback = callback(self, "_on_node_widget_right_pressed", widget)
+		widget.content.hotspot.released_callback = callback(self, "_on_node_widget_left_pressed", widget, nil)
+		widget.content.hotspot.right_pressed_callback = callback(self, "_on_node_widget_right_pressed", widget, nil)
 	end
 
 	widget.content.player_mode = self._player_mode
@@ -168,22 +184,17 @@ NodeBuilderViewBase._create_node_widget = function (self, node)
 	return widget
 end
 
-NodeBuilderViewBase._on_node_widget_left_pressed = function (self, widget)
+NodeBuilderViewBase._on_node_widget_left_pressed = function (self, widget, optional_choice)
 	local success = false
-	local already_spent_node_points, max_points = self:_node_points_by_widget(widget)
+	local num_tiers, max_tiers = self:_node_tiers_by_widget(widget)
 
-	already_spent_node_points = already_spent_node_points or 0
-
-	local amount_to_add = 1
-	local can_spend_points = max_points - already_spent_node_points - amount_to_add
-
-	if not already_spent_node_points or can_spend_points then
+	if num_tiers < max_tiers then
 		local content = widget.content
 		local node_data = content.node_data
 		local status = self:_node_availability_status(node_data)
 
 		if status == NODE_STATUS.available then
-			success = self:_add_node_point_on_widget(widget, amount_to_add)
+			success = self:_add_node_point_on_widget(widget, 1, optional_choice)
 		end
 	end
 
@@ -201,9 +212,9 @@ NodeBuilderViewBase._has_points_spent_in_children = function (self, node)
 
 		for i = 1, #children do
 			local child_name = children[i]
-			local tier = node_widget_tiers[child_name]
+			local selection_data = node_widget_tiers[child_name]
 
-			if tier then
+			if selection_data then
 				children_counter = children_counter + 1
 
 				if table.find(parents, child_name) then
@@ -225,9 +236,9 @@ NodeBuilderViewBase._has_points_spent_in_parents = function (self, node)
 
 		for i = 1, #parents do
 			local parent_name = parents[i]
-			local tier = node_widget_tiers[parent_name]
+			local selection_data = node_widget_tiers[parent_name]
 
-			if tier then
+			if selection_data then
 				parent_counter = parent_counter + 1
 			end
 		end
@@ -259,41 +270,16 @@ NodeBuilderViewBase._has_node_bridge_links = function (self, node)
 end
 
 NodeBuilderViewBase._can_remove_point_in_node = function (self, node)
-	local _, spent_in_parents_counter = self:_has_points_spent_in_parents(node)
-	local points_spent_in_children, children_spent_counter, children_spent_link_counter = self:_has_points_spent_in_children(node)
-	local can_remove = true
-
-	if node.type == "aura" or node.type == "tactical" or node.type == "ability" then
-		return true
-	end
-
-	if points_spent_in_children then
-		if children_spent_counter == 1 and children_spent_link_counter == 1 and spent_in_parents_counter == 1 then
-			can_remove = true
-		else
-			local children = node.children
-
-			can_remove = true
-
-			for _, child_name in ipairs(children) do
-				local child_node = self:_node_by_name(child_name)
-				local node_tier = self._node_widget_tiers[child_name]
-
-				if node_tier and self:_is_node_dependent_on_parent(child_node, node) then
-					can_remove = false
-
-					break
-				end
-			end
-		end
-	end
-
-	return can_remove
+	return self:_node_tiers_by_widget(self._widgets_by_name[node.widget_name]) > 0
 end
 
 local temp_ignore_list = {}
 
 NodeBuilderViewBase._can_node_traverse_to_start = function (self, node, ignore_list, step_count)
+	if node.type == "start" then
+		return true, 0
+	end
+
 	step_count = (step_count or 0) + 1
 
 	if not ignore_list then
@@ -324,8 +310,6 @@ NodeBuilderViewBase._can_node_traverse_to_start = function (self, node, ignore_l
 					end
 				end
 			end
-		else
-			return true, step_count
 		end
 	end
 
@@ -334,9 +318,9 @@ end
 
 NodeBuilderViewBase._is_node_dependent_on_parent = function (self, node, parent_node)
 	local node_widget_tiers = self._node_widget_tiers
-	local tier = node_widget_tiers[node.widget_name]
+	local selection_data = node_widget_tiers[node.widget_name]
 
-	if not tier then
+	if not selection_data then
 		return false
 	end
 
@@ -344,7 +328,7 @@ NodeBuilderViewBase._is_node_dependent_on_parent = function (self, node, parent_
 
 	if spent_in_parents_counter > 1 then
 		local ignore_list = {
-			[parent_node.widget_name] = true,
+			[parent_node.widget_name] = true
 		}
 		local can_node_traverse_to_start = self:_can_node_traverse_to_start(node, ignore_list)
 
@@ -372,12 +356,6 @@ NodeBuilderViewBase._on_node_widget_right_pressed = function (self, widget)
 			self:_remove_node_point_on_widget(widget)
 
 			success = true
-
-			local node_type = node_data.type
-
-			if node_type == "aura" or node_type == "tactical" or node_type == "ability" then
-				self:_remove_node_points_on_child_nodes_of_node(node_data)
-			end
 		end
 	end
 
@@ -426,34 +404,12 @@ NodeBuilderViewBase._activate_layout_by_name = function (self, name)
 		end
 	end
 
+	local new_layout = (self._active_layout and self._active_layout.name) ~= active_layout.name
+
 	self._active_layout = active_layout
 
 	self:_destroy_node_widgets()
-
-	local nodes = active_layout.nodes
-	local nodes_render_order_list = {}
-	local lowest_node_height, highest_node_height = math.huge, 0
-
-	for i = 1, #nodes do
-		local node = nodes[i]
-
-		self._node_widgets[#self._node_widgets + 1] = self:_create_node_widget(node)
-		nodes_render_order_list[i] = node
-
-		if lowest_node_height > node.y then
-			lowest_node_height = node.y
-		end
-
-		if highest_node_height < node.y then
-			highest_node_height = node.y
-		end
-	end
-
-	self._nodes_render_order_list = nodes_render_order_list
-	self._lowest_node_height = lowest_node_height
-	self._highest_node_height = highest_node_height
-
-	self:_refresh_all_nodes()
+	self:_create_node_widgets()
 	self:apply_active_background_size()
 end
 
@@ -496,9 +452,9 @@ NodeBuilderViewBase._increase_render_priority_of_node = function (self, priority
 
 	for i = 1, #nodes do
 		local node = nodes[i]
-		local tier = node_widget_tiers[node.widget_name]
+		local selection_data = node_widget_tiers[node.widget_name]
 
-		if not tier then
+		if not selection_data then
 			wanted_move_index = i
 
 			break
@@ -536,6 +492,7 @@ NodeBuilderViewBase._add_node = function (self, x, y, optional_source_node_widge
 		group_name = nil,
 		horizontal_alignment = nil,
 		max_points = 1,
+		only_draw_connector_when_parent_chosen = false,
 		type = "default",
 		vertical_alignment = nil,
 		requirements = {
@@ -544,8 +501,8 @@ NodeBuilderViewBase._add_node = function (self, x, y, optional_source_node_widge
 			exclusive_group = nil,
 			incompatible_talent = nil,
 			min_points_spent = 0,
-			min_points_spent_in_group = nil,
-		},
+			min_points_spent_in_group = nil
+		}
 	}
 
 	node.widget_name = "node_" .. math.uuid()
@@ -555,7 +512,7 @@ NodeBuilderViewBase._add_node = function (self, x, y, optional_source_node_widge
 	node.children = {}
 	node.connector_offset = {
 		0,
-		0,
+		0
 	}
 
 	self:_init_node(node)
@@ -594,15 +551,17 @@ NodeBuilderViewBase._refresh_all_nodes = function (self)
 
 	table.sort(self._nodes_render_order_list, function (a, b)
 		local node_widget_tiers = self._node_widget_tiers
-		local a_tier = node_widget_tiers[a.widget_name]
-		local b_tier = node_widget_tiers[b.widget_name]
+		local a_selection_data = node_widget_tiers[a.widget_name]
+		local b_selection_data = node_widget_tiers[b.widget_name]
 
-		if a_tier and b_tier then
+		if a_selection_data and b_selection_data then
 			local _, a_step_count = self:_can_node_traverse_to_start(a)
 			local _, b_step_count = self:_can_node_traverse_to_start(b)
 
 			return a_step_count < b_step_count
 		else
+			local a_tier, b_tier = a_selection_data, b_selection_data
+
 			return (a_tier or -1) > (b_tier or -1)
 		end
 	end)
@@ -705,7 +664,7 @@ NodeBuilderViewBase.update = function (self, dt, t, input_service)
 
 	local player_mode = self._player_mode
 
-	self._can_close = not player_mode and not active_layout.dirty
+	self._can_close = player_mode or not active_layout.dirty
 
 	local render_scale = Managers.ui:view_render_scale()
 
@@ -752,8 +711,9 @@ NodeBuilderViewBase._update_node_widgets = function (self)
 		local content = widget.content
 		local hotspot = content.hotspot
 		local already_spent_node_points, max_points = self:_node_points_by_widget(widget)
+		local already_added_tiers = self:_node_tiers_by_widget(widget) > 0
 
-		content.has_points_spent = already_spent_node_points
+		content.has_points_spent = already_added_tiers
 
 		self:_set_node_points_spent_text(widget, already_spent_node_points or 0, max_points)
 
@@ -764,7 +724,7 @@ NodeBuilderViewBase._update_node_widgets = function (self)
 			hotspot.disabled = not allowed_node_input
 
 			if hotspot.on_hover_enter then
-				self:_setup_tooltip_info(node_data)
+				self:_on_node_hover_enter(node_data)
 				self:_node_on_hovered(node_data)
 			end
 
@@ -782,6 +742,7 @@ NodeBuilderViewBase._update_node_widgets = function (self)
 		local status = self:_node_availability_status(node_data)
 
 		content.locked = status == NODE_STATUS.locked
+		content.orphaned = already_added_tiers and not self:_can_node_traverse_to_start(node_data)
 	end
 
 	self._hovered_node_widget = hovered_widget
@@ -803,7 +764,7 @@ NodeBuilderViewBase._setup_tooltip_info = function (self, node, instant_tooltip)
 end
 
 NodeBuilderViewBase._on_node_hover_enter = function (self, node)
-	return
+	self:_setup_tooltip_info(node)
 end
 
 local temp_node_table = {}
@@ -830,7 +791,13 @@ NodeBuilderViewBase._nodes_in_exclusive_group = function (self, group_name)
 	return temp_node_table
 end
 
-NodeBuilderViewBase._node_with_incompatible_talent_is_selected = function (self, incompatible_talent)
+NodeBuilderViewBase._node_with_incompatible_talent_is_selected = function (self, check_node)
+	local incompatible_talent = check_node.requirements.incompatible_talent
+
+	if not incompatible_talent then
+		return false
+	end
+
 	local layout = self:get_active_layout()
 	local node_widget_tiers = self._node_widget_tiers
 	local nodes = layout.nodes
@@ -839,11 +806,11 @@ NodeBuilderViewBase._node_with_incompatible_talent_is_selected = function (self,
 		local node = nodes[i]
 		local node_talent = node.talent
 
-		if node_talent == incompatible_talent then
+		if node.widget_name ~= check_node.widget_name and node_talent == incompatible_talent then
 			local node_widget_name = node.widget_name
-			local tier = node_widget_tiers[node_widget_name]
+			local selection_data = node_widget_tiers[node_widget_name]
 
-			if tier then
+			if selection_data then
 				return true
 			end
 		end
@@ -852,7 +819,7 @@ NodeBuilderViewBase._node_with_incompatible_talent_is_selected = function (self,
 	return false
 end
 
-NodeBuilderViewBase._node_incompatible_with_talent_is_selected = function (self, incompatible_talent)
+NodeBuilderViewBase._node_incompatible_with_talent_is_selected = function (self, check_node)
 	local layout = self:get_active_layout()
 	local node_widget_tiers = self._node_widget_tiers
 	local nodes = layout.nodes
@@ -861,11 +828,11 @@ NodeBuilderViewBase._node_incompatible_with_talent_is_selected = function (self,
 		local node = nodes[i]
 		local node_incompatible_talent = node.requirements.incompatible_talent
 
-		if node_incompatible_talent and node_incompatible_talent == incompatible_talent then
+		if node_incompatible_talent and node.widget_name ~= check_node.widget_name and node_incompatible_talent == check_node.talent then
 			local node_widget_name = node.widget_name
-			local tier = node_widget_tiers[node_widget_name]
+			local selection_data = node_widget_tiers[node_widget_name]
 
-			if tier then
+			if selection_data then
 				return true
 			end
 		end
@@ -899,8 +866,9 @@ NodeBuilderViewBase._points_spent_in_group = function (self, group_name)
 
 		if node.group_name == group_name then
 			local node_widget_name = node.widget_name
+			local tier = node_widget_tiers[node_widget_name] or 0
 
-			points_spent = points_spent + (node_widget_tiers[node_widget_name] or 0) * node.cost
+			points_spent = points_spent + tier * node.cost
 		end
 	end
 
@@ -917,9 +885,11 @@ NodeBuilderViewBase._points_spent_on_node_in_exclusive_group = function (self, g
 
 		if node.requirements.exclusive_group == group_name then
 			local node_widget_name = node.widget_name
-			local tier = node_widget_tiers[node_widget_name]
+			local selection_data = node_widget_tiers[node_widget_name]
 
-			if tier then
+			if selection_data then
+				local tier = selection_data
+
 				return node.widget_name, tier * node.cost
 			end
 		end
@@ -942,7 +912,7 @@ NodeBuilderViewBase._node_availability_status = function (self, node, can_always
 	local is_incompatible_with_other_nodes = self._incompatible_talents[node.talent]
 
 	if is_incompatible_with_other_nodes then
-		local incompatible_node_is_selected = self:_node_incompatible_with_talent_is_selected(node.talent)
+		local incompatible_node_is_selected = self:_node_incompatible_with_talent_is_selected(node)
 
 		if incompatible_node_is_selected then
 			return NODE_STATUS.locked
@@ -982,9 +952,9 @@ NodeBuilderViewBase._node_availability_status = function (self, node, can_always
 				local exlusive_node_name = exlusive_node.widget_name
 
 				if exlusive_node_name ~= widget_name then
-					local tier = node_widget_tiers[exlusive_node_name]
+					local selection_data = node_widget_tiers[exlusive_node_name]
 
-					if tier then
+					if selection_data then
 						return NODE_STATUS.locked
 					end
 				end
@@ -994,7 +964,7 @@ NodeBuilderViewBase._node_availability_status = function (self, node, can_always
 		local incompatible_talent = requirements.incompatible_talent
 
 		if incompatible_talent and incompatible_talent ~= "" then
-			local incompatible_node_is_selected = self:_node_with_incompatible_talent_is_selected(incompatible_talent)
+			local incompatible_node_is_selected = self:_node_with_incompatible_talent_is_selected(node)
 
 			if incompatible_node_is_selected then
 				return NODE_STATUS.locked
@@ -1023,7 +993,7 @@ NodeBuilderViewBase._node_availability_status = function (self, node, can_always
 						points_spent_on_all_parents = false
 					end
 
-					if (parent_tier and children_unlock_points <= parent_points_spent or parent_node.type == "start") and can_afford then
+					if (parent_tier and children_unlock_points <= parent_points_spent or parent_node.type == "start") and can_afford and self:_can_node_traverse_to_start(parent_node) then
 						return_result = NODE_STATUS.available
 					end
 				end
@@ -1046,9 +1016,23 @@ NodeBuilderViewBase._node_points_by_widget = function (self, widget)
 	local node = content.node_data
 	local max_points = node.max_points or 0
 	local cost = node.cost
-	local tier = self._node_widget_tiers[name]
+	local selection_data = self._node_widget_tiers[name]
+	local points = selection_data and selection_data * cost or nil
 
-	return tier and tier * cost, max_points
+	return points, max_points
+end
+
+NodeBuilderViewBase._node_tiers_by_widget = function (self, widget)
+	local name = widget.name
+	local content = widget.content
+	local node = content.node_data
+	local max_points = node.max_points or 0
+	local cost = node.cost
+	local selection_data = self._node_widget_tiers[name]
+	local tiers = selection_data and selection_data or 0
+	local max_tiers = cost == 0 and 1 or math.floor(max_points / cost)
+
+	return tiers, max_tiers
 end
 
 NodeBuilderViewBase.clear_node_points = function (self)
@@ -1065,7 +1049,7 @@ NodeBuilderViewBase._node_points_spent = function (self)
 	return TalentLayoutParser.node_points_spent(active_layout, self._node_widget_tiers)
 end
 
-NodeBuilderViewBase._max_node_points = function (self)
+NodeBuilderViewBase._max_layout_points = function (self)
 	local active_layout = self:get_active_layout()
 
 	if not active_layout then
@@ -1082,14 +1066,14 @@ NodeBuilderViewBase._points_available = function (self)
 		return 0
 	end
 
-	local max_node_points = self:_max_node_points()
+	local max_node_points = self:_max_layout_points()
 	local node_points_spent = self:_node_points_spent()
 	local points_available = max_node_points - node_points_spent
 
 	return points_available
 end
 
-NodeBuilderViewBase._add_node_point_on_widget = function (self, widget, amount_to_add)
+NodeBuilderViewBase._add_node_point_on_widget = function (self, widget, amount_to_add, optional_choice)
 	local active_layout = self:get_active_layout()
 
 	if not active_layout then
@@ -1098,7 +1082,7 @@ NodeBuilderViewBase._add_node_point_on_widget = function (self, widget, amount_t
 
 	local node = widget.content.node_data
 	local amount_spent = self:_node_points_spent()
-	local max_node_points = self:_max_node_points()
+	local max_node_points = self:_max_layout_points()
 	local available_points_to_spend = max_node_points - amount_spent
 
 	if available_points_to_spend < amount_to_add then
@@ -1218,6 +1202,12 @@ NodeBuilderViewBase._remove_node_point_on_widget = function (self, widget, skip_
 		self._node_widget_tiers[name] = math.max(self._node_widget_tiers[name] - 1, 0)
 	end
 
+	local node_type = node_data.type
+
+	if node_type == "aura" or node_type == "tactical" or node_type == "ability" then
+		self:_remove_node_points_on_child_nodes_of_node(node_data)
+	end
+
 	if not skip_tooltip_update then
 		local instant_tooltip = true
 
@@ -1225,12 +1215,20 @@ NodeBuilderViewBase._remove_node_point_on_widget = function (self, widget, skip_
 	end
 end
 
-NodeBuilderViewBase._remove_node_points_on_child_nodes_of_node = function (self, node_data)
+NodeBuilderViewBase._remove_node_points_on_child_nodes_of_node = function (self, node_data, recursive_seen_nodes)
 	local children = node_data.children
 
 	if not children then
 		return
 	end
+
+	recursive_seen_nodes = recursive_seen_nodes or {}
+
+	if recursive_seen_nodes[node_data.widget_name] then
+		return
+	end
+
+	recursive_seen_nodes[node_data.widget_name] = true
 
 	local node_type = node_data.type
 	local widgets_by_name = self._widgets_by_name
@@ -1249,12 +1247,17 @@ NodeBuilderViewBase._remove_node_points_on_child_nodes_of_node = function (self,
 				if child_widget then
 					local skip_tooltip_update = true
 
-					self:_remove_node_point_on_widget(child_widget, skip_tooltip_update)
-					self:_remove_node_points_on_child_nodes_of_node(child_node)
+					if self._node_widget_tiers[child_widget_name] then
+						self:_remove_node_point_on_widget(child_widget, skip_tooltip_update)
+					end
+
+					self:_remove_node_points_on_child_nodes_of_node(child_node, recursive_seen_nodes)
 				end
 			end
 		end
 	end
+
+	recursive_seen_nodes[node_data.widget_name] = nil
 end
 
 NodeBuilderViewBase._set_zoom = function (self, zoom)
@@ -1455,7 +1458,7 @@ NodeBuilderViewBase._get_or_create_scenegraph_settings = function (self, scenegr
 			x = position_x,
 			y = position_y,
 			is_node = is_node,
-			scenegraph_id = scenegraph_id,
+			scenegraph_id = scenegraph_id
 		}
 		self._saved_scenegraph_settings[scenegraph_id] = scenegraph_settings
 	end
@@ -1486,7 +1489,7 @@ NodeBuilderViewBase._handle_scenegraph_coordinates = function (self, widget_name
 	_temp_widget_size[1] = scenegraph_width * render_scale
 	_temp_widget_size[2] = scenegraph_height * render_scale
 
-	local handled = false
+	local handled, finalized = false, false
 
 	if left_pressed then
 		local world_position = self:_scenegraph_world_position(scenegraph_id, render_scale)
@@ -1497,7 +1500,7 @@ NodeBuilderViewBase._handle_scenegraph_coordinates = function (self, widget_name
 			self._cursor_last_coordinates = Vector3.to_array(cursor_position)
 			self._cursor_box_offset = {
 				cursor_position[1] - world_position[1] - _temp_widget_size[1] * 0.5,
-				cursor_position[2] - world_position[2] - _temp_widget_size[2] * 0.75,
+				cursor_position[2] - world_position[2] - _temp_widget_size[2] * 0.75
 			}
 		end
 	end
@@ -1585,6 +1588,8 @@ NodeBuilderViewBase._handle_scenegraph_coordinates = function (self, widget_name
 						final_x = final_x + (grid_size - scenegraph_width) * 0.5
 						final_y = final_y + (grid_size - scenegraph_height) * 0.5
 					end
+
+					finalized = true
 				end
 
 				if not self._player_mode then
@@ -1598,7 +1603,7 @@ NodeBuilderViewBase._handle_scenegraph_coordinates = function (self, widget_name
 		end
 	end
 
-	return handled
+	return handled, finalized
 end
 
 NodeBuilderViewBase._update_scenegraph_positions = function (self)
@@ -1759,24 +1764,33 @@ local line_colors = {
 		255,
 		50,
 		50,
-		50,
+		50
 	},
 	unlocked = {
 		255,
 		255,
 		255,
-		255,
+		255
 	},
 	chosen = {
 		255,
 		0,
 		255,
-		0,
-	},
+		0
+	}
 }
 
 NodeBuilderViewBase._node_connection_widget_by_index = function (self, index)
-	return self._node_connection_widgets[1]
+	local connection_widgets = self._node_connection_widgets
+
+	if not connection_widgets[index] then
+		connection_widgets[index] = self:_create_widget("node_connection_" .. index, self._definitions.default_node_connection_definition)
+		connection_widgets[index].content.player_mode = self._player_mode
+	end
+
+	connection_widgets[index].content.visible = true
+
+	return connection_widgets[index]
 end
 
 NodeBuilderViewBase._draw_layout_node_connections = function (self, dt, t, input_service, ui_renderer, render_settings, layout)
@@ -1804,41 +1818,47 @@ NodeBuilderViewBase._draw_layout_node_connections = function (self, dt, t, input
 			end
 
 			local children = node.children
+			local parent_can_reach_start, parent_steps_to_start = self:_can_node_traverse_to_start(node)
 
 			for idx, child_node_name in ipairs(children) do
 				local child_widget = widgets_by_name[child_node_name]
 
 				if child_widget then
 					local child_node = child_widget.content.node_data
-					local child_frame_connection_draw_list = child_widget.content.frame_connection_draw_list
+					local two_way = child_node.children and table.contains(child_node.children, node_widget_name)
+					local child_can_reach_start, child_steps_to_start = self:_can_node_traverse_to_start(child_node)
 
-					if not child_frame_connection_draw_list or not child_frame_connection_draw_list[node_widget_name] then
-						connection_index = connection_index + 1
+					if not two_way or not parent_can_reach_start or not child_can_reach_start or parent_steps_to_start <= child_steps_to_start then
+						local child_frame_connection_draw_list = child_widget.content.frame_connection_draw_list
 
-						local child_widget_scenegraph_id = child_widget.scenegraph_id
-						local child_widget_world_position = self:_scenegraph_world_position(child_widget_scenegraph_id)
-						local child_widget_width, child_widget_height = self:_scenegraph_size(child_widget_scenegraph_id)
-						local node_connection_widget = self:_node_connection_widget_by_index(connection_index)
-						local scenegraph_id = node_connection_widget.scenegraph_id
-						local node_connection_widget_world_position = self:_scenegraph_world_position(scenegraph_id)
-						local node_connection_widget_width, node_connection_widget_height = self:_scenegraph_size(scenegraph_id)
-						local connector_offset_x = node_widget.content.node_data.connector_offset[1]
-						local connector_offset_y = node_widget.content.node_data.connector_offset[2]
-						local child_connector_offset_x = child_widget.content.node_data.connector_offset[1]
-						local child_connector_offset_y = child_widget.content.node_data.connector_offset[2]
-						local offset_x = node_widget_world_position[1] - node_connection_widget_world_position[1] - (node_connection_widget_width - node_widget_width) * 0.5 + connector_offset_x
-						local offset_y = node_widget_world_position[2] - node_connection_widget_world_position[2] - (node_connection_widget_height - node_widget_height) * 0.5 + connector_offset_y
+						if not child_frame_connection_draw_list or not child_frame_connection_draw_list[node_widget_name] then
+							connection_index = connection_index + 1
 
-						node_connection_widget.offset[1] = offset_x
-						node_connection_widget.offset[2] = offset_y
+							local child_widget_scenegraph_id = child_widget.scenegraph_id
+							local child_widget_world_position = self:_scenegraph_world_position(child_widget_scenegraph_id)
+							local child_widget_width, child_widget_height = self:_scenegraph_size(child_widget_scenegraph_id)
+							local node_connection_widget = self:_node_connection_widget_by_index(connection_index)
+							local scenegraph_id = node_connection_widget.scenegraph_id
+							local node_connection_widget_world_position = self:_scenegraph_world_position(scenegraph_id)
+							local node_connection_widget_width, node_connection_widget_height = self:_scenegraph_size(scenegraph_id)
+							local connector_offset_x = node_widget.content.node_data.connector_offset[1]
+							local connector_offset_y = node_widget.content.node_data.connector_offset[2]
+							local child_connector_offset_x = child_widget.content.node_data.connector_offset[1]
+							local child_connector_offset_y = child_widget.content.node_data.connector_offset[2]
+							local offset_x = node_widget_world_position[1] - node_connection_widget_world_position[1] - (node_connection_widget_width - node_widget_width) * 0.5 + connector_offset_x
+							local offset_y = node_widget_world_position[2] - node_connection_widget_world_position[2] - (node_connection_widget_height - node_widget_height) * 0.5 + connector_offset_y
 
-						local distance = math.distance_2d(child_widget_world_position[1] + child_widget_width * 0.5 + child_connector_offset_x, child_widget_world_position[2] + child_widget_height * 0.5 + child_connector_offset_y, node_widget_world_position[1] + node_widget_width * 0.5 + connector_offset_x, node_widget_world_position[2] + node_widget_height * 0.5 + connector_offset_y)
-						local angle = math.angle(child_widget_world_position[1] + child_widget_width * 0.5 + child_connector_offset_x, child_widget_world_position[2] + child_widget_height * 0.5 + child_connector_offset_y, node_widget_world_position[1] + node_widget_width * 0.5 + connector_offset_x, node_widget_world_position[2] + node_widget_height * 0.5 + connector_offset_y)
-						local inverse_scale = render_settings.inverse_scale or 1
-						local visible = math.min(child_widget_world_position[2], node_widget_world_position[2]) < screen_height * inverse_scale
-						local drawn = self:_draw_connection_between_widgets(ui_renderer, visible, dt, node, child_node, offset_x, offset_y, distance, angle, connection_index)
+							node_connection_widget.offset[1] = offset_x
+							node_connection_widget.offset[2] = offset_y
 
-						parent_frame_connection_draw_list[child_node_name] = drawn
+							local distance = math.distance_2d(child_widget_world_position[1] + child_widget_width * 0.5 + child_connector_offset_x, child_widget_world_position[2] + child_widget_height * 0.5 + child_connector_offset_y, node_widget_world_position[1] + node_widget_width * 0.5 + connector_offset_x, node_widget_world_position[2] + node_widget_height * 0.5 + connector_offset_y)
+							local angle = math.angle(child_widget_world_position[1] + child_widget_width * 0.5 + child_connector_offset_x, child_widget_world_position[2] + child_widget_height * 0.5 + child_connector_offset_y, node_widget_world_position[1] + node_widget_width * 0.5 + connector_offset_x, node_widget_world_position[2] + node_widget_height * 0.5 + connector_offset_y)
+							local inverse_scale = render_settings.inverse_scale or 1
+							local visible = math.min(child_widget_world_position[2], node_widget_world_position[2]) < screen_height * inverse_scale
+							local drawn = self:_draw_connection_between_widgets(ui_renderer, visible, dt, node, child_node, offset_x, offset_y, distance, angle, connection_index)
+
+							parent_frame_connection_draw_list[child_node_name] = drawn
+						end
 					end
 				end
 			end
@@ -1854,6 +1874,7 @@ NodeBuilderViewBase._draw_connection_between_widgets = function (self, ui_render
 	local is_parent_starting_node = table.is_empty(parent_node.parents)
 	local parent_node_name = parent_node.widget_name
 	local parent_node_requirements = parent_node.requirements
+	local parent_node_widget = self._widgets_by_name[parent_node_name]
 	local children_unlock_points = parent_node_requirements and parent_node_requirements.children_unlock_points or 0
 	local parent_tier = node_widget_tiers[parent_node_name]
 	local parent_points_spent = (parent_tier or 0) * parent_node.cost
@@ -1874,7 +1895,7 @@ NodeBuilderViewBase._draw_connection_between_widgets = function (self, ui_render
 		color_status = (child_status == NODE_STATUS.locked or child_status == NODE_STATUS.unavailable or not parent_tier or parent_points_spent < children_unlock_points) and "locked" or unlocked_child and "chosen" or "unlocked"
 	end
 
-	self:_apply_node_connection_line_colors(color_status, connection_index)
+	self:_apply_node_connection_line_colors(color_status, 1, connection_index)
 
 	local node_connection_style = node_connection_widget.style
 
@@ -1891,6 +1912,9 @@ NodeBuilderViewBase._draw_connection_between_widgets = function (self, ui_render
 		arrow_style.angle = math.pi - angle
 	end
 
+	local is_orphaned = parent_node_widget.content.orphaned
+
+	node_connection_widget.content.orphaned = is_orphaned
 	node_connection_widget.content.has_progressed = color_status == "chosen"
 	node_connection_widget.content.can_progress = color_status == "unlocked"
 
@@ -1911,7 +1935,7 @@ NodeBuilderViewBase._apply_node_connection_anims = function (self, node_connecti
 	return
 end
 
-NodeBuilderViewBase._apply_node_connection_line_colors = function (self, color_status, connection_index)
+NodeBuilderViewBase._apply_node_connection_line_colors = function (self, color_status, alpha_multiplier, connection_index)
 	local node_connection_widget = self:_node_connection_widget_by_index(connection_index)
 	local color
 

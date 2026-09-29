@@ -20,15 +20,15 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/weapons/grenades/flame_grenade_initial_blast",
+			"content/fx/particles/weapons/grenades/flame_grenade_initial_blast"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_grenade_flame_minion",
-			"wwise/events/weapon/play_explosion_refl_small",
-		},
+			"wwise/events/weapon/play_explosion_refl_small"
+		}
 	},
 	cultist_grenadier_gas_grenade_impact = {
 		close_damage_type = nil,
@@ -46,12 +46,12 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_grenade_gas",
-			"wwise/events/weapon/play_explosion_refl_small",
-		},
+			"wwise/events/weapon/play_explosion_refl_small"
+		}
 	},
 	twin_gas_grenade_impact = {
 		close_damage_type = nil,
@@ -68,28 +68,28 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		scaled_power_level = {
 			100,
 			200,
 			500,
 			700,
-			850,
+			850
 		},
 		vfx = {
-			"content/fx/particles/enemies/twin_disappear_cloud",
+			"content/fx/particles/enemies/twin_disappear_cloud"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_gas_proximity_mine",
-			"wwise/events/weapon/play_explosion_refl_gen",
-		},
+			"wwise/events/weapon/play_explosion_refl_gen"
+		}
 	},
 	poxwalker_bomber = {
 		close_radius = 3,
 		collision_filter = "filter_minion_explosion",
-		damage_falloff = false,
-		min_close_radius = 0.5,
+		damage_falloff = true,
+		min_close_radius = 1,
 		min_radius = 3,
 		override_friendly_fire = true,
 		radius = 6,
@@ -99,15 +99,15 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/explosions/poxwalker_explode",
+			"content/fx/particles/explosions/poxwalker_explode"
 		},
 		sfx = {
 			"wwise/events/minions/play_explosion_bomber",
-			"wwise/events/weapon/play_explosion_refl_gen",
-		},
+			"wwise/events/weapon/play_explosion_refl_gen"
+		}
 	},
 	poxwalker_bomber_mild = {
 		close_radius = 1.5,
@@ -123,15 +123,15 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/explosions/poxwalker_explode",
+			"content/fx/particles/explosions/poxwalker_explode"
 		},
 		sfx = {
 			"wwise/events/minions/play_explosion_bomber",
-			"wwise/events/weapon/play_explosion_refl_gen",
-		},
+			"wwise/events/weapon/play_explosion_refl_gen"
+		}
 	},
 	beast_of_nurgle_death = {
 		close_radius = 3,
@@ -146,14 +146,14 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/enemies/beast_of_nurgle/bon_death_splatter",
+			"content/fx/particles/enemies/beast_of_nurgle/bon_death_splatter"
 		},
 		sfx = {
-			"wwise/events/minions/play_beast_of_nurgle_death_explode",
-		},
+			"wwise/events/minions/play_beast_of_nurgle_death_explode"
+		}
 	},
 	nurgle_head_parasite = {
 		close_damage_type = nil,
@@ -172,14 +172,40 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/enemies/beast_of_nurgle/bon_death_splatter",
+			"content/fx/particles/enemies/beast_of_nurgle/bon_death_splatter"
 		},
 		sfx = {
-			"wwise/events/minions/play_nurgle_head_parasite_explode",
+			"wwise/events/minions/play_nurgle_head_parasite_explode"
+		}
+	},
+	nurgle_head_parasite_nurgle_explosion_2026 = {
+		close_damage_type = nil,
+		close_radius = 1,
+		collision_filter = "filter_minion_explosion",
+		damage_falloff = false,
+		damage_type = nil,
+		min_close_radius = 0,
+		min_radius = 1,
+		override_friendly_fire = true,
+		radius = 4.5,
+		scalable_radius = true,
+		static_power_level = 250,
+		close_damage_profile = DamageProfileTemplates.nurgle_head_parasite_nurgle_explosion_2026,
+		damage_profile = DamageProfileTemplates.nurgle_head_parasite_nurgle_explosion_2026,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles"
 		},
+		vfx = {
+			"content/fx/particles/enemies/beast_of_nurgle/bon_death_splatter"
+		},
+		sfx = {
+			"wwise/events/minions/play_nurgle_head_parasite_explode"
+		}
 	},
 	renegade_captain_bolt_shell_kill = {
 		collision_filter = "filter_minion_explosion",
@@ -191,14 +217,14 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/weapons/rifles/bolter/bolter_burrowed_explode",
+			"content/fx/particles/weapons/rifles/bolter/bolter_burrowed_explode"
 		},
 		sfx = {
-			"wwise/events/weapon/play_bullet_hits_explosive_gen_husk",
-		},
+			"wwise/events/weapon/play_bullet_hits_explosive_gen_husk"
+		}
 	},
 	renegade_captain_bolt_shell_stop = {
 		collision_filter = "filter_minion_explosion",
@@ -210,18 +236,18 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		explosion_area_suppression = {
 			distance = 4,
-			suppression_value = 4,
+			suppression_value = 4
 		},
 		vfx = {
-			"content/fx/particles/weapons/rifles/bolter/bolter_bullet_surface_explode",
+			"content/fx/particles/weapons/rifles/bolter/bolter_bullet_surface_explode"
 		},
 		sfx = {
-			"wwise/events/weapon/play_bullet_hits_explosive_gen_husk",
-		},
+			"wwise/events/weapon/play_bullet_hits_explosive_gen_husk"
+		}
 	},
 	renegade_captain_plasma_stop = {
 		collision_filter = "filter_minion_explosion",
@@ -233,15 +259,15 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		explosion_area_suppression = {
 			distance = 4,
-			suppression_value = 4,
+			suppression_value = 4
 		},
 		vfx = {
-			"content/fx/particles/enemies/renegade_plasma_trooper/renegade_plasma_explosion_medium",
-		},
+			"content/fx/particles/enemies/renegade_plasma_trooper/renegade_plasma_explosion_medium"
+		}
 	},
 	renegade_captain_fire_grenade = {
 		close_damage_type = nil,
@@ -259,15 +285,15 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/weapons/grenades/flame_grenade_initial_blast",
+			"content/fx/particles/weapons/grenades/flame_grenade_initial_blast"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_grenade_flame_minion",
-			"wwise/events/weapon/play_explosion_refl_small",
-		},
+			"wwise/events/weapon/play_explosion_refl_small"
+		}
 	},
 	renegade_captain_frag_grenade = {
 		close_radius = 5,
@@ -286,15 +312,15 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/explosions/frag_grenade_01",
+			"content/fx/particles/explosions/frag_grenade_01"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_grenade_frag",
-			"wwise/events/weapon/play_explosion_refl_gen",
-		},
+			"wwise/events/weapon/play_explosion_refl_gen"
+		}
 	},
 	renegade_shocktrooper_frag_grenade = {
 		close_radius = 5,
@@ -313,15 +339,15 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/explosions/frag_grenade_01",
+			"content/fx/particles/explosions/frag_grenade_01"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_grenade_frag",
-			"wwise/events/weapon/play_explosion_refl_gen",
-		},
+			"wwise/events/weapon/play_explosion_refl_gen"
+		}
 	},
 	renegade_captain_toughness_depleted = {
 		close_radius = 3,
@@ -336,14 +362,37 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/enemies/renegade_captain/renegade_captain_shield_burst",
+			"content/fx/particles/enemies/renegade_captain/renegade_captain_shield_burst"
 		},
 		sfx = {
-			"wwise/events/minions/play_traitor_captain_shield_break",
+			"wwise/events/minions/play_traitor_captain_shield_break"
+		}
+	},
+	live_story_spillway_void_shield_burst = {
+		close_radius = 1,
+		collision_filter = "filter_minion_explosion",
+		damage_falloff = false,
+		min_close_radius = 0.5,
+		min_radius = 1,
+		override_friendly_fire = true,
+		radius = 3,
+		scalable_radius = false,
+		close_damage_profile = DamageProfileTemplates.renegade_captain_toughness_depleted,
+		damage_profile = DamageProfileTemplates.renegade_captain_toughness_depleted,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles"
 		},
+		vfx = {
+			"content/fx/particles/enemies/spillway_mini_campaign_toxgas_shield_push"
+		},
+		sfx = {
+			"wwise/events/minions/play_mutator_enemy_psyker_shield_break"
+		}
 	},
 	chaos_hound_pounced_explosion = {
 		close_radius = 2,
@@ -358,11 +407,11 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/enemies/chaos_hound/chaos_hound_pounce",
-		},
+			"content/fx/particles/enemies/chaos_hound/chaos_hound_pounce"
+		}
 	},
 	purple_stimmed_explosion = {
 		close_damage_type = nil,
@@ -380,15 +429,15 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/enemies/purple_stimmed_explosion",
+			"content/fx/particles/enemies/purple_stimmed_explosion"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_grenade_gas",
-			"wwise/events/weapon/play_explosion_refl_small",
-		},
+			"wwise/events/weapon/play_explosion_refl_small"
+		}
 	},
 	twin_appear_explosion = {
 		close_damage_type = nil,
@@ -406,14 +455,14 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/enemies/twin_disappear_cloud",
+			"content/fx/particles/enemies/twin_disappear_cloud"
 		},
 		sfx = {
-			"wwise/events/minions/play_minion_twins_ambush_spawn_impact_hit",
-		},
+			"wwise/events/minions/play_minion_twins_ambush_spawn_impact_hit"
+		}
 	},
 	twin_disappear_explosion = {
 		close_damage_type = nil,
@@ -431,15 +480,15 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/enemies/twin_disappear_cloud",
+			"content/fx/particles/enemies/twin_disappear_cloud"
 		},
 		sfx = {
 			"wwise/events/minions/play_minion_twins_disappear_explosion",
-			"wwise/events/weapon/play_explosion_refl_small",
-		},
+			"wwise/events/weapon/play_explosion_refl_small"
+		}
 	},
 	explosion_settings_renegade_flamer = {
 		close_damage_type = nil,
@@ -458,15 +507,15 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/enemies/renegade_flamer/renegade_flamer_fuel_detonation",
+			"content/fx/particles/enemies/renegade_flamer/renegade_flamer_fuel_detonation"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_flamer_tank",
-			"wwise/events/weapon/play_explosion_refl_gen",
-		},
+			"wwise/events/weapon/play_explosion_refl_gen"
+		}
 	},
 	explosion_settings_interrupted_renegade_flamer = {
 		close_damage_type = nil,
@@ -485,15 +534,15 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/enemies/renegade_flamer/renegade_flamer_fuel_detonation",
+			"content/fx/particles/enemies/renegade_flamer/renegade_flamer_fuel_detonation"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_flamer_tank",
-			"wwise/events/weapon/play_explosion_refl_gen",
-		},
+			"wwise/events/weapon/play_explosion_refl_gen"
+		}
 	},
 	explosion_settings_cultist_flamer = {
 		close_damage_type = nil,
@@ -512,15 +561,15 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/enemies/cultist_flamer/cultist_flamer_fuel_detonation",
+			"content/fx/particles/enemies/cultist_flamer/cultist_flamer_fuel_detonation"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_flamer_tank",
-			"wwise/events/weapon/play_explosion_refl_gen",
-		},
+			"wwise/events/weapon/play_explosion_refl_gen"
+		}
 	},
 	explosion_settings_interrupted_cultist_flamer = {
 		close_damage_type = nil,
@@ -539,16 +588,109 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
-			"destructibles",
+			"destructibles"
 		},
 		vfx = {
-			"content/fx/particles/enemies/cultist_flamer/cultist_flamer_fuel_detonation",
+			"content/fx/particles/enemies/cultist_flamer/cultist_flamer_fuel_detonation"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_flamer_tank",
-			"wwise/events/weapon/play_explosion_refl_gen",
-		},
+			"wwise/events/weapon/play_explosion_refl_gen"
+		}
 	},
+	renegade_wizard_projectile_nurgle = {
+		close_radius = 5,
+		collision_filter = "filter_minion_explosion",
+		damage_falloff = true,
+		min_close_radius = 3,
+		min_radius = 5,
+		override_friendly_fire = true,
+		radius = 10,
+		scalable_radius = true,
+		static_power_level = 500,
+		close_damage_profile = DamageProfileTemplates.renegade_captain_frag_grenade_close,
+		close_damage_type = damage_types.grenade_frag,
+		damage_profile = DamageProfileTemplates.renegade_captain_frag_grenade,
+		damage_type = damage_types.grenade_frag,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles"
+		},
+		vfx = {
+			"content/fx/particles/enemies/renegade_wizard/renegade_wizard_projectile_nurgle_impact"
+		},
+		sfx = {
+			"wwise/events/weapon/play_explosion_grenade_frag",
+			"wwise/events/weapon/play_explosion_refl_gen"
+		}
+	},
+	renegade_wizard_projectile_nurgle_rebounding = {
+		close_radius = 5,
+		collision_filter = "filter_minion_explosion",
+		damage_falloff = true,
+		min_close_radius = 3,
+		min_radius = 5,
+		override_friendly_fire = true,
+		radius = 10,
+		scalable_radius = true,
+		static_power_level = 500,
+		close_damage_profile = DamageProfileTemplates.renegade_captain_frag_grenade_close,
+		close_damage_type = damage_types.grenade_frag,
+		damage_profile = DamageProfileTemplates.renegade_captain_frag_grenade,
+		damage_type = damage_types.grenade_frag,
+		broadphase_explosion_filter = {
+			"villains",
+			"destructibles"
+		},
+		vfx = {
+			"content/fx/particles/enemies/renegade_wizard/renegade_wizard_projectile_nurgle_impact"
+		},
+		sfx = {
+			"wwise/events/weapon/play_explosion_grenade_frag",
+			"wwise/events/weapon/play_explosion_refl_gen"
+		}
+	},
+	renegade_wizard_projectile_warp = {
+		close_radius = 0,
+		collision_filter = "filter_minion_explosion",
+		damage_falloff = false,
+		min_close_radius = 0,
+		min_radius = 0,
+		override_friendly_fire = false,
+		radius = 0,
+		scalable_radius = false,
+		static_power_level = 0,
+		close_damage_profile = DamageProfileTemplates.renegade_captain_frag_grenade_close,
+		close_damage_type = damage_types.warp,
+		damage_profile = DamageProfileTemplates.renegade_captain_frag_grenade,
+		damage_type = damage_types.warp,
+		broadphase_explosion_filter = {},
+		vfx = {
+			"content/fx/particles/enemies/renegade_wizard/renegade_wizard_projectile_warp_dissipate"
+		},
+		sfx = {}
+	},
+	renegade_wizard_projectile_warp_rebounding = {
+		close_radius = 0,
+		collision_filter = "filter_minion_explosion",
+		damage_falloff = false,
+		min_close_radius = 0,
+		min_radius = 0,
+		override_friendly_fire = false,
+		radius = 0,
+		scalable_radius = false,
+		static_power_level = 0,
+		close_damage_profile = DamageProfileTemplates.renegade_captain_frag_grenade_close,
+		close_damage_type = damage_types.warp,
+		damage_profile = DamageProfileTemplates.renegade_captain_frag_grenade,
+		damage_type = damage_types.warp,
+		broadphase_explosion_filter = {},
+		vfx = {
+			"content/fx/particles/enemies/renegade_wizard/renegade_wizard_projectile_warp_impact"
+		},
+		sfx = {}
+	}
 }
 
 return explosion_templates

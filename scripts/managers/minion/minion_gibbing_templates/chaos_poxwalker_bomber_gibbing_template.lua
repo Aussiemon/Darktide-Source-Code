@@ -14,20 +14,20 @@ local gibbing_template = {
 				vfx = {
 					linked = true,
 					node_name = "fx_blood",
-					particle_effect = "content/fx/particles/impacts/flesh/blood_fountain_head_01",
+					particle_effect = "content/fx/particles/impacts/flesh/blood_fountain_head_01"
 				},
 				sfx = {
 					node_name = "fx_blood",
-					sound_event = "wwise/events/weapon/play_combat_shared_gore_blood_fountain_neck",
-				},
+					sound_event = "wwise/events/weapon/play_combat_shared_gore_blood_fountain_neck"
+				}
 			},
 			gibbing_threshold = GibbingThresholds.always,
 			material_overrides = {
 				"slot_body",
-				"environmental_override",
-			},
-		},
-	},
+				"environmental_override"
+			}
+		}
+	}
 }
 
 return gibbing_template

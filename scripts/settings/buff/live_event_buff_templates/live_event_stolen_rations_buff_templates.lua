@@ -52,16 +52,16 @@ templates.live_event_stolen_rations_destroy_ranged = {
 	title = "Stolen Rations Destroy Ranged",
 	buff_category = buff_categories.live_event,
 	stat_buffs = {
-		[stat_buffs.ammo_reserve_capacity] = 1,
+		[stat_buffs.ammo_reserve_capacity] = 1
 	},
 	keywords = {
-		keywords.ranged_attack_infinite_cleave,
+		keywords.ranged_attack_infinite_cleave
 	},
 	start_func = function (template_data, template_context)
 		local buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
 
 		template_data.buff_extension = buff_extension
-	end,
+	end
 }
 templates.live_event_stolen_rations_recover_syringe = {
 	class_name = "buff",
@@ -83,13 +83,13 @@ templates.live_event_stolen_rations_recover_syringe = {
 		[stat_buffs.reload_speed] = 0.25,
 		[stat_buffs.dodge_speed_multiplier] = 1.25,
 		[stat_buffs.dodge_distance_modifier] = 0.3,
-		[stat_buffs.stamina_modifier] = 2,
+		[stat_buffs.stamina_modifier] = 2
 	},
 	start_func = function (template_data, template_context)
 		local buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
 
 		template_data.buff_extension = buff_extension
-	end,
+	end
 }
 
 return templates

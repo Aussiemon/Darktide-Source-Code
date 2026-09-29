@@ -7,11 +7,11 @@ local ColorUtilities = require("scripts/utilities/ui/colors")
 local template = {}
 local size = {
 	50,
-	50,
+	50
 }
 local arrow_size = {
 	70,
-	70,
+	70
 }
 
 template.size = size
@@ -23,13 +23,13 @@ template.screen_margins = {
 	down = 250,
 	left = 450,
 	right = 450,
-	up = 250,
+	up = 250
 }
 
 local template_visual_definitions = {
 	default = {
 		template_settings_overrides = {
-			screen_clamp = true,
+			screen_clamp = true
 		},
 		colors = {
 			frame = UIHudSettings.color_tint_main_1,
@@ -37,9 +37,9 @@ local template_visual_definitions = {
 			icon = UIHudSettings.color_tint_main_1,
 			text = UIHudSettings.color_tint_main_1,
 			indicator = Color.ui_hud_green_super_light(255, true),
-			background = Color.terminal_background(200, true),
+			background = Color.terminal_background(200, true)
 		},
-		textures = {},
+		textures = {}
 	},
 	interact = {
 		template_settings_overrides = {
@@ -47,7 +47,7 @@ local template_visual_definitions = {
 			position_offset = {
 				0,
 				0,
-				0,
+				0
 			},
 			fade_settings = {
 				default_fade = 1,
@@ -55,11 +55,11 @@ local template_visual_definitions = {
 				distance_min = 3,
 				fade_from = 1,
 				fade_to = 0,
-				easing_function = math.easeCubic,
-			},
+				easing_function = math.easeCubic
+			}
 		},
 		colors = {},
-		textures = {},
+		textures = {}
 	},
 	servitor = {
 		template_settings_overrides = {
@@ -67,7 +67,7 @@ local template_visual_definitions = {
 			position_offset = {
 				0,
 				0,
-				0,
+				0
 			},
 			fade_settings = {
 				default_fade = 1,
@@ -75,11 +75,11 @@ local template_visual_definitions = {
 				distance_min = 15,
 				fade_from = 1,
 				fade_to = 0,
-				easing_function = math.easeCubic,
-			},
+				easing_function = math.easeCubic
+			}
 		},
 		colors = {},
-		textures = {},
+		textures = {}
 	},
 	enemy = {
 		template_settings_overrides = {
@@ -87,23 +87,23 @@ local template_visual_definitions = {
 			position_offset = {
 				0,
 				0,
-				0.3,
-			},
+				0.3
+			}
 		},
 		colors = {},
-		textures = {},
+		textures = {}
 	},
 	portal = {
 		template_settings_overrides = {
 			position_offset = {
 				0,
 				0,
-				1.8,
-			},
+				1.8
+			}
 		},
 		colors = {},
-		textures = {},
-	},
+		textures = {}
+	}
 }
 
 local function setup_marker_by_visual_type(widget, marker, visual_type)
@@ -154,13 +154,13 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					0,
 					30,
-					2,
+					2
 				},
-				color = UIHudSettings.color_tint_main_1,
+				color = UIHudSettings.color_tint_main_1
 			},
 			visibility_function = function (content, style)
 				return style.color[1] > 0
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -174,17 +174,17 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					0,
 					35,
-					1,
+					1
 				},
 				size_addition = {
 					10,
-					10,
+					10
 				},
-				color = UIHudSettings.color_tint_main_1,
+				color = UIHudSettings.color_tint_main_1
 			},
 			visibility_function = function (content, style)
 				return style.color[1] > 0
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -198,22 +198,22 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					0,
 					35,
-					0,
+					0
 				},
 				size_addition = {
 					10,
-					10,
+					10
 				},
 				color = {
 					200,
 					0,
 					0,
-					0,
-				},
+					0
+				}
 			},
 			visibility_function = function (content, style)
 				return style.color[1] > 0
-			end,
+			end
 		},
 		{
 			pass_type = "rotated_texture",
@@ -227,17 +227,17 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					0,
 					40,
-					1,
+					1
 				},
-				color = Color.ui_hud_green_super_light(255, true),
+				color = Color.ui_hud_green_super_light(255, true)
 			},
 			visibility_function = function (content, style)
 				return content.is_clamped
 			end,
 			change_function = function (content, style)
 				style.angle = content.angle
-			end,
-		},
+			end
+		}
 	}, scenegraph_id)
 end
 

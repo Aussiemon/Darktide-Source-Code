@@ -42,6 +42,7 @@ MonsterPacing.destroy = function (self)
 end
 
 MonsterPacing.on_gameplay_post_init = function (self, level, template)
+	self._disabled = false
 	self._template = template
 	self._pacing_type = self._template.pacing_type or pacing_types.default
 
@@ -68,12 +69,12 @@ MonsterPacing._setup_timer_based_monster_pacing = function (self, dt, t, side_id
 	self._monster_timer = 0
 	self._currently_spawned_by_timer = {
 		boss_patrols = {},
-		monsters = {},
+		monsters = {}
 	}
 	self._amount_allowed_by_type = {
 		boss_patrols = 0,
 		monsters = 0,
-		total = 0,
+		total = 0
 	}
 end
 
@@ -223,7 +224,7 @@ MonsterPacing._generate_spawns = function (self, template)
 					position = position,
 					section = section_index,
 					despawn_distance_when_passive = despawn_distance_when_passive,
-					spawn_type = spawn_type,
+					spawn_type = spawn_type
 				}
 
 				monsters[#monsters + 1] = monster
@@ -255,7 +256,7 @@ MonsterPacing._generate_spawns = function (self, template)
 					distance = travel_distance - sound_data.distance,
 					vo_event = sound_data.vo_event,
 					voice_profile = sound_data.voice_profile,
-					breed_name = sound_data.breed_name,
+					breed_name = sound_data.breed_name
 				}
 			end
 		end
@@ -293,7 +294,7 @@ MonsterPacing._generate_spawns = function (self, template)
 				breed_list = breed_list,
 				section = section_index,
 				spawn_point_travel_distance = spawn_point_travel_distance,
-				sound_events = sound_events,
+				sound_events = sound_events
 			}
 
 			boss_patrols[#boss_patrols + 1] = boss_patrol
@@ -383,7 +384,7 @@ MonsterPacing.fill_spawns_by_travel_distance = function (self, breed_name, spawn
 						breed_name = monster_breed_name,
 						position = position,
 						section = i,
-						spawn_type = spawn_type,
+						spawn_type = spawn_type
 					}
 
 					monsters[#monsters + 1] = monster
@@ -452,7 +453,7 @@ MonsterPacing.fill_boss_patrols_by_travel_distance = function (self, per_travel_
 						breed_list = breed_list,
 						section = i,
 						spawn_point_travel_distance = spawn_point_travel_distance,
-						sound_events = sound_events,
+						sound_events = sound_events
 					}
 
 					boss_patrols[#boss_patrols + 1] = boss_patrol
@@ -466,7 +467,7 @@ end
 
 local monster_types = {
 	"boss_patrols",
-	"monsters",
+	"monsters"
 }
 local ABOVE, BELOW = 5, 5
 
@@ -510,7 +511,7 @@ MonsterPacing._fill_spawns_by_timer = function (self, dt, t, side_id, target_sid
 		local choosen_breed = possible_breeds[random]
 		local monster = {
 			breed_name = choosen_breed,
-			position = Vector3Box(random_occluded_position),
+			position = Vector3Box(random_occluded_position)
 		}
 		local position = POSITION_LOOKUP[ahead_target_unit]
 
@@ -524,7 +525,7 @@ MonsterPacing._fill_spawns_by_timer = function (self, dt, t, side_id, target_sid
 			local breed_list = boss_patrol_settings.breed_lists
 			local boss_patrol = {
 				breed_list = breed_list,
-				spawn_position = Vector3Box(random_occluded_position),
+				spawn_position = Vector3Box(random_occluded_position)
 			}
 
 			self:_spawn_boss_patrol(boss_patrol, ahead_position, side_id)
@@ -560,14 +561,14 @@ MonsterPacing.add_spawn_point = function (self, unit, position, path_position, t
 		position = Vector3Box(position_on_navmesh),
 		spawn_travel_distance = wanted_distance,
 		spawn_type = spawn_type,
-		spawn_point_travel_distance = travel_distance,
+		spawn_point_travel_distance = travel_distance
 	}
 
 	if spawn_point_section then
 		spawn_point_section[#spawn_point_section + 1] = spawn_point
 	else
 		spawn_point_sections[section_index] = {
-			spawn_point,
+			spawn_point
 		}
 		self._num_spawn_type_sections[spawn_type] = self._num_spawn_type_sections[spawn_type] + 1
 	end
@@ -581,7 +582,7 @@ end
 
 local captain_breeds = {
 	cultist = "cultist_captain",
-	renegade = "renegade_captain",
+	renegade = "renegade_captain"
 }
 
 MonsterPacing._get_captain_faction = function (self, monster)
@@ -604,7 +605,7 @@ end
 
 local names = {
 	"monsters",
-	"boss_patrols",
+	"boss_patrols"
 }
 
 MonsterPacing._check_alive = function (self)
@@ -633,6 +634,10 @@ MonsterPacing._check_alive = function (self)
 end
 
 MonsterPacing._update_allowance = function (self, dt, t, side_id, target_side_id)
+	if not Managers.state.pacing:heat_active() then
+		return false
+	end
+
 	local template = self._template
 	local max_allowed_by_current_heat_level = Managers.state.pacing:get_table_entry_by_heat_stage(template.max_allowed_by_heat)
 
@@ -852,6 +857,10 @@ MonsterPacing.set_num_captains_override = function (self, override)
 end
 
 MonsterPacing._expedition_setup_monster_loot = function (self, pacing_type, spawned_unit)
+	if not Managers.state.pacing:heat_active() then
+		return
+	end
+
 	local unit_data_extension = ScriptUnit.extension(spawned_unit, "unit_data_system")
 	local breed = unit_data_extension:breed()
 	local is_monster_or_captain = breed.tags.monster or breed.tags.captain or breed.tags.cultist_captain
@@ -866,7 +875,7 @@ MonsterPacing._expedition_setup_monster_loot = function (self, pacing_type, spaw
 			404,
 			404,
 			404,
-			404,
+			404
 		}
 
 		if game_mode_name == "expedition" then

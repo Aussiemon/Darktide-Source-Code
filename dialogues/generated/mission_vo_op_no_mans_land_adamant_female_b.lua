@@ -12,7 +12,7 @@ local mission_vo_op_no_mans_land_adamant_female_b = {
 			"loc_adamant_female_b__guidance_starting_area_05",
 			"loc_adamant_female_b__guidance_starting_area_06",
 			"loc_adamant_female_b__guidance_starting_area_07",
-			"loc_adamant_female_b__guidance_starting_area_08",
+			"loc_adamant_female_b__guidance_starting_area_08"
 		},
 		sound_events_duration = {
 			2.489438,
@@ -22,7 +22,7 @@ local mission_vo_op_no_mans_land_adamant_female_b = {
 			4.19201,
 			3.705521,
 			2.911885,
-			3.076052,
+			3.076052
 		},
 		sound_event_weights = {
 			0.125,
@@ -32,10 +32,10 @@ local mission_vo_op_no_mans_land_adamant_female_b = {
 			0.125,
 			0.125,
 			0.125,
-			0.125,
+			0.125
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_op_no_mans_land_adamant_female_b", mission_vo_op_no_mans_land_adamant_female_b)

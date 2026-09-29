@@ -7,8 +7,8 @@ local view_element_input_legend_settings = {
 	button_text_margin = 20,
 	button_size = {
 		300,
-		50,
-	},
+		50
+	}
 }
 
 return settings("ViewElementInputLegendSettings", view_element_input_legend_settings)

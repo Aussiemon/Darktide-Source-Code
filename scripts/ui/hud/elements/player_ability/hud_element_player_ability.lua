@@ -26,7 +26,7 @@ HudElementPlayerAbility.init = function (self, parent, draw_layer, start_scale, 
 	end
 
 	self._weapon_slots = weapon_slots
-	self._ability_id = data.ability_id
+	self._ability_type = data.ability_id
 	self._slot_id = data.slot_id
 
 	self:set_charges_amount(99)
@@ -42,9 +42,9 @@ HudElementPlayerAbility.destroy = function (self, ui_renderer)
 end
 
 HudElementPlayerAbility._update_input = function (self)
-	local ability_id = self._ability_id
+	local ability_type = self._ability_type
 	local service_type = "Ingame"
-	local alias_name = ability_id
+	local alias_name = ability_type
 	local color_tint_text = false
 	local input_key = InputUtils.input_text_for_current_input_device(service_type, alias_name, color_tint_text)
 
@@ -57,43 +57,34 @@ HudElementPlayerAbility.update = function (self, dt, t, ui_renderer, render_sett
 	local player = self._data.player
 	local parent = self._parent
 	local ability_extension = parent:get_player_extension(player, "ability_system")
-	local ability_id = self._ability_id
+	local ability_type = self._ability_type
 	local cooldown_progress, remaining_ability_charges
 	local has_charges_left = true
-	local uses_charges = false
+	local has_more_than_one_charge = false
 	local in_process_of_going_on_cooldown = false
 	local force_on_cooldown = false
 
-	if ability_extension and ability_extension:ability_is_equipped(ability_id) then
-		local remaining_ability_cooldown = ability_extension:remaining_ability_cooldown(ability_id)
-		local max_ability_cooldown = ability_extension:max_ability_cooldown(ability_id)
-		local is_paused = ability_extension:is_cooldown_paused(ability_id)
-		local is_cooldown_regen_over_time_disabled = ability_extension:is_cooldown_regen_over_time_disabled(ability_id)
+	if ability_extension and ability_extension:ability_is_equipped(ability_type) then
+		local max_ability_resource = ability_extension:max_ability_resource(ability_type)
+		local ability_resource_regen_progress = ability_extension:get_ability_resource_regen_progress(ability_type)
+		local is_paused = ability_extension:is_ability_resource_regen_paused(ability_type)
+		local max_ability_charges = ability_extension:max_ability_charges(ability_type)
 
-		remaining_ability_charges = ability_extension:remaining_ability_charges(ability_id)
-
-		local max_ability_charges = ability_extension:max_ability_charges(ability_id)
-
-		uses_charges = max_ability_charges and max_ability_charges > 1
+		remaining_ability_charges = ability_extension:remaining_ability_charges(ability_type)
 		has_charges_left = remaining_ability_charges > 0
+		has_more_than_one_charge = max_ability_charges and max_ability_charges > 1
 
 		local should_show_empty_cooldown = is_paused
 
-		should_show_empty_cooldown = should_show_empty_cooldown and not is_cooldown_regen_over_time_disabled
-
 		if should_show_empty_cooldown then
 			cooldown_progress = 0
-		elseif max_ability_cooldown and max_ability_cooldown > 0 then
-			cooldown_progress = 1 - math.lerp(0, 1, remaining_ability_cooldown / max_ability_cooldown)
-
-			if cooldown_progress == 0 then
-				cooldown_progress = 1
-			end
+		elseif max_ability_resource and max_ability_resource > 0 then
+			cooldown_progress = ability_resource_regen_progress
 		else
-			cooldown_progress = uses_charges and 1 or 0
+			cooldown_progress = has_more_than_one_charge and 1 or 0
 		end
 
-		local pause_cooldown_settings = ability_extension:ability_pause_cooldown_settings(ability_id)
+		local pause_cooldown_settings = ability_extension:ability_pause_cooldown_settings(ability_type)
 
 		if pause_cooldown_settings then
 			local duration_tracking_buff = pause_cooldown_settings.duration_tracking_buff
@@ -144,24 +135,25 @@ HudElementPlayerAbility.update = function (self, dt, t, ui_renderer, render_sett
 		self:_set_progress(cooldown_progress)
 	end
 
-	local on_cooldown = cooldown_progress ~= 1 and not in_process_of_going_on_cooldown or force_on_cooldown
+	local can_use_ability = ability_extension:can_use_ability(ability_type)
+	local on_cooldown = not can_use_ability and (cooldown_progress ~= 1 and not in_process_of_going_on_cooldown or force_on_cooldown)
 
-	if on_cooldown ~= self._on_cooldown or uses_charges ~= self._uses_charges or has_charges_left ~= self._has_charges_left then
-		if not on_cooldown and self._on_cooldown and (not uses_charges or has_charges_left) then
+	if on_cooldown ~= self._on_cooldown or has_more_than_one_charge ~= self._has_more_than_one_charge or has_charges_left ~= self._has_charges_left then
+		if not on_cooldown and self._on_cooldown and (not has_more_than_one_charge or has_charges_left) then
 			self:_play_sound(UISoundEvents.ability_off_cooldown)
 		end
 
 		self._on_cooldown = on_cooldown
-		self._uses_charges = uses_charges
+		self._has_more_than_one_charge = has_more_than_one_charge
 		self._has_charges_left = has_charges_left
 
-		self:_set_widget_state_colors(on_cooldown, uses_charges, has_charges_left)
+		self:_set_widget_state_colors(on_cooldown, has_more_than_one_charge, has_charges_left)
 	end
 
 	if remaining_ability_charges and remaining_ability_charges ~= self._remaining_ability_charges then
 		self._remaining_ability_charges = remaining_ability_charges
 
-		self:set_charges_amount(uses_charges and remaining_ability_charges)
+		self:set_charges_amount(has_more_than_one_charge and remaining_ability_charges)
 	end
 end
 
@@ -174,13 +166,13 @@ HudElementPlayerAbility.set_charges_amount = function (self, amount)
 	content.text = amount and tostring(amount) or nil
 end
 
-HudElementPlayerAbility._set_widget_state_colors = function (self, on_cooldown, uses_charges, has_charges_left)
+HudElementPlayerAbility._set_widget_state_colors = function (self, on_cooldown, has_more_than_one_charge, has_charges_left)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.ability
 	local source_colors
 
 	if on_cooldown then
-		if uses_charges then
+		if has_more_than_one_charge then
 			if has_charges_left then
 				source_colors = HudElementPlayerAbilitySettings.has_charges_cooldown_colors
 			else
@@ -189,7 +181,7 @@ HudElementPlayerAbility._set_widget_state_colors = function (self, on_cooldown, 
 		else
 			source_colors = HudElementPlayerAbilitySettings.cooldown_colors
 		end
-	elseif not uses_charges or uses_charges and has_charges_left then
+	elseif not has_more_than_one_charge or has_more_than_one_charge and has_charges_left then
 		source_colors = HudElementPlayerAbilitySettings.active_colors
 	else
 		source_colors = HudElementPlayerAbilitySettings.inactive

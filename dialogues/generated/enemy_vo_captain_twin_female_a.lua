@@ -14,7 +14,7 @@ local enemy_vo_captain_twin_female_a = {
 			"loc_captain_twin_female_a__laugh_a_02",
 			"loc_captain_twin_female_a__laugh_a_03",
 			"loc_captain_twin_female_a__laugh_a_04",
-			"loc_captain_twin_female_a__laugh_a_05",
+			"loc_captain_twin_female_a__laugh_a_05"
 		},
 		sound_events_duration = {
 			0.853396,
@@ -26,7 +26,7 @@ local enemy_vo_captain_twin_female_a = {
 			1.084438,
 			1.328292,
 			1.878708,
-			1.517958,
+			1.517958
 		},
 		sound_event_weights = {
 			0.1,
@@ -38,10 +38,10 @@ local enemy_vo_captain_twin_female_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1,
+			0.1
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("enemy_vo_captain_twin_female_a", enemy_vo_captain_twin_female_a)

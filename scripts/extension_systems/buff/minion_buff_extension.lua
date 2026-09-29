@@ -19,7 +19,7 @@ MinionBuffExtension.init = function (self, extension_init_context, unit, extensi
 		buff_template_name = nil,
 		name = nil,
 		priority = 0,
-		value = nil,
+		value = nil
 	}
 
 	MinionBuffExtension.super.init(self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id, false)
@@ -115,7 +115,7 @@ MinionBuffExtension._on_add_buff = function (self, buff_instance)
 	if not self._update_enabled and #self._buffs == 0 then
 		self._update_enabled = true
 
-		self._owner_system:enable_update_function(self.__class_name, "update", self._unit, self)
+		self._owner_system:enable_update_function(self._unit, "update")
 	end
 end
 
@@ -123,7 +123,7 @@ MinionBuffExtension._on_remove_buff = function (self, buff_instance)
 	if self._update_enabled and #self._buffs == 1 then
 		self._update_enabled = false
 
-		self._owner_system:disable_update_function(self.__class_name, "update", self._unit, self)
+		self._owner_system:disable_update_function(self._unit, "update")
 	end
 end
 
@@ -165,10 +165,10 @@ MinionBuffExtension._on_add_buff_stack = function (self, buff_instance, previous
 
 		if stack_node_effects then
 			local template_name = template.name
-			local node_effects_priotity = minion_effects.node_effects_priotity
+			local node_effects_priority = minion_effects.node_effects_priority
 			local current_stack_count = buff_instance:stack_count()
 
-			self:_check_stack_node_effects(template_name, stack_node_effects, current_stack_count, previous_stack_count, node_effects_priotity)
+			self:_check_stack_node_effects(template_name, stack_node_effects, current_stack_count, previous_stack_count, node_effects_priority)
 		end
 
 		local stack_material_vectors = minion_effects.stack_material_vectors
@@ -274,6 +274,27 @@ MinionBuffExtension.remove_externally_controlled_buff = function (self, local_in
 	end
 end
 
+MinionBuffExtension.remove_buff_with_id = function (self, buff_id)
+	local buffs = self._buffs
+
+	for i = 1, #buffs do
+		local buff_instance = buffs[i]
+		local template = buff_instance:template()
+
+		if template.buff_id == buff_id then
+			local local_index = self:_find_local_index(buff_instance)
+
+			if local_index then
+				self:_remove_internally_controlled_buff(local_index)
+
+				return true
+			end
+		end
+	end
+
+	return false
+end
+
 local _external_buff_stacks_to_remove = Script.new_array(MAX_BUFF_STACKS_ARRAY_SIZE)
 
 MinionBuffExtension.remove_externally_controlled_buff_stacks = function (self, buff_stacks_indexes)
@@ -342,7 +363,7 @@ MinionBuffExtension._add_rpc_synced_buff = function (self, template, t, ...)
 			index = index,
 			optional_lerp_value = optional_lerp_value,
 			from_talent = from_talent,
-			owner_unit = owner_unit,
+			owner_unit = owner_unit
 		}
 		local buffs_added_before_game_object_creation = self._buffs_added_before_game_object_creation
 
@@ -404,12 +425,12 @@ MinionBuffExtension._start_fx = function (self, index, template)
 		end
 
 		local node_effects = minion_effects.node_effects
-		local node_effects_priotity = minion_effects.node_effects_priotity
+		local node_effects_priority = minion_effects.node_effects_priority
 
 		if node_effects then
 			local template_name = template.name
 
-			self:_start_node_effects(template_name, node_effects, node_effects_priotity)
+			self:_start_node_effects(template_name, node_effects, node_effects_priority)
 		end
 
 		local material_vector = minion_effects.material_vector
@@ -446,7 +467,7 @@ MinionBuffExtension._stop_fx = function (self, index, template)
 		local material_vector = minion_effects.material_vector
 
 		if material_vector then
-			self:_stop_material_vector_effect(self.unit, material_vector, template)
+			self:_stop_material_vector_effect(self._unit, material_vector, template)
 		end
 
 		if self._is_server then
@@ -483,7 +504,7 @@ MinionBuffExtension._start_material_vector_effect = function (self, unit, materi
 		material_vector_active_effects.effects[buff_template_name] = {
 			priority = priority,
 			name = material_vector_name,
-			value = value,
+			value = value
 		}
 		material_vector_active_effects.ref_count = (material_vector_active_effects.ref_count or 0) + 1
 	end
@@ -494,6 +515,10 @@ MinionBuffExtension._stop_material_vector_effect = function (self, unit, materia
 	local material_vector_name = material_vector.name
 	local active_material_vector_effects = self._active_material_vector_effects
 	local active_effects = active_material_vector_effects[material_vector_name]
+
+	if not active_effects or not active_effects.effects[buff_template_name] then
+		return
+	end
 
 	active_effects.effects[buff_template_name] = nil
 	active_effects.ref_count = (active_effects.ref_count or 0) - 1
@@ -509,12 +534,19 @@ MinionBuffExtension._stop_material_vector_effect = function (self, unit, materia
 		else
 			active_material_vector_effects[material_vector_name] = nil
 		end
+	elseif active_effects.ref_count <= 0 then
+		active_material_vector_effects[material_vector_name] = nil
 	end
 end
 
 MinionBuffExtension._start_existing_effect_for_material_vector = function (self, material_vector_name, buff_template_name)
 	local active_material_vector_effects = self._active_material_vector_effects
 	local active_effects = active_material_vector_effects[material_vector_name]
+
+	if not active_effects then
+		return
+	end
+
 	local target_effect, highest_priority = nil, 0
 
 	for _, effect in pairs(active_effects.effects) do
@@ -551,7 +583,7 @@ MinionBuffExtension._get_material_vector_active_effects = function (self, name)
 	if not active_material_vector_effects[name] then
 		active_material_vector_effects[name] = {
 			ref_count = 0,
-			effects = {},
+			effects = {}
 		}
 	end
 

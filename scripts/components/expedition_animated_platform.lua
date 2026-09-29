@@ -7,7 +7,7 @@ local END_FRAME = 3000
 local CHEST_UNIT_RESOURCES = {
 	"content/environment/artsets/imperial/expeditions/wastes/canyon/props/chests/chest_small_01",
 	"content/environment/artsets/imperial/expeditions/wastes/canyon/props/chests/chest_medium_01",
-	"content/environment/artsets/imperial/expeditions/wastes/canyon/props/chests/chest_large_01",
+	"content/environment/artsets/imperial/expeditions/wastes/canyon/props/chests/chest_large_01"
 }
 
 ExpeditionAnimatedPlatform.init = function (self, unit)
@@ -208,29 +208,29 @@ ExpeditionAnimatedPlatform.component_data = {
 		step = 0.1,
 		ui_name = "Duration",
 		ui_type = "number",
-		value = 10,
+		value = 10
 	},
 	platform_unit_resource = {
 		filter = "unit",
 		preview = false,
 		ui_name = "Platform Unit Resource",
 		ui_type = "resource",
-		value = "",
+		value = ""
 	},
 	inputs = {
 		play = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		pause = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		reset = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return ExpeditionAnimatedPlatform

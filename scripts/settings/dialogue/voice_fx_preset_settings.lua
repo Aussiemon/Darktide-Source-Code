@@ -26,7 +26,7 @@ local voice_fx_preset_settings = {
 	voice_fx_rtpc_rare_genstealer_metal = 20,
 	voice_fx_rtpc_rare_tubes = 20,
 	voice_fx_rtpc_robo_a = 50,
-	voice_fx_rtpc_voice_box_a = 40,
+	voice_fx_rtpc_voice_box_a = 40
 }
 
 return settings("VoiceFxPresetSettings", voice_fx_preset_settings)

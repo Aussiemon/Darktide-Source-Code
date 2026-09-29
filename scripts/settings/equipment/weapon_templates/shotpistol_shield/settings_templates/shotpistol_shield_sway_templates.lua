@@ -34,12 +34,12 @@ sway_templates.default_shotpistol_shield_ads = {
 		max_sway = {
 			pitch = {
 				lerp_basic = 2.5,
-				lerp_perfect = 2.5,
+				lerp_perfect = 2.5
 			},
 			yaw = {
 				lerp_basic = 2.5,
-				lerp_perfect = 2.5,
-			},
+				lerp_perfect = 2.5
+			}
 		},
 		decay = {
 			crouch_transition_grace_time = 0.5,
@@ -47,51 +47,51 @@ sway_templates.default_shotpistol_shield_ads = {
 			shooting = {
 				pitch = {
 					lerp_basic = 0.1,
-					lerp_perfect = 0.25,
+					lerp_perfect = 0.25
 				},
 				yaw = {
 					lerp_basic = 0.1,
-					lerp_perfect = 0.25,
-				},
+					lerp_perfect = 0.25
+				}
 			},
 			idle = {
 				pitch = {
 					lerp_basic = 0.75,
-					lerp_perfect = 1,
+					lerp_perfect = 1
 				},
 				yaw = {
 					lerp_basic = 0.75,
-					lerp_perfect = 1,
-				},
+					lerp_perfect = 1
+				}
 			},
 			player_event = {
 				pitch = {
 					lerp_basic = 0.25,
-					lerp_perfect = 0.5,
+					lerp_perfect = 0.5
 				},
 				yaw = {
 					lerp_basic = 0.25,
-					lerp_perfect = 0.5,
-				},
+					lerp_perfect = 0.5
+				}
 			},
 			enter_alternate_fire_grace_time = {
 				lerp_basic = 0.45,
-				lerp_perfect = 0,
+				lerp_perfect = 0
 			},
 			from_shooting_grace_time = {
 				lerp_basic = 1,
-				lerp_perfect = 0,
-			},
+				lerp_perfect = 0
+			}
 		},
 		continuous_sway = {
 			pitch = {
 				lerp_basic = 0.2,
-				lerp_perfect = 0.025,
+				lerp_perfect = 0.025
 			},
 			yaw = {
 				lerp_basic = 0.25,
-				lerp_perfect = 0.025,
-			},
+				lerp_perfect = 0.025
+			}
 		},
 		immediate_sway = {
 			num_shots_clear_time = 0.5,
@@ -100,70 +100,70 @@ sway_templates.default_shotpistol_shield_ads = {
 					cap = true,
 					pitch = {
 						lerp_basic = 0.25,
-						lerp_perfect = 0,
+						lerp_perfect = 0
 					},
 					yaw = {
 						lerp_basic = 0.25,
-						lerp_perfect = 0,
-					},
-				},
+						lerp_perfect = 0
+					}
+				}
 			},
 			alternate_fire_start = {
 				{
 					cap = true,
 					pitch = {
 						lerp_basic = 0.5,
-						lerp_perfect = 0,
+						lerp_perfect = 0
 					},
 					yaw = {
 						lerp_basic = 0.5,
-						lerp_perfect = 0,
-					},
-				},
+						lerp_perfect = 0
+					}
+				}
 			},
 			damage_hit = {
 				{
 					pitch = {
 						lerp_basic = 0.6,
-						lerp_perfect = 0.1,
+						lerp_perfect = 0.1
 					},
 					yaw = {
 						lerp_basic = 0.6,
-						lerp_perfect = 0.1,
-					},
-				},
+						lerp_perfect = 0.1
+					}
+				}
 			},
 			shooting = {
 				{
 					pitch = {
 						lerp_basic = 0.1,
-						lerp_perfect = 0.04,
+						lerp_perfect = 0.04
 					},
 					yaw = {
 						lerp_basic = 0.1,
-						lerp_perfect = 0.03,
-					},
-				},
-			},
+						lerp_perfect = 0.03
+					}
+				}
+			}
 		},
-		sway_pattern = _default_shotpistol_shield_sway_pattern,
+		sway_pattern = _default_shotpistol_shield_sway_pattern
 	},
 	moving = {
 		intensity = 0.8,
 		rotation_speed = 0.4,
 		inherits = {
 			"default_shotpistol_shield_ads",
-			"still",
+			"still"
 		},
 		continuous_sway = {
 			pitch = {
 				lerp_basic = 0.2,
-				lerp_perfect = 0.025,
+				lerp_perfect = 0.025
 			},
 			yaw = {
 				lerp_basic = 0.25,
-				lerp_perfect = 0.025,
-			},
+				lerp_perfect = 0.025
+			}
 		},
 		decay = {
 			crouch_transition_grace_time = 0.5,
@@ -171,58 +171,58 @@ sway_templates.default_shotpistol_shield_ads = {
 			shooting = {
 				pitch = {
 					lerp_basic = 0.1,
-					lerp_perfect = 0.25,
+					lerp_perfect = 0.25
 				},
 				yaw = {
 					lerp_basic = 0.1,
-					lerp_perfect = 0.25,
-				},
+					lerp_perfect = 0.25
+				}
 			},
 			idle = {
 				pitch = {
 					lerp_basic = 0.75,
-					lerp_perfect = 1,
+					lerp_perfect = 1
 				},
 				yaw = {
 					lerp_basic = 0.75,
-					lerp_perfect = 1,
-				},
+					lerp_perfect = 1
+				}
 			},
 			player_event = {
 				pitch = {
 					lerp_basic = 0.25,
-					lerp_perfect = 0.5,
+					lerp_perfect = 0.5
 				},
 				yaw = {
 					lerp_basic = 0.25,
-					lerp_perfect = 0.5,
-				},
+					lerp_perfect = 0.5
+				}
 			},
 			enter_alternate_fire_grace_time = {
 				lerp_basic = 0.45,
-				lerp_perfect = 0,
+				lerp_perfect = 0
 			},
 			from_shooting_grace_time = {
 				lerp_basic = 1,
-				lerp_perfect = 0,
-			},
-		},
+				lerp_perfect = 0
+			}
+		}
 	},
 	crouch_still = {
 		rotation_speed = 0.5,
 		inherits = {
 			"default_shotpistol_shield_ads",
-			"still",
+			"still"
 		},
 		continuous_sway = {
 			pitch = {
 				lerp_basic = 0.2,
-				lerp_perfect = 0.025,
+				lerp_perfect = 0.025
 			},
 			yaw = {
 				lerp_basic = 0.25,
-				lerp_perfect = 0.025,
-			},
+				lerp_perfect = 0.025
+			}
 		},
 		decay = {
 			crouch_transition_grace_time = 0.5,
@@ -231,54 +231,54 @@ sway_templates.default_shotpistol_shield_ads = {
 			shooting = {
 				pitch = {
 					lerp_basic = 0.1,
-					lerp_perfect = 0.1,
+					lerp_perfect = 0.1
 				},
 				yaw = {
 					lerp_basic = 0.01,
-					lerp_perfect = 0.1,
-				},
+					lerp_perfect = 0.1
+				}
 			},
 			idle = {
 				pitch = {
 					lerp_basic = 1.5,
-					lerp_perfect = 3.5,
+					lerp_perfect = 3.5
 				},
 				yaw = {
 					lerp_basic = 1.5,
-					lerp_perfect = 3.5,
-				},
+					lerp_perfect = 3.5
+				}
 			},
 			player_event = {
 				pitch = {
 					lerp_basic = 0.1,
-					lerp_perfect = 0.1,
+					lerp_perfect = 0.1
 				},
 				yaw = {
 					lerp_basic = 0.1,
-					lerp_perfect = 0.1,
-				},
+					lerp_perfect = 0.1
+				}
 			},
 			from_shooting_grace_time = {
 				lerp_basic = 1,
-				lerp_perfect = 0,
-			},
-		},
+				lerp_perfect = 0
+			}
+		}
 	},
 	crouch_moving = {
 		rotation_speed = 0.85,
 		inherits = {
 			"default_shotpistol_shield_ads",
-			"still",
+			"still"
 		},
 		continuous_sway = {
 			pitch = {
 				lerp_basic = 0.2,
-				lerp_perfect = 0.025,
+				lerp_perfect = 0.025
 			},
 			yaw = {
 				lerp_basic = 0.25,
-				lerp_perfect = 0.025,
-			},
+				lerp_perfect = 0.025
+			}
 		},
 		decay = {
 			crouch_transition_grace_time = 0.5,
@@ -287,42 +287,42 @@ sway_templates.default_shotpistol_shield_ads = {
 			shooting = {
 				pitch = {
 					lerp_basic = 0.1,
-					lerp_perfect = 0.1,
+					lerp_perfect = 0.1
 				},
 				yaw = {
 					lerp_basic = 0.1,
-					lerp_perfect = 0.1,
-				},
+					lerp_perfect = 0.1
+				}
 			},
 			idle = {
 				pitch = {
 					lerp_basic = 1.25,
-					lerp_perfect = 3,
+					lerp_perfect = 3
 				},
 				yaw = {
 					lerp_basic = 1.25,
-					lerp_perfect = 3,
-				},
+					lerp_perfect = 3
+				}
 			},
 			player_event = {
 				pitch = {
 					lerp_basic = 0.1,
-					lerp_perfect = 0.1,
+					lerp_perfect = 0.1
 				},
 				yaw = {
 					lerp_basic = 0.1,
-					lerp_perfect = 0.1,
-				},
+					lerp_perfect = 0.1
+				}
 			},
 			from_shooting_grace_time = {
 				lerp_basic = 1,
-				lerp_perfect = 0,
-			},
-		},
-	},
+				lerp_perfect = 0
+			}
+		}
+	}
 }
 
 return {
 	base_templates = sway_templates,
-	overrides = overrides,
+	overrides = overrides
 }

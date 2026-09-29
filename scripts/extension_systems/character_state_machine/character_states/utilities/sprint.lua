@@ -135,7 +135,7 @@ Sprint.is_in_start_slowdown = function (unit, character_state_component, sprint_
 end
 
 local NO_STAT_BUFFS = {
-	[BuffSettings.stat_buffs.sprint_dodge_reduce_angle_threshold_rad] = 0,
+	[BuffSettings.stat_buffs.sprint_dodge_reduce_angle_threshold_rad] = 0
 }
 
 Sprint.is_sprint_dodging = function (target_unit, attacking_unit, run_away_dodge)

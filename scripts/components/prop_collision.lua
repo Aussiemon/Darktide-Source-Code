@@ -54,34 +54,34 @@ PropCollision.component_data = {
 		value = "Sphere",
 		options_keys = {
 			"Sphere",
-			"Polygon",
+			"Polygon"
 		},
 		options_values = {
 			"sphere",
-			"polygon",
-		},
+			"polygon"
+		}
 	},
 	sphere_radius = {
 		category = "Sphere",
 		ui_name = "Radius",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	polygon_nodes = {
 		category = "Polygon",
 		size = 0,
 		ui_name = "Node Names",
-		ui_type = "text_box_array",
+		ui_type = "text_box_array"
 	},
 	inputs = {
 		update_position = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"PropCollisionExtension",
-	},
+		"PropCollisionExtension"
+	}
 }
 
 return PropCollision

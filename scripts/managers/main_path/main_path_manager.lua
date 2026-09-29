@@ -18,15 +18,18 @@ local MainPathManager = class("MainPathManager")
 
 MainPathManager.init = function (self, world, nav_world, level_seed, main_path_resource_name, path_type, num_sides, is_server, use_nav_point_time_slice)
 	self._is_server = is_server
-	self._path_type = path_type
-	self._path = PATH_TYPES[path_type]:new(world, nav_world, num_sides, is_server, use_nav_point_time_slice)
 	self._world = world
 	self._nav_world = nav_world
 	self._level_seed = level_seed
 	self._num_sides = num_sides
+	self._main_path_resource_name = main_path_resource_name
+
+	self:set_path_type(path_type)
+
+	self._triangle_group_forbidden_volume_types = {}
 	self._group_locations = {}
 
-	self:setup_for_level(main_path_resource_name, use_nav_point_time_slice, false, debug_level_name)
+	self:setup_for_level(main_path_resource_name, use_nav_point_time_slice, debug_level_name)
 end
 
 MainPathManager.setup_for_level = function (self, main_path_resource_name, use_nav_point_time_slice, debug_level_name)
@@ -34,7 +37,9 @@ MainPathManager.setup_for_level = function (self, main_path_resource_name, use_n
 
 	use_nav_point_time_slice = use_nav_point_time_slice ~= false
 
-	if Application.can_get_resource("lua", main_path_resource_name) then
+	local path_data
+
+	if Application.can_get_resource("lua", main_path_resource_name) or path_data then
 		local path_markers, crossroads, main_path_segments, main_path_version = self:_load_main_path_data(main_path_resource_name)
 
 		if not table.is_empty(crossroads) then
@@ -58,7 +63,7 @@ MainPathManager.setup_for_level = function (self, main_path_resource_name, use_n
 		if use_nav_point_time_slice then
 			local spawn_points_time_slice_data = {
 				last_index = 0,
-				ready = false,
+				ready = false
 			}
 
 			self._spawn_points_time_slice_data = spawn_points_time_slice_data
@@ -68,6 +73,19 @@ MainPathManager.setup_for_level = function (self, main_path_resource_name, use_n
 	end
 
 	return false
+end
+
+MainPathManager.set_path_type = function (self, path_type)
+	if path_type == self._path_type then
+		return
+	end
+
+	if self._path then
+		self._path:destroy()
+	end
+
+	self._path_type = path_type
+	self._path = PATH_TYPES[path_type]:new(self._world, self._nav_world, self._num_sides)
 end
 
 MainPathManager.path_type = function (self)
@@ -104,7 +122,7 @@ MainPathManager._calculate_travel_distances = function (self, main_path_segments
 		total_travel_distance = total_travel_distance + Vector3_distance(p1, p2)
 
 		local travel_distances = {
-			total_travel_distance,
+			total_travel_distance
 		}
 		local num_nodes = #nodes
 
@@ -197,6 +215,10 @@ MainPathManager.is_main_path_available = function (self)
 	return self._main_path_version ~= nil
 end
 
+MainPathManager.has_main_path_resource = function (self)
+	return Application.can_get_resource("lua", self._main_path_resource_name)
+end
+
 MainPathManager.is_main_path_ready = function (self)
 	return self._main_path_version ~= nil and (not self._spawn_points_time_slice_data or self._spawn_points_time_slice_data.ready)
 end
@@ -273,6 +295,14 @@ MainPathManager.on_gameplay_post_init = function (self)
 	self:generate_spawn_points()
 end
 
+MainPathManager.register_triangle_group_forbidden_volume_type = function (self, volume_type)
+	self._triangle_group_forbidden_volume_types[volume_type] = true
+end
+
+MainPathManager.unregister_triangle_group_forbidden_volume_type = function (self, volume_type)
+	self._triangle_group_forbidden_volume_types[volume_type] = nil
+end
+
 MainPathManager.generate_spawn_points = function (self)
 	if not self._is_server then
 		return
@@ -288,8 +318,17 @@ MainPathManager.generate_spawn_points = function (self)
 		GwNavTagLayerCostTable.forbid_layer(nav_triangle_group_cost_table, layer_id)
 	end
 
+	for volume_type in pairs(self._triangle_group_forbidden_volume_types) do
+		local layer_ids = nav_mesh_manager:nav_tag_volume_layer_ids_by_volume_type(volume_type)
+
+		for j = 1, #layer_ids do
+			GwNavTagLayerCostTable.forbid_layer(nav_triangle_group_cost_table, layer_ids[j])
+		end
+	end
+
+	local prepend_table, append_table = Managers.state.game_mode:game_mode():get_additional_nav_group_points()
 	local nav_world, triangle_group_distance, triangle_group_cutoff_values = self._nav_world, MainPathSettings.triangle_group_distance, MainPathSettings.triangle_group_cutoff_values
-	local nav_triangle_group, debug_flood_fill_positions, group_to_main_path_index = SpawnPointQueries.generate_nav_triangle_group(nav_world, triangle_group_distance, triangle_group_cutoff_values, nav_triangle_group_cost_table)
+	local nav_triangle_group, debug_flood_fill_positions, group_to_main_path_index = SpawnPointQueries.generate_nav_triangle_group(nav_world, triangle_group_distance, triangle_group_cutoff_values, nav_triangle_group_cost_table, prepend_table, append_table)
 
 	self._nav_triangle_group = nav_triangle_group
 
@@ -322,7 +361,7 @@ MainPathManager.generate_spawn_points = function (self)
 		num_spawn_points_per_triangle = MainPathSettings.num_spawn_points_per_triangle,
 		nav_tag_cost_table = spawn_point_cost_table,
 		seed = self._level_seed,
-		path_type = self._path_type,
+		path_type = self._path_type
 	}
 
 	if self._spawn_points_time_slice_data then
@@ -354,60 +393,63 @@ MainPathManager.update_time_slice_spawn_points = function (self)
 	local time_slice_data = self._spawn_points_time_slice_data
 	local done = SpawnPointQueries.update_time_slice_nav_spawn_points(time_slice_data, self._nav_spawn_points, self._spawn_point_positions)
 
-	if self._path_type == "open" and #self._group_locations > 0 then
-		local previous_spawn_point_positions = self._spawn_point_positions
-		local spawn_point_positions = Script.new_array(#previous_spawn_point_positions)
-		local spawn_point_origin = {}
-		local group_locations = self._group_locations
+	if #self._group_locations > 0 then
+		if self._path_type == "open" then
+			local previous_spawn_point_positions = self._spawn_point_positions
+			local spawn_point_positions = Script.new_array(#previous_spawn_point_positions)
+			local spawn_point_origin = {}
+			local group_locations = self._group_locations
 
-		table.shuffle(group_locations, self._level_seed)
+			table.shuffle(group_locations, self._level_seed)
 
-		for i = 1, #group_locations do
-			local new_step = {}
+			for i = 1, #group_locations do
+				local new_step = {}
 
-			spawn_point_positions[i] = new_step
+				spawn_point_positions[i] = new_step
 
-			for j = 1, 5 do
-				new_step[j] = {}
+				for j = 1, 5 do
+					new_step[j] = {}
+				end
+
+				spawn_point_origin[i] = group_locations[i]:unbox()
 			end
 
-			spawn_point_origin[i] = group_locations[i]:unbox()
-		end
+			for i = 1, #previous_spawn_point_positions do
+				local old_step = previous_spawn_point_positions[i]
 
-		for i = 1, #previous_spawn_point_positions do
-			local old_step = previous_spawn_point_positions[i]
+				for j = 1, #old_step do
+					local old_group = old_step[j]
 
-			for j = 1, #old_step do
-				local old_group = old_step[j]
+					for k = 1, #old_group do
+						local point = old_group[k]:unbox()
+						local closest_l
+						local closest_dist = math.huge
 
-				for k = 1, #old_group do
-					local point = old_group[k]:unbox()
-					local closest_l
-					local closest_dist = math.huge
+						for l = 1, #spawn_point_origin do
+							local origin = spawn_point_origin[l]
+							local distance = math.abs(origin.x - point.x) + math.abs(origin.y - point.y)
 
-					for l = 1, #spawn_point_origin do
-						local origin = spawn_point_origin[l]
-						local distance = math.abs(origin.x - point.x) + math.abs(origin.y - point.y)
-
-						if distance < closest_dist then
-							closest_l = l
-							closest_dist = distance
+							if distance < closest_dist then
+								closest_l = l
+								closest_dist = distance
+							end
 						end
-					end
 
-					if closest_l then
-						local new_step = spawn_point_positions[closest_l]
-						local group_length = 100
-						local group_index = math.min(math.floor(1 + closest_dist / group_length), 5)
-						local group = new_step[group_index]
+						if closest_l then
+							local new_step = spawn_point_positions[closest_l]
+							local group_length = 100
+							local group_index = math.min(math.floor(1 + closest_dist / group_length), 5)
+							local group = new_step[group_index]
 
-						group[#group + 1] = Vector3Box(point)
+							group[#group + 1] = Vector3Box(point)
+						end
 					end
 				end
 			end
+
+			self._spawn_point_positions = spawn_point_positions
 		end
 
-		self._spawn_point_positions = spawn_point_positions
 		self._group_origins = table.create_copy({}, self._group_locations)
 
 		table.clear(self._group_locations)
@@ -440,16 +482,16 @@ MainPathManager.update_time_slice_generate_occluded_points = function (self, opt
 end
 
 MainPathManager.update = function (self, dt, t)
+	if GameParameters.testify then
+		Testify:poll_requests_through_handler(MainPathManagerTestify, self)
+	end
+
 	if self._main_path_version == nil then
 		return
 	end
 
 	if self._nav_spawn_points then
 		self._path:update_progress_on_path(t)
-	end
-
-	if GameParameters.testify then
-		Testify:poll_requests_through_handler(MainPathManagerTestify, self)
 	end
 end
 

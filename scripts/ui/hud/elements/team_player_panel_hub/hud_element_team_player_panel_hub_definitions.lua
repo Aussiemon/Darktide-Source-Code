@@ -19,7 +19,7 @@ local scenegraph_definition = {
 		parent = "screen",
 		vertical_alignment = "top",
 		size = panel_size,
-		position = panel_offset,
+		position = panel_offset
 	},
 	panel_background = {
 		horizontal_alignment = "left",
@@ -29,8 +29,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	player_icon = {
 		horizontal_alignment = "left",
@@ -40,8 +40,8 @@ local scenegraph_definition = {
 		position = {
 			33,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	bar = {
 		horizontal_alignment = "left",
@@ -51,8 +51,8 @@ local scenegraph_definition = {
 		position = {
 			112,
 			36,
-			2,
-		},
+			2
+		}
 	},
 	respawn_timer = {
 		horizontal_alignment = "left",
@@ -62,9 +62,9 @@ local scenegraph_definition = {
 		position = {
 			icon_size[1] + icon_bar_spacing[1] * 2 + bar_size[1],
 			icon_bar_spacing[2],
-			3,
-		},
-	},
+			3
+		}
+	}
 }
 
 local function color_copy(target, source, alpha)
@@ -94,16 +94,16 @@ local widget_definitions = {
 				offset = {
 					0,
 					-bar_size[2] - 12,
-					4,
+					4
 				},
 				default_offset = {
 					0,
 					-bar_size[2] - 12,
-					2,
+					2
 				},
 				size = {
 					panel_size[1],
-					bar_size[2],
+					bar_size[2]
 				},
 				font_type = hud_body_font_settings.font_type,
 				font_size = hud_body_font_settings.font_size,
@@ -114,10 +114,10 @@ local widget_definitions = {
 					200,
 					80,
 					80,
-					80,
-				},
-			},
-		},
+					80
+				}
+			}
+		}
 	}, "bar"),
 	character_title = UIWidget.create_definition({
 		{
@@ -131,11 +131,11 @@ local widget_definitions = {
 				offset = {
 					0,
 					-7,
-					4,
+					4
 				},
 				size = {
 					bar_size[1] * 1.5,
-					bar_size[2],
+					bar_size[2]
 				},
 				font_type = rich_presence_font_settings.font_type,
 				font_size = rich_presence_font_settings.font_size - 2,
@@ -146,10 +146,10 @@ local widget_definitions = {
 					200,
 					80,
 					80,
-					80,
-				},
-			},
-		},
+					80
+				}
+			}
+		}
 	}, "bar"),
 	rich_presence = UIWidget.create_definition({
 		{
@@ -163,11 +163,11 @@ local widget_definitions = {
 				offset = {
 					0,
 					bar_size[2] + 4,
-					4,
+					4
 				},
 				size = {
 					bar_size[1] * 1.5,
-					bar_size[2],
+					bar_size[2]
 				},
 				font_type = rich_presence_font_settings.font_type,
 				font_size = rich_presence_font_settings.font_size - 2,
@@ -178,10 +178,10 @@ local widget_definitions = {
 					200,
 					80,
 					80,
-					80,
-				},
-			},
-		},
+					80
+				}
+			}
+		}
 	}, "bar"),
 	voice_indicator = UIWidget.create_definition({
 		{
@@ -193,16 +193,16 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					32,
-					32,
+					32
 				},
 				offset = {
 					-8,
 					0,
-					6,
+					6
 				},
-				color = UIHudSettings.color_tint_main_1,
-			},
-		},
+				color = UIHudSettings.color_tint_main_1
+			}
+		}
 	}, "panel_background"),
 	panel_background = UIWidget.create_definition({
 		{
@@ -215,10 +215,10 @@ local widget_definitions = {
 				offset = {
 					100,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "panel_background"),
 	player_icon = UIWidget.create_definition({
 		{
@@ -231,9 +231,9 @@ local widget_definitions = {
 					columns = 1,
 					grid_index = 1,
 					rows = 1,
-					use_placeholder_texture = 1,
-				},
-			},
+					use_placeholder_texture = 1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -247,26 +247,26 @@ local widget_definitions = {
 				offset = {
 					-insignia_icon_size[1],
 					0,
-					1,
+					1
 				},
 				material_values = {
 					columns = 1,
 					grid_index = 1,
 					rows = 1,
-					use_placeholder_texture = 1,
+					use_placeholder_texture = 1
 				},
 				color = {
 					0,
 					255,
 					255,
-					255,
-				},
-			},
-		},
-	}, "player_icon"),
+					255
+				}
+			}
+		}
+	}, "player_icon")
 }
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

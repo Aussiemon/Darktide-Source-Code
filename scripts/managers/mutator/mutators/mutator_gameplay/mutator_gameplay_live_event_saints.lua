@@ -9,17 +9,17 @@ local MutatorGameplayLiveEventSaints = class("MutatorGameplayLiveEventSaints", "
 local saint_red_data = {
 	buff = "live_event_saints_buff_saint_red",
 	name = "loc_saints_saint_name_red",
-	color = Color.citadel_jokaero_orange(255, true),
+	color = Color.citadel_jokaero_orange(255, true)
 }
 local saint_blue_data = {
 	buff = "live_event_saints_buff_saint_blue",
 	name = "loc_saints_saint_name_blue",
-	color = Color.citadel_guilliman_blue(255, true),
+	color = Color.citadel_guilliman_blue(255, true)
 }
 local particles = {
 	player_screen_saints_revive = "content/fx/particles/player_buffs/player_screen_saints_revive",
 	saints_relice_01 = "content/fx/particles/player_buffs/saints_relic_01",
-	saints_revive_01 = "content/fx/particles/player_buffs/saints_revive_01",
+	saints_revive_01 = "content/fx/particles/player_buffs/saints_revive_01"
 }
 local backstory_to_saint_mapping = {
 	option_1 = saint_red_data,
@@ -37,7 +37,7 @@ local backstory_to_saint_mapping = {
 	option_13 = saint_red_data,
 	option_14 = saint_blue_data,
 	option_15 = saint_red_data,
-	option_16 = saint_blue_data,
+	option_16 = saint_blue_data
 }
 
 local function _saint_for_crime(player)
@@ -323,19 +323,19 @@ MutatorGameplayLiveEventSaints.get_side_notification_data_formatter = function (
 		local text = Localize(text_localization_key, true, {
 			amount = amount,
 			player_name = player_name,
-			amount_value = data.amount_value,
+			amount_value = data.amount_value
 		})
 		local enter_sound_event = notification_settings.notification_sound_event
 		local texts = {}
 
 		texts[#texts + 1] = reason and {
-			display_name = reason,
+			display_name = reason
 		}
 		texts[#texts + 1] = {
-			display_name = text,
+			display_name = text
 		}
 		texts[#texts + 1] = {
-			display_name = for_saint,
+			display_name = for_saint
 		}
 
 		return {
@@ -343,7 +343,7 @@ MutatorGameplayLiveEventSaints.get_side_notification_data_formatter = function (
 			texts = texts,
 			icon = icon_texture_large,
 			color = Color.terminal_grid_background(100, true),
-			enter_sound_event = enter_sound_event,
+			enter_sound_event = enter_sound_event
 		}
 	end
 end

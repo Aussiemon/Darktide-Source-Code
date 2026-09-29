@@ -5,5 +5,5 @@ local counter_metrics = table.enum("missed_frame_time", "lagging_frames", "laggi
 
 return {
 	gauge = gauge_metrics,
-	counter = counter_metrics,
+	counter = counter_metrics
 }

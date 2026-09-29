@@ -14,13 +14,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	indicator = {
 		horizontal_alignment = "center",
@@ -30,9 +30,9 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local widget_definitions = {}
 local indicator = UIWidget.create_definition({
@@ -44,10 +44,10 @@ local indicator = UIWidget.create_definition({
 			angle = 0,
 			pivot = {
 				size[1] * 0.5,
-				center_distance,
+				center_distance
 			},
-			color = UIHudSettings.color_tint_alert_3,
-		},
+			color = UIHudSettings.color_tint_alert_3
+		}
 	},
 	{
 		pass_type = "rotated_texture",
@@ -57,20 +57,20 @@ local indicator = UIWidget.create_definition({
 			angle = 0,
 			pivot = {
 				size[1] * 0.5,
-				center_distance,
+				center_distance
 			},
 			color = UIHudSettings.color_tint_alert_1,
 			offset = {
 				0,
 				0,
-				1,
-			},
-		},
-	},
+				1
+			}
+		}
+	}
 }, "indicator")
 
 return {
 	indicator_definition = indicator,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

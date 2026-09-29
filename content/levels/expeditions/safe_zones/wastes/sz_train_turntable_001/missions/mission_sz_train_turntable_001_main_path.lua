@@ -11,8 +11,8 @@ local path_markers = {
 		position = {
 			0,
 			-14,
-			0,
-		},
+			0
+		}
 	},
 	{
 		crossroads = "",
@@ -24,9 +24,9 @@ local path_markers = {
 		position = {
 			0,
 			14,
-			0,
-		},
-	},
+			0
+		}
+	}
 }
 local main_path_segments = {
 	{
@@ -35,15 +35,15 @@ local main_path_segments = {
 			{
 				0,
 				-14,
-				0,
+				0
 			},
 			{
 				0,
 				14,
-				0,
-			},
-		},
-	},
+				0
+			}
+		}
+	}
 }
 local crossroads = {}
 local main_path_version = "1.00"
@@ -52,5 +52,5 @@ return {
 	version = main_path_version,
 	path_markers = path_markers,
 	main_path_segments = main_path_segments,
-	crossroads = crossroads,
+	crossroads = crossroads
 }

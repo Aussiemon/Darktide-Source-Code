@@ -13,7 +13,7 @@ local expedition_disallowed_weapon_templates = table.set({
 	"expedition_grenade_valkyrie_hover_pocketable",
 	"expedition_explosive_luggable_01",
 	"expeditions_big_grenade",
-	"deployable_force_field_pocketable",
+	"deployable_force_field_pocketable"
 })
 local wield_info_passives_templates = {
 	{
@@ -25,8 +25,8 @@ local wield_info_passives_templates = {
 				icon_height = 84,
 				icon_width = 84,
 				input_action = "wield_5",
-				icon_color = Color.terminal_text_body(255, true),
-			},
+				icon_color = Color.terminal_text_body(255, true)
+			}
 		},
 		validation_function = function (wielded_slot_id, item, current_action, current_action_name, player)
 			local game_mode_manager = Managers.state.game_mode
@@ -58,7 +58,7 @@ local wield_info_passives_templates = {
 			end
 
 			return false
-		end,
+		end
 	},
 	{
 		name = "in_expedition_safe_zone",
@@ -69,8 +69,8 @@ local wield_info_passives_templates = {
 				icon_height = 90,
 				icon_width = 90,
 				text_color = Color.ui_interaction_critical(255, true),
-				icon_color = Color.ui_interaction_critical(255, true),
-			},
+				icon_color = Color.ui_interaction_critical(255, true)
+			}
 		},
 		validation_function = function (wielded_slot_id, item, current_action, current_action_name, player)
 			local game_mode_manager = Managers.state.game_mode
@@ -101,7 +101,7 @@ local wield_info_passives_templates = {
 			end
 
 			return false
-		end,
+		end
 	},
 	{
 		name = "wield_scanner",
@@ -112,8 +112,8 @@ local wield_info_passives_templates = {
 				icon_height = 84,
 				icon_width = 84,
 				input_action = "wield_5",
-				icon_color = Color.terminal_text_body(255, true),
-			},
+				icon_color = Color.terminal_text_body(255, true)
+			}
 		},
 		validation_function = function (wielded_slot_id, item, current_action, current_action_name, player)
 			local player_unit = player.player_unit
@@ -151,8 +151,8 @@ local wield_info_passives_templates = {
 			end
 
 			return true
-		end,
-	},
+		end
+	}
 }
 
 return wield_info_passives_templates

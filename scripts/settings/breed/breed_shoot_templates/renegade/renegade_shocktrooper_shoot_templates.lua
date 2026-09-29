@@ -19,11 +19,11 @@ local renegade_shocktrooper_default = {
 	damage_falloff = {
 		falloff_range = 15,
 		max_power_reduction = 0.6,
-		max_range = 8,
-	},
+		max_range = 8
+	}
 }
 local shoot_templates = {
-	renegade_shocktrooper_default = renegade_shocktrooper_default,
+	renegade_shocktrooper_default = renegade_shocktrooper_default
 }
 
 return shoot_templates

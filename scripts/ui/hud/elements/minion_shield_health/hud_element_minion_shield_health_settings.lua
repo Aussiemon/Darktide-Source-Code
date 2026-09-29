@@ -7,8 +7,8 @@ local hud_element_minion_shield_health_settings = {
 			values = {
 				icon_01 = true,
 				icon_03 = true,
-				icon_03_sub_icon_01 = true,
-			},
+				icon_03_sub_icon_01 = true
+			}
 		},
 		{
 			health_value = 50,
@@ -16,8 +16,8 @@ local hud_element_minion_shield_health_settings = {
 				icon_01 = true,
 				icon_03 = true,
 				icon_03_sub_icon_01 = true,
-				icon_03_sub_icon_02 = true,
-			},
+				icon_03_sub_icon_02 = true
+			}
 		},
 		{
 			health_value = 75,
@@ -26,8 +26,8 @@ local hud_element_minion_shield_health_settings = {
 				icon_01_sub_icon_01 = true,
 				icon_03 = true,
 				icon_03_sub_icon_01 = true,
-				icon_03_sub_icon_02 = true,
-			},
+				icon_03_sub_icon_02 = true
+			}
 		},
 		{
 			health_value = 100,
@@ -37,10 +37,10 @@ local hud_element_minion_shield_health_settings = {
 				icon_01_sub_icon_02 = true,
 				icon_03 = true,
 				icon_03_sub_icon_01 = true,
-				icon_03_sub_icon_02 = true,
-			},
-		},
-	},
+				icon_03_sub_icon_02 = true
+			}
+		}
+	}
 }
 
 return settings("HudElementMinionShieldHealthSettings", hud_element_minion_shield_health_settings)

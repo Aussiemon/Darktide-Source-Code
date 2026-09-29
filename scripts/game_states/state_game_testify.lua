@@ -2,9 +2,9 @@
 
 local BotSpawning = require("scripts/managers/bot/bot_spawning")
 local Breeds = require("scripts/settings/breed/breeds")
+local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
 local MissionBuffsAllowedBuffs = require("scripts/managers/mission_buffs/mission_buffs_allowed_buffs")
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
-local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
 local MasterItems = require("scripts/backend/master_items")
 local MissionObjectives = require("scripts/settings/mission_objective/mission_objective_templates")
 local Missions = require("scripts/settings/mission/mission_templates")
@@ -26,7 +26,7 @@ local function retrieve_items_for_archetype(archetype, filtered_slots, workflow_
 	local WORKFLOW_STATES = {
 		"SHIPPABLE",
 		"RELEASABLE",
-		"FUNCTIONAL",
+		"FUNCTIONAL"
 	}
 
 	workflow_states = workflow_states and workflow_states or WORKFLOW_STATES
@@ -50,13 +50,13 @@ local function retrieve_items_for_archetype(archetype, filtered_slots, workflow_
 			end
 
 			local is_item_stripped = true
-			local strip_tags_table = Application.get_strip_tags_table()
+			local feature_flags_table = Application.get_feature_flags_table()
 
 			if table.size(item.feature_flags) == 0 then
 				is_item_stripped = false
 			else
 				for _, feature_flag in pairs(item.feature_flags) do
-					if strip_tags_table[feature_flag] == true then
+					if feature_flags_table[feature_flag] == true then
 						is_item_stripped = false
 
 						break
@@ -128,7 +128,7 @@ local StateGameTestify = {
 			"slot_gear_head",
 			"slot_gear_lowerbody",
 			"slot_gear_upperbody",
-			"slot_gear_extra_cosmetic",
+			"slot_gear_extra_cosmetic"
 		}
 		local gears = retrieve_items_for_archetype(archetype, gears_slots, workflow_states)
 
@@ -140,7 +140,7 @@ local StateGameTestify = {
 		end
 
 		local gears_slots = {
-			slot_name,
+			slot_name
 		}
 		local gears = retrieve_items_for_archetype(archetype, gears_slots, workflow_states)
 
@@ -227,7 +227,7 @@ local StateGameTestify = {
 
 		local weapon_slots = {
 			"slot_primary",
-			"slot_secondary",
+			"slot_secondary"
 		}
 		local weapons = retrieve_items_for_archetype(archetype, weapon_slots)
 
@@ -296,7 +296,7 @@ local StateGameTestify = {
 		local game_mode_name = mission_settings.game_mode_name
 		local game_mode_settings = GameModeSettings[game_mode_name]
 
-		if game_mode_settings.host_singleplay then
+		if game_mode_settings.host_singleplay or mission_settings.host_singleplay then
 			local multiplayer_session_manager = Managers.multiplayer_session
 
 			multiplayer_session_manager:reset("Hosting singleplayer session from Testify")
@@ -481,7 +481,7 @@ local StateGameTestify = {
 		local unit = world_unit_by_name(world, unit_name)
 
 		return unit
-	end,
+	end
 }
 
 return StateGameTestify

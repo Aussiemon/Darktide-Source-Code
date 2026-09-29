@@ -21,7 +21,7 @@ InputHoldTracker.start_tracking = function (self, action_name, time_completed, c
 		time_held = 0,
 		action_name = action_name,
 		time_completed = time_completed,
-		cb_completed = cb_completed,
+		cb_completed = cb_completed
 	}
 
 	return id

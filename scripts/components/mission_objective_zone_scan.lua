@@ -46,22 +46,22 @@ MissionObjectiveZoneScan.component_data = {
 		decimals = 0,
 		ui_name = "Amount of scannable objects",
 		ui_type = "number",
-		value = 3,
+		value = 3
 	},
 	item_to_equip = {
 		filter = "item",
 		ui_name = "Item to Equip (scanner, decoder...)",
 		ui_type = "resource",
-		value = "",
+		value = ""
 	},
 	return_to_skull = {
 		ui_name = "Return to servo skull",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	extensions = {
-		"MissionObjectiveZoneScanExtension",
-	},
+		"MissionObjectiveZoneScanExtension"
+	}
 }
 
 return MissionObjectiveZoneScan

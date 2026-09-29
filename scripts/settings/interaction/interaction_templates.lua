@@ -13,7 +13,7 @@ local interaction_templates = {
 		start_anim_event = "arms_down",
 		start_anim_event_3p = "interaction_revive",
 		stop_anim_event = "arms_down",
-		stop_anim_event_3p = "interaction_end",
+		stop_anim_event_3p = "interaction_end"
 	},
 	ammunition = {
 		action_text = "loc_action_interaction_pickup",
@@ -22,7 +22,7 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/ammunition",
 		interaction_priority = 1,
 		taggable = true,
-		ui_interaction_type = "pickup",
+		ui_interaction_type = "pickup"
 	},
 	chest = {
 		action_text = "loc_action_interaction_open",
@@ -31,7 +31,7 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/default",
 		interaction_priority = 1,
 		taggable = true,
-		ui_interaction_type = "default",
+		ui_interaction_type = "default"
 	},
 	decoding = {
 		action_text = "loc_action_interaction_decode",
@@ -39,7 +39,7 @@ local interaction_templates = {
 		interaction_class_name = "decoding",
 		interaction_icon = "content/ui/materials/hud/interactions/icons/objective_secondary",
 		interaction_priority = 1,
-		ui_interaction_type = "mission",
+		ui_interaction_type = "mission"
 	},
 	door_control_panel = {
 		action_text = "loc_action_interaction_use",
@@ -48,7 +48,7 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/default",
 		interaction_priority = 1,
 		taggable = true,
-		ui_interaction_type = "default",
+		ui_interaction_type = "default"
 	},
 	setup_decoding = {
 		action_text = "loc_action_interaction_plant",
@@ -60,7 +60,7 @@ local interaction_templates = {
 		start_anim_event = "servo_start",
 		stop_anim_event = "servo_finished",
 		ui_interaction_type = "mission",
-		wield_slot = "slot_device",
+		wield_slot = "slot_device"
 	},
 	gamemode_expeditions = {
 		action_text = "loc_action_interaction_view",
@@ -70,7 +70,7 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/expeditions",
 		interaction_priority = 1,
 		ui_interaction_type = "point_of_interest",
-		ui_view_name = "expedition_view",
+		ui_view_name = "expedition_view"
 	},
 	gamemode_havoc = {
 		action_text = "loc_action_interaction_view",
@@ -80,7 +80,7 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/havoc",
 		interaction_priority = 1,
 		ui_interaction_type = "point_of_interest",
-		ui_view_name = "havoc_background_view",
+		ui_view_name = "havoc_background_view"
 	},
 	grenade = {
 		action_text = "loc_action_interaction_pickup",
@@ -89,7 +89,7 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/grenade",
 		interaction_priority = 1,
 		taggable = true,
-		ui_interaction_type = "pickup",
+		ui_interaction_type = "pickup"
 	},
 	health = {
 		action_text = "loc_action_interaction_use",
@@ -98,7 +98,17 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/respawn",
 		interaction_priority = 1,
 		taggable = true,
-		ui_interaction_type = "pickup",
+		ui_interaction_type = "pickup"
+	},
+	deployable_marker = {
+		action_text = "loc_action_interaction_use",
+		description = "loc_pickup_deployable_medical_crate_01",
+		duration = 0,
+		interaction_class_name = "deployable_marker",
+		interaction_icon = "content/ui/materials/hud/interactions/icons/pocketable_medkit",
+		interaction_priority = 1,
+		taggable = true,
+		ui_interaction_type = "pickup"
 	},
 	health_station = {
 		action_text = "loc_action_interaction_use",
@@ -111,7 +121,7 @@ local interaction_templates = {
 		stop_anim_event = "arms_down",
 		stop_anim_event_3p = "interaction_end",
 		taggable = true,
-		ui_interaction_type = "point_of_interest",
+		ui_interaction_type = "point_of_interest"
 	},
 	expedition_loot_converter = {
 		action_text = "loc_action_interaction_use",
@@ -121,7 +131,7 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/default",
 		interaction_priority = 1,
 		taggable = true,
-		ui_interaction_type = "point_of_interest",
+		ui_interaction_type = "point_of_interest"
 	},
 	luggable = {
 		action_text = "loc_action_interaction_pickup",
@@ -130,7 +140,7 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/default",
 		interaction_priority = 1,
 		taggable = true,
-		ui_interaction_type = "pickup",
+		ui_interaction_type = "pickup"
 	},
 	luggable_socket = {
 		action_text = "loc_action_interaction_insert",
@@ -138,7 +148,7 @@ local interaction_templates = {
 		interaction_class_name = "luggable_socket",
 		interaction_icon = "content/ui/materials/hud/interactions/icons/default",
 		interaction_priority = 1,
-		ui_interaction_type = "pickup",
+		ui_interaction_type = "pickup"
 	},
 	mission_board = {
 		action_text = "loc_action_interaction_view",
@@ -148,7 +158,7 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/mission_board",
 		interaction_priority = 1,
 		ui_interaction_type = "point_of_interest",
-		ui_view_name = "mission_board_view",
+		ui_view_name = "mission_board_view"
 	},
 	crafting = {
 		action_text = "loc_action_interaction_view",
@@ -158,7 +168,7 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/forge",
 		interaction_priority = 1,
 		ui_interaction_type = "point_of_interest",
-		ui_view_name = "crafting_view",
+		ui_view_name = "crafting_view"
 	},
 	penances = {
 		action_text = "loc_action_interaction_view",
@@ -168,7 +178,7 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/penances",
 		interaction_priority = 1,
 		ui_interaction_type = "point_of_interest",
-		ui_view_name = "penance_overview_view",
+		ui_view_name = "penance_overview_view"
 	},
 	body_shop = {
 		action_text = "loc_action_interaction_view",
@@ -178,7 +188,7 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/barber",
 		interaction_priority = 1,
 		ui_interaction_type = "point_of_interest",
-		ui_view_name = "barber_vendor_background_view",
+		ui_view_name = "barber_vendor_background_view"
 	},
 	vendor = {
 		action_text = "loc_action_interaction_view",
@@ -188,7 +198,7 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/credits_store",
 		interaction_priority = 1,
 		ui_interaction_type = "point_of_interest",
-		ui_view_name = "credits_vendor_background_view",
+		ui_view_name = "credits_vendor_background_view"
 	},
 	marks_vendor = {
 		action_text = "loc_action_interaction_view",
@@ -198,7 +208,7 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/contracts",
 		interaction_priority = 1,
 		ui_interaction_type = "point_of_interest",
-		ui_view_name = "marks_vendor_view",
+		ui_view_name = "marks_vendor_view"
 	},
 	premium_vendor = {
 		action_text = "loc_action_interaction_view",
@@ -208,7 +218,7 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/premium_store",
 		interaction_priority = 1,
 		ui_interaction_type = "point_of_interest",
-		ui_view_name = "store_view",
+		ui_view_name = "store_view"
 	},
 	cosmetics_vendor = {
 		action_text = "loc_action_interaction_view",
@@ -218,7 +228,7 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/cosmetics_store",
 		interaction_priority = 1,
 		ui_interaction_type = "point_of_interest",
-		ui_view_name = "cosmetics_vendor_background_view",
+		ui_view_name = "cosmetics_vendor_background_view"
 	},
 	training_ground = {
 		action_text = "loc_action_interaction_view",
@@ -228,7 +238,7 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/training_grounds",
 		interaction_priority = 1,
 		ui_interaction_type = "point_of_interest",
-		ui_view_name = "training_grounds_view",
+		ui_view_name = "training_grounds_view"
 	},
 	contracts = {
 		action_text = "loc_action_interaction_view",
@@ -238,7 +248,7 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/contracts",
 		interaction_priority = 1,
 		ui_interaction_type = "point_of_interest",
-		ui_view_name = "contracts_background_view",
+		ui_view_name = "contracts_background_view"
 	},
 	moveable_platform = {
 		action_text = "loc_action_interaction_press",
@@ -246,7 +256,7 @@ local interaction_templates = {
 		interaction_class_name = "moveable_platform",
 		interaction_icon = "content/ui/materials/hud/interactions/icons/default",
 		interaction_priority = 1,
-		ui_interaction_type = "default",
+		ui_interaction_type = "default"
 	},
 	pocketable = {
 		action_text = "loc_action_interaction_pickup",
@@ -255,7 +265,7 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/pocketable_default",
 		interaction_priority = 1,
 		taggable = true,
-		ui_interaction_type = "pickup",
+		ui_interaction_type = "pickup"
 	},
 	pull_up = {
 		action_text = "loc_action_interaction_help",
@@ -274,7 +284,7 @@ local interaction_templates = {
 		breed_anim_events_3p = {
 			cryptic = "interaction_revive_human",
 			human = "interaction_revive_human",
-			ogryn = "interaction_revive_ogryn",
+			ogryn = "interaction_revive_ogryn"
 		},
 		start_anim_event_func = function (template, interactee_unit, interactor_unit)
 			local interactee_unit_data_extension = ScriptUnit.extension(interactee_unit, "unit_data_system")
@@ -283,7 +293,7 @@ local interaction_templates = {
 			local anim_event_3p = template.breed_anim_events_3p[breed_name]
 
 			return "arms_down", anim_event_3p
-		end,
+		end
 	},
 	remove_net = {
 		action_text = "loc_action_interaction_help",
@@ -303,7 +313,7 @@ local interaction_templates = {
 		breed_anim_events_3p = {
 			cryptic = "interaction_revive_human",
 			human = "interaction_revive_human",
-			ogryn = "interaction_revive_ogryn",
+			ogryn = "interaction_revive_ogryn"
 		},
 		start_anim_event_func = function (template, interactee_unit, interactor_unit)
 			local interactee_unit_data_extension = ScriptUnit.extension(interactee_unit, "unit_data_system")
@@ -312,7 +322,7 @@ local interaction_templates = {
 			local anim_event_3p = template.breed_anim_events_3p[breed_name]
 
 			return "arms_down", anim_event_3p
-		end,
+		end
 	},
 	revive = {
 		action_text = "loc_action_interaction_revive",
@@ -332,7 +342,7 @@ local interaction_templates = {
 		breed_anim_events_3p = {
 			cryptic = "interaction_revive_human",
 			human = "interaction_revive_human",
-			ogryn = "interaction_revive_ogryn",
+			ogryn = "interaction_revive_ogryn"
 		},
 		start_anim_event_func = function (template, interactee_unit, interactor_unit)
 			local interactee_unit_data_extension = ScriptUnit.extension(interactee_unit, "unit_data_system")
@@ -341,7 +351,7 @@ local interaction_templates = {
 			local anim_event_3p = template.breed_anim_events_3p[breed_name]
 
 			return "arms_down", anim_event_3p
-		end,
+		end
 	},
 	rescue = {
 		action_text = "loc_action_interaction_rescue",
@@ -361,7 +371,7 @@ local interaction_templates = {
 		breed_anim_events_3p = {
 			cryptic = "interaction_revive_human",
 			human = "interaction_revive_human",
-			ogryn = "interaction_revive_ogryn",
+			ogryn = "interaction_revive_ogryn"
 		},
 		start_anim_event_func = function (template, interactee_unit, interactor_unit)
 			local interactee_unit_data_extension = ScriptUnit.extension(interactee_unit, "unit_data_system")
@@ -370,7 +380,7 @@ local interaction_templates = {
 			local anim_event_3p = template.breed_anim_events_3p[breed_name]
 
 			return "arms_down", anim_event_3p
-		end,
+		end
 	},
 	scanning = {
 		action_text = "loc_scanning",
@@ -384,7 +394,7 @@ local interaction_templates = {
 		stop_anim_event = "scan_end",
 		ui_interaction_type = "mission",
 		wield_slot = "slot_device",
-		wwise_player_state = "auspex_scanner",
+		wwise_player_state = "auspex_scanner"
 	},
 	servo_skull = {
 		action_text = "loc_interactable_servo_skull_scanner_continue",
@@ -398,7 +408,7 @@ local interaction_templates = {
 		start_anim_event_3p = "interaction_revive",
 		stop_anim_event = "arms_down",
 		stop_anim_event_3p = "interaction_end",
-		ui_interaction_type = "mission",
+		ui_interaction_type = "mission"
 	},
 	servo_skull_activator = {
 		action_text = "loc_interactable_servo_skull_scanner_deploy",
@@ -410,7 +420,7 @@ local interaction_templates = {
 		start_anim_event_3p = "interaction_revive",
 		stop_anim_event_3p = "interaction_end",
 		ui_interaction_type = "mission",
-		wield_slot = "slot_device",
+		wield_slot = "slot_device"
 	},
 	setup_breach_charge = {
 		action_text = "loc_action_interaction_plant",
@@ -422,7 +432,7 @@ local interaction_templates = {
 		start_anim_event = "deploy",
 		stop_anim_event = "action_finished",
 		ui_interaction_type = "mission",
-		wield_slot = "slot_device",
+		wield_slot = "slot_device"
 	},
 	pickup = {
 		action_text = "loc_action_interaction_pickup",
@@ -431,7 +441,7 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/default",
 		interaction_priority = 1,
 		taggable = true,
-		ui_interaction_type = "pickup",
+		ui_interaction_type = "pickup"
 	},
 	side_mission = {
 		action_text = "loc_action_interaction_pickup",
@@ -439,7 +449,7 @@ local interaction_templates = {
 		interaction_class_name = "pickup",
 		interaction_icon = "content/ui/materials/hud/interactions/icons/objective_side",
 		interaction_priority = 1,
-		ui_interaction_type = "pickup",
+		ui_interaction_type = "pickup"
 	},
 	expeditions_loot = {
 		action_text = "loc_action_interaction_pickup",
@@ -447,7 +457,7 @@ local interaction_templates = {
 		interaction_class_name = "pickup",
 		interaction_icon = "content/ui/materials/hud/interactions/icons/expeditions_loot",
 		interaction_priority = 1,
-		ui_interaction_type = "pickup",
+		ui_interaction_type = "pickup"
 	},
 	expeditions_currency = {
 		action_text = "loc_action_interaction_pickup",
@@ -455,7 +465,7 @@ local interaction_templates = {
 		interaction_class_name = "pickup",
 		interaction_icon = "content/ui/materials/hud/interactions/icons/expeditions_salvage",
 		interaction_priority = 1,
-		ui_interaction_type = "pickup",
+		ui_interaction_type = "pickup"
 	},
 	forge_material = {
 		action_text = "loc_action_interaction_pickup",
@@ -463,7 +473,7 @@ local interaction_templates = {
 		interaction_class_name = "pickup",
 		interaction_icon = "content/ui/materials/hud/interactions/icons/environment_generic",
 		interaction_priority = 1,
-		ui_interaction_type = "pickup",
+		ui_interaction_type = "pickup"
 	},
 	objective_pickup = {
 		action_text = "loc_action_interaction_pickup",
@@ -471,7 +481,7 @@ local interaction_templates = {
 		interaction_class_name = "pickup",
 		interaction_icon = "content/ui/materials/hud/interactions/icons/objective_secondary",
 		interaction_priority = 1,
-		ui_interaction_type = "pickup",
+		ui_interaction_type = "pickup"
 	},
 	objective_pickup_hold = {
 		action_text = "loc_action_interaction_pickup",
@@ -483,7 +493,7 @@ local interaction_templates = {
 		start_anim_event_3p = "interaction_revive",
 		stop_anim_event = "arms_down",
 		stop_anim_event_3p = "interaction_end",
-		ui_interaction_type = "pickup",
+		ui_interaction_type = "pickup"
 	},
 	objective_pickup_hidden_hold = {
 		action_text = "loc_action_interaction_pickup",
@@ -495,7 +505,7 @@ local interaction_templates = {
 		start_anim_event_3p = "interaction_revive",
 		stop_anim_event = "arms_down",
 		stop_anim_event_3p = "interaction_end",
-		ui_interaction_type = "pickup_hidden",
+		ui_interaction_type = "pickup_hidden"
 	},
 	equip_auspex = {
 		action_text = "loc_action_interaction_pickup",
@@ -503,7 +513,7 @@ local interaction_templates = {
 		interaction_class_name = "equip_auspex",
 		interaction_icon = "content/ui/materials/hud/interactions/icons/environment_generic",
 		interaction_priority = 1,
-		ui_interaction_type = "pickup",
+		ui_interaction_type = "pickup"
 	},
 	scripted_scenario = {
 		action_text = "loc_action_interaction_view",
@@ -512,7 +522,7 @@ local interaction_templates = {
 		interaction_class_name = "scripted_scenario",
 		interaction_icon = "content/ui/materials/hud/interactions/icons/environment_generic",
 		interaction_priority = 1,
-		ui_interaction_type = "point_of_interest",
+		ui_interaction_type = "point_of_interest"
 	},
 	player_hub_inspect = {
 		action_text = "loc_lobby_entry_inspect",
@@ -521,7 +531,7 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/default",
 		interaction_input = "interact_inspect_pressed",
 		interaction_priority = 2,
-		ui_interaction_type = "player_interaction",
+		ui_interaction_type = "player_interaction"
 	},
 	companion_hub_interact = {
 		action_text = "loc_companion_hub_interaction_pet",
@@ -530,7 +540,7 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/default",
 		interaction_input = "interact_inspect_pressed",
 		interaction_priority = 2,
-		ui_interaction_type = "player_interaction",
+		ui_interaction_type = "player_interaction"
 	},
 	penance_collectible = {
 		action_text = "loc_action_interaction_pickup",
@@ -540,7 +550,7 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/default",
 		interaction_priority = 1,
 		taggable = true,
-		ui_interaction_type = "pickup",
+		ui_interaction_type = "pickup"
 	},
 	tainted_skull = {
 		action_text = "loc_action_interaction_tainted_skull",
@@ -555,7 +565,7 @@ local interaction_templates = {
 		stop_anim_event = "arms_down",
 		stop_anim_event_3p = "interaction_end",
 		taggable = false,
-		ui_interaction_type = "pickup",
+		ui_interaction_type = "pickup"
 	},
 	stolen_rations = {
 		action_text = "loc_action_interaction_stolen_rations_recover",
@@ -565,7 +575,7 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/default",
 		interaction_priority = 1,
 		taggable = false,
-		ui_interaction_type = "pickup",
+		ui_interaction_type = "pickup"
 	},
 	saints_pickup = {
 		action_text = "loc_action_interaction_pickup",
@@ -574,7 +584,7 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/default",
 		interaction_priority = 1,
 		taggable = false,
-		ui_interaction_type = "pickup",
+		ui_interaction_type = "pickup"
 	},
 	leftover_pickup = {
 		action_text = "loc_action_interaction_pickup",
@@ -583,8 +593,8 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/default",
 		interaction_priority = 1,
 		taggable = false,
-		ui_interaction_type = "pickup",
-	},
+		ui_interaction_type = "pickup"
+	}
 }
 
 for interaction_type, template in pairs(interaction_templates) do

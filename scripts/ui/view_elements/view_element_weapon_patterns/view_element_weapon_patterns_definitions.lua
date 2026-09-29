@@ -9,8 +9,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	pivot = {
 		horizontal_alignment = "left",
@@ -18,14 +18,14 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			10,
-		},
-	},
+			10
+		}
+	}
 }
 local widget_definitions = {
 	grid_background = UIWidget.create_definition({
@@ -36,15 +36,15 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					-4,
-					0,
+					0
 				},
 				color = {
 					100,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -55,20 +55,20 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					16,
-					20,
+					20
 				},
 				color = {
 					100,
 					0,
 					0,
-					0,
-				},
-			},
-		},
-	}, "grid_background"),
+					0
+				}
+			}
+		}
+	}, "grid_background")
 }
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

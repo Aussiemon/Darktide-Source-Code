@@ -10,7 +10,7 @@ local flow_callback_white_list = {
 	"set_component_data",
 	"trigger_lua_unit_event",
 	"trigger_lua_string_event",
-	"local_player_level_larger_than",
+	"local_player_level_larger_than"
 }
 
 for function_name, func in pairs(MainFlowCallbacks) do

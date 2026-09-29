@@ -8,6 +8,7 @@ local SmartObjectSettings = require("scripts/settings/navigation/smart_object_se
 local TargetSelectionTemplates = require("scripts/extension_systems/perception/target_selection_templates")
 local TargetSelectionWeights = require("scripts/settings/minion_target_selection/minion_target_selection_weights")
 local breed_types = BreedSettings.types
+local breed_tags = BreedSettings.tags
 local hit_zone_names = HitZone.hit_zone_names
 local BREED_NAME = "companion_dog"
 
@@ -20,9 +21,7 @@ local breed_data = {
 	base_unit = "content/characters/player/companion_dog/third_person/base",
 	bone_lod_radius = 1.5,
 	broadphase_radius = 1,
-	can_tag_order = true,
 	challenge_rating = 0,
-	companion_double_tag_template_name = "enemy_companion_target",
 	display_name = "loc_breed_display_name_undefined",
 	faction_name = "imperium",
 	force_aggro = true,
@@ -46,8 +45,8 @@ local breed_data = {
 	name = BREED_NAME,
 	breed_type = breed_types.companion,
 	tags = {
-		companion = true,
-		minion = true,
+		[breed_tags.minion] = true,
+		[breed_tags.companion] = true
 	},
 	sounds = require("scripts/settings/breed/breeds/companion/companion_dog_sounds"),
 	vfx = require("scripts/settings/breed/breeds/companion/companion_dog_vfx"),
@@ -62,36 +61,36 @@ local breed_data = {
 		"gallop_speed",
 		"gallop_fast_speed",
 		"attack_start_angle",
-		"gallop_lean",
+		"gallop_lean"
 	},
 	animation_variable_bounds = {
 		walk_speed = {
 			0.2,
-			1.2,
+			1.2
 		},
 		trot_speed = {
 			0.7,
-			1.3,
+			1.3
 		},
 		canter_speed = {
 			0.8,
-			1.3,
+			1.3
 		},
 		gallop_speed = {
 			0.9,
-			1.4,
+			1.4
 		},
 		gallop_fast_speed = {
 			1.4,
-			1.5,
-		},
+			1.5
+		}
 	},
 	animation_variable_init = {
 		canter_speed = 0.5,
 		gallop_fast_speed = 0.5,
 		gallop_speed = 0.5,
 		trot_speed = 0.5,
-		walk_speed = 0.5,
+		walk_speed = 0.5
 	},
 	animation_speed_thresholds = {
 		walk = {
@@ -99,65 +98,65 @@ local breed_data = {
 			max = 1.8,
 			min = 0,
 			offset = 0.3,
-			speed_variable = "walk_speed",
+			speed_variable = "walk_speed"
 		},
 		trot = {
 			event_name = "to_trot",
 			max = 3.6,
 			min = 1.8,
 			offset = 0.3,
-			speed_variable = "trot_speed",
+			speed_variable = "trot_speed"
 		},
 		canter = {
 			event_name = "to_canter",
 			max = 4.8,
 			min = 3.6,
 			offset = 0.3,
-			speed_variable = "canter_speed",
+			speed_variable = "canter_speed"
 		},
 		gallop = {
 			event_name = "to_gallop",
 			max = 9,
 			min = 4.8,
 			offset = 0.3,
-			speed_variable = "gallop_speed",
+			speed_variable = "gallop_speed"
 		},
 		gallop_fast = {
 			event_name = "to_gallop_fast",
 			max = 10,
 			min = 9,
 			offset = 0.3,
-			speed_variable = "gallop_fast_speed",
-		},
+			speed_variable = "gallop_fast_speed"
+		}
 	},
 	animation_variable_bounds_hub = {
 		walk_speed = {
 			0.2,
-			1.2,
+			1.2
 		},
 		trot_speed = {
 			0.7,
-			0.85,
+			0.85
 		},
 		canter_speed = {
 			0.8,
-			1.3,
+			1.3
 		},
 		gallop_speed = {
 			0.9,
-			1.4,
+			1.4
 		},
 		gallop_fast_speed = {
 			1.4,
-			1.5,
-		},
+			1.5
+		}
 	},
 	animation_variable_init_hub = {
 		canter_speed = 0.5,
 		gallop_fast_speed = 0.5,
 		gallop_speed = 0.5,
 		trot_speed = 0.5,
-		walk_speed = 0.5,
+		walk_speed = 0.5
 	},
 	animation_speed_thresholds_hub = {
 		walk = {
@@ -165,36 +164,36 @@ local breed_data = {
 			max = 1.8,
 			min = 0,
 			offset = 0.3,
-			speed_variable = "walk_speed",
+			speed_variable = "walk_speed"
 		},
 		trot = {
 			event_name = "to_trot",
 			max = 4.8,
 			min = 1.8,
 			offset = 0.3,
-			speed_variable = "trot_speed",
+			speed_variable = "trot_speed"
 		},
 		canter = {
 			event_name = "to_canter",
 			max = 5,
 			min = 4.8,
 			offset = 0.3,
-			speed_variable = "canter_speed",
+			speed_variable = "canter_speed"
 		},
 		gallop = {
 			event_name = "to_gallop",
 			max = 9,
 			min = 5,
 			offset = 0.3,
-			speed_variable = "gallop_speed",
+			speed_variable = "gallop_speed"
 		},
 		gallop_fast = {
 			event_name = "to_gallop_fast",
 			max = 10,
 			min = 9,
 			offset = 0.3,
-			speed_variable = "gallop_fast_speed",
-		},
+			speed_variable = "gallop_fast_speed"
+		}
 	},
 	navigation_path_spline_config = {
 		channel_smoothing_angle = 15,
@@ -205,54 +204,54 @@ local breed_data = {
 		spline_distance_to_borders = 0.1,
 		spline_length = 100,
 		spline_recomputation_ratio = 0.5,
-		turn_sampling_angle = 30,
+		turn_sampling_angle = 30
 	},
 	nav_tag_allowed_layers = {
 		cover_ledges = 40,
 		cover_vaults = 0.5,
 		jumps = 40,
 		ledges = 40,
-		ledges_with_fence = 40,
+		ledges_with_fence = 40
 	},
 	smart_object_template = SmartObjectSettings.templates.chaos_hound,
 	fade = {
 		max_distance = 0.9,
 		max_height_difference = 1,
 		min_distance = 0.65,
-		node_name = "fade_root",
+		node_name = "fade_root"
 	},
 	detection_radius = math.huge,
 	target_changed_attack_intensities = {
-		disabling = 5,
+		disabling = 5
 	},
 	line_of_sight_data = {
 		{
 			from_node = "j_head",
 			id = "eyes",
 			to_node = "enemy_aim_target_03",
-			offsets = PerceptionSettings.default_minion_line_of_sight_offsets,
-		},
+			offsets = PerceptionSettings.default_minion_line_of_sight_offsets
+		}
 	},
 	target_selection_template = TargetSelectionTemplates.companion_dog,
 	target_selection_weights = TargetSelectionWeights.companion_dog,
 	threat_config = {
 		max_threat = 50,
 		threat_decay_per_second = 2.5,
-		threat_multiplier = 1,
+		threat_multiplier = 1
 	},
 	aim_config = {
 		distance = 10,
 		lerp_speed = 5,
 		node = "j_neck",
 		target = "head_aim_target",
-		target_node = "enemy_aim_target_03",
+		target_node = "enemy_aim_target_03"
 	},
 	combat_vector_config = {
 		choose_furthest_away = true,
 		default_combat_range = "far",
 		valid_combat_ranges = {
-			far = true,
-		},
+			far = true
+		}
 	},
 	hit_zones = {
 		{
@@ -260,18 +259,18 @@ local breed_data = {
 			actors = {
 				"c_spine",
 				"c_spine1",
-				"c_spine2",
-			},
-		},
+				"c_spine2"
+			}
+		}
 	},
 	blackboard_component_config = BreedBlackboardComponentTemplates.companion_dog,
 	blackboard_component_config_hub = BreedBlackboardComponentTemplates.companion_dog_hub,
 	base_unit_sound_sources = {
-		jaw = "fx_jaw",
+		jaw = "fx_jaw"
 	},
 	testify_flags = {
-		spawn_all_enemies = false,
-	},
+		spawn_all_enemies = false
+	}
 }
 
 breed_data.get_animation_variable_bounds = function ()

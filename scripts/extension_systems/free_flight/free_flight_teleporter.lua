@@ -3,7 +3,7 @@
 local PlayerMovement = require("scripts/utilities/player_movement")
 local FreeFlightTeleporter = class("FreeFlightTeleporter")
 local SERVER_RPCS = {
-	"rpc_debug_free_flight_teleport_client",
+	"rpc_debug_free_flight_teleport_client"
 }
 
 FreeFlightTeleporter.init = function (self, is_server)

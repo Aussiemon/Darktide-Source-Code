@@ -81,19 +81,19 @@ social_roster_view_blueprints.player_plaque = {
 		{
 			content_id = "hotspot",
 			pass_type = "hotspot",
-			style_id = "hotspot",
+			style_id = "hotspot"
 		},
 		{
 			pass_type = "texture",
 			style_id = "background",
 			value = "content/ui/materials/buttons/background_selected",
-			change_function = change_functions.player_plaque_background,
+			change_function = change_functions.player_plaque_background
 		},
 		{
 			pass_type = "texture",
 			style_id = "portrait",
 			value = "content/ui/materials/base/ui_portrait_frame_base",
-			value_id = "portrait",
+			value_id = "portrait"
 		},
 		{
 			pass_type = "texture",
@@ -104,7 +104,7 @@ social_roster_view_blueprints.player_plaque = {
 				local party_status = content.party_status
 
 				return not content.party_panel and (party_status == _party_status_in_my_party or party_status == _party_status_in_same_mission)
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -113,21 +113,21 @@ social_roster_view_blueprints.player_plaque = {
 			value_id = "invite_overlay",
 			visibility_function = function (content, style)
 				return content.party_status == _party_status_invite_pending or content.online_status == _online_status_reconnecting
-			end,
+			end
 		},
 		{
 			pass_type = "text",
 			style_id = "name_or_activity",
 			value_id = "name_or_activity",
 			value = Localize("loc_social_menu_no_name_or_activity"),
-			change_function = _player_name_or_status_change_function,
+			change_function = _player_name_or_status_change_function
 		},
 		{
 			pass_type = "text",
 			style_id = "account_name",
 			value_id = "account_name",
 			value = Localize("loc_social_menu_no_account_name"),
-			change_function = _account_name_change_function,
+			change_function = _account_name_change_function
 		},
 		{
 			pass_type = "text",
@@ -144,15 +144,15 @@ social_roster_view_blueprints.player_plaque = {
 			end,
 			visibility_function = function (content, style)
 				return content.party_status == _party_status_in_others_party or content.player_info:player_activity_id() == "mission"
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
 			style_id = "highlight",
 			value = "content/ui/materials/frames/hover",
 			visibility_function = ButtonPassTemplates.list_button_focused_visibility_function,
-			change_function = ButtonPassTemplates.list_button_highlight_change_function,
-		},
+			change_function = ButtonPassTemplates.list_button_highlight_change_function
+		}
 	},
 	style = blueprint_styles.player_plaque,
 	init = function (parent, widget, player_info, callback_name, secondary_callback_name, ui_renderer)
@@ -185,7 +185,7 @@ social_roster_view_blueprints.player_plaque = {
 		hotspot.use_is_focused = true
 		hotspot.pressed_callback = callback(parent, "cb_show_popup_menu_for_player", player_info)
 	end,
-	get_name_suffix = _player_widget_name_function,
+	get_name_suffix = _player_widget_name_function
 }
 
 local _online_status_text_params = {}
@@ -196,19 +196,19 @@ social_roster_view_blueprints.player_plaque_platform_online = {
 		{
 			content_id = "hotspot",
 			pass_type = "hotspot",
-			style_id = "hotspot",
+			style_id = "hotspot"
 		},
 		{
 			pass_type = "texture",
 			style_id = "background",
 			value = "content/ui/materials/buttons/background_selected",
-			change_function = change_functions.player_plaque_background,
+			change_function = change_functions.player_plaque_background
 		},
 		{
 			pass_type = "texture",
 			style_id = "portrait",
 			value = "content/ui/materials/base/ui_portrait_frame_base",
-			value_id = "portrait",
+			value_id = "portrait"
 		},
 		{
 			pass_type = "texture",
@@ -219,28 +219,28 @@ social_roster_view_blueprints.player_plaque_platform_online = {
 				local player_info = content.player_info
 
 				return player_info:party_status() == _party_status_invite_pending
-			end,
+			end
 		},
 		{
 			pass_type = "text",
 			style_id = "status",
 			value_id = "status",
-			change_function = _listbutton_label_change_function,
+			change_function = _listbutton_label_change_function
 		},
 		{
 			pass_type = "text",
 			style_id = "account_name",
 			value = "N/A",
 			value_id = "account_name",
-			change_function = _listbutton_label_change_function,
+			change_function = _listbutton_label_change_function
 		},
 		{
 			pass_type = "texture",
 			style_id = "highlight",
 			value = "content/ui/materials/frames/hover",
 			visibility_function = ButtonPassTemplates.list_button_focused_visibility_function,
-			change_function = ButtonPassTemplates.list_button_highlight_change_function,
-		},
+			change_function = ButtonPassTemplates.list_button_highlight_change_function
+		}
 	},
 	style = blueprint_styles.player_plaque_platform_online,
 	init = function (parent, widget, player_info, callback_name, secondary_callback_name, ui_renderer)
@@ -264,7 +264,7 @@ social_roster_view_blueprints.player_plaque_platform_online = {
 		hotspot.use_is_focused = true
 		hotspot.pressed_callback = callback(parent, "cb_show_popup_menu_for_player", player_info)
 	end,
-	get_name_suffix = _player_widget_name_function,
+	get_name_suffix = _player_widget_name_function
 }
 social_roster_view_blueprints.player_plaque_blocked = {
 	size = blueprint_styles.player_plaque.size,
@@ -272,45 +272,45 @@ social_roster_view_blueprints.player_plaque_blocked = {
 		{
 			content_id = "hotspot",
 			pass_type = "hotspot",
-			style_id = "hotspot",
+			style_id = "hotspot"
 		},
 		{
 			pass_type = "texture",
 			style_id = "background",
 			value = "content/ui/materials/buttons/background_selected",
-			change_function = change_functions.player_plaque_background,
+			change_function = change_functions.player_plaque_background
 		},
 		{
 			pass_type = "texture",
 			style_id = "icon_background",
-			value = "content/ui/materials/frames/line_medium_inner_shadow",
+			value = "content/ui/materials/frames/line_medium_inner_shadow"
 		},
 		{
 			pass_type = "texture",
 			style_id = "icon_blocked",
-			value = "content/ui/materials/icons/portraits/status_blocked",
+			value = "content/ui/materials/icons/portraits/status_blocked"
 		},
 		{
 			pass_type = "text",
 			style_id = "status",
 			value_id = "status",
 			value = Localize("loc_social_menu_player_blocked"),
-			change_function = _listbutton_label_change_function,
+			change_function = _listbutton_label_change_function
 		},
 		{
 			pass_type = "text",
 			style_id = "account_name",
 			value = "N/A",
 			value_id = "account_name",
-			change_function = _listbutton_label_change_function,
+			change_function = _listbutton_label_change_function
 		},
 		{
 			pass_type = "texture",
 			style_id = "highlight",
 			value = "content/ui/materials/frames/hover",
 			visibility_function = ButtonPassTemplates.list_button_focused_visibility_function,
-			change_function = ButtonPassTemplates.list_button_highlight_change_function,
-		},
+			change_function = ButtonPassTemplates.list_button_highlight_change_function
+		}
 	},
 	style = blueprint_styles.player_plaque_blocked,
 	init = function (parent, widget, player_info, callback_name, secondary_callback_name, ui_renderer)
@@ -327,7 +327,7 @@ social_roster_view_blueprints.player_plaque_blocked = {
 		hotspot.use_is_focused = true
 		hotspot.pressed_callback = callback(parent, "cb_show_popup_menu_for_player", player_info)
 	end,
-	get_name_suffix = _player_widget_name_function,
+	get_name_suffix = _player_widget_name_function
 }
 social_roster_view_blueprints.player_plaque_offline = {
 	size = blueprint_styles.player_plaque.size,
@@ -335,40 +335,52 @@ social_roster_view_blueprints.player_plaque_offline = {
 		{
 			content_id = "hotspot",
 			pass_type = "hotspot",
-			style_id = "hotspot",
+			style_id = "hotspot"
 		},
 		{
 			pass_type = "texture",
 			style_id = "background",
 			value = "content/ui/materials/buttons/background_selected",
-			change_function = change_functions.player_plaque_background,
+			change_function = change_functions.player_plaque_background
+		},
+		{
+			pass_type = "texture",
+			style_id = "portrait",
+			value = "content/ui/materials/base/ui_portrait_frame_base",
+			value_id = "portrait",
+			visibility_function = function (content, style)
+				return content.has_avatar
+			end
 		},
 		{
 			pass_type = "texture",
 			style_id = "icon_background",
 			value = "content/ui/materials/frames/line_medium_inner_shadow",
+			visibility_function = function (content, style)
+				return not content.has_avatar
+			end
 		},
 		{
 			pass_type = "text",
 			style_id = "status",
 			value_id = "status",
 			value = Localize("loc_social_menu_player_online_status_offline"),
-			change_function = _listbutton_label_change_function,
+			change_function = _listbutton_label_change_function
 		},
 		{
 			pass_type = "text",
 			style_id = "account_name",
 			value = "N/A",
 			value_id = "account_name",
-			change_function = _listbutton_label_change_function,
+			change_function = _listbutton_label_change_function
 		},
 		{
 			pass_type = "texture",
 			style_id = "highlight",
 			value = "content/ui/materials/frames/hover",
 			visibility_function = ButtonPassTemplates.list_button_focused_visibility_function,
-			change_function = ButtonPassTemplates.list_button_highlight_change_function,
-		},
+			change_function = ButtonPassTemplates.list_button_highlight_change_function
+		}
 	},
 	style = blueprint_styles.player_plaque_offline,
 	init = function (parent, widget, player_info, callback_name, secondary_callback_name, ui_renderer)
@@ -385,7 +397,7 @@ social_roster_view_blueprints.player_plaque_offline = {
 		hotspot.use_is_focused = true
 		hotspot.pressed_callback = callback(parent, "cb_show_popup_menu_for_player", player_info)
 	end,
-	get_name_suffix = _player_widget_name_function,
+	get_name_suffix = _player_widget_name_function
 }
 
 local _header_params = {}
@@ -396,8 +408,8 @@ social_roster_view_blueprints.group_header = {
 		{
 			pass_type = "text",
 			style_id = "text",
-			value_id = "text",
-		},
+			value_id = "text"
+		}
 	},
 	style = blueprint_styles.group_header,
 	init = function (parent, widget, context, callback_name, secondary_callback_name, ui_renderer)
@@ -414,7 +426,7 @@ social_roster_view_blueprints.group_header = {
 	end,
 	get_name_suffix = function (context)
 		return context.group_name .. "_" .. context.num_members
-	end,
+	end
 }
 social_roster_view_blueprints.list_divider = {
 	size = blueprint_styles.list_divider.size,
@@ -422,13 +434,13 @@ social_roster_view_blueprints.list_divider = {
 		{
 			pass_type = "texture",
 			style_id = "divider",
-			value = "content/ui/materials/dividers/horizontal_frame_big_middle",
-		},
+			value = "content/ui/materials/dividers/horizontal_frame_big_middle"
+		}
 	},
 	style = blueprint_styles.list_divider,
 	get_name_suffix = function (context)
 		return "divider_" .. context.name
-	end,
+	end
 }
 
 return social_roster_view_blueprints

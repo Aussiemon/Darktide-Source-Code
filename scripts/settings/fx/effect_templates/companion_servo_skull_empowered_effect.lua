@@ -6,7 +6,7 @@ local vfx = CompanionServoSkullEmpoweredEffectSettings.vfx
 local sfx = CompanionServoSkullEmpoweredEffectSettings.sfx
 local resources = {
 	resources_vfx = vfx,
-	resources_sfx = sfx,
+	resources_sfx = sfx
 }
 local _start_effect
 local effect_template = {
@@ -83,7 +83,7 @@ local effect_template = {
 		template_data.source_id = nil
 		template_data.playing_id = nil
 		template_data.stop_event_name = nil
-	end,
+	end
 }
 
 function _start_effect(unit, attachment_unit, node, template_data, world)

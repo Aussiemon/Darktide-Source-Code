@@ -24,7 +24,7 @@ local RPCS = {
 	"rpc_buff_batched_proc_set_active_time",
 	"rpc_buff_set_start_time",
 	"rpc_buff_set_extra_duration",
-	"rpc_add_buff_with_stacks",
+	"rpc_add_buff_with_stacks"
 }
 local _stat_buff_base_values = BuffSettings.stat_buff_type_base_values
 local _stat_buff_lazy_mt = {
@@ -34,7 +34,7 @@ local _stat_buff_lazy_mt = {
 		self[key] = val
 
 		return val
-	end,
+	end
 }
 
 BuffExtensionBase.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id, pre_allocate_event_param_tables)
@@ -59,7 +59,7 @@ BuffExtensionBase.init = function (self, extension_init_context, unit, extension
 		is_local_unit = extension_init_data.is_local_unit,
 		is_server = is_server,
 		breed = extension_init_data.breed,
-		fixed_time_step = Managers.state.game_session.fixed_time_step,
+		fixed_time_step = Managers.state.game_session.fixed_time_step
 	}
 
 	if GameParameters.destroy_unmanaged_particles then
@@ -76,7 +76,7 @@ BuffExtensionBase.init = function (self, extension_init_context, unit, extension
 	self._stacking_buffs = {}
 	self._buffs_by_index = {}
 	self._stat_buffs = setmetatable({
-		_modified_stats = {},
+		_modified_stats = {}
 	}, _stat_buff_lazy_mt)
 	self._keywords = {}
 	self._had_keywords = {}
@@ -107,18 +107,7 @@ BuffExtensionBase.init = function (self, extension_init_context, unit, extension
 
 	if is_server then
 		self._buffs_added_before_game_object_creation = {}
-
-		local initial_buffs = extension_init_data.initial_buffs
-
-		if initial_buffs then
-			local t = FixedFrame.get_latest_fixed_time()
-
-			for i = 1, #initial_buffs do
-				local buff_name = initial_buffs[i]
-
-				self:add_internally_controlled_buff(buff_name, t)
-			end
-		end
+		self._initial_buffs = extension_init_data.initial_buffs
 	else
 		local network_event_delegate = extension_init_context.network_event_delegate
 
@@ -132,6 +121,22 @@ BuffExtensionBase.init = function (self, extension_init_context, unit, extension
 	end
 
 	self._fixed_time_step = Managers.state.game_session.fixed_time_step
+end
+
+BuffExtensionBase.extensions_ready = function (self, world, unit)
+	local initial_buffs = self._initial_buffs
+
+	if initial_buffs then
+		self._initial_buffs = nil
+
+		local t = FixedFrame.get_latest_fixed_time()
+
+		for i = 1, #initial_buffs do
+			local buff_name = initial_buffs[i]
+
+			self:add_internally_controlled_buff(buff_name, t)
+		end
+	end
 end
 
 BuffExtensionBase.destroy = function (self)
@@ -588,6 +593,7 @@ BuffExtensionBase.refresh_duration_of_stacking_buff = function (self, buff_name,
 	local buff_instance = self._stacking_buffs[buff_name]
 
 	buff_instance:set_start_time(t)
+	self:_proc_on_buff_event(buff_name, buff_instance, BuffSettings.proc_events.on_stackable_buff_refresh_duration)
 end
 
 BuffExtensionBase.add_duration_of_stacking_buff = function (self, buff_name, amount)
@@ -1023,10 +1029,10 @@ BuffExtensionBase._stop_fx = function (self, index, template)
 	end
 end
 
-BuffExtensionBase._start_node_effects = function (self, template_name, node_effects, optional_node_effects_priotity)
+BuffExtensionBase._start_node_effects = function (self, template_name, node_effects, optional_node_effects_priority)
 	local active_node_sfx_effects = self._sfx_node_effects
 	local active_node_vfx_effects = self._vfx_node_effects
-	local new_node_effect_priority = optional_node_effects_priotity or 1
+	local new_node_effect_priority = optional_node_effects_priority or 1
 	local buff_context = self._buff_context
 	local world = buff_context.world
 	local wwise_world = buff_context.wwise_world
@@ -1053,7 +1059,7 @@ BuffExtensionBase._start_node_effects = function (self, template_name, node_effe
 
 					active_node_sfx_effects[node_index] = {
 						wwise_source_id = wwise_source_id,
-						active_wwise_events = {},
+						active_wwise_events = {}
 					}
 				end
 
@@ -1108,9 +1114,9 @@ BuffExtensionBase._start_node_effects = function (self, template_name, node_effe
 							[template_name] = {
 								active_buffs_count = 1,
 								material_variables = vfx.material_variables or nil,
-								priority = new_node_effect_priority,
-							},
-						},
+								priority = new_node_effect_priority
+							}
+						}
 					}
 
 					local material_variables = vfx.material_variables
@@ -1138,7 +1144,7 @@ BuffExtensionBase._start_node_effects = function (self, template_name, node_effe
 						active_effects_for_node_and_particle[template_name] = {
 							active_buffs_count = 1,
 							material_variables = vfx.material_variables or nil,
-							priority = new_node_effect_priority,
+							priority = new_node_effect_priority
 						}
 					end
 
@@ -1291,7 +1297,7 @@ end
 
 local TEMP_STACK_NODE_EFFECTS = {}
 
-BuffExtensionBase._check_stack_node_effects = function (self, template_name, stack_node_effects, current_stack_count, previous_stack_count, optional_node_effects_priotity)
+BuffExtensionBase._check_stack_node_effects = function (self, template_name, stack_node_effects, current_stack_count, previous_stack_count, optional_node_effects_priority)
 	if previous_stack_count < current_stack_count then
 		local index = 0
 
@@ -1310,7 +1316,7 @@ BuffExtensionBase._check_stack_node_effects = function (self, template_name, sta
 		end
 
 		if index > 0 then
-			self:_start_node_effects(template_name, TEMP_STACK_NODE_EFFECTS, optional_node_effects_priotity or 1)
+			self:_start_node_effects(template_name, TEMP_STACK_NODE_EFFECTS, optional_node_effects_priority or 1)
 			table.clear_array(TEMP_STACK_NODE_EFFECTS, index)
 		end
 	else

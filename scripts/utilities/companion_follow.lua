@@ -8,7 +8,7 @@ local default_nav_distances = {
 	4,
 	4,
 	0.25,
-	0,
+	0
 }
 local valid_prioritized_positions = {}
 local default_valid_positions = {}

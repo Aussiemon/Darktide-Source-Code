@@ -34,7 +34,7 @@ MagazineAmmo.init = function (self, context, slot, weapon_template, fx_sources, 
 			unit_components[#unit_components + 1] = {
 				is_first_person = true,
 				unit = attachment_unit,
-				component = component,
+				component = component
 			}
 		end
 	end
@@ -50,7 +50,7 @@ MagazineAmmo.init = function (self, context, slot, weapon_template, fx_sources, 
 			unit_components[#unit_components + 1] = {
 				is_first_person = false,
 				unit = attachment_unit,
-				component = component,
+				component = component
 			}
 		end
 	end

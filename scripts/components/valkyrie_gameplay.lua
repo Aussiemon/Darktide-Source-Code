@@ -69,7 +69,7 @@ end
 
 local DELAY_TIMER = {}
 local PUSH_TEMPLATE = {
-	speed = 0,
+	speed = 0
 }
 local PUSH_DISTANCE = 10
 
@@ -196,27 +196,27 @@ ValkyrieGameplay.component_data = {
 	kill_overlap = {
 		ui_name = "Kill overlapping",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	landing_position = {
 		ui_name = "Landing position",
 		ui_type = "vector",
-		value = Vector3Box(0, 0, 0),
+		value = Vector3Box(0, 0, 0)
 	},
 	inputs = {
 		kill_overlap_enable = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		kill_overlap_disable = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		hatch_open = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return ValkyrieGameplay

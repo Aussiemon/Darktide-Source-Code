@@ -12,8 +12,8 @@ local horde_template = {
 	requires_main_path = true,
 	main_path_distance_from_targets = {
 		60,
-		80,
-	},
+		80
+	}
 }
 local breeds_to_spawn = {}
 
@@ -280,7 +280,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 		template_name = horde_template.name,
 		side = side,
 		target_side = target_side,
-		group_id = group_id,
+		group_id = group_id
 	}
 	local spawn_rotation = Quaternion.look(Vector3(horde_direction.x, horde_direction.y, 0))
 	local side_id = side.side_id

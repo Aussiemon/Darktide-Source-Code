@@ -13,8 +13,8 @@ RemoteInSessionState.enter = function (self)
 		name = "session_joined",
 		parameters = {
 			peer_id = shared_state.peer_id,
-			channel_id = shared_state.channel_id,
-		},
+			channel_id = shared_state.channel_id
+		}
 	}
 	shared_state.has_been_in_session = true
 end
@@ -27,7 +27,7 @@ RemoteInSessionState.update = function (self, dt)
 		Log.info("RemoteInSessionState", "Session channel disconnected %s", shared_state.peer_id)
 
 		return "disconnect", {
-			engine_reason = reason,
+			engine_reason = reason
 		}
 	end
 end

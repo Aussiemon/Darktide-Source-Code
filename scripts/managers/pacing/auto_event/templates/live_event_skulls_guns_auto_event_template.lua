@@ -11,7 +11,7 @@ live_event_skulls_guns_auto_event_template.points_base = {
 	40,
 	40,
 	45,
-	50,
+	50
 }
 
 live_event_skulls_guns_auto_event_template.conditional_function = function (t)
@@ -37,46 +37,46 @@ end
 live_event_skulls_guns_auto_event_template.cooldown = {
 	{
 		16,
-		18,
+		18
 	},
 	{
 		14,
-		16,
+		16
 	},
 	{
 		8,
-		10,
+		10
 	},
 	{
 		3,
-		6,
+		6
 	},
 	{
 		1,
-		4,
-	},
+		4
+	}
 }
 live_event_skulls_guns_auto_event_template.waves_cooldown = {
 	{
 		7,
-		8,
+		8
 	},
 	{
 		6,
-		7,
+		7
 	},
 	{
 		3,
-		4,
+		4
 	},
 	{
 		2,
-		3,
+		3
 	},
 	{
 		1,
-		3,
-	},
+		3
+	}
 }
 
 local captain_chance_for_injection = {
@@ -85,7 +85,7 @@ local captain_chance_for_injection = {
 		0,
 		0.1,
 		0.4,
-		0.5,
+		0.5
 	},
 	chance_indexed_by_resistance = {
 		0,
@@ -93,8 +93,8 @@ local captain_chance_for_injection = {
 		0.3,
 		0.4,
 		0.5,
-		0.6,
-	},
+		0.6
+	}
 }
 
 live_event_skulls_guns_auto_event_template.captains_settings = {
@@ -120,7 +120,7 @@ live_event_skulls_guns_auto_event_template.captains_settings = {
 		else
 			return false
 		end
-	end,
+	end
 }
 
 local monster_chance_for_injection = {
@@ -129,7 +129,7 @@ local monster_chance_for_injection = {
 		0,
 		0.2,
 		0.3,
-		0.35,
+		0.35
 	},
 	chance_indexed_by_resistance = {
 		0,
@@ -137,15 +137,15 @@ local monster_chance_for_injection = {
 		0.2,
 		0.25,
 		0.3,
-		0.35,
-	},
+		0.35
+	}
 }
 
 live_event_skulls_guns_auto_event_template.monster_settings = {
 	monster_breeds = {
 		"chaos_spawn",
 		"chaos_beast_of_nurgle",
-		"chaos_plague_ogryn",
+		"chaos_plague_ogryn"
 	},
 	execute = function (force_spawn)
 		local num_to_spawn = 1
@@ -169,7 +169,7 @@ live_event_skulls_guns_auto_event_template.monster_settings = {
 		else
 			return false
 		end
-	end,
+	end
 }
 
 local twins_chance_for_injection = {
@@ -178,7 +178,7 @@ local twins_chance_for_injection = {
 		0,
 		0,
 		0.1,
-		0.5,
+		0.5
 	},
 	chance_indexed_by_resistance = {
 		0,
@@ -186,8 +186,8 @@ local twins_chance_for_injection = {
 		0,
 		0,
 		0.7,
-		0.8,
-	},
+		0.8
+	}
 }
 
 live_event_skulls_guns_auto_event_template.twins_settings = {
@@ -211,9 +211,9 @@ live_event_skulls_guns_auto_event_template.twins_settings = {
 		else
 			return false
 		end
-	end,
+	end
 }
 
 return {
-	live_event_skulls_guns_auto_event_template = live_event_skulls_guns_auto_event_template,
+	live_event_skulls_guns_auto_event_template = live_event_skulls_guns_auto_event_template
 }

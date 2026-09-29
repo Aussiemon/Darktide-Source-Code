@@ -134,12 +134,12 @@ Annotation.component_data = {
 	description = {
 		ui_name = "Description",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	color = {
 		ui_name = "Color",
 		ui_type = "color",
-		value = QuaternionBox(1, 0.5, 0, 0.5),
+		value = QuaternionBox(1, 0.5, 0, 0.5)
 	},
 	font_size = {
 		decimals = 1,
@@ -148,8 +148,8 @@ Annotation.component_data = {
 		step = 0.1,
 		ui_name = "Font Size",
 		ui_type = "number",
-		value = 0.3,
-	},
+		value = 0.3
+	}
 }
 
 return Annotation

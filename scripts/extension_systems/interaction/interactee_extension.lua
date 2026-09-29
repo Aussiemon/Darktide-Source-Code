@@ -28,6 +28,7 @@ InteracteeExtension.init = function (self, extension_init_context, unit, extensi
 	self._owner_system = extension_init_context.owner_system
 	self._interactions = {}
 	self._override_contexts = {}
+	self._display_start_event_override = nil
 	self._active_interaction_type = nil
 	self._active_interaction_changed = false
 	self._emissive_material_name = nil
@@ -58,7 +59,7 @@ InteracteeExtension.update = function (self, unit, dt, t)
 
 		self._spawn_cooldown = spawn_cooldown
 	else
-		self._owner_system:disable_update_function(self.__class_name, "update", self._unit, self)
+		self._owner_system:disable_update_function(self._unit, "update")
 	end
 end
 
@@ -80,6 +81,12 @@ InteracteeExtension.hot_join_sync = function (self, unit, sender, channel)
 		local unit_id, is_level_unit = self._unit_id, self._is_level_unit
 
 		RPC.rpc_interaction_set_electrified(channel, unit_id, is_level_unit, true)
+	end
+
+	if self._display_start_event_override ~= nil then
+		local unit_id, is_level_unit = self._unit_id, self._is_level_unit
+
+		RPC.rpc_interaction_set_display_start_event_override(channel, unit_id, is_level_unit, self._display_start_event_override)
 	end
 end
 
@@ -317,8 +324,23 @@ InteracteeExtension.display_start_event = function (self)
 	end
 
 	local override_context = self._override_contexts[active_interaction_type]
+	local should_display_start_event = override_context.display_start_event or false
 
-	return override_context.display_start_event or false
+	if self._display_start_event_override then
+		should_display_start_event = self._display_start_event_override
+	end
+
+	return should_display_start_event
+end
+
+InteracteeExtension.set_display_start_event_override = function (self, should_display_start_event)
+	self._display_start_event_override = should_display_start_event
+
+	if self._is_server then
+		local unit_id, is_level_unit = self._unit_id, self._is_level_unit
+
+		Managers.state.game_session:send_rpc_clients("rpc_interaction_set_display_start_event_override", unit_id, is_level_unit, should_display_start_event)
+	end
 end
 
 InteracteeExtension.disable_display_start_event = function (self)

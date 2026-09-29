@@ -23,8 +23,8 @@ local sound_data = {
 			[armor_types.berserker] = "wwise/events/weapon/play_companion_bite_flesh",
 			[armor_types.super_armor] = "wwise/events/weapon/play_companion_bite_armour",
 			[armor_types.disgustingly_resilient] = "wwise/events/weapon/play_companion_bite_flesh",
-			[armor_types.void_shield] = "wwise/events/weapon/play_companion_bite_armour",
-		},
+			[armor_types.void_shield] = "wwise/events/weapon/play_companion_bite_armour"
+		}
 	},
 	use_proximity_culling = {
 		foley = false,
@@ -38,8 +38,8 @@ local sound_data = {
 		sfx_growl = false,
 		sfx_growl_probability = false,
 		sfx_hurt = false,
-		sfx_leap = false,
-	},
+		sfx_leap = false
+	}
 }
 
 return sound_data

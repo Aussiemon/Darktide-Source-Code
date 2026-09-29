@@ -9,11 +9,11 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local info_box_size = {
 	1150,
-	200,
+	200
 }
 local equip_button_size = {
 	374,
-	76,
+	76
 }
 local title_height = 70
 local edge_padding = 44
@@ -21,15 +21,15 @@ local grid_width = 450
 local grid_height = 860
 local grid_size = {
 	grid_width - edge_padding,
-	grid_height,
+	grid_height
 }
 local grid_spacing = {
 	10,
-	10,
+	10
 }
 local mask_size = {
 	grid_width + 40,
-	grid_height,
+	grid_height
 }
 local grid_settings = {
 	scrollbar_horizontal_offset = -7,
@@ -44,7 +44,7 @@ local grid_settings = {
 	grid_size = grid_size,
 	mask_size = mask_size,
 	title_height = title_height,
-	edge_padding = edge_padding,
+	edge_padding = edge_padding
 }
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
@@ -54,13 +54,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	corner_top_left = {
 		horizontal_alignment = "left",
@@ -68,13 +68,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			180,
-			310,
+			310
 		},
 		position = {
 			0,
 			0,
-			62,
-		},
+			62
+		}
 	},
 	corner_top_right = {
 		horizontal_alignment = "right",
@@ -82,13 +82,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			180,
-			310,
+			310
 		},
 		position = {
 			0,
 			0,
-			62,
-		},
+			62
+		}
 	},
 	corner_bottom_left = {
 		horizontal_alignment = "left",
@@ -96,13 +96,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			180,
-			120,
+			120
 		},
 		position = {
 			0,
 			0,
-			62,
-		},
+			62
+		}
 	},
 	corner_bottom_right = {
 		horizontal_alignment = "right",
@@ -110,13 +110,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			180,
-			120,
+			120
 		},
 		position = {
 			0,
 			0,
-			62,
-		},
+			62
+		}
 	},
 	item_grid_pivot = {
 		horizontal_alignment = "left",
@@ -124,13 +124,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			200,
 			100,
-			1,
-		},
+			1
+		}
 	},
 	button_pivot = {
 		horizontal_alignment = "left",
@@ -138,13 +138,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			-120,
 			40,
-			3,
-		},
+			3
+		}
 	},
 	button_pivot_background = {
 		horizontal_alignment = "left",
@@ -152,13 +152,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			120,
-			240,
+			240
 		},
 		position = {
 			-20,
 			-20,
-			3,
-		},
+			3
+		}
 	},
 	grid_tab_panel = {
 		horizontal_alignment = "center",
@@ -166,13 +166,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			-48,
-			1,
-		},
+			1
+		}
 	},
 	weapon_preview = {
 		horizontal_alignment = "right",
@@ -180,27 +180,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			800,
-			800,
+			800
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
-	},
-	description_text = {
-		horizontal_alignment = "center",
-		parent = "display_name_divider",
-		vertical_alignment = "bottom",
-		size = {
-			1000,
-			150,
-		},
-		position = {
-			0,
-			120,
-			3,
-		},
+			1
+		}
 	},
 	info_box = {
 		horizontal_alignment = "right",
@@ -210,64 +196,8 @@ local scenegraph_definition = {
 		position = {
 			-100,
 			-125,
-			3,
-		},
-	},
-	display_name_divider = {
-		horizontal_alignment = "left",
-		parent = "info_box",
-		vertical_alignment = "bottom",
-		size = {
-			info_box_size[1] - (equip_button_size[1] + 30),
-			20,
-		},
-		position = {
-			0,
-			0,
-			1,
-		},
-	},
-	display_name_divider_glow = {
-		horizontal_alignment = "left",
-		parent = "info_box",
-		vertical_alignment = "bottom",
-		size = {
-			info_box_size[1] - (equip_button_size[1] + 30),
-			80,
-		},
-		position = {
-			0,
-			-6,
-			1,
-		},
-	},
-	display_name = {
-		horizontal_alignment = "left",
-		parent = "info_box",
-		vertical_alignment = "bottom",
-		size = {
-			info_box_size[1] - (equip_button_size[1] + 30 + 20),
-			50,
-		},
-		position = {
-			10,
-			-40,
-			3,
-		},
-	},
-	sub_display_name = {
-		horizontal_alignment = "center",
-		parent = "display_name",
-		vertical_alignment = "top",
-		size = {
-			info_box_size[1] - (equip_button_size[1] + 30 + 20),
-			50,
-		},
-		position = {
-			0,
-			45,
-			3,
-		},
+			3
+		}
 	},
 	equip_button = {
 		horizontal_alignment = "right",
@@ -277,8 +207,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			-8,
-			1,
-		},
+			1
+		}
 	},
 	side_panel_area = {
 		horizontal_alignment = "left",
@@ -286,13 +216,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			550,
-			0,
+			0
 		},
 		position = {
 			690,
 			-260,
-			3,
-		},
+			3
+		}
 	},
 	player_panel_pivot = {
 		horizontal_alignment = "center",
@@ -300,13 +230,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			100,
 			-50,
-			1,
-		},
+			1
+		}
 	},
 	item_name_pivot = {
 		horizontal_alignment = "right",
@@ -314,36 +244,15 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			-70,
 			-260,
-			3,
-		},
-	},
+			3
+		}
+	}
 }
-local display_name_style = table.clone(UIFontSettings.header_2)
-
-display_name_style.text_horizontal_alignment = "left"
-display_name_style.text_vertical_alignment = "bottom"
-
-local title_text_style = table.clone(UIFontSettings.header_2)
-
-title_text_style.text_horizontal_alignment = "center"
-title_text_style.text_vertical_alignment = "bottom"
-
-local sub_display_name_style = table.clone(UIFontSettings.header_3)
-
-sub_display_name_style.text_horizontal_alignment = "left"
-sub_display_name_style.text_vertical_alignment = "top"
-sub_display_name_style.text_color = Color.ui_grey_light(255, true)
-
-local description_text_style = table.clone(UIFontSettings.body_small)
-
-description_text_style.text_horizontal_alignment = "left"
-description_text_style.text_vertical_alignment = "top"
-
 local big_header_text_style = table.clone(UIFontSettings.header_3)
 
 big_header_text_style.text_horizontal_alignment = "left"
@@ -365,7 +274,7 @@ small_header_text_style.vertical_alignment = "top"
 small_header_text_style.offset = {
 	0,
 	0,
-	1,
+	1
 }
 small_header_text_style.font_size = 20
 small_header_text_style.text_color = Color.terminal_text_body_sub_header(255, true)
@@ -382,15 +291,15 @@ big_details_text_style.text_color = {
 	255,
 	116,
 	140,
-	115,
+	115
 }
 
 local widget_definitions = {
 	corner_bottom_left = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/metal_01_lower",
-		},
+			value = "content/ui/materials/frames/screen/metal_01_lower"
+		}
 	}, "corner_bottom_left"),
 	corner_bottom_right = UIWidget.create_definition({
 		{
@@ -400,59 +309,22 @@ local widget_definitions = {
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
-				},
-			},
-		},
+						1
+					}
+				}
+			}
+		}
 	}, "corner_bottom_right"),
-	description_text = UIWidget.create_definition({
-		{
-			pass_type = "text",
-			value = "",
-			value_id = "text",
-			style = description_text_style,
-		},
-	}, "description_text"),
-	display_name_divider = UIWidget.create_definition({
-		{
-			pass_type = "texture",
-			value = "content/ui/materials/dividers/horizontal_dynamic_lower",
-		},
-	}, "display_name_divider"),
-	display_name_divider_glow = UIWidget.create_definition({
-		{
-			pass_type = "texture",
-			style_id = "texture",
-			value = "content/ui/materials/effects/wide_upward_glow",
-		},
-	}, "display_name_divider_glow"),
-	sub_display_name = UIWidget.create_definition({
-		{
-			pass_type = "text",
-			value = "",
-			value_id = "text",
-			style = sub_display_name_style,
-		},
-	}, "sub_display_name"),
-	display_name = UIWidget.create_definition({
-		{
-			pass_type = "text",
-			value = "",
-			value_id = "text",
-			style = display_name_style,
-		},
-	}, "display_name"),
 	equip_button = UIWidget.create_definition(table.clone(ButtonPassTemplates.default_button), "equip_button", {
 		gamepad_action = "confirm_pressed",
 		original_text = Utf8.upper(Localize("loc_weapon_inventory_equip_button")),
 		hotspot = {
-			on_pressed_sound = UISoundEvents.weapons_skin_confirm,
-		},
+			on_pressed_sound = UISoundEvents.weapons_skin_confirm
+		}
 	}),
 	button_pivot_background = UIWidget.create_definition({
 		{
@@ -467,14 +339,14 @@ local widget_definitions = {
 				color = Color.terminal_grid_background(255, true),
 				size_addition = {
 					30,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -485,14 +357,14 @@ local widget_definitions = {
 				color = Color.white(255, true),
 				size = {
 					136,
-					14,
+					14
 				},
 				offset = {
 					0,
 					-5,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -503,16 +375,16 @@ local widget_definitions = {
 				color = Color.white(255, true),
 				size = {
 					135,
-					14,
+					14
 				},
 				offset = {
 					0,
 					5,
-					1,
-				},
-			},
-		},
-	}, "button_pivot_background"),
+					1
+				}
+			}
+		}
+	}, "button_pivot_background")
 }
 local background_widget = UIWidget.create_definition({
 	{
@@ -524,20 +396,20 @@ local background_widget = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				1,
+				1
 			},
 			size = {
 				1920,
-				1080,
-			},
-		},
+				1080
+			}
+		}
 	},
 	{
 		pass_type = "rect",
 		style = {
-			color = Color.black(255, true),
-		},
-	},
+			color = Color.black(255, true)
+		}
+	}
 }, "screen")
 local legend_inputs = {
 	{
@@ -545,7 +417,7 @@ local legend_inputs = {
 		display_name = "loc_settings_menu_close_menu",
 		input_action = "back",
 		on_pressed_callback = "_cb_on_close_pressed",
-		visibility_function = nil,
+		visibility_function = nil
 	},
 	{
 		alignment = "right_alignment",
@@ -571,8 +443,8 @@ local legend_inputs = {
 			end
 
 			return false
-		end,
-	},
+		end
+	}
 }
 local animations = {
 	on_enter = {
@@ -585,7 +457,7 @@ local animations = {
 			end,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, parent)
 				return
-			end,
+			end
 		},
 		{
 			end_time = 0.8,
@@ -605,7 +477,7 @@ local animations = {
 				parent:_set_scenegraph_position("button_pivot", scenegraph_definition.button_pivot.position[1] - x_anim_distance)
 				parent:_set_scenegraph_position("item_grid_pivot", scenegraph_definition.item_grid_pivot.position[1] - x_anim_distance)
 				parent:_force_update_scenegraph()
-			end,
+			end
 		},
 		{
 			end_time = 0.8,
@@ -613,9 +485,9 @@ local animations = {
 			start_time = 0.8,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, parent)
 				parent.enter_animation_done = true
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 local small_header_text_pass = {
 	{
@@ -623,8 +495,8 @@ local small_header_text_pass = {
 		style_id = "text",
 		value = "",
 		value_id = "text",
-		style = small_header_text_style,
-	},
+		style = small_header_text_style
+	}
 }
 local small_body_text_pass = {
 	{
@@ -632,8 +504,8 @@ local small_body_text_pass = {
 		style_id = "text",
 		value = "",
 		value_id = "text",
-		style = small_body_text_style,
-	},
+		style = small_body_text_style
+	}
 }
 local big_header_text_pass = {
 	{
@@ -641,8 +513,8 @@ local big_header_text_pass = {
 		style_id = "text",
 		value = "",
 		value_id = "text",
-		style = big_header_text_style,
-	},
+		style = big_header_text_style
+	}
 }
 local big_body_text_pass = {
 	{
@@ -650,8 +522,8 @@ local big_body_text_pass = {
 		style_id = "text",
 		value = "",
 		value_id = "text",
-		style = big_body_text_style,
-	},
+		style = big_body_text_style
+	}
 }
 local big_details_text_pass = {
 	{
@@ -659,14 +531,14 @@ local big_details_text_pass = {
 		style_id = "text",
 		value = "",
 		value_id = "text",
-		style = big_details_text_style,
-	},
+		style = big_details_text_style
+	}
 }
 local always_visible_widget_names = {
 	corner_bottom_left = true,
 	corner_bottom_right = true,
 	corner_top_left = true,
-	corner_top_right = true,
+	corner_top_right = true
 }
 
 return {
@@ -681,5 +553,5 @@ return {
 	small_body_text_pass = small_body_text_pass,
 	big_header_text_pass = big_header_text_pass,
 	big_body_text_pass = big_body_text_pass,
-	big_details_text_pass = big_details_text_pass,
+	big_details_text_pass = big_details_text_pass
 }

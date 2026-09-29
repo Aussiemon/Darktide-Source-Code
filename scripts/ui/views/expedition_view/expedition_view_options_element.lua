@@ -24,7 +24,7 @@ OptionsElement.present = function (self, regions_latency, close_callback)
 	end
 
 	self._view_element = self._owner_view:_add_element(ViewElementMissionBoardOptions, "options_element", 200, {
-		on_destroy_callback = close_callback,
+		on_destroy_callback = close_callback
 	})
 
 	local presentation_data = {
@@ -72,7 +72,7 @@ OptionsElement.present = function (self, regions_latency, close_callback)
 						display_name = region_display_name,
 						ignore_localization = ignore_localization,
 						value = region_name,
-						latency_order = latency_data.min_latency,
+						latency_order = latency_data.min_latency
 					}
 				end
 
@@ -84,7 +84,7 @@ OptionsElement.present = function (self, regions_latency, close_callback)
 			end,
 			on_changed = function (value)
 				Managers.data_service.region_latency:set_prefered_mission_region(value)
-			end,
+			end
 		},
 		{
 			display_name = "loc_private_tag_name",
@@ -100,8 +100,8 @@ OptionsElement.present = function (self, regions_latency, close_callback)
 			end,
 			on_changed = function (value)
 				self._owner_view:cb_toggle_private_match()
-			end,
-		},
+			end
+		}
 	}
 
 	self._view_element:present(presentation_data)

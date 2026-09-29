@@ -6,6 +6,7 @@ require("scripts/extension_systems/fx/projectile_fx_extension")
 
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local EffectTemplatesHandler = require("scripts/extension_systems/fx/utilities/effect_templates_handler")
+local FxSequenceHandler = require("scripts/extension_systems/fx/utilities/fx_sequence_handler")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local ImpactEffectSettings = require("scripts/settings/damage/impact_effect_settings")
 local MaterialQuerySettings = require("scripts/settings/material_query_settings")
@@ -28,6 +29,8 @@ local CLIENT_RPCS = {
 	"rpc_trigger_wwise_event",
 	"rpc_trigger_flow_event",
 	"rpc_projectile_trigger_fx",
+	"rpc_projectile_lerp_vfx_towards_target",
+	"rpc_projectile_reattach_vfx"
 }
 
 FxSystem.init = function (self, extension_system_creation_context, ...)
@@ -36,6 +39,7 @@ FxSystem.init = function (self, extension_system_creation_context, ...)
 	self._physics_world = extension_system_creation_context.physics_world
 	self._effect_templates_handler = EffectTemplatesHandler:new(NetworkConstants.max_template_effect_buffer_index, false)
 	self._player_effect_templates_handler = EffectTemplatesHandler:new(NetworkConstants.max_template_effect_buffer_index, true)
+	self._fx_sequence_handler = FxSequenceHandler:new()
 
 	if not DEDICATED_SERVER then
 		self._local_effect_templates_handler = EffectTemplatesHandler:new(MAX_NUM_LOCAL_RUNNING_EFFECT_TEMPLATES, true)
@@ -48,7 +52,7 @@ FxSystem.init = function (self, extension_system_creation_context, ...)
 		world = self._world,
 		wwise_world = self._wwise_world,
 		physics_world = self._physics_world,
-		game_session = game_session,
+		game_session = game_session
 	}
 	self.unit_to_particle_group_lookup = Script.new_map(256)
 	self._spawned_impact_fx_units = Script.new_map(8)
@@ -123,6 +127,7 @@ FxSystem.destroy = function (self)
 
 	self._effect_templates_handler:clear(template_context)
 	self._player_effect_templates_handler:clear(template_context)
+	self._fx_sequence_handler:clear(template_context)
 
 	if not DEDICATED_SERVER then
 		self._local_effect_templates_handler:clear(template_context)
@@ -139,6 +144,7 @@ end
 FxSystem.hot_join_sync = function (self, sender, channel)
 	self._effect_templates_handler:hot_join_sync(sender, channel)
 	self._player_effect_templates_handler:hot_join_sync(sender, channel)
+	self._fx_sequence_handler:hot_join_sync(sender, channel)
 	FxSystem.super.hot_join_sync(self, sender, channel)
 end
 
@@ -147,6 +153,7 @@ FxSystem.update = function (self, context, dt, t, ...)
 
 	self._effect_templates_handler:update(template_context, dt, t)
 	self._player_effect_templates_handler:update(template_context, dt, t)
+	self._fx_sequence_handler:update(template_context, dt, t)
 
 	if not DEDICATED_SERVER then
 		self._local_effect_templates_handler:update(template_context, dt, t)
@@ -450,6 +457,10 @@ FxSystem.delete_units = function (self)
 	table.clear(self._spawned_impact_fx_units)
 end
 
+FxSystem.start_sequence = function (self, unit, sequence_name, ...)
+	self._fx_sequence_handler:start_sequence(unit, sequence_name, ...)
+end
+
 FxSystem.trigger_flow_event = function (self, unit, event_name)
 	Unit.flow_event(unit, event_name)
 
@@ -581,8 +592,40 @@ FxSystem.rpc_projectile_trigger_fx = function (self, channel_id, unit_id, event_
 	if unit then
 		local unit_to_extension_map = self._unit_to_extension_map
 		local fx_extension = unit_to_extension_map[unit]
+		local should_play = true
 
-		fx_extension:start_fx(effect_type)
+		if fx_extension.should_play_fx then
+			should_play = fx_extension:should_play_fx(effect_type)
+		end
+
+		if should_play then
+			fx_extension:start_fx(effect_type, true)
+		end
+	end
+end
+
+FxSystem.rpc_projectile_lerp_vfx_towards_target = function (self, channel_id, unit_id, event_type_id, target_unit_id, end_t, z_delta)
+	local effect_type = NetworkLookup.projectile_template_effects[event_type_id]
+	local unit = Managers.state.unit_spawner:unit(unit_id)
+	local target_unit = Managers.state.unit_spawner:unit(target_unit_id)
+
+	if unit and target_unit then
+		local unit_to_extension_map = self._unit_to_extension_map
+		local fx_extension = unit_to_extension_map[unit]
+
+		fx_extension:lerp_vfx_towards_target(target_unit, effect_type, end_t, z_delta)
+	end
+end
+
+FxSystem.rpc_projectile_reattach_vfx = function (self, channel_id, unit_id, event_type_id)
+	local effect_type = NetworkLookup.projectile_template_effects[event_type_id]
+	local unit = Managers.state.unit_spawner:unit(unit_id)
+
+	if unit then
+		local unit_to_extension_map = self._unit_to_extension_map
+		local fx_extension = unit_to_extension_map[unit]
+
+		fx_extension:reattach_vfx(effect_type)
 	end
 end
 

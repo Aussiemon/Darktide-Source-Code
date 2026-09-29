@@ -40,9 +40,9 @@ weapon_template.actions = {
 		use_aim_date = false,
 		deployable_settings = Deployables.deployable_force_field,
 		place_configuration = {
-			distance = 2,
-		},
-	},
+			distance = 2
+		}
+	}
 }
 
 table.add_missing(weapon_template.actions, PocketablesTemplateSettings.actions)
@@ -52,22 +52,22 @@ weapon_template.actions.action_place_complete.action_condition_func = function (
 end
 
 weapon_template.keywords = {
-	"pocketable",
+	"pocketable"
 }
 weapon_template.ammo_template = "no_ammo"
 weapon_template.hud_configuration = {
 	uses_ammunition = true,
-	uses_overheat = false,
+	uses_overheat = false
 }
 weapon_template.breed_anim_state_machine_3p = {
 	cryptic = "content/characters/player/human/third_person/animations/pocketables",
 	human = "content/characters/player/human/third_person/animations/pocketables",
-	ogryn = "content/characters/player/ogryn/third_person/animations/pocketables",
+	ogryn = "content/characters/player/ogryn/third_person/animations/pocketables"
 }
 weapon_template.breed_anim_state_machine_1p = {
 	cryptic = "content/characters/player/human/first_person/animations/pocketables",
 	human = "content/characters/player/human/first_person/animations/pocketables",
-	ogryn = "content/characters/player/ogryn/first_person/animations/pocketables",
+	ogryn = "content/characters/player/ogryn/first_person/animations/pocketables"
 }
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.fx_sources = {}
@@ -80,7 +80,7 @@ weapon_template.pickup_name = "expedition_deployable_force_field_pocketable"
 weapon_template.breed_footstep_intervals = {
 	cryptic = FootstepIntervalsTemplates.pocketable_human,
 	human = FootstepIntervalsTemplates.pocketable_human,
-	ogryn = FootstepIntervalsTemplates.pocketable_ogryn,
+	ogryn = FootstepIntervalsTemplates.pocketable_ogryn
 }
 weapon_template.hud_icon = "content/ui/materials/icons/pocketables/hud/void_shield"
 weapon_template.hud_icon_small = "content/ui/materials/icons/pocketables/hud/void_shield"

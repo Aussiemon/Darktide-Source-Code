@@ -8,15 +8,15 @@ local mission_giver_vo_enginseer_a = {
 			"loc_enginseer_a__cmd_deploy_skull_01",
 			"loc_enginseer_a__cmd_deploy_skull_02",
 			"loc_enginseer_a__cmd_deploy_skull_03",
-			"loc_enginseer_a__cmd_deploy_skull_04",
+			"loc_enginseer_a__cmd_deploy_skull_04"
 		},
 		sound_events_duration = {
 			7.55175,
 			7.51174,
 			6.978865,
-			7.445405,
+			7.445405
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	mission_agnostic_dropship_deploy_a = {
 		randomize_indexes_n = 0,
@@ -24,15 +24,15 @@ local mission_giver_vo_enginseer_a = {
 		sound_events = {
 			"loc_enginseer_a__mission_agnostic_dropship_deploy_a_01",
 			"loc_enginseer_a__mission_agnostic_dropship_deploy_a_02",
-			"loc_enginseer_a__mission_agnostic_dropship_deploy_a_03",
+			"loc_enginseer_a__mission_agnostic_dropship_deploy_a_03"
 		},
 		sound_events_duration = {
 			5.348521,
 			5.124448,
-			5.690332,
+			5.690332
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_giver_vo_enginseer_a", mission_giver_vo_enginseer_a)

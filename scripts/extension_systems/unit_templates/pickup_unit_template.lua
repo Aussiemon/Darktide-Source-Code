@@ -10,7 +10,7 @@ local function _pickup_broadphase_radius_and_categories(pickup_settings)
 	local group_name = pickup_settings.group
 	local radius, categories = 1, {
 		"pickups",
-		group_name,
+		group_name
 	}
 
 	return radius, categories
@@ -27,6 +27,11 @@ local pickup_unit_template = {
 		local pickup_name = NetworkLookup.pickup_names[pickup_id]
 		local pickup_settings = Pickups.by_name[pickup_name]
 		local unit_name = pickup_settings.unit_name
+
+		if pickup_settings.unit_names then
+			unit_name = math.random_array_entry(pickup_settings.unit_names)
+		end
+
 		local position, rotation = UnitTemplate.position_rotation_from_game_object(session, object_id)
 
 		return unit_name, position, rotation
@@ -48,7 +53,7 @@ local pickup_unit_template = {
 		config:add("BroadphaseExtension", {
 			moving = false,
 			radius = radius,
-			categories = categories,
+			categories = categories
 		})
 
 		local projectile_template_name_id
@@ -74,7 +79,7 @@ local pickup_unit_template = {
 			config:add("ProjectileUnitLocomotionExtension", {
 				handle_oob_despawning = false,
 				projectile_template_name = projectile_template_name,
-				optional_item = item,
+				optional_item = item
 			})
 			config:add("LuggableExtension")
 			config:add("TriggerVolumeEventExtension")
@@ -85,7 +90,7 @@ local pickup_unit_template = {
 
 		if pickup_settings.deployable then
 			config:add("DeployableUnitLocomotionExtension", {
-				placed_on_unit = optional_placed_on_unit,
+				placed_on_unit = optional_placed_on_unit
 			})
 
 			if optional_placed_on_unit then
@@ -108,7 +113,7 @@ local pickup_unit_template = {
 				hit_mass = luggable_explosion_component_data.hit_mass,
 				is_unkillable = luggable_explosion_component_data.unkillable,
 				is_invulnerable = luggable_explosion_component_data.invulnerable,
-				invulnerable_when_carried = luggable_explosion_component_data.invulnerable_when_carried,
+				invulnerable_when_carried = luggable_explosion_component_data.invulnerable_when_carried
 			})
 		end
 
@@ -118,19 +123,19 @@ local pickup_unit_template = {
 			override_context = {
 				description = pickup_settings.description,
 				extra_description = pickup_settings.extra_description,
-				interaction_icon = pickup_settings.interaction_icon,
-			},
+				interaction_icon = pickup_settings.interaction_icon
+			}
 		})
 		config:add("PointOfInterestTargetExtension", {
 			tag = pickup_settings.look_at_tag,
-			view_distance = pickup_settings.look_at_distance,
+			view_distance = pickup_settings.look_at_distance
 		})
 
 		if pickup_settings.smart_tag_target_type then
 			config:add("SmartTagExtension", {
 				target_type = pickup_settings.smart_tag_target_type,
 				auto_tag_on_spawn = pickup_settings.auto_tag_on_spawn,
-				origin_player = optional_origin_player,
+				origin_player = optional_origin_player
 			})
 		end
 
@@ -173,7 +178,7 @@ local pickup_unit_template = {
 		config:add("BroadphaseExtension", {
 			moving = false,
 			radius = radius,
-			categories = categories,
+			categories = categories
 		})
 
 		local pickup_group = pickup_settings.group
@@ -188,7 +193,7 @@ local pickup_unit_template = {
 			config:add("MissionObjectiveTargetExtension")
 			config:add("ProjectileHuskLocomotionExtension", {
 				projectile_template_name = projectile_template_name,
-				optional_item = item,
+				optional_item = item
 			})
 			config:add("LuggableExtension")
 		elseif pickup_group == "side_mission_collect" then
@@ -208,7 +213,7 @@ local pickup_unit_template = {
 
 		if luggable_explosion_component_data then
 			config:add("PropHealthExtension", {
-				has_health_bar = luggable_explosion_component_data.has_health_bar,
+				has_health_bar = luggable_explosion_component_data.has_health_bar
 			})
 		end
 
@@ -217,13 +222,13 @@ local pickup_unit_template = {
 			override_context = {
 				description = pickup_settings.description,
 				extra_description = pickup_settings.extra_description,
-				interaction_icon = pickup_settings.interaction_icon,
-			},
+				interaction_icon = pickup_settings.interaction_icon
+			}
 		})
 
 		if pickup_settings.smart_tag_target_type then
 			config:add("SmartTagExtension", {
-				target_type = pickup_settings.smart_tag_target_type,
+				target_type = pickup_settings.smart_tag_target_type
 			})
 		end
 
@@ -269,7 +274,7 @@ local pickup_unit_template = {
 			component_ext:add_component("PropHealth", unit, starts_enabled, luggable_explosion_component_data)
 			component_ext:add_component("ExplosiveLuggable", unit, starts_enabled, luggable_explosion_component_data)
 		end
-	end,
+	end
 }
 
 return pickup_unit_template

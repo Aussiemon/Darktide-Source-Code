@@ -11,20 +11,20 @@ local view_settings = {
 	state_bound = true,
 	use_transition_ui = true,
 	levels = {
-		"content/levels/ui/cosmetics_preview/cosmetics_preview",
+		"content/levels/ui/cosmetics_preview/cosmetics_preview"
 	},
 	enter_sound_events = {
-		UISoundEvents.default_menu_enter,
+		UISoundEvents.default_menu_enter
 	},
 	exit_sound_events = {
-		UISoundEvents.default_menu_exit,
+		UISoundEvents.default_menu_exit
 	},
 	wwise_states = {
-		options = WwiseGameSyncSettings.state_groups.options.ingame_menu,
+		options = WwiseGameSyncSettings.state_groups.options.ingame_menu
 	},
 	testify_flags = {
-		ui_views = false,
-	},
+		ui_views = false
+	}
 }
 
 return settings("MasteryViewDeclarationSettings", view_settings)

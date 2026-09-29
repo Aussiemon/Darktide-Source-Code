@@ -36,7 +36,7 @@ AimAssist.update_ramp_multiplier = function (dt, t, aim_assist_ramp_component)
 end
 
 AimAssist.apply_aim_assist = function (main_t, main_dt, input, targeting_data, aim_assist_ramp_component, weapon_action_component, look_yaw, look_pitch, position, combat_ability_action_component, grenade_ability_action_component)
-	local gamepad_active = Managers.input:is_using_gamepad()
+	local gamepad_active = Managers.input:is_using_gamepad() and Managers.input:is_using_gamepad_without_motion()
 	local enable_aim_assist = gamepad_active
 
 	enable_aim_assist = enable_aim_assist and not not targeting_data and not not targeting_data.unit
@@ -193,7 +193,7 @@ local _internal = {
 	locking = false,
 	previous_distance = 0,
 	target_position = Vector3Box(Vector3.zero()),
-	lock_position = Vector3Box(Vector3.zero()),
+	lock_position = Vector3Box(Vector3.zero())
 }
 
 AimAssist.apply_movement_aim_assist = function (aim_assist_context, orientation, input, look_delta, dt, t)

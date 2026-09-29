@@ -14,53 +14,53 @@ suppression_templates.bolter_p1_m1_suppression_spraynpray = {
 			{
 				pitch = {
 					lerp_basic = 1,
-					lerp_perfect = 0.5,
+					lerp_perfect = 0.5
 				},
 				yaw = {
 					lerp_basic = 1,
-					lerp_perfect = 0.5,
-				},
+					lerp_perfect = 0.5
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 2,
-					lerp_perfect = 1,
+					lerp_perfect = 1
 				},
 				yaw = {
 					lerp_basic = 2,
-					lerp_perfect = 1,
-				},
+					lerp_perfect = 1
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 3,
-					lerp_perfect = 2,
+					lerp_perfect = 2
 				},
 				yaw = {
 					lerp_basic = 3,
-					lerp_perfect = 2,
-				},
-			},
-		},
+					lerp_perfect = 2
+				}
+			}
+		}
 	},
 	moving = {
 		inherits = {
 			"bolter_p1_m1_suppression_spraynpray",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"bolter_p1_m1_suppression_spraynpray",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"bolter_p1_m1_suppression_spraynpray",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 suppression_templates.bolter_p1_m1_suppression_killshot = {
 	still = {
@@ -70,76 +70,76 @@ suppression_templates.bolter_p1_m1_suppression_killshot = {
 			{
 				pitch = {
 					lerp_basic = 0.25,
-					lerp_perfect = 0.1,
+					lerp_perfect = 0.1
 				},
 				yaw = {
 					lerp_basic = 0.25,
-					lerp_perfect = 0.1,
-				},
+					lerp_perfect = 0.1
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 0.5,
-					lerp_perfect = 0.25,
+					lerp_perfect = 0.25
 				},
 				yaw = {
 					lerp_basic = 0.5,
-					lerp_perfect = 0.25,
-				},
+					lerp_perfect = 0.25
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 2,
-					lerp_perfect = 1.5,
+					lerp_perfect = 1.5
 				},
 				yaw = {
 					lerp_basic = 2,
-					lerp_perfect = 1.5,
-				},
+					lerp_perfect = 1.5
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 3,
-					lerp_perfect = 2.5,
+					lerp_perfect = 2.5
 				},
 				yaw = {
 					lerp_basic = 3,
-					lerp_perfect = 2.5,
-				},
+					lerp_perfect = 2.5
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 4,
-					lerp_perfect = 3.5,
+					lerp_perfect = 3.5
 				},
 				yaw = {
 					lerp_basic = 4,
-					lerp_perfect = 3.5,
-				},
-			},
-		},
+					lerp_perfect = 3.5
+				}
+			}
+		}
 	},
 	moving = {
 		inherits = {
 			"bolter_p1_m1_suppression_killshot",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"bolter_p1_m1_suppression_killshot",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"bolter_p1_m1_suppression_killshot",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 
 return {
 	base_templates = suppression_templates,
-	overrides = overrides,
+	overrides = overrides
 }

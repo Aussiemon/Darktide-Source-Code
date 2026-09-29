@@ -8,10 +8,10 @@ local STORES_FORMAT_STRINGS = {
 	credit_goods = "get_%s_credits_goods_store",
 	credit_weapon_cosmetics = "get_%s_credits_weapon_cosmetics_store",
 	mark = "get_%s_marks_store",
-	premium = "premium_store_skins_%s",
+	premium = "premium_store_skins_%s"
 }
 local store_names = {
-	by_archetype = {},
+	by_archetype = {}
 }
 
 for store_name, format_string in pairs(STORES_FORMAT_STRINGS) do

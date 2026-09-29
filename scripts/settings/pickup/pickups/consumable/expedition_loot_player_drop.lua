@@ -12,7 +12,7 @@ local pickup_data = {
 	unit_name = "content/pickups/consumables/expeditions/loot_player_drop",
 	on_pickup_func = function (pickup_unit, interactor_unit, pickup_data)
 		Managers.event:trigger("event_expedition_player_loot_collected", interactor_unit, pickup_unit)
-	end,
+	end
 }
 
 return pickup_data

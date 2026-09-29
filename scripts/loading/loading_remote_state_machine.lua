@@ -22,7 +22,7 @@ LoadingRemoteStateMachine.init = function (self, network_delegate, client_channe
 		timeout = LoadingRemoteStateMachine.TIMEOUT,
 		spawn_queue = spawn_queue,
 		done_loading_level_func = done_loading_level_func,
-		mission_seed = mission_seed,
+		mission_seed = mission_seed
 	}
 
 	self._shared_state = shared_state

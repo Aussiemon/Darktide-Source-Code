@@ -10,8 +10,8 @@ local hub_camera_settings = {
 		idle = 0,
 		jog = 0.25,
 		sprint = 1,
-		walk = 0,
-	},
+		walk = 0
+	}
 }
 
 return settings("HubCameraSettings", hub_camera_settings)

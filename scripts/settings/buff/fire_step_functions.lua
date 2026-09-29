@@ -77,7 +77,7 @@ local FireStepFunctions = {
 		local max_ammunition_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
 
 		return math.max(1, math.floor(max_ammunition_clip * 0.08))
-	end,
+	end
 }
 
 return FireStepFunctions

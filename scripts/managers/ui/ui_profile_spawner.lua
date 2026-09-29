@@ -5,6 +5,7 @@ local EquipmentComponent = require("scripts/extension_systems/visual_loadout/equ
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ItemSlotUtils = require("scripts/utilities/item_slot_utils")
 local MasterItems = require("scripts/backend/master_items")
+local PlayerCharacterBody = require("scripts/utilities/player_character_body")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local Promise = require("scripts/foundation/utilities/promise")
@@ -14,14 +15,14 @@ local UIProfileSpawner = class("UIProfileSpawner")
 local NilCursor = {
 	0,
 	0,
-	0,
+	0
 }
 local PI = math.pi
 local PI_2 = PI * 2
 local SLOT_CONFIGURATION = PlayerCharacterConstants.slot_configuration
 local FORCE_STREAM_TIMEOUT = GameParameters.force_stream_mesh_timeout
 local COMPANION_COSMETIC_SLOTS = {
-	"slot_companion_gear_full",
+	"slot_companion_gear_full"
 }
 local COMPANION_SLOT_DEPENDENCIES = {}
 
@@ -214,7 +215,7 @@ UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, sc
 		disable_hair_state_machine = not not disable_hair_state_machine_or_nil,
 		optional_unit_3p = optional_unit_3p,
 		optional_ignore_state_machine = optional_ignore_state_machine,
-		companion_data = companion_data,
+		companion_data = companion_data
 	}
 end
 
@@ -285,7 +286,7 @@ UIProfileSpawner.assign_animation_variable = function (self, index, value)
 	else
 		self._pending_animation_variable_data = {
 			index = index,
-			value = value,
+			value = value
 		}
 	end
 end
@@ -297,7 +298,9 @@ UIProfileSpawner.assign_animation_event = function (self, animation_event)
 		if animation_event then
 			local unit_3p = character_spawn_data.unit_3p
 
-			Unit.animation_event(unit_3p, animation_event)
+			if Unit.has_animation_event(unit_3p, animation_event) then
+				Unit.animation_event(unit_3p, animation_event)
+			end
 
 			self._pending_animation_event = nil
 		end
@@ -382,7 +385,7 @@ UIProfileSpawner.assign_companion_animation_variable = function (self, index, va
 	else
 		self._pending_companion_animation_variable_data = {
 			index = index,
-			value = value,
+			value = value
 		}
 	end
 end
@@ -420,7 +423,7 @@ UIProfileSpawner.assign_companion_animation_event = function (self, animation_ev
 		if animation_event then
 			local unit_3p = character_spawn_data.companion_unit_3p
 
-			if unit_3p then
+			if unit_3p and Unit.has_animation_event(unit_3p, animation_event) then
 				Unit.animation_event(unit_3p, animation_event)
 			end
 
@@ -521,7 +524,7 @@ UIProfileSpawner._change_slot_items = function (self, changed_items, loadout, vi
 		visual_slot_ids[slot_id] = true
 		updated_slots[slot_id] = {
 			item = item or nil,
-			visual_item = visual_loadout[slot_id],
+			visual_item = visual_loadout[slot_id]
 		}
 	end
 
@@ -539,7 +542,7 @@ UIProfileSpawner._change_slot_items = function (self, changed_items, loadout, vi
 		if not updated_slots[visual_slot_id] then
 			updated_slots[visual_slot_id] = {
 				item = loadout[visual_slot_id] or nil,
-				visual_item = visual_loadout[visual_slot_id],
+				visual_item = visual_loadout[visual_slot_id]
 			}
 		end
 	end
@@ -1005,11 +1008,11 @@ UIProfileSpawner._equip_item_for_spawned_character = function (self, slot_id, it
 			end
 		end
 
-		local gender = profile.gender
 		local deform_override_items = {}
+		local profile_wrap_deform_override_item_name = PlayerCharacterBody.wrap_deform_item_name_from_profile(profile)
 
-		if gender == "female" then
-			deform_override_items[#deform_override_items + 1] = "content/items/material_overrides/player_wrap_deform/wrap_deform_human_body_female"
+		if profile_wrap_deform_override_item_name then
+			deform_override_items[#deform_override_items + 1] = profile_wrap_deform_override_item_name
 		end
 
 		local parent_unit_3p = unit_3p
@@ -1139,11 +1142,11 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 
 	local slot_options = {
 		slot_primary = {
-			skip_link_children = false,
+			skip_link_children = false
 		},
 		slot_secondary = {
-			skip_link_children = true,
-		},
+			skip_link_children = true
+		}
 	}
 	local equipment_component = EquipmentComponent:new(self._world, self._item_definitions, self._unit_spawner, unit_3p, nil, nil, self._force_highest_lod_step, true)
 	local slots = equipment_component.initialize_equipment(gear_slots, breed_settings, slot_options)
@@ -1192,11 +1195,11 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 			end
 
 			if not skip_slot then
-				local gender = profile.gender
 				local deform_override_items = {}
+				local profile_wrap_deform_override_item_name = PlayerCharacterBody.wrap_deform_item_name_from_profile(profile)
 
-				if gender == "female" then
-					deform_override_items[#deform_override_items + 1] = "content/items/material_overrides/player_wrap_deform/wrap_deform_human_body_female"
+				if profile_wrap_deform_override_item_name then
+					deform_override_items[#deform_override_items + 1] = profile_wrap_deform_override_item_name
 				end
 
 				local parent_unit_3p = unit_3p
@@ -1292,7 +1295,7 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 		companion_position = Vector3Box(self._loading_profile_data.companion_data.original_position:unbox()),
 		companion_rotation = self._loading_profile_data.companion_data.original_rotation,
 		companion_ignore = companion_ignore,
-		companion_attach_to_character = companion_attach_to_character,
+		companion_attach_to_character = companion_attach_to_character
 	}
 
 	self._character_spawn_data = character_spawn_data
@@ -1337,7 +1340,7 @@ UIProfileSpawner._force_stream = function (self, unit_3p, on_complete_callback)
 	end)
 
 	self._stream_promises[stream_promise] = {
-		on_complete_callback = on_complete_callback,
+		on_complete_callback = on_complete_callback
 	}
 end
 
@@ -1428,7 +1431,7 @@ UIProfileSpawner._update_items_visibility = function (self)
 	local equipment_component = spawn_data.equipment_component
 	local slots = spawn_data.slots
 	local wielded_slot = spawn_data.wielded_slot
-	local wielded_slot_name = wielded_slot.name
+	local wielded_slot_name = wielded_slot and wielded_slot.name or nil
 	local unit_3p = spawn_data.unit_3p
 	local companion_unit_3p = spawn_data.companion_unit_3p
 	local unit_1p = spawn_data.unit_1p

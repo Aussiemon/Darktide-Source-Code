@@ -1,23 +1,24 @@
 ﻿-- chunkname: @scripts/ui/constant_elements/elements/loading/constant_element_loading.lua
 
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
+local Views = require("scripts/ui/views/views")
 local HOST_TYPES = MatchmakingConstants.HOST_TYPES
 local NO_TRANSITION_UI = {
-	use_transition_ui = false,
+	use_transition_ui = false
 }
 local LOADING_ICON = {
-	loading_icon = true,
+	loading_icon = true
 }
 local DELAYED_LOADING_ICON = {
 	loading_icon = true,
-	loading_icon_delay = 3,
+	loading_icon_delay = 3
 }
 local VIEW_SETTINGS = {
 	{
 		view_name = "mission_intro_view",
 		valid_states = {
 			"StateLoading",
-			"GameplayStateInit",
+			"GameplayStateInit"
 		},
 		validation_func = function ()
 			if Managers.ui:view_active("lobby_view") then
@@ -53,7 +54,7 @@ local VIEW_SETTINGS = {
 				end
 			end
 
-			local mechanism_data = Managers.mechanism:mechanism_data()
+			local mechanism_data = Managers.mechanism:current_mechanism() and Managers.mechanism:mechanism_data()
 			local mission_name = mechanism_data and mechanism_data.mission_name
 
 			if mission_name == nil then
@@ -61,13 +62,13 @@ local VIEW_SETTINGS = {
 			end
 
 			return true
-		end,
+		end
 	},
 	{
 		view_name = "blank_view",
 		valid_states = {
 			"StateLoading",
-			"GameplayStateRun",
+			"GameplayStateRun"
 		},
 		validation_func = function ()
 			if Managers.ui:view_active("lobby_view") then
@@ -101,7 +102,20 @@ local VIEW_SETTINGS = {
 			end
 
 			if Managers.state and Managers.state.camera and not Managers.state.camera:has_proper_3d_camera() then
-				return true
+				local active_views = Managers.ui:active_views()
+				local need_coverage = true
+
+				for _, view_name in ipairs(active_views) do
+					if Views[view_name].disable_game_world then
+						need_coverage = false
+
+						break
+					end
+				end
+
+				if #active_views >= 1 and need_coverage then
+					return true
+				end
 			end
 
 			if Managers.state and Managers.state.extension then
@@ -113,12 +127,12 @@ local VIEW_SETTINGS = {
 					return true, LOADING_ICON
 				end
 			end
-		end,
+		end
 	},
 	{
 		view_name = "blank_view",
 		valid_states = {
-			"GameplayStateRun",
+			"GameplayStateRun"
 		},
 		validation_func = function ()
 			local cinematic_loading = Managers.state.cinematic:is_loading_cinematic_levels()
@@ -132,7 +146,7 @@ local VIEW_SETTINGS = {
 			if mission_outro_played then
 				return true, nil, NO_TRANSITION_UI
 			end
-		end,
+		end
 	},
 	{
 		view_name = "video_view",
@@ -141,7 +155,7 @@ local VIEW_SETTINGS = {
 			"StateExitToMainMenu",
 			"StateMissionServerExit",
 			"GameplayStateInit",
-			"StateError",
+			"StateError"
 		},
 		validation_func = function ()
 			if Managers.ui:view_active("lobby_view") then
@@ -159,13 +173,13 @@ local VIEW_SETTINGS = {
 
 				return true
 			end
-		end,
+		end
 	},
 	{
 		view_name = "blank_view",
 		valid_states = {
 			"GameplayStateInit",
-			"GameplayStateRun",
+			"GameplayStateRun"
 		},
 		validation_func = function ()
 			if Managers.ui:view_active("lobby_view") then
@@ -182,7 +196,7 @@ local VIEW_SETTINGS = {
 			if not fully_hot_join_synced then
 				return true, DELAYED_LOADING_ICON
 			end
-		end,
+		end
 	},
 	{
 		view_name = "loading_view",
@@ -191,7 +205,7 @@ local VIEW_SETTINGS = {
 			"StateExitToMainMenu",
 			"StateMissionServerExit",
 			"GameplayStateInit",
-			"StateError",
+			"StateError"
 		},
 		validation_func = function ()
 			if Managers.ui:view_active("lobby_view") then
@@ -199,8 +213,8 @@ local VIEW_SETTINGS = {
 			end
 
 			return true
-		end,
-	},
+		end
+	}
 }
 local ConstantElementLoading = class("ConstantElementLoading")
 

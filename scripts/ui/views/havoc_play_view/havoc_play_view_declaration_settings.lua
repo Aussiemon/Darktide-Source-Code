@@ -8,8 +8,8 @@ local view_settings = {
 	preload_in_hub = "not_ps5_nor_lockhart",
 	state_bound = true,
 	testify_flags = {
-		ui_views = false,
-	},
+		ui_views = false
+	}
 }
 
 return settings("HavocPlayViewDeclarationSettings", view_settings)

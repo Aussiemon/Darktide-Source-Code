@@ -72,7 +72,7 @@ local function _generate_blueprints_function(grid_size)
 	group_header_font_style.offset = {
 		0,
 		0,
-		3,
+		3
 	}
 	group_header_font_style.text_horizontal_alignment = "center"
 	group_header_font_style.text_vertical_alignment = "center"
@@ -83,7 +83,7 @@ local function _generate_blueprints_function(grid_size)
 	sub_header_font_style.offset = {
 		0,
 		0,
-		3,
+		3
 	}
 	sub_header_font_style.font_size = 18
 	sub_header_font_style.text_horizontal_alignment = "center"
@@ -99,11 +99,11 @@ local function _generate_blueprints_function(grid_size)
 	cosmetic_item_display_name_text_style.offset = {
 		10,
 		0,
-		5,
+		5
 	}
 	cosmetic_item_display_name_text_style.size = {
 		grid_width - 20,
-		50,
+		50
 	}
 
 	local function _apply_package_item_icon_cb_func(widget, item)
@@ -183,22 +183,22 @@ local function _generate_blueprints_function(grid_size)
 		dynamic_spacing = {
 			size = {
 				0,
-				0,
+				0
 			},
 			size_function = function (parent, config)
 				return config.size
-			end,
+			end
 		},
 		spacing_vertical = {
 			size = {
 				grid_width,
-				20,
-			},
+				20
+			}
 		},
 		divider = {
 			size = {
 				grid_width,
-				60,
+				60
 			},
 			pass_template = {
 				{
@@ -211,35 +211,35 @@ local function _generate_blueprints_function(grid_size)
 						vertical_alignment = "top",
 						size = {
 							math.min(grid_width * 0.8, 400),
-							18,
+							18
 						},
 						offset = {
 							0,
 							24,
-							1,
+							1
 						},
-						color = Color.terminal_frame(255, true),
-					},
-				},
-			},
+						color = Color.terminal_frame(255, true)
+					}
+				}
+			}
 		},
 		spacing_vertical_small = {
 			size = {
 				grid_width,
-				10,
-			},
+				10
+			}
 		},
 		button = {
 			size = {
 				grid_width,
-				50,
+				50
 			},
 			pass_template = ButtonPassTemplates.list_button,
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
 
 				content.text = element.display_name
-			end,
+			end
 		},
 		ui_item = {
 			size = ItemPassTemplates.ui_item_size,
@@ -280,7 +280,7 @@ local function _generate_blueprints_function(grid_size)
 
 							item_icon_size = {
 								icon_width,
-								icon_height,
+								icon_height
 							}
 						end
 
@@ -340,7 +340,7 @@ local function _generate_blueprints_function(grid_size)
 					local slot_name = slot.name
 					local cb = callback(_apply_package_item_icon_cb_func, widget, item)
 					local render_context = {
-						camera_focus_slot_name = slot_name,
+						camera_focus_slot_name = slot_name
 					}
 
 					content.icon_load_id = Managers.ui:load_item_icon(item, cb)
@@ -372,7 +372,7 @@ local function _generate_blueprints_function(grid_size)
 				if content.icon_load_id then
 					Managers.ui:update_item_icon_priority(content.icon_load_id)
 				end
-			end,
+			end
 		},
 		character_title_item = {
 			size = ItemPassTemplates.character_title_item_size,
@@ -419,7 +419,7 @@ local function _generate_blueprints_function(grid_size)
 
 							item_icon_size = {
 								icon_width,
-								icon_height,
+								icon_height
 							}
 						end
 
@@ -494,7 +494,7 @@ local function _generate_blueprints_function(grid_size)
 				if content.icon_load_id then
 					Managers.ui:update_item_icon_priority(content.icon_load_id)
 				end
-			end,
+			end
 		},
 		gear_item = {
 			size = ItemPassTemplates.gear_icon_size,
@@ -644,7 +644,7 @@ local function _generate_blueprints_function(grid_size)
 						state_machine = item_state_machine,
 						animation_event = item_animation_event,
 						companion_state_machine = item_companion_state_machine,
-						companion_animation_event = item_companion_animation_event,
+						companion_animation_event = item_companion_animation_event
 					}
 
 					content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, dummy_profile, prioritize, nil)
@@ -676,7 +676,7 @@ local function _generate_blueprints_function(grid_size)
 				if content.icon_load_id then
 					Managers.ui:update_item_icon_priority(content.icon_load_id)
 				end
-			end,
+			end
 		},
 		item_icon = {
 			size = ItemPassTemplates.icon_size,
@@ -795,7 +795,7 @@ local function _generate_blueprints_function(grid_size)
 					local render_context = {
 						alignment_key = element.alignment_key,
 						alignment_key_value = element.alignment_key_value,
-						size = element.render_size,
+						size = element.render_size
 					}
 
 					content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, dummy_profile, prioritize)
@@ -827,7 +827,7 @@ local function _generate_blueprints_function(grid_size)
 				if content.icon_load_id then
 					Managers.ui:update_item_icon_priority(content.icon_load_id)
 				end
-			end,
+			end
 		},
 		item = {
 			size = ItemPassTemplates.weapon_item_size,
@@ -882,7 +882,7 @@ local function _generate_blueprints_function(grid_size)
 
 				if not level_requirement_met then
 					local required_level_text = Localize("loc_requires_level", true, {
-						level = required_level,
+						level = required_level
 					})
 
 					content.required_level = required_level_text
@@ -1018,7 +1018,7 @@ local function _generate_blueprints_function(grid_size)
 
 				style.background_gradient.color = table.clone(rarity_color)
 				style.rarity_tag.color = table.clone(rarity_color)
-			end,
+			end
 		},
 		gear_set = {
 			size = ItemPassTemplates.gear_bundle_size,
@@ -1132,8 +1132,8 @@ local function _generate_blueprints_function(grid_size)
 						camera_focus_slot_name = "slot_set",
 						size = {
 							gear_bundle_size[1],
-							gear_bundle_size[2],
-						},
+							gear_bundle_size[2]
+						}
 					}
 
 					content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, preview_profile, prioritize)
@@ -1165,7 +1165,7 @@ local function _generate_blueprints_function(grid_size)
 				if content.icon_load_id then
 					Managers.ui:update_item_icon_priority(content.icon_load_id)
 				end
-			end,
+			end
 		},
 		store_item = {
 			size = ItemPassTemplates.store_item_size,
@@ -1246,7 +1246,7 @@ local function _generate_blueprints_function(grid_size)
 
 				if not level_requirement_met then
 					content.required_level = Localize("loc_requires_level", true, {
-						level = required_level,
+						level = required_level
 					})
 				end
 
@@ -1312,7 +1312,7 @@ local function _generate_blueprints_function(grid_size)
 							state_machine = item_state_machine,
 							animation_event = item_animation_event,
 							companion_state_machine = item_companion_state_machine,
-							companion_animation_event = item_companion_animation_event,
+							companion_animation_event = item_companion_animation_event
 						}
 					end
 
@@ -1347,7 +1347,7 @@ local function _generate_blueprints_function(grid_size)
 				if content.icon_load_id then
 					Managers.ui:update_item_icon_priority(content.icon_load_id)
 				end
-			end,
+			end
 		},
 		general_goods_item = {
 			size = ItemPassTemplates.store_item_size,
@@ -1426,7 +1426,7 @@ local function _generate_blueprints_function(grid_size)
 			end,
 			destroy = function (parent, widget, element, ui_renderer)
 				return
-			end,
+			end
 		},
 		credits_goods_item = {
 			size = ItemPassTemplates.store_item_credits_goods_size,
@@ -1471,7 +1471,7 @@ local function _generate_blueprints_function(grid_size)
 
 				if level_requirement_met == false then
 					content.required_level = Localize("loc_requires_level", true, {
-						level = element.weapon_level_requirement,
+						level = element.weapon_level_requirement
 					})
 				end
 			end,
@@ -1480,20 +1480,20 @@ local function _generate_blueprints_function(grid_size)
 			end,
 			destroy = function (parent, widget, element, ui_renderer)
 				return
-			end,
+			end
 		},
 		group_header = {
 			size = {
 				grid_width,
-				70,
+				70
 			},
 			pass_template = {
 				{
 					pass_type = "text",
 					value = "n/a",
 					value_id = "text",
-					style = group_header_font_style,
-				},
+					style = group_header_font_style
+				}
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
@@ -1517,20 +1517,20 @@ local function _generate_blueprints_function(grid_size)
 				end
 
 				content.text = text
-			end,
+			end
 		},
 		sub_header = {
 			size = {
 				grid_width,
-				20,
+				20
 			},
 			pass_template = {
 				{
 					pass_type = "text",
 					value = "n/a",
 					value_id = "text",
-					style = sub_header_font_style,
-				},
+					style = sub_header_font_style
+				}
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
@@ -1554,7 +1554,7 @@ local function _generate_blueprints_function(grid_size)
 				end
 
 				content.text = text
-			end,
+			end
 		},
 		item_name = {
 			size_function = function (parent, config, ui_renderer)
@@ -1590,13 +1590,13 @@ local function _generate_blueprints_function(grid_size)
 						rarity_color[2] / 255,
 						rarity_color[3] / 255,
 						rarity_color[4] / 255,
-						rarity_color[1] / 255,
+						rarity_color[1] / 255
 					}
 					widget.style.background.material_values.background_color = {
 						rarity_color_dark[2] / 255,
 						rarity_color_dark[3] / 255,
 						rarity_color_dark[4] / 255,
-						rarity_color_dark[1] / 191.25,
+						rarity_color_dark[1] / 191.25
 					}
 					widget.content.description = string.format("{#color(%d, %d, %d)}%s{#reset()} • %s", rarity_color[2], rarity_color[3], rarity_color[4], rarity_display_name, item_type)
 				else
@@ -1607,13 +1607,13 @@ local function _generate_blueprints_function(grid_size)
 						line_color[2] / 255,
 						line_color[3] / 255,
 						line_color[4] / 255,
-						line_color[1] / 255,
+						line_color[1] / 255
 					}
 					widget.style.background.material_values.background_color = {
 						background_color[2] / 255,
 						background_color[3] / 255,
 						background_color[4] / 255,
-						background_color[1] / 255,
+						background_color[1] / 255
 					}
 					widget.content.description = item_type
 				end
@@ -1630,7 +1630,7 @@ local function _generate_blueprints_function(grid_size)
 				local item_name_margin = 15
 				local item_name_size = {
 					widget.content.size[1],
-					1080,
+					1080
 				}
 				local item_name_height = Text.text_height(ui_renderer, widget.content.title, item_name_style, item_name_size)
 				local display_description_height = Text.text_height(ui_renderer, widget.content.description, display_description_style, item_name_size)
@@ -1638,11 +1638,11 @@ local function _generate_blueprints_function(grid_size)
 				widget.content.size[2] = item_name_height + item_name_margin + display_description_height
 				widget.style.title.size = {
 					widget.content.size[1],
-					item_name_height,
+					item_name_height
 				}
 				widget.style.description.size = {
 					widget.content.size[1],
-					display_description_height,
+					display_description_height
 				}
 				widget.style.description.offset[2] = item_name_height + item_name_margin
 
@@ -1663,8 +1663,8 @@ local function _generate_blueprints_function(grid_size)
 				widget.offset[1] = offset_x
 				widget.offset[2] = offset_y
 				widget.original_offset = table.clone(widget.offset)
-			end,
-		},
+			end
+		}
 	}
 	local WIDGET_TYPE_BY_SLOT = {
 		slot_animation_emote_1 = "ui_item",
@@ -1683,7 +1683,7 @@ local function _generate_blueprints_function(grid_size)
 		slot_portrait_frame = "ui_item",
 		slot_trinket_1 = "gear_item",
 		slot_trinket_2 = "gear_item",
-		slot_weapon_skin = "gear_item",
+		slot_weapon_skin = "gear_item"
 	}
 
 	return blueprints, WIDGET_TYPE_BY_SLOT

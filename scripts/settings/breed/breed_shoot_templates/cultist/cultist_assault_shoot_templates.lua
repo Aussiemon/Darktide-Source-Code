@@ -14,10 +14,10 @@ local cultist_assault_default = {
 	hit_scan_template = HitScanTemplates.assaulter_auto_burst,
 	spread = math.degrees_to_radians(0.7),
 	damage_type = damage_types.minion_auto_bullet,
-	line_effect = LineEffects.cultist_autogun_bullet,
+	line_effect = LineEffects.cultist_autogun_bullet
 }
 local shoot_templates = {
-	cultist_assault_default = cultist_assault_default,
+	cultist_assault_default = cultist_assault_default
 }
 
 return shoot_templates

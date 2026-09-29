@@ -17,11 +17,11 @@ local renegade_sniper_default = {
 	damage_falloff = {
 		falloff_range = 20,
 		max_power_reduction = 0.5,
-		max_range = 60,
-	},
+		max_range = 60
+	}
 }
 local shoot_templates = {
-	renegade_sniper_default = renegade_sniper_default,
+	renegade_sniper_default = renegade_sniper_default
 }
 
 return shoot_templates

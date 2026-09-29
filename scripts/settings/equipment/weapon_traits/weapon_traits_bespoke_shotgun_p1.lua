@@ -17,9 +17,9 @@ templates.weapon_trait_bespoke_shotgun_p1_increase_power_on_close_kill = {
 				find_value_type = "trait_override",
 				path = {
 					"stat_buffs",
-					stat_buffs.power_level_modifier,
-				},
-			},
+					stat_buffs.power_level_modifier
+				}
+			}
 		},
 		time = {
 			format_type = "number",
@@ -27,9 +27,9 @@ templates.weapon_trait_bespoke_shotgun_p1_increase_power_on_close_kill = {
 				buff_template_name = "weapon_trait_bespoke_shotgun_p1_increase_power_on_close_kill_parent",
 				find_value_type = "trait_override",
 				path = {
-					"child_duration",
-				},
-			},
+					"child_duration"
+				}
+			}
 		},
 		stacks = {
 			format_type = "number",
@@ -37,39 +37,39 @@ templates.weapon_trait_bespoke_shotgun_p1_increase_power_on_close_kill = {
 				buff_template_name = "weapon_trait_bespoke_shotgun_p1_increase_power_on_close_kill_child",
 				find_value_type = "buff_template",
 				path = {
-					"max_stacks",
-				},
-			},
-		},
+					"max_stacks"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_shotgun_p1_increase_power_on_close_kill_parent = {
 			{
 				child_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.05,
-				},
+					[stat_buffs.power_level_modifier] = 0.05
+				}
 			},
 			{
 				child_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.055,
-				},
+					[stat_buffs.power_level_modifier] = 0.055
+				}
 			},
 			{
 				child_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.06,
-				},
+					[stat_buffs.power_level_modifier] = 0.06
+				}
 			},
 			{
 				child_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.065,
-				},
-			},
-		},
-	},
+					[stat_buffs.power_level_modifier] = 0.065
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_shotgun_p1_increase_close_damage_on_close_kill = {
 	format_values = {
@@ -81,9 +81,9 @@ templates.weapon_trait_bespoke_shotgun_p1_increase_close_damage_on_close_kill = 
 				find_value_type = "trait_override",
 				path = {
 					"stat_buffs",
-					stat_buffs.damage_near,
-				},
-			},
+					stat_buffs.damage_near
+				}
+			}
 		},
 		time = {
 			format_type = "number",
@@ -91,9 +91,9 @@ templates.weapon_trait_bespoke_shotgun_p1_increase_close_damage_on_close_kill = 
 				buff_template_name = "weapon_trait_bespoke_shotgun_p1_increase_close_damage_on_close_kill_parent",
 				find_value_type = "trait_override",
 				path = {
-					"child_duration",
-				},
-			},
+					"child_duration"
+				}
+			}
 		},
 		stacks = {
 			format_type = "number",
@@ -101,39 +101,39 @@ templates.weapon_trait_bespoke_shotgun_p1_increase_close_damage_on_close_kill = 
 				buff_template_name = "weapon_trait_bespoke_shotgun_p1_increase_close_damage_on_close_kill_child",
 				find_value_type = "buff_template",
 				path = {
-					"max_stacks",
-				},
-			},
-		},
+					"max_stacks"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_shotgun_p1_increase_close_damage_on_close_kill_parent = {
 			{
 				child_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.damage_near] = 0.07,
-				},
+					[stat_buffs.damage_near] = 0.07
+				}
 			},
 			{
 				child_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.damage_near] = 0.08,
-				},
+					[stat_buffs.damage_near] = 0.08
+				}
 			},
 			{
 				child_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.damage_near] = 0.09,
-				},
+					[stat_buffs.damage_near] = 0.09
+				}
 			},
 			{
 				child_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.damage_near] = 0.1,
-				},
-			},
-		},
-	},
+					[stat_buffs.damage_near] = 0.1
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_shotgun_p1_count_as_dodge_vs_ranged_on_close_kill = {
 	format_values = {
@@ -143,27 +143,27 @@ templates.weapon_trait_bespoke_shotgun_p1_count_as_dodge_vs_ranged_on_close_kill
 				buff_template_name = "weapon_trait_bespoke_shotgun_p1_count_as_dodge_vs_ranged_on_close_kill",
 				find_value_type = "trait_override",
 				path = {
-					"active_duration",
-				},
-			},
-		},
+					"active_duration"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_shotgun_p1_count_as_dodge_vs_ranged_on_close_kill = {
 			{
-				active_duration = 0.7,
+				active_duration = 0.7
 			},
 			{
-				active_duration = 0.8,
+				active_duration = 0.8
 			},
 			{
-				active_duration = 0.9,
+				active_duration = 0.9
 			},
 			{
-				active_duration = 1,
-			},
-		},
-	},
+				active_duration = 1
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_shotgun_p1_suppression_on_close_kill = {
 	format_values = {
@@ -175,10 +175,10 @@ templates.weapon_trait_bespoke_shotgun_p1_suppression_on_close_kill = {
 					"5m",
 					"6m",
 					"7m",
-					"8m",
-				},
-			},
-		},
+					"8m"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_shotgun_p1_suppression_on_close_kill = {
@@ -187,35 +187,35 @@ templates.weapon_trait_bespoke_shotgun_p1_suppression_on_close_kill = {
 					distance = 12,
 					instant_aggro = true,
 					suppression_falloff = false,
-					suppression_value = 15,
-				},
+					suppression_value = 15
+				}
 			},
 			{
 				suppression_settings = {
 					distance = 12,
 					instant_aggro = true,
 					suppression_falloff = false,
-					suppression_value = 20,
-				},
+					suppression_value = 20
+				}
 			},
 			{
 				suppression_settings = {
 					distance = 12,
 					instant_aggro = true,
 					suppression_falloff = false,
-					suppression_value = 25,
-				},
+					suppression_value = 25
+				}
 			},
 			{
 				suppression_settings = {
 					distance = 12,
 					instant_aggro = true,
 					suppression_falloff = false,
-					suppression_value = 30,
-				},
-			},
-		},
-	},
+					suppression_value = 30
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_shotgun_p1_power_bonus_on_hitting_single_enemy_with_all = {
 	format_values = {
@@ -227,9 +227,9 @@ templates.weapon_trait_bespoke_shotgun_p1_power_bonus_on_hitting_single_enemy_wi
 				find_value_type = "trait_override",
 				path = {
 					"proc_stat_buffs",
-					stat_buffs.power_level_modifier,
-				},
-			},
+					stat_buffs.power_level_modifier
+				}
+			}
 		},
 		time = {
 			format_type = "number",
@@ -237,35 +237,35 @@ templates.weapon_trait_bespoke_shotgun_p1_power_bonus_on_hitting_single_enemy_wi
 				buff_template_name = "weapon_trait_bespoke_shotgun_p1_power_bonus_on_hitting_single_enemy_with_all",
 				find_value_type = "buff_template",
 				path = {
-					"active_duration",
-				},
-			},
-		},
+					"active_duration"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_shotgun_p1_power_bonus_on_hitting_single_enemy_with_all = {
 			{
 				proc_stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.14,
-				},
+					[stat_buffs.power_level_modifier] = 0.14
+				}
 			},
 			{
 				proc_stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.16,
-				},
+					[stat_buffs.power_level_modifier] = 0.16
+				}
 			},
 			{
 				proc_stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.18,
-				},
+					[stat_buffs.power_level_modifier] = 0.18
+				}
 			},
 			{
 				proc_stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.2,
-				},
-			},
-		},
-	},
+					[stat_buffs.power_level_modifier] = 0.2
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_shotgun_p1_bleed_on_crit = {
 	format_values = {
@@ -276,35 +276,35 @@ templates.weapon_trait_bespoke_shotgun_p1_bleed_on_crit = {
 				find_value_type = "trait_override",
 				path = {
 					"target_buff_data",
-					"num_stacks_on_proc",
-				},
-			},
-		},
+					"num_stacks_on_proc"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_shotgun_p1_bleed_on_crit = {
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 3,
-				},
+					num_stacks_on_proc = 3
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 4,
-				},
+					num_stacks_on_proc = 4
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 5,
-				},
+					num_stacks_on_proc = 5
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 6,
-				},
-			},
-		},
-	},
+					num_stacks_on_proc = 6
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_shotgun_p1_crit_chance_on_hitting_multiple_with_one_shot = {
 	format_values = {
@@ -316,9 +316,9 @@ templates.weapon_trait_bespoke_shotgun_p1_crit_chance_on_hitting_multiple_with_o
 				find_value_type = "trait_override",
 				path = {
 					"conditional_stat_buffs",
-					stat_buffs.ranged_critical_strike_chance,
-				},
-			},
+					stat_buffs.ranged_critical_strike_chance
+				}
+			}
 		},
 		stacks = {
 			format_type = "number",
@@ -326,35 +326,35 @@ templates.weapon_trait_bespoke_shotgun_p1_crit_chance_on_hitting_multiple_with_o
 				buff_template_name = "weapon_trait_bespoke_shotgun_p1_crit_chance_on_hitting_multiple_with_one_shot_child",
 				find_value_type = "buff_template",
 				path = {
-					"max_stacks",
-				},
-			},
-		},
+					"max_stacks"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_shotgun_p1_crit_chance_on_hitting_multiple_with_one_shot_parent = {
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.ranged_critical_strike_chance] = 0.06,
-				},
+					[stat_buffs.ranged_critical_strike_chance] = 0.06
+				}
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.ranged_critical_strike_chance] = 0.08,
-				},
+					[stat_buffs.ranged_critical_strike_chance] = 0.08
+				}
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.ranged_critical_strike_chance] = 0.1,
-				},
+					[stat_buffs.ranged_critical_strike_chance] = 0.1
+				}
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.ranged_critical_strike_chance] = 0.12,
-				},
-			},
-		},
-	},
+					[stat_buffs.ranged_critical_strike_chance] = 0.12
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_shotgun_p1_stagger_count_bonus_damage = {
 	format_values = {
@@ -366,35 +366,35 @@ templates.weapon_trait_bespoke_shotgun_p1_stagger_count_bonus_damage = {
 				find_value_type = "trait_override",
 				path = {
 					"stat_buffs",
-					stat_buffs.stagger_count_damage,
-				},
-			},
-		},
+					stat_buffs.stagger_count_damage
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_shotgun_p1_stagger_count_bonus_damage = {
 			{
 				stat_buffs = {
-					[stat_buffs.stagger_count_damage] = 0.14,
-				},
+					[stat_buffs.stagger_count_damage] = 0.14
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.stagger_count_damage] = 0.16,
-				},
+					[stat_buffs.stagger_count_damage] = 0.16
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.stagger_count_damage] = 0.18,
-				},
+					[stat_buffs.stagger_count_damage] = 0.18
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.stagger_count_damage] = 0.2,
-				},
-			},
-		},
-	},
+					[stat_buffs.stagger_count_damage] = 0.2
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_shotgun_p1_cleave_on_crit = {
 	format_values = {
@@ -406,35 +406,35 @@ templates.weapon_trait_bespoke_shotgun_p1_cleave_on_crit = {
 				find_value_type = "trait_override",
 				path = {
 					"conditional_stat_buffs",
-					stat_buffs.ranged_impact_modifier,
-				},
-			},
-		},
+					stat_buffs.ranged_impact_modifier
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_shotgun_p1_cleave_on_crit = {
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.ranged_impact_modifier] = 0.1,
-				},
+					[stat_buffs.ranged_impact_modifier] = 0.1
+				}
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.ranged_impact_modifier] = 0.15,
-				},
+					[stat_buffs.ranged_impact_modifier] = 0.15
+				}
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.ranged_impact_modifier] = 0.2,
-				},
+					[stat_buffs.ranged_impact_modifier] = 0.2
+				}
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.ranged_impact_modifier] = 0.25,
-				},
-			},
-		},
-	},
+					[stat_buffs.ranged_impact_modifier] = 0.25
+				}
+			}
+		}
+	}
 }
 
 return templates

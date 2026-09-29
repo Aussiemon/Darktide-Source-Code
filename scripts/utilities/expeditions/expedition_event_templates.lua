@@ -252,7 +252,7 @@ local function _add_lightning_strikes_close_to_position(context, data, settings,
 				initial_delayed_spawn_time = initial_delayed_spawn_time,
 				start_time = start_time,
 				hit_position = Vector3Box(hit_position),
-				deal_damage = deal_damage,
+				deal_damage = deal_damage
 			}
 
 			data.dynamic_unit_spawning[#data.dynamic_unit_spawning + 1] = entry
@@ -379,7 +379,7 @@ expedition_event_templates.spawn_sand_vortex = {
 
 			data.minion_unit = nil
 		end
-	end,
+	end
 }
 expedition_event_templates.spawn_nurgle_flies = {
 	server_only = true,
@@ -477,7 +477,7 @@ expedition_event_templates.spawn_nurgle_flies = {
 
 			data.minion_unit = nil
 		end
-	end,
+	end
 }
 expedition_event_templates.lightning_strikes_naive = {
 	settings = ExpeditionEventSettings.lightning_strikes_naive,
@@ -596,7 +596,7 @@ expedition_event_templates.lightning_strikes_naive = {
 				end
 			end
 		end
-	end,
+	end
 }
 expedition_event_templates.lightning_strikes_targeted_random_player = {
 	settings = ExpeditionEventSettings.lightning_strikes_targeted_random_player,
@@ -737,7 +737,7 @@ expedition_event_templates.lightning_strikes_targeted_random_player = {
 				end
 			end
 		end
-	end,
+	end
 }
 
 local lightning_strikes_looping_generic = {
@@ -752,14 +752,14 @@ local lightning_strikes_looping_generic = {
 		data.lightning_configs[1] = {
 			lightning_strike_frequency = settings.lightning_strike_frequency,
 			event_to_trigger = settings.event_to_trigger,
-			trigger_t = t + settings.lightning_strike_frequency,
+			trigger_t = t + settings.lightning_strike_frequency
 		}
 
 		if random_strikes then
 			data.lightning_configs[2] = {
 				lightning_strike_frequency = random_strikes.lightning_strike_frequency,
 				event_to_trigger = random_strikes.event_to_trigger,
-				trigger_t = t + random_strikes.lightning_strike_frequency,
+				trigger_t = t + random_strikes.lightning_strike_frequency
 			}
 		end
 	end,
@@ -792,7 +792,7 @@ local lightning_strikes_looping_generic = {
 	end,
 	destroy = function (data, template, context)
 		return
-	end,
+	end
 }
 
 local function _add_new_lightning_event(new_event_name, base_event_name)

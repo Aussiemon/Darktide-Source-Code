@@ -6,14 +6,14 @@ local event_vo_scan_veteran_female_c = {
 		sound_events_n = 2,
 		sound_events = {
 			[1] = "loc_veteran_female_c__event_scan_first_target_scanned_01",
-			[2] = "loc_veteran_female_c__event_scan_first_target_scanned_02",
+			[2] = "loc_veteran_female_c__event_scan_first_target_scanned_02"
 		},
 		sound_events_duration = {
 			[1] = 1.280323,
-			[2] = 1.800896,
+			[2] = 1.800896
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("event_vo_scan_veteran_female_c", event_vo_scan_veteran_female_c)

@@ -5,16 +5,17 @@ local NAVMESH_DISTANCE_FROM_WALL = 0.5
 local slot_position_check_index = {
 	check_left = 0,
 	check_middle = 1,
-	check_right = 2,
+	check_right = 2
 }
 local slot_system_settings = {
 	disabled_slots_count_update_interval = 0.5,
 	ghost_position_distance = 8,
+	max_target_updates_per_frame = 1,
 	max_user_loops_per_frame = 75,
-	max_user_updates_per_frame = 2,
 	occupied_slots_count_update_interval = 0.5,
 	overlap_slot_to_target_distance_sq = 1.44,
 	slot_anchor_max_position_tries = 24,
+	slot_anchor_max_position_tries_per_update = 6,
 	slot_owner_sticky_value = -3,
 	slot_queue_max_z_diff_above = 2,
 	slot_queue_max_z_diff_below = 3,
@@ -36,14 +37,18 @@ local slot_system_settings = {
 	target_slots_update_long = 1,
 	z_max_difference_above = 1.5,
 	z_max_difference_below = 1.5,
+	max_user_updates_per_frame = {
+		default = 2,
+		revalidate = 10
+	},
 	slot_position_check_index = slot_position_check_index,
 	slot_position_check_index_size = table.size(slot_position_check_index),
 	slot_position_check_radians = {
 		[slot_position_check_index.check_left] = math.degrees_to_radians(-90),
-		[slot_position_check_index.check_right] = math.degrees_to_radians(90),
+		[slot_position_check_index.check_right] = math.degrees_to_radians(90)
 	},
 	slot_position_check_raycango_offset = NAVMESH_DISTANCE_FROM_WALL + MOVER_RADIUS,
-	slot_ghost_radians = math.degrees_to_radians(90),
+	slot_ghost_radians = math.degrees_to_radians(90)
 }
 
 return settings("SlotSystemSettings", slot_system_settings)

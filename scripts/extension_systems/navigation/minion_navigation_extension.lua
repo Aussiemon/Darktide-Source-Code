@@ -74,33 +74,33 @@ local DEFAULT_RANDOMIZED_NAV_TAG_COSTS = {
 		layer_name = "teleporters",
 		costs = {
 			0.5,
-			2,
-		},
+			2
+		}
 	},
 	{
 		chance_to_pick_first_index = 0.25,
 		layer_name = "ledges",
 		costs = {
 			1,
-			5,
-		},
+			5
+		}
 	},
 	{
 		chance_to_pick_first_index = 0.25,
 		layer_name = "ledges_with_fence",
 		costs = {
 			1,
-			5,
-		},
+			5
+		}
 	},
 	{
 		chance_to_pick_first_index = 0.25,
 		layer_name = "cover_ledges",
 		costs = {
 			1,
-			5,
-		},
-	},
+			5
+		}
+	}
 }
 
 MinionNavigationExtension._set_randomized_nav_tag_costs = function (self, nav_tag_cost_table, optional_randomized_nav_tag_costs)
@@ -133,7 +133,7 @@ local DEFAULT_NAVIGATION_PATH_SPLINE_CONFIG = {
 	spline_distance_to_borders = 1,
 	spline_length = 100,
 	spline_recomputation_ratio = 1,
-	turn_sampling_angle = 30,
+	turn_sampling_angle = 30
 }
 local DEFAULT_AVOIDANCE_CONFIG = {
 	angle_span = 75,
@@ -147,7 +147,7 @@ local DEFAULT_AVOIDANCE_CONFIG = {
 	radius = 4,
 	sample_count = 20,
 	stop_wait_time_s = 1,
-	time_to_collision = 1.25,
+	time_to_collision = 1.25
 }
 
 MinionNavigationExtension._create_nav_bot = function (self, position, breed, traverse_logic, nav_world)

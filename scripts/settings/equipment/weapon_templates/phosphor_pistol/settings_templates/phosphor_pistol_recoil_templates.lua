@@ -17,54 +17,54 @@ recoil_templates.phosphor_pistol_p1_m1_recoil_hip = {
 		new_influence_percent = 0.6,
 		rise_duration = 0.05,
 		rise = {
-			1.1,
+			1.1
 		},
 		decay = {
 			idle = 2,
-			shooting = 1,
+			shooting = 1
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.145,
-					0.165,
+					0.165
 				},
 				yaw = {
 					-0.05,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 2,
-			yaw = 2,
+			yaw = 2
 		},
 		visual_recoil_settings = {
 			intensity = 5,
-			lerp_scalar = 1,
-		},
+			lerp_scalar = 1
+		}
 	},
 	moving = {
 		new_influence_percent = 0.7,
 		inherits = {
 			"phosphor_pistol_p1_m1_recoil_hip",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		new_influence_percent = 0.5,
 		inherits = {
 			"phosphor_pistol_p1_m1_recoil_hip",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		new_influence_percent = 0.7,
 		inherits = {
 			"phosphor_pistol_p1_m1_recoil_hip",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 recoil_templates.phosphor_pistol_p1_m1_recoil_ads = {
 	still = {
@@ -73,57 +73,57 @@ recoil_templates.phosphor_pistol_p1_m1_recoil_ads = {
 		new_influence_percent = 0.6,
 		rise_duration = 0.05,
 		rise = {
-			0.75,
+			0.75
 		},
 		decay = {
 			idle = 2,
-			shooting = 1,
+			shooting = 1
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.145,
-					0.165,
+					0.165
 				},
 				yaw = {
 					-0.05,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		offset_limit = {
 			pitch = 2,
-			yaw = 2,
+			yaw = 2
 		},
 		visual_recoil_settings = {
 			intensity = 5,
-			lerp_scalar = 1,
-		},
+			lerp_scalar = 1
+		}
 	},
 	moving = {
 		new_influence_percent = 0.6,
 		inherits = {
 			"phosphor_pistol_p1_m1_recoil_ads",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		new_influence_percent = 0.55,
 		inherits = {
 			"phosphor_pistol_p1_m1_recoil_ads",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		new_influence_percent = 0.6,
 		inherits = {
 			"phosphor_pistol_p1_m1_recoil_ads",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 
 return {
 	base_templates = recoil_templates,
-	overrides = overrides,
+	overrides = overrides
 }

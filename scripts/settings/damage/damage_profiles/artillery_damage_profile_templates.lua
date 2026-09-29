@@ -24,7 +24,7 @@ local GRENADE_IMPACT_ADM = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 0.5,
 			[armor_types.disgustingly_resilient] = 0.75,
-			[armor_types.void_shield] = 0.75,
+			[armor_types.void_shield] = 0.75
 		},
 		impact = {
 			[armor_types.unarmored] = 2,
@@ -34,8 +34,8 @@ local GRENADE_IMPACT_ADM = {
 			[armor_types.berserker] = 2,
 			[armor_types.super_armor] = 0.5,
 			[armor_types.disgustingly_resilient] = 2.5,
-			[armor_types.void_shield] = 2.5,
-		},
+			[armor_types.void_shield] = 2.5
+		}
 	},
 	far = {
 		attack = {
@@ -46,7 +46,7 @@ local GRENADE_IMPACT_ADM = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 0.5,
 			[armor_types.disgustingly_resilient] = 0.75,
-			[armor_types.void_shield] = 0.75,
+			[armor_types.void_shield] = 0.75
 		},
 		impact = {
 			[armor_types.unarmored] = 2,
@@ -56,9 +56,9 @@ local GRENADE_IMPACT_ADM = {
 			[armor_types.berserker] = 2,
 			[armor_types.super_armor] = 2,
 			[armor_types.disgustingly_resilient] = 2.5,
-			[armor_types.void_shield] = 2.5,
-		},
-	},
+			[armor_types.void_shield] = 2.5
+		}
+	}
 }
 
 damage_templates.expedition_artillery_strike_grenade_impact = {
@@ -72,30 +72,30 @@ damage_templates.expedition_artillery_strike_grenade_impact = {
 	suppression_value = 4,
 	cleave_distribution = {
 		attack = 0.1,
-		impact = 0.1,
+		impact = 0.1
 	},
 	ranges = {
 		max = 20,
-		min = 10,
+		min = 10
 	},
 	armor_damage_modifier_ranged = GRENADE_IMPACT_ADM,
 	power_distribution = {
 		attack = 2,
-		impact = 3,
+		impact = 3
 	},
 	on_kill_area_suppression = {
 		distance = 8,
-		suppression_value = 10,
+		suppression_value = 10
 	},
 	targets = {
 		default_target = {
 			boost_curve_multiplier_finesse = 1.2,
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			finesse_boost = {
-				[armor_types.unarmored] = 0.75,
-			},
-		},
-	},
+				[armor_types.unarmored] = 0.75
+			}
+		}
+	}
 }
 
 local ARTILLERY_STRIKE_ADM = {
@@ -107,7 +107,7 @@ local ARTILLERY_STRIKE_ADM = {
 		[armor_types.berserker] = 1,
 		[armor_types.super_armor] = 0.2,
 		[armor_types.disgustingly_resilient] = 0.75,
-		[armor_types.void_shield] = 0.75,
+		[armor_types.void_shield] = 0.75
 	},
 	impact = {
 		[armor_types.unarmored] = 2,
@@ -117,8 +117,8 @@ local ARTILLERY_STRIKE_ADM = {
 		[armor_types.berserker] = 2,
 		[armor_types.super_armor] = 2,
 		[armor_types.disgustingly_resilient] = 2,
-		[armor_types.void_shield] = 2,
-	},
+		[armor_types.void_shield] = 2
+	}
 }
 local ARTILLERY_STRIKE_ATTACK = 3200
 local ARTILLERY_STRIKE_IMPACT = 128
@@ -130,23 +130,23 @@ damage_templates.expedition_artillery_strike_close = {
 	stagger_category = "explosion",
 	cleave_distribution = {
 		attack = 0.1,
-		impact = 0.15,
+		impact = 0.15
 	},
 	armor_damage_modifier = ARTILLERY_STRIKE_ADM,
 	power_distribution = {
 		attack = ARTILLERY_STRIKE_ATTACK,
-		impact = ARTILLERY_STRIKE_IMPACT,
+		impact = ARTILLERY_STRIKE_IMPACT
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	suppression_value = ARTILLERY_STRIKE_SUPPRESSION_VALUE,
 	damage_type = damage_types.grenade_frag,
 	gibbing_type = GibbingTypes.explosion,
 	gibbing_power = GibbingPower.infinite,
-	gib_push_force = GibbingSettings.gib_push_force.explosive_heavy,
+	gib_push_force = GibbingSettings.gib_push_force.explosive_heavy
 }
 overrides.expedition_artillery_strike = {
 	parent_template_name = "expedition_artillery_strike_close",
@@ -154,29 +154,29 @@ overrides.expedition_artillery_strike = {
 		{
 			"power_distribution",
 			"attack",
-			ARTILLERY_STRIKE_ATTACK / 2,
+			ARTILLERY_STRIKE_ATTACK / 2
 		},
 		{
 			"power_distribution",
 			"impact",
-			ARTILLERY_STRIKE_IMPACT / 4,
+			ARTILLERY_STRIKE_IMPACT / 4
 		},
 		{
 			"suppression_value",
-			ARTILLERY_STRIKE_SUPPRESSION_VALUE / 2,
+			ARTILLERY_STRIKE_SUPPRESSION_VALUE / 2
 		},
 		{
 			"gibbing_power",
-			GibbingPower.heavy,
+			GibbingPower.heavy
 		},
 		{
 			"gib_push_force",
-			GibbingSettings.gib_push_force.explosive,
-		},
-	},
+			GibbingSettings.gib_push_force.explosive
+		}
+	}
 }
 
 return {
 	base_templates = damage_templates,
-	overrides = overrides,
+	overrides = overrides
 }

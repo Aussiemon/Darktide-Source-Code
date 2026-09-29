@@ -9,8 +9,8 @@ local bot_gestalt_target_selection_weights = {
 	[behavior_gestalts.killshot] = {
 		chaos_ogryn_bulwark = -5,
 		chaos_ogryn_executor = -5,
-		renegade_executor = -5,
-	},
+		renegade_executor = -5
+	}
 }
 
 return settings("BotGestaltTargetSelectionWeights", bot_gestalt_target_selection_weights)

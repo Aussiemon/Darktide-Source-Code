@@ -25,7 +25,7 @@ local PartyImmateriumManagerTestify = {
 		return party_immaterium_manager:leave_party():next(function ()
 			return
 		end)
-	end,
+	end
 }
 
 return PartyImmateriumManagerTestify

@@ -157,7 +157,7 @@ BuffVolume._update_buffs = function (self, unit, dt, t, num_results)
 
 						buff_affected_units[affected_unit] = {
 							local_index = local_index,
-							component_index = component_index,
+							component_index = component_index
 						}
 					end
 				end
@@ -216,7 +216,7 @@ BuffVolume._update_inverse_buffs = function (self, unit, dt, t)
 
 					buff_affected_units[affected_unit] = {
 						local_index = local_index,
-						component_index = component_index,
+						component_index = component_index
 					}
 				end
 
@@ -393,32 +393,32 @@ BuffVolume.component_data = {
 	start_enabled = {
 		ui_name = "start_enabled",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	buff_template_name = {
 		ui_name = "Buff Name",
 		ui_type = "text_box",
-		value = "default",
+		value = "default"
 	},
 	leaving_buff_template_name = {
 		ui_name = "Leaving Buff Name",
 		ui_type = "text_box",
-		value = "default",
+		value = "default"
 	},
 	heroes_buff_template_name = {
 		ui_name = "Heroes Buff Name",
 		ui_type = "text_box",
-		value = "default",
+		value = "default"
 	},
 	villains_buff_template_name = {
 		ui_name = "Villains Buff Name",
 		ui_type = "text_box",
-		value = "default",
+		value = "default"
 	},
 	forbidden_keyword = {
 		ui_name = "Forbidden Keyword",
 		ui_type = "text_box",
-		value = "default",
+		value = "default"
 	},
 	affected_side_name = {
 		ui_name = "Side",
@@ -427,29 +427,29 @@ BuffVolume.component_data = {
 		options_keys = {
 			"Heroes",
 			"Villains",
-			"Both",
+			"Both"
 		},
 		options_values = {
 			"heroes",
 			"villains",
-			"both",
-		},
+			"both"
+		}
 	},
 	inverse = {
 		ui_name = "Inverse",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	inputs = {
 		enable_buffs = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		disable_buffs = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return BuffVolume

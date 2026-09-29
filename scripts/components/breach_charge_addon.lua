@@ -6,7 +6,7 @@ local CameraShake = require("scripts/utilities/camera/camera_shake")
 local Component = require("scripts/utilities/component")
 local RPC_FLOW_EVENTS = {
 	"remove",
-	"interactable_disable",
+	"interactable_disable"
 }
 
 local function index_of(array, value)
@@ -172,7 +172,7 @@ BreachChargeAddon.component_data = {
 	is_charge_enabled = {
 		ui_name = "Enabled",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	node_options = {
 		ui_name = "Node Options",
@@ -181,63 +181,63 @@ BreachChargeAddon.component_data = {
 		options_keys = {
 			"A & B",
 			"A",
-			"B",
+			"B"
 		},
 		options_values = {
 			"a_b",
 			"a",
-			"b",
-		},
+			"b"
+		}
 	},
 	unit_resource = {
 		filter = "unit",
 		preview = false,
 		ui_name = "Unit Resource",
 		ui_type = "resource",
-		value = "",
+		value = ""
 	},
 	misc_unit_resource = {
 		filter = "unit",
 		preview = false,
 		ui_name = "Misc Unit Resource",
 		ui_type = "resource",
-		value = "",
+		value = ""
 	},
 	use_particle_effect = {
 		ui_name = "Use Particle Effect",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	particle_effect_resource = {
 		filter = "particles",
 		preview = false,
 		ui_name = "Particle Effect Resource",
 		ui_type = "resource",
-		value = "",
+		value = ""
 	},
 	use_wwise_event = {
 		ui_name = "Use Wwise Event",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	wwise_event_resource = {
 		filter = "wwise_event",
 		preview = false,
 		ui_name = "Wwise Event Resource",
 		ui_type = "resource",
-		value = "",
+		value = ""
 	},
 	use_camera_shake = {
 		ui_name = "Use Camera Shake",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	inputs = {
 		lua_timer_finished = {
 			accessibility = "private",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return BreachChargeAddon

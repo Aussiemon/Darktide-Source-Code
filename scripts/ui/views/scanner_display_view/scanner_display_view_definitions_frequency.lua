@@ -23,21 +23,21 @@ local widget_definitions = {
 					255,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					-edge_fade_widget_size[1] * 0.5,
 					-edge_fade_widget_size[2] * 0.5,
-					2,
-				},
-			},
-		},
-	}, "center_pivot", nil, edge_fade_widget_size),
+					2
+				}
+			}
+		}
+	}, "center_pivot", nil, edge_fade_widget_size)
 }
 
 return {
 	frequency = {
 		widget_definitions = widget_definitions,
-		scenegraph_definition = scenegraph_definition,
-	},
+		scenegraph_definition = scenegraph_definition
+	}
 }

@@ -9,49 +9,49 @@ local conversations_hub_training_ground_psyker_a = {
 			"loc_training_ground_psyker_a__hub_horde_greeting_agnostic_a_02",
 			"loc_training_ground_psyker_a__hub_horde_greeting_agnostic_a_03",
 			"loc_training_ground_psyker_a__hub_horde_greeting_agnostic_a_04",
-			"loc_training_ground_psyker_a__hub_horde_greeting_agnostic_a_05",
+			"loc_training_ground_psyker_a__hub_horde_greeting_agnostic_a_05"
 		},
 		sound_events_duration = {
 			6.860875,
 			6.613146,
 			5.693542,
 			5.277854,
-			6.993104,
+			6.993104
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_horde_greeting_first_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_training_ground_psyker_a__hub_horde_greeting_first_a_01",
+			[1] = "loc_training_ground_psyker_a__hub_horde_greeting_first_a_01"
 		},
 		sound_events_duration = {
-			[1] = 5.224104,
+			[1] = 5.224104
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_horde_greeting_first_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_training_ground_psyker_a__hub_horde_greeting_first_b_01",
+			[1] = "loc_training_ground_psyker_a__hub_horde_greeting_first_b_01"
 		},
 		sound_events_duration = {
-			[1] = 6.524563,
+			[1] = 6.524563
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_horde_greeting_first_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_training_ground_psyker_a__hub_horde_greeting_first_c_01",
+			[1] = "loc_training_ground_psyker_a__hub_horde_greeting_first_c_01"
 		},
 		sound_events_duration = {
-			[1] = 10.40365,
+			[1] = 10.40365
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_idle = {
 		randomize_indexes_n = 0,
@@ -75,7 +75,7 @@ local conversations_hub_training_ground_psyker_a = {
 			"loc_training_ground_psyker_a__hub_idle_17",
 			"loc_training_ground_psyker_a__hub_idle_18",
 			"loc_training_ground_psyker_a__hub_idle_19",
-			"loc_training_ground_psyker_a__hub_idle_20",
+			"loc_training_ground_psyker_a__hub_idle_20"
 		},
 		sound_events_duration = {
 			4.623,
@@ -96,9 +96,9 @@ local conversations_hub_training_ground_psyker_a = {
 			5.13,
 			4.828,
 			5.419,
-			6.742,
+			6.742
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_interact_training_ground_psyker_dislikes_character = {
 		randomize_indexes_n = 0,
@@ -123,7 +123,7 @@ local conversations_hub_training_ground_psyker_a = {
 			"loc_training_ground_psyker_a__hub_interact_dislikes_character_17",
 			"loc_training_ground_psyker_a__hub_interact_dislikes_character_18",
 			"loc_training_ground_psyker_a__hub_interact_dislikes_character_19",
-			"loc_training_ground_psyker_a__hub_interact_dislikes_character_20",
+			"loc_training_ground_psyker_a__hub_interact_dislikes_character_20"
 		},
 		sound_events_duration = {
 			2.922,
@@ -145,9 +145,9 @@ local conversations_hub_training_ground_psyker_a = {
 			3.833,
 			6.199,
 			8.482,
-			6.444,
+			6.444
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_interact_training_ground_psyker_likes_character = {
 		randomize_indexes_n = 0,
@@ -172,7 +172,7 @@ local conversations_hub_training_ground_psyker_a = {
 			"loc_training_ground_psyker_a__hub_interact_likes_character_17",
 			"loc_training_ground_psyker_a__hub_interact_likes_character_18",
 			"loc_training_ground_psyker_a__hub_interact_likes_character_19",
-			"loc_training_ground_psyker_a__hub_interact_likes_character_20",
+			"loc_training_ground_psyker_a__hub_interact_likes_character_20"
 		},
 		sound_events_duration = {
 			3.26,
@@ -194,9 +194,9 @@ local conversations_hub_training_ground_psyker_a = {
 			6.959,
 			5.09,
 			6.815,
-			4.612,
+			4.612
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_mindwipe_backstory_a = {
 		randomize_indexes_n = 0,
@@ -204,14 +204,14 @@ local conversations_hub_training_ground_psyker_a = {
 		sound_events = {
 			"loc_training_ground_psyker_a__hub_mindwipe_backstory_a_01",
 			"loc_training_ground_psyker_a__hub_mindwipe_backstory_a_02",
-			"loc_training_ground_psyker_a__hub_mindwipe_backstory_a_03",
+			"loc_training_ground_psyker_a__hub_mindwipe_backstory_a_03"
 		},
 		sound_events_duration = {
 			2.568125,
 			2.722813,
-			4.599521,
+			4.599521
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_mindwipe_body_type_a = {
 		randomize_indexes_n = 0,
@@ -219,14 +219,14 @@ local conversations_hub_training_ground_psyker_a = {
 		sound_events = {
 			"loc_training_ground_psyker_a__hub_mindwipe_body_type_a_01",
 			"loc_training_ground_psyker_a__hub_mindwipe_body_type_a_02",
-			"loc_training_ground_psyker_a__hub_mindwipe_body_type_a_03",
+			"loc_training_ground_psyker_a__hub_mindwipe_body_type_a_03"
 		},
 		sound_events_duration = {
 			2.92975,
 			2.813688,
-			2.424917,
+			2.424917
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_mindwipe_conclusion_a = {
 		randomize_indexes_n = 0,
@@ -234,14 +234,14 @@ local conversations_hub_training_ground_psyker_a = {
 		sound_events = {
 			"loc_training_ground_psyker_a__hub_mindwipe_conclusion_a_01",
 			"loc_training_ground_psyker_a__hub_mindwipe_conclusion_a_02",
-			"loc_training_ground_psyker_a__hub_mindwipe_conclusion_a_03",
+			"loc_training_ground_psyker_a__hub_mindwipe_conclusion_a_03"
 		},
 		sound_events_duration = {
 			4.434563,
 			4.698188,
-			5.043417,
+			5.043417
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_mindwipe_frequent_customer_a = {
 		randomize_indexes_n = 0,
@@ -249,14 +249,14 @@ local conversations_hub_training_ground_psyker_a = {
 		sound_events = {
 			"loc_training_ground_psyker_a__hub_mindwipe_frequent_customer_a_01",
 			"loc_training_ground_psyker_a__hub_mindwipe_frequent_customer_a_02",
-			"loc_training_ground_psyker_a__hub_mindwipe_frequent_customer_a_03",
+			"loc_training_ground_psyker_a__hub_mindwipe_frequent_customer_a_03"
 		},
 		sound_events_duration = {
 			5.367708,
 			3.430979,
-			3.760083,
+			3.760083
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_mindwipe_personality_a = {
 		randomize_indexes_n = 0,
@@ -264,14 +264,14 @@ local conversations_hub_training_ground_psyker_a = {
 		sound_events = {
 			"loc_training_ground_psyker_a__hub_mindwipe_personality_a_01",
 			"loc_training_ground_psyker_a__hub_mindwipe_personality_a_02",
-			"loc_training_ground_psyker_a__hub_mindwipe_personality_a_03",
+			"loc_training_ground_psyker_a__hub_mindwipe_personality_a_03"
 		},
 		sound_events_duration = {
 			2.331458,
 			3.288021,
-			2.157188,
+			2.157188
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_mindwipe_select_option_a = {
 		randomize_indexes_n = 0,
@@ -279,59 +279,59 @@ local conversations_hub_training_ground_psyker_a = {
 		sound_events = {
 			"loc_training_ground_psyker_a__hub_mindwipe_select_option_a_01",
 			"loc_training_ground_psyker_a__hub_mindwipe_select_option_a_02",
-			"loc_training_ground_psyker_a__hub_mindwipe_select_option_a_03",
+			"loc_training_ground_psyker_a__hub_mindwipe_select_option_a_03"
 		},
 		sound_events_duration = {
 			5.305625,
 			4.683646,
-			6.142521,
+			6.142521
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	shipmistress_hub_announcement_b_44_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_training_ground_psyker_a__shipmistress_hub_announcement_b_44_b_01",
+			[1] = "loc_training_ground_psyker_a__shipmistress_hub_announcement_b_44_b_01"
 		},
 		sound_events_duration = {
-			[1] = 8.407354,
+			[1] = 8.407354
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	shipmistress_hub_announcement_b_45_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_training_ground_psyker_a__shipmistress_hub_announcement_b_45_b_01",
+			[1] = "loc_training_ground_psyker_a__shipmistress_hub_announcement_b_45_b_01"
 		},
 		sound_events_duration = {
-			[1] = 8.56675,
+			[1] = 8.56675
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	shipmistress_hub_announcement_b_46_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_training_ground_psyker_a__shipmistress_hub_announcement_b_46_b_01",
+			[1] = "loc_training_ground_psyker_a__shipmistress_hub_announcement_b_46_b_01"
 		},
 		sound_events_duration = {
-			[1] = 8.464438,
+			[1] = 8.464438
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	shipmistress_hub_announcement_d_46_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_training_ground_psyker_a__shipmistress_hub_announcement_d_46_d_01",
+			[1] = "loc_training_ground_psyker_a__shipmistress_hub_announcement_d_46_d_01"
 		},
 		sound_events_duration = {
-			[1] = 3.522333,
+			[1] = 3.522333
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("conversations_hub_training_ground_psyker_a", conversations_hub_training_ground_psyker_a)

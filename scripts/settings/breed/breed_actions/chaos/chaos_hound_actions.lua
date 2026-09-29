@@ -8,20 +8,20 @@ local damage_types = DamageSettings.damage_types
 local action_data = {
 	name = "chaos_hound",
 	idle = {
-		anim_events = "idle_bark",
+		anim_events = "idle_bark"
 	},
 	death = {
-		instant_ragdoll_chance = 1,
+		instant_ragdoll_chance = 1
 	},
 	patrol = {
 		optional_set_aggroed = true,
 		patrol_offset = 5,
 		anim_events = {
-			"walk_fwd",
+			"walk_fwd"
 		},
 		speeds = {
-			walk_fwd = 0.7,
-		},
+			walk_fwd = 0.7
+		}
 	},
 	leap = {
 		aoe_bot_threat_duration = 1,
@@ -59,15 +59,15 @@ local action_data = {
 		wall_land_length = 3,
 		stagger_type_reduction = {
 			melee = -200,
-			ranged = 20,
+			ranged = 20
 		},
 		push_minions_damage_profile = DamageProfileTemplates.chaos_hound_push,
 		push_enemies_damage_profile = DamageProfileTemplates.chaos_hound_push,
 		aoe_bot_threat_size = Vector3Box(1.5, 2, 2),
 		in_air_staggers = {
-			"stagger_inair_bwd",
+			"stagger_inair_bwd"
 		},
-		land_ground_impact_fx_template = GroundImpactFxTemplates.chaos_hound_leap_land,
+		land_ground_impact_fx_template = GroundImpactFxTemplates.chaos_hound_leap_land
 	},
 	approach_target = {
 		controlled_stagger = true,
@@ -98,48 +98,48 @@ local action_data = {
 			bwd = "run_start_bwd",
 			fwd = "run_start_fwd",
 			left = "run_start_left",
-			right = "run_start_right",
+			right = "run_start_right"
 		},
 		start_move_anim_data = {
 			run_start_fwd = {
 				rad = nil,
-				sign = nil,
+				sign = nil
 			},
 			run_start_bwd = {
 				sign = 1,
-				rad = math.pi,
+				rad = math.pi
 			},
 			run_start_left = {
 				sign = 1,
-				rad = math.pi / 2,
+				rad = math.pi / 2
 			},
 			run_start_right = {
 				sign = -1,
-				rad = math.pi / 2,
-			},
+				rad = math.pi / 2
+			}
 		},
 		start_move_rotation_timings = {
 			run_start_bwd = 0.06666666666666667,
 			run_start_fwd = 0.06666666666666667,
 			run_start_left = 0.06666666666666667,
-			run_start_right = 0.06666666666666667,
+			run_start_right = 0.06666666666666667
 		},
 		start_rotation_durations = {
 			run_start_bwd = 0.4666666666666667,
 			run_start_fwd = 0.4666666666666667,
 			run_start_left = 0.3333333333333333,
-			run_start_right = 0.4666666666666667,
+			run_start_right = 0.4666666666666667
 		},
 		start_move_event_anim_speed_durations = {
-			run_start_fwd = 1.2666666666666666,
+			run_start_fwd = 1.2666666666666666
 		},
 		idle_anim_events = {
-			"idle",
+			"idle"
 		},
 		move_to_cooldown = {
 			0.6,
-			1,
-		},
+			1
+		}
 	},
 	skulking = {
 		controlled_stagger = true,
@@ -161,44 +161,44 @@ local action_data = {
 			bwd = "run_start_bwd",
 			fwd = "run_start_fwd",
 			left = "run_start_left",
-			right = "run_start_right",
+			right = "run_start_right"
 		},
 		start_move_anim_data = {
 			run_start_fwd = {
 				rad = nil,
-				sign = nil,
+				sign = nil
 			},
 			run_start_bwd = {
 				sign = 1,
-				rad = math.pi,
+				rad = math.pi
 			},
 			run_start_left = {
 				sign = 1,
-				rad = math.pi / 2,
+				rad = math.pi / 2
 			},
 			run_start_right = {
 				sign = -1,
-				rad = math.pi / 2,
-			},
+				rad = math.pi / 2
+			}
 		},
 		start_move_rotation_timings = {
 			run_start_bwd = 0.06666666666666667,
 			run_start_fwd = 0.06666666666666667,
 			run_start_left = 0.06666666666666667,
-			run_start_right = 0.06666666666666667,
+			run_start_right = 0.06666666666666667
 		},
 		start_rotation_durations = {
 			run_start_bwd = 0.4666666666666667,
 			run_start_fwd = 0.4666666666666667,
 			run_start_left = 0.3333333333333333,
-			run_start_right = 0.4666666666666667,
+			run_start_right = 0.4666666666666667
 		},
 		start_move_event_anim_speed_durations = {
-			run_start_fwd = 1.2666666666666666,
+			run_start_fwd = 1.2666666666666666
 		},
 		idle_anim_events = {
-			"idle",
-		},
+			"idle"
+		}
 	},
 	roaming = {
 		controlled_stagger = true,
@@ -220,48 +220,48 @@ local action_data = {
 			bwd = "run_start_bwd",
 			fwd = "run_start_fwd",
 			left = "run_start_left",
-			right = "run_start_right",
+			right = "run_start_right"
 		},
 		start_move_anim_data = {
 			run_start_fwd = {
 				rad = nil,
-				sign = nil,
+				sign = nil
 			},
 			run_start_bwd = {
 				sign = 1,
-				rad = math.pi,
+				rad = math.pi
 			},
 			run_start_left = {
 				sign = 1,
-				rad = math.pi / 2,
+				rad = math.pi / 2
 			},
 			run_start_right = {
 				sign = -1,
-				rad = math.pi / 2,
-			},
+				rad = math.pi / 2
+			}
 		},
 		start_move_rotation_timings = {
 			run_start_bwd = 0.06666666666666667,
 			run_start_fwd = 0.06666666666666667,
 			run_start_left = 0.06666666666666667,
-			run_start_right = 0.06666666666666667,
+			run_start_right = 0.06666666666666667
 		},
 		start_rotation_durations = {
 			run_start_bwd = 0.4666666666666667,
 			run_start_fwd = 0.4666666666666667,
 			run_start_left = 0.3333333333333333,
-			run_start_right = 0.4666666666666667,
+			run_start_right = 0.4666666666666667
 		},
 		start_move_event_anim_speed_durations = {
-			run_start_fwd = 1.2666666666666666,
+			run_start_fwd = 1.2666666666666666
 		},
 		idle_anim_events = {
-			"idle",
+			"idle"
 		},
 		idle_wait_timings = {
 			[1] = 3,
-			[2] = 6,
-		},
+			[2] = 6
+		}
 	},
 	target_pounced = {
 		damage_frequency = 1.3333333333333333,
@@ -273,21 +273,21 @@ local action_data = {
 		pounce_anim_event = {
 			cryptic = "leap_attack",
 			human = "leap_attack",
-			ogryn = "leap_attack_ogryn",
+			ogryn = "leap_attack_ogryn"
 		},
 		power_level = {
 			75,
 			100,
 			125,
 			150,
-			175,
+			175
 		},
 		impact_power_level = {
 			200,
 			225,
 			250,
 			275,
-			300,
+			300
 		},
 		damage_profile = DamageProfileTemplates.chaos_hound_pounce,
 		initial_damage_profile = DamageProfileTemplates.chaos_hound_initial_pounce,
@@ -295,8 +295,8 @@ local action_data = {
 		enter_explosion_template = ExplosionTemplates.chaos_hound_pounced_explosion,
 		stagger_type_reduction = {
 			melee = -30,
-			ranged = 40,
-		},
+			ranged = 40
+		}
 	},
 	climb = {
 		rotation_duration = 0.1,
@@ -311,7 +311,7 @@ local action_data = {
 			jump_up_5m = 1.4333333333333333,
 			jump_up_fence_1m = 0.8333333333333334,
 			jump_up_fence_3m = 0.8333333333333334,
-			jump_up_fence_5m = 1.0333333333333334,
+			jump_up_fence_5m = 1.0333333333333334
 		},
 		ending_move_states = {
 			jump_down_fence_land_1m = "moving",
@@ -321,7 +321,7 @@ local action_data = {
 			jump_down_land_5m = "jumping",
 			jump_up_1m = "jumping",
 			jump_up_3m = "jumping",
-			jump_up_5m = "jumping",
+			jump_up_5m = "jumping"
 		},
 		blend_timings = {
 			jump_down = 0,
@@ -336,8 +336,8 @@ local action_data = {
 			jump_up_5m = 0.1,
 			jump_up_fence_1m = 0.1,
 			jump_up_fence_3m = 0.1,
-			jump_up_fence_5m = 0.1,
-		},
+			jump_up_fence_5m = 0.1
+		}
 	},
 	jump_across = {
 		rotation_duration = 0.1,
@@ -345,181 +345,181 @@ local action_data = {
 		anim_timings = {
 			jump_over_gap_4m = 0.7333333333333333,
 			jump_over_gap_4m_2 = 0.7333333333333333,
-			jump_vault_left_1 = 1,
+			jump_vault_left_1 = 1
 		},
 		ending_move_states = {
 			jump_over_gap_4m = "moving",
 			jump_over_gap_4m_2 = "moving",
-			jump_vault_left_1 = "moving",
-		},
+			jump_vault_left_1 = "moving"
+		}
 	},
 	stagger = {
 		stagger_duration_mods = {
-			stagger_fwd = 1.25,
+			stagger_fwd = 1.25
 		},
 		stagger_anims = {
 			light = {
 				fwd = {
-					"stagger_fwd",
+					"stagger_fwd"
 				},
 				bwd = {
-					"stagger_bwd",
+					"stagger_bwd"
 				},
 				left = {
-					"stagger_left",
+					"stagger_left"
 				},
 				right = {
-					"stagger_right",
+					"stagger_right"
 				},
 				dwn = {
-					"stagger_bwd",
-				},
+					"stagger_bwd"
+				}
 			},
 			medium = {
 				fwd = {
-					"stagger_fwd",
+					"stagger_fwd"
 				},
 				bwd = {
-					"stagger_bwd",
+					"stagger_bwd"
 				},
 				left = {
-					"stagger_left",
+					"stagger_left"
 				},
 				right = {
-					"stagger_right",
+					"stagger_right"
 				},
 				dwn = {
-					"stagger_bwd",
-				},
+					"stagger_bwd"
+				}
 			},
 			heavy = {
 				fwd = {
-					"stagger_fwd",
+					"stagger_fwd"
 				},
 				bwd = {
-					"stagger_bwd",
+					"stagger_bwd"
 				},
 				left = {
-					"stagger_left",
+					"stagger_left"
 				},
 				right = {
-					"stagger_right",
+					"stagger_right"
 				},
 				dwn = {
-					"stagger_bwd",
-				},
+					"stagger_bwd"
+				}
 			},
 			light_ranged = {
 				fwd = {
-					"stagger_fwd",
+					"stagger_fwd"
 				},
 				bwd = {
-					"stagger_bwd",
+					"stagger_bwd"
 				},
 				left = {
-					"stagger_left",
+					"stagger_left"
 				},
 				right = {
-					"stagger_right",
+					"stagger_right"
 				},
 				dwn = {
-					"stagger_bwd",
-				},
+					"stagger_bwd"
+				}
 			},
 			explosion = {
 				fwd = {
-					"stagger_fwd",
+					"stagger_fwd"
 				},
 				bwd = {
-					"stagger_bwd",
+					"stagger_bwd"
 				},
 				left = {
-					"stagger_left",
+					"stagger_left"
 				},
 				right = {
-					"stagger_right",
+					"stagger_right"
 				},
 				dwn = {
-					"stagger_bwd",
-				},
+					"stagger_bwd"
+				}
 			},
 			killshot = {
 				fwd = {
-					"stagger_fwd",
+					"stagger_fwd"
 				},
 				bwd = {
-					"stagger_bwd",
+					"stagger_bwd"
 				},
 				left = {
-					"stagger_left",
+					"stagger_left"
 				},
 				right = {
-					"stagger_right",
+					"stagger_right"
 				},
 				dwn = {
-					"stagger_bwd",
-				},
+					"stagger_bwd"
+				}
 			},
 			sticky = {
 				fwd = {
-					"hit_reaction_forward",
+					"hit_reaction_forward"
 				},
 				bwd = {
-					"hit_reaction_backward",
+					"hit_reaction_backward"
 				},
 				left = {
-					"hit_reaction_left",
+					"hit_reaction_left"
 				},
 				right = {
-					"hit_reaction_right",
+					"hit_reaction_right"
 				},
 				dwn = {
-					"hit_reaction_backward",
-				},
+					"hit_reaction_backward"
+				}
 			},
 			electrocuted = {
 				fwd = {
-					"hit_reaction_forward",
+					"hit_reaction_forward"
 				},
 				bwd = {
-					"hit_reaction_backward",
+					"hit_reaction_backward"
 				},
 				left = {
-					"hit_reaction_left",
+					"hit_reaction_left"
 				},
 				right = {
-					"hit_reaction_right",
+					"hit_reaction_right"
 				},
 				dwn = {
-					"hit_reaction_backward",
-				},
+					"hit_reaction_backward"
+				}
 			},
 			blinding = {
 				fwd = {
-					"hit_reaction_forward",
+					"hit_reaction_forward"
 				},
 				bwd = {
-					"hit_reaction_backward",
+					"hit_reaction_backward"
 				},
 				left = {
-					"hit_reaction_left",
+					"hit_reaction_left"
 				},
 				right = {
-					"hit_reaction_right",
+					"hit_reaction_right"
 				},
 				dwn = {
-					"hit_reaction_backward",
-				},
-			},
-		},
+					"hit_reaction_backward"
+				}
+			}
+		}
 	},
 	open_door = {
 		rotation_duration = 0.1,
-		stagger_immune = true,
+		stagger_immune = true
 	},
 	exit_spawner = {
-		run_anim_event = "run_start_fwd",
-	},
+		run_anim_event = "run_start_fwd"
+	}
 }
 
 return action_data

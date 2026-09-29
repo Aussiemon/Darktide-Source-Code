@@ -14,7 +14,7 @@ for name, settings in pairs(GameModeSettings) do
 end
 
 local CLIENT_RPCS = {
-	"rpc_game_mode_end_conditions_met",
+	"rpc_game_mode_end_conditions_met"
 }
 local GameModeManager = class("GameModeManager")
 
@@ -358,6 +358,10 @@ end
 
 GameModeManager.can_player_enter_game = function (self)
 	return self._game_mode:can_player_enter_game()
+end
+
+GameModeManager.is_ready_for_hot_join = function (self)
+	return self._game_mode:is_ready_for_hot_join()
 end
 
 GameModeManager.game_mode_ready = function (self)

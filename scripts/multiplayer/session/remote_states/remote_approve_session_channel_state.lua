@@ -20,7 +20,7 @@ RemoteApproveSessionChannelState.update = function (self, dt)
 		Log.info("RemoteApproveSessionChannelState", "Timeout waiting for channel request %s", shared_state.peer_id)
 
 		return "timeout", {
-			game_reason = "timeout",
+			game_reason = "timeout"
 		}
 	end
 end

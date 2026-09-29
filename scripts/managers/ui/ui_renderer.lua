@@ -103,7 +103,7 @@ UIRenderer.create_ui_renderer = function (world, gui, gui_retained, name, render
 		debug_startpoint_direction = StrictNil,
 		debug_startpoint = StrictNil,
 		render_settings = StrictNil,
-		render_passes = {},
+		render_passes = {}
 	})
 end
 
@@ -894,7 +894,7 @@ UIRenderer.draw_triangle = function (self, position, size, ui_style, retained_id
 		255,
 		255,
 		0,
-		255,
+		255
 	}
 	local color = Color(style_color[1] * alpha_multiplier, style_color[2] * color_intensity_multiplier, style_color[3] * color_intensity_multiplier, style_color[4] * color_intensity_multiplier)
 	local layer = position[3]
@@ -1122,7 +1122,7 @@ UIRenderer.text_size = function (self, text, font_type, font_size, optional_size
 	if optional_gui_args.vertical_alignment == Gui.VerticalAlignCenter then
 		optional_size = {
 			optional_size and optional_size[1] or 1920,
-			optional_size and optional_size[2] or 1080,
+			optional_size and optional_size[2] or 1080
 		}
 	end
 
@@ -1151,7 +1151,7 @@ UIRenderer.styled_text_size = function (self, text, style, optional_size, use_ma
 	if optional_gui_args.vertical_alignment == Gui.VerticalAlignCenter then
 		optional_size = {
 			optional_size and optional_size[1] or 1920,
-			optional_size and optional_size[2] or 1080,
+			optional_size and optional_size[2] or 1080
 		}
 	end
 
@@ -1423,7 +1423,7 @@ end
 local _debug_render_scenegraph_text_options = {
 	shadow = true,
 	horizontal_alignment = Gui.HorizontalAlignCenter,
-	vertical_alignment = Gui.VerticalAlignCenter,
+	vertical_alignment = Gui.VerticalAlignCenter
 }
 
 local function debug_render_scenegraph(ui_renderer, scenegraph, n_scenegraph)

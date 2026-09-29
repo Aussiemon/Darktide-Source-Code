@@ -12,32 +12,32 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo",
+				"generic_mission_vo"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"event_demolition_first_corruptor_destroyed_a",
+				"event_demolition_first_corruptor_destroyed_a"
 			},
 			{
 				"faction_memory",
 				"event_demolition_first_corruptor_destroyed_a",
 				OP.LT,
-				2,
-			},
+				2
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"event_demolition_first_corruptor_destroyed_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_giver_default",
-		},
+			target = "mission_giver_default"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -53,15 +53,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"event_demolition_first_corruptor_destroyed_a",
-				},
+					"event_demolition_first_corruptor_destroyed_a"
+				}
 			},
 			{
 				"user_context",
@@ -71,32 +71,32 @@ return function ()
 					"explicator",
 					"pilot",
 					"sergeant",
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"event_demolition_first_corruptor_destroyed_b",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"event_demolition_first_corruptor_destroyed_b",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3,
-			},
-		},
+				duration = 0.3
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -112,13 +112,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"event_demolition_last_corruptor",
+				"event_demolition_last_corruptor"
 			},
 			{
 				"user_context",
@@ -131,14 +131,14 @@ return function ()
 					"tech_priest",
 					"contract_vendor",
 					"purser",
-					"enginseer",
-				},
-			},
+					"enginseer"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -154,13 +154,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"event_demolition_more_corruptors",
+				"event_demolition_more_corruptors"
 			},
 			{
 				"user_context",
@@ -171,14 +171,14 @@ return function ()
 					"explicator",
 					"pilot",
 					"tech_priest",
-					"training_ground_psyker",
-				},
-			},
+					"training_ground_psyker"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -194,13 +194,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"info_event_demolition_corruptors_almost_done",
+				"info_event_demolition_corruptors_almost_done"
 			},
 			{
 				"user_context",
@@ -211,27 +211,27 @@ return function ()
 					"explicator",
 					"pilot",
 					"tech_priest",
-					"training_ground_psyker",
-				},
+					"training_ground_psyker"
+				}
 			},
 			{
 				"faction_memory",
 				"info_event_demolition_corruptors_almost_done",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"info_event_demolition_corruptors_almost_done",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -247,13 +247,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_stockpile_bazaar",
+				"mission_stockpile_bazaar"
 			},
 			{
 				"user_context",
@@ -262,23 +262,23 @@ return function ()
 				args = {
 					"explicator",
 					"sergeant",
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_stockpile_bazaar",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_stockpile_bazaar",
 				OP.ADD,
-				1,
-			},
-		},
+				1
+			}
+		}
 	})
 end

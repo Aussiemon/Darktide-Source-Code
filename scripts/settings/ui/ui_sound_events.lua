@@ -456,7 +456,7 @@ local ui_sound_events = {
 	wintrack_item_reward_overlay_in_rarity_3 = "wwise/events/ui/play_ui_penances_claim_reward_tier_2",
 	wintrack_item_reward_overlay_in_rarity_4 = "wwise/events/ui/play_ui_penances_claim_reward_tier_2",
 	wintrack_item_reward_overlay_in_rarity_5 = "wwise/events/ui/play_ui_penances_claim_reward_tier_3",
-	wintrack_item_reward_overlay_in_rarity_6 = "wwise/events/ui/play_ui_penances_claim_reward_tier_3",
+	wintrack_item_reward_overlay_in_rarity_6 = "wwise/events/ui/play_ui_penances_claim_reward_tier_3"
 }
 
 local function _append_sound_events(sound_events)

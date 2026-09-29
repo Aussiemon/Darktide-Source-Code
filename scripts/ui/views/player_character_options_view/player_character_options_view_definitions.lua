@@ -13,7 +13,7 @@ local image_size = PlayerCharacterOptionsViewSettings.image_size
 local content_size = PlayerCharacterOptionsViewSettings.content_size
 local button_size = {
 	420,
-	60,
+	60
 }
 local scenegraph_definitions = {
 	screen = UIWorkspaceSettings.screen,
@@ -23,13 +23,13 @@ local scenegraph_definitions = {
 		vertical_alignment = "center",
 		size = {
 			1250,
-			1250,
+			1250
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	button_pivot = {
 		horizontal_alignment = "center",
@@ -37,26 +37,26 @@ local scenegraph_definitions = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			470,
-			1,
-		},
+			1
+		}
 	},
 	window = {
 		scale = "fit_width",
 		vertical_alignment = "center",
 		size = {
 			1920,
-			window_size[2],
+			window_size[2]
 		},
 		position = {
 			0,
 			30,
-			20,
-		},
+			20
+		}
 	},
 	window_content = {
 		horizontal_alignment = "center",
@@ -66,8 +66,8 @@ local scenegraph_definitions = {
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	window_image = {
 		horizontal_alignment = "left",
@@ -77,8 +77,8 @@ local scenegraph_definitions = {
 		position = {
 			0,
 			0,
-			15,
-		},
+			15
+		}
 	},
 	player_panel = {
 		horizontal_alignment = "right",
@@ -88,8 +88,8 @@ local scenegraph_definitions = {
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	class_badge = {
 		horizontal_alignment = "left",
@@ -97,13 +97,13 @@ local scenegraph_definitions = {
 		vertical_alignment = "top",
 		size = {
 			400,
-			240,
+			240
 		},
 		position = {
 			button_size[1] * 0.5 - 200 + 40,
 			-10,
-			1,
-		},
+			1
+		}
 	},
 	player_name = {
 		horizontal_alignment = "center",
@@ -111,13 +111,13 @@ local scenegraph_definitions = {
 		vertical_alignment = "bottom",
 		size = {
 			content_size[1],
-			50,
+			50
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	character_title = {
 		horizontal_alignment = "center",
@@ -125,13 +125,13 @@ local scenegraph_definitions = {
 		vertical_alignment = "bottom",
 		size = {
 			content_size[1],
-			50,
+			50
 		},
 		position = {
 			0,
 			35,
-			1,
-		},
+			1
+		}
 	},
 	class_name = {
 		horizontal_alignment = "center",
@@ -139,13 +139,13 @@ local scenegraph_definitions = {
 		vertical_alignment = "bottom",
 		size = {
 			content_size[1],
-			50,
+			50
 		},
 		position = {
 			0,
 			70,
-			1,
-		},
+			1
+		}
 	},
 	inspect_button = {
 		horizontal_alignment = "left",
@@ -153,13 +153,13 @@ local scenegraph_definitions = {
 		vertical_alignment = "bottom",
 		size = {
 			380,
-			40,
+			40
 		},
 		position = {
 			60,
 			-145,
-			13,
-		},
+			13
+		}
 	},
 	invite_button = {
 		horizontal_alignment = "left",
@@ -167,13 +167,13 @@ local scenegraph_definitions = {
 		vertical_alignment = "bottom",
 		size = {
 			380,
-			40,
+			40
 		},
 		position = {
 			60,
 			-95,
-			13,
-		},
+			13
+		}
 	},
 	close_button = {
 		horizontal_alignment = "left",
@@ -181,14 +181,14 @@ local scenegraph_definitions = {
 		vertical_alignment = "bottom",
 		size = {
 			380,
-			40,
+			40
 		},
 		position = {
 			60,
 			-45,
-			13,
-		},
-	},
+			13
+		}
+	}
 }
 local widget_definitions = {
 	class_badge = UIWidget.create_definition({
@@ -198,10 +198,10 @@ local widget_definitions = {
 			value = "content/ui/materials/icons/class_badges/container",
 			style = {
 				material_values = {
-					effect_progress = 0,
-				},
-			},
-		},
+					effect_progress = 0
+				}
+			}
+		}
 	}, "class_badge"),
 	player_name = UIWidget.create_definition({
 		{
@@ -220,10 +220,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "player_name"),
 	class_name = UIWidget.create_definition({
 		{
@@ -242,10 +242,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "class_name"),
 	character_title = UIWidget.create_definition({
 		{
@@ -264,10 +264,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "character_title"),
 	window_image = UIWidget.create_definition({
 		{
@@ -279,25 +279,25 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				uvs = {
 					{
 						0,
-						0,
+						0
 					},
 					{
 						1,
-						1,
-					},
+						1
+					}
 				},
 				color = {
 					0,
 					255,
 					255,
-					255,
+					255
 				},
-				material_values = {},
+				material_values = {}
 			},
 			change_function = function (content, style, _, dt)
 				if content.alpha_fraction then
@@ -308,8 +308,8 @@ local widget_definitions = {
 						content.alpha_fraction = nil
 					end
 				end
-			end,
-		},
+			end
+		}
 	}, "window_image"),
 	window = UIWidget.create_definition({
 		{
@@ -320,14 +320,14 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					10,
-				},
-			},
+					10
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -340,18 +340,18 @@ local widget_definitions = {
 					100,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				size_addition = {
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -363,14 +363,14 @@ local widget_definitions = {
 					100,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -382,18 +382,18 @@ local widget_definitions = {
 					100,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					-1,
+					-1
 				},
 				size_addition = {
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -405,10 +405,10 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					64,
-					24,
+					24
 				},
-				color = Color.terminal_grid_background(nil, true),
-			},
+				color = Color.terminal_grid_background(nil, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -421,13 +421,13 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
 				size_addition = {
 					40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -440,14 +440,14 @@ local widget_definitions = {
 				color = Color.black(200, true),
 				size_addition = {
 					96,
-					96,
+					96
 				},
 				offset = {
 					0,
 					0,
-					5,
-				},
-			},
+					5
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -460,13 +460,13 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				size_addition = {
 					40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -479,13 +479,13 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				size_addition = {
 					40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -496,19 +496,19 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					nil,
-					10,
+					10
 				},
 				size_addition = {
 					80,
-					0,
+					0
 				},
 				color = Color.terminal_text_header(255, true),
 				offset = {
 					0,
 					-4,
-					14,
-				},
-			},
+					14
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -519,33 +519,33 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					nil,
-					10,
+					10
 				},
 				size_addition = {
 					80,
-					0,
+					0
 				},
 				color = Color.terminal_text_header(255, true),
 				offset = {
 					0,
 					4,
-					19,
-				},
-			},
-		},
+					19
+				}
+			}
+		}
 	}, "window"),
 	inspect_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "inspect_button", {
 		visible = true,
-		original_text = Localize("loc_lobby_player_inpect_button"),
+		original_text = Localize("loc_lobby_player_inpect_button")
 	}),
 	invite_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "invite_button", {
 		visible = true,
-		original_text = Localize("loc_social_menu_invite_to_party"),
+		original_text = Localize("loc_social_menu_invite_to_party")
 	}),
 	close_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "close_button", {
 		visible = true,
-		original_text = Localize("loc_action_interaction_close"),
-	}),
+		original_text = Localize("loc_action_interaction_close")
+	})
 }
 local animation_definitions = {
 	on_enter = {
@@ -573,7 +573,7 @@ local animation_definitions = {
 				widgets.class_name.alpha_multiplier = 0
 				widgets.character_title.alpha_multiplier = 0
 				parent._content_alpha_multiplier = 0
-			end,
+			end
 		},
 		{
 			end_time = 1.2,
@@ -586,7 +586,7 @@ local animation_definitions = {
 
 				window.style.screen_background.color[1] = alpha
 				window.style.screen_background_vignette.color[1] = alpha
-			end,
+			end
 		},
 		{
 			end_time = 0.2,
@@ -606,7 +606,7 @@ local animation_definitions = {
 				window_style.edge_top.color[1] = alpha
 				window_style.edge_bottom.color[1] = alpha
 				window_style.window_background.color[1] = alpha
-			end,
+			end
 		},
 		{
 			end_time = 0.7,
@@ -624,7 +624,7 @@ local animation_definitions = {
 				widgets.player_name.alpha_multiplier = anim_progress
 				widgets.class_name.alpha_multiplier = anim_progress
 				widgets.character_title.alpha_multiplier = anim_progress
-			end,
+			end
 		},
 		{
 			end_time = 0.4,
@@ -637,8 +637,8 @@ local animation_definitions = {
 				local anim_progress = math.easeCubic(progress)
 
 				parent:_set_scenegraph_size("window", nil, 100 + (scenegraph_definition.window.size[2] - 100) * anim_progress)
-			end,
-		},
+			end
+		}
 	},
 	on_exit = {
 		{
@@ -657,7 +657,7 @@ local animation_definitions = {
 				widgets.player_name.alpha_multiplier = anim_progress
 				widgets.class_name.alpha_multiplier = anim_progress
 				widgets.character_title.alpha_multiplier = anim_progress
-			end,
+			end
 		},
 		{
 			end_time = 0.7,
@@ -670,7 +670,7 @@ local animation_definitions = {
 				local anim_progress = math.easeCubic(1 - progress)
 
 				parent:_set_scenegraph_size("window", nil, 100 + (scenegraph_definition.window.size[2] - 100) * anim_progress)
-			end,
+			end
 		},
 		{
 			end_time = 0.5,
@@ -690,18 +690,18 @@ local animation_definitions = {
 				window_style.edge_top.color[1] = alpha
 				window_style.edge_bottom.color[1] = alpha
 				window_style.window_background.color[1] = alpha
-			end,
+			end
 		},
 		{
 			end_time = 0.6,
 			name = "delay",
-			start_time = 0.5,
-		},
-	},
+			start_time = 0.5
+		}
+	}
 }
 
 return {
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definitions,
-	animations = animation_definitions,
+	animations = animation_definitions
 }

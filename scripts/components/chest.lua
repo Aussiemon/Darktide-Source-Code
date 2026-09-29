@@ -63,30 +63,30 @@ Chest.component_data = {
 	interaction_delay = {
 		ui_name = "Interaction delay (in sec.)",
 		ui_type = "number",
-		value = 0.5,
+		value = 0.5
 	},
 	locked = {
 		ui_name = "Locked",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	inputs = {
 		chest_open = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		chest_lock = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		chest_unlock = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"ChestExtension",
-	},
+		"ChestExtension"
+	}
 }
 
 return Chest

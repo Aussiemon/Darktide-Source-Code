@@ -5,11 +5,20 @@ local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
+local custom_settings_view_settings = require("scripts/ui/views/custom_settings_view/custom_settings_view_settings")
 local title_text_style = table.clone(UIFontSettings.header_2)
 
 title_text_style.text_horizontal_alignment = "center"
 title_text_style.text_vertical_alignment = "top"
 
+local scrollbar_width = custom_settings_view_settings.scrollbar_width
+local settings_grid_width = custom_settings_view_settings.settings_grid_width
+local grid_height = custom_settings_view_settings.grid_height
+local grid_blur_edge_size = custom_settings_view_settings.grid_blur_edge_size
+local mask_size = {
+	settings_grid_width + grid_blur_edge_size[1] * 2,
+	grid_height + grid_blur_edge_size[2] * 2
+}
 local scenegraph_definitions = {
 	screen = UIWorkspaceSettings.screen,
 	canvas = {
@@ -18,27 +27,27 @@ local scenegraph_definitions = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	area = {
 		horizontal_alignment = "center",
 		parent = "canvas",
 		vertical_alignment = "center",
 		size = {
-			1500,
-			1080,
+			1800,
+			1080
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	title_text = {
 		horizontal_alignment = "center",
@@ -46,13 +55,13 @@ local scenegraph_definitions = {
 		vertical_alignment = "center",
 		size = {
 			600,
-			100,
+			100
 		},
 		position = {
 			0,
 			-470,
-			1,
-		},
+			1
+		}
 	},
 	next_button = {
 		horizontal_alignment = "center",
@@ -61,9 +70,9 @@ local scenegraph_definitions = {
 		size = ButtonPassTemplates.terminal_button.size,
 		position = {
 			0,
-			470,
-			1,
-		},
+			420,
+			1
+		}
 	},
 	page_number = {
 		horizontal_alignment = "center",
@@ -71,122 +80,119 @@ local scenegraph_definitions = {
 		vertical_alignment = "center",
 		size = {
 			500,
-			100,
+			100
 		},
 		position = {
 			0,
 			-30,
-			1,
-		},
+			1
+		}
 	},
 	setting_base = {
 		horizontal_alignment = "center",
 		parent = "area",
 		vertical_alignment = "center",
 		size = {
-			1720,
-			880,
+			1800,
+			880
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	grid_start = {
 		horizontal_alignment = "center",
 		parent = "setting_base",
 		vertical_alignment = "center",
 		size = {
-			1720,
-			880,
+			settings_grid_width,
+			grid_height
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	grid_content_pivot = {
-		horizontal_alignment = "center",
+		horizontal_alignment = "left",
 		parent = "grid_start",
-		vertical_alignment = "center",
+		vertical_alignment = "top",
 		size = {
-			1720,
-			880,
+			settings_grid_width,
+			grid_height
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	grid_content_mask = {
 		horizontal_alignment = "center",
 		parent = "grid_start",
 		vertical_alignment = "center",
-		size = {
-			1720,
-			880,
-		},
+		size = mask_size,
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	grid_content_scrollbar = {
-		horizontal_alignment = "center",
+		horizontal_alignment = "right",
 		parent = "grid_start",
 		vertical_alignment = "center",
 		size = {
-			1720,
-			880,
+			scrollbar_width,
+			grid_height
 		},
 		position = {
+			20,
 			0,
-			0,
-			2,
-		},
+			3
+		}
 	},
 	grid_content_interaction = {
-		horizontal_alignment = "center",
+		horizontal_alignment = "left",
 		parent = "grid_start",
 		vertical_alignment = "top",
 		size = {
-			1720,
-			880,
+			settings_grid_width + scrollbar_width * 2,
+			grid_height
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
-	},
+			2
+		}
+	}
 }
 local widget_definitions = {
 	background = UIWidget.create_definition({
 		{
 			pass_type = "rect",
 			style = {
-				color = Color.black(255, true),
+				color = Color.black(255, true)
 			},
 			offset = {
 				0,
 				0,
-				0,
-			},
+				0
+			}
 		},
 		{
 			pass_type = "rect",
 			style = {
-				color = Color.black(127.5, true),
+				color = Color.black(127.5, true)
 			},
 			offset = {
 				0,
 				0,
-				3,
-			},
+				3
+			}
 		},
 		{
 			pass_type = "slug_icon",
@@ -197,19 +203,19 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				color = {
 					40,
 					0,
 					0,
-					0,
+					0
 				},
 				size = {
 					1250,
-					1250,
-				},
-			},
+					1250
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -220,31 +226,31 @@ local widget_definitions = {
 				vertical_alignemnt = "center",
 				size_addition = {
 					40,
-					40,
+					40
 				},
 				offset = {
 					-20,
 					-20,
-					1,
+					1
 				},
-				color = Color.terminal_grid_background_gradient(255, true),
-			},
-		},
+				color = Color.terminal_grid_background_gradient(255, true)
+			}
+		}
 	}, "screen"),
 	gamma_background = UIWidget.create_definition({
 		{
 			pass_type = "rect",
 			style = {
-				color = Color.black(255, true),
+				color = Color.black(255, true)
 			},
 			offset = {
 				0,
 				0,
-				0,
-			},
-		},
+				0
+			}
+		}
 	}, "screen", {
-		visible = false,
+		visible = false
 	}),
 	title_settings = UIWidget.create_definition({
 		{
@@ -252,8 +258,8 @@ local widget_definitions = {
 			style_id = "text",
 			value = "",
 			value_id = "text",
-			style = title_text_style,
-		},
+			style = title_text_style
+		}
 	}, "title_text"),
 	page_number = UIWidget.create_definition({
 		{
@@ -261,12 +267,12 @@ local widget_definitions = {
 			style_id = "text",
 			value = "",
 			value_id = "text",
-			style = title_text_style,
-		},
+			style = title_text_style
+		}
 	}, "page_number"),
 	next_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "next_button", {
 		gamepad_action = "next",
-		original_text = "",
+		original_text = ""
 	}),
 	grid_content_mask = UIWidget.create_definition({
 		{
@@ -277,19 +283,20 @@ local widget_definitions = {
 					255,
 					255,
 					255,
-					255,
-				},
-			},
-		},
+					255
+				}
+			}
+		}
 	}, "grid_content_mask"),
-	grid_content_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.default_scrollbar, "grid_content_scrollbar", {
+	grid_content_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "grid_content_scrollbar", {
 		scroll_speed = 10,
+		using_custom_gamepad_navigation = true
 	}),
 	options_grid_interaction = UIWidget.create_definition({
 		{
 			content_id = "hotspot",
-			pass_type = "hotspot",
-		},
+			pass_type = "hotspot"
+		}
 	}, "grid_content_interaction"),
 	settings_overlay = UIWidget.create_definition({
 		{
@@ -298,17 +305,28 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					20,
+					20
 				},
 				color = {
 					160,
 					0,
 					0,
-					0,
-				},
-			},
-		},
-	}, "screen"),
+					0
+				}
+			}
+		}
+	}, "screen")
+}
+local legend_inputs = {
+	{
+		alignment = "left_alignment",
+		display_name = "loc_settings_menu_close_menu",
+		input_action = "back",
+		on_pressed_callback = "cb_on_back_pressed",
+		visibility_function = function (parent)
+			return parent:should_show_close_legend()
+		end
+	}
 }
 local accessibility_widget_definitions = {
 	title_settings = UIWidget.create_definition({
@@ -317,13 +335,14 @@ local accessibility_widget_definitions = {
 			style_id = "text",
 			value = "Gamma Settings",
 			value_id = "text",
-			style = title_text_style,
-		},
-	}, "title_text"),
+			style = title_text_style
+		}
+	}, "title_text")
 }
 
 return {
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definitions,
 	accessibility_widget_definitions = accessibility_widget_definitions,
+	legend_inputs = legend_inputs
 }

@@ -10,13 +10,13 @@ view_groups.ImguiManager = {
 		name = "Lua Memory Snapshot",
 		require = "scripts/managers/imgui/guis/imgui_lua_memory_snapshot",
 		flags = {
-			"always_auto_resize",
-		},
-	},
+			"always_auto_resize"
+		}
+	}
 }
 
 local imgui_settings = {
-	view_groups = view_groups,
+	view_groups = view_groups
 }
 
 return settings("ImguiSettings", imgui_settings)

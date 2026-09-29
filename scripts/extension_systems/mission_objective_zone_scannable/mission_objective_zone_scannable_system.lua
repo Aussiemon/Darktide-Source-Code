@@ -5,7 +5,7 @@ require("scripts/extension_systems/mission_objective_zone_scannable/mission_obje
 local MissionObjectiveZoneScannableSystem = class("MissionObjectiveZoneScannableSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
 	"rpc_mission_objective_zone_scannable_hot_join_sync",
-	"rpc_mission_objective_zone_scannable_set_active",
+	"rpc_mission_objective_zone_scannable_set_active"
 }
 
 MissionObjectiveZoneScannableSystem.init = function (self, context, system_init_data, ...)

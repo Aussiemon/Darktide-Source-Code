@@ -36,7 +36,7 @@ local effect_template = {
 	end,
 	stop = function (template_data, template_context)
 		_destroy_particles(template_data, template_context)
-	end,
+	end
 }
 
 function _create_particles(template_data, template_context)

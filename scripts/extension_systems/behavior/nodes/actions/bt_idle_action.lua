@@ -7,6 +7,7 @@ local Blackboard = require("scripts/extension_systems/blackboard/utilities/black
 local MinionMovement = require("scripts/utilities/minion_movement")
 local Vo = require("scripts/utilities/vo")
 local BtIdleAction = class("BtIdleAction", "BtNode")
+local UPDATE_RATE = 0.5
 
 BtIdleAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
@@ -38,15 +39,15 @@ BtIdleAction.enter = function (self, unit, breed, blackboard, scratchpad, action
 		end
 	end
 
-	scratchpad.update_rate = action_data.update_rate or math.huge
+	scratchpad.update_rate = action_data.update_rate or UPDATE_RATE
 end
 
 BtIdleAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
-	if not action_data.ignore_rotate_towards_target then
-		MinionMovement.rotate_towards_target_unit(unit, scratchpad)
-	end
+	local update_rate = scratchpad.update_rate
 
-	return "running", nil
+	update_rate = not action_data.ignore_rotate_towards_target and MinionMovement.rotate_towards_target_unit(unit, scratchpad) and 0 or update_rate
+
+	return "running", nil, update_rate
 end
 
 BtIdleAction.init_values = function (self, blackboard)

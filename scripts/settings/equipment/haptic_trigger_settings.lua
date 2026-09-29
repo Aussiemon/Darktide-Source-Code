@@ -25,17 +25,17 @@ local haptic_trigger_settings = {
 		[effect_mode.weapon] = {
 			end_position = 3,
 			start_position = 3,
-			strength = 4,
+			strength = 4
 		},
 		[effect_mode.feedback] = {
 			position = 3,
-			strength = 4,
+			strength = 4
 		},
 		[effect_mode.slope_feedback] = {
 			end_position = 9,
 			end_strength = 5,
 			start_position = 0,
-			start_strength = 1,
+			start_strength = 1
 		},
 		[effect_mode.multi_position_feedback] = {
 			strength = {
@@ -48,13 +48,13 @@ local haptic_trigger_settings = {
 				0,
 				3,
 				6,
-				0,
-			},
+				0
+			}
 		},
 		[effect_mode.vibration] = {
 			amplitude = 4,
 			frequency = 0,
-			position = 2,
+			position = 2
 		},
 		[effect_mode.multi_position_vibration] = {
 			frequency = 0,
@@ -68,27 +68,27 @@ local haptic_trigger_settings = {
 				0,
 				3,
 				6,
-				0,
-			},
-		},
+				0
+			}
+		}
 	},
 	low_ammo_extra_vibration_amplitude = {
 		1.25,
 		1.5,
-		2.25,
+		2.25
 	},
 	resistance_multiplier = {
 		full = 0.75,
 		off = 0,
 		strong = 0.5,
-		subtle = 0.15,
+		subtle = 0.15
 	},
 	vibration_multiplier = {
 		full = 1,
 		off = 0,
 		strong = 0.75,
-		subtle = 0.25,
-	},
+		subtle = 0.25
+	}
 }
 
 return settings("HapticTriggerSettings", haptic_trigger_settings)

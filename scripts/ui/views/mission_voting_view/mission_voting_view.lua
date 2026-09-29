@@ -2,7 +2,6 @@
 
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local Danger = require("scripts/utilities/danger")
-local DangerSettings = require("scripts/settings/difficulty/danger_settings")
 local Definitions = require("scripts/ui/views/mission_voting_view/mission_voting_view_definitions")
 local Havoc = require("scripts/utilities/havoc")
 local InputDevice = require("scripts/managers/input/input_device")
@@ -10,15 +9,14 @@ local InputUtils = require("scripts/managers/input/input_utils")
 local MissionDetailsBlueprints = require("scripts/ui/views/mission_voting_view/mission_voting_view_blueprints")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local MissionTypes = require("scripts/settings/mission/mission_types")
+local QPCode = require("scripts/utilities/qp_code")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
+local Text = require("scripts/utilities/ui/text")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
-local ViewStyles = require("scripts/ui/views/mission_voting_view/mission_voting_view_styles")
 local Zones = require("scripts/settings/zones/zones")
-local Text = require("scripts/utilities/ui/text")
-local QPCode = require("scripts/utilities/qp_code")
 local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
 local MissionVotingViewTestify = GameParameters.testify and require("scripts/ui/views/mission_voting_view/mission_voting_view_testify")
 
@@ -300,7 +298,7 @@ MissionVotingView.cb_on_toggle_details_pressed = function (self)
 	local params = {
 		show_details_flag = show_details_flag,
 		source_heights = show_details_flag and self._main_page_heights or self._details_page_heights,
-		target_heights = show_details_flag and self._details_page_heights or self._main_page_heights,
+		target_heights = show_details_flag and self._details_page_heights or self._main_page_heights
 	}
 
 	self._toggle_details_page_animation_id = self:_start_animation("switch_page", self._widgets_by_name, params)
@@ -318,7 +316,7 @@ MissionVotingView.toggle_details = function (self, show_details_flag)
 	else
 		self._additional_widgets = self._mission_info_widgets
 		self._additional_text_styles = {
-			self._widgets_by_name.title_bar_bottom.style.text,
+			self._widgets_by_name.title_bar_bottom.style.text
 		}
 		text = Localize(MissionDetailsBlueprints.button_strings.show_details)
 	end
@@ -401,7 +399,7 @@ MissionVotingView._create_offscreen_renderer = function (self)
 		world = world,
 		viewport = viewport,
 		viewport_name = viewport_name,
-		renderer_name = renderer_name,
+		renderer_name = renderer_name
 	}
 end
 
@@ -457,7 +455,7 @@ end
 
 MissionVotingView._setup_main_page_widgets = function (self)
 	local definitions = {
-		widget_definitions = self._definitions.mission_info_widget_definitions,
+		widget_definitions = self._definitions.mission_info_widget_definitions
 	}
 
 	self._mission_info_widgets = {}
@@ -468,7 +466,7 @@ end
 
 MissionVotingView._setup_button_widgets = function (self)
 	local definitions = {
-		widget_definitions = self._definitions.buttons_widget_definitions,
+		widget_definitions = self._definitions.buttons_widget_definitions
 	}
 
 	self._button_widgets = {}
@@ -478,7 +476,7 @@ end
 
 MissionVotingView._setup_details_page_static_widgets = function (self)
 	local definitions = {
-		widget_definitions = self._definitions.details_static_widgets_definitions,
+		widget_definitions = self._definitions.details_static_widgets_definitions
 	}
 
 	self._details_static_widgets = {}
@@ -578,16 +576,16 @@ MissionVotingView._handle_gamepad_input = function (self, input_service, dt)
 	end
 end
 
-local function _calculate_danger_level(mission_data)
-	local danger_setting = Danger.danger_by_mission(mission_data)
+local function _danger_settings(mission_data)
+	local danger_settings = Danger.danger_by_mission(mission_data)
 
-	return danger_setting.index, danger_setting.display_name
+	return danger_settings
 end
 
-local function _calculate_quickplay_danger_level(qp_string)
-	local danger_setting = Danger.danger_by_qp_code(qp_string)
+local function _quickplay_danger_settings(qp_string)
+	local danger_settings = Danger.danger_by_qp_code(qp_string)
 
-	return danger_setting.index, danger_setting.display_name
+	return danger_settings
 end
 
 MissionVotingView._populate_quickplay_data = function (self, qp_data)
@@ -626,12 +624,12 @@ MissionVotingView._populate_quickplay_data = function (self, qp_data)
 	danger_level_widget.style.danger_icon.visible = false
 	danger_level_widget.style.danger_icon_drop_shadow.visible = false
 
-	local danger_level, danger_level_text = _calculate_quickplay_danger_level(self._backend_mission_id)
+	local danger_settings = _quickplay_danger_settings(self._backend_mission_id)
 
-	self:_set_difficulty_icons(danger_level_widget.style, danger_level)
+	self:_set_difficulty_icons(danger_level_widget.style, danger_settings)
 
-	danger_level_widget.content.danger_text = Utf8.upper(Localize(danger_level_text))
-	danger_level_widget.content.difficulty_icon = DangerSettings[danger_level].icon
+	danger_level_widget.content.danger_text = Utf8.upper(Localize(danger_settings.display_name))
+	danger_level_widget.content.difficulty_icon = danger_settings.icon
 	danger_level_widget.style.rankup_icon.amount = 0
 	danger_level_widget.style.rankup_icon_background.amount = 0
 
@@ -705,12 +703,12 @@ MissionVotingView._set_mission_data = function (self, mission_data)
 		danger_level_widget.style.danger_icon.offset = {
 			0,
 			10,
-			1,
+			1
 		}
 		danger_level_widget.style.danger_icon_drop_shadow.offset = {
 			2,
 			10,
-			0,
+			0
 		}
 
 		local levels_to_be_gained = determine_havoc_promotion_rate(havoc_rank, self._own_order and self._own_order.rank)
@@ -725,12 +723,12 @@ MissionVotingView._set_mission_data = function (self, mission_data)
 		danger_level_widget.style.danger_icon.visible = false
 		danger_level_widget.style.danger_icon_drop_shadow.visible = false
 
-		local danger_level, danger_level_text = _calculate_danger_level(mission_data)
+		local danger_settings = _danger_settings(mission_data)
 
-		self:_set_difficulty_icons(danger_level_widget.style, danger_level)
+		self:_set_difficulty_icons(danger_level_widget.style, danger_settings)
 
-		danger_level_widget.content.danger_text = Utf8.upper(Localize(danger_level_text))
-		danger_level_widget.content.difficulty_icon = DangerSettings[danger_level].icon
+		danger_level_widget.content.danger_text = Utf8.upper(Localize(danger_settings.display_name))
+		danger_level_widget.content.difficulty_icon = danger_settings.icon
 	end
 
 	local accept_confirmation_widget = self._widgets_by_name.accept_confirmation
@@ -777,15 +775,15 @@ MissionVotingView._create_mission_icons_info = function (self, scenegraph_id, ic
 				color = icon_color,
 				size = {
 					widget_size,
-					widget_size,
+					widget_size
 				},
 				offset = {
 					x_offset,
 					0,
-					25,
-				},
-			},
-		},
+					25
+				}
+			}
+		}
 	}, scenegraph_id)
 
 	return icon_definition
@@ -813,8 +811,8 @@ MissionVotingView._setup_mission_info_icons = function (self, mission_data, qp_d
 				255,
 				169,
 				191,
-				153,
-			},
+				153
+			}
 		}
 	else
 		local mission_template = MissionTemplates[mission_data.map]
@@ -826,16 +824,24 @@ MissionVotingView._setup_mission_info_icons = function (self, mission_data, qp_d
 		local has_side_mission = not not mission_data.sideMission
 		local has_circumstance = mission_data.circumstance and mission_data.circumstance ~= "default"
 		local havoc_mutators = Havoc.get_havoc_mutators(mission_data.flags)
-		local mission_type = MissionTypes[mission_template.mission_type]
+		local mission_type = mission_template.mission_type
+
+		if not mission_type then
+			mission_type = "undefined"
+
+			Log.error(mission_type, "[MissionVotingView] Found no mission_type in mission %q, using \"undefined\" as mission_type instead", mission_data.map)
+		end
+
+		local mission_type_settings = MissionTypes[mission_type]
 
 		mission_icon_settings[#mission_icon_settings + 1] = {
-			icon = mission_type.icon,
+			icon = mission_type_settings.icon,
 			color = {
 				255,
 				169,
 				191,
-				153,
-			},
+				153
+			}
 		}
 
 		if has_side_mission then
@@ -849,8 +855,8 @@ MissionVotingView._setup_mission_info_icons = function (self, mission_data, qp_d
 						255,
 						169,
 						191,
-						153,
-					},
+						153
+					}
 				}
 			end
 		end
@@ -865,7 +871,7 @@ MissionVotingView._setup_mission_info_icons = function (self, mission_data, qp_d
 				if circumstance_ui_settings then
 					mission_icon_settings[#mission_icon_settings + 1] = {
 						icon = circumstance_ui_settings.icon,
-						color = Color.golden_rod(255, true),
+						color = Color.golden_rod(255, true)
 					}
 				end
 			end
@@ -882,7 +888,7 @@ MissionVotingView._setup_mission_info_icons = function (self, mission_data, qp_d
 					if circumstance_ui_settings then
 						mission_icon_settings[#mission_icon_settings + 1] = {
 							icon = circumstance_ui_settings.icon,
-							color = Color.golden_rod(225, true),
+							color = Color.golden_rod(225, true)
 						}
 					end
 				else
@@ -968,22 +974,20 @@ MissionVotingView._horizontally_layout_salary_passes = function (self, salary_wi
 	self:_set_scenegraph_size("mission_salary", total_width)
 end
 
-MissionVotingView._set_difficulty_icons = function (self, style, difficulty_value)
+MissionVotingView._set_difficulty_icons = function (self, style, danger_settings)
 	local difficulty_icon_style = style.difficulty_icon
-	local color = DangerSettings[difficulty_value] and DangerSettings[difficulty_value].color or DangerSettings[1].color
+	local difficulty_icon_frame_style = style.difficulty_icon_frame
+	local difficulty_icon_color = danger_settings.color
 
-	difficulty_icon_style.color = color
-
-	local difficulty_icon_frame = style.difficulty_icon_frame
-
-	difficulty_icon_frame.color = color
+	difficulty_icon_style.color = difficulty_icon_color
+	difficulty_icon_frame_style.color = difficulty_icon_color
 end
 
 MissionVotingView._create_spacing_widget = function (self, size, scenegraph_id, name)
 	local templates = MissionDetailsBlueprints.templates
 	local template = templates.dynamic_spacing
 	local config = {
-		size = size,
+		size = size
 	}
 	local size = template.size_function and template.size_function(config) or template.size
 	local widget_definition = UIWidget.create_definition(template.pass_template, scenegraph_id, nil, size)
@@ -1078,7 +1082,7 @@ MissionVotingView._calculate_page_heights = function (self, details_page_needed_
 		title_bar_bottom_height = title_bar_bottom_height,
 		zone_image_panel_height = zone_image_panel_height,
 		zone_image_bottom_fade_height = zone_image_bottom_fade_height,
-		circumstance_icon_height = circumstance_icon_height,
+		circumstance_icon_height = circumstance_icon_height
 	}
 
 	local details_page_overhang = 0
@@ -1106,7 +1110,7 @@ MissionVotingView._calculate_page_heights = function (self, details_page_needed_
 		body_height = details_page_height,
 		mission_info_panel_height = details_page_height,
 		outer_panel_y_offset = outer_panel_y_offset + details_page_overhang / 2,
-		body_y_offset = zone_image_y_offset,
+		body_y_offset = zone_image_y_offset
 	}
 end
 
@@ -1128,7 +1132,7 @@ MissionVotingView._calc_text_size = function (self, widget, text_and_style_id)
 	local text = widget.content[text_and_style_id]
 	local text_style = widget.style[text_and_style_id]
 	local size = text_style.size or {
-		self:_scenegraph_size(widget.scenegraph_id),
+		self:_scenegraph_size(widget.scenegraph_id)
 	}
 
 	return Text.text_size(self._ui_renderer, text, text_style, size)

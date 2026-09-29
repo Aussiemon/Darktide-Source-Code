@@ -56,7 +56,7 @@ Tracks.claim_track_tier = function (self, track_id, tier, optional_account_id)
 		local account_id = optional_account_id or account.sub
 		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/tracks/"):path(track_id):path("/tiers/"):path(tier)
 		local options = {
-			method = "POST",
+			method = "POST"
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options)
@@ -68,7 +68,7 @@ Tracks.claim_track_tier_reward = function (self, track_id, tier, reward_id)
 		local account_id = account.sub
 		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/tracks/"):path(track_id):path("/tiers/"):path(tier):path("/reward/"):path(reward_id)
 		local options = {
-			method = "POST",
+			method = "POST"
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options)
@@ -80,8 +80,8 @@ Tracks.modify_track_account_state = function (self, account_id, track_id, track_
 	local options = {
 		method = "PATCH",
 		body = {
-			xp = track_xp,
-		},
+			xp = track_xp
+		}
 	}
 
 	return Managers.backend:title_request(builder:to_string(), options)
@@ -124,7 +124,7 @@ Tracks.claim_track_node = function (self, track_id, node_id, optional_account_id
 		local account_id = optional_account_id or account.sub
 		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/tracks/"):path(track_id):path("/nodes/"):path(node_id)
 		local options = {
-			method = "POST",
+			method = "POST"
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options)
@@ -136,7 +136,7 @@ Tracks.claim_track_node_reward = function (self, track_id, node_id, reward_id)
 		local account_id = account.sub
 		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/tracks/"):path(track_id):path("/nodes/"):path(node_id):path("/reward/"):path(reward_id)
 		local options = {
-			method = "POST",
+			method = "POST"
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options)
@@ -148,7 +148,7 @@ Tracks.get_claimable_track_nodes = function (self, track_id)
 		local account_id = account.sub
 		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/tracks/"):path(track_id):path("/claimable-nodes")
 		local options = {
-			method = "GET",
+			method = "GET"
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options):next(function (data)
@@ -162,7 +162,7 @@ end
 Tracks.get_track_data_by_type = function (self, account_id, track_id, data_type)
 	local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/account/tracks/"):path(track_id):path("/data/"):path(data_type)
 	local options = {
-		method = "GET",
+		method = "GET"
 	}
 
 	return Managers.backend:title_request(builder:to_string(), options):next(function (data)
@@ -176,7 +176,7 @@ Tracks.set_track_data_by_type = function (self, account_id, track_id, data_type,
 	local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/account/tracks/"):path(track_id):path("/data/"):path(data_type)
 	local options = {
 		method = "PUT",
-		body = data,
+		body = data
 	}
 
 	return Managers.backend:title_request(builder:to_string(), options)
@@ -185,7 +185,7 @@ end
 Tracks.get_track_statistics_by_type = function (self, account_id, track_id, statistics_type)
 	local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/account/tracks/"):path(track_id):path("/statistics/"):path(statistics_type)
 	local options = {
-		method = "GET",
+		method = "GET"
 	}
 
 	return Managers.backend:title_request(builder:to_string(), options):next(function (data)
@@ -197,7 +197,7 @@ Tracks.set_track_statistics_by_type = function (self, account_id, track_id, stat
 	local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/account/tracks/"):path(track_id):path("/statistics/"):path(statistics_type)
 	local options = {
 		method = "PUT",
-		body = data,
+		body = data
 	}
 
 	return Managers.backend:title_request(builder:to_string(), options)
@@ -207,7 +207,7 @@ Tracks.set_event_track_data = function (self, account_id, track_id, data)
 	local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/events/"):path(track_id)
 	local options = {
 		method = "POST",
-		body = data,
+		body = data
 	}
 
 	return Managers.backend:title_request(builder:to_string(), options)

@@ -8,7 +8,7 @@ local function flat(v)
 		v,
 		v,
 		v,
-		v,
+		v
 	}
 end
 
@@ -20,7 +20,7 @@ do
 		small_metal = removed,
 		small_platinum = removed,
 		large_metal = removed,
-		large_platinum = removed,
+		large_platinum = removed
 	}
 
 	PickupOverrides.havoc_pickups = {
@@ -30,42 +30,42 @@ do
 				ammo = {
 					small_clip = flat(2),
 					large_clip = flat(2),
-					ammo_cache_pocketable = not_changed,
-				},
+					ammo_cache_pocketable = not_changed
+				}
 			},
 			mid_event = {
 				forge_material = no_currency_pickup,
 				ammo = {
 					small_clip = flat(2),
 					large_clip = flat(2),
-					ammo_cache_pocketable = not_changed,
-				},
+					ammo_cache_pocketable = not_changed
+				}
 			},
 			end_event = {
 				forge_material = no_currency_pickup,
 				ammo = {
 					small_clip = flat(2),
 					large_clip = flat(2),
-					ammo_cache_pocketable = not_changed,
-				},
+					ammo_cache_pocketable = not_changed
+				}
 			},
 			primary = {
 				forge_material = no_currency_pickup,
 				ammo = {
 					small_clip = flat(2),
 					large_clip = flat(2),
-					ammo_cache_pocketable = not_changed,
-				},
+					ammo_cache_pocketable = not_changed
+				}
 			},
 			secondary = {
 				forge_material = no_currency_pickup,
 				ammo = {
 					small_clip = flat(2),
 					large_clip = flat(2),
-					ammo_cache_pocketable = not_changed,
-				},
-			},
-		},
+					ammo_cache_pocketable = not_changed
+				}
+			}
+		}
 	}
 end
 
@@ -73,27 +73,27 @@ do
 	local no_ammo_pickup = {
 		small_clip = removed,
 		large_clip = removed,
-		ammo_cache_pocketable = removed,
+		ammo_cache_pocketable = removed
 	}
 
 	PickupOverrides.no_ammo_pickups = {
 		pickup_settings = {
 			rubberband_pool = {
-				ammo = no_ammo_pickup,
+				ammo = no_ammo_pickup
 			},
 			mid_event = {
-				ammo = no_ammo_pickup,
+				ammo = no_ammo_pickup
 			},
 			end_event = {
-				ammo = no_ammo_pickup,
+				ammo = no_ammo_pickup
 			},
 			primary = {
-				ammo = no_ammo_pickup,
+				ammo = no_ammo_pickup
 			},
 			secondary = {
-				ammo = no_ammo_pickup,
-			},
-		},
+				ammo = no_ammo_pickup
+			}
+		}
 	}
 end
 
@@ -102,27 +102,27 @@ do
 		small_metal = removed,
 		small_platinum = removed,
 		large_metal = removed,
-		large_platinum = removed,
+		large_platinum = removed
 	}
 
 	PickupOverrides.no_currency_pickups = {
 		pickup_settings = {
 			rubberband_pool = {
-				currency = no_currency_pickup,
+				currency = no_currency_pickup
 			},
 			mid_event = {
-				currency = no_currency_pickup,
+				currency = no_currency_pickup
 			},
 			end_event = {
-				currency = no_currency_pickup,
+				currency = no_currency_pickup
 			},
 			primary = {
-				currency = no_currency_pickup,
+				currency = no_currency_pickup
 			},
 			secondary = {
-				currency = no_currency_pickup,
-			},
-		},
+				currency = no_currency_pickup
+			}
+		}
 	}
 end
 
@@ -130,73 +130,73 @@ PickupOverrides.more_grenade_pickups = {
 	pickup_settings = {
 		rubberband_pool = {
 			grenade = {
-				small_grenade = flat(3),
-			},
+				small_grenade = flat(3)
+			}
 		},
 		primary = {
 			grenade = {
-				small_grenade = flat(4),
-			},
+				small_grenade = flat(4)
+			}
 		},
 		secondary = {
 			grenade = {
-				small_grenade = flat(3),
-			},
-		},
-	},
+				small_grenade = flat(3)
+			}
+		}
+	}
 }
 PickupOverrides.more_corruption_syringes = {
 	pickup_settings = {
 		rubberband_pool = {
 			wounds = {
-				syringe_corruption_pocketable = flat(10),
-			},
+				syringe_corruption_pocketable = flat(10)
+			}
 		},
 		mid_event = {
 			wounds = {
-				syringe_corruption_pocketable = flat(1),
-			},
+				syringe_corruption_pocketable = flat(1)
+			}
 		},
 		end_event = {
 			wounds = {
-				syringe_corruption_pocketable = flat(1),
-			},
+				syringe_corruption_pocketable = flat(1)
+			}
 		},
 		primary = {
 			wounds = {
-				syringe_corruption_pocketable = flat(10),
-			},
+				syringe_corruption_pocketable = flat(10)
+			}
 		},
 		secondary = {
 			wounds = {
-				syringe_corruption_pocketable = flat(10),
-			},
-		},
-	},
+				syringe_corruption_pocketable = flat(10)
+			}
+		}
+	}
 }
 PickupOverrides.less_healing_pocketables = {
 	pickup_settings = {
 		rubberband_pool = {
 			health = {
-				medical_crate_pocketable = flat(-2),
-			},
+				medical_crate_pocketable = flat(-2)
+			}
 		},
 		mid_event = {
 			health = {
-				medical_crate_pocketable = flat(-2),
-			},
+				medical_crate_pocketable = flat(-2)
+			}
 		},
 		end_event = {
 			health = {
-				medical_crate_pocketable = flat(-2),
-			},
+				medical_crate_pocketable = flat(-2)
+			}
 		},
 		primary = {
 			health = {
-				medical_crate_pocketable = flat(-2),
-			},
-		},
-	},
+				medical_crate_pocketable = flat(-2)
+			}
+		}
+	}
 }
 PickupOverrides.extra_ammo_pickups = {
 	pickup_settings = {
@@ -204,22 +204,22 @@ PickupOverrides.extra_ammo_pickups = {
 			ammo = {
 				small_clip = not_changed,
 				large_clip = flat(5),
-				ammo_cache_pocketable = flat(2),
-			},
+				ammo_cache_pocketable = flat(2)
+			}
 		},
 		mid_event = {
 			ammo = {
 				small_clip = not_changed,
 				large_clip = flat(2),
-				ammo_cache_pocketable = flat(2),
-			},
+				ammo_cache_pocketable = flat(2)
+			}
 		},
 		end_event = {
 			ammo = {
 				small_clip = not_changed,
 				large_clip = flat(2),
-				ammo_cache_pocketable = flat(2),
-			},
+				ammo_cache_pocketable = flat(2)
+			}
 		},
 		primary = {
 			ammo = {
@@ -229,16 +229,16 @@ PickupOverrides.extra_ammo_pickups = {
 					35,
 					35,
 					30,
-					30,
+					30
 				},
 				ammo_cache_pocketable = {
 					5,
 					5,
 					5,
 					4,
-					4,
-				},
-			},
+					4
+				}
+			}
 		},
 		secondary = {
 			ammo = {
@@ -248,48 +248,48 @@ PickupOverrides.extra_ammo_pickups = {
 					8,
 					8,
 					5,
-					5,
+					5
 				},
 				ammo_cache_pocketable = {
 					5,
 					5,
 					5,
 					4,
-					4,
-				},
-			},
-		},
-	},
+					4
+				}
+			}
+		}
+	}
 }
 PickupOverrides.add_skulls_pickup = {
 	pickup_settings = {
 		primary = {
 			rewards = {
-				skulls_01_pickup = flat(10),
-			},
+				skulls_01_pickup = flat(10)
+			}
 		},
 		secondary = {
 			rewards = {
-				skulls_01_pickup = flat(5),
-			},
-		},
-	},
+				skulls_01_pickup = flat(5)
+			}
+		}
+	}
 }
 PickupOverrides.add_stolen_rations = {
 	pickup_settings = {
 		primary = {
 			rewards = {
 				stolen_rations_01_pickup_small = flat(20),
-				stolen_rations_01_pickup_medium = flat(10),
-			},
+				stolen_rations_01_pickup_medium = flat(10)
+			}
 		},
 		secondary = {
 			rewards = {
 				stolen_rations_01_pickup_small = flat(20),
-				stolen_rations_01_pickup_medium = flat(10),
-			},
-		},
-	},
+				stolen_rations_01_pickup_medium = flat(10)
+			}
+		}
+	}
 }
 PickupOverrides.pickups_more_syringes = {
 	pickup_settings = {
@@ -297,31 +297,31 @@ PickupOverrides.pickups_more_syringes = {
 			wounds = {
 				syringe_ability_boost_pocketable = flat(2),
 				syringe_power_boost_pocketable = flat(2),
-				syringe_speed_boost_pocketable = flat(2),
-			},
+				syringe_speed_boost_pocketable = flat(2)
+			}
 		},
 		end_event = {
 			wounds = {
 				syringe_ability_boost_pocketable = flat(2),
 				syringe_power_boost_pocketable = flat(2),
-				syringe_speed_boost_pocketable = flat(2),
-			},
+				syringe_speed_boost_pocketable = flat(2)
+			}
 		},
 		primary = {
 			wounds = {
 				syringe_ability_boost_pocketable = flat(10),
 				syringe_power_boost_pocketable = flat(10),
-				syringe_speed_boost_pocketable = flat(10),
-			},
+				syringe_speed_boost_pocketable = flat(10)
+			}
 		},
 		secondary = {
 			wounds = {
 				syringe_ability_boost_pocketable = flat(10),
 				syringe_power_boost_pocketable = flat(10),
-				syringe_speed_boost_pocketable = flat(10),
-			},
-		},
-	},
+				syringe_speed_boost_pocketable = flat(10)
+			}
+		}
+	}
 }
 
 do
@@ -329,7 +329,7 @@ do
 		small_clip = removed,
 		large_clip = removed,
 		ammo_cache_pocketable = removed,
-		ammo_cache_deployable = removed,
+		ammo_cache_deployable = removed
 	}
 	local no_health_pickups = {
 		syringe_ability_boost_pocketable = removed,
@@ -337,20 +337,20 @@ do
 		syringe_speed_boost_pocketable = removed,
 		syringe_corruption_pocketable = removed,
 		medical_crate_deployable = removed,
-		medical_crate_pocketable = removed,
+		medical_crate_pocketable = removed
 	}
 	local no_currency_pickup = {
 		small_metal = removed,
 		small_platinum = removed,
 		large_metal = removed,
-		large_platinum = removed,
+		large_platinum = removed
 	}
 	local no_stimms = {
 		syringe_ability_boost_pocketable = removed,
 		syringe_power_boost_pocketable = removed,
 		syringe_speed_boost_pocketable = removed,
 		syringe_corruption_pocketable = removed,
-		syringe_generic_pocketable = removed,
+		syringe_generic_pocketable = removed
 	}
 
 	PickupOverrides.no_resource_pickups = {
@@ -359,53 +359,53 @@ do
 				forge_material = no_currency_pickup,
 				ammo = no_ammo_pickup,
 				grenade = {
-					small_grenade = removed,
+					small_grenade = removed
 				},
 				wounds = no_health_pickups,
 				health = no_health_pickups,
-				stimms = no_stimms,
+				stimms = no_stimms
 			},
 			mid_event = {
 				forge_material = no_currency_pickup,
 				ammo = no_ammo_pickup,
 				grenade = {
-					small_grenade = removed,
+					small_grenade = removed
 				},
 				wounds = no_health_pickups,
 				health = no_health_pickups,
-				stimms = no_stimms,
+				stimms = no_stimms
 			},
 			end_event = {
 				forge_material = no_currency_pickup,
 				ammo = no_ammo_pickup,
 				grenade = {
-					small_grenade = removed,
+					small_grenade = removed
 				},
 				wounds = no_health_pickups,
 				health = no_health_pickups,
-				stimms = no_stimms,
+				stimms = no_stimms
 			},
 			primary = {
 				forge_material = no_currency_pickup,
 				ammo = no_ammo_pickup,
 				grenade = {
-					small_grenade = removed,
+					small_grenade = removed
 				},
 				wounds = no_health_pickups,
 				health = no_health_pickups,
-				stimms = no_stimms,
+				stimms = no_stimms
 			},
 			secondary = {
 				forge_material = no_currency_pickup,
 				ammo = no_ammo_pickup,
 				grenade = {
-					small_grenade = removed,
+					small_grenade = removed
 				},
 				wounds = no_health_pickups,
 				health = no_health_pickups,
-				stimms = no_stimms,
-			},
-		},
+				stimms = no_stimms
+			}
+		}
 	}
 end
 

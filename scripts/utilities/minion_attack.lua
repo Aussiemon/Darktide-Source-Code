@@ -273,7 +273,7 @@ end
 local DEFAULT_DAMAGE_FALLOFF = {
 	falloff_range = 15,
 	max_power_reduction = 0.6,
-	max_range = 15,
+	max_range = 15
 }
 
 MinionAttack.shoot_hit_scan = function (world, physics_world, unit, target_unit, weapon_item, fx_source_name, shoot_position, shoot_template, optional_spread_multiplier, perception_component, action_data)
@@ -1090,7 +1090,7 @@ local MELEE_DOGPILE_POWER_LEVEL_MODIFIER = {
 	0.85,
 	0.7,
 	0.65,
-	0.5,
+	0.5
 }
 local _CONSTANT_ATTACK_TYPE_MELEE = "melee"
 

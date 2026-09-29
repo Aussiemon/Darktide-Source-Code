@@ -5,7 +5,7 @@ local smart_object_settings = {
 	jump_across_max_length = 8,
 	jump_across_min_length = 3.5,
 	jump_up_max_height = 5.1,
-	templates = minion_smart_object_templates,
+	templates = minion_smart_object_templates
 }
 
 local function _create_template_entry(path)

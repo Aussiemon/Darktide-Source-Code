@@ -7,19 +7,19 @@ local mission_vo_cm_habs_adamant_male_c = {
 		sound_events = {
 			"loc_adamant_male_c__region_habculum_01",
 			"loc_adamant_male_c__region_habculum_02",
-			"loc_adamant_male_c__region_habculum_03",
+			"loc_adamant_male_c__region_habculum_03"
 		},
 		sound_events_duration = {
 			5.100792,
 			3.458396,
-			3.785479,
+			3.785479
 		},
 		sound_event_weights = {
 			0.3333333,
 			0.3333333,
-			0.3333333,
+			0.3333333
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	level_hab_block_start_banter_c = {
 		randomize_indexes_n = 0,
@@ -27,20 +27,20 @@ local mission_vo_cm_habs_adamant_male_c = {
 		sound_events = {
 			"loc_adamant_male_c__zone_transit_01",
 			"loc_adamant_male_c__zone_transit_02",
-			"loc_adamant_male_c__zone_transit_03",
+			"loc_adamant_male_c__zone_transit_03"
 		},
 		sound_events_duration = {
 			3.849344,
 			5.022677,
-			3.63601,
+			3.63601
 		},
 		sound_event_weights = {
 			0.3333333,
 			0.3333333,
-			0.3333333,
+			0.3333333
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_cm_habs_adamant_male_c", mission_vo_cm_habs_adamant_male_c)

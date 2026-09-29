@@ -6,7 +6,7 @@ local mechanicus = {
 	icon = "",
 	id = "mechanicus",
 	name = "loc_mechanicus_event_name",
-	stat = "session_new_weapon_kills",
+	stat = "session_new_weapon_kills"
 }
 
 return mechanicus

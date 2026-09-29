@@ -10,14 +10,14 @@ local personalities_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			archetypes = {
-				"cryptic",
-			},
-		},
+				"cryptic"
+			}
+		}
 	},
 	{
 		character_voice = "cryptic_b",
@@ -28,14 +28,14 @@ local personalities_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			archetypes = {
-				"cryptic",
-			},
-		},
+				"cryptic"
+			}
+		}
 	},
 	{
 		character_voice = "cryptic_c",
@@ -46,14 +46,14 @@ local personalities_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			archetypes = {
-				"cryptic",
-			},
-		},
+				"cryptic"
+			}
+		}
 	},
 	{
 		character_voice = "cryptic_d",
@@ -64,15 +64,15 @@ local personalities_options = {
 		unlocks = {
 			{
 				text = "loc_personality_effect_description",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		visibility = {
 			archetypes = {
-				"cryptic",
-			},
-		},
-	},
+				"cryptic"
+			}
+		}
+	}
 }
 
 return personalities_options

@@ -15,7 +15,7 @@ local pickup_data = {
 	num_charges = math.huge,
 	ammo_amount_func = function (max_ammunition_reserve, max_ammo_clip, pickup_data)
 		return max_ammunition_reserve + max_ammo_clip
-	end,
+	end
 }
 
 return pickup_data

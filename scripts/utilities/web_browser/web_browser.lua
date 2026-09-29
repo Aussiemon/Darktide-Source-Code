@@ -7,7 +7,7 @@ WebBrowser._open_on_device = function (url)
 	pcall(Application.open_url_in_browser, url)
 
 	return Promise.resolved({
-		success = true,
+		success = true
 	})
 end
 
@@ -32,7 +32,7 @@ WebBrowser._open_on_steam = function (url)
 		end
 
 		return {
-			success = true,
+			success = true
 		}
 	end)
 end

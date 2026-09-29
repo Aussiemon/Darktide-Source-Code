@@ -5,12 +5,12 @@ local view_element_inventory_weapon_preview_settings = {
 	weapon_spawn_depth = 1.2,
 	stats_size = {
 		300,
-		50,
+		50
 	},
 	trait_size = {
 		90,
-		90,
-	},
+		90
+	}
 }
 
 return settings("ViewElementInventoryWeaponPreviewSettings", view_element_inventory_weapon_preview_settings)

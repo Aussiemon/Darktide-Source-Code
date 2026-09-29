@@ -12,7 +12,7 @@ local pickup_data = {
 	name = "expedition_deployable_force_field_pocketable",
 	pickup_sound = "wwise/events/player/play_pick_up_box",
 	smart_tag_target_type = "pickup",
-	unit_name = "content/pickups/pocketables/void_shield/pickup_void_shield",
+	unit_name = "content/pickups/pocketables/void_shield/pickup_void_shield"
 }
 
 return pickup_data

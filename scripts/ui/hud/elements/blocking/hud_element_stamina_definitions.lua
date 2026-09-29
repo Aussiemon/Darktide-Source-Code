@@ -19,8 +19,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			center_offset,
-			0,
-		},
+			0
+		}
 	},
 	gauge = {
 		horizontal_alignment = "center",
@@ -28,13 +28,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			212,
-			10,
+			10
 		},
 		position = {
 			0,
 			6,
-			1,
-		},
+			1
+		}
 	},
 	stamina_bar = {
 		horizontal_alignment = "center",
@@ -44,9 +44,9 @@ local scenegraph_definition = {
 		position = {
 			0,
 			1,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local STAMINA_BAR_BACKGROUND_COLOR = HudElementStaminaSettings.STAMINA_BAR_BACKGROUND_COLOR
 local STAMINA_NODGES_COLOR = HudElementStaminaSettings.STAMINA_NODGES_COLOR
@@ -56,11 +56,11 @@ local value_text_style = table.clone(UIFontSettings.body_small)
 value_text_style.offset = {
 	-54,
 	-12,
-	3,
+	3
 }
 value_text_style.size = {
 	50,
-	30,
+	30
 }
 value_text_style.vertical_alignment = "top"
 value_text_style.horizontal_alignment = "left"
@@ -75,7 +75,7 @@ local widget_definitions = {
 			style_id = "value_text",
 			value_id = "value_text",
 			value = Utf8.upper(Localize("loc_hud_display_overheat_death_danger")),
-			style = value_text_style,
+			style = value_text_style
 		},
 		{
 			pass_type = "texture",
@@ -87,11 +87,11 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
-				color = UIHudSettings.color_tint_main_2,
-			},
-		},
+				color = UIHudSettings.color_tint_main_2
+			}
+		}
 	}, "gauge"),
 	stamina_bar = UIWidget.create_definition({
 		{
@@ -104,14 +104,14 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				size_addition = {
 					0,
-					0,
+					0
 				},
-				color = STAMINA_BAR_COLOR.background,
-			},
+				color = STAMINA_BAR_COLOR.background
+			}
 		},
 		{
 			pass_type = "rect",
@@ -123,14 +123,14 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				size_addition = {
 					0,
-					0,
+					0
 				},
-				color = STAMINA_BAR_COLOR.spent,
-			},
+				color = STAMINA_BAR_COLOR.spent
+			}
 		},
 		{
 			pass_type = "rect",
@@ -142,15 +142,15 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					6,
+					6
 				},
 				size_addition = {
 					0,
-					0,
+					0
 				},
-				color = STAMINA_BAR_COLOR.fill,
-			},
-		},
+				color = STAMINA_BAR_COLOR.fill
+			}
+		}
 	}, "stamina_bar"),
 	stamina_depleted_bar = UIWidget.create_definition({
 		{
@@ -163,16 +163,16 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					8,
+					8
 				},
 				size_addition = {
 					0,
-					0,
+					0
 				},
-				color = STAMINA_BAR_BACKGROUND_COLOR,
-			},
-		},
-	}, "stamina_bar"),
+				color = STAMINA_BAR_BACKGROUND_COLOR
+			}
+		}
+	}, "stamina_bar")
 }
 local stamina_nodges = UIWidget.create_definition({
 	{
@@ -184,20 +184,20 @@ local stamina_nodges = UIWidget.create_definition({
 			vertical_alignment = "top",
 			size = {
 				spacing,
-				6,
+				6
 			},
 			offset = {
 				0,
 				0,
-				7,
+				7
 			},
 			size_addition = {
 				0,
-				0,
+				0
 			},
-			color = STAMINA_NODGES_COLOR.filled,
-		},
-	},
+			color = STAMINA_NODGES_COLOR.filled
+		}
+	}
 }, "stamina_bar")
 local animations = {
 	on_stamina_depleted = {
@@ -217,14 +217,14 @@ local animations = {
 				local fill_widget_color = widget_style.bar_overlap.color
 
 				fill_widget_color[1] = 255 * (1 - color_anim_progress)
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
 	animations = animations,
 	stamina_nodges_definition = stamina_nodges,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

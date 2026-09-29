@@ -5,20 +5,20 @@ local CrypticPersonalForceFieldUnitExtension = class("CrypticPersonalForceFieldU
 local SPHERE_UNIT_RADIUS = 1
 local SPAWNING = {
 	particle_name = "content/fx/particles/abilities/cryptic/force_field_spawn",
-	real_shield_visible_time = 0,
+	real_shield_visible_time = 0
 }
 local DESPAWNING = {
 	lingering_time_after_shield_expire = 0.1,
 	particle_name = "content/fx/particles/abilities/cryptic/force_field_despawn",
-	spawn_time_before_expired = 1,
+	spawn_time_before_expired = 1
 }
 local PULSING = {
 	pulsing_animation_duration = 3,
 	variable_names = {
 		pulse = "pulse_on_off",
 		pulse_intensity = "pulse_intensity",
-		redness = "redness",
-	},
+		redness = "redness"
+	}
 }
 local SHIELD_POWER_VARIABLE_NAME = "shield_power"
 local WWISE_SHIELD_POWER_DURATION_VARIABLE_NAME = "ability_duration"

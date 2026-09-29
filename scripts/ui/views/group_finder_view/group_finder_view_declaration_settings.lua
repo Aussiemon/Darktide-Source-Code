@@ -14,17 +14,17 @@ local view_settings = {
 	state_bound = true,
 	use_transition_ui = true,
 	levels = {
-		"content/levels/ui/group_finder/group_finder",
+		"content/levels/ui/group_finder/group_finder"
 	},
 	enter_sound_events = {
-		UISoundEvents.group_finder_enter,
+		UISoundEvents.group_finder_enter
 	},
 	exit_sound_events = {
-		UISoundEvents.group_finder_exit,
+		UISoundEvents.group_finder_exit
 	},
 	wwise_states = {
-		options = WwiseGameSyncSettings.state_groups.options.ingame_menu,
-	},
+		options = WwiseGameSyncSettings.state_groups.options.ingame_menu
+	}
 }
 
 return settings("GroupFinderViewDeclarationSettings", view_settings)

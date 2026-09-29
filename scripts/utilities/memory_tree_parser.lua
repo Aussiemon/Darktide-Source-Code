@@ -11,7 +11,7 @@ local PROCESS_MEMORY_KEY = "process_memory"
 
 MemoryTreeParser.new = function (separator)
 	return setmetatable({
-		separator = separator,
+		separator = separator
 	}, MemoryTreeParser)
 end
 
@@ -96,7 +96,7 @@ MemoryTreeParser._parse_header_data = function (self, line)
 				is_parsing_key = true
 				ordered[#ordered + 1] = {
 					key = self:_format_header(current_key),
-					separators = current_number_of_separators,
+					separators = current_number_of_separators
 				}
 				current_key = c
 				current_number_of_separators = 0
@@ -110,7 +110,7 @@ MemoryTreeParser._parse_header_data = function (self, line)
 	if is_parsing_key then
 		ordered[#ordered + 1] = {
 			separators = -1,
-			key = self:_format_header(current_key),
+			key = self:_format_header(current_key)
 		}
 	end
 

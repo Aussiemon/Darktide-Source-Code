@@ -8,7 +8,7 @@ local PROGRESSION_PER_PLAYER_AMOUNT = {
 	0.4,
 	0.6,
 	0.8,
-	1,
+	1
 }
 
 MissionObjectiveZoneCaptureExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)

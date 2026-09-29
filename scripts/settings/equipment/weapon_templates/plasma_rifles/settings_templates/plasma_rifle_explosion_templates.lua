@@ -25,29 +25,29 @@ explosion_templates.plasma_rifle = {
 	broadphase_explosion_filter = {
 		"heroes",
 		"villains",
-		"destructibles",
+		"destructibles"
 	},
 	explosion_area_suppression = {
 		instant_aggro = true,
 		suppression_falloff = true,
 		distance = {
 			6,
-			14,
+			14
 		},
 		suppression_value = {
 			5,
-			15,
-		},
+			15
+		}
 	},
 	scalable_vfx = {
 		{
 			min_radius = 2.9,
 			radius_variable_name = "radius",
 			effects = {
-				"content/fx/particles/weapons/rifles/plasma_gun/plasma_charged_explosion_medium",
-			},
-		},
-	},
+				"content/fx/particles/weapons/rifles/plasma_gun/plasma_charged_explosion_medium"
+			}
+		}
+	}
 }
 explosion_templates.plasma_rifle_exit = {
 	close_radius = 0.5,
@@ -65,9 +65,9 @@ explosion_templates.plasma_rifle_exit = {
 	broadphase_explosion_filter = {
 		"heroes",
 		"villains",
-		"destructibles",
+		"destructibles"
 	},
-	scalable_vfx = {},
+	scalable_vfx = {}
 }
 explosion_templates.light_plasma_p1_m2_explosion = {
 	close_radius = 2.75,
@@ -85,29 +85,29 @@ explosion_templates.light_plasma_p1_m2_explosion = {
 	broadphase_explosion_filter = {
 		"heroes",
 		"villains",
-		"destructibles",
+		"destructibles"
 	},
 	explosion_area_suppression = {
 		instant_aggro = true,
 		suppression_falloff = true,
 		distance = {
 			6,
-			14,
+			14
 		},
 		suppression_value = {
 			2,
-			7,
-		},
+			7
+		}
 	},
 	scalable_vfx = {
 		{
 			min_radius = 8.5,
 			radius_variable_name = "radius",
 			effects = {
-				"content/fx/particles/weapons/rifles/plasma_gun/plasma_charged_explosion_medium",
-			},
-		},
-	},
+				"content/fx/particles/weapons/rifles/plasma_gun/plasma_charged_explosion_medium"
+			}
+		}
+	}
 }
 explosion_templates.charged_plasma_p1_m2_explosion = {
 	close_radius = 3.3,
@@ -125,23 +125,23 @@ explosion_templates.charged_plasma_p1_m2_explosion = {
 	broadphase_explosion_filter = {
 		"heroes",
 		"villains",
-		"destructibles",
+		"destructibles"
 	},
 	explosion_area_suppression = {
 		instant_aggro = true,
 		suppression_falloff = true,
 		distance = {
 			6,
-			14,
+			14
 		},
 		suppression_value = {
 			2,
-			7,
-		},
+			7
+		}
 	},
 	vfx = {
-		"content/fx/particles/weapons/rifles/plasma_gun/plasma_charged_explosion_large",
-	},
+		"content/fx/particles/weapons/rifles/plasma_gun/plasma_charged_explosion_large"
+	}
 }
 explosion_templates.plasma_p1_m2_exit_explosion = {
 	close_radius = 1.5,
@@ -159,12 +159,12 @@ explosion_templates.plasma_p1_m2_exit_explosion = {
 	broadphase_explosion_filter = {
 		"heroes",
 		"villains",
-		"destructibles",
+		"destructibles"
 	},
-	scalable_vfx = {},
+	scalable_vfx = {}
 }
 
 return {
 	base_templates = explosion_templates,
-	overrides = overrides,
+	overrides = overrides
 }

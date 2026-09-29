@@ -66,7 +66,7 @@ local VALID_AXES = {
 	"left",
 	"right",
 	"mouse",
-	"wheel",
+	"wheel"
 }
 
 InputDevice._any_analog_input = function (self)

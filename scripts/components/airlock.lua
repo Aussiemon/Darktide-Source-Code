@@ -48,6 +48,12 @@ Airlock.start_lockdown = function (self)
 		return
 	end
 
+	if self._lockdown_active then
+		return
+	end
+
+	self._lockdown_active = true
+
 	local perception_system, unit_untargetable_id = self._perception_system, self._unit_untargetable_id
 	local side = self._side
 	local valid_player_units = side.valid_player_units
@@ -90,6 +96,12 @@ Airlock.stop_lockdown = function (self)
 		return
 	end
 
+	if not self._lockdown_active then
+		return
+	end
+
+	self._lockdown_active = false
+
 	local perception_system, unit_untargetable_id = self._perception_system, self._unit_untargetable_id
 
 	for unit, id in pairs(unit_untargetable_id) do
@@ -107,13 +119,13 @@ Airlock.component_data = {
 	inputs = {
 		start_lockdown = {
 			accessibility = "private",
-			type = "event",
+			type = "event"
 		},
 		stop_lockdown = {
 			accessibility = "private",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return Airlock

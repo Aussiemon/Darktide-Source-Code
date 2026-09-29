@@ -4,15 +4,15 @@ local group_name_display_names = {
 	input_group_combat = "loc_keybind_category_combat",
 	input_group_hotkeys = "loc_keybind_category_hotkeys",
 	input_group_interface = "loc_keybind_category_interface",
-	input_group_movement = "loc_keybind_category_movement",
+	input_group_movement = "loc_keybind_category_movement"
 }
 local services = {
 	"Ingame",
-	"View",
+	"View"
 }
 local devices = {
 	"keyboard",
-	"mouse",
+	"mouse"
 }
 local settings = {}
 
@@ -54,7 +54,7 @@ if IS_XBS or IS_WINDOWS then
 							local key_info = alias:get_keys_for_alias(alias_name, devices)
 
 							return key_info
-						end,
+						end
 					}
 				end
 			end
@@ -97,7 +97,7 @@ for i = 1, #settings do
 		local group_header_entry = {
 			widget_type = "group_header",
 			group_name = group_name,
-			display_name = group_name_display_names[group_name] or "n/a",
+			display_name = group_name_display_names[group_name] or "n/a"
 		}
 
 		table.insert(settings, i, group_header_entry)
@@ -130,5 +130,5 @@ return {
 	display_name = "loc_settings_menu_category_keybind",
 	icon = "content/ui/materials/icons/system/settings/category_keybindings",
 	settings = settings,
-	reset_function = reset_function,
+	reset_function = reset_function
 }

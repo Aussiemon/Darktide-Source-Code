@@ -8,7 +8,7 @@ local behavior_tree = {
 		"BtDieAction",
 		name = "death",
 		state = "dead",
-		action_data = action_data.death,
+		action_data = action_data.death
 	},
 	{
 		"BtExitSpawnerAction",
@@ -16,41 +16,41 @@ local behavior_tree = {
 		exit_state = "base",
 		name = "exit_spawner",
 		state = "exiting_spawner",
-		action_data = action_data.exit_spawner,
+		action_data = action_data.exit_spawner
 	},
 	{
 		"BtSelectorNode",
 		{
 			"BtTeleportAction",
 			condition = "at_teleport_smart_object",
-			name = "teleport",
+			name = "teleport"
 		},
 		{
 			"BtClimbAction",
 			condition = "at_climb_smart_object",
 			name = "climb",
-			action_data = action_data.climb,
+			action_data = action_data.climb
 		},
 		{
 			"BtJumpAcrossAction",
 			condition = "at_jump_smart_object",
 			name = "jump_across",
-			action_data = action_data.jump_across,
+			action_data = action_data.jump_across
 		},
 		{
 			"BtOpenDoorAction",
 			condition = "at_door_smart_object",
 			name = "open_door",
-			action_data = action_data.open_door,
+			action_data = action_data.open_door
 		},
 		condition = "at_smart_object",
-		name = "smart_object",
+		name = "smart_object"
 	},
 	{
 		"BtStaggerAction",
 		condition = "is_staggered",
 		name = "stagger",
-		action_data = action_data.stagger,
+		action_data = action_data.stagger
 	},
 	{
 		"BtSelectorNode",
@@ -59,49 +59,49 @@ local behavior_tree = {
 			{
 				"BtChaosHoundApproachAction",
 				name = "approach_target",
-				action_data = action_data.approach_target,
+				action_data = action_data.approach_target
 			},
 			{
 				"BtChaosHoundLeapAction",
 				name = "leap",
-				action_data = action_data.leap,
+				action_data = action_data.leap
 			},
 			{
 				"BtChaosHoundTargetPouncedAction",
 				condition = "has_pounce_target",
 				name = "target_pounced",
-				action_data = action_data.target_pounced,
+				action_data = action_data.target_pounced
 			},
 			condition = "chaos_hound_can_pounce",
-			name = "leap_sequence",
+			name = "leap_sequence"
 		},
 		{
 			"BtChaosHoundSkulkAction",
 			condition = "chaos_hound_pounce_is_on_cooldown",
 			name = "skulking",
-			action_data = action_data.skulking,
+			action_data = action_data.skulking
 		},
 		condition = "chaos_hound_is_aggroed",
-		name = "combat",
+		name = "combat"
 	},
 	{
 		"BtPatrolAction",
 		condition = "should_patrol",
 		name = "patrol",
-		action_data = action_data.patrol,
+		action_data = action_data.patrol
 	},
 	{
 		"BtChaosHoundRoamAction",
 		condition = "is_passive",
 		name = "roaming",
-		action_data = action_data.roaming,
+		action_data = action_data.roaming
 	},
 	{
 		"BtIdleAction",
 		name = "idle",
-		action_data = action_data.idle,
+		action_data = action_data.idle
 	},
-	name = "chaos_armored_hound",
+	name = "chaos_armored_hound"
 }
 
 return behavior_tree

@@ -174,9 +174,9 @@ Store.get_premium_storefront = function (self, storefront, t)
 				storefront = store,
 				catalog = {
 					valid_from = catalog_valid_from and tonumber(catalog_valid_from),
-					valid_to = catalog_valid_to and tonumber(catalog_valid_to),
+					valid_to = catalog_valid_to and tonumber(catalog_valid_to)
 				},
-				bundle_rules = bundle_rules,
+				bundle_rules = bundle_rules
 			})
 		end)
 	end)

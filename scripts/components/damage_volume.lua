@@ -243,12 +243,12 @@ DamageVolume.component_data = {
 	starts_enabled = {
 		ui_name = "Start Enabled",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	ignore_bots = {
 		ui_name = "Ignore Bots",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	damage_type = {
 		ui_name = "Damage Type",
@@ -257,13 +257,13 @@ DamageVolume.component_data = {
 		options_keys = {
 			"electrical",
 			"burning",
-			"instakill",
+			"instakill"
 		},
 		options_values = {
 			"electrical",
 			"burning",
-			"instakill",
-		},
+			"instakill"
+		}
 	},
 	affected_side_name = {
 		ui_name = "Side",
@@ -272,19 +272,19 @@ DamageVolume.component_data = {
 		options_keys = {
 			"Heroes",
 			"Villains",
-			"Both",
+			"Both"
 		},
 		options_values = {
 			"heroes",
 			"villains",
-			"both",
-		},
+			"both"
+		}
 	},
 	refresh_time = {
 		ui_name = "Tick Time",
 		ui_type = "number",
-		value = 0,
-	},
+		value = 0
+	}
 }
 
 return DamageVolume

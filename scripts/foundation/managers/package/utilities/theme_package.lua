@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/foundation/managers/package/utilities/theme_package.lua
 
 local ThemePackage = {
-	disabled_levels = {},
+	disabled_levels = {}
 }
 
 local function _get_theme_packages(level_name, theme_tag)

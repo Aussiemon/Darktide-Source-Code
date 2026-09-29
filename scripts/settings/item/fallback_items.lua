@@ -43,7 +43,7 @@ local base_fallback_items = {
 	slot_timed = "content/items/weapons/player/melee/unarmed",
 	slot_trinket_1 = "content/items/weapons/player/trinkets/empty_trinket",
 	slot_unarmed = "content/items/weapons/player/melee/unarmed",
-	slot_weapon_skin = "content/items/weapons/player/skins/lasgun/lasgun_p1_m001",
+	slot_weapon_skin = "content/items/weapons/player/skins/lasgun/lasgun_p1_m001"
 }
 
 if BUILD == "release" then
@@ -57,7 +57,7 @@ if BUILD == "release" then
 		slot_gear_extra_cosmetic = "content/items/characters/player/human/backpacks/empty_backpack",
 		slot_gear_head = "content/items/characters/player/human/gear_head/empty_headgear",
 		slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/empty_lowerbody",
-		slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/empty_upperbody",
+		slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/empty_upperbody"
 	}
 
 	for slot_name, item_name in pairs(release_fallback_items) do
@@ -66,7 +66,7 @@ if BUILD == "release" then
 end
 
 local fallback_items = {
-	by_slot = base_fallback_items,
+	by_slot = base_fallback_items
 }
 
 return settings("FallbackItems", fallback_items)

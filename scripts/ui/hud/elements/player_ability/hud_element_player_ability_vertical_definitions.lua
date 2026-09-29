@@ -15,9 +15,9 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			0,
-		},
-	},
+			0
+		}
+	}
 }
 local counter_text_style = table.clone(UIFontSettings.hud_body)
 
@@ -27,13 +27,13 @@ counter_text_style.text_horizontal_alignment = "center"
 counter_text_style.text_vertical_alignment = "center"
 counter_text_style.size = {
 	50,
-	50,
+	50
 }
 counter_text_style.font_size = 24
 counter_text_style.offset = {
 	0,
 	-(ability_size[1] * 0.5 + 15),
-	2,
+	2
 }
 counter_text_style.drop_shadow = false
 
@@ -45,20 +45,20 @@ input_text_style.text_horizontal_alignment = "center"
 input_text_style.text_vertical_alignment = "top"
 input_text_style.size = {
 	60,
-	50,
+	50
 }
 input_text_style.font_size = 20
 input_text_style.offset = {
 	0,
 	ability_size[1] - 5,
-	2,
+	2
 }
 input_text_style.drop_shadow = false
 input_text_style.text_color = {
 	255,
 	100,
 	100,
-	100,
+	100
 }
 
 local widget_definitions = {
@@ -73,7 +73,7 @@ local widget_definitions = {
 				local text = content.text
 
 				return text ~= nil
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -85,7 +85,7 @@ local widget_definitions = {
 				local input_text = content.input_text
 
 				return input_text ~= nil
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -96,25 +96,25 @@ local widget_definitions = {
 					mask = nil,
 					progress = 0,
 					ramp = nil,
-					talent_icon = nil,
+					talent_icon = nil
 				},
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				color = {
 					255,
 					255,
 					255,
-					255,
-				},
+					255
+				}
 			},
 			change_function = function (content, style)
 				local duration_progress = content.duration_progress
 
 				style.material_values.progress = duration_progress
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -124,24 +124,24 @@ local widget_definitions = {
 				horizontal_alignment = "center",
 				vertical_alignment = "center",
 				material_values = {
-					texture_map = nil,
+					texture_map = nil
 				},
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
 				color = {
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				size = {
 					128,
-					128,
-				},
-			},
+					128
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -152,29 +152,29 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				material_values = {
 					glow_shape = nil,
-					glow_spin = nil,
+					glow_spin = nil
 				},
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				color = {
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				size = {
 					128,
-					128,
-				},
-			},
-		},
-	}, "slot"),
+					128
+				}
+			}
+		}
+	}, "slot")
 }
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

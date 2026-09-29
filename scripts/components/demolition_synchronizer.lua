@@ -55,52 +55,52 @@ DemolitionSynchronizer.component_data = {
 	objective_name = {
 		ui_name = "Objective Name",
 		ui_type = "text_box",
-		value = "default",
+		value = "default"
 	},
 	total_segments = {
 		decimals = 0,
 		ui_name = "Objective Segments",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	shuffle_segments = {
 		ui_name = "Shuffle Segments",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	lock_last_segment = {
 		ui_name = "Lock Last Segment",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	stage_end_delay = {
 		decimals = 100,
 		step = 0.1,
 		ui_name = "Stage End Delay (sec.)",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	segment_end_delay = {
 		decimals = 100,
 		step = 0.1,
 		ui_name = "Segment End Delay (sec.)",
 		ui_type = "number",
-		value = 8,
+		value = 8
 	},
 	automatic_start = {
 		ui_name = "Automatic Start On Mission Start",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	inputs = {
 		start_demolition_event = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"DemolitionSynchronizerExtension",
-	},
+		"DemolitionSynchronizerExtension"
+	}
 }
 
 return DemolitionSynchronizer

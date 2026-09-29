@@ -5,57 +5,57 @@ local zealot_male_a_veteran_female_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_veteran_female_c__bonding_conversation_cheer_up_b_01",
+			[1] = "loc_veteran_female_c__bonding_conversation_cheer_up_b_01"
 		},
 		sound_events_duration = {
-			[1] = 3.481979,
+			[1] = 3.481979
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	bonding_conversation_cheer_up_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_veteran_female_c__bonding_conversation_cheer_up_d_01",
+			[1] = "loc_veteran_female_c__bonding_conversation_cheer_up_d_01"
 		},
 		sound_events_duration = {
-			[1] = 4.485135,
+			[1] = 4.485135
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	bonding_conversation_cheer_up_f = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_veteran_female_c__bonding_conversation_cheer_up_f_01",
+			[1] = "loc_veteran_female_c__bonding_conversation_cheer_up_f_01"
 		},
 		sound_events_duration = {
-			[1] = 2.219615,
+			[1] = 2.219615
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	bonding_conversations_victoria_mark_targets_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_veteran_female_c__bonding_conversations_victoria_mark_targets_b_01",
+			[1] = "loc_veteran_female_c__bonding_conversations_victoria_mark_targets_b_01"
 		},
 		sound_events_duration = {
-			[1] = 2.898063,
+			[1] = 2.898063
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	bonding_conversations_victoria_mark_targets_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_veteran_female_c__bonding_conversations_victoria_mark_targets_d_01",
+			[1] = "loc_veteran_female_c__bonding_conversations_victoria_mark_targets_d_01"
 		},
 		sound_events_duration = {
-			[1] = 2.031885,
+			[1] = 2.031885
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("zealot_male_a_veteran_female_c", zealot_male_a_veteran_female_c)

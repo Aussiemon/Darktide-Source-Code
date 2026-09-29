@@ -130,7 +130,7 @@ templates.hordes_buff_toughness_regen_in_melee_range = {
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.is_active
-	end,
+	end
 }
 
 local percent_damage_reduction_per_near_disabled_ally = HordesBuffsData.hordes_buff_reduce_damage_taken_on_disabled_allies.buff_stats.damage.value
@@ -145,7 +145,7 @@ templates.hordes_buff_reduce_damage_taken_on_disabled_allies = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_damage_taken] = 1,
+		[proc_events.on_damage_taken] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		return template_data.lerp_t > 0 and params.attacked_unit == template_context.unit
@@ -156,8 +156,8 @@ templates.hordes_buff_reduce_damage_taken_on_disabled_allies = {
 	lerped_stat_buffs = {
 		[stat_buffs.damage_taken_multiplier] = {
 			min = 1,
-			max = max_percent_damage_reduction_near_disabled_allies,
-		},
+			max = max_percent_damage_reduction_near_disabled_allies
+		}
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -205,7 +205,7 @@ templates.hordes_buff_reduce_damage_taken_on_disabled_allies = {
 		end
 
 		return template_data.lerp_t
-	end,
+	end
 }
 
 local coherency_corruption_healing_amount = HordesBuffsData.hordes_buff_coherency_corruption_healing.buff_stats.heal.value
@@ -225,7 +225,7 @@ templates.hordes_buff_coherency_corruption_healing = {
 		local coherency_system = Managers.state.extension:system("coherency_system")
 
 		coherency_system:add_external_buff(unit, "hordes_buff_coherency_corruption_healing_effect")
-	end,
+	end
 }
 templates.hordes_buff_coherency_corruption_healing_effect = {
 	class_name = "interval_buff",
@@ -253,7 +253,7 @@ templates.hordes_buff_coherency_corruption_healing_effect = {
 		local corruption_heal_amount = coherency_corruption_healing_amount
 
 		template_data.health_extension:reduce_permanent_damage(corruption_heal_amount)
-	end,
+	end
 }
 
 local extra_wounds = HordesBuffsData.hordes_buff_two_extra_wounds.buff_stats.wounds.value
@@ -265,8 +265,8 @@ templates.hordes_buff_two_extra_wounds = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	stat_buffs = {
-		[stat_buffs.extra_max_amount_of_wounds] = extra_wounds,
-	},
+		[stat_buffs.extra_max_amount_of_wounds] = extra_wounds
+	}
 }
 
 local percent_toughness_damage_reduction_while_above_threshold = HordesBuffsData.hordes_buff_toughness_damage_taken_above_threshold.buff_stats.damage_reduce.value
@@ -279,7 +279,7 @@ templates.hordes_buff_toughness_damage_taken_above_threshold = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	conditional_stat_buffs = {
-		[stat_buffs.toughness_damage_taken_modifier] = -percent_toughness_damage_reduction_while_above_threshold,
+		[stat_buffs.toughness_damage_taken_modifier] = -percent_toughness_damage_reduction_while_above_threshold
 	},
 	start_func = function (template_data, template_context)
 		local player_unit = template_context.unit
@@ -290,7 +290,7 @@ templates.hordes_buff_toughness_damage_taken_above_threshold = {
 		local current_toughness_percent = template_data.player_toughness_extension:current_toughness_percent()
 
 		return current_toughness_percent >= percent_toughness_threshold_for_damage_reduction
-	end,
+	end
 }
 
 local percentage_health_regen_on_interval = HordesBuffsData.hordes_buff_health_regen.buff_stats.hp_regen.value
@@ -317,7 +317,7 @@ templates.hordes_buff_health_regen = {
 
 			health_extension:add_heal(heal_amount, DamageSettings.heal_types.buff)
 		end
-	end,
+	end
 }
 
 local percent_damage_increase_toughness_broken = HordesBuffsData.hordes_buff_damage_increase_on_toughness_broken.buff_stats.damage.value
@@ -331,14 +331,14 @@ templates.hordes_buff_damage_increase_on_toughness_broken = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_player_hit_received] = 1,
+		[proc_events.on_player_hit_received] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.damage] = percent_damage_increase_toughness_broken,
+		[stat_buffs.damage] = percent_damage_increase_toughness_broken
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		return params.attack_result == "toughness_broken"
-	end,
+	end
 }
 
 return templates

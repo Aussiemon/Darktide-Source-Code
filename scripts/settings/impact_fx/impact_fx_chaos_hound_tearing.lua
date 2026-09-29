@@ -4,7 +4,7 @@ local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local NO_SURFACE_DECAL = false
 local armor_types = ArmorSettings.types
 local blood_ball = {
-	"content/decals/blood_ball/blood_ball",
+	"content/decals/blood_ball/blood_ball"
 }
 local unarmored, armored, super_armor, disgustingly_resilient, resistant, berserker
 local player = {
@@ -18,7 +18,7 @@ local player = {
 		shield_blocked = nil,
 		shove = nil,
 		weakspot_damage = nil,
-		weakspot_died = nil,
+		weakspot_died = nil
 	},
 	vfx = {
 		blocked = nil,
@@ -33,10 +33,10 @@ local player = {
 		damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_01",
-				},
-			},
-		},
+					"content/fx/particles/impacts/flesh/blood_splatter_01"
+				}
+			}
+		}
 	},
 	blood_ball = {
 		blocked = nil,
@@ -48,8 +48,8 @@ local player = {
 		shove = nil,
 		weakspot_damage = nil,
 		weakspot_died = nil,
-		damage = blood_ball,
-	},
+		damage = blood_ball
+	}
 }
 
 return {
@@ -60,6 +60,6 @@ return {
 		[armor_types.player] = player,
 		[armor_types.resistant] = resistant,
 		[armor_types.super_armor] = super_armor,
-		[armor_types.unarmored] = unarmored,
-	},
+		[armor_types.unarmored] = unarmored
+	}
 }

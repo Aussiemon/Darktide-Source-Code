@@ -32,8 +32,8 @@ end
 
 ScannerDisplay.component_data = {
 	extensions = {
-		"ScannerDisplayExtension",
-	},
+		"ScannerDisplayExtension"
+	}
 }
 
 return ScannerDisplay

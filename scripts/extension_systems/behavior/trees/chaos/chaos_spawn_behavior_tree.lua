@@ -8,29 +8,29 @@ local COMBAT = {
 		"BtChaosSpawnGrabAction",
 		condition = "chaos_spawn_should_grab",
 		name = "grab",
-		action_data = action_data.grab,
+		action_data = action_data.grab
 	},
 	{
 		"BtMeleeAttackAction",
 		name = "claw_attack",
-		action_data = action_data.claw_attack,
+		action_data = action_data.claw_attack
 	},
 	{
 		"BtMeleeAttackAction",
 		condition = "moving_attack_allowed",
 		name = "combo_attack",
 		condition_args = {
-			attack_type = "moving_melee",
+			attack_type = "moving_melee"
 		},
-		action_data = action_data.combo_attack,
+		action_data = action_data.combo_attack
 	},
 	{
 		"BtErraticFollowAction",
 		name = "erratic_follow",
-		action_data = action_data.erratic_follow,
+		action_data = action_data.erratic_follow
 	},
 	condition = "is_aggroed",
-	name = "melee_combat",
+	name = "melee_combat"
 }
 local behavior_tree = {
 	"BtSelectorNode",
@@ -38,7 +38,7 @@ local behavior_tree = {
 		"BtDieAction",
 		name = "death",
 		state = "dead",
-		action_data = action_data.death,
+		action_data = action_data.death
 	},
 	{
 		"BtExitSpawnerAction",
@@ -46,47 +46,47 @@ local behavior_tree = {
 		exit_state = "base",
 		name = "exit_spawner",
 		state = "exiting_spawner",
-		action_data = action_data.exit_spawner,
+		action_data = action_data.exit_spawner
 	},
 	{
 		"BtSelectorNode",
 		{
 			"BtTeleportAction",
 			condition = "at_teleport_smart_object",
-			name = "teleport",
+			name = "teleport"
 		},
 		{
 			"BtClimbAction",
 			condition = "at_climb_smart_object",
 			name = "climb",
-			action_data = action_data.climb,
+			action_data = action_data.climb
 		},
 		{
 			"BtJumpAcrossAction",
 			condition = "at_jump_smart_object",
 			name = "jump_across",
-			action_data = action_data.jump_across,
+			action_data = action_data.jump_across
 		},
 		{
 			"BtSmashObstacleAction",
 			condition = "at_smashable_obstacle_smart_object",
 			name = "smash_obstacle",
-			action_data = action_data.smash_obstacle,
+			action_data = action_data.smash_obstacle
 		},
 		{
 			"BtOpenDoorAction",
 			condition = "at_door_smart_object",
 			name = "open_door",
-			action_data = action_data.open_door,
+			action_data = action_data.open_door
 		},
 		condition = "at_smart_object",
-		name = "smart_object",
+		name = "smart_object"
 	},
 	{
 		"BtStaggerAction",
 		condition = "is_staggered",
 		name = "stagger",
-		action_data = action_data.stagger,
+		action_data = action_data.stagger
 	},
 	{
 		"BtSelectorNode",
@@ -94,41 +94,41 @@ local behavior_tree = {
 			"BtMeleeAttackAction",
 			condition = "chaos_spawn_target_changed_close",
 			name = "change_target_combo",
-			action_data = action_data.change_target_combo,
+			action_data = action_data.change_target_combo
 		},
 		{
 			"BtChangeTargetAction",
 			name = "change_target",
-			action_data = action_data.change_target,
+			action_data = action_data.change_target
 		},
 		condition = "chaos_spawn_target_changed",
-		name = "target_change",
+		name = "target_change"
 	},
 	{
 		"BtLeapAction",
 		condition = "chaos_spawn_should_leap",
 		name = "leap",
-		action_data = action_data.leap,
+		action_data = action_data.leap
 	},
 	COMBAT,
 	{
 		"BtAlertedAction",
 		condition = "is_alerted",
 		name = "alerted",
-		action_data = action_data.alerted,
+		action_data = action_data.alerted
 	},
 	{
 		"BtPatrolAction",
 		condition = "should_patrol",
 		name = "patrol",
-		action_data = action_data.patrol,
+		action_data = action_data.patrol
 	},
 	{
 		"BtIdleAction",
 		name = "idle",
-		action_data = action_data.idle,
+		action_data = action_data.idle
 	},
-	name = "chaos_spawn",
+	name = "chaos_spawn"
 }
 
 return behavior_tree

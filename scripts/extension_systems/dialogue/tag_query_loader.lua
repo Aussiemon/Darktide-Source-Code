@@ -22,7 +22,7 @@ if rawget(_G, "RuleDatabase") then
 		TIMESET = TagQuery.OP.TIMESET,
 		ADD = TagQuery.OP.ADD,
 		SUB = TagQuery.OP.SUB,
-		NUMSET = TagQuery.OP.NUMSET,
+		NUMSET = TagQuery.OP.NUMSET
 	}
 
 	OP = operator_string_lookup
@@ -48,17 +48,17 @@ TagQueryLoader.init = function (self, tagquery_database, dialogue_templates_dest
 				wwise_route = rule_definition.wwise_route,
 				heard_speak_routing = rule_definition.heard_speak_routing,
 				on_post_rule_execution = rule_definition.on_post_rule_execution,
-				on_pre_rule_execution = rule_definition.on_pre_rule_execution,
+				on_pre_rule_execution = rule_definition.on_pre_rule_execution
 			}
 
 			dialogue_templates_destination_table[rule_definition.name] = dialogue_template
-		end,
+		end
 	}
 	self.unload_file_environment = {
 		OP = OP,
 		define_rule = function (rule_definition)
 			tagquery_database:remove_rule(rule_definition.name, rule_definition.database)
-		end,
+		end
 	}
 	self.tagquery_database = tagquery_database
 	self.loaded_files = Script.new_map(32)
@@ -131,7 +131,7 @@ TagQueryLoader.invalid_rules_from_group = function (self, rule_group_name)
 					end
 
 					patterns_to_remove = {
-						rule_pattern,
+						rule_pattern
 					}
 				end
 			end

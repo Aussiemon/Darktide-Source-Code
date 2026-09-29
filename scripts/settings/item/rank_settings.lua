@@ -1,18 +1,18 @@
 ﻿-- chunkname: @scripts/settings/item/rank_settings.lua
 
-local RankSettings = {
+local rank_settings = {
 	[0] = {
 		display_name = "n/a",
 		perk_icon = "content/ui/materials/icons/perks/perk_level_01",
 		trait_frame_texture = "content/ui/textures/icons/traits/trait_icon_frame_00_large",
 		perk_rating = {
 			gadget = 0,
-			weapon = 0,
+			weapon = 0
 		},
 		trait_rating = {
 			gadget = 0,
-			weapon = 0,
-		},
+			weapon = 0
+		}
 	},
 	{
 		display_name = "I",
@@ -20,12 +20,12 @@ local RankSettings = {
 		trait_frame_texture = "content/ui/textures/icons/traits/trait_icon_frame_01_large",
 		perk_rating = {
 			gadget = 10,
-			weapon = 10,
+			weapon = 10
 		},
 		trait_rating = {
 			gadget = 25,
-			weapon = 25,
-		},
+			weapon = 25
+		}
 	},
 	{
 		display_name = "II",
@@ -33,12 +33,12 @@ local RankSettings = {
 		trait_frame_texture = "content/ui/textures/icons/traits/trait_icon_frame_02_large",
 		perk_rating = {
 			gadget = 15,
-			weapon = 15,
+			weapon = 15
 		},
 		trait_rating = {
 			gadget = 35,
-			weapon = 35,
-		},
+			weapon = 35
+		}
 	},
 	{
 		display_name = "III",
@@ -46,12 +46,12 @@ local RankSettings = {
 		trait_frame_texture = "content/ui/textures/icons/traits/trait_icon_frame_03_large",
 		perk_rating = {
 			gadget = 20,
-			weapon = 20,
+			weapon = 20
 		},
 		trait_rating = {
 			gadget = 45,
-			weapon = 45,
-		},
+			weapon = 45
+		}
 	},
 	{
 		display_name = "IV",
@@ -59,12 +59,12 @@ local RankSettings = {
 		trait_frame_texture = "content/ui/textures/icons/traits/trait_icon_frame_04_large",
 		perk_rating = {
 			gadget = 30,
-			weapon = 25,
+			weapon = 25
 		},
 		trait_rating = {
 			gadget = 60,
-			weapon = 60,
-		},
+			weapon = 60
+		}
 	},
 	{
 		display_name = "VV",
@@ -72,16 +72,16 @@ local RankSettings = {
 		trait_frame_texture = "content/ui/textures/icons/traits/trait_icon_frame_05_large",
 		perk_rating = {
 			gadget = -999,
-			weapon = -999,
+			weapon = -999
 		},
 		trait_rating = {
 			gadget = -999,
-			weapon = -999,
-		},
-	},
+			weapon = -999
+		}
+	}
 }
 
-RankSettings.max_trait_rank = 4
-RankSettings.max_perk_rank = 4
+rank_settings.max_trait_rank = 4
+rank_settings.max_perk_rank = 4
 
-return settings("RankSettings", RankSettings)
+return settings("RankSettings", rank_settings)

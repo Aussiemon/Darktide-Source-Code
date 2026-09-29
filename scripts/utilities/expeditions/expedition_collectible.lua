@@ -251,7 +251,7 @@ ExpeditionCollectible.get_block_text_by_unit = function (self, interactable_unit
 	if requirements_met then
 		local text_context = {
 			description = Localize(original_description),
-			value = Localize(collectible_display_name),
+			value = Localize(collectible_display_name)
 		}
 
 		unit_interactee_extension:set_block_text(nil)
@@ -263,7 +263,7 @@ ExpeditionCollectible.get_block_text_by_unit = function (self, interactable_unit
 			value = Localize(collectible_display_name),
 			r = key_value_color[2],
 			g = key_value_color[3],
-			b = key_value_color[4],
+			b = key_value_color[4]
 		}
 
 		unit_interactee_extension:set_block_text("loc_group_finder_tag_requirement_warning")

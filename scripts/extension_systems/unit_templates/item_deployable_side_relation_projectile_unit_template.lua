@@ -5,6 +5,7 @@ local MasterItems = require("scripts/backend/master_items")
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local UnitTemplate = require("scripts/extension_systems/unit_templates/utilities/unit_template")
+local Breed = require("scripts/utilities/breed")
 local GAME_OBJECT_TYPE = "item_deployable_side_relation_projectile"
 local item_deployable_side_relation_projectile_unit_template = {
 	local_unit = function (unit_name, position, rotation, material, item)
@@ -36,7 +37,7 @@ local item_deployable_side_relation_projectile_unit_template = {
 
 			if side_extension then
 				config:add("SideExtension", {
-					side_id = side_id,
+					side_id = side_id
 				})
 			end
 
@@ -58,19 +59,22 @@ local item_deployable_side_relation_projectile_unit_template = {
 
 				config:add("ProjectileUnitWeaponExtension", {
 					damage_profile_lerp_values = damage_profile_lerp_values,
-					explosion_template_lerp_values = explosion_template_lerp_values,
+					explosion_template_lerp_values = explosion_template_lerp_values
 				})
 			end
 
+			local unit_data_extension = ScriptUnit.has_extension(owner_unit, "unit_data_system")
+			local breed = unit_data_extension and unit_data_extension:breed()
+			local is_player_breed = breed and Breed.is_player(breed)
 			local owner_buff_extension = ScriptUnit.has_extension(owner_unit, "buff_system")
 
-			if owner_buff_extension then
+			if is_player_breed and owner_buff_extension then
 				local stat_buffs = owner_buff_extension:stat_buffs()
 				local keywords = owner_buff_extension:keywords()
 
-				config:add("ProjectileUnitBuffExtension", {
+				config:add("PlayerProjectileUnitBuffExtension", {
 					stat_buffs = table.shallow_copy(stat_buffs),
-					keywords = table.shallow_copy(keywords),
+					keywords = table.shallow_copy(keywords)
 				})
 			end
 		end
@@ -83,7 +87,7 @@ local item_deployable_side_relation_projectile_unit_template = {
 			origin_item_slot = origin_item_slot,
 			weapon_item_or_nil = weapon_item_or_nil or item,
 			fuse_override_time_or_nil = fuse_override_time_or_nil,
-			owner_side_or_nil = owner_side_or_nil,
+			owner_side_or_nil = owner_side_or_nil
 		})
 
 		local item_name = item.name
@@ -95,7 +99,7 @@ local item_deployable_side_relation_projectile_unit_template = {
 			projectile_template_name = projectile_template_name,
 			charge_level = charge_level,
 			is_critical_strike = is_critical_strike,
-			owner_unit = owner_unit,
+			owner_unit = owner_unit
 		})
 		config:add("ProjectileUnitLocomotionExtension", {
 			handle_oob_despawning = true,
@@ -107,7 +111,7 @@ local item_deployable_side_relation_projectile_unit_template = {
 			owner_unit = owner_unit,
 			target_unit = target_unit,
 			target_position = target_position,
-			optional_item = item,
+			optional_item = item
 		})
 
 		local relation_init_data = projectile_template.deployable.relation_init_data
@@ -119,7 +123,7 @@ local item_deployable_side_relation_projectile_unit_template = {
 			config:add("SideRelationProximityExtension", {
 				owner_unit_or_nil = owner_unit,
 				broadphase = broadphase,
-				relation_init_data = relation_init_data,
+				relation_init_data = relation_init_data
 			})
 		end
 
@@ -167,12 +171,12 @@ local item_deployable_side_relation_projectile_unit_template = {
 			projectile_template_name = projectile_template_name,
 			charge_level = charge_level,
 			is_critical_strike = is_critical_strike,
-			owner_unit = owner_unit,
+			owner_unit = owner_unit
 		})
 		config:add("ProjectileHuskLocomotionExtension", {
 			hide_until_initial_interpolation_start = true,
 			projectile_template_name = projectile_template_name,
-			optional_item = item,
+			optional_item = item
 		})
 
 		local projectile_template = ProjectileTemplates[projectile_template_name]
@@ -200,7 +204,7 @@ local item_deployable_side_relation_projectile_unit_template = {
 		if has_owner then
 			player_unit_spawn_manager:relinquish_unit_ownership(unit)
 		end
-	end,
+	end
 }
 
 return item_deployable_side_relation_projectile_unit_template

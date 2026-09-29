@@ -250,7 +250,7 @@ MutatorToxicGasVolumes._get_clouds = function (self, gas_clouds)
 
 			local entry = {
 				fog_unit = fog_unit,
-				max_liquid = max_liquid,
+				max_liquid = max_liquid
 			}
 
 			table.insert(gas_clouds[section_id][id], entry)
@@ -292,7 +292,7 @@ MutatorToxicGasVolumes._get_corals = function (self, corals)
 
 			local entry = {
 				coral_unit = coral_unit,
-				coral_component = coral_component,
+				coral_component = coral_component
 			}
 
 			table.insert(corals[section_id][id], entry)
@@ -354,7 +354,7 @@ MutatorToxicGasVolumes._setup_static_clouds = function (self)
 						position = boxed_position,
 						max_liquid = max_liquid,
 						fog_component = wanted_component,
-						buff_volume_component = wanted_buff_volume_component,
+						buff_volume_component = wanted_buff_volume_component
 					}
 				end
 			end
@@ -393,7 +393,7 @@ MutatorToxicGasVolumes._setup_alternating_clouds = function (self)
 				if not alternating_timers[i][k] then
 					alternating_timers[i][k] = {
 						active = false,
-						timer = 1,
+						timer = 1
 					}
 				end
 
@@ -449,7 +449,7 @@ MutatorToxicGasVolumes._setup_alternating_clouds = function (self)
 							position = boxed_position,
 							max_liquid = max_liquid,
 							fog_component = wanted_component,
-							buff_volume_component = wanted_buff_volume_component,
+							buff_volume_component = wanted_buff_volume_component
 						}
 
 						sound_position = sound_position + position
@@ -462,7 +462,7 @@ MutatorToxicGasVolumes._setup_alternating_clouds = function (self)
 					sound_position = sound_position / num_active_clouds
 					sound_positions[i][k] = {
 						triggered = false,
-						position = Vector3Box(sound_position),
+						position = Vector3Box(sound_position)
 					}
 				end
 			end

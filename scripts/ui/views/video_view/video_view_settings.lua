@@ -7,7 +7,7 @@ local video_view_settings = {
 	viewport_name = "ui_video_view_world_viewport",
 	viewport_type = "default",
 	world_layer = 1,
-	world_name = "ui_video_view_world",
+	world_name = "ui_video_view_world"
 }
 local cinematic_video_templates = {}
 
@@ -44,6 +44,9 @@ _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/d
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/debriefing_nml_01")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/debriefing_nml_02")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/debriefing_nml_03")
+_extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/debriefing_spillway_01")
+_extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/debriefing_spillway_02")
+_extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/debriefing_spillway_03")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/cin_nox_alpha")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/s1_intro")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/core_research_intro")

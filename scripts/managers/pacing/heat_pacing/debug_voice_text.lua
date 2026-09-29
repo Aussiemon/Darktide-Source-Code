@@ -8,225 +8,225 @@ debug_text_lines.rise = {
 		"Seems the rats have come out to play today.",
 		"The Deadsiders are nosy today. Squash them on sight.",
 		"Reported contact. Probably deadsiders.",
-		"Deadsiders are feeling brave. Let's fix that.",
+		"Deadsiders are feeling brave. Let's fix that."
 	},
 	alert = {
 		"*We're hearing our coordinates may be in the wind. High alert!",
 		"*Command reports our location may be compromised. High alert!",
 		"*High alert! Wolfer said there may be loyalists on the menu today.",
 		"*I want a more eyes on the ground! High alert!",
-		"*High alert! There are more reports of disturbances.",
+		"*High alert! There are more reports of disturbances."
 	},
 	detected = {
 		"*It's the loyalists! Stop them in their tracks!",
 		"*Negative for deadsiders. It's loyalists. Kill them on sight!",
 		"*Wolfer was right. Loyalists. Track and kill.",
-		"*Confirmed loyalist contact. Eliminate.",
+		"*Confirmed loyalist contact. Eliminate."
 	},
 	max = {
 		"*We've got them, target and kill!",
 		"*All units! All units! Converge on loyalist location.",
 		"*Loyalist location confirmed. We won't let them out of our sights now.",
 		"*They're not getting out of this one! Press on!",
-		"*Stop whatever you are doing and kill the loyalists!",
-	},
+		"*Stop whatever you are doing and kill the loyalists!"
+	}
 }
 debug_text_lines.drop = {
 	undetected = {
 		"*Stand down. The threat has been dealt with.",
 		"*Deadsiders have scuttled away. At ease.",
-		"*It seems to have calmed down. Back to positions.",
+		"*It seems to have calmed down. Back to positions."
 	},
 	alert = {
 		"*We've lost track of them! Back to your stations!,",
 		"*Keep searching! Spread out! Back to high alert",
 		"*Contact lost. Drop to high alert!",
 		"*Drop to high alert! Spread out and find them!",
-		"*We lost them! Back to high alert!",
+		"*We lost them! Back to high alert!"
 	},
 	detected = {
 		"*We lost their marker. But they're there!",
 		"*Report in contact! Else we're blind!",
 		"*Don't let them slip away!",
 		"*Grr… We had them. Track them down!",
-		"*They must be there. Find them!",
+		"*They must be there. Find them!"
 	},
-	max = {},
+	max = {}
 }
 debug_text_lines.opportunity_started = {
 	none = {
 		"something tripped an alarm in the area, check it out!",
-		"Seems we have Deadsider activity in the vicinity, check it out!",
+		"Seems we have Deadsider activity in the vicinity, check it out!"
 	},
 	undetected = {
 		"*We have a disturbance. investigate!",
 		"*A cache sensor has sprung. Find out why.",
-		"*Why am I seeing cache activity? Send a squad!",
+		"*Why am I seeing cache activity? Send a squad!"
 	},
 	alert = {
 		"*Who the hel is messing with the caches? Stop them!",
 		"*Protect the caches! How hard can it be? Send another squad!",
-		"*Guard the cache! Call in more men!",
+		"*Guard the cache! Call in more men!"
 	},
 	detected = {
 		"*Loyalists contact! They're at the cache!",
 		"*There! At the cache! Get rid of them!",
 		"*Get to that cache and kill the loyalists!",
 		"*Keep that filth out of our cache!",
-		"*Converge on that cache! Kill them!",
+		"*Converge on that cache! Kill them!"
 	},
 	max = {
 		"*All nearby units to cache location! Kill the loyalists!",
 		"*The cache is teeming with loyalists! What are you waiting for!",
 		"*Get to the cache and cut their flesh from their bone!",
 		"*They're at the cache! Converge immediately!",
-		"*The loyalists are at the cache! All units! Kill!",
-	},
+		"*The loyalists are at the cache! All units! Kill!"
+	}
 }
 debug_text_lines.extraction = {
 	none = {
 		"something tripped an alarm in the area, check it out!",
-		"Seems we have Deadsider activity in the vicinity, check it out!",
+		"Seems we have Deadsider activity in the vicinity, check it out!"
 	},
 	undetected = {
 		"something tripped an alarm in the area, check it out!",
-		"Seems we have Deadsider activity in the vicinity, check it out!",
+		"Seems we have Deadsider activity in the vicinity, check it out!"
 	},
 	alert = {
 		"*The loyalists are trying to escape! Kill them!",
 		"*The loyalists are making a run for it! Get there and stop them!",
 		"*They're trying to slip away! Don't let them.",
 		"*Stop the loyalists! They're signaling for extraction!",
-		"*Do not let them leave! Get to the smoke and kill!",
+		"*Do not let them leave! Get to the smoke and kill!"
 	},
 	detected = {
 		"*The loyalists are trying to escape! Kill them!",
 		"*The loyalists are making a run for it! Get there and stop them!",
 		"*They're trying to slip away! Don't let them.",
 		"*Stop the loyalists! They're signaling for extraction!",
-		"*Do not let them leave! Get to the smoke and kill!",
+		"*Do not let them leave! Get to the smoke and kill!"
 	},
 	max = {
 		"*All units to the signal! Kill! Kill! Kill!",
 		"*Put that smoke out with their blood!",
 		"*All units! Go! Kill! Or you'll be next!",
 		"*Do not let them escape! Priority ALPHA!",
-		"*Everyone! Kill the loyalists! If they leave your heads will roll!",
-	},
+		"*Everyone! Kill the loyalists! If they leave your heads will roll!"
+	}
 }
 debug_text_lines.monster_spawn = {
 	undetected = {},
 	alert = {
 		"*Let's scare them off with a monstrosity.",
 		"*Sending some real muscle to the field!",
-		"*Let's see how they deal with a monstrosity.",
+		"*Let's see how they deal with a monstrosity."
 	},
 	detected = {
 		"*Get me a monstrosity in the field! We need to even the odds!",
 		"*Send a monstrosity! Apply some real pressure!",
-		"*The loyalists are too comfortable. Send em one of the big ones!",
+		"*The loyalists are too comfortable. Send em one of the big ones!"
 	},
 	max = {
 		"*Send that monster in! We have to kill them! Now!",
 		"*A monstrosity? Yes! Send it immediately!",
 		"*We need another monstrosity down there! The meaner the better!",
 		"*Another monstrosity coming down! Stay out of its way!",
-		"*Monstrosity deployed! Die, loyalists! Die!",
-	},
+		"*Monstrosity deployed! Die, loyalists! Die!"
+	}
 }
 debug_text_lines.trickle_horde_spawn = {
 	undetected = {},
 	alert = {
 		"*Patrol unit deployed.",
 		"*Deploying a roaming unit.",
-		"*Search the area. They'll be around.",
+		"*Search the area. They'll be around."
 	},
 	detected = {
 		"*Deploy more patrol units! We've got to zero in!",
 		"*Sending more patrols to the field!",
-		"*We need ID's! Get another patrol down there!",
+		"*We need ID's! Get another patrol down there!"
 	},
 	max = {
 		"*I need more patrols in the field! Now!",
 		"*Find them! Kill them! Get me a patrol on the field!",
 		"*More patrols! Now!",
 		"*Give me patrolling units! Give me a head! Anything!",
-		"*Get down there and patrol the area! We have loyalists at large!",
-	},
+		"*Get down there and patrol the area! We have loyalists at large!"
+	}
 }
 debug_text_lines.horde_spawn = {
 	undetected = {},
 	alert = {
 		"*The poxers are hungry. Let them hunt.",
 		"*Send out the poxers, I want to see what they find.",
-		"*Give 'em a taste of nurgle's blessings.",
+		"*Give 'em a taste of nurgle's blessings."
 	},
 	detected = {
 		"*Get some poxers in the field, they've got a nose for loyalists!",
 		"*Oh poxers! Fresh meat, straight from the Mourningstar!",
-		"*Get some poxers down there, they'll sniff them out!",
+		"*Get some poxers down there, they'll sniff them out!"
 	},
 	max = {
 		"*Another horde of infected ready! Send them out!",
 		"*Send the poxers! Send them now!",
 		"*Keep those poxers hungry and send them!",
 		"*More poxers to the field! Let them feast!",
-		"*Keep the pressure up! Send more infected!",
-	},
+		"*Keep the pressure up! Send more infected!"
+	}
 }
 debug_text_lines.loner_prevention = {
 	undetected = {},
 	alert = {},
 	detected = {},
-	max = {},
+	max = {}
 }
 debug_text_lines.safe_room_entered = {
 	undetected = {
 		"*Nothing to report.",
 		"*Keep to your stations for now.",
-		"*No disturbances. At ease.",
+		"*No disturbances. At ease."
 	},
 	alert = {
 		"*Ah! They slipped away into the caves! Don't let it happen again.",
 		"*They got away. They should consider themselves lucky.",
-		"*Minor losses. Scuttle back to your burrows, Deadsiders!",
+		"*Minor losses. Scuttle back to your burrows, Deadsiders!"
 	},
 	detected = {
 		"*Loyalists slipped away! Stay vigilant!",
 		"*You lost them! Await your punishment.",
 		"*They think they're clever, huh? Do not let up. Patrol the area!",
 		"*They'll poke their little noses out sooner or later. Be ready.",
-		"*We need more men! They're just out of our grasp.",
+		"*We need more men! They're just out of our grasp."
 	},
 	max = {
 		"*No! We had them! Give me more soldiers!",
 		"*Blast! We will find them and we will kill them!",
 		"*Argh! Helfire will be waiting, loyalists…",
 		"*Do not let them get away with this! Be ready and hunt them down!",
-		"*No! Do not let them slip away again! They must die!",
-	},
+		"*No! Do not let them slip away again! They must die!"
+	}
 }
 debug_text_lines.safe_room_exited = {
 	undetected = {},
 	alert = {
 		"*We're still on high alert! Report any disturbance.",
 		"*Don't let up yet. Our enemies are still in the wind.",
-		"*Be ready! They may come back yet.",
+		"*Be ready! They may come back yet."
 	},
 	detected = {
 		"*Get ready for contact! They're still around!",
 		"*Be ready for anything! The loyalists haven't left!",
 		"*Don't let up. The loyalists are still around. I can practically taste it.",
 		"*I want the loyalists found and disposed of!",
-		"*Call in any contact immediately! They'll show themselves soon.",
+		"*Call in any contact immediately! They'll show themselves soon."
 	},
 	max = {
 		"*I'm picking up a signal again! They're not getting away this time!",
 		"*Call in all reinforcements! Do not let them flee!",
 		"*Send everything! We've got the loyalists location!",
 		"*We've got you now loyalists… All units! Engage at location!",
-		"*They're back! Kill! Rip them to pieces!",
-	},
+		"*They're back! Kill! Rip them to pieces!"
+	}
 }
 debug_text_lines.lookup = {
 	["*A cache sensor has sprung. Find out why."] = true,
@@ -350,7 +350,7 @@ debug_text_lines.lookup = {
 	["Seems we have Deadsider activity in the vicinity, check it out!"] = true,
 	["The Deadsiders are nosy today. Squash them on sight."] = true,
 	["We seem to have some Deadsiders poking around."] = true,
-	["something tripped an alarm in the area, check it out!"] = true,
+	["something tripped an alarm in the area, check it out!"] = true
 }
 
 return debug_text_lines

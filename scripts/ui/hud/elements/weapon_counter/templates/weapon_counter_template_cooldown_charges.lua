@@ -15,12 +15,12 @@ local FILLED_OUTLINE_COLOR = UIHudSettings.color_tint_main_1
 local SIZE_THICKNESS_OUTLINE_DEFAULT = {
 	0.6,
 	0.015,
-	0.011,
+	0.011
 }
 local SIZE_THICKNESS_OUTLINE_SPECIAL_ACTIVE = {
 	0.6,
 	0.017,
-	0.011,
+	0.011
 }
 local OUTLINE_OPACITY_DEFAULT = 0.875
 local OUTLINE_OPACITY_SPECIAL_ACTIVE = 1.075
@@ -45,18 +45,18 @@ end
 
 local weapon_counter_template_cooldown_charges = {
 	data = {
-		state = {},
-	},
+		state = {}
+	}
 }
 local length = 400
 local thickness = 400
 local size = {
 	length,
-	thickness,
+	thickness
 }
 local center_size = {
 	4,
-	4,
+	4
 }
 
 weapon_counter_template_cooldown_charges.name = "cooldown_charges"
@@ -149,7 +149,7 @@ weapon_counter_template_cooldown_charges.create_widget_defintion = function (sce
 	local charge_bar_offset_right = {
 		0,
 		0,
-		1,
+		1
 	}
 
 	local function create_passes(num_bars)
@@ -166,11 +166,11 @@ weapon_counter_template_cooldown_charges.create_widget_defintion = function (sce
 					offset = {
 						charge_bar_offset_right[1],
 						charge_bar_offset_right[2],
-						ii + 1,
+						ii + 1
 					},
 					size = {
 						size[1],
-						size[2],
+						size[2]
 					},
 					color = UIHudSettings.color_tint_main_1,
 					material_values = {
@@ -179,22 +179,22 @@ weapon_counter_template_cooldown_charges.create_widget_defintion = function (sce
 						lightning_opacity = 0,
 						arc_top_bottom = {
 							1,
-							0,
+							0
 						},
 						fill_outline_opacity = {
 							FILLED_FILL_OPACITY,
-							OUTLINE_OPACITY_DEFAULT,
+							OUTLINE_OPACITY_DEFAULT
 						},
 						outline_color = Colors.format_color_to_material(UNFILLED_OUTLINE_COLOR),
 						fillcolor = UIHudSettings.color_tint_main_1,
 						SizeThicknessOutline = {
 							SIZE_THICKNESS_OUTLINE_DEFAULT[1],
 							SIZE_THICKNESS_OUTLINE_DEFAULT[2],
-							SIZE_THICKNESS_OUTLINE_DEFAULT[3],
+							SIZE_THICKNESS_OUTLINE_DEFAULT[3]
 						},
-						fillTex = FILL_TEXTURE,
-					},
-				},
+						fillTex = FILL_TEXTURE
+					}
+				}
 			}
 		end
 
@@ -208,11 +208,11 @@ weapon_counter_template_cooldown_charges.create_widget_defintion = function (sce
 				offset = {
 					charge_bar_offset_right[1],
 					charge_bar_offset_right[2],
-					1,
+					1
 				},
 				size = {
 					size[1] / 1.4,
-					size[2] / 1.4,
+					size[2] / 1.4
 				},
 				color = UIHudSettings.color_tint_main_1,
 				material_values = {
@@ -221,16 +221,16 @@ weapon_counter_template_cooldown_charges.create_widget_defintion = function (sce
 					lightning_opacity = 0,
 					arc_top_bottom = {
 						0,
-						1,
+						1
 					},
 					fill_outline_opacity = {
 						FILLED_FILL_OPACITY,
-						1,
+						1
 					},
 					outline_color = Colors.format_color_to_material(UNFILLED_OUTLINE_COLOR),
-					fillTex = FILL_TEXTURE,
-				},
-			},
+					fillTex = FILL_TEXTURE
+				}
+			}
 		}
 
 		return passes

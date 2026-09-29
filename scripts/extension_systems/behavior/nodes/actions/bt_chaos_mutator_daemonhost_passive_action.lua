@@ -19,6 +19,9 @@ local Vo = require("scripts/utilities/vo")
 local STAGES = ChaosDaemonhostSettings.stages
 local BtChaosMutatorDaemonhostPassiveAction = class("BtChaosMutatorDaemonhostPassiveAction", "BtNode")
 local NAV_MESH_ABOVE, NAV_MESH_BELOW = 5, 5
+local CULTIST_NAV_ABOVE, CULTIST_NAV_BELOW = 2.5, 2.5
+local MAX_TRAVEL_DISTANCE_Z_DIFF = 4
+local MAX_PLAYER_Z_DIFF = 4
 local _setup_progress_bar, _update_progress_bar, _closets_aggro_target
 
 BtChaosMutatorDaemonhostPassiveAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
@@ -45,6 +48,11 @@ BtChaosMutatorDaemonhostPassiveAction.enter = function (self, unit, breed, black
 
 	scratchpad.locomotion_extension = locomotion_extension
 	scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
+
+	local aim_component = Blackboard.write_component(blackboard, "aim")
+
+	scratchpad.aim_component = aim_component
+	aim_component.controlled_aiming = true
 
 	local current_rotation_speed = locomotion_extension:rotation_speed()
 
@@ -88,6 +96,7 @@ BtChaosMutatorDaemonhostPassiveAction.enter = function (self, unit, breed, black
 	scratchpad.t_until_next_stage = self:_get_time_until_next_stage(scratchpad)
 	scratchpad.delay = 10
 	scratchpad.timer = 0
+	scratchpad.ritual_travel_distance = self:_calculate_ritual_travel_distance(unit)
 
 	self:_populate_cultists(scratchpad, action_data, unit)
 
@@ -143,7 +152,7 @@ BtChaosMutatorDaemonhostPassiveAction.leave = function (self, unit, breed, black
 
 		local target_player = _closets_aggro_target(unit, breed, blackboard, scratchpad, action_data, t)
 
-		if HEALTH_ALIVE[target_player] then
+		if target_player and HEALTH_ALIVE[target_player] then
 			Threat.add_flat_threat(unit, target_player, math.huge)
 			perception_extension:alert(target_player)
 		end
@@ -174,6 +183,8 @@ BtChaosMutatorDaemonhostPassiveAction.leave = function (self, unit, breed, black
 	local statistics_component = Blackboard.write_component(blackboard, "statistics")
 
 	Managers.state.pacing:set_minion_listening_for_player_deaths(unit, statistics_component, true)
+
+	scratchpad.aim_component.controlled_aiming = true
 end
 
 BtChaosMutatorDaemonhostPassiveAction._switch_stage = function (self, unit, breed, scratchpad, action_data, stage, t)
@@ -367,6 +378,22 @@ BtChaosMutatorDaemonhostPassiveAction._kill = function (self, scratchpad, action
 	fx_system:trigger_wwise_event(mutator_death_stinger, nil, unit)
 end
 
+local CULTIST_OFFSET_SCALES = {
+	1,
+	0.5
+}
+
+local function _find_cultist_nav_position(nav_world, traverse_logic, center_on_nav, center_position, offsets)
+	for _, offset_scale in ipairs(CULTIST_OFFSET_SCALES) do
+		local position = Vector3(center_position.x + offsets[1] * offset_scale, center_position.y + offsets[2] * offset_scale, center_position.z)
+		local pos_on_nav = NavQueries.position_on_mesh(nav_world, position, CULTIST_NAV_ABOVE, CULTIST_NAV_BELOW, traverse_logic)
+
+		if pos_on_nav and GwNavQueries.raycango(nav_world, center_on_nav, pos_on_nav, traverse_logic) then
+			return pos_on_nav
+		end
+	end
+end
+
 BtChaosMutatorDaemonhostPassiveAction._populate_cultists = function (self, scratchpad, action_data, unit)
 	scratchpad.chanting_units = {}
 
@@ -377,16 +404,13 @@ BtChaosMutatorDaemonhostPassiveAction._populate_cultists = function (self, scrat
 	local traverse_logic = navigation_extension:traverse_logic()
 	local side_extension = ScriptUnit.extension(unit, "side_system")
 	local side_id = side_extension.side_id
+	local center_position = Unit.world_position(unit, 1)
+	local center_on_nav = NavQueries.position_on_mesh(nav_world, center_position, NAV_MESH_ABOVE, NAV_MESH_BELOW, traverse_logic) or center_position
 
 	for i = 1, amount do
-		local position = Unit.world_position(unit, 1)
 		local rotation = Unit.local_rotation(unit, 1)
 		local offsets = rotational_values[i]
-
-		position[1] = position[1] + offsets[1]
-		position[2] = position[2] + offsets[2]
-
-		local pos_on_nav = NavQueries.position_on_mesh(nav_world, position, NAV_MESH_ABOVE, NAV_MESH_BELOW, traverse_logic)
+		local pos_on_nav = _find_cultist_nav_position(nav_world, traverse_logic, center_on_nav, center_position, offsets)
 
 		if pos_on_nav then
 			local minion_spawn_manager = Managers.state.minion_spawn
@@ -438,9 +462,26 @@ BtChaosMutatorDaemonhostPassiveAction._check_damage = function (self, scratchpad
 	return false
 end
 
-BtChaosMutatorDaemonhostPassiveAction._get_closest_player = function (self, unit, position, valid_enemy_player_units, scratchpad, action_data)
+BtChaosMutatorDaemonhostPassiveAction._calculate_ritual_travel_distance = function (self, unit)
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
 	local nav_world = navigation_extension:nav_world()
+	local position = Unit.world_position(unit, 1)
+	local nav_mesh_position = NavQueries.position_on_mesh(nav_world, position, NAV_MESH_ABOVE, NAV_MESH_BELOW) or position
+	local main_path_segments = Managers.state.main_path:main_path_segments()
+	local travel_distance = MainPathQueries.closest_travel_distance_vertical_aware(main_path_segments, nav_mesh_position, MAX_TRAVEL_DISTANCE_Z_DIFF)
+
+	if not travel_distance then
+		local _, closest_travel_distance = MainPathQueries.closest_position(nav_mesh_position)
+
+		travel_distance = closest_travel_distance
+
+		Log.warning("BtChaosMutatorDaemonhostPassiveAction", "Ritual at %s has no main path node within %dm height, falling back to closest 3d point (travel distance %.1f).", tostring(position), MAX_TRAVEL_DISTANCE_Z_DIFF, travel_distance)
+	end
+
+	return travel_distance
+end
+
+BtChaosMutatorDaemonhostPassiveAction._get_closest_player = function (self, unit, position, valid_enemy_player_units, scratchpad, action_data)
 	local in_safe_zone = Managers.state.pacing:get_in_safe_zone()
 
 	if in_safe_zone then
@@ -463,22 +504,32 @@ BtChaosMutatorDaemonhostPassiveAction._get_closest_player = function (self, unit
 		return false
 	end
 
-	local nav_mesh_position = NavQueries.position_on_mesh(nav_world, POSITION_LOOKUP[unit], NAV_MESH_ABOVE, NAV_MESH_BELOW)
-	local _, monster_travel_distance = MainPathQueries.closest_position(nav_mesh_position)
 	local damage_override = self:_check_damage(scratchpad)
+	local monster_travel_distance = scratchpad.ritual_travel_distance
 	local close_distance_offset, far_distance_offset = action_data.close_distance_offset, action_data.far_distance_offset
-	local closest_position = MainPathQueries.position_from_distance(monster_travel_distance - close_distance_offset)
-	local _, closest_position_distance = MainPathQueries.closest_position(closest_position)
-	local far_position = MainPathQueries.position_from_distance(monster_travel_distance - far_distance_offset)
-	local _, far_position_distance = MainPathQueries.closest_position(far_position)
+	local closest_player_distance = math.huge
 
-	if closest_position_distance < ahead_travel_distance or damage_override then
+	for i = 1, #valid_enemy_player_units do
+		local player_position = POSITION_LOOKUP[valid_enemy_player_units[i]]
+
+		if player_position and math.abs(player_position.z - position.z) <= MAX_PLAYER_Z_DIFF then
+			local flat_distance = Vector3.distance(Vector3.flat(player_position), Vector3.flat(position))
+
+			closest_player_distance = math.min(closest_player_distance, flat_distance)
+		end
+	end
+
+	local within_close_distance = ahead_travel_distance > monster_travel_distance - close_distance_offset or closest_player_distance <= close_distance_offset
+
+	if within_close_distance or damage_override then
 		scratchpad.speed = "full"
 
 		return true
 	end
 
-	if far_position_distance < ahead_travel_distance then
+	local within_far_distance = ahead_travel_distance > monster_travel_distance - far_distance_offset or closest_player_distance <= far_distance_offset
+
+	if within_far_distance then
 		scratchpad.speed = "half"
 	end
 
@@ -529,6 +580,12 @@ BtChaosMutatorDaemonhostPassiveAction.run = function (self, unit, breed, blackbo
 
 		scratchpad.locomotion_extension:set_wanted_rotation(flat_rotation)
 	end
+
+	local self_position = Unit.world_position(unit, 1)
+	local flat_forward = Vector3.normalize(Vector3.flat(Quaternion.forward(Unit.local_rotation(unit, 1))))
+	local aim_position = self_position + flat_forward * 10
+
+	scratchpad.aim_component.controlled_aim_position:store(aim_position)
 
 	local duration = scratchpad.duration
 
@@ -655,7 +712,7 @@ function _closets_aggro_target(unit, breed, blackboard, scratchpad, action_data,
 
 		distance_to_all_players[i] = {
 			distance_to_target_sq,
-			target_unit,
+			target_unit
 		}
 	end
 

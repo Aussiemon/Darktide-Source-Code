@@ -12,12 +12,12 @@ local home_planet_options = {
 			path = "content/ui/textures/backgrounds/backstory/planets/branx_magna",
 			size = {
 				512,
-				512,
-			},
+				512
+			}
 		},
 		position = {
 			3040,
-			2416,
+			2416
 		},
 		visibility = {
 			archetypes = {
@@ -25,9 +25,9 @@ local home_planet_options = {
 				"ogryn",
 				"psyker",
 				"veteran",
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		description = "loc_character_birthplace_planet_02_description",
@@ -38,12 +38,12 @@ local home_planet_options = {
 			path = "content/ui/textures/backgrounds/backstory/planets/crucis",
 			size = {
 				512,
-				512,
-			},
+				512
+			}
 		},
 		position = {
 			4185,
-			2447,
+			2447
 		},
 		visibility = {
 			archetypes = {
@@ -51,9 +51,9 @@ local home_planet_options = {
 				"ogryn",
 				"psyker",
 				"veteran",
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		description = "loc_character_birthplace_planet_03_description",
@@ -64,12 +64,12 @@ local home_planet_options = {
 			path = "content/ui/textures/backgrounds/backstory/planets/mornax",
 			size = {
 				512,
-				512,
-			},
+				512
+			}
 		},
 		position = {
 			3751,
-			1698,
+			1698
 		},
 		visibility = {
 			archetypes = {
@@ -77,9 +77,9 @@ local home_planet_options = {
 				"ogryn",
 				"psyker",
 				"veteran",
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		description = "loc_character_birthplace_planet_04_description",
@@ -90,12 +90,12 @@ local home_planet_options = {
 			path = "content/ui/textures/backgrounds/backstory/planets/incron",
 			size = {
 				512,
-				512,
-			},
+				512
+			}
 		},
 		position = {
 			2426,
-			1626,
+			1626
 		},
 		visibility = {
 			archetypes = {
@@ -103,9 +103,9 @@ local home_planet_options = {
 				"ogryn",
 				"psyker",
 				"veteran",
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		description = "loc_character_birthplace_planet_05_description",
@@ -116,12 +116,12 @@ local home_planet_options = {
 			path = "content/ui/textures/backgrounds/backstory/planets/rocyria",
 			size = {
 				512,
-				512,
-			},
+				512
+			}
 		},
 		position = {
 			3074,
-			822,
+			822
 		},
 		visibility = {
 			archetypes = {
@@ -129,9 +129,9 @@ local home_planet_options = {
 				"ogryn",
 				"psyker",
 				"veteran",
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		description = "loc_character_birthplace_planet_06_description",
@@ -142,12 +142,12 @@ local home_planet_options = {
 			path = "content/ui/textures/backgrounds/backstory/planets/pavane",
 			size = {
 				512,
-				512,
-			},
+				512
+			}
 		},
 		position = {
 			1472,
-			1364,
+			1364
 		},
 		visibility = {
 			archetypes = {
@@ -155,9 +155,9 @@ local home_planet_options = {
 				"ogryn",
 				"psyker",
 				"veteran",
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		description = "loc_character_birthplace_planet_07_description",
@@ -168,12 +168,12 @@ local home_planet_options = {
 			path = "content/ui/textures/backgrounds/backstory/planets/cadia",
 			size = {
 				1536,
-				512,
-			},
+				512
+			}
 		},
 		position = {
 			1786,
-			2588,
+			2588
 		},
 		visibility = {
 			archetypes = {
@@ -181,9 +181,9 @@ local home_planet_options = {
 				"ogryn",
 				"psyker",
 				"veteran",
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		description = "loc_character_birthplace_planet_08_description",
@@ -194,12 +194,12 @@ local home_planet_options = {
 			path = "content/ui/textures/backgrounds/backstory/planets/messelina_gloriana",
 			size = {
 				512,
-				512,
-			},
+				512
+			}
 		},
 		position = {
 			1400,
-			1926,
+			1926
 		},
 		visibility = {
 			archetypes = {
@@ -207,10 +207,10 @@ local home_planet_options = {
 				"ogryn",
 				"psyker",
 				"veteran",
-				"zealot",
-			},
-		},
-	},
+				"zealot"
+			}
+		}
+	}
 }
 
 table.append(home_planet_options, HOME_PLANETS_BROKER)

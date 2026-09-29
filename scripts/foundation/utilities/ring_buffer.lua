@@ -7,7 +7,6 @@ local RingBuffer = class("RingBuffer")
 RingBuffer.init = function (self, max_length)
 	self._buffer = {}
 	self._max_length = max_length
-	self._is_full = false
 	self._head_index = 0
 	self._tail_index = 0
 end
@@ -15,7 +14,6 @@ end
 RingBuffer.clear = function (self)
 	table.clear(self._buffer)
 
-	self._is_full = false
 	self._head_index = 0
 	self._tail_index = 0
 end
@@ -25,7 +23,7 @@ RingBuffer.is_empty = function (self)
 end
 
 RingBuffer.is_full = function (self)
-	return self._is_full
+	return self:size() == self._max_length
 end
 
 RingBuffer.capacity = function (self)
@@ -33,22 +31,18 @@ RingBuffer.capacity = function (self)
 end
 
 RingBuffer.size = function (self)
-	local size = self._max_length
-
 	if self:is_empty() then
-		size = 0
-	elseif not self:is_full() then
-		local head_index = self._head_index + 1
-		local tail_index = self._tail_index
-
-		if tail_index < head_index then
-			size = head_index - tail_index
-		else
-			size = size + head_index - tail_index
-		end
+		return 0
 	end
 
-	return size
+	local head_index = self._head_index + 1
+	local tail_index = self._tail_index
+
+	if tail_index < head_index then
+		return head_index - tail_index
+	else
+		return self._max_length + head_index - tail_index
+	end
 end
 
 RingBuffer._advance_indices = function (self)
@@ -58,14 +52,13 @@ RingBuffer._advance_indices = function (self)
 
 	head_index = head_index == max_length and 1 or head_index + 1
 
-	local is_full = head_index == tail_index
+	local overwrote_oldest = head_index == tail_index
 	local first_element_added = tail_index == 0 and head_index == 1
 
-	if is_full or first_element_added then
+	if overwrote_oldest or first_element_added then
 		tail_index = tail_index == max_length and 1 or tail_index + 1
 	end
 
-	self._is_full = is_full
 	self._head_index = head_index
 	self._tail_index = tail_index
 end
@@ -82,7 +75,6 @@ RingBuffer._retreat_index = function (self)
 		tail_index = tail_index == max_length and 1 or tail_index + 1
 	end
 
-	self._is_full = false
 	self._tail_index = tail_index
 	self._head_index = head_index
 end

@@ -65,7 +65,7 @@ Destructible.init = function (self, unit, is_server)
 
 				collectible_data = {
 					name = collectible_name,
-					section_id = collectible_section_id,
+					section_id = collectible_section_id
 				}
 			end
 
@@ -327,13 +327,13 @@ Destructible.component_data = {
 		category = "Destruction Stages",
 		ui_name = "Material Slot Name",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	damage_amount_variable_name = {
 		category = "Destruction Stages",
 		ui_name = "Damage Variable Name",
 		ui_type = "text_box",
-		value = "damage_amount",
+		value = "damage_amount"
 	},
 	destructible_stages = {
 		category = "Destruction Stages",
@@ -343,12 +343,12 @@ Destructible.component_data = {
 			event_name = {
 				ui_name = "Callback",
 				ui_type = "text_box",
-				value = "",
+				value = ""
 			},
 			hot_join_event_name = {
 				ui_name = "Hot-Join Callback",
 				ui_type = "text_box",
-				value = "",
+				value = ""
 			},
 			health_threshold = {
 				decimals = 3,
@@ -356,34 +356,34 @@ Destructible.component_data = {
 				min = 0,
 				ui_name = "Threshold",
 				ui_type = "number",
-				value = 1,
-			},
+				value = 1
+			}
 		},
 		control_order = {
 			"event_name",
 			"hot_join_event_name",
-			"health_threshold",
-		},
+			"health_threshold"
+		}
 	},
 	start_enabled = {
 		ui_name = "Start enabled",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	start_visible = {
 		ui_name = "Start visible",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	network_unit = {
 		ui_name = "Is Network Unit",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	despawn_when_destroyed = {
 		ui_name = "Despawn When Destroyed",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	despawn_timer_duration = {
 		decimals = 0,
@@ -391,18 +391,18 @@ Destructible.component_data = {
 		step = 5,
 		ui_name = "Despawn Timer Duration",
 		ui_type = "number",
-		value = 6,
+		value = 6
 	},
 	collision_actors = {
 		size = 0,
 		ui_name = "Collision Actors to Remove",
 		ui_type = "text_box_array",
-		values = {},
+		values = {}
 	},
 	is_nav_gate = {
 		ui_name = "Is Nav Gate",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	broadphase_radius = {
 		decimals = 2,
@@ -411,12 +411,12 @@ Destructible.component_data = {
 		step = 0.1,
 		ui_name = "Broadphase Radius",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	skip_stages = {
 		ui_name = "Skip stages",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	mass = {
 		category = "Force on Destroy",
@@ -426,7 +426,7 @@ Destructible.component_data = {
 		step = 1,
 		ui_name = "Mass",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	speed = {
 		category = "Force on Destroy",
@@ -436,14 +436,14 @@ Destructible.component_data = {
 		step = 10,
 		ui_name = "Speed",
 		ui_type = "number",
-		value = 120,
+		value = 120
 	},
 	direction = {
 		category = "Force on Destroy",
 		step = 0.1,
 		ui_name = "Direction",
 		ui_type = "vector",
-		value = Vector3Box(0, 0, 0),
+		value = Vector3Box(0, 0, 0)
 	},
 	force_direction = {
 		category = "Force on Destroy",
@@ -454,20 +454,20 @@ Destructible.component_data = {
 			"Random Direction",
 			"Attack Direction",
 			"Relative - Provided Direction",
-			"World space - Provided Direction",
+			"World space - Provided Direction"
 		},
 		options_values = {
 			"random_direction",
 			"attack_direction",
 			"provided_direction_relative",
-			"provided_direction_world",
-		},
+			"provided_direction_world"
+		}
 	},
 	use_health_extension_health = {
 		category = "DO NOT USE - IS HACK",
 		ui_name = "use_health_extension_health",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	collectible_section_id = {
 		category = "Collectibles",
@@ -475,7 +475,7 @@ Destructible.component_data = {
 		min = 0,
 		ui_name = "Collectible Section ID",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	collectible_type = {
 		category = "Collectibles",
@@ -484,23 +484,23 @@ Destructible.component_data = {
 		value = "none",
 		options_keys = {
 			"None",
-			"Heretic Idol",
+			"Heretic Idol"
 		},
 		options_values = {
 			"none",
-			"heretic_idol",
-		},
+			"heretic_idol"
+		}
 	},
 	inputs = {
 		force_destruct = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
 		"DestructibleExtension",
-		"BroadphaseExtension",
-	},
+		"BroadphaseExtension"
+	}
 }
 
 return Destructible

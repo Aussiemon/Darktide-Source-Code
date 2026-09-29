@@ -34,13 +34,13 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	mission_area = {
 		horizontal_alignment = "left",
@@ -48,13 +48,13 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			mission_area_width,
-			mission_area_height,
+			mission_area_height
 		},
 		position = {
 			side_buffer + 100,
 			top_buffer,
-			0,
-		},
+			0
+		}
 	},
 	page_selection_area = {
 		horizontal_alignment = "center",
@@ -62,13 +62,13 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			mission_area_width,
-			difficulty_selector_height,
+			difficulty_selector_height
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	page_selection_pivot = {
 		horizontal_alignment = "center",
@@ -76,13 +76,13 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	gamepad_cursor_pivot = {
 		horizontal_alignment = "left",
@@ -90,13 +90,13 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			1,
-			1,
+			1
 		},
 		position = {
 			0,
 			0,
-			500,
-		},
+			500
+		}
 	},
 	gamepad_cursor = {
 		horizontal_alignment = "center",
@@ -104,13 +104,13 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			80,
-			125,
+			125
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	corner_top_left = {
 		horizontal_alignment = "left",
@@ -118,13 +118,13 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			172,
-			230,
+			230
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	corner_top_right = {
 		horizontal_alignment = "right",
@@ -132,13 +132,13 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			172,
-			230,
+			230
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	corner_bottom_left = {
 		horizontal_alignment = "left",
@@ -146,13 +146,13 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			220,
-			268,
+			268
 		},
 		position = {
 			0,
 			0,
-			63,
-		},
+			63
+		}
 	},
 	corner_bottom_right = {
 		horizontal_alignment = "right",
@@ -160,13 +160,13 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			220,
-			268,
+			268
 		},
 		position = {
 			0,
 			0,
-			63,
-		},
+			63
+		}
 	},
 	sidebar = {
 		horizontal_alignment = "right",
@@ -174,13 +174,13 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			details_width,
-			mission_area_height - 200,
+			mission_area_height - 200
 		},
 		position = {
 			-side_buffer,
 			top_buffer,
-			0,
-		},
+			0
+		}
 	},
 	sidebar_content = {
 		horizontal_alignment = "center",
@@ -188,13 +188,13 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			details_width - 2 * sidebar_buffer,
-			mission_area_height - 200,
+			mission_area_height - 200
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	mission_area_info = {
 		horizontal_alignment = "center",
@@ -202,13 +202,13 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			details_width,
-			360,
+			360
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	mission_area_timer = {
 		horizontal_alignment = "center",
@@ -216,13 +216,13 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			details_width,
-			20,
+			20
 		},
 		position = {
 			0,
 			92,
-			10,
-		},
+			10
+		}
 	},
 	mission_area_circumstance = {
 		horizontal_alignment = "center",
@@ -230,13 +230,13 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			details_width - 2,
-			100,
+			100
 		},
 		position = {
 			0,
 			-2,
-			20,
-		},
+			20
+		}
 	},
 	mission_objective_info = {
 		horizontal_alignment = "center",
@@ -244,13 +244,13 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			details_width,
-			250,
+			250
 		},
 		position = {
 			0,
 			275,
-			2,
-		},
+			2
+		}
 	},
 	mission_objectives_panel = {
 		horizontal_alignment = "center",
@@ -258,13 +258,13 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			details_width,
-			80,
+			80
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	mission_rewards_panel = {
 		horizontal_alignment = "center",
@@ -272,13 +272,13 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			details_width,
-			Dimensions.rewards_height,
+			Dimensions.rewards_height
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	info_box = {
 		horizontal_alignment = "center",
@@ -286,13 +286,13 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			380,
-			60,
+			60
 		},
 		position = {
 			0,
 			60 + Dimensions.sidebar_buffer + 76 + 10 + 60,
-			0,
-		},
+			0
+		}
 	},
 	play_button = {
 		horizontal_alignment = "center",
@@ -302,8 +302,8 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		position = {
 			0,
 			200,
-			100,
-		},
+			100
+		}
 	},
 	difficulty_stepper = {
 		horizontal_alignment = "center",
@@ -311,13 +311,13 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			Dimensions.difficulty_stepper_width,
-			94,
+			94
 		},
 		position = {
 			0,
 			-130,
-			100,
-		},
+			100
+		}
 	},
 	difficulty_stepper_indicators = {
 		horizontal_alignment = "center",
@@ -325,14 +325,14 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			Dimensions.difficulty_stepper_width - 56,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			40,
-		},
-	},
+			40
+		}
+	}
 }
 
 local widget_definitions = {}
@@ -342,8 +342,8 @@ widget_definitions.loading = UIWidget.create_definition({
 	{
 		pass_type = "rect",
 		style = {
-			color = Color.black(127.5, true),
-		},
+			color = Color.black(127.5, true)
+		}
 	},
 	{
 		pass_type = "texture",
@@ -353,17 +353,17 @@ widget_definitions.loading = UIWidget.create_definition({
 			vertical_alignment = "center",
 			size = {
 				256,
-				256,
+				256
 			},
 			offset = {
 				0,
 				0,
-				1,
-			},
-		},
-	},
+				1
+			}
+		}
+	}
 }, "screen", {
-	visible = true,
+	visible = true
 })
 widget_definitions.gamepad_cursor = UIWidget.create_definition({
 	{
@@ -378,13 +378,13 @@ widget_definitions.gamepad_cursor = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				5,
+				5
 			},
 			size_addition = {
 				24,
-				24,
-			},
-		},
+				24
+			}
+		}
 	},
 	{
 		pass_type = "rect",
@@ -397,9 +397,9 @@ widget_definitions.gamepad_cursor = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	{
 		pass_type = "rotated_texture",
@@ -413,13 +413,13 @@ widget_definitions.gamepad_cursor = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				2,
+				2
 			},
 			size = {
 				16,
-				28,
-			},
-		},
+				28
+			}
+		}
 	},
 	{
 		pass_type = "texture",
@@ -433,13 +433,13 @@ widget_definitions.gamepad_cursor = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				3,
+				3
 			},
 			size_addition = {
 				0,
-				0,
-			},
-		},
+				0
+			}
+		}
 	},
 	{
 		pass_type = "texture",
@@ -453,14 +453,14 @@ widget_definitions.gamepad_cursor = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				4,
+				4
 			},
 			size_addition = {
 				15,
-				15,
-			},
-		},
-	},
+				15
+			}
+		}
+	}
 }, "gamepad_cursor")
 widget_definitions.play_button_legend = UIWidget.create_definition({
 	{
@@ -469,9 +469,9 @@ widget_definitions.play_button_legend = UIWidget.create_definition({
 		value = "",
 		value_id = "text",
 		style = {
-			horizontal_alignment = "center",
-		},
-	},
+			horizontal_alignment = "center"
+		}
+	}
 }, "play_button", nil, nil, {
 	text = {
 		font_size = 14,
@@ -482,16 +482,16 @@ widget_definitions.play_button_legend = UIWidget.create_definition({
 		offset = {
 			0,
 			58,
-			2,
-		},
-	},
+			2
+		}
+	}
 })
 widget_definitions.mission_board_screen_frame = UIWidget.create_definition({
 	{
 		pass_type = "texture",
 		style_id = "screen_frame",
 		value = "content/ui/materials/mission_board/mission_board_screen_frame",
-		style = Styles.screen_frame,
+		style = Styles.screen_frame
 	},
 	{
 		pass_type = "rect",
@@ -503,18 +503,18 @@ widget_definitions.mission_board_screen_frame = UIWidget.create_definition({
 				145,
 				0,
 				0,
-				0,
+				0
 			},
 			size = {
 				2500,
-				1080,
+				1080
 			},
 			offset = {
 				2500,
 				0,
-				-1,
-			},
-		},
+				-1
+			}
+		}
 	},
 	{
 		pass_type = "rect",
@@ -526,18 +526,18 @@ widget_definitions.mission_board_screen_frame = UIWidget.create_definition({
 				145,
 				0,
 				0,
-				0,
+				0
 			},
 			size = {
 				2500,
-				1080,
+				1080
 			},
 			offset = {
 				-2500,
 				0,
-				-1,
-			},
-		},
+				-1
+			}
+		}
 	},
 	{
 		pass_type = "texture",
@@ -548,14 +548,14 @@ widget_definitions.mission_board_screen_frame = UIWidget.create_definition({
 			vertical_alignment = "top",
 			size = {
 				1920,
-				2500,
+				2500
 			},
 			offset = {
 				0,
 				-2500,
-				-1,
-			},
-		},
+				-1
+			}
+		}
 	},
 	{
 		pass_type = "texture",
@@ -566,23 +566,23 @@ widget_definitions.mission_board_screen_frame = UIWidget.create_definition({
 			vertical_alignment = "bottom",
 			size = {
 				1920,
-				2500,
+				2500
 			},
 			offset = {
 				0,
 				2500,
-				-1,
-			},
-		},
-	},
+				-1
+			}
+		}
+	}
 }, "canvas")
 widget_definitions.mission_board_screen_frame_glow = UIWidget.create_definition({
 	{
 		pass_type = "texture",
 		style_id = "screen_frame_glow",
 		value = "content/ui/materials/mission_board/mission_board_screen_frame_glow",
-		style = Styles.screen_frame_glow,
-	},
+		style = Styles.screen_frame_glow
+	}
 }, "screen")
 
 local function _progress_bar_change_function(content, style, animations, dt)
@@ -597,12 +597,12 @@ end
 
 local play_button_content_overrides = {
 	gamepad_action = "confirm_pressed",
-	gamepad_input = "confirm",
+	gamepad_input = "confirm"
 }
 local play_button_style_overrides = {
 	text = {
-		line_spacing = 0.7,
-	},
+		line_spacing = 0.7
+	}
 }
 
 widget_definitions.play_button = UIWidget.create_definition({
@@ -610,7 +610,7 @@ widget_definitions.play_button = UIWidget.create_definition({
 		content_id = "hotspot",
 		pass_type = "hotspot",
 		style_id = "hotspot",
-		style = Styles.play_button.hotspot,
+		style = Styles.play_button.hotspot
 	},
 	{
 		pass_type = "texture",
@@ -619,7 +619,7 @@ widget_definitions.play_button = UIWidget.create_definition({
 		style = Styles.play_button.default,
 		visibility_function = function (content, style)
 			return not content.hotspot.disabled
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -633,7 +633,7 @@ widget_definitions.play_button = UIWidget.create_definition({
 		end,
 		visibility_function = function (content, style)
 			return not content.hotspot.disabled
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -673,7 +673,7 @@ widget_definitions.play_button = UIWidget.create_definition({
 				content.was_gamepad_active = InputDevice.gamepad_active
 				content.previous_selected_mission_id = content.current_selected_mission_id
 			end
-		end,
+		end
 	},
 	{
 		Styles.play_button.disabled,
@@ -682,7 +682,7 @@ widget_definitions.play_button = UIWidget.create_definition({
 		value = "content/ui/materials/buttons/mb_play_button_disabled",
 		visibility_function = function (content, style)
 			return content.hotspot.disabled
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -692,8 +692,8 @@ widget_definitions.play_button = UIWidget.create_definition({
 		style = Styles.play_button.disabled_text,
 		visibility_function = function (content, style)
 			return content.hotspot.disabled
-		end,
-	},
+		end
+	}
 }, "play_button", play_button_content_overrides, nil, play_button_style_overrides)
 
 local animations = {}
@@ -721,7 +721,7 @@ animations.mission_enter = {
 			local full_size = widget.content.size
 			local size = {
 				full_size[1] / 8,
-				full_size[2] / 8,
+				full_size[2] / 8
 			}
 
 			style.location_rect.size = size
@@ -729,7 +729,7 @@ animations.mission_enter = {
 			style.location_corner.size = size
 
 			mission_board_view:_play_sound(UISoundEvents.mission_board_show_icon)
-		end,
+		end
 	},
 	{
 		end_time = 0.15,
@@ -739,7 +739,7 @@ animations.mission_enter = {
 			local full_size = widget.content.size
 
 			widget.style.location_rect.size[2] = full_size[2] * (math.ease_in_quad(progress) * 7 / 8 + 0.125)
-		end,
+		end
 	},
 	{
 		end_time = 0.25,
@@ -753,7 +753,7 @@ animations.mission_enter = {
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, mission_board_view)
 			widget.style.location_rect.visible = false
 			widget.style.location_image.visible = true
-		end,
+		end
 	},
 	{
 		end_time = 0.3,
@@ -771,8 +771,8 @@ animations.mission_enter = {
 			style.location_frame.size = nil
 			style.location_corner.size = nil
 			widget.content.enter_anim_id = nil
-		end,
-	},
+		end
+	}
 }
 animations.mission_exit = {
 	{
@@ -789,7 +789,7 @@ animations.mission_exit = {
 			local full_size = widget.content.size
 			local size = {
 				full_size[1],
-				full_size[2],
+				full_size[2]
 			}
 
 			style.location_rect.visible = true
@@ -804,7 +804,7 @@ animations.mission_exit = {
 				0,
 				255,
 				255,
-				255,
+				255
 			}
 
 			mission_board_view:_play_sound(UISoundEvents.mission_board_hide_icon)
@@ -825,8 +825,8 @@ animations.mission_exit = {
 		end,
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, mission_board_view)
 			mission_board_view:_remove_mission_widget(widget)
-		end,
-	},
+		end
+	}
 }
 
 return settings("MissionBoardViewDefinitions", MissionBoardViewDefinitions)

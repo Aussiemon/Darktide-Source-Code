@@ -25,7 +25,7 @@ local function _extract_item(description)
 
 		if visual_item and not visual_item.slots then
 			visual_item.slots = {
-				"slot_trinket_1",
+				"slot_trinket_1"
 			}
 		end
 	end
@@ -46,7 +46,7 @@ Offer.extract_items = function (offer, follow_nested)
 			real_item = real_item,
 			gearId = offer.description.gearId,
 			item = item,
-			offer = offer,
+			offer = offer
 		}
 
 		return items
@@ -64,14 +64,14 @@ Offer.extract_items = function (offer, follow_nested)
 				real_item = real_item,
 				gearId = bundle_offer.description.gearId,
 				item = item,
-				offer = bundle_offer,
+				offer = bundle_offer
 			}
 		elseif follow_nested then
 			items = table.append(items, Offer.extract_items(bundle_offer, follow_nested))
 		else
 			items[#items + 1] = {
 				gearId = bundle_offer.description.gearId,
-				offer = bundle_offer,
+				offer = bundle_offer
 			}
 		end
 	end

@@ -24,8 +24,8 @@ end
 
 PropOutline.component_data = {
 	extensions = {
-		"PropOutlineExtension",
-	},
+		"PropOutlineExtension"
+	}
 }
 
 return PropOutline

@@ -10,15 +10,15 @@ circumstance_templates.plasma_smugglers_default = {
 		"mutator_attack_selection_template_override_plasma",
 		"mutator_only_traitor_guard_faction",
 		"mutator_live_event_plasma_gunner_replacement",
-		"mutator_plasma_smuggler_props",
+		"mutator_plasma_smuggler_props"
 	},
 	ui = {
 		background = "content/ui/materials/backgrounds/mutators/mutators_bg_default",
 		description = "loc_circumstance_plasma_smugglers_default_description",
 		display_name = "loc_circumstance_plasma_smugglers_default_title",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
-		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
-	},
+		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01"
+	}
 }
 circumstance_templates.plasma_smugglers_hunting_grounds = {
 	dialogue_id = "circumstance_vo_hunting_grounds",
@@ -32,7 +32,7 @@ circumstance_templates.plasma_smugglers_hunting_grounds = {
 		"mutator_attack_selection_template_override_plasma",
 		"mutator_only_traitor_guard_faction",
 		"mutator_live_event_plasma_gunner_replacement",
-		"mutator_plasma_smuggler_props",
+		"mutator_plasma_smuggler_props"
 	},
 	ui = {
 		background = "content/ui/materials/backgrounds/mutators/mutators_bg_default",
@@ -40,8 +40,8 @@ circumstance_templates.plasma_smugglers_hunting_grounds = {
 		display_name = "loc_circumstance_plasma_smugglers_hunting_grounds_title",
 		happening_display_name = "loc_happening_hunting_grounds",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
-		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
-	},
+		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01"
+	}
 }
 circumstance_templates.plasma_smugglers_increased_resistance = {
 	theme_tag = "default",
@@ -51,15 +51,15 @@ circumstance_templates.plasma_smugglers_increased_resistance = {
 		"mutator_attack_selection_template_override_plasma",
 		"mutator_only_traitor_guard_faction",
 		"mutator_live_event_plasma_gunner_replacement",
-		"mutator_plasma_smuggler_props",
+		"mutator_plasma_smuggler_props"
 	},
 	ui = {
 		background = "content/ui/materials/backgrounds/mutators/mutators_bg_default",
 		description = "loc_circumstance_plasma_smugglers_increased_resistance_description",
 		display_name = "loc_circumstance_plasma_smugglers_increased_resistance_title",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
-		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
-	},
+		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01"
+	}
 }
 circumstance_templates.plasma_smugglers_darkness = {
 	dialogue_id = "circumstance_vo_darkness",
@@ -73,7 +73,7 @@ circumstance_templates.plasma_smugglers_darkness = {
 		"mutator_attack_selection_template_override_plasma",
 		"mutator_only_traitor_guard_faction",
 		"mutator_live_event_plasma_gunner_replacement",
-		"mutator_plasma_smuggler_props",
+		"mutator_plasma_smuggler_props"
 	},
 	ui = {
 		background = "content/ui/materials/backgrounds/mutators/mutators_bg_default",
@@ -81,8 +81,8 @@ circumstance_templates.plasma_smugglers_darkness = {
 		display_name = "loc_circumstance_plasma_smugglers_darkness_title",
 		happening_display_name = "loc_happening_darkness",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
-		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
-	},
+		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01"
+	}
 }
 circumstance_templates.plasma_smugglers_toxic_gas = {
 	dialogue_id = "circumstance_vo_toxic_gas",
@@ -94,7 +94,7 @@ circumstance_templates.plasma_smugglers_toxic_gas = {
 		"mutator_attack_selection_template_override_plasma",
 		"mutator_only_traitor_guard_faction",
 		"mutator_live_event_plasma_gunner_replacement",
-		"mutator_plasma_smuggler_props",
+		"mutator_plasma_smuggler_props"
 	},
 	ui = {
 		background = "content/ui/materials/backgrounds/mutators/mutators_bg_default",
@@ -102,9 +102,9 @@ circumstance_templates.plasma_smugglers_toxic_gas = {
 		display_name = "loc_circumstance_plasma_smugglers_toxic_gas_title",
 		happening_display_name = "loc_happening_ventilation_purge",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
-		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
+		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01"
 	},
-	mission_overrides = MissionOverrides.more_corruption_syringes,
+	mission_overrides = MissionOverrides.more_corruption_syringes
 }
 circumstance_templates.plasma_smugglers_ventilation = {
 	dialogue_id = "circumstance_vo_ventilation_purge",
@@ -117,7 +117,7 @@ circumstance_templates.plasma_smugglers_ventilation = {
 		"mutator_attack_selection_template_override_plasma",
 		"mutator_only_traitor_guard_faction",
 		"mutator_live_event_plasma_gunner_replacement",
-		"mutator_plasma_smuggler_props",
+		"mutator_plasma_smuggler_props"
 	},
 	ui = {
 		background = "content/ui/materials/backgrounds/mutators/mutators_bg_default",
@@ -125,8 +125,8 @@ circumstance_templates.plasma_smugglers_ventilation = {
 		display_name = "loc_circumstance_plasma_smugglers_ventilation_title",
 		happening_display_name = "loc_happening_ventilation_purge",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
-		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
-	},
+		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01"
+	}
 }
 circumstance_templates.plasma_smugglers_waves_of_specials = {
 	theme_tag = "default",
@@ -140,15 +140,15 @@ circumstance_templates.plasma_smugglers_waves_of_specials = {
 		"mutator_attack_selection_template_override_plasma",
 		"mutator_only_traitor_guard_faction",
 		"mutator_live_event_plasma_gunner_replacement",
-		"mutator_plasma_smuggler_props",
+		"mutator_plasma_smuggler_props"
 	},
 	ui = {
 		background = "content/ui/materials/backgrounds/mutators/mutators_bg_default",
 		description = "loc_circumstance_plasma_smugglers_waves_of_specials_description",
 		display_name = "loc_circumstance_plasma_smugglers_waves_of_specials_title",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
-		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
-	},
+		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01"
+	}
 }
 
 return circumstance_templates

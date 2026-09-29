@@ -14,8 +14,8 @@ shout_target_templates.adamant_shout = {
 		force_stagger_duration = 2.5,
 		force_stagger_type = "light",
 		power_level = 1000,
-		damage_profile = DamageProfileTemplates.adamant_shout,
-	},
+		damage_profile = DamageProfileTemplates.adamant_shout
+	}
 }
 shout_target_templates.adamant_shout_improved = {
 	owner = nil,
@@ -25,12 +25,12 @@ shout_target_templates.adamant_shout_improved = {
 		force_stagger_duration = 2.5,
 		force_stagger_type = "light",
 		power_level = 1000,
-		damage_profile = DamageProfileTemplates.adamant_shout,
+		damage_profile = DamageProfileTemplates.adamant_shout
 	},
 	allies = {
 		shout_restores_toughness = true,
-		toughness_replenish_percent = talent_settings_adamant.combat_ability.shout_improved.toughness,
-	},
+		toughness_replenish_percent = talent_settings_adamant.combat_ability.shout_improved.toughness
+	}
 }
 shout_target_templates.broker_rage_shout = {
 	owner = nil,
@@ -41,12 +41,12 @@ shout_target_templates.broker_rage_shout = {
 		force_stagger_type_if_not_staggered = "heavy",
 		force_stagger_type_if_not_staggered_duration = 2.5,
 		power_level = 500,
-		damage_profile = DamageProfileTemplates.broker_punk_rage_shout,
+		damage_profile = DamageProfileTemplates.broker_punk_rage_shout
 	},
 	allies = {
 		buff_to_add = nil,
-		revive_allies = true,
-	},
+		revive_allies = true
+	}
 }
 shout_target_templates.veteran_shout = {
 	owner = nil,
@@ -57,12 +57,12 @@ shout_target_templates.veteran_shout = {
 		force_stagger_type_if_not_staggered = "heavy",
 		force_stagger_type_if_not_staggered_duration = 2.5,
 		power_level = 500,
-		damage_profile = DamageProfileTemplates.shout_stagger_veteran,
+		damage_profile = DamageProfileTemplates.shout_stagger_veteran
 	},
 	allies = {
 		buff_to_add = nil,
-		revive_allies = true,
-	},
+		revive_allies = true
+	}
 }
 shout_target_templates.ogryn_shout = {
 	allies = nil,
@@ -78,14 +78,14 @@ shout_target_templates.ogryn_shout = {
 		buff_ignored_breeds = {
 			chaos_daemonhost = true,
 			chaos_mutator_daemonhost = true,
-			chaos_mutator_ritualist = true,
+			chaos_mutator_ritualist = true
 		},
 		ignored_breeds = {
 			chaos_mutator_daemonhost = true,
-			chaos_mutator_ritualist = true,
+			chaos_mutator_ritualist = true
 		},
-		damage_profile = DamageProfileTemplates.shout_stagger_ogryn_taunt,
-	},
+		damage_profile = DamageProfileTemplates.shout_stagger_ogryn_taunt
+	}
 }
 shout_target_templates.ogryn_shout_no_stagger = table.clone(shout_target_templates.ogryn_shout)
 shout_target_templates.ogryn_shout_no_stagger.enemies.power_level = 0
@@ -102,8 +102,8 @@ shout_target_templates.hordes_zealot_lunge_shout = {
 		force_stagger_type_if_not_staggered = "heavy",
 		force_stagger_type_if_not_staggered_duration = 2.5,
 		power_level = 500,
-		damage_profile = DamageProfileTemplates.shout_stagger_veteran,
-	},
+		damage_profile = DamageProfileTemplates.shout_stagger_veteran
+	}
 }
 
 return settings("ShoutTargetTemplates", shout_target_templates)

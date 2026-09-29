@@ -53,8 +53,8 @@ AchievementClassGroups.classes = {
 			"veteran_2_kills_with_last_round_in_mag",
 			"veteran_2_no_melee_damage_taken",
 			"veteran_2_elite_weakspot_kills_during_volley_fire_alternate_fire",
-			"veteran_2_no_missed_shots_empty_ammo",
-		},
+			"veteran_2_no_missed_shots_empty_ammo"
+		}
 	},
 	{
 		category = "zealot_progression",
@@ -106,8 +106,8 @@ AchievementClassGroups.classes = {
 			"zealot_2_kills_of_shocked_enemies_last_15",
 			"zealot_2_not_use_ranged_attacks",
 			"zealot_2_healed_up_after_resisting_death",
-			"zealot_2_health_on_last_segment_enough_during_mission",
-		},
+			"zealot_2_health_on_last_segment_enough_during_mission"
+		}
 	},
 	{
 		category = "psyker_progression",
@@ -159,8 +159,8 @@ AchievementClassGroups.classes = {
 			"psyker_team_elite_aura_kills",
 			"psyker_team_cooldown_reduced",
 			"psyker_team_critical_hits",
-			"psyker_threshold_kills_reached_with_grenade_chain",
-		},
+			"psyker_threshold_kills_reached_with_grenade_chain"
+		}
 	},
 	{
 		category = "ogryn_progression",
@@ -213,8 +213,8 @@ AchievementClassGroups.classes = {
 			"ogryn_leadbelcher_free_shot",
 			"ogryn_team_heavy_aura_kills",
 			"ogryn_team_suppressed_aura_kills",
-			"ogryn_team_toughness_restored_aura",
-		},
+			"ogryn_team_toughness_restored_aura"
+		}
 	},
 	{
 		category = "adamant_progression",
@@ -266,8 +266,8 @@ AchievementClassGroups.classes = {
 			"adamant_killed_enemies_marked_by_execution_order",
 			"adamant_melee_kills_with_terminus_warrant",
 			"adamant_ranged_kills_with_terminus_warrant",
-			"adamant_time_at_max_forceful_stacks",
-		},
+			"adamant_time_at_max_forceful_stacks"
+		}
 	},
 	{
 		category = "broker_progression",
@@ -319,8 +319,8 @@ AchievementClassGroups.classes = {
 			"broker_stimm_combat_potency",
 			"broker_stimm_heavy_attack_kills",
 			"broker_stimm_durability_potency",
-			"broker_stimm_apply_toxin",
-		},
+			"broker_stimm_apply_toxin"
+		}
 	},
 	{
 		category = "cryptic_progression",
@@ -372,9 +372,9 @@ AchievementClassGroups.classes = {
 			"cryptic_win_using_power_generation_keystone_and_abilities_combo",
 			"cryptic_win_using_dissector_keystone_and_abilities_combo",
 			"cryptic_restore_ability_charges_using_power_generation",
-			"cryptic_percent_mission_won_with_dissector_stacks",
-		},
-	},
+			"cryptic_percent_mission_won_with_dissector_stacks"
+		}
+	}
 }
 
 return AchievementClassGroups

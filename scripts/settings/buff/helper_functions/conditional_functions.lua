@@ -10,7 +10,7 @@ local ConditionalFunctions = {}
 
 ConditionalFunctions.all = function (...)
 	local conditions = {
-		...,
+		...
 	}
 
 	return function (...)
@@ -26,7 +26,7 @@ end
 
 ConditionalFunctions.any = function (...)
 	local conditions = {
-		...,
+		...
 	}
 
 	return function (...)
@@ -74,7 +74,7 @@ end
 local reloading_states = {
 	reload_shotgun = true,
 	reload_state = true,
-	vent_overheat = true,
+	vent_overheat = true
 }
 
 ConditionalFunctions.has_stamina = function (template_data, template_context)

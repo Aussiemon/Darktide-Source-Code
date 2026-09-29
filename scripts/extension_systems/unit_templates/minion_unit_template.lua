@@ -14,6 +14,12 @@ local function _initialize_breed_specific_game_object_data(game_object_type, gam
 		game_object_data.effect_template_variation_id = -1
 		game_object_data.level_unit_id = NetworkConstants.invalid_level_unit_id
 	end
+
+	if game_object_type == "minion_wizard_boss" then
+		game_object_data.safe_zone = 21
+		game_object_data.time_t_stop = 1
+		game_object_data.arming_t = 1
+	end
 end
 
 local minion_unit_template = {
@@ -56,34 +62,34 @@ local minion_unit_template = {
 		_, voice_selection_seed = math.random_seed(next_seed)
 
 		config:add("BlackboardExtension", {
-			component_config = blackboard_component_config,
+			component_config = blackboard_component_config
 		})
 		config:add("BroadphaseExtension", {
 			moving = true,
 			radius = broadphase_radius,
-			categories = broadphase_categories,
+			categories = broadphase_categories
 		})
 
 		if breed.aim_config then
 			config:add("MinionRangedAimExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
 		config:add("MinionUnitDataExtension", {
-			breed = breed,
+			breed = breed
 		})
 
 		if breed.attack_intensity_cooldowns then
 			config:add("MinionAttackIntensityExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
 		config:add("MinionBuffExtension", {
 			buff_seed = buff_seed,
 			breed = breed,
-			initial_buffs = spawn_buffs,
+			initial_buffs = spawn_buffs
 		})
 
 		local inventory, attack_selection_template_name, selected_attack_names, phase_template, combat_range_multi_config_key
@@ -92,29 +98,29 @@ local minion_unit_template = {
 
 		config:add("MinionAnimationExtension", {
 			breed = breed,
-			random_seed = animation_seed,
+			random_seed = animation_seed
 		})
 
 		if inventory then
 			config:add("MinionVisualLoadoutExtension", {
 				breed = breed,
 				random_seed = inventory_seed,
-				inventory = inventory,
+				inventory = inventory
 			})
 		end
 
 		config:add("MinionFxExtension", {
-			breed = breed,
+			breed = breed
 		})
 		config:add("MinionLocomotionExtension", {
-			breed = breed,
+			breed = breed
 		})
 		config:add("MinionNavigationExtension", {
-			breed = breed,
+			breed = breed
 		})
 		config:add("SideExtension", {
 			side_id = side_id,
-			breed = breed,
+			breed = breed
 		})
 
 		local optional_mission_objective_id = init_data.optional_mission_objective_id
@@ -134,19 +140,19 @@ local minion_unit_template = {
 			breed = breed,
 			aggro_state = optional_aggro_state,
 			target_unit = optional_target_unit,
-			is_perception_disabled = should_perception_be_disabled,
+			is_perception_disabled = should_perception_be_disabled
 		})
 
 		if breed.cover_config then
 			config:add("CoverUserExtension", {
 				breed = breed,
-				side_id = side_id,
+				side_id = side_id
 			})
 		end
 
 		if breed.combat_vector_config then
 			config:add("CombatVectorUserExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
@@ -155,7 +161,7 @@ local minion_unit_template = {
 		if optional_group_id then
 			config:add("MinionGroupExtension", {
 				breed = breed,
-				group_id = optional_group_id,
+				group_id = optional_group_id
 			})
 
 			game_object_data.group_id = optional_group_id
@@ -163,7 +169,7 @@ local minion_unit_template = {
 
 		if breed.suppress_config then
 			config:add("MinionSuppressionExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
@@ -186,36 +192,36 @@ local minion_unit_template = {
 			has_health_bar = has_health_bar,
 			hit_mass = hit_mass,
 			is_unkillable = is_unkillable,
-			is_invulnerable = is_invulnerable,
+			is_invulnerable = is_invulnerable
 		})
 		config:add("MinionVolumeEventExtension")
 
 		if breed.shield_template then
 			config:add("MinionShieldExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
 		if breed.summon_minions_template then
 			config:add("SummonedMinionsExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
 		if breed.slot_template then
 			config:add("SlotUserExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
 		config:add("MinionProximityExtension", {
 			side_id = side_id,
-			breed = breed,
+			breed = breed
 		})
 
 		if not breed.always_update_unit then
 			config:add("PhysicsUnitProximityActorExtension", {
-				time_caching_enabled = true,
+				time_caching_enabled = true
 			})
 		end
 
@@ -223,7 +229,7 @@ local minion_unit_template = {
 			config:add("PointOfInterestTargetExtension", {
 				is_dynamic = true,
 				tag = breed.look_at_tag,
-				view_distance = breed.look_at_distance,
+				view_distance = breed.look_at_distance
 			})
 		end
 
@@ -233,7 +239,7 @@ local minion_unit_template = {
 			config:add("DialogueExtension", {
 				local_player = false,
 				breed = breed,
-				seed = voice_selection_seed,
+				seed = voice_selection_seed
 			})
 		end
 
@@ -246,7 +252,7 @@ local minion_unit_template = {
 
 			config:add("MinionToughnessExtension", {
 				breed = breed,
-				start_depleted = start_depleted,
+				start_depleted = start_depleted
 			})
 		end
 
@@ -260,13 +266,13 @@ local minion_unit_template = {
 			config:add("BossExtension", {
 				breed = breed,
 				seed = boss_seed,
-				start_depleted = start_depleted,
+				start_depleted = start_depleted
 			})
 		end
 
 		if breed.use_wounds then
 			config:add("WoundsExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
@@ -274,21 +280,21 @@ local minion_unit_template = {
 
 		if breed.smart_tag_target_type then
 			config:add("SmartTagExtension", {
-				target_type = breed.smart_tag_target_type,
+				target_type = breed.smart_tag_target_type
 			})
 			config:add("MinionOutlineExtension", {
-				breed = breed,
+				breed = breed
 			})
 		else
 			config:add("MinionOutlineExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
 		local behavior_extension_init_data = {
 			breed = breed,
 			behavior_tree_name = behavior_tree_name,
-			selected_attack_names = selected_attack_names,
+			selected_attack_names = selected_attack_names
 		}
 
 		behavior_extension_init_data.owning_auto_event_id = init_data.optional_owning_auto_event_id
@@ -305,25 +311,25 @@ local minion_unit_template = {
 
 		if breed.weakspot_config then
 			config:add("WeakspotExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
 		if breed.dissolve_config then
 			config:add("MinionDissolveExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
 		if breed.tokens then
 			config:add("TokenExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
 		if breed.flee_settings then
 			config:add("FleeExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
@@ -333,7 +339,7 @@ local minion_unit_template = {
 			local extension_name = scripted_animation_settings.extension_name
 
 			config:add(extension_name, {
-				breed = breed,
+				breed = breed
 			})
 		end
 
@@ -378,15 +384,15 @@ local minion_unit_template = {
 		config:add("BroadphaseExtension", {
 			moving = true,
 			radius = broadphase_radius,
-			categories = broadphase_categories,
+			categories = broadphase_categories
 		})
 		config:add("MinionUnitDataExtension", {
-			breed = breed,
+			breed = breed
 		})
 
 		if breed.aim_config then
 			config:add("MinionRangedHuskAimExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
@@ -396,31 +402,31 @@ local minion_unit_template = {
 
 		config:add("MinionAnimationExtension", {
 			breed = breed,
-			random_seed = animation_seed,
+			random_seed = animation_seed
 		})
 
 		if inventory then
 			config:add("MinionVisualLoadoutExtension", {
 				breed = breed,
 				random_seed = inventory_seed,
-				inventory = inventory,
+				inventory = inventory
 			})
 		end
 
 		config:add("MinionFxExtension", {
-			breed = breed,
+			breed = breed
 		})
 		config:add("MinionHuskLocomotionExtension", {
-			breed = breed,
+			breed = breed
 		})
 		config:add("MinionHuskNavigationExtension")
 		config:add("SideExtension", {
 			side_id = side_id,
-			breed = breed,
+			breed = breed
 		})
 		config:add("MinionBuffExtension", {
 			buff_seed = buff_seed,
-			breed = breed,
+			breed = breed
 		})
 
 		if GameSession.has_game_object_field(game_session, game_object_id, "group_id") then
@@ -428,55 +434,55 @@ local minion_unit_template = {
 
 			config:add("MinionGroupExtension", {
 				breed = breed,
-				group_id = group_id,
+				group_id = group_id
 			})
 		end
 
 		if breed.suppress_config then
 			config:add("MinionSuppressionHuskExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
 		local has_health_bar = breed.has_health_bar
 
 		config:add("HuskHealthExtension", {
-			has_health_bar = has_health_bar,
+			has_health_bar = has_health_bar
 		})
 
 		if breed.shield_template then
 			config:add("MinionHuskShieldExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
 		if breed.toughness_template then
 			config:add("MinionToughnessHuskExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
 		if breed.is_boss then
 			config:add("BossExtension", {
 				breed = breed,
-				seed = boss_seed,
+				seed = boss_seed
 			})
 		end
 
 		if breed.use_wounds then
 			config:add("WoundsExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
 		config:add("MinionProximityExtension", {
 			side_id = side_id,
-			breed = breed,
+			breed = breed
 		})
 
 		if not breed.always_update_unit then
 			config:add("PhysicsUnitProximityActorExtension", {
-				time_caching_enabled = false,
+				time_caching_enabled = false
 			})
 		end
 
@@ -492,7 +498,7 @@ local minion_unit_template = {
 			config:add("DialogueExtension", {
 				local_player = false,
 				breed = breed,
-				seed = voice_selection_seed,
+				seed = voice_selection_seed
 			})
 		end
 
@@ -500,13 +506,13 @@ local minion_unit_template = {
 
 		if breed.dissolve_config then
 			config:add("MinionDissolveExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
 		if breed.tokens then
 			config:add("TokenExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
@@ -516,26 +522,26 @@ local minion_unit_template = {
 			local extension_name = scripted_animation_settings.extension_name
 
 			config:add(extension_name, {
-				breed = breed,
+				breed = breed
 			})
 		end
 
 		if breed.smart_tag_target_type then
 			config:add("SmartTagExtension", {
-				target_type = breed.smart_tag_target_type,
+				target_type = breed.smart_tag_target_type
 			})
 			config:add("MinionOutlineExtension", {
-				breed = breed,
+				breed = breed
 			})
 		else
 			config:add("MinionOutlineExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 	end,
 	pre_unit_destroyed = function (unit)
 		Managers.state.decal:remove_linked_decals(unit)
-	end,
+	end
 }
 
 return minion_unit_template

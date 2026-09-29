@@ -21,10 +21,10 @@ local widget_definitions = {
 					255,
 					0,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "center_pivot", nil, ScannerDisplayViewDecodeSearchSettings.cursor_widget_size),
 	symbol_highlight = UIWidget.create_definition({
 		{
@@ -37,16 +37,16 @@ local widget_definitions = {
 					255,
 					0,
 					0,
-					0,
-				},
-			},
-		},
-	}, "center_pivot", nil, ScannerDisplayViewDecodeSearchSettings.cursor_widget_size),
+					0
+				}
+			}
+		}
+	}, "center_pivot", nil, ScannerDisplayViewDecodeSearchSettings.cursor_widget_size)
 }
 
 return {
 	decode_search = {
 		widget_definitions = widget_definitions,
-		scenegraph_definition = scenegraph_definition,
-	},
+		scenegraph_definition = scenegraph_definition
+	}
 }

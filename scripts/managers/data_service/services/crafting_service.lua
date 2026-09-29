@@ -308,7 +308,7 @@ CraftingService.extract_weapon_mastery = function (self, mastery_id, gear_ids)
 
 	return self:_extract_weapon_mastery_batches(track_id, gear_batches, {
 		amount = 0,
-		gear_ids = {},
+		gear_ids = {}
 	})
 end
 

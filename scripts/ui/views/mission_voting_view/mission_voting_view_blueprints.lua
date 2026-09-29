@@ -10,29 +10,29 @@ local Text = require("scripts/utilities/ui/text")
 local ViewStyles = require("scripts/ui/views/mission_voting_view/mission_voting_view_styles")
 local blueprint_styles = ViewStyles.blueprints
 local icons = {
-	loot = "content/ui/materials/icons/generic/loot",
+	loot = "content/ui/materials/icons/generic/loot"
 }
 local quickplay_data = {
 	default = {
 		icon = "content/ui/materials/icons/mission_types/mission_type_quick",
 		image = "content/ui/textures/icons/zones/zone_quickplay",
 		mission_title = "loc_mission_board_quickplay_header",
-		mission_type = "loc_mission_board_view_header_tertium_hive",
+		mission_type = "loc_mission_board_view_header_tertium_hive"
 	},
 	expedition = {
 		icon = "content/ui/materials/icons/mission_types/mission_type_quick",
 		image = "content/ui/textures/icons/zones/zone_deadside",
 		mission_title = "loc_mission_board_quickplay_header",
-		mission_type = "loc_mission_name_exp_wastes",
-	},
+		mission_type = "loc_mission_name_exp_wastes"
+	}
 }
 local button_strings = {
 	hide_details = "loc_mission_voting_view_hide_details",
 	show_details = "loc_mission_voting_view_show_details",
 	selectable_buttons = {
 		accept_button = "loc_mission_voting_view_accept_mission",
-		decline_button = "loc_mission_voting_view_decline_mission",
-	},
+		decline_button = "loc_mission_voting_view_decline_mission"
+	}
 }
 
 local function has_side_mission(mission_data)
@@ -58,7 +58,7 @@ local function calculate_text_height(widget, text_and_style_id, ui_renderer)
 	local text_style = widget.style[text_and_style_id]
 	local size = {
 		text_style.size[1],
-		1000,
+		1000
 	}
 
 	return Text.text_height(ui_renderer, text, text_style, size)
@@ -69,32 +69,32 @@ local details_widgets_blueprints = {
 		main_objective = {
 			size = {
 				520,
-				130,
+				130
 			},
 			pass_template = {
 				{
 					pass_type = "text",
 					style_id = "objective_header",
 					value = "",
-					value_id = "objective_header",
+					value_id = "objective_header"
 				},
 				{
 					pass_type = "texture",
 					style_id = "main_objective_icon",
-					value_id = "main_objective_icon",
+					value_id = "main_objective_icon"
 				},
 				{
 					pass_type = "text",
 					style_id = "body_text",
 					value = "BODY TEXT",
-					value_id = "body_text",
+					value_id = "body_text"
 				},
 				{
 					pass_type = "text",
 					style_id = "rewards_text",
 					value = "",
-					value_id = "rewards_text",
-				},
+					value_id = "rewards_text"
+				}
 			},
 			style = blueprint_styles.main_objective,
 			init = function (widget, data, ui_renderer)
@@ -122,7 +122,7 @@ local details_widgets_blueprints = {
 
 				header_text_style.offset[1] = text_x_offset
 				header_text_style.size = {
-					widget.content.size[1] - header_text_style.offset[1],
+					widget.content.size[1] - header_text_style.offset[1]
 				}
 
 				local header_text_height = calculate_text_height(widget, "objective_header", ui_renderer)
@@ -132,10 +132,10 @@ local details_widgets_blueprints = {
 				body_text_style.offset = {
 					text_x_offset,
 					body_text_y_offset,
-					1,
+					1
 				}
 				body_text_style.size = {
-					widget.content.size[1] - body_text_style.offset[1],
+					widget.content.size[1] - body_text_style.offset[1]
 				}
 
 				local body_text_height = calculate_text_height(widget, "body_text", ui_renderer)
@@ -145,38 +145,38 @@ local details_widgets_blueprints = {
 				rewards_text_style.offset = {
 					text_x_offset,
 					rewards_y_offset,
-					10,
+					10
 				}
 				widget.content.size[2] = rewards_text_style.offset[2] + 20
-			end,
+			end
 		},
 		side_mission = {
 			size = {
 				520,
-				100,
+				100
 			},
 			pass_template = {
 				{
 					pass_type = "text",
 					style_id = "objective_header",
-					value_id = "objective_header",
+					value_id = "objective_header"
 				},
 				{
 					pass_type = "texture",
 					style_id = "objective_icon",
-					value_id = "objective_icon",
+					value_id = "objective_icon"
 				},
 				{
 					pass_type = "text",
 					style_id = "body_text",
-					value_id = "body_text",
+					value_id = "body_text"
 				},
 				{
 					pass_type = "text",
 					style_id = "rewards_text",
 					value = "",
-					value_id = "rewards_text",
-				},
+					value_id = "rewards_text"
+				}
 			},
 			style = blueprint_styles.side_mission,
 			init = function (widget, data, ui_renderer)
@@ -217,10 +217,10 @@ local details_widgets_blueprints = {
 				objective_header_style.offset = {
 					text_x_offset,
 					0,
-					1,
+					1
 				}
 				objective_header_style.size = {
-					widget.content.size[1] - objective_header_style.offset[1],
+					widget.content.size[1] - objective_header_style.offset[1]
 				}
 
 				local objective_header_height = calculate_text_height(widget, "objective_header", ui_renderer)
@@ -229,10 +229,10 @@ local details_widgets_blueprints = {
 				body_text_style.offset = {
 					text_x_offset,
 					body_text_y_offset,
-					1,
+					1
 				}
 				body_text_style.size = {
-					widget.content.size[1] - body_text_style.offset[1],
+					widget.content.size[1] - body_text_style.offset[1]
 				}
 
 				local body_text_height = calculate_text_height(widget, "body_text", ui_renderer)
@@ -241,32 +241,32 @@ local details_widgets_blueprints = {
 				rewards_text_style.offset = {
 					text_x_offset,
 					reward_text_y_offset,
-					1,
+					1
 				}
 				widget.content.size[2] = rewards_text_style.offset[2] + 20
-			end,
+			end
 		},
 		circumstance = {
 			size = {
 				520,
-				100,
+				100
 			},
 			pass_template = {
 				{
 					pass_type = "text",
 					style_id = "circumstance_title",
-					value_id = "circumstance_title",
+					value_id = "circumstance_title"
 				},
 				{
 					pass_type = "texture",
 					style_id = "circumstance_icon",
-					value_id = "circumstance_icon",
+					value_id = "circumstance_icon"
 				},
 				{
 					pass_type = "text",
 					style_id = "body_text",
-					value_id = "body_text",
-				},
+					value_id = "body_text"
+				}
 			},
 			style = blueprint_styles.circumstance,
 			init = function (widget, data, ui_renderer)
@@ -296,7 +296,7 @@ local details_widgets_blueprints = {
 				style.circumstance_icon.offset = {
 					0,
 					0,
-					1,
+					1
 				}
 
 				local circumstance_title_style = style.circumstance_title
@@ -304,10 +304,10 @@ local details_widgets_blueprints = {
 				circumstance_title_style.offset = {
 					text_x_offset,
 					0,
-					1,
+					1
 				}
 				circumstance_title_style.size = {
-					widget.content.size[1] - circumstance_title_style.offset[1],
+					widget.content.size[1] - circumstance_title_style.offset[1]
 				}
 
 				local circumstance_title_height = calculate_text_height(widget, "circumstance_title", ui_renderer)
@@ -317,16 +317,16 @@ local details_widgets_blueprints = {
 				body_text_style.offset = {
 					text_x_offset,
 					body_text_y_offset,
-					1,
+					1
 				}
 				body_text_style.size = {
-					widget.content.size[1] - body_text_style.offset[1],
+					widget.content.size[1] - body_text_style.offset[1]
 				}
 
 				local body_text_height = calculate_text_height(widget, "body_text", ui_renderer)
 
 				widget.content.size[2] = body_text_y_offset + body_text_height
-			end,
+			end
 		},
 		dynamic_spacing = {
 			pass_template = {
@@ -338,15 +338,15 @@ local details_widgets_blueprints = {
 						offset = {
 							0,
 							0,
-							0,
+							0
 						},
-						color = Color.terminal_frame(25, true),
-					},
-				},
+						color = Color.terminal_frame(25, true)
+					}
+				}
 			},
 			size = {
 				0,
-				0,
+				0
 			},
 			init = function (widget, data)
 				local style = widget.style
@@ -355,19 +355,19 @@ local details_widgets_blueprints = {
 			end,
 			size_function = function (data)
 				return data.size
-			end,
+			end
 		},
 		category_name = {
 			size = {
 				515,
-				50,
+				50
 			},
 			pass_template = {
 				{
 					pass_type = "text",
 					style_id = "text",
-					value_id = "text",
-				},
+					value_id = "text"
+				}
 			},
 			style = blueprint_styles.category_name,
 			init = function (widget, data)
@@ -378,34 +378,34 @@ local details_widgets_blueprints = {
 				end
 
 				widget.content.text = title_text
-			end,
+			end
 		},
 		bonus = {
 			size = {
 				450,
-				64,
+				64
 			},
 			pass_template = {
 				{
 					pass_type = "texture",
 					style_id = "icon",
-					value_id = "icon",
+					value_id = "icon"
 				},
 				{
 					pass_type = "text",
 					style_id = "title",
-					value_id = "title",
+					value_id = "title"
 				},
 				{
 					pass_type = "text",
 					style_id = "description",
-					value_id = "description",
-				},
+					value_id = "description"
+				}
 			},
-			style = blueprint_styles.detail,
-		},
+			style = blueprint_styles.detail
+		}
 	},
-	utility_functions = {},
+	utility_functions = {}
 }
 
 details_widgets_blueprints.utility_functions.prepare_details_data = function (mission_data, include_mission_header)
@@ -417,8 +417,8 @@ details_widgets_blueprints.utility_functions.prepare_details_data = function (mi
 		widget_data = {
 			map = mission_data.map,
 			xp = mission_data.xp,
-			credits = mission_data.credits,
-		},
+			credits = mission_data.credits
+		}
 	}
 
 	if has_side_mission then
@@ -426,8 +426,8 @@ details_widgets_blueprints.utility_functions.prepare_details_data = function (mi
 			template = "side_mission",
 			widget_data = {
 				side_mission = mission_data.sideMission,
-				extraRewards = mission_data.extraRewards,
-			},
+				extraRewards = mission_data.extraRewards
+			}
 		}
 	end
 
@@ -440,8 +440,8 @@ details_widgets_blueprints.utility_functions.prepare_details_data = function (mi
 			details_data[#details_data + 1] = {
 				template = "circumstance",
 				widget_data = {
-					circumstance = circumstance,
-				},
+					circumstance = circumstance
+				}
 			}
 		end
 	end
@@ -458,8 +458,8 @@ details_widgets_blueprints.utility_functions.prepare_details_data = function (mi
 					details_data[#details_data + 1] = {
 						template = "circumstance",
 						widget_data = {
-							circumstance = circumstance,
-						},
+							circumstance = circumstance
+						}
 					}
 				end
 			end

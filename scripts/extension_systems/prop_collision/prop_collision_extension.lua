@@ -2,7 +2,7 @@
 
 local PropCollisionExtension = class("PropCollisionExtension")
 local BROADPHASE_CATEGORIES = {
-	"prop_collision",
+	"prop_collision"
 }
 
 PropCollisionExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)

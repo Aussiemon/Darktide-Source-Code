@@ -23,7 +23,7 @@ local area_of_effect_unit_spawner_unit_template = {
 			aoe_template_name = aoe_template_name,
 			source_position = unit_template_parameters.source_position,
 			salvo_seed = salvo_seed,
-			owner_unit = owner_unit,
+			owner_unit = owner_unit
 		})
 		config:parse_unit(unit)
 
@@ -51,10 +51,10 @@ local area_of_effect_unit_spawner_unit_template = {
 			aoe_template_name = aoe_template_name,
 			source_position = source_position,
 			salvo_seed = salvo_seed,
-			owner_unit = owner_unit,
+			owner_unit = owner_unit
 		})
 		config:parse_unit(unit)
-	end,
+	end
 }
 
 return area_of_effect_unit_spawner_unit_template

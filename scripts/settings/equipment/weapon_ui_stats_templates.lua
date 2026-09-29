@@ -24,100 +24,100 @@ local default_attack_settings = {
 	DAMAGE_ALL,
 	ArmorSettings.types.berserker,
 	DAMAGE_ALL,
-	DAMAGE_ALL,
+	DAMAGE_ALL
 }
 local default_stats = {
 	{
 		"diminishing_return_start",
 		target = "base",
 		ui_identifier = "effective_dodges",
-		template_type = template_types.dodge,
+		template_type = template_types.dodge
 	},
 	{
 		"distance_scale",
 		target = "base",
 		ui_identifier = "dodge_distance",
-		template_type = template_types.dodge,
+		template_type = template_types.dodge
 	},
 	{
 		"sprint_speed_mod",
 		target = "base",
 		ui_identifier = "sprint_speed",
-		template_type = template_types.sprint,
+		template_type = template_types.sprint
 	},
 	{
 		"stamina_modifier",
 		target = "base",
 		ui_identifier = "stamina",
-		template_type = template_types.stamina,
+		template_type = template_types.stamina
 	},
 	{
 		"sprint_cost_per_second",
 		target = "base",
 		ui_identifier = "sprint_cost",
-		template_type = template_types.stamina,
+		template_type = template_types.stamina
 	},
 	{
 		"ammunition_clips",
 		1,
 		target = "base",
 		ui_identifier = "ammo_clip",
-		template_type = template_types.ammo,
+		template_type = template_types.ammo
 	},
 	{
 		"ammunition_reserve",
 		target = "base",
 		ui_identifier = "ammo_reserve",
-		template_type = template_types.ammo,
+		template_type = template_types.ammo
 	},
 	{
 		"block_cost_melee",
 		"inner",
 		target = "base",
-		template_type = template_types.stamina,
+		template_type = template_types.stamina
 	},
 	{
 		"block_cost_ranged",
 		"inner",
 		target = "base",
-		template_type = template_types.stamina,
+		template_type = template_types.stamina
 	},
 	{
 		"block_cost_default",
 		"inner",
 		target = "base",
-		template_type = template_types.stamina,
+		template_type = template_types.stamina
 	},
 	{
 		"block_cost_melee",
 		"outer",
 		target = "base",
-		template_type = template_types.stamina,
+		template_type = template_types.stamina
 	},
 	{
 		"block_cost_ranged",
 		"outer",
 		target = "base",
-		template_type = template_types.stamina,
+		template_type = template_types.stamina
 	},
 	{
 		"block_cost_default",
 		"outer",
 		target = "base",
-		template_type = template_types.stamina,
+		template_type = template_types.stamina
 	},
 	{
 		"modifier",
 		target = "base",
-		template_type = template_types.movement_curve_modifier,
-	},
+		template_type = template_types.movement_curve_modifier
+	}
 }
 local WeaponUIStatsTemplates = {
 	settings = {
 		default_attack_settings = default_attack_settings,
 		default_stats = default_stats,
 		default_ranged_damage_profile_stats = {},
-		default_ranged_per_action_stats = {},
+		default_ranged_per_action_stats = {}
 	},
 	plasmagun_p1_m1 = {
 		stats = default_stats,
@@ -127,15 +127,15 @@ local WeaponUIStatsTemplates = {
 				charge_level = 0.516133333,
 				display_name = "loc_weapon_action_title_primary",
 				dropoff_scalar = 0,
-				target_index = 1,
+				target_index = 1
 			},
 			{
 				action_name = "action_shoot_charged",
 				charge_level = 1,
 				display_name = "loc_weapon_keyword_charged_attack",
 				dropoff_scalar = 0,
-				target_index = 1,
-			},
+				target_index = 1
+			}
 		},
 		damage = {
 			{
@@ -147,8 +147,8 @@ local WeaponUIStatsTemplates = {
 					target_index = 1,
 					attack = default_attack_settings,
 					damage_profile_stats = {},
-					per_action_stats = {},
-				},
+					per_action_stats = {}
+				}
 			},
 			{
 				{
@@ -159,10 +159,10 @@ local WeaponUIStatsTemplates = {
 					target_index = 1,
 					attack = default_attack_settings,
 					damage_profile_stats = {},
-					per_action_stats = {},
-				},
-			},
-		},
+					per_action_stats = {}
+				}
+			}
+		}
 	},
 	lasgun_p2 = {
 		stats = default_stats,
@@ -172,15 +172,15 @@ local WeaponUIStatsTemplates = {
 				charge_level = 0,
 				display_name = "loc_weapon_action_title_primary",
 				dropoff_scalar = 1,
-				target_index = 1,
+				target_index = 1
 			},
 			{
 				action_name = "action_zoom_shoot_charged",
 				charge_level = 1,
 				display_name = "loc_weapon_keyword_charged_attack",
 				dropoff_scalar = 1,
-				target_index = 1,
-			},
+				target_index = 1
+			}
 		},
 		damage = {
 			{
@@ -192,8 +192,8 @@ local WeaponUIStatsTemplates = {
 					target_index = 1,
 					attack = default_attack_settings,
 					damage_profile_stats = {},
-					per_action_stats = {},
-				},
+					per_action_stats = {}
+				}
 			},
 			{
 				{
@@ -204,8 +204,8 @@ local WeaponUIStatsTemplates = {
 					target_index = 1,
 					attack = default_attack_settings,
 					damage_profile_stats = {},
-					per_action_stats = {},
-				},
+					per_action_stats = {}
+				}
 			},
 			{
 				{
@@ -216,10 +216,10 @@ local WeaponUIStatsTemplates = {
 					target_index = 1,
 					attack = default_attack_settings,
 					damage_profile_stats = {},
-					per_action_stats = {},
-				},
-			},
-		},
+					per_action_stats = {}
+				}
+			}
+		}
 	},
 	lasgun_p2_m3 = {
 		stats = default_stats,
@@ -229,15 +229,15 @@ local WeaponUIStatsTemplates = {
 				charge_level = 0,
 				display_name = "loc_weapon_action_title_primary",
 				dropoff_scalar = 1,
-				target_index = 1,
+				target_index = 1
 			},
 			{
 				action_name = "action_zoom_shoot_charged",
 				charge_level = 1,
 				display_name = "loc_weapon_keyword_charged_attack",
 				dropoff_scalar = 1,
-				target_index = 1,
-			},
+				target_index = 1
+			}
 		},
 		damage = {
 			{
@@ -249,8 +249,8 @@ local WeaponUIStatsTemplates = {
 					target_index = 1,
 					attack = default_attack_settings,
 					damage_profile_stats = {},
-					per_action_stats = {},
-				},
+					per_action_stats = {}
+				}
 			},
 			{
 				{
@@ -261,8 +261,8 @@ local WeaponUIStatsTemplates = {
 					target_index = 1,
 					attack = default_attack_settings,
 					damage_profile_stats = {},
-					per_action_stats = {},
-				},
+					per_action_stats = {}
+				}
 			},
 			{
 				{
@@ -273,10 +273,10 @@ local WeaponUIStatsTemplates = {
 					target_index = 1,
 					attack = default_attack_settings,
 					damage_profile_stats = {},
-					per_action_stats = {},
-				},
-			},
-		},
+					per_action_stats = {}
+				}
+			}
+		}
 	},
 	ogryn_gauntlet = {
 		stats = default_stats,
@@ -286,15 +286,15 @@ local WeaponUIStatsTemplates = {
 				charge_level = 1,
 				display_name = "loc_weapon_action_title_light",
 				dropoff_scalar = 1,
-				target_index = 1,
+				target_index = 1
 			},
 			{
 				action_name = "action_left_heavy",
 				charge_level = 1,
 				display_name = "loc_weapon_action_title_heavy",
 				dropoff_scalar = 1,
-				target_index = 1,
-			},
+				target_index = 1
+			}
 		},
 		damage = {
 			{
@@ -306,7 +306,7 @@ local WeaponUIStatsTemplates = {
 					target_index = 1,
 					attack = default_attack_settings,
 					damage_profile_stats = {},
-					per_action_stats = {},
+					per_action_stats = {}
 				},
 				{
 					action_name = "action_swing_right",
@@ -316,7 +316,7 @@ local WeaponUIStatsTemplates = {
 					target_index = 1,
 					attack = default_attack_settings,
 					damage_profile_stats = {},
-					per_action_stats = {},
+					per_action_stats = {}
 				},
 				{
 					action_name = "action_swing_up",
@@ -326,8 +326,8 @@ local WeaponUIStatsTemplates = {
 					target_index = 1,
 					attack = default_attack_settings,
 					damage_profile_stats = {},
-					per_action_stats = {},
-				},
+					per_action_stats = {}
+				}
 			},
 			{
 				{
@@ -338,7 +338,7 @@ local WeaponUIStatsTemplates = {
 					target_index = 1,
 					attack = default_attack_settings,
 					damage_profile_stats = {},
-					per_action_stats = {},
+					per_action_stats = {}
 				},
 				{
 					action_name = "action_left_heavy_2",
@@ -348,8 +348,8 @@ local WeaponUIStatsTemplates = {
 					target_index = 1,
 					attack = default_attack_settings,
 					damage_profile_stats = {},
-					per_action_stats = {},
-				},
+					per_action_stats = {}
+				}
 			},
 			{
 				{
@@ -360,8 +360,8 @@ local WeaponUIStatsTemplates = {
 					target_index = 1,
 					attack = default_attack_settings,
 					damage_profile_stats = {},
-					per_action_stats = {},
-				},
+					per_action_stats = {}
+				}
 			},
 			{
 				{
@@ -372,10 +372,10 @@ local WeaponUIStatsTemplates = {
 					target_index = 1,
 					attack = default_attack_settings,
 					damage_profile_stats = {},
-					per_action_stats = {},
-				},
-			},
-		},
+					per_action_stats = {}
+				}
+			}
+		}
 	},
 	ogryn_thumper_p1_m2 = {
 		stats = default_stats,
@@ -385,15 +385,15 @@ local WeaponUIStatsTemplates = {
 				charge_level = 1,
 				display_name = "loc_weapon_action_title_primary",
 				dropoff_scalar = 1,
-				target_index = 1,
+				target_index = 1
 			},
 			{
 				action_name = "action_shoot_zoomed",
 				charge_level = 1,
 				display_name = "loc_weapon_action_title_secondary",
 				dropoff_scalar = 1,
-				target_index = 1,
-			},
+				target_index = 1
+			}
 		},
 		damage = {
 			{
@@ -405,8 +405,8 @@ local WeaponUIStatsTemplates = {
 					target_index = 1,
 					attack = default_attack_settings,
 					damage_profile_stats = {},
-					per_action_stats = {},
-				},
+					per_action_stats = {}
+				}
 			},
 			{
 				{
@@ -417,8 +417,8 @@ local WeaponUIStatsTemplates = {
 					target_index = 1,
 					attack = default_attack_settings,
 					damage_profile_stats = {},
-					per_action_stats = {},
-				},
+					per_action_stats = {}
+				}
 			},
 			{
 				{
@@ -429,11 +429,11 @@ local WeaponUIStatsTemplates = {
 					target_index = 1,
 					attack = default_attack_settings,
 					damage_profile_stats = {},
-					per_action_stats = {},
-				},
-			},
-		},
-	},
+					per_action_stats = {}
+				}
+			}
+		}
+	}
 }
 
 return WeaponUIStatsTemplates

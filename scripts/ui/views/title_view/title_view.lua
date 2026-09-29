@@ -9,7 +9,7 @@ local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local device_list = {
 	Keyboard,
 	Mouse,
-	Pad1,
+	Pad1
 }
 local TitleView = class("TitleView", "BaseView")
 
@@ -82,7 +82,7 @@ TitleView._apply_title_text = function (self)
 	local color_tint_text = true
 	local input_key = InputUtils.input_text_for_current_input_device(service_type, input_alias_name, color_tint_text)
 	local context = {
-		input = input_key,
+		input = input_key
 	}
 	local text = Localize("loc_title_view_input_description", true, context)
 
@@ -92,6 +92,11 @@ end
 TitleView._on_navigation_input_changed = function (self)
 	TitleView.super._on_navigation_input_changed(self)
 	self:_apply_title_text()
+end
+
+TitleView.draw_while_loading = function (self, dt, t)
+	Managers.ui:render_loading_icon()
+	Managers.ui:render_black_background()
 end
 
 TitleView.update = function (self, dt, t, input_service)

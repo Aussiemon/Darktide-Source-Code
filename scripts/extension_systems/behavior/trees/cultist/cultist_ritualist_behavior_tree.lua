@@ -8,7 +8,7 @@ local behavior_tree = {
 		"BtDieAction",
 		name = "death",
 		state = "dead",
-		action_data = action_data.death,
+		action_data = action_data.death
 	},
 	{
 		"BtDisableAction",
@@ -16,20 +16,20 @@ local behavior_tree = {
 		exit_state = "base",
 		name = "disable",
 		state = "disabled",
-		action_data = action_data.disable,
+		action_data = action_data.disable
 	},
 	{
 		"BtStaggerAction",
 		condition = "is_staggered",
 		name = "stagger",
-		action_data = action_data.stagger,
+		action_data = action_data.stagger
 	},
 	{
 		"BtCultistRitualistChantingAction",
 		name = "chanting",
-		action_data = action_data.chanting,
+		action_data = action_data.chanting
 	},
-	name = "cultist_ritualist",
+	name = "cultist_ritualist"
 }
 
 return behavior_tree

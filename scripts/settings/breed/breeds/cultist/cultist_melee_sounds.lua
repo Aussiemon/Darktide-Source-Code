@@ -22,13 +22,13 @@ local sound_data = {
 		vce_melee_attack_short = "wwise/events/minions/play_enemy_cultist_melee_fighter__melee_attack_vce",
 		vce_passive_idle_aggro = "wwise/events/minions/play_enemy_cultist_melee_fighter_idle_aggro_vce",
 		vce_passive_idle_cough = "wwise/events/minions/play_enemy_cultist_melee_fighter__idle_cough_vce",
-		vce_passive_idle_itchy = "wwise/events/minions/play_enemy_cultist_melee_fighter__idle_itchy_vce",
+		vce_passive_idle_itchy = "wwise/events/minions/play_enemy_cultist_melee_fighter__idle_itchy_vce"
 	},
 	use_proximity_culling = {
 		stop_vce = false,
 		vce_melee_attack_charged = false,
-		vce_melee_attack_short = false,
-	},
+		vce_melee_attack_short = false
+	}
 }
 
 table.add_missing(sound_data.events, RenegadeCommonSounds.events)

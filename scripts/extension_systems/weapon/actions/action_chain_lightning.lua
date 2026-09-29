@@ -17,7 +17,7 @@ local Vector3_normalize = Vector3.normalize
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local DEFAULT_POWER_LEVEL_RANDOM_RANGE = {
 	max = 1.25,
-	min = 0.75,
+	min = 0.75
 }
 local PROC_EVENTS = BuffSettings.proc_events
 local EXTERNAL_PROPERTIES = {}
@@ -29,7 +29,7 @@ local DEPTH_FIRST_VALIDATION = ChainLightning.depth_first_validation_functions
 local ACTION_MODULE_TARGET_FINDER_COMPONENT_KEYS = {
 	"target_unit_1",
 	"target_unit_2",
-	"target_unit_3",
+	"target_unit_3"
 }
 local _on_add_func, _on_remove_func, _set_charge_level, _trigger_gear_sound, _trigger_gear_tail_sound, _trigger_exclusive_gear_sound
 
@@ -51,7 +51,7 @@ ActionChainLightning.init = function (self, action_context, action_params, actio
 			hit_units = self._hit_units,
 			player_unit = self._player_unit,
 			talent_extension = talent_extension,
-			source_item = weapon and weapon.item,
+			source_item = weapon and weapon.item
 		}
 
 		self._jump_on_add_func = function (node, func_context)

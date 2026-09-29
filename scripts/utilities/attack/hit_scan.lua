@@ -119,188 +119,194 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 			local hit_zone_name_or_nil = HitZone.get_name(hit_unit, hit_actor)
 			local hit_afro = hit_zone_name_or_nil == HitZone.hit_zone_names.afro
 			local target_breed_or_nil = Breed.unit_breed_or_nil(hit_unit)
+			local can_actor_collide_with_attack_type = true
+
+			can_actor_collide_with_attack_type = Health.can_actor_collide_with_attack_type(hit_unit, hit_actor, "ranged")
+
 			local is_damagable = Health.is_damagable(hit_unit)
 			local target_is_hazard_prop, hazard_prop_is_active = HazardProp.status(hit_unit)
 			local is_breed_with_hit_zone = target_breed_or_nil and hit_zone_name_or_nil
 			local is_damagable_hazard_prop = target_is_hazard_prop and hazard_prop_is_active
 
-			if Health.is_ragdolled(hit_unit) then
-				if hit_afro then
-					break
-				end
+			if can_actor_collide_with_attack_type then
+				if Health.is_ragdolled(hit_unit) then
+					if hit_afro then
+						break
+					end
 
-				MinionDeath.attack_ragdoll(hit_unit, direction, damage_profile, damage_type, hit_zone_name_or_nil, hit_position, attacker_unit, hit_actor, nil, optional_is_critical_strike)
-			elseif is_damagable then
-				if is_attacker_player and HitScan.inside_faded_player(target_breed_or_nil, hit_distance) then
-					break
-				end
+					MinionDeath.attack_ragdoll(hit_unit, direction, damage_profile, damage_type, hit_zone_name_or_nil, hit_position, attacker_unit, hit_actor, nil, optional_is_critical_strike)
+				elseif is_damagable then
+					if is_attacker_player and HitScan.inside_faded_player(target_breed_or_nil, hit_distance) then
+						break
+					end
 
-				if not target_is_hazard_prop then
-					local should_break = false
-					local is_undodgeable = damage_profile.undodgeable
+					if not target_is_hazard_prop then
+						local should_break = false
+						local is_undodgeable = damage_profile.undodgeable
 
-					if not is_undodgeable and is_server then
-						local is_dodging, dodge_type = Dodge.is_dodging(hit_unit, attack_types.ranged)
-						local is_sprint_dodging = Sprint.is_sprint_dodging(hit_unit, attacker_unit, damage_profile.run_away_dodge)
+						if not is_undodgeable and is_server then
+							local is_dodging, dodge_type = Dodge.is_dodging(hit_unit, attack_types.ranged)
+							local is_sprint_dodging = Sprint.is_sprint_dodging(hit_unit, attacker_unit, damage_profile.run_away_dodge)
 
-						if is_dodging or is_sprint_dodging then
-							HIT_UNITS[hit_unit] = true
+							if is_dodging or is_sprint_dodging then
+								HIT_UNITS[hit_unit] = true
 
-							local hit_unit_fx_extension = ScriptUnit.has_extension(hit_unit, "fx_system")
+								local hit_unit_fx_extension = ScriptUnit.has_extension(hit_unit, "fx_system")
 
-							if is_server and hit_unit_fx_extension then
-								local optional_position = hit_position
-								local optional_except_sender = false
+								if is_server and hit_unit_fx_extension then
+									local optional_position = hit_position
+									local optional_except_sender = false
 
-								hit_unit_fx_extension:trigger_exclusive_wwise_event("wwise/events/player/play_player_dodge_ranged_success", optional_position, optional_except_sender)
-								Managers.event:trigger("on_sprint_dodge")
-							end
+									hit_unit_fx_extension:trigger_exclusive_wwise_event("wwise/events/player/play_player_dodge_ranged_success", optional_position, optional_except_sender)
+									Managers.event:trigger("on_sprint_dodge")
+								end
 
-							local target_buff_extension = ScriptUnit.has_extension(hit_unit, "buff_system")
+								local target_buff_extension = ScriptUnit.has_extension(hit_unit, "buff_system")
 
-							if target_buff_extension then
-								if is_sprint_dodging then
+								if target_buff_extension then
+									if is_sprint_dodging then
+										local param_table = target_buff_extension:request_proc_event_param_table()
+
+										if param_table then
+											target_buff_extension:add_proc_event(proc_events.on_sprint_dodge, param_table)
+										end
+									end
+
 									local param_table = target_buff_extension:request_proc_event_param_table()
 
 									if param_table then
-										target_buff_extension:add_proc_event(proc_events.on_sprint_dodge, param_table)
+										target_buff_extension:add_proc_event(proc_events.on_ranged_dodge, param_table)
 									end
 								end
 
-								local param_table = target_buff_extension:request_proc_event_param_table()
+								local player_unit_spawn_manager = Managers.state.player_unit_spawn
+								local dodging_player = player_unit_spawn_manager:owner(hit_unit)
 
-								if param_table then
-									target_buff_extension:add_proc_event(proc_events.on_ranged_dodge, param_table)
+								if dodging_player then
+									local optional_attacker_breed_name = optional_attacker_breed and optional_attacker_breed.name
+									local stat_dodge_type = is_sprint_dodging and dodge_types.sprint or dodge_type
+									local behaviour_extension = ScriptUnit.has_extension(attacker_unit, "behavior_system")
+									local attacked_action = behaviour_extension and behaviour_extension:running_action()
+									local previously_dodged = behaviour_extension and behaviour_extension.dodged_before and behaviour_extension:dodged_before(hit_unit)
+									local dodging_unit_buff_keywords = target_buff_extension and target_buff_extension:keywords() or nil
+
+									Managers.stats:record_private("hook_dodged_attack", dodging_player, optional_attacker_breed_name, attack_types.ranged, stat_dodge_type, attacked_action, previously_dodged, dodging_unit_buff_keywords)
 								end
+
+								should_break = true
 							end
+						end
 
-							local player_unit_spawn_manager = Managers.state.player_unit_spawn
-							local dodging_player = player_unit_spawn_manager:owner(hit_unit)
+						if hit_afro then
+							if is_server and not SUPPRESSED_UNITS[hit_unit] and HEALTH_ALIVE[hit_unit] then
+								Suppression.apply_suppression(hit_unit, attacker_unit, damage_profile, hit_position)
 
-							if dodging_player then
-								local optional_attacker_breed_name = optional_attacker_breed and optional_attacker_breed.name
-								local stat_dodge_type = is_sprint_dodging and dodge_types.sprint or dodge_type
-								local behaviour_extension = ScriptUnit.has_extension(attacker_unit, "behavior_system")
-								local attacked_action = behaviour_extension and behaviour_extension:running_action()
-								local previously_dodged = behaviour_extension and behaviour_extension.dodged_before and behaviour_extension:dodged_before(hit_unit)
-								local dodging_unit_buff_keywords = target_buff_extension and target_buff_extension:keywords() or nil
-
-								Managers.stats:record_private("hook_dodged_attack", dodging_player, optional_attacker_breed_name, attack_types.ranged, stat_dodge_type, attacked_action, previously_dodged, dodging_unit_buff_keywords)
+								SUPPRESSED_UNITS[hit_unit] = true
 							end
 
 							should_break = true
 						end
+
+						if should_break then
+							break
+						end
 					end
 
-					if hit_afro then
-						if is_server and not SUPPRESSED_UNITS[hit_unit] and HEALTH_ALIVE[hit_unit] then
-							Suppression.apply_suppression(hit_unit, attacker_unit, damage_profile, hit_position)
+					local hit_any_weakspot = hit_weakspot
 
-							SUPPRESSED_UNITS[hit_unit] = true
+					hit_weakspot = Weakspot.hit_weakspot(target_breed_or_nil, hit_zone_name_or_nil, attacker_unit)
+					target_index = RangedAction.target_index(target_index, penetrated, penetration_config)
+					hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(attacker_unit, hit_unit, hit_mass_budget_attack, hit_mass_budget_impact, hit_weakspot, optional_is_critical_strike, attack_type)
+					stop = HitMass.stopped_attack(hit_unit, hit_zone_name_or_nil, hit_mass_budget_attack, hit_mass_budget_impact, impact_config)
+
+					local should_deal_damage = target_is_hazard_prop and hazard_prop_is_active or not target_is_hazard_prop and is_breed_with_hit_zone or not target_breed_or_nil
+					local damage_dealt, attack_result, damage_efficiency
+
+					if should_deal_damage then
+						damage_dealt, attack_result, damage_efficiency, hit_weakspot = RangedAction.execute_attack(target_index, attacker_unit, hit_unit, hit_actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name_or_nil, damage_profile, damage_profile_lerp_values, power_level, charge_level, penetrated, optional_instakill, damage_type, optional_is_critical_strike, optional_weapon_item)
+
+						if attack_result == attack_results.blocked then
+							hit_position = _block_position(hit_unit, hit_position, direction)
 						end
 
-						should_break = true
+						hit_elite = hit_elite or target_breed_or_nil and target_breed_or_nil.tags and target_breed_or_nil.tags.elite or false
+						hit_result = attack_result
+						killing_blow = killing_blow or attack_result == AttackSettings.attack_results.died
+
+						local breed_is_minion = Breed.is_minion(target_breed_or_nil)
+						local breed_is_living_prop = Breed.is_living_prop(target_breed_or_nil)
+
+						hit_minion = hit_minion or breed_is_minion or breed_is_living_prop
+						number_of_units_hit = number_of_units_hit + 1
 					end
 
-					if should_break then
-						break
-					end
-				end
+					hit_weakspot = hit_any_weakspot or hit_weakspot
 
-				local hit_any_weakspot = hit_weakspot
-
-				hit_weakspot = Weakspot.hit_weakspot(target_breed_or_nil, hit_zone_name_or_nil, attacker_unit)
-				target_index = RangedAction.target_index(target_index, penetrated, penetration_config)
-				hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(attacker_unit, hit_unit, hit_mass_budget_attack, hit_mass_budget_impact, hit_weakspot, optional_is_critical_strike, attack_type)
-				stop = HitMass.stopped_attack(hit_unit, hit_zone_name_or_nil, hit_mass_budget_attack, hit_mass_budget_impact, impact_config)
-
-				local should_deal_damage = target_is_hazard_prop and hazard_prop_is_active or not target_is_hazard_prop and is_breed_with_hit_zone or not target_breed_or_nil
-				local damage_dealt, attack_result, damage_efficiency
-
-				if should_deal_damage then
-					damage_dealt, attack_result, damage_efficiency, hit_weakspot = RangedAction.execute_attack(target_index, attacker_unit, hit_unit, hit_actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name_or_nil, damage_profile, damage_profile_lerp_values, power_level, charge_level, penetrated, optional_instakill, damage_type, optional_is_critical_strike, optional_weapon_item)
-
-					if attack_result == attack_results.blocked then
-						hit_position = _block_position(hit_unit, hit_position, direction)
+					if Breed.is_character(target_breed_or_nil) or Breed.count_as_character(target_breed_or_nil) then
+						exploded = exploded or RangedAction.armor_explosion(is_server, world, physics_world, attacker_unit, hit_unit, hit_zone_name_or_nil, hit_position, hit_normal, hit_distance, direction, damage_config, power_level, charge_level, optional_weapon_item)
+						exploded = exploded or RangedAction.hitmass_explosion(is_server, world, physics_world, hit_mass_budget_attack, hit_mass_budget_impact, attacker_unit, hit_unit, hit_position, hit_normal, hit_distance, direction, damage_config, attack_result, power_level, charge_level, optional_weapon_item)
 					end
 
-					hit_elite = hit_elite or target_breed_or_nil and target_breed_or_nil.tags and target_breed_or_nil.tags.elite or false
-					hit_result = attack_result
-					killing_blow = killing_blow or attack_result == AttackSettings.attack_results.died
+					if not target_is_hazard_prop and target_breed_or_nil and hit_zone_name_or_nil or is_damagable_hazard_prop then
+						ImpactEffect.play(hit_unit, hit_actor, damage_dealt, damage_type, hit_zone_name_or_nil, attack_result, hit_position, hit_normal, direction, attacker_unit, impact_fx_data, stop, nil, damage_efficiency, damage_profile)
+					else
+						ImpactEffect.play_surface_effect(physics_world, attacker_unit, hit_position, hit_normal, direction, damage_type, surface_hit_types.stop, impact_fx_data)
+					end
 
-					local breed_is_minion = Breed.is_minion(target_breed_or_nil)
-					local breed_is_living_prop = Breed.is_living_prop(target_breed_or_nil)
+					if is_server and not SUPPRESSED_UNITS[hit_unit] and HEALTH_ALIVE[hit_unit] then
+						Suppression.apply_suppression(hit_unit, attacker_unit, damage_profile, hit_position)
 
-					hit_minion = hit_minion or breed_is_minion or breed_is_living_prop
-					number_of_units_hit = number_of_units_hit + 1
-				end
+						SUPPRESSED_UNITS[hit_unit] = true
+					end
+				elseif try_penetration and not penetrated then
+					local exit_position, exit_normal, _ = ObjectPenetration.test_for_penetration(physics_world, hit_position, direction, penetration_config.depth)
 
-				hit_weakspot = hit_any_weakspot or hit_weakspot
+					if exit_position then
+						try_penetration = false
+						penetrated = true
 
-				if Breed.is_character(target_breed_or_nil) or Breed.count_as_character(target_breed_or_nil) then
-					exploded = exploded or RangedAction.armor_explosion(is_server, world, physics_world, attacker_unit, hit_unit, hit_zone_name_or_nil, hit_position, hit_normal, hit_distance, direction, damage_config, power_level, charge_level, optional_weapon_item)
-					exploded = exploded or RangedAction.hitmass_explosion(is_server, world, physics_world, hit_mass_budget_attack, hit_mass_budget_impact, attacker_unit, hit_unit, hit_position, hit_normal, hit_distance, direction, damage_config, attack_result, power_level, charge_level, optional_weapon_item)
-				end
+						local object_thickness = Vector3.distance(hit_position, exit_position)
 
-				if not target_is_hazard_prop and target_breed_or_nil and hit_zone_name_or_nil or is_damagable_hazard_prop then
-					ImpactEffect.play(hit_unit, hit_actor, damage_dealt, damage_type, hit_zone_name_or_nil, attack_result, hit_position, hit_normal, direction, attacker_unit, impact_fx_data, stop, nil, damage_efficiency, damage_profile)
-				else
+						exit_distance = hit_distance + object_thickness
+
+						if (not explode_once or not exploded) and penetration_config.exit_explosion_template and is_server then
+							local explosion_attack_type = AttackSettings.attack_types.explosion
+
+							Explosion.create_explosion(world, physics_world, exit_position, exit_normal and Quaternion.look(exit_normal) or Quaternion.identity(), attacker_unit, penetration_config.exit_explosion_template, power_level, charge_level, explosion_attack_type, false, false, optional_weapon_item, optional_origin_slot)
+
+							exploded = true
+						end
+
+						ImpactEffect.play_surface_effect(physics_world, attacker_unit, hit_position, hit_normal, direction, damage_type, surface_hit_types.penetration_entry, impact_fx_data)
+						ImpactEffect.play_surface_effect(physics_world, attacker_unit, exit_position, exit_normal, direction, damage_type, surface_hit_types.penetration_exit, impact_fx_data)
+					end
+
 					ImpactEffect.play_surface_effect(physics_world, attacker_unit, hit_position, hit_normal, direction, damage_type, surface_hit_types.stop, impact_fx_data)
-				end
 
-				if is_server and not SUPPRESSED_UNITS[hit_unit] and HEALTH_ALIVE[hit_unit] then
-					Suppression.apply_suppression(hit_unit, attacker_unit, damage_profile, hit_position)
+					if not exit_position or penetration_config.destroy_on_exit then
+						stop = true
+					end
 
-					SUPPRESSED_UNITS[hit_unit] = true
-				end
-			elseif try_penetration and not penetrated then
-				local exit_position, exit_normal, _ = ObjectPenetration.test_for_penetration(physics_world, hit_position, direction, penetration_config.depth)
-
-				if exit_position then
-					try_penetration = false
-					penetrated = true
-
-					local object_thickness = Vector3.distance(hit_position, exit_position)
-
-					exit_distance = hit_distance + object_thickness
-
-					if (not explode_once or not exploded) and penetration_config.exit_explosion_template and is_server then
+					if can_explode and (not explode_once or not exploded) and not exit_position and penetration_config.stop_explosion_template and is_server then
 						local explosion_attack_type = AttackSettings.attack_types.explosion
 
-						Explosion.create_explosion(world, physics_world, exit_position, exit_normal and Quaternion.look(exit_normal) or Quaternion.identity(), attacker_unit, penetration_config.exit_explosion_template, power_level, charge_level, explosion_attack_type, false, false, optional_weapon_item, optional_origin_slot)
+						Explosion.create_explosion(world, physics_world, hit_position, Quaternion.look(hit_normal), attacker_unit, penetration_config.stop_explosion_template, power_level, charge_level, explosion_attack_type, false, false, optional_weapon_item, optional_origin_slot)
+
+						exploded = true
+					end
+				else
+					if can_explode and (not explode_once or not exploded) and penetrated and penetration_config.stop_explosion_template and is_server then
+						local explosion_attack_type = AttackSettings.attack_types.explosion
+
+						Explosion.create_explosion(world, physics_world, hit_position, Quaternion.look(hit_normal), attacker_unit, penetration_config.stop_explosion_template, power_level, charge_level, explosion_attack_type, false, false, optional_weapon_item, optional_origin_slot)
 
 						exploded = true
 					end
 
-					ImpactEffect.play_surface_effect(physics_world, attacker_unit, hit_position, hit_normal, direction, damage_type, surface_hit_types.penetration_entry, impact_fx_data)
-					ImpactEffect.play_surface_effect(physics_world, attacker_unit, exit_position, exit_normal, direction, damage_type, surface_hit_types.penetration_exit, impact_fx_data)
-				end
-
-				ImpactEffect.play_surface_effect(physics_world, attacker_unit, hit_position, hit_normal, direction, damage_type, surface_hit_types.stop, impact_fx_data)
-
-				if not exit_position or penetration_config.destroy_on_exit then
 					stop = true
+
+					ImpactEffect.play_surface_effect(physics_world, attacker_unit, hit_position, hit_normal, direction, damage_type, surface_hit_types.stop, impact_fx_data)
 				end
-
-				if can_explode and (not explode_once or not exploded) and not exit_position and penetration_config.stop_explosion_template and is_server then
-					local explosion_attack_type = AttackSettings.attack_types.explosion
-
-					Explosion.create_explosion(world, physics_world, hit_position, Quaternion.look(hit_normal), attacker_unit, penetration_config.stop_explosion_template, power_level, charge_level, explosion_attack_type, false, false, optional_weapon_item, optional_origin_slot)
-
-					exploded = true
-				end
-			else
-				if can_explode and (not explode_once or not exploded) and penetrated and penetration_config.stop_explosion_template and is_server then
-					local explosion_attack_type = AttackSettings.attack_types.explosion
-
-					Explosion.create_explosion(world, physics_world, hit_position, Quaternion.look(hit_normal), attacker_unit, penetration_config.stop_explosion_template, power_level, charge_level, explosion_attack_type, false, false, optional_weapon_item, optional_origin_slot)
-
-					exploded = true
-				end
-
-				stop = true
-
-				ImpactEffect.play_surface_effect(physics_world, attacker_unit, hit_position, hit_normal, direction, damage_type, surface_hit_types.stop, impact_fx_data)
 			end
 
 			local explosion_trigger_met = (not explode_once or not exploded) and (stop or penetrated or explode_on_minion_hit and hit_minion)
@@ -319,12 +325,14 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 				end_position = hit_position
 			end
 
-			HIT_UNITS[hit_unit] = true
+			if can_actor_collide_with_attack_type then
+				HIT_UNITS[hit_unit] = true
+			end
 
 			if optional_get_results_per_unit then
 				_RESULTS_PER_UNIT[#_RESULTS_PER_UNIT + 1] = {
 					hit_unit = hit_unit,
-					hit_result = hit_result,
+					hit_result = hit_result
 				}
 			end
 		until true

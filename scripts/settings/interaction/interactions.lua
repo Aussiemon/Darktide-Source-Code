@@ -6,6 +6,7 @@ local AmmunitionInteraction = require("scripts/extension_systems/interaction/int
 local AssistBaseInteraction = require("scripts/extension_systems/interaction/interactions/assist_base_interaction")
 local ChestInteraction = require("scripts/extension_systems/interaction/interactions/chest_interaction")
 local DecodingInteraction = require("scripts/extension_systems/interaction/interactions/decoding_interaction")
+local DeployableMarkerInteraction = require("scripts/extension_systems/interaction/interactions/deployable_marker_interaction")
 local DoorControlPanelInteraction = require("scripts/extension_systems/interaction/interactions/door_control_panel_interaction")
 local GrenadeInteraction = require("scripts/extension_systems/interaction/interactions/grenade_interaction")
 local HealthInteraction = require("scripts/extension_systems/interaction/interactions/health_interaction")
@@ -40,6 +41,7 @@ local interactions = {
 	cosmetics_vendor = ViewInteraction,
 	crafting = ViewInteraction,
 	decoding = DecodingInteraction,
+	deployable_marker = DeployableMarkerInteraction,
 	door_control_panel = DoorControlPanelInteraction,
 	gamemode_expeditions = ViewInteraction,
 	gamemode_havoc = ViewInteraction,
@@ -70,7 +72,7 @@ local interactions = {
 	setup_breach_charge = SetupBreachChargeInteraction,
 	setup_decoding = SetupDecodingInteraction,
 	training_ground = ViewInteraction,
-	vendor = ViewInteraction,
+	vendor = ViewInteraction
 }
 
 return settings("Interactions", interactions)

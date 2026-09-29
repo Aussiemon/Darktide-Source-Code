@@ -14,7 +14,7 @@ local templates = {
 		sfx_source_z_offset = 0.5,
 		spawn_brush_size = 1,
 		vfx_name_filled = "content/fx/particles/weapons/grenades/flame_grenade_hostile_fire_lingering_green",
-		z_cell_size = 5,
+		z_cell_size = 5
 	},
 	renegade_flamer_liquid_paint = {
 		additional_unit_vfx = "content/fx/particles/enemies/renegade_flamer/renegade_flamer_ground_flame_light",
@@ -28,7 +28,7 @@ local templates = {
 		sfx_source_z_offset = 0.5,
 		spawn_brush_size = 1,
 		vfx_name_filled = "content/fx/particles/enemies/renegade_flamer/renegade_flamer_fire_lingering",
-		z_cell_size = 5,
+		z_cell_size = 5
 	},
 	beast_of_nurgle_slime = {
 		cell_size = 1,
@@ -39,7 +39,7 @@ local templates = {
 		sfx_name_start = "wwise/events/minions/play_beast_of_nurgle_vomit_aoe",
 		sfx_name_stop = "wwise/events/minions/stop_beast_of_nurgle_vomit_aoe",
 		spawn_brush_size = 1,
-		vfx_name_filled = "content/fx/particles/liquid_area/beast_of_nurgle_slime",
+		vfx_name_filled = "content/fx/particles/liquid_area/beast_of_nurgle_slime"
 	},
 	nurgle_slime_world = {
 		cell_size = 1,
@@ -53,7 +53,7 @@ local templates = {
 		spawn_brush_size = 1,
 		start_pressure = 20,
 		vfx_name_filled = "content/fx/particles/liquid_area/beast_of_nurgle_slime",
-		spread_function = LiquidSpread.pour,
+		spread_function = LiquidSpread.pour
 	},
 	havoc_enemy_corruption_liquid = {
 		cell_size = 1,
@@ -67,7 +67,7 @@ local templates = {
 		spawn_brush_size = 1,
 		start_pressure = 20,
 		vfx_name_filled = "content/fx/particles/liquid_area/nurgle_corruption_goo",
-		spread_function = LiquidSpread.pour,
+		spread_function = LiquidSpread.pour
 	},
 	toxic_gas = {
 		bots_allowed_to_assist_within = true,
@@ -84,7 +84,7 @@ local templates = {
 		start_pressure = 40,
 		vfx_name_filled = "content/fx/particles/weapons/grenades/gas_grenade_gas",
 		z_cell_size = 5,
-		spread_function = LiquidSpread.pour,
+		spread_function = LiquidSpread.pour
 	},
 	twin_toxic_gas = {
 		cell_size = 3,
@@ -102,7 +102,7 @@ local templates = {
 		start_pressure = 40,
 		vfx_name_filled = "content/fx/particles/enemies/twins/twins_ambush_gas",
 		z_cell_size = 1,
-		spread_function = LiquidSpread.pour,
+		spread_function = LiquidSpread.pour
 	},
 	buildup_twin_toxic_gas = {
 		cell_size = 3,
@@ -120,7 +120,7 @@ local templates = {
 		start_pressure = 40,
 		vfx_name_filled = "content/fx/particles/weapons/grenades/gas_grenade_ground",
 		z_cell_size = 1,
-		spread_function = LiquidSpread.pour,
+		spread_function = LiquidSpread.pour
 	},
 	buildup_twin_toxic_gas_slow = {
 		cell_size = 3,
@@ -138,7 +138,7 @@ local templates = {
 		start_pressure = 40,
 		vfx_name_filled = "content/fx/particles/weapons/grenades/gas_grenade_ground",
 		z_cell_size = 1,
-		spread_function = LiquidSpread.pour,
+		spread_function = LiquidSpread.pour
 	},
 	twin_gas_phase_toxic_gas = {
 		cell_size = 3,
@@ -156,7 +156,7 @@ local templates = {
 		start_pressure = 40,
 		vfx_name_filled = "content/fx/particles/enemies/twins/twins_arena_phase_gas",
 		z_cell_size = 1,
-		spread_function = LiquidSpread.pour,
+		spread_function = LiquidSpread.pour
 	},
 	ambush_disappear_toxic_gas = {
 		cell_size = 3,
@@ -173,7 +173,7 @@ local templates = {
 		start_pressure = 40,
 		vfx_name_filled = "content/fx/particles/enemies/twins/twins_arena_phase_gas",
 		z_cell_size = 1,
-		spread_function = LiquidSpread.pour,
+		spread_function = LiquidSpread.pour
 	},
 	renegade_grenadier_fire_grenade = {
 		cell_size = 1.1,
@@ -189,8 +189,8 @@ local templates = {
 		use_liquid_drawer = true,
 		vfx_name_filled = "content/fx/particles/weapons/grenades/flame_grenade_hostile_fire_lingering",
 		vfx_name_rim = "content/fx/particles/weapons/grenades/flame_grenade_hostile_fire_edge",
-		z_cell_size = 5,
-		spread_function = LiquidSpread.pour,
+		z_cell_size = 3,
+		spread_function = LiquidSpread.pour
 	},
 	cultist_grenadier_gas = {
 		additional_unit_vfx = "content/fx/particles/enemies/cultist_blight_grenadier/cultist_gas_grenade_detonation",
@@ -207,7 +207,7 @@ local templates = {
 		start_pressure = 40,
 		vfx_name_filled = "content/fx/particles/enemies/cultist_blight_grenadier/cultist_gas_grenade",
 		z_cell_size = 5,
-		spread_function = LiquidSpread.pour,
+		spread_function = LiquidSpread.pour
 	},
 	twin_grenade_gas = {
 		additional_unit_vfx = "content/fx/particles/enemies/cultist_blight_grenadier/cultist_gas_grenade_detonation",
@@ -224,7 +224,7 @@ local templates = {
 		start_pressure = 40,
 		vfx_name_filled = "content/fx/particles/weapons/grenades/gas_grenade_gas",
 		z_cell_size = 5,
-		spread_function = LiquidSpread.pour,
+		spread_function = LiquidSpread.pour
 	},
 	rotten_armor = {
 		cell_size = 1,
@@ -240,7 +240,7 @@ local templates = {
 		start_pressure = 20,
 		vfx_name_filled = "content/fx/particles/weapons/grenades/gas_grenade_gas",
 		z_cell_size = 2,
-		spread_function = LiquidSpread.pour,
+		spread_function = LiquidSpread.pour
 	},
 	renegade_flamer_backpack = {
 		cell_size = 0.85,
@@ -257,7 +257,7 @@ local templates = {
 		start_pressure = 40,
 		vfx_name_filled = "content/fx/particles/liquid_area/fire_lingering",
 		vfx_name_rim = "content/fx/particles/liquid_area/fire_lingering_edge",
-		spread_function = LiquidSpread.pour,
+		spread_function = LiquidSpread.pour
 	},
 	interrupted_renegade_flamer_backpack = {
 		cell_size = 0.85,
@@ -274,7 +274,7 @@ local templates = {
 		start_pressure = 40,
 		vfx_name_filled = "content/fx/particles/liquid_area/fire_lingering",
 		vfx_name_rim = "content/fx/particles/liquid_area/fire_lingering_edge",
-		spread_function = LiquidSpread.pour,
+		spread_function = LiquidSpread.pour
 	},
 	cultist_flamer_backpack = {
 		cell_size = 0.7,
@@ -291,7 +291,7 @@ local templates = {
 		start_pressure = 40,
 		vfx_name_filled = "content/fx/particles/liquid_area/fire_lingering_cultist",
 		vfx_name_rim = "content/fx/particles/enemies/cultist_flamer/cultist_flame_edge_ignition",
-		spread_function = LiquidSpread.pour,
+		spread_function = LiquidSpread.pour
 	},
 	interrupted_cultist_flamer_backpack = {
 		cell_size = 0.7,
@@ -308,8 +308,8 @@ local templates = {
 		start_pressure = 40,
 		vfx_name_filled = "content/fx/particles/weapons/grenades/flame_grenade_hostile_fire_lingering_green",
 		vfx_name_rim = "content/fx/particles/weapons/grenades/flame_grenade_hostile_fire_lingering_green",
-		spread_function = LiquidSpread.pour,
-	},
+		spread_function = LiquidSpread.pour
+	}
 }
 
 return templates

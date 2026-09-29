@@ -35,7 +35,7 @@ SoundReflection.init = function (self, unit)
 		QuaternionBox(Quaternion.axis_angle(Vector3.up(), 45)),
 		QuaternionBox(Quaternion.axis_angle(Vector3.up(), -45)),
 		QuaternionBox(Quaternion.axis_angle(Vector3.up(), 90)),
-		QuaternionBox(Quaternion.axis_angle(Vector3.up(), -90)),
+		QuaternionBox(Quaternion.axis_angle(Vector3.up(), -90))
 	}
 	self._distances = {}
 	self._positions = {}
@@ -133,7 +133,7 @@ end
 local INDEX_POSITION = 1
 local INDEX_ACTOR = 4
 local QUERY_MATERIAL_CONTEXTS = {
-	"surface_material",
+	"surface_material"
 }
 local _query_material_buffer = {}
 
@@ -204,7 +204,7 @@ end
 SoundReflection.component_config = {
 	disable_event_public = false,
 	enable_event_public = false,
-	starts_enabled_default = true,
+	starts_enabled_default = true
 }
 SoundReflection.component_data = {}
 

@@ -5,57 +5,57 @@ local psyker_female_a_zealot_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_zealot_male_b__bonding_conversation_round_three_ignorance_b_01",
+			[1] = "loc_zealot_male_b__bonding_conversation_round_three_ignorance_b_01"
 		},
 		sound_events_duration = {
-			[1] = 5.262792,
+			[1] = 5.262792
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	bonding_conversation_round_three_ignorance_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_zealot_male_b__bonding_conversation_round_three_ignorance_d_01",
+			[1] = "loc_zealot_male_b__bonding_conversation_round_three_ignorance_d_01"
 		},
 		sound_events_duration = {
-			[1] = 5.928375,
+			[1] = 5.928375
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	bonding_conversation_round_three_ignorance_f = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_zealot_male_b__bonding_conversation_round_three_ignorance_f_01",
+			[1] = "loc_zealot_male_b__bonding_conversation_round_three_ignorance_f_01"
 		},
 		sound_events_duration = {
-			[1] = 1.33075,
+			[1] = 1.33075
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	oval_bonding_conversation_havering_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_zealot_male_b__oval_bonding_conversation_havering_b_01",
+			[1] = "loc_zealot_male_b__oval_bonding_conversation_havering_b_01"
 		},
 		sound_events_duration = {
-			[1] = 5.189854,
+			[1] = 5.189854
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	oval_bonding_conversation_havering_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_zealot_male_b__oval_bonding_conversation_havering_d_01",
+			[1] = "loc_zealot_male_b__oval_bonding_conversation_havering_d_01"
 		},
 		sound_events_duration = {
-			[1] = 2.019354,
+			[1] = 2.019354
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("psyker_female_a_zealot_male_b", psyker_female_a_zealot_male_b)

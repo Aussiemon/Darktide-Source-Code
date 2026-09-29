@@ -87,7 +87,7 @@ Payload.component_data = {
 	path_name = {
 		ui_name = "Path Name",
 		ui_type = "text_box",
-		value = "default",
+		value = "default"
 	},
 	movement_type = {
 		category = "Movement",
@@ -96,12 +96,12 @@ Payload.component_data = {
 		value = "smooth",
 		options_keys = {
 			"Linear",
-			"Smooth",
+			"Smooth"
 		},
 		options_values = {
 			"linear",
-			"smooth",
-		},
+			"smooth"
+		}
 	},
 	rotation_type_in_movement = {
 		category = "Movement",
@@ -110,19 +110,19 @@ Payload.component_data = {
 		value = "constant",
 		options_keys = {
 			"Constant",
-			"Lerp",
+			"Lerp"
 		},
 		options_values = {
 			"constant",
-			"lerp",
-		},
+			"lerp"
+		}
 	},
 	rotation_speed_in_movement = {
 		category = "Movement",
 		decimals = 2,
 		ui_name = "Rotation Speed in Movement",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	speed_controller = {
 		category = "Movement",
@@ -133,57 +133,57 @@ Payload.component_data = {
 			"Proximity",
 			"Main Path",
 			"Flow",
-			"Max",
+			"Max"
 		},
 		options_values = {
 			"proximity",
 			"main_path",
 			"flow",
-			"max",
-		},
+			"max"
+		}
 	},
 	speed_passive = {
 		category = "Movement",
 		ui_name = "Passive Speed",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	speed_active = {
 		category = "Movement",
 		ui_name = "Active Speed",
 		ui_type = "number",
-		value = 2,
+		value = 2
 	},
 	speed_additional_player = {
 		category = "Movement",
 		ui_name = "Additional Player Speed",
 		ui_type = "number",
-		value = 0.25,
+		value = 0.25
 	},
 	acceleration = {
 		category = "Movement",
 		ui_name = "Acceleration",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	deceleration = {
 		category = "Movement",
 		ui_name = "Deceleration",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	floor_normal_adjustment_speed = {
 		category = "Smooth Movement",
 		decimals = 2,
 		ui_name = "Floor Normal Adjustment Speed",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	normal_adjustment_square_half_extents = {
 		category = "Smooth Movement",
 		ui_name = "Normal Adjustment Square Half Extents",
 		ui_type = "vector",
-		value = Vector3Box(0.75, 1, 0),
+		value = Vector3Box(0.75, 1, 0)
 	},
 	turn_type = {
 		category = "Turning In Place",
@@ -193,81 +193,81 @@ Payload.component_data = {
 		options_keys = {
 			"Constant",
 			"Lerp",
-			"Timed Bezier",
+			"Timed Bezier"
 		},
 		options_values = {
 			"constant",
 			"lerp",
-			"timed_bezier",
-		},
+			"timed_bezier"
+		}
 	},
 	turning_speed = {
 		category = "Turning In Place",
 		decimals = 2,
 		ui_name = "Turning Speed",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	time_for_turning_pi = {
 		category = "Turning In Place",
 		decimals = 2,
 		ui_name = "Timed Bezier: Time for 180º turn",
 		ui_type = "number",
-		value = 15,
+		value = 15
 	},
 	optional_aiming_node_name = {
 		category = "Optional - Aim Target",
 		ui_name = "Node Name",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	optional_aiming_constraint_target = {
 		category = "Optional - Aim Target",
 		ui_name = "Aim Constraint Target",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	proximity_distance = {
 		category = "Proximity",
 		ui_name = "Proximity Distance",
 		ui_type = "number",
-		value = 12,
+		value = 12
 	},
 	player_push_power = {
 		category = "Push",
 		ui_name = "Player Push Power",
 		ui_type = "number",
-		value = 3,
+		value = 3
 	},
 	player_push_distance = {
 		category = "Push",
 		ui_name = "Player Push Distance",
 		ui_type = "number",
-		value = 2,
+		value = 2
 	},
 	random_spawn_radius = {
 		category = "Spawn",
 		ui_name = "Random Spawn Radius",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	inputs = {
 		payload_path = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		payload_continue_path = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		payload_start = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"PayloadExtension",
-	},
+		"PayloadExtension"
+	}
 }
 
 return Payload

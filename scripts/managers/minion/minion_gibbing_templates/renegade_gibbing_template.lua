@@ -14,7 +14,7 @@ local gibbing_template = {
 			stump_attach_node = "j_spine1",
 			stump_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/head_gib_cap",
 			unequip_inventory_slot = "slot_head",
-			gibbing_threshold = GibbingThresholds.medium,
+			gibbing_threshold = GibbingThresholds.medium
 		},
 		crushing = {
 			scale_node = "j_neck",
@@ -22,8 +22,8 @@ local gibbing_template = {
 			stump_attach_node = "j_spine1",
 			stump_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/melee_a/head_gib_cap",
 			unequip_inventory_slot = "slot_head",
-			gibbing_threshold = GibbingThresholds.medium,
-		},
+			gibbing_threshold = GibbingThresholds.medium
+		}
 	},
 	upper_left_arm = {
 		default = {
@@ -37,8 +37,8 @@ local gibbing_template = {
 					stump_unit = "content/characters/enemy/chaos_poxwalker/gibbing/left_upper_arm_gib_cap_01",
 					gibbing_threshold = GibbingThresholds.medium,
 					condition = {
-						already_gibbed = "lower_left_arm",
-					},
+						already_gibbed = "lower_left_arm"
+					}
 				},
 				{
 					gib_actor = "rp_left_entire_arm_flesh_gib_01",
@@ -48,15 +48,15 @@ local gibbing_template = {
 					stump_attach_node = "j_spine1",
 					stump_unit = "content/characters/enemy/chaos_poxwalker/gibbing/left_upper_arm_gib_cap_01",
 					extra_hit_zone_actors_to_destroy = {
-						"lower_left_arm",
+						"lower_left_arm"
 					},
 					gibbing_threshold = GibbingThresholds.medium,
 					condition = {
-						always_true = true,
-					},
-				},
-			},
-		},
+						always_true = true
+					}
+				}
+			}
+		}
 	},
 	upper_right_arm = {
 		default = {
@@ -70,8 +70,8 @@ local gibbing_template = {
 					stump_unit = "content/characters/enemy/chaos_poxwalker/gibbing/right_upper_arm_gib_cap_01",
 					gibbing_threshold = GibbingThresholds.medium,
 					condition = {
-						already_gibbed = "lower_right_arm",
-					},
+						already_gibbed = "lower_right_arm"
+					}
 				},
 				{
 					gib_actor = "rp_right_entire_arm_flesh_gib_01",
@@ -82,14 +82,14 @@ local gibbing_template = {
 					stump_unit = "content/characters/enemy/chaos_poxwalker/gibbing/right_upper_arm_gib_cap_01",
 					gibbing_threshold = GibbingThresholds.medium,
 					extra_hit_zone_actors_to_destroy = {
-						"lower_right_arm",
+						"lower_right_arm"
 					},
 					condition = {
-						always_true = true,
-					},
-				},
-			},
-		},
+						always_true = true
+					}
+				}
+			}
+		}
 	},
 	upper_left_leg = {
 		default = {
@@ -103,8 +103,8 @@ local gibbing_template = {
 					stump_unit = "content/characters/enemy/chaos_poxwalker/gibbing/left_upper_leg_gib_cap_01",
 					gibbing_threshold = GibbingThresholds.medium,
 					condition = {
-						already_gibbed = "lower_left_leg",
-					},
+						already_gibbed = "lower_left_leg"
+					}
 				},
 				{
 					gib_actor = "rp_left_entire_leg_flesh_gib_01",
@@ -115,14 +115,14 @@ local gibbing_template = {
 					stump_unit = "content/characters/enemy/chaos_poxwalker/gibbing/left_upper_leg_gib_cap_01",
 					gibbing_threshold = GibbingThresholds.medium,
 					extra_hit_zone_actors_to_destroy = {
-						"lower_left_leg",
+						"lower_left_leg"
 					},
 					condition = {
-						always_true = true,
-					},
-				},
-			},
-		},
+						always_true = true
+					}
+				}
+			}
+		}
 	},
 	upper_right_leg = {
 		default = {
@@ -136,8 +136,8 @@ local gibbing_template = {
 					stump_unit = "content/characters/enemy/chaos_poxwalker/gibbing/right_upper_leg_gib_cap_01",
 					gibbing_threshold = GibbingThresholds.medium,
 					condition = {
-						already_gibbed = "lower_right_leg",
-					},
+						already_gibbed = "lower_right_leg"
+					}
 				},
 				{
 					gib_actor = "rp_right_entire_leg_flesh_gib_01",
@@ -148,14 +148,14 @@ local gibbing_template = {
 					stump_unit = "content/characters/enemy/chaos_poxwalker/gibbing/right_upper_leg_gib_cap_01",
 					gibbing_threshold = GibbingThresholds.medium,
 					extra_hit_zone_actors_to_destroy = {
-						"lower_right_leg",
+						"lower_right_leg"
 					},
 					condition = {
-						always_true = true,
-					},
-				},
-			},
-		},
+						always_true = true
+					}
+				}
+			}
+		}
 	},
 	lower_left_arm = {
 		default = {
@@ -165,8 +165,8 @@ local gibbing_template = {
 			scale_node = "j_leftforearm",
 			stump_attach_node = "j_spine1",
 			stump_unit = "content/characters/enemy/chaos_poxwalker/gibbing/left_lower_arm_gib_cap_01",
-			gibbing_threshold = GibbingThresholds.medium,
-		},
+			gibbing_threshold = GibbingThresholds.medium
+		}
 	},
 	lower_right_arm = {
 		default = {
@@ -176,8 +176,8 @@ local gibbing_template = {
 			scale_node = "j_rightforearm",
 			stump_attach_node = "j_spine1",
 			stump_unit = "content/characters/enemy/chaos_poxwalker/gibbing/right_lower_arm_gib_cap_01",
-			gibbing_threshold = GibbingThresholds.medium,
-		},
+			gibbing_threshold = GibbingThresholds.medium
+		}
 	},
 	lower_left_leg = {
 		default = {
@@ -187,8 +187,8 @@ local gibbing_template = {
 			scale_node = "j_leftleg",
 			stump_attach_node = "j_hips",
 			stump_unit = "content/characters/enemy/chaos_poxwalker/gibbing/left_lower_leg_gib_cap_01",
-			gibbing_threshold = GibbingThresholds.medium,
-		},
+			gibbing_threshold = GibbingThresholds.medium
+		}
 	},
 	lower_right_leg = {
 		default = {
@@ -198,8 +198,8 @@ local gibbing_template = {
 			scale_node = "j_rightleg",
 			stump_attach_node = "j_hips",
 			stump_unit = "content/characters/enemy/chaos_poxwalker/gibbing/right_lower_leg_gib_cap_01",
-			gibbing_threshold = GibbingThresholds.medium,
-		},
+			gibbing_threshold = GibbingThresholds.medium
+		}
 	},
 	torso = {
 		plasma = {
@@ -211,17 +211,17 @@ local gibbing_template = {
 			extra_hit_zone_gibs = {
 				"head",
 				"upper_left_arm",
-				"upper_right_arm",
+				"upper_right_arm"
 			},
 			extra_hit_zone_gib_push_forces = {
 				head = 0.001,
 				upper_left_arm = 0.001,
-				upper_right_arm = 0.001,
+				upper_right_arm = 0.001
 			},
 			extra_hit_zone_actors_to_destroy = {
-				"center_mass",
-			},
-		},
+				"center_mass"
+			}
+		}
 	},
 	center_mass = {
 		explosion = {
@@ -230,8 +230,8 @@ local gibbing_template = {
 				"upper_left_arm",
 				"upper_right_arm",
 				"upper_left_leg",
-				"upper_right_leg",
-			},
+				"upper_right_leg"
+			}
 		},
 		plasma = {
 			gib_actor = "rp_upper_torso_flesh_gib_01",
@@ -242,16 +242,16 @@ local gibbing_template = {
 			extra_hit_zone_gibs = {
 				"head",
 				"upper_left_arm",
-				"upper_right_arm",
+				"upper_right_arm"
 			},
 			extra_hit_zone_gib_push_forces = {
 				head = 0.001,
 				upper_left_arm = 0.001,
-				upper_right_arm = 0.001,
+				upper_right_arm = 0.001
 			},
 			extra_hit_zone_actors_to_destroy = {
-				"torso",
-			},
+				"torso"
+			}
 		},
 		sawing = {
 			gib_actor = "rp_upper_torso_flesh_gib_01",
@@ -262,18 +262,18 @@ local gibbing_template = {
 			extra_hit_zone_gibs = {
 				"head",
 				"upper_left_arm",
-				"upper_right_arm",
+				"upper_right_arm"
 			},
 			extra_hit_zone_gib_push_forces = {
 				head = 0.001,
 				upper_left_arm = 0.001,
-				upper_right_arm = 0.001,
+				upper_right_arm = 0.001
 			},
 			extra_hit_zone_actors_to_destroy = {
-				"torso",
-			},
-		},
-	},
+				"torso"
+			}
+		}
+	}
 }
 
 return gibbing_template

@@ -12,7 +12,7 @@ local mission_vo_hm_complex_adamant_male_a = {
 			"loc_adamant_male_a__guidance_starting_area_05",
 			"loc_adamant_male_a__guidance_starting_area_06",
 			"loc_adamant_male_a__guidance_starting_area_07",
-			"loc_adamant_male_a__guidance_starting_area_08",
+			"loc_adamant_male_a__guidance_starting_area_08"
 		},
 		sound_events_duration = {
 			1.677344,
@@ -22,7 +22,7 @@ local mission_vo_hm_complex_adamant_male_a = {
 			3.72001,
 			4.96401,
 			2.613344,
-			5.453344,
+			5.453344
 		},
 		sound_event_weights = {
 			0.125,
@@ -32,20 +32,20 @@ local mission_vo_hm_complex_adamant_male_a = {
 			0.125,
 			0.125,
 			0.125,
-			0.125,
+			0.125
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	mission_complex_start_banter_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_male_a__mission_complex_start_banter_a_01",
+			[1] = "loc_adamant_male_a__mission_complex_start_banter_a_01"
 		},
 		sound_events_duration = {
-			[1] = 4.823198,
+			[1] = 4.823198
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	mission_complex_start_banter_c = {
 		randomize_indexes_n = 0,
@@ -53,20 +53,20 @@ local mission_vo_hm_complex_adamant_male_a = {
 		sound_events = {
 			"loc_adamant_male_a__zone_throneside_01",
 			"loc_adamant_male_a__zone_throneside_02",
-			"loc_adamant_male_a__zone_throneside_03",
+			"loc_adamant_male_a__zone_throneside_03"
 		},
 		sound_events_duration = {
 			3.03001,
 			1.749344,
-			3.894677,
+			3.894677
 		},
 		sound_event_weights = {
 			0.3333333,
 			0.3333333,
-			0.3333333,
+			0.3333333
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_hm_complex_adamant_male_a", mission_vo_hm_complex_adamant_male_a)

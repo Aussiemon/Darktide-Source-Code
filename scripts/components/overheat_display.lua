@@ -65,7 +65,7 @@ OverheatDisplay.component_data = {
 		step = 1,
 		ui_name = "Overheat Steps",
 		ui_type = "slider",
-		value = 10,
+		value = 10
 	},
 	overheat = {
 		decimals = 2,
@@ -73,7 +73,7 @@ OverheatDisplay.component_data = {
 		step = 1,
 		ui_name = "Overheat",
 		ui_type = "slider",
-		value = 0,
+		value = 0
 	},
 	warning_threshold = {
 		decimals = 2,
@@ -81,8 +81,8 @@ OverheatDisplay.component_data = {
 		step = 1,
 		ui_name = "Warning Threshold",
 		ui_type = "slider",
-		value = 0.9,
-	},
+		value = 0.9
+	}
 }
 
 return OverheatDisplay

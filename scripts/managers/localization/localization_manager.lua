@@ -6,7 +6,7 @@ local STRING_RESOURCE_NAMES = {
 	"content/localization/ui",
 	"content/localization/subtitles",
 	"content/localization/items",
-	"content/localization/path_of_trust/ui",
+	"content/localization/path_of_trust/ui"
 }
 local ASSERT_ON_MISSING_LOC_PREFIX = false
 local STRING_CACHE_EXPECTED_SIZE = 2048
@@ -53,7 +53,7 @@ local function xbox_format_locale(language_id)
 		["zh-hk"] = "zh-cn",
 		["zh-mo"] = "zh-cn",
 		["zh-sg"] = "zh-cn",
-		["zh-tw"] = "zh-tw",
+		["zh-tw"] = "zh-tw"
 	}
 
 	return supported_languages[string.lower(language_id)] or "en"
@@ -75,7 +75,7 @@ local function ps5_format_locale(language_id)
 		["pt-br"] = "pt-br",
 		["ru-ru"] = "ru",
 		["zh-cn"] = "zh-cn",
-		["zh-tw"] = "zh-tw",
+		["zh-tw"] = "zh-tw"
 	}
 
 	return supported_languages[string.lower(language_id)] or "en"

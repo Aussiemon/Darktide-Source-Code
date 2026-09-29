@@ -5,19 +5,19 @@ local hud_element_prologue_tutorial_objectives_tracker_settings = {
 	icon = "content/ui/materials/icons/mission_type/default",
 	background_size = {
 		500,
-		400,
+		400
 	},
 	entry_size = {
 		500,
-		60,
+		60
 	},
 	icon_size = {
 		50,
-		50,
+		50
 	},
 	entry_colors = {
 		icon = UIHudSettings.color_tint_main_1,
-		description_text = UIHudSettings.color_tint_main_1,
+		description_text = UIHudSettings.color_tint_main_1
 	},
 	description_text_style = {
 		drop_shadow = false,
@@ -29,23 +29,23 @@ local hud_element_prologue_tutorial_objectives_tracker_settings = {
 		offset = {
 			75,
 			0,
-			4,
+			4
 		},
 		size = {
 			400,
-			50,
-		},
+			50
+		}
 	},
 	events = {
 		{
 			"event_player_add_step_tracker",
-			"event_player_add_step_tracker",
+			"event_player_add_step_tracker"
 		},
 		{
 			"event_player_remove_tracker",
-			"event_player_remove_tracker",
-		},
-	},
+			"event_player_remove_tracker"
+		}
+	}
 }
 
 return settings("HudElementPrologueTutorialObjectivesTrackerSettings", hud_element_prologue_tutorial_objectives_tracker_settings)

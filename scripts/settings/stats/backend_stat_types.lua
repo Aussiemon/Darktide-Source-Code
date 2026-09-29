@@ -3,5 +3,5 @@
 return {
 	ephemeral = "Ephemeral",
 	statistic_by = "StatisticBy",
-	statistic_to = "StatisticTo",
+	statistic_to = "StatisticTo"
 }

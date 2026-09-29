@@ -8,16 +8,16 @@ local circumstance_vo_ventilation_purge_adamant_male_c = {
 			"loc_adamant_male_c__vent_circumstance_start_b_01",
 			"loc_adamant_male_c__vent_circumstance_start_b_02",
 			"loc_adamant_male_c__vent_circumstance_start_b_03",
-			"loc_adamant_male_c__vent_circumstance_start_b_04",
+			"loc_adamant_male_c__vent_circumstance_start_b_04"
 		},
 		sound_events_duration = {
 			2.797344,
 			2.737344,
 			3.28801,
-			4.309333,
+			4.309333
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("circumstance_vo_ventilation_purge_adamant_male_c", circumstance_vo_ventilation_purge_adamant_male_c)

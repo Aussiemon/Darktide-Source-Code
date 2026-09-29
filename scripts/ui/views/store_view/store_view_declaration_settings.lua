@@ -15,17 +15,17 @@ local view_settings = {
 	state_bound = true,
 	use_transition_ui = true,
 	levels = {
-		"content/levels/ui/store/store",
+		"content/levels/ui/store/store"
 	},
 	enter_sound_events = {
-		UISoundEvents.aquilas_vendor_on_enter,
+		UISoundEvents.aquilas_vendor_on_enter
 	},
 	exit_sound_events = {
-		UISoundEvents.aquilas_vendor_on_exit,
+		UISoundEvents.aquilas_vendor_on_exit
 	},
 	wwise_states = {
-		options = WwiseGameSyncSettings.state_groups.options.credit_store_menu,
-	},
+		options = WwiseGameSyncSettings.state_groups.options.credit_store_menu
+	}
 }
 
 return settings("StoreViewDeclarationSettings", view_settings)

@@ -7,13 +7,13 @@ local scenegraph_definition = {
 		scale = "fit",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	canvas = {
 		horizontal_alignment = "center",
@@ -21,13 +21,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	background_image = {
 		horizontal_alignment = "center",
@@ -35,13 +35,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	title_text = {
 		horizontal_alignment = "center",
@@ -49,13 +49,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			1200,
-			40,
+			40
 		},
 		position = {
 			0,
 			-55,
-			4,
-		},
+			4
+		}
 	},
 	logo = {
 		horizontal_alignment = "center",
@@ -63,14 +63,14 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			1920,
-			470,
+			470
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
-	},
+			2
+		}
+	}
 }
 local title_text_font_style = table.clone(UIFontSettings.body)
 
@@ -79,7 +79,7 @@ title_text_font_style.text_color = {
 	255,
 	255,
 	255,
-	255,
+	255
 }
 title_text_font_style.font_size = 24
 
@@ -92,10 +92,10 @@ local widget_definitions = {
 					255,
 					0,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "screen"),
 	background_image = UIWidget.create_definition({
 		{
@@ -106,10 +106,10 @@ local widget_definitions = {
 					255,
 					255,
 					255,
-					255,
-				},
-			},
-		},
+					255
+				}
+			}
+		}
 	}, "background_image"),
 	logo = UIWidget.create_definition({
 		{
@@ -120,10 +120,10 @@ local widget_definitions = {
 					255,
 					255,
 					255,
-					255,
-				},
-			},
-		},
+					255
+				}
+			}
+		}
 	}, "logo"),
 	title_text = UIWidget.create_definition({
 		{
@@ -137,12 +137,12 @@ local widget_definitions = {
 				text_color[2] = 180 + 75 * progress
 				text_color[3] = 180 + 75 * progress
 				text_color[4] = 180 + 75 * progress
-			end,
-		},
-	}, "title_text"),
+			end
+		}
+	}, "title_text")
 }
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

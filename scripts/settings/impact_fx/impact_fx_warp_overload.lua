@@ -9,69 +9,69 @@ local player = {
 		weakspot_died = {
 			{
 				event = "wwise/events/player/play_player_get_hit_light_2d",
-				only_1p = true,
-			},
+				only_1p = true
+			}
 		},
 		died = {
 			{
 				event = "wwise/events/player/play_player_get_hit_light_2d",
-				only_1p = true,
-			},
+				only_1p = true
+			}
 		},
 		weakspot_damage = {
 			{
 				event = "wwise/events/player/play_player_get_hit_light_2d",
-				only_1p = true,
-			},
+				only_1p = true
+			}
 		},
 		damage = {
 			{
 				event = "wwise/events/player/play_player_get_hit_light_2d",
-				only_1p = true,
-			},
+				only_1p = true
+			}
 		},
 		damage_reduced = {
 			{
 				event = "wwise/events/player/play_player_get_hit_light_2d",
-				only_1p = true,
-			},
+				only_1p = true
+			}
 		},
 		damage_negated = {
 			{
 				event = "wwise/events/player/play_player_get_hit_light_2d",
-				only_1p = true,
-			},
+				only_1p = true
+			}
 		},
 		toughness_absorbed = {
 			{
 				event = "wwise/events/player/play_player_get_hit_light_2d",
-				only_1p = true,
-			},
+				only_1p = true
+			}
 		},
 		shield_blocked = {
 			{
 				event = "wwise/events/player/play_player_get_hit_light_2d",
-				only_1p = true,
-			},
+				only_1p = true
+			}
 		},
 		blocked = {
 			{
 				event = "wwise/events/player/play_player_get_hit_light_2d",
-				only_1p = true,
-			},
+				only_1p = true
+			}
 		},
 		dead = {
 			{
 				event = "wwise/events/player/play_player_get_hit_light_2d",
-				only_1p = true,
-			},
+				only_1p = true
+			}
 		},
 		shove = {
 			{
 				event = "wwise/events/player/play_player_get_hit_light_2d",
-				only_1p = true,
-			},
-		},
+				only_1p = true
+			}
+		}
 	},
 	vfx = {
 		blocked = nil,
@@ -84,7 +84,7 @@ local player = {
 		shove = nil,
 		toughness_absorbed = nil,
 		weakspot_damage = nil,
-		weakspot_died = nil,
+		weakspot_died = nil
 	},
 	linked_decal = {
 		blocked = nil,
@@ -96,7 +96,7 @@ local player = {
 		shield_blocked = nil,
 		shove = nil,
 		weakspot_damage = nil,
-		weakspot_died = nil,
+		weakspot_died = nil
 	},
 	blood_ball = {
 		blocked = nil,
@@ -108,8 +108,8 @@ local player = {
 		shield_blocked = nil,
 		shove = nil,
 		weakspot_damage = nil,
-		weakspot_died = nil,
-	},
+		weakspot_died = nil
+	}
 }
 
 return {
@@ -120,6 +120,6 @@ return {
 		[armor_types.player] = player,
 		[armor_types.resistant] = resistant,
 		[armor_types.super_armor] = super_armor,
-		[armor_types.unarmored] = unarmored,
-	},
+		[armor_types.unarmored] = unarmored
+	}
 }

@@ -124,7 +124,7 @@ UICharacterProfilePackageLoader.load_slot_item = function (self, slot_id, item, 
 		self._slots_item_loaded[slot_id] = nil
 		self._slots_loading_data[slot_id] = {
 			packages = packages_to_load,
-			item_name = item_name,
+			item_name = item_name
 		}
 
 		local package_ids = Script.new_array(num_packages_to_load)

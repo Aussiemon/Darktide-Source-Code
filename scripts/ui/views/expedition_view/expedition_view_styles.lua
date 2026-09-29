@@ -12,8 +12,8 @@ ExpeditionViewStyles.play_button.default = {
 	offset = {
 		0,
 		0,
-		3,
-	},
+		3
+	}
 }
 ExpeditionViewStyles.play_button.hover = {
 	horizontal_alignment = "center",
@@ -22,14 +22,14 @@ ExpeditionViewStyles.play_button.hover = {
 	offset = {
 		0,
 		1,
-		4,
+		4
 	},
 	color = {
 		125,
 		255,
 		255,
-		255,
-	},
+		255
+	}
 }
 ExpeditionViewStyles.play_button.hotspot = {
 	horizontal_alignment = "center",
@@ -39,18 +39,18 @@ ExpeditionViewStyles.play_button.hotspot = {
 	offset = {
 		0,
 		0,
-		2,
+		2
 	},
 	size = {
 		268,
-		40,
+		40
 	},
 	color = {
 		255,
 		255,
 		255,
-		0,
-	},
+		0
+	}
 }
 ExpeditionViewStyles.play_button.disabled = {
 	hdr = true,
@@ -58,8 +58,8 @@ ExpeditionViewStyles.play_button.disabled = {
 	offset = {
 		0,
 		0,
-		3,
-	},
+		3
+	}
 }
 ExpeditionViewStyles.play_button.default_text = {
 	font_size = 28,
@@ -71,13 +71,13 @@ ExpeditionViewStyles.play_button.default_text = {
 	offset = {
 		0,
 		0,
-		5,
+		5
 	},
 	size_addition = {
 		0,
-		0,
+		0
 	},
-	text_color = Color.light_green(nil, true),
+	text_color = Color.light_green(nil, true)
 }
 ExpeditionViewStyles.play_button.selected_text = {
 	font_size = 32,
@@ -89,13 +89,13 @@ ExpeditionViewStyles.play_button.selected_text = {
 	offset = {
 		0,
 		0,
-		5,
+		5
 	},
 	size_addition = {
 		0,
-		0,
+		0
 	},
-	text_color = Color.black(nil, true),
+	text_color = Color.black(nil, true)
 }
 ExpeditionViewStyles.play_button.disabled_text = {
 	font_size = 18,
@@ -106,18 +106,18 @@ ExpeditionViewStyles.play_button.disabled_text = {
 	vertical_alignment = "center",
 	size = {
 		345,
-		72,
+		72
 	},
 	offset = {
 		0,
 		0,
-		5,
+		5
 	},
 	size_addition = {
 		0,
-		0,
+		0
 	},
-	text_color = Color.ui_interaction_critical(255, true),
+	text_color = Color.ui_interaction_critical(255, true)
 }
 ExpeditionViewStyles.mapwide_stats = {}
 ExpeditionViewStyles.mapwide_stats.frame = {
@@ -125,9 +125,9 @@ ExpeditionViewStyles.mapwide_stats.frame = {
 	offset = {
 		0,
 		0,
-		20,
+		20
 	},
-	color = Colors.terminal_frame,
+	color = Colors.terminal_frame
 }
 ExpeditionViewStyles.mapwide_stats.background = {
 	horizontal_alignment = "center",
@@ -136,8 +136,8 @@ ExpeditionViewStyles.mapwide_stats.background = {
 		255,
 		0,
 		0,
-		0,
-	},
+		0
+	}
 }
 ExpeditionViewStyles.mapwide_stats.title = {
 	font_size = 20,
@@ -150,30 +150,30 @@ ExpeditionViewStyles.mapwide_stats.title = {
 	offset = {
 		10,
 		10,
-		5,
+		5
 	},
 	size = {
 		Dimensions.sidebar_size[1] - 20,
-		20,
-	},
+		20
+	}
 }
 ExpeditionViewStyles.mapwide_stats.divider_line = {
 	horizontal_alignment = "left",
 	vertical_alignment = "top",
 	size = {
 		Dimensions.sidebar_size[1],
-		1,
+		1
 	},
 	color = Colors.terminal_frame,
 	offset = {
 		0,
 		40,
-		5,
+		5
 	},
 	size_addition = {
 		0,
-		0,
-	},
+		0
+	}
 }
 ExpeditionViewStyles.mapwide_stats.personal_total_text = {
 	font_size = 16,
@@ -186,12 +186,12 @@ ExpeditionViewStyles.mapwide_stats.personal_total_text = {
 	offset = {
 		10,
 		50,
-		5,
+		5
 	},
 	size = {
 		Dimensions.sidebar_size[1] - 65,
-		20,
-	},
+		20
+	}
 }
 ExpeditionViewStyles.mapwide_stats.personal_total_number = {
 	font_size = 16,
@@ -204,12 +204,12 @@ ExpeditionViewStyles.mapwide_stats.personal_total_number = {
 	offset = {
 		-55,
 		50,
-		5,
+		5
 	},
 	size = {
 		Dimensions.sidebar_size[1] - 65,
-		20,
-	},
+		20
+	}
 }
 ExpeditionViewStyles.mapwide_stats.personal_total_icon = {
 	horizontal_alignment = "right",
@@ -218,27 +218,27 @@ ExpeditionViewStyles.mapwide_stats.personal_total_icon = {
 	offset = {
 		-10,
 		45,
-		5,
+		5
 	},
-	color = Colors.text_dark,
+	color = Colors.text_dark
 }
 ExpeditionViewStyles.mapwide_stats.divider_line_2 = {
 	horizontal_alignment = "left",
 	vertical_alignment = "top",
 	size = {
 		Dimensions.sidebar_size[1],
-		1,
+		1
 	},
 	color = Colors.terminal_frame,
 	offset = {
 		0,
 		80,
-		5,
+		5
 	},
 	size_addition = {
 		0,
-		0,
-	},
+		0
+	}
 }
 ExpeditionViewStyles.mapwide_stats.personal_best_text = {
 	font_size = 16,
@@ -251,12 +251,12 @@ ExpeditionViewStyles.mapwide_stats.personal_best_text = {
 	offset = {
 		10,
 		90,
-		5,
+		5
 	},
 	size = {
 		Dimensions.sidebar_size[1] - 65,
-		20,
-	},
+		20
+	}
 }
 ExpeditionViewStyles.mapwide_stats.personal_best_number = {
 	font_size = 16,
@@ -269,12 +269,12 @@ ExpeditionViewStyles.mapwide_stats.personal_best_number = {
 	offset = {
 		-55,
 		90,
-		5,
+		5
 	},
 	size = {
 		Dimensions.sidebar_size[1] - 65,
-		20,
-	},
+		20
+	}
 }
 ExpeditionViewStyles.mapwide_stats.personal_best_icon = {
 	horizontal_alignment = "right",
@@ -283,22 +283,22 @@ ExpeditionViewStyles.mapwide_stats.personal_best_icon = {
 	offset = {
 		-10,
 		85,
-		5,
+		5
 	},
-	color = Colors.text_dark,
+	color = Colors.text_dark
 }
 ExpeditionViewStyles.sidebar_fade = {
 	color = {
 		255,
 		0,
 		0,
-		0,
+		0
 	},
 	offset = {
 		0,
 		0,
-		-99,
-	},
+		-99
+	}
 }
 
 return ExpeditionViewStyles

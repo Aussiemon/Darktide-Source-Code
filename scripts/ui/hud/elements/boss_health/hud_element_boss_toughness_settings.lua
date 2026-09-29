@@ -10,12 +10,12 @@ local hud_element_boss_toughness_settings = {
 	health_animation_threshold = 0.1,
 	size = {
 		640,
-		6,
+		6
 	},
 	size_small = {
 		305,
-		5,
-	},
+		5
+	}
 }
 
 return settings("HudElementBossToughnessSettings", hud_element_boss_toughness_settings)

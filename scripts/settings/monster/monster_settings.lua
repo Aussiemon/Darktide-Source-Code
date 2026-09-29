@@ -7,16 +7,16 @@ local monster_settings = {
 	spawn_types = {
 		"monsters",
 		"witches",
-		"captains",
+		"captains"
 	},
 	used_spawn_types = {
 		"monsters",
 		"witches",
-		"captains",
+		"captains"
 	},
 	no_spawn_volume_half_extents = {
-		witches = Vector3Box(2, 2, 0.5),
-	},
+		witches = Vector3Box(2, 2, 0.5)
+	}
 }
 
 return settings("MonsterSettings", monster_settings)

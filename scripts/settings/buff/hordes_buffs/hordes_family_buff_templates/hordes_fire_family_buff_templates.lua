@@ -66,7 +66,7 @@ templates.hordes_buff_burning_on_melee_hit = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		local is_ogryn_lunge_hit = params.damage_type == "ogryn_lunge"
@@ -93,7 +93,7 @@ templates.hordes_buff_burning_on_melee_hit = {
 
 			fx_system:trigger_wwise_event(SFX_NAMES.burning_proc, enemy_position)
 		end
-	end,
+	end
 }
 
 local burning_stacks_on_ranged_hit = HordesBuffsData.hordes_buff_burning_on_ranged_hit.buff_stats.stacks.value
@@ -106,7 +106,7 @@ templates.hordes_buff_burning_on_ranged_hit = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_ranged_hit,
 	proc_func = function (params, template_data, template_context)
@@ -124,7 +124,7 @@ templates.hordes_buff_burning_on_ranged_hit = {
 
 			fx_system:trigger_wwise_event(SFX_NAMES.burning_proc, enemy_position)
 		end
-	end,
+	end
 }
 
 local burning_stacks_on_melee_hit_taken = HordesBuffsData.hordes_buff_burning_on_melee_hit_taken.buff_stats.stacks.value
@@ -136,7 +136,7 @@ templates.hordes_buff_burning_on_melee_hit_taken = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_player_hit_received] = 1,
+		[proc_events.on_player_hit_received] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_melee_hit,
 	proc_func = function (params, template_data, template_context)
@@ -158,7 +158,7 @@ templates.hordes_buff_burning_on_melee_hit_taken = {
 
 			fx_system:trigger_wwise_event(SFX_NAMES.burning_proc, enemy_position)
 		end
-	end,
+	end
 }
 
 local percent_extra_damage_vs_burning_enemies = HordesBuffsData.hordes_buff_damage_vs_burning.buff_stats.damage.value
@@ -170,8 +170,8 @@ templates.hordes_buff_damage_vs_burning = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	stat_buffs = {
-		[stat_buffs.damage_vs_burning] = percent_extra_damage_vs_burning_enemies,
-	},
+		[stat_buffs.damage_vs_burning] = percent_extra_damage_vs_burning_enemies
+	}
 }
 
 local fire_pulse_burning_stacks = HordesBuffsData.hordes_buff_fire_pulse.buff_stats.stacks.value
@@ -206,7 +206,7 @@ templates.hordes_buff_fire_pulse = {
 		end
 
 		HordesBuffsUtilities.compute_fire_pulse(template_context.is_server, template_context.unit, template_data.broadphase, template_data.enemy_side_names, t, fire_pulse_burning_stacks)
-	end,
+	end
 }
 
 local percentage_toughness_per_fire_damage_dealt = HordesBuffsData.hordes_buff_toughness_on_fire_damage_dealt.buff_stats.thoughness_regen.value
@@ -218,14 +218,14 @@ templates.hordes_buff_toughness_on_fire_damage_dealt = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_damage_dealt] = 1,
+		[proc_events.on_damage_dealt] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		return params.damage_type and params.damage_type == "burning"
 	end,
 	proc_func = function (params, template_data, template_context)
 		Toughness.replenish_percentage(template_context.unit, percentage_toughness_per_fire_damage_dealt, false)
-	end,
+	end
 }
 
 local percent_burning_dmg_per_burning_enemy = HordesBuffsData.hordes_buff_burning_damage_per_burning_enemy.buff_stats.damage.value
@@ -237,8 +237,8 @@ templates.hordes_buff_burning_damage_per_burning_enemy = {
 	lerped_stat_buffs = {
 		[stat_buffs.burning_damage] = {
 			min = 0,
-			max = percent_burning_dmg_per_burning_enemy,
-		},
+			max = percent_burning_dmg_per_burning_enemy
+		}
 	},
 	start_func = function (template_data, template_context)
 		template_data.burn_extra_damage_max_stacks = 10
@@ -290,7 +290,7 @@ templates.hordes_buff_burning_damage_per_burning_enemy = {
 	end,
 	visual_stack_count = function (template_data, template_context)
 		return math.clamp(template_data.num_stacks, 0, template_data.burn_extra_damage_max_stacks)
-	end,
+	end
 }
 
 local percent_dmg_reduction_vs_flammers_grenadiers = HordesBuffsData.hordes_buff_damage_taken_by_flamers_and_grenadier_reduced.buff_stats.damage_reduce.value
@@ -305,8 +305,8 @@ templates.hordes_buff_damage_taken_by_flamers_and_grenadier_reduced = {
 		[stat_buffs.damage_taken_by_cultist_flamer_multiplier] = percent_dmg_reduction_vs_flammers_grenadiers,
 		[stat_buffs.damage_taken_by_renegade_flamer_multiplier] = percent_dmg_reduction_vs_flammers_grenadiers,
 		[stat_buffs.damage_taken_by_cultist_grenadier_multiplier] = percent_dmg_reduction_vs_flammers_grenadiers,
-		[stat_buffs.damage_taken_by_renegade_grenadier_multiplier] = percent_dmg_reduction_vs_flammers_grenadiers,
-	},
+		[stat_buffs.damage_taken_by_renegade_grenadier_multiplier] = percent_dmg_reduction_vs_flammers_grenadiers
+	}
 }
 
 local coherency_damage_vs_burning_enemies = HordesBuffsData.hordes_buff_coherency_damage_vs_burning.buff_stats.damage.value
@@ -326,7 +326,7 @@ templates.hordes_buff_coherency_damage_vs_burning = {
 		local coherency_system = Managers.state.extension:system("coherency_system")
 
 		coherency_system:add_external_buff(unit, "hordes_buff_coherency_damage_vs_burning_effect")
-	end,
+	end
 }
 templates.hordes_buff_coherency_damage_vs_burning_effect = {
 	class_name = "buff",
@@ -337,8 +337,8 @@ templates.hordes_buff_coherency_damage_vs_burning_effect = {
 	predicted = false,
 	buff_category = buff_categories.hordes_sub_buff,
 	stat_buffs = {
-		[stat_buffs.damage_vs_burning] = coherency_damage_vs_burning_enemies,
-	},
+		[stat_buffs.damage_vs_burning] = coherency_damage_vs_burning_enemies
+	}
 }
 
 local coherency_extra_burning_duration_percent = HordesBuffsData.hordes_buff_coherency_burning_duration.buff_stats.linger.value
@@ -358,7 +358,7 @@ templates.hordes_buff_coherency_burning_duration = {
 		local coherency_system = Managers.state.extension:system("coherency_system")
 
 		coherency_system:add_external_buff(unit, "hordes_buff_coherency_burning_duration_effect")
-	end,
+	end
 }
 templates.hordes_buff_coherency_burning_duration_effect = {
 	class_name = "buff",
@@ -369,8 +369,8 @@ templates.hordes_buff_coherency_burning_duration_effect = {
 	predicted = false,
 	buff_category = buff_categories.hordes_sub_buff,
 	stat_buffs = {
-		[stat_buffs.burning_duration] = coherency_extra_burning_duration_percent,
-	},
+		[stat_buffs.burning_duration] = coherency_extra_burning_duration_percent
+	}
 }
 
 return templates

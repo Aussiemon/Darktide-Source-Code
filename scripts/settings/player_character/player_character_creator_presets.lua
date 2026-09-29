@@ -7,7 +7,7 @@ local player_character_creator_presets = {
 	ogryn = require("scripts/settings/player_character/character_creator_presets/character_creator_presets_ogryn"),
 	psyker = require("scripts/settings/player_character/character_creator_presets/character_creator_presets_human"),
 	veteran = require("scripts/settings/player_character/character_creator_presets/character_creator_presets_human"),
-	zealot = require("scripts/settings/player_character/character_creator_presets/character_creator_presets_human"),
+	zealot = require("scripts/settings/player_character/character_creator_presets/character_creator_presets_human")
 }
 
 return settings("PlayerCharacterCreatorPresets", player_character_creator_presets)

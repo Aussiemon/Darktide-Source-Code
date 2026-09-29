@@ -16,7 +16,7 @@ rating_text_style.font_size = 30
 rating_text_style.offset = {
 	-10,
 	0,
-	300,
+	300
 }
 rating_text_style.material = "content/ui/materials/font_gradients/slug_font_gradient_item_level"
 
@@ -28,12 +28,12 @@ rating_header_text_style.text_color = Color.terminal_text_body(255, true)
 rating_header_text_style.font_size = 17
 rating_header_text_style.size = {
 	nil,
-	18,
+	18
 }
 rating_header_text_style.offset = {
 	-112,
 	3,
-	300,
+	300
 }
 
 local basic_text_style = table.clone(UIFontSettings.body_small)
@@ -44,26 +44,26 @@ basic_text_style.text_color = Color.terminal_text_body(255, true)
 basic_text_style.font_size = 17
 basic_text_style.size = {
 	nil,
-	18,
+	18
 }
 basic_text_style.offset = {
 	55,
 	3,
-	300,
+	300
 }
 
 local bar_size = {
 	1300,
-	17,
+	17
 }
 local reward_field_size = {
 	bar_size[1] + 300,
-	198,
+	198
 }
 local item_size = ViewElementWintrackSettings.item_size
 local reward_size = {
 	164,
-	168,
+	168
 }
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
@@ -73,13 +73,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	reward_field = {
 		horizontal_alignment = "center",
@@ -89,8 +89,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			-95,
-			2,
-		},
+			2
+		}
 	},
 	experience_bar_frame = {
 		horizontal_alignment = "center",
@@ -98,13 +98,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			1420,
-			34,
+			34
 		},
 		position = {
 			0,
 			-10,
-			3,
-		},
+			3
+		}
 	},
 	reward_progress_bar = {
 		horizontal_alignment = "center",
@@ -114,8 +114,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			-22,
-			6,
-		},
+			6
+		}
 	},
 	experience_progress_bar = {
 		horizontal_alignment = "center",
@@ -125,8 +125,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			-22,
-			5,
-		},
+			5
+		}
 	},
 	reward_mask = {
 		horizontal_alignment = "center",
@@ -134,13 +134,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			bar_size[1] + 50,
-			reward_size[2] + 150,
+			reward_size[2] + 150
 		},
 		position = {
 			0,
 			25,
-			1,
-		},
+			1
+		}
 	},
 	reward_interaction = {
 		horizontal_alignment = "center",
@@ -148,13 +148,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			bar_size[1] - 200,
-			reward_size[2] + 150,
+			reward_size[2] + 150
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	reward = {
 		horizontal_alignment = "left",
@@ -164,8 +164,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			5,
-			10,
-		},
+			10
+		}
 	},
 	reward_item = {
 		horizontal_alignment = "center",
@@ -175,8 +175,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			-10,
-			3,
-		},
+			3
+		}
 	},
 	claim_button = {
 		horizontal_alignment = "left",
@@ -184,13 +184,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			232,
-			52,
+			52
 		},
 		position = {
 			9,
 			-6,
-			33,
-		},
+			33
+		}
 	},
 	page_thumb_indicator = {
 		horizontal_alignment = "center",
@@ -198,13 +198,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			30,
-			15,
-		},
+			15
+		}
 	},
 	navigation_arrow_left = {
 		horizontal_alignment = "left",
@@ -212,13 +212,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			35,
-			35,
+			35
 		},
 		position = {
 			-80,
 			0,
-			30,
-		},
+			30
+		}
 	},
 	navigation_arrow_right = {
 		horizontal_alignment = "right",
@@ -226,13 +226,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			35,
-			35,
+			35
 		},
 		position = {
 			80,
 			0,
-			30,
-		},
+			30
+		}
 	},
 	item_stats_pivot = {
 		horizontal_alignment = "center",
@@ -240,13 +240,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			170,
-			1,
-		},
+			1
+		}
 	},
 	reward_input_description = {
 		horizontal_alignment = "center",
@@ -254,14 +254,14 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			800,
-			40,
+			40
 		},
 		position = {
 			0,
 			75,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local widget_definitions = {
 	reward_input_description = UIWidget.create_definition({
@@ -280,15 +280,15 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "reward_input_description"),
 	navigation_arrow_left = UIWidget.create_definition({
 		{
 			content_id = "hotspot",
-			pass_type = "hotspot",
+			pass_type = "hotspot"
 		},
 		{
 			pass_type = "texture_uv",
@@ -299,19 +299,19 @@ local widget_definitions = {
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
-				},
+						1
+					}
+				}
 			},
 			visibility_function = function (content, style)
 				local hotspot = content.hotspot
 
 				return not hotspot.is_selected and not hotspot.is_hover and not hotspot.is_focused
-			end,
+			end
 		},
 		{
 			pass_type = "texture_uv",
@@ -322,25 +322,25 @@ local widget_definitions = {
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
-				},
+						1
+					}
+				}
 			},
 			visibility_function = function (content, style)
 				local hotspot = content.hotspot
 
 				return hotspot.is_selected or hotspot.is_hover or hotspot.is_focused
-			end,
-		},
+			end
+		}
 	}, "navigation_arrow_left"),
 	navigation_arrow_right = UIWidget.create_definition({
 		{
 			content_id = "hotspot",
-			pass_type = "hotspot",
+			pass_type = "hotspot"
 		},
 		{
 			pass_type = "texture",
@@ -351,7 +351,7 @@ local widget_definitions = {
 				local hotspot = content.hotspot
 
 				return not hotspot.is_selected and not hotspot.is_hover and not hotspot.is_focused
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -362,8 +362,8 @@ local widget_definitions = {
 				local hotspot = content.hotspot
 
 				return hotspot.is_selected or hotspot.is_hover or hotspot.is_focused
-			end,
-		},
+			end
+		}
 	}, "navigation_arrow_right"),
 	reward_field = UIWidget.create_definition({
 		{
@@ -375,14 +375,14 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					1286,
-					90,
+					90
 				},
 				offset = {
 					0,
 					-70,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -393,13 +393,13 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					bar_size[1] + 100,
-					16,
+					16
 				},
 				offset = {
 					0,
 					-160,
-					0,
-				},
+					0
+				}
 			},
 			change_function = function (content, style, animations, dt)
 				local pixel_progress = content.pixel_progress or 0
@@ -418,7 +418,7 @@ local widget_definitions = {
 					uvs[1][1] = 1 - start_uv + current_uv
 					uvs[2][1] = start_uv + current_uv
 				end
-			end,
+			end
 		},
 		{
 			pass_type = "texture_uv",
@@ -429,13 +429,13 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					bar_size[1] + 100,
-					16,
+					16
 				},
 				offset = {
 					0,
 					-54,
-					0,
-				},
+					0
+				}
 			},
 			change_function = function (content, style, animations, dt)
 				local pixel_progress = content.pixel_progress or 0
@@ -454,8 +454,8 @@ local widget_definitions = {
 					uvs[1][1] = 1 - start_uv + current_uv
 					uvs[2][1] = start_uv + current_uv
 				end
-			end,
-		},
+			end
+		}
 	}, "reward_field"),
 	experience_bar_frame = UIWidget.create_definition({
 		{
@@ -467,10 +467,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
-				color = Color.white(255, true),
-			},
+				color = Color.white(255, true)
+			}
 		},
 		{
 			pass_type = "rect",
@@ -479,16 +479,16 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					nil,
-					15,
+					15
 				},
 				color = Color.black(255, true),
 				offset = {
 					0,
 					-3,
-					-3,
-				},
-			},
-		},
+					-3
+				}
+			}
+		}
 	}, "experience_bar_frame"),
 	experience_progress_bar = UIWidget.create_definition({
 		{
@@ -500,21 +500,21 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				color = Color.terminal_text_body_sub_header(255, true),
 				size = {
-					0,
+					0
 				},
 				size_addition = {
 					0,
-					-4,
+					-4
 				},
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				material_values = {
-					progress = 1,
-				},
-			},
+					progress = 1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -525,20 +525,20 @@ local widget_definitions = {
 				scale_to_material = true,
 				vertical_alignment = "center",
 				size = {
-					0,
+					0
 				},
 				offset = {
 					-10,
 					1,
-					0,
+					0
 				},
 				color = Color.terminal_text_body_sub_header(0, true),
 				size_addition = {
 					20,
-					14,
-				},
-			},
-		},
+					14
+				}
+			}
+		}
 	}, "experience_progress_bar"),
 	reward_progress_bar = UIWidget.create_definition({
 		{
@@ -550,21 +550,21 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				color = Color.terminal_corner_selected(255, true),
 				size = {
-					0,
+					0
 				},
 				size_addition = {
 					0,
-					-4,
+					-4
 				},
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				material_values = {
-					progress = 1,
-				},
-			},
+					progress = 1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -575,21 +575,21 @@ local widget_definitions = {
 				scale_to_material = true,
 				vertical_alignment = "center",
 				size = {
-					0,
+					0
 				},
 				offset = {
 					-10,
 					1,
-					0,
+					0
 				},
 				color = Color.terminal_text_key_value(0, true),
 				size_addition = {
 					20,
-					14,
-				},
-			},
-		},
-	}, "reward_progress_bar"),
+					14
+				}
+			}
+		}
+	}, "reward_progress_bar")
 }
 local page_thumb_size = ViewElementWintrackSettings.page_thumb_size
 local page_thumb_widget_definition = UIWidget.create_definition({
@@ -603,9 +603,9 @@ local page_thumb_widget_definition = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				0,
-			},
-		},
+				0
+			}
+		}
 	},
 	{
 		pass_type = "rect",
@@ -617,12 +617,12 @@ local page_thumb_widget_definition = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				1,
-			},
+				1
+			}
 		},
 		visibility_function = function (content, style)
 			return content.active
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -636,17 +636,17 @@ local page_thumb_widget_definition = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				1,
+				1
 			},
 			size_addition = {
 				24,
-				24,
-			},
+				24
+			}
 		},
 		visibility_function = function (content, style)
 			return content.active
-		end,
-	},
+		end
+	}
 }, "page_thumb_indicator")
 local reward_base_pass_template = {
 	{
@@ -655,8 +655,8 @@ local reward_base_pass_template = {
 		style_id = "hotspot",
 		content = {},
 		style = {
-			anim_select_speed = 4,
-		},
+			anim_select_speed = 4
+		}
 	},
 	{
 		pass_type = "texture",
@@ -667,18 +667,18 @@ local reward_base_pass_template = {
 			vertical_alignment = "center",
 			size_addition = {
 				140,
-				140,
+				140
 			},
 			color = Color.ui_terminal(255, true),
 			offset = {
 				0,
 				-10,
-				0,
-			},
+				0
+			}
 		},
 		visibility_function = function (content, style)
 			return content.can_claim and not content.claimed
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -691,18 +691,18 @@ local reward_base_pass_template = {
 				255,
 				0,
 				0,
-				0,
+				0
 			},
 			size = {
 				110,
-				110,
+				110
 			},
 			offset = {
 				0,
 				-10,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	{
 		pass_type = "texture",
@@ -715,14 +715,14 @@ local reward_base_pass_template = {
 				255,
 				255,
 				255,
-				255,
+				255
 			},
 			offset = {
 				0,
 				-2,
-				21,
-			},
-		},
+				21
+			}
+		}
 	},
 	{
 		pass_type = "texture",
@@ -736,12 +736,12 @@ local reward_base_pass_template = {
 			offset = {
 				0,
 				-10,
-				20,
-			},
+				20
+			}
 		},
 		visibility_function = function (content, style)
 			return content.claimed
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -751,7 +751,7 @@ local reward_base_pass_template = {
 			vertical_alignment = "top",
 			size = {
 				40,
-				40,
+				40
 			},
 			default_color = Color.terminal_frame(180, true),
 			selected_color = Color.terminal_frame_selected(180, true),
@@ -760,8 +760,8 @@ local reward_base_pass_template = {
 			offset = {
 				-28,
 				20,
-				24,
-			},
+				24
+			}
 		},
 		visibility_function = function (content, style)
 			return content.claimed
@@ -770,7 +770,7 @@ local reward_base_pass_template = {
 			if not content.hotspot.disabled then
 				ButtonPassTemplates.terminal_button_change_function(content, style)
 			end
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -789,8 +789,8 @@ local reward_base_pass_template = {
 			offset = {
 				-32,
 				19,
-				25,
-			},
+				25
+			}
 		},
 		visibility_function = function (content, style)
 			return content.claimed
@@ -799,7 +799,7 @@ local reward_base_pass_template = {
 			if not content.hotspot.disabled then
 				ButtonPassTemplates.terminal_button_change_function(content, style)
 			end
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -812,21 +812,21 @@ local reward_base_pass_template = {
 				255,
 				0,
 				0,
-				0,
+				0
 			},
 			size = {
 				60,
-				30,
+				30
 			},
 			offset = {
 				26,
 				32,
-				20,
-			},
+				20
+			}
 		},
 		visibility_function = function (content, style)
 			return content.reward_count ~= ""
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -836,7 +836,7 @@ local reward_base_pass_template = {
 			vertical_alignment = "center",
 			size = {
 				112,
-				110,
+				110
 			},
 			default_color = Color.terminal_frame(180, true),
 			selected_color = Color.terminal_frame_selected(180, true),
@@ -845,13 +845,13 @@ local reward_base_pass_template = {
 			offset = {
 				0,
 				-9,
-				24,
-			},
+				24
+			}
 		},
 		visibility_function = function (content, style)
 			return not content.hotspot.disabled and (content.hotspot.is_hover or content.hotspot.is_selected)
 		end,
-		change_function = ButtonPassTemplates.terminal_button_change_function,
+		change_function = ButtonPassTemplates.terminal_button_change_function
 	},
 	{
 		pass_type = "text",
@@ -868,9 +868,9 @@ local reward_base_pass_template = {
 			offset = {
 				-30,
 				31,
-				21,
-			},
-		},
+				21
+			}
+		}
 	},
 	{
 		pass_type = "text",
@@ -886,10 +886,10 @@ local reward_base_pass_template = {
 			offset = {
 				0,
 				-26,
-				21,
-			},
-		},
-	},
+				21
+			}
+		}
+	}
 }
 local claim_button_pass_template = table.clone(ButtonPassTemplates.terminal_button)
 
@@ -906,15 +906,15 @@ claim_button_pass_template[#claim_button_pass_template + 1] = {
 		offset = {
 			0,
 			0,
-			2,
+			2
 		},
 		material_values = {
-			intensity = 0,
-		},
+			intensity = 0
+		}
 	},
 	visibility_function = function (content, style)
 		return style.play_pulse
-	end,
+	end
 }
 claim_button_pass_template[#claim_button_pass_template + 1] = {
 	pass_type = "texture",
@@ -929,8 +929,8 @@ claim_button_pass_template[#claim_button_pass_template + 1] = {
 		offset = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	visibility_function = function (content, style)
 		return style.play_pulse
@@ -948,7 +948,7 @@ claim_button_pass_template[#claim_button_pass_template + 1] = {
 		end
 
 		style.color[1] = alpha
-	end,
+	end
 }
 
 local front_widget_definitions = {
@@ -962,17 +962,17 @@ local front_widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					272,
-					204,
+					204
 				},
 				offset = {
 					-21,
 					9,
-					30,
-				},
+					30
+				}
 			},
 			visibility_function = function (content, style)
 				return not content.read_only
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -983,17 +983,17 @@ local front_widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					272,
-					204,
+					204
 				},
 				offset = {
 					-21,
 					9,
-					30,
-				},
+					30
+				}
 			},
 			visibility_function = function (content, style)
 				return not content.read_only
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -1004,14 +1004,14 @@ local front_widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					192,
-					224,
+					224
 				},
 				offset = {
 					0,
 					17,
-					30,
-				},
-			},
+					30
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1022,25 +1022,25 @@ local front_widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					192,
-					224,
+					224
 				},
 				offset = {
 					0,
 					17,
-					30,
-				},
+					30
+				}
 			},
 			visibility_function = function (content, style)
 				return content.read_only
-			end,
-		},
+			end
+		}
 	}, "reward_field"),
 	claim_button = UIWidget.create_definition(claim_button_pass_template, "claim_button", {
 		gamepad_action = "hotkey_menu_special_2",
 		original_text = Utf8.upper(Localize("loc_penance_menu_claim_button")),
 		hotspot = {
-			on_pressed_sound = UISoundEvents.default_click,
-		},
+			on_pressed_sound = UISoundEvents.default_click
+		}
 	}, nil, {
 		text = {
 			font_size = 22,
@@ -1048,14 +1048,14 @@ local front_widget_definitions = {
 			offset = {
 				10,
 				0,
-				6,
+				6
 			},
 			size_addition = {
 				-20,
-				0,
-			},
-		},
-	}),
+				0
+			}
+		}
+	})
 }
 local animations = {
 	on_points_added = {
@@ -1074,7 +1074,7 @@ local animations = {
 				if not params.anim_only_experience_bar then
 					widgets.reward_progress_bar.style.outer_glow.color[1] = anim_progress * 200
 				end
-			end,
+			end
 		},
 		{
 			end_time = 1.9,
@@ -1091,8 +1091,8 @@ local animations = {
 				if not params.anim_only_experience_bar then
 					widgets.reward_progress_bar.style.outer_glow.color[1] = anim_progress * 200
 				end
-			end,
-		},
+			end
+		}
 	},
 	activate_claim_button = {
 		{
@@ -1105,7 +1105,7 @@ local animations = {
 			end,
 			update = function (parent, ui_scenegraph, _scenegraph_definition, widgets, progress, params)
 				widgets.claim_button.style.button_attention.color[1] = 255 * progress
-			end,
+			end
 		},
 		{
 			end_time = 1,
@@ -1113,7 +1113,7 @@ local animations = {
 			start_time = 0,
 			update = function (parent, ui_scenegraph, _scenegraph_definition, widgets, progress, params)
 				widgets.claim_button.style.button_attention.material_values.intensity = 1 - math.ease_sine(progress)
-			end,
+			end
 		},
 		{
 			end_time = 2,
@@ -1121,8 +1121,8 @@ local animations = {
 			start_time = 0.8,
 			update = function (parent, ui_scenegraph, _scenegraph_definition, widgets, progress, params)
 				widgets.claim_button.style.button_attention.color[1] = 255 - 255 * math.easeOutCubic(progress)
-			end,
-		},
+			end
+		}
 	},
 	deactivate_claim_button = {
 		{
@@ -1132,9 +1132,9 @@ local animations = {
 			init = function (parent, ui_scenegraph, _scenegraph_definition, widgets, progress, params)
 				widgets.claim_button.style.inner_frame_glow.play_pulse = false
 				widgets.claim_button.style.button_attention.play_pulse = true
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
@@ -1143,5 +1143,5 @@ return {
 	page_thumb_widget_definition = page_thumb_widget_definition,
 	widget_definitions = widget_definitions,
 	front_widget_definitions = front_widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

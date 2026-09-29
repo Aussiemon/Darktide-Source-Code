@@ -10,7 +10,7 @@ local NON_SUPPORTED_CHARACTER_STATES = {
 	ladder_climbing = true,
 	ladder_top_entering = true,
 	ladder_top_leaving = true,
-	ledge_vaulting = true,
+	ledge_vaulting = true
 }
 local LuggableInteraction = class("LuggableInteraction", "BaseInteraction")
 

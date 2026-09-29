@@ -34,7 +34,7 @@ Options.create_percent_slider_template = function (params)
 		tooltip_text = params.tooltip_text,
 		id = params.id,
 		is_sub_setting = params.is_sub_setting,
-		commit = params.commit,
+		commit = params.commit
 	}
 
 	return slider_template
@@ -89,7 +89,7 @@ Options.create_value_slider_template = function (params)
 		tooltip_text = params.tooltip_text,
 		id = params.id,
 		is_sub_setting = params.is_sub_setting,
-		commit = params.commit,
+		commit = params.commit
 	}
 
 	return slider_template

@@ -12,12 +12,12 @@ title_text_style.text_horizontal_alignment = "center"
 title_text_style.text_vertical_alignment = "center"
 title_text_style.size = {
 	650,
-	50,
+	50
 }
 title_text_style.offset = {
 	0,
 	80,
-	2,
+	2
 }
 title_text_style.text_color = Color.ui_interaction_critical(180, true)
 title_text_style.font_type = "machine_medium"
@@ -33,12 +33,12 @@ description_text_style.text_vertical_alignment = "center"
 description_text_style.text_color = Color.ui_interaction_critical(180, true)
 description_text_style.size = {
 	650,
-	50,
+	50
 }
 description_text_style.offset = {
 	0,
 	120,
-	2,
+	2
 }
 description_text_style.font_type = "machine_medium"
 description_text_style.font_size = 30
@@ -52,14 +52,14 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			128,
-			128,
+			128
 		},
 		position = {
 			0,
 			-230,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local widget_definitions = {
 	warning_sign = UIWidget.create_definition({
@@ -68,14 +68,14 @@ local widget_definitions = {
 			style_id = "title_text",
 			value = "WARNING",
 			value_id = "title_text",
-			style = title_text_style,
+			style = title_text_style
 		},
 		{
 			pass_type = "text",
 			style_id = "description_text",
 			value = "EVACUATE IMMEDIATELY",
 			value_id = "description_text",
-			style = description_text_style,
+			style = description_text_style
 		},
 		{
 			pass_type = "texture",
@@ -86,15 +86,15 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
-				color = Color.ui_interaction_critical(180, true),
-			},
-		},
-	}, "warning_sign"),
+				color = Color.ui_interaction_critical(180, true)
+			}
+		}
+	}, "warning_sign")
 }
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

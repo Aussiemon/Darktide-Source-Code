@@ -6,15 +6,15 @@ local UISettings = require("scripts/settings/ui/ui_settings")
 local template = {}
 local size = {
 	100,
-	100,
+	100
 }
 local arrow_size = {
 	100,
-	100,
+	100
 }
 local icon_size = {
 	64,
-	64,
+	64
 }
 
 template.size = size
@@ -26,13 +26,13 @@ template.screen_margins = {
 	down = 0.23148148148148148,
 	left = 0.234375,
 	right = 0.234375,
-	up = 0.23148148148148148,
+	up = 0.23148148148148148
 }
 template.scale_settings = {
 	distance_max = 50,
 	distance_min = 5,
 	scale_from = 0.5,
-	scale_to = 1,
+	scale_to = 1
 }
 
 template.get_smart_tag_id = function (marker)
@@ -61,13 +61,13 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					0,
 					-10,
-					1,
+					1
 				},
-				color = Color.ui_hud_green_super_light(255, true),
+				color = Color.ui_hud_green_super_light(255, true)
 			},
 			visibility_function = function (content, style)
 				return content.icon ~= nil
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -78,22 +78,22 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				vertical_alignment = "center",
 				default_size = {
 					icon_size[1] * 1.25,
-					icon_size[2] * 1.25,
+					icon_size[2] * 1.25
 				},
 				size = {
 					icon_size[1],
-					icon_size[2],
+					icon_size[2]
 				},
 				offset = {
 					0,
 					-10,
-					0,
+					0
 				},
-				color = Color.ui_hud_green_medium(255, true),
+				color = Color.ui_hud_green_medium(255, true)
 			},
 			visibility_function = function (content, style)
 				return content.icon ~= nil
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -105,22 +105,22 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				vertical_alignment = "center",
 				default_size = {
 					icon_size[1] * 1,
-					icon_size[2] * 1,
+					icon_size[2] * 1
 				},
 				size = {
 					icon_size[1],
-					icon_size[2],
+					icon_size[2]
 				},
 				offset = {
 					0,
 					-10,
-					0,
+					0
 				},
-				color = Color.ui_hud_green_super_light(255, true),
+				color = Color.ui_hud_green_super_light(255, true)
 			},
 			visibility_function = function (content, style)
 				return content.icon ~= nil
-			end,
+			end
 		},
 		{
 			pass_type = "rotated_texture",
@@ -134,16 +134,16 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					0,
 					-10,
-					1,
+					1
 				},
-				color = Color.ui_hud_green_super_light(255, true),
+				color = Color.ui_hud_green_super_light(255, true)
 			},
 			visibility_function = function (content, style)
 				return content.is_clamped
 			end,
 			change_function = function (content, style)
 				style.angle = content.angle
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -158,7 +158,7 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					0,
 					20,
-					2,
+					2
 				},
 				font_type = header_font_settings.font_type,
 				font_size = header_font_settings.font_size,
@@ -166,13 +166,13 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				default_text_color = header_font_color,
 				size = {
 					200,
-					20,
-				},
+					20
+				}
 			},
 			visibility_function = function (content, style)
 				return content.distance >= 5 and (content.is_hovered or content.is_clamped)
-			end,
-		},
+			end
+		}
 	}, scenegraph_id)
 end
 

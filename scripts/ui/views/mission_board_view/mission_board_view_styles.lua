@@ -16,9 +16,9 @@ MissionBoardViewStyles.screen_frame = {
 	offset = {
 		0,
 		0,
-		-50,
+		-50
 	},
-	color = Color.white(nil, true),
+	color = Color.white(nil, true)
 }
 MissionBoardViewStyles.screen_frame_glow = {
 	horizontal_alignment = "center",
@@ -26,14 +26,14 @@ MissionBoardViewStyles.screen_frame_glow = {
 	vertical_alignment = "bottom",
 	size = {
 		1330,
-		308,
+		308
 	},
 	offset = {
 		-705,
 		0,
-		1,
+		1
 	},
-	color = Color.white(nil, true),
+	color = Color.white(nil, true)
 }
 MissionBoardViewStyles.play_button = {}
 MissionBoardViewStyles.play_button.default = {
@@ -41,8 +41,8 @@ MissionBoardViewStyles.play_button.default = {
 	offset = {
 		0,
 		0,
-		3,
-	},
+		3
+	}
 }
 MissionBoardViewStyles.play_button.hover = {
 	horizontal_alignment = "center",
@@ -51,14 +51,14 @@ MissionBoardViewStyles.play_button.hover = {
 	offset = {
 		0,
 		1,
-		4,
+		4
 	},
 	color = {
 		125,
 		255,
 		255,
-		255,
-	},
+		255
+	}
 }
 MissionBoardViewStyles.play_button.hotspot = {
 	horizontal_alignment = "center",
@@ -68,18 +68,18 @@ MissionBoardViewStyles.play_button.hotspot = {
 	offset = {
 		0,
 		0,
-		2,
+		2
 	},
 	size = {
 		268,
-		40,
+		40
 	},
 	color = {
 		255,
 		255,
 		255,
-		0,
-	},
+		0
+	}
 }
 MissionBoardViewStyles.play_button.disabled = {
 	hdr = true,
@@ -87,8 +87,8 @@ MissionBoardViewStyles.play_button.disabled = {
 	offset = {
 		0,
 		0,
-		3,
-	},
+		3
+	}
 }
 MissionBoardViewStyles.play_button.default_text = {
 	default_font_size = 28,
@@ -101,13 +101,13 @@ MissionBoardViewStyles.play_button.default_text = {
 	offset = {
 		0,
 		0,
-		5,
+		5
 	},
 	size_addition = {
 		0,
-		0,
+		0
 	},
-	text_color = Color.light_green(nil, true),
+	text_color = Color.light_green(nil, true)
 }
 MissionBoardViewStyles.play_button.selected_text = {
 	default_font_size = 32,
@@ -120,13 +120,13 @@ MissionBoardViewStyles.play_button.selected_text = {
 	offset = {
 		0,
 		0,
-		5,
+		5
 	},
 	size_addition = {
 		0,
-		0,
+		0
 	},
-	text_color = Color.black(nil, true),
+	text_color = Color.black(nil, true)
 }
 MissionBoardViewStyles.play_button.disabled_text = {
 	default_font_size = 18,
@@ -138,63 +138,63 @@ MissionBoardViewStyles.play_button.disabled_text = {
 	vertical_alignment = "center",
 	size = {
 		345,
-		72,
+		72
 	},
 	offset = {
 		0,
 		0,
-		5,
+		5
 	},
 	size_addition = {
 		0,
-		0,
+		0
 	},
-	text_color = Color.ui_interaction_critical(255, true),
+	text_color = Color.ui_interaction_critical(255, true)
 }
 MissionBoardViewStyles.gradient_by_category = {
 	default = {
 		default_gradient = "content/ui/textures/mission_board/gradient_farme_selected_green",
 		disabled_gradient = "content/ui/textures/mission_board/gradient_digital_disabled_green",
-		selected_gradient = "content/ui/textures/mission_board/gradient_digital_green",
+		selected_gradient = "content/ui/textures/mission_board/gradient_digital_green"
 	},
 	story = {
 		default_gradient = "content/ui/textures/mission_board/gradient_digital_frame_red",
 		disabled_gradient = "content/ui/textures/mission_board/gradient_digital_disabled_red",
-		selected_gradient = "content/ui/textures/mission_board/gradient_farme_selected_red",
+		selected_gradient = "content/ui/textures/mission_board/gradient_farme_selected_red"
 	},
 	circumstance = {
 		default_gradient = "content/ui/textures/mission_board/gradient_digital_circumnstance_default",
 		disabled_gradient = "content/ui/textures/mission_board/gradient_digital_circumstances_locked",
-		selected_gradient = "content/ui/textures/mission_board/gradient_digital_circumstances",
-	},
+		selected_gradient = "content/ui/textures/mission_board/gradient_digital_circumstances"
+	}
 }
 MissionBoardViewStyles.colors.auric = setmetatable({
 	corner = {
 		255,
 		249,
 		231,
-		115,
+		115
 	},
 	frame = {
 		255,
 		164,
 		139,
-		86,
+		86
 	},
 	main = {
 		255,
 		228,
 		197,
-		130,
+		130
 	},
 	green_faded = {
 		255,
 		171,
 		146,
-		92,
-	},
+		92
+	}
 }, {
-	__index = MissionBoardViewStyles.colors.default,
+	__index = MissionBoardViewStyles.colors.default
 })
 
 local function _get_color_by_name(color_name, palette_name)
@@ -210,39 +210,39 @@ MissionBoardViewStyles.screen_decorations_widget_style_function = function (miss
 				75,
 				0,
 				0,
-				0,
+				0
 			},
 			offset = {
 				0,
 				0,
-				-1,
-			},
+				-1
+			}
 		},
 		overlay_top = {
 			color = {
 				0,
 				0,
 				0,
-				0,
+				0
 			},
 			offset = {
 				0,
 				0,
-				500,
-			},
+				500
+			}
 		},
 		corner_right = {
 			uvs = {
 				{
 					1,
-					0,
+					0
 				},
 				{
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}
 end
 
@@ -253,8 +253,8 @@ MissionBoardViewStyles.info_box_widget_style_function = function (mission_type)
 				150,
 				58,
 				15,
-				15,
-			},
+				15
+			}
 		},
 		frame = {
 			scale_to_material = true,
@@ -262,15 +262,15 @@ MissionBoardViewStyles.info_box_widget_style_function = function (mission_type)
 				0,
 				0,
 				0,
-				0,
+				0
 			},
 			color_info = _get_color_by_name("accent", mission_type),
 			color_warning = Color.ui_interaction_critical(255, true),
 			offset = {
 				0,
 				0,
-				1,
-			},
+				1
+			}
 		},
 		text = {
 			font_size = 18,
@@ -281,13 +281,13 @@ MissionBoardViewStyles.info_box_widget_style_function = function (mission_type)
 			offset = {
 				0,
 				0,
-				2,
+				2
 			},
 			size_addition = {
 				-10,
-				0,
-			},
-		},
+				0
+			}
+		}
 	}
 end
 

@@ -7,8 +7,8 @@ local view_element_tab_menu_settings = {
 	wrapped_selection = false,
 	button_size = {
 		300,
-		50,
-	},
+		50
+	}
 }
 
 return settings("ViewElementTabMenuSettings", view_element_tab_menu_settings)

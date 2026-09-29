@@ -142,7 +142,7 @@ LiquidAreaExtension.init = function (self, extension_init_context, unit, extensi
 	add_liquid_buffer[0] = 0
 	self._add_liquid_buffer = add_liquid_buffer
 	self._set_filled_buffer = {
-		size = 0,
+		size = 0
 	}
 	self._set_filled_send_array = Script.new_array(real_index_max_size)
 	self._use_liquid_drawer = template.use_liquid_drawer
@@ -263,7 +263,7 @@ LiquidAreaExtension._create_liquid = function (self, real_index, angle)
 		rotation = QuaternionBox(rotation),
 		particle_id = particle_id,
 		angle = angle,
-		real_index = real_index,
+		real_index = real_index
 	}
 
 	self._flow[real_index] = liquid
@@ -654,38 +654,38 @@ local fill_list = {
 		angle = 0,
 		index = 0,
 		relative_angle = 0,
-		weight = 0,
+		weight = 0
 	},
 	{
 		angle = 0,
 		index = 0,
 		relative_angle = 0,
-		weight = 0,
+		weight = 0
 	},
 	{
 		angle = 0,
 		index = 0,
 		relative_angle = 0,
-		weight = 0,
+		weight = 0
 	},
 	{
 		angle = 0,
 		index = 0,
 		relative_angle = 0,
-		weight = 0,
+		weight = 0
 	},
 	{
 		angle = 0,
 		index = 0,
 		relative_angle = 0,
-		weight = 0,
+		weight = 0
 	},
 	{
 		angle = 0,
 		index = 0,
 		relative_angle = 0,
-		weight = 0,
-	},
+		weight = 0
+	}
 }
 
 LiquidAreaExtension._update_flow = function (self, dt)
@@ -932,7 +932,7 @@ LiquidAreaExtension._update_collision_detection = function (self, t)
 
 			buff_affected_units[unit] = {
 				local_index = local_index,
-				component_index = component_index,
+				component_index = component_index
 			}
 		end
 	end

@@ -6,14 +6,14 @@ local scenegraph_definition = {
 		scale = "fit",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
-	},
+			0
+		}
+	}
 }
 local widget_definitions = {
 	fade = UIWidget.create_definition({
@@ -26,14 +26,14 @@ local widget_definitions = {
 					255,
 					0,
 					0,
-					0,
-				},
-			},
-		},
-	}, "screen"),
+					0
+				}
+			}
+		}
+	}, "screen")
 }
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

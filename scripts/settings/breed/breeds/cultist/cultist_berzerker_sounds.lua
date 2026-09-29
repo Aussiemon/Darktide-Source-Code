@@ -20,7 +20,7 @@ local sound_data = {
 		vce_melee_attack_anim_combo_attack_01 = "wwise/events/minions/play_enemy_cultist_berzerker_a__melee_attack_anim_combo_01_vce",
 		vce_melee_attack_final_vce = "wwise/events/minions/play_enemy_cultist_berzerker__melee_attack_final_vce",
 		vce_melee_attack_normal = "wwise/events/minions/play_enemy_cultist_berzerker__melee_attack_normal_vce",
-		vce_melee_attack_short = "wwise/events/minions/play_enemy_cultist_berzerker__melee_attack_short_vce",
+		vce_melee_attack_short = "wwise/events/minions/play_enemy_cultist_berzerker__melee_attack_short_vce"
 	},
 	use_proximity_culling = {
 		footstep = false,
@@ -34,8 +34,8 @@ local sound_data = {
 		vce_melee_attack_anim_combo_attack_01 = false,
 		vce_melee_attack_final_vce = false,
 		vce_melee_attack_normal = false,
-		vce_melee_attack_short = false,
-	},
+		vce_melee_attack_short = false
+	}
 }
 
 table.add_missing(sound_data.events, RenegadeCommonSounds.events)

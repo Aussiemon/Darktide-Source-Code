@@ -7,7 +7,6 @@ local CharacterSheet = require("scripts/utilities/character_sheet")
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local ElementSettings = require("scripts/ui/hud/elements/tactical_overlay/hud_element_tactical_overlay_settings")
 local HordeBuffsData = require("scripts/settings/buff/hordes_buffs/hordes_buffs_data")
-local InputDevice = require("scripts/managers/input/input_device")
 local Items = require("scripts/utilities/items")
 local LiveEventManager = require("scripts/managers/live_event/live_event_manager")
 local MasterItems = require("scripts/backend/master_items")
@@ -73,6 +72,8 @@ HudElementTacticalOverlay.init = function (self, parent, draw_layer, start_scale
 	Managers.event:register(self, "event_tactical_overlay_change_using_input", "set_using_input")
 	Managers.event:register(self, "event_live_event_activated", "_on_live_event_activated")
 	Managers.event:register(self, "event_live_event_deactivated", "_on_live_event_deactivated")
+	Managers.event:register(self, "event_on_active_input_changed", "event_on_input_changed")
+	Managers.event:register(self, "event_on_input_settings_changed", "event_on_input_changed")
 
 	if Managers.live_event then
 		local active_events = Managers.live_event:get_active_events()
@@ -88,6 +89,8 @@ HudElementTacticalOverlay.destroy = function (self, ui_renderer)
 	Managers.event:unregister(self, "event_tactical_overlay_change_using_input")
 	Managers.event:unregister(self, "event_live_event_activated")
 	Managers.event:unregister(self, "event_live_event_deactivated")
+	Managers.event:unregister(self, "event_on_active_input_changed")
+	Managers.event:unregister(self, "event_on_input_settings_changed")
 
 	local contracts_promise = self._contracts_promise
 
@@ -140,7 +143,7 @@ HudElementTacticalOverlay._add_class_buffs_data = function (self, display_buffs,
 		special_rules = {},
 		buff_template_tiers = {},
 		iconics = {},
-		modifiers = {},
+		modifiers = {}
 	}
 
 	CharacterSheet.class_loadout(profile, class_loadout, nil, profile.talents)
@@ -174,18 +177,18 @@ HudElementTacticalOverlay._add_class_buffs_data = function (self, display_buffs,
 						gradient_map = settings_by_node_type and settings_by_node_type.gradient_map,
 						frame = frame,
 						icon_mask = icon_mask,
-						icon = icon,
+						icon = icon
 					},
 					category = category_id,
 					sub_category = talent_type,
 					size = {
 						65,
-						65,
+						65
 					},
 					offset = {
 						-5,
-						-5,
-					},
+						-5
+					}
 				}
 
 				if modifiers then
@@ -210,18 +213,18 @@ HudElementTacticalOverlay._add_class_buffs_data = function (self, display_buffs,
 								gradient_map = settings_by_node_type and settings_by_node_type.gradient_map,
 								frame = frame,
 								icon_mask = icon_mask,
-								icon = modifier_icon,
+								icon = modifier_icon
 							},
 							category = category_id,
 							sub_category = talent_type,
 							size = {
 								65,
-								65,
+								65
 							},
 							offset = {
 								-5,
-								-5,
-							},
+								-5
+							}
 						}
 					end
 				end
@@ -253,13 +256,13 @@ HudElementTacticalOverlay._add_items_buffs_data = function (self, display_buffs,
 					title = title,
 					material_values = {
 						icon = texture_icon,
-						frame = texture_frame,
+						frame = texture_frame
 					},
 					description = description,
 					category = category_id,
 					sub_category = string.lower(item.item_type),
 					icon_color = Color.terminal_text_header(255, true),
-					item = trait_item,
+					item = trait_item
 				}
 			end
 		end
@@ -326,7 +329,7 @@ HudElementTacticalOverlay._add_player_buffs = function (self)
 						progress = 1,
 						texture_map = "",
 						talent_icon = buff_hud_icon,
-						gradient_map = buff_hud_icon_gradient_map,
+						gradient_map = buff_hud_icon_gradient_map
 					}
 				elseif buff_hud_icon then
 					texture = buff_hud_icon
@@ -349,16 +352,16 @@ HudElementTacticalOverlay._add_player_buffs = function (self)
 						icon = buff_hud_icon,
 						gradient_map = buff_hud_icon_gradient_map,
 						frame = buff_template.frame,
-						icon_mask = buff_template.icon_mask,
+						icon_mask = buff_template.icon_mask
 					}
 					texture = ""
 					size = {
 						60,
-						60,
+						60
 					}
 					offset = {
 						-10,
-						-10,
+						-10
 					}
 				elseif is_horde then
 					category_id = "horde"
@@ -376,16 +379,16 @@ HudElementTacticalOverlay._add_player_buffs = function (self)
 						saturation = 1,
 						texture_map = "",
 						icon = buff_data and buff_data.icon and buff_data.icon ~= "" and buff_data.icon or default_texture,
-						gradient_map = buff_data and buff_data.gradient and buff_data.gradient ~= "" and buff_data.gradient or default_gradient,
+						gradient_map = buff_data and buff_data.gradient and buff_data.gradient ~= "" and buff_data.gradient or default_gradient
 					}
 					texture = ""
 					size = {
 						60,
-						60,
+						60
 					}
 					offset = {
 						-10,
-						-10,
+						-10
 					}
 				elseif is_talent or is_aura then
 					local found_buff = false
@@ -417,7 +420,7 @@ HudElementTacticalOverlay._add_player_buffs = function (self)
 													progress = 1,
 													texture_map = "",
 													talent_icon = buff_hud_icon,
-													gradient_map = buff_hud_icon_gradient_map,
+													gradient_map = buff_hud_icon_gradient_map
 												}
 												display_buff.size = nil
 												display_buff.offset = nil
@@ -464,7 +467,7 @@ HudElementTacticalOverlay._add_player_buffs = function (self)
 										progress = 1,
 										texture_map = "",
 										talent_icon = buff_hud_icon,
-										gradient_map = buff_hud_icon_gradient_map,
+										gradient_map = buff_hud_icon_gradient_map
 									}
 								end
 							end
@@ -489,7 +492,7 @@ HudElementTacticalOverlay._add_player_buffs = function (self)
 						description = description,
 						category = category_id,
 						sub_category = sub_category_id,
-						size = size,
+						size = size
 					}
 				end
 			end
@@ -506,13 +509,13 @@ HudElementTacticalOverlay._generate_buffs_layout = function (self, display_buffs
 		"active_buffs",
 		"talents",
 		"items",
-		"default",
+		"default"
 	}
 	local buffs_category_talents_prio = {
 		"ability",
 		"aura",
 		"blitz",
-		"other_talents",
+		"other_talents"
 	}
 	local buff_title_display_name = {
 		active_buffs = Localize("loc_horde_tactical_overlay_category_active"),
@@ -520,7 +523,7 @@ HudElementTacticalOverlay._generate_buffs_layout = function (self, display_buffs
 		items = Localize("loc_horde_tactical_overlay_category_loadout"),
 		talents = Localize("loc_horde_tactical_overlay_category_talents"),
 		default = Localize("loc_horde_tactical_overlay_category_misc"),
-		live_event = Localize("loc_mission_board_mission_category_event"),
+		live_event = Localize("loc_mission_board_mission_category_event")
 	}
 	local circumstance_template = Managers.state.circumstance:template()
 
@@ -538,7 +541,7 @@ HudElementTacticalOverlay._generate_buffs_layout = function (self, display_buffs
 		ability = Localize("loc_tactical_overlay_build_ability"),
 		aura = Localize("loc_tactical_overlay_build_aura"),
 		other_talents = Localize("loc_tactical_overlay_build_talents_other"),
-		other_buffs = Localize("loc_tactical_overlay_build_other"),
+		other_buffs = Localize("loc_tactical_overlay_build_other")
 	}
 	local sorted_buffs = {}
 
@@ -568,7 +571,7 @@ HudElementTacticalOverlay._generate_buffs_layout = function (self, display_buffs
 		if sorted_buffs[category] then
 			if #layout > 0 then
 				layout[#layout + 1] = {
-					blueprint = "buff_spacing",
+					blueprint = "buff_spacing"
 				}
 			end
 
@@ -576,10 +579,10 @@ HudElementTacticalOverlay._generate_buffs_layout = function (self, display_buffs
 
 			layout[#layout + 1] = {
 				blueprint = "buff_title",
-				title = buff_title_display_name,
+				title = buff_title_display_name
 			}
 			layout[#layout + 1] = {
-				blueprint = "buff_spacing",
+				blueprint = "buff_spacing"
 			}
 
 			for sub_category, buffs in pairs(sorted_buffs[category]) do
@@ -588,7 +591,7 @@ HudElementTacticalOverlay._generate_buffs_layout = function (self, display_buffs
 				if buff_sub_title_display_name ~= "" then
 					layout[#layout + 1] = {
 						blueprint = "buff_sub_title",
-						title = buff_sub_title_display_name,
+						title = buff_sub_title_display_name
 					}
 				end
 
@@ -605,7 +608,7 @@ HudElementTacticalOverlay._generate_buffs_layout = function (self, display_buffs
 						material = buff.material,
 						icon_color = buff.icon_color,
 						icon_size = buff.size,
-						icon_offset = buff.offset,
+						icon_offset = buff.offset
 					}
 				end
 			end
@@ -632,7 +635,7 @@ HudElementTacticalOverlay._setup_buffs_presentation = function (self, ui_rendere
 			self._buff_panel_widgets = widgets
 			self._buff_panel_grid = UIWidgetGrid:new(widgets, alignment_widgets, self._ui_scenegraph, "buff_panel", "down", {
 				0,
-				0,
+				0
 			})
 
 			local scrollbar_widget = self._widgets_by_name.buff_panel_scrollbar
@@ -665,7 +668,7 @@ HudElementTacticalOverlay._update_buff_input_text = function (self)
 			keyboard = "",
 			mouse = "",
 			ps4_controller = "",
-			xbox_controller = "",
+			xbox_controller = ""
 		}
 		local last_pressed_device = Managers.input:last_pressed_device()
 		local device_type = last_pressed_device and last_pressed_device:type()
@@ -841,10 +844,9 @@ HudElementTacticalOverlay.update = function (self, dt, t, ui_renderer, render_se
 	HudElementTacticalOverlay.super.update(self, dt, t, ui_renderer, render_settings, is_input_blocked and input_service:null_service() or input_service)
 
 	local service_type = "Ingame"
+	local active = false
 
 	input_service = is_input_blocked and input_service:null_service() or Managers.input:get_input_service(service_type)
-
-	local active = false
 
 	if not input_service:is_null_service() and input_service:get("tactical_overlay_hold") then
 		active = true
@@ -870,13 +872,6 @@ HudElementTacticalOverlay.update = function (self, dt, t, ui_renderer, render_se
 	self:_update_achievements(dt, ui_renderer)
 	self:_update_live_event(dt, ui_renderer)
 	self:_update_right_panel_widgets(ui_renderer)
-
-	if self._gamepad_active ~= InputDevice.gamepad_active then
-		self._gamepad_active = InputDevice.gamepad_active
-
-		self:_update_right_hint()
-		self:_update_buff_input_text()
-	end
 
 	if active and not self._active then
 		Managers.event:trigger("event_set_tactical_overlay_state", true)
@@ -926,7 +921,7 @@ HudElementTacticalOverlay._update_left_panel_elements = function (self, ui_rende
 		local circumstance_icon_style = circumstance_info_widget.style.icon
 		local _, circumstance_name_height = self:_text_size(ui_renderer, circumstance_name_content, circumstance_name_style, {
 			circumstance_name_style.size[1],
-			1000,
+			1000
 		})
 		local min_height = circumstance_info_widget.style.icon.size[2]
 		local title_height = math.max(min_height, circumstance_name_height)
@@ -934,7 +929,7 @@ HudElementTacticalOverlay._update_left_panel_elements = function (self, ui_rende
 		local circumstance_description_content = circumstance_info_widget.content.circumstance_description
 		local _, circumstance_description_height = self:_text_size(ui_renderer, circumstance_description_content, circumstance_description_style, {
 			circumstance_description_style.size[1],
-			1000,
+			1000
 		})
 
 		circumstance_name_style.offset[2] = total_height
@@ -961,20 +956,21 @@ HudElementTacticalOverlay._update_left_panel_elements = function (self, ui_rende
 			local circumstance_icon = havoc_circumstance_info.style["icon_0" .. i]
 			local _, circumstance_name_height = self:_text_size(ui_renderer, circumstance_name_content, circumstance_name_style, {
 				circumstance_name_style.size[1],
-				1000,
-			})
+				1000
+			}, true)
 			local circumstance_description_content = havoc_circumstance_info.content["circumstance_description_0" .. i]
 			local circumstance_description_style = havoc_circumstance_info.style["circumstance_description_0" .. i]
 			local _, circumstance_description_height = self:_text_size(ui_renderer, circumstance_description_content, circumstance_description_style, {
 				circumstance_description_style.size[1],
-				1000,
-			})
+				1000
+			}, true)
 			local min_height = havoc_circumstance_info.style.icon_01.size[2]
 			local title_height = math.max(min_height, circumstance_name_height)
 
 			circumstance_name_style.offset[2] = total_height
 			circumstance_icon.offset[2] = total_height
 			circumstance_description_style.offset[2] = circumstance_name_style.offset[2] + title_height + description_margin
+			circumstance_description_style.size[2] = circumstance_description_height
 			total_height = circumstance_description_style.offset[2] + circumstance_description_height + title_margin
 		end
 
@@ -1041,6 +1037,11 @@ HudElementTacticalOverlay._update_right_grid_size = function (self)
 	widgets_by_name.right_grid_background.style.rect.size[2] = height
 	widgets_by_name.right_grid_stick.style.rect.size[2] = height
 	widgets_by_name.right_input_hint.style.hint.offset[2] = height + 2
+end
+
+HudElementTacticalOverlay.event_on_input_changed = function (self)
+	self:_update_right_hint()
+	self:_update_buff_input_text()
 end
 
 HudElementTacticalOverlay._update_right_hint = function (self)
@@ -1224,7 +1225,7 @@ HudElementTacticalOverlay._update_right_tab_bar = function (self, ui_renderer)
 					is_left = false,
 					value = page_settings.icon.value,
 					selected = selected,
-					counter_text = render_key == "__event_slot__" and slot_counter_text or "",
+					counter_text = render_key == "__event_slot__" and slot_counter_text or ""
 				}
 				local index = #tab_bar_widgets + 1
 				local name = string.format("tab_%d", index)
@@ -1381,7 +1382,7 @@ HudElementTacticalOverlay._setup_contracts = function (self, contracts_data, ui_
 		configs[i] = {
 			blueprint = "contract",
 			task = tasks[i],
-			reward = table.nested_get(tasks[i], "reward", "amount"),
+			reward = table.nested_get(tasks[i], "reward", "amount")
 		}
 	end
 
@@ -1416,7 +1417,11 @@ HudElementTacticalOverlay._update_right_panel_widgets = function (self, ui_rende
 end
 
 HudElementTacticalOverlay._on_live_event_activated = function (self, event_id)
-	self._pending_live_event_activations[#self._pending_live_event_activations + 1] = event_id
+	local pending = self._pending_live_event_activations
+
+	if not table.array_contains(pending, event_id) then
+		pending[#pending + 1] = event_id
+	end
 end
 
 HudElementTacticalOverlay._on_live_event_deactivated = function (self, event_id)
@@ -1446,7 +1451,7 @@ HudElementTacticalOverlay._add_live_event_page = function (self, event_id, ui_re
 		loc_key = "loc_event_time_left",
 		func = function (t)
 			return Managers.live_event:event_time_left(t, event_id)
-		end,
+		end
 	}
 
 	local template_icon = template.icon
@@ -1454,7 +1459,7 @@ HudElementTacticalOverlay._add_live_event_page = function (self, event_id, ui_re
 	if template_icon then
 		page.icon = {
 			blueprint_type = "text_icon",
-			value = template_icon,
+			value = template_icon
 		}
 	end
 
@@ -1468,16 +1473,16 @@ HudElementTacticalOverlay._add_live_event_page = function (self, event_id, ui_re
 	local configs = {
 		{
 			blueprint = "title",
-			text = Localize(event_name),
+			text = Localize(event_name)
 		},
 		{
 			blueprint = "header",
-			text = Localize("loc_event_briefing"),
+			text = Localize("loc_event_briefing")
 		},
 		{
 			blueprint = "body",
-			text = Localize(event_description),
-		},
+			text = Localize(event_description)
+		}
 	}
 	local tiers = Managers.live_event:get_event_tiers(event_id)
 	local tier_count = tiers and #tiers or 0
@@ -1487,7 +1492,7 @@ HudElementTacticalOverlay._add_live_event_page = function (self, event_id, ui_re
 	if shown_tiers > 0 then
 		configs[#configs + 1] = {
 			blueprint = "header",
-			text = Localize("loc_event_objectives"),
+			text = Localize("loc_event_objectives")
 		}
 	end
 
@@ -1499,15 +1504,38 @@ HudElementTacticalOverlay._add_live_event_page = function (self, event_id, ui_re
 	end
 
 	local end_at = start_from + shown_tiers - 1
+	local segments = LiveEventManager.objective_segments(template, tiers)
+	local last_label_segment
 
 	for i = start_from, end_at do
 		local tier = tiers[i]
+		local segment, segment_index
+
+		for s = 1, #segments do
+			if i >= segments[s].first_tier and i <= segments[s].last_tier then
+				segment = segments[s]
+				segment_index = s
+
+				break
+			end
+		end
+
+		if segment and segment ~= last_label_segment then
+			configs[#configs + 1] = {
+				blueprint = "body",
+				text = Localize(segment.condition, true, {
+					target = segment.ceiling
+				})
+			}
+			last_label_segment = segment
+		end
 
 		configs[#configs + 1] = {
 			blueprint = "event_tier",
 			target = tier.target,
 			rewards = tier.rewards,
 			event_id = event_id,
+			prev_ceiling = segment_index and segment_index > 1 and segments[segment_index - 1].ceiling or nil
 		}
 	end
 
@@ -1517,8 +1545,8 @@ HudElementTacticalOverlay._add_live_event_page = function (self, event_id, ui_re
 		configs[#configs + 1] = {
 			blueprint = "divider",
 			text = Localize("loc_tactical_overlay_extra_entries", true, {
-				amount = remaining_tiers,
-			}),
+				amount = remaining_tiers
+			})
 		}
 	end
 
@@ -1620,7 +1648,7 @@ HudElementTacticalOverlay._setup_achievements = function (self, ui_renderer)
 		if Managers.achievements:achievement_definition(id) then
 			configs[#configs + 1] = {
 				blueprint = "achievement",
-				id = id,
+				id = id
 			}
 			current_achievements[i] = id
 		end
@@ -1782,7 +1810,7 @@ end
 
 HudElementTacticalOverlay._setup_left_panel_widgets = function (self)
 	local definitions = {
-		widget_definitions = self._definitions.left_panel_widgets_definitions,
+		widget_definitions = self._definitions.left_panel_widgets_definitions
 	}
 
 	self._left_panel_widgets = {}
@@ -1802,17 +1830,17 @@ HudElementTacticalOverlay._sync_mission_info = function (self)
 	local mission_info_style = mission_info_widget.style
 	local mission = self._mission_manager:mission()
 	local mission_name = mission.mission_name
-	local type = mission.mission_type
-	local mission_type = MissionTypes[type]
-	local mission_type_icon = mission_type and mission_type.icon or default_mission_type_icon
+	local mission_type = mission.mission_type
+	local mission_type_settings = MissionTypes[mission_type]
+	local mission_type_icon = mission_type_settings and mission_type_settings.icon or default_mission_type_icon
 
 	mission_info_content.icon = mission_type_icon
 	mission_info_content.mission_name = Utf8.upper(Localize(mission_name))
 
-	local show_mission_type = mission_type and self._context.show_left_side_details
+	local show_mission_type = mission_type_settings and self._context.show_left_side_details
 
 	if show_mission_type then
-		local mission_type_name = mission_type.name
+		local mission_type_name = mission_type_settings.name
 
 		mission_info_content.mission_type = Localize(mission_type_name)
 		mission_info_style.mission_name.offset[2] = 15
@@ -1822,7 +1850,6 @@ HudElementTacticalOverlay._sync_mission_info = function (self)
 	end
 
 	if Managers.mechanism._mechanism._mechanism_data.expedition_template_name then
-		local node_id
 		local node_id = Managers.mechanism._mechanism._mechanism_data.node_id
 
 		if node_id then
@@ -1840,7 +1867,7 @@ HudElementTacticalOverlay._sync_mission_info = function (self)
 						local zone_id = mission.zone_id
 						local zone_settings = zone_id and Zones[zone_id]
 
-						mission_info_content.mission_type = string.format("%s · %s", Localize(mission_type.name), Localize(zone_settings.name))
+						mission_info_content.mission_type = string.format("%s · %s", Localize(mission_type_settings.name), Localize(zone_settings.name))
 					end
 				end
 			end)
@@ -1900,7 +1927,7 @@ end
 
 HudElementTacticalOverlay._setup_right_panel_widgets = function (self)
 	local definitions = {
-		widget_definitions = self._definitions.right_panel_widgets_definitions,
+		widget_definitions = self._definitions.right_panel_widgets_definitions
 	}
 
 	self._right_panel_widgets = {}
@@ -2067,7 +2094,7 @@ HudElementTacticalOverlay._update_materials_collected = function (self, ui_rende
 		local text_style = expedition_currency_widget.style.text
 		local _, text_height = self:_text_size(ui_renderer, players_name_text, text_style, {
 			widget_size[1],
-			1000,
+			1000
 		})
 		local edge_margin = 60
 

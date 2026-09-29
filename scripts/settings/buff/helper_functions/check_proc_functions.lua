@@ -19,7 +19,7 @@ local _is_within_close_distance
 
 CheckProcFunctions.all = function (...)
 	local conditions = {
-		...,
+		...
 	}
 
 	return function (...)
@@ -35,7 +35,7 @@ end
 
 CheckProcFunctions.any = function (...)
 	local conditions = {
-		...,
+		...
 	}
 
 	return function (...)
@@ -161,6 +161,16 @@ CheckProcFunctions.on_monster_or_captain_hit = function (params, template_data, 
 	local breed_tags = params.tags
 
 	if not breed_tags or not breed_tags.monster and not breed_tags.captain and not breed_tags.cultist_captain then
+		return false
+	end
+
+	return true
+end
+
+CheckProcFunctions.on_elite_or_monster_or_captain_hit = function (params, template_data, template_context, t)
+	local breed_tags = params.tags
+
+	if not breed_tags or not params.tags.elite and not breed_tags.monster and not breed_tags.captain and not breed_tags.cultist_captain then
 		return false
 	end
 
@@ -749,7 +759,7 @@ end
 
 CheckProcFunctions.combine = function (...)
 	local functions = {
-		...,
+		...
 	}
 	local num_functions = #functions
 

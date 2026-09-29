@@ -42,7 +42,7 @@ UIScenegraph.init_scenegraph = function (scenegraph, scale)
 			local position = scene_object_data.position or {
 				0,
 				0,
-				0,
+				0
 			}
 
 			scene_object_data.local_position = position
@@ -65,7 +65,7 @@ UIScenegraph.init_scenegraph = function (scenegraph, scale)
 					local position = scene_object_data.position or {
 						0,
 						0,
-						0,
+						0
 					}
 
 					scene_object_data.local_position = position

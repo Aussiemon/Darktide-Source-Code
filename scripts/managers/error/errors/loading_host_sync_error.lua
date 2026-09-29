@@ -6,20 +6,20 @@ local LoadingHostSyncError = class("LoadingHostSyncError")
 local LOOKUP_ERROR_REASON = {
 	sync_other = {
 		error_code = 1,
-		log_message = "Failed to sync with other peers",
+		log_message = "Failed to sync with other peers"
 	},
 	sync_spawning = {
 		error_code = 2,
-		log_message = "Failed to sync with spawning peers",
+		log_message = "Failed to sync with spawning peers"
 	},
 	sync_host = {
 		error_code = 3,
-		log_message = "Failed to sync with host",
+		log_message = "Failed to sync with host"
 	},
 	unknown = {
 		error_code = 99,
-		log_message = "Unknown error",
-	},
+		log_message = "Unknown error"
+	}
 }
 
 LoadingHostSyncError.init = function (self, optional_error_details)
@@ -45,7 +45,7 @@ end
 
 LoadingHostSyncError.loc_description = function (self)
 	return "loc_popup_description_loading_host_sync_error", {
-		error_code = self._error_code,
+		error_code = self._error_code
 	}
 end
 

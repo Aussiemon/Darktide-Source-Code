@@ -5,7 +5,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local template = {}
 local size = {
 	20,
-	20,
+	20
 }
 
 template.size = size
@@ -19,7 +19,7 @@ template.screen_margins = {
 	up = size[2] * 0.5,
 	down = size[2] * 0.5,
 	left = size[1] * 0.5,
-	right = size[1] * 0.5,
+	right = size[1] * 0.5
 }
 template.fade_settings = {
 	default_fade = 1,
@@ -27,7 +27,7 @@ template.fade_settings = {
 	fade_to = 1,
 	distance_max = template.max_distance,
 	distance_min = template.max_distance * 0.5,
-	easing_function = math.ease_exp,
+	easing_function = math.ease_exp
 }
 
 template.create_widget_defintion = function (template, scenegraph_id)
@@ -37,7 +37,7 @@ template.create_widget_defintion = function (template, scenegraph_id)
 		255,
 		255,
 		255,
-		255,
+		255
 	}
 	local size = template.size
 
@@ -54,9 +54,9 @@ template.create_widget_defintion = function (template, scenegraph_id)
 					255,
 					255,
 					255,
-					255,
-				},
-			},
+					255
+				}
+			}
 		},
 		{
 			pass_type = "slug_icon",
@@ -70,9 +70,9 @@ template.create_widget_defintion = function (template, scenegraph_id)
 					255,
 					255,
 					255,
-					255,
-				},
-			},
+					255
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -87,7 +87,7 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					0,
 					20,
-					2,
+					2
 				},
 				font_type = header_font_settings.font_type,
 				font_size = header_font_settings.font_size,
@@ -95,13 +95,13 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				default_text_color = header_font_color,
 				size = {
 					200,
-					20,
-				},
+					20
+				}
 			},
 			visibility_function = function (content, style)
 				return content.distance >= 5
-			end,
-		},
+			end
+		}
 	}, scenegraph_id)
 end
 

@@ -50,7 +50,7 @@ CompanionCustomization._construct_attach_settings = function (self, unit, world,
 		character_unit = unit,
 		in_editor = in_editor,
 		lod_group = Unit.has_lod_group(unit, "lod") and Unit.lod_group(unit, "lod"),
-		lod_shadow_group = Unit.has_lod_group(unit, "lod_shadow") and Unit.lod_group(unit, "lod_shadow"),
+		lod_shadow_group = Unit.has_lod_group(unit, "lod_shadow") and Unit.lod_group(unit, "lod_shadow")
 	}
 
 	if not in_editor then
@@ -220,31 +220,31 @@ end
 CompanionCustomization.component_config = {
 	disable_event_public = false,
 	enable_event_public = false,
-	starts_enabled_default = true,
+	starts_enabled_default = true
 }
 CompanionCustomization.component_data = {
 	editor_only = {
 		ui_name = "Editor Only",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	disable_fur_shells = {
 		ui_name = "Disable Fur Shells",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	item = {
 		filter = "item",
 		ui_name = "Item",
 		ui_type = "resource",
-		value = "",
+		value = ""
 	},
 	material_override_items = {
 		filter = "item",
 		size = 1,
 		ui_name = "Material Override Items",
-		ui_type = "resource_array",
-	},
+		ui_type = "resource_array"
+	}
 }
 
 return CompanionCustomization

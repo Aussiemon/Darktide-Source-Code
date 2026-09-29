@@ -191,7 +191,7 @@ local function _create_icon_animation(animation_table, icons)
 
 				_color_utils_color_lerp(start_color, dimmed_out_color, eased_progress, icon_style.color)
 			end
-		end,
+		end
 	}
 
 	for i = 1, #icons, 2 do
@@ -240,7 +240,7 @@ local function _create_icon_animation(animation_table, icons)
 
 					color_utils_color_lerp(in_focus_color, dimmed_out_color, color_progress, prev_icon_bg_style.color)
 				end
-			end,
+			end
 		}
 		_passes_to_dim[#_passes_to_dim + 1] = icon_id
 		_passes_to_hide[#_passes_to_hide + 1] = background_id
@@ -286,7 +286,7 @@ local function _create_count_up_animation(animation_table, value_name, value_gro
 		end,
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 			params._label_name = nil
-		end,
+		end
 	}
 	animation_table[#animation_table + 1] = {
 		start_time = animation_table[#animation_table].end_time,
@@ -345,7 +345,7 @@ local function _create_count_up_animation(animation_table, value_name, value_gro
 
 				parent:play_sound(sound_events.stop)
 			end
-		end,
+		end
 	}
 
 	if not animation_table._passes_to_dim then
@@ -362,7 +362,7 @@ local function _create_progress_bar_animation(animation_table, start_time, end_t
 		start_time = 0,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 			parent:update_xp_bar(0)
-		end,
+		end
 	}
 	animation_table[#animation_table + 1] = {
 		name = "update_progress_bar",
@@ -389,7 +389,7 @@ local function _create_progress_bar_animation(animation_table, start_time, end_t
 
 			parent:update_xp_bar(target_value)
 			parent:play_sound(UISoundEvents.end_screen_summary_xp_bar_stop)
-		end,
+		end
 	}
 end
 
@@ -405,7 +405,7 @@ local function _create_consolidate_wallet_animation(animation_table, retract_sta
 			local eased_progress = _math_ease_in_cubic(progress)
 
 			parent:retract_currency_gain_widgets(eased_progress)
-		end,
+		end
 	}
 	animation_table[#animation_table + 1] = {
 		name = "update_belated_wallet",
@@ -421,7 +421,7 @@ local function _create_consolidate_wallet_animation(animation_table, retract_sta
 		end,
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 			parent:update_belated_wallet(1)
-		end,
+		end
 	}
 end
 
@@ -479,7 +479,7 @@ local function _create_fade_in_pass_animation(animation_table, style_name, start
 			local color_progress = _math_ease_sine(progress)
 
 			color_utils_color_lerp(start_color, target_color, color_progress, pass_color)
-		end,
+		end
 	}
 
 	local passes_to_dim = animation_table._passes_to_dim
@@ -495,7 +495,7 @@ end
 local function _create_init_weapon_animation(animation_table, start_time)
 	local slots = {
 		"slot_primary",
-		"slot_secondary",
+		"slot_secondary"
 	}
 
 	start_time = start_time or 0
@@ -540,7 +540,7 @@ local function _create_progress_weapon_animation(animation_table, start_time, en
 			local eased_progress = progress < 0.5 and _math_ease_sine(progress) or _math_ease_cubic(progress)
 			local slots = {
 				"slot_primary",
-				"slot_secondary",
+				"slot_secondary"
 			}
 
 			for f = 1, #slots do
@@ -561,7 +561,7 @@ local function _create_progress_weapon_animation(animation_table, start_time, en
 
 			local slots = {
 				"slot_primary",
-				"slot_secondary",
+				"slot_secondary"
 			}
 
 			for f = 1, #slots do
@@ -573,7 +573,7 @@ local function _create_progress_weapon_animation(animation_table, start_time, en
 			end
 
 			parent:play_sound(UISoundEvents.end_screen_summary_mastery_bar_stop)
-		end,
+		end
 	}
 end
 
@@ -591,7 +591,7 @@ local function _create_dim_weapon_animation(animation_table)
 
 			local slots = {
 				"slot_primary",
-				"slot_secondary",
+				"slot_secondary"
 			}
 
 			for f = 1, #slots do
@@ -607,7 +607,7 @@ local function _create_dim_weapon_animation(animation_table)
 		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
 			local slots = {
 				"slot_primary",
-				"slot_secondary",
+				"slot_secondary"
 			}
 			local current_alpha = 255 - 255 * progress
 			local current_alpha_icon = 255 - 128 * progress
@@ -639,7 +639,7 @@ local function _create_dim_weapon_animation(animation_table)
 				"background",
 				"background_gradient",
 				"button_gradient",
-				"background",
+				"background"
 			}
 
 			for f = 1, #pass_names do
@@ -648,7 +648,7 @@ local function _create_dim_weapon_animation(animation_table)
 
 				widget.style[name].offset[2] = widget.style[name].start_offset[2] + current_offset
 			end
-		end,
+		end
 	}
 end
 
@@ -656,7 +656,7 @@ local function get_havoc_positions(widget)
 	local ids = {
 		widget.content.order_reward_state and "order",
 		widget.content.highest_rank and "highest",
-		widget.content.week_rank and "week",
+		widget.content.week_rank and "week"
 	}
 	local positions = {}
 
@@ -696,20 +696,20 @@ local havoc_fade_in_passes_by_id = {
 		"havoc_charge_1",
 		"havoc_charge_2",
 		"havoc_charge_3",
-		"havoc_order_text",
+		"havoc_order_text"
 	},
 	highest = {
 		"havoc_icon",
 		"highest_havoc_rank",
-		"highest_havoc_description",
+		"highest_havoc_description"
 	},
 	week = {
 		"havoc_week_description",
 		"havoc_reward_week_icon_glow",
 		"havoc_reward_week_icon",
 		"week_havoc_icon",
-		"week_havoc_rank",
-	},
+		"week_havoc_rank"
+	}
 }
 local havoc_fade_out_passes_by_id = {
 	order = {
@@ -722,20 +722,20 @@ local havoc_fade_out_passes_by_id = {
 		"havoc_charge_1",
 		"havoc_charge_2",
 		"havoc_charge_3",
-		"havoc_order_text",
+		"havoc_order_text"
 	},
 	highest = {
 		"havoc_icon",
 		"highest_havoc_rank",
-		"highest_havoc_description",
+		"highest_havoc_description"
 	},
 	week = {
 		"havoc_week_description",
 		"havoc_reward_week_icon_glow",
 		"havoc_reward_week_icon",
 		"week_havoc_icon",
-		"week_havoc_rank",
-	},
+		"week_havoc_rank"
+	}
 }
 local havoc_concat_passes_by_id = {
 	order = {
@@ -751,20 +751,20 @@ local havoc_concat_passes_by_id = {
 		"havoc_charge_ghost_1",
 		"havoc_charge_ghost_2",
 		"havoc_charge_ghost_3",
-		"havoc_order_text",
+		"havoc_order_text"
 	},
 	highest = {
 		"havoc_icon",
 		"highest_havoc_rank",
-		"highest_havoc_description",
+		"highest_havoc_description"
 	},
 	week = {
 		"havoc_week_description",
 		"havoc_reward_week_icon_glow",
 		"havoc_reward_week_icon",
 		"week_havoc_icon",
-		"week_havoc_rank",
-	},
+		"week_havoc_rank"
+	}
 }
 
 local function havoc_fade_in_init_by_id(id, widget, parent, params)
@@ -998,49 +998,49 @@ local function havoc_concat_init_by_id(id, widget, parent, params)
 			if widget_content.uses_charges then
 				widget_style.havoc_charge_1.size = {
 					widget_style.havoc_charge_1.size[1] * charge_scale,
-					widget_style.havoc_charge_1.size[2] * charge_scale,
+					widget_style.havoc_charge_1.size[2] * charge_scale
 				}
 				widget_style.havoc_charge_2.size = {
 					widget_style.havoc_charge_2.size[1] * charge_scale,
-					widget_style.havoc_charge_2.size[2] * charge_scale,
+					widget_style.havoc_charge_2.size[2] * charge_scale
 				}
 				widget_style.havoc_charge_3.size = {
 					widget_style.havoc_charge_3.size[1] * charge_scale,
-					widget_style.havoc_charge_3.size[2] * charge_scale,
+					widget_style.havoc_charge_3.size[2] * charge_scale
 				}
 			end
 
 			widget_style.havoc_badge_background.size = {
 				widget_style.havoc_badge_background.size[1] * badge_scale,
-				widget_style.havoc_badge_background.size[2] * badge_scale,
+				widget_style.havoc_badge_background.size[2] * badge_scale
 			}
 			widget_style.havoc_rank_badge.size = {
 				widget_style.havoc_rank_badge.size[1] * badge_scale,
-				widget_style.havoc_rank_badge.size[2] * badge_scale,
+				widget_style.havoc_rank_badge.size[2] * badge_scale
 			}
 			widget_style.previous_havoc_rank_value_1.size = {
 				widget_style.previous_havoc_rank_value_1.size[1] * badge_scale,
-				widget_style.previous_havoc_rank_value_1.size[2] * badge_scale,
+				widget_style.previous_havoc_rank_value_1.size[2] * badge_scale
 			}
 
 			if widget_style.previous_havoc_rank_value_2 then
 				widget_style.previous_havoc_rank_value_2.size = {
 					widget_style.previous_havoc_rank_value_2.size[1] * badge_scale,
-					widget_style.previous_havoc_rank_value_2.size[2] * badge_scale,
+					widget_style.previous_havoc_rank_value_2.size[2] * badge_scale
 				}
 			end
 
 			if widget_style.current_havoc_rank_value_1 then
 				widget_style.current_havoc_rank_value_1.size = {
 					widget_style.current_havoc_rank_value_1.size[1] * badge_scale,
-					widget_style.current_havoc_rank_value_1.size[2] * badge_scale,
+					widget_style.current_havoc_rank_value_1.size[2] * badge_scale
 				}
 			end
 
 			if widget_style.current_havoc_rank_value_2 then
 				widget_style.current_havoc_rank_value_2.size = {
 					widget_style.current_havoc_rank_value_2.size[1] * badge_scale,
-					widget_style.current_havoc_rank_value_2.size[2] * badge_scale,
+					widget_style.current_havoc_rank_value_2.size[2] * badge_scale
 				}
 			end
 		end
@@ -1138,7 +1138,7 @@ local function _create_progress_havoc_animation(animation_table, start_time)
 			local start_id = get_havoc_id_by_wanted_position(widget, 1)
 
 			havoc_fade_in_progress_by_id(start_id, widget, parent, params, progress)
-		end,
+		end
 	}
 	animation_table[#animation_table + 1] = {
 		name = "change_charge",
@@ -1208,7 +1208,7 @@ local function _create_progress_havoc_animation(animation_table, start_time)
 					end
 				end
 			end
-		end,
+		end
 	}
 	animation_table[#animation_table + 1] = {
 		name = "change_badge",
@@ -1234,7 +1234,7 @@ local function _create_progress_havoc_animation(animation_table, start_time)
 					style.havoc_rank_badge.material_values.AnimationSpeedFireAmountt[1] = progress
 				end
 			end
-		end,
+		end
 	}
 	animation_table[#animation_table + 1] = {
 		name = "update_previous_rank",
@@ -1270,7 +1270,7 @@ local function _create_progress_havoc_animation(animation_table, start_time)
 					end
 				end
 			end
-		end,
+		end
 	}
 	animation_table[#animation_table + 1] = {
 		name = "update_current_rank",
@@ -1298,7 +1298,7 @@ local function _create_progress_havoc_animation(animation_table, start_time)
 					end
 				end
 			end
-		end,
+		end
 	}
 	animation_table[#animation_table + 1] = {
 		name = "fade_out_havoc_reward_1",
@@ -1377,7 +1377,7 @@ local function _create_progress_havoc_animation(animation_table, start_time)
 			if next_id then
 				havoc_fade_out_progress_by_id(start_id, widget, parent, params, progress)
 			end
-		end,
+		end
 	}
 	animation_table[#animation_table + 1] = {
 		name = "fade_in_havoc_reward_2",
@@ -1400,7 +1400,7 @@ local function _create_progress_havoc_animation(animation_table, start_time)
 			local start_id = get_havoc_id_by_wanted_position(widget, 2)
 
 			havoc_fade_in_progress_by_id(start_id, widget, parent, params, progress)
-		end,
+		end
 	}
 	animation_table[#animation_table + 1] = {
 		name = "fade_out_havoc_reward_2",
@@ -1416,7 +1416,7 @@ local function _create_progress_havoc_animation(animation_table, start_time)
 			if next_id then
 				havoc_fade_out_progress_by_id(start_id, widget, parent, params, progress)
 			end
-		end,
+		end
 	}
 	animation_table[#animation_table + 1] = {
 		name = "fade_in_havoc_reward_3",
@@ -1439,7 +1439,7 @@ local function _create_progress_havoc_animation(animation_table, start_time)
 			local start_id = get_havoc_id_by_wanted_position(widget, 3)
 
 			havoc_fade_in_progress_by_id(start_id, widget, parent, params, progress)
-		end,
+		end
 	}
 	animation_table[#animation_table + 1] = {
 		name = "fade_out_havoc_reward_3",
@@ -1454,7 +1454,7 @@ local function _create_progress_havoc_animation(animation_table, start_time)
 			if start_id then
 				havoc_fade_out_progress_by_id(start_id, widget, parent, params, progress)
 			end
-		end,
+		end
 	}
 	animation_table[#animation_table + 1] = {
 		name = "havoc_reward_show_all",
@@ -1487,7 +1487,7 @@ local function _create_progress_havoc_animation(animation_table, start_time)
 
 				havoc_fade_in_all_progress_by_id(id, widget, parent, params, progress)
 			end
-		end,
+		end
 	}
 end
 
@@ -1526,7 +1526,7 @@ local function _create_dim_havoc_animation(animation_table)
 					local charge_styles = {
 						"havoc_charge_1",
 						"havoc_charge_2",
-						"havoc_charge_3",
+						"havoc_charge_3"
 					}
 
 					for i = 1, #charge_styles do
@@ -1543,7 +1543,7 @@ local function _create_dim_havoc_animation(animation_table)
 				local ghost_styles = {
 					"havoc_charge_ghost_1",
 					"havoc_charge_ghost_2",
-					"havoc_charge_ghost_3",
+					"havoc_charge_ghost_3"
 				}
 
 				for i = 1, #ghost_styles do
@@ -1587,7 +1587,7 @@ local function _create_dim_havoc_animation(animation_table)
 					end
 				end
 			end
-		end,
+		end
 	}
 end
 
@@ -1601,7 +1601,7 @@ local function _create_progress_expedition_animation(animation_table, start_time
 				widget.style.currency_icon_background,
 				widget.style.currency_icon,
 				widget.style.currency_label,
-				widget.style.currency_text,
+				widget.style.currency_text
 			}
 			params.progress_styles = {}
 			params.progress_background_styles = {}
@@ -1676,7 +1676,7 @@ local function _create_progress_expedition_animation(animation_table, start_time
 				pass_style.start_text_color = table.clone(pass_style.text_color)
 				pass_style.end_text_color[1] = 255
 			end
-		end,
+		end
 	}
 	animation_table[#animation_table + 1] = {
 		name = "expedition_loot_fade",
@@ -1705,7 +1705,7 @@ local function _create_progress_expedition_animation(animation_table, start_time
 			local pass_style = widget.style.currency_background
 
 			pass_style.color[1] = math.lerp(pass_style.start_color[1], pass_style.end_color[1], progress)
-		end,
+		end
 	}
 	animation_table[#animation_table + 1] = {
 		name = "expedition_loot_icon_fade",
@@ -1718,7 +1718,7 @@ local function _create_progress_expedition_animation(animation_table, start_time
 			local pass_style = params.currency_styles[1]
 
 			pass_style.color[1] = math.lerp(pass_style.start_color[1], pass_style.end_color[1], progress)
-		end,
+		end
 	}
 	animation_table[#animation_table + 1] = {
 		name = "expedition_loot_update",
@@ -1734,7 +1734,7 @@ local function _create_progress_expedition_animation(animation_table, start_time
 		end,
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 			parent:play_sound(UISoundEvents.end_screen_summary_expeditions_credits_stop)
-		end,
+		end
 	}
 	animation_table[#animation_table + 1] = {
 		name = "expedition_progress_fade",
@@ -1769,7 +1769,7 @@ local function _create_progress_expedition_animation(animation_table, start_time
 
 				pass_style.color[1] = math.lerp(pass_style.start_color[1], pass_style.end_color[1], progress)
 			end
-		end,
+		end
 	}
 	animation_table[#animation_table + 1] = {
 		name = "expedition_resume_fade",
@@ -1785,7 +1785,7 @@ local function _create_progress_expedition_animation(animation_table, start_time
 				resume_text_style.offset[2] = math.lerp(resume_text_style.start_offset[2], resume_text_style.end_offset[2], progress)
 				resume_text_style.text_color[1] = math.lerp(resume_text_style.start_text_color[1], resume_text_style.end_text_color[1], progress)
 			end
-		end,
+		end
 	}
 	animation_table[#animation_table + 1] = {
 		name = "expedition_progress_update",
@@ -1810,7 +1810,7 @@ local function _create_progress_expedition_animation(animation_table, start_time
 		end,
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 			parent:play_sound(UISoundEvents.end_screen_summary_expeditions_progress_stop)
-		end,
+		end
 	}
 	animation_table[#animation_table + 1] = {
 		name = "expedition_progress_complete_start",
@@ -1852,7 +1852,7 @@ local function _create_progress_expedition_animation(animation_table, start_time
 			if is_completed then
 				parent:play_sound(UISoundEvents.end_screen_summary_expeditions_node_complete)
 			end
-		end,
+		end
 	}
 	animation_table[#animation_table + 1] = {
 		name = "expedition_progress_complete_end",
@@ -1915,7 +1915,7 @@ local function _create_progress_expedition_animation(animation_table, start_time
 			params.progress_styles = nil
 			params.progress_background_styles = nil
 			params.progress_square_styles = nil
-		end,
+		end
 	}
 end
 
@@ -1978,7 +1978,7 @@ local function _create_dim_expedition_animation(animation_table)
 
 				if resume_text then
 					widget.content.expedition_resume_text = Localize("loc_expedition_eor_additional", true, {
-						requirements = count,
+						requirements = count
 					})
 				end
 
@@ -1991,7 +1991,7 @@ local function _create_dim_expedition_animation(animation_table)
 					pass_style.start_text_color = nil
 				end
 			end
-		end,
+		end
 	}
 	animation_table[#animation_table + 1] = {
 		end_time = 0.2,
@@ -2002,7 +2002,7 @@ local function _create_dim_expedition_animation(animation_table)
 				widget.style.currency_icon_background,
 				widget.style.currency_icon,
 				widget.style.currency_label,
-				widget.style.currency_text,
+				widget.style.currency_text
 			}
 
 			local total_moved_y_offset = not table.is_empty(params.progress_styles) and 0 or -60
@@ -2087,7 +2087,7 @@ local function _create_dim_expedition_animation(animation_table)
 					pass_style.end_text_color = nil
 				end
 			end
-		end,
+		end
 	}
 end
 
@@ -2254,7 +2254,7 @@ local function _create_dim_out_animation(animation_table, show_content_animation
 
 				color_utils_color_lerp(bg_start_color, bg_target_color, eased_progress, icon_bg_style.color)
 			end
-		end,
+		end
 	}
 end
 
@@ -2323,7 +2323,7 @@ local function _create_compress_content_animation(animation_table)
 				style.offset[1] = math_lerp(offset_original[1], offset_compressed[1], eased_progress)
 				style.offset[2] = math_lerp(offset_original[2], offset_compressed[2], eased_progress)
 			end
-		end,
+		end
 	}
 end
 
@@ -2332,7 +2332,7 @@ animations.experience_card_dim_out_content = {}
 
 _create_icon_animation(animations.experience_card_show_content, {
 	"experience",
-	0.25,
+	0.25
 })
 _create_count_up_animation(animations.experience_card_show_content, "base_xp", "experience", 0.25, 3)
 _create_count_up_animation(animations.experience_card_show_content, "side_mission_xp", "experience", 3.25, 4)
@@ -2351,7 +2351,7 @@ _create_icon_animation(animations.salary_card_show_content, {
 	"plasteel",
 	4.25,
 	"diamantine",
-	5.25,
+	5.25
 })
 _create_count_up_animation(animations.salary_card_show_content, "credits", "credits", 0.25, 2)
 _create_count_up_animation(animations.salary_card_show_content, "side_mission_credits", "credits", 2.25, 3)
@@ -2396,8 +2396,8 @@ animations.test = {
 		end,
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			return
-		end,
-	},
+		end
+	}
 }
 animations.weapon_card_show_content = {}
 animations.weapon_card_dim_out_content = {}
@@ -2477,7 +2477,7 @@ animations.weapon_level_up = {
 			local current_mastery_level = widget.content["weapon_current_mastery_level_" .. slot]
 			local slug_text = string.format("{#size(%d);color(%d, %d, %d)}%d{#reset()}", current_font_size, text_style.highlight_text_color[2], text_style.highlight_text_color[3], text_style.highlight_text_color[4], current_mastery_level)
 			local animated_mastery_level = Localize("loc_mastery_level_current", true, {
-				level = slug_text,
+				level = slug_text
 			})
 
 			widget.content["weapon_level_" .. slot] = animated_mastery_level
@@ -2495,10 +2495,10 @@ animations.weapon_level_up = {
 			local current_mastery_level = widget.content["weapon_current_mastery_level_" .. slot]
 
 			widget.content["weapon_level_" .. slot] = Localize("loc_mastery_level_current", true, {
-				level = current_mastery_level,
+				level = current_mastery_level
 			})
-		end,
-	},
+		end
+	}
 }
 
 return settings("EndPlayerViewAnimations", animations)

@@ -13,7 +13,7 @@ LocalProfileBackendParser.parse_profile = function (profile, character_id)
 
 	for slot_name, master_item in pairs(loadout) do
 		loadout_item_data[slot_name] = {
-			id = master_item.name,
+			id = master_item.name
 		}
 		loadout_item_ids[slot_name] = master_item.name .. slot_name
 	end

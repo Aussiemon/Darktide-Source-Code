@@ -9,7 +9,7 @@ local template = {
 			"horde_wave_1_b",
 			1,
 			"horde_wave_1_c",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_2 = {
 			"horde_wave_2_a",
@@ -17,7 +17,7 @@ local template = {
 			"horde_wave_2_b",
 			1,
 			"horde_wave_2_c",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_3 = {
 			"horde_wave_3_a",
@@ -25,7 +25,7 @@ local template = {
 			"horde_wave_3_b",
 			1,
 			"horde_wave_3_c",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_4 = {
 			"horde_wave_4_a",
@@ -33,7 +33,7 @@ local template = {
 			"horde_wave_4_b",
 			1,
 			"horde_wave_4_c",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_5 = {
 			"horde_wave_5_a",
@@ -41,7 +41,7 @@ local template = {
 			"horde_wave_5_b",
 			1,
 			"horde_wave_5_c",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_6 = {
 			"horde_wave_6_a",
@@ -49,7 +49,7 @@ local template = {
 			"horde_wave_6_b",
 			1,
 			"horde_wave_6_c",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_7 = {
 			"horde_wave_7_a",
@@ -57,7 +57,7 @@ local template = {
 			"horde_wave_7_b",
 			1,
 			"horde_wave_7_c",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_8 = {
 			"horde_wave_8_a",
@@ -65,7 +65,7 @@ local template = {
 			"horde_wave_8_b",
 			1,
 			"horde_wave_8_c",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_9 = {
 			"horde_wave_9_a",
@@ -73,7 +73,7 @@ local template = {
 			"horde_wave_9_b",
 			1,
 			"horde_wave_9_c",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_10 = {
 			"horde_wave_10_a",
@@ -81,7 +81,7 @@ local template = {
 			"horde_wave_10_b",
 			1,
 			"horde_wave_10_c",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_11 = {
 			"horde_wave_11_a",
@@ -89,7 +89,7 @@ local template = {
 			"horde_wave_11_b",
 			1,
 			"horde_wave_11_c",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_12 = {
 			"horde_wave_12_a",
@@ -97,7 +97,7 @@ local template = {
 			"horde_wave_12_b",
 			1,
 			"horde_wave_12_c",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_1_alt = {
 			"horde_wave_1_a_alt",
@@ -105,7 +105,7 @@ local template = {
 			"horde_wave_1_b_alt",
 			1,
 			"horde_wave_1_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_2_alt = {
 			"horde_wave_2_a_alt",
@@ -113,7 +113,7 @@ local template = {
 			"horde_wave_2_b_alt",
 			1,
 			"horde_wave_2_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_3_alt = {
 			"horde_wave_3_a_alt",
@@ -121,7 +121,7 @@ local template = {
 			"horde_wave_3_b_alt",
 			1,
 			"horde_wave_3_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_4_alt = {
 			"horde_wave_4_a_alt",
@@ -129,7 +129,7 @@ local template = {
 			"horde_wave_4_b_alt",
 			1,
 			"horde_wave_4_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_5_alt = {
 			"horde_wave_5_a_alt",
@@ -137,7 +137,7 @@ local template = {
 			"horde_wave_5_b_alt",
 			1,
 			"horde_wave_5_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_6_alt = {
 			"horde_wave_6_a_alt",
@@ -145,7 +145,7 @@ local template = {
 			"horde_wave_6_b_alt",
 			1,
 			"horde_wave_6_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_7_alt = {
 			"horde_wave_7_a_alt",
@@ -153,7 +153,7 @@ local template = {
 			"horde_wave_7_b_alt",
 			1,
 			"horde_wave_7_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_8_alt = {
 			"horde_wave_8_a_alt",
@@ -161,7 +161,7 @@ local template = {
 			"horde_wave_8_b_alt",
 			1,
 			"horde_wave_8_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_9_alt = {
 			"horde_wave_9_a_alt",
@@ -169,7 +169,7 @@ local template = {
 			"horde_wave_9_b_alt",
 			1,
 			"horde_wave_9_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_10_alt = {
 			"horde_wave_10_a_alt",
@@ -177,7 +177,7 @@ local template = {
 			"horde_wave_10_b_alt",
 			1,
 			"horde_wave_10_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_11_alt = {
 			"horde_wave_11_a_alt",
@@ -185,7 +185,7 @@ local template = {
 			"horde_wave_11_b_alt",
 			1,
 			"horde_wave_11_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_12_alt = {
 			"horde_wave_12_a_alt",
@@ -193,7 +193,7 @@ local template = {
 			"horde_wave_12_b_alt",
 			1,
 			"horde_wave_12_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_rooftops_1 = {
 			"horde_wave_rooftops_1_a",
@@ -201,7 +201,7 @@ local template = {
 			"horde_wave_rooftops_1_a",
 			1,
 			"horde_wave_rooftops_1_a",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_rooftops_2 = {
 			"horde_wave_rooftops_2_a",
@@ -209,7 +209,7 @@ local template = {
 			"horde_wave_rooftops_2_a",
 			1,
 			"horde_wave_rooftops_2_a",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_rooftops_3 = {
 			"horde_wave_rooftops_3_a",
@@ -217,7 +217,7 @@ local template = {
 			"horde_wave_rooftops_3_a",
 			1,
 			"horde_wave_rooftops_3_a",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_rooftops_4 = {
 			"horde_wave_rooftops_4_a",
@@ -225,7 +225,7 @@ local template = {
 			"horde_wave_rooftops_4_a",
 			1,
 			"horde_wave_rooftops_4_a",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_rooftops_5 = {
 			"horde_wave_rooftops_5_a",
@@ -233,7 +233,7 @@ local template = {
 			"horde_wave_rooftops_5_a",
 			1,
 			"horde_wave_rooftops_5_a",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_rooftops_6 = {
 			"horde_wave_rooftops_6_a",
@@ -241,7 +241,7 @@ local template = {
 			"horde_wave_rooftops_6_a",
 			1,
 			"horde_wave_rooftops_6_a",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_rooftops_7 = {
 			"horde_wave_rooftops_7_a",
@@ -249,7 +249,7 @@ local template = {
 			"horde_wave_rooftops_7_a",
 			1,
 			"horde_wave_rooftops_7_a",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_rooftops_8 = {
 			"horde_wave_rooftops_8_a",
@@ -257,7 +257,7 @@ local template = {
 			"horde_wave_rooftops_8_a",
 			1,
 			"horde_wave_rooftops_8_a",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_rooftops_9 = {
 			"horde_wave_rooftops_9_a",
@@ -265,7 +265,7 @@ local template = {
 			"horde_wave_rooftops_9_a",
 			1,
 			"horde_wave_rooftops_9_a",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_rooftops_10 = {
 			"horde_wave_rooftops_10_a",
@@ -273,7 +273,7 @@ local template = {
 			"horde_wave_rooftops_10_a",
 			1,
 			"horde_wave_rooftops_10_a",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_rooftops_11 = {
 			"horde_wave_rooftops_11_a",
@@ -281,7 +281,7 @@ local template = {
 			"horde_wave_rooftops_11_a",
 			1,
 			"horde_wave_rooftops_11_a",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_rooftops_12 = {
 			"horde_wave_rooftops_12_a",
@@ -289,7 +289,7 @@ local template = {
 			"horde_wave_rooftops_12_a",
 			1,
 			"horde_wave_rooftops_12_a",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_rooftops_1_alt = {
 			"horde_wave_rooftops_1_a_alt",
@@ -297,7 +297,7 @@ local template = {
 			"horde_wave_rooftops_1_b_alt",
 			1,
 			"horde_wave_rooftops_1_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_rooftops_2_alt = {
 			"horde_wave_rooftops_2_a_alt",
@@ -305,7 +305,7 @@ local template = {
 			"horde_wave_rooftops_2_b_alt",
 			1,
 			"horde_wave_rooftops_2_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_rooftops_3_alt = {
 			"horde_wave_rooftops_3_a_alt",
@@ -313,7 +313,7 @@ local template = {
 			"horde_wave_rooftops_3_b_alt",
 			1,
 			"horde_wave_rooftops_3_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_rooftops_4_alt = {
 			"horde_wave_rooftops_4_a_alt",
@@ -321,7 +321,7 @@ local template = {
 			"horde_wave_rooftops_4_b_alt",
 			1,
 			"horde_wave_rooftops_4_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_rooftops_5_alt = {
 			"horde_wave_rooftops_5_a_alt",
@@ -329,7 +329,7 @@ local template = {
 			"horde_wave_rooftops_5_b_alt",
 			1,
 			"horde_wave_rooftops_5_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_rooftops_6_alt = {
 			"horde_wave_rooftops_6_a_alt",
@@ -337,7 +337,7 @@ local template = {
 			"horde_wave_rooftops_6_b_alt",
 			1,
 			"horde_wave_rooftops_6_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_rooftops_7_alt = {
 			"horde_wave_rooftops_7_a_alt",
@@ -345,7 +345,7 @@ local template = {
 			"horde_wave_rooftops_7_b_alt",
 			1,
 			"horde_wave_rooftops_7_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_rooftops_8_alt = {
 			"horde_wave_rooftops_8_a_alt",
@@ -353,7 +353,7 @@ local template = {
 			"horde_wave_rooftops_8_b_alt",
 			1,
 			"horde_wave_rooftops_8_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_rooftops_9_alt = {
 			"horde_wave_rooftops_9_a_alt",
@@ -361,7 +361,7 @@ local template = {
 			"horde_wave_rooftops_9_b_alt",
 			1,
 			"horde_wave_rooftops_9_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_rooftops_10_alt = {
 			"horde_wave_rooftops_10_a_alt",
@@ -369,7 +369,7 @@ local template = {
 			"horde_wave_rooftops_10_b_alt",
 			1,
 			"horde_wave_rooftops_10_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_rooftops_11_alt = {
 			"horde_wave_rooftops_11_a_alt",
@@ -377,7 +377,7 @@ local template = {
 			"horde_wave_rooftops_11_b_alt",
 			1,
 			"horde_wave_rooftops_11_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_rooftops_12_alt = {
 			"horde_wave_rooftops_12_a_alt",
@@ -385,7 +385,7 @@ local template = {
 			"horde_wave_rooftops_12_b_alt",
 			1,
 			"horde_wave_rooftops_12_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_machine_1 = {
 			"horde_wave_machine_1_a",
@@ -393,7 +393,7 @@ local template = {
 			"horde_wave_machine_1_b",
 			1,
 			"horde_wave_machine_1_c",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_machine_2 = {
 			"horde_wave_machine_2_a",
@@ -401,7 +401,7 @@ local template = {
 			"horde_wave_machine_2_b",
 			1,
 			"horde_wave_machine_2_c",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_machine_3 = {
 			"horde_wave_machine_3_a",
@@ -409,7 +409,7 @@ local template = {
 			"horde_wave_machine_3_b",
 			1,
 			"horde_wave_machine_3_c",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_machine_4 = {
 			"horde_wave_machine_4_a",
@@ -417,7 +417,7 @@ local template = {
 			"horde_wave_machine_4_b",
 			1,
 			"horde_wave_machine_4_c",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_machine_5 = {
 			"horde_wave_machine_5_a",
@@ -425,7 +425,7 @@ local template = {
 			"horde_wave_machine_5_b",
 			1,
 			"horde_wave_machine_5_c",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_machine_6 = {
 			"horde_wave_machine_6_a",
@@ -433,7 +433,7 @@ local template = {
 			"horde_wave_machine_6_b",
 			1,
 			"horde_wave_machine_6_c",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_machine_7 = {
 			"horde_wave_machine_7_a",
@@ -441,7 +441,7 @@ local template = {
 			"horde_wave_machine_7_b",
 			1,
 			"horde_wave_machine_7_c",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_machine_8 = {
 			"horde_wave_machine_8_a",
@@ -449,7 +449,7 @@ local template = {
 			"horde_wave_machine_8_b",
 			1,
 			"horde_wave_machine_8_c",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_machine_9 = {
 			"horde_wave_machine_9_a",
@@ -457,7 +457,7 @@ local template = {
 			"horde_wave_machine_9_b",
 			1,
 			"horde_wave_machine_9_c",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_machine_10 = {
 			"horde_wave_machine_10_a",
@@ -465,7 +465,7 @@ local template = {
 			"horde_wave_machine_10_b",
 			1,
 			"horde_wave_machine_10_c",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_machine_11 = {
 			"horde_wave_machine_11_a",
@@ -473,7 +473,7 @@ local template = {
 			"horde_wave_machine_11_b",
 			1,
 			"horde_wave_machine_11_c",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_machine_12 = {
 			"horde_wave_machine_12_a",
@@ -481,7 +481,7 @@ local template = {
 			"horde_wave_machine_12_b",
 			1,
 			"horde_wave_machine_12_c",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_machine_1_alt = {
 			"horde_wave_machine_1_a_alt",
@@ -489,7 +489,7 @@ local template = {
 			"horde_wave_machine_1_b_alt",
 			1,
 			"horde_wave_machine_1_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_machine_2_alt = {
 			"horde_wave_machine_2_a_alt",
@@ -497,7 +497,7 @@ local template = {
 			"horde_wave_machine_2_b_alt",
 			1,
 			"horde_wave_machine_2_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_machine_3_alt = {
 			"horde_wave_machine_3_a_alt",
@@ -505,7 +505,7 @@ local template = {
 			"horde_wave_machine_3_b_alt",
 			1,
 			"horde_wave_machine_3_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_machine_4_alt = {
 			"horde_wave_machine_4_a_alt",
@@ -513,7 +513,7 @@ local template = {
 			"horde_wave_machine_4_b_alt",
 			1,
 			"horde_wave_machine_4_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_machine_5_alt = {
 			"horde_wave_machine_5_a_alt",
@@ -521,7 +521,7 @@ local template = {
 			"horde_wave_machine_5_b_alt",
 			1,
 			"horde_wave_machine_5_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_machine_6_alt = {
 			"horde_wave_machine_6_a_alt",
@@ -529,7 +529,7 @@ local template = {
 			"horde_wave_machine_6_b_alt",
 			1,
 			"horde_wave_machine_6_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_machine_7_alt = {
 			"horde_wave_machine_7_a_alt",
@@ -537,7 +537,7 @@ local template = {
 			"horde_wave_machine_7_b_alt",
 			1,
 			"horde_wave_machine_7_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_machine_8_alt = {
 			"horde_wave_machine_8_a_alt",
@@ -545,7 +545,7 @@ local template = {
 			"horde_wave_machine_8_b_alt",
 			1,
 			"horde_wave_machine_8_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_machine_9_alt = {
 			"horde_wave_machine_9_a_alt",
@@ -553,7 +553,7 @@ local template = {
 			"horde_wave_machine_9_b_alt",
 			1,
 			"horde_wave_machine_9_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_machine_10_alt = {
 			"horde_wave_machine_10_a_alt",
@@ -561,7 +561,7 @@ local template = {
 			"horde_wave_machine_10_b_alt",
 			1,
 			"horde_wave_machine_10_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_machine_11_alt = {
 			"horde_wave_machine_11_a_alt",
@@ -569,7 +569,7 @@ local template = {
 			"horde_wave_machine_11_b_alt",
 			1,
 			"horde_wave_machine_11_c_alt",
-			1,
+			1
 		},
 		psykhanium_horde_random_waves_machine_12_alt = {
 			"horde_wave_machine_12_a_alt",
@@ -577,15 +577,15 @@ local template = {
 			"horde_wave_machine_12_b_alt",
 			1,
 			"horde_wave_machine_12_c_alt",
-			1,
-		},
+			1
+		}
 	},
 	events = {
 		event_pacing_off = {
 			{
 				"set_pacing_enabled",
-				enabled = false,
-			},
+				enabled = false
+			}
 		},
 		horde_wave_1_a_alt = {
 			{
@@ -596,9 +596,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -608,16 +608,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -627,9 +627,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -641,12 +641,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -656,16 +656,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -675,9 +675,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -690,30 +690,30 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() <= 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_1_complete",
-			},
+				flow_event_name = "wave_1_complete"
+			}
 		},
 		horde_wave_1_b_alt = {
 			{
@@ -727,9 +727,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -739,9 +739,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -751,16 +751,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -772,18 +772,18 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "chaos_hound",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -793,16 +793,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -815,9 +815,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -827,32 +827,32 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 120,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_1_complete",
-			},
+				flow_event_name = "wave_1_complete"
+			}
 		},
 		horde_wave_1_c_alt = {
 			{
@@ -866,9 +866,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"close",
-					},
-				},
+						"close"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -878,9 +878,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -893,16 +893,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -914,12 +914,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -929,9 +929,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -941,16 +941,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -961,9 +961,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"close",
-					},
-				},
+						"close"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -973,9 +973,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -988,32 +988,32 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 120,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_1_complete",
-			},
+				flow_event_name = "wave_1_complete"
+			}
 		},
 		horde_wave_2_a_alt = {
 			{
@@ -1027,9 +1027,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1039,16 +1039,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 15,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -1060,12 +1060,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1075,16 +1075,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -1096,12 +1096,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1111,9 +1111,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1123,16 +1123,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -1145,9 +1145,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1157,32 +1157,32 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_2_complete",
-			},
+				flow_event_name = "wave_2_complete"
+			}
 		},
 		horde_wave_2_b_alt = {
 			{
@@ -1196,9 +1196,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1208,16 +1208,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -1229,12 +1229,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1244,16 +1244,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -1265,12 +1265,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1280,9 +1280,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1292,16 +1292,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -1311,12 +1311,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"monster",
-					},
+						"monster"
+					}
 				},
 				excluded_breed_tags = {
-					"witch",
-				},
+					"witch"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1326,37 +1326,37 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_2_complete",
-			},
+				flow_event_name = "wave_2_complete"
+			}
 		},
 		horde_wave_2_c_alt = {
 			{
 				"flow_event",
-				flow_event_name = "chaos_hound_wave",
+				flow_event_name = "chaos_hound_wave"
 			},
 			{
 				"spawn_by_points",
@@ -1369,12 +1369,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1384,28 +1384,28 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 5,
 				breed_name = "chaos_hound",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "renegade_flamer",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -1418,12 +1418,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1433,28 +1433,28 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "chaos_hound",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 3,
 				breed_name = "renegade_flamer",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -1467,12 +1467,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"close",
-					},
+						"close"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1482,44 +1482,44 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 9,
 				breed_name = "chaos_hound",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 3,
 				breed_name = "renegade_flamer",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_2_complete",
-			},
+				flow_event_name = "wave_2_complete"
+			}
 		},
 		horde_wave_3_a_alt = {
 			{
@@ -1533,9 +1533,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1545,9 +1545,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1557,25 +1557,25 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 3,
 				breed_name = "chaos_ogryn_gunner",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -1585,9 +1585,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1599,9 +1599,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1612,9 +1612,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -1628,30 +1628,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_3_complete",
-			},
+				flow_event_name = "wave_3_complete"
+			}
 		},
 		horde_wave_3_b_alt = {
 			{
@@ -1662,9 +1662,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1674,19 +1674,19 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -1696,9 +1696,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1708,22 +1708,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"restart_when",
@@ -1737,30 +1737,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_3_complete",
-			},
+				flow_event_name = "wave_3_complete"
+			}
 		},
 		horde_wave_3_c_alt = {
 			{
@@ -1771,9 +1771,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1783,12 +1783,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1799,19 +1799,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -1821,9 +1821,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1833,9 +1833,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1847,9 +1847,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -1863,30 +1863,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_3_complete",
-			},
+				flow_event_name = "wave_3_complete"
+			}
 		},
 		horde_wave_4_a_alt = {
 			{
@@ -1897,9 +1897,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1912,26 +1912,26 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_spawn",
 				max_breed_amount = 1,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -1941,9 +1941,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1955,19 +1955,19 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -1977,9 +1977,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -1992,9 +1992,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -2006,44 +2006,44 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "chaos_ogryn_gunner",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 3,
 				breed_name = "chaos_ogryn_executor",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_4_complete",
-			},
+				flow_event_name = "wave_4_complete"
+			}
 		},
 		horde_wave_4_b_alt = {
 			{
@@ -2054,9 +2054,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -2069,19 +2069,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "cultist_berzerker",
 				max_breed_amount = 10,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
@@ -2089,14 +2089,14 @@ local template = {
 				breed_name = "renegade_rifleman",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -2106,9 +2106,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -2118,12 +2118,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -2133,9 +2133,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -2145,16 +2145,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -2164,9 +2164,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
@@ -2174,37 +2174,37 @@ local template = {
 				breed_name = "renegade_plasma_gunner",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "cultist_berzerker",
 				max_breed_amount = 5,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_4_complete",
-			},
+				flow_event_name = "wave_4_complete"
+			}
 		},
 		horde_wave_4_c_alt = {
 			{
@@ -2215,16 +2215,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_poxwalker_bomber",
 				max_breed_amount = 3,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -2237,19 +2237,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -2259,9 +2259,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -2273,12 +2273,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -2288,16 +2288,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -2307,23 +2307,23 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_poxwalker_bomber",
 				max_breed_amount = 4,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "cultist_mutant",
 				max_breed_amount = 6,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -2333,32 +2333,32 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_4_complete",
-			},
+				flow_event_name = "wave_4_complete"
+			}
 		},
 		horde_wave_5_a_alt = {
 			{
@@ -2369,9 +2369,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -2383,25 +2383,25 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
+						"roamer"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_armored_infected",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -2411,9 +2411,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -2425,18 +2425,18 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_armored_infected",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -2446,9 +2446,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"sniper",
-					},
-				},
+						"sniper"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -2458,29 +2458,29 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"ogryn",
-					},
-				},
+						"ogryn"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_beast_of_nurgle",
 				max_breed_amount = 2,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_armored_infected",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -2490,32 +2490,32 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"ogryn",
-					},
-				},
+						"ogryn"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_5_complete",
-			},
+				flow_event_name = "wave_5_complete"
+			}
 		},
 		horde_wave_5_b_alt = {
 			{
@@ -2526,9 +2526,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -2540,19 +2540,19 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
+						"roamer"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -2562,9 +2562,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -2576,12 +2576,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -2591,39 +2591,39 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"sniper",
-					},
-				},
+						"sniper"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_plague_ogryn",
 				max_breed_amount = 2,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_5_complete",
-			},
+				flow_event_name = "wave_5_complete"
+			}
 		},
 		horde_wave_5_c_alt = {
 			{
@@ -2634,9 +2634,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -2648,16 +2648,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"flow_event",
-				flow_event_name = "cultist_mutant_wave",
+				flow_event_name = "cultist_mutant_wave"
 			},
 			{
 				"spawn_by_points",
@@ -2667,22 +2667,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -2692,22 +2692,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 8,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -2717,45 +2717,45 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_spawn",
 				max_breed_amount = 1,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_5_complete",
-			},
+				flow_event_name = "wave_5_complete"
+			}
 		},
 		horde_wave_6_a_alt = {
 			{
@@ -2766,15 +2766,15 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 30,
 				breed_name = "chaos_armored_infected",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
@@ -2782,20 +2782,20 @@ local template = {
 				breed_name = "renegade_gunner",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 4,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -2805,28 +2805,28 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 35,
 				breed_name = "chaos_armored_infected",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -2836,18 +2836,18 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 50,
 				breed_name = "chaos_armored_infected",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
@@ -2855,13 +2855,13 @@ local template = {
 				breed_name = "renegade_plasma_gunner",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 5,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"restart_when",
@@ -2875,30 +2875,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_6_complete",
-			},
+				flow_event_name = "wave_6_complete"
+			}
 		},
 		horde_wave_6_b_alt = {
 			{
@@ -2909,9 +2909,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -2924,19 +2924,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 25,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -2946,9 +2946,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
@@ -2956,14 +2956,14 @@ local template = {
 				breed_name = "renegade_gunner",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 40,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -2973,12 +2973,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -2989,9 +2989,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -3005,30 +3005,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_6_complete",
-			},
+				flow_event_name = "wave_6_complete"
+			}
 		},
 		horde_wave_6_c_alt = {
 			{
@@ -3039,9 +3039,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -3054,25 +3054,25 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 5,
 				breed_name = "chaos_ogryn_gunner",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -3082,22 +3082,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "chaos_ogryn_bulwark",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -3109,15 +3109,15 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "chaos_ogryn_executor",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"restart_when",
@@ -3131,30 +3131,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_6_complete",
-			},
+				flow_event_name = "wave_6_complete"
+			}
 		},
 		horde_wave_7_a_alt = {
 			{
@@ -3165,9 +3165,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -3179,16 +3179,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -3198,28 +3198,28 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 9,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 12,
 				breed_name = "chaos_ogryn_bulwark",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -3231,12 +3231,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
@@ -3244,7 +3244,7 @@ local template = {
 				breed_name = "renegade_rifleman",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -3254,32 +3254,32 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_7_complete",
-			},
+				flow_event_name = "wave_7_complete"
+			}
 		},
 		horde_wave_7_b_alt = {
 			{
@@ -3290,9 +3290,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -3304,16 +3304,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -3323,28 +3323,28 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "cultist_grenadier",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 8,
 				breed_name = "renegade_flamer",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -3356,47 +3356,47 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 8,
 				breed_name = "cultist_grenadier",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 8,
 				breed_name = "renegade_flamer",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_7_complete",
-			},
+				flow_event_name = "wave_7_complete"
+			}
 		},
 		horde_wave_7_c_alt = {
 			{
@@ -3407,13 +3407,13 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"flow_event",
-				flow_event_name = "chaos_poxwalker_bomber_wave",
+				flow_event_name = "chaos_poxwalker_bomber_wave"
 			},
 			{
 				"spawn_by_points",
@@ -3423,28 +3423,28 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "chaos_poxwalker_bomber",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 5,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -3454,28 +3454,28 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "chaos_poxwalker_bomber",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -3485,44 +3485,44 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 13,
 				breed_name = "chaos_poxwalker_bomber",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_7_complete",
-			},
+				flow_event_name = "wave_7_complete"
+			}
 		},
 		horde_wave_8_a_alt = {
 			{
@@ -3533,22 +3533,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "renegade_netgunner",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -3558,22 +3558,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 9,
 				breed_name = "chaos_hound",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -3583,22 +3583,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 12,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -3608,38 +3608,38 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 14,
 				breed_name = "cultist_assault",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_8_complete",
-			},
+				flow_event_name = "wave_8_complete"
+			}
 		},
 		horde_wave_8_b_alt = {
 			{
@@ -3650,9 +3650,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -3664,16 +3664,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -3683,22 +3683,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 9,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -3708,12 +3708,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
@@ -3721,7 +3721,7 @@ local template = {
 				breed_name = "renegade_rifleman",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -3731,38 +3731,38 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 3,
 				breed_name = "chaos_ogryn_bulwark",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_8_complete",
-			},
+				flow_event_name = "wave_8_complete"
+			}
 		},
 		horde_wave_8_c_alt = {
 			{
@@ -3773,13 +3773,13 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"flow_event",
-				flow_event_name = "flamer_wave",
+				flow_event_name = "flamer_wave"
 			},
 			{
 				"spawn_by_points",
@@ -3789,15 +3789,15 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "renegade_flamer",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -3807,16 +3807,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -3826,22 +3826,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "cultist_flamer",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -3851,15 +3851,15 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 8,
 				breed_name = "cultist_flamer",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -3869,32 +3869,32 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_8_complete",
-			},
+				flow_event_name = "wave_8_complete"
+			}
 		},
 		horde_wave_9_a_alt = {
 			{
@@ -3905,9 +3905,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -3919,19 +3919,19 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
+						"roamer"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -3941,9 +3941,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -3953,9 +3953,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"ogryn",
-					},
-				},
+						"ogryn"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -3965,25 +3965,25 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 30,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "cultist_grenadier",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -3993,9 +3993,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -4008,9 +4008,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -4024,30 +4024,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_9_complete",
-			},
+				flow_event_name = "wave_9_complete"
+			}
 		},
 		horde_wave_9_b_alt = {
 			{
@@ -4058,9 +4058,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -4072,19 +4072,19 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
+						"roamer"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -4094,9 +4094,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -4106,15 +4106,15 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "renegade_plasma_gunner",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -4124,19 +4124,19 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -4147,9 +4147,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -4162,9 +4162,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -4178,30 +4178,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_9_complete",
-			},
+				flow_event_name = "wave_9_complete"
+			}
 		},
 		horde_wave_9_c_alt = {
 			{
@@ -4212,9 +4212,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -4225,18 +4225,18 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 5,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -4246,16 +4246,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 30,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -4266,12 +4266,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -4281,15 +4281,15 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 8,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -4299,16 +4299,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -4319,12 +4319,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -4334,15 +4334,15 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -4352,9 +4352,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -4368,30 +4368,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_9_complete",
-			},
+				flow_event_name = "wave_9_complete"
+			}
 		},
 		horde_wave_10_a_alt = {
 			{
@@ -4402,15 +4402,15 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_spawn",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -4420,16 +4420,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -4439,15 +4439,15 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -4457,16 +4457,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -4476,15 +4476,15 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_beast_of_nurgle",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -4494,32 +4494,32 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 250,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_10_complete",
-			},
+				flow_event_name = "wave_10_complete"
+			}
 		},
 		horde_wave_10_b_alt = {
 			{
@@ -4530,16 +4530,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 50,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -4549,16 +4549,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -4568,26 +4568,26 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 35,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 100,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -4597,9 +4597,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -4609,9 +4609,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"sniper",
-					},
-				},
+						"sniper"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -4622,9 +4622,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -4637,32 +4637,32 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_10_complete",
-			},
+				flow_event_name = "wave_10_complete"
+			}
 		},
 		horde_wave_10_c_alt = {
 			{
@@ -4673,9 +4673,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -4686,18 +4686,18 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 5,
 				breed_name = "renegade_netgunner",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -4710,16 +4710,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -4729,9 +4729,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -4742,18 +4742,18 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "renegade_netgunner",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -4766,16 +4766,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -4785,9 +4785,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -4798,18 +4798,18 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "renegade_plasma_gunner",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -4822,32 +4822,32 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_10_complete",
-			},
+				flow_event_name = "wave_10_complete"
+			}
 		},
 		horde_wave_11_a_alt = {
 			{
@@ -4861,12 +4861,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -4876,9 +4876,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -4888,12 +4888,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -4903,9 +4903,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -4915,9 +4915,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -4927,9 +4927,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"ogryn",
-					},
-				},
+						"ogryn"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -4942,9 +4942,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -4954,44 +4954,44 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_daemonhost",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "chaos_ogryn_executor",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_11_complete",
-			},
+				flow_event_name = "wave_11_complete"
+			}
 		},
 		horde_wave_11_b_alt = {
 			{
@@ -5005,12 +5005,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5020,9 +5020,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5032,12 +5032,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5047,9 +5047,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5059,9 +5059,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"sniper",
-					},
-				},
+						"sniper"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5072,9 +5072,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5087,39 +5087,39 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_11_complete",
-			},
+				flow_event_name = "wave_11_complete"
+			}
 		},
 		horde_wave_11_c_alt = {
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -5129,9 +5129,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5144,25 +5144,25 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_beast_of_nurgle",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -5172,9 +5172,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5187,25 +5187,25 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_spawn",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -5215,9 +5215,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5230,35 +5230,35 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_11_complete",
-			},
+				flow_event_name = "wave_11_complete"
+			}
 		},
 		horde_wave_12_a_alt = {
 			{
@@ -5272,12 +5272,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5287,9 +5287,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5299,12 +5299,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5314,9 +5314,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5326,9 +5326,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5339,9 +5339,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5354,16 +5354,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -5373,9 +5373,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5385,12 +5385,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5403,9 +5403,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5418,12 +5418,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5433,15 +5433,15 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_daemonhost",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -5451,32 +5451,32 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_12_complete",
-			},
+				flow_event_name = "wave_12_complete"
+			}
 		},
 		horde_wave_12_b_alt = {
 			{
@@ -5490,12 +5490,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5505,9 +5505,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5517,12 +5517,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5532,9 +5532,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5544,9 +5544,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5557,9 +5557,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5572,16 +5572,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -5594,9 +5594,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5606,30 +5606,30 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_beast_of_nurgle",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 3,
 				breed_name = "chaos_spawn",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -5639,9 +5639,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"ogryn",
-					},
-				},
+						"ogryn"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5654,12 +5654,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5669,32 +5669,32 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_12_complete",
-			},
+				flow_event_name = "wave_12_complete"
+			}
 		},
 		horde_wave_12_c_alt = {
 			{
@@ -5708,12 +5708,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5723,9 +5723,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5735,12 +5735,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5750,9 +5750,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5762,9 +5762,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5775,9 +5775,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"close",
-					},
-				},
+						"close"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5790,16 +5790,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -5809,12 +5809,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5825,9 +5825,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5836,12 +5836,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"captain",
-					},
+						"captain"
+					}
 				},
 				attack_selection_template_tag = {
-					"default",
-				},
+					"default"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5852,9 +5852,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"close",
-					},
-				},
+						"close"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5864,9 +5864,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5879,12 +5879,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5894,32 +5894,32 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_12_complete",
-			},
+				flow_event_name = "wave_12_complete"
+			}
 		},
 		horde_wave_1_a = {
 			{
@@ -5930,9 +5930,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5945,19 +5945,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -5967,9 +5967,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5981,12 +5981,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -5996,16 +5996,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -6015,36 +6015,36 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "cultist_berzerker",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() <= 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_1_complete",
-			},
+				flow_event_name = "wave_1_complete"
+			}
 		},
 		horde_wave_1_b = {
 			{
@@ -6058,9 +6058,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6070,16 +6070,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -6091,12 +6091,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6106,9 +6106,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6118,16 +6118,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -6140,9 +6140,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6152,32 +6152,32 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 120,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_1_complete",
-			},
+				flow_event_name = "wave_1_complete"
+			}
 		},
 		horde_wave_1_c = {
 			{
@@ -6191,9 +6191,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"close",
-					},
-				},
+						"close"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6203,16 +6203,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -6224,12 +6224,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6239,9 +6239,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6251,16 +6251,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -6271,9 +6271,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"close",
-					},
-				},
+						"close"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6283,32 +6283,32 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 120,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_1_complete",
-			},
+				flow_event_name = "wave_1_complete"
+			}
 		},
 		horde_wave_2_a = {
 			{
@@ -6322,9 +6322,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6334,16 +6334,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -6355,12 +6355,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6370,16 +6370,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -6391,12 +6391,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6406,9 +6406,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6418,16 +6418,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -6440,9 +6440,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6452,32 +6452,32 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_2_complete",
-			},
+				flow_event_name = "wave_2_complete"
+			}
 		},
 		horde_wave_2_b = {
 			{
@@ -6491,9 +6491,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6503,16 +6503,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -6524,12 +6524,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6539,16 +6539,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -6560,12 +6560,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6575,9 +6575,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6587,16 +6587,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -6606,12 +6606,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"monster",
-					},
+						"monster"
+					}
 				},
 				excluded_breed_tags = {
-					"witch",
-				},
+					"witch"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6621,37 +6621,37 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_2_complete",
-			},
+				flow_event_name = "wave_2_complete"
+			}
 		},
 		horde_wave_2_c = {
 			{
 				"flow_event",
-				flow_event_name = "chaos_hound_wave",
+				flow_event_name = "chaos_hound_wave"
 			},
 			{
 				"spawn_by_points",
@@ -6664,12 +6664,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6679,22 +6679,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 4,
 				breed_name = "chaos_hound",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -6707,12 +6707,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6722,22 +6722,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 5,
 				breed_name = "chaos_hound",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -6750,12 +6750,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"close",
-					},
+						"close"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6765,38 +6765,38 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 8,
 				breed_name = "chaos_hound",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_2_complete",
-			},
+				flow_event_name = "wave_2_complete"
+			}
 		},
 		horde_wave_3_a = {
 			{
@@ -6810,9 +6810,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6822,9 +6822,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6834,19 +6834,19 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -6856,9 +6856,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6870,9 +6870,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6883,9 +6883,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -6899,30 +6899,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_3_complete",
-			},
+				flow_event_name = "wave_3_complete"
+			}
 		},
 		horde_wave_3_b = {
 			{
@@ -6933,9 +6933,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6945,19 +6945,19 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -6967,9 +6967,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -6979,9 +6979,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -6995,30 +6995,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_3_complete",
-			},
+				flow_event_name = "wave_3_complete"
+			}
 		},
 		horde_wave_3_c = {
 			{
@@ -7029,9 +7029,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -7041,12 +7041,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -7057,19 +7057,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -7079,9 +7079,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -7091,9 +7091,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -7105,9 +7105,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -7121,30 +7121,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_3_complete",
-			},
+				flow_event_name = "wave_3_complete"
+			}
 		},
 		horde_wave_4_a = {
 			{
@@ -7155,9 +7155,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -7170,19 +7170,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -7192,9 +7192,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -7206,19 +7206,19 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -7228,9 +7228,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -7243,9 +7243,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -7257,38 +7257,38 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "renegade_plasma_gunner",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_4_complete",
-			},
+				flow_event_name = "wave_4_complete"
+			}
 		},
 		horde_wave_4_b = {
 			{
@@ -7299,9 +7299,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -7314,19 +7314,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -7336,9 +7336,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -7348,12 +7348,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -7363,16 +7363,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -7382,39 +7382,39 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "cultist_berzerker",
 				max_breed_amount = 4,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_4_complete",
-			},
+				flow_event_name = "wave_4_complete"
+			}
 		},
 		horde_wave_4_c = {
 			{
@@ -7425,9 +7425,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -7440,19 +7440,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -7462,9 +7462,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -7476,12 +7476,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -7491,16 +7491,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -7510,46 +7510,46 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_spawn",
 				max_breed_amount = 1,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "cultist_mutant",
 				max_breed_amount = 4,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_4_complete",
-			},
+				flow_event_name = "wave_4_complete"
+			}
 		},
 		horde_wave_5_a = {
 			{
@@ -7560,9 +7560,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -7574,19 +7574,19 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
+						"roamer"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -7596,9 +7596,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -7610,12 +7610,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -7625,46 +7625,46 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"sniper",
-					},
-				},
+						"sniper"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_plague_ogryn",
 				max_breed_amount = 2,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_5_complete",
-			},
+				flow_event_name = "wave_5_complete"
+			}
 		},
 		horde_wave_5_b = {
 			{
@@ -7675,9 +7675,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -7689,19 +7689,19 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
+						"roamer"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -7711,9 +7711,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -7725,12 +7725,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -7740,39 +7740,39 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"sniper",
-					},
-				},
+						"sniper"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_plague_ogryn",
 				max_breed_amount = 2,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_5_complete",
-			},
+				flow_event_name = "wave_5_complete"
+			}
 		},
 		horde_wave_5_c = {
 			{
@@ -7783,13 +7783,13 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"flow_event",
-				flow_event_name = "cultist_mutant_wave",
+				flow_event_name = "cultist_mutant_wave"
 			},
 			{
 				"spawn_by_points",
@@ -7799,22 +7799,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -7824,22 +7824,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 8,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -7849,38 +7849,38 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_5_complete",
-			},
+				flow_event_name = "wave_5_complete"
+			}
 		},
 		horde_wave_6_a = {
 			{
@@ -7891,22 +7891,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_armored_infected",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 30,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -7916,22 +7916,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 35,
 				breed_name = "chaos_armored_infected",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -7941,18 +7941,18 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 45,
 				breed_name = "chaos_armored_infected",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"restart_when",
@@ -7966,30 +7966,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_6_complete",
-			},
+				flow_event_name = "wave_6_complete"
+			}
 		},
 		horde_wave_6_b = {
 			{
@@ -8000,9 +8000,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -8015,19 +8015,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 30,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -8037,9 +8037,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
@@ -8047,14 +8047,14 @@ local template = {
 				breed_name = "renegade_plasma_gunner",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -8064,12 +8064,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -8080,9 +8080,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -8096,30 +8096,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_6_complete",
-			},
+				flow_event_name = "wave_6_complete"
+			}
 		},
 		horde_wave_6_c = {
 			{
@@ -8130,9 +8130,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -8145,19 +8145,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 30,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -8167,22 +8167,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "renegade_plasma_gunner",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -8194,15 +8194,15 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "chaos_ogryn_executor",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"restart_when",
@@ -8216,30 +8216,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_6_complete",
-			},
+				flow_event_name = "wave_6_complete"
+			}
 		},
 		horde_wave_7_a = {
 			{
@@ -8250,9 +8250,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -8264,16 +8264,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -8283,22 +8283,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 9,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -8310,12 +8310,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
@@ -8323,7 +8323,7 @@ local template = {
 				breed_name = "renegade_plasma_gunner",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -8333,32 +8333,32 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_7_complete",
-			},
+				flow_event_name = "wave_7_complete"
+			}
 		},
 		horde_wave_7_b = {
 			{
@@ -8369,9 +8369,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -8383,16 +8383,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -8402,22 +8402,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "renegade_flamer",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -8429,47 +8429,47 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "cultist_grenadier",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "renegade_flamer",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_7_complete",
-			},
+				flow_event_name = "wave_7_complete"
+			}
 		},
 		horde_wave_7_c = {
 			{
@@ -8480,13 +8480,13 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"flow_event",
-				flow_event_name = "chaos_poxwalker_bomber_wave",
+				flow_event_name = "chaos_poxwalker_bomber_wave"
 			},
 			{
 				"spawn_by_points",
@@ -8496,22 +8496,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "chaos_poxwalker_bomber",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -8521,22 +8521,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 9,
 				breed_name = "chaos_poxwalker_bomber",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -8546,38 +8546,38 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 13,
 				breed_name = "chaos_poxwalker_bomber",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_7_complete",
-			},
+				flow_event_name = "wave_7_complete"
+			}
 		},
 		horde_wave_8_a = {
 			{
@@ -8588,22 +8588,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "renegade_netgunner",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -8613,22 +8613,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 5,
 				breed_name = "chaos_hound",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -8638,22 +8638,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -8663,38 +8663,38 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "cultist_assault",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_8_complete",
-			},
+				flow_event_name = "wave_8_complete"
+			}
 		},
 		horde_wave_8_b = {
 			{
@@ -8705,9 +8705,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -8719,16 +8719,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -8738,22 +8738,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 9,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -8763,12 +8763,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
@@ -8776,7 +8776,7 @@ local template = {
 				breed_name = "renegade_rifleman",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -8786,32 +8786,32 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_8_complete",
-			},
+				flow_event_name = "wave_8_complete"
+			}
 		},
 		horde_wave_8_c = {
 			{
@@ -8822,13 +8822,13 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"flow_event",
-				flow_event_name = "flamer_wave",
+				flow_event_name = "flamer_wave"
 			},
 			{
 				"spawn_by_points",
@@ -8838,22 +8838,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "renegade_flamer",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -8863,22 +8863,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 8,
 				breed_name = "cultist_flamer",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -8888,38 +8888,38 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "renegade_flamer",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_8_complete",
-			},
+				flow_event_name = "wave_8_complete"
+			}
 		},
 		horde_wave_9_a = {
 			{
@@ -8930,9 +8930,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -8944,19 +8944,19 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
+						"roamer"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 30,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -8966,9 +8966,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -8978,9 +8978,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"ogryn",
-					},
-				},
+						"ogryn"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -8990,19 +8990,19 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -9012,9 +9012,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9027,9 +9027,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -9043,30 +9043,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_9_complete",
-			},
+				flow_event_name = "wave_9_complete"
+			}
 		},
 		horde_wave_9_b = {
 			{
@@ -9077,9 +9077,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9091,19 +9091,19 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
+						"roamer"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 30,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -9113,9 +9113,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9125,9 +9125,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9137,19 +9137,19 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -9160,9 +9160,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9175,9 +9175,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -9191,30 +9191,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_9_complete",
-			},
+				flow_event_name = "wave_9_complete"
+			}
 		},
 		horde_wave_9_c = {
 			{
@@ -9225,9 +9225,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9238,25 +9238,25 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 5,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 30,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -9267,12 +9267,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9282,22 +9282,22 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 8,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -9308,12 +9308,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9323,15 +9323,15 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 5,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"restart_when",
@@ -9345,30 +9345,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_9_complete",
-			},
+				flow_event_name = "wave_9_complete"
+			}
 		},
 		horde_wave_10_a = {
 			{
@@ -9379,15 +9379,15 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_spawn",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -9397,16 +9397,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -9416,15 +9416,15 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -9434,16 +9434,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -9453,15 +9453,15 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_beast_of_nurgle",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -9471,32 +9471,32 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 250,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_10_complete",
-			},
+				flow_event_name = "wave_10_complete"
+			}
 		},
 		horde_wave_10_b = {
 			{
@@ -9507,16 +9507,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 30,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -9526,16 +9526,16 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -9545,26 +9545,26 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 35,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 50,
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -9574,9 +9574,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9586,9 +9586,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"sniper",
-					},
-				},
+						"sniper"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9599,9 +9599,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9614,32 +9614,32 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_10_complete",
-			},
+				flow_event_name = "wave_10_complete"
+			}
 		},
 		horde_wave_10_c = {
 			{
@@ -9650,9 +9650,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9663,25 +9663,25 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 5,
 				breed_name = "renegade_netgunner",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -9691,9 +9691,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9704,25 +9704,25 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "renegade_netgunner",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -9732,9 +9732,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9745,41 +9745,41 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "renegade_netgunner",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_10_complete",
-			},
+				flow_event_name = "wave_10_complete"
+			}
 		},
 		horde_wave_11_a = {
 			{
@@ -9793,12 +9793,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9808,9 +9808,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9820,12 +9820,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9835,9 +9835,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9847,9 +9847,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9859,9 +9859,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"ogryn",
-					},
-				},
+						"ogryn"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9874,9 +9874,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9886,32 +9886,32 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_11_complete",
-			},
+				flow_event_name = "wave_11_complete"
+			}
 		},
 		horde_wave_11_b = {
 			{
@@ -9925,12 +9925,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9940,9 +9940,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9952,12 +9952,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9967,9 +9967,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9979,9 +9979,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"sniper",
-					},
-				},
+						"sniper"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -9992,9 +9992,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10007,39 +10007,39 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_11_complete",
-			},
+				flow_event_name = "wave_11_complete"
+			}
 		},
 		horde_wave_11_c = {
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -10049,9 +10049,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10064,25 +10064,25 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_beast_of_nurgle",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -10092,9 +10092,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10107,25 +10107,25 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_spawn",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -10135,9 +10135,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10150,35 +10150,35 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_11_complete",
-			},
+				flow_event_name = "wave_11_complete"
+			}
 		},
 		horde_wave_12_a = {
 			{
@@ -10192,12 +10192,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10207,9 +10207,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10219,12 +10219,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10234,9 +10234,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10246,9 +10246,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10259,9 +10259,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10274,16 +10274,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -10293,9 +10293,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10305,12 +10305,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10323,9 +10323,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10338,12 +10338,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10353,15 +10353,15 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_daemonhost",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -10371,32 +10371,32 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_12_complete",
-			},
+				flow_event_name = "wave_12_complete"
+			}
 		},
 		horde_wave_12_b = {
 			{
@@ -10410,12 +10410,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10425,9 +10425,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10437,12 +10437,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10452,9 +10452,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10464,9 +10464,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10477,9 +10477,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10492,16 +10492,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -10514,9 +10514,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10526,30 +10526,30 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_beast_of_nurgle",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_spawn",
-				spawner_group = "spawner_wave_horde",
+				spawner_group = "spawner_wave_horde"
 			},
 			{
 				"spawn_by_points",
@@ -10562,12 +10562,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10577,32 +10577,32 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_12_complete",
-			},
+				flow_event_name = "wave_12_complete"
+			}
 		},
 		horde_wave_12_c = {
 			{
@@ -10616,12 +10616,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10631,9 +10631,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10643,12 +10643,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10658,9 +10658,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10670,9 +10670,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10683,9 +10683,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"close",
-					},
-				},
+						"close"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10698,16 +10698,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -10717,12 +10717,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10733,9 +10733,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10744,12 +10744,12 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"captain",
-					},
+						"captain"
+					}
 				},
 				attack_selection_template_tag = {
-					"default",
-				},
+					"default"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10760,9 +10760,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"close",
-					},
-				},
+						"close"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10772,9 +10772,9 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10787,12 +10787,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10802,32 +10802,32 @@ local template = {
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_12_complete",
-			},
+				flow_event_name = "wave_12_complete"
+			}
 		},
 		horde_wave_rooftops_1_a = {
 			{
@@ -10838,9 +10838,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10851,19 +10851,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -10873,9 +10873,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10885,12 +10885,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10902,16 +10902,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -10921,38 +10921,38 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 3,
 				breed_name = "cultist_berzerker",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_1_rooftops_complete",
-			},
+				flow_event_name = "wave_1_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_1_b = {
 			{
@@ -10963,9 +10963,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -10976,19 +10976,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -10998,9 +10998,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -11012,25 +11012,25 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "renegade_flamer",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -11040,9 +11040,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
@@ -11050,30 +11050,30 @@ local template = {
 				breed_name = "renegade_plasma_gunner",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_1_rooftops_complete",
-			},
+				flow_event_name = "wave_1_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_1_c = {
 			{
@@ -11084,9 +11084,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -11096,16 +11096,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -11115,9 +11115,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -11129,12 +11129,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -11144,16 +11144,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -11163,9 +11163,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -11175,32 +11175,32 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_1_rooftops_complete",
-			},
+				flow_event_name = "wave_1_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_2_a = {
 			{
@@ -11211,9 +11211,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -11226,19 +11226,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -11248,9 +11248,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -11262,12 +11262,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -11278,16 +11278,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -11297,9 +11297,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -11309,32 +11309,32 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_2_rooftops_complete",
-			},
+				flow_event_name = "wave_2_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_2_b = {
 			{
@@ -11345,22 +11345,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 5,
 				breed_name = "renegade_plasma_gunner",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -11370,9 +11370,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -11382,12 +11382,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
@@ -11395,14 +11395,14 @@ local template = {
 				breed_name = "cultist_assault",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -11412,38 +11412,38 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_ogryn_executor",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_2_rooftops_complete",
-			},
+				flow_event_name = "wave_2_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_2_c = {
 			{
@@ -11454,22 +11454,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -11479,22 +11479,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "renegade_grenadier",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -11504,38 +11504,38 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_2_rooftops_complete",
-			},
+				flow_event_name = "wave_2_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_3_a = {
 			{
@@ -11546,9 +11546,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -11560,16 +11560,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 30,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -11579,9 +11579,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -11593,16 +11593,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 30,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -11612,9 +11612,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -11626,9 +11626,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -11642,30 +11642,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 300,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_3_rooftops_complete",
-			},
+				flow_event_name = "wave_3_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_3_b = {
 			{
@@ -11676,9 +11676,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -11688,12 +11688,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -11706,19 +11706,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -11728,9 +11728,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -11740,9 +11740,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -11752,9 +11752,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -11768,30 +11768,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 300,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_3_rooftops_complete",
-			},
+				flow_event_name = "wave_3_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_3_c = {
 			{
@@ -11802,9 +11802,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -11816,12 +11816,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -11832,19 +11832,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -11854,12 +11854,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -11869,9 +11869,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -11881,9 +11881,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -11897,30 +11897,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 300,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_3_rooftops_complete",
-			},
+				flow_event_name = "wave_3_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_4_a = {
 			{
@@ -11931,22 +11931,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 15,
 				breed_name = "renegade_melee",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -11956,9 +11956,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -11970,12 +11970,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -11985,9 +11985,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -11997,16 +11997,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -12019,9 +12019,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -12031,32 +12031,32 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"ogryn",
-					},
-				},
+						"ogryn"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_4_rooftops_complete",
-			},
+				flow_event_name = "wave_4_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_4_b = {
 			{
@@ -12067,9 +12067,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -12082,19 +12082,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -12104,9 +12104,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -12116,31 +12116,31 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "renegade_plasma_gunner",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "cultist_flamer",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -12153,32 +12153,32 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_4_rooftops_complete",
-			},
+				flow_event_name = "wave_4_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_4_c = {
 			{
@@ -12189,9 +12189,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -12204,12 +12204,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -12219,16 +12219,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -12238,9 +12238,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -12252,12 +12252,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -12267,35 +12267,35 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"monster",
-					},
+						"monster"
+					}
 				},
 				excluded_breed_tags = {
-					"witch",
-				},
+					"witch"
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_4_rooftops_complete",
-			},
+				flow_event_name = "wave_4_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_5_a = {
 			{
@@ -12306,9 +12306,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -12319,19 +12319,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -12341,9 +12341,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -12353,31 +12353,31 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 4,
 				breed_name = "chaos_hound",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 4,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -12390,32 +12390,32 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_5_rooftops_complete",
-			},
+				flow_event_name = "wave_5_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_5_b = {
 			{
@@ -12426,9 +12426,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -12439,19 +12439,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -12461,9 +12461,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -12475,9 +12475,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -12487,9 +12487,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -12499,16 +12499,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -12518,9 +12518,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -12531,32 +12531,32 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"ogryn",
-					},
-				},
+						"ogryn"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_5_rooftops_complete",
-			},
+				flow_event_name = "wave_5_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_5_c = {
 			{
@@ -12567,13 +12567,13 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"flow_event",
-				flow_event_name = "cultist_mutant_wave",
+				flow_event_name = "cultist_mutant_wave"
 			},
 			{
 				"spawn_by_points",
@@ -12583,22 +12583,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -12608,22 +12608,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 8,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -12633,38 +12633,38 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_5_rooftops_complete",
-			},
+				flow_event_name = "wave_5_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_6_a = {
 			{
@@ -12675,9 +12675,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -12688,19 +12688,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 30,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -12710,9 +12710,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -12724,12 +12724,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
@@ -12737,13 +12737,13 @@ local template = {
 				breed_name = "chaos_ogryn_gunner",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 4,
 				breed_name = "chaos_ogryn_bulwark",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -12754,9 +12754,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -12770,30 +12770,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_6_rooftops_complete",
-			},
+				flow_event_name = "wave_6_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_6_b = {
 			{
@@ -12804,9 +12804,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -12817,19 +12817,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 25,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -12839,9 +12839,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -12851,24 +12851,24 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "chaos_ogryn_bulwark",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -12879,9 +12879,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -12895,30 +12895,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_6_rooftops_complete",
-			},
+				flow_event_name = "wave_6_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_6_c = {
 			{
@@ -12929,22 +12929,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 25,
 				breed_name = "chaos_armored_infected",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 30,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -12954,22 +12954,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 45,
 				breed_name = "chaos_armored_infected",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -12979,18 +12979,18 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 50,
 				breed_name = "chaos_armored_infected",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -13001,9 +13001,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -13017,30 +13017,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_6_rooftops_complete",
-			},
+				flow_event_name = "wave_6_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_7_a = {
 			{
@@ -13051,9 +13051,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -13063,16 +13063,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -13082,22 +13082,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 9,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -13107,12 +13107,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
@@ -13120,7 +13120,7 @@ local template = {
 				breed_name = "renegade_plasma_gunner",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -13130,32 +13130,32 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_7_rooftops_complete",
-			},
+				flow_event_name = "wave_7_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_7_b = {
 			{
@@ -13166,13 +13166,13 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"flow_event",
-				flow_event_name = "chaos_poxwalker_bomber_wave",
+				flow_event_name = "chaos_poxwalker_bomber_wave"
 			},
 			{
 				"spawn_by_points",
@@ -13182,22 +13182,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "chaos_poxwalker_bomber",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -13207,22 +13207,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "chaos_poxwalker_bomber",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -13232,38 +13232,38 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 12,
 				breed_name = "chaos_poxwalker_bomber",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_7_rooftops_complete",
-			},
+				flow_event_name = "wave_7_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_7_c = {
 			{
@@ -13274,9 +13274,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -13286,16 +13286,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -13305,9 +13305,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
@@ -13315,7 +13315,7 @@ local template = {
 				breed_name = "renegade_rifleman",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -13327,25 +13327,25 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 9,
 				breed_name = "chaos_poxwalker_bomber",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -13355,32 +13355,32 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_7_rooftops_complete",
-			},
+				flow_event_name = "wave_7_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_8_a = {
 			{
@@ -13391,22 +13391,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_spawn",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -13416,22 +13416,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_beast_of_nurgle",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -13441,38 +13441,38 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_8_rooftops_complete",
-			},
+				flow_event_name = "wave_8_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_8_b = {
 			{
@@ -13483,13 +13483,13 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"flow_event",
-				flow_event_name = "flamer_wave",
+				flow_event_name = "flamer_wave"
 			},
 			{
 				"spawn_by_points",
@@ -13499,22 +13499,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "renegade_flamer",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -13524,22 +13524,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 9,
 				breed_name = "cultist_flamer",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -13549,38 +13549,38 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "renegade_flamer",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_8_rooftops_complete",
-			},
+				flow_event_name = "wave_8_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_8_c = {
 			{
@@ -13591,9 +13591,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -13605,16 +13605,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -13624,9 +13624,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -13638,25 +13638,25 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 13,
 				breed_name = "renegade_plasma_gunner",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -13666,32 +13666,32 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_8_rooftops_complete",
-			},
+				flow_event_name = "wave_8_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_9_a = {
 			{
@@ -13705,12 +13705,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -13720,9 +13720,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -13732,12 +13732,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -13747,9 +13747,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -13761,9 +13761,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -13773,9 +13773,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"ogryn",
-					},
-				},
+						"ogryn"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -13786,9 +13786,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -13802,30 +13802,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_9_rooftops_complete",
-			},
+				flow_event_name = "wave_9_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_9_b = {
 			{
@@ -13839,12 +13839,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -13854,9 +13854,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -13866,12 +13866,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -13881,9 +13881,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -13893,9 +13893,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"sniper",
-					},
-				},
+						"sniper"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -13906,9 +13906,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -13919,9 +13919,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -13935,37 +13935,37 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_9_rooftops_complete",
-			},
+				flow_event_name = "wave_9_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_9_c = {
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -13975,22 +13975,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_beast_of_nurgle",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -14000,22 +14000,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_spawn",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -14025,9 +14025,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -14041,30 +14041,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_9_rooftops_complete",
-			},
+				flow_event_name = "wave_9_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_10_a = {
 			{
@@ -14075,22 +14075,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "renegade_netgunner",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -14100,22 +14100,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 9,
 				breed_name = "chaos_hound",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 30,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -14125,22 +14125,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 9,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -14150,38 +14150,38 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 12,
 				breed_name = "cultist_assault",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_10_rooftops_complete",
-			},
+				flow_event_name = "wave_10_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_10_b = {
 			{
@@ -14195,12 +14195,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14210,9 +14210,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14222,12 +14222,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14237,9 +14237,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14249,9 +14249,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14262,9 +14262,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14277,16 +14277,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -14296,9 +14296,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14308,12 +14308,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14324,9 +14324,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14335,35 +14335,35 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"captain",
-					},
+						"captain"
+					}
 				},
 				attack_selection_template_tag = {
-					"default",
-				},
+					"default"
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_10_rooftops_complete",
-			},
+				flow_event_name = "wave_10_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_10_c = {
 			{
@@ -14377,12 +14377,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14392,9 +14392,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14404,12 +14404,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14419,9 +14419,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14431,9 +14431,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14444,9 +14444,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"close",
-					},
-				},
+						"close"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14459,16 +14459,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -14478,9 +14478,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14490,12 +14490,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14506,44 +14506,44 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_beast_of_nurgle",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_10_rooftops_complete",
-			},
+				flow_event_name = "wave_10_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_11_a = {
 			{
@@ -14555,12 +14555,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14570,9 +14570,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14582,12 +14582,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14597,9 +14597,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14609,9 +14609,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14621,9 +14621,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"ogryn",
-					},
-				},
+						"ogryn"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14636,35 +14636,35 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"renegade_radio_operator",
-				},
+					"renegade_radio_operator"
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_11_rooftops_complete",
-			},
+				flow_event_name = "wave_11_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_11_b = {
 			{
@@ -14676,12 +14676,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14691,9 +14691,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14703,12 +14703,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14718,9 +14718,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14730,9 +14730,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"sniper",
-					},
-				},
+						"sniper"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14743,9 +14743,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14758,39 +14758,39 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_11_rooftops_complete",
-			},
+				flow_event_name = "wave_11_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_11_c = {
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -14800,9 +14800,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14813,25 +14813,25 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_beast_of_nurgle",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -14841,9 +14841,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14854,25 +14854,25 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_spawn",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -14882,9 +14882,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14895,35 +14895,35 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_11_rooftops_complete",
-			},
+				flow_event_name = "wave_11_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_12_a = {
 			{
@@ -14935,12 +14935,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14950,15 +14950,15 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 8,
 				breed_name = "renegade_plasma_gunner",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -14968,9 +14968,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14980,9 +14980,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -14993,9 +14993,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15006,16 +15006,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -15025,9 +15025,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15037,12 +15037,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15053,15 +15053,15 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_daemonhost",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -15071,9 +15071,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15086,12 +15086,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15101,32 +15101,32 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_12_rooftops_complete",
-			},
+				flow_event_name = "wave_12_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_12_b = {
 			{
@@ -15138,12 +15138,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15153,9 +15153,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15165,12 +15165,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15180,9 +15180,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15192,9 +15192,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15205,9 +15205,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15218,16 +15218,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -15237,12 +15237,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15252,27 +15252,27 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"sniper",
-					},
-				},
+						"sniper"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_beast_of_nurgle",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_spawn",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -15282,9 +15282,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15297,12 +15297,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15312,32 +15312,32 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_12_rooftops_complete",
-			},
+				flow_event_name = "wave_12_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_12_c = {
 			{
@@ -15349,12 +15349,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15364,9 +15364,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15376,12 +15376,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15391,9 +15391,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15403,9 +15403,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15416,9 +15416,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"close",
-					},
-				},
+						"close"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15429,16 +15429,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -15448,12 +15448,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15464,21 +15464,21 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "renegade_twin_captain",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "renegade_twin_captain_two",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -15488,9 +15488,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15503,12 +15503,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15518,32 +15518,32 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_12_rooftops_complete",
-			},
+				flow_event_name = "wave_12_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_1_a_alt = {
 			{
@@ -15554,9 +15554,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15567,19 +15567,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -15589,9 +15589,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15601,12 +15601,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15618,16 +15618,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -15637,44 +15637,44 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "renegade_plasma_gunner",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "cultist_shocktrooper",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_1_rooftops_complete",
-			},
+				flow_event_name = "wave_1_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_1_b_alt = {
 			{
@@ -15685,9 +15685,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15698,19 +15698,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -15720,9 +15720,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15734,25 +15734,25 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 4,
 				breed_name = "renegade_flamer",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -15762,9 +15762,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
@@ -15772,42 +15772,42 @@ local template = {
 				breed_name = "renegade_rifleman",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_ogryn_executor",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "cultist_shocktrooper",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_1_rooftops_complete",
-			},
+				flow_event_name = "wave_1_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_1_c_alt = {
 			{
@@ -15818,9 +15818,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15830,16 +15830,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -15849,9 +15849,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15863,12 +15863,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15878,22 +15878,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_poxwalker_bomber",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -15903,9 +15903,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15915,38 +15915,38 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "cultist_shocktrooper",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_1_rooftops_complete",
-			},
+				flow_event_name = "wave_1_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_2_a_alt = {
 			{
@@ -15957,9 +15957,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -15972,19 +15972,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -15994,9 +15994,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -16008,12 +16008,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -16024,16 +16024,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -16043,9 +16043,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -16055,32 +16055,32 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_2_rooftops_complete",
-			},
+				flow_event_name = "wave_2_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_2_b_alt = {
 			{
@@ -16091,22 +16091,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 25,
 				breed_name = "renegade_melee",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -16116,9 +16116,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -16128,12 +16128,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
@@ -16141,14 +16141,14 @@ local template = {
 				breed_name = "cultist_assault",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -16158,9 +16158,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -16170,38 +16170,38 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 5,
 				breed_name = "chaos_ogryn_executor",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_2_rooftops_complete",
-			},
+				flow_event_name = "wave_2_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_2_c_alt = {
 			{
@@ -16212,22 +16212,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 5,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -16237,22 +16237,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 4,
 				breed_name = "renegade_grenadier",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -16262,44 +16262,44 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 5,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_ogryn_bulwark",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_2_rooftops_complete",
-			},
+				flow_event_name = "wave_2_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_3_a_alt = {
 			{
@@ -16310,9 +16310,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -16324,16 +16324,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -16343,9 +16343,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -16357,16 +16357,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -16376,9 +16376,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -16390,9 +16390,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -16406,30 +16406,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 300,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_3_rooftops_complete",
-			},
+				flow_event_name = "wave_3_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_3_b_alt = {
 			{
@@ -16440,9 +16440,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -16452,12 +16452,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -16470,25 +16470,25 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 30,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 5,
 				breed_name = "renegade_plasma_gunner",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -16498,9 +16498,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -16510,9 +16510,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -16522,9 +16522,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -16538,30 +16538,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 300,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_3_rooftops_complete",
-			},
+				flow_event_name = "wave_3_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_3_c_alt = {
 			{
@@ -16572,9 +16572,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -16586,12 +16586,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -16602,19 +16602,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 30,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -16624,12 +16624,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -16639,9 +16639,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -16651,15 +16651,15 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"restart_when",
@@ -16673,30 +16673,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 300,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_3_rooftops_complete",
-			},
+				flow_event_name = "wave_3_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_4_a_alt = {
 			{
@@ -16707,22 +16707,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "renegade_plasma_gunner",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -16732,9 +16732,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -16746,12 +16746,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -16761,9 +16761,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -16773,16 +16773,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -16795,9 +16795,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -16807,32 +16807,32 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"ogryn",
-					},
-				},
+						"ogryn"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_4_rooftops_complete",
-			},
+				flow_event_name = "wave_4_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_4_b_alt = {
 			{
@@ -16843,9 +16843,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -16858,19 +16858,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -16880,9 +16880,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -16892,31 +16892,31 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "cultist_flamer",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -16929,38 +16929,38 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 15,
 				breed_name = "chaos_hound_mutator",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_4_rooftops_complete",
-			},
+				flow_event_name = "wave_4_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_4_c_alt = {
 			{
@@ -16971,9 +16971,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -16986,12 +16986,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -17001,16 +17001,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -17020,9 +17020,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -17034,12 +17034,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -17049,35 +17049,35 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"monster",
-					},
+						"monster"
+					}
 				},
 				excluded_breed_tags = {
-					"witch",
-				},
+					"witch"
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_4_rooftops_complete",
-			},
+				flow_event_name = "wave_4_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_5_a_alt = {
 			{
@@ -17088,9 +17088,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -17101,19 +17101,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -17123,9 +17123,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -17135,31 +17135,31 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "chaos_hound",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -17172,38 +17172,38 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "cultist_captain",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_5_rooftops_complete",
-			},
+				flow_event_name = "wave_5_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_5_b_alt = {
 			{
@@ -17214,9 +17214,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -17227,19 +17227,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -17249,9 +17249,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -17263,9 +17263,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -17275,9 +17275,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -17287,16 +17287,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -17306,9 +17306,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -17319,32 +17319,32 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"ogryn",
-					},
-				},
+						"ogryn"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_5_rooftops_complete",
-			},
+				flow_event_name = "wave_5_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_5_c_alt = {
 			{
@@ -17355,13 +17355,13 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"flow_event",
-				flow_event_name = "cultist_mutant_wave",
+				flow_event_name = "cultist_mutant_wave"
 			},
 			{
 				"spawn_by_points",
@@ -17371,15 +17371,15 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -17389,16 +17389,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -17408,15 +17408,15 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 8,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -17426,16 +17426,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -17445,15 +17445,15 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -17463,32 +17463,32 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_5_rooftops_complete",
-			},
+				flow_event_name = "wave_5_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_6_a_alt = {
 			{
@@ -17499,9 +17499,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -17512,19 +17512,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -17534,9 +17534,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -17548,12 +17548,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
@@ -17561,20 +17561,20 @@ local template = {
 				breed_name = "renegade_plasma_gunner",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "chaos_ogryn_bulwark",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 260,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -17585,9 +17585,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -17601,30 +17601,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_6_rooftops_complete",
-			},
+				flow_event_name = "wave_6_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_6_b_alt = {
 			{
@@ -17635,9 +17635,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -17648,19 +17648,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 25,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -17670,9 +17670,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -17682,37 +17682,37 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "chaos_ogryn_bulwark",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 3,
 				breed_name = "chaos_ogryn_executor",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 160,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -17723,9 +17723,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -17739,30 +17739,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_6_rooftops_complete",
-			},
+				flow_event_name = "wave_6_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_6_c_alt = {
 			{
@@ -17773,22 +17773,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 50,
 				breed_name = "chaos_armored_infected",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -17798,22 +17798,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 65,
 				breed_name = "chaos_armored_infected",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -17823,24 +17823,24 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 65,
 				breed_name = "chaos_armored_infected",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "renegade_netgunner",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -17851,9 +17851,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -17867,30 +17867,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_6_rooftops_complete",
-			},
+				flow_event_name = "wave_6_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_7_a_alt = {
 			{
@@ -17901,9 +17901,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -17913,16 +17913,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -17932,22 +17932,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 9,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -17957,12 +17957,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
@@ -17970,7 +17970,7 @@ local template = {
 				breed_name = "renegade_rifleman",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -17980,9 +17980,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
@@ -17990,30 +17990,30 @@ local template = {
 				breed_name = "chaos_newly_infected",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_7_rooftops_complete",
-			},
+				flow_event_name = "wave_7_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_7_b_alt = {
 			{
@@ -18024,13 +18024,13 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"flow_event",
-				flow_event_name = "chaos_poxwalker_bomber_wave",
+				flow_event_name = "chaos_poxwalker_bomber_wave"
 			},
 			{
 				"spawn_by_points",
@@ -18040,15 +18040,15 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "chaos_poxwalker_bomber",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -18058,16 +18058,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -18077,15 +18077,15 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "chaos_poxwalker_bomber",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -18095,16 +18095,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -18114,15 +18114,15 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 12,
 				breed_name = "chaos_poxwalker_bomber",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -18132,32 +18132,32 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_7_rooftops_complete",
-			},
+				flow_event_name = "wave_7_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_7_c_alt = {
 			{
@@ -18168,9 +18168,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -18180,16 +18180,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -18199,9 +18199,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
@@ -18209,7 +18209,7 @@ local template = {
 				breed_name = "renegade_rifleman",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -18221,25 +18221,25 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 12,
 				breed_name = "chaos_poxwalker_bomber",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -18249,32 +18249,32 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_7_rooftops_complete",
-			},
+				flow_event_name = "wave_7_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_8_a_alt = {
 			{
@@ -18285,28 +18285,28 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_spawn",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 3,
 				breed_name = "cultist_grenadier",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -18316,28 +18316,28 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_beast_of_nurgle",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_ogryn_executor",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -18347,44 +18347,44 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_poxwalker_bomber",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_8_rooftops_complete",
-			},
+				flow_event_name = "wave_8_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_8_b_alt = {
 			{
@@ -18395,13 +18395,13 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"flow_event",
-				flow_event_name = "flamer_wave",
+				flow_event_name = "flamer_wave"
 			},
 			{
 				"spawn_by_points",
@@ -18411,28 +18411,28 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "cultist_shocktrooper",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "renegade_flamer",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -18442,21 +18442,21 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "cultist_shocktrooper",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 9,
 				breed_name = "cultist_flamer",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -18466,16 +18466,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -18485,44 +18485,44 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "cultist_shocktrooper",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 12,
 				breed_name = "renegade_flamer",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_8_rooftops_complete",
-			},
+				flow_event_name = "wave_8_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_8_c_alt = {
 			{
@@ -18533,9 +18533,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -18547,16 +18547,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -18566,9 +18566,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -18580,25 +18580,25 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 15,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -18608,38 +18608,38 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 12,
 				breed_name = "chaos_poxwalker_bomber",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_8_rooftops_complete",
-			},
+				flow_event_name = "wave_8_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_9_a_alt = {
 			{
@@ -18653,12 +18653,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -18668,9 +18668,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -18680,12 +18680,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -18695,9 +18695,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -18709,9 +18709,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -18721,9 +18721,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"ogryn",
-					},
-				},
+						"ogryn"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -18734,9 +18734,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -18750,30 +18750,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_9_rooftops_complete",
-			},
+				flow_event_name = "wave_9_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_9_b_alt = {
 			{
@@ -18787,12 +18787,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -18802,9 +18802,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -18814,12 +18814,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -18829,15 +18829,15 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_ogryn_gunner",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -18847,9 +18847,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"sniper",
-					},
-				},
+						"sniper"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -18860,9 +18860,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -18873,9 +18873,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -18889,37 +18889,37 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_9_rooftops_complete",
-			},
+				flow_event_name = "wave_9_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_9_c_alt = {
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -18929,28 +18929,28 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_beast_of_nurgle",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_ogryn_gunner",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -18960,22 +18960,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_spawn",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -18985,9 +18985,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -18997,9 +18997,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -19013,30 +19013,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_9_rooftops_complete",
-			},
+				flow_event_name = "wave_9_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_10_a_alt = {
 			{
@@ -19047,22 +19047,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 8,
 				breed_name = "renegade_netgunner",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -19072,22 +19072,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 16,
 				breed_name = "chaos_hound",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 15,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -19097,22 +19097,22 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 22,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -19122,38 +19122,38 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 23,
 				breed_name = "cultist_assault",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_10_rooftops_complete",
-			},
+				flow_event_name = "wave_10_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_10_b_alt = {
 			{
@@ -19167,12 +19167,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19182,9 +19182,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19194,12 +19194,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19209,9 +19209,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19221,9 +19221,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19234,9 +19234,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19249,16 +19249,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -19268,9 +19268,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19280,12 +19280,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19296,44 +19296,44 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "renegade_twin_captain",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "renegade_twin_captain_two",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_10_rooftops_complete",
-			},
+				flow_event_name = "wave_10_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_10_c_alt = {
 			{
@@ -19347,12 +19347,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19362,9 +19362,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19374,12 +19374,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19389,9 +19389,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19401,9 +19401,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19414,9 +19414,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"close",
-					},
-				},
+						"close"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19429,16 +19429,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -19448,9 +19448,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19460,12 +19460,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19476,50 +19476,50 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 12,
 				breed_name = "cultist_grenadier",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 3,
 				breed_name = "chaos_beast_of_nurgle",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 3,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_10_rooftops_complete",
-			},
+				flow_event_name = "wave_10_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_11_a_alt = {
 			{
@@ -19531,12 +19531,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19546,9 +19546,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19558,12 +19558,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19573,9 +19573,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19585,9 +19585,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19597,9 +19597,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"ogryn",
-					},
-				},
+						"ogryn"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19612,35 +19612,35 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"renegade_radio_operator",
-				},
+					"renegade_radio_operator"
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_11_rooftops_complete",
-			},
+				flow_event_name = "wave_11_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_11_b_alt = {
 			{
@@ -19651,9 +19651,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19663,12 +19663,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19678,15 +19678,15 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"ogryn",
-					},
-				},
+						"ogryn"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 4,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -19699,39 +19699,39 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_11_rooftops_complete",
-			},
+				flow_event_name = "wave_11_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_11_c_alt = {
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -19741,9 +19741,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19754,25 +19754,25 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_beast_of_nurgle",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -19782,9 +19782,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19795,25 +19795,25 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 4,
 				breed_name = "chaos_spawn",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -19823,9 +19823,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19836,32 +19836,32 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_11_rooftops_complete",
-			},
+				flow_event_name = "wave_11_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_12_a_alt = {
 			{
@@ -19873,12 +19873,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19888,15 +19888,15 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 8,
 				breed_name = "cultist_berzerker",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -19906,9 +19906,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19918,9 +19918,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19931,9 +19931,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19944,16 +19944,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -19963,9 +19963,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19975,12 +19975,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -19991,15 +19991,15 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_daemonhost",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -20009,9 +20009,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20024,12 +20024,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20039,16 +20039,16 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -20058,9 +20058,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20070,12 +20070,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20086,15 +20086,15 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_daemonhost",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -20104,9 +20104,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20119,12 +20119,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20134,32 +20134,32 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_12_rooftops_complete",
-			},
+				flow_event_name = "wave_12_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_12_b_alt = {
 			{
@@ -20171,12 +20171,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20186,9 +20186,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20198,12 +20198,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20213,9 +20213,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20225,9 +20225,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20238,9 +20238,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20251,16 +20251,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -20270,12 +20270,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20285,27 +20285,27 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"sniper",
-					},
-				},
+						"sniper"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_beast_of_nurgle",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_spawn",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -20315,9 +20315,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20330,12 +20330,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20345,9 +20345,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20358,12 +20358,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20373,9 +20373,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20385,12 +20385,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20400,9 +20400,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20412,9 +20412,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20425,9 +20425,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20438,32 +20438,32 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_12_rooftops_complete",
-			},
+				flow_event_name = "wave_12_rooftops_complete"
+			}
 		},
 		horde_wave_rooftops_12_c_alt = {
 			{
@@ -20475,12 +20475,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20490,9 +20490,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20502,12 +20502,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20517,9 +20517,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20529,9 +20529,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20542,9 +20542,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"close",
-					},
-				},
+						"close"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20555,16 +20555,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -20574,12 +20574,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20590,21 +20590,21 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "renegade_twin_captain",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "renegade_twin_captain_two",
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_rooftops_horde"
 			},
 			{
 				"spawn_by_points",
@@ -20614,9 +20614,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20629,12 +20629,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20644,9 +20644,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20657,12 +20657,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20672,9 +20672,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20684,12 +20684,12 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20699,9 +20699,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20711,9 +20711,9 @@ local template = {
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20724,9 +20724,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"close",
-					},
-				},
+						"close"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20737,32 +20737,32 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_12_rooftops_complete",
-			},
+				flow_event_name = "wave_12_rooftops_complete"
+			}
 		},
 		horde_wave_machine_1_a = {
 			{
@@ -20773,9 +20773,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20788,19 +20788,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -20810,9 +20810,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20824,12 +20824,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20839,16 +20839,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -20858,36 +20858,36 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 3,
 				breed_name = "chaos_ogryn_bulwark",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() <= 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_1_machine_complete",
-			},
+				flow_event_name = "wave_1_machine_complete"
+			}
 		},
 		horde_wave_machine_1_b = {
 			{
@@ -20901,9 +20901,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20913,16 +20913,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -20934,12 +20934,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20949,9 +20949,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20961,16 +20961,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -20983,9 +20983,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -20995,32 +20995,32 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 120,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_1_machine_complete",
-			},
+				flow_event_name = "wave_1_machine_complete"
+			}
 		},
 		horde_wave_machine_1_c = {
 			{
@@ -21034,9 +21034,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"close",
-					},
-				},
+						"close"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -21046,16 +21046,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -21067,12 +21067,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -21082,9 +21082,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -21094,16 +21094,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -21114,9 +21114,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"close",
-					},
-				},
+						"close"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -21126,32 +21126,32 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 120,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_1_machine_complete",
-			},
+				flow_event_name = "wave_1_machine_complete"
+			}
 		},
 		horde_wave_machine_2_a = {
 			{
@@ -21165,9 +21165,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -21177,16 +21177,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -21198,12 +21198,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -21213,16 +21213,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -21234,12 +21234,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -21249,9 +21249,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -21261,16 +21261,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -21283,9 +21283,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -21295,32 +21295,32 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_2_machine_complete",
-			},
+				flow_event_name = "wave_2_machine_complete"
+			}
 		},
 		horde_wave_machine_2_b = {
 			{
@@ -21334,9 +21334,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -21346,16 +21346,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -21367,12 +21367,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -21382,16 +21382,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -21403,12 +21403,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -21418,9 +21418,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -21430,16 +21430,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -21449,12 +21449,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"monster",
-					},
+						"monster"
+					}
 				},
 				excluded_breed_tags = {
-					"witch",
-				},
+					"witch"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -21464,32 +21464,32 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_2_machine_complete",
-			},
+				flow_event_name = "wave_2_machine_complete"
+			}
 		},
 		horde_wave_machine_2_c = {
 			{
@@ -21503,12 +21503,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -21518,22 +21518,22 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 3,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -21546,12 +21546,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -21561,22 +21561,22 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 3,
 				breed_name = "renegade_plasma_gunner",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -21589,12 +21589,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"close",
-					},
+						"close"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -21604,38 +21604,38 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_2_machine_complete",
-			},
+				flow_event_name = "wave_2_machine_complete"
+			}
 		},
 		horde_wave_machine_3_a = {
 			{
@@ -21649,9 +21649,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -21661,9 +21661,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -21673,25 +21673,25 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 3,
 				breed_name = "chaos_ogryn_executor",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -21703,9 +21703,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -21716,9 +21716,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -21732,30 +21732,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_3_machine_complete",
-			},
+				flow_event_name = "wave_3_machine_complete"
+			}
 		},
 		horde_wave_machine_3_b = {
 			{
@@ -21766,9 +21766,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -21778,25 +21778,25 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 50,
 				breed_name = "chaos_newly_infected",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -21806,9 +21806,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -21822,30 +21822,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_3_machine_complete",
-			},
+				flow_event_name = "wave_3_machine_complete"
+			}
 		},
 		horde_wave_machine_3_c = {
 			{
@@ -21856,9 +21856,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -21868,12 +21868,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -21884,19 +21884,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -21906,15 +21906,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "renegade_plasma_gunner",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -21926,9 +21926,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -21942,30 +21942,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_3_machine_complete",
-			},
+				flow_event_name = "wave_3_machine_complete"
+			}
 		},
 		horde_wave_machine_4_a = {
 			{
@@ -21976,15 +21976,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "renegade_melee",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -21997,16 +21997,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -22016,9 +22016,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -22030,12 +22030,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -22048,16 +22048,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -22067,9 +22067,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -22082,9 +22082,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -22094,32 +22094,32 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"ogryn",
-					},
-				},
+						"ogryn"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_4_machine_complete",
-			},
+				flow_event_name = "wave_4_machine_complete"
+			}
 		},
 		horde_wave_machine_4_b = {
 			{
@@ -22130,9 +22130,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -22145,19 +22145,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -22167,9 +22167,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -22179,31 +22179,31 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "cultist_flamer",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -22216,32 +22216,32 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_4_machine_complete",
-			},
+				flow_event_name = "wave_4_machine_complete"
+			}
 		},
 		horde_wave_machine_4_c = {
 			{
@@ -22252,9 +22252,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -22267,19 +22267,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -22289,9 +22289,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -22303,12 +22303,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -22318,16 +22318,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -22337,46 +22337,46 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_spawn",
 				max_breed_amount = 1,
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "cultist_mutant",
 				max_breed_amount = 4,
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_4_machine_complete",
-			},
+				flow_event_name = "wave_4_machine_complete"
+			}
 		},
 		horde_wave_machine_5_a = {
 			{
@@ -22387,9 +22387,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -22401,19 +22401,19 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
+						"roamer"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -22423,9 +22423,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -22437,12 +22437,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -22452,46 +22452,46 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"sniper",
-					},
-				},
+						"sniper"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "renegade_melee",
 				max_breed_amount = 25,
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_5_machine_complete",
-			},
+				flow_event_name = "wave_5_machine_complete"
+			}
 		},
 		horde_wave_machine_5_b = {
 			{
@@ -22502,9 +22502,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -22516,19 +22516,19 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
+						"roamer"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -22538,9 +22538,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -22552,12 +22552,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -22567,39 +22567,39 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"sniper",
-					},
-				},
+						"sniper"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "renegade_rifleman",
 				max_breed_amount = 50,
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_5_machine_complete",
-			},
+				flow_event_name = "wave_5_machine_complete"
+			}
 		},
 		horde_wave_machine_5_c = {
 			{
@@ -22610,13 +22610,13 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"flow_event",
-				flow_event_name = "cultist_mutant_wave",
+				flow_event_name = "cultist_mutant_wave"
 			},
 			{
 				"spawn_by_points",
@@ -22626,22 +22626,22 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -22651,22 +22651,22 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 8,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -22676,38 +22676,38 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_5_machine_complete",
-			},
+				flow_event_name = "wave_5_machine_complete"
+			}
 		},
 		horde_wave_machine_6_a = {
 			{
@@ -22718,9 +22718,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -22731,19 +22731,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 25,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -22753,9 +22753,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -22765,31 +22765,31 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 5,
 				breed_name = "chaos_ogryn_bulwark",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 160,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -22800,9 +22800,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -22816,30 +22816,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_6_machine_complete",
-			},
+				flow_event_name = "wave_6_machine_complete"
+			}
 		},
 		horde_wave_machine_6_b = {
 			{
@@ -22850,9 +22850,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -22865,19 +22865,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 30,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -22887,9 +22887,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
@@ -22897,14 +22897,14 @@ local template = {
 				breed_name = "renegade_gunner",
 				limit_spawners = 2,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -22914,12 +22914,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -22930,9 +22930,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -22946,37 +22946,37 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_6_machine_complete",
-			},
+				flow_event_name = "wave_6_machine_complete"
+			}
 		},
 		horde_wave_machine_6_c = {
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -22986,9 +22986,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -23001,19 +23001,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -23023,16 +23023,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -23044,9 +23044,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -23056,9 +23056,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"ogryn",
-					},
-				},
+						"ogryn"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -23072,30 +23072,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_6_machine_complete",
-			},
+				flow_event_name = "wave_6_machine_complete"
+			}
 		},
 		horde_wave_machine_7_a = {
 			{
@@ -23106,9 +23106,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -23120,16 +23120,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -23139,22 +23139,22 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 11,
 				breed_name = "renegade_plasma_gunner",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -23166,12 +23166,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
@@ -23179,7 +23179,7 @@ local template = {
 				breed_name = "renegade_rifleman",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -23189,32 +23189,32 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_7_machine_complete",
-			},
+				flow_event_name = "wave_7_machine_complete"
+			}
 		},
 		horde_wave_machine_7_b = {
 			{
@@ -23225,9 +23225,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -23239,16 +23239,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -23258,22 +23258,22 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "renegade_flamer",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -23285,47 +23285,47 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "cultist_grenadier",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "renegade_flamer",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_7_machine_complete",
-			},
+				flow_event_name = "wave_7_machine_complete"
+			}
 		},
 		horde_wave_machine_7_c = {
 			{
@@ -23336,22 +23336,22 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "chaos_ogryn_executor",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -23361,9 +23361,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -23373,16 +23373,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"ogryn",
-					},
-				},
+						"ogryn"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -23392,9 +23392,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -23404,32 +23404,32 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"ogryn",
-					},
-				},
+						"ogryn"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_7_machine_complete",
-			},
+				flow_event_name = "wave_7_machine_complete"
+			}
 		},
 		horde_wave_machine_8_a = {
 			{
@@ -23440,22 +23440,22 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "renegade_netgunner",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -23465,22 +23465,22 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 5,
 				breed_name = "chaos_hound",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -23490,22 +23490,22 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -23515,38 +23515,38 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "cultist_assault",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_8_machine_complete",
-			},
+				flow_event_name = "wave_8_machine_complete"
+			}
 		},
 		horde_wave_machine_8_b = {
 			{
@@ -23557,9 +23557,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -23571,16 +23571,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -23590,22 +23590,22 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 9,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -23615,12 +23615,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
@@ -23628,7 +23628,7 @@ local template = {
 				breed_name = "chaos_lesser_mutated_poxwalker",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -23638,32 +23638,32 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_8_machine_complete",
-			},
+				flow_event_name = "wave_8_machine_complete"
+			}
 		},
 		horde_wave_machine_8_c = {
 			{
@@ -23674,9 +23674,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -23688,16 +23688,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -23707,9 +23707,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -23721,25 +23721,25 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 8,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -23749,32 +23749,32 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_8_machine_complete",
-			},
+				flow_event_name = "wave_8_machine_complete"
+			}
 		},
 		horde_wave_machine_gate_opening = {
 			{
@@ -23785,10 +23785,10 @@ local template = {
 				spawner_group = "spawner_wave_machine_gate_opening",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
-			},
+						"horde"
+					}
+				}
+			}
 		},
 		horde_wave_machine_9_a = {
 			{
@@ -23802,12 +23802,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -23817,9 +23817,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -23829,12 +23829,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -23844,9 +23844,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -23858,9 +23858,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -23870,9 +23870,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"ogryn",
-					},
-				},
+						"ogryn"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -23883,9 +23883,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -23899,30 +23899,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_9_machine_complete",
-			},
+				flow_event_name = "wave_9_machine_complete"
+			}
 		},
 		horde_wave_machine_9_b = {
 			{
@@ -23933,9 +23933,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -23947,19 +23947,19 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"roamer",
-					},
+						"roamer"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 30,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -23969,9 +23969,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -23981,9 +23981,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -23993,19 +23993,19 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -24016,9 +24016,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -24031,9 +24031,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -24047,30 +24047,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_9_machine_complete",
-			},
+				flow_event_name = "wave_9_machine_complete"
+			}
 		},
 		horde_wave_machine_9_c = {
 			{
@@ -24081,9 +24081,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -24094,25 +24094,25 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 5,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"continue_when",
 				duration = 30,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -24123,12 +24123,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -24138,22 +24138,22 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 8,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -24164,12 +24164,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -24179,15 +24179,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 5,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"restart_when",
@@ -24201,30 +24201,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_9_machine_complete",
-			},
+				flow_event_name = "wave_9_machine_complete"
+			}
 		},
 		horde_wave_machine_10_a = {
 			{
@@ -24235,15 +24235,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_spawn",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -24253,16 +24253,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -24272,15 +24272,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -24290,16 +24290,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -24309,15 +24309,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_beast_of_nurgle",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -24327,32 +24327,32 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 250,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_10_machine_complete",
-			},
+				flow_event_name = "wave_10_machine_complete"
+			}
 		},
 		horde_wave_machine_10_b = {
 			{
@@ -24363,16 +24363,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 30,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -24382,16 +24382,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -24401,26 +24401,26 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 35,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 50,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -24430,9 +24430,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -24442,9 +24442,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"sniper",
-					},
-				},
+						"sniper"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -24455,9 +24455,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -24470,32 +24470,32 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_10_machine_complete",
-			},
+				flow_event_name = "wave_10_machine_complete"
+			}
 		},
 		horde_wave_machine_10_c = {
 			{
@@ -24503,96 +24503,96 @@ local template = {
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 50,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "renegade_netgunner",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 50,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 9,
 				breed_name = "chaos_hound",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"continue_when",
 				duration = 30,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 50,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 9,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 50,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 12,
 				breed_name = "cultist_assault",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_10_machine_complete",
-			},
+				flow_event_name = "wave_10_machine_complete"
+			}
 		},
 		horde_wave_machine_11_a = {
 			{
@@ -24604,12 +24604,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -24619,9 +24619,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -24631,12 +24631,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -24646,9 +24646,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -24658,9 +24658,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -24670,9 +24670,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"ogryn",
-					},
-				},
+						"ogryn"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -24685,35 +24685,35 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"renegade_radio_operator",
-				},
+					"renegade_radio_operator"
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_11_machine_complete",
-			},
+				flow_event_name = "wave_11_machine_complete"
+			}
 		},
 		horde_wave_machine_11_b = {
 			{
@@ -24727,12 +24727,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -24742,9 +24742,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -24754,18 +24754,18 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "cultist_mutant_mutator",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -24775,9 +24775,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"sniper",
-					},
-				},
+						"sniper"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -24788,9 +24788,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -24803,39 +24803,39 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_11_machine_complete",
-			},
+				flow_event_name = "wave_11_machine_complete"
+			}
 		},
 		horde_wave_machine_11_c = {
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -24845,9 +24845,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -24860,25 +24860,25 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_beast_of_nurgle",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -24888,9 +24888,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -24903,25 +24903,25 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_spawn",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -24931,9 +24931,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -24946,35 +24946,35 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_11_machine_complete",
-			},
+				flow_event_name = "wave_11_machine_complete"
+			}
 		},
 		horde_wave_machine_12_a = {
 			{
@@ -24988,12 +24988,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25003,9 +25003,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25015,12 +25015,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25030,9 +25030,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25042,9 +25042,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25055,9 +25055,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25070,16 +25070,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -25089,9 +25089,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25101,12 +25101,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25119,9 +25119,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25134,12 +25134,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25149,15 +25149,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_daemonhost",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -25167,32 +25167,32 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_12_machine_complete",
-			},
+				flow_event_name = "wave_12_machine_complete"
+			}
 		},
 		horde_wave_machine_12_b = {
 			{
@@ -25206,12 +25206,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25221,9 +25221,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25233,12 +25233,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25248,9 +25248,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25260,9 +25260,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25273,9 +25273,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25288,16 +25288,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -25310,9 +25310,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25322,30 +25322,30 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_beast_of_nurgle",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_spawn",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -25358,12 +25358,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25373,32 +25373,32 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_12_machine_complete",
-			},
+				flow_event_name = "wave_12_machine_complete"
+			}
 		},
 		horde_wave_machine_12_c = {
 			{
@@ -25410,12 +25410,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25425,9 +25425,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25437,12 +25437,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25452,9 +25452,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25464,9 +25464,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25477,9 +25477,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"close",
-					},
-				},
+						"close"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25490,16 +25490,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -25509,12 +25509,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25525,21 +25525,21 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "renegade_twin_captain",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "renegade_twin_captain_two",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -25549,9 +25549,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25564,12 +25564,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25579,32 +25579,32 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_12_machine_complete",
-			},
+				flow_event_name = "wave_12_machine_complete"
+			}
 		},
 		horde_wave_machine_1_a_alt = {
 			{
@@ -25615,15 +25615,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -25636,19 +25636,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -25658,15 +25658,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -25678,12 +25678,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25693,16 +25693,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -25712,42 +25712,42 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "renegade_shocktrooper",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() <= 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_1_machine_complete",
-			},
+				flow_event_name = "wave_1_machine_complete"
+			}
 		},
 		horde_wave_machine_1_b_alt = {
 			{
@@ -25761,9 +25761,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25773,22 +25773,22 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -25800,12 +25800,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25815,9 +25815,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25827,22 +25827,22 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -25855,9 +25855,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25867,38 +25867,38 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 120,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_1_machine_complete",
-			},
+				flow_event_name = "wave_1_machine_complete"
+			}
 		},
 		horde_wave_machine_1_c_alt = {
 			{
@@ -25909,15 +25909,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -25927,16 +25927,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 10,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -25946,15 +25946,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -25966,12 +25966,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -25981,22 +25981,22 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 3,
 				breed_name = "renegade_plasma_gunner",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -26006,15 +26006,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -26024,38 +26024,38 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "cultist_shocktrooper",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_1_machine_complete",
-			},
+				flow_event_name = "wave_1_machine_complete"
+			}
 		},
 		horde_wave_machine_2_a_alt = {
 			{
@@ -26069,9 +26069,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -26081,22 +26081,22 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -26108,12 +26108,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -26123,22 +26123,22 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -26150,12 +26150,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -26165,9 +26165,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -26177,22 +26177,22 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -26205,9 +26205,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -26217,38 +26217,38 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_2_machine_complete",
-			},
+				flow_event_name = "wave_2_machine_complete"
+			}
 		},
 		horde_wave_machine_2_b_alt = {
 			{
@@ -26262,9 +26262,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -26274,22 +26274,22 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -26301,12 +26301,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -26316,22 +26316,22 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -26343,12 +26343,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -26358,9 +26358,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -26370,22 +26370,22 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -26395,12 +26395,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"monster",
-					},
+						"monster"
+					}
 				},
 				excluded_breed_tags = {
-					"witch",
-				},
+					"witch"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -26410,43 +26410,43 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_2_machine_complete",
-			},
+				flow_event_name = "wave_2_machine_complete"
+			}
 		},
 		horde_wave_machine_2_c_alt = {
 			{
 				"flow_event",
-				flow_event_name = "chaos_hound_wave",
+				flow_event_name = "chaos_hound_wave"
 			},
 			{
 				"spawn_by_points",
@@ -26459,12 +26459,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -26474,28 +26474,28 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 8,
 				breed_name = "chaos_hound",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -26508,12 +26508,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -26523,28 +26523,28 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 9,
 				breed_name = "chaos_hound",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -26557,12 +26557,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"close",
-					},
+						"close"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -26572,44 +26572,44 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 13,
 				breed_name = "renegade_shocktrooper",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_2_machine_complete",
-			},
+				flow_event_name = "wave_2_machine_complete"
+			}
 		},
 		horde_wave_machine_3_a_alt = {
 			{
@@ -26623,9 +26623,9 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -26635,15 +26635,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -26653,19 +26653,19 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -26675,9 +26675,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -26689,9 +26689,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -26702,9 +26702,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -26718,30 +26718,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_3_machine_complete",
-			},
+				flow_event_name = "wave_3_machine_complete"
+			}
 		},
 		horde_wave_machine_3_b_alt = {
 			{
@@ -26752,15 +26752,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -26770,19 +26770,19 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -26792,9 +26792,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -26804,21 +26804,21 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 4,
 				breed_name = "renegade_plasma_gunner",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"restart_when",
@@ -26832,30 +26832,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_3_machine_complete",
-			},
+				flow_event_name = "wave_3_machine_complete"
+			}
 		},
 		horde_wave_machine_3_c_alt = {
 			{
@@ -26866,15 +26866,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -26884,12 +26884,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -26900,19 +26900,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -26922,15 +26922,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -26940,9 +26940,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -26954,9 +26954,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -26970,30 +26970,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_3_machine_complete",
-			},
+				flow_event_name = "wave_3_machine_complete"
+			}
 		},
 		horde_wave_machine_4_a_alt = {
 			{
@@ -27004,15 +27004,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -27025,19 +27025,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -27047,15 +27047,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -27067,19 +27067,19 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -27089,15 +27089,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -27110,9 +27110,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -27124,38 +27124,38 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "chaos_ogryn_gunner",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_4_machine_complete",
-			},
+				flow_event_name = "wave_4_machine_complete"
+			}
 		},
 		horde_wave_machine_4_b_alt = {
 			{
@@ -27166,15 +27166,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -27187,19 +27187,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -27209,15 +27209,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -27227,12 +27227,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -27242,16 +27242,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -27261,45 +27261,45 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "cultist_berzerker",
 				max_breed_amount = 5,
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_4_machine_complete",
-			},
+				flow_event_name = "wave_4_machine_complete"
+			}
 		},
 		horde_wave_machine_4_c_alt = {
 			{
@@ -27310,15 +27310,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -27331,19 +27331,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -27353,15 +27353,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -27373,12 +27373,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -27388,16 +27388,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -27407,52 +27407,52 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_spawn",
 				max_breed_amount = 2,
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "cultist_mutant",
 				max_breed_amount = 6,
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_4_machine_complete",
-			},
+				flow_event_name = "wave_4_machine_complete"
+			}
 		},
 		horde_wave_machine_5_a_alt = {
 			{
@@ -27463,15 +27463,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -27483,19 +27483,19 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
+						"roamer"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -27505,15 +27505,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "renegade_shocktrooper",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -27525,12 +27525,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -27540,46 +27540,46 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"sniper",
-					},
-				},
+						"sniper"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_plague_ogryn",
 				max_breed_amount = 3,
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_5_machine_complete",
-			},
+				flow_event_name = "wave_5_machine_complete"
+			}
 		},
 		horde_wave_machine_5_b_alt = {
 			{
@@ -27590,15 +27590,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -27609,19 +27609,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -27631,15 +27631,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -27651,9 +27651,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -27663,9 +27663,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -27675,16 +27675,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -27694,15 +27694,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -27713,55 +27713,55 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"ogryn",
-					},
-				},
+						"ogryn"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_5_machine_complete",
-			},
+				flow_event_name = "wave_5_machine_complete"
+			}
 		},
 		horde_wave_machine_5_c_alt = {
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"flow_event",
-				flow_event_name = "cultist_mutant_wave",
+				flow_event_name = "cultist_mutant_wave"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -27771,28 +27771,28 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 8,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -27802,28 +27802,28 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -27833,32 +27833,32 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_5_machine_complete",
-			},
+				flow_event_name = "wave_5_machine_complete"
+			}
 		},
 		horde_wave_machine_6_a_alt = {
 			{
@@ -27869,15 +27869,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -27888,19 +27888,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -27910,15 +27910,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -27930,12 +27930,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
@@ -27943,20 +27943,20 @@ local template = {
 				breed_name = "chaos_ogryn_gunner",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "chaos_ogryn_bulwark",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 260,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -27967,9 +27967,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -27983,30 +27983,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_6_machine_complete",
-			},
+				flow_event_name = "wave_6_machine_complete"
+			}
 		},
 		horde_wave_machine_6_b_alt = {
 			{
@@ -28017,15 +28017,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -28038,19 +28038,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 25,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -28060,40 +28060,40 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "chaos_ogryn_bulwark",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 3,
 				breed_name = "chaos_ogryn_executor",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 40,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -28103,12 +28103,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"restart_when",
@@ -28122,30 +28122,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_6_machine_complete",
-			},
+				flow_event_name = "wave_6_machine_complete"
+			}
 		},
 		horde_wave_machine_6_c_alt = {
 			{
@@ -28156,15 +28156,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -28177,19 +28177,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -28199,28 +28199,28 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "chaos_ogryn_bulwark",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -28232,21 +28232,21 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "chaos_ogryn_executor",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "renegade_netgunner",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"restart_when",
@@ -28260,30 +28260,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_6_machine_complete",
-			},
+				flow_event_name = "wave_6_machine_complete"
+			}
 		},
 		horde_wave_machine_7_a_alt = {
 			{
@@ -28294,15 +28294,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -28312,16 +28312,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -28331,28 +28331,28 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 9,
 				breed_name = "renegade_plasma_gunner",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -28362,12 +28362,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
@@ -28375,7 +28375,7 @@ local template = {
 				breed_name = "renegade_rifleman",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -28385,9 +28385,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
@@ -28395,30 +28395,30 @@ local template = {
 				breed_name = "chaos_newly_infected",
 				limit_spawners = 4,
 				proximity_spawners = true,
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_7_machine_complete",
-			},
+				flow_event_name = "wave_7_machine_complete"
+			}
 		},
 		horde_wave_machine_7_b_alt = {
 			{
@@ -28429,15 +28429,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -28447,21 +28447,21 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "renegade_plasma_gunner",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -28471,16 +28471,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -28490,21 +28490,21 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 15,
 				breed_name = "renegade_shocktrooper",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -28514,16 +28514,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -28533,21 +28533,21 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 11,
 				breed_name = "renegade_plasma_gunner",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -28557,32 +28557,32 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_7_machine_complete",
-			},
+				flow_event_name = "wave_7_machine_complete"
+			}
 		},
 		horde_wave_machine_7_c_alt = {
 			{
@@ -28593,19 +28593,19 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"flow_event",
-				flow_event_name = "chaos_poxwalker_bomber_wave",
+				flow_event_name = "chaos_poxwalker_bomber_wave"
 			},
 			{
 				"spawn_by_points",
@@ -28615,28 +28615,28 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "chaos_poxwalker_bomber",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -28646,28 +28646,28 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 9,
 				breed_name = "chaos_poxwalker_bomber",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -28677,44 +28677,44 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 12,
 				breed_name = "chaos_poxwalker_bomber",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_7_machine_complete",
-			},
+				flow_event_name = "wave_7_machine_complete"
+			}
 		},
 		horde_wave_machine_8_a_alt = {
 			{
@@ -28725,19 +28725,19 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"flow_event",
-				flow_event_name = "flamer_wave",
+				flow_event_name = "flamer_wave"
 			},
 			{
 				"spawn_by_points",
@@ -28747,34 +28747,34 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 50,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 14,
 				breed_name = "cultist_shocktrooper",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "renegade_flamer",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -28784,27 +28784,27 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 50,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 14,
 				breed_name = "cultist_shocktrooper",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 9,
 				breed_name = "cultist_flamer",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -28814,16 +28814,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -28833,50 +28833,50 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 50,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 14,
 				breed_name = "cultist_shocktrooper",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "renegade_flamer",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_8_machine_complete",
-			},
+				flow_event_name = "wave_8_machine_complete"
+			}
 		},
 		horde_wave_machine_8_b_alt = {
 			{
@@ -28887,19 +28887,19 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"flow_event",
-				flow_event_name = "flamer_wave",
+				flow_event_name = "flamer_wave"
 			},
 			{
 				"spawn_by_points",
@@ -28909,34 +28909,34 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "cultist_shocktrooper",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "renegade_flamer",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -28946,27 +28946,27 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "cultist_shocktrooper",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 9,
 				breed_name = "cultist_flamer",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -28976,16 +28976,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -28995,50 +28995,50 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "cultist_shocktrooper",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "renegade_flamer",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_8_machine_complete",
-			},
+				flow_event_name = "wave_8_machine_complete"
+			}
 		},
 		horde_wave_machine_8_c_alt = {
 			{
@@ -29049,19 +29049,19 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"flow_event",
-				flow_event_name = "flamer_wave",
+				flow_event_name = "flamer_wave"
 			},
 			{
 				"spawn_by_points",
@@ -29071,28 +29071,28 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 6,
 				breed_name = "renegade_flamer",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -29102,28 +29102,28 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 8,
 				breed_name = "cultist_flamer",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -29133,44 +29133,44 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "renegade_flamer",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_8_machine_complete",
-			},
+				flow_event_name = "wave_8_machine_complete"
+			}
 		},
 		horde_wave_machine_9_a_alt = {
 			{
@@ -29181,9 +29181,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -29195,19 +29195,19 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"roamer",
-					},
+						"roamer"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -29217,9 +29217,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -29229,9 +29229,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"ogryn",
-					},
-				},
+						"ogryn"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -29241,19 +29241,19 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 30,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -29263,9 +29263,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -29278,9 +29278,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -29294,30 +29294,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_9_machine_complete",
-			},
+				flow_event_name = "wave_9_machine_complete"
+			}
 		},
 		horde_wave_machine_9_b_alt = {
 			{
@@ -29328,15 +29328,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -29348,19 +29348,19 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"roamer",
-					},
+						"roamer"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -29370,15 +29370,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -29388,9 +29388,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -29400,19 +29400,19 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -29423,9 +29423,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -29438,9 +29438,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"restart_when",
@@ -29454,30 +29454,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_9_machine_complete",
-			},
+				flow_event_name = "wave_9_machine_complete"
+			}
 		},
 		horde_wave_machine_9_c_alt = {
 			{
@@ -29488,15 +29488,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_points",
@@ -29507,25 +29507,25 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 8,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"continue_when",
 				duration = 30,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -29536,12 +29536,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -29551,28 +29551,28 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 8,
 				breed_name = "renegade_sniper",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -29583,12 +29583,12 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -29598,21 +29598,21 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 40,
 				breed_name = "chaos_mutated_poxwalker",
-				spawner_group = "spawner_wave_machine_horde",
+				spawner_group = "spawner_wave_machine_horde"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 12,
 				breed_name = "renegade_plasma_gunner",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"restart_when",
@@ -29626,30 +29626,30 @@ local template = {
 				end,
 				early_exit_condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 8
-				end,
+				end
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_9_machine_complete",
-			},
+				flow_event_name = "wave_9_machine_complete"
+			}
 		},
 		horde_wave_machine_10_a_alt = {
 			{
@@ -29660,22 +29660,22 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "renegade_netgunner",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -29685,22 +29685,22 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 15,
 				breed_name = "chaos_hound",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"continue_when",
 				duration = 30,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -29710,22 +29710,22 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 15,
 				breed_name = "cultist_mutant",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -29735,38 +29735,38 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "cultist_assault",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_10_machine_complete",
-			},
+				flow_event_name = "wave_10_machine_complete"
+			}
 		},
 		horde_wave_machine_10_b_alt = {
 			{
@@ -29777,16 +29777,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 60,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -29796,16 +29796,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -29815,38 +29815,38 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 35,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 70,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "renegade_twin_captain",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "renegade_twin_captain_two",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -29856,9 +29856,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -29868,9 +29868,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"sniper",
-					},
-				},
+						"sniper"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -29881,9 +29881,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -29896,32 +29896,32 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_10_machine_complete",
-			},
+				flow_event_name = "wave_10_machine_complete"
+			}
 		},
 		horde_wave_machine_10_c_alt = {
 			{
@@ -29932,16 +29932,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 60,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -29952,25 +29952,25 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 5,
 				breed_name = "renegade_netgunner",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -29980,16 +29980,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 60,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -30000,25 +30000,25 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 10,
 				breed_name = "renegade_netgunner",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -30028,16 +30028,16 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 60,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -30048,53 +30048,53 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 7,
 				breed_name = "renegade_netgunner",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 3,
 				breed_name = "chaos_beast_of_nurgle",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 3,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_10_machine_complete",
-			},
+				flow_event_name = "wave_10_machine_complete"
+			}
 		},
 		horde_wave_machine_11_a_alt = {
 			{
@@ -30108,19 +30108,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 60,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -30130,12 +30130,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -30145,9 +30145,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -30157,9 +30157,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -30169,9 +30169,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"ogryn",
-					},
-				},
+						"ogryn"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -30184,9 +30184,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -30196,32 +30196,32 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_11_machine_complete",
-			},
+				flow_event_name = "wave_11_machine_complete"
+			}
 		},
 		horde_wave_machine_11_b_alt = {
 			{
@@ -30235,19 +30235,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "renegade_plasma_gunner",
 				max_breed_amount = 15,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -30257,12 +30257,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -30272,15 +30272,15 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 4,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -30291,9 +30291,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -30306,46 +30306,46 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_11_machine_complete",
-			},
+				flow_event_name = "wave_11_machine_complete"
+			}
 		},
 		horde_wave_machine_11_c_alt = {
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 60,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -30358,32 +30358,32 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 2,
 				breed_name = "chaos_beast_of_nurgle",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 60,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -30396,32 +30396,32 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
-				end,
+				end
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_spawn",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 60,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -30434,35 +30434,35 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_11_machine_complete",
-			},
+				flow_event_name = "wave_11_machine_complete"
+			}
 		},
 		horde_wave_machine_12_a_alt = {
 			{
@@ -30474,25 +30474,25 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 60,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 8,
 				breed_name = "cultist_berzerker",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -30502,9 +30502,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -30514,9 +30514,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -30527,9 +30527,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -30540,16 +30540,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -30559,9 +30559,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -30571,12 +30571,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -30587,15 +30587,15 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_daemonhost",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -30605,9 +30605,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -30620,26 +30620,26 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 60,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -30649,9 +30649,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -30661,12 +30661,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -30677,22 +30677,22 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_daemonhost",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 60,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -30705,42 +30705,42 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 80,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_12_machine_complete",
-			},
+				flow_event_name = "wave_12_machine_complete"
+			}
 		},
 		horde_wave_machine_12_b_alt = {
 			{
@@ -30752,19 +30752,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 60,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -30774,12 +30774,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -30789,9 +30789,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -30801,9 +30801,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -30814,9 +30814,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -30827,16 +30827,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -30846,12 +30846,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -30861,34 +30861,34 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"sniper",
-					},
-				},
+						"sniper"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_beast_of_nurgle",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_plague_ogryn",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "chaos_spawn",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 60,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -30901,19 +30901,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 60,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -30924,19 +30924,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "renegade_plasma_gunner",
 				max_breed_amount = 15,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -30946,12 +30946,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -30961,9 +30961,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -30973,9 +30973,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -30986,9 +30986,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -30999,32 +30999,32 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_12_machine_complete",
-			},
+				flow_event_name = "wave_12_machine_complete"
+			}
 		},
 		horde_wave_machine_12_c_alt = {
 			{
@@ -31036,19 +31036,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 60,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -31058,12 +31058,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -31073,9 +31073,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -31085,9 +31085,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -31098,9 +31098,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"close",
-					},
-				},
+						"close"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -31111,16 +31111,16 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"spawn_by_points",
@@ -31130,12 +31130,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -31146,28 +31146,28 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "renegade_twin_captain",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
 				breed_name = "renegade_twin_captain_two",
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 60,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -31180,19 +31180,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 60,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -31203,19 +31203,19 @@ local template = {
 				breed_tags = {
 					{
 						"roamer",
-						"far",
-					},
+						"far"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_breed_name",
 				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 60,
-				spawner_group = "spawner_wave_machine_horde_final",
+				spawner_group = "spawner_wave_machine_horde_final"
 			},
 			{
 				"spawn_by_points",
@@ -31225,12 +31225,12 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"melee",
-					},
+						"melee"
+					}
 				},
 				excluded_breed_tags = {
-					"elite",
-				},
+					"elite"
+				}
 			},
 			{
 				"spawn_by_points",
@@ -31240,9 +31240,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -31252,9 +31252,9 @@ local template = {
 				spawner_group = "spawner_wave_machine_horde_final",
 				breed_tags = {
 					{
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -31265,9 +31265,9 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"close",
-					},
-				},
+						"close"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -31278,34 +31278,34 @@ local template = {
 				breed_tags = {
 					{
 						"elite",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 12
-				end,
+				end
 			},
 			{
 				"lua_event",
-				target_event = "event_surival_mode_tag_remaining_enemies",
+				target_event = "event_surival_mode_tag_remaining_enemies"
 			},
 			{
 				"continue_when",
 				duration = 200,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "wave_12_machine_complete",
-			},
-		},
-	},
+				flow_event_name = "wave_12_machine_complete"
+			}
+		}
+	}
 }
 
 return template

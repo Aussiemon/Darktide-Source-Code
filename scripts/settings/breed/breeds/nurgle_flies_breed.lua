@@ -8,6 +8,7 @@ local PerceptionSettings = require("scripts/settings/perception/perception_setti
 local SmartObjectSettings = require("scripts/settings/navigation/smart_object_settings")
 local breed_name = "nurgle_flies"
 local breed_types = BreedSettings.types
+local breed_tags = BreedSettings.tags
 local hit_zone_names = HitZone.hit_zone_names
 local breed_data = {
 	base_height = 3.6,
@@ -39,11 +40,11 @@ local breed_data = {
 	breed_type = breed_types.living_prop,
 	blackboard_component_config = BreedBlackboardComponentTemplates.nurgle_flies,
 	tags = {
-		minion = true,
+		[breed_tags.minion] = true
 	},
 	size_variation_range = {
 		1.04,
-		1.04,
+		1.04
 	},
 	outline_config = {},
 	behavior_tree_name = breed_name,
@@ -51,28 +52,28 @@ local breed_data = {
 	attack_intensity_cooldowns = {
 		melee = {
 			0,
-			0,
+			0
 		},
 		moving_melee = {
 			0,
-			0,
-		},
+			0
+		}
 	},
 	threat_config = {
 		max_threat = 1000,
 		threat_decay_per_second = 100,
-		threat_multiplier = 1,
+		threat_multiplier = 1
 	},
 	target_changed_attack_intensities = {
-		disabling = 5,
+		disabling = 5
 	},
 	line_of_sight_data = {
 		{
 			from_node = "j_head",
 			id = "eyes",
 			to_node = "j_spine",
-			offsets = PerceptionSettings.default_minion_line_of_sight_offsets,
-		},
+			offsets = PerceptionSettings.default_minion_line_of_sight_offsets
+		}
 	},
 	nav_tag_allowed_layers = {},
 	nav_cost_map_multipliers = {},
@@ -80,8 +81,8 @@ local breed_data = {
 	hit_zones = {
 		{
 			name = hit_zone_names.center_mass,
-			actors = {},
-		},
+			actors = {}
+		}
 	},
 	chase_target_template = {
 		attach_range = 2,
@@ -92,12 +93,12 @@ local breed_data = {
 		random_wander = false,
 		stop_and_process_player = true,
 		vfx_follow_speed = 1,
-		vfx_ground_offset = 0.75,
+		vfx_ground_offset = 0.75
 	},
 	companion_pounce_setting = {
 		companion_pounce_action = "stagger_and_leap_away",
-		ignore_target_selection = true,
-	},
+		ignore_target_selection = true
+	}
 }
 
 return breed_data

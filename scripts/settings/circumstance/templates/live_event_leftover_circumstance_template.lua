@@ -7,13 +7,13 @@ local core_mutators = {
 	"mutator_only_cultist_faction",
 	"mutator_leftover_gameplay_logic",
 	"mutator_live_event_leftover_drop_large_pickups_on_death",
-	"mutator_live_event_leftover_loot_point_spawns",
+	"mutator_live_event_leftover_loot_point_spawns"
 }
 local base_templates = CircumstanceUtils.inherit(BaseLiveEventTemplate, core_mutators, {
-	"stats_live_event_leftover",
+	"stats_live_event_leftover"
 }, "leftover")
 local circumstance_templates = table.reduce({
-	base_templates,
+	base_templates
 }, table.merge, {})
 
 circumstance_templates.leftover.ui.display_name = "loc_circumstance_leftover_default_title"

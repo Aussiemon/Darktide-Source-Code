@@ -2,6 +2,7 @@
 
 local LocalLoader = require("scripts/settings/equipment/local_items_loader")
 local MasterItems = require("scripts/backend/master_items")
+local NeckLock = require("scripts/utilities/neck_lock")
 local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local PlayerCustomization = component("PlayerCustomization")
 
@@ -54,7 +55,7 @@ PlayerCustomization._construct_attach_settings = function (self, unit, world, in
 		in_editor = in_editor,
 		is_first_person = is_first_person,
 		lod_group = Unit.has_lod_group(unit, "lod") and Unit.lod_group(unit, "lod"),
-		lod_shadow_group = Unit.has_lod_group(unit, "lod_shadow") and Unit.lod_group(unit, "lod_shadow"),
+		lod_shadow_group = Unit.has_lod_group(unit, "lod_shadow") and Unit.lod_group(unit, "lod_shadow")
 	}
 
 	if not in_editor then
@@ -93,6 +94,19 @@ PlayerCustomization._customize = function (self, unit, item_definitions)
 	attach_settings.item_definitions = item_defs
 
 	local item_table = {}
+	local face_unit = self:_spawn_facial_items(face_item_name, face_attachment_items, attach_settings)
+
+	if face_unit then
+		self._face_unit = face_unit
+
+		local face_sm_override = self:get_data(unit, "face_sm_override")
+
+		self._face_sm_override = face_sm_override
+
+		local face_sm_init_event = self:get_data(unit, "face_sm_init_event")
+
+		self:_override_face_anim(face_unit, face_sm_override, face_sm_init_event)
+	end
 
 	for _, item_name in pairs(item_names) do
 		local item = rawget(item_defs, item_name)
@@ -102,18 +116,6 @@ PlayerCustomization._customize = function (self, unit, item_definitions)
 	end
 
 	self:spawn_items(item_table)
-
-	local face_unit = self:_spawn_facial_items(face_item_name, face_attachment_items, attach_settings)
-
-	if face_unit then
-		local face_sm_override = self:get_data(unit, "face_sm_override")
-
-		self._face_sm_override = face_sm_override
-
-		local face_sm_init_event = self:get_data(unit, "face_sm_init_event")
-
-		self:_override_face_anim(face_unit, face_sm_override, face_sm_init_event)
-	end
 
 	if attach_settings.lod_group then
 		local bounding_volume = LODGroup.compile_time_bounding_volume(attach_settings.lod_group)
@@ -224,7 +226,7 @@ PlayerCustomization.spawn_items = function (self, items, optional_mission_templa
 
 				item_units[item] = {
 					item_unit,
-					all_attachment_units,
+					all_attachment_units
 				}
 
 				local slots = item_data_clone.slots
@@ -238,11 +240,27 @@ PlayerCustomization.spawn_items = function (self, items, optional_mission_templa
 					end
 				end
 
+				if item.mask_facial_hair_item and item.mask_facial_hair_item ~= "" then
+					local face_unit = self._face_unit or self:unit_in_slot("slot_body_face")
+
+					if face_unit then
+						VisualLoadoutCustomization.apply_material_override_item(face_unit, unit, false, item.mask_facial_hair_item, in_editor, attach_settings.item_definitions)
+					end
+				end
+
+				if item.mask_hair_item and item.mask_hair_item ~= "" then
+					local face_unit = self._face_unit or self:unit_in_slot("slot_body_face")
+
+					if face_unit then
+						VisualLoadoutCustomization.apply_material_override_item(face_unit, unit, false, item.mask_hair_item, in_editor, attach_settings.item_definitions)
+					end
+				end
+
 				local deform_override_items = item.deform_override_items
 
 				if deform_override_items then
 					for _, deform_override_item in pairs(deform_override_items) do
-						VisualLoadoutCustomization.apply_material_override_item(item_unit, unit, false, deform_override_item, false, attach_settings.item_definitions)
+						VisualLoadoutCustomization.apply_material_override_item(item_unit, unit, false, deform_override_item, in_editor, attach_settings.item_definitions)
 					end
 				end
 
@@ -257,40 +275,8 @@ PlayerCustomization.spawn_items = function (self, items, optional_mission_templa
 		end
 	end
 
-	if stabilize_neck and Unit.has_animation_state_machine(unit) then
-		if Unit.has_animation_event(unit, "lock_head") and Unit.has_animation_event(unit, "unlock_head") then
-			if stabilize_neck > 0 then
-				Unit.animation_event(unit, "lock_head")
-
-				local sm_variable_index = Unit.animation_find_variable(unit, "lock_neck_weight")
-				local stabilize_amount
-
-				if sm_variable_index then
-					stabilize_amount = math.clamp(stabilize_neck, 0, 80) / 80
-
-					Unit.animation_set_variable(unit, sm_variable_index, stabilize_amount)
-				end
-
-				sm_variable_index = Unit.animation_find_variable(unit, "lock_head_weight")
-
-				if sm_variable_index then
-					if stabilize_neck >= 50 then
-						stabilize_amount = (stabilize_neck - 50) / 50
-
-						Unit.animation_set_variable(unit, sm_variable_index, stabilize_amount)
-					else
-						Unit.animation_set_variable(unit, sm_variable_index, 0)
-					end
-				end
-
-				Log.info("PlayerCustomization", "Neck locked", unit)
-			else
-				Unit.animation_event(unit, "unlock_head")
-				Log.info("PlayerCustomization", "Neck unlocked", unit)
-			end
-		elseif stabilize_neck > 0 then
-			Log.info("PlayerCustomization", "Neck lock events not found in state machine for %s", unit)
-		end
+	if stabilize_neck then
+		NeckLock.stabilize_neck(unit, stabilize_neck)
 	end
 
 	self._total_num_attachments = attachment_count
@@ -436,108 +422,109 @@ end
 PlayerCustomization.component_config = {
 	disable_event_public = false,
 	enable_event_public = false,
-	starts_enabled_default = true,
+	starts_enabled_default = true
 }
 PlayerCustomization.component_data = {
 	editor_only = {
 		category = "Settings",
 		ui_name = "Editor Only",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	disable_all_culling = {
 		category = "Settings",
 		ui_name = "Disable All Culling",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	force_highest_lod = {
 		category = "Settings",
 		ui_name = "Force Highest LOD",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	is_first_person = {
 		category = "Settings",
 		ui_name = "Is First Person",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	disable_all_shadows = {
 		category = "Settings",
 		ui_name = "Disable All Shadows",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	face_item = {
 		category = "Facial Attachments",
 		filter = "item",
 		ui_name = "Face Item",
 		ui_type = "resource",
-		value = "",
+		value = ""
 	},
 	face_attachments = {
 		category = "Facial Attachments",
 		filter = "item",
 		size = 3,
 		ui_name = "Face Attachment",
-		ui_type = "resource_array",
+		ui_type = "resource_array"
 	},
 	face_material_override_items = {
 		category = "Facial Attachments",
 		filter = "item",
 		size = 1,
 		ui_name = "Face Material Override Items",
-		ui_type = "resource_array",
+		ui_type = "resource_array"
 	},
 	face_sm_override = {
 		category = "Facial Attachments",
 		filter = "state_machine",
 		ui_name = "Face State Machine Override",
 		ui_type = "resource",
-		value = "",
+		value = ""
 	},
 	face_sm_init_event = {
 		category = "Facial Attachments",
 		ui_name = "Face State Machine Init Event",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	attachment_items = {
 		category = "Attachments",
 		filter = "item",
 		size = 3,
 		ui_name = "Item",
-		ui_type = "resource_array",
+		ui_type = "resource_array"
 	},
 	attachment_material_override_items = {
 		category = "Attachments",
+		filter = "item",
 		ui_name = "Item Material Overrides",
 		ui_type = "struct_array",
 		definition = {
 			item_no = {
 				ui_name = "Item Number",
 				ui_type = "number",
-				value = 1,
+				value = 1
 			},
 			material_override_item = {
 				filter = "item",
 				ui_name = "Material Override Item",
-				ui_type = "resource",
-			},
+				ui_type = "resource"
+			}
 		},
 		control_order = {
 			"item_no",
-			"material_override_item",
-		},
+			"material_override_item"
+		}
 	},
 	global_material_override_items = {
 		category = "Attachments",
 		filter = "item",
 		size = 1,
 		ui_name = "Global Material Override Items",
-		ui_type = "resource_array",
-	},
+		ui_type = "resource_array"
+	}
 }
 
 return PlayerCustomization

@@ -4,8 +4,8 @@ local base_template = require("scripts/settings/breed/breed_blackboard_component
 local sand_vortex = {
 	behavior = {
 		move_medium = "string",
-		move_state = "string",
-	},
+		move_state = "string"
+	}
 }
 
 table.merge(sand_vortex, base_template)
@@ -22,7 +22,7 @@ sand_vortex.spawn = {
 	spawner_spawn_index = "number",
 	spawner_unit = "Unit",
 	unit = "Unit",
-	world = "World",
+	world = "World"
 }
 sand_vortex.vortex = {
 	idle_time = "number",
@@ -30,11 +30,11 @@ sand_vortex.vortex = {
 	num_players_inside = "number",
 	target_unit = "Unit",
 	wander_state = "string",
-	wander_time = "number",
+	wander_time = "number"
 }
 
 local templates = {
-	sand_vortex = sand_vortex,
+	sand_vortex = sand_vortex
 }
 
 return templates

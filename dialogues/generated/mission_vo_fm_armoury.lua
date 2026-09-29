@@ -14,13 +14,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_armoury_amphitheatre_a",
+				"mission_armoury_amphitheatre_a"
 			},
 			{
 				"user_context",
@@ -29,27 +29,27 @@ return function ()
 				args = {
 					"sergeant",
 					"explicator",
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_armoury_amphitheatre_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_armoury_amphitheatre_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "self",
-		},
+			target = "self"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -63,15 +63,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_armoury_amphitheatre_a",
-				},
+					"mission_armoury_amphitheatre_a"
+				}
 			},
 			{
 				"user_context",
@@ -80,19 +80,19 @@ return function ()
 				args = {
 					"sergeant",
 					"explicator",
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "self",
+			target = "self"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -107,15 +107,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_armoury_amphitheatre_b",
-				},
+					"mission_armoury_amphitheatre_b"
+				}
 			},
 			{
 				"user_context",
@@ -124,19 +124,19 @@ return function ()
 				args = {
 					"sergeant",
 					"explicator",
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -152,13 +152,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_armoury_black_market_a",
+				"mission_armoury_black_market_a"
 			},
 			{
 				"user_context",
@@ -167,27 +167,27 @@ return function ()
 				args = {
 					"enemy_wolfer_adjutant",
 					"purser",
-					"shipmistress",
-				},
+					"shipmistress"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_armoury_black_market_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_armoury_black_market_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -203,15 +203,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_armoury_black_market_a",
-				},
+					"mission_armoury_black_market_a"
+				}
 			},
 			{
 				"user_context",
@@ -220,19 +220,19 @@ return function ()
 				args = {
 					"enemy_nemesis_wolfer",
 					"explicator",
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all",
+			target = "all"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -248,13 +248,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_armoury_brewery_cellar_01_a",
+				"mission_armoury_brewery_cellar_01_a"
 			},
 			{
 				"user_context",
@@ -263,27 +263,27 @@ return function ()
 				args = {
 					"enemy_nemesis_wolfer",
 					"contract_vendor",
-					"shipmistress",
-				},
+					"shipmistress"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_armoury_brewery_cellar_01_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_armoury_brewery_cellar_01_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -299,15 +299,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_armoury_brewery_cellar_01_a",
-				},
+					"mission_armoury_brewery_cellar_01_a"
+				}
 			},
 			{
 				"user_context",
@@ -316,19 +316,19 @@ return function ()
 				args = {
 					"enemy_wolfer_adjutant",
 					"explicator",
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -344,13 +344,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_armoury_brewery_cellar_02_a",
+				"mission_armoury_brewery_cellar_02_a"
 			},
 			{
 				"user_context",
@@ -359,27 +359,27 @@ return function ()
 				args = {
 					"sergeant",
 					"explicator",
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_armoury_brewery_cellar_02_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_armoury_brewery_cellar_02_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -395,13 +395,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_armoury_brewery_main_brewery_a",
+				"mission_armoury_brewery_main_brewery_a"
 			},
 			{
 				"user_context",
@@ -410,27 +410,27 @@ return function ()
 				args = {
 					"sergeant",
 					"purser",
-					"shipmistress",
-				},
+					"shipmistress"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_armoury_brewery_main_brewery_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_armoury_brewery_main_brewery_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -446,13 +446,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_armoury_brewery_sighted_a",
+				"mission_armoury_brewery_sighted_a"
 			},
 			{
 				"user_context",
@@ -461,27 +461,27 @@ return function ()
 				args = {
 					"sergeant",
 					"explicator",
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_armoury_brewery_sighted_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_armoury_brewery_sighted_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -497,13 +497,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_armoury_cipher_terminal_a",
+				"mission_armoury_cipher_terminal_a"
 			},
 			{
 				"user_context",
@@ -512,27 +512,27 @@ return function ()
 				args = {
 					"sergeant",
 					"explicator",
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_armoury_cipher_terminal_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_armoury_cipher_terminal_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -548,15 +548,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_armoury_cipher_terminal_a",
-				},
+					"mission_armoury_cipher_terminal_a"
+				}
 			},
 			{
 				"user_context",
@@ -565,19 +565,19 @@ return function ()
 				args = {
 					"enemy_nemesis_wolfer",
 					"purser",
-					"shipmistress",
-				},
-			},
+					"shipmistress"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -593,13 +593,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_armoury_cipher_terminal_complete_a",
+				"mission_armoury_cipher_terminal_complete_a"
 			},
 			{
 				"user_context",
@@ -608,27 +608,27 @@ return function ()
 				args = {
 					"sergeant",
 					"explicator",
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_armoury_cipher_terminal_complete_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_armoury_cipher_terminal_complete_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -644,13 +644,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_armoury_ending_a",
+				"mission_armoury_ending_a"
 			},
 			{
 				"user_context",
@@ -659,27 +659,27 @@ return function ()
 				args = {
 					"sergeant",
 					"explicator",
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_armoury_ending_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_armoury_ending_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -695,13 +695,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_armoury_first_breach_a",
+				"mission_armoury_first_breach_a"
 			},
 			{
 				"user_context",
@@ -712,27 +712,27 @@ return function ()
 					"explicator",
 					"contract_vendor",
 					"purser",
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_armoury_first_breach_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_armoury_first_breach_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "players",
-		},
+			target = "players"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -748,13 +748,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_armoury_first_objective_a",
+				"mission_armoury_first_objective_a"
 			},
 			{
 				"user_context",
@@ -762,27 +762,27 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"explicator",
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_armoury_first_objective_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_armoury_first_objective_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -798,40 +798,40 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_armoury_first_objective_a",
+				"mission_armoury_first_objective_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
+					"sergeant"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_armoury_first_objective_a_sergeant",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_armoury_first_objective_a_sergeant",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -847,13 +847,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_armoury_insalubrious_a",
+				"mission_armoury_insalubrious_a"
 			},
 			{
 				"user_context",
@@ -863,27 +863,27 @@ return function ()
 					"sergeant",
 					"explicator",
 					"purser",
-					"shipmistress",
-				},
+					"shipmistress"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_armoury_insalubrious_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_armoury_insalubrious_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -899,13 +899,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_armoury_low_profile_a",
+				"mission_armoury_low_profile_a"
 			},
 			{
 				"user_context",
@@ -915,27 +915,27 @@ return function ()
 					"sergeant",
 					"enemy_nemesis_wolfer",
 					"purser",
-					"shipmistress",
-				},
+					"shipmistress"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_armoury_low_profile_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_armoury_low_profile_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -951,13 +951,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_armoury_refectory_a",
+				"mission_armoury_refectory_a"
 			},
 			{
 				"user_context",
@@ -966,27 +966,27 @@ return function ()
 				args = {
 					"sergeant",
 					"explicator",
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_armoury_refectory_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_armoury_refectory_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1002,15 +1002,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_armoury_refectory_a",
-				},
+					"mission_armoury_refectory_a"
+				}
 			},
 			{
 				"user_context",
@@ -1019,19 +1019,19 @@ return function ()
 				args = {
 					"enemy_nemesis_wolfer",
 					"contract_vendor",
-					"shipmistress",
-				},
-			},
+					"shipmistress"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1047,15 +1047,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_armoury_refectory_b",
-				},
+					"mission_armoury_refectory_b"
+				}
 			},
 			{
 				"user_context",
@@ -1064,19 +1064,19 @@ return function ()
 				args = {
 					"enemy_wolfer_adjutant",
 					"purser",
-					"shipmistress",
-				},
-			},
+					"shipmistress"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1092,13 +1092,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_armoury_rivals_a",
+				"mission_armoury_rivals_a"
 			},
 			{
 				"user_context",
@@ -1108,27 +1108,27 @@ return function ()
 					"sergeant",
 					"enemy_nemesis_wolfer",
 					"contract_vendor",
-					"shipmistress",
-				},
+					"shipmistress"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_armoury_rivals_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_armoury_rivals_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1144,13 +1144,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_armoury_roof_opened_a",
+				"mission_armoury_roof_opened_a"
 			},
 			{
 				"user_context",
@@ -1159,27 +1159,27 @@ return function ()
 				args = {
 					"sergeant",
 					"explicator",
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_armoury_roof_opened_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_armoury_roof_opened_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1195,13 +1195,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_armoury_rooftops_a",
+				"mission_armoury_rooftops_a"
 			},
 			{
 				"user_context",
@@ -1210,27 +1210,27 @@ return function ()
 				args = {
 					"sergeant",
 					"shipmistress",
-					"purser",
-				},
+					"purser"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_armoury_rooftops_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_armoury_rooftops_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1246,15 +1246,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_armoury_rooftops_a",
-				},
+					"mission_armoury_rooftops_a"
+				}
 			},
 			{
 				"user_context",
@@ -1263,14 +1263,14 @@ return function ()
 				args = {
 					"enemy_nemesis_wolfer",
 					"explicator",
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1286,15 +1286,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_armoury_rooftops_b",
-				},
+					"mission_armoury_rooftops_b"
+				}
 			},
 			{
 				"user_context",
@@ -1303,14 +1303,14 @@ return function ()
 				args = {
 					"enemy_wolfer_adjutant",
 					"purser",
-					"shipmistress",
-				},
-			},
+					"shipmistress"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1326,15 +1326,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_armoury_rooftops_c",
-				},
+					"mission_armoury_rooftops_c"
+				}
 			},
 			{
 				"user_context",
@@ -1343,14 +1343,14 @@ return function ()
 				args = {
 					"sergeant",
 					"contract_vendor",
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1366,29 +1366,29 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_armoury_rooftops_d",
-				},
+					"mission_armoury_rooftops_d"
+				}
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1404,13 +1404,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_armoury_second_breach_a",
+				"mission_armoury_second_breach_a"
 			},
 			{
 				"user_context",
@@ -1419,27 +1419,27 @@ return function ()
 				args = {
 					"sergeant",
 					"explicator",
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_armoury_second_breach_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_armoury_second_breach_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "disabled",
-		},
+			target = "disabled"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1455,13 +1455,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_armoury_side_streets_01_a",
+				"mission_armoury_side_streets_01_a"
 			},
 			{
 				"user_context",
@@ -1470,27 +1470,27 @@ return function ()
 				args = {
 					"enemy_nemesis_wolfer",
 					"explicator",
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_armoury_side_streets_01_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_armoury_side_streets_01_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1506,15 +1506,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_armoury_side_streets_01_a",
-				},
+					"mission_armoury_side_streets_01_a"
+				}
 			},
 			{
 				"user_context",
@@ -1523,19 +1523,19 @@ return function ()
 				args = {
 					"enemy_wolfer_adjutant",
 					"contract_vendor",
-					"shipmistress",
-				},
-			},
+					"shipmistress"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1551,15 +1551,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_armoury_side_streets_01_b",
-				},
+					"mission_armoury_side_streets_01_b"
+				}
 			},
 			{
 				"user_context",
@@ -1568,19 +1568,19 @@ return function ()
 				args = {
 					"sergeant",
 					"purser",
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1596,13 +1596,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_armoury_side_streets_02_a",
+				"mission_armoury_side_streets_02_a"
 			},
 			{
 				"user_context",
@@ -1611,27 +1611,27 @@ return function ()
 				args = {
 					"enemy_nemesis_wolfer",
 					"explicator",
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_armoury_side_streets_02_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_armoury_side_streets_02_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1647,15 +1647,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_armoury_side_streets_02_a",
-				},
+					"mission_armoury_side_streets_02_a"
+				}
 			},
 			{
 				"user_context",
@@ -1665,19 +1665,19 @@ return function ()
 					"enemy_wolfer_adjutant",
 					"contract_vendor",
 					"purser",
-					"shipmistress",
-				},
-			},
+					"shipmistress"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1693,15 +1693,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_armoury_side_streets_02_b",
-				},
+					"mission_armoury_side_streets_02_b"
+				}
 			},
 			{
 				"user_context",
@@ -1711,19 +1711,19 @@ return function ()
 					"enemy_nemesis_wolfer",
 					"contract_vendor",
 					"purser",
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -1736,7 +1736,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
@@ -1744,19 +1744,19 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"mission_armoury_side_streets_01_c",
-					"mission_armoury_side_streets_02_c",
-				},
-			},
+					"mission_armoury_side_streets_02_c"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1772,13 +1772,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_armoury_stims_a",
+				"mission_armoury_stims_a"
 			},
 			{
 				"user_context",
@@ -1787,27 +1787,27 @@ return function ()
 				args = {
 					"sergeant",
 					"explicator",
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_armoury_stims_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_armoury_stims_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1823,15 +1823,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_armoury_stims_a",
-				},
+					"mission_armoury_stims_a"
+				}
 			},
 			{
 				"user_context",
@@ -1840,19 +1840,19 @@ return function ()
 				args = {
 					"enemy_wolfer_adjutant",
 					"purser",
-					"shipmistress",
-				},
-			},
+					"shipmistress"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1868,15 +1868,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_armoury_stims_b",
-				},
+					"mission_armoury_stims_b"
+				}
 			},
 			{
 				"user_context",
@@ -1885,19 +1885,19 @@ return function ()
 				args = {
 					"enemy_nemesis_wolfer",
 					"contract_vendor",
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1913,15 +1913,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_armoury_stims_c",
-				},
+					"mission_armoury_stims_c"
+				}
 			},
 			{
 				"user_context",
@@ -1930,19 +1930,19 @@ return function ()
 				args = {
 					"sergeant",
 					"purser",
-					"shipmistress",
-				},
-			},
+					"shipmistress"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1958,13 +1958,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info",
+				"mission_info"
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_armoury_survival_mid_a",
+				"mission_armoury_survival_mid_a"
 			},
 			{
 				"user_context",
@@ -1973,27 +1973,27 @@ return function ()
 				args = {
 					"enemy_nemesis_wolfer",
 					"contract_vendor",
-					"tech_priest",
-				},
+					"tech_priest"
+				}
 			},
 			{
 				"faction_memory",
 				"mission_armoury_survival_mid_a",
 				OP.EQ,
-				0,
-			},
+				0
+			}
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_armoury_survival_mid_a",
 				OP.ADD,
-				1,
-			},
+				1
+			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers",
-		},
+			target = "mission_givers"
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2009,15 +2009,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_armoury_survival_mid_a",
-				},
+					"mission_armoury_survival_mid_a"
+				}
 			},
 			{
 				"user_context",
@@ -2026,19 +2026,19 @@ return function ()
 				args = {
 					"enemy_wolfer_adjutant",
 					"purser",
-					"shipmistress",
-				},
-			},
+					"shipmistress"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_givers",
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2054,15 +2054,15 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak",
+				"heard_speak"
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_armoury_survival_mid_b",
-				},
+					"mission_armoury_survival_mid_b"
+				}
 			},
 			{
 				"user_context",
@@ -2071,18 +2071,18 @@ return function ()
 				args = {
 					"enemy_nemesis_wolfer",
 					"explicator",
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2,
-			},
-		},
+				duration = 0.2
+			}
+		}
 	})
 end

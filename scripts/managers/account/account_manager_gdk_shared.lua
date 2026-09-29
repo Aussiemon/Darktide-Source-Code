@@ -8,7 +8,7 @@ AccountManagerGDKShared.is_owner_of = function (self, product_id)
 
 	if not async_job then
 		return Promise.rejected({
-			message = string.format("acquire_license_for_durables_async returned error_code=0x%x", error_code),
+			message = string.format("acquire_license_for_durables_async returned error_code=0x%x", error_code)
 		})
 	end
 
@@ -21,14 +21,14 @@ AccountManagerGDKShared.is_owner_of = function (self, product_id)
 
 		if result ~= nil then
 			return {
-				is_owner = result,
+				is_owner = result
 			}
 		end
 
 		Log.info("AccountManagerGDKShared", "ACQUIRE LICENSE RESULT for '%s' resulted in error '%x'", product_id, error_code)
 
 		return {
-			is_owner = false,
+			is_owner = false
 		}
 	end)
 end

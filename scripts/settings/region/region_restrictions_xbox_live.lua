@@ -7,32 +7,32 @@ local RegionRestrictionsXboxLive = {
 		[restrictions.ragdoll_interaction] = true,
 		[restrictions.visible_minion_wounds] = false,
 		[restrictions.gibbing] = false,
-		[restrictions.blood_decals] = false,
+		[restrictions.blood_decals] = false
 	},
 	["040"] = {
 		[restrictions.ragdoll_interaction] = true,
 		[restrictions.visible_minion_wounds] = false,
 		[restrictions.gibbing] = false,
-		[restrictions.blood_decals] = false,
+		[restrictions.blood_decals] = false
 	},
 	de = {
 		[restrictions.ragdoll_interaction] = true,
 		[restrictions.visible_minion_wounds] = false,
 		[restrictions.gibbing] = false,
-		[restrictions.blood_decals] = false,
+		[restrictions.blood_decals] = false
 	},
 	["276"] = {
 		[restrictions.ragdoll_interaction] = true,
 		[restrictions.visible_minion_wounds] = false,
 		[restrictions.gibbing] = false,
-		[restrictions.blood_decals] = false,
+		[restrictions.blood_decals] = false
 	},
 	unknown = {
 		[restrictions.ragdoll_interaction] = true,
 		[restrictions.visible_minion_wounds] = true,
 		[restrictions.gibbing] = true,
-		[restrictions.blood_decals] = true,
-	},
+		[restrictions.blood_decals] = true
+	}
 }
 
 return settings("RegionRestrictionsXboxLive", RegionRestrictionsXboxLive)

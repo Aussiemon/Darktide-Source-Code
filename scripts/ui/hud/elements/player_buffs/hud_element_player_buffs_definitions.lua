@@ -13,13 +13,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			1125,
-			80,
+			80
 		},
 		position = {
 			550,
 			-50,
-			1,
-		},
+			1
+		}
 	},
 	buff = {
 		horizontal_alignment = "left",
@@ -27,14 +27,14 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			38,
-			38,
+			38
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local text_style = table.clone(UIFontSettings.hud_body)
 
@@ -44,12 +44,12 @@ text_style.text_horizontal_alignment = "center"
 text_style.text_vertical_alignment = "bottom"
 text_style.size = {
 	0,
-	38,
+	38
 }
 text_style.offset = {
 	-2,
 	2,
-	7,
+	7
 }
 text_style.drop_shadow = true
 
@@ -65,7 +65,7 @@ local buff_widget_definition = UIWidget.create_definition({
 			local text = content.text
 
 			return text ~= nil
-		end,
+		end
 	},
 	{
 		pass_type = "rect",
@@ -75,25 +75,25 @@ local buff_widget_definition = UIWidget.create_definition({
 			vertical_alignment = "bottom",
 			size = {
 				0,
-				19,
+				19
 			},
 			color = {
 				150,
 				0,
 				0,
-				0,
+				0
 			},
 			offset = {
 				-1,
 				-1,
-				5,
-			},
+				5
+			}
 		},
 		visibility_function = function (content, style)
 			local text = content.text
 
 			return text ~= nil
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -103,29 +103,29 @@ local buff_widget_definition = UIWidget.create_definition({
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
 			material_values = {
-				opacity = 1,
+				opacity = 1
 			},
 			size = {
 				59,
-				59,
+				59
 			},
 			offset = {
 				0,
 				0,
-				1,
+				1
 			},
 			color = {
 				150,
 				0,
 				0,
-				0,
-			},
+				0
+			}
 		},
 		change_function = function (content, style)
 			local opacity = content.opacity
 
 			style.material_values.opacity = opacity or 1
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -136,23 +136,23 @@ local buff_widget_definition = UIWidget.create_definition({
 			vertical_alignment = "center",
 			material_values = {
 				opacity = 1,
-				progress = 1,
+				progress = 1
 			},
 			size = {
 				38,
-				38,
+				38
 			},
 			offset = {
 				0,
 				0,
-				0,
+				0
 			},
 			color = {
 				150,
 				102,
 				102,
-				102,
-			},
+				102
+			}
 		},
 		change_function = function (content, style)
 			local duration_progress = content.duration_progress
@@ -162,8 +162,8 @@ local buff_widget_definition = UIWidget.create_definition({
 			local opacity = content.opacity
 
 			style.material_values.opacity = opacity or 1
-		end,
-	},
+		end
+	}
 }, "buff")
 
 for i = 1, MAX_BUFFS do
@@ -178,5 +178,5 @@ return {
 	animations = animations,
 	buff_widget_definition = buff_widget_definition,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

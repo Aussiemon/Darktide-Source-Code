@@ -13,7 +13,7 @@ local sound_data = {
 		vce_grunt = "wwise/events/minions/play_enemy_cultist_shocktrooper_a__hurt_vce",
 		vce_hurt = "wwise/events/minions/play_enemy_cultist_shocktrooper_a__hurt_vce",
 		vce_melee_attack_short = "wwise/events/minions/play_enemy_cultist_shocktrooper_a__melee_attack_vce",
-		vce_stagger = "wwise/events/minions/play_enemy_cultist_shocktrooper_a__stagger_vce",
+		vce_stagger = "wwise/events/minions/play_enemy_cultist_shocktrooper_a__stagger_vce"
 	},
 	use_proximity_culling = {
 		footstep = false,
@@ -21,8 +21,8 @@ local sound_data = {
 		stop_vce = false,
 		vce_death = false,
 		vce_hurt = false,
-		vce_melee_attack_short = false,
-	},
+		vce_melee_attack_short = false
+	}
 }
 
 table.add_missing(sound_data.events, RenegadeCommonSounds.events)

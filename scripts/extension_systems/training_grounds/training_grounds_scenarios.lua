@@ -8,9 +8,9 @@ local post_ui_removed_transition_start_delay = 1.8
 
 scenarios.default = {
 	steps = {
-		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "basic_training"),
+		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "basic_training")
 	},
-	cleanup = {},
+	cleanup = {}
 }
 scenarios.basic_training = {
 	steps = {
@@ -22,9 +22,9 @@ scenarios.basic_training = {
 		TrainingGroundsSteps.make_player_invulnerable,
 		TrainingGroundsSteps.basic_training,
 		TrainingGroundsSteps.dynamic.delay(5),
-		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "attack_chains"),
+		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "attack_chains")
 	},
-	cleanup = {},
+	cleanup = {}
 }
 scenarios.attack_chains = {
 	steps = {
@@ -48,12 +48,12 @@ scenarios.attack_chains = {
 		TrainingGroundsSteps.dynamic.delay(post_scenario_complete_ui_remove_delay),
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),
-		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "attack_chains_heavy"),
+		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "attack_chains_heavy")
 	},
 	cleanup = {
 		TrainingGroundsSteps.cleanup_ragdolls,
-		TrainingGroundsSteps.hide_prompt,
-	},
+		TrainingGroundsSteps.hide_prompt
+	}
 }
 scenarios.attack_chains_heavy = {
 	steps = {
@@ -77,12 +77,12 @@ scenarios.attack_chains_heavy = {
 		TrainingGroundsSteps.dynamic.delay(post_scenario_complete_ui_remove_delay),
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),
-		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "weapon_special"),
+		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "weapon_special")
 	},
 	cleanup = {
 		TrainingGroundsSteps.cleanup_ragdolls,
-		TrainingGroundsSteps.hide_prompt,
-	},
+		TrainingGroundsSteps.hide_prompt
+	}
 }
 scenarios.weapon_special = {
 	steps = {
@@ -116,12 +116,12 @@ scenarios.weapon_special = {
 		TrainingGroundsSteps.dynamic.delay(post_scenario_complete_ui_remove_delay),
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),
-		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "push"),
+		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "push")
 	},
 	cleanup = {
 		TrainingGroundsSteps.cleanup_ragdolls,
-		TrainingGroundsSteps.hide_prompt,
-	},
+		TrainingGroundsSteps.hide_prompt
+	}
 }
 scenarios.push = {
 	steps = {
@@ -151,13 +151,13 @@ scenarios.push = {
 		TrainingGroundsSteps.condition_elseif.archetype_is("cryptic"),
 		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "cryptic_cooldown_regen"),
 		TrainingGroundsSteps.condition_end,
-		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "ranged_grenade"),
+		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "ranged_grenade")
 	},
 	cleanup = {
 		TrainingGroundsSteps.push_clean_enemies,
 		TrainingGroundsSteps.cleanup_ragdolls,
-		TrainingGroundsSteps.hide_prompt,
-	},
+		TrainingGroundsSteps.hide_prompt
+	}
 }
 scenarios.ranged_grenade = {
 	steps = {
@@ -193,13 +193,13 @@ scenarios.ranged_grenade = {
 		TrainingGroundsSteps.dynamic.delay(post_scenario_complete_ui_remove_delay),
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),
-		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "combat_ability"),
+		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "combat_ability")
 	},
 	cleanup = {
 		TrainingGroundsSteps.cleanup_ragdolls,
 		TrainingGroundsSteps.hide_prompt,
-		TrainingGroundsSteps.dynamic.set_grenade_count(0),
-	},
+		TrainingGroundsSteps.dynamic.set_grenade_count(0)
+	}
 }
 scenarios.biomancer_blitz = {
 	steps = {
@@ -213,12 +213,12 @@ scenarios.biomancer_blitz = {
 		TrainingGroundsSteps.dynamic.delay(2),
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),
-		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "combat_ability"),
+		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "combat_ability")
 	},
 	cleanup = {
 		TrainingGroundsSteps.cleanup_ragdolls,
-		TrainingGroundsSteps.hide_prompt,
-	},
+		TrainingGroundsSteps.hide_prompt
+	}
 }
 scenarios.cryptic_cooldown_regen = {
 	steps = {
@@ -235,13 +235,13 @@ scenarios.cryptic_cooldown_regen = {
 		TrainingGroundsSteps.dynamic.delay(2),
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),
-		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "combat_ability"),
+		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "combat_ability")
 	},
 	cleanup = {
 		TrainingGroundsSteps.generic_dissolve_scenario_enemies,
 		TrainingGroundsSteps.cleanup_ragdolls,
-		TrainingGroundsSteps.hide_prompt,
-	},
+		TrainingGroundsSteps.hide_prompt
+	}
 }
 scenarios.combat_ability = {
 	steps = {
@@ -319,13 +319,13 @@ scenarios.combat_ability = {
 		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "cryptic_servo_skull_blitz"),
 		TrainingGroundsSteps.condition_else,
 		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "dodging"),
-		TrainingGroundsSteps.condition_end,
+		TrainingGroundsSteps.condition_end
 	},
 	cleanup = {
 		TrainingGroundsSteps.generic_dissolve_scenario_enemies,
 		TrainingGroundsSteps.cleanup_ragdolls,
-		TrainingGroundsSteps.hide_prompt,
-	},
+		TrainingGroundsSteps.hide_prompt
+	}
 }
 scenarios.cryptic_servo_skull_blitz = {
 	steps = {
@@ -359,13 +359,13 @@ scenarios.cryptic_servo_skull_blitz = {
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),
 		TrainingGroundsSteps.dynamic.set_ability_enabled("grenade_ability", false, false),
-		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "dodging"),
+		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "dodging")
 	},
 	cleanup = {
 		TrainingGroundsSteps.cleanup_ragdolls,
 		TrainingGroundsSteps.adamant_companion_despawn,
-		TrainingGroundsSteps.hide_prompt,
-	},
+		TrainingGroundsSteps.hide_prompt
+	}
 }
 scenarios.adamant_companion_targeting = {
 	steps = {
@@ -381,13 +381,13 @@ scenarios.adamant_companion_targeting = {
 		TrainingGroundsSteps.dynamic.delay(post_scenario_complete_ui_remove_delay),
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),
-		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "dodging"),
+		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "dodging")
 	},
 	cleanup = {
 		TrainingGroundsSteps.cleanup_ragdolls,
 		TrainingGroundsSteps.adamant_companion_despawn,
-		TrainingGroundsSteps.hide_prompt,
-	},
+		TrainingGroundsSteps.hide_prompt
+	}
 }
 scenarios.dodging = {
 	steps = {
@@ -411,12 +411,12 @@ scenarios.dodging = {
 		TrainingGroundsSteps.dynamic.delay(post_scenario_complete_ui_remove_delay),
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),
-		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "toughness_pre"),
+		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "toughness_pre")
 	},
 	cleanup = {
 		TrainingGroundsSteps.cleanup_ragdolls,
-		TrainingGroundsSteps.hide_prompt,
-	},
+		TrainingGroundsSteps.hide_prompt
+	}
 }
 scenarios.toughness_pre = {
 	steps = {
@@ -432,14 +432,14 @@ scenarios.toughness_pre = {
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),
 		TrainingGroundsSteps.make_player_invulnerable,
-		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "toughness"),
+		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "toughness")
 	},
 	cleanup = {
 		TrainingGroundsSteps.make_player_invulnerable,
 		TrainingGroundsSteps.cleanup_ragdolls,
 		TrainingGroundsSteps.hide_prompt,
-		TrainingGroundsSteps.dynamic.set_ability_enabled("grenade_ability", true, false),
-	},
+		TrainingGroundsSteps.dynamic.set_ability_enabled("grenade_ability", true, false)
+	}
 }
 scenarios.toughness = {
 	steps = {
@@ -471,13 +471,13 @@ scenarios.toughness = {
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),
 		TrainingGroundsSteps.dynamic.set_ability_enabled("combat_ability", true, true),
-		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "part_1_completed"),
+		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "part_1_completed")
 	},
 	cleanup = {
 		TrainingGroundsSteps.cleanup_ragdolls,
 		TrainingGroundsSteps.hide_prompt,
-		TrainingGroundsSteps.dynamic.set_ability_enabled("grenade_ability", true, false),
-	},
+		TrainingGroundsSteps.dynamic.set_ability_enabled("grenade_ability", true, false)
+	}
 }
 scenarios.part_1_completed = {
 	steps = {
@@ -486,9 +486,9 @@ scenarios.part_1_completed = {
 		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "advanced_training"),
 		TrainingGroundsSteps.condition_else,
 		TrainingGroundsSteps.trigger_training_complete,
-		TrainingGroundsSteps.condition_end,
+		TrainingGroundsSteps.condition_end
 	},
-	cleanup = {},
+	cleanup = {}
 }
 scenarios.advanced_training = {
 	steps = {
@@ -496,9 +496,9 @@ scenarios.advanced_training = {
 		TrainingGroundsSteps.make_player_invulnerable,
 		TrainingGroundsSteps.dynamic.set_ability_enabled("combat_ability", false, true),
 		TrainingGroundsSteps.dynamic.delay(2),
-		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "armor_types"),
+		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "armor_types")
 	},
-	cleanup = {},
+	cleanup = {}
 }
 scenarios.armor_types = {
 	steps = {
@@ -522,12 +522,12 @@ scenarios.armor_types = {
 		TrainingGroundsSteps.dynamic.delay(post_scenario_complete_ui_remove_delay),
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),
-		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "push_follow"),
+		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "push_follow")
 	},
 	cleanup = {
 		TrainingGroundsSteps.cleanup_ragdolls,
-		TrainingGroundsSteps.hide_prompt,
-	},
+		TrainingGroundsSteps.hide_prompt
+	}
 }
 scenarios.push_follow = {
 	steps = {
@@ -550,12 +550,12 @@ scenarios.push_follow = {
 		TrainingGroundsSteps.dynamic.delay(post_scenario_complete_ui_remove_delay),
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),
-		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "healing_self_and_others"),
+		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "healing_self_and_others")
 	},
 	cleanup = {
 		TrainingGroundsSteps.cleanup_ragdolls,
-		TrainingGroundsSteps.hide_prompt,
-	},
+		TrainingGroundsSteps.hide_prompt
+	}
 }
 scenarios.healing_self_and_others = {
 	steps = {
@@ -584,13 +584,13 @@ scenarios.healing_self_and_others = {
 		TrainingGroundsSteps.dynamic.delay(post_scenario_complete_ui_remove_delay),
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),
-		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "reviving"),
+		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "reviving")
 	},
 	cleanup = {
 		TrainingGroundsSteps.cleanup_ragdolls,
 		TrainingGroundsSteps.hide_prompt,
-		TrainingGroundsSteps.health_and_ammo_cleanup,
-	},
+		TrainingGroundsSteps.health_and_ammo_cleanup
+	}
 }
 scenarios.reviving = {
 	steps = {
@@ -614,14 +614,14 @@ scenarios.reviving = {
 		TrainingGroundsSteps.reviving_spawn_health_station,
 		TrainingGroundsSteps.dynamic.delay(2),
 		TrainingGroundsSteps.hide_prompt,
-		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "tagging"),
+		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "tagging")
 	},
 	cleanup = {
 		TrainingGroundsSteps.reviving_cleanup,
 		TrainingGroundsSteps.cleanup_ragdolls,
 		TrainingGroundsSteps.hide_prompt,
-		TrainingGroundsSteps.remove_all_bots,
-	},
+		TrainingGroundsSteps.remove_all_bots
+	}
 }
 scenarios.tagging = {
 	steps = {
@@ -633,12 +633,12 @@ scenarios.tagging = {
 		TrainingGroundsSteps.dynamic.delay(post_scenario_complete_ui_remove_delay),
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),
-		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "sprint_slide"),
+		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "sprint_slide")
 	},
 	cleanup = {
 		TrainingGroundsSteps.cleanup_ragdolls,
-		TrainingGroundsSteps.hide_prompt,
-	},
+		TrainingGroundsSteps.hide_prompt
+	}
 }
 scenarios.sprint_slide = {
 	steps = {
@@ -673,14 +673,14 @@ scenarios.sprint_slide = {
 		TrainingGroundsSteps.dynamic.delay(post_scenario_complete_ui_remove_delay),
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),
-		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "ranged_suppression"),
+		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "ranged_suppression")
 	},
 	cleanup = {
 		TrainingGroundsSteps.dynamic.set_ability_enabled("grenade_ability", true, false),
 		TrainingGroundsSteps.sprint_dodge_cleanup,
 		TrainingGroundsSteps.cleanup_ragdolls,
-		TrainingGroundsSteps.hide_prompt,
-	},
+		TrainingGroundsSteps.hide_prompt
+	}
 }
 scenarios.ranged_suppression = {
 	steps = {
@@ -703,13 +703,13 @@ scenarios.ranged_suppression = {
 		TrainingGroundsSteps.dynamic.delay(post_scenario_complete_ui_remove_delay),
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),
-		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "incoming_suppression"),
+		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "incoming_suppression")
 	},
 	cleanup = {
 		TrainingGroundsSteps.dynamic.set_ability_enabled("grenade_ability", true, false),
 		TrainingGroundsSteps.cleanup_ragdolls,
-		TrainingGroundsSteps.hide_prompt,
-	},
+		TrainingGroundsSteps.hide_prompt
+	}
 }
 scenarios.incoming_suppression = {
 	steps = {
@@ -740,13 +740,13 @@ scenarios.incoming_suppression = {
 		TrainingGroundsSteps.dynamic.trigger_vo_event("training_end_advanced"),
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),
-		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "end_of_training_grounds"),
+		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "end_of_training_grounds")
 	},
 	cleanup = {
 		TrainingGroundsSteps.cleanup_ragdolls,
 		TrainingGroundsSteps.cleanup_incoming_suppression,
-		TrainingGroundsSteps.hide_prompt,
-	},
+		TrainingGroundsSteps.hide_prompt
+	}
 }
 scenarios.end_of_training_grounds = {
 	steps = {
@@ -771,11 +771,11 @@ scenarios.end_of_training_grounds = {
 		TrainingGroundsSteps.dynamic.add_scenario_buff("tg_player_unperceivable"),
 		TrainingGroundsSteps.end_of_tg_prompt,
 		TrainingGroundsSteps.end_of_tg_loop,
-		TrainingGroundsSteps.trigger_training_complete,
+		TrainingGroundsSteps.trigger_training_complete
 	},
 	cleanup = {
-		TrainingGroundsSteps.cleanup_ragdolls,
-	},
+		TrainingGroundsSteps.cleanup_ragdolls
+	}
 }
 
 for name, scenario_template in pairs(scenarios) do

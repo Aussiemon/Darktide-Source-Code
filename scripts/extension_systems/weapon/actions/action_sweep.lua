@@ -28,6 +28,7 @@ local SweepSplineExported = require("scripts/extension_systems/weapon/actions/ut
 local SweepStickyness = require("scripts/utilities/action/sweep_stickyness")
 local Weakspot = require("scripts/utilities/attack/weakspot")
 local WieldableSlotScripts = require("scripts/extension_systems/visual_loadout/utilities/wieldable_slot_scripts")
+local ProjectileLocomotion = require("scripts/extension_systems/locomotion/utilities/projectile_locomotion")
 local attack_results = AttackSettings.attack_results
 local buff_group_keywords = BuffSettings.group_keywords
 local buff_keywords = BuffSettings.keywords
@@ -38,8 +39,8 @@ local BROADPHASE_RESULTS = {}
 local _on_chain_node_add_func, _on_chain_node_remove_func
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local POWERED_WWISE_SWITCH = {
-	[false] = "false",
 	[true] = "true",
+	[false] = "false"
 }
 local _dot
 
@@ -156,7 +157,7 @@ ActionSweep.init = function (self, action_context, action_params, action_setting
 				hit_distance = 0,
 				hit_actor = ActorBox(),
 				hit_position = Vector3Box(),
-				hit_normal = Vector3Box(),
+				hit_normal = Vector3Box()
 			}
 		end
 	end
@@ -168,13 +169,18 @@ ActionSweep.init = function (self, action_context, action_params, action_setting
 	local visual_loadout_extension = ScriptUnit.has_extension(self._player_unit, "visual_loadout_system")
 
 	self._wieldable_slot_scripts = visual_loadout_extension:current_wielded_slot_scripts()
+
+	local collision_settings = action_settings.collision_settings
+
+	self._collision_filter = collision_settings and collision_settings.filter or "filter_player_character_melee_sweep"
+	self._ignore_self_on_collision = collision_settings and collision_settings.ignore_self
 end
 
 ActionSweep._init_splines = function (self, action_settings)
 	local sweeps = action_settings.sweeps
 	local sweep_process_mode = action_settings.sweep_process_mode or ActionSweepSettings.multi_sweep_process_mode.shared
 	local hit_units = {
-		{},
+		{}
 	}
 	local uses_matrix_data = false
 	local all_sweeps_aborted_mask = 1
@@ -314,6 +320,7 @@ ActionSweep._reset_sweep_component = function (self)
 	action_sweep_component.sweep_aborted_unit = nil
 	action_sweep_component.sweep_aborted_actor_index = nil
 	action_sweep_component.is_sticky = false
+	action_sweep_component.sticky_start_orientation = Quaternion.identity()
 	action_sweep_component.attack_direction = Vector3.zero()
 	action_sweep_component.sweep_state = "before_damage_window"
 end
@@ -350,7 +357,9 @@ ActionSweep._calculate_max_hit_mass = function (self, damage_profile, power_leve
 	return math.max(max_hit_mass_attack, max_hit_mass_impact)
 end
 
-ActionSweep.server_correction_occurred = function (self)
+ActionSweep.server_correction_occurred = function (self, ...)
+	ActionSweep.super.server_correction_occurred(self, ...)
+
 	for i = 1, #self._hit_units do
 		table.clear(self._hit_units[i])
 	end
@@ -608,6 +617,7 @@ ActionSweep._start_hit_stickyness = function (self, hit_stickyness_settings, t, 
 
 	action_sweep_component.is_sticky = true
 	action_sweep_component.attack_direction = attack_direction
+	action_sweep_component.sticky_start_orientation = self._first_person_component.rotation
 
 	local stick_to_unit = action_sweep_component.sweep_aborted_unit
 	local buff_to_add = hit_stickyness_settings.buff_to_add
@@ -704,7 +714,7 @@ end
 
 local stickyness_impact_fx_data = {
 	will_be_predicted = true,
-	source_parameters = {},
+	source_parameters = {}
 }
 
 ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_component, hit_stickyness_settings)
@@ -1314,7 +1324,7 @@ ActionSweep._current_max_hit_mass = function (self, weapon_action_component)
 end
 
 local attack_intensities = {
-	ranged = 15,
+	ranged = 15
 }
 
 ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, action_settings, hit_position, attack_direction, hit_zone_name_or_nil, hit_normal, sweep_index)
@@ -1449,6 +1459,8 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 		self:_try_make_chain_from_sweep_hit(hit_unit, result, abort_attack, t)
 	end
 
+	ProjectileLocomotion.register_sweep_hit(hit_unit, player_unit, self._first_person_component, attack_direction, damage_profile, t)
+
 	return abort_attack, armor_aborts_attack
 end
 
@@ -1456,8 +1468,8 @@ local impact_fx_data = {
 	will_be_predicted = true,
 	source_parameters = {
 		hit_mass_percentage = 0,
-		num_melee_hits = 0,
-	},
+		num_melee_hits = 0
+	}
 }
 
 ActionSweep._do_damage_to_unit = function (self, damage_profile, hit_unit, hit_actor, hit_position, hit_normal, attack_direction, target_index, num_hit_enemies, hit_zone_name_or_nil, abort_attack, amount_of_mass_hit, damage_type, is_special_active)
@@ -1508,7 +1520,7 @@ end
 ActionSweep._run_sphere_sweeps = function (self, start_position, end_position, action_settings)
 	local radius = action_settings.sphere_radius
 	local max_hits = 20
-	local collision_filter = "filter_player_character_melee_sweep"
+	local collision_filter = self._collision_filter
 	local results = PhysicsWorld.linear_sphere_sweep(self._physics_world, start_position, end_position, radius, max_hits, "collision_filter", collision_filter, "report_initial_overlap")
 	local num_results = 0
 
@@ -1527,7 +1539,7 @@ ActionSweep._run_sweeps = function (self, start_position, start_rotation, end_po
 	local modified_start_position = self:_modify_sweep_position(start_position, start_rotation, weapon_half_extents, action_settings)
 	local modified_end_position = self:_modify_sweep_position(end_position, end_rotation, weapon_half_extents, action_settings)
 	local weapon_cross_section = Vector3(weapon_half_extents.x, weapon_half_extents.y, 0.0001)
-	local collision_filter = "filter_player_character_melee_sweep"
+	local collision_filter = self._collision_filter
 	local physics_world = self._physics_world
 	local start_rotation_up_dir = Quaternion.up(start_rotation)
 	local sweep_1_start = modified_start_position - start_rotation_up_dir * weapon_half_length
@@ -1535,7 +1547,7 @@ ActionSweep._run_sweeps = function (self, start_position, start_rotation, end_po
 	local sweep_1_extents = weapon_cross_section
 	local sweep_1_rot = start_rotation
 	local max_num_hits1 = 5
-	local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player)
+	local rewind_ms = LagCompensation.rewind_miliseconds(self._is_server, self._is_local_unit, self._player)
 	local sweep_results1 = PhysicsWorld.linear_obb_sweep(physics_world, sweep_1_start, sweep_1_end, sweep_1_extents, sweep_1_rot, max_num_hits1, "collision_filter", collision_filter, "rewind_ms", rewind_ms, "report_initial_overlap")
 	local sweep_2_start = modified_start_position
 	local sweep_2_end = modified_end_position

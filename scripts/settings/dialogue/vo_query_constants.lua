@@ -6,7 +6,7 @@ local vo_query_constants = {
 		interaction_vo = "interaction_vo",
 		on_demand_com_wheel = "on_demand_com_wheel",
 		on_demand_vo_tag_enemy = "on_demand_vo_tag_enemy",
-		on_demand_vo_tag_item = "on_demand_vo_tag_item",
+		on_demand_vo_tag_item = "on_demand_vo_tag_item"
 	},
 	trigger_ids = {
 		com_wheel_vo_enemy_over_here = "location_enemy_there",
@@ -40,8 +40,8 @@ local vo_query_constants = {
 		smart_tag_vo_pickup_stimm_speed = "pup_stimm_speed",
 		smart_tag_vo_small_grenade = "pup_small_grenade",
 		smart_tag_vo_station_health = "station_health",
-		smart_tag_vo_station_health_without_battery = "station_health_without_battery",
-	},
+		smart_tag_vo_station_health_without_battery = "station_health_without_battery"
+	}
 }
 
 return vo_query_constants

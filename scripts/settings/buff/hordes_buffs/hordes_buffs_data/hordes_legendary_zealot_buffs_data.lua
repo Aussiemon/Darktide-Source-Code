@@ -15,9 +15,9 @@ hordes_legendary_zealot_buffs_data.hordes_buff_zealot_channel_heals_corruption =
 	buff_stats = {
 		health = {
 			format_type = "percentage",
-			value = 0.25,
-		},
-	},
+			value = 0.25
+		}
+	}
 }
 hordes_legendary_zealot_buffs_data.hordes_buff_zealot_shock_grenade_increase_next_hit_damage = {
 	description = "Stun grenades increases the damage done by the next damage taken when hit by 250%",
@@ -28,9 +28,9 @@ hordes_legendary_zealot_buffs_data.hordes_buff_zealot_shock_grenade_increase_nex
 	buff_stats = {
 		damage = {
 			format_type = "percentage",
-			value = 2.5,
-		},
-	},
+			value = 2.5
+		}
+	}
 }
 hordes_legendary_zealot_buffs_data.hordes_buff_zealot_fire_pulse_while_aiming_lunge = {
 	description = "Fury of the faithful create a ring of fire around the player until you charge forward",
@@ -38,7 +38,7 @@ hordes_legendary_zealot_buffs_data.hordes_buff_zealot_fire_pulse_while_aiming_lu
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/big_buffs/hordes_buff_zealot_fire_pulse_while_aiming_lunge",
 	title = "Unfaithfulls, follow my steps",
 	filter_category = filtering_categories.jackpot,
-	buff_stats = {},
+	buff_stats = {}
 }
 hordes_legendary_zealot_buffs_data.hordes_buff_zealot_lunge_hit_triggers_shout = {
 	description = "Fury of the faithful trigger voice of command on impact",
@@ -46,7 +46,7 @@ hordes_legendary_zealot_buffs_data.hordes_buff_zealot_lunge_hit_triggers_shout =
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/big_buffs/hordes_buff_zealot_lunge_hit_triggers_shout",
 	title = "Born a leader",
 	filter_category = filtering_categories.jackpot,
-	buff_stats = {},
+	buff_stats = {}
 }
 hordes_legendary_zealot_buffs_data.hordes_buff_zealot_regen_toughness_inside_fire_grenade = {
 	description = "Standing in the fire of a fire grenade regenerate 100% thoughness every 2 seconds",
@@ -57,13 +57,13 @@ hordes_legendary_zealot_buffs_data.hordes_buff_zealot_regen_toughness_inside_fir
 	buff_stats = {
 		thoughness = {
 			format_type = "percentage",
-			value = 1,
+			value = 1
 		},
 		time = {
 			format_type = "number",
-			value = 2,
-		},
-	},
+			value = 2
+		}
+	}
 }
 hordes_legendary_zealot_buffs_data.hordes_buff_zealot_knives_bleed_and_restore_thoughness_on_kill = {
 	description = "Throwing knife applies bleeding, if the target die while bleeding recover %thoughness = to stacks of bleeding remaining",
@@ -74,9 +74,9 @@ hordes_legendary_zealot_buffs_data.hordes_buff_zealot_knives_bleed_and_restore_t
 	buff_stats = {
 		thoughness = {
 			format_type = "percentage",
-			value = 0.15,
-		},
-	},
+			value = 0.15
+		}
+	}
 }
 hordes_legendary_zealot_buffs_data.hordes_buff_zealot_fire_trail_on_lunge = {
 	description = "Using your lunge ability burns enemies around you.",
@@ -84,7 +84,7 @@ hordes_legendary_zealot_buffs_data.hordes_buff_zealot_fire_trail_on_lunge = {
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/big_buffs/hordes_buff_zealot_fire_trail_on_lunge",
 	title = "Dolorean",
 	filter_category = filtering_categories.jackpot,
-	buff_stats = {},
+	buff_stats = {}
 }
 
 return hordes_legendary_zealot_buffs_data

@@ -10,7 +10,7 @@ WorldTestCases.load_mission = function (case_settings)
 		local settings = cjson.decode(case_settings or "{}")
 		local check_theme_loaded = settings.check_theme_loaded or false
 		local flags = settings.flags or {
-			"load_mission",
+			"load_mission"
 		}
 		local mission_key = settings.mission_key
 		local num_peers = settings.num_peers or 0
@@ -52,7 +52,7 @@ WorldTestCases.load_mission_circumstances = function (case_settings)
 		local check_theme_loaded = settings.check_theme_loaded ~= false
 		local flags = settings.flags or {
 			"load_mission",
-			"circumstances",
+			"circumstances"
 		}
 		local mission_name = settings.mission_name
 		local circumstances_to_test = settings.circumstances_to_test or nil
@@ -92,6 +92,7 @@ WorldTestCases.load_mission_circumstances = function (case_settings)
 		end
 
 		TestifySnippets.wait(2)
+		TestifySnippets.exit_to_main_menu_and_wait()
 	end)
 end
 
@@ -101,7 +102,7 @@ WorldTestCases.load_mission_side_missions = function (case_settings)
 		local check_theme_loaded = settings.check_theme_loaded or true
 		local flags = settings.flags or {
 			"load_mission",
-			"side_missions",
+			"side_missions"
 		}
 		local mission_name = settings.mission_name
 		local num_peers = settings.num_peers or 0
@@ -145,6 +146,7 @@ WorldTestCases.load_mission_side_missions = function (case_settings)
 		end
 
 		TestifySnippets.wait(2)
+		TestifySnippets.exit_to_main_menu_and_wait()
 	end)
 end
 
@@ -168,18 +170,47 @@ WorldTestCases.invalid_side_missions = function ()
 	end)
 end
 
+WorldTestCases.load_procgen_exp_missions = function (case_settings)
+	Testify:run_case(function (dt, t)
+		local speed = 20
+
+		TestifySnippets.skip_splash_and_title_screen()
+
+		local settings = cjson.decode(case_settings or "{}")
+		local mission_key = settings.mission_key
+		local output = TestifySnippets.mission_exists(mission_key)
+
+		if output then
+			return output
+		end
+
+		TestifySnippets.skip_main_menu()
+		TestifySnippets.load_mission(mission_key)
+		Testify:make_request("expedition_wait_until_location_ready")
+		TestifySnippets.wait(5)
+		Testify:make_request("expedition_start_next_location")
+
+		local expedition_store_path = Testify:make_request("expedition_store_path")
+
+		TestifySnippets.free_flight_camera_follow_path(expedition_store_path, speed)
+		Testify:make_request("expedition_wait_until_location_ready")
+		TestifySnippets.wait(5)
+		TestifySnippets.exit_to_main_menu_and_wait()
+	end)
+end
+
 WorldTestCases.screenshots_for_timelapse_videos = function (case_settings)
 	Testify:run_case(function (dt, t)
 		local result = ""
 		local settings = cjson.decode(case_settings or "{}")
 		local missions = settings.missions
 		local flags = {
-			"screenshot",
+			"screenshot"
 		}
 		local wait_time = 5
 		local screenshot_settings = settings.screenshot_settings or {
 			filetype = "png",
-			output_dir = "//filegw01.i.fatshark.se/tools/testify/screenshot_timelapse",
+			output_dir = "//filegw01.i.fatshark.se/tools/testify/screenshot_timelapse"
 		}
 		local output_dir = screenshot_settings.output_dir
 
@@ -259,6 +290,10 @@ WorldTestCases.test_triggers = function ()
 
 		result = result == "" and "Success" or result
 
+		if result ~= "Success" then
+			Testify.expect:fail("untriggered_triggers", result)
+		end
+
 		return result
 	end)
 end
@@ -294,7 +329,7 @@ local _fly_through_mission_by_mechanism = {
 
 		Testify.expect:is_not_nil("fly_through_mission", coordinates, string.format("Mission %s does not have flythrough coordinates.", mission_key))
 		TestifySnippets.free_flight_camera_follow_path(coordinates, speed)
-	end,
+	end
 }
 
 _fly_through_mission_by_mechanism.prologue = _fly_through_mission_by_mechanism.hub
@@ -317,5 +352,6 @@ WorldTestCases.check_isolated_islands = function (case_settings)
 		local has_islands = Testify:make_request("check_isolated_islands")
 
 		Testify.expect:is_true("has_islands", has_islands, "Level contains navmesh islands")
+		TestifySnippets.exit_to_main_menu_and_wait()
 	end)
 end

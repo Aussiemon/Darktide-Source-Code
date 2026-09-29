@@ -11,6 +11,7 @@ local CLIENT_RPCS = {
 	"rpc_interaction_set_missing_player",
 	"rpc_interaction_hot_join",
 	"rpc_interaction_set_electrified",
+	"rpc_interaction_set_display_start_event_override"
 }
 
 InteracteeSystem.init = function (self, ...)
@@ -73,6 +74,13 @@ InteracteeSystem.rpc_interaction_set_electrified = function (self, channel_id, u
 	local extension = self._unit_to_extension_map[unit]
 
 	extension:set_electrified(state)
+end
+
+InteracteeSystem.rpc_interaction_set_display_start_event_override = function (self, channel_id, unit_id, is_level_unit, display_override_or_nil)
+	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
+	local extension = self._unit_to_extension_map[unit]
+
+	extension:set_display_start_event_override(display_override_or_nil)
 end
 
 return InteracteeSystem

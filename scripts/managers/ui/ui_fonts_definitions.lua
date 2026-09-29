@@ -18,44 +18,44 @@ local definitions = {
 		mono_tide_regular = FONT_TYPES.sans_serif,
 		mono_tide_medium = FONT_TYPES.sans_serif,
 		mono_tide_bold = FONT_TYPES.sans_serif,
-		mono_tide_light = FONT_TYPES.sans_serif,
+		mono_tide_light = FONT_TYPES.sans_serif
 	},
 	locale_specific_fonts = {
 		ja = {
 			machine_medium = "noto_sans_jp_black",
 			package = "packages/ui/fonts/slug_ja",
 			[FONT_TYPES.sans_serif] = "noto_sans_jp_bold",
-			[FONT_TYPES.serif] = "noto_sans_jp_black",
+			[FONT_TYPES.serif] = "noto_sans_jp_black"
 		},
 		ko = {
 			machine_medium = "noto_sans_kr_black",
 			package = "packages/ui/fonts/slug_ko",
 			[FONT_TYPES.sans_serif] = "noto_sans_kr_bold",
-			[FONT_TYPES.serif] = "noto_sans_kr_black",
+			[FONT_TYPES.serif] = "noto_sans_kr_black"
 		},
 		ru = {
 			[FONT_TYPES.serif] = "friz_quadrata",
-			[FONT_TYPES.sans_serif] = "proxima_nova_bold",
+			[FONT_TYPES.sans_serif] = "proxima_nova_bold"
 		},
 		["zh-cn"] = {
 			machine_medium = "noto_sans_sc_black",
 			package = "packages/ui/fonts/slug_zh_cn",
 			[FONT_TYPES.sans_serif] = "noto_sans_sc_bold",
-			[FONT_TYPES.serif] = "noto_sans_sc_black",
+			[FONT_TYPES.serif] = "noto_sans_sc_black"
 		},
 		["zh-tw"] = {
 			machine_medium = "noto_sans_tc_black",
 			package = "packages/ui/fonts/slug_zh_tw",
 			[FONT_TYPES.sans_serif] = {
 				"noto_sans_tc_bold",
-				"noto_sans_sc_bold",
+				"noto_sans_sc_bold"
 			},
 			[FONT_TYPES.serif] = {
 				"noto_sans_tc_black",
-				"noto_sans_sc_black",
-			},
-		},
-	},
+				"noto_sans_sc_black"
+			}
+		}
+	}
 }
 
 return definitions

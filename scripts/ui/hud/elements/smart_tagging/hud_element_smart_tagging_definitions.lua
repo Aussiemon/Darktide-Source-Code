@@ -16,13 +16,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	line_pivot = {
 		horizontal_alignment = "center",
@@ -30,13 +30,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			100,
-			100,
+			100
 		},
 		position = {
 			200,
 			-180,
-			1,
-		},
+			1
+		}
 	},
 	background = {
 		horizontal_alignment = "center",
@@ -44,14 +44,14 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			250,
-			250,
+			250
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local hover_color = get_hud_color("color_tint_main_1", 255)
 local default_color = get_hud_color("color_tint_main_2", 255)
@@ -60,7 +60,7 @@ local icon_default_color = get_hud_color("color_tint_main_3", 255)
 local default_button_content = {
 	on_released_sound = nil,
 	on_hover_sound = UISoundEvents.default_mouse_hover,
-	on_pressed_sound = UISoundEvents.default_select,
+	on_pressed_sound = UISoundEvents.default_select
 }
 local simple_button_font_setting_name = "button_medium"
 local simple_button_font_settings = UIFontSettings[simple_button_font_setting_name]
@@ -69,7 +69,7 @@ local button_pass_template = {
 	{
 		content_id = "hotspot",
 		pass_type = "hotspot",
-		content = default_button_content,
+		content = default_button_content
 	},
 	{
 		pass_type = "texture",
@@ -80,14 +80,14 @@ local button_pass_template = {
 			vertical_alignment = "center",
 			size = {
 				128,
-				128,
+				128
 			},
 			offset = {
 				0,
 				0,
-				3,
+				3
 			},
-			color = get_hud_color("color_tint_main_2", 255),
+			color = get_hud_color("color_tint_main_2", 255)
 		},
 		change_function = function (content, style)
 			local color = style.color
@@ -96,7 +96,7 @@ local button_pass_template = {
 			local anim_hover_progress = hotspot.anim_hover_progress
 
 			ColorUtilities.color_lerp(icon_default_color, icon_hover_color, anim_hover_progress, color, ignore_alpha)
-		end,
+		end
 	},
 	{
 		pass_type = "rotated_texture",
@@ -106,14 +106,14 @@ local button_pass_template = {
 			vertical_alignment = "center",
 			size = {
 				190,
-				140,
+				140
 			},
 			offset = {
 				0,
 				0,
-				4,
+				4
 			},
-			color = get_hud_color("color_tint_main_1", 255),
+			color = get_hud_color("color_tint_main_1", 255)
 		},
 		change_function = function (content, style)
 			style.angle = math.pi + (content.angle or 0)
@@ -124,7 +124,7 @@ local button_pass_template = {
 			local anim_hover_progress = hotspot.anim_hover_progress
 
 			ColorUtilities.color_lerp(default_color, hover_color, anim_hover_progress, color, ignore_alpha)
-		end,
+		end
 	},
 	{
 		pass_type = "rotated_texture",
@@ -135,18 +135,18 @@ local button_pass_template = {
 			offset = {
 				0,
 				0,
-				2,
+				2
 			},
 			size = {
 				190,
-				140,
+				140
 			},
 			color = {
 				150,
 				0,
 				0,
-				0,
-			},
+				0
+			}
 		},
 		change_function = function (content, style)
 			style.angle = math.pi + (content.angle or 0)
@@ -157,7 +157,7 @@ local button_pass_template = {
 			local anim_hover_progress = hotspot.anim_hover_progress
 
 			ColorUtilities.color_lerp(icon_default_color, icon_hover_color, anim_hover_progress, color, ignore_alpha)
-		end,
+		end
 	},
 	{
 		pass_type = "rotated_texture",
@@ -167,18 +167,18 @@ local button_pass_template = {
 			vertical_alignment = "center",
 			size = {
 				190,
-				140,
+				140
 			},
 			color = {
 				150,
 				0,
 				0,
-				0,
-			},
+				0
+			}
 		},
 		change_function = function (content, style)
 			style.angle = math.pi + (content.angle or 0)
-		end,
+		end
 	},
 	{
 		pass_type = "rect",
@@ -187,17 +187,17 @@ local button_pass_template = {
 				200,
 				40,
 				40,
-				40,
+				40
 			},
 			offset = {
 				0,
 				0,
-				1,
-			},
+				1
+			}
 		},
 		change_function = function (content, style)
 			style.color[1] = math.max(content.hotspot.anim_hover_progress, content.hotspot.anim_select_progress) * 255
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -209,12 +209,12 @@ local button_pass_template = {
 			offset = {
 				0,
 				0,
-				2,
+				2
 			},
 			font_type = simple_button_font_settings.font_type,
 			font_size = simple_button_font_settings.font_size,
 			text_color = simple_button_font_color,
-			default_text_color = simple_button_font_color,
+			default_text_color = simple_button_font_color
 		},
 		change_function = function (content, style)
 			local default_text_color = style.default_text_color
@@ -224,8 +224,8 @@ local button_pass_template = {
 			text_color[2] = default_text_color[2] * progress
 			text_color[3] = default_text_color[3] * progress
 			text_color[4] = default_text_color[4] * progress
-		end,
-	},
+		end
+	}
 }
 local wheel_font_style = table.clone(UIFontSettings.hud_body)
 
@@ -237,7 +237,7 @@ wheel_font_style.text_vertical_alignment = "center"
 wheel_font_style.offset = {
 	0,
 	0,
-	4,
+	4
 }
 
 local widget_definitions = {
@@ -250,23 +250,23 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					250,
-					64,
+					64
 				},
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				color = {
 					120,
 					0,
 					0,
-					0,
-				},
+					0
+				}
 			},
 			visibility_function = function (content, style)
 				return content.force_hover
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -275,7 +275,7 @@ local widget_definitions = {
 			style = wheel_font_style,
 			visibility_function = function (content, style)
 				return content.force_hover
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -284,15 +284,15 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				color = {
 					255,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "rotated_texture",
@@ -303,18 +303,18 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					20,
-					28,
+					28
 				},
 				pivot = {
 					10,
-					147,
+					147
 				},
 				offset = {
 					0,
 					-133,
-					6,
+					6
 				},
-				color = get_hud_color("color_tint_main_1", 255),
+				color = get_hud_color("color_tint_main_1", 255)
 			},
 			change_function = function (content, style)
 				style.angle = math.pi - (content.angle or 0)
@@ -324,9 +324,9 @@ local widget_definitions = {
 				local anim_hover_progress = content.force_hover and 1 or 0
 
 				ColorUtilities.color_lerp(default_color, hover_color, anim_hover_progress, color, ignore_alpha)
-			end,
-		},
-	}, "background"),
+			end
+		}
+	}, "background")
 }
 local input_interact_text_style = table.clone(UIFontSettings.hud_body)
 
@@ -338,12 +338,12 @@ input_interact_text_style.text_color = {
 	255,
 	160,
 	160,
-	160,
+	160
 }
 input_interact_text_style.offset = {
 	0,
 	-28,
-	5,
+	5
 }
 
 local description_text_style = table.clone(UIFontSettings.hud_body)
@@ -355,7 +355,7 @@ description_text_style.text_vertical_alignment = "top"
 description_text_style.offset = {
 	0,
 	5,
-	5,
+	5
 }
 
 local interaction_line_definition = UIWidget.create_definition({
@@ -366,14 +366,14 @@ local interaction_line_definition = UIWidget.create_definition({
 		style = {
 			size = {
 				100,
-				4,
+				4
 			},
 			pivot = {
 				0,
-				2,
+				2
 			},
-			color = get_hud_color("color_tint_main_2", 255),
-		},
+			color = get_hud_color("color_tint_main_2", 255)
+		}
 	},
 	{
 		pass_type = "texture",
@@ -385,38 +385,38 @@ local interaction_line_definition = UIWidget.create_definition({
 			offset = {
 				-1,
 				0,
-				0,
+				0
 			},
 			size = {
 				400,
-				5,
+				5
 			},
 			size_addition = {
 				0,
-				0,
+				0
 			},
-			color = get_hud_color("color_tint_main_2", 255),
-		},
+			color = get_hud_color("color_tint_main_2", 255)
+		}
 	},
 	{
 		pass_type = "text",
 		style_id = "input_text",
 		value = "<input_text>",
 		value_id = "input_text",
-		style = input_interact_text_style,
+		style = input_interact_text_style
 	},
 	{
 		pass_type = "text",
 		style_id = "description_text",
 		value = "<description_text>",
 		value_id = "description_text",
-		style = description_text_style,
-	},
+		style = description_text_style
+	}
 }, "screen")
 
 return {
 	interaction_line_definition = interaction_line_definition,
 	entry_widget_definition = UIWidget.create_definition(button_pass_template, "pivot"),
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

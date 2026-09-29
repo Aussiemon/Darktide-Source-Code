@@ -11,13 +11,13 @@ local home_planet_options = {
 		unlocks = {
 			{
 				text = "loc_character_forge_world_unlocks",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		rotation = {
 			0,
 			0,
-			90,
+			90
 		},
 		on_pressed_sound = UISoundEvents.play_ui_character_create_select_forge_world_01,
 		page_leave_sound = UISoundEvents.stop_ui_character_create_select_forge_world_loops,
@@ -25,13 +25,13 @@ local home_planet_options = {
 			slot_gear_extra_cosmetic = "content/items/characters/player/human/backpacks/cryptic_backpack_d_var_01",
 			slot_gear_head = "content/items/characters/player/human/gear_head/cryptic_headgear_10_var_01",
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/cryptic_lowerbody_b_var_01",
-			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/cryptic_upperbody_b_var_01",
+			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/cryptic_upperbody_b_var_01"
 		},
 		visibility = {
 			archetypes = {
-				"cryptic",
-			},
-		},
+				"cryptic"
+			}
+		}
 	},
 	{
 		description = "loc_character_forge_world_02_description",
@@ -42,13 +42,13 @@ local home_planet_options = {
 		unlocks = {
 			{
 				text = "loc_character_forge_world_unlocks",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		rotation = {
 			0,
 			0,
-			180,
+			180
 		},
 		on_pressed_sound = UISoundEvents.play_ui_character_create_select_forge_world_02,
 		page_leave_sound = UISoundEvents.stop_ui_character_create_select_forge_world_loops,
@@ -56,13 +56,13 @@ local home_planet_options = {
 			slot_gear_extra_cosmetic = "content/items/characters/player/human/backpacks/cryptic_backpack_d_var_01",
 			slot_gear_head = "content/items/characters/player/human/gear_head/cryptic_headgear_10_var_02",
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/cryptic_lowerbody_b_var_02",
-			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/cryptic_upperbody_b_var_02",
+			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/cryptic_upperbody_b_var_02"
 		},
 		visibility = {
 			archetypes = {
-				"cryptic",
-			},
-		},
+				"cryptic"
+			}
+		}
 	},
 	{
 		description = "loc_character_forge_world_03_description",
@@ -73,13 +73,13 @@ local home_planet_options = {
 		unlocks = {
 			{
 				text = "loc_character_forge_world_unlocks",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		rotation = {
 			0,
 			0,
-			270,
+			270
 		},
 		on_pressed_sound = UISoundEvents.play_ui_character_create_select_forge_world_03,
 		page_leave_sound = UISoundEvents.stop_ui_character_create_select_forge_world_loops,
@@ -87,13 +87,13 @@ local home_planet_options = {
 			slot_gear_extra_cosmetic = "content/items/characters/player/human/backpacks/cryptic_backpack_d_var_01",
 			slot_gear_head = "content/items/characters/player/human/gear_head/cryptic_headgear_10_var_03",
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/cryptic_lowerbody_b_var_03",
-			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/cryptic_upperbody_b_var_03",
+			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/cryptic_upperbody_b_var_03"
 		},
 		visibility = {
 			archetypes = {
-				"cryptic",
-			},
-		},
+				"cryptic"
+			}
+		}
 	},
 	{
 		description = "loc_character_forge_world_04_description",
@@ -104,13 +104,13 @@ local home_planet_options = {
 		unlocks = {
 			{
 				text = "loc_character_forge_world_unlocks",
-				type = "text",
-			},
+				type = "text"
+			}
 		},
 		rotation = {
 			0,
 			0,
-			0,
+			0
 		},
 		on_pressed_sound = UISoundEvents.play_ui_character_create_select_forge_world_04,
 		page_leave_sound = UISoundEvents.stop_ui_character_create_select_forge_world_loops,
@@ -118,14 +118,14 @@ local home_planet_options = {
 			slot_gear_extra_cosmetic = "content/items/characters/player/human/backpacks/cryptic_backpack_d_var_01",
 			slot_gear_head = "content/items/characters/player/human/gear_head/cryptic_headgear_10_var_04",
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/cryptic_lowerbody_b_var_04",
-			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/cryptic_upperbody_b_var_04",
+			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/cryptic_upperbody_b_var_04"
 		},
 		visibility = {
 			archetypes = {
-				"cryptic",
-			},
-		},
-	},
+				"cryptic"
+			}
+		}
+	}
 }
 
 return home_planet_options

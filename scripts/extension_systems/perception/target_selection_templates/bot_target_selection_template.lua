@@ -19,6 +19,10 @@ target_selection_template.bot_default = function (unit, unit_position, side, per
 
 	current_target_enemy = HEALTH_ALIVE[current_target_enemy] and current_target_enemy or nil
 
+	if current_target_enemy and not ScriptUnit.has_extension(current_target_enemy, "unit_data_system") then
+		current_target_enemy = nil
+	end
+
 	local vector3_distance_squared = Vector3.distance_squared
 	local POSITION_LOOKUP = POSITION_LOOKUP
 	local should_fully_reevaluate = false
@@ -139,6 +143,10 @@ function _calculate_common_score(unit, target_unit, target_breed, t, bot_group, 
 	local monster_weight, is_urgent_target = BotTargetSelection.monster_weight(unit, target_unit, target_breed, t)
 
 	score = score + monster_weight
+
+	local invulnerable_weight = BotTargetSelection.invulnerable_weight(target_unit)
+
+	score = score + invulnerable_weight
 
 	local current_target_weight = BotTargetSelection.current_target_weight(target_unit, current_target_enemy)
 

@@ -7,7 +7,7 @@ local prop_data = {
 	mutator_on_minigame_complete = "mutator_communication_hack_event",
 	name = "minigame_interface",
 	unit_name = "content/environment/gameplay/decoder_stations/decoder_device_05/decoder_device_05",
-	unit_template_name = "level_prop",
+	unit_template_name = "level_prop"
 }
 
 return prop_data

@@ -6,9 +6,9 @@ local Promise = require("scripts/foundation/utilities/promise")
 local RankSettings = require("scripts/settings/item/rank_settings")
 local RaritySettings = require("scripts/settings/item/rarity_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local CraftingSettings = {}
+local crafting_mechanicus_settings = {}
 
-CraftingSettings.MAX_UPGRADE_RARITY_TIER = 5
+crafting_mechanicus_settings.MAX_UPGRADE_RARITY_TIER = 5
 
 local function is_valid_crafting_item(item)
 	return item and not item.no_crafting and RaritySettings[item.rarity]
@@ -55,15 +55,15 @@ local function calculate_costs(start_costs, item, item_crafting_costs, cost_mult
 
 		final_costs[i] = {
 			type = cost.type,
-			amount = amount,
+			amount = amount
 		}
 	end
 
 	return final_costs
 end
 
-CraftingSettings.recipes = {}
-CraftingSettings.recipes.upgrade_item = {
+crafting_mechanicus_settings.recipes = {}
+crafting_mechanicus_settings.recipes.upgrade_item = {
 	button_text = "loc_crafting_upgrade_button",
 	description_text = "loc_crafting_upgrade_description",
 	display_name = "loc_crafting_upgrade_option",
@@ -111,10 +111,10 @@ CraftingSettings.recipes.upgrade_item = {
 	can_craft = function (ingredients)
 		local item = ingredients.item
 
-		return CraftingSettings.recipes.upgrade_item.is_valid_item(item)
+		return crafting_mechanicus_settings.recipes.upgrade_item.is_valid_item(item)
 	end,
 	craft = function (ingredients)
-		local costs = CraftingSettings.recipes.upgrade_item.get_costs(ingredients)
+		local costs = crafting_mechanicus_settings.recipes.upgrade_item.get_costs(ingredients)
 		local item = ingredients.item
 		local gear_id = item.gear_id
 		local is_gadget = item.item_type == "GADGET"
@@ -150,7 +150,7 @@ CraftingSettings.recipes.upgrade_item = {
 					id = "content/items/traits/unknown_trait",
 					is_fake = true,
 					rarity = nil,
-					value = 1,
+					value = 1
 				}
 			end
 
@@ -175,7 +175,7 @@ CraftingSettings.recipes.upgrade_item = {
 				item.perks[i] = {
 					id = "content/items/perks/unknown_perk",
 					is_fake = true,
-					rarity = 1,
+					rarity = 1
 				}
 			end
 
@@ -191,9 +191,9 @@ CraftingSettings.recipes.upgrade_item = {
 		end
 
 		return item
-	end,
+	end
 }
-CraftingSettings.recipes.upgrade_expertise = {
+crafting_mechanicus_settings.recipes.upgrade_expertise = {
 	button_text = "loc_expertise_crafting_button_upgrade",
 	description_text = "loc_expertise_crafting_description",
 	display_name = "loc_expertise_crafting_title",
@@ -268,7 +268,7 @@ CraftingSettings.recipes.upgrade_expertise = {
 			for type, cost in pairs(costs_count) do
 				costs[#costs + 1] = {
 					type = type,
-					amount = cost,
+					amount = cost
 				}
 			end
 
@@ -279,7 +279,7 @@ CraftingSettings.recipes.upgrade_expertise = {
 		local item = ingredients.item
 
 		if additional_data then
-			local is_valid, reason, error_type = CraftingSettings.recipes.upgrade_expertise.is_valid_item(item, additional_data)
+			local is_valid, reason, error_type = crafting_mechanicus_settings.recipes.upgrade_expertise.is_valid_item(item, additional_data)
 
 			if not is_valid then
 				return is_valid, reason, error_type
@@ -293,16 +293,16 @@ CraftingSettings.recipes.upgrade_expertise = {
 	craft = function (ingredients, additional_data)
 		local item = ingredients.item
 		local added_expertise = additional_data.expertise_data.current / Items.get_expertise_multiplier()
-		local costs = CraftingSettings.recipes.upgrade_expertise.get_costs(ingredients, additional_data)
+		local costs = crafting_mechanicus_settings.recipes.upgrade_expertise.get_costs(ingredients, additional_data)
 		local promise = Managers.data_service.crafting:add_weapon_expertise(item.gear_id, added_expertise, costs)
 
 		return promise
 	end,
 	get_bogus_result = function (ingredients)
 		return true
-	end,
+	end
 }
-CraftingSettings.recipes.replace_trait = {
+crafting_mechanicus_settings.recipes.replace_trait = {
 	button_text = "loc_crafting_replace_option",
 	description_text = "loc_crafting_replace_description",
 	display_name = "loc_crafting_replace_option",
@@ -349,7 +349,7 @@ CraftingSettings.recipes.replace_trait = {
 		local item = ingredients.item
 		local item_traits = item.traits
 
-		if not CraftingSettings.recipes.replace_trait.is_valid_item(item) then
+		if not crafting_mechanicus_settings.recipes.replace_trait.is_valid_item(item) then
 			return false, "loc_crafting_failure"
 		end
 
@@ -401,14 +401,14 @@ CraftingSettings.recipes.replace_trait = {
 		return true
 	end,
 	craft = function (ingredients)
-		local costs = CraftingSettings.recipes.replace_trait.get_costs(ingredients)
+		local costs = crafting_mechanicus_settings.recipes.replace_trait.get_costs(ingredients)
 		local item = ingredients.item
 		local promise = Managers.data_service.crafting:replace_trait_in_weapon(item.gear_id, ingredients.existing_trait_index, ingredients.trait_master_ids[1], ingredients.tiers[1], costs)
 
 		return promise
-	end,
+	end
 }
-CraftingSettings.recipes.replace_perk = {
+crafting_mechanicus_settings.recipes.replace_perk = {
 	button_text = "loc_crafting_reroll_perk_button",
 	description_text = "loc_crafting_replace_perk_description",
 	display_name = "loc_crafting_reroll_perk_option",
@@ -450,7 +450,7 @@ CraftingSettings.recipes.replace_perk = {
 	can_craft = function (ingredients, additional_context)
 		local item = ingredients.item
 
-		if not CraftingSettings.recipes.replace_perk.is_valid_item(item) then
+		if not crafting_mechanicus_settings.recipes.replace_perk.is_valid_item(item) then
 			return false, Localize("loc_crafting_failure")
 		end
 
@@ -477,28 +477,28 @@ CraftingSettings.recipes.replace_perk = {
 		if additional_context.max_rank and new_perk_item.rarity > additional_context.max_rank then
 			return false, Localize("loc_crafting_level_locked", true, {
 				required_level = new_perk_item.rarity,
-				current_level = additional_context.max_rank,
+				current_level = additional_context.max_rank
 			})
 		end
 
 		return true
 	end,
 	craft = function (ingredients)
-		local costs = CraftingSettings.recipes.replace_perk.get_costs(ingredients)
+		local costs = crafting_mechanicus_settings.recipes.replace_perk.get_costs(ingredients)
 		local item = ingredients.item
 		local promise = Managers.data_service.crafting:replace_perk_in_weapon(item.gear_id, ingredients.existing_perk_index, ingredients.perk_master_ids[1], costs, ingredients.tiers[1])
 
 		return promise
-	end,
+	end
 }
-CraftingSettings.type = "crafting_mechanicus"
-CraftingSettings.recipes_ui_order = {
-	CraftingSettings.recipes.upgrade_item,
-	CraftingSettings.recipes.upgrade_expertise,
-	CraftingSettings.recipes.replace_perk,
-	CraftingSettings.recipes.replace_trait,
+crafting_mechanicus_settings.type = "crafting_mechanicus"
+crafting_mechanicus_settings.recipes_ui_order = {
+	crafting_mechanicus_settings.recipes.upgrade_item,
+	crafting_mechanicus_settings.recipes.upgrade_expertise,
+	crafting_mechanicus_settings.recipes.replace_perk,
+	crafting_mechanicus_settings.recipes.replace_trait
 }
-CraftingSettings.trait_sticker_book_enum = table.enum("invalid", "unseen", "seen")
+crafting_mechanicus_settings.trait_sticker_book_enum = table.enum("invalid", "unseen", "seen")
 
 do
 	local title_height = 70
@@ -507,24 +507,24 @@ do
 	local grid_height = 920
 	local grid_size = {
 		grid_width - edge_padding,
-		grid_height,
+		grid_height
 	}
 	local grid_spacing = {
 		0,
-		0,
+		0
 	}
 	local mask_size = {
 		grid_width + 40,
-		grid_height,
+		grid_height
 	}
 
-	CraftingSettings.weapon_stats_context = {
+	crafting_mechanicus_settings.weapon_stats_context = {
 		scrollbar_width = 7,
 		grid_spacing = grid_spacing,
 		grid_size = grid_size,
 		mask_size = mask_size,
 		title_height = title_height,
-		edge_padding = edge_padding,
+		edge_padding = edge_padding
 	}
 end
 
@@ -533,7 +533,7 @@ do
 	local grid_width = 430
 	local grid_height = 900
 
-	CraftingSettings.crafting_recipe_context = {
+	crafting_mechanicus_settings.crafting_recipe_context = {
 		refresh_on_grid_pressed = true,
 		reset_selection_on_navigation_change = false,
 		scrollbar_width = 7,
@@ -541,18 +541,18 @@ do
 		use_select_on_focused = true,
 		grid_spacing = {
 			0,
-			10,
+			10
 		},
 		grid_size = {
 			grid_width,
-			grid_height,
+			grid_height
 		},
 		mask_size = {
 			grid_width + edge_padding,
-			grid_height,
+			grid_height
 		},
-		edge_padding = edge_padding,
+		edge_padding = edge_padding
 	}
 end
 
-return settings("CraftingMechanicusSettings", CraftingSettings)
+return settings("CraftingMechanicusSettings", crafting_mechanicus_settings)

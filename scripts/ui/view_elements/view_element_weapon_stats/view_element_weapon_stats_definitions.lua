@@ -10,7 +10,7 @@ local function create_definitions(settings)
 	local hide_dividers = settings.hide_dividers
 	local background_size = {
 		grid_size[1] + edge_padding,
-		grid_size[2],
+		grid_size[2]
 	}
 	local scenegraph_definition = {
 		screen = UIWorkspaceSettings.screen,
@@ -20,14 +20,14 @@ local function create_definitions(settings)
 			vertical_alignment = "top",
 			size = {
 				0,
-				0,
+				0
 			},
 			position = {
 				0,
 				0,
-				1,
-			},
-		},
+				1
+			}
+		}
 	}
 
 	if not hide_dividers then
@@ -37,13 +37,13 @@ local function create_definitions(settings)
 			vertical_alignment = "left",
 			size = {
 				background_size[1],
-				150,
+				150
 			},
 			position = {
 				0,
 				0,
-				0,
-			},
+				0
+			}
 		}
 		scenegraph_definition.grid_divider_top_weapon = {
 			horizontal_alignment = "center",
@@ -51,13 +51,13 @@ local function create_definitions(settings)
 			vertical_alignment = "center",
 			size = {
 				background_size[1],
-				58,
+				58
 			},
 			position = {
 				0,
 				10,
-				5,
-			},
+				5
+			}
 		}
 		scenegraph_definition.grid_divider_bottom_weapon = {
 			horizontal_alignment = "center",
@@ -65,13 +65,13 @@ local function create_definitions(settings)
 			vertical_alignment = "center",
 			size = {
 				background_size[1],
-				36,
+				36
 			},
 			position = {
 				0,
 				0,
-				5,
-			},
+				5
+			}
 		}
 	end
 
@@ -86,18 +86,18 @@ local function create_definitions(settings)
 						100,
 						0,
 						0,
-						0,
+						0
 					},
 					offset = {
 						0,
 						0,
-						-1,
+						-1
 					},
 					size_addition = {
 						-8,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -108,11 +108,11 @@ local function create_definitions(settings)
 					vertical_alignment = "center",
 					size_addition = {
 						18,
-						16,
+						16
 					},
-					color = Color.terminal_grid_background(255, true),
-				},
-			},
+					color = Color.terminal_grid_background(255, true)
+				}
+			}
 		}, "grid_background"),
 		shine_overlay = UIWidget.create_definition({
 			{
@@ -129,24 +129,24 @@ local function create_definitions(settings)
 					offset = {
 						edge_padding * 0.25,
 						0,
-						5,
+						5
 					},
 					size = {
 						grid_size[1] + edge_padding * 0.5,
-						250,
+						250
 					},
 					material_values = {
 						full_color = 1,
 						grid = "content/ui/textures/patterns/rasters/raster_screen_06",
 						grid_scale = 0.75,
-						intensity = 0,
-					},
+						intensity = 0
+					}
 				},
 				visibility_function = function (content, style)
 					return style.show_overlay
-				end,
-			},
-		}, "shine_overlay"),
+				end
+			}
+		}, "shine_overlay")
 	}
 
 	if not hide_dividers then
@@ -158,9 +158,9 @@ local function create_definitions(settings)
 				value_id = "texture",
 				style = {
 					horizontal_alignment = "center",
-					vertical_alignment = "top",
-				},
-			},
+					vertical_alignment = "top"
+				}
+			}
 		}, "grid_divider_top")
 		widget_definitions.grid_divider_bottom = UIWidget.create_definition({
 			{
@@ -170,9 +170,9 @@ local function create_definitions(settings)
 				value_id = "texture",
 				style = {
 					horizontal_alignment = "center",
-					vertical_alignment = "center",
-				},
-			},
+					vertical_alignment = "center"
+				}
+			}
 		}, "grid_divider_bottom")
 
 		local divider_top_widget_name = "grid_divider_top_weapon"
@@ -185,8 +185,8 @@ local function create_definitions(settings)
 				value_id = "texture",
 				style = {
 					horizontal_alignment = "center",
-					vertical_alignment = "top",
-				},
+					vertical_alignment = "top"
+				}
 			},
 			{
 				pass_type = "text",
@@ -202,14 +202,14 @@ local function create_definitions(settings)
 					offset = {
 						15,
 						6,
-						51,
+						51
 					},
 					size = {
 						600,
-						25,
+						25
 					},
-					text_color = Color.terminal_icon(255, true),
-				}),
+					text_color = Color.terminal_icon(255, true)
+				})
 			},
 			{
 				pass_type = "text",
@@ -225,14 +225,14 @@ local function create_definitions(settings)
 					offset = {
 						50,
 						6,
-						51,
+						51
 					},
 					size = {
 						200,
-						25,
+						25
 					},
-					text_color = Color.terminal_icon(255, true),
-				}),
+					text_color = Color.terminal_icon(255, true)
+				})
 			},
 			{
 				pass_type = "texture",
@@ -245,20 +245,20 @@ local function create_definitions(settings)
 					offset = {
 						3,
 						-6,
-						52,
+						52
 					},
 					size = {
 						105,
-						50,
+						50
 					},
-					color = Color.terminal_corner_selected(nil, true),
+					color = Color.terminal_corner_selected(nil, true)
 				},
 				change_function = function (content, style)
 					style.color[1] = 200 + 55 * math.cos(3 * Application.time_since_launch())
 				end,
 				visibility_function = function (content, style)
 					return not not content.show_glow
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -271,21 +271,21 @@ local function create_definitions(settings)
 					offset = {
 						-8,
 						5,
-						52,
+						52
 					},
 					size = {
 						84,
-						30,
+						30
 					},
-					color = Color.terminal_corner_selected(nil, true),
+					color = Color.terminal_corner_selected(nil, true)
 				},
 				change_function = function (content, style)
 					style.color[1] = 50 + 5 * math.cos(3 * Application.time_since_launch())
 				end,
 				visibility_function = function (content, style)
 					return not not content.show_glow
-				end,
-			},
+				end
+			}
 		}, divider_top_widget_name)
 
 		local divider_bottom_widget_name = "grid_divider_bottom_weapon"
@@ -298,9 +298,9 @@ local function create_definitions(settings)
 				value_id = "texture",
 				style = {
 					horizontal_alignment = "center",
-					vertical_alignment = "center",
-				},
-			},
+					vertical_alignment = "center"
+				}
+			}
 		}, divider_bottom_widget_name)
 	end
 
@@ -315,7 +315,7 @@ local function create_definitions(settings)
 				end,
 				update = function (parent, ui_scenegraph, _scenegraph_definition, widgets, progress, params)
 					widgets.shine_overlay.style.texture.color[1] = 255 * progress
-				end,
+				end
 			},
 			{
 				end_time = 0.8,
@@ -323,7 +323,7 @@ local function create_definitions(settings)
 				start_time = 0,
 				update = function (parent, ui_scenegraph, _scenegraph_definition, widgets, progress, params)
 					widgets.shine_overlay.style.texture.material_values.intensity = 1 - math.ease_sine(progress)
-				end,
+				end
 			},
 			{
 				end_time = 0.8,
@@ -335,7 +335,7 @@ local function create_definitions(settings)
 					if progress >= 1 and widgets.shine_overlay.style.texture.show_overlay then
 						widgets.shine_overlay.style.texture.show_overlay = false
 					end
-				end,
+				end
 			},
 			{
 				end_time = 0.8,
@@ -351,15 +351,15 @@ local function create_definitions(settings)
 							end
 						end
 					end
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 
 	return {
 		widget_definitions = widget_definitions,
 		scenegraph_definition = scenegraph_definition,
-		animations = animations,
+		animations = animations
 	}
 end
 

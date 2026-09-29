@@ -6,7 +6,7 @@ local Graph = require("scripts/utilities/graph")
 local LevelEventSettings = require("scripts/settings/level_event/level_event_settings")
 local SplineFollowerSystem = class("SplineFollowerSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
-	"rpc_spline_follower_hot_join_sync",
+	"rpc_spline_follower_hot_join_sync"
 }
 
 SplineFollowerSystem.init = function (self, context, system_init_data, ...)
@@ -191,7 +191,7 @@ end
 SplineFollowerSystem._new_random_spline_path_index = function (self, graph, start_spline_indices, seed)
 	local new_seed, spline_index = self:_next_random_spline_index(start_spline_indices, seed)
 	local spline_path_indices = {
-		spline_index,
+		spline_index
 	}
 
 	while graph:has_adjacency_nodes(spline_index) do

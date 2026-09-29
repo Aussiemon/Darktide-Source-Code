@@ -12,26 +12,26 @@ local gamma_settings = {
 		widget_type = "gamma_texture",
 		update = function (template)
 			return (Application.user_setting("gamma") or 0) + 1 or template.default_value
-		end,
+		end
 	},
 	{
-		widget_type = "extra_large_spacing",
+		widget_type = "extra_large_spacing"
 	},
 	{
 		display_name = "loc_setting_brightness_gamma_description",
 		shrink_to_fit = true,
 		widget_type = "description",
 		size = {
-			settings_grid_width,
+			settings_grid_width
 		},
 		style = {
 			text_horizontal_alignment = "center",
 			offset = {
 				0,
 				0,
-				3,
-			},
-		},
+				3
+			}
+		}
 	},
 	{
 		apply_on_drag = true,
@@ -84,18 +84,18 @@ local gamma_settings = {
 			return true
 		end,
 		size = {
-			settings_grid_width - 200,
+			settings_grid_width - 200
 		},
 		alignment = {
 			horizontal_alignment = "left",
 			size = {
-				400,
-			},
+				400
+			}
 		},
 		dependent_focus_ids = {
-			"checker",
-		},
-	},
+			"checker"
+		}
+	}
 }
 local page_templates = {}
 
@@ -111,7 +111,7 @@ page_templates.first_run_page_settings = {
 		on_leave = function (parent)
 			parent._widgets_by_name.background.content.visible = true
 			parent._widgets_by_name.gamma_background.content.visible = false
-		end,
+		end
 	},
 	{
 		grid_alignment = "left",
@@ -121,9 +121,9 @@ page_templates.first_run_page_settings = {
 			interface_settings.settings_by_id.subtitle_speaker_enabled,
 			sound_settings.settings_by_id.option_master_slider,
 			sound_settings.settings_by_id.sound_device,
-			sound_settings.settings_by_id.speaker_settings,
-		},
-	},
+			sound_settings.settings_by_id.speaker_settings
+		}
+	}
 }
 page_templates.brightness_render_option_settings = {
 	{
@@ -137,8 +137,8 @@ page_templates.brightness_render_option_settings = {
 		on_leave = function (parent)
 			parent._widgets_by_name.background.content.visible = true
 			parent._widgets_by_name.gamma_background.content.visible = false
-		end,
-	},
+		end
+	}
 }
 
 return page_templates

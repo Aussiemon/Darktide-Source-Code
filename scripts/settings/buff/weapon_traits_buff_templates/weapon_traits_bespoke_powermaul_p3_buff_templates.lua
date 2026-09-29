@@ -27,9 +27,10 @@ templates.weapon_trait_bespoke_powermaul_p3_block_has_chance_to_stun = {
 	predicted = false,
 	proc_events = {
 		[proc_events.on_perfect_block] = 1,
+		[proc_events.on_block] = 1
 	},
 	add_child_proc_events = {
-		[proc_events.on_perfect_block] = 1,
+		[proc_events.on_block] = 1
 	},
 	conditional_proc_func = function (template_data, template_context, t)
 		local stacks = template_context.buff_extension:current_stacks("powermaul_p3_block_has_chance_to_stun_child")
@@ -44,14 +45,16 @@ templates.weapon_trait_bespoke_powermaul_p3_block_has_chance_to_stun = {
 	check_proc_func = function (params, template_data, template_context)
 		return params.attack_type == "melee"
 	end,
-	proc_func = function (params, template_data, template_context, t)
-		local attacking_unit = params.attacking_unit
-		local attacking_unit_buff_extension = ScriptUnit.has_extension(attacking_unit, "buff_system")
+	specific_proc_func = {
+		on_perfect_block = function (params, template_data, template_context, t)
+			local attacking_unit = params.attacking_unit
+			local attacking_unit_buff_extension = ScriptUnit.has_extension(attacking_unit, "buff_system")
 
-		if attacking_unit_buff_extension then
-			attacking_unit_buff_extension:add_internally_controlled_buff("power_maul_stun", t)
+			if attacking_unit_buff_extension then
+				attacking_unit_buff_extension:add_internally_controlled_buff("power_maul_stun", t, "owner_unit", template_context.unit)
+			end
 		end
-	end,
+	}
 }
 templates.powermaul_p3_block_has_chance_to_stun_child = {
 	class_name = "buff",
@@ -60,9 +63,9 @@ templates.powermaul_p3_block_has_chance_to_stun_child = {
 	predicted = false,
 	stack_offset = -1,
 	conditional_stat_buffs = {
-		[stat_buffs.melee_power_level_modifier] = 0.2,
+		[stat_buffs.melee_power_level_modifier] = 0.2
 	},
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 templates.weapon_trait_bespoke_powermaul_p3_stagger_bonus_damage = table.clone(BaseWeaponTraitBuffTemplates.stagger_bonus_damage)
 templates.weapon_trait_bespoke_powermaul_p3_power_bonus_scaled_on_stamina = table.clone(BaseWeaponTraitBuffTemplates.power_bonus_scaled_on_stamina)
@@ -74,7 +77,7 @@ templates.weapon_trait_bespoke_powermaul_p3_staggering_hits_has_chance_to_stun =
 	cooldown_duration = 5,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = function (params, template_data, template_context)
@@ -90,10 +93,10 @@ templates.weapon_trait_bespoke_powermaul_p3_staggering_hits_has_chance_to_stun =
 			local stick_to_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
 
 			if stick_to_buff_extension then
-				stick_to_buff_extension:add_internally_controlled_buff("power_maul_stun", t)
+				stick_to_buff_extension:add_internally_controlled_buff("power_maul_stun", t, "owner_unit", template_context.unit)
 			end
 		end
-	end,
+	end
 }
 templates.weapon_trait_bespoke_powermaul_p3_targets_receive_rending_debuff = table.clone(BaseWeaponTraitBuffTemplates.targets_receive_rending_debuff)
 templates.weapon_trait_bespoke_powermaul_p3_toughness_recovery_on_chained_attacks = table.clone(BaseWeaponTraitBuffTemplates.toughness_recovery_on_chained_attacks)
@@ -103,19 +106,19 @@ templates.weapon_trait_bespoke_powermaul_p3_enhanced_arc_jumps_angle = {
 	conditional_stat_buffs = {
 		[stat_buffs.chain_lightning_powermaul_max_angle] = math.degrees_to_radians(10),
 		[stat_buffs.chain_lightning_powermaul_max_jumps] = 1,
-		[stat_buffs.chain_lightning_powermaul_max_radius] = 0.5,
+		[stat_buffs.chain_lightning_powermaul_max_radius] = 0.5
 	},
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 templates.weapon_trait_bespoke_powermaul_p3_arc_has_killing_blow_chance = {
 	class_name = "proc_buff",
 	hide_icon_in_hud = true,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	target_buff_data = {
-		killing_blow_chance = 0.2,
+		killing_blow_chance = 0.2
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
@@ -163,7 +166,7 @@ templates.weapon_trait_bespoke_powermaul_p3_arc_has_killing_blow_chance = {
 		local hit_world_position = hit_world_position_box and hit_world_position_box:unbox()
 
 		Attack.execute(attacked_unit, damage_profile, "power_level", DEFAULT_POWER_LEVEL, "instakill", true, "attack_direction", attack_direction, "hit_world_position", hit_world_position, "hit_zone_name", params.hit_zone_name, "damage_type", params.damage_type, "attack_type", params.attack_type, "attacking_unit", template_context.unit)
-	end,
+	end
 }
 
 return templates

@@ -5,7 +5,7 @@ local ProfileUtils = require("scripts/utilities/profile_utils")
 local BotSynchronizerClient = class("BotSynchronizerClient")
 local RPCS = {
 	"rpc_add_bot_player",
-	"rpc_remove_bot_player",
+	"rpc_remove_bot_player"
 }
 
 BotSynchronizerClient.DEBUG_TAG = "Bot Sync Client"

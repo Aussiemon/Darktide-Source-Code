@@ -19,8 +19,8 @@ local renegade_plasma_gunner_default = {
 	damage_falloff = {
 		falloff_range = 15,
 		max_power_reduction = 0.6,
-		max_range = 8,
-	},
+		max_range = 8
+	}
 }
 local renegade_plasma_gunner_plasma_beam = {
 	collision_filter = "filter_minion_shooting",
@@ -36,12 +36,12 @@ local renegade_plasma_gunner_plasma_beam = {
 	damage_falloff = {
 		falloff_range = 18,
 		max_power_reduction = 0.6,
-		max_range = 18,
-	},
+		max_range = 18
+	}
 }
 local shoot_templates = {
 	renegade_plasma_gunner_default = renegade_plasma_gunner_default,
-	renegade_plasma_gunner_plasma_beam = renegade_plasma_gunner_plasma_beam,
+	renegade_plasma_gunner_plasma_beam = renegade_plasma_gunner_plasma_beam
 }
 
 return shoot_templates

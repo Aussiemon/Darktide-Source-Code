@@ -8,11 +8,11 @@ local BtMoveToCoverAction = class("BtMoveToCoverAction", "BtNode")
 
 BtMoveToCoverAction.TIME_TO_FIRST_EVALUATE = {
 	0.8,
-	1.5,
+	1.5
 }
 BtMoveToCoverAction.CONSECUTIVE_EVALUATE_INTERVAL = {
 	1,
-	2,
+	2
 }
 
 BtMoveToCoverAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)

@@ -11,7 +11,7 @@ local settings = {
 	states = {
 		"start_state",
 		"second_state",
-		"third_state",
+		"third_state"
 	},
 	side_compositions = {
 		{
@@ -19,44 +19,44 @@ local settings = {
 			name = "heroes",
 			relations = {
 				enemy = {
-					"villains",
-				},
-			},
+					"villains"
+				}
+			}
 		},
 		{
 			color_name = "red",
 			name = "villains",
 			relations = {
 				enemy = {
-					"heroes",
-				},
-			},
-		},
+					"heroes"
+				}
+			}
+		}
 	},
 	side_sub_faction_types = {
 		villains = {
 			"chaos",
 			"cultist",
-			"renegade",
-		},
+			"renegade"
+		}
 	},
 	spawn = {
 		ammo_percentage = 1,
 		grenade_percentage = 1,
-		health_percentage = 1,
+		health_percentage = 1
 	},
 	respawn = {
 		ammo_percentage = 0.5,
 		grenade_percentage = 0,
 		health_percentage = 1,
-		time = 60,
+		time = 60
 	},
 	hud_settings = {
-		player_composition = "players",
+		player_composition = "players"
 	},
 	hotkeys = {
-		hotkey_system = "system_view",
-	},
+		hotkey_system = "system_view"
+	}
 }
 
 return settings

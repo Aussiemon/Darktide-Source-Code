@@ -2,7 +2,6 @@
 
 local mission_templates = {
 	lm_scavenge = {
-		coordinates = "loc_mission_coordinates_lm_scavenge",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/dust/missions/mission_lm_scavenge",
@@ -20,24 +19,24 @@ local mission_templates = {
 		zone_id = "dust",
 		cinematics = {
 			intro_abc = {
-				"c_cam",
+				"c_cam"
 			},
 			outro_fail = {
-				"outro_fail",
+				"outro_fail"
 			},
 			outro_win = {
-				"outro_win",
-			},
+				"outro_win"
+			}
 		},
 		pickup_settings = {},
 		terror_event_templates = {
-			"terror_events_lm_scavenge",
+			"terror_events_lm_scavenge"
 		},
 		health_station = {},
 		hazard_prop_settings = {
 			explosion = 0.3,
 			fire = 0.2,
-			none = 0.4,
+			none = 0.4
 		},
 		mission_brief_vo = {
 			vo_profile = "commissar_a",
@@ -45,20 +44,22 @@ local mission_templates = {
 			vo_events = {
 				"mission_scavenge_briefing_one",
 				"mission_scavenge_briefing_two",
-				"mission_scavenge_briefing_three",
-			},
+				"mission_scavenge_briefing_three"
+			}
 		},
 		dialogue_settings = {
 			short_story_ticker_enabled = true,
-			story_ticker_enabled = true,
+			story_ticker_enabled = true
 		},
 		testify_flags = {},
 		spawn_settings = {
-			next_mission = "recent_mission",
+			next_mission = "recent_mission"
 		},
+		controllable_object_set_prefixes = {
+			"flow"
+		}
 	},
 	dm_propaganda = {
-		coordinates = "loc_mission_coordinates_dm_propaganda",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/dust/missions/mission_dm_propaganda",
@@ -76,23 +77,23 @@ local mission_templates = {
 		zone_id = "dust",
 		cinematics = {
 			intro_abc = {
-				"c_cam",
+				"c_cam"
 			},
 			outro_fail = {
-				"outro_fail",
+				"outro_fail"
 			},
 			outro_win = {
-				"outro_win",
-			},
+				"outro_win"
+			}
 		},
 		pickup_settings = {},
 		hazard_prop_settings = {
 			explosion = 0.3,
 			fire = 0.2,
-			none = 0.4,
+			none = 0.4
 		},
 		terror_event_templates = {
-			"terror_events_dm_propaganda",
+			"terror_events_dm_propaganda"
 		},
 		mission_brief_vo = {
 			vo_profile = "explicator_a",
@@ -100,38 +101,40 @@ local mission_templates = {
 			vo_events = {
 				"mission_propaganda_briefing_a",
 				"mission_propaganda_briefing_b",
-				"mission_propaganda_briefing_c",
+				"mission_propaganda_briefing_c"
 			},
 			mission_giver_packs = {
 				explicator_a = {
 					"explicator",
-					"dreg_lector",
+					"dreg_lector"
 				},
 				sergeant_a = {
 					"sergeant",
-					"pilot",
+					"pilot"
 				},
 				tech_priest_a = {
 					"tech_priest",
-					"pilot",
+					"pilot"
 				},
 				pilot_a = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
 		dialogue_settings = {
 			short_story_ticker_enabled = true,
-			story_ticker_enabled = true,
+			story_ticker_enabled = true
 		},
 		testify_flags = {},
 		health_station = {},
 		spawn_settings = {
-			next_mission = "recent_mission",
+			next_mission = "recent_mission"
 		},
+		controllable_object_set_prefixes = {
+			"flow"
+		}
 	},
 	hm_strain = {
-		coordinates = "loc_mission_coordinates_hm_strain",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/dust/missions/mission_hm_strain",
@@ -149,23 +152,23 @@ local mission_templates = {
 		zone_id = "dust",
 		cinematics = {
 			intro_abc = {
-				"c_cam",
+				"c_cam"
 			},
 			outro_fail = {
-				"outro_fail",
+				"outro_fail"
 			},
 			outro_win = {
-				"outro_win",
-			},
+				"outro_win"
+			}
 		},
 		hazard_prop_settings = {
 			explosion = 0.3,
 			fire = 0.2,
-			none = 0.4,
+			none = 0.4
 		},
 		pickup_settings = {},
 		terror_event_templates = {
-			"terror_events_hm_strain",
+			"terror_events_hm_strain"
 		},
 		health_station = {},
 		testify_flags = {},
@@ -175,36 +178,39 @@ local mission_templates = {
 			vo_events = {
 				"mission_strain_briefing_a",
 				"mission_strain_briefing_b",
-				"mission_strain_briefing_c",
+				"mission_strain_briefing_c"
 			},
 			mission_giver_packs = {
 				sergeant_a = {
 					"sergeant",
 					"tech_priest",
-					"pilot",
+					"pilot"
 				},
 				tech_priest_a = {
 					"tech_priest",
-					"pilot",
+					"pilot"
 				},
 				pilot_a = {
 					"tech_priest",
-					"pilot",
+					"pilot"
 				},
 				sergeant_b = {
 					"sergeant",
-					"dreg_lector",
-				},
-			},
+					"dreg_lector"
+				}
+			}
 		},
 		dialogue_settings = {
 			short_story_ticker_enabled = true,
-			story_ticker_enabled = true,
+			story_ticker_enabled = true
 		},
 		spawn_settings = {
-			next_mission = "recent_mission",
+			next_mission = "recent_mission"
 		},
-	},
+		controllable_object_set_prefixes = {
+			"flow"
+		}
+	}
 }
 
 return mission_templates

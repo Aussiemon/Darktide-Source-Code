@@ -7,10 +7,10 @@ local renegade_flamer_default = {
 	collision_filter = "filter_minion_shooting",
 	hit_scan_template = HitScanTemplates.renegade_flamer,
 	spread = math.degrees_to_radians(0),
-	damage_type = damage_types.minion_direct_flamer,
+	damage_type = damage_types.minion_direct_flamer
 }
 local shoot_templates = {
-	renegade_flamer_default = renegade_flamer_default,
+	renegade_flamer_default = renegade_flamer_default
 }
 
 return shoot_templates

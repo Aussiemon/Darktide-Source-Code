@@ -21,7 +21,7 @@ volume_event_functions.player_instakill = {
 
 			Attack.execute(entering_unit, damage_profile, "instakill", true, "attack_direction", attack_direction)
 		end
-	end,
+	end
 }
 volume_event_functions.minion_instakill = {
 	on_enter = function (entering_unit, dt, t, data)
@@ -33,7 +33,7 @@ volume_event_functions.minion_instakill = {
 		local last_damaging_unit = health_extension and health_extension:last_damaging_unit()
 
 		Attack.execute(entering_unit, damage_profile, "instakill", true, "attack_direction", attack_direction, "attacking_unit", last_damaging_unit)
-	end,
+	end
 }
 volume_event_functions.minion_instakill_with_gibbing = {
 	on_enter = function (entering_unit, dt, t, data)
@@ -68,7 +68,7 @@ volume_event_functions.minion_instakill_with_gibbing = {
 				Unit.flow_event(unit, "lua_connected_volume_minion_kill")
 			end
 		end
-	end,
+	end
 }
 volume_event_functions.end_zone = {
 	on_enter = function (entering_unit, dt, t, data)
@@ -82,7 +82,7 @@ volume_event_functions.end_zone = {
 		local trigger_extension = ScriptUnit.extension(volume_unit, "trigger_system")
 
 		trigger_extension:on_volume_exit(exiting_unit)
-	end,
+	end
 }
 volume_event_functions.trigger = {
 	on_enter = function (entering_unit, dt, t, data)
@@ -96,7 +96,7 @@ volume_event_functions.trigger = {
 		local trigger_extension = ScriptUnit.extension(volume_unit, "trigger_system")
 
 		trigger_extension:on_volume_exit(exiting_unit)
-	end,
+	end
 }
 
 return settings("VolumeEventFunctions", volume_event_functions)

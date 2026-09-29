@@ -11,10 +11,10 @@ spawn_settings.live_event_stolen_rations_stat_recover_spawn_horde = {
 						name = "chaos_ogryn_bulwark",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -22,10 +22,10 @@ spawn_settings.live_event_stolen_rations_stat_recover_spawn_horde = {
 						name = "chaos_ogryn_bulwark",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -33,32 +33,32 @@ spawn_settings.live_event_stolen_rations_stat_recover_spawn_horde = {
 						name = "chaos_ogryn_bulwark",
 						amount = {
 							1,
+							2
+						}
+					}
+				}
+			},
+			{
+				breeds = {
+					{
+						name = "chaos_ogryn_bulwark",
+						amount = {
+							1,
+							3
+						}
+					}
+				}
+			},
+			{
+				breeds = {
+					{
+						name = "chaos_ogryn_bulwark",
+						amount = {
 							2,
-						},
-					},
-				},
-			},
-			{
-				breeds = {
-					{
-						name = "chaos_ogryn_bulwark",
-						amount = {
-							1,
-							3,
-						},
-					},
-				},
-			},
-			{
-				breeds = {
-					{
-						name = "chaos_ogryn_bulwark",
-						amount = {
-							2,
-							4,
-						},
-					},
-				},
+							4
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -66,13 +66,13 @@ spawn_settings.live_event_stolen_rations_stat_recover_spawn_horde = {
 						name = "chaos_ogryn_bulwark",
 						amount = {
 							3,
-							4,
-						},
-					},
-				},
-			},
-		},
-	},
+							4
+						}
+					}
+				}
+			}
+		}
+	}
 }
 spawn_settings.live_event_stolen_rations_stat_recover_boss = {
 	renegade = {
@@ -83,10 +83,10 @@ spawn_settings.live_event_stolen_rations_stat_recover_boss = {
 						name = "chaos_plague_ogryn",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -94,10 +94,10 @@ spawn_settings.live_event_stolen_rations_stat_recover_boss = {
 						name = "chaos_plague_ogryn",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -105,10 +105,10 @@ spawn_settings.live_event_stolen_rations_stat_recover_boss = {
 						name = "chaos_plague_ogryn",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -116,10 +116,10 @@ spawn_settings.live_event_stolen_rations_stat_recover_boss = {
 						name = "chaos_plague_ogryn",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -127,10 +127,10 @@ spawn_settings.live_event_stolen_rations_stat_recover_boss = {
 						name = "chaos_plague_ogryn",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -138,13 +138,13 @@ spawn_settings.live_event_stolen_rations_stat_recover_boss = {
 						name = "chaos_plague_ogryn",
 						amount = {
 							1,
-							2,
-						},
-					},
-				},
-			},
-		},
-	},
+							2
+						}
+					}
+				}
+			}
+		}
+	}
 }
 spawn_settings.live_event_stolen_rations_stat_recover_super_boss = {
 	renegade = {
@@ -155,31 +155,31 @@ spawn_settings.live_event_stolen_rations_stat_recover_super_boss = {
 						name = "chaos_plague_ogryn",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_ogryn_bulwark",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_ogryn_executor",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_ogryn_gunner",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -187,31 +187,31 @@ spawn_settings.live_event_stolen_rations_stat_recover_super_boss = {
 						name = "chaos_plague_ogryn",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_ogryn_bulwark",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_ogryn_executor",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_ogryn_gunner",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -219,31 +219,31 @@ spawn_settings.live_event_stolen_rations_stat_recover_super_boss = {
 						name = "chaos_plague_ogryn",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_ogryn_bulwark",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_ogryn_executor",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_ogryn_gunner",
 						amount = {
 							1,
-							2,
-						},
-					},
-				},
+							2
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -251,31 +251,31 @@ spawn_settings.live_event_stolen_rations_stat_recover_super_boss = {
 						name = "chaos_plague_ogryn",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_ogryn_bulwark",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_ogryn_executor",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_ogryn_gunner",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -283,31 +283,31 @@ spawn_settings.live_event_stolen_rations_stat_recover_super_boss = {
 						name = "chaos_plague_ogryn",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_ogryn_bulwark",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "chaos_ogryn_executor",
 						amount = {
 							1,
-							2,
-						},
+							2
+						}
 					},
 					{
 						name = "chaos_ogryn_gunner",
 						amount = {
 							1,
-							2,
-						},
-					},
-				},
+							2
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -315,34 +315,34 @@ spawn_settings.live_event_stolen_rations_stat_recover_super_boss = {
 						name = "chaos_plague_ogryn",
 						amount = {
 							2,
-							2,
-						},
+							2
+						}
 					},
 					{
 						name = "chaos_ogryn_bulwark",
 						amount = {
 							1,
-							2,
-						},
+							2
+						}
 					},
 					{
 						name = "chaos_ogryn_executor",
 						amount = {
 							1,
-							2,
-						},
+							2
+						}
 					},
 					{
 						name = "chaos_ogryn_gunner",
 						amount = {
 							1,
-							3,
-						},
-					},
-				},
-			},
-		},
-	},
+							3
+						}
+					}
+				}
+			}
+		}
+	}
 }
 spawn_settings.live_event_stolen_rations_stat_destroy_spawn_horde = {
 	renegade = {
@@ -353,10 +353,10 @@ spawn_settings.live_event_stolen_rations_stat_destroy_spawn_horde = {
 						name = "chaos_armored_infected",
 						amount = {
 							15,
-							20,
-						},
-					},
-				},
+							20
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -364,10 +364,10 @@ spawn_settings.live_event_stolen_rations_stat_destroy_spawn_horde = {
 						name = "chaos_armored_infected",
 						amount = {
 							20,
-							25,
-						},
-					},
-				},
+							25
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -375,10 +375,10 @@ spawn_settings.live_event_stolen_rations_stat_destroy_spawn_horde = {
 						name = "chaos_armored_infected",
 						amount = {
 							22,
-							27,
-						},
-					},
-				},
+							27
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -386,10 +386,10 @@ spawn_settings.live_event_stolen_rations_stat_destroy_spawn_horde = {
 						name = "chaos_armored_infected",
 						amount = {
 							27,
-							32,
-						},
-					},
-				},
+							32
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -397,10 +397,10 @@ spawn_settings.live_event_stolen_rations_stat_destroy_spawn_horde = {
 						name = "chaos_armored_infected",
 						amount = {
 							32,
-							35,
-						},
-					},
-				},
+							35
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -408,13 +408,13 @@ spawn_settings.live_event_stolen_rations_stat_destroy_spawn_horde = {
 						name = "chaos_armored_infected",
 						amount = {
 							34,
-							37,
-						},
-					},
-				},
-			},
-		},
-	},
+							37
+						}
+					}
+				}
+			}
+		}
+	}
 }
 spawn_settings.live_event_stolen_rations_stat_destroy_boss = {
 	renegade = {
@@ -425,10 +425,10 @@ spawn_settings.live_event_stolen_rations_stat_destroy_boss = {
 						name = "renegade_captain",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -436,10 +436,10 @@ spawn_settings.live_event_stolen_rations_stat_destroy_boss = {
 						name = "renegade_captain",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -447,10 +447,10 @@ spawn_settings.live_event_stolen_rations_stat_destroy_boss = {
 						name = "renegade_captain",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -458,10 +458,10 @@ spawn_settings.live_event_stolen_rations_stat_destroy_boss = {
 						name = "renegade_captain",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -469,10 +469,10 @@ spawn_settings.live_event_stolen_rations_stat_destroy_boss = {
 						name = "renegade_captain",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -480,13 +480,13 @@ spawn_settings.live_event_stolen_rations_stat_destroy_boss = {
 						name = "renegade_captain",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
-			},
-		},
-	},
+							1
+						}
+					}
+				}
+			}
+		}
+	}
 }
 spawn_settings.live_event_stolen_rations_stat_destroy_super_boss = {
 	renegade = {
@@ -497,10 +497,10 @@ spawn_settings.live_event_stolen_rations_stat_destroy_super_boss = {
 						name = "renegade_twin_captain",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -508,10 +508,10 @@ spawn_settings.live_event_stolen_rations_stat_destroy_super_boss = {
 						name = "renegade_twin_captain",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -519,10 +519,10 @@ spawn_settings.live_event_stolen_rations_stat_destroy_super_boss = {
 						name = "renegade_twin_captain",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -530,10 +530,10 @@ spawn_settings.live_event_stolen_rations_stat_destroy_super_boss = {
 						name = "renegade_twin_captain_two",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -541,17 +541,17 @@ spawn_settings.live_event_stolen_rations_stat_destroy_super_boss = {
 						name = "renegade_twin_captain",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "renegade_twin_captain_two",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -559,20 +559,20 @@ spawn_settings.live_event_stolen_rations_stat_destroy_super_boss = {
 						name = "renegade_twin_captain",
 						amount = {
 							1,
-							1,
-						},
+							1
+						}
 					},
 					{
 						name = "renegade_twin_captain_two",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
-			},
-		},
-	},
+							1
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 return spawn_settings

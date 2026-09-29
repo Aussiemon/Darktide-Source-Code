@@ -3,6 +3,7 @@
 require("scripts/managers/mutator/mutators/mutator_base")
 
 local Component = require("scripts/utilities/component")
+local MainPathQueries = require("scripts/utilities/main_path_queries")
 local NavQueries = require("scripts/utilities/nav_queries")
 local LoadedDice = require("scripts/utilities/loaded_dice")
 local MutatorSpawner = class("MutatorSpawner", "MutatorBase")
@@ -11,6 +12,9 @@ local TARGET_SIDE_ID = 1
 local PLAYER_POSITIONS = {}
 local vector3_distance = Vector3.distance
 local NAV_MESH_ABOVE, NAV_MESH_BELOW = 5, 5
+local MAX_TRAVEL_DISTANCE_Z_DIFF = 4
+local MAX_PROJECTION_HORIZONTAL_DISPLACEMENT = 2
+local DEFAULT_MIN_LOCATION_SEPARATION = 30
 
 local function _walk_nodes_recursive(nodes, node_func)
 	for i = 1, #nodes do
@@ -47,7 +51,7 @@ MutatorSpawner.add_spawn_point = function (self, unit, position, rotation, path_
 		position = position,
 		rotation = rotation,
 		section = section,
-		level_size = level_size,
+		level_size = level_size
 	}
 end
 
@@ -190,7 +194,7 @@ MutatorSpawner.on_spawn_points_generated = function (self, level, themes)
 				position = component_data.position,
 				rotation = component_data.rotation,
 				section = component_data.section,
-				level_size = component_data.level_size,
+				level_size = component_data.level_size
 			}
 		end
 	end
@@ -200,14 +204,40 @@ MutatorSpawner.on_spawn_points_generated = function (self, level, themes)
 	local trigger_distance = self._template_data.trigger_distance
 	local spawn_locations = self._dirty_spawn_locations
 	local nav_world = self._nav_world
+	local main_path_manager = Managers.state.main_path
+	local main_path_segments = main_path_manager:main_path_segments()
+	local total_path_distance = MainPathQueries.total_path_distance()
+	local num_sections = 0
 	local num_spawn_locations = spawn_locations and #spawn_locations or 0
 
 	for i = 1, num_spawn_locations do
+		num_sections = math.max(num_sections, spawn_locations[i].section or 0)
+	end
+
+	for i = 1, num_spawn_locations do
 		local dirty_spawn_data = spawn_locations[i]
-		local nav_mesh_position = NavQueries.position_on_mesh_guaranteed(nav_world, dirty_spawn_data.position:unbox(), NAV_MESH_ABOVE, NAV_MESH_BELOW)
+		local wanted_position = dirty_spawn_data.position:unbox()
+		local nav_mesh_position = NavQueries.position_on_mesh_guaranteed(nav_world, wanted_position, NAV_MESH_ABOVE, NAV_MESH_BELOW)
 
 		if nav_mesh_position then
-			local travel_distance = Managers.state.main_path:travel_distance_from_position(nav_mesh_position)
+			local flat_displacement = Vector3.distance(Vector3.flat(nav_mesh_position), Vector3.flat(wanted_position))
+
+			if flat_displacement > MAX_PROJECTION_HORIZONTAL_DISPLACEMENT then
+				nav_mesh_position = nil
+			end
+		end
+
+		if nav_mesh_position then
+			local travel_distance = MainPathQueries.closest_travel_distance_vertical_aware(main_path_segments, nav_mesh_position, MAX_TRAVEL_DISTANCE_Z_DIFF)
+
+			travel_distance = travel_distance or main_path_manager:travel_distance_from_position(nav_mesh_position)
+
+			local section = dirty_spawn_data.section
+
+			if section and num_sections > 0 and total_path_distance and total_path_distance > 0 then
+				local computed_section = math.clamp(math.ceil(travel_distance / total_path_distance * num_sections), 1, num_sections)
+			end
+
 			local wanted_distance = travel_distance - trigger_distance
 			local rotation = dirty_spawn_data.rotation
 			local level_size = dirty_spawn_data.level_size
@@ -216,9 +246,8 @@ MutatorSpawner.on_spawn_points_generated = function (self, level, themes)
 				spawn_travel_distance = wanted_distance,
 				spawn_point_travel_distance = travel_distance,
 				rotation = rotation,
-				level_size = level_size,
+				level_size = level_size
 			}
-			local section = dirty_spawn_data.section
 			local spawn_point_sections = self._spawn_point_sections
 			local spawn_point_section = spawn_point_sections[section]
 
@@ -227,7 +256,7 @@ MutatorSpawner.on_spawn_points_generated = function (self, level, themes)
 				self._allowed_per_section[section] = self._allowed_per_section[section] + 1
 			else
 				spawn_point_sections[section] = {
-					spawn_point,
+					spawn_point
 				}
 				self._section_probabillity[section] = 0
 				self._allowed_per_section[section] = 1
@@ -237,9 +266,15 @@ MutatorSpawner.on_spawn_points_generated = function (self, level, themes)
 		end
 	end
 
-	if self._num_to_spawn > self._valid_spawn_points then
-		Log.warning("[MutatorMonsterSpawner]", "Requested %s spawns but we only have %s possible spawn points. Clamped.", self._num_to_spawn, self._valid_spawn_points)
+	for section = 1, num_sections do
+		if not self._spawn_point_sections[section] then
+			self._spawn_point_sections[section] = {}
+			self._section_probabillity[section] = 0
+			self._allowed_per_section[section] = 0
+		end
+	end
 
+	if self._num_to_spawn > self._valid_spawn_points then
 		self._num_to_spawn = self._valid_spawn_points
 	end
 
@@ -316,9 +351,9 @@ MutatorSpawner.update = function (self, dt, t)
 
 			for ii = 1, #PLAYER_POSITIONS do
 				local player_pos = PLAYER_POSITIONS[ii]
-				local distance_sq = vector3_distance(spawn_position:unbox(), player_pos)
+				local distance = vector3_distance(spawn_position:unbox(), player_pos)
 
-				if distance_sq <= proximity_trigger_distance then
+				if distance <= proximity_trigger_distance then
 					self:_trigger_runtime_spawn(location)
 					table.remove(locations, i)
 
@@ -339,17 +374,22 @@ MutatorSpawner._initialize_probability = function (self)
 	self._chance_initialized = true
 
 	local weights = self._section_probabillity
-	local num = 0
-	local initial_chance = 1
+	local num_available = 0
 
 	for i = 1, #weights do
-		num = num + 1
+		if self._allowed_per_section[i] > 0 then
+			num_available = num_available + 1
+		end
 	end
 
-	initial_chance = initial_chance / num
+	local initial_chance = num_available > 0 and 1 / num_available or 0
 
 	for i = 1, #weights do
-		weights[i] = math.floor(initial_chance * 100) / 100
+		if self._allowed_per_section[i] > 0 then
+			weights[i] = math.floor(initial_chance * 100) / 100
+		else
+			weights[i] = 0
+		end
 	end
 
 	if self._template.allowed_sections then
@@ -384,33 +424,46 @@ MutatorSpawner._initialize_probability = function (self)
 
 	self._section_probabillity = {
 		probability = prob,
-		alias = alias,
+		alias = alias
 	}
 end
 
-MutatorSpawner._calculate_probabillity = function (self, optional_probabillity_reroll, remove_chance)
+MutatorSpawner._calculate_probabillity = function (self, picked_section, remove_chance)
 	local weights = self._base_section_weights
-	local add_to_other_probabillites
-	local current_value = weights[optional_probabillity_reroll]
-
-	current_value = current_value / 2
+	local picked_weight = weights[picked_section]
+	local removed_weight
 
 	if remove_chance then
-		add_to_other_probabillites = 0
-		current_value = 0
+		removed_weight = picked_weight
+		weights[picked_section] = 0
 	else
-		add_to_other_probabillites = current_value / 2
+		removed_weight = picked_weight / 2
+		weights[picked_section] = picked_weight / 2
 	end
 
+	local num_receivers = 0
+
 	for i = 1, #weights do
-		if i == optional_probabillity_reroll then
-			weights[i] = current_value
-		elseif self._allowed_per_section[i] <= 0 then
-			weights[i] = 0
-			add_to_other_probabillites = add_to_other_probabillites + add_to_other_probabillites
-		else
-			weights[i] = weights[i] + add_to_other_probabillites
+		if i ~= picked_section then
+			if self._allowed_per_section[i] <= 0 then
+				removed_weight = removed_weight + weights[i]
+				weights[i] = 0
+			else
+				num_receivers = num_receivers + 1
+			end
 		end
+	end
+
+	if num_receivers > 0 then
+		local share = removed_weight / num_receivers
+
+		for i = 1, #weights do
+			if i ~= picked_section and self._allowed_per_section[i] > 0 then
+				weights[i] = weights[i] + share
+			end
+		end
+	elseif weights[picked_section] <= 0 then
+		return
 	end
 
 	self._base_section_weights = weights
@@ -419,47 +472,78 @@ MutatorSpawner._calculate_probabillity = function (self, optional_probabillity_r
 
 	self._section_probabillity = {
 		probability = prob,
-		alias = alias,
+		alias = alias
 	}
+end
+
+MutatorSpawner._is_separated_from_locations = function (self, spawn_point, locations, min_separation)
+	local position = spawn_point.position:unbox()
+
+	for i = 1, #locations do
+		local location_position = locations[i].position:unbox()
+
+		if min_separation > Vector3.distance(position, location_position) then
+			return false
+		end
+	end
+
+	return true
+end
+
+MutatorSpawner._pick_spawn_point = function (self, locations, min_separation)
+	local spawn_point_sections = self._spawn_point_sections
+	local allowed_per_section = self._allowed_per_section
+	local num_pick_attempts = 20
+
+	for _ = 1, num_pick_attempts do
+		local weights = self._section_probabillity
+		local section_index = LoadedDice.roll(weights.probability, weights.alias)
+
+		if section_index and allowed_per_section[section_index] and allowed_per_section[section_index] > 0 then
+			local section = spawn_point_sections[section_index]
+			local spawn_point_index = math.random(#section)
+			local spawn_point = section[spawn_point_index]
+
+			if not min_separation or self:_is_separated_from_locations(spawn_point, locations, min_separation) then
+				return section_index, spawn_point_index, spawn_point
+			end
+		end
+	end
 end
 
 MutatorSpawner._add_location_spawns = function (self)
 	local locations = {}
 	local spawn_point_sections = self._spawn_point_sections
 	local num_to_spawn = self._num_to_spawn
+	local min_separation = self._template.min_location_separation or DEFAULT_MIN_LOCATION_SEPARATION
 
 	for i = 1, num_to_spawn do
-		local weights = self._section_probabillity
-		local temp_section_index = LoadedDice.roll(weights.probability, weights.alias)
+		local section_index, spawn_point_index, spawn_point = self:_pick_spawn_point(locations, min_separation)
 
-		if self._allowed_per_section[temp_section_index] > 0 then
-			local section = spawn_point_sections[temp_section_index]
-			local spawn_point_index = math.random(#section)
-			local spawn_point = section[spawn_point_index]
-			local travel_distance = spawn_point.spawn_travel_distance
-			local position = spawn_point.position
-			local rotation = spawn_point.rotation
-			local level_size = spawn_point.level_size
-			local section_index = temp_section_index
-			local location = {
-				travel_distance = travel_distance,
-				position = position,
-				section = section_index,
-				rotation = rotation,
-				level_size = level_size,
-			}
-
-			locations[#locations + 1] = location
-			self._allowed_per_section[temp_section_index] = self._allowed_per_section[temp_section_index] - 1
-
-			if self._allowed_per_section[temp_section_index] <= 0 then
-				self:_calculate_probabillity(temp_section_index, true)
-			else
-				self:_calculate_probabillity(temp_section_index, false)
-			end
-
-			table.swap_delete(section, spawn_point_index)
+		if not section_index then
+			section_index, spawn_point_index, spawn_point = self:_pick_spawn_point(locations, nil)
 		end
+
+		if not section_index then
+			break
+		end
+
+		local location = {
+			travel_distance = spawn_point.spawn_travel_distance,
+			position = spawn_point.position,
+			section = section_index,
+			rotation = spawn_point.rotation,
+			level_size = spawn_point.level_size
+		}
+
+		locations[#locations + 1] = location
+
+		local section = spawn_point_sections[section_index]
+
+		self._allowed_per_section[section_index] = self._allowed_per_section[section_index] - 1
+
+		table.swap_delete(section, spawn_point_index)
+		self:_calculate_probabillity(section_index, self._allowed_per_section[section_index] <= 0)
 	end
 
 	self._locations = locations

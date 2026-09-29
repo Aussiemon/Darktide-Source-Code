@@ -7,15 +7,15 @@ local grid_width = 640
 local grid_height = 860
 local grid_size = {
 	grid_width - edge_padding,
-	grid_height,
+	grid_height
 }
 local mask_size = {
 	grid_width + 40,
-	grid_height,
+	grid_height
 }
 local grid_spacing = {
 	10,
-	10,
+	10
 }
 local grid_settings = {
 	scroll_start_margin = 80,
@@ -34,11 +34,11 @@ local grid_settings = {
 	grid_size = grid_size,
 	mask_size = mask_size,
 	title_height = title_height,
-	edge_padding = edge_padding,
+	edge_padding = edge_padding
 }
 local weapon_stats_grid_settings = {
 	resource_renderer_background = true,
-	use_parent_world = true,
+	use_parent_world = true
 }
 local scenegraph_definition = {
 	item_grid_pivot = {
@@ -47,13 +47,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			grid_width,
-			grid_height,
+			grid_height
 		},
 		position = {
 			100,
 			84,
-			1,
-		},
+			1
+		}
 	},
 	grid_tab_panel = {
 		horizontal_alignment = "center",
@@ -61,14 +61,14 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			28,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local widget_definitions = {}
 local animations = {}
@@ -79,28 +79,28 @@ local tab_menu_settings = {
 	layer = 80,
 	button_size = {
 		132,
-		38,
+		38
 	},
 	button_template = ButtonPassTemplates.item_category_tab_menu_button,
 	input_label_offset = {
 		10,
-		5,
-	},
+		5
+	}
 }
 local item_category_tabs_content = {
 	{
 		hide_display_name = true,
 		icon = "content/ui/materials/icons/categories/melee",
 		slot_types = {
-			"slot_primary",
-		},
+			"slot_primary"
+		}
 	},
 	{
 		hide_display_name = true,
 		icon = "content/ui/materials/icons/categories/ranged",
 		slot_types = {
-			"slot_secondary",
-		},
+			"slot_secondary"
+		}
 	},
 	{
 		hide_display_name = true,
@@ -108,9 +108,9 @@ local item_category_tabs_content = {
 		slot_types = {
 			"slot_attachment_1",
 			"slot_attachment_2",
-			"slot_attachment_3",
-		},
-	},
+			"slot_attachment_3"
+		}
+	}
 }
 
 return {
@@ -120,5 +120,5 @@ return {
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
 	item_category_tabs_content = item_category_tabs_content,
-	tab_menu_settings = tab_menu_settings,
+	tab_menu_settings = tab_menu_settings
 }

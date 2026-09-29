@@ -4,12 +4,12 @@ local ScannerDisplayViewDefinitionsBase = require("scripts/ui/views/scanner_disp
 local scenegraph_definition = ScannerDisplayViewDefinitionsBase.scenegraph_definition
 local widget_definitions = {
 	scanner_background = ScannerDisplayViewDefinitionsBase.widget_definitions.scanner_background,
-	noise_background = ScannerDisplayViewDefinitionsBase.widget_definitions.noise_background,
+	noise_background = ScannerDisplayViewDefinitionsBase.widget_definitions.noise_background
 }
 
 return {
 	none = {
 		widget_definitions = widget_definitions,
-		scenegraph_definition = scenegraph_definition,
-	},
+		scenegraph_definition = scenegraph_definition
+	}
 }

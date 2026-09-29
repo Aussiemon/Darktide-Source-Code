@@ -12,7 +12,7 @@ local broker_cryptic_a = {
 			"loc_cryptic_a__ability_01_a_05",
 			"loc_cryptic_a__ability_01_a_06",
 			"loc_cryptic_a__ability_01_a_07",
-			"loc_cryptic_a__ability_01_a_08",
+			"loc_cryptic_a__ability_01_a_08"
 		},
 		sound_events_duration = {
 			2.093333,
@@ -22,9 +22,9 @@ local broker_cryptic_a = {
 			2.508688,
 			1.799031,
 			1.632521,
-			2.962573,
+			2.962573
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	ability_02_a = {
 		randomize_indexes_n = 0,
@@ -37,7 +37,7 @@ local broker_cryptic_a = {
 			"loc_cryptic_a__ability_02_a_05",
 			"loc_cryptic_a__ability_02_a_06",
 			"loc_cryptic_a__ability_02_a_07",
-			"loc_cryptic_a__ability_02_a_08",
+			"loc_cryptic_a__ability_02_a_08"
 		},
 		sound_events_duration = {
 			2.958271,
@@ -47,9 +47,9 @@ local broker_cryptic_a = {
 			1.840771,
 			2.500604,
 			2.537896,
-			3.365948,
+			3.365948
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	ability_03_a = {
 		randomize_indexes_n = 0,
@@ -62,7 +62,7 @@ local broker_cryptic_a = {
 			"loc_cryptic_a__ability_03_a_05",
 			"loc_cryptic_a__ability_03_a_06",
 			"loc_cryptic_a__ability_03_a_07",
-			"loc_cryptic_a__ability_03_a_08",
+			"loc_cryptic_a__ability_03_a_08"
 		},
 		sound_events_duration = {
 			1.19849,
@@ -72,9 +72,9 @@ local broker_cryptic_a = {
 			1.406177,
 			1.154677,
 			1.668823,
-			1.799052,
+			1.799052
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	blitz_01_a = {
 		randomize_indexes_n = 0,
@@ -87,7 +87,7 @@ local broker_cryptic_a = {
 			"loc_cryptic_a__blitz_01_a_05",
 			"loc_cryptic_a__blitz_01_a_06",
 			"loc_cryptic_a__blitz_01_a_07",
-			"loc_cryptic_a__blitz_01_a_08",
+			"loc_cryptic_a__blitz_01_a_08"
 		},
 		sound_events_duration = {
 			2.151188,
@@ -97,9 +97,9 @@ local broker_cryptic_a = {
 			2.377125,
 			2.367667,
 			3.014156,
-			2.173427,
+			2.173427
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	blitz_02_a = {
 		randomize_indexes_n = 0,
@@ -112,7 +112,7 @@ local broker_cryptic_a = {
 			"loc_cryptic_a__blitz_02_a_05",
 			"loc_cryptic_a__blitz_02_a_06",
 			"loc_cryptic_a__blitz_02_a_07",
-			"loc_cryptic_a__blitz_02_a_08",
+			"loc_cryptic_a__blitz_02_a_08"
 		},
 		sound_events_duration = {
 			1.161229,
@@ -122,9 +122,9 @@ local broker_cryptic_a = {
 			1.659563,
 			1.317979,
 			1.786146,
-			1.462573,
+			1.462573
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	blitz_03_a = {
 		randomize_indexes_n = 0,
@@ -137,7 +137,7 @@ local broker_cryptic_a = {
 			"loc_cryptic_a__blitz_03_a_05",
 			"loc_cryptic_a__blitz_03_a_06",
 			"loc_cryptic_a__blitz_03_a_07",
-			"loc_cryptic_a__blitz_03_a_08",
+			"loc_cryptic_a__blitz_03_a_08"
 		},
 		sound_events_duration = {
 			1.524813,
@@ -147,10 +147,10 @@ local broker_cryptic_a = {
 			1.065656,
 			2.18776,
 			1.714833,
-			1.917771,
+			1.917771
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("broker_cryptic_a", broker_cryptic_a)

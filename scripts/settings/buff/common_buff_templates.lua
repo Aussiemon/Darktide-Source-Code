@@ -24,10 +24,10 @@ templates.light_stun_movement_slow = {
 	lerped_stat_buffs = {
 		[buff_stat_buffs.movement_speed] = {
 			max = -0.25,
-			min = -0.5,
-		},
+			min = -0.5
+		}
 	},
-	lerp_t_func = smoothstep_lerp_t_func,
+	lerp_t_func = smoothstep_lerp_t_func
 }
 templates.medium_stun_movement_slow = {
 	class_name = "buff",
@@ -38,10 +38,10 @@ templates.medium_stun_movement_slow = {
 	lerped_stat_buffs = {
 		[buff_stat_buffs.movement_speed] = {
 			max = -0.25,
-			min = -0.5,
-		},
+			min = -0.5
+		}
 	},
-	lerp_t_func = smoothstep_lerp_t_func,
+	lerp_t_func = smoothstep_lerp_t_func
 }
 templates.heavy_stun_movement_slow = {
 	class_name = "buff",
@@ -52,10 +52,10 @@ templates.heavy_stun_movement_slow = {
 	lerped_stat_buffs = {
 		[buff_stat_buffs.movement_speed] = {
 			max = -0.35,
-			min = -0.5,
-		},
+			min = -0.5
+		}
 	},
-	lerp_t_func = smoothstep_lerp_t_func,
+	lerp_t_func = smoothstep_lerp_t_func
 }
 templates.ogryn_stun_movement_speed_up = {
 	class_name = "buff",
@@ -66,10 +66,10 @@ templates.ogryn_stun_movement_speed_up = {
 	lerped_stat_buffs = {
 		[buff_stat_buffs.movement_speed] = {
 			max = 0.050000000000000044,
-			min = 0,
-		},
+			min = 0
+		}
 	},
-	lerp_t_func = smoothstep_lerp_t_func,
+	lerp_t_func = smoothstep_lerp_t_func
 }
 templates.fumbled_stun_movement_slow = {
 	class_name = "buff",
@@ -80,10 +80,10 @@ templates.fumbled_stun_movement_slow = {
 	lerped_stat_buffs = {
 		[buff_stat_buffs.movement_speed] = {
 			max = -0.30000000000000004,
-			min = -0.5,
-		},
+			min = -0.5
+		}
 	},
-	lerp_t_func = smoothstep_lerp_t_func,
+	lerp_t_func = smoothstep_lerp_t_func
 }
 templates.grenadier_stun_movement_slow = {
 	class_name = "buff",
@@ -94,10 +94,10 @@ templates.grenadier_stun_movement_slow = {
 	lerped_stat_buffs = {
 		[buff_stat_buffs.movement_speed] = {
 			max = -0.25,
-			min = -0.5,
-		},
+			min = -0.5
+		}
 	},
-	lerp_t_func = smoothstep_lerp_t_func,
+	lerp_t_func = smoothstep_lerp_t_func
 }
 templates.fortitude_broken_stun_movement_slow = {
 	class_name = "buff",
@@ -108,10 +108,10 @@ templates.fortitude_broken_stun_movement_slow = {
 	lerped_stat_buffs = {
 		[buff_stat_buffs.movement_speed] = {
 			max = -0.25,
-			min = -0.75,
-		},
+			min = -0.75
+		}
 	},
-	lerp_t_func = smoothstep_lerp_t_func,
+	lerp_t_func = smoothstep_lerp_t_func
 }
 templates.sniper_stun_movement_slow = {
 	class_name = "buff",
@@ -122,10 +122,10 @@ templates.sniper_stun_movement_slow = {
 	lerped_stat_buffs = {
 		[buff_stat_buffs.movement_speed] = {
 			max = -0.6,
-			min = -0.99,
-		},
+			min = -0.99
+		}
 	},
-	lerp_t_func = smoothstep_lerp_t_func,
+	lerp_t_func = smoothstep_lerp_t_func
 }
 templates.toughness_stun_movement_slow = {
 	class_name = "buff",
@@ -136,10 +136,10 @@ templates.toughness_stun_movement_slow = {
 	lerped_stat_buffs = {
 		[buff_stat_buffs.movement_speed] = {
 			max = -0.050000000000000044,
-			min = -0.19999999999999996,
-		},
+			min = -0.19999999999999996
+		}
 	},
-	lerp_t_func = smoothstep_lerp_t_func,
+	lerp_t_func = smoothstep_lerp_t_func
 }
 templates.ranged_stun_movement_slow = {
 	class_name = "buff",
@@ -150,10 +150,10 @@ templates.ranged_stun_movement_slow = {
 	lerped_stat_buffs = {
 		[buff_stat_buffs.movement_speed] = {
 			max = -0.15000000000000002,
-			min = -0.25,
-		},
+			min = -0.25
+		}
 	},
-	lerp_t_func = smoothstep_lerp_t_func,
+	lerp_t_func = smoothstep_lerp_t_func
 }
 templates.ranged_sprinting_stun_movement_slow = {
 	class_name = "buff",
@@ -164,10 +164,10 @@ templates.ranged_sprinting_stun_movement_slow = {
 	lerped_stat_buffs = {
 		[buff_stat_buffs.movement_speed] = {
 			max = 0,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
-	lerp_t_func = smoothstep_lerp_t_func,
+	lerp_t_func = smoothstep_lerp_t_func
 }
 templates.ogryn_powermaul_stun_movement_slow = {
 	class_name = "buff",
@@ -178,10 +178,10 @@ templates.ogryn_powermaul_stun_movement_slow = {
 	lerped_stat_buffs = {
 		[buff_stat_buffs.movement_speed] = {
 			max = -0.19999999999999996,
-			min = -0.99,
-		},
+			min = -0.99
+		}
 	},
-	lerp_t_func = smoothstep_lerp_t_func,
+	lerp_t_func = smoothstep_lerp_t_func
 }
 templates.stun_immune_ultra_short = {
 	class_name = "buff",
@@ -189,8 +189,8 @@ templates.stun_immune_ultra_short = {
 	predicted = true,
 	unique_buff_id = "stun_immunity",
 	keywords = {
-		buff_keywords.stun_immune,
-	},
+		buff_keywords.stun_immune
+	}
 }
 templates.stun_immune_short = {
 	class_name = "buff",
@@ -198,8 +198,8 @@ templates.stun_immune_short = {
 	predicted = true,
 	unique_buff_id = "stun_immunity",
 	keywords = {
-		buff_keywords.stun_immune,
-	},
+		buff_keywords.stun_immune
+	}
 }
 templates.stun_immune_medium = {
 	class_name = "buff",
@@ -207,8 +207,8 @@ templates.stun_immune_medium = {
 	predicted = true,
 	unique_buff_id = "stun_immunity",
 	keywords = {
-		buff_keywords.stun_immune,
-	},
+		buff_keywords.stun_immune
+	}
 }
 templates.stun_immune_long = {
 	class_name = "buff",
@@ -216,8 +216,8 @@ templates.stun_immune_long = {
 	predicted = true,
 	unique_buff_id = "stun_immunity",
 	keywords = {
-		buff_keywords.stun_immune,
-	},
+		buff_keywords.stun_immune
+	}
 }
 templates.stun_immune_very_long = {
 	class_name = "buff",
@@ -225,8 +225,8 @@ templates.stun_immune_very_long = {
 	predicted = true,
 	unique_buff_id = "stun_immunity",
 	keywords = {
-		buff_keywords.stun_immune,
-	},
+		buff_keywords.stun_immune
+	}
 }
 
 return templates

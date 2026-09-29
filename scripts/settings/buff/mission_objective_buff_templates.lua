@@ -14,18 +14,18 @@ templates.grimoire_pickup = {
 	keywords = {},
 	stepped_stat_buffs = {
 		{
-			[buff_stat_buffs.permanent_damage_converter] = 0.1,
+			[buff_stat_buffs.permanent_damage_converter] = 0.1
 		},
 		{
-			[buff_stat_buffs.permanent_damage_converter] = 0.25,
+			[buff_stat_buffs.permanent_damage_converter] = 0.25
 		},
 		{
-			[buff_stat_buffs.permanent_damage_converter] = 0.5,
+			[buff_stat_buffs.permanent_damage_converter] = 0.5
 		},
 		{
-			[buff_stat_buffs.permanent_damage_converter] = 0.75,
-		},
-	},
+			[buff_stat_buffs.permanent_damage_converter] = 0.75
+		}
+	}
 }
 
 return templates

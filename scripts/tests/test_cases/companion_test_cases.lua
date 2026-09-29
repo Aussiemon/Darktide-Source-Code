@@ -18,18 +18,20 @@ CompanionTestCases.spawn_and_despawn_dog_with_lone_wolf_talent = function (case_
 
 		local local_player = Testify:make_request("local_player", 1)
 		local params = {
-			player = local_player,
+			player = local_player
 		}
 
 		params.talents = {
-			adamant_disable_companion = 1,
+			adamant_disable_companion = {
+				tier = 1
+			}
 		}
 
 		Testify:make_request("apply_select_talents", params)
 		TestifySnippets.wait(5)
 
 		params.talents = {
-			adamant_disable_companion = nil,
+			adamant_disable_companion = nil
 		}
 
 		Testify:make_request("apply_select_talents", params)
@@ -51,19 +53,21 @@ CompanionTestCases.check_lone_wolf_talent_and_coherency_interaction = function (
 
 		local local_player = Testify:make_request("local_player", 1)
 		local params = {
-			player = local_player,
+			player = local_player
 		}
 
 		params.talents = {
 			adamant_companion_coherency = nil,
-			adamant_disable_companion = nil,
+			adamant_disable_companion = nil
 		}
 
 		Testify:make_request("apply_select_talents", params)
 		TestifySnippets.wait(5)
 
 		params.talents = {
-			adamant_companion_coherency = 1,
+			adamant_companion_coherency = {
+				tier = 1
+			}
 		}
 
 		Testify:make_request("apply_select_talents", params)
@@ -71,17 +75,23 @@ CompanionTestCases.check_lone_wolf_talent_and_coherency_interaction = function (
 
 		params.talents = {
 			adamant_companion_coherency = nil,
-			adamant_disable_companion = 1,
-			adamant_reload_speed_aura = 1,
+			adamant_reload_speed_aura = {
+				tier = 1
+			},
+			adamant_disable_companion = {
+				tier = 1
+			}
 		}
 
 		Testify:make_request("apply_select_talents", params)
 		TestifySnippets.wait(5)
 
 		params.talents = {
-			adamant_companion_coherency = 1,
 			adamant_disable_companion = nil,
 			adamant_reload_speed_aura = nil,
+			adamant_companion_coherency = {
+				tier = 1
+			}
 		}
 
 		Testify:make_request("apply_select_talents", params)
@@ -105,12 +115,12 @@ CompanionTestCases.adamant_target_enemy_and_attack_with_companion_dog = function
 		local spawn_position = {
 			x = 0,
 			y = 10,
-			z = 0,
+			z = 0
 		}
 		local minion_spawn_data = {
 			breed_side = 2,
 			breed_name = settings.breed_name,
-			spawn_position = spawn_position,
+			spawn_position = spawn_position
 		}
 		local target_unit = Testify:make_request("spawn_minion", minion_spawn_data)
 

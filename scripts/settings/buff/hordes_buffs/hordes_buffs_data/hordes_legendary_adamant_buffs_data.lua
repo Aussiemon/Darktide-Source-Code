@@ -15,9 +15,9 @@ hordes_legendary_adamant_buffs_data.hordes_buff_adamant_stance_immunity = {
 	buff_stats = {
 		talent_name = {
 			format_type = "loc_string",
-			value = "loc_talent_adamant_stance_ability_name",
-		},
-	},
+			value = "loc_talent_adamant_stance_ability_name"
+		}
+	}
 }
 hordes_legendary_adamant_buffs_data.hordes_buff_adamant_drone_stun = {
 	description = "Your Nuncio Aquila shocks enemies inside its area every X seconds",
@@ -28,13 +28,13 @@ hordes_legendary_adamant_buffs_data.hordes_buff_adamant_drone_stun = {
 	buff_stats = {
 		talent_name = {
 			format_type = "loc_string",
-			value = "loc_talent_ability_area_buff_drone",
+			value = "loc_talent_ability_area_buff_drone"
 		},
 		time = {
 			format_type = "number",
-			value = 5,
-		},
-	},
+			value = 5
+		}
+	}
 }
 hordes_legendary_adamant_buffs_data.hordes_buff_adamant_random_bash = {
 	description = "Your Bash applies Soulblaze, Burn or Bleed on Hit. Random which one for each enemy",
@@ -45,9 +45,9 @@ hordes_legendary_adamant_buffs_data.hordes_buff_adamant_random_bash = {
 	buff_stats = {
 		talent_name = {
 			format_type = "loc_string",
-			value = "loc_talent_adamant_charge_ability_name",
-		},
-	},
+			value = "loc_talent_adamant_charge_ability_name"
+		}
+	}
 }
 hordes_legendary_adamant_buffs_data.hordes_buff_adamant_mine_explosion = {
 	description = "Your Shock Mine explodes when its duration expires",
@@ -58,9 +58,9 @@ hordes_legendary_adamant_buffs_data.hordes_buff_adamant_mine_explosion = {
 	buff_stats = {
 		talent_name = {
 			format_type = "loc_string",
-			value = "loc_talent_ability_shock_mine",
-		},
-	},
+			value = "loc_talent_ability_shock_mine"
+		}
+	}
 }
 hordes_legendary_adamant_buffs_data.hordes_buff_adamant_grenade_multi = {
 	description = "Replenish a grenade if your Grenade kills X or more enemies.",
@@ -71,13 +71,13 @@ hordes_legendary_adamant_buffs_data.hordes_buff_adamant_grenade_multi = {
 	buff_stats = {
 		talent_name = {
 			format_type = "loc_string",
-			value = "loc_talent_ability_adamant_grenade_improved",
+			value = "loc_talent_ability_adamant_grenade_improved"
 		},
 		amount = {
 			format_type = "number",
-			value = 10,
-		},
-	},
+			value = 10
+		}
+	}
 }
 hordes_legendary_adamant_buffs_data.hordes_buff_adamant_auto_detonate = {
 	description = "Trigger Detonation whenever the Cyber-Mastiff Poundes an Elite/Special/Monster at no Charge Cost. Xs internal Cooldown.",
@@ -88,13 +88,13 @@ hordes_legendary_adamant_buffs_data.hordes_buff_adamant_auto_detonate = {
 	buff_stats = {
 		talent_name = {
 			format_type = "loc_string",
-			value = "loc_talent_ability_detonate",
+			value = "loc_talent_ability_detonate"
 		},
 		time = {
 			format_type = "number",
-			value = 10,
-		},
-	},
+			value = 10
+		}
+	}
 }
 
 return hordes_legendary_adamant_buffs_data

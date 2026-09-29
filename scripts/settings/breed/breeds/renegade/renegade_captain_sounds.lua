@@ -24,20 +24,20 @@ local sound_data = {
 		vce_mocking_laughter = "wwise/events/minions/play_minion_captain__mocking_laughter_vce",
 		equip_melee = {
 			slot_power_sword = "wwise/events/minions/play_minion_captain_equip_sword",
-			slot_powermaul = "wwise/events/minions/play_minion_captain_equip_maul",
+			slot_powermaul = "wwise/events/minions/play_minion_captain_equip_maul"
 		},
 		swing_heavy = {
 			slot_power_sword = "wwise/events/weapon/play_minion_captain_swing_powered",
-			slot_powermaul = "wwise/events/weapon/play_minion_captain_swing_powered",
+			slot_powermaul = "wwise/events/weapon/play_minion_captain_swing_powered"
 		},
 		swing = {
 			slot_power_sword = "wwise/events/weapon/play_minion_captain_swing",
-			slot_powermaul = "wwise/events/weapon/play_minion_captain_swing",
+			slot_powermaul = "wwise/events/weapon/play_minion_captain_swing"
 		},
 		swing_start = {
 			slot_power_sword = "wwise/events/minions/play_minion_captain_swing_light_charge",
-			slot_powermaul = "wwise/events/minions/play_minion_captain_light_charge_start",
-		},
+			slot_powermaul = "wwise/events/minions/play_minion_captain_light_charge_start"
+		}
 	},
 	use_proximity_culling = {
 		charge = false,
@@ -55,8 +55,8 @@ local sound_data = {
 		vce_melee_attack_charged = false,
 		vce_melee_attack_charged_long = false,
 		vce_melee_attack_short = false,
-		vce_mocking_laughter = false,
-	},
+		vce_mocking_laughter = false
+	}
 }
 
 return sound_data

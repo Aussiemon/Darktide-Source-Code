@@ -7,10 +7,10 @@ local SFX_ALIAS = "weapon_overload"
 local LOOPING_SFX_ALIAS = "weapon_overload_loop"
 local LOOPING_VFX_ALIAS = "weapon_overload_loop"
 local _vfx_external_properties = {
-	stage = nil,
+	stage = nil
 }
 local _sfx_external_properties = {
-	stage = nil,
+	stage = nil
 }
 local _slot_components, _is_cinematic_active
 
@@ -305,7 +305,7 @@ function _slot_components(attachments)
 
 			component_list[#component_list + 1] = {
 				unit = attachment_unit,
-				component = component,
+				component = component
 			}
 		end
 	end

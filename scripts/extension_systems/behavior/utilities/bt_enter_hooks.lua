@@ -155,7 +155,7 @@ BtEnterHooks = {
 		for _, value in pairs(args) do
 			BtEnterHooks[value.hook](unit, breed, blackboard, scratchpad, action_data, t, value.args)
 		end
-	end,
+	end
 }
 
 return BtEnterHooks

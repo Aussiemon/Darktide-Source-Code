@@ -64,7 +64,7 @@ templates.hordes_buff_no_ammo_consumption_on_crits = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	conditional_keywords = {
-		buff_keywords.no_ammo_consumption_on_crits,
+		buff_keywords.no_ammo_consumption_on_crits
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -80,7 +80,7 @@ templates.hordes_buff_no_ammo_consumption_on_crits = {
 		end
 
 		return true
-	end,
+	end
 }
 
 local basic_damage_increase = HordesBuffsData.hordes_buff_damage_increase.buff_stats.damage.value
@@ -92,8 +92,8 @@ templates.hordes_buff_damage_increase = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	stat_buffs = {
-		[stat_buffs.damage] = basic_damage_increase,
-	},
+		[stat_buffs.damage] = basic_damage_increase
+	}
 }
 
 local percent_wield_speed_increase = HordesBuffsData.hordes_buff_reduce_swap_time.buff_stats.swap_time.value
@@ -103,8 +103,8 @@ templates.hordes_buff_reduce_swap_time = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	stat_buffs = {
-		[stat_buffs.wield_speed] = percent_wield_speed_increase,
-	},
+		[stat_buffs.wield_speed] = percent_wield_speed_increase
+	}
 }
 
 local percent_toughness_regen_on_ranged_kill = HordesBuffsData.hordes_buff_toughness_on_ranged_kill.buff_stats.thoughness_regen.value
@@ -116,12 +116,12 @@ templates.hordes_buff_toughness_on_ranged_kill = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_ranged_kill,
 	proc_func = function (params, template_data, template_context)
 		Toughness.replenish_percentage(template_context.unit, percent_toughness_regen_on_ranged_kill, false)
-	end,
+	end
 }
 
 local percent_ranged_damage_increase_after_reload = HordesBuffsData.hordes_buff_increased_damage_after_reload.buff_stats.range.value
@@ -136,11 +136,11 @@ templates.hordes_buff_increased_damage_after_reload = {
 	buff_category = buff_categories.hordes_buff,
 	active_duration = duration_ranged_damage_increase_after_reload,
 	proc_events = {
-		[proc_events.on_reload] = 1,
+		[proc_events.on_reload] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.ranged_damage] = percent_ranged_damage_increase_after_reload,
-	},
+		[stat_buffs.ranged_damage] = percent_ranged_damage_increase_after_reload
+	}
 }
 
 local max_stacks_improved_weapon_reload_on_melee_kill = HordesBuffsData.hordes_buff_improved_weapon_reload_on_melee_kill.buff_stats.time.value
@@ -153,7 +153,7 @@ templates.hordes_buff_improved_weapon_reload_on_melee_kill = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_melee_kill,
 	start_func = function (template_data, template_context)
@@ -163,7 +163,7 @@ templates.hordes_buff_improved_weapon_reload_on_melee_kill = {
 	end,
 	proc_func = function (params, template_data, template_context, t)
 		template_data.buff_extension:add_internally_controlled_buff("hordes_buff_improved_weapon_reload_on_melee_kill_effect", t)
-	end,
+	end
 }
 templates.hordes_buff_improved_weapon_reload_on_melee_kill_effect = {
 	class_name = "server_only_proc_buff",
@@ -172,10 +172,10 @@ templates.hordes_buff_improved_weapon_reload_on_melee_kill_effect = {
 	max_stacks = max_stacks_improved_weapon_reload_on_melee_kill,
 	max_stacks_cap = max_stacks_improved_weapon_reload_on_melee_kill,
 	proc_events = {
-		[proc_events.on_reload] = 1,
+		[proc_events.on_reload] = 1
 	},
 	stat_buffs = {
-		[stat_buffs.reload_speed] = percent_improved_weapon_reload_on_melee_kill,
+		[stat_buffs.reload_speed] = percent_improved_weapon_reload_on_melee_kill
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -200,7 +200,7 @@ templates.hordes_buff_improved_weapon_reload_on_melee_kill_effect = {
 		local is_reloading = action_kind and (action_kind == "reload_shotgun" or action_kind == "reload_state" or action_kind == "ranged_load_special")
 
 		return template_data.done and not is_reloading
-	end,
+	end
 }
 
 local percent_ammo_gets_increased_crit_chance_after_reload = HordesBuffsData.hordes_buff_bonus_crit_chance_on_ammo.buff_stats.ammo.value
@@ -213,7 +213,7 @@ templates.hordes_buff_bonus_crit_chance_on_ammo = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	conditional_stat_buffs = {
-		[stat_buffs.ranged_critical_strike_chance] = percent_crit_chance_increase_after_reload,
+		[stat_buffs.ranged_critical_strike_chance] = percent_crit_chance_increase_after_reload
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -233,7 +233,7 @@ templates.hordes_buff_bonus_crit_chance_on_ammo = {
 		local ammunition_percentage = 1 - percent_ammo_gets_increased_crit_chance_after_reload
 
 		return ammunition_percentage <= current_animation_percentage
-	end,
+	end
 }
 
 local percent_melee_damage_increase_on_ranged_kill = HordesBuffsData.hordes_buff_other_slot_damage_increase_on_kill.buff_stats.dammage.value
@@ -256,15 +256,15 @@ templates.hordes_buff_other_slot_damage_increase_on_kill = {
 
 		template_data.melee_kills_buff = {
 			buff_index = buff_index,
-			component_index = component_index,
+			component_index = component_index
 		}
 		_, buff_index, component_index = buff_extension:add_externally_controlled_buff("hordes_buff_ranged_kills_grant_melee_damage", current_time)
 		template_data.range_kills_buff = {
 			buff_index = buff_index,
-			component_index = component_index,
+			component_index = component_index
 		}
 		template_data.buff_extension = buff_extension
-	end,
+	end
 }
 templates.hordes_buff_melee_kills_grant_range_damage = {
 	active_duration = 5,
@@ -275,12 +275,12 @@ templates.hordes_buff_melee_kills_grant_range_damage = {
 	predicted = false,
 	buff_category = buff_categories.hordes_sub_buff,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_melee_kill,
 	proc_stat_buffs = {
-		[stat_buffs.ranged_damage] = percent_range_damage_increase_on_melee_kill,
-	},
+		[stat_buffs.ranged_damage] = percent_range_damage_increase_on_melee_kill
+	}
 }
 templates.hordes_buff_ranged_kills_grant_melee_damage = {
 	active_duration = 5,
@@ -291,12 +291,12 @@ templates.hordes_buff_ranged_kills_grant_melee_damage = {
 	predicted = false,
 	buff_category = buff_categories.hordes_sub_buff,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_ranged_kill,
 	proc_stat_buffs = {
-		[stat_buffs.melee_damage] = percent_melee_damage_increase_on_ranged_kill,
-	},
+		[stat_buffs.melee_damage] = percent_melee_damage_increase_on_ranged_kill
+	}
 }
 
 local percent_decrease_range_hit_mass_consumption = HordesBuffsData.hordes_buff_ranged_attacks_hit_mass_penetration_increased.buff_stats.increase_hitmass.value
@@ -308,8 +308,8 @@ templates.hordes_buff_ranged_attacks_hit_mass_penetration_increased = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	stat_buffs = {
-		[stat_buffs.consumed_hit_mass_modifier_on_ranged_hit] = 1 / (1 + percent_decrease_range_hit_mass_consumption),
-	},
+		[stat_buffs.consumed_hit_mass_modifier_on_ranged_hit] = 1 / (1 + percent_decrease_range_hit_mass_consumption)
+	}
 }
 
 local percent_damage_increase_per_missing_ammo_in_clip = HordesBuffsData.hordes_buff_melee_damage_missing_ammo_in_clip.buff_stats.dammage.value
@@ -323,7 +323,7 @@ templates.hordes_buff_melee_damage_missing_ammo_in_clip = {
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
 		[proc_events.on_ammo_consumed] = 1,
-		[proc_events.on_reload] = 1,
+		[proc_events.on_reload] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.ammo_missing = 0
@@ -340,17 +340,17 @@ templates.hordes_buff_melee_damage_missing_ammo_in_clip = {
 		[proc_events.on_reload] = function (params, template_data, template_context)
 			template_data.ammo_missing = 0
 			template_data.lerp_t = 0
-		end,
+		end
 	},
 	lerped_stat_buffs = {
 		[stat_buffs.melee_damage] = {
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		return template_data.lerp_t
-	end,
+	end
 }
 
 local num_weakspot_hit_streak_needed_for_infinite_ammo = HordesBuffsData.hordes_buff_weakspot_ranged_hit_gives_infinite_ammo.buff_stats.headshot.value
@@ -372,15 +372,15 @@ templates.hordes_buff_weakspot_ranged_hit_gives_infinite_ammo = {
 			wwise_state = {
 				group = "player_ability",
 				off_state = "none",
-				on_state = "ogryn_stance",
-			},
-		},
+				on_state = "ogryn_stance"
+			}
+		}
 	},
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	proc_keywords = {
-		buff_keywords.no_ammo_consumption,
+		buff_keywords.no_ammo_consumption
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -409,7 +409,7 @@ templates.hordes_buff_weakspot_ranged_hit_gives_infinite_ammo = {
 	end,
 	proc_func = function (params, template_data, template_context, t)
 		template_data.hits_in_a_row = 0
-	end,
+	end
 }
 
 return templates

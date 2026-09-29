@@ -5,7 +5,7 @@ local CutsceneCharacterExtensionInterface = {
 	"has_player_assigned",
 	"cinematic_name",
 	"slot",
-	"unassign_player_loadout",
+	"unassign_player_loadout"
 }
 
 return CutsceneCharacterExtensionInterface

@@ -5,166 +5,166 @@ local ogryn_c_adamant_male_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_male_c__adamant_male_c_ogryn_bonding_conversation_26_b_01",
+			[1] = "loc_adamant_male_c__adamant_male_c_ogryn_bonding_conversation_26_b_01"
 		},
 		sound_events_duration = {
-			[1] = 2.060396,
+			[1] = 2.060396
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	adamant_male_c_ogryn_bonding_conversation_26_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_male_c__adamant_male_c_ogryn_bonding_conversation_26_d_01",
+			[1] = "loc_adamant_male_c__adamant_male_c_ogryn_bonding_conversation_26_d_01"
 		},
 		sound_events_duration = {
-			[1] = 1.06424,
+			[1] = 1.06424
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	combat_pause_limited_bolt_on_a_ogryn_c_01_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_male_c__combat_pause_limited_bolt_on_a_ogryn_c_01_b_01",
+			[1] = "loc_adamant_male_c__combat_pause_limited_bolt_on_a_ogryn_c_01_b_01"
 		},
 		sound_events_duration = {
-			[1] = 3.600792,
+			[1] = 3.600792
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	combat_pause_limited_bolt_on_a_ogryn_c_02_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_male_c__combat_pause_limited_bolt_on_a_ogryn_c_02_b_01",
+			[1] = "loc_adamant_male_c__combat_pause_limited_bolt_on_a_ogryn_c_02_b_01"
 		},
 		sound_events_duration = {
-			[1] = 3.13599,
+			[1] = 3.13599
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	combat_pause_limited_ogryn_c_04_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_male_c__combat_pause_limited_ogryn_c_04_b_01",
+			[1] = "loc_adamant_male_c__combat_pause_limited_ogryn_c_04_b_01"
 		},
 		sound_events_duration = {
-			[1] = 2.763479,
+			[1] = 2.763479
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	combat_pause_limited_ogryn_c_08_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_male_c__combat_pause_limited_ogryn_c_08_b_01",
+			[1] = "loc_adamant_male_c__combat_pause_limited_ogryn_c_08_b_01"
 		},
 		sound_events_duration = {
-			[1] = 4.516167,
+			[1] = 4.516167
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	combat_pause_limited_ogryn_c_12_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_male_c__combat_pause_limited_ogryn_c_12_b_01",
+			[1] = "loc_adamant_male_c__combat_pause_limited_ogryn_c_12_b_01"
 		},
 		sound_events_duration = {
-			[1] = 7.114854,
+			[1] = 7.114854
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	combat_pause_limited_ogryn_c_16_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_male_c__combat_pause_limited_ogryn_c_16_b_01",
+			[1] = "loc_adamant_male_c__combat_pause_limited_ogryn_c_16_b_01"
 		},
 		sound_events_duration = {
-			[1] = 2.549146,
+			[1] = 2.549146
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	combat_pause_limited_ogryn_c_20_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_male_c__combat_pause_limited_ogryn_c_20_b_01",
+			[1] = "loc_adamant_male_c__combat_pause_limited_ogryn_c_20_b_01"
 		},
 		sound_events_duration = {
-			[1] = 3.324229,
+			[1] = 3.324229
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	combat_pause_quirk_abhuman_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
 			[1] = "loc_adamant_male_c__combat_pause_quirk_abhuman_b_01",
-			[2] = "loc_adamant_male_c__combat_pause_quirk_abhuman_b_02",
+			[2] = "loc_adamant_male_c__combat_pause_quirk_abhuman_b_02"
 		},
 		sound_events_duration = {
 			[1] = 2.64001,
-			[2] = 3.474677,
+			[2] = 3.474677
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	combat_pause_quirk_club_thump_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
 			[1] = "loc_adamant_male_c__combat_pause_quirk_club_thump_b_01",
-			[2] = "loc_adamant_male_c__combat_pause_quirk_club_thump_b_02",
+			[2] = "loc_adamant_male_c__combat_pause_quirk_club_thump_b_02"
 		},
 		sound_events_duration = {
 			[1] = 11.06801,
-			[2] = 4.469344,
+			[2] = 4.469344
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	combat_pause_quirk_deddog_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
 			[1] = "loc_adamant_male_c__combat_pause_quirk_deddog_b_01",
-			[2] = "loc_adamant_male_c__combat_pause_quirk_deddog_b_02",
+			[2] = "loc_adamant_male_c__combat_pause_quirk_deddog_b_02"
 		},
 		sound_events_duration = {
 			[1] = 3.233344,
-			[2] = 2.74401,
+			[2] = 2.74401
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	combat_pause_quirk_glutton_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
 			[1] = "loc_adamant_male_c__combat_pause_quirk_glutton_b_01",
-			[2] = "loc_adamant_male_c__combat_pause_quirk_glutton_b_02",
+			[2] = "loc_adamant_male_c__combat_pause_quirk_glutton_b_02"
 		},
 		sound_events_duration = {
 			[1] = 6.637344,
-			[2] = 2.13,
+			[2] = 2.13
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	combat_pause_quirk_hates_goo_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
 			[1] = "loc_adamant_male_c__combat_pause_quirk_hates_goo_b_01",
-			[2] = "loc_adamant_male_c__combat_pause_quirk_hates_goo_b_02",
+			[2] = "loc_adamant_male_c__combat_pause_quirk_hates_goo_b_02"
 		},
 		sound_events_duration = {
 			[1] = 2.022677,
-			[2] = 5.09601,
+			[2] = 5.09601
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("ogryn_c_adamant_male_c", ogryn_c_adamant_male_c)

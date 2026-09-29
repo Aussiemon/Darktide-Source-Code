@@ -35,7 +35,7 @@ local level_prop_unit_template = {
 	end,
 	husk_init = function (unit, config, template_context, game_session, game_object_id, owner_id)
 		config:parse_unit(unit)
-	end,
+	end
 }
 
 return level_prop_unit_template

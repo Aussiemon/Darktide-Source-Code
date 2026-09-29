@@ -25,8 +25,8 @@ local grenade_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi * 2.2,
 					y = math.pi * 1.1,
-					z = math.pi * 2.2,
-				},
+					z = math.pi * 2.2
+				}
 			},
 			underhand_throw = {
 				aim_max_iterations = 40,
@@ -48,9 +48,9 @@ local grenade_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi * 2.2,
 					y = math.pi * 1.1,
-					z = math.pi * 2.2,
-				},
-			},
+					z = math.pi * 2.2
+				}
+			}
 		},
 		integrator_parameters = {
 			air_density = 0.7,
@@ -62,13 +62,13 @@ local grenade_projectile_locomotion_templates = {
 			mass = 0.8,
 			max_hit_count = 10,
 			radius = 0.07,
-			use_actor_mass_radius = false,
+			use_actor_mass_radius = false
 		},
 		vfx = {
 			trajectory = {
-				material_name = "content/fx/materials/master/trajectory",
-			},
-		},
+				material_name = "content/fx/materials/master/trajectory"
+			}
+		}
 	},
 	krak_grenade = {
 		trajectory_parameters = {
@@ -92,8 +92,8 @@ local grenade_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi * 2.2,
 					y = math.pi * 1.1,
-					z = math.pi * 2.2,
-				},
+					z = math.pi * 2.2
+				}
 			},
 			underhand_throw = {
 				aim_max_iterations = 40,
@@ -115,9 +115,9 @@ local grenade_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi * 2.2,
 					y = math.pi * 1.1,
-					z = math.pi * 2.2,
-				},
-			},
+					z = math.pi * 2.2
+				}
+			}
 		},
 		integrator_parameters = {
 			air_density = 0.7,
@@ -130,13 +130,13 @@ local grenade_projectile_locomotion_templates = {
 			max_hit_count = 10,
 			radius = 0.07,
 			use_actor_mass_radius = false,
-			true_flight_template = TrueFlightTemplates.krak_grenade,
+			true_flight_template = TrueFlightTemplates.krak_grenade
 		},
 		vfx = {
 			trajectory = {
-				material_name = "content/fx/materials/master/trajectory",
-			},
-		},
+				material_name = "content/fx/materials/master/trajectory"
+			}
+		}
 	},
 	ogryn_grenade_box = {
 		trajectory_parameters = {
@@ -159,8 +159,8 @@ local grenade_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi * 4.4,
 					y = math.pi * 2.2,
-					z = math.pi * 4.4,
-				},
+					z = math.pi * 4.4
+				}
 			},
 			underhand_throw = {
 				aim_max_iterations = 40,
@@ -182,9 +182,9 @@ local grenade_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi * 4.4,
 					y = math.pi * 2.2,
-					z = math.pi * 4.4,
-				},
-			},
+					z = math.pi * 4.4
+				}
+			}
 		},
 		integrator_parameters = {
 			air_density = 0.7,
@@ -198,13 +198,13 @@ local grenade_projectile_locomotion_templates = {
 			max_hit_count = 10,
 			radius = 0.07,
 			use_actor_mass_radius = false,
-			use_generous_bouncing = true,
+			use_generous_bouncing = true
 		},
 		vfx = {
 			trajectory = {
-				material_name = "content/fx/materials/master/trajectory",
-			},
-		},
+				material_name = "content/fx/materials/master/trajectory"
+			}
+		}
 	},
 	ogryn_friendly_rock = {
 		trajectory_parameters = {
@@ -227,8 +227,8 @@ local grenade_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi * 4.4,
 					y = math.pi * 2.2,
-					z = math.pi * 4.4,
-				},
+					z = math.pi * 4.4
+				}
 			},
 			underhand_throw = {
 				aim_max_iterations = 40,
@@ -250,9 +250,9 @@ local grenade_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi * 4.4,
 					y = math.pi * 2.2,
-					z = math.pi * 4.4,
-				},
-			},
+					z = math.pi * 4.4
+				}
+			}
 		},
 		integrator_parameters = {
 			air_density = 0.7,
@@ -266,13 +266,13 @@ local grenade_projectile_locomotion_templates = {
 			max_hit_count = 10,
 			radius = 0.15,
 			use_actor_mass_radius = false,
-			use_generous_bouncing = true,
+			use_generous_bouncing = true
 		},
 		vfx = {
 			trajectory = {
-				material_name = "content/fx/materials/master/trajectory",
-			},
-		},
+				material_name = "content/fx/materials/master/trajectory"
+			}
+		}
 	},
 	ogryn_frag_grenade = {
 		trajectory_parameters = {
@@ -295,8 +295,8 @@ local grenade_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi * 2.2,
 					y = math.pi * 1.1,
-					z = math.pi * 2.2,
-				},
+					z = math.pi * 2.2
+				}
 			},
 			underhand_throw = {
 				aim_max_iterations = 40,
@@ -318,9 +318,9 @@ local grenade_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi * 2.2,
 					y = math.pi * 1.1,
-					z = math.pi * 2.2,
-				},
-			},
+					z = math.pi * 2.2
+				}
+			}
 		},
 		integrator_parameters = {
 			air_density = 0.9,
@@ -332,19 +332,19 @@ local grenade_projectile_locomotion_templates = {
 			mass = 0.9,
 			max_hit_count = 10,
 			radius = 0.07,
-			use_actor_mass_radius = false,
+			use_actor_mass_radius = false
 		},
 		vfx = {
 			trajectory = {
-				material_name = "content/fx/materials/master/trajectory",
-			},
-		},
+				material_name = "content/fx/materials/master/trajectory"
+			}
+		}
 	},
 	zealot_throwing_knife_projectile = {
 		trajectory_parameters = {
 			spawn = {
-				locomotion_state = locomotion_states.manual_physics,
-			},
+				locomotion_state = locomotion_states.manual_physics
+			}
 		},
 		spawn_projectile_parameters = {
 			initial_speed = 75,
@@ -353,12 +353,12 @@ local grenade_projectile_locomotion_templates = {
 			rotation = Vector3Box(-90, 0, 0),
 			yaw_offset = {
 				max = 0.25,
-				min = 0.1,
+				min = 0.1
 			},
 			pitch_offset = {
 				max = 0.8,
-				min = 0.25,
-			},
+				min = 0.25
+			}
 		},
 		integrator_parameters = {
 			air_density = 0.7,
@@ -370,14 +370,14 @@ local grenade_projectile_locomotion_templates = {
 			mass = 0.8,
 			radius = 0.2,
 			statics_raycast = true,
-			use_actor_mass_radius = false,
-		},
+			use_actor_mass_radius = false
+		}
 	},
 	psyker_throwing_knife_projectile = {
 		trajectory_parameters = {
 			spawn = {
-				locomotion_state = locomotion_states.true_flight,
-			},
+				locomotion_state = locomotion_states.true_flight
+			}
 		},
 		spawn_projectile_parameters = {
 			initial_speed = 20,
@@ -385,20 +385,20 @@ local grenade_projectile_locomotion_templates = {
 			rotation = Vector3Box(-90, 0, 0),
 			has_target_yaw_offset = {
 				max = 10,
-				min = -10,
+				min = -10
 			},
 			has_target_pitch_offset = {
 				max = 8,
-				min = -3,
+				min = -3
 			},
 			pitch_offset = {
 				max = 5,
-				min = -5,
+				min = -5
 			},
 			yaw_offset = {
 				max = 3,
-				min = -3,
-			},
+				min = -3
+			}
 		},
 		integrator_parameters = {
 			coefficient_of_restitution = 1,
@@ -408,14 +408,14 @@ local grenade_projectile_locomotion_templates = {
 			radius = 0.1,
 			statics_raycast = true,
 			use_actor_mass_radius = false,
-			true_flight_template = TrueFlightTemplates.throwing_knives,
-		},
+			true_flight_template = TrueFlightTemplates.throwing_knives
+		}
 	},
 	psyker_throwing_knife_projectile_aimed = {
 		trajectory_parameters = {
 			spawn = {
-				locomotion_state = locomotion_states.true_flight,
-			},
+				locomotion_state = locomotion_states.true_flight
+			}
 		},
 		spawn_projectile_parameters = {
 			initial_speed = 40,
@@ -423,16 +423,16 @@ local grenade_projectile_locomotion_templates = {
 			rotation = Vector3Box(-90, 0, 0),
 			has_target_yaw_offset = {
 				max = 1,
-				min = 0.5,
+				min = 0.5
 			},
 			has_target_pitch_offset = {
 				max = 0.8,
-				min = 0.25,
+				min = 0.25
 			},
 			pitch_offset = {
 				max = 0,
-				min = 0,
-			},
+				min = 0
+			}
 		},
 		integrator_parameters = {
 			coefficient_of_restitution = 1,
@@ -442,14 +442,14 @@ local grenade_projectile_locomotion_templates = {
 			radius = 0.1,
 			statics_raycast = true,
 			use_actor_mass_radius = false,
-			true_flight_template = TrueFlightTemplates.throwing_knives_aimed,
-		},
+			true_flight_template = TrueFlightTemplates.throwing_knives_aimed
+		}
 	},
 	dual_shivs_throwing_knife_projectile = {
 		trajectory_parameters = {
 			spawn = {
-				locomotion_state = locomotion_states.manual_physics,
-			},
+				locomotion_state = locomotion_states.manual_physics
+			}
 		},
 		spawn_projectile_parameters = {
 			initial_speed = 65,
@@ -458,12 +458,12 @@ local grenade_projectile_locomotion_templates = {
 			rotation = Vector3Box(-90, 0, 0),
 			yaw_offset = {
 				max = 0.25,
-				min = 0.1,
+				min = 0.1
 			},
 			pitch_offset = {
 				max = 0.8,
-				min = 0.25,
-			},
+				min = 0.25
+			}
 		},
 		integrator_parameters = {
 			air_density = 0.8,
@@ -475,8 +475,8 @@ local grenade_projectile_locomotion_templates = {
 			mass = 0.8,
 			radius = 0.2,
 			statics_raycast = true,
-			use_actor_mass_radius = false,
-		},
+			use_actor_mass_radius = false
+		}
 	},
 	adamant_grenade = {
 		trajectory_parameters = {
@@ -499,8 +499,8 @@ local grenade_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi * 2.2,
 					y = math.pi * 1.1,
-					z = math.pi * 2.2,
-				},
+					z = math.pi * 2.2
+				}
 			},
 			underhand_throw = {
 				aim_max_iterations = 40,
@@ -522,9 +522,9 @@ local grenade_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi * 2.2,
 					y = math.pi * 1.1,
-					z = math.pi * 2.2,
-				},
-			},
+					z = math.pi * 2.2
+				}
+			}
 		},
 		integrator_parameters = {
 			air_density = 0.7,
@@ -536,13 +536,13 @@ local grenade_projectile_locomotion_templates = {
 			mass = 0.8,
 			max_hit_count = 10,
 			radius = 0.07,
-			use_actor_mass_radius = false,
+			use_actor_mass_radius = false
 		},
 		vfx = {
 			trajectory = {
-				material_name = "content/fx/materials/master/trajectory",
-			},
-		},
+				material_name = "content/fx/materials/master/trajectory"
+			}
+		}
 	},
 	shock_mine = {
 		trajectory_parameters = {
@@ -565,8 +565,8 @@ local grenade_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = 0,
 					y = 0,
-					z = math.pi * 10,
-				},
+					z = math.pi * 10
+				}
 			},
 			underhand_throw = {
 				aim_max_iterations = 40,
@@ -587,9 +587,9 @@ local grenade_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = 0,
 					y = 0,
-					z = math.pi * 2.7,
-				},
-			},
+					z = math.pi * 2.7
+				}
+			}
 		},
 		integrator_parameters = {
 			air_density = 0.7,
@@ -601,19 +601,19 @@ local grenade_projectile_locomotion_templates = {
 			mass = 0.8,
 			max_hit_count = 10,
 			radius = 0.18,
-			use_actor_mass_radius = false,
+			use_actor_mass_radius = false
 		},
 		vfx = {
 			trajectory = {
-				material_name = "content/fx/materials/master/trajectory",
-			},
-		},
+				material_name = "content/fx/materials/master/trajectory"
+			}
+		}
 	},
 	area_buff_drone = {
 		trajectory_parameters = {
 			spawn = {
-				locomotion_state = locomotion_states.true_flight,
-			},
+				locomotion_state = locomotion_states.true_flight
+			}
 		},
 		spawn_projectile_parameters = {
 			initial_speed = 5,
@@ -621,20 +621,20 @@ local grenade_projectile_locomotion_templates = {
 			rotation = Vector3Box(0, 0, 0),
 			has_target_yaw_offset = {
 				max = 2,
-				min = -2,
+				min = -2
 			},
 			has_target_pitch_offset = {
 				max = 2,
-				min = -1,
+				min = -1
 			},
 			pitch_offset = {
 				max = 1,
-				min = -1,
+				min = -1
 			},
 			yaw_offset = {
 				max = 1,
-				min = -1,
-			},
+				min = -1
+			}
 		},
 		integrator_parameters = {
 			air_density = 0.7,
@@ -642,24 +642,25 @@ local grenade_projectile_locomotion_templates = {
 			collision_filter = "filter_player_character_shooting_projectile",
 			collision_types = "both",
 			drag_coefficient = 0.2,
+			flat_look_rotation = true,
 			gravity = 12.5,
 			mass = 0.8,
 			max_hit_count = 10,
 			radius = 0.35,
 			use_actor_mass_radius = false,
-			true_flight_template = TrueFlightTemplates.drone,
+			true_flight_template = TrueFlightTemplates.drone
 		},
 		vfx = {
 			trajectory = {
-				material_name = "content/fx/materials/master/trajectory",
-			},
-		},
+				material_name = "content/fx/materials/master/trajectory"
+			}
+		}
 	},
 	broker_flash_grenade = {
 		trajectory_parameters = {
 			spawn = {
-				locomotion_state = locomotion_states.manual_physics,
-			},
+				locomotion_state = locomotion_states.manual_physics
+			}
 		},
 		spawn_projectile_parameters = {
 			initial_speed = 40,
@@ -668,12 +669,12 @@ local grenade_projectile_locomotion_templates = {
 			rotation = Vector3Box(-90, 0, 0),
 			yaw_offset = {
 				max = 0.25,
-				min = 0.1,
+				min = 0.1
 			},
 			pitch_offset = {
 				max = 0.8,
-				min = 0.25,
-			},
+				min = 0.25
+			}
 		},
 		integrator_parameters = {
 			air_density = 0.7,
@@ -685,13 +686,13 @@ local grenade_projectile_locomotion_templates = {
 			mass = 0.8,
 			max_hit_count = 10,
 			radius = 0.07,
-			use_actor_mass_radius = false,
+			use_actor_mass_radius = false
 		},
 		vfx = {
 			trajectory = {
-				material_name = "content/fx/materials/master/trajectory",
-			},
-		},
+				material_name = "content/fx/materials/master/trajectory"
+			}
+		}
 	},
 	arc_grenade = {
 		trajectory_parameters = {
@@ -714,8 +715,8 @@ local grenade_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi * 2.2,
 					y = math.pi * 1.1,
-					z = math.pi * 2.2,
-				},
+					z = math.pi * 2.2
+				}
 			},
 			underhand_throw = {
 				aim_max_iterations = 40,
@@ -737,9 +738,9 @@ local grenade_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi * 2.2,
 					y = math.pi * 1.1,
-					z = math.pi * 2.2,
-				},
-			},
+					z = math.pi * 2.2
+				}
+			}
 		},
 		integrator_parameters = {
 			air_density = 0.7,
@@ -751,13 +752,13 @@ local grenade_projectile_locomotion_templates = {
 			mass = 0.8,
 			max_hit_count = 10,
 			radius = 0.07,
-			use_actor_mass_radius = false,
+			use_actor_mass_radius = false
 		},
 		vfx = {
 			trajectory = {
-				material_name = "content/fx/materials/master/trajectory",
-			},
-		},
+				material_name = "content/fx/materials/master/trajectory"
+			}
+		}
 	},
 	trap_explosive_cluster = {
 		trajectory_parameters = {
@@ -780,8 +781,8 @@ local grenade_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi * 2.2,
 					y = math.pi * 1.1,
-					z = math.pi * 2.2,
-				},
+					z = math.pi * 2.2
+				}
 			},
 			underhand_throw = {
 				aim_max_iterations = 40,
@@ -803,9 +804,9 @@ local grenade_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi * 2.2,
 					y = math.pi * 1.1,
-					z = math.pi * 2.2,
-				},
-			},
+					z = math.pi * 2.2
+				}
+			}
 		},
 		integrator_parameters = {
 			air_density = 0.875,
@@ -817,14 +818,14 @@ local grenade_projectile_locomotion_templates = {
 			mass = 0.8,
 			max_hit_count = 10,
 			radius = 0.07,
-			use_actor_mass_radius = false,
+			use_actor_mass_radius = false
 		},
 		vfx = {
 			trajectory = {
-				material_name = "content/fx/materials/master/trajectory",
-			},
-		},
-	},
+				material_name = "content/fx/materials/master/trajectory"
+			}
+		}
+	}
 }
 
 return grenade_projectile_locomotion_templates

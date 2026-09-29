@@ -8,19 +8,19 @@ local behavior_tree = {
 		"BtDieAction",
 		name = "death",
 		state = "dead",
-		action_data = action_data.death,
+		action_data = action_data.death
 	},
 	{
 		"BTNurgleFliesChaseTargetAction",
 		name = "nurgle_flies_chase_target",
-		action_data = action_data.nurgle_flies_chase_target,
+		action_data = action_data.nurgle_flies_chase_target
 	},
 	{
 		"BtIdleAction",
 		name = "idle",
-		action_data = action_data.idle,
+		action_data = action_data.idle
 	},
-	name = "nurgle_flies",
+	name = "nurgle_flies"
 }
 
 return behavior_tree

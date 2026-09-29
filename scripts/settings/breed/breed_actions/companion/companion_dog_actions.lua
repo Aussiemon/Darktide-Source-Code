@@ -8,7 +8,7 @@ local GroundImpactFxTemplates = require("scripts/settings/fx/ground_impact_fx_te
 local damage_types = DamageSettings.damage_types
 local idle_circle_distances = {
 	inner_circle_distance = 2,
-	outer_circle_distance = 4,
+	outer_circle_distance = 4
 }
 local move_to_position_default = {
 	enable_disable_locomotion_speed = false,
@@ -22,41 +22,41 @@ local move_to_position_default = {
 		bwd = "run_start_bwd",
 		fwd = "run_start_fwd",
 		left = "run_start_left",
-		right = "run_start_right",
+		right = "run_start_right"
 	},
 	start_move_anim_data = {
 		run_start_fwd = {
 			rad = nil,
-			sign = nil,
+			sign = nil
 		},
 		run_start_bwd = {
 			sign = 1,
-			rad = math.pi,
+			rad = math.pi
 		},
 		run_start_left = {
 			sign = 1,
-			rad = math.pi / 2,
+			rad = math.pi / 2
 		},
 		run_start_right = {
 			sign = -1,
-			rad = math.pi / 2,
-		},
+			rad = math.pi / 2
+		}
 	},
 	start_move_rotation_timings = {
 		run_start_bwd = 0,
 		run_start_left = 0,
-		run_start_right = 0,
+		run_start_right = 0
 	},
 	start_rotation_durations = {
 		run_start_bwd = 0.26666666666666666,
 		run_start_left = 0.23333333333333334,
-		run_start_right = 0.23333333333333334,
+		run_start_right = 0.23333333333333334
 	},
 	start_move_event_anim_speed_durations = {
-		run_start_fwd = 0,
+		run_start_fwd = 0
 	},
 	idle_anim_events = {
-		"idle",
+		"idle"
 	},
 	adapt_speed = {
 		epsilon = 0.3,
@@ -66,32 +66,32 @@ local move_to_position_default = {
 		min_speed_multiplier = 0,
 		slow_epsilon = 1.3,
 		slow_max_deceleration = 16,
-		speed_timer = 0,
+		speed_timer = 0
 	},
 	push_enemies_damage_profile = DamageProfileTemplates.chaos_hound_push,
 	push_ignored_breeds = {
 		chaos_poxwalker_bomber = true,
-		sand_vortex = true,
+		sand_vortex = true
 	},
 	dog_owner_follow_config = CompanionDogLocomotionSettings.dog_owner_follow_config,
 	dog_forward_follow_config = CompanionDogLocomotionSettings.dog_forward_follow_config,
-	dog_lrb_follow_config = CompanionDogLocomotionSettings.dog_lrb_follow_config,
+	dog_lrb_follow_config = CompanionDogLocomotionSettings.dog_lrb_follow_config
 }
 local action_data = {
 	name = "companion_dog",
 	idle = {
 		anim_events = "idle",
-		update_rate = 0.5,
+		update_rate = 0.5
 	},
 	manual_teleport = {
-		wait_time = 1,
+		wait_time = 1
 	},
 	move_with_platform = {
-		anim_events = "idle",
+		anim_events = "idle"
 	},
 	companion_unstuck = {
 		anim_events = "idle",
-		waiting_time = 0.1,
+		waiting_time = 0.1
 	},
 	move_close_to_owner_follow_selector = {
 		angle_rotation_for_check = 40,
@@ -99,8 +99,8 @@ local action_data = {
 		idle_circle_distances = idle_circle_distances,
 		far_distance = math.huge,
 		companion_cone_check = {
-			angle = 90,
-		},
+			angle = 90
+		}
 	},
 	move_close_to_owner_selector = {
 		angle_rotation_for_check = 40,
@@ -109,11 +109,11 @@ local action_data = {
 		close_distance = idle_circle_distances.inner_circle_distance,
 		angle_to_prioritize = {
 			-40,
-			40,
-		},
+			40
+		}
 	},
 	falling = {
-		leap_cooldown = 1.5,
+		leap_cooldown = 1.5
 	},
 	companion_has_move_position = {
 		follow_owner_cooldown = 1,
@@ -122,8 +122,8 @@ local action_data = {
 		dog_forward_follow_config = CompanionDogLocomotionSettings.dog_forward_follow_config,
 		dog_lrb_follow_config = CompanionDogLocomotionSettings.dog_lrb_follow_config,
 		companion_cone_check = {
-			angle = 90,
-		},
+			angle = 90
+		}
 	},
 	follow = {
 		follow_owner_cooldown = 1,
@@ -131,12 +131,12 @@ local action_data = {
 		idle_circle_distances = idle_circle_distances,
 		dog_owner_follow_config = CompanionDogLocomotionSettings.dog_owner_follow_config,
 		dog_forward_follow_config = CompanionDogLocomotionSettings.dog_forward_follow_config,
-		dog_lrb_follow_config = CompanionDogLocomotionSettings.dog_lrb_follow_config,
+		dog_lrb_follow_config = CompanionDogLocomotionSettings.dog_lrb_follow_config
 	},
 	move_to_position = table.merge(table.clone(move_to_position_default), {
 		arrived_at_distance_threshold_sq = 1,
 		effect_template_name = "companion_dog_breath_effect",
-		stop_at_target_position = true,
+		stop_at_target_position = true
 	}),
 	move_close_to_owner_action = table.merge(table.clone(move_to_position_default), {
 		arrived_at_distance_threshold_sq = 0.1,
@@ -144,9 +144,9 @@ local action_data = {
 		follow_aim = {
 			player = {
 				0,
-				math.huge,
-			},
-		},
+				math.huge
+			}
+		}
 	}),
 	approach_target = {
 		fast_jump_speed_threshold = 7,
@@ -161,38 +161,38 @@ local action_data = {
 			bwd = "run_start_bwd",
 			fwd = "run_start_fwd",
 			left = "run_start_left",
-			right = "run_start_right",
+			right = "run_start_right"
 		},
 		start_move_anim_data = {
 			run_start_fwd = {
 				rad = nil,
-				sign = nil,
+				sign = nil
 			},
 			run_start_bwd = {
 				sign = 1,
-				rad = math.pi,
+				rad = math.pi
 			},
 			run_start_left = {
 				sign = 1,
-				rad = math.pi / 2,
+				rad = math.pi / 2
 			},
 			run_start_right = {
 				sign = -1,
-				rad = math.pi / 2,
-			},
+				rad = math.pi / 2
+			}
 		},
 		start_move_rotation_timings = {
 			run_start_bwd = 0,
 			run_start_left = 0,
-			run_start_right = 0,
+			run_start_right = 0
 		},
 		start_rotation_durations = {
 			run_start_bwd = 0.26666666666666666,
 			run_start_left = 0.23333333333333334,
-			run_start_right = 0.23333333333333334,
+			run_start_right = 0.23333333333333334
 		},
 		start_move_event_anim_speed_durations = {
-			run_start_fwd = 0.6666666666666666,
+			run_start_fwd = 0.6666666666666666
 		},
 		adapt_speed = {
 			epsilon = 0.3,
@@ -202,17 +202,17 @@ local action_data = {
 			min_speed_multiplier = 1.2,
 			slow_epsilon = 1.3,
 			slow_max_deceleration = 16,
-			speed_timer = 0,
+			speed_timer = 0
 		},
 		idle_anim_events = {
-			"idle",
+			"idle"
 		},
 		push_enemies_damage_profile = DamageProfileTemplates.chaos_hound_push,
 		push_ignored_breeds = {
 			chaos_poxwalker_bomber = true,
-			sand_vortex = true,
+			sand_vortex = true
 		},
-		max_angle_for_fast_jump = math.pi / 6,
+		max_angle_for_fast_jump = math.pi / 6
 	},
 	leap = {
 		aoe_bot_threat_duration = 1,
@@ -256,9 +256,9 @@ local action_data = {
 		push_enemies_damage_profile = DamageProfileTemplates.cyber_mastiff_push,
 		aoe_bot_threat_size = Vector3Box(1.5, 2, 2),
 		in_air_staggers = {
-			"stagger_inair_bwd",
+			"stagger_inair_bwd"
 		},
-		land_ground_impact_fx_template = GroundImpactFxTemplates.chaos_hound_leap_land,
+		land_ground_impact_fx_template = GroundImpactFxTemplates.chaos_hound_leap_land
 	},
 	target_pounced = {
 		damage_frequency = 1.3333333333333333,
@@ -268,7 +268,7 @@ local action_data = {
 		hit_position_node = "j_jaw",
 		lerp_position_time = 0.06666666666666667,
 		damage_type = damage_types.chaos_hound_tearing,
-		enter_explosion_template = ExplosionTemplates.companion_dog_pounced_explosion,
+		enter_explosion_template = ExplosionTemplates.companion_dog_pounced_explosion
 	},
 	target_pounced_and_escape = {
 		explosion_power_level = 500,
@@ -283,8 +283,8 @@ local action_data = {
 			animation_variable_name = "attack_start_angle",
 			estimated_animation_angle = 15,
 			max_distance_check = 20,
-			sweep_radius = 0.5,
-		},
+			sweep_radius = 0.5
+		}
 	},
 	move_around_enemy = {
 		max_distance_to_target = 8,
@@ -299,48 +299,48 @@ local action_data = {
 			bwd = "run_start_bwd",
 			fwd = "run_start_fwd",
 			left = "run_start_left",
-			right = "run_start_right",
+			right = "run_start_right"
 		},
 		start_move_anim_data = {
 			run_start_fwd = {
 				rad = nil,
-				sign = nil,
+				sign = nil
 			},
 			run_start_bwd = {
 				sign = 1,
-				rad = math.pi,
+				rad = math.pi
 			},
 			run_start_left = {
 				sign = 1,
-				rad = math.pi / 2,
+				rad = math.pi / 2
 			},
 			run_start_right = {
 				sign = -1,
-				rad = math.pi / 2,
-			},
+				rad = math.pi / 2
+			}
 		},
 		start_move_rotation_timings = {
 			run_start_bwd = 0,
 			run_start_left = 0,
-			run_start_right = 0,
+			run_start_right = 0
 		},
 		start_rotation_durations = {
 			run_start_bwd = 0.26666666666666666,
 			run_start_left = 0.23333333333333334,
-			run_start_right = 0.23333333333333334,
+			run_start_right = 0.23333333333333334
 		},
 		start_move_event_anim_speed_durations = {
-			run_start_fwd = 0.6666666666666666,
+			run_start_fwd = 0.6666666666666666
 		},
 		idle_anim_events = {
-			"idle",
+			"idle"
 		},
 		push_enemies_damage_profile = DamageProfileTemplates.chaos_hound_push,
 		push_ignored_breeds = {
 			chaos_poxwalker_bomber = true,
-			sand_vortex = true,
+			sand_vortex = true
 		},
-		rotation_angle = math.pi / 3,
+		rotation_angle = math.pi / 3
 	},
 	climb = {
 		rotation_duration = 0.1,
@@ -355,7 +355,7 @@ local action_data = {
 			jump_up_5m = 1.4333333333333333,
 			jump_up_fence_1m = 0.8333333333333334,
 			jump_up_fence_3m = 0.8333333333333334,
-			jump_up_fence_5m = 1.0333333333333334,
+			jump_up_fence_5m = 1.0333333333333334
 		},
 		ending_move_states = {
 			jump_down_fence_land_1m = "moving",
@@ -365,7 +365,7 @@ local action_data = {
 			jump_down_land_5m = "jumping",
 			jump_up_1m = "jumping",
 			jump_up_3m = "jumping",
-			jump_up_5m = "jumping",
+			jump_up_5m = "jumping"
 		},
 		blend_timings = {
 			jump_down = 0,
@@ -380,8 +380,8 @@ local action_data = {
 			jump_up_5m = 0.1,
 			jump_up_fence_1m = 0.1,
 			jump_up_fence_3m = 0.1,
-			jump_up_fence_5m = 0.1,
-		},
+			jump_up_fence_5m = 0.1
+		}
 	},
 	jump_across = {
 		rotation_duration = 0.1,
@@ -389,20 +389,20 @@ local action_data = {
 		anim_timings = {
 			jump_over_gap_4m = 0.7333333333333333,
 			jump_over_gap_4m_2 = 0.7333333333333333,
-			jump_vault_left_1 = 1,
+			jump_vault_left_1 = 1
 		},
 		ending_move_states = {
 			jump_over_gap_4m = "moving",
 			jump_over_gap_4m_2 = "moving",
-			jump_vault_left_1 = "moving",
-		},
+			jump_vault_left_1 = "moving"
+		}
 	},
 	open_door = {
-		rotation_duration = 0.1,
+		rotation_duration = 0.1
 	},
 	teleport = {
-		keep_outline = true,
-	},
+		keep_outline = true
+	}
 }
 
 return action_data

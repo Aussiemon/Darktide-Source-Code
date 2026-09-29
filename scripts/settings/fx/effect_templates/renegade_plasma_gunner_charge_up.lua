@@ -14,7 +14,7 @@ local shooting_difficulty_settings_plasma_pistol = MinionDifficultySettings.shoo
 local resources = {
 	start_sound_event = START_SOUND_EVENT,
 	stop_sound_event = STOP_SOUND_EVENT,
-	muzzle_vfx = MUZZLE_VFX,
+	muzzle_vfx = MUZZLE_VFX
 }
 local MAX_INTENSITY_LUMEN = 80
 local scalar_addative_value = 0.5
@@ -133,7 +133,7 @@ local effect_template = {
 		if vfx_particle_id then
 			World.stop_spawning_particles(world, vfx_particle_id)
 		end
-	end,
+	end
 }
 
 return effect_template

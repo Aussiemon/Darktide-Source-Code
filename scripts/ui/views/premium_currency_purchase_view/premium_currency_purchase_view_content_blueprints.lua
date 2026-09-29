@@ -9,7 +9,7 @@ local group_header_font_style = table.clone(UIFontSettings.header_3)
 group_header_font_style.offset = {
 	0,
 	0,
-	3,
+	3
 }
 group_header_font_style.text_horizontal_alignment = "center"
 group_header_font_style.text_vertical_alignment = "center"
@@ -20,7 +20,7 @@ local sub_header_font_style = table.clone(UIFontSettings.header_3)
 sub_header_font_style.offset = {
 	0,
 	0,
-	3,
+	3
 }
 sub_header_font_style.font_size = 18
 sub_header_font_style.text_horizontal_alignment = "center"
@@ -36,11 +36,11 @@ item_header_text_style.vertical_alignment = "center"
 item_header_text_style.offset = {
 	10,
 	-55,
-	4,
+	4
 }
 item_header_text_style.size_addition = {
 	-20,
-	0,
+	0
 }
 item_header_text_style.text_color = Color.terminal_text_header(255, true)
 item_header_text_style.font_size = 24
@@ -54,11 +54,11 @@ aquila_header_text_style.font_size = 36
 aquila_header_text_style.offset = {
 	0,
 	3,
-	4,
+	4
 }
 aquila_header_text_style.size_addition = {
 	0,
-	0,
+	0
 }
 
 local item_header_premium_text_style = table.clone(item_header_text_style)
@@ -75,11 +75,11 @@ item_sub_header_text_style.vertical_alignment = "center"
 item_sub_header_text_style.offset = {
 	10,
 	-10,
-	4,
+	4
 }
 item_sub_header_text_style.size_addition = {
 	-20,
-	0,
+	0
 }
 item_sub_header_text_style.text_color = Color.terminal_text_body(255, true)
 item_sub_header_text_style.font_size = 24
@@ -93,11 +93,11 @@ item_description_text_style.vertical_alignment = "bottom"
 item_description_text_style.offset = {
 	0,
 	-60,
-	5,
+	5
 }
 item_description_text_style.size_addition = {
 	-30,
-	-30,
+	-30
 }
 item_description_text_style.text_color = Color.terminal_text_body(255, true)
 
@@ -110,7 +110,7 @@ item_price_text_style.vertical_alignment = "center"
 item_price_text_style.offset = {
 	-30,
 	-10,
-	4,
+	4
 }
 item_price_text_style.text_color = Color.white(255, true)
 
@@ -120,7 +120,7 @@ aquila_price_text_style.text_horizontal_alignment = "center"
 aquila_price_text_style.offset = {
 	0,
 	-10,
-	4,
+	4
 }
 
 local aquila_price_discounted_text_style = table.clone(aquila_price_text_style)
@@ -130,7 +130,7 @@ aquila_price_discounted_text_style.text_horizontal_alignment = "left"
 aquila_price_discounted_text_style.offset = {
 	10,
 	-10,
-	4,
+	4
 }
 aquila_price_discounted_text_style.font_size = 20
 
@@ -144,12 +144,12 @@ timer_text_style.hover_color = {
 	255,
 	255,
 	255,
-	255,
+	255
 }
 timer_text_style.offset = {
 	30,
 	-15,
-	5,
+	5
 }
 timer_text_style.horizontal_alignment = "center"
 timer_text_style.vertical_alignment = "center"
@@ -160,11 +160,11 @@ best_offer_text_style.text_color = Color.white(255, true)
 best_offer_text_style.offset = {
 	-20,
 	-35,
-	3,
+	3
 }
 best_offer_text_style.size = {
 	200,
-	100,
+	100
 }
 best_offer_text_style.horizontal_alignment = "right"
 best_offer_text_style.vertical_alignment = "top"
@@ -177,8 +177,8 @@ local _colors = {
 		255,
 		172,
 		136,
-		84,
-	},
+		84
+	}
 }
 
 local function _icon_change_function(content, style)
@@ -202,12 +202,12 @@ local function _base_blueprint()
 			content_id = "hotspot",
 			pass_type = "hotspot",
 			content = {
-				use_is_focused = true,
+				use_is_focused = true
 			},
 			style = {
 				on_hover_sound = UISoundEvents.default_mouse_hover,
-				on_pressed_sound = UISoundEvents.default_click,
-			},
+				on_pressed_sound = UISoundEvents.default_click
+			}
 		},
 		{
 			pass_type = "texture",
@@ -220,12 +220,12 @@ local function _base_blueprint()
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				size_addition = {
 					20,
-					20,
-				},
+					20
+				}
 			},
 			change_function = function (content, style, _, dt)
 				local hotspot = content.hotspot
@@ -237,7 +237,7 @@ local function _base_blueprint()
 
 				style_size_additon[1] = 20 + 20 * math.easeInCubic(1 - progress)
 				style_size_additon[2] = 20 + 20 * math.easeInCubic(1 - progress)
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -252,12 +252,12 @@ local function _base_blueprint()
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				size_addition = {
 					0,
-					-8,
-				},
+					-8
+				}
 			},
 			change_function = function (content, style, _, dt)
 				local hotspot = content.hotspot
@@ -267,7 +267,7 @@ local function _base_blueprint()
 				local color = style.color
 
 				Colors.color_lerp(default_color, hover_color, progress, color)
-			end,
+			end
 		},
 		{
 			pass_type = "rect",
@@ -276,31 +276,31 @@ local function _base_blueprint()
 				vertical_alignment = "bottom",
 				size_addition = {
 					-2,
-					0,
+					0
 				},
 				size = {
 					nil,
-					50,
+					50
 				},
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
 				color = {
 					180,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
 			style_id = "price",
 			value = "??? ",
 			value_id = "formatted_price",
-			style = aquila_price_text_style,
+			style = aquila_price_text_style
 		},
 		{
 			pass_type = "text",
@@ -309,7 +309,7 @@ local function _base_blueprint()
 			style = aquila_price_discounted_text_style,
 			visibility_function = function (content, style)
 				return content.formatted_original_price and content.formatted_original_price
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -322,26 +322,26 @@ local function _base_blueprint()
 				vertical_alignment = "top",
 				size_addition = {
 					-2,
-					20,
+					20
 				},
 				color = Color.black(153, true),
 				size = {
 					nil,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "text",
 			style_id = "title",
 			value = "<Title>",
 			value_id = "title",
-			style = aquila_header_text_style,
+			style = aquila_header_text_style
 		},
 		{
 			pass_type = "texture",
@@ -353,22 +353,22 @@ local function _base_blueprint()
 				vertical_alignment = "top",
 				size = {
 					48,
-					33.6,
+					33.6
 				},
 				offset = {
 					0,
 					10,
-					5,
+					5
 				},
 				size_addition = {
 					0,
-					0,
-				},
+					0
+				}
 			},
 			visibility_function = function (content, style)
 				return content.icon
-			end,
-		},
+			end
+		}
 	}
 
 	local function base_init(parent, widget, element, callback_name)
@@ -384,7 +384,7 @@ local function _base_blueprint()
 		local max_width = content.size[1] + style.title.size_addition[1]
 		local title_width, title_height = parent:_text_size(content.title, title_style, {
 			max_width,
-			200,
+			200
 		})
 		local icon_margin = 10
 		local wallet_settings = WalletSettings.aquilas
@@ -395,7 +395,7 @@ local function _base_blueprint()
 		style.price.text_color = element.owned and Color.terminal_text_header(255, true) or Color.white(255, true)
 		content.icon = icon_texture_small
 		style.title_background.size = {
-			[2] = title_height,
+			[2] = title_height
 		}
 		style.icon.offset[1] = (title_width + style.icon.size[1] + icon_margin) * 0.5
 	end
@@ -403,8 +403,8 @@ local function _base_blueprint()
 	return {
 		pass_template = button_base_passes,
 		init_functions = {
-			base_init,
-		},
+			base_init
+		}
 	}
 end
 
@@ -416,7 +416,7 @@ local function _add_bonus_description()
 				style_id = "bonus_description",
 				value = "",
 				value_id = "bonus_description",
-				style = item_description_text_style,
+				style = item_description_text_style
 			},
 			{
 				pass_type = "texture",
@@ -426,17 +426,17 @@ local function _add_bonus_description()
 				style = {
 					size_addition = {
 						60,
-						20,
+						20
 					},
 					color = Color.terminal_corner(178.5, true),
 					offset = {
 						item_description_text_style.offset[1],
 						item_description_text_style.offset[2],
-						item_description_text_style.offset[3] - 1,
+						item_description_text_style.offset[3] - 1
 					},
 					horizontal_alignment = item_description_text_style.horizontal_alignment,
-					vertical_alignment = item_description_text_style.vertical_alignment,
-				},
+					vertical_alignment = item_description_text_style.vertical_alignment
+				}
 			},
 			{
 				pass_type = "texture",
@@ -446,33 +446,33 @@ local function _add_bonus_description()
 				style = {
 					size_addition = {
 						60,
-						20,
+						20
 					},
 					color = Color.terminal_corner(178.5, true),
 					offset = {
 						item_description_text_style.offset[1],
 						item_description_text_style.offset[2],
-						item_description_text_style.offset[3],
+						item_description_text_style.offset[3]
 					},
 					horizontal_alignment = item_description_text_style.horizontal_alignment,
-					vertical_alignment = item_description_text_style.vertical_alignment,
-				},
-			},
+					vertical_alignment = item_description_text_style.vertical_alignment
+				}
+			}
 		})
 
 		table.insert(blueprint.init_functions, function (parent, widget, element, callback_name)
 			local description_width, description_height = parent:_text_size(widget.content.bonus_description, widget.style.bonus_description, {
 				1920,
-				1080,
+				1080
 			})
 
 			widget.style.bonus_description_background.size = {
 				description_width,
-				description_height,
+				description_height
 			}
 			widget.style.bonus_description_background_line.size = {
 				description_width,
-				description_height,
+				description_height
 			}
 		end)
 
@@ -482,7 +482,7 @@ end
 
 local _original_banner_size = {
 	352,
-	572,
+	572
 }
 
 local function _add_platform_banner(icon_size, horizontal_alignment)
@@ -492,14 +492,14 @@ local function _add_platform_banner(icon_size, horizontal_alignment)
 	local wanted_height = is_component_wide and icon_size[2] or icon_size[2] * 0.66
 	local wanted_size = {
 		ratio * wanted_height,
-		wanted_height,
+		wanted_height
 	}
 	local base_x_offset = is_component_wide and 48 or icon_size[1] * 0.15
 	local base_y_offset = is_component_wide and -23 or -icon_size[2] * 0.073
 	local offset = {
 		is_flipped and base_x_offset or -base_x_offset,
 		base_y_offset,
-		8,
+		8
 	}
 	local style = {
 		vertical_alignment = "top",
@@ -507,28 +507,28 @@ local function _add_platform_banner(icon_size, horizontal_alignment)
 		size = wanted_size,
 		size_addition = {
 			0,
-			0,
+			0
 		},
 		horizontal_alignment = horizontal_alignment,
 		uvs = horizontal_alignment == "left" and {
 			{
 				0,
-				0,
+				0
 			},
 			{
 				1,
-				1,
-			},
+				1
+			}
 		} or {
 			{
 				1,
-				0,
+				0
 			},
 			{
 				0,
-				1,
-			},
-		},
+				1
+			}
+		}
 	}
 
 	return function (blueprint)
@@ -536,8 +536,8 @@ local function _add_platform_banner(icon_size, horizontal_alignment)
 			{
 				pass_type = "texture_uv",
 				value = "content/ui/materials/frames/premium_store/offer_card_best_value_banner",
-				style = style,
-			},
+				style = style
+			}
 		})
 
 		return blueprint
@@ -555,12 +555,12 @@ local function _add_decorator_line(component_size, vertical_alignment, offset)
 					scale_to_material = true,
 					size = {
 						component_size[1],
-						30,
+						30
 					},
 					vertical_alignment = vertical_alignment,
-					offset = offset,
-				},
-			},
+					offset = offset
+				}
+			}
 		})
 
 		return blueprint
@@ -573,18 +573,18 @@ local function _add_frame(component_size, has_bonus, is_pack)
 	local material_values = {
 		texture_size = {
 			component_size[1] + 20,
-			30,
-		},
+			30
+		}
 	}
 	local offset_top = {
 		0,
 		-15,
-		6,
+		6
 	}
 	local offset_bottom = {
 		0,
 		15,
-		6,
+		6
 	}
 
 	if has_bonus then
@@ -612,15 +612,15 @@ local function _add_frame(component_size, has_bonus, is_pack)
 					vertical_alignment = "top",
 					size = {
 						nil,
-						30,
+						30
 					},
 					offset = offset_top,
 					material_values = material_values,
 					size_addition = {
 						20,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -633,16 +633,16 @@ local function _add_frame(component_size, has_bonus, is_pack)
 					vertical_alignment = "bottom",
 					size = {
 						nil,
-						30,
+						30
 					},
 					offset = offset_bottom,
 					material_values = material_values,
 					size_addition = {
 						20,
-						0,
-					},
-				},
-			},
+						0
+					}
+				}
+			}
 		})
 
 		if is_pack then
@@ -675,27 +675,27 @@ local function _add_icon_glow(icon_horizontal_alignment, icon_offset, icon_size)
 					vertical_alignment = "center",
 					size_addition = {
 						size_addition,
-						size_addition,
+						size_addition
 					},
 					horizontal_alignment = icon_horizontal_alignment,
 					offset = glow_offset,
 					size = {
 						size,
-						size,
+						size
 					},
 					uvs = {
 						{
 							0,
-							0,
+							0
 						},
 						{
 							1,
-							1,
-						},
-					},
+							1
+						}
+					}
 				},
-				change_function = _icon_change_function,
-			},
+				change_function = _icon_change_function
+			}
 		})
 
 		return blueprint
@@ -705,21 +705,21 @@ end
 local function _add_main_icon(component_size, texture_data, has_bonus, is_golden)
 	local icon_size = has_bonus and {
 		168,
-		198,
+		198
 	} or {
 		196,
-		230.99999999999997,
+		230.99999999999997
 	}
 
 	icon_size = is_golden and {
 		308,
-		363.00000000000006,
+		363.00000000000006
 	} or icon_size
 
 	local offset = {
 		0,
 		has_bonus and -40 or -10,
-		1,
+		1
 	}
 	local icon_horizontal_alignment = "center"
 
@@ -741,20 +741,20 @@ local function _add_main_icon(component_size, texture_data, has_bonus, is_golden
 					uvs = {
 						{
 							0,
-							0,
+							0
 						},
 						{
 							1,
-							1,
-						},
+							1
+						}
 					},
 					material_values = {
 						shine = 0,
-						main_texture = texture_data.main.texture,
-					},
+						main_texture = texture_data.main.texture
+					}
 				},
-				change_function = _icon_change_function,
-			},
+				change_function = _icon_change_function
+			}
 		})
 
 		if is_golden then
@@ -782,22 +782,22 @@ local function _add_decorations(component_size, is_pack)
 					color = background_color,
 					size_addition = {
 						25,
-						20,
-					},
-				},
-			},
+						20
+					}
+				}
+			}
 		})
 
 		if is_pack then
 			blueprint = _add_decorator_line(component_size, "top", {
 				0,
 				30,
-				6,
+				6
 			})(blueprint)
 			blueprint = _add_decorator_line(component_size, "bottom", {
 				0,
 				-35,
-				6,
+				6
 			})(blueprint)
 		end
 
@@ -820,7 +820,7 @@ local function aquila_button_template_factory(component_size, texture_data, has_
 	table.append(button_components, {
 		_add_decorations(component_size, is_golden),
 		_add_main_icon(component_size, texture_data, has_bonus, is_golden),
-		_add_frame(component_size, has_bonus, is_golden),
+		_add_frame(component_size, has_bonus, is_golden)
 	})
 
 	for i = 1, #button_components do
@@ -839,5 +839,5 @@ local function aquila_button_template_factory(component_size, texture_data, has_
 end
 
 return {
-	create_blueprint = aquila_button_template_factory,
+	create_blueprint = aquila_button_template_factory
 }

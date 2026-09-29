@@ -24,7 +24,7 @@ ConstantElementPopupHandler.INPUT_DIR_RIGHT = 4
 
 local dummy_text_size = {
 	ConstantElementPopupHandlerSettings.text_max_width,
-	20,
+	20
 }
 
 local function _get_text_height(text, text_style, ui_renderer)
@@ -135,7 +135,7 @@ ConstantElementPopupHandler._setup_presentation = function (self, data, ui_rende
 	local params = {
 		popup_height = height,
 		additional_widgets = self._offer_price_widgets,
-		description_grid = self._description_grid,
+		description_grid = self._description_grid
 	}
 
 	self._on_enter_anim_id = self:_start_animation("on_enter", self._widgets_by_name, params, on_enter_animation_callback)
@@ -194,8 +194,8 @@ ConstantElementPopupHandler._setup_popup_type = function (self, data, ui_rendere
 		local offer_prices = {
 			{
 				amount = data.offer.price.amount.amount,
-				type = data.offer.price.amount.type,
-			},
+				type = data.offer.price.amount.type
+			}
 		}
 
 		for i = 1, #offer_prices do
@@ -218,7 +218,7 @@ ConstantElementPopupHandler._setup_popup_type = function (self, data, ui_rendere
 			local text_style = style.text
 			local text_width = Text.text_width(ui_renderer, text, text_style, {
 				2000,
-				100,
+				100
 			})
 			local texture_width = widget.style.texture.size[1]
 			local text_margin = 5
@@ -226,7 +226,7 @@ ConstantElementPopupHandler._setup_popup_type = function (self, data, ui_rendere
 			widget.offset[1] = total_prices_width
 			widget.content.size = {
 				text_width + texture_width + text_margin,
-				widget.style.texture.size[2],
+				widget.style.texture.size[2]
 			}
 			total_prices_width = total_prices_width + widget.content.size[1]
 			price_widgets[#price_widgets + 1] = widget
@@ -237,11 +237,11 @@ ConstantElementPopupHandler._setup_popup_type = function (self, data, ui_rendere
 		local max_width = self._ui_scenegraph.offer_text.size[1]
 		local title_width, title_height = Text.text_size(ui_renderer, item_title_widget.content.text, title_style, {
 			max_width,
-			2000,
+			2000
 		})
 		local sub_title_width, sub_title_height = Text.text_size(ui_renderer, item_title_widget.content.sub_text, sub_title_style, {
 			max_width,
-			2000,
+			2000
 		})
 		local sub_title_margin = 10
 		local price_margin = 20
@@ -295,7 +295,7 @@ ConstantElementPopupHandler._cleanup_presentation = function (self, active_popup
 	local params = {
 		popup_height = height,
 		additional_widgets = self._offer_price_widgets,
-		description_grid = self._description_grid,
+		description_grid = self._description_grid
 	}
 
 	self._on_exit_anim_id = self:_start_animation("on_exit", self._widgets_by_name, params)
@@ -409,7 +409,7 @@ ConstantElementPopupHandler._create_popup_content = function (self, options, ui_
 
 			local text_height = Text.text_height(ui_renderer, text, text_style, {
 				ConstantElementPopupHandlerSettings.text_max_width,
-				2000,
+				2000
 			})
 			local pass = {
 				{
@@ -417,13 +417,13 @@ ConstantElementPopupHandler._create_popup_content = function (self, options, ui_
 					value_id = "text",
 					value = text,
 					style_id = i,
-					style = text_style,
-				},
+					style = text_style
+				}
 			}
 
 			button_size = {
 				ConstantElementPopupHandlerSettings.text_max_width,
-				text_height,
+				text_height
 			}
 
 			local widget_definitions = UIWidget.create_definition(pass, "button_pivot", nil, button_size)
@@ -442,7 +442,7 @@ ConstantElementPopupHandler._create_popup_content = function (self, options, ui_
 
 			button_size = {
 				button_width,
-				ConstantElementPopupHandlerSettings.button_height,
+				ConstantElementPopupHandlerSettings.button_height
 			}
 			text_length = button_size[1]
 
@@ -718,13 +718,13 @@ ConstantElementPopupHandler._setup_description_grid = function (self)
 		widget_icon_load_margin = 0,
 		grid_spacing = {
 			0,
-			0,
+			0
 		},
 		grid_size = grid_size,
 		mask_size = {
 			grid_size[1],
-			grid_size[2],
-		},
+			grid_size[2]
+		}
 	}
 
 	self._grid_settings = grid_settings

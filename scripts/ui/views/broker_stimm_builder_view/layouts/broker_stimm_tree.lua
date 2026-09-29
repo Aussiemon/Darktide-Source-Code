@@ -21,18 +21,18 @@ return {
 				"node_69855bec-40f7-4a9c-9c39-4acc080aaeb8",
 				"node_c23ee23e-1dc5-4a85-abb3-d0bd53d7b7bc",
 				"node_52ffe54b-abcd-469a-9376-64b387582546",
-				"node_71791540-7dbc-4d3d-b931-630cab2a423a",
+				"node_71791540-7dbc-4d3d-b931-630cab2a423a"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 0,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -44,20 +44,20 @@ return {
 			x = 1130,
 			y = 440,
 			children = {
-				"node_34ccae82-45bf-499e-99ba-93ed864f14c5",
+				"node_34ccae82-45bf-499e-99ba-93ed864f14c5"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_5c2139f8-0686-42f5-97fe-9b65e547e649",
+				"node_5c2139f8-0686-42f5-97fe-9b65e547e649"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 4,
@@ -69,21 +69,21 @@ return {
 			x = 1460,
 			y = 320,
 			children = {
-				"node_2d8bcc20-0d76-462f-bf28-a3d82ccd1c06",
+				"node_2d8bcc20-0d76-462f-bf28-a3d82ccd1c06"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_b343d91d-888d-403d-a01f-e57449b09067",
+				"node_b343d91d-888d-403d-a01f-e57449b09067"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 4,
 				exclusive_group = "combat_1",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 2,
@@ -95,20 +95,20 @@ return {
 			x = 1220,
 			y = 350,
 			children = {
-				"node_b343d91d-888d-403d-a01f-e57449b09067",
+				"node_b343d91d-888d-403d-a01f-e57449b09067"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_69855bec-40f7-4a9c-9c39-4acc080aaeb8",
+				"node_69855bec-40f7-4a9c-9c39-4acc080aaeb8"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 2,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 3,
@@ -122,20 +122,20 @@ return {
 			children = {
 				"node_e758ce7a-ab78-4046-8a5c-ad5068d81d6a",
 				"node_8eaa3a96-6b14-4511-ab1a-5dcecc1f666d",
-				"node_c4e14f52-1fd6-423f-bfdd-d3e19492d994",
+				"node_c4e14f52-1fd6-423f-bfdd-d3e19492d994"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_34ccae82-45bf-499e-99ba-93ed864f14c5",
+				"node_34ccae82-45bf-499e-99ba-93ed864f14c5"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 3,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 4,
@@ -147,21 +147,21 @@ return {
 			x = 1460,
 			y = 200,
 			children = {
-				"node_ba8e5f91-d471-416b-8273-7e0886ae4e03",
+				"node_ba8e5f91-d471-416b-8273-7e0886ae4e03"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_b343d91d-888d-403d-a01f-e57449b09067",
+				"node_b343d91d-888d-403d-a01f-e57449b09067"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 4,
 				exclusive_group = "combat_1",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 5,
@@ -175,17 +175,17 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_8eaa3a96-6b14-4511-ab1a-5dcecc1f666d",
+				"node_8eaa3a96-6b14-4511-ab1a-5dcecc1f666d"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 5,
 				exclusive_group = "combat_2",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 5,
@@ -199,17 +199,17 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_c4e14f52-1fd6-423f-bfdd-d3e19492d994",
+				"node_c4e14f52-1fd6-423f-bfdd-d3e19492d994"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 5,
 				exclusive_group = "combat_2",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 4,
@@ -221,21 +221,21 @@ return {
 			x = 1460,
 			y = 440,
 			children = {
-				"node_cd8fcca5-ca27-4800-965d-f36fc8e3d140",
+				"node_cd8fcca5-ca27-4800-965d-f36fc8e3d140"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_b343d91d-888d-403d-a01f-e57449b09067",
+				"node_b343d91d-888d-403d-a01f-e57449b09067"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 4,
 				exclusive_group = "combat_1",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 5,
@@ -249,17 +249,17 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_e758ce7a-ab78-4046-8a5c-ad5068d81d6a",
+				"node_e758ce7a-ab78-4046-8a5c-ad5068d81d6a"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 5,
 				exclusive_group = "combat_2",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -271,20 +271,20 @@ return {
 			x = 1130,
 			y = 680,
 			children = {
-				"node_d2c5c6af-dc71-4f44-98de-be00ba3457b5",
+				"node_d2c5c6af-dc71-4f44-98de-be00ba3457b5"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_5c2139f8-0686-42f5-97fe-9b65e547e649",
+				"node_5c2139f8-0686-42f5-97fe-9b65e547e649"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 2,
@@ -296,20 +296,20 @@ return {
 			x = 1220,
 			y = 770,
 			children = {
-				"node_a338737f-2230-48cc-a706-d209c7071451",
+				"node_a338737f-2230-48cc-a706-d209c7071451"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_c23ee23e-1dc5-4a85-abb3-d0bd53d7b7bc",
+				"node_c23ee23e-1dc5-4a85-abb3-d0bd53d7b7bc"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 2,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 3,
@@ -321,20 +321,20 @@ return {
 			x = 1340,
 			y = 800,
 			children = {
-				"node_3266c405-04b4-405b-87e9-626b2c6abd2f",
+				"node_3266c405-04b4-405b-87e9-626b2c6abd2f"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_d2c5c6af-dc71-4f44-98de-be00ba3457b5",
+				"node_d2c5c6af-dc71-4f44-98de-be00ba3457b5"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 3,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 4,
@@ -348,20 +348,20 @@ return {
 			children = {
 				"node_9581f891-fa81-42cc-a455-9979fda53399",
 				"node_cfc646a9-648a-402d-bcb5-7656f2852309",
-				"node_a03d2d80-93e2-4d27-94b6-73c24692de2c",
+				"node_a03d2d80-93e2-4d27-94b6-73c24692de2c"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_a338737f-2230-48cc-a706-d209c7071451",
+				"node_a338737f-2230-48cc-a706-d209c7071451"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 4,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 5,
@@ -375,17 +375,17 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_3266c405-04b4-405b-87e9-626b2c6abd2f",
+				"node_3266c405-04b4-405b-87e9-626b2c6abd2f"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 5,
 				exclusive_group = "concentration",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -397,20 +397,20 @@ return {
 			x = 950,
 			y = 440,
 			children = {
-				"node_57c21f09-03ee-4196-b2c8-c80d5c3aaa0b",
+				"node_57c21f09-03ee-4196-b2c8-c80d5c3aaa0b"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_5c2139f8-0686-42f5-97fe-9b65e547e649",
+				"node_5c2139f8-0686-42f5-97fe-9b65e547e649"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 2,
@@ -422,20 +422,20 @@ return {
 			x = 860,
 			y = 350,
 			children = {
-				"node_3007e418-f9ee-4815-9241-36c0af334834",
+				"node_3007e418-f9ee-4815-9241-36c0af334834"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_71791540-7dbc-4d3d-b931-630cab2a423a",
+				"node_71791540-7dbc-4d3d-b931-630cab2a423a"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 2,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 3,
@@ -447,20 +447,20 @@ return {
 			x = 740,
 			y = 320,
 			children = {
-				"node_d98eed0c-f566-4d14-a4fc-b2f1d4d45639",
+				"node_d98eed0c-f566-4d14-a4fc-b2f1d4d45639"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_57c21f09-03ee-4196-b2c8-c80d5c3aaa0b",
+				"node_57c21f09-03ee-4196-b2c8-c80d5c3aaa0b"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 3,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 4,
@@ -473,20 +473,20 @@ return {
 			y = 320,
 			children = {
 				"node_0b600a94-b5b8-44e6-a8bc-1f07f88229bd",
-				"node_3ccea381-39a7-4411-b455-36d8fa65d30f",
+				"node_3ccea381-39a7-4411-b455-36d8fa65d30f"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_3007e418-f9ee-4815-9241-36c0af334834",
+				"node_3007e418-f9ee-4815-9241-36c0af334834"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 4,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 5,
@@ -500,17 +500,17 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_d98eed0c-f566-4d14-a4fc-b2f1d4d45639",
+				"node_d98eed0c-f566-4d14-a4fc-b2f1d4d45639"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 5,
 				exclusive_group = "durability",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -522,20 +522,20 @@ return {
 			x = 950,
 			y = 680,
 			children = {
-				"node_1431c326-ad53-4c00-afc8-088f0ef8c197",
+				"node_1431c326-ad53-4c00-afc8-088f0ef8c197"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_5c2139f8-0686-42f5-97fe-9b65e547e649",
+				"node_5c2139f8-0686-42f5-97fe-9b65e547e649"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 5,
@@ -549,17 +549,17 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_478577bd-fe37-433e-a7f9-b4277c88cac9",
+				"node_478577bd-fe37-433e-a7f9-b4277c88cac9"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 5,
 				exclusive_group = "celerity",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 2,
@@ -571,20 +571,20 @@ return {
 			x = 860,
 			y = 770,
 			children = {
-				"node_c1b0f29b-8968-44a3-bc1c-7580440db96c",
+				"node_c1b0f29b-8968-44a3-bc1c-7580440db96c"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_52ffe54b-abcd-469a-9376-64b387582546",
+				"node_52ffe54b-abcd-469a-9376-64b387582546"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 2,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 3,
@@ -596,20 +596,20 @@ return {
 			x = 740,
 			y = 800,
 			children = {
-				"node_478577bd-fe37-433e-a7f9-b4277c88cac9",
+				"node_478577bd-fe37-433e-a7f9-b4277c88cac9"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_1431c326-ad53-4c00-afc8-088f0ef8c197",
+				"node_1431c326-ad53-4c00-afc8-088f0ef8c197"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 3,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 4,
@@ -623,20 +623,20 @@ return {
 			children = {
 				"node_c7743c1a-1eba-4c2c-b9ba-a1f865e92f0c",
 				"node_7cb667f6-6558-44b4-b47d-67abf6bdef36",
-				"node_8b44a279-b6fb-410a-9805-22f5e25d470c",
+				"node_8b44a279-b6fb-410a-9805-22f5e25d470c"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_c1b0f29b-8968-44a3-bc1c-7580440db96c",
+				"node_c1b0f29b-8968-44a3-bc1c-7580440db96c"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 4,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 5,
@@ -650,17 +650,17 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_478577bd-fe37-433e-a7f9-b4277c88cac9",
+				"node_478577bd-fe37-433e-a7f9-b4277c88cac9"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 5,
 				exclusive_group = "celerity",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 5,
@@ -674,17 +674,17 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_d98eed0c-f566-4d14-a4fc-b2f1d4d45639",
+				"node_d98eed0c-f566-4d14-a4fc-b2f1d4d45639"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 5,
 				exclusive_group = "durability",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 5,
@@ -698,17 +698,17 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_3266c405-04b4-405b-87e9-626b2c6abd2f",
+				"node_3266c405-04b4-405b-87e9-626b2c6abd2f"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 5,
 				exclusive_group = "concentration",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 5,
@@ -722,17 +722,17 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_3266c405-04b4-405b-87e9-626b2c6abd2f",
+				"node_3266c405-04b4-405b-87e9-626b2c6abd2f"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 5,
 				exclusive_group = "concentration",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 5,
@@ -746,25 +746,25 @@ return {
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_478577bd-fe37-433e-a7f9-b4277c88cac9",
+				"node_478577bd-fe37-433e-a7f9-b4277c88cac9"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 5,
 				exclusive_group = "celerity",
-				min_points_spent = 0,
-			},
-		},
+				min_points_spent = 0
+			}
+		}
 	},
 	offset = {
 		0,
-		0,
+		0
 	},
 	size = {
 		4096,
-		5000,
-	},
+		5000
+	}
 }

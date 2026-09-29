@@ -11,109 +11,109 @@ local hit_zone_names = HitZone.hit_zone_names
 local action_data = {
 	name = "renegade_twin_captain_two",
 	idle = {
-		anim_events = "idle",
+		anim_events = "idle"
 	},
 	disappear_idle = {
 		anim_events = {
 			{
-				"foff_rinda_weaklings",
+				"foff_rinda_weaklings"
 			},
 			{
-				"foff_rinda_curse_you",
-			},
+				"foff_rinda_curse_you"
+			}
 		},
 		durations = {
 			foff_rinda_curse_you = 5.5,
-			foff_rinda_weaklings = 7,
+			foff_rinda_weaklings = 7
 		},
 		vo_trigger_timings = {
 			foff_rinda_curse_you = 0.6666666666666666,
-			foff_rinda_weaklings = 0.23333333333333334,
-		},
+			foff_rinda_weaklings = 0.23333333333333334
+		}
 	},
 	disappear = {
 		anim_events = "foff",
 		explode_position_node = "j_spine",
 		power_level = 5,
 		disappear_timings = {
-			foff = 0.9333333333333333,
+			foff = 0.9333333333333333
 		},
 		explosion_template = ExplosionTemplates.twin_disappear_explosion,
 		vo_event = {
 			trigger_id = "cult_retreat_a",
-			voice_profile = "captain_twin_female_a",
-		},
+			voice_profile = "captain_twin_female_a"
+		}
 	},
 	disappear_instant = {
 		anim_events = "foff",
 		explode_position_node = "j_spine",
 		power_level = 5,
 		disappear_timings = {
-			foff = 0,
+			foff = 0
 		},
-		explosion_template = ExplosionTemplates.twin_disappear_explosion,
+		explosion_template = ExplosionTemplates.twin_disappear_explosion
 	},
 	move_to_position = {
 		idle_anim_events = "idle",
 		move_anim_event = "move_fwd_sword",
 		speeds = {
-			move_fwd_sword = 2,
-		},
+			move_fwd_sword = 2
+		}
 	},
 	intro = {
 		duration = 6,
 		idle_anim_events = "idle",
 		move_anim_event = "move_fwd_sword",
 		speeds = {
-			move_fwd_sword = 0.9,
-		},
+			move_fwd_sword = 0.9
+		}
 	},
 	death = {
 		ignore_hit_during_death_ragdoll = true,
 		instant_ragdoll_chance = 0,
 		death_animations = {
 			default = {
-				"death_burn_3",
+				"death_burn_3"
 			},
 			[hit_zone_names.head] = {
-				"death_burn_3",
+				"death_burn_3"
 			},
 			[hit_zone_names.torso] = {
-				"death_burn_3",
+				"death_burn_3"
 			},
 			[hit_zone_names.upper_left_arm] = {
-				"death_arm_left",
+				"death_arm_left"
 			},
 			[hit_zone_names.lower_left_arm] = {
-				"death_burn_3",
+				"death_burn_3"
 			},
 			[hit_zone_names.upper_right_arm] = {
-				"death_burn_3",
+				"death_burn_3"
 			},
 			[hit_zone_names.lower_right_arm] = {
-				"death_burn_3",
+				"death_burn_3"
 			},
 			[hit_zone_names.upper_left_leg] = {
-				"death_burn_3",
+				"death_burn_3"
 			},
 			[hit_zone_names.lower_left_leg] = {
-				"death_burn_3",
+				"death_burn_3"
 			},
 			[hit_zone_names.upper_right_leg] = {
-				"death_burn_3",
+				"death_burn_3"
 			},
 			[hit_zone_names.lower_right_leg] = {
-				"death_burn_3",
+				"death_burn_3"
 			},
 			[hit_zone_names.captain_void_shield] = {
-				"death_burn_3",
+				"death_burn_3"
 			},
 			[hit_zone_names.afro] = {
-				"death_burn_3",
+				"death_burn_3"
 			},
 			[hit_zone_names.center_mass] = {
-				"death_burn_3",
-			},
+				"death_burn_3"
+			}
 		},
 		ragdoll_timings = {
 			death_arm_left = 3.033333333333333,
@@ -144,12 +144,12 @@ local action_data = {
 			death_strike_chest_back = 3.1666666666666665,
 			death_strike_chest_front = 1.6666666666666667,
 			death_strike_chest_left = 3.2,
-			death_strike_chest_right = 1.2666666666666666,
+			death_strike_chest_right = 1.2666666666666666
 		},
 		death_animation_vo = {
 			death_arm_left = "long_death",
-			death_burn_3 = "long_death",
-		},
+			death_burn_3 = "long_death"
+		}
 	},
 	climb = {
 		rotation_duration = 0.1,
@@ -163,7 +163,7 @@ local action_data = {
 			jump_up_5m = 4.166666666666667,
 			jump_up_fence_1m = 0.6,
 			jump_up_fence_3m = 1.4,
-			jump_up_fence_5m = 1.3,
+			jump_up_fence_5m = 1.3
 		},
 		land_timings = {
 			jump_down_1m = 0.2,
@@ -172,7 +172,7 @@ local action_data = {
 			jump_down_3m_2 = 0.5,
 			jump_down_fence_1m = 0.26666666666666666,
 			jump_down_fence_3m = 0.3333333333333333,
-			jump_down_fence_5m = 0.3333333333333333,
+			jump_down_fence_5m = 0.3333333333333333
 		},
 		ending_move_states = {
 			jump_down_land = "jumping",
@@ -180,7 +180,7 @@ local action_data = {
 			jump_up_1m_2 = "jumping",
 			jump_up_3m = "jumping",
 			jump_up_3m_2 = "jumping",
-			jump_up_5m = "jumping",
+			jump_up_5m = "jumping"
 		},
 		blend_timings = {
 			jump_down_1m = 0.1,
@@ -195,20 +195,20 @@ local action_data = {
 			jump_up_5m = 0.1,
 			jump_up_fence_1m = 0.2,
 			jump_up_fence_3m = 0.2,
-			jump_up_fence_5m = 0.2,
-		},
+			jump_up_fence_5m = 0.2
+		}
 	},
 	jump_across = {
 		rotation_duration = 0.1,
 		stagger_immune = true,
 		anim_timings = {
 			jump_over_gap_4m = 1.1666666666666667,
-			jump_over_gap_4m_2 = 1.1333333333333333,
+			jump_over_gap_4m_2 = 1.1333333333333333
 		},
 		ending_move_states = {
 			jump_over_gap_4m = "jumping",
-			jump_over_gap_4m_2 = "jumping",
-		},
+			jump_over_gap_4m_2 = "jumping"
+		}
 	},
 	melee_follow = {
 		enter_walk_distance = 4,
@@ -225,42 +225,42 @@ local action_data = {
 				bwd = "move_start_bwd",
 				fwd = "move_start_fwd",
 				left = "move_start_left",
-				right = "move_start_right",
-			},
+				right = "move_start_right"
+			}
 		},
 		start_move_anim_data = {
 			move_start_fwd = {
 				rad = nil,
-				sign = nil,
+				sign = nil
 			},
 			move_start_bwd = {
 				sign = 1,
-				rad = math.pi,
+				rad = math.pi
 			},
 			move_start_left = {
 				sign = 1,
-				rad = math.pi / 2,
+				rad = math.pi / 2
 			},
 			move_start_right = {
 				sign = -1,
-				rad = math.pi / 2,
-			},
+				rad = math.pi / 2
+			}
 		},
 		start_move_rotation_timings = {
 			move_start_bwd = 0.16666666666666666,
 			move_start_fwd = 0,
 			move_start_left = 0.16666666666666666,
-			move_start_right = 0.16666666666666666,
+			move_start_right = 0.16666666666666666
 		},
 		start_rotation_durations = {
 			move_start_bwd = 1,
 			move_start_fwd = 0.26666666666666666,
 			move_start_left = 0.7666666666666667,
-			move_start_right = 0.7,
+			move_start_right = 0.7
 		},
 		start_move_event_anim_speed_durations = {
-			move_start_fwd = 1.0666666666666667,
-		},
+			move_start_fwd = 1.0666666666666667
+		}
 	},
 	power_sword_moving_melee_attack = {
 		aoe_threat_timing = 0.3,
@@ -280,127 +280,127 @@ local action_data = {
 			"attack_move_01",
 			"attack_move_02",
 			"attack_move_03",
-			"attack_move_04",
+			"attack_move_04"
 		},
 		attack_anim_damage_timings = {
 			attack_move_01 = 0.9382716049382716,
 			attack_move_02 = 1.1111111111111112,
 			attack_move_03 = 1.1111111111111112,
-			attack_move_04 = 1.0617283950617284,
+			attack_move_04 = 1.0617283950617284
 		},
 		attack_anim_durations = {
 			attack_move_01 = 1.728395061728395,
 			attack_move_02 = 1.728395061728395,
 			attack_move_03 = 1.728395061728395,
-			attack_move_04 = 1.728395061728395,
+			attack_move_04 = 1.728395061728395
 		},
 		attack_intensities = {
 			melee = 0.25,
 			moving_melee = 0.5,
 			ranged = 1,
-			running_melee = 1,
+			running_melee = 1
 		},
 		move_start_timings = {
 			attack_move_01 = 0.11494252873563218,
 			attack_move_02 = 0.11494252873563218,
 			attack_move_03 = 0.11494252873563218,
-			attack_move_04 = 0.11494252873563218,
+			attack_move_04 = 0.11494252873563218
 		},
 		damage_profile = DamageProfileTemplates.twin_captain_two_melee_default,
 		damage_type = damage_types.minion_powered_sharp,
 		stagger_type_reduction = {
-			ranged = 20,
+			ranged = 20
 		},
 		animation_move_speed_configs = {
 			attack_move_01 = {
 				{
 					distance = 4.61,
-					value = 4,
+					value = 4
 				},
 				{
 					distance = 3.39,
-					value = 3,
+					value = 3
 				},
 				{
 					distance = 2.12,
-					value = 2,
+					value = 2
 				},
 				{
 					distance = 1.12,
-					value = 1,
+					value = 1
 				},
 				{
 					distance = 0.35,
-					value = 0,
-				},
+					value = 0
+				}
 			},
 			attack_move_02 = {
 				{
 					distance = 4.64,
-					value = 4,
+					value = 4
 				},
 				{
 					distance = 3.31,
-					value = 3,
+					value = 3
 				},
 				{
 					distance = 2.14,
-					value = 2,
+					value = 2
 				},
 				{
 					distance = 1.13,
-					value = 1,
+					value = 1
 				},
 				{
 					distance = 0.35,
-					value = 0,
-				},
+					value = 0
+				}
 			},
 			attack_move_03 = {
 				{
 					distance = 4.53,
-					value = 4,
+					value = 4
 				},
 				{
 					distance = 3.02,
-					value = 3,
+					value = 3
 				},
 				{
 					distance = 2.12,
-					value = 2,
+					value = 2
 				},
 				{
 					distance = 1.09,
-					value = 1,
+					value = 1
 				},
 				{
 					distance = 0.35,
-					value = 0,
-				},
+					value = 0
+				}
 			},
 			attack_move_04 = {
 				{
 					distance = 4.5,
-					value = 4,
+					value = 4
 				},
 				{
 					distance = 3.42,
-					value = 3,
+					value = 3
 				},
 				{
 					distance = 2.12,
-					value = 2,
+					value = 2
 				},
 				{
 					distance = 1,
-					value = 1,
+					value = 1
 				},
 				{
 					distance = 0.35,
-					value = 0,
-				},
-			},
-		},
+					value = 0
+				}
+			}
+		}
 	},
 	power_sword_melee_combo_attack = {
 		aoe_threat_timing = 0.3,
@@ -422,72 +422,72 @@ local action_data = {
 			"attack_swing_combo_02",
 			"attack_swing_combo_03",
 			"attack_swing_combo_04",
-			"attack_swing_combo_05",
+			"attack_swing_combo_05"
 		},
 		attack_anim_damage_timings = {
 			attack_swing_combo_01 = {
 				0.6236559139784946,
 				1.075268817204301,
-				1.8709677419354838,
+				1.8709677419354838
 			},
 			attack_swing_combo_02 = {
 				0.6021505376344086,
 				1.075268817204301,
 				1.7419354838709677,
-				2.4301075268817205,
+				2.4301075268817205
 			},
 			attack_swing_combo_03 = {
 				0.6021505376344086,
 				1.2043010752688172,
 				1.7419354838709677,
-				2.2795698924731185,
+				2.2795698924731185
 			},
 			attack_swing_combo_04 = {
 				0.5591397849462365,
 				1.010752688172043,
 				1.4838709677419355,
-				2.129032258064516,
+				2.129032258064516
 			},
 			attack_swing_combo_05 = {
 				0.5376344086021505,
 				1.075268817204301,
 				1.5483870967741935,
-				2.150537634408602,
-			},
+				2.150537634408602
+			}
 		},
 		attack_anim_durations = {
 			attack_swing_combo_01 = 2.150537634408602,
 			attack_swing_combo_02 = 2.795698924731183,
 			attack_swing_combo_03 = 2.3010752688172045,
 			attack_swing_combo_04 = 2.3655913978494625,
-			attack_swing_combo_05 = 2.2580645161290325,
+			attack_swing_combo_05 = 2.2580645161290325
 		},
 		attack_override_damage_data = {
 			attack_swing_combo_01 = {
 				[3] = {
 					override_damage_profile = DamageProfileTemplates.renegade_captain_kick,
-					override_damage_type = damage_types.minion_ogryn_kick,
-				},
+					override_damage_type = damage_types.minion_ogryn_kick
+				}
 			},
 			attack_swing_combo_04 = {
 				[4] = {
 					override_damage_profile = DamageProfileTemplates.renegade_captain_kick,
-					override_damage_type = damage_types.minion_ogryn_kick,
-				},
-			},
+					override_damage_type = damage_types.minion_ogryn_kick
+				}
+			}
 		},
 		attack_intensities = {
 			melee = 0.25,
 			moving_melee = 1,
 			ranged = 1,
-			running_melee = 2,
+			running_melee = 2
 		},
 		move_start_timings = {
 			attack_swing_combo_01 = 0,
 			attack_swing_combo_02 = 0,
 			attack_swing_combo_03 = 0,
 			attack_swing_combo_04 = 0,
-			attack_swing_combo_05 = 0,
+			attack_swing_combo_05 = 0
 		},
 		damage_profile = DamageProfileTemplates.twin_captain_two_melee_default,
 		damage_type = damage_types.minion_powered_sharp,
@@ -496,16 +496,16 @@ local action_data = {
 			rotation_speed = 4.5,
 			force_new_target_attempt_config = {
 				max_distance = 4,
-				max_angle = math.degrees_to_radians(180),
-			},
+				max_angle = math.degrees_to_radians(180)
+			}
 		},
 		effect_template_start_timings = {
 			attack_swing_combo_01 = 0.16666666666666666,
 			attack_swing_combo_02 = 0.16666666666666666,
 			attack_swing_combo_03 = 0.16666666666666666,
 			attack_swing_combo_04 = 0.16666666666666666,
-			attack_swing_combo_05 = 0.16666666666666666,
-		},
+			attack_swing_combo_05 = 0.16666666666666666
+		}
 	},
 	kick = {
 		aoe_threat_timing = 0.3,
@@ -522,26 +522,26 @@ local action_data = {
 		attack_anim_events = {
 			"attack_kick_01",
 			"attack_kick_02",
-			"attack_knee_01",
+			"attack_knee_01"
 		},
 		attack_anim_damage_timings = {
 			attack_kick_01 = 0.6666666666666666,
 			attack_kick_02 = 0.4266666666666667,
-			attack_knee_01 = 0.6133333333333333,
+			attack_knee_01 = 0.6133333333333333
 		},
 		attack_anim_durations = {
 			attack_kick_01 = 1.2,
 			attack_kick_02 = 0.6666666666666666,
-			attack_knee_01 = 1.2,
+			attack_knee_01 = 1.2
 		},
 		attack_intensities = {
 			melee = 0.25,
 			moving_melee = 0.1,
 			ranged = 1,
-			running_melee = 2,
+			running_melee = 2
 		},
 		damage_profile = DamageProfileTemplates.renegade_captain_kick,
-		damage_type = damage_types.minion_ogryn_kick,
+		damage_type = damage_types.minion_ogryn_kick
 	},
 	dash = {
 		collision_radius = 1.8,
@@ -556,26 +556,26 @@ local action_data = {
 		vo_event = "cult_switch_focus_a",
 		considerations = UtilityConsiderations.twin_captain_dash,
 		dash_anim_events = {
-			"twin_dash_start",
+			"twin_dash_start"
 		},
 		dash_durations = {
-			twin_dash_start = 0.18333333333333332,
+			twin_dash_start = 0.18333333333333332
 		},
 		reached_destination_anim_events = {
-			"attack_charge_miss",
+			"attack_charge_miss"
 		},
 		reached_destination_durations = {
-			attack_charge_miss = 0.625,
+			attack_charge_miss = 0.625
 		},
 		push_minions_damage_profile = DamageProfileTemplates.renegade_captain_minion_charge_push,
 		push_minions_fx_template = MinionPushFxTemplates.captain_charge_push,
 		push_minions_fx_cooldown = {
 			0.03,
-			0.18,
+			0.18
 		},
 		collision_angle = math.degrees_to_radians(100),
 		damage_profile = DamageProfileTemplates.twin_dash,
-		damage_type = damage_types.minion_charge,
+		damage_type = damage_types.minion_charge
 	},
 	dash_fast = {
 		collision_radius = 1.8,
@@ -590,26 +590,26 @@ local action_data = {
 		vo_event = "cult_switch_focus_a",
 		considerations = UtilityConsiderations.twin_captain_dash,
 		dash_anim_events = {
-			"twin_dash_start",
+			"twin_dash_start"
 		},
 		dash_durations = {
-			twin_dash_start = 0.18333333333333332,
+			twin_dash_start = 0.18333333333333332
 		},
 		reached_destination_anim_events = {
-			"attack_charge_miss",
+			"attack_charge_miss"
 		},
 		reached_destination_durations = {
-			attack_charge_miss = 0.0625,
+			attack_charge_miss = 0.0625
 		},
 		push_minions_damage_profile = DamageProfileTemplates.renegade_captain_minion_charge_push,
 		push_minions_fx_template = MinionPushFxTemplates.captain_charge_push,
 		push_minions_fx_cooldown = {
 			0.03,
-			0.18,
+			0.18
 		},
 		collision_angle = math.degrees_to_radians(100),
 		damage_profile = DamageProfileTemplates.twin_dash_light,
-		damage_type = damage_types.minion_charge,
+		damage_type = damage_types.minion_charge
 	},
 	random_dash = {
 		collision_radius = 1.8,
@@ -625,33 +625,33 @@ local action_data = {
 		considerations = UtilityConsiderations.twin_captain_random_dash,
 		num_dashes = {
 			4,
-			6,
+			6
 		},
 		random_position_distance = {
 			3,
-			8,
+			8
 		},
 		dash_anim_events = {
-			"twin_dash_start",
+			"twin_dash_start"
 		},
 		dash_durations = {
-			twin_dash_start = 0.18333333333333332,
+			twin_dash_start = 0.18333333333333332
 		},
 		reached_destination_anim_events = {
-			"attack_charge_miss",
+			"attack_charge_miss"
 		},
 		reached_destination_durations = {
-			attack_charge_miss = 0.625,
+			attack_charge_miss = 0.625
 		},
 		push_minions_damage_profile = DamageProfileTemplates.renegade_captain_minion_charge_push,
 		push_minions_fx_template = MinionPushFxTemplates.captain_charge_push,
 		push_minions_fx_cooldown = {
 			0.03,
-			0.18,
+			0.18
 		},
 		collision_angle = math.degrees_to_radians(100),
 		damage_profile = DamageProfileTemplates.twin_dash,
-		damage_type = damage_types.minion_charge,
+		damage_type = damage_types.minion_charge
 	},
 	random_dash_short = {
 		collision_radius = 1.8,
@@ -667,33 +667,33 @@ local action_data = {
 		considerations = UtilityConsiderations.twin_captain_random_dash,
 		num_dashes = {
 			1,
-			1,
+			1
 		},
 		random_position_distance = {
 			3,
-			8,
+			8
 		},
 		dash_anim_events = {
-			"twin_dash_start",
+			"twin_dash_start"
 		},
 		dash_durations = {
-			twin_dash_start = 0.18333333333333332,
+			twin_dash_start = 0.18333333333333332
 		},
 		reached_destination_anim_events = {
-			"attack_charge_miss",
+			"attack_charge_miss"
 		},
 		reached_destination_durations = {
-			attack_charge_miss = 0.0625,
+			attack_charge_miss = 0.0625
 		},
 		push_minions_damage_profile = DamageProfileTemplates.renegade_captain_minion_charge_push,
 		push_minions_fx_template = MinionPushFxTemplates.captain_charge_push,
 		push_minions_fx_cooldown = {
 			0.03,
-			0.18,
+			0.18
 		},
 		collision_angle = math.degrees_to_radians(100),
 		damage_profile = DamageProfileTemplates.twin_dash,
-		damage_type = damage_types.minion_charge,
+		damage_type = damage_types.minion_charge
 	},
 	power_sword_melee_sweep = {
 		aoe_bot_threat_broadphase_size = 5,
@@ -716,38 +716,38 @@ local action_data = {
 		considerations = UtilityConsiderations.renegade_captain_power_sword_melee_sweep,
 		attack_anim_events = {
 			"attack_heavy_swing_fast",
-			"attack_heavy_swing_fast_02",
+			"attack_heavy_swing_fast_02"
 		},
 		attack_sweep_damage_timings = {
 			attack_heavy_swing_fast = {
 				0.8333333333333334,
-				1.1666666666666667,
+				1.1666666666666667
 			},
 			attack_heavy_swing_fast_02 = {
 				1.3541666666666667,
-				1.4583333333333333,
-			},
+				1.4583333333333333
+			}
 		},
 		attack_anim_durations = {
 			attack_heavy_swing_fast = 1.6666666666666667,
-			attack_heavy_swing_fast_02 = 1.6666666666666667,
+			attack_heavy_swing_fast_02 = 1.6666666666666667
 		},
 		attack_intensities = {
 			melee = 0.25,
 			moving_melee = 1,
 			ranged = 1,
-			running_melee = 2,
+			running_melee = 2
 		},
 		damage_profile = DamageProfileTemplates.twin_captain_two_aoe_sweep,
 		offtarget_damage_profile = DamageProfileTemplates.twin_captain_two_aoe_sweep,
 		stagger_type_reduction = {
-			ranged = 100,
+			ranged = 100
 		},
 		damage_type = damage_types.minion_powered_sharp,
 		effect_template_start_timings = {
 			attack_heavy_swing_fast = 0.16666666666666666,
-			attack_heavy_swing_fast_02 = 0.3333333333333333,
-		},
+			attack_heavy_swing_fast_02 = 0.3333333333333333
+		}
 	},
 	power_sword_moving_melee_sweep = {
 		aoe_threat_timing = 0.3,
@@ -767,32 +767,32 @@ local action_data = {
 		weapon_reach = 5,
 		considerations = UtilityConsiderations.renegade_captain_power_sword_melee_sweep,
 		attack_anim_events = {
-			"attack_heavy_swing_moving",
+			"attack_heavy_swing_moving"
 		},
 		attack_sweep_damage_timings = {
 			attack_heavy_swing_moving = {
 				1.4666666666666666,
-				1.6,
-			},
+				1.6
+			}
 		},
 		attack_anim_durations = {
-			attack_heavy_swing_moving = 2.5,
+			attack_heavy_swing_moving = 2.5
 		},
 		attack_intensities = {
 			melee = 0.25,
 			moving_melee = 1,
 			ranged = 1,
-			running_melee = 2,
+			running_melee = 2
 		},
 		damage_profile = DamageProfileTemplates.twin_captain_two_aoe_sweep,
 		offtarget_damage_profile = DamageProfileTemplates.twin_captain_two_aoe_sweep,
 		stagger_type_reduction = {
-			ranged = 100,
+			ranged = 100
 		},
 		damage_type = damage_types.minion_powered_sharp,
 		effect_template_start_timings = {
-			attack_heavy_swing_moving = 0.3333333333333333,
-		},
+			attack_heavy_swing_moving = 0.3333333333333333
+		}
 	},
 	shield_down_recharge = {
 		charge_effect_template_name = "linked_beam",
@@ -800,37 +800,37 @@ local action_data = {
 		stand_up_anim_duration = 1.3333333333333333,
 		vo_event = "taunt_shield",
 		anim_events = {
-			"stagger_shield_break_charge_into",
+			"stagger_shield_break_charge_into"
 		},
 		stand_up_anim_events = {
-			"stagger_shield_break_charge_outof",
+			"stagger_shield_break_charge_outof"
 		},
 		regen_speed = {
 			300,
 			400,
 			500,
 			600,
-			800,
+			800
 		},
 		regenerate_full_delay = {
 			20,
 			18,
 			16,
 			14,
-			12,
-		},
+			12
+		}
 	},
 	dash_and_sweep = {
 		utility_weight = 300,
-		considerations = UtilityConsiderations.twin_captain_dash_and_sweep,
+		considerations = UtilityConsiderations.twin_captain_dash_and_sweep
 	},
 	empowered_dash_and_sweep = {
 		utility_weight = 600,
-		considerations = UtilityConsiderations.twin_captain_dash_and_sweep,
+		considerations = UtilityConsiderations.twin_captain_dash_and_sweep
 	},
 	stagger = {
 		stagger_duration_mods = {
-			stagger_explosion_front_2 = 0.8,
+			stagger_explosion_front_2 = 0.8
 		},
 		stagger_anims = {
 			light = {
@@ -840,7 +840,7 @@ local action_data = {
 					"stagger_fwd_light_3",
 					"stagger_fwd_light_4",
 					"stagger_fwd_light_5",
-					"stagger_fwd_light_6",
+					"stagger_fwd_light_6"
 				},
 				bwd = {
 					"stagger_bwd_light",
@@ -850,101 +850,101 @@ local action_data = {
 					"stagger_bwd_light_5",
 					"stagger_bwd_light_6",
 					"stagger_bwd_light_7",
-					"stagger_bwd_light_8",
+					"stagger_bwd_light_8"
 				},
 				left = {
 					"stagger_left_light",
 					"stagger_left_light_2",
 					"stagger_left_light_3",
-					"stagger_left_light_4",
+					"stagger_left_light_4"
 				},
 				right = {
 					"stagger_right_light",
 					"stagger_right_light_2",
 					"stagger_right_light_3",
-					"stagger_right_light_4",
+					"stagger_right_light_4"
 				},
 				dwn = {
-					"stagger_bwd_light",
-				},
+					"stagger_bwd_light"
+				}
 			},
 			medium = {
 				fwd = {
 					"stagger_fwd",
 					"stagger_fwd_2",
 					"stagger_fwd_3",
-					"stagger_fwd_4",
+					"stagger_fwd_4"
 				},
 				bwd = {
 					"stagger_bwd",
 					"stagger_bwd_2",
 					"stagger_bwd_3",
-					"stagger_bwd_4",
+					"stagger_bwd_4"
 				},
 				left = {
 					"stagger_left",
 					"stagger_left_2",
 					"stagger_left_3",
 					"stagger_left_4",
-					"stagger_left_5",
+					"stagger_left_5"
 				},
 				right = {
 					"stagger_right",
 					"stagger_right_2",
 					"stagger_right_3",
 					"stagger_right_4",
-					"stagger_right_5",
+					"stagger_right_5"
 				},
 				dwn = {
 					"stagger_medium_downward",
 					"stagger_medium_downward_2",
-					"stagger_medium_downward_3",
-				},
+					"stagger_medium_downward_3"
+				}
 			},
 			heavy = {
 				fwd = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				bwd = {
-					"stagger_bwd_heavy",
+					"stagger_bwd_heavy"
 				},
 				left = {
-					"stagger_left_heavy",
+					"stagger_left_heavy"
 				},
 				right = {
-					"stagger_right_heavy",
+					"stagger_right_heavy"
 				},
 				dwn = {
-					"stagger_dwn_heavy",
-				},
+					"stagger_dwn_heavy"
+				}
 			},
 			light_ranged = {
 				fwd = {
-					"stagger_fwd_light",
+					"stagger_fwd_light"
 				},
 				bwd = {
-					"stagger_bwd_light",
+					"stagger_bwd_light"
 				},
 				left = {
-					"stagger_left_light",
+					"stagger_left_light"
 				},
 				right = {
-					"stagger_right_light",
-				},
+					"stagger_right_light"
+				}
 			},
 			explosion = {
 				fwd = {
-					"stagger_fwd_heavy",
+					"stagger_fwd_heavy"
 				},
 				bwd = {
-					"stagger_bwd_heavy",
+					"stagger_bwd_heavy"
 				},
 				left = {
-					"stagger_left_heavy",
+					"stagger_left_heavy"
 				},
 				right = {
-					"stagger_right_heavy",
-				},
+					"stagger_right_heavy"
+				}
 			},
 			killshot = {
 				fwd = {
@@ -953,7 +953,7 @@ local action_data = {
 					"stagger_fwd_light_3",
 					"stagger_fwd_light_4",
 					"stagger_fwd_light_5",
-					"stagger_fwd_light_6",
+					"stagger_fwd_light_6"
 				},
 				bwd = {
 					"stagger_bwd_light",
@@ -963,111 +963,111 @@ local action_data = {
 					"stagger_bwd_light_5",
 					"stagger_bwd_light_6",
 					"stagger_bwd_light_7",
-					"stagger_bwd_light_8",
+					"stagger_bwd_light_8"
 				},
 				left = {
 					"stagger_left_light",
 					"stagger_left_light_2",
 					"stagger_left_light_3",
-					"stagger_left_light_4",
+					"stagger_left_light_4"
 				},
 				right = {
 					"stagger_right_light",
 					"stagger_right_light_2",
 					"stagger_right_light_3",
-					"stagger_right_light_4",
+					"stagger_right_light_4"
 				},
 				dwn = {
-					"stagger_bwd_light",
-				},
+					"stagger_bwd_light"
+				}
 			},
 			sticky = {
 				bwd = {
 					"stagger_front_sticky",
 					"stagger_front_sticky_2",
-					"stagger_front_sticky_3",
+					"stagger_front_sticky_3"
 				},
 				fwd = {
 					"stagger_bwd_sticky",
 					"stagger_bwd_sticky_2",
-					"stagger_bwd_sticky_3",
+					"stagger_bwd_sticky_3"
 				},
 				left = {
 					"stagger_left_sticky",
 					"stagger_left_sticky_2",
-					"stagger_left_sticky_3",
+					"stagger_left_sticky_3"
 				},
 				right = {
 					"stagger_right_sticky",
 					"stagger_right_sticky_2",
-					"stagger_right_sticky_3",
+					"stagger_right_sticky_3"
 				},
 				dwn = {
 					"stagger_bwd_sticky",
 					"stagger_bwd_sticky_2",
-					"stagger_bwd_sticky_3",
-				},
+					"stagger_bwd_sticky_3"
+				}
 			},
 			electrocuted = {
 				bwd = {
 					"stagger_front_sticky",
 					"stagger_front_sticky_2",
-					"stagger_front_sticky_3",
+					"stagger_front_sticky_3"
 				},
 				fwd = {
 					"stagger_bwd_sticky",
 					"stagger_bwd_sticky_2",
-					"stagger_bwd_sticky_3",
+					"stagger_bwd_sticky_3"
 				},
 				left = {
 					"stagger_left_sticky",
 					"stagger_left_sticky_2",
-					"stagger_left_sticky_3",
+					"stagger_left_sticky_3"
 				},
 				right = {
 					"stagger_right_sticky",
 					"stagger_right_sticky_2",
-					"stagger_right_sticky_3",
+					"stagger_right_sticky_3"
 				},
 				dwn = {
 					"stagger_bwd_sticky",
 					"stagger_bwd_sticky_2",
-					"stagger_bwd_sticky_3",
-				},
+					"stagger_bwd_sticky_3"
+				}
 			},
 			shield_broken = {
 				fwd = {
-					"stagger_shield_break",
+					"stagger_shield_break"
 				},
 				bwd = {
-					"stagger_shield_break",
+					"stagger_shield_break"
 				},
 				left = {
-					"stagger_shield_break",
+					"stagger_shield_break"
 				},
 				right = {
-					"stagger_shield_break",
+					"stagger_shield_break"
 				},
 				dwn = {
-					"stagger_shield_break",
-				},
+					"stagger_shield_break"
+				}
 			},
 			wall_collision = {
 				fwd = {
-					"stagger_wall_hit",
+					"stagger_wall_hit"
 				},
 				bwd = {
-					"stagger_wall_hit",
+					"stagger_wall_hit"
 				},
 				left = {
-					"stagger_wall_hit",
+					"stagger_wall_hit"
 				},
 				right = {
-					"stagger_wall_hit",
+					"stagger_wall_hit"
 				},
 				dwn = {
-					"stagger_wall_hit",
-				},
+					"stagger_wall_hit"
+				}
 			},
 			blinding = {
 				fwd = {
@@ -1076,7 +1076,7 @@ local action_data = {
 					"stagger_fwd_light_3",
 					"stagger_fwd_light_4",
 					"stagger_fwd_light_5",
-					"stagger_fwd_light_6",
+					"stagger_fwd_light_6"
 				},
 				bwd = {
 					"stagger_bwd_light",
@@ -1086,48 +1086,48 @@ local action_data = {
 					"stagger_bwd_light_5",
 					"stagger_bwd_light_6",
 					"stagger_bwd_light_7",
-					"stagger_bwd_light_8",
+					"stagger_bwd_light_8"
 				},
 				left = {
 					"stagger_left_light",
 					"stagger_left_light_2",
 					"stagger_left_light_3",
-					"stagger_left_light_4",
+					"stagger_left_light_4"
 				},
 				right = {
 					"stagger_right_light",
 					"stagger_right_light_2",
 					"stagger_right_light_3",
-					"stagger_right_light_4",
+					"stagger_right_light_4"
 				},
 				dwn = {
-					"stagger_bwd_light",
-				},
-			},
-		},
+					"stagger_bwd_light"
+				}
+			}
+		}
 	},
 	smash_obstacle = {
 		damage_type = nil,
 		power_level = 1000,
 		rotation_duration = 0.1,
 		attack_anim_events = {
-			"attack_kick_01",
+			"attack_kick_01"
 		},
 		attack_anim_damage_timings = {
-			attack_kick_01 = 0.6666666666666666,
+			attack_kick_01 = 0.6666666666666666
 		},
 		attack_anim_durations = {
-			attack_kick_01 = 1.0666666666666667,
+			attack_kick_01 = 1.0666666666666667
 		},
-		damage_profile = DamageProfileTemplates.default,
+		damage_profile = DamageProfileTemplates.default
 	},
 	open_door = {
 		rotation_duration = 0.1,
-		stagger_immune = true,
+		stagger_immune = true
 	},
 	exit_spawner = {
-		run_anim_event = "move_fwd",
-	},
+		run_anim_event = "move_fwd"
+	}
 }
 
 return action_data

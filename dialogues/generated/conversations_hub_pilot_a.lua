@@ -19,7 +19,7 @@ local conversations_hub_pilot_a = {
 			"loc_pilot_a__hub_idle_12",
 			"loc_pilot_a__hub_idle_13",
 			"loc_pilot_a__hub_idle_14",
-			"loc_pilot_a__hub_idle_15",
+			"loc_pilot_a__hub_idle_15"
 		},
 		sound_events_duration = {
 			3.722917,
@@ -36,64 +36,64 @@ local conversations_hub_pilot_a = {
 			2.306833,
 			3.097479,
 			3.363063,
-			3.702688,
+			3.702688
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_idle_2nd_phase_conversation_eleven_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_pilot_a__hub_idle_2nd_phase_conversation_eleven_a_01",
+			[1] = "loc_pilot_a__hub_idle_2nd_phase_conversation_eleven_a_01"
 		},
 		sound_events_duration = {
-			[1] = 3.534,
+			[1] = 3.534
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_idle_2nd_phase_conversation_forty_one_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_pilot_a__hub_idle_2nd_phase_conversation_forty_one_a_01",
+			[1] = "loc_pilot_a__hub_idle_2nd_phase_conversation_forty_one_a_01"
 		},
 		sound_events_duration = {
-			[1] = 7.076104,
+			[1] = 7.076104
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_idle_2nd_phase_conversation_fortytwo_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_pilot_a__hub_idle_2nd_phase_conversation_fortytwo_b_01",
+			[1] = "loc_pilot_a__hub_idle_2nd_phase_conversation_fortytwo_b_01"
 		},
 		sound_events_duration = {
-			[1] = 5.430375,
+			[1] = 5.430375
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_idle_2nd_phase_conversation_thirteen_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_pilot_a__hub_idle_2nd_phase_conversation_thirteen_a_01",
+			[1] = "loc_pilot_a__hub_idle_2nd_phase_conversation_thirteen_a_01"
 		},
 		sound_events_duration = {
-			[1] = 5.191375,
+			[1] = 5.191375
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_idle_2nd_phase_conversation_twelve_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_pilot_a__hub_idle_2nd_phase_conversation_twelve_a_01",
+			[1] = "loc_pilot_a__hub_idle_2nd_phase_conversation_twelve_a_01"
 		},
 		sound_events_duration = {
-			[1] = 8.218354,
+			[1] = 8.218354
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	pilot_distance = {
 		randomize_indexes_n = 0,
@@ -118,7 +118,7 @@ local conversations_hub_pilot_a = {
 			"loc_pilot_a__pilot_distance_17",
 			"loc_pilot_a__pilot_distance_18",
 			"loc_pilot_a__pilot_distance_19",
-			"loc_pilot_a__pilot_distance_20",
+			"loc_pilot_a__pilot_distance_20"
 		},
 		sound_events_duration = {
 			3.61225,
@@ -140,32 +140,32 @@ local conversations_hub_pilot_a = {
 			4.846188,
 			1.590271,
 			3.512583,
-			5.074792,
+			5.074792
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	shipmistress_hub_announcement_b_27_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_pilot_a__shipmistress_hub_announcement_b_27_b_01",
+			[1] = "loc_pilot_a__shipmistress_hub_announcement_b_27_b_01"
 		},
 		sound_events_duration = {
-			[1] = 6.237979,
+			[1] = 6.237979
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	shipmistress_hub_announcement_b_28_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_pilot_a__shipmistress_hub_announcement_b_28_b_01",
+			[1] = "loc_pilot_a__shipmistress_hub_announcement_b_28_b_01"
 		},
 		sound_events_duration = {
-			[1] = 3.644542,
+			[1] = 3.644542
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("conversations_hub_pilot_a", conversations_hub_pilot_a)

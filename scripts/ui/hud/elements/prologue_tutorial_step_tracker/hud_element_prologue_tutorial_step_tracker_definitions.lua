@@ -18,8 +18,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	entry_pivot = {
 		horizontal_alignment = "center",
@@ -29,9 +29,9 @@ local scenegraph_definition = {
 		position = {
 			background_size[1],
 			25,
-			0,
-		},
-	},
+			0
+		}
+	}
 }
 local description_text_style = objective_tracker_settings.description_text_style
 
@@ -50,24 +50,24 @@ local widget_definitions = {
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
+						1
+					}
 				},
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				color = get_hud_color("color_tint_main_2", 255),
 				offset = {
 					0,
 					0,
-					10,
-				},
-			},
+					10
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -78,10 +78,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
-				color = get_hud_color("color_tint_main_4", 220),
-			},
+				color = get_hud_color("color_tint_main_4", 220)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -95,19 +95,19 @@ local widget_definitions = {
 				offset = {
 					10,
 					0,
-					5,
+					5
 				},
-				color = UIHudSettings.color_tint_main_1,
-			},
+				color = UIHudSettings.color_tint_main_1
+			}
 		},
 		{
 			pass_type = "text",
 			style_id = "description_text",
 			value = "",
 			value_id = "description_text",
-			style = description_text_style,
-		},
-	}, "entry_pivot"),
+			style = description_text_style
+		}
+	}, "entry_pivot")
 }
 local animations = {
 	add_entry = {
@@ -118,7 +118,7 @@ local animations = {
 			init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 				widget.alpha_multiplier = 0
 				widget.offset[1] = -25
-			end,
+			end
 		},
 		{
 			end_time = 0.6,
@@ -131,7 +131,7 @@ local animations = {
 				local size_x = size[1]
 
 				widget.offset[1] = -25 + -size_x * math.easeInCubic(progress)
-			end,
+			end
 		},
 		{
 			end_time = 0.4,
@@ -139,8 +139,8 @@ local animations = {
 			start_time = 0.2,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
 				widget.alpha_multiplier = 1 * math.easeOutCubic(progress)
-			end,
-		},
+			end
+		}
 	},
 	remove_entry = {
 		{
@@ -154,7 +154,7 @@ local animations = {
 				local size_x = size[1]
 
 				widget.offset[1] = -size_x - 25 + (25 + size_x) * math.easeInCubic(progress)
-			end,
+			end
 		},
 		{
 			end_time = 0.8,
@@ -164,13 +164,13 @@ local animations = {
 				local alpha = -1 * math.easeOutCubic(progress)
 
 				widget.alpha_multiplier = alpha
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
 	animations = animations,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

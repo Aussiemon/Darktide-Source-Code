@@ -5,7 +5,7 @@ local ExpeditionMinionLootSettings = require("scripts/settings/minion_loot/exped
 local NavQueries = require("scripts/utilities/nav_queries")
 local CLIENT_RPCS = {
 	"rpc_player_loot_stolen",
-	"rpc_minion_dropped_loot",
+	"rpc_minion_dropped_loot"
 }
 local SERVER_RPCS = {}
 local ExpeditionMinionLootHandler = class("ExpeditionMinionLootHandler")
@@ -76,7 +76,7 @@ ExpeditionMinionLootHandler._client_show_loot_notification = function (self, pee
 	Managers.event:trigger("event_add_notification_message", "minion_loot_steal", {
 		player = player,
 		breed_display_name = breed_display_name,
-		amount = amount_to_steal,
+		amount = amount_to_steal
 	})
 end
 
@@ -89,7 +89,7 @@ ExpeditionMinionLootHandler._client_show_minion_loot_dropped_notification = func
 
 	Managers.event:trigger("event_add_notification_message", "minion_loot_drop", {
 		breed_display_name = breed_display_name,
-		amount = amount_to_steal,
+		amount = amount_to_steal
 	})
 end
 
@@ -117,7 +117,7 @@ ExpeditionMinionLootHandler.steal = function (self, player_unit, unit)
 				amount = 0,
 				reason = "stolen",
 				position = Vector3Box(POSITION_LOOKUP[unit]),
-				breed_id = breed_id,
+				breed_id = breed_id
 			}
 			loot_by_minion = self._loot_by_minion[unit]
 		else
@@ -156,7 +156,7 @@ ExpeditionMinionLootHandler._set_spawn_amount = function (self, unit, spawn_amou
 			reason = "reward",
 			position = Vector3Box(POSITION_LOOKUP[unit]),
 			amount = spawn_amount,
-			breed_id = breed_id,
+			breed_id = breed_id
 		}
 	end
 end
@@ -184,7 +184,7 @@ ExpeditionMinionLootHandler.insta_drop = function (self, player_unit, unit)
 		local spawn_data = {
 			position = Vector3Box(position),
 			amount = amount_to_steal,
-			breed_id = breed_id,
+			breed_id = breed_id
 		}
 
 		self:_drop_loot(spawn_data)

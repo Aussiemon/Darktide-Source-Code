@@ -15,7 +15,7 @@ end
 
 MetaAchievement.setup = function (achievement_definition, scratch_pad, player_id)
 	local _scratch_pad = {
-		__size = 0,
+		__size = 0
 	}
 	local achievements = achievement_definition.achievements
 

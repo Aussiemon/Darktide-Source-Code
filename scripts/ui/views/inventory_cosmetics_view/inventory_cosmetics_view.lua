@@ -42,7 +42,7 @@ local WIDGET_TYPE_BY_SLOT = {
 	slot_gear_lowerbody = "gear_item",
 	slot_gear_upperbody = "gear_item",
 	slot_insignia = "ui_item",
-	slot_portrait_frame = "ui_item",
+	slot_portrait_frame = "ui_item"
 }
 local PENANCE_TRACK_ID = "dec942ce-b6ba-439c-95e2-022c5d71394d"
 local ANIMATION_SLOTS_MAP = {
@@ -51,7 +51,7 @@ local ANIMATION_SLOTS_MAP = {
 	slot_animation_emote_3 = true,
 	slot_animation_emote_4 = true,
 	slot_animation_emote_5 = true,
-	slot_animation_end_of_round = true,
+	slot_animation_end_of_round = true
 }
 
 local function _stats_sort_iterator(stats, stats_sorting)
@@ -81,6 +81,7 @@ InventoryCosmeticsView.init = function (self, settings, context)
 	self._sort_options = {}
 	self._debug = context.debug
 	self._hide_item_source_in_tooltip = true
+	self._can_purchase_premium_items = not Managers.ui:view_active("lobby_view")
 	self._promise_container = PromiseContainer:new()
 	context.preview_player = context.player or Managers.player:local_player(1)
 	context.preview_loadout = self._preview_profile_equipped_items or context.preview_player.loadout
@@ -103,7 +104,7 @@ InventoryCosmeticsView.init = function (self, settings, context)
 		self._initialize_zoom = is_gear
 	else
 		self._selected_slot = {
-			name = "slot_gear_upperbody",
+			name = "slot_gear_upperbody"
 		}
 		self._initial_rotation = 0
 	end
@@ -180,7 +181,7 @@ InventoryCosmeticsView._load_layout = function (self, selected_slot)
 		if has_rarity then
 			sort_options[#sort_options + 1] = {
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
 				}),
 				sort_function = sort_function_generator(Items.sort_comparator({
 					"<",
@@ -188,12 +189,12 @@ InventoryCosmeticsView._load_layout = function (self, selected_slot)
 					">",
 					Items.compare_item_rarity,
 					"<",
-					Items.compare_item_name,
-				})),
+					Items.compare_item_name
+				}))
 			}
 			sort_options[#sort_options + 1] = {
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
 				}),
 				sort_function = sort_function_generator(Items.sort_comparator({
 					"<",
@@ -201,32 +202,32 @@ InventoryCosmeticsView._load_layout = function (self, selected_slot)
 					"<",
 					Items.compare_item_rarity,
 					"<",
-					Items.compare_item_name,
-				})),
+					Items.compare_item_name
+				}))
 			}
 		end
 
 		sort_options[#sort_options + 1] = {
 			display_name = Localize("loc_inventory_item_grid_sort_title_format_increasing_letters", true, {
-				sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+				sort_name = Localize("loc_inventory_item_grid_sort_title_name")
 			}),
 			sort_function = sort_function_generator(Items.sort_comparator({
 				"<",
 				Items.compare_item_sort_order,
 				"<",
-				Items.compare_item_name,
-			})),
+				Items.compare_item_name
+			}))
 		}
 		sort_options[#sort_options + 1] = {
 			display_name = Localize("loc_inventory_item_grid_sort_title_format_decreasing_letters", true, {
-				sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+				sort_name = Localize("loc_inventory_item_grid_sort_title_name")
 			}),
 			sort_function = sort_function_generator(Items.sort_comparator({
 				"<",
 				Items.compare_item_sort_order,
 				">",
-				Items.compare_item_name,
-			})),
+				Items.compare_item_name
+			}))
 		}
 
 		self:_setup_sort_options()
@@ -358,7 +359,7 @@ InventoryCosmeticsView._spawn_profile = function (self, profile, initial_rotatio
 		position = spawn_position,
 		rotation = spawn_rotation,
 		state_machine = companion_state_machine,
-		animation_event = companion_animation_event,
+		animation_event = companion_animation_event
 	}
 
 	self._profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, nil, character_appearance_state_machine, animation_event, nil, nil, nil, nil, nil, nil, companion_data)
@@ -407,7 +408,7 @@ InventoryCosmeticsView._setup_side_panel = function (self, item, is_locked, dx, 
 	local function _add_text_widget(pass_template, text)
 		local widget_definition = UIWidget.create_definition(pass_template, scenegraph_id, nil, {
 			max_width,
-			0,
+			0
 		})
 		local widget = self:_create_widget(string.format("side_panel_widget_%d", #widgets), widget_definition)
 
@@ -417,7 +418,7 @@ InventoryCosmeticsView._setup_side_panel = function (self, item, is_locked, dx, 
 		local widget_text_style = widget.style.text
 		local text_height = Text.text_height(self._ui_renderer, text, widget_text_style, {
 			max_width,
-			math.huge,
+			math.huge
 		})
 
 		y_offset = y_offset + text_height
@@ -473,7 +474,7 @@ InventoryCosmeticsView._setup_side_panel = function (self, item, is_locked, dx, 
 			_add_text_widget(Definitions.big_details_text_pass, unlock_description)
 		end
 
-		local achievement = unlock_title and AchievementUiHelper.get_acheivement_by_reward_item(item)
+		local achievement = unlock_title and AchievementUiHelper.get_achievement_by_reward_item(item)
 		local stats = achievement and achievement.stats
 
 		if stats and is_locked then
@@ -607,7 +608,7 @@ InventoryCosmeticsView._preview_element = function (self, element)
 
 	local item_size = {
 		700,
-		60,
+		60
 	}
 	local ui_renderer = self._ui_default_renderer
 	local scenegraph_id = "item_name_pivot"
@@ -619,7 +620,7 @@ InventoryCosmeticsView._preview_element = function (self, element)
 		ignore_negative_rarity = true,
 		vertical_alignment = "bottom",
 		size = item_size,
-		item = item,
+		item = item
 	}
 	local size = template.size_function and template.size_function(self, config, ui_renderer) or template.size
 	local pass_template = template.pass_template_function and template.pass_template_function(self, config, ui_renderer) or template.pass_template
@@ -832,7 +833,7 @@ InventoryCosmeticsView._parse_store_items = function (self, selected_slot_name, 
 				if valid then
 					items[#items + 1] = {
 						item = item,
-						offer = offer,
+						offer = offer
 					}
 				end
 			end
@@ -861,7 +862,7 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slot)
 
 	local selected_slot_name = selected_slot.name
 	local filter = {
-		selected_slot_name,
+		selected_slot_name
 	}
 	local promises = {}
 
@@ -923,7 +924,7 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slot)
 								if valid then
 									penance_track_items[#penance_track_items + 1] = {
 										item = reward_item,
-										label = Localize("loc_item_source_penance_track"),
+										label = Localize("loc_item_source_penance_track")
 									}
 								end
 							end
@@ -982,7 +983,7 @@ InventoryCosmeticsView._achievement_items = function (self, selected_slot_name)
 					local sub_penances_count = table.size(achievement.achievements)
 
 					description_text = Localize("loc_inventory_cosmetic_item_acquisition_penance_description_multiple_requirement", true, {
-						penance_amount = sub_penances_count,
+						penance_amount = sub_penances_count
 					})
 				else
 					description_text = AchievementUiHelper.localized_description(achievement)
@@ -995,7 +996,7 @@ InventoryCosmeticsView._achievement_items = function (self, selected_slot_name)
 					achievement_items[#achievement_items + 1] = {
 						item = reward_item,
 						label = AchievementUiHelper.localized_title(achievement),
-						description = description_text,
+						description = description_text
 					}
 				end
 			end
@@ -1065,7 +1066,7 @@ InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
 			store = found_store,
 			new_item_marker = is_new,
 			remove_new_marker_callback = remove_new_marker_callback,
-			profile = profile,
+			profile = profile
 		}
 	end
 
@@ -1077,7 +1078,7 @@ InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
 		layout_count = layout_count + 1
 		layout[layout_count] = {
 			sort_group = 4,
-			widget_type = "divider",
+			widget_type = "divider"
 		}
 	end
 
@@ -1089,7 +1090,7 @@ InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
 			item = achievement_item.item,
 			slot = selected_slot,
 			widget_type = WIDGET_TYPE_BY_SLOT[selected_slot_name],
-			achievement = achievement_item,
+			achievement = achievement_item
 		}
 	end
 
@@ -1101,7 +1102,7 @@ InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
 			item = penance_track_item.item,
 			slot = selected_slot,
 			widget_type = WIDGET_TYPE_BY_SLOT[selected_slot_name],
-			penance_track = penance_track_item,
+			penance_track = penance_track_item
 		}
 	end
 
@@ -1113,7 +1114,7 @@ InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
 			item = store_item.item,
 			slot = selected_slot,
 			widget_type = WIDGET_TYPE_BY_SLOT[selected_slot_name],
-			store = store_item.item,
+			store = store_item.item
 		}
 	end
 
@@ -1123,7 +1124,7 @@ InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
 		layout_count = layout_count + 1
 		layout[layout_count] = {
 			sort_group = 2,
-			widget_type = "divider",
+			widget_type = "divider"
 		}
 	end
 
@@ -1136,7 +1137,7 @@ InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
 			slot = selected_slot,
 			widget_type = WIDGET_TYPE_BY_SLOT[selected_slot_name],
 			store = premium_item.item,
-			premium_offer = premium_item.offer,
+			premium_offer = premium_item.offer
 		}
 	end
 
@@ -1274,7 +1275,7 @@ InventoryCosmeticsView._update_equip_button_status = function (self)
 	local previewed_element = self._previewed_element
 	local is_disabled = not previewed_item
 	local is_locked = previewed_element and not not previewed_element.locked
-	local is_premium = previewed_element and previewed_element.premium_offer ~= nil
+	local is_premium = self._can_purchase_premium_items and previewed_element and previewed_element.premium_offer
 	local is_equipped
 
 	if is_disabled then
@@ -1531,9 +1532,7 @@ InventoryCosmeticsView._setup_background_world = function (self)
 		local is_gear = slot.slot_type == "gear"
 		local is_body = slot.slot_type == "body"
 		local is_companion_gear = slot_name == "slot_companion_gear_full"
-		local valid_player_slot = is_gear and not is_companion_gear
-
-		valid_player_slot = valid_player_slot or is_body
+		local valid_player_slot = (is_gear or is_body) and not is_companion_gear
 
 		if valid_player_slot then
 			local item_camera_event_id = string.format("event_register_%s_%s_cosmetics_preview_item_camera", body_size, slot_name)
@@ -1671,15 +1670,15 @@ InventoryCosmeticsView.cb_on_purchase_pressed = function (self)
 	local element = self._previewed_element
 	local premium_offer = element and element.premium_offer
 
-	if not premium_offer then
+	if not premium_offer or not self._can_purchase_premium_items then
 		return
 	end
 
 	Managers.ui:open_view("store_item_detail_view", nil, nil, nil, nil, {
 		store_item = {
-			offer = premium_offer,
+			offer = premium_offer
 		},
-		parent = self,
+		parent = self
 	})
 end
 
@@ -1750,7 +1749,7 @@ InventoryCosmeticsView.play_vo_events = function (self, events, voice_profile, o
 			voice_profile = voice_profile,
 			optional_route_key = optional_route_key,
 			delay = optional_delay,
-			is_opinion_vo = is_opinion_vo,
+			is_opinion_vo = is_opinion_vo
 		}
 	else
 		local wwise_route_key = optional_route_key or 40

@@ -6,7 +6,7 @@ local ExponentialGlobalStatWrapper = class("ExponentialGlobalStatWrapper", "Glob
 
 ExponentialGlobalStatWrapper.init = function (self, obj, func_name, category, stat_name, options)
 	options = table.add_missing(options or {}, {
-		step_factor = 0.1,
+		step_factor = 0.1
 	})
 
 	return ExponentialGlobalStatWrapper.super.init(self, obj, func_name, category, stat_name, options)

@@ -19,7 +19,7 @@ local conversations_hub_credit_store_servitor_a = {
 			"loc_credit_store_servitor_a__credit_store_servitor_goodbye_14",
 			"loc_credit_store_servitor_a__credit_store_servitor_goodbye_15",
 			"loc_credit_store_servitor_a__credit_store_servitor_goodbye_16",
-			"loc_credit_store_servitor_a__credit_store_servitor_goodbye_17",
+			"loc_credit_store_servitor_a__credit_store_servitor_goodbye_17"
 		},
 		sound_events_duration = {
 			0.769458,
@@ -36,9 +36,9 @@ local conversations_hub_credit_store_servitor_a = {
 			1.147083,
 			1.810104,
 			2.708625,
-			2.667646,
+			2.667646
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	credit_store_servitor_hello = {
 		randomize_indexes_n = 0,
@@ -54,7 +54,7 @@ local conversations_hub_credit_store_servitor_a = {
 			"loc_credit_store_servitor_a__credit_store_servitor_hello_08",
 			"loc_credit_store_servitor_a__credit_store_servitor_hello_09",
 			"loc_credit_store_servitor_a__credit_store_servitor_hello_11",
-			"loc_credit_store_servitor_a__credit_store_servitor_hello_14",
+			"loc_credit_store_servitor_a__credit_store_servitor_hello_14"
 		},
 		sound_events_duration = {
 			0.932563,
@@ -67,9 +67,9 @@ local conversations_hub_credit_store_servitor_a = {
 			2.680063,
 			2.121208,
 			1.350833,
-			2.151125,
+			2.151125
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	credit_store_servitor_purchase = {
 		randomize_indexes_n = 0,
@@ -91,7 +91,7 @@ local conversations_hub_credit_store_servitor_a = {
 			"loc_credit_store_servitor_a__credit_store_servitor_purchase_15",
 			"loc_credit_store_servitor_a__credit_store_servitor_purchase_16",
 			"loc_credit_store_servitor_a__credit_store_servitor_purchase_17",
-			"loc_credit_store_servitor_a__credit_store_servitor_purchase_18",
+			"loc_credit_store_servitor_a__credit_store_servitor_purchase_18"
 		},
 		sound_events_duration = {
 			1.11525,
@@ -110,10 +110,10 @@ local conversations_hub_credit_store_servitor_a = {
 			1.562979,
 			1.665458,
 			2.318604,
-			0.838938,
+			0.838938
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("conversations_hub_credit_store_servitor_a", conversations_hub_credit_store_servitor_a)

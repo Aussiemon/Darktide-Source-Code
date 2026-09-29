@@ -3,9 +3,9 @@
 local talent_settings = {
 	shared = {
 		venting = {
-			vent_to_toughness = 0.5,
-		},
-	},
+			vent_to_toughness = 0.5
+		}
+	}
 }
 
 return talent_settings

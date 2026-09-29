@@ -166,13 +166,13 @@ VortexLocomotion.is_position_indoors = function (target_position, physics_world,
 		local travel_dir = Vector3.normalize(target_position - optional_from_position)
 
 		dirs = {
-			Vector3.cross(Vector3.flat(travel_dir), Vector3.up()) * 0.5 + Vector3.up(),
+			Vector3.cross(Vector3.flat(travel_dir), Vector3.up()) * 0.5 + Vector3.up()
 		}
 	else
 		full_rotation = math.pi * 2
 		num_rays = NUM_RAYS * 2
 		dirs = {
-			Vector3.normalize(Vector3.up() * 2 + Vector3.forward()),
+			Vector3.normalize(Vector3.up() * 2 + Vector3.forward())
 		}
 	end
 

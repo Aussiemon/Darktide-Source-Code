@@ -11,7 +11,7 @@ local inventory_weapon_cosmetics_view_settings = {
 	viewport_type = "default",
 	weapon_spawn_depth = 1.2,
 	world_layer = 35,
-	world_name = "ui_weapon_marks_preview",
+	world_name = "ui_weapon_marks_preview"
 }
 
 return settings("InventoryWeaponMarksViewSettings", inventory_weapon_cosmetics_view_settings)

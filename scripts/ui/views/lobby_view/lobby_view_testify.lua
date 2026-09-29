@@ -13,7 +13,7 @@ local LobbyViewTestify = {
 		if GameParameters.network_wan then
 			return Testify.RETRY
 		end
-	end,
+	end
 }
 
 return LobbyViewTestify

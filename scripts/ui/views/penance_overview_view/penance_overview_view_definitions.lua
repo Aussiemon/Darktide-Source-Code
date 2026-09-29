@@ -19,13 +19,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			200,
-		},
+			200
+		}
 	},
 	corner_top_left = {
 		horizontal_alignment = "left",
@@ -33,13 +33,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			112,
-			230,
+			230
 		},
 		position = {
 			0,
 			0,
-			62,
-		},
+			62
+		}
 	},
 	corner_top_right = {
 		horizontal_alignment = "right",
@@ -47,13 +47,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			112,
-			230,
+			230
 		},
 		position = {
 			0,
 			0,
-			62,
-		},
+			62
+		}
 	},
 	corner_bottom_left = {
 		horizontal_alignment = "left",
@@ -61,13 +61,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			128,
-			184,
+			184
 		},
 		position = {
 			0,
 			0,
-			62,
-		},
+			62
+		}
 	},
 	corner_bottom_right = {
 		horizontal_alignment = "right",
@@ -75,13 +75,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			128,
-			184,
+			184
 		},
 		position = {
 			0,
 			0,
-			62,
-		},
+			62
+		}
 	},
 	penance_points_panel = {
 		horizontal_alignment = "right",
@@ -89,13 +89,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			290,
-			118,
+			118
 		},
 		position = {
 			0,
 			10,
-			63,
-		},
+			63
+		}
 	},
 	canvas = {
 		horizontal_alignment = "center",
@@ -103,13 +103,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			3,
-		},
+			3
+		}
 	},
 	penance_grid_background = {
 		horizontal_alignment = "left",
@@ -119,8 +119,8 @@ local scenegraph_definition = {
 		position = {
 			170,
 			185,
-			1,
-		},
+			1
+		}
 	},
 	penance_grid = {
 		horizontal_alignment = "left",
@@ -130,8 +130,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			-13,
-			1,
-		},
+			1
+		}
 	},
 	page_header = {
 		horizontal_alignment = "center",
@@ -139,13 +139,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			penance_grid_background_size[1],
-			75,
+			75
 		},
 		position = {
 			0,
 			15,
-			30,
-		},
+			30
+		}
 	},
 	total_completed = {
 		horizontal_alignment = "center",
@@ -153,13 +153,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			penance_grid_size[1],
-			50,
+			50
 		},
 		position = {
 			0,
 			10,
-			0,
-		},
+			0
+		}
 	},
 	page_category_pivot = {
 		horizontal_alignment = "center",
@@ -167,13 +167,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			-43,
-			1,
-		},
+			1
+		}
 	},
 	tooltip_grid = {
 		horizontal_alignment = "right",
@@ -183,8 +183,8 @@ local scenegraph_definition = {
 		position = {
 			-170,
 			173,
-			1,
-		},
+			1
+		}
 	},
 	wintrack = {
 		horizontal_alignment = "center",
@@ -192,13 +192,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			5,
-			2,
-		},
+			2
+		}
 	},
 	carousel_card = {
 		horizontal_alignment = "center",
@@ -208,8 +208,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			-90,
-			1,
-		},
+			1
+		}
 	},
 	carousel_header = {
 		horizontal_alignment = "center",
@@ -217,13 +217,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			penance_grid_background_size[1],
-			55,
+			55
 		},
 		position = {
 			0,
 			115,
-			30,
-		},
+			30
+		}
 	},
 	carousel_footer = {
 		horizontal_alignment = "center",
@@ -231,14 +231,14 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			penance_grid_background_size[1],
-			55,
+			55
 		},
 		position = {
 			0,
 			765,
-			30,
-		},
-	},
+			30
+		}
+	}
 }
 local carousel_header_style = table.clone(UIFontSettings.terminal_header_3)
 
@@ -252,13 +252,13 @@ local page_header_style = table.clone(carousel_header_style)
 page_header_style.offset = {
 	0,
 	20,
-	1,
+	1
 }
 carousel_header_style.font_size = 24
 carousel_header_style.offset = {
 	0,
 	0,
-	1,
+	1
 }
 
 local carousel_footer_style = table.clone(carousel_header_style)
@@ -274,14 +274,14 @@ local widget_definitions = {
 				color = Color.white(255, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -294,18 +294,18 @@ local widget_definitions = {
 				color = Color.terminal_text_key_value(0, true),
 				size = {
 					290,
-					77,
+					77
 				},
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					20,
 					-12,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -328,23 +328,23 @@ local widget_definitions = {
 				offset = {
 					0,
 					-14,
-					2,
-				},
-			},
-		},
+					2
+				}
+			}
+		}
 	}, "penance_points_panel", {
-		visible = false,
+		visible = false
 	}),
 	background = UIWidget.create_definition({
 		{
 			pass_type = "texture",
 			scenegraph_id = "corner_top_left",
-			value = "content/ui/materials/frames/screen/achievements_02_upper",
+			value = "content/ui/materials/frames/screen/achievements_02_upper"
 		},
 		{
 			pass_type = "texture",
 			scenegraph_id = "corner_top_left",
-			value = "content/ui/materials/effects/screen/achievements_02_upper_candles",
+			value = "content/ui/materials/effects/screen/achievements_02_upper_candles"
 		},
 		{
 			pass_type = "texture_uv",
@@ -354,14 +354,14 @@ local widget_definitions = {
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
-				},
-			},
+						1
+					}
+				}
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -371,14 +371,14 @@ local widget_definitions = {
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
-				},
-			},
+						1
+					}
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -388,9 +388,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					16,
-				},
-			},
+					16
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -400,9 +400,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					16,
-				},
-			},
+					16
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -412,9 +412,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					16,
-				},
-			},
+					16
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -424,12 +424,12 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					16,
-				},
-			},
-		},
+					16
+				}
+			}
+		}
 	}, "screen", {
-		visible = false,
+		visible = false
 	}),
 	page_header = UIWidget.create_definition({
 		{
@@ -437,7 +437,7 @@ local widget_definitions = {
 			style_id = "text",
 			value = "",
 			value_id = "text",
-			style = page_header_style,
+			style = page_header_style
 		},
 		{
 			pass_type = "texture",
@@ -449,15 +449,15 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					468,
-					22,
+					22
 				},
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
-				color = Color.terminal_text_body_sub_header(nil, true),
-			},
+				color = Color.terminal_text_body_sub_header(nil, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -469,15 +469,15 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					1080,
-					76,
+					76
 				},
 				offset = {
 					0,
 					-64,
-					2,
+					2
 				},
-				color = Color.white(nil, true),
-			},
+				color = Color.white(nil, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -489,14 +489,14 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					100,
-					100,
+					100
 				},
 				offset = {
 					-450,
 					-98,
-					2,
-				},
-			},
+					2
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -508,14 +508,14 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					100,
-					100,
+					100
 				},
 				offset = {
 					455,
 					-101,
-					2,
-				},
-			},
+					2
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -527,18 +527,18 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					850,
-					88,
+					88
 				},
 				offset = {
 					0,
 					-75,
-					3,
+					3
 				},
-				color = Color.white(nil, true),
-			},
-		},
+				color = Color.white(nil, true)
+			}
+		}
 	}, "page_header", {
-		visible = false,
+		visible = false
 	}),
 	carousel_header = UIWidget.create_definition({
 		{
@@ -546,7 +546,7 @@ local widget_definitions = {
 			style_id = "text",
 			value_id = "text",
 			style = carousel_header_style,
-			value = Localize("loc_penance_menu_carousel_title"),
+			value = Localize("loc_penance_menu_carousel_title")
 		},
 		{
 			pass_type = "texture",
@@ -558,18 +558,18 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					468,
-					22,
+					22
 				},
 				offset = {
 					0,
 					-8,
-					2,
+					2
 				},
-				color = Color.terminal_text_body_sub_header(nil, true),
-			},
-		},
+				color = Color.terminal_text_body_sub_header(nil, true)
+			}
+		}
 	}, "carousel_header", {
-		visible = false,
+		visible = false
 	}),
 	carousel_footer = UIWidget.create_definition({
 		{
@@ -577,10 +577,10 @@ local widget_definitions = {
 			style_id = "text",
 			value = "1 / 10",
 			value_id = "text",
-			style = carousel_footer_style,
-		},
+			style = carousel_footer_style
+		}
 	}, "carousel_footer", {
-		visible = false,
+		visible = false
 	}),
 	screen = UIWidget.create_definition({
 		{
@@ -588,14 +588,33 @@ local widget_definitions = {
 			style = {
 				horizontal_alignment = "center",
 				vertical_alignment = "center",
-				color = Color.black(100, true),
-			},
-		},
+				color = Color.black(100, true)
+			}
+		}
 	}, "screen", {
-		visible = false,
-	}),
+		visible = false
+	})
 }
 local animations = {
+	initializing_backend = {
+		{
+			end_time = 4,
+			name = "update_loading",
+			start_time = 2.5,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+				parent.animation_alpha_multiplier = 0
+			end,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeOutCubic(progress)
+
+				for _, widget in pairs(widgets) do
+					widget.alpha_multiplier = anim_progress
+				end
+
+				parent.animation_alpha_multiplier = anim_progress
+			end
+		}
+	},
 	on_enter = {
 		{
 			end_time = 0,
@@ -611,12 +630,12 @@ local animations = {
 				for _, widget in pairs(widgets) do
 					widget.alpha_multiplier = 0
 				end
-			end,
+			end
 		},
 		{
-			end_time = 2,
+			end_time = 1,
 			name = "fade_in",
-			start_time = 1,
+			start_time = 0,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				return
 			end,
@@ -631,8 +650,8 @@ local animations = {
 			end,
 			on_complete = function (parent)
 				parent._enter_animation = false
-			end,
-		},
+			end
+		}
 	},
 	on_carousel_claimed = {
 		{
@@ -650,7 +669,7 @@ local animations = {
 				for _, widget in ipairs(widgets) do
 					widget.alpha_multiplier = 1 - anim_progress
 				end
-			end,
+			end
 		},
 		{
 			end_time = 0.5,
@@ -666,7 +685,7 @@ local animations = {
 
 				params.grid:update_grid_height(new_height)
 				params.grid:set_pivot_offset(nil, (total_height - new_height) / 2)
-			end,
+			end
 		},
 		{
 			end_time = 0.5,
@@ -696,8 +715,8 @@ local animations = {
 				else
 					params.grid:set_visibility(false)
 				end
-			end,
-		},
+			end
+		}
 	},
 	on_points_added = {
 		{
@@ -721,7 +740,7 @@ local animations = {
 				local ignore_alpha = true
 
 				ColorUtilities.color_lerp(text_style.default_text_color, text_style.anim_text_color, anim_progress, text_style.text_color, ignore_alpha)
-			end,
+			end
 		},
 		{
 			end_time = 1.1,
@@ -744,9 +763,9 @@ local animations = {
 				local ignore_alpha = true
 
 				ColorUtilities.color_lerp(text_style.default_text_color, text_style.anim_text_color, anim_progress, text_style.text_color, ignore_alpha)
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 local function format_favorites(_)
@@ -761,7 +780,7 @@ local legend_inputs = {
 		display_name = "loc_settings_menu_close_menu",
 		input_action = "back",
 		on_pressed_callback = "cb_on_close_pressed",
-		visibility_function = nil,
+		visibility_function = nil
 	},
 	{
 		display_name = "loc_achievements_view_button_hint_favorite_achievement",
@@ -770,7 +789,7 @@ local legend_inputs = {
 		visibility_function = function (parent)
 			return not parent._using_cursor_navigation and parent:_cb_favorite_legend_visibility(true)
 		end,
-		suffix_function = format_favorites,
+		suffix_function = format_favorites
 	},
 	{
 		display_name = "loc_achievements_view_button_hint_unfavorite_achievement",
@@ -779,7 +798,7 @@ local legend_inputs = {
 		visibility_function = function (parent)
 			return not parent._using_cursor_navigation and parent:_cb_favorite_legend_visibility(false)
 		end,
-		suffix_function = format_favorites,
+		suffix_function = format_favorites
 	},
 	{
 		display_name = "loc_achievements_view_button_hint_favorite_achievement",
@@ -788,7 +807,7 @@ local legend_inputs = {
 		visibility_function = function (parent)
 			return parent._using_cursor_navigation and parent:_cb_favorite_legend_visibility(true)
 		end,
-		suffix_function = format_favorites,
+		suffix_function = format_favorites
 	},
 	{
 		display_name = "loc_achievements_view_button_hint_unfavorite_achievement",
@@ -797,7 +816,7 @@ local legend_inputs = {
 		visibility_function = function (parent)
 			return parent._using_cursor_navigation and parent:_cb_favorite_legend_visibility(false)
 		end,
-		suffix_function = format_favorites,
+		suffix_function = format_favorites
 	},
 	{
 		alignment = "right_alignment",
@@ -811,7 +830,7 @@ local legend_inputs = {
 			parent._input_legend_element:set_display_name(id, display_name)
 
 			return parent._selected_top_option_key == "browser" and not wintrack_active and parent._enter_animation_complete
-		end,
+		end
 	},
 	{
 		alignment = "right_alignment",
@@ -824,7 +843,7 @@ local legend_inputs = {
 			parent._input_legend_element:set_display_name(id, display_name)
 
 			return not parent._using_cursor_navigation and parent._wintrack_element and parent._enter_animation_complete
-		end,
+		end
 	},
 	{
 		alignment = "right_alignment",
@@ -833,8 +852,8 @@ local legend_inputs = {
 		on_pressed_callback = "cb_on_inspect_pressed",
 		visibility_function = function (parent)
 			return parent:can_inspect_item()
-		end,
-	},
+		end
+	}
 }
 local bottom_divider_passes = {
 	{
@@ -848,14 +867,14 @@ local bottom_divider_passes = {
 			vertical_alignment = "bottom",
 			size = {
 				100,
-				100,
+				100
 			},
 			offset = {
 				-12,
 				-4,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	{
 		pass_type = "texture",
@@ -868,15 +887,15 @@ local bottom_divider_passes = {
 			vertical_alignment = "bottom",
 			size = {
 				100,
-				100,
+				100
 			},
 			offset = {
 				8,
 				0,
-				1,
-			},
-		},
-	},
+				1
+			}
+		}
+	}
 }
 
 return {
@@ -885,5 +904,5 @@ return {
 	scenegraph_definition = scenegraph_definition,
 	widget_definitions = widget_definitions,
 	grid_blueprints = PenanceBlueprints,
-	bottom_divider_passes = bottom_divider_passes,
+	bottom_divider_passes = bottom_divider_passes
 }

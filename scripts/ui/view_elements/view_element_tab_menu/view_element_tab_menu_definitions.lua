@@ -14,14 +14,14 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			button_size[2],
+			button_size[2]
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local input_text_style_left = table.clone(UIFontSettings.body)
 
@@ -31,7 +31,7 @@ input_text_style_left.vertical_alignment = "center"
 input_text_style_left.horizontal_alignment = "right"
 input_text_style_left.size = {
 	200,
-	50,
+	50
 }
 input_text_style_left.text_color = Color.ui_input_color(255, true)
 
@@ -47,8 +47,8 @@ local widget_definitions = {
 			style_id = "text",
 			value = "left",
 			value_id = "text",
-			style = input_text_style_left,
-		},
+			style = input_text_style_left
+		}
 	}, "entry_pivot"),
 	input_text_right = UIWidget.create_definition({
 		{
@@ -56,12 +56,12 @@ local widget_definitions = {
 			style_id = "text",
 			value = "right",
 			value_id = "text",
-			style = input_text_style_right,
-		},
-	}, "entry_pivot"),
+			style = input_text_style_right
+		}
+	}, "entry_pivot")
 }
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

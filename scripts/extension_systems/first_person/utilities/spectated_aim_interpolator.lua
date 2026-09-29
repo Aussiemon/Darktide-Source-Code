@@ -53,7 +53,7 @@ SpectatedAimInterpolator.init = function (self, fixed_time_step)
 			frame = -1,
 			pitch = 0,
 			time = 0,
-			yaw = 0,
+			yaw = 0
 		}
 	end
 end

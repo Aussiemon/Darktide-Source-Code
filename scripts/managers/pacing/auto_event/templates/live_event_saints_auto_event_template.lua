@@ -7,64 +7,64 @@ template.live_event_saints_auto_event_template = {
 	cooldown = {
 		{
 			3,
-			6,
+			6
 		},
 		{
 			3,
-			6,
+			6
 		},
 		{
 			3,
-			6,
+			6
 		},
 		{
 			3,
-			6,
+			6
 		},
 		{
 			3,
-			6,
+			6
 		},
 		{
 			3,
-			6,
-		},
+			6
+		}
 	},
 	waves_cooldown = {
 		{
 			0,
-			1,
+			1
 		},
 		{
 			3,
-			3,
+			3
 		},
 		{
 			3,
-			3,
+			3
 		},
 		{
 			3,
-			3,
+			3
 		},
 		{
 			3,
-			3,
+			3
 		},
 		{
 			3,
-			3,
-		},
+			3
+		}
 	},
 	inital_cooldown_types = {
-		default = 1,
+		default = 1
 	},
 	num_waves_by_resistance = {
 		5,
 		5,
 		5,
 		5,
-		5,
+		5
 	},
 	resistance_multiplier = {
 		0.5,
@@ -72,19 +72,19 @@ template.live_event_saints_auto_event_template = {
 		0.7,
 		0.8,
 		0.9,
-		1.2,
+		1.2
 	},
 	points_base = {
 		20,
 		30,
 		50,
 		60,
-		80,
+		80
 	},
 	size_multipliers = {
 		default = 1,
 		large = 1.5,
-		small = 0.5,
+		small = 0.5
 	},
 	composition = {
 		default = {
@@ -93,14 +93,14 @@ template.live_event_saints_auto_event_template = {
 					points = 0,
 					breed_tags = {
 						{
-							"roamer",
-						},
+							"roamer"
+						}
 					},
 					excluded_breed_tags = {
 						{
 							"elite",
-							"ranged",
-						},
+							"ranged"
+						}
 					},
 					weights = {
 						{
@@ -108,56 +108,56 @@ template.live_event_saints_auto_event_template = {
 							1,
 							0.7,
 							0.5,
-							0.4,
+							0.4
 						},
 						{
 							1,
 							1,
 							0.7,
 							0.5,
-							0.4,
+							0.4
 						},
 						{
 							1,
 							1,
 							0.7,
 							0.5,
-							0.4,
+							0.4
 						},
 						{
 							1,
 							1,
 							0.7,
 							0.5,
-							0.4,
+							0.4
 						},
 						{
 							1,
 							1,
 							0.7,
 							0.5,
-							0.4,
+							0.4
 						},
 						{
 							1,
 							1,
 							0.7,
 							0.5,
-							0.4,
-						},
-					},
+							0.4
+						}
+					}
 				},
 				{
 					points = 0,
 					breed_tags = {
 						{
-							"horde",
-						},
+							"horde"
+						}
 					},
 					excluded_breed_tags = {
 						{
-							"ranged",
-						},
+							"ranged"
+						}
 					},
 					weights = {
 						{
@@ -165,52 +165,52 @@ template.live_event_saints_auto_event_template = {
 							3,
 							2,
 							1,
-							0.5,
+							0.5
 						},
 						{
 							5,
 							3,
 							2,
 							1,
-							0.5,
+							0.5
 						},
 						{
 							5,
 							3,
 							2,
 							1,
-							0.5,
+							0.5
 						},
 						{
 							5,
 							3,
 							2,
 							1,
-							0.5,
+							0.5
 						},
 						{
 							5,
 							3,
 							2,
 							1,
-							0.5,
+							0.5
 						},
 						{
 							5,
 							3,
 							2,
 							1,
-							0.5,
-						},
-					},
+							0.5
+						}
+					}
 				},
 				{
 					points = 0,
 					breed_tags = {
 						{
 							"elite",
-							"melee",
-						},
+							"melee"
+						}
 					},
 					excluded_breed_tags = {},
 					weights = {
@@ -219,47 +219,47 @@ template.live_event_saints_auto_event_template = {
 							0.5,
 							1,
 							2,
-							3,
+							3
 						},
 						{
 							0,
 							0.5,
 							1,
 							2,
-							3,
+							3
 						},
 						{
 							0,
 							0.5,
 							1,
 							2,
-							3,
+							3
 						},
 						{
 							0,
 							0.5,
 							1,
 							2,
-							3,
+							3
 						},
 						{
 							0,
 							0.5,
 							1,
 							2,
-							3,
+							3
 						},
 						{
 							0,
 							0.5,
 							1,
 							2,
-							3,
-						},
-					},
-				},
-			},
-		},
+							3
+						}
+					}
+				}
+			}
+		}
 	},
 	conditional_function = function (t)
 		local mutator = Managers.state.mutator:mutator("mutator_live_event_saints_shrine_gameplay")
@@ -279,7 +279,7 @@ template.live_event_saints_auto_event_template = {
 		shrines_completed = math.clamp(shrines_completed, 1, #t)
 
 		return t[shrines_completed]
-	end,
+	end
 }
 
 return template

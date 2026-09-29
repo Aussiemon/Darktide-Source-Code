@@ -77,7 +77,7 @@ MinionState.is_vortex_grabbed = function (unit)
 	if target_blackboard then
 		local in_vortex_state = target_blackboard.in_vortex_state
 
-		if not in_vortex_state == "in_vortex_init" and not in_vortex_state == "landed" then
+		if in_vortex_state ~= "in_vortex_init" and in_vortex_state ~= "landed" then
 			return true
 		end
 	end

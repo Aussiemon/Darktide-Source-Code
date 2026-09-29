@@ -150,8 +150,8 @@ PartyManagerDummy.mission_matchmaking_started = function (self, mission_id)
 			preview = true,
 			mission_data = {
 				circumstance_name = "default",
-				mission_name = mission_name,
-			},
+				mission_name = mission_name
+			}
 		}
 
 		Managers.ui:open_view("lobby_view", transition_time, close_previous, close_all, close_transition_time, view_context)

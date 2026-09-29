@@ -95,7 +95,7 @@ local function _fetch_client_data()
 				Managers.event:trigger("event_add_notification_message", "currency", {
 					reason = reason,
 					currency = reward.type,
-					amount = reward.amount,
+					amount = reward.amount
 				})
 
 				return contract_service:complete_contract(character_id)
@@ -213,8 +213,8 @@ MechanismHub.wanted_transition = function (self)
 			side_mission = side_mission,
 			next_state = StateGameplay,
 			next_state_params = {
-				mechanism_data = mechanism_data,
-			},
+				mechanism_data = mechanism_data
+			}
 		}
 	elseif state == "in_hub" then
 		if not DEDICATED_SERVER then
@@ -338,7 +338,7 @@ MechanismHub._show_retry_popup = function (self)
 					self._retry_popup_id = nil
 
 					self:_retry_join()
-				end,
+				end
 			},
 			{
 				close_on_pressed = true,
@@ -348,9 +348,9 @@ MechanismHub._show_retry_popup = function (self)
 					self._retry_popup_id = nil
 
 					Managers.party_immaterium:leave_party()
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)

@@ -110,7 +110,7 @@ NarrativeManager._push_dirty_data = function (self, character_data)
 	character_data.in_air = character_data.dirty
 	character_data.dirty = {
 		events = {},
-		stories = {},
+		stories = {}
 	}
 	character_data.is_saving = true
 
@@ -158,12 +158,12 @@ NarrativeManager._empty_character_data = function (self, character_id)
 		events = {},
 		dirty = {
 			stories = {},
-			events = {},
+			events = {}
 		},
 		in_air = {
 			stories = {},
-			events = {},
-		},
+			events = {}
+		}
 	}
 end
 

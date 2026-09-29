@@ -30,10 +30,10 @@ SocialSteam.friends_list_has_changes = function (self)
 end
 
 SocialSteam.fetch_friends_list = function (self)
-	local friend_list = {}
 	local promise = Promise:new()
 	local app_id = Steam.app_id()
 	local num_friends = Friends.num_friends(Friends.FRIEND_FLAG)
+	local friend_list = Script.new_array(num_friends)
 
 	for i = 1, num_friends do
 		local id = Friends.id(i)

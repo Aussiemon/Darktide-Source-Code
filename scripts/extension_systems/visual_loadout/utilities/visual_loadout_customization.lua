@@ -2,13 +2,14 @@
 
 local Items = require("scripts/utilities/items")
 local ItemSlotUtils = require("scripts/utilities/item_slot_utils")
+local MasterItems = require("scripts/backend/master_items")
 local VisualLoadoutExtractData = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_extract_data")
 local VisualLoadoutCustomization = {}
 local _attach_hierarchy, _attach_hierarchy_children, _generate_attachment_overrides_recursive, _spawn_attachment, _validate_item_name, _apply_material_override_item
 local SORT_ORDER = {
 	FACE_HAIR = 2,
 	FACE_SCAR = 1,
-	HAIR = 3,
+	HAIR = 3
 }
 local Unit = Unit
 local Unit_has_node = Unit.has_node
@@ -21,7 +22,7 @@ local Unit_set_texture_for_materials = Unit.set_texture_for_materials
 local Unit_set_texture_for_material = Unit.set_texture_for_material
 local Unit_set_material = Unit.set_material
 
-VisualLoadoutCustomization.apply_material_override_item = function (unit, parent_unit, apply_to_parent, material_override_item, in_editor, item_definitions, item_manager)
+VisualLoadoutCustomization.apply_material_override_item = function (unit, parent_unit, apply_to_parent, material_override_item, in_editor, item_definitions, item_manager, external_overrides)
 	local material_override_item_data = _validate_item_name(material_override_item)
 
 	if type(material_override_item_data) == "string" then
@@ -38,9 +39,9 @@ VisualLoadoutCustomization.apply_material_override_item = function (unit, parent
 
 	if material_override_item_data then
 		if apply_to_parent then
-			_apply_material_override_item(parent_unit, material_override_item_data, in_editor)
+			_apply_material_override_item(parent_unit, material_override_item_data, in_editor, external_overrides)
 		else
-			_apply_material_override_item(unit, material_override_item_data, in_editor)
+			_apply_material_override_item(unit, material_override_item_data, in_editor, external_overrides)
 		end
 	end
 end
@@ -54,6 +55,18 @@ VisualLoadoutCustomization.apply_material_overrides = function (item_data, item_
 			VisualLoadoutCustomization.apply_material_override_item(item_unit, parent_unit, apply_to_parent, material_override_item, attach_settings.in_editor, attach_settings.item_definitions, attach_settings.item_manager)
 		end
 	end
+end
+
+local _freestanding_attach_settings = {}
+
+VisualLoadoutCustomization.spawn_freestanding_item = function (item_data, world)
+	local attach_settings = _freestanding_attach_settings
+
+	attach_settings.item_definitions = MasterItems.get_cached()
+	attach_settings.world = world
+	attach_settings.unit_spawner = Managers.state.unit_spawner
+
+	return VisualLoadoutCustomization.spawn_item(item_data, attach_settings, nil, nil, nil, nil, nil, nil)
 end
 
 VisualLoadoutCustomization.spawn_item = function (item_data, attach_settings, parent_unit, optional_map_attachment_name_to_unit, optional_extract_attachment_units_bind_poses, optional_extract_item_names, optional_mission_template, optional_equipment)
@@ -258,22 +271,24 @@ function _spawn_attachment(item_data, attach_settings, parent_unit, optional_mis
 	local attach_node = optional_as_leaf_override_attach_node or breed_attach_node or item_data.attach_node
 	local attach_node_index
 
-	if tonumber(attach_node) ~= nil then
-		attach_node_index = tonumber(attach_node)
-	elseif attach_settings.is_minion then
-		if attach_settings.from_script_component then
-			attach_node_index = Unit_has_node(parent_unit, item_data.wielded_attach_node or attach_node) and Unit_node(parent_unit, item_data.wielded_attach_node or attach_node) or 1
+	if parent_unit then
+		if tonumber(attach_node) ~= nil then
+			attach_node_index = tonumber(attach_node)
+		elseif attach_settings.is_minion then
+			if attach_settings.from_script_component then
+				attach_node_index = Unit_has_node(parent_unit, item_data.wielded_attach_node or attach_node) and Unit_node(parent_unit, item_data.wielded_attach_node or attach_node) or 1
+			else
+				attach_node_index = Unit_has_node(parent_unit, item_data.unwielded_attach_node or attach_node) and Unit_node(parent_unit, item_data.unwielded_attach_node or attach_node) or 1
+			end
+		elseif attach_node then
+			parent_unit, attach_node_index = _find_unit_node_recursive(parent_unit, attach_node)
 		else
-			attach_node_index = Unit_has_node(parent_unit, item_data.unwielded_attach_node or attach_node) and Unit_node(parent_unit, item_data.unwielded_attach_node or attach_node) or 1
+			attach_node_index = 1
 		end
-	elseif attach_node then
-		parent_unit, attach_node_index = _find_unit_node_recursive(parent_unit, attach_node)
-	else
-		attach_node_index = 1
 	end
 
 	local spawned_unit
-	local pose = Unit.world_pose(parent_unit, attach_node_index)
+	local pose = parent_unit and Unit.world_pose(parent_unit, attach_node_index) or nil
 
 	if attach_settings.from_script_component then
 		spawned_unit = World.spawn_unit_ex(attach_settings.world, base_unit, nil, pose)
@@ -310,7 +325,7 @@ function _spawn_attachment(item_data, attach_settings, parent_unit, optional_mis
 	local backpack_offset = item_data.backpack_offset
 
 	if backpack_offset then
-		local backpack_offset_node_index = Unit_has_node(parent_unit, "j_backpackoffset") and Unit_node(parent_unit, "j_backpackoffset")
+		local backpack_offset_node_index = parent_unit and Unit_has_node(parent_unit, "j_backpackoffset") and Unit_node(parent_unit, "j_backpackoffset") or nil
 
 		if backpack_offset_node_index then
 			local offset_translation = Vector3(0, backpack_offset, 0)
@@ -325,19 +340,21 @@ function _spawn_attachment(item_data, attach_settings, parent_unit, optional_mis
 		Unit.set_unit_objects_visibility(spawned_unit, false, true, VisibilityContexts.RAYTRACING_CONTEXT)
 	end
 
-	local map_mode
+	if parent_unit then
+		local map_mode
 
-	if optional_as_leaf_map_mode then
-		map_mode = optional_as_leaf_map_mode
-	elseif World[item_data.link_map_mode] then
-		map_mode = World[item_data.link_map_mode]
-	elseif attach_settings.skip_link_children and not item_data.force_link_children then
-		map_mode = World.LINK_MODE_NONE
-	else
-		map_mode = World.LINK_MODE_NODE_NAME
+		if optional_as_leaf_map_mode then
+			map_mode = optional_as_leaf_map_mode
+		elseif World[item_data.link_map_mode] then
+			map_mode = World[item_data.link_map_mode]
+		elseif attach_settings.skip_link_children and not item_data.force_link_children then
+			map_mode = World.LINK_MODE_NONE
+		else
+			map_mode = World.LINK_MODE_NODE_NAME
+		end
+
+		World.link_unit(attach_settings.world, spawned_unit, 1, parent_unit, attach_node_index, map_mode)
 	end
-
-	World.link_unit(attach_settings.world, spawned_unit, 1, parent_unit, attach_node_index, map_mode)
 
 	if attach_settings.lod_group and Unit.has_lod_object(spawned_unit, "lod") and not attach_settings.is_first_person then
 		local attached_lod_object = Unit.lod_object(spawned_unit, "lod")
@@ -396,7 +413,7 @@ end
 local IGNORE_SLOT_ITEM_ASSIGNING = table.set({
 	"slot_primary",
 	"slot_secondary",
-	"slot_timed",
+	"slot_timed"
 })
 
 function _attach_hierarchy(attachment_slot_data, override_lookup, attach_settings, parent_unit, attachment_name, extract_data, optional_map_attachment_name_to_unit, optional_extract_attachment_units_bind_poses, optional_extract_item_names, optional_mission_template, optional_equipment)
@@ -430,11 +447,11 @@ function _attach_hierarchy(attachment_slot_data, override_lookup, attach_setting
 		local attachments = item and item.attachments
 
 		_attach_hierarchy_children(attachments, override_lookup, attach_settings, attachment_unit, extract_data, optional_map_attachment_name_to_unit, optional_extract_attachment_units_bind_poses, optional_extract_item_names, optional_mission_template)
-		VisualLoadoutExtractData.pop(extract_data, attachment_unit)
 
 		local children = attachment_slot_data.children
 
 		_attach_hierarchy_children(children, override_lookup, attach_settings, attachment_unit, extract_data, optional_map_attachment_name_to_unit, optional_extract_attachment_units_bind_poses, optional_extract_item_names, optional_mission_template)
+		VisualLoadoutExtractData.pop(extract_data, attachment_unit)
 
 		local material_override_items = {}
 		local item_material_override_items = item.material_override_items
@@ -485,7 +502,7 @@ end
 
 local _scratchpad = {
 	depth = 0,
-	sorted_children = {},
+	sorted_children = {}
 }
 
 function _attach_hierarchy_children(children, override_lookup, attach_settings, parent_unit, extract_data, optional_map_attachment_name_to_unit, optional_extract_attachment_units_bind_poses, optional_extract_item_names, optional_mission_template)
@@ -507,38 +524,59 @@ function _attach_hierarchy_children(children, override_lookup, attach_settings, 
 	end
 end
 
-function _apply_material_override_item(unit, material_override_item, in_editor)
+local _default_external_overrides = {
+	scalar_material_overrides = {},
+	vector2_material_overrides = {},
+	vector3_material_overrides = {},
+	vector4_material_overrides = {},
+	material_overrides = {}
+}
+local _empty_external_overrides = table.set_readonly({})
+
+function _apply_material_override_item(unit, material_override_item, in_editor, external_overrides_or_nil)
+	if external_overrides_or_nil == nil then
+		external_overrides_or_nil = _empty_external_overrides
+	end
+
 	if material_override_item.scalar_material_overrides ~= nil then
+		local external_overrides = external_overrides_or_nil.scalar_material_overrides or _default_external_overrides.scalar_material_overrides
+
 		for _, property_override_data in pairs(material_override_item.scalar_material_overrides) do
 			local property_name = property_override_data.property_name
-			local value = property_override_data.value
+			local value = external_overrides[property_name] or property_override_data.value
 
 			Unit_set_scalar_for_materials(unit, property_name, value, true)
 		end
 	end
 
 	if material_override_item.vector2_material_overrides ~= nil then
+		local external_overrides = external_overrides_or_nil.vector2_material_overrides or _default_external_overrides.vector2_material_overrides
+
 		for _, property_override_data in pairs(material_override_item.vector2_material_overrides) do
 			local property_name = property_override_data.property_name
-			local value = property_override_data.value
+			local value = external_overrides[property_name] or property_override_data.value
 
 			Unit_set_vector2_for_materials(unit, property_name, Vector2(value[1], value[2]), true)
 		end
 	end
 
 	if material_override_item.vector3_material_overrides ~= nil then
+		local external_overrides = external_overrides_or_nil.vector3_material_overrides or _default_external_overrides.vector3_material_overrides
+
 		for _, property_override_data in pairs(material_override_item.vector3_material_overrides) do
 			local property_name = property_override_data.property_name
-			local value = property_override_data.value
+			local value = external_overrides[property_name] or property_override_data.value
 
 			Unit_set_vector3_for_materials(unit, property_name, Vector3(value[1], value[2], value[3]), true)
 		end
 	end
 
 	if material_override_item.vector4_material_overrides ~= nil then
+		local external_overrides = external_overrides_or_nil.vector4_material_overrides or _default_external_overrides.vector4_material_overrides
+
 		for _, property_override_data in pairs(material_override_item.vector4_material_overrides) do
 			local property_name = property_override_data.property_name
-			local value = property_override_data.value
+			local value = external_overrides[property_name] or property_override_data.value
 
 			Unit_set_vector4_for_materials(unit, property_name, Color(value[2], value[3], value[4], value[1]), true)
 		end
@@ -561,9 +599,11 @@ function _apply_material_override_item(unit, material_override_item, in_editor)
 	end
 
 	if material_override_item.material_overrides ~= nil then
+		local external_overrides = external_overrides_or_nil.material_overrides or _default_external_overrides.material_overrides
+
 		for _, material_override_data in pairs(material_override_item.material_overrides) do
 			local material_slot = material_override_data.material_slot
-			local material_resource = material_override_data.material
+			local material_resource = external_overrides[material_slot] or material_override_data.material
 
 			if material_resource ~= nil and material_resource ~= "" and material_slot ~= nil and material_slot ~= "" then
 				Unit_set_material(unit, material_slot, material_resource)

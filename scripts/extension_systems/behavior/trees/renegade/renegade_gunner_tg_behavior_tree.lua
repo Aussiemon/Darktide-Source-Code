@@ -8,14 +8,14 @@ local behavior_tree = {
 		"BtDieAction",
 		name = "death",
 		state = "dead",
-		action_data = action_data.death,
+		action_data = action_data.death
 	},
 	{
 		"BtShootPositionAction",
 		name = "shoot_spray_n_pray",
-		action_data = action_data.shoot_spray_n_pray,
+		action_data = action_data.shoot_spray_n_pray
 	},
-	name = "renegade_gunner_tg",
+	name = "renegade_gunner_tg"
 }
 
 return behavior_tree

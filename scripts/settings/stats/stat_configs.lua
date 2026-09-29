@@ -4,65 +4,65 @@ local stat_configs = {}
 
 stat_configs.session = {
 	mission_name = {
-		required = true,
+		required = true
 	},
 	mission_type = {
-		required = true,
+		required = true
 	},
 	difficulty = {
-		required = true,
+		required = true
 	},
 	circumstance_name = {
-		required = true,
+		required = true
 	},
 	game_mode_name = {
-		default = "none",
+		default = "none"
 	},
 	is_auric_mission = {
-		default = false,
+		default = false
 	},
 	is_flash_mission = {
-		default = false,
+		default = false
 	},
 	private_session = {
-		default = false,
+		default = false
 	},
 	is_hub = {
-		default = false,
+		default = false
 	},
 	live_event = {
-		default = "none",
+		default = "none"
 	},
 	is_havoc = {
-		default = false,
+		default = false
 	},
 	havoc_rank = {
-		default = "nil",
+		default = "nil"
 	},
 	havoc_order_owner = {
-		default = "none",
-	},
+		default = "none"
+	}
 }
 stat_configs.user = {
 	peer_id = {
-		required = true,
+		required = true
 	},
 	local_player_id = {
-		required = true,
+		required = true
 	},
 	archetype_name = {
-		required = true,
+		required = true
 	},
 	joined_at = {
 		inherit = true,
-		required = true,
+		required = true
 	},
 	character_id = {
-		default = "none",
+		default = "none"
 	},
 	account_id = {
-		default = "none",
-	},
+		default = "none"
+	}
 }
 
 return settings("StatConfigs", stat_configs)

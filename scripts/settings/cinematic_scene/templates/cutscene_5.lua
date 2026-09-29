@@ -21,9 +21,9 @@ local cinematic_scene_templates = {
 			"slot_grenade_ability",
 			"slot_attachment_1",
 			"slot_attachment_2",
-			"slot_attachment_3",
-		},
-	},
+			"slot_attachment_3"
+		}
+	}
 }
 
 return cinematic_scene_templates

@@ -236,7 +236,7 @@ function _components(components, attachments)
 		for _, flash_light_component in ipairs(flash_light_components) do
 			components[#components + 1] = {
 				unit = attachment_unit,
-				component = flash_light_component,
+				component = flash_light_component
 			}
 		end
 	end

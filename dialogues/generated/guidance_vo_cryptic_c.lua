@@ -9,23 +9,23 @@ local guidance_vo_cryptic_c = {
 			"loc_cryptic_c__guidance_correct_path_02",
 			"loc_cryptic_c__guidance_correct_path_03",
 			"loc_cryptic_c__guidance_correct_path_04",
-			"loc_cryptic_c__guidance_correct_path_05",
+			"loc_cryptic_c__guidance_correct_path_05"
 		},
 		sound_events_duration = {
 			0.710406,
 			1.053396,
 			1.735052,
 			1.549604,
-			1.728083,
+			1.728083
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_correct_path = {
 		randomize_indexes_n = 0,
@@ -35,16 +35,16 @@ local guidance_vo_cryptic_c = {
 			"loc_cryptic_c__guidance_correct_path_02",
 			"loc_cryptic_c__guidance_correct_path_03",
 			"loc_cryptic_c__guidance_correct_path_04",
-			"loc_cryptic_c__guidance_correct_path_05",
+			"loc_cryptic_c__guidance_correct_path_05"
 		},
 		sound_events_duration = {
 			0.710406,
 			1.053396,
 			1.735052,
 			1.549604,
-			1.728083,
+			1.728083
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_correct_path_1 = {
 		randomize_indexes_n = 0,
@@ -54,23 +54,23 @@ local guidance_vo_cryptic_c = {
 			"loc_cryptic_c__guidance_correct_path_02",
 			"loc_cryptic_c__guidance_correct_path_03",
 			"loc_cryptic_c__guidance_correct_path_04",
-			"loc_cryptic_c__guidance_correct_path_05",
+			"loc_cryptic_c__guidance_correct_path_05"
 		},
 		sound_events_duration = {
 			0.710406,
 			1.053396,
 			1.735052,
 			1.549604,
-			1.728083,
+			1.728083
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_correct_path_2 = {
 		randomize_indexes_n = 0,
@@ -80,23 +80,23 @@ local guidance_vo_cryptic_c = {
 			"loc_cryptic_c__guidance_correct_path_02",
 			"loc_cryptic_c__guidance_correct_path_03",
 			"loc_cryptic_c__guidance_correct_path_04",
-			"loc_cryptic_c__guidance_correct_path_05",
+			"loc_cryptic_c__guidance_correct_path_05"
 		},
 		sound_events_duration = {
 			0.710406,
 			1.053396,
 			1.735052,
 			1.549604,
-			1.728083,
+			1.728083
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_correct_path_3 = {
 		randomize_indexes_n = 0,
@@ -106,23 +106,23 @@ local guidance_vo_cryptic_c = {
 			"loc_cryptic_c__guidance_correct_path_02",
 			"loc_cryptic_c__guidance_correct_path_03",
 			"loc_cryptic_c__guidance_correct_path_04",
-			"loc_cryptic_c__guidance_correct_path_05",
+			"loc_cryptic_c__guidance_correct_path_05"
 		},
 		sound_events_duration = {
 			0.710406,
 			1.053396,
 			1.735052,
 			1.549604,
-			1.728083,
+			1.728083
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_correct_path_drop = {
 		randomize_indexes_n = 0,
@@ -132,16 +132,16 @@ local guidance_vo_cryptic_c = {
 			"loc_cryptic_c__guidance_correct_path_drop_02",
 			"loc_cryptic_c__guidance_correct_path_drop_03",
 			"loc_cryptic_c__guidance_correct_path_drop_04",
-			"loc_cryptic_c__guidance_correct_path_drop_05",
+			"loc_cryptic_c__guidance_correct_path_drop_05"
 		},
 		sound_events_duration = {
 			1.293698,
 			1.653583,
 			1.964021,
 			2.233188,
-			2.07725,
+			2.07725
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_correct_path_drop_1 = {
 		randomize_indexes_n = 0,
@@ -151,23 +151,23 @@ local guidance_vo_cryptic_c = {
 			"loc_cryptic_c__guidance_correct_path_drop_02",
 			"loc_cryptic_c__guidance_correct_path_drop_03",
 			"loc_cryptic_c__guidance_correct_path_drop_04",
-			"loc_cryptic_c__guidance_correct_path_drop_05",
+			"loc_cryptic_c__guidance_correct_path_drop_05"
 		},
 		sound_events_duration = {
 			1.293698,
 			1.653583,
 			1.964021,
 			2.233188,
-			2.07725,
+			2.07725
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_correct_path_drop_2 = {
 		randomize_indexes_n = 0,
@@ -177,23 +177,23 @@ local guidance_vo_cryptic_c = {
 			"loc_cryptic_c__guidance_correct_path_drop_02",
 			"loc_cryptic_c__guidance_correct_path_drop_03",
 			"loc_cryptic_c__guidance_correct_path_drop_04",
-			"loc_cryptic_c__guidance_correct_path_drop_05",
+			"loc_cryptic_c__guidance_correct_path_drop_05"
 		},
 		sound_events_duration = {
 			1.293698,
 			1.653583,
 			1.964021,
 			2.233188,
-			2.07725,
+			2.07725
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_correct_path_drop_3 = {
 		randomize_indexes_n = 0,
@@ -203,23 +203,23 @@ local guidance_vo_cryptic_c = {
 			"loc_cryptic_c__guidance_correct_path_drop_02",
 			"loc_cryptic_c__guidance_correct_path_drop_03",
 			"loc_cryptic_c__guidance_correct_path_drop_04",
-			"loc_cryptic_c__guidance_correct_path_drop_05",
+			"loc_cryptic_c__guidance_correct_path_drop_05"
 		},
 		sound_events_duration = {
 			1.293698,
 			1.653583,
 			1.964021,
 			2.233188,
-			2.07725,
+			2.07725
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_correct_path_drop_4 = {
 		randomize_indexes_n = 0,
@@ -229,23 +229,23 @@ local guidance_vo_cryptic_c = {
 			"loc_cryptic_c__guidance_correct_path_drop_02",
 			"loc_cryptic_c__guidance_correct_path_drop_03",
 			"loc_cryptic_c__guidance_correct_path_drop_04",
-			"loc_cryptic_c__guidance_correct_path_drop_05",
+			"loc_cryptic_c__guidance_correct_path_drop_05"
 		},
 		sound_events_duration = {
 			1.293698,
 			1.653583,
 			1.964021,
 			2.233188,
-			2.07725,
+			2.07725
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_correct_path_drop_5 = {
 		randomize_indexes_n = 0,
@@ -255,23 +255,23 @@ local guidance_vo_cryptic_c = {
 			"loc_cryptic_c__guidance_correct_path_drop_02",
 			"loc_cryptic_c__guidance_correct_path_drop_03",
 			"loc_cryptic_c__guidance_correct_path_drop_04",
-			"loc_cryptic_c__guidance_correct_path_drop_05",
+			"loc_cryptic_c__guidance_correct_path_drop_05"
 		},
 		sound_events_duration = {
 			1.293698,
 			1.653583,
 			1.964021,
 			2.233188,
-			2.07725,
+			2.07725
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_correct_path_drop_6 = {
 		randomize_indexes_n = 0,
@@ -281,23 +281,23 @@ local guidance_vo_cryptic_c = {
 			"loc_cryptic_c__guidance_correct_path_drop_02",
 			"loc_cryptic_c__guidance_correct_path_drop_03",
 			"loc_cryptic_c__guidance_correct_path_drop_04",
-			"loc_cryptic_c__guidance_correct_path_drop_05",
+			"loc_cryptic_c__guidance_correct_path_drop_05"
 		},
 		sound_events_duration = {
 			1.293698,
 			1.653583,
 			1.964021,
 			2.233188,
-			2.07725,
+			2.07725
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_correct_path_up = {
 		randomize_indexes_n = 0,
@@ -307,16 +307,16 @@ local guidance_vo_cryptic_c = {
 			"loc_cryptic_c__guidance_correct_path_up_02",
 			"loc_cryptic_c__guidance_correct_path_up_03",
 			"loc_cryptic_c__guidance_correct_path_up_04",
-			"loc_cryptic_c__guidance_correct_path_up_05",
+			"loc_cryptic_c__guidance_correct_path_up_05"
 		},
 		sound_events_duration = {
 			0.470271,
 			1.309948,
 			1.743354,
 			1.852406,
-			1.271448,
+			1.271448
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_ladder_down = {
 		randomize_indexes_n = 0,
@@ -326,23 +326,23 @@ local guidance_vo_cryptic_c = {
 			"loc_cryptic_c__ladder_sighted_02",
 			"loc_cryptic_c__ladder_sighted_03",
 			"loc_cryptic_c__ladder_sighted_04",
-			"loc_cryptic_c__ladder_sighted_05",
+			"loc_cryptic_c__ladder_sighted_05"
 		},
 		sound_events_duration = {
 			0.675281,
 			0.649698,
 			0.992563,
 			1.127188,
-			2.328042,
+			2.328042
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_ladder_sighted = {
 		randomize_indexes_n = 0,
@@ -352,23 +352,23 @@ local guidance_vo_cryptic_c = {
 			"loc_cryptic_c__ladder_sighted_02",
 			"loc_cryptic_c__ladder_sighted_03",
 			"loc_cryptic_c__ladder_sighted_04",
-			"loc_cryptic_c__ladder_sighted_05",
+			"loc_cryptic_c__ladder_sighted_05"
 		},
 		sound_events_duration = {
 			0.675281,
 			0.649698,
 			0.992563,
 			1.127188,
-			2.328042,
+			2.328042
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_ladder_up = {
 		randomize_indexes_n = 0,
@@ -378,23 +378,23 @@ local guidance_vo_cryptic_c = {
 			"loc_cryptic_c__ladder_sighted_02",
 			"loc_cryptic_c__ladder_sighted_03",
 			"loc_cryptic_c__ladder_sighted_04",
-			"loc_cryptic_c__ladder_sighted_05",
+			"loc_cryptic_c__ladder_sighted_05"
 		},
 		sound_events_duration = {
 			0.675281,
 			0.649698,
 			0.992563,
 			1.127188,
-			2.328042,
+			2.328042
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_stairs_down = {
 		randomize_indexes_n = 0,
@@ -404,23 +404,23 @@ local guidance_vo_cryptic_c = {
 			"loc_cryptic_c__stairs_sighted_02",
 			"loc_cryptic_c__stairs_sighted_03",
 			"loc_cryptic_c__stairs_sighted_04",
-			"loc_cryptic_c__stairs_sighted_05",
+			"loc_cryptic_c__stairs_sighted_05"
 		},
 		sound_events_duration = {
 			0.784938,
 			0.851073,
 			1.228781,
 			1.279969,
-			2.035479,
+			2.035479
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_stairs_sighted = {
 		randomize_indexes_n = 0,
@@ -430,23 +430,23 @@ local guidance_vo_cryptic_c = {
 			"loc_cryptic_c__stairs_sighted_02",
 			"loc_cryptic_c__stairs_sighted_03",
 			"loc_cryptic_c__stairs_sighted_04",
-			"loc_cryptic_c__stairs_sighted_05",
+			"loc_cryptic_c__stairs_sighted_05"
 		},
 		sound_events_duration = {
 			0.784938,
 			0.851073,
 			1.228781,
 			1.279969,
-			2.035479,
+			2.035479
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_stairs_sighted_1 = {
 		randomize_indexes_n = 0,
@@ -456,23 +456,23 @@ local guidance_vo_cryptic_c = {
 			"loc_cryptic_c__stairs_sighted_02",
 			"loc_cryptic_c__stairs_sighted_03",
 			"loc_cryptic_c__stairs_sighted_04",
-			"loc_cryptic_c__stairs_sighted_05",
+			"loc_cryptic_c__stairs_sighted_05"
 		},
 		sound_events_duration = {
 			0.784938,
 			0.851073,
 			1.228781,
 			1.279969,
-			2.035479,
+			2.035479
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_stairs_sighted_2 = {
 		randomize_indexes_n = 0,
@@ -482,23 +482,23 @@ local guidance_vo_cryptic_c = {
 			"loc_cryptic_c__stairs_sighted_02",
 			"loc_cryptic_c__stairs_sighted_03",
 			"loc_cryptic_c__stairs_sighted_04",
-			"loc_cryptic_c__stairs_sighted_05",
+			"loc_cryptic_c__stairs_sighted_05"
 		},
 		sound_events_duration = {
 			0.784938,
 			0.851073,
 			1.228781,
 			1.279969,
-			2.035479,
+			2.035479
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_stairs_sighted_3 = {
 		randomize_indexes_n = 0,
@@ -508,23 +508,23 @@ local guidance_vo_cryptic_c = {
 			"loc_cryptic_c__stairs_sighted_02",
 			"loc_cryptic_c__stairs_sighted_03",
 			"loc_cryptic_c__stairs_sighted_04",
-			"loc_cryptic_c__stairs_sighted_05",
+			"loc_cryptic_c__stairs_sighted_05"
 		},
 		sound_events_duration = {
 			0.784938,
 			0.851073,
 			1.228781,
 			1.279969,
-			2.035479,
+			2.035479
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_stairs_sighted_4 = {
 		randomize_indexes_n = 0,
@@ -534,23 +534,23 @@ local guidance_vo_cryptic_c = {
 			"loc_cryptic_c__stairs_sighted_02",
 			"loc_cryptic_c__stairs_sighted_03",
 			"loc_cryptic_c__stairs_sighted_04",
-			"loc_cryptic_c__stairs_sighted_05",
+			"loc_cryptic_c__stairs_sighted_05"
 		},
 		sound_events_duration = {
 			0.784938,
 			0.851073,
 			1.228781,
 			1.279969,
-			2.035479,
+			2.035479
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_stairs_up = {
 		randomize_indexes_n = 0,
@@ -560,23 +560,23 @@ local guidance_vo_cryptic_c = {
 			"loc_cryptic_c__stairs_sighted_02",
 			"loc_cryptic_c__stairs_sighted_03",
 			"loc_cryptic_c__stairs_sighted_04",
-			"loc_cryptic_c__stairs_sighted_05",
+			"loc_cryptic_c__stairs_sighted_05"
 		},
 		sound_events_duration = {
 			0.784938,
 			0.851073,
 			1.228781,
 			1.279969,
-			2.035479,
+			2.035479
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	guidance_starting_area = {
 		randomize_indexes_n = 0,
@@ -586,17 +586,17 @@ local guidance_vo_cryptic_c = {
 			"loc_cryptic_c__guidance_starting_area_02",
 			"loc_cryptic_c__guidance_starting_area_03",
 			"loc_cryptic_c__guidance_starting_area_04",
-			"loc_cryptic_c__guidance_starting_area_05",
+			"loc_cryptic_c__guidance_starting_area_05"
 		},
 		sound_events_duration = {
 			3.623542,
 			3.451458,
 			2.55001,
 			3.043302,
-			5.726906,
+			5.726906
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("guidance_vo_cryptic_c", guidance_vo_cryptic_c)

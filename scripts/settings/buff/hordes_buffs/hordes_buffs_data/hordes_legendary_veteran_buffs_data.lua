@@ -12,7 +12,7 @@ hordes_legendary_veteran_buffs_data.hordes_buff_veteran_infinite_ammo_during_sta
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/big_buffs/hordes_buff_veteran_infinite_ammo_during_stance",
 	title = "No holding back",
 	filter_category = filtering_categories.jackpot,
-	buff_stats = {},
+	buff_stats = {}
 }
 hordes_legendary_veteran_buffs_data.hordes_buff_veteran_increased_damage_after_stealth = {
 	description = "Veteran infiltrate increase damage of 110% for 3sc after leaving stealth",
@@ -23,13 +23,13 @@ hordes_legendary_veteran_buffs_data.hordes_buff_veteran_increased_damage_after_s
 	buff_stats = {
 		time = {
 			format_type = "number",
-			value = 10,
+			value = 10
 		},
 		dammage = {
 			format_type = "percentage",
-			value = 1.1,
-		},
-	},
+			value = 1.1
+		}
+	}
 }
 hordes_legendary_veteran_buffs_data.hordes_buff_veteran_shock_units_in_smoke_grenade = {
 	description = "Smoke Grenade's are electrified shocking enemies entering it. Once per enemy.",
@@ -37,7 +37,7 @@ hordes_legendary_veteran_buffs_data.hordes_buff_veteran_shock_units_in_smoke_gre
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/big_buffs/hordes_buff_veteran_shock_units_in_smoke_grenade",
 	title = "Charged clouds",
 	filter_category = filtering_categories.jackpot,
-	buff_stats = {},
+	buff_stats = {}
 }
 hordes_legendary_veteran_buffs_data.hordes_buff_veteran_grouped_upgraded_stealth = {
 	description = "Give stealth to nearby allies upon entering stealth. While in stealth become invulnerable and able to attack without canceling stealth.",
@@ -45,7 +45,7 @@ hordes_legendary_veteran_buffs_data.hordes_buff_veteran_grouped_upgraded_stealth
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/big_buffs/hordes_buff_veteran_grouped_upgraded_stealth",
 	title = "Ambusher",
 	filter_category = filtering_categories.jackpot,
-	buff_stats = {},
+	buff_stats = {}
 }
 hordes_legendary_veteran_buffs_data.hordes_buff_veteran_apply_infinite_bleed_on_shout = {
 	description = "Shout now applies infinite bleed on enemies hit.",
@@ -53,7 +53,7 @@ hordes_legendary_veteran_buffs_data.hordes_buff_veteran_apply_infinite_bleed_on_
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/big_buffs/hordes_buff_veteran_apply_infinite_bleed_on_shout",
 	title = "Death by bleeding",
 	filter_category = filtering_categories.jackpot,
-	buff_stats = {},
+	buff_stats = {}
 }
 hordes_legendary_veteran_buffs_data.hordes_buff_veteran_sticky_grenade_pulls_enemies = {
 	description = "Pull all ennemies at the grenade impact in  {radius} radius",
@@ -64,9 +64,9 @@ hordes_legendary_veteran_buffs_data.hordes_buff_veteran_sticky_grenade_pulls_ene
 	buff_stats = {
 		radius = {
 			format_type = "number",
-			value = 5,
-		},
-	},
+			value = 5
+		}
+	}
 }
 
 return hordes_legendary_veteran_buffs_data

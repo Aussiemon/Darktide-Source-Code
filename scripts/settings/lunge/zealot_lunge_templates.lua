@@ -32,70 +32,70 @@ zealot_lunge_templates.zealot_dash = {
 	lunge_speed_at_times = {
 		{
 			speed = 8,
-			time_in_lunge = 0,
+			time_in_lunge = 0
 		},
 		{
 			speed = 6,
-			time_in_lunge = 0.1,
+			time_in_lunge = 0.1
 		},
 		{
 			speed = 10,
-			time_in_lunge = 0.15,
+			time_in_lunge = 0.15
 		},
 		{
 			speed = 11,
-			time_in_lunge = 0.2,
+			time_in_lunge = 0.2
 		},
 		{
 			speed = 12,
-			time_in_lunge = 0.25,
+			time_in_lunge = 0.25
 		},
 		{
 			speed = 12,
-			time_in_lunge = 0.35,
+			time_in_lunge = 0.35
 		},
 		{
 			speed = 11,
-			time_in_lunge = 0.5,
+			time_in_lunge = 0.5
 		},
 		{
 			speed = 10,
-			time_in_lunge = 0.55,
-		},
+			time_in_lunge = 0.55
+		}
 	},
 	distance = talent_settings.combat_ability.distance,
 	has_target_distance = talent_settings.combat_ability.has_target_distance,
 	damage_settings = {
 		damage_profile = DamageProfileTemplates.zealot_dash_impact,
 		damage_type = damage_types.physical,
-		radius = talent_settings.combat_ability.radius,
+		radius = talent_settings.combat_ability.radius
 	},
 	anim_settings = {
 		on_enter = {
 			"move_fwd",
-			"sprint",
-		},
+			"sprint"
+		}
 	},
 	wwise_state = {
 		group = "player_ability",
 		off_state = "none",
-		on_state = "zealot_dash",
+		on_state = "zealot_dash"
 	},
 	restore_toughness = talent_settings.combat_ability.toughness,
 	add_delayed_buff = {
 		"zealot_combat_ability_attack_speed_increase",
-		"zealot_dash_buff",
+		"zealot_dash_buff"
 	},
 	add_delayed_buff_special_rule = {
 		"zealot_combat_ability_attack_speed_increased_duration",
-		"zealot_dash_buff",
+		"zealot_dash_buff"
 	},
 	stop_armor_types = {
 		armor_types.super_armor,
 		armor_types.void_shield,
-		armor_types.resistant,
+		armor_types.resistant
 	},
-	mood = MoodSettings.mood_types.zealot_combat_ability_dash,
+	mood = MoodSettings.mood_types.zealot_combat_ability_dash
 }
 zealot_lunge_templates.zealot_dash_with_burning = {
 	block_input_cancel = true,
@@ -110,55 +110,55 @@ zealot_lunge_templates.zealot_dash_with_burning = {
 	lunge_speed_at_times = {
 		{
 			speed = 0,
-			time_in_lunge = 0,
+			time_in_lunge = 0
 		},
 		{
 			speed = 2,
-			time_in_lunge = 0.1,
+			time_in_lunge = 0.1
 		},
 		{
 			speed = 8,
-			time_in_lunge = 0.15,
+			time_in_lunge = 0.15
 		},
 		{
 			speed = 10,
-			time_in_lunge = 0.2,
+			time_in_lunge = 0.2
 		},
 		{
 			speed = 10,
-			time_in_lunge = 0.25,
+			time_in_lunge = 0.25
 		},
 		{
 			speed = 12,
-			time_in_lunge = 0.35,
+			time_in_lunge = 0.35
 		},
 		{
 			speed = 14,
-			time_in_lunge = 0.5,
+			time_in_lunge = 0.5
 		},
 		{
 			speed = 12,
-			time_in_lunge = 0.55,
-		},
+			time_in_lunge = 0.55
+		}
 	},
 	damage_settings = {
 		radius = 2,
 		damage_profile = DamageProfileTemplates.zealot_dash_impact,
-		damage_type = damage_types.physical,
+		damage_type = damage_types.physical
 	},
 	anim_settings = {
-		on_enter = "sprint",
+		on_enter = "sprint"
 	},
 	on_finish_explosion = {
 		forward_offset = 1.5,
-		explosion_template = ExplosionTemplates.zealot_charge_impact_with_burning,
+		explosion_template = ExplosionTemplates.zealot_charge_impact_with_burning
 	},
 	stop_armor_types = {
 		armor_types.super_armor,
 		armor_types.void_shield,
-		armor_types.resistant,
+		armor_types.resistant
 	},
-	mood = MoodSettings.mood_types.zealot_combat_ability_dash,
+	mood = MoodSettings.mood_types.zealot_combat_ability_dash
 }
 
 return zealot_lunge_templates

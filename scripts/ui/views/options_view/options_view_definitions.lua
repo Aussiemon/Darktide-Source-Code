@@ -12,12 +12,12 @@ local grid_height = grid_size[2]
 local grid_blur_edge_size = OptionsViewSettings.grid_blur_edge_size
 local mask_size = {
 	grid_width + grid_blur_edge_size[1] * 2,
-	grid_height + grid_blur_edge_size[2] * 2,
+	grid_height + grid_blur_edge_size[2] * 2
 }
 local mask_offset_y = 16
 local settings_mask_size = {
 	1080 + grid_blur_edge_size[1] * 2,
-	grid_height + grid_blur_edge_size[2],
+	grid_height + grid_blur_edge_size[2]
 }
 local settings_grid_height = grid_height + mask_offset_y
 local tooltip_text_style = table.clone(UIFontSettings.body)
@@ -30,7 +30,7 @@ tooltip_text_style.color = Color.white(255, true)
 tooltip_text_style.offset = {
 	0,
 	0,
-	2,
+	2
 }
 
 local scenegraph_definition = {
@@ -41,13 +41,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			200,
-		},
+			200
+		}
 	},
 	background = {
 		horizontal_alignment = "left",
@@ -55,13 +55,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			grid_width,
-			grid_height,
+			grid_height
 		},
 		position = {
 			180,
 			240,
-			1,
-		},
+			1
+		}
 	},
 	background_icon = {
 		horizontal_alignment = "center",
@@ -69,13 +69,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1250,
-			1250,
+			1250
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	grid_start = {
 		horizontal_alignment = "left",
@@ -83,13 +83,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	grid_content_pivot = {
 		horizontal_alignment = "left",
@@ -97,13 +97,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	grid_mask = {
 		horizontal_alignment = "center",
@@ -113,8 +113,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	grid_interaction = {
 		horizontal_alignment = "left",
@@ -122,13 +122,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			grid_width + scrollbar_width * 2,
-			mask_size[2],
+			mask_size[2]
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	scrollbar = {
 		horizontal_alignment = "right",
@@ -136,13 +136,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			scrollbar_width,
-			grid_height,
+			grid_height
 		},
 		position = {
 			50,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	button = {
 		horizontal_alignment = "top",
@@ -150,13 +150,13 @@ local scenegraph_definition = {
 		vertical_alignment = "left",
 		size = {
 			500,
-			64,
+			64
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	title_divider = {
 		horizontal_alignment = "left",
@@ -164,13 +164,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			335,
-			18,
+			18
 		},
 		position = {
 			180,
 			145,
-			1,
-		},
+			1
+		}
 	},
 	title_text = {
 		horizontal_alignment = "left",
@@ -178,13 +178,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			500,
-			50,
+			50
 		},
 		position = {
 			0,
 			-35,
-			1,
-		},
+			1
+		}
 	},
 	settings_grid_background = {
 		horizontal_alignment = "right",
@@ -192,13 +192,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			1000,
-			settings_grid_height,
+			settings_grid_height
 		},
 		position = {
 			-180,
 			130,
-			1,
-		},
+			1
+		}
 	},
 	settings_grid_start = {
 		horizontal_alignment = "left",
@@ -206,13 +206,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	settings_grid_content_pivot = {
 		horizontal_alignment = "left",
@@ -220,13 +220,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	settings_scrollbar = {
 		horizontal_alignment = "right",
@@ -234,13 +234,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			scrollbar_width,
-			grid_height - 26,
+			grid_height - 26
 		},
 		position = {
 			50,
 			45,
-			1,
-		},
+			1
+		}
 	},
 	settings_grid_mask = {
 		horizontal_alignment = "center",
@@ -250,8 +250,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			mask_offset_y,
-			0,
-		},
+			0
+		}
 	},
 	settings_grid_interaction = {
 		horizontal_alignment = "left",
@@ -259,14 +259,14 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			1000 + scrollbar_width * 2,
-			mask_size[2],
+			mask_size[2]
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
-	},
+			0
+		}
+	}
 }
 local widget_definitions = {
 	settings_overlay = UIWidget.create_definition({
@@ -276,23 +276,23 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					20,
+					20
 				},
 				color = {
 					160,
 					0,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "screen"),
 	background = UIWidget.create_definition({
 		{
 			pass_type = "rect",
 			style = {
-				color = Color.black(255, true),
-			},
+				color = Color.black(255, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -303,22 +303,22 @@ local widget_definitions = {
 				vertical_alignemnt = "center",
 				size_addition = {
 					40,
-					40,
+					40
 				},
 				offset = {
 					-20,
 					-20,
-					0,
+					0
 				},
-				color = Color.terminal_grid_background_gradient(204, true),
-			},
-		},
+				color = Color.terminal_grid_background_gradient(204, true)
+			}
+		}
 	}, "screen"),
 	title_divider = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/dividers/skull_rendered_left_01",
-		},
+			value = "content/ui/materials/dividers/skull_rendered_left_01"
+		}
 	}, "title_divider"),
 	title_text = UIWidget.create_definition({
 		{
@@ -326,8 +326,8 @@ local widget_definitions = {
 			style_id = "text",
 			value_id = "text",
 			value = Managers.localization:localize("loc_settings_menu_header"),
-			style = table.clone(UIFontSettings.header_1),
-		},
+			style = table.clone(UIFontSettings.header_1)
+		}
 	}, "title_text"),
 	background_icon = UIWidget.create_definition({
 		{
@@ -337,16 +337,16 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				color = {
 					80,
 					0,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "background_icon"),
 	tooltip = UIWidget.create_definition({
 		{
@@ -357,14 +357,14 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				color = Color.terminal_corner(255, true),
 				size_addition = {
 					23,
-					23,
-				},
-			},
+					23
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -374,27 +374,27 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				color = Color.black(255, true),
 				size_addition = {
 					20,
-					20,
-				},
-			},
+					20
+				}
+			}
 		},
 		{
 			pass_type = "text",
 			style_id = "text",
 			value = "",
 			value_id = "text",
-			style = tooltip_text_style,
-		},
+			style = tooltip_text_style
+		}
 	}, "tooltip", {
-		visible = false,
+		visible = false
 	}),
 	scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "scrollbar", {
-		scroll_speed = 10,
+		scroll_speed = 10
 	}),
 	grid_mask = UIWidget.create_definition({
 		{
@@ -405,19 +405,19 @@ local widget_definitions = {
 					255,
 					255,
 					255,
-					255,
-				},
-			},
-		},
+					255
+				}
+			}
+		}
 	}, "grid_mask"),
 	grid_interaction = UIWidget.create_definition({
 		{
 			content_id = "hotspot",
-			pass_type = "hotspot",
-		},
+			pass_type = "hotspot"
+		}
 	}, "grid_interaction"),
 	settings_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "settings_scrollbar", {
-		scroll_speed = 10,
+		scroll_speed = 10
 	}),
 	settings_grid_mask = UIWidget.create_definition({
 		{
@@ -428,17 +428,17 @@ local widget_definitions = {
 					255,
 					255,
 					255,
-					255,
-				},
-			},
-		},
+					255
+				}
+			}
+		}
 	}, "settings_grid_mask"),
 	settings_grid_interaction = UIWidget.create_definition({
 		{
 			content_id = "hotspot",
-			pass_type = "hotspot",
-		},
-	}, "settings_grid_interaction"),
+			pass_type = "hotspot"
+		}
+	}, "settings_grid_interaction")
 }
 local legend_inputs = {
 	{
@@ -446,7 +446,7 @@ local legend_inputs = {
 		display_name = "loc_settings_menu_close_menu",
 		input_action = "back",
 		on_pressed_callback = "cb_on_back_pressed",
-		visibility_function = nil,
+		visibility_function = nil
 	},
 	{
 		alignment = nil,
@@ -455,13 +455,13 @@ local legend_inputs = {
 		on_pressed_callback = "cb_reset_category_to_default",
 		visibility_function = function (parent)
 			return not not parent._selected_category and parent._categories_by_display_name[parent._selected_category].can_be_reset
-		end,
-	},
+		end
+	}
 }
 local OptionsViewDefinitions = {
 	legend_inputs = legend_inputs,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }
 
 return settings("OptionsViewDefinitions", OptionsViewDefinitions)

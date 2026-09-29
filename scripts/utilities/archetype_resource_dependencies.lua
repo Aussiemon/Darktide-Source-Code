@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/utilities/archetype_resource_dependencies.lua
 
 local ArchetypeResourceDependencies = {}
-local _resolve_data_recursive, _is_valid_wwise_resource_name, _is_valid_fx_resource_name, _is_valid_player_decal_resource_name
+local _resolve_data_recursive, _is_valid_player_wwise_resource_name, _is_valid_fx_resource_name, _is_valid_decal_resource_name
 local TEMP_SOUND_RESOURCE_PACKAGES = {}
 local TEMP_PARTICLE_RESOURCE_PACKAGES = {}
 local TEMP_DECAL_RESOURCE_PACKAGES = {}
@@ -11,9 +11,9 @@ ArchetypeResourceDependencies.generate = function (archetype)
 	local particle_resource_packages = {}
 	local decal_resource_packages = {}
 
-	_resolve_data_recursive(archetype, TEMP_SOUND_RESOURCE_PACKAGES, _is_valid_wwise_resource_name)
+	_resolve_data_recursive(archetype, TEMP_SOUND_RESOURCE_PACKAGES, _is_valid_player_wwise_resource_name)
 	_resolve_data_recursive(archetype, TEMP_PARTICLE_RESOURCE_PACKAGES, _is_valid_fx_resource_name)
-	_resolve_data_recursive(archetype, TEMP_DECAL_RESOURCE_PACKAGES, _is_valid_player_decal_resource_name)
+	_resolve_data_recursive(archetype, TEMP_DECAL_RESOURCE_PACKAGES, _is_valid_decal_resource_name)
 
 	for resource_name, _ in pairs(TEMP_SOUND_RESOURCE_PACKAGES) do
 		TEMP_SOUND_RESOURCE_PACKAGES[resource_name] = nil
@@ -30,13 +30,17 @@ ArchetypeResourceDependencies.generate = function (archetype)
 		decal_resource_packages[#decal_resource_packages + 1] = resource_name
 	end
 
-	return sound_resource_packages, particle_resource_packages, decal_resource_packages
+	return {
+		sounds = sound_resource_packages,
+		particles = particle_resource_packages,
+		decals = decal_resource_packages
+	}
 end
 
-local WWISE_START_STRING_PLAYER = "wwise/events/player/"
+local PLAYER_WWISE_START_STRING = "wwise/events/player/"
 
-function _is_valid_wwise_resource_name(value)
-	return string.starts_with(value, WWISE_START_STRING_PLAYER)
+function _is_valid_player_wwise_resource_name(value)
+	return string.starts_with(value, PLAYER_WWISE_START_STRING)
 end
 
 local CONTENT_FX_PARTICLES_SCREENSPACE = "content/fx/particles/screenspace/"
@@ -47,7 +51,7 @@ end
 
 local DECAL_PREFIX = "content/fx/units/player/"
 
-function _is_valid_player_decal_resource_name(value)
+function _is_valid_decal_resource_name(value)
 	return string.starts_with(value, DECAL_PREFIX)
 end
 

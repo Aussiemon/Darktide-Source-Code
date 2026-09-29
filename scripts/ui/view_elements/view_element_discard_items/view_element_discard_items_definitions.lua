@@ -20,13 +20,13 @@ local scenegraph_definitions = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	window = {
 		horizontal_alignment = "top",
@@ -36,8 +36,8 @@ local scenegraph_definitions = {
 		position = {
 			0,
 			0,
-			20,
-		},
+			20
+		}
 	},
 	window_content = {
 		horizontal_alignment = "center",
@@ -47,8 +47,8 @@ local scenegraph_definitions = {
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	rarity_title = {
 		horizontal_alignment = "center",
@@ -56,13 +56,13 @@ local scenegraph_definitions = {
 		vertical_alignment = "top",
 		size = {
 			content_size[1],
-			50,
+			50
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	rarity_checkbox_button_1 = {
 		horizontal_alignment = "center",
@@ -72,8 +72,8 @@ local scenegraph_definitions = {
 		position = {
 			0,
 			checkbox_size[2] + 10,
-			0,
-		},
+			0
+		}
 	},
 	rarity_checkbox_button_2 = {
 		horizontal_alignment = "center",
@@ -83,8 +83,8 @@ local scenegraph_definitions = {
 		position = {
 			0,
 			checkbox_size[2] + 10,
-			0,
-		},
+			0
+		}
 	},
 	rarity_checkbox_button_3 = {
 		horizontal_alignment = "center",
@@ -94,8 +94,8 @@ local scenegraph_definitions = {
 		position = {
 			0,
 			checkbox_size[2] + 10,
-			0,
-		},
+			0
+		}
 	},
 	rarity_checkbox_button_4 = {
 		horizontal_alignment = "center",
@@ -105,8 +105,8 @@ local scenegraph_definitions = {
 		position = {
 			0,
 			checkbox_size[2] + 10,
-			0,
-		},
+			0
+		}
 	},
 	rarity_checkbox_button_5 = {
 		horizontal_alignment = "center",
@@ -116,8 +116,8 @@ local scenegraph_definitions = {
 		position = {
 			0,
 			checkbox_size[2] + 10,
-			0,
-		},
+			0
+		}
 	},
 	rating_title = {
 		horizontal_alignment = "center",
@@ -125,13 +125,13 @@ local scenegraph_definitions = {
 		vertical_alignment = "bottom",
 		size = {
 			content_size[1],
-			50,
+			50
 		},
 		position = {
 			0,
 			50,
-			1,
-		},
+			1
+		}
 	},
 	rating_stepper = {
 		horizontal_alignment = "center",
@@ -141,8 +141,8 @@ local scenegraph_definitions = {
 		position = {
 			0,
 			checkbox_size[2] + 10,
-			0,
-		},
+			0
+		}
 	},
 	select_button = {
 		horizontal_alignment = "center",
@@ -152,8 +152,8 @@ local scenegraph_definitions = {
 		position = {
 			0,
 			confirm_button_size[2] + 10,
-			0,
-		},
+			0
+		}
 	},
 	unselect_button = {
 		horizontal_alignment = "center",
@@ -163,8 +163,8 @@ local scenegraph_definitions = {
 		position = {
 			0,
 			confirm_button_size[2] + 10,
-			0,
-		},
+			0
+		}
 	},
 	selection_value = {
 		horizontal_alignment = "center",
@@ -172,13 +172,13 @@ local scenegraph_definitions = {
 		vertical_alignment = "bottom",
 		size = {
 			content_size[1],
-			30,
+			30
 		},
 		position = {
 			0,
 			60,
-			23,
-		},
+			23
+		}
 	},
 	description = {
 		horizontal_alignment = "center",
@@ -186,14 +186,14 @@ local scenegraph_definitions = {
 		vertical_alignment = "bottom",
 		size = {
 			content_size[1],
-			30,
+			30
 		},
 		position = {
 			0,
 			-30,
-			2,
-		},
-	},
+			2
+		}
+	}
 }
 local widget_definitions = {
 	rarity_title = UIWidget.create_definition({
@@ -212,11 +212,11 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
-			value = Localize("loc_discard_items_view_rarity_title"),
-		},
+			value = Localize("loc_discard_items_view_rarity_title")
+		}
 	}, "rarity_title"),
 	rating_title = UIWidget.create_definition({
 		{
@@ -234,11 +234,11 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
-			value = Localize("loc_discard_items_view_rating_lower"),
-		},
+			value = Localize("loc_discard_items_view_rating_lower")
+		}
 	}, "rating_title"),
 	description = UIWidget.create_definition({
 		{
@@ -257,10 +257,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "description"),
 	window = UIWidget.create_definition({
 		{
@@ -273,10 +273,10 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					24,
-					24,
+					24
 				},
-				color = Color.terminal_grid_background(nil, true),
-			},
+				color = Color.terminal_grid_background(nil, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -289,9 +289,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -304,9 +304,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					4,
-				},
-			},
+					4
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -319,9 +319,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
-				},
-			},
+					5
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -332,19 +332,19 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					nil,
-					10,
+					10
 				},
 				size_addition = {
 					10,
-					0,
+					0
 				},
 				color = Color.terminal_text_header(255, true),
 				offset = {
 					0,
 					-4,
-					14,
-				},
-			},
+					14
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -355,20 +355,20 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					nil,
-					10,
+					10
 				},
 				size_addition = {
 					10,
-					0,
+					0
 				},
 				color = Color.terminal_text_header(255, true),
 				offset = {
 					0,
 					4,
-					14,
-				},
-			},
-		},
+					14
+				}
+			}
+		}
 	}, "window"),
 	selection_value = UIWidget.create_definition({
 		{
@@ -385,34 +385,34 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "selection_value"),
 	rarity_checkbox_button_1 = UIWidget.create_definition(CheckboxPassTemplates.terminal_checkbox_button, "rarity_checkbox_button_1", {
 		visible = true,
-		original_text = Localize("loc_item_weapon_rarity_1"),
+		original_text = Localize("loc_item_weapon_rarity_1")
 	}),
 	rarity_checkbox_button_2 = UIWidget.create_definition(CheckboxPassTemplates.terminal_checkbox_button, "rarity_checkbox_button_2", {
 		visible = true,
-		original_text = Localize("loc_item_weapon_rarity_2"),
+		original_text = Localize("loc_item_weapon_rarity_2")
 	}),
 	rarity_checkbox_button_3 = UIWidget.create_definition(CheckboxPassTemplates.terminal_checkbox_button, "rarity_checkbox_button_3", {
 		visible = true,
-		original_text = Localize("loc_item_weapon_rarity_3"),
+		original_text = Localize("loc_item_weapon_rarity_3")
 	}),
 	rarity_checkbox_button_4 = UIWidget.create_definition(CheckboxPassTemplates.terminal_checkbox_button, "rarity_checkbox_button_4", {
 		visible = true,
-		original_text = Localize("loc_item_weapon_rarity_4"),
+		original_text = Localize("loc_item_weapon_rarity_4")
 	}),
 	rarity_checkbox_button_5 = UIWidget.create_definition(CheckboxPassTemplates.terminal_checkbox_button, "rarity_checkbox_button_5", {
 		visible = true,
-		original_text = Localize("loc_item_weapon_rarity_5"),
+		original_text = Localize("loc_item_weapon_rarity_5")
 	}),
 	rating_stepper = UIWidget.create_definition(StepperPassTemplates.terminal_stepper, "rating_stepper", {
 		original_text = "999",
-		visible = true,
+		visible = true
 	}),
 	select_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "select_button", {
 		visible = true,
@@ -420,8 +420,8 @@ local widget_definitions = {
 		hotspot = {
 			on_released_sound = nil,
 			on_hover_sound = UISoundEvents.default_mouse_hover,
-			on_pressed_sound = UISoundEvents.mastery_select_weapon,
-		},
+			on_pressed_sound = UISoundEvents.mastery_select_weapon
+		}
 	}),
 	unselect_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "unselect_button", {
 		visible = true,
@@ -429,12 +429,12 @@ local widget_definitions = {
 		hotspot = {
 			on_released_sound = nil,
 			on_hover_sound = UISoundEvents.default_mouse_hover,
-			on_pressed_sound = UISoundEvents.weapons_select_weapon,
-		},
-	}),
+			on_pressed_sound = UISoundEvents.weapons_select_weapon
+		}
+	})
 }
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definitions,
+	scenegraph_definition = scenegraph_definitions
 }

@@ -11,7 +11,7 @@ end
 MoverController.create_mover_state = function ()
 	return {
 		active_mover = nil,
-		disable_reasons = {},
+		disable_reasons = {}
 	}
 end
 

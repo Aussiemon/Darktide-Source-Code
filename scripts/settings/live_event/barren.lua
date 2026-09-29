@@ -9,8 +9,8 @@ local settings = {
 	name = "loc_live_event_barren_name",
 	stat = "live_event_barren_mission_won",
 	item_rewards = {
-		"content/items/2d/insignias/insignia_event_barren",
-	},
+		"content/items/2d/insignias/insignia_event_barren"
+	}
 }
 
 return settings

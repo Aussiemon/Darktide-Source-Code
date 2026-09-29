@@ -20,7 +20,7 @@ InvitesPSN.update = function (self)
 		self._invite_code_promise:next(function (invite_code)
 			self._invite = {
 				code = invite_code,
-				recipient_account_id = Managers.account:platform_user_id(),
+				recipient_account_id = Managers.account:platform_user_id()
 			}
 			self._invite_code_promise = nil
 		end):catch(function (err)

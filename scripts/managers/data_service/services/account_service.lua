@@ -36,7 +36,7 @@ end
 
 local function update_user_setting(parameter_value, ...)
 	local keys = {
-		...,
+		...
 	}
 	local current_value = Application.user_setting(unpack(keys))
 
@@ -76,7 +76,7 @@ AccountService.signin = function (self)
 
 		if not _init_network_client(account_id) then
 			return Promise.rejected({
-				description = "INITIALIZE_WAN_ERROR",
+				description = "INITIALIZE_WAN_ERROR"
 			})
 		end
 
@@ -116,7 +116,7 @@ AccountService.signin = function (self)
 				immaterium_connection_info,
 				crafting_costs_promise,
 				migration_data_promise,
-				havoc_settings_promise,
+				havoc_settings_promise
 			}
 
 			return Promise.all(unpack(promises))
@@ -137,7 +137,7 @@ AccountService.signin = function (self)
 			return Promise.all(profiles_promise, has_created_first_character_promise, has_completed_onboarding_promise, auth_data_promise, immaterium_connect_promise, migration_data_promise)
 		else
 			return Promise.rejected({
-				description = "VERSION_ERROR",
+				description = "VERSION_ERROR"
 			})
 		end
 	end):next(function (results)
@@ -145,7 +145,7 @@ AccountService.signin = function (self)
 
 		if immaterium_connect_error then
 			return Promise.rejected({
-				description = "IMMATERIUM_CONNECT_ERROR",
+				description = "IMMATERIUM_CONNECT_ERROR"
 			})
 		end
 
@@ -158,7 +158,7 @@ AccountService.signin = function (self)
 			account_id = auth_data.sub,
 			vivox_token = auth_data.vivox_token,
 			gear = profile_data.gear,
-			migration_data = migration_data,
+			migration_data = migration_data
 		})
 	end):next(function (results)
 		local result_promise = Promise.resolved(results)

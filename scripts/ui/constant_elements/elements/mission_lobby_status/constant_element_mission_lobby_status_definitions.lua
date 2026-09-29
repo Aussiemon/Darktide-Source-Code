@@ -14,13 +14,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			-70,
 			65,
-			900,
-		},
+			900
+		}
 	},
 	timer_background = {
 		horizontal_alignment = "right",
@@ -28,13 +28,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			234,
-			90,
+			90
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	timer_text = {
 		horizontal_alignment = "right",
@@ -42,13 +42,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			110,
-			90,
+			90
 		},
 		position = {
 			-5,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	team_status_text = {
 		horizontal_alignment = "right",
@@ -56,13 +56,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			600,
-			35,
+			35
 		},
 		position = {
 			-117,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	team_status = {
 		horizontal_alignment = "right",
@@ -72,9 +72,9 @@ local scenegraph_definition = {
 		position = {
 			-117,
 			35,
-			2,
-		},
-	},
+			2
+		}
+	}
 }
 local team_status_text_style = table.clone(UIFontSettings.header_4)
 
@@ -83,7 +83,7 @@ team_status_text_style.text_horizontal_alignment = "right"
 team_status_text_style.offset = {
 	-5,
 	0,
-	0,
+	0
 }
 
 local timer_new_text_style = table.clone(UIFontSettings.body)
@@ -105,7 +105,7 @@ timer_active_new_text_style.text_horizontal_alignment = "right"
 timer_active_new_text_style.offset = {
 	-13,
 	0,
-	0,
+	0
 }
 
 local widget_definitions = {
@@ -118,10 +118,10 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					234,
-					90,
+					90
 				},
-				color = Color.black(76.5, true),
-			},
+				color = Color.black(76.5, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -132,24 +132,24 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					234,
-					90,
+					90
 				},
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
-				color = Color.ui_terminal(127.5, true),
-			},
-		},
+				color = Color.ui_terminal(127.5, true)
+			}
+		}
 	}, "timer_background"),
 	team_status_text = UIWidget.create_definition({
 		{
 			pass_type = "text",
 			value_id = "text",
 			value = Managers.localization:localize("loc_lobby_timer_description"),
-			style = team_status_text_style,
-		},
+			style = team_status_text_style
+		}
 	}, "team_status_text"),
 	timer_text = UIWidget.create_definition({
 		{
@@ -157,16 +157,16 @@ local widget_definitions = {
 			style_id = "text_background",
 			value = "",
 			value_id = "text_background",
-			style = timer_new_text_style,
+			style = timer_new_text_style
 		},
 		{
 			pass_type = "text",
 			style_id = "text",
 			value = "",
 			value_id = "text",
-			style = timer_active_new_text_style,
-		},
-	}, "timer_text"),
+			style = timer_active_new_text_style
+		}
+	}, "timer_text")
 }
 local ready_status_definition = UIWidget.create_definition({
 	{
@@ -178,18 +178,18 @@ local ready_status_definition = UIWidget.create_definition({
 			vertical_alignment = "center",
 			size = {
 				22,
-				46,
+				46
 			},
 			offset = {
 				0,
 				0,
-				2,
+				2
 			},
-			color = Color.ui_terminal(76.5, true),
+			color = Color.ui_terminal(76.5, true)
 		},
 		visibility_function = function (content, style)
 			return content.occupied
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -200,18 +200,18 @@ local ready_status_definition = UIWidget.create_definition({
 			vertical_alignment = "center",
 			size = {
 				22,
-				46,
+				46
 			},
 			offset = {
 				0,
 				0,
-				2,
+				2
 			},
-			color = Color.ui_terminal(255, true),
+			color = Color.ui_terminal(255, true)
 		},
 		visibility_function = function (content, style)
 			return content.selected and content.occupied
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -221,23 +221,23 @@ local ready_status_definition = UIWidget.create_definition({
 			vertical_alignment = "center",
 			size = {
 				22,
-				46,
+				46
 			},
 			offset = {
 				0,
 				0,
-				2,
+				2
 			},
-			color = Color.ui_red_light(127.5, true),
+			color = Color.ui_red_light(127.5, true)
 		},
 		visibility_function = function (content, style)
 			return not content.occupied
-		end,
-	},
+		end
+	}
 }, "team_status")
 
 return {
 	ready_status_definition = ready_status_definition,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

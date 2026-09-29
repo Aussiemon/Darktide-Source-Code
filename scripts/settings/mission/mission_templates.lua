@@ -24,5 +24,6 @@ _extract_mission_templates("scripts/settings/mission/templates/throneside_missio
 _extract_mission_templates("scripts/settings/mission/templates/transit_mission_templates")
 _extract_mission_templates("scripts/settings/mission/templates/void_mission_templates")
 _extract_mission_templates("scripts/settings/mission/templates/watertown_mission_templates")
+_extract_mission_templates("scripts/settings/mission/templates/depths_mission_templates")
 
 return settings("MissionTemplates", mission_templates)

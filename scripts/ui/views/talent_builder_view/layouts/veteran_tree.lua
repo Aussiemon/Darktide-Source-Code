@@ -6,13 +6,14 @@ return {
 	name = "veteran_tree",
 	node_points = 30,
 	talent_points = 30,
-	version = 29,
+	version = 34,
 	nodes = {
 		{
 			cost = 0,
 			icon = "content/ui/materials/frames/talents/starting_points/starting_point_veteran",
 			max_points = 1,
 			talent = "veteran_combat_ability_stance",
+			target_slot = "slot_combat_ability",
 			type = "start",
 			widget_name = "node_8376d017-537b-45f4-b3c5-e653fd1ac6d2",
 			x = 975,
@@ -20,18 +21,18 @@ return {
 			children = {
 				"node_06b90705-95b0-44bd-b357-bbb061cf0cb4",
 				"node_f0744989-1f87-4da4-aa97-30a821197ed9",
-				"node_ba8679cd-fc19-435d-a317-ebeccb210f87",
+				"node_ba8679cd-fc19-435d-a317-ebeccb210f87"
 			},
 			connector_offset = {
 				0,
-				42,
+				42
 			},
 			parents = {},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 0,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -40,25 +41,28 @@ return {
 			talent = "veteran_aura_elite_kills_restore_grenade",
 			type = "default",
 			widget_name = "node_743e6ff1-6bb2-4816-9270-ef9c92d9d376",
-			x = 1085,
-			y = 1955,
+			x = 1115,
+			y = 2015,
 			children = {
-				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a",
+				"node_8c17e249-1082-43cd-82b1-42e18c7f29e8",
+				"node_7e94349b-d6c6-446e-bb39-0b367f6477bf",
+				"node_c6d92993-58ab-4f1c-ac76-0e3b36af29a5"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_8dae58e9-9625-4e01-ac1b-209a13301c56",
 				"node_acd02218-225d-418d-ad97-9b9ee7d4c5b1",
-				"node_e38451de-f4cc-4490-89b6-ae9f7bfefbde",
+				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a",
+				"node_7c08ee90-6528-4188-915f-41e330db49f5"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -72,22 +76,22 @@ return {
 			children = {
 				"node_1f4db598-72a5-4f49-beb3-dd67cacd531a",
 				"node_90d61df3-340c-4ddf-b802-ef29d3878e0c",
-				"node_41d2b96f-c399-47c0-88c3-9e60a07638fc",
+				"node_41d2b96f-c399-47c0-88c3-9e60a07638fc"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_864a1e68-33d3-4beb-86ee-e18a6351a637",
 				"node_06b90705-95b0-44bd-b357-bbb061cf0cb4",
-				"node_41d2b96f-c399-47c0-88c3-9e60a07638fc",
+				"node_41d2b96f-c399-47c0-88c3-9e60a07638fc"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -101,22 +105,22 @@ return {
 			children = {
 				"node_25df52cb-b6f9-469c-b831-3118f9f498f5",
 				"node_90d61df3-340c-4ddf-b802-ef29d3878e0c",
-				"node_62b7b680-7096-40ed-9303-7ba124a5d812",
+				"node_62b7b680-7096-40ed-9303-7ba124a5d812"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_864a1e68-33d3-4beb-86ee-e18a6351a637",
 				"node_f0744989-1f87-4da4-aa97-30a821197ed9",
-				"node_62b7b680-7096-40ed-9303-7ba124a5d812",
+				"node_62b7b680-7096-40ed-9303-7ba124a5d812"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -125,24 +129,27 @@ return {
 			talent = "veteran_increased_weakspot_damage",
 			type = "default",
 			widget_name = "node_a6dcece9-435c-4d88-83a6-8c58bd9240b9",
-			x = 575,
-			y = 1955,
+			x = 875,
+			y = 2015,
 			children = {
 				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992",
+				"node_7adfbd19-7df3-4337-875b-2a9dfa00d378",
+				"node_7163a098-c55a-47f0-a861-38509acc0d44"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_12b3bc42-7582-41cd-b56e-af8a9685bb15",
-				"node_b40ef26d-5e6e-4f30-87e6-a96091d5ce0a",
+				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a",
+				"node_6dca445f-a83e-442c-89dd-04a1deb408ee"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -151,54 +158,29 @@ return {
 			talent = "veteran_increased_melee_crit_chance_and_melee_finesse",
 			type = "default",
 			widget_name = "node_7e94349b-d6c6-446e-bb39-0b367f6477bf",
-			x = 1325,
-			y = 2045,
+			x = 1235,
+			y = 2135,
 			children = {
-				"node_38aad78e-4d8f-4fba-b66c-947b4486f34e",
+				"node_09bb7c07-c733-4d08-9387-50f404da5ce5",
 				"node_39129a53-b8c1-4d7e-82bd-e2b9d49315a1",
-				"node_e0e0d8de-9787-4ecb-b7b8-43cb0eb133d9",
+				"node_c6d92993-58ab-4f1c-ac76-0e3b36af29a5",
+				"node_a8044c1f-dda9-4a0b-b503-d549fd2ad5f9"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_12b3bc42-7582-41cd-b56e-af8a9685bb15",
+				"node_743e6ff1-6bb2-4816-9270-ef9c92d9d376",
 				"node_8c17e249-1082-43cd-82b1-42e18c7f29e8",
-				"node_7c08ee90-6528-4188-915f-41e330db49f5",
-				"node_e17c1b44-cbfd-4f58-bc7e-dc80ff90fbcc",
+				"node_c6d92993-58ab-4f1c-ac76-0e3b36af29a5"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
-		},
-		{
-			cost = 1,
-			icon = "content/ui/textures/frames/talents/circular_small_frame",
-			max_points = 1,
-			talent = "base_toughness_node_buff_medium_1",
-			type = "stat",
-			widget_name = "node_e0e0d8de-9787-4ecb-b7b8-43cb0eb133d9",
-			x = 1324,
-			y = 2134,
-			children = {
-				"node_96335f86-60f8-46e4-a6df-47c0a4ee2719",
-				"node_a8044c1f-dda9-4a0b-b503-d549fd2ad5f9",
-			},
-			connector_offset = {
-				0,
-				0,
-			},
-			parents = {
-				"node_7e94349b-d6c6-446e-bb39-0b367f6477bf",
-			},
-			requirements = {
-				all_parents_chosen = false,
-				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -212,20 +194,20 @@ return {
 			children = {
 				"node_1f4db598-72a5-4f49-beb3-dd67cacd531a",
 				"node_41d2b96f-c399-47c0-88c3-9e60a07638fc",
-				"node_be2f4721-6e3e-4594-9393-6654b6c234cd",
+				"node_be2f4721-6e3e-4594-9393-6654b6c234cd"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_8376d017-537b-45f4-b3c5-e653fd1ac6d2",
+				"node_8376d017-537b-45f4-b3c5-e653fd1ac6d2"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -234,23 +216,28 @@ return {
 			talent = "veteran_increase_damage_after_sprinting",
 			type = "default",
 			widget_name = "node_39129a53-b8c1-4d7e-82bd-e2b9d49315a1",
-			x = 1415,
-			y = 2135,
+			x = 1235,
+			y = 2255,
 			children = {
-				"node_a8044c1f-dda9-4a0b-b503-d549fd2ad5f9",
+				"node_38aad78e-4d8f-4fba-b66c-947b4486f34e",
+				"node_96335f86-60f8-46e4-a6df-47c0a4ee2719",
+				"node_09bb7c07-c733-4d08-9387-50f404da5ce5",
+				"node_e17c1b44-cbfd-4f58-bc7e-dc80ff90fbcc"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_7e94349b-d6c6-446e-bb39-0b367f6477bf",
+				"node_c6d92993-58ab-4f1c-ac76-0e3b36af29a5",
+				"node_96335f86-60f8-46e4-a6df-47c0a4ee2719",
+				"node_7e94349b-d6c6-446e-bb39-0b367f6477bf"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -259,83 +246,84 @@ return {
 			talent = "veteran_crits_apply_rending",
 			type = "default",
 			widget_name = "node_a8044c1f-dda9-4a0b-b503-d549fd2ad5f9",
-			x = 1385,
-			y = 2225,
-			children = {
-				"node_09bb7c07-c733-4d08-9387-50f404da5ce5",
-			},
+			x = 1355,
+			y = 2135,
+			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_39129a53-b8c1-4d7e-82bd-e2b9d49315a1",
-				"node_e0e0d8de-9787-4ecb-b7b8-43cb0eb133d9",
+				"node_8c17e249-1082-43cd-82b1-42e18c7f29e8",
+				"node_7e94349b-d6c6-446e-bb39-0b367f6477bf"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_blitz_smoke_grenade",
 			max_points = 1,
 			talent = "veteran_smoke_grenade",
+			target_slot = "slot_grenade_ability",
 			type = "tactical",
 			widget_name = "node_4bde1a72-40bd-46ad-950f-8546a48ccb9f",
 			x = 1220,
 			y = 800.0000010697572,
 			children = {
-				"node_6dd3ceaa-4d3c-4493-9836-79584c994fcf",
 				"node_6cb969f2-3011-4d7f-b73f-68afd28c958c",
-				"node_079ac2c7-5e1d-41d2-a31d-6c3ce9fcec12",
+				"node_8acdddd9-366b-4601-bf16-13574eb1cb24",
+				"node_5888acc4-4572-49ef-b277-f38b174bb166"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_90d61df3-340c-4ddf-b802-ef29d3878e0c",
+				"node_90d61df3-340c-4ddf-b802-ef29d3878e0c"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "blitz",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_ability_undercover",
 			max_points = 1,
 			talent = "veteran_invisibility_on_combat_ability",
+			target_slot = "slot_combat_ability",
 			type = "ability",
 			widget_name = "node_04923c84-a6e7-428b-9074-19b157f088bb",
-			x = 1299,
-			y = 1689,
+			x = 1239,
+			y = 1719,
 			children = {
-				"node_fa0ae054-51ac-4488-90ee-58d24f90fb63",
 				"node_4f9d7c7d-ae7e-4d54-afc0-298eedca8342",
 				"node_af5f3f23-6829-4999-8cc8-b93639b6729d",
 				"node_6469a1ec-589f-49a3-a53e-3676c3181dad",
 				"node_a85c31ac-40a1-48e3-8585-0e04d85adfcf",
+				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a",
+				"node_7c08ee90-6528-4188-915f-41e330db49f5"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_5888acc4-4572-49ef-b277-f38b174bb166",
-				"node_8acdddd9-366b-4601-bf16-13574eb1cb24",
+				"node_33819d8f-8635-4356-97b1-4cf1d67dd6d5",
+				"node_85b81c97-8ca9-42db-a637-06a3af956bba"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "combat",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -344,50 +332,54 @@ return {
 			talent = "veteran_movement_speed_towards_downed",
 			type = "default",
 			widget_name = "node_c6d92993-58ab-4f1c-ac76-0e3b36af29a5",
-			x = 995,
-			y = 1955,
+			x = 1115,
+			y = 2135,
 			children = {
-				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a",
+				"node_39129a53-b8c1-4d7e-82bd-e2b9d49315a1",
+				"node_96335f86-60f8-46e4-a6df-47c0a4ee2719",
+				"node_18f58702-92f4-4084-afc3-934731f36b83",
+				"node_7e94349b-d6c6-446e-bb39-0b367f6477bf"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_e38451de-f4cc-4490-89b6-ae9f7bfefbde",
+				"node_181e4412-cb3f-4b80-b3f9-10c5bb61d022",
+				"node_743e6ff1-6bb2-4816-9270-ef9c92d9d376",
+				"node_7e94349b-d6c6-446e-bb39-0b367f6477bf"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_extra_grenade",
 			max_points = 1,
 			talent = "veteran_extra_grenade",
-			type = "default",
+			type = "tactical_modifier",
 			widget_name = "node_8c9efccd-3b95-45aa-a620-98f9d4d7133e",
-			x = 815,
-			y = 1595,
+			x = 817.5000284223256,
+			y = 937.5000045093147,
 			children = {
-				"node_8acdddd9-366b-4601-bf16-13574eb1cb24",
-				"node_bbd51147-0e4f-4bec-a020-b23d16efb29a",
+				"node_06272211-2d9a-47c7-bf84-8e7ea1eb8a01"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_5ae6929c-f9fe-43b2-b2d9-079d6737de23",
 				"node_8acdddd9-366b-4601-bf16-13574eb1cb24",
+				"node_0800a598-65f0-4293-a838-43c21ce1849c"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -396,23 +388,23 @@ return {
 			talent = "veteran_rending_bonus",
 			type = "default",
 			widget_name = "node_c36508a3-b4f2-4b5a-837e-132101c8739d",
-			x = 1085,
+			x = 995,
 			y = 2135,
 			children = {
-				"node_181e4412-cb3f-4b80-b3f9-10c5bb61d022",
+				"node_18f58702-92f4-4084-afc3-934731f36b83"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a",
+				"node_181e4412-cb3f-4b80-b3f9-10c5bb61d022"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -422,24 +414,24 @@ return {
 			type = "aura",
 			widget_name = "node_06b8c8de-0e09-40c9-af16-a6018e9984a8",
 			x = 1220,
-			y = 1460,
+			y = 1490,
 			children = {
-				"node_8acdddd9-366b-4601-bf16-13574eb1cb24",
-				"node_5888acc4-4572-49ef-b277-f38b174bb166",
+				"node_33819d8f-8635-4356-97b1-4cf1d67dd6d5",
+				"node_85b81c97-8ca9-42db-a637-06a3af956bba"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_3a5e822f-27dd-4ec0-ab2f-ee8638d959af",
+				"node_3a5e822f-27dd-4ec0-ab2f-ee8638d959af"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "aura",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -449,22 +441,24 @@ return {
 			type = "default",
 			widget_name = "node_8c17e249-1082-43cd-82b1-42e18c7f29e8",
 			x = 1235,
-			y = 1955,
+			y = 2015,
 			children = {
-				"node_7e94349b-d6c6-446e-bb39-0b367f6477bf",
+				"node_a8044c1f-dda9-4a0b-b503-d549fd2ad5f9",
+				"node_7e94349b-d6c6-446e-bb39-0b367f6477bf"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_fa0ae054-51ac-4488-90ee-58d24f90fb63",
+				"node_743e6ff1-6bb2-4816-9270-ef9c92d9d376",
+				"node_7c08ee90-6528-4188-915f-41e330db49f5"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -474,22 +468,22 @@ return {
 			type = "default",
 			widget_name = "node_38aad78e-4d8f-4fba-b66c-947b4486f34e",
 			x = 1235,
-			y = 2135,
-			children = {
-				"node_96335f86-60f8-46e4-a6df-47c0a4ee2719",
-			},
+			y = 2375,
+			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_7e94349b-d6c6-446e-bb39-0b367f6477bf",
+				"node_e17c1b44-cbfd-4f58-bc7e-dc80ff90fbcc",
+				"node_39129a53-b8c1-4d7e-82bd-e2b9d49315a1",
+				"node_96335f86-60f8-46e4-a6df-47c0a4ee2719"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -499,25 +493,25 @@ return {
 			type = "default",
 			widget_name = "node_9971a100-0ec5-4252-a20f-f33e94a34442",
 			x = 1235,
-			y = 1235,
+			y = 1265,
 			children = {
 				"node_3a5e822f-27dd-4ec0-ab2f-ee8638d959af",
-				"node_eb62ac80-bd39-4ad3-bf09-49e25ae55af9",
+				"node_eb62ac80-bd39-4ad3-bf09-49e25ae55af9"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_51cd0e84-38e8-4df8-b703-bf34e5b166eb",
 				"node_340ef70a-75c5-4a84-9627-6ccd00409d01",
-				"node_eb62ac80-bd39-4ad3-bf09-49e25ae55af9",
+				"node_eb62ac80-bd39-4ad3-bf09-49e25ae55af9"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -527,27 +521,27 @@ return {
 			type = "default",
 			widget_name = "node_340ef70a-75c5-4a84-9627-6ccd00409d01",
 			x = 1235,
-			y = 1025,
+			y = 1055,
 			children = {
 				"node_9971a100-0ec5-4252-a20f-f33e94a34442",
 				"node_51cd0e84-38e8-4df8-b703-bf34e5b166eb",
-				"node_60000569-87a7-4c75-874b-02b86af43f52",
+				"node_60000569-87a7-4c75-874b-02b86af43f52"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_60000569-87a7-4c75-874b-02b86af43f52",
-				"node_6dd3ceaa-4d3c-4493-9836-79584c994fcf",
 				"node_6cb969f2-3011-4d7f-b73f-68afd28c958c",
-				"node_079ac2c7-5e1d-41d2-a31d-6c3ce9fcec12",
+				"node_8acdddd9-366b-4601-bf16-13574eb1cb24",
+				"node_5888acc4-4572-49ef-b277-f38b174bb166"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -556,25 +550,28 @@ return {
 			talent = "veteran_continous_hits_apply_rending",
 			type = "default",
 			widget_name = "node_96335f86-60f8-46e4-a6df-47c0a4ee2719",
-			x = 1265,
-			y = 2225,
+			x = 1115,
+			y = 2255,
 			children = {
 				"node_c933a40e-4bf6-4c60-a83f-ed8bbdfb885f",
-				"node_09bb7c07-c733-4d08-9387-50f404da5ce5",
+				"node_38aad78e-4d8f-4fba-b66c-947b4486f34e",
+				"node_18f58702-92f4-4084-afc3-934731f36b83",
+				"node_39129a53-b8c1-4d7e-82bd-e2b9d49315a1"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_e0e0d8de-9787-4ecb-b7b8-43cb0eb133d9",
-				"node_38aad78e-4d8f-4fba-b66c-947b4486f34e",
+				"node_c6d92993-58ab-4f1c-ac76-0e3b36af29a5",
+				"node_18f58702-92f4-4084-afc3-934731f36b83",
+				"node_39129a53-b8c1-4d7e-82bd-e2b9d49315a1"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -584,23 +581,31 @@ return {
 			type = "stat",
 			widget_name = "node_33819d8f-8635-4356-97b1-4cf1d67dd6d5",
 			x = 994,
-			y = 2134,
+			y = 1624,
 			children = {
 				"node_93ef2e46-69f8-46b1-a48a-9c35ad057681",
-				"node_181e4412-cb3f-4b80-b3f9-10c5bb61d022",
+				"node_73319c64-81e7-4234-8fb7-4e65ebb620f5",
+				"node_0c833225-0e7c-478d-93e9-82263be2f0d7",
+				"node_85b81c97-8ca9-42db-a637-06a3af956bba",
+				"node_bbd51147-0e4f-4bec-a020-b23d16efb29a",
+				"node_04923c84-a6e7-428b-9074-19b157f088bb"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a",
+				"node_bd398c77-960a-41f8-af1c-e4e15ef9ee7d",
+				"node_85b81c97-8ca9-42db-a637-06a3af956bba",
+				"node_0c833225-0e7c-478d-93e9-82263be2f0d7",
+				"node_5ae6929c-f9fe-43b2-b2d9-079d6737de23",
+				"node_06b8c8de-0e09-40c9-af16-a6018e9984a8"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -609,21 +614,21 @@ return {
 			talent = "veteran_reduced_threat_after_combat_ability",
 			type = "ability_modifier",
 			widget_name = "node_a85c31ac-40a1-48e3-8585-0e04d85adfcf",
-			x = 1415,
-			y = 1805,
+			x = 1355,
+			y = 1835,
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_04923c84-a6e7-428b-9074-19b157f088bb",
+				"node_04923c84-a6e7-428b-9074-19b157f088bb"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -633,28 +638,28 @@ return {
 			type = "default",
 			widget_name = "node_3a5e822f-27dd-4ec0-ab2f-ee8638d959af",
 			x = 995,
-			y = 1355,
+			y = 1385,
 			children = {
 				"node_5ae6929c-f9fe-43b2-b2d9-079d6737de23",
 				"node_bd398c77-960a-41f8-af1c-e4e15ef9ee7d",
-				"node_06b8c8de-0e09-40c9-af16-a6018e9984a8",
+				"node_06b8c8de-0e09-40c9-af16-a6018e9984a8"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_40c7bc1e-e4a2-40c1-ab28-459d599cc30b",
 				"node_92ce0aa9-e7c8-4620-9ad3-de2cedbf9431",
 				"node_9971a100-0ec5-4252-a20f-f33e94a34442",
 				"node_51cd0e84-38e8-4df8-b703-bf34e5b166eb",
-				"node_eb62ac80-bd39-4ad3-bf09-49e25ae55af9",
+				"node_eb62ac80-bd39-4ad3-bf09-49e25ae55af9"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -664,24 +669,24 @@ return {
 			type = "default",
 			widget_name = "node_40c7bc1e-e4a2-40c1-ab28-459d599cc30b",
 			x = 905,
-			y = 1235,
+			y = 1265,
 			children = {
 				"node_3a5e822f-27dd-4ec0-ab2f-ee8638d959af",
-				"node_92ce0aa9-e7c8-4620-9ad3-de2cedbf9431",
+				"node_92ce0aa9-e7c8-4620-9ad3-de2cedbf9431"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_51cd0e84-38e8-4df8-b703-bf34e5b166eb",
-				"node_92ce0aa9-e7c8-4620-9ad3-de2cedbf9431",
+				"node_92ce0aa9-e7c8-4620-9ad3-de2cedbf9431"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -690,57 +695,62 @@ return {
 			talent = "veteran_ranged_power_out_of_melee",
 			type = "default",
 			widget_name = "node_b0c4f49c-fd47-4b1c-9279-82e12dc3ac7d",
-			x = 665,
-			y = 2225,
+			x = 755,
+			y = 2255,
 			children = {
 				"node_548adb63-0554-4ab5-a044-439fd851c521",
+				"node_d195ddb0-73e5-4774-8bd7-e8f93e1e7ab2",
+				"node_a3f092bc-651f-457d-9791-9c38ff2b99fd",
+				"node_7faaad0d-aebf-44f2-ba30-6a23ce68d320"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_9f8799fb-9107-462b-9adb-204b2d257650",
-				"node_630f40a6-c9ca-4337-8af3-541d274dbcab",
-				"node_a3f092bc-651f-457d-9791-9c38ff2b99fd",
+				"node_7163a098-c55a-47f0-a861-38509acc0d44",
+				"node_7faaad0d-aebf-44f2-ba30-6a23ce68d320",
+				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_ability_volley_fire",
 			max_points = 1,
 			talent = "veteran_combat_ability_elite_and_special_outlines",
+			target_slot = "slot_combat_ability",
 			type = "ability",
 			widget_name = "node_bbd51147-0e4f-4bec-a020-b23d16efb29a",
-			x = 639,
-			y = 1689,
+			x = 699,
+			y = 1719,
 			children = {
 				"node_92793f3d-46d0-4a20-a4af-b5fe7ea28b22",
 				"node_3843e597-be1c-44dc-b07f-e7b0b2f779dd",
-				"node_b40ef26d-5e6e-4f30-87e6-a96091d5ce0a",
 				"node_0a5464cb-bd8e-4fbc-87b5-a005d73d809c",
 				"node_c9c09c7f-211c-4cf3-8192-2d532bcaffee",
+				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a",
+				"node_6dca445f-a83e-442c-89dd-04a1deb408ee"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_0c9d022b-d4ea-4a0e-9a0e-84d560eac1f0",
-				"node_8c9efccd-3b95-45aa-a620-98f9d4d7133e",
-				"node_8acdddd9-366b-4601-bf16-13574eb1cb24",
+				"node_33819d8f-8635-4356-97b1-4cf1d67dd6d5",
+				"node_0c833225-0e7c-478d-93e9-82263be2f0d7"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "combat",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -749,23 +759,24 @@ return {
 			talent = "veteran_no_ammo_consumption_on_lasweapon_crit",
 			type = "default",
 			widget_name = "node_d195ddb0-73e5-4774-8bd7-e8f93e1e7ab2",
-			x = 575,
-			y = 2225,
+			x = 755,
+			y = 2375,
 			children = {
-				"node_548adb63-0554-4ab5-a044-439fd851c521",
+				"node_a3f092bc-651f-457d-9791-9c38ff2b99fd"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_9f8799fb-9107-462b-9adb-204b2d257650",
+				"node_b0c4f49c-fd47-4b1c-9279-82e12dc3ac7d",
+				"node_7faaad0d-aebf-44f2-ba30-6a23ce68d320"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -774,21 +785,21 @@ return {
 			talent = "veteran_combat_ability_coherency_outlines",
 			type = "ability_modifier",
 			widget_name = "node_92793f3d-46d0-4a20-a4af-b5fe7ea28b22",
-			x = 515,
-			y = 1715,
+			x = 605,
+			y = 1745,
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_bbd51147-0e4f-4bec-a020-b23d16efb29a",
+				"node_bbd51147-0e4f-4bec-a020-b23d16efb29a"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -798,25 +809,25 @@ return {
 			type = "default",
 			widget_name = "node_92ce0aa9-e7c8-4620-9ad3-de2cedbf9431",
 			x = 755,
-			y = 1235,
+			y = 1265,
 			children = {
 				"node_3a5e822f-27dd-4ec0-ab2f-ee8638d959af",
-				"node_40c7bc1e-e4a2-40c1-ab28-459d599cc30b",
+				"node_40c7bc1e-e4a2-40c1-ab28-459d599cc30b"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_06272211-2d9a-47c7-bf84-8e7ea1eb8a01",
 				"node_51cd0e84-38e8-4df8-b703-bf34e5b166eb",
-				"node_40c7bc1e-e4a2-40c1-ab28-459d599cc30b",
+				"node_40c7bc1e-e4a2-40c1-ab28-459d599cc30b"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -825,24 +836,24 @@ return {
 			talent = "veteran_combat_ability_ranged_roamer_outlines",
 			type = "ability_modifier",
 			widget_name = "node_3843e597-be1c-44dc-b07f-e7b0b2f779dd",
-			x = 575,
-			y = 1805,
+			x = 635,
+			y = 1835,
 			children = {
-				"node_129ff9f1-a7ba-4556-8617-c63d53c68f7c",
+				"node_129ff9f1-a7ba-4556-8617-c63d53c68f7c"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_bbd51147-0e4f-4bec-a020-b23d16efb29a",
+				"node_bbd51147-0e4f-4bec-a020-b23d16efb29a"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "stance_1",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -857,20 +868,20 @@ return {
 				"node_129ff9f1-a7ba-4556-8617-c63d53c68f7c",
 				"node_25df52cb-b6f9-469c-b831-3118f9f498f5",
 				"node_62b7b680-7096-40ed-9303-7ba124a5d812",
-				"node_d99d3163-8528-4232-af21-f29cbf453fb1",
+				"node_d99d3163-8528-4232-af21-f29cbf453fb1"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_8376d017-537b-45f4-b3c5-e653fd1ac6d2",
+				"node_8376d017-537b-45f4-b3c5-e653fd1ac6d2"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -879,22 +890,22 @@ return {
 			talent = "veteran_toughness_bonus_leaving_invisibility",
 			type = "ability_modifier",
 			widget_name = "node_af5f3f23-6829-4999-8cc8-b93639b6729d",
-			x = 1235,
-			y = 1805,
+			x = 1265,
+			y = 1865,
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_129ff9f1-a7ba-4556-8617-c63d53c68f7c",
-				"node_04923c84-a6e7-428b-9074-19b157f088bb",
+				"node_04923c84-a6e7-428b-9074-19b157f088bb"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -903,165 +914,176 @@ return {
 			talent = "veteran_ammo_increase",
 			type = "default",
 			widget_name = "node_c56789ed-287a-4fe0-9e94-f50ffabe1992",
-			x = 665,
-			y = 2045,
+			x = 755,
+			y = 2135,
 			children = {
-				"node_9f8799fb-9107-462b-9adb-204b2d257650",
-				"node_630f40a6-c9ca-4337-8af3-541d274dbcab",
-				"node_a3f092bc-651f-457d-9791-9c38ff2b99fd",
+				"node_548adb63-0554-4ab5-a044-439fd851c521",
+				"node_891f1d0a-96ac-40b0-8a37-7dd491212599",
+				"node_b0c4f49c-fd47-4b1c-9279-82e12dc3ac7d",
+				"node_7163a098-c55a-47f0-a861-38509acc0d44"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_129ff9f1-a7ba-4556-8617-c63d53c68f7c",
 				"node_a6dcece9-435c-4d88-83a6-8c58bd9240b9",
 				"node_7adfbd19-7df3-4337-875b-2a9dfa00d378",
-				"node_6dca445f-a83e-442c-89dd-04a1deb408ee",
+				"node_7163a098-c55a-47f0-a861-38509acc0d44"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
-			icon = "content/ui/textures/icons/talents/veteran/veteran_ally_kills_increase_damage",
+			icon = "content/ui/textures/icons/talents/veteran/veteran_allies_in_coherency_share_toughness_gain",
 			max_points = 1,
-			talent = "veteran_ally_kills_increase_damage",
+			talent = "veteran_allies_in_coherency_share_toughness_gain",
 			type = "default",
 			widget_name = "node_7163a098-c55a-47f0-a861-38509acc0d44",
-			x = 905,
+			x = 875,
 			y = 2135,
 			children = {
-				"node_181e4412-cb3f-4b80-b3f9-10c5bb61d022",
+				"node_18f58702-92f4-4084-afc3-934731f36b83",
+				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992",
+				"node_7faaad0d-aebf-44f2-ba30-6a23ce68d320",
+				"node_b0c4f49c-fd47-4b1c-9279-82e12dc3ac7d"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a",
+				"node_181e4412-cb3f-4b80-b3f9-10c5bb61d022",
+				"node_a6dcece9-435c-4d88-83a6-8c58bd9240b9",
+				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_improved_grenades",
 			max_points = 1,
 			talent = "veteran_improved_grenades",
-			type = "default",
+			type = "tactical_modifier",
 			widget_name = "node_5888acc4-4572-49ef-b277-f38b174bb166",
-			x = 1175,
-			y = 1595,
+			x = 1177.5000284223256,
+			y = 937.5000045093147,
 			children = {
-				"node_8acdddd9-366b-4601-bf16-13574eb1cb24",
-				"node_04923c84-a6e7-428b-9074-19b157f088bb",
+				"node_340ef70a-75c5-4a84-9627-6ccd00409d01"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_06b8c8de-0e09-40c9-af16-a6018e9984a8",
 				"node_8acdddd9-366b-4601-bf16-13574eb1cb24",
+				"node_4bde1a72-40bd-46ad-950f-8546a48ccb9f"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_elite_kills_reduce_cooldown",
 			max_points = 1,
 			talent = "veteran_elite_kills_reduce_cooldown",
-			type = "default",
+			type = "ability_modifier",
 			widget_name = "node_efcadf37-2626-40eb-b9e5-5baecdcecd0a",
 			x = 995,
-			y = 2045,
+			y = 1895,
 			children = {
-				"node_c36508a3-b4f2-4b5a-837e-132101c8739d",
-				"node_7163a098-c55a-47f0-a861-38509acc0d44",
-				"node_33819d8f-8635-4356-97b1-4cf1d67dd6d5",
+				"node_743e6ff1-6bb2-4816-9270-ef9c92d9d376",
+				"node_a6dcece9-435c-4d88-83a6-8c58bd9240b9",
+				"node_181e4412-cb3f-4b80-b3f9-10c5bb61d022",
+				"node_7c08ee90-6528-4188-915f-41e330db49f5",
+				"node_6dca445f-a83e-442c-89dd-04a1deb408ee"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_7faaad0d-aebf-44f2-ba30-6a23ce68d320",
-				"node_743e6ff1-6bb2-4816-9270-ef9c92d9d376",
-				"node_c6d92993-58ab-4f1c-ac76-0e3b36af29a5",
+				"node_bbd51147-0e4f-4bec-a020-b23d16efb29a",
+				"node_73319c64-81e7-4234-8fb7-4e65ebb620f5",
+				"node_04923c84-a6e7-428b-9074-19b157f088bb",
+				"node_6dca445f-a83e-442c-89dd-04a1deb408ee",
+				"node_7c08ee90-6528-4188-915f-41e330db49f5"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_blitz_krak_grenade",
 			max_points = 1,
 			talent = "veteran_krak_grenade",
+			target_slot = "slot_grenade_ability",
 			type = "tactical",
 			widget_name = "node_29b3560b-2a50-46cd-b0bb-352b34897c49",
 			x = 980,
 			y = 800.0000010697572,
 			children = {
-				"node_6dd3ceaa-4d3c-4493-9836-79584c994fcf",
+				"node_8acdddd9-366b-4601-bf16-13574eb1cb24"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_90d61df3-340c-4ddf-b802-ef29d3878e0c",
+				"node_90d61df3-340c-4ddf-b802-ef29d3878e0c"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "blitz",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_ability_voice_of_command",
 			max_points = 1,
 			talent = "veteran_combat_ability_stagger_nearby_enemies",
+			target_slot = "slot_combat_ability",
 			type = "ability",
 			widget_name = "node_73319c64-81e7-4234-8fb7-4e65ebb620f5",
 			x = 969,
-			y = 1689,
+			y = 1719,
 			children = {
 				"node_acd02218-225d-418d-ad97-9b9ee7d4c5b1",
 				"node_5c3c2498-e9f8-497c-ad3a-a99d5ccfdefd",
 				"node_66fbd2b5-f51e-4e1e-a77f-ae8aa2687303",
-				"node_e38451de-f4cc-4490-89b6-ae9f7bfefbde",
+				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_525102a2-f841-4434-b141-f126ec88103f",
-				"node_8acdddd9-366b-4601-bf16-13574eb1cb24",
+				"node_33819d8f-8635-4356-97b1-4cf1d67dd6d5"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "combat",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1071,53 +1093,51 @@ return {
 			type = "ability_modifier",
 			widget_name = "node_5c3c2498-e9f8-497c-ad3a-a99d5ccfdefd",
 			x = 1115,
-			y = 1775,
+			y = 1745,
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_73319c64-81e7-4234-8fb7-4e65ebb620f5",
+				"node_73319c64-81e7-4234-8fb7-4e65ebb620f5"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_replenish_grenades",
 			max_points = 1,
 			talent = "veteran_replenish_grenades",
-			type = "default",
+			type = "tactical_modifier",
 			widget_name = "node_8acdddd9-366b-4601-bf16-13574eb1cb24",
-			x = 995,
-			y = 1595,
+			x = 997.5,
+			y = 937.5,
 			children = {
+				"node_06272211-2d9a-47c7-bf84-8e7ea1eb8a01",
+				"node_60000569-87a7-4c75-874b-02b86af43f52",
+				"node_340ef70a-75c5-4a84-9627-6ccd00409d01",
 				"node_8c9efccd-3b95-45aa-a620-98f9d4d7133e",
-				"node_5888acc4-4572-49ef-b277-f38b174bb166",
-				"node_73319c64-81e7-4234-8fb7-4e65ebb620f5",
-				"node_04923c84-a6e7-428b-9074-19b157f088bb",
-				"node_bbd51147-0e4f-4bec-a020-b23d16efb29a",
+				"node_5888acc4-4572-49ef-b277-f38b174bb166"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_5ae6929c-f9fe-43b2-b2d9-079d6737de23",
-				"node_bd398c77-960a-41f8-af1c-e4e15ef9ee7d",
-				"node_06b8c8de-0e09-40c9-af16-a6018e9984a8",
-				"node_8c9efccd-3b95-45aa-a620-98f9d4d7133e",
-				"node_5888acc4-4572-49ef-b277-f38b174bb166",
+				"node_0800a598-65f0-4293-a838-43c21ce1849c",
+				"node_29b3560b-2a50-46cd-b0bb-352b34897c49",
+				"node_4bde1a72-40bd-46ad-950f-8546a48ccb9f"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1127,28 +1147,28 @@ return {
 			type = "default",
 			widget_name = "node_51cd0e84-38e8-4df8-b703-bf34e5b166eb",
 			x = 995,
-			y = 1145,
+			y = 1175,
 			children = {
 				"node_92ce0aa9-e7c8-4620-9ad3-de2cedbf9431",
 				"node_40c7bc1e-e4a2-40c1-ab28-459d599cc30b",
 				"node_9971a100-0ec5-4252-a20f-f33e94a34442",
 				"node_3a5e822f-27dd-4ec0-ab2f-ee8638d959af",
-				"node_eb62ac80-bd39-4ad3-bf09-49e25ae55af9",
+				"node_eb62ac80-bd39-4ad3-bf09-49e25ae55af9"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_60000569-87a7-4c75-874b-02b86af43f52",
 				"node_340ef70a-75c5-4a84-9627-6ccd00409d01",
-				"node_06272211-2d9a-47c7-bf84-8e7ea1eb8a01",
+				"node_06272211-2d9a-47c7-bf84-8e7ea1eb8a01"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1158,23 +1178,23 @@ return {
 			type = "aura",
 			widget_name = "node_bd398c77-960a-41f8-af1c-e4e15ef9ee7d",
 			x = 980,
-			y = 1460,
+			y = 1490,
 			children = {
-				"node_8acdddd9-366b-4601-bf16-13574eb1cb24",
+				"node_33819d8f-8635-4356-97b1-4cf1d67dd6d5"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_3a5e822f-27dd-4ec0-ab2f-ee8638d959af",
+				"node_3a5e822f-27dd-4ec0-ab2f-ee8638d959af"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "aura",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1183,23 +1203,26 @@ return {
 			talent = "veteran_increased_weakspot_power_after_combat_ability",
 			type = "ability_modifier",
 			widget_name = "node_6dca445f-a83e-442c-89dd-04a1deb408ee",
-			x = 665,
-			y = 1955,
+			x = 875,
+			y = 1895,
 			children = {
-				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992",
+				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a",
+				"node_a6dcece9-435c-4d88-83a6-8c58bd9240b9",
+				"node_7adfbd19-7df3-4337-875b-2a9dfa00d378"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_b40ef26d-5e6e-4f30-87e6-a96091d5ce0a",
+				"node_bbd51147-0e4f-4bec-a020-b23d16efb29a",
+				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1211,46 +1234,50 @@ return {
 			x = 995,
 			y = 575,
 			children = {
-				"node_90d61df3-340c-4ddf-b802-ef29d3878e0c",
+				"node_90d61df3-340c-4ddf-b802-ef29d3878e0c"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_ba8679cd-fc19-435d-a317-ebeccb210f87",
+				"node_ba8679cd-fc19-435d-a317-ebeccb210f87"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
-			icon = "content/ui/textures/icons/talents/veteran/veteran_allies_in_coherency_share_toughness_gain",
+			icon = "content/ui/textures/icons/talents/veteran/veteran_ally_kills_increase_damage",
 			max_points = 1,
-			talent = "veteran_allies_in_coherency_share_toughness_gain",
+			talent = "veteran_ally_kills_increase_damage",
 			type = "default",
 			widget_name = "node_7faaad0d-aebf-44f2-ba30-6a23ce68d320",
-			x = 905,
-			y = 1955,
+			x = 875,
+			y = 2255,
 			children = {
-				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a",
+				"node_d195ddb0-73e5-4774-8bd7-e8f93e1e7ab2",
+				"node_b0c4f49c-fd47-4b1c-9279-82e12dc3ac7d",
+				"node_18f58702-92f4-4084-afc3-934731f36b83"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_acd02218-225d-418d-ad97-9b9ee7d4c5b1",
-				"node_e38451de-f4cc-4490-89b6-ae9f7bfefbde",
+				"node_7163a098-c55a-47f0-a861-38509acc0d44",
+				"node_b0c4f49c-fd47-4b1c-9279-82e12dc3ac7d",
+				"node_18f58702-92f4-4084-afc3-934731f36b83"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1265,20 +1292,20 @@ return {
 				"node_37c325f1-cbe4-4389-aeca-d008815abba8",
 				"node_62b7b680-7096-40ed-9303-7ba124a5d812",
 				"node_f607f1a6-5fe0-4814-b534-4177cbe9b2c0",
-				"node_41d2b96f-c399-47c0-88c3-9e60a07638fc",
+				"node_41d2b96f-c399-47c0-88c3-9e60a07638fc"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_8376d017-537b-45f4-b3c5-e653fd1ac6d2",
+				"node_8376d017-537b-45f4-b3c5-e653fd1ac6d2"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1288,20 +1315,20 @@ return {
 			type = "ability_modifier",
 			widget_name = "node_66fbd2b5-f51e-4e1e-a77f-ae8aa2687303",
 			x = 875,
-			y = 1775,
+			y = 1745,
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_73319c64-81e7-4234-8fb7-4e65ebb620f5",
+				"node_73319c64-81e7-4234-8fb7-4e65ebb620f5"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1310,21 +1337,21 @@ return {
 			talent = "veteran_combat_ability_extra_charge",
 			type = "ability_modifier",
 			widget_name = "node_6469a1ec-589f-49a3-a53e-3676c3181dad",
-			x = 1475,
-			y = 1715,
+			x = 1385,
+			y = 1745,
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_04923c84-a6e7-428b-9074-19b157f088bb",
+				"node_04923c84-a6e7-428b-9074-19b157f088bb"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1338,24 +1365,24 @@ return {
 			children = {
 				"node_29b3560b-2a50-46cd-b0bb-352b34897c49",
 				"node_0800a598-65f0-4293-a838-43c21ce1849c",
-				"node_4bde1a72-40bd-46ad-950f-8546a48ccb9f",
+				"node_4bde1a72-40bd-46ad-950f-8546a48ccb9f"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_f607f1a6-5fe0-4814-b534-4177cbe9b2c0",
 				"node_62b7b680-7096-40ed-9303-7ba124a5d812",
 				"node_d99d3163-8528-4232-af21-f29cbf453fb1",
 				"node_be2f4721-6e3e-4594-9393-6654b6c234cd",
-				"node_41d2b96f-c399-47c0-88c3-9e60a07638fc",
+				"node_41d2b96f-c399-47c0-88c3-9e60a07638fc"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1368,22 +1395,22 @@ return {
 			y = 575,
 			children = {
 				"node_90d61df3-340c-4ddf-b802-ef29d3878e0c",
-				"node_d99d3163-8528-4232-af21-f29cbf453fb1",
+				"node_d99d3163-8528-4232-af21-f29cbf453fb1"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_ba8679cd-fc19-435d-a317-ebeccb210f87",
 				"node_f0744989-1f87-4da4-aa97-30a821197ed9",
-				"node_d99d3163-8528-4232-af21-f29cbf453fb1",
+				"node_d99d3163-8528-4232-af21-f29cbf453fb1"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1396,22 +1423,22 @@ return {
 			y = 575,
 			children = {
 				"node_90d61df3-340c-4ddf-b802-ef29d3878e0c",
-				"node_be2f4721-6e3e-4594-9393-6654b6c234cd",
+				"node_be2f4721-6e3e-4594-9393-6654b6c234cd"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_ba8679cd-fc19-435d-a317-ebeccb210f87",
 				"node_06b90705-95b0-44bd-b357-bbb061cf0cb4",
-				"node_be2f4721-6e3e-4594-9393-6654b6c234cd",
+				"node_be2f4721-6e3e-4594-9393-6654b6c234cd"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1421,22 +1448,24 @@ return {
 			type = "default",
 			widget_name = "node_7adfbd19-7df3-4337-875b-2a9dfa00d378",
 			x = 755,
-			y = 1955,
+			y = 2015,
 			children = {
-				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992",
+				"node_891f1d0a-96ac-40b0-8a37-7dd491212599",
+				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_b40ef26d-5e6e-4f30-87e6-a96091d5ce0a",
+				"node_6dca445f-a83e-442c-89dd-04a1deb408ee",
+				"node_a6dcece9-435c-4d88-83a6-8c58bd9240b9"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1446,24 +1475,24 @@ return {
 			type = "default",
 			widget_name = "node_181e4412-cb3f-4b80-b3f9-10c5bb61d022",
 			x = 995,
-			y = 2225,
+			y = 2015,
 			children = {
-				"node_18f58702-92f4-4084-afc3-934731f36b83",
+				"node_c36508a3-b4f2-4b5a-837e-132101c8739d",
+				"node_7163a098-c55a-47f0-a861-38509acc0d44",
+				"node_c6d92993-58ab-4f1c-ac76-0e3b36af29a5"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_c36508a3-b4f2-4b5a-837e-132101c8739d",
-				"node_7163a098-c55a-47f0-a861-38509acc0d44",
-				"node_33819d8f-8635-4356-97b1-4cf1d67dd6d5",
+				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1473,24 +1502,24 @@ return {
 			type = "aura",
 			widget_name = "node_5ae6929c-f9fe-43b2-b2d9-079d6737de23",
 			x = 740,
-			y = 1460,
+			y = 1490,
 			children = {
-				"node_8c9efccd-3b95-45aa-a620-98f9d4d7133e",
-				"node_8acdddd9-366b-4601-bf16-13574eb1cb24",
+				"node_33819d8f-8635-4356-97b1-4cf1d67dd6d5",
+				"node_0c833225-0e7c-478d-93e9-82263be2f0d7"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_3a5e822f-27dd-4ec0-ab2f-ee8638d959af",
+				"node_3a5e822f-27dd-4ec0-ab2f-ee8638d959af"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "aura",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1502,117 +1531,22 @@ return {
 			x = 740,
 			y = 800.0000010697572,
 			children = {
-				"node_6dd3ceaa-4d3c-4493-9836-79584c994fcf",
-				"node_0a263862-582d-4b55-80fa-6978c907efd5",
+				"node_8acdddd9-366b-4601-bf16-13574eb1cb24",
+				"node_8c9efccd-3b95-45aa-a620-98f9d4d7133e"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_90d61df3-340c-4ddf-b802-ef29d3878e0c",
+				"node_90d61df3-340c-4ddf-b802-ef29d3878e0c"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "blitz",
-				min_points_spent = 0,
-			},
-		},
-		{
-			cost = 1,
-			icon = "content/ui/textures/frames/talents/circular_small_frame",
-			max_points = 1,
-			talent = "base_reload_speed_node_buff_medium_1",
-			type = "stat",
-			widget_name = "node_0a263862-582d-4b55-80fa-6978c907efd5",
-			x = 814,
-			y = 934,
-			children = {
-				"node_69c3cc17-56a9-4c39-b702-451bf3d0f5ab",
-				"node_d0a1f707-5176-4297-b32f-08efc487eb02",
-				"node_0e2e135f-4bcc-4497-9a1b-fc9555cb6105",
-				"node_06272211-2d9a-47c7-bf84-8e7ea1eb8a01",
-				"node_6dd3ceaa-4d3c-4493-9836-79584c994fcf",
-			},
-			connector_offset = {
-				0,
-				0,
-			},
-			parents = {
-				"node_69c3cc17-56a9-4c39-b702-451bf3d0f5ab",
-				"node_d0a1f707-5176-4297-b32f-08efc487eb02",
-				"node_0e2e135f-4bcc-4497-9a1b-fc9555cb6105",
-				"node_0800a598-65f0-4293-a838-43c21ce1849c",
-				"node_6dd3ceaa-4d3c-4493-9836-79584c994fcf",
-			},
-			requirements = {
-				all_parents_chosen = false,
-				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
-		},
-		{
-			cost = 1,
-			icon = "content/ui/textures/frames/talents/circular_small_frame",
-			max_points = 1,
-			talent = "base_melee_damage_node_buff_high_1",
-			type = "stat",
-			widget_name = "node_fa0ae054-51ac-4488-90ee-58d24f90fb63",
-			x = 1324,
-			y = 1864,
-			children = {
-				"node_acd02218-225d-418d-ad97-9b9ee7d4c5b1",
-				"node_8c17e249-1082-43cd-82b1-42e18c7f29e8",
-				"node_e17c1b44-cbfd-4f58-bc7e-dc80ff90fbcc",
-				"node_7c08ee90-6528-4188-915f-41e330db49f5",
-				"node_e38451de-f4cc-4490-89b6-ae9f7bfefbde",
-			},
-			connector_offset = {
-				0,
-				0,
-			},
-			parents = {
-				"node_04923c84-a6e7-428b-9074-19b157f088bb",
-				"node_acd02218-225d-418d-ad97-9b9ee7d4c5b1",
-				"node_e38451de-f4cc-4490-89b6-ae9f7bfefbde",
-			},
-			requirements = {
-				all_parents_chosen = false,
-				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
-		},
-		{
-			cost = 1,
-			icon = "content/ui/textures/frames/talents/circular_small_frame",
-			max_points = 1,
-			talent = "base_ranged_damage_node_buff_medium_1",
-			type = "stat",
-			widget_name = "node_b40ef26d-5e6e-4f30-87e6-a96091d5ce0a",
-			x = 664,
-			y = 1864,
-			children = {
-				"node_acd02218-225d-418d-ad97-9b9ee7d4c5b1",
-				"node_a6dcece9-435c-4d88-83a6-8c58bd9240b9",
-				"node_7adfbd19-7df3-4337-875b-2a9dfa00d378",
-				"node_6dca445f-a83e-442c-89dd-04a1deb408ee",
-				"node_e38451de-f4cc-4490-89b6-ae9f7bfefbde",
-			},
-			connector_offset = {
-				0,
-				0,
-			},
-			parents = {
-				"node_acd02218-225d-418d-ad97-9b9ee7d4c5b1",
-				"node_bbd51147-0e4f-4bec-a020-b23d16efb29a",
-				"node_e38451de-f4cc-4490-89b6-ae9f7bfefbde",
-			},
-			requirements = {
-				all_parents_chosen = false,
-				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1622,26 +1556,26 @@ return {
 			type = "default",
 			widget_name = "node_06272211-2d9a-47c7-bf84-8e7ea1eb8a01",
 			x = 755,
-			y = 1025,
+			y = 1055,
 			children = {
 				"node_92ce0aa9-e7c8-4620-9ad3-de2cedbf9431",
 				"node_51cd0e84-38e8-4df8-b703-bf34e5b166eb",
-				"node_60000569-87a7-4c75-874b-02b86af43f52",
+				"node_60000569-87a7-4c75-874b-02b86af43f52"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_60000569-87a7-4c75-874b-02b86af43f52",
-				"node_6dd3ceaa-4d3c-4493-9836-79584c994fcf",
-				"node_0a263862-582d-4b55-80fa-6978c907efd5",
+				"node_8acdddd9-366b-4601-bf16-13574eb1cb24",
+				"node_8c9efccd-3b95-45aa-a620-98f9d4d7133e"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1650,23 +1584,23 @@ return {
 			talent = "veteran_dodging_grants_stamina",
 			type = "default",
 			widget_name = "node_e17c1b44-cbfd-4f58-bc7e-dc80ff90fbcc",
-			x = 1415,
-			y = 1955,
+			x = 1355,
+			y = 2375,
 			children = {
-				"node_7e94349b-d6c6-446e-bb39-0b367f6477bf",
+				"node_38aad78e-4d8f-4fba-b66c-947b4486f34e"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_fa0ae054-51ac-4488-90ee-58d24f90fb63",
+				"node_39129a53-b8c1-4d7e-82bd-e2b9d49315a1"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1676,115 +1610,26 @@ return {
 			type = "default",
 			widget_name = "node_60000569-87a7-4c75-874b-02b86af43f52",
 			x = 995,
-			y = 1025,
+			y = 1055,
 			children = {
 				"node_51cd0e84-38e8-4df8-b703-bf34e5b166eb",
 				"node_06272211-2d9a-47c7-bf84-8e7ea1eb8a01",
-				"node_340ef70a-75c5-4a84-9627-6ccd00409d01",
+				"node_340ef70a-75c5-4a84-9627-6ccd00409d01"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_6dd3ceaa-4d3c-4493-9836-79584c994fcf",
 				"node_06272211-2d9a-47c7-bf84-8e7ea1eb8a01",
 				"node_340ef70a-75c5-4a84-9627-6ccd00409d01",
+				"node_8acdddd9-366b-4601-bf16-13574eb1cb24"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
-		},
-		{
-			cost = 1,
-			icon = "content/ui/textures/frames/talents/circular_small_frame",
-			max_points = 1,
-			talent = "base_toughness_damage_reduction_node_buff_medium_1",
-			type = "stat",
-			widget_name = "node_630f40a6-c9ca-4337-8af3-541d274dbcab",
-			x = 754,
-			y = 2134,
-			children = {
-				"node_891f1d0a-96ac-40b0-8a37-7dd491212599",
-				"node_b0c4f49c-fd47-4b1c-9279-82e12dc3ac7d",
-			},
-			connector_offset = {
-				0,
-				0,
-			},
-			parents = {
-				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992",
-			},
-			requirements = {
-				all_parents_chosen = false,
-				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
-		},
-		{
-			cost = 1,
-			icon = "content/ui/textures/frames/talents/circular_small_frame",
-			max_points = 1,
-			talent = "base_toughness_node_buff_low_5",
-			type = "stat",
-			widget_name = "node_6dd3ceaa-4d3c-4493-9836-79584c994fcf",
-			x = 994,
-			y = 934,
-			children = {
-				"node_06272211-2d9a-47c7-bf84-8e7ea1eb8a01",
-				"node_60000569-87a7-4c75-874b-02b86af43f52",
-				"node_340ef70a-75c5-4a84-9627-6ccd00409d01",
-				"node_6e2ae8a4-e9cf-46cf-b302-31433857ec63",
-				"node_6cb969f2-3011-4d7f-b73f-68afd28c958c",
-				"node_0a263862-582d-4b55-80fa-6978c907efd5",
-				"node_079ac2c7-5e1d-41d2-a31d-6c3ce9fcec12",
-			},
-			connector_offset = {
-				0,
-				0,
-			},
-			parents = {
-				"node_0800a598-65f0-4293-a838-43c21ce1849c",
-				"node_29b3560b-2a50-46cd-b0bb-352b34897c49",
-				"node_4bde1a72-40bd-46ad-950f-8546a48ccb9f",
-				"node_6cb969f2-3011-4d7f-b73f-68afd28c958c",
-				"node_6e2ae8a4-e9cf-46cf-b302-31433857ec63",
-				"node_0a263862-582d-4b55-80fa-6978c907efd5",
-				"node_079ac2c7-5e1d-41d2-a31d-6c3ce9fcec12",
-			},
-			requirements = {
-				all_parents_chosen = false,
-				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
-		},
-		{
-			cost = 1,
-			icon = "content/ui/textures/frames/talents/circular_small_frame",
-			max_points = 1,
-			talent = "base_stamina_regen_delay_2",
-			type = "stat",
-			widget_name = "node_9f8799fb-9107-462b-9adb-204b2d257650",
-			x = 574,
-			y = 2134,
-			children = {
-				"node_d195ddb0-73e5-4774-8bd7-e8f93e1e7ab2",
-				"node_b0c4f49c-fd47-4b1c-9279-82e12dc3ac7d",
-			},
-			connector_offset = {
-				0,
-				0,
-			},
-			parents = {
-				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992",
-			},
-			requirements = {
-				all_parents_chosen = false,
-				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1793,23 +1638,26 @@ return {
 			talent = "veteran_increased_close_damage_after_combat_ability",
 			type = "ability_modifier",
 			widget_name = "node_7c08ee90-6528-4188-915f-41e330db49f5",
-			x = 1325,
-			y = 1955,
+			x = 1115,
+			y = 1895,
 			children = {
-				"node_7e94349b-d6c6-446e-bb39-0b367f6477bf",
+				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a",
+				"node_743e6ff1-6bb2-4816-9270-ef9c92d9d376",
+				"node_8c17e249-1082-43cd-82b1-42e18c7f29e8"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_fa0ae054-51ac-4488-90ee-58d24f90fb63",
+				"node_04923c84-a6e7-428b-9074-19b157f088bb",
+				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1818,81 +1666,22 @@ return {
 			talent = "veteran_clip_size",
 			type = "default",
 			widget_name = "node_891f1d0a-96ac-40b0-8a37-7dd491212599",
-			x = 755,
-			y = 2225,
-			children = {
-				"node_548adb63-0554-4ab5-a044-439fd851c521",
-			},
+			x = 635,
+			y = 2135,
+			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_630f40a6-c9ca-4337-8af3-541d274dbcab",
+				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992",
+				"node_7adfbd19-7df3-4337-875b-2a9dfa00d378"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
-		},
-		{
-			cost = 1,
-			icon = "content/ui/textures/frames/talents/circular_small_frame",
-			max_points = 1,
-			talent = "base_stamina_node_buff_low_2",
-			type = "stat",
-			widget_name = "node_e38451de-f4cc-4490-89b6-ae9f7bfefbde",
-			x = 994,
-			y = 1864,
-			children = {
-				"node_7faaad0d-aebf-44f2-ba30-6a23ce68d320",
-				"node_743e6ff1-6bb2-4816-9270-ef9c92d9d376",
-				"node_b40ef26d-5e6e-4f30-87e6-a96091d5ce0a",
-				"node_fa0ae054-51ac-4488-90ee-58d24f90fb63",
-				"node_c6d92993-58ab-4f1c-ac76-0e3b36af29a5",
-			},
-			connector_offset = {
-				0,
-				0,
-			},
-			parents = {
-				"node_73319c64-81e7-4234-8fb7-4e65ebb620f5",
-				"node_fa0ae054-51ac-4488-90ee-58d24f90fb63",
-				"node_b40ef26d-5e6e-4f30-87e6-a96091d5ce0a",
-			},
-			requirements = {
-				all_parents_chosen = false,
-				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
-		},
-		{
-			cost = 1,
-			icon = "content/ui/textures/frames/talents/circular_small_frame",
-			max_points = 1,
-			talent = "base_movement_speed_node_buff_low_1",
-			type = "stat",
-			widget_name = "node_079ac2c7-5e1d-41d2-a31d-6c3ce9fcec12",
-			x = 1174,
-			y = 934,
-			children = {
-				"node_340ef70a-75c5-4a84-9627-6ccd00409d01",
-				"node_6dd3ceaa-4d3c-4493-9836-79584c994fcf",
-			},
-			connector_offset = {
-				0,
-				0,
-			},
-			parents = {
-				"node_4bde1a72-40bd-46ad-950f-8546a48ccb9f",
-				"node_6dd3ceaa-4d3c-4493-9836-79584c994fcf",
-			},
-			requirements = {
-				all_parents_chosen = false,
-				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1901,22 +1690,22 @@ return {
 			talent = "veteran_combat_ability_ogryn_outlines",
 			type = "ability_modifier",
 			widget_name = "node_c9c09c7f-211c-4cf3-8192-2d532bcaffee",
-			x = 755,
-			y = 1805,
+			x = 725,
+			y = 1865,
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_bbd51147-0e4f-4bec-a020-b23d16efb29a",
+				"node_bbd51147-0e4f-4bec-a020-b23d16efb29a"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "stance_1",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1925,30 +1714,29 @@ return {
 			talent = "veteran_snipers_focus",
 			type = "keystone",
 			widget_name = "node_548adb63-0554-4ab5-a044-439fd851c521",
-			x = 650,
-			y = 2330,
+			x = 620,
+			y = 2240,
 			children = {
 				"node_4398f8ca-1637-481c-bd85-8c27355fcff7",
 				"node_efbff75c-83c1-4310-a721-4bce3583cb3e",
 				"node_11a4a71d-e135-4842-a90d-8cf96e5ee5a8",
 				"node_c426c7f4-97d1-4176-810c-9dd935ef89cd",
-				"node_da3643f8-6d4e-48f5-8e7c-05b100aeaae1",
+				"node_da3643f8-6d4e-48f5-8e7c-05b100aeaae1"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_891f1d0a-96ac-40b0-8a37-7dd491212599",
-				"node_d195ddb0-73e5-4774-8bd7-e8f93e1e7ab2",
-				"node_b0c4f49c-fd47-4b1c-9279-82e12dc3ac7d",
+				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992",
+				"node_b0c4f49c-fd47-4b1c-9279-82e12dc3ac7d"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "keystone",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1957,21 +1745,21 @@ return {
 			talent = "veteran_snipers_focus_rending_bonus",
 			type = "keystone_modifier",
 			widget_name = "node_11a4a71d-e135-4842-a90d-8cf96e5ee5a8",
-			x = 575,
-			y = 2435,
+			x = 515,
+			y = 2165,
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_548adb63-0554-4ab5-a044-439fd851c521",
+				"node_548adb63-0554-4ab5-a044-439fd851c521"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -1980,21 +1768,21 @@ return {
 			talent = "veteran_snipers_focus_toughness_bonus",
 			type = "keystone_modifier",
 			widget_name = "node_efbff75c-83c1-4310-a721-4bce3583cb3e",
-			x = 755,
-			y = 2435,
+			x = 485,
+			y = 2255,
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_548adb63-0554-4ab5-a044-439fd851c521",
+				"node_548adb63-0554-4ab5-a044-439fd851c521"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2003,22 +1791,22 @@ return {
 			talent = "veteran_snipers_focus_increased_stacks",
 			type = "keystone_modifier",
 			widget_name = "node_c426c7f4-97d1-4176-810c-9dd935ef89cd",
-			x = 665,
-			y = 2495,
+			x = 515,
+			y = 2345,
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_4398f8ca-1637-481c-bd85-8c27355fcff7",
-				"node_548adb63-0554-4ab5-a044-439fd851c521",
+				"node_548adb63-0554-4ab5-a044-439fd851c521"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2027,27 +1815,27 @@ return {
 			talent = "veteran_weapon_switch_passive",
 			type = "keystone",
 			widget_name = "node_09bb7c07-c733-4d08-9387-50f404da5ce5",
-			x = 1310,
-			y = 2330,
+			x = 1340,
+			y = 2240,
 			children = {
 				"node_265dcb9e-af95-4e79-8ccd-1591951ac6ac",
 				"node_78c14d65-e167-4148-ac90-b53c00f2d4f4",
-				"node_18ddfb8a-8035-4232-90b2-c114a1451ac7",
+				"node_18ddfb8a-8035-4232-90b2-c114a1451ac7"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_a8044c1f-dda9-4a0b-b503-d549fd2ad5f9",
-				"node_96335f86-60f8-46e4-a6df-47c0a4ee2719",
+				"node_7e94349b-d6c6-446e-bb39-0b367f6477bf",
+				"node_39129a53-b8c1-4d7e-82bd-e2b9d49315a1"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "keystone",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2056,21 +1844,21 @@ return {
 			talent = "veteran_weapon_switch_replenish_toughness",
 			type = "keystone_modifier",
 			widget_name = "node_18ddfb8a-8035-4232-90b2-c114a1451ac7",
-			x = 1325,
-			y = 2495,
+			x = 1505,
+			y = 2255,
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_09bb7c07-c733-4d08-9387-50f404da5ce5",
+				"node_09bb7c07-c733-4d08-9387-50f404da5ce5"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2079,23 +1867,23 @@ return {
 			talent = "veteran_weapon_switch_replenish_ammo",
 			type = "keystone_modifier",
 			widget_name = "node_265dcb9e-af95-4e79-8ccd-1591951ac6ac",
-			x = 1235,
-			y = 2435,
+			x = 1475,
+			y = 2345,
 			children = {
-				"node_9151734a-c321-41f6-973b-4793c5913b1b",
+				"node_9151734a-c321-41f6-973b-4793c5913b1b"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_09bb7c07-c733-4d08-9387-50f404da5ce5",
+				"node_09bb7c07-c733-4d08-9387-50f404da5ce5"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2104,23 +1892,23 @@ return {
 			talent = "veteran_weapon_switch_replenish_stamina",
 			type = "keystone_modifier",
 			widget_name = "node_78c14d65-e167-4148-ac90-b53c00f2d4f4",
-			x = 1415,
-			y = 2435,
+			x = 1475,
+			y = 2165,
 			children = {
-				"node_33bf1346-2601-4a06-9e7e-f70aed5e441f",
+				"node_33bf1346-2601-4a06-9e7e-f70aed5e441f"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_09bb7c07-c733-4d08-9387-50f404da5ce5",
+				"node_09bb7c07-c733-4d08-9387-50f404da5ce5"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2130,25 +1918,31 @@ return {
 			type = "keystone",
 			widget_name = "node_18f58702-92f4-4084-afc3-934731f36b83",
 			x = 980,
-			y = 2330,
+			y = 2240,
 			children = {
 				"node_a7ec533f-0efa-450a-b45d-02b8c7f61861",
 				"node_ac52f1fe-53d7-4e5a-8872-21c6db29db9e",
 				"node_97953f03-3524-42f4-b653-da2e3468823f",
+				"node_7faaad0d-aebf-44f2-ba30-6a23ce68d320",
+				"node_96335f86-60f8-46e4-a6df-47c0a4ee2719"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_181e4412-cb3f-4b80-b3f9-10c5bb61d022",
+				"node_c36508a3-b4f2-4b5a-837e-132101c8739d",
+				"node_7163a098-c55a-47f0-a861-38509acc0d44",
+				"node_7faaad0d-aebf-44f2-ba30-6a23ce68d320",
+				"node_c6d92993-58ab-4f1c-ac76-0e3b36af29a5",
+				"node_96335f86-60f8-46e4-a6df-47c0a4ee2719"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
 				exclusive_group = "keystone",
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2158,20 +1952,20 @@ return {
 			type = "keystone_modifier",
 			widget_name = "node_a7ec533f-0efa-450a-b45d-02b8c7f61861",
 			x = 905,
-			y = 2435,
+			y = 2375,
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_18f58702-92f4-4084-afc3-934731f36b83",
+				"node_18f58702-92f4-4084-afc3-934731f36b83"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2181,20 +1975,20 @@ return {
 			type = "keystone_modifier",
 			widget_name = "node_ac52f1fe-53d7-4e5a-8872-21c6db29db9e",
 			x = 1085,
-			y = 2435,
+			y = 2375,
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_18f58702-92f4-4084-afc3-934731f36b83",
+				"node_18f58702-92f4-4084-afc3-934731f36b83"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2204,20 +1998,20 @@ return {
 			type = "keystone_modifier",
 			widget_name = "node_97953f03-3524-42f4-b653-da2e3468823f",
 			x = 995,
-			y = 2495,
+			y = 2435,
 			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_18f58702-92f4-4084-afc3-934731f36b83",
+				"node_18f58702-92f4-4084-afc3-934731f36b83"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2226,23 +2020,22 @@ return {
 			talent = "veteran_increase_suppression",
 			type = "default",
 			widget_name = "node_a3f092bc-651f-457d-9791-9c38ff2b99fd",
-			x = 665,
-			y = 2135,
-			children = {
-				"node_b0c4f49c-fd47-4b1c-9279-82e12dc3ac7d",
-			},
+			x = 635,
+			y = 2375,
+			children = {},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
-				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992",
+				"node_d195ddb0-73e5-4774-8bd7-e8f93e1e7ab2",
+				"node_b0c4f49c-fd47-4b1c-9279-82e12dc3ac7d"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
 		{
 			cost = 1,
@@ -2252,32 +2045,88 @@ return {
 			type = "default",
 			widget_name = "node_eb62ac80-bd39-4ad3-bf09-49e25ae55af9",
 			x = 1085,
-			y = 1235,
+			y = 1265,
 			children = {
 				"node_3a5e822f-27dd-4ec0-ab2f-ee8638d959af",
-				"node_9971a100-0ec5-4252-a20f-f33e94a34442",
+				"node_9971a100-0ec5-4252-a20f-f33e94a34442"
 			},
 			connector_offset = {
 				0,
-				0,
+				0
 			},
 			parents = {
 				"node_51cd0e84-38e8-4df8-b703-bf34e5b166eb",
-				"node_9971a100-0ec5-4252-a20f-f33e94a34442",
+				"node_9971a100-0ec5-4252-a20f-f33e94a34442"
 			},
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
+				min_points_spent = 0
+			}
 		},
+		{
+			cost = 1,
+			icon = "content/ui/textures/frames/talents/circular_small_frame",
+			max_points = 1,
+			only_draw_connector_when_parent_chosen = false,
+			talent = "base_melee_damage_node_buff_high_2",
+			type = "stat",
+			widget_name = "node_85b81c97-8ca9-42db-a637-06a3af956bba",
+			x = 1114,
+			y = 1624,
+			children = {
+				"node_33819d8f-8635-4356-97b1-4cf1d67dd6d5",
+				"node_04923c84-a6e7-428b-9074-19b157f088bb"
+			},
+			connector_offset = {
+				0,
+				0
+			},
+			parents = {
+				"node_33819d8f-8635-4356-97b1-4cf1d67dd6d5",
+				"node_06b8c8de-0e09-40c9-af16-a6018e9984a8"
+			},
+			requirements = {
+				all_parents_chosen = false,
+				children_unlock_points = 1,
+				min_points_spent = 0
+			}
+		},
+		{
+			cost = 1,
+			icon = "content/ui/textures/frames/talents/circular_small_frame",
+			max_points = 1,
+			only_draw_connector_when_parent_chosen = false,
+			talent = "base_toughness_damage_reduction_node_buff_medium_1",
+			type = "stat",
+			widget_name = "node_0c833225-0e7c-478d-93e9-82263be2f0d7",
+			x = 874,
+			y = 1624,
+			children = {
+				"node_33819d8f-8635-4356-97b1-4cf1d67dd6d5",
+				"node_bbd51147-0e4f-4bec-a020-b23d16efb29a"
+			},
+			connector_offset = {
+				0,
+				0
+			},
+			parents = {
+				"node_33819d8f-8635-4356-97b1-4cf1d67dd6d5",
+				"node_5ae6929c-f9fe-43b2-b2d9-079d6737de23"
+			},
+			requirements = {
+				all_parents_chosen = false,
+				children_unlock_points = 1,
+				min_points_spent = 0
+			}
+		}
 	},
 	offset = {
 		0,
-		0,
+		0
 	},
 	size = {
 		4096,
-		4096,
-	},
+		4096
+	}
 }

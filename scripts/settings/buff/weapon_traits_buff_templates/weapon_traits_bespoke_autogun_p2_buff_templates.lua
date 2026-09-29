@@ -23,20 +23,20 @@ templates.weapon_trait_bespoke_autogun_p2_increased_sprint_speed = table.clone(B
 templates.weapon_trait_bespoke_autogun_p2_increased_suppression_on_continuous_fire = table.merge({
 	conditional_stat_buffs = {
 		[stat_buffs.suppression_dealt] = 0.5,
-		[stat_buffs.damage_vs_suppressed] = 0.06,
+		[stat_buffs.damage_vs_suppressed] = 0.06
 	},
-	continuous_fire_step_func = FireStepFunctions.suppression_continuous_fire_step_func,
+	continuous_fire_step_func = FireStepFunctions.suppression_continuous_fire_step_func
 }, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire)
 templates.weapon_trait_bespoke_autogun_p2_movement_speed_on_continous_fire = table.merge({
 	conditional_stat_buffs = {
 		[stat_buffs.alternate_fire_movement_speed_reduction_modifier] = 0.5,
-		[stat_buffs.weapon_action_movespeed_reduction_multiplier] = 0.5,
+		[stat_buffs.weapon_action_movespeed_reduction_multiplier] = 0.5
 	},
-	continuous_fire_step_func = FireStepFunctions.movement_speed_continuous_fire_step_func,
+	continuous_fire_step_func = FireStepFunctions.movement_speed_continuous_fire_step_func
 }, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire)
 templates.weapon_trait_bespoke_autogun_p2_toughness_on_continuous_fire = table.merge({
 	toughness_fixed_percentage = 0.1,
-	continuous_fire_step_func = FireStepFunctions.toughness_regen_continuous_fire_step_func,
+	continuous_fire_step_func = FireStepFunctions.toughness_regen_continuous_fire_step_func
 }, BaseWeaponTraitBuffTemplates.toughness_on_continuous_fire)
 
 return templates

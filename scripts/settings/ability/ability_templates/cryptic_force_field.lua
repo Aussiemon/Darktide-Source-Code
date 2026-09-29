@@ -11,58 +11,56 @@ ability_template.action_inputs = {
 		input_sequence = {
 			{
 				input = "grenade_ability_pressed",
-				value = true,
-			},
-		},
-	},
+				value = true
+			}
+		}
+	}
 }
 ability_template.action_input_hierarchy = {
 	{
 		input = "aim_pressed",
-		transition = "stay",
-	},
+		transition = "stay"
+	}
 }
 ability_template.actions = {
 	action_activate = {
-		ability_type = "grenade_ability",
 		allowed_during_sprint = true,
+		consume_ability_usage_cost = true,
+		consume_usage_cost_at_start = true,
 		kind = "activate_force_shield",
 		sprint_ready_up_time = 0,
 		start_input = "aim_pressed",
 		trigger_time = 0.3,
 		uninterruptible = true,
-		use_ability_charge = true,
-		use_charge_at_start = true,
 		vo_tag = "cryptic_blitz_03_a",
 		total_time = talent_settings.duration,
 		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 			return not condition_func_params.talent_extension:has_special_rule("cryptic_force_field_increased_duration_and_extra_explosion")
-		end,
+		end
 	},
 	action_activate_increased_duration = {
-		ability_type = "grenade_ability",
 		allowed_during_sprint = true,
+		consume_ability_usage_cost = true,
+		consume_usage_cost_at_start = true,
 		kind = "activate_force_shield",
 		sprint_ready_up_time = 0,
 		start_input = "aim_pressed",
 		trigger_time = 0.3,
 		uninterruptible = true,
-		use_ability_charge = true,
-		use_charge_at_start = true,
 		vo_tag = "cryptic_blitz_03_a",
 		total_time = talent_settings.increased_duration,
 		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 			return condition_func_params.talent_extension:has_special_rule("cryptic_force_field_increased_duration_and_extra_explosion")
-		end,
-	},
+		end
+	}
 }
 ability_template.fx_sources = {}
 ability_template.hud_configuration = {
 	uses_ammunition = true,
-	uses_overheat = false,
+	uses_overheat = false
 }
 ability_template.keywords = {
-	"adamant",
+	"adamant"
 }
 ability_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/psyker_smite"
 ability_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/throwing_knives"

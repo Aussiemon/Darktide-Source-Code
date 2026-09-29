@@ -18,13 +18,13 @@ companion_servo_skull_flamer_gas_templates.auto = {
 		0.375,
 		0.375,
 		0.375,
-		0.45,
+		0.45
 	},
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.companion_servo_skull_flamer,
-		},
-	},
+			damage_profile = DamageProfileTemplates.companion_servo_skull_flamer
+		}
+	}
 }
 
 for name, template in pairs(companion_servo_skull_flamer_gas_templates) do

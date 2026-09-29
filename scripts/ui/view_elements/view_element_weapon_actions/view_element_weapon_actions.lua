@@ -35,7 +35,7 @@ ViewElementWeaponActions.init = function (self, parent, draw_layer, start_scale,
 		viewport_type = "default_with_alpha",
 		world_layer = 800,
 		width = grid_size[1] * 4,
-		world_name = self._unique_id,
+		world_name = self._unique_id
 	}
 	local icon_render_type = "weapon"
 
@@ -79,13 +79,13 @@ ViewElementWeaponActions.present_item = function (self, item)
 			widget_type = "dynamic_spacing",
 			size = {
 				grid_size[1],
-				10,
-			},
+				10
+			}
 		},
 		{
 			widget_type = "description",
-			item = item,
-		},
+			item = item
+		}
 	}
 	local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 	local displayed_attacks = weapon_template.displayed_attacks
@@ -106,8 +106,8 @@ ViewElementWeaponActions.present_item = function (self, item)
 						widget_type = "dynamic_spacing",
 						size = {
 							grid_size[1],
-							30,
-						},
+							30
+						}
 					}
 				end
 
@@ -115,18 +115,18 @@ ViewElementWeaponActions.present_item = function (self, item)
 
 				layout[#layout + 1] = {
 					widget_type = "weapon_attack_header",
-					display_name = title_loc_key,
+					display_name = title_loc_key
 				}
 
 				if is_ranged_weapon then
 					layout[#layout + 1] = {
 						widget_type = "weapon_attack_info_ranged",
-						data = data,
+						data = data
 					}
 				else
 					layout[#layout + 1] = {
 						widget_type = "weapon_attack_info",
-						data = data,
+						data = data
 					}
 				end
 
@@ -135,12 +135,12 @@ ViewElementWeaponActions.present_item = function (self, item)
 						widget_type = "dynamic_spacing",
 						size = {
 							grid_size[1],
-							10,
-						},
+							10
+						}
 					}
 					layout[#layout + 1] = {
 						widget_type = "weapon_attack_chain",
-						attack_chain = data.attack_chain,
+						attack_chain = data.attack_chain
 					}
 				end
 
@@ -149,8 +149,8 @@ ViewElementWeaponActions.present_item = function (self, item)
 						widget_type = "dynamic_spacing",
 						size = {
 							grid_size[1],
-							30,
-						},
+							30
+						}
 					}
 				end
 			end
@@ -161,8 +161,8 @@ ViewElementWeaponActions.present_item = function (self, item)
 		widget_type = "dynamic_spacing",
 		size = {
 			grid_size[1],
-			10,
-		},
+			10
+		}
 	}
 
 	self:present_grid_layout(layout)
@@ -182,7 +182,7 @@ ViewElementWeaponActions.present_grid_layout = function (self, layout)
 	local grid_size = menu_settings.grid_size
 	local ContentBlueprints = generate_blueprints_function(grid_size)
 	local spacing_entry = {
-		widget_type = "spacing_vertical_small",
+		widget_type = "spacing_vertical_small"
 	}
 	local menu_settings = self._menu_settings
 	local grid_size = menu_settings.grid_size

@@ -17,13 +17,13 @@ local sound_data = {
 		vce_melee_attack_charged = "wwise/events/minions/play_enemy_chaos_newly_infected_melee_attack_charged_vce",
 		vce_melee_attack_short = "wwise/events/minions/play_enemy_chaos_newly_infected_melee_attack_short_vce",
 		vce_passive_idle_cough = "wwise/events/minions/play_enemy_chaos_newly_infected_idle_vce",
-		vce_passive_idle_itchy = "wwise/events/minions/play_enemy_chaos_newly_infected_idle_vce",
+		vce_passive_idle_itchy = "wwise/events/minions/play_enemy_chaos_newly_infected_idle_vce"
 	},
 	use_proximity_culling = {
 		stop_vce = false,
 		vce_melee_attack_charged = false,
-		vce_melee_attack_short = false,
-	},
+		vce_melee_attack_short = false
+	}
 }
 
 return sound_data

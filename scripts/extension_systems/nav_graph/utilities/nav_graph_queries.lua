@@ -621,7 +621,7 @@ end
 
 local COVER_Z_OFFSETS = {
 	high = 1.82,
-	low = 1.22,
+	low = 1.22
 }
 
 local function _set_cover_calculation_parameters(unit, calculation_params)
@@ -703,7 +703,7 @@ local function _get_smart_object_calculation_parameters(unit, component)
 		if not error then
 			CALCULATION_PARAMS.node_pair = {
 				Unit.node(unit, node_a_name),
-				Unit.node(unit, node_b_name),
+				Unit.node(unit, node_b_name)
 			}
 		end
 	elseif smart_object_calculation_method == "use_offset_node" then

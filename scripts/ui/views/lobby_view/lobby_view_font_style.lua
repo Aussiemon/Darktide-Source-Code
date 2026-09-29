@@ -15,7 +15,7 @@ sub_title_text_style.text_horizontal_alignment = "left"
 sub_title_text_style.offset = {
 	0,
 	60,
-	1,
+	1
 }
 
 local character_name_style = table.clone(UIFontSettings.body)
@@ -25,7 +25,7 @@ character_name_style.text_vertical_alignment = "top"
 character_name_style.offset = {
 	0,
 	115,
-	0,
+	0
 }
 character_name_style.default_color = Color.terminal_text_header(255, true)
 character_name_style.text_color = Color.terminal_text_header(255, true)
@@ -39,7 +39,7 @@ character_name_style.text_vertical_alignment = "top"
 character_name_style.offset = {
 	0,
 	105,
-	1,
+	1
 }
 character_name_style.text_color = Color.ui_brown_super_light(255, true)
 character_name_style.font_size = 22
@@ -51,7 +51,7 @@ character_archetype_title_style.text_vertical_alignment = "top"
 character_archetype_title_style.offset = {
 	0,
 	152,
-	0,
+	0
 }
 character_archetype_title_style.default_color = Color.terminal_text_body(255, true)
 character_archetype_title_style.text_color = Color.terminal_text_body(255, true)
@@ -67,7 +67,7 @@ character_title_style.text_vertical_alignment = "top"
 character_title_style.offset = {
 	0,
 	130,
-	0,
+	0
 }
 character_title_style.default_color = Color.terminal_text_body(255, true)
 character_title_style.text_color = Color.terminal_text_body(255, true)
@@ -81,7 +81,7 @@ guild_name_style.text_vertical_alignment = "top"
 guild_name_style.offset = {
 	0,
 	185,
-	0,
+	0
 }
 guild_name_style.default_color = Color.ui_grey_light(255, true)
 guild_name_style.text_color = Color.ui_grey_light(255, true)
@@ -97,11 +97,11 @@ ready_text_style.material = "content/ui/materials/base/ui_slug_hdr"
 ready_text_style.offset = {
 	0,
 	30,
-	2,
+	2
 }
 ready_text_style.size = {
 	400,
-	40,
+	40
 }
 
 local loading_text_style = table.clone(UIFontSettings.body_small)
@@ -115,11 +115,11 @@ loading_text_style.horizontal_alignment = "center"
 loading_text_style.offset = {
 	10,
 	40,
-	2,
+	2
 }
 loading_text_style.size = {
 	800,
-	20,
+	20
 }
 
 local weapon_text_style = table.clone(UIFontSettings.header_3)
@@ -138,7 +138,7 @@ weapon_hover_text_style.horizontal_alignment = "center"
 weapon_hover_text_style.offset = {
 	0,
 	0,
-	1,
+	1
 }
 weapon_hover_text_style.text_color = Color.ui_brown_super_light(255, true)
 
@@ -149,7 +149,7 @@ inspect_text_style.text_horizontal_alignment = "center"
 inspect_text_style.offset = {
 	0,
 	40,
-	1,
+	1
 }
 inspect_text_style.vertical_alignment = "bottom"
 
@@ -165,5 +165,5 @@ return {
 	weapon_text_style = weapon_text_style,
 	weapon_hover_text_style = weapon_hover_text_style,
 	inspect_text_style = inspect_text_style,
-	character_title_style = character_title_style,
+	character_title_style = character_title_style
 }

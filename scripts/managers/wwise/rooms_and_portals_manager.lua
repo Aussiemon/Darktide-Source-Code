@@ -113,7 +113,7 @@ RoomsAndPortalsManager.toggle_portal = function (self, portal, enabled)
 	else
 		self._portal_toggle_queue[#self._portal_toggle_queue + 1] = {
 			wwise_portal_component = portal,
-			enabled = enabled,
+			enabled = enabled
 		}
 	end
 end

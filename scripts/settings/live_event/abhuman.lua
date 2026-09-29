@@ -8,8 +8,8 @@ local abhuman = {
 	name = "loc_abhuman_event_name",
 	stat = "live_event_abhuman_won",
 	item_rewards = {
-		"content/items/2d/portrait_frames/class_ogryn_05_yellow",
-	},
+		"content/items/2d/portrait_frames/class_ogryn_05_yellow"
+	}
 }
 
 return abhuman

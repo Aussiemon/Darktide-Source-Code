@@ -6,21 +6,21 @@ local weapon_movement_states = WeaponMovementStateSettings.weapon_movement_state
 local sway_templates = {}
 local loaded_template_files = {}
 
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/arc_rifle/settings_templates/arc_rifle_sway_templates", sway_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/autoguns/settings_templates/autogun_sway_templates", sway_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/bolt_pistols/settings_templates/boltpistol_sway_templates", sway_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/bolters/settings_templates/bolter_sway_templates", sway_templates, loaded_template_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/galvanic_rifle/settings_templates/galvanic_rifle_sway_templates", sway_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/lasguns/settings_templates/lasgun_sway_templates", sway_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/laspistols/settings_templates/laspistol_sway_templates", sway_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/needlepistols/settings_templates/needlepistol_sway_templates", sway_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/ogryn_heavystubbers/settings_templates/ogryn_heavystubber_sway_templates", sway_templates, loaded_template_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/phosphor_pistol/settings_templates/phosphor_pistol_sway_templates", sway_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/ripperguns/settings_templates/rippergun_sway_templates", sway_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/shotguns/settings_templates/shotgun_sway_templates", sway_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/shotpistol_shield/settings_templates/shotpistol_shield_sway_templates", sway_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/stub_pistols/settings_templates/stub_pistol_sway_templates", sway_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/thumpers/settings_templates/thumper_sway_templates", sway_templates, loaded_template_files)
-WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/galvanic_rifle/settings_templates/galvanic_rifle_sway_templates", sway_templates, loaded_template_files)
-WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/arc_rifle/settings_templates/arc_rifle_sway_templates", sway_templates, loaded_template_files)
-WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/phosphor_pistol/settings_templates/phosphor_pistol_sway_templates", sway_templates, loaded_template_files)
 
 local function _inherit(move_state_settings, inheritance_settings)
 	local new_move_state_settings = table.clone(sway_templates[inheritance_settings[1]][inheritance_settings[2]])
@@ -43,7 +43,7 @@ local _immediate_sway_types = {
 	"damage_hit",
 	"shooting",
 	"alternate_fire_start",
-	"crouch_transition",
+	"crouch_transition"
 }
 
 for name, template in pairs(sway_templates) do

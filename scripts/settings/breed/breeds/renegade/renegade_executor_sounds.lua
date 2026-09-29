@@ -17,15 +17,15 @@ local sound_data = {
 		vce_grunt = "wwise/events/minions/play_enemy_traitor_executor__grunt_vce",
 		vce_hurt = "wwise/events/minions/play_enemy_traitor_executor__hurt_vce",
 		vce_melee_attack_short = "wwise/events/minions/play_enemy_traitor_executor__melee_attack_short_vce",
-		vce_special_attack = "wwise/events/minions/play_enemy_traitor_executor__special_attack_vce",
+		vce_special_attack = "wwise/events/minions/play_enemy_traitor_executor__special_attack_vce"
 	},
 	use_proximity_culling = {
 		footstep = false,
 		footstep_land = false,
 		swing = false,
 		vce_melee_attack_short = false,
-		vce_special_attack = false,
-	},
+		vce_special_attack = false
+	}
 }
 
 table.add_missing(sound_data.events, RenegadeCommonSounds.events)

@@ -22,7 +22,7 @@ local BackendManagerTestify = {
 			sideMission = side_mission,
 			bonuses = {},
 			challenge = challenge,
-			resistance = resistance,
+			resistance = resistance
 		}):next(function (response)
 			return response.mission
 		end):next(function (mission)
@@ -33,7 +33,7 @@ local BackendManagerTestify = {
 		end):catch(function (error)
 			Log.error("BackendManagerTestify", "Could not create debug mission " .. table.tostring(error, 5))
 		end)
-	end,
+	end
 }
 
 return BackendManagerTestify

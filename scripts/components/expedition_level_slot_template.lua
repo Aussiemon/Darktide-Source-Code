@@ -105,15 +105,15 @@ ExpeditionLevelSlotTemplate.component_data = {
 			"16",
 			"32",
 			"48",
-			"64",
+			"64"
 		},
 		options_values = {
 			"level_size_16",
 			"level_size_32",
 			"level_size_48",
-			"level_size_64",
-		},
-	},
+			"level_size_64"
+		}
+	}
 }
 
 return ExpeditionLevelSlotTemplate

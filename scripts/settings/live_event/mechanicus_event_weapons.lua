@@ -8,7 +8,7 @@ local mechanicus_event_weapons = {
 	"powermaul_p1_m2",
 	"ogryn_pickaxe_2h_p1_m1",
 	"ogryn_pickaxe_2h_p1_m2",
-	"ogryn_pickaxe_2h_p1_m3",
+	"ogryn_pickaxe_2h_p1_m3"
 }
 
 return settings("MechanicusEventWeapons", mechanicus_event_weapons)

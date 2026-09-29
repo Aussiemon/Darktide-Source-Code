@@ -5,131 +5,131 @@ local zealot_c_adamant_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_male_a__combat_pause_limited_bolt_on_a_zealot_c_04_b_01",
+			[1] = "loc_adamant_male_a__combat_pause_limited_bolt_on_a_zealot_c_04_b_01"
 		},
 		sound_events_duration = {
-			[1] = 6.743698,
+			[1] = 6.743698
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	combat_pause_limited_zealot_c_01_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_male_a__combat_pause_limited_zealot_c_01_b_01",
+			[1] = "loc_adamant_male_a__combat_pause_limited_zealot_c_01_b_01"
 		},
 		sound_events_duration = {
-			[1] = 1.673625,
+			[1] = 1.673625
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	combat_pause_limited_zealot_c_03_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_male_a__combat_pause_limited_zealot_c_03_b_01",
+			[1] = "loc_adamant_male_a__combat_pause_limited_zealot_c_03_b_01"
 		},
 		sound_events_duration = {
-			[1] = 4.567229,
+			[1] = 4.567229
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	combat_pause_limited_zealot_c_07_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_male_a__combat_pause_limited_zealot_c_07_b_01",
+			[1] = "loc_adamant_male_a__combat_pause_limited_zealot_c_07_b_01"
 		},
 		sound_events_duration = {
-			[1] = 4.563208,
+			[1] = 4.563208
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	combat_pause_limited_zealot_c_08_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_male_a__combat_pause_limited_zealot_c_08_b_01",
+			[1] = "loc_adamant_male_a__combat_pause_limited_zealot_c_08_b_01"
 		},
 		sound_events_duration = {
-			[1] = 3.515063,
+			[1] = 3.515063
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	combat_pause_limited_zealot_c_14_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_male_a__combat_pause_limited_zealot_c_14_b_01",
+			[1] = "loc_adamant_male_a__combat_pause_limited_zealot_c_14_b_01"
 		},
 		sound_events_duration = {
-			[1] = 4.459833,
+			[1] = 4.459833
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	combat_pause_limited_zealot_c_18_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_adamant_male_a__combat_pause_limited_zealot_c_18_b_01",
+			[1] = "loc_adamant_male_a__combat_pause_limited_zealot_c_18_b_01"
 		},
 		sound_events_duration = {
-			[1] = 7.284667,
+			[1] = 7.284667
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	combat_pause_quirk_hymnal_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
 			[1] = "loc_adamant_male_a__combat_pause_quirk_hymnal_b_01",
-			[2] = "loc_adamant_male_a__combat_pause_quirk_hymnal_b_02",
+			[2] = "loc_adamant_male_a__combat_pause_quirk_hymnal_b_02"
 		},
 		sound_events_duration = {
 			[1] = 1.18601,
-			[2] = 2.918677,
+			[2] = 2.918677
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	combat_pause_quirk_pilgrimage_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
 			[1] = "loc_adamant_male_a__combat_pause_quirk_pilgrimage_b_01",
-			[2] = "loc_adamant_male_a__combat_pause_quirk_pilgrimage_b_02",
+			[2] = "loc_adamant_male_a__combat_pause_quirk_pilgrimage_b_02"
 		},
 		sound_events_duration = {
 			[1] = 2.24601,
-			[2] = 2.78001,
+			[2] = 2.78001
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	combat_pause_quirk_pray_with_me_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
 			[1] = "loc_adamant_male_a__combat_pause_quirk_pray_with_me_b_01",
-			[2] = "loc_adamant_male_a__combat_pause_quirk_pray_with_me_b_02",
+			[2] = "loc_adamant_male_a__combat_pause_quirk_pray_with_me_b_02"
 		},
 		sound_events_duration = {
 			[1] = 3.02201,
-			[2] = 5.01601,
+			[2] = 5.01601
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	combat_pause_quirk_your_sins_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
 			[1] = "loc_adamant_male_a__combat_pause_quirk_your_sins_b_01",
-			[2] = "loc_adamant_male_a__combat_pause_quirk_your_sins_b_02",
+			[2] = "loc_adamant_male_a__combat_pause_quirk_your_sins_b_02"
 		},
 		sound_events_duration = {
 			[1] = 4.18801,
-			[2] = 4.400677,
+			[2] = 4.400677
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("zealot_c_adamant_male_a", zealot_c_adamant_male_a)

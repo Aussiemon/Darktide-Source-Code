@@ -45,46 +45,46 @@ local minion_companion_dog_unit_template = {
 		_, voice_selection_seed = math.random_seed(next_seed)
 
 		config:add("BlackboardExtension", {
-			component_config = blackboard_component_config,
+			component_config = blackboard_component_config
 		})
 		config:add("BroadphaseExtension", {
 			moving = true,
 			radius = broadphase_radius,
-			categories = broadphase_categories,
+			categories = broadphase_categories
 		})
 		config:add("MinionAnimationExtension", {
 			breed = breed,
 			random_seed = animation_seed,
-			is_in_hub = is_in_hub,
+			is_in_hub = is_in_hub
 		})
 		config:add("CompanionVisualLoadoutExtension", {
 			breed = breed,
-			owner_player = owner_player,
+			owner_player = owner_player
 		})
 		config:add("MinionFxExtension", {
-			breed = breed,
+			breed = breed
 		})
 		config:add("MinionLocomotionExtension", {
-			breed = breed,
+			breed = breed
 		})
 		config:add("MinionNavigationExtension", {
-			breed = breed,
+			breed = breed
 		})
 		config:add("SideExtension", {
 			side_id = side_id,
-			breed = breed,
+			breed = breed
 		})
 		config:add("MinionUnitDataExtension", {
-			breed = breed,
+			breed = breed
 		})
 		config:add("CompanionCoherencyExtension", {
 			owner_player = owner_player,
-			coherency_settings = PlayerCharacterConstants.coherency,
+			coherency_settings = PlayerCharacterConstants.coherency
 		})
 
 		if not is_in_hub then
 			config:add("CompanionTagManagerDogExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
@@ -92,14 +92,14 @@ local minion_companion_dog_unit_template = {
 			config:add("InteracteeExtension", {
 				interaction_type = "companion_hub_interact",
 				is_local_unit = false,
-				override_context = {},
+				override_context = {}
 			})
 		end
 
 		local behavior_extension_init_data = {
 			breed = breed,
 			behavior_tree_name = behavior_tree_name,
-			owner_unit = init_data.optional_owner_player_unit,
+			owner_unit = init_data.optional_owner_player_unit
 		}
 
 		config:add("MinionBehaviorExtension", behavior_extension_init_data)
@@ -108,14 +108,14 @@ local minion_companion_dog_unit_template = {
 			config:add("CompanionOutlineExtension", {
 				breed = breed,
 				owner_unit = owner_unit,
-				owner_player = owner_player,
+				owner_player = owner_player
 			})
 		end
 
 		config:add("MinionBuffExtension", {
 			buff_seed = buff_seed,
 			breed = breed,
-			initial_buffs = spawn_buffs,
+			initial_buffs = spawn_buffs
 		})
 
 		local optional_aggro_state, optional_target_unit = init_data.optional_aggro_state, init_data.optional_target_unit
@@ -123,7 +123,7 @@ local minion_companion_dog_unit_template = {
 		config:add("MinionPerceptionExtension", {
 			breed = breed,
 			aggro_state = optional_aggro_state,
-			target_unit = optional_target_unit,
+			target_unit = optional_target_unit
 		})
 
 		local dialogue_settings = DialogueBreedSettings[breed_name]
@@ -132,19 +132,19 @@ local minion_companion_dog_unit_template = {
 			config:add("DialogueExtension", {
 				local_player = false,
 				breed = breed,
-				seed = voice_selection_seed,
+				seed = voice_selection_seed
 			})
 		end
 
 		if breed.aim_config then
 			config:add("MinionRangedAimExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
 		config:add("MinionProximityExtension", {
 			side_id = side_id,
-			breed = breed,
+			breed = breed
 		})
 		config:add("FadeExtension")
 
@@ -205,51 +205,51 @@ local minion_companion_dog_unit_template = {
 		config:add("MinionAnimationExtension", {
 			breed = breed,
 			random_seed = animation_seed,
-			is_in_hub = is_in_hub,
+			is_in_hub = is_in_hub
 		})
 		config:add("CompanionVisualLoadoutExtension", {
 			breed = breed,
-			owner_player = owner_player,
+			owner_player = owner_player
 		})
 		config:add("MinionFxExtension", {
-			breed = breed,
+			breed = breed
 		})
 		config:add("MinionHuskLocomotionExtension", {
-			breed = breed,
+			breed = breed
 		})
 		config:add("MinionHuskNavigationExtension")
 		config:add("SideExtension", {
 			side_id = side_id,
-			breed = breed,
+			breed = breed
 		})
 		config:add("MinionUnitDataExtension", {
-			breed = breed,
+			breed = breed
 		})
 
 		if not is_in_hub then
 			config:add("CompanionOutlineExtension", {
 				breed = breed,
-				owner_player = owner_player,
+				owner_player = owner_player
 			})
 		end
 
 		config:add("BroadphaseExtension", {
 			moving = true,
 			radius = broadphase_radius,
-			categories = broadphase_categories,
+			categories = broadphase_categories
 		})
 
 		if is_in_hub then
 			config:add("InteracteeExtension", {
 				interaction_type = "companion_hub_interact",
 				is_local_unit = false,
-				override_context = {},
+				override_context = {}
 			})
 		end
 
 		if breed.aim_config then
 			config:add("MinionRangedHuskAimExtension", {
-				breed = breed,
+				breed = breed
 			})
 		end
 
@@ -263,11 +263,11 @@ local minion_companion_dog_unit_template = {
 
 		config:add("MinionBuffExtension", {
 			buff_seed = buff_seed,
-			breed = breed,
+			breed = breed
 		})
 		config:add("MinionProximityExtension", {
 			side_id = side_id,
-			breed = breed,
+			breed = breed
 		})
 		config:add("FadeExtension")
 
@@ -277,7 +277,7 @@ local minion_companion_dog_unit_template = {
 			config:add("DialogueExtension", {
 				local_player = false,
 				breed = breed,
-				seed = voice_selection_seed,
+				seed = voice_selection_seed
 			})
 		end
 	end,
@@ -288,7 +288,7 @@ local minion_companion_dog_unit_template = {
 		if has_owner then
 			player_unit_spawn_manager:relinquish_unit_ownership(unit)
 		end
-	end,
+	end
 }
 
 return minion_companion_dog_unit_template

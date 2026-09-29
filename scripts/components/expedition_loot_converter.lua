@@ -30,29 +30,29 @@ ExpeditionLootConverter.component_data = {
 	inputs = {
 		interactable_enable = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		interactable_disable = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		interactable_set_used = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		interactable_clear_block = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		interactable_missing_players = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		disable_display_start_event = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return ExpeditionLootConverter

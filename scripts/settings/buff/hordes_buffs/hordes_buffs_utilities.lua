@@ -28,7 +28,7 @@ local VFX_NAMES = {
 	push_wave = "content/fx/particles/player_buffs/buff_unstoppable_double_push_01",
 	single_target_shock = "content/fx/particles/player_buffs/buff_electricity_one_target_01",
 	stagger_pulse = "content/fx/particles/player_buffs/buff_staggering_pulse",
-	veteran_shout = "content/fx/particles/abilities/squad_leader_ability_shout_activate",
+	veteran_shout = "content/fx/particles/abilities/squad_leader_ability_shout_activate"
 }
 local SFX_NAMES = {
 	ammo_refil = "wwise/events/player/play_horde_mode_buff_ammo_refill",
@@ -49,19 +49,19 @@ local SFX_NAMES = {
 	friendly_rock_charge_stop = "wwise/events/player/stop_horde_mode_buff_rock_charge_loop",
 	gravity_pull = "wwise/events/player/play_horde_mode_buff_gravitation",
 	grenade_refil = "wwise/events/player/play_horde_mode_buff_grenade_refill",
-	healing = "wwise/events/weapon/play_horde_mode_heal_self_confirmation",
+	healing = "wwise/events/player/play_horde_mode_heal_self_confirmation",
 	inferno = "wwise/events/player/play_horde_mode_buff_fire_inferno",
 	infinite_ammo_start = "wwise/events/player/play_horde_mode_buff_infinite_ammo_start",
 	infinite_ammo_stop = "wwise/events/player/play_horde_mode_buff_infinite_ammo_stop",
 	infinite_cleave_hit = "wwise/events/player/play_horde_mode_buff_infinite_cleave_hit",
 	reduced_damage_hit = "wwise/events/player/play_horde_mode_buff_shield_hit",
-	shield = "wwise/events/weapon/play_horde_mode_buff_shield",
+	shield = "wwise/events/player/play_horde_mode_buff_shield",
 	shock_aoe_big = "wwise/events/player/play_horde_mode_buff_electric_shock",
 	shock_crit = "wwise/events/player/play_horde_mode_buff_electric_crit",
 	shock_proc = "wwise/events/player/play_horde_mode_buff_electric_damage",
 	stagger_hit = "wwise/events/player/play_horde_mode_buff_stagger_hit",
 	stagger_pulse = "wwise/events/player/play_horde_mode_buff_stagger_pulse",
-	super_crit = "wwise/events/player/play_horde_mode_buff_super_crit",
+	super_crit = "wwise/events/player/play_horde_mode_buff_super_crit"
 }
 
 HordesBuffsUtilities.SFX_NAMES = SFX_NAMES

@@ -11,7 +11,7 @@ local SLOT_NAME = "slot_hellgun"
 local resources = {
 	shoot_vfx = SHOOT_VFX,
 	start_shoot_sound_event = START_SHOOT_SOUND_EVENT,
-	stop_shoot_sound_event = STOP_SHOOT_SOUND_EVENT,
+	stop_shoot_sound_event = STOP_SHOOT_SOUND_EVENT
 }
 local effect_template = {
 	name = "renegade_captain_hellgun_spray_and_pray",
@@ -66,7 +66,7 @@ local effect_template = {
 		local unit = template_data.unit
 
 		Unit.animation_event(unit, "shoot_finished")
-	end,
+	end
 }
 
 return effect_template

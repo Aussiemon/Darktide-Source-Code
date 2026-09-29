@@ -13,7 +13,7 @@ local pickup_data = {
 	pickup_sound = "wwise/events/player/play_pick_up_grenade",
 	smart_tag_target_type = "pickup",
 	unit_name = "content/environment/gameplay/expeditions/grenades/artillery_ogryn_01",
-	spawn_offset = Vector3Box(0, 0, 0.137),
+	spawn_offset = Vector3Box(0, 0, 0.137)
 }
 
 return pickup_data

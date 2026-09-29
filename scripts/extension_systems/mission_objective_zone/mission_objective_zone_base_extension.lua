@@ -238,11 +238,11 @@ MissionObjectiveZoneBaseExtension.is_waiting_for_player_confirmation = function 
 end
 
 MissionObjectiveZoneBaseExtension._enable_update = function (self)
-	self._owner_system:enable_update_function(self.__class_name, "update", self._unit, self)
+	self._owner_system:enable_update_function(self._unit, "update")
 end
 
 MissionObjectiveZoneBaseExtension._disable_update = function (self)
-	self._owner_system:disable_update_function(self.__class_name, "update", self._unit, self)
+	self._owner_system:disable_update_function(self._unit, "update")
 end
 
 MissionObjectiveZoneBaseExtension.unit = function (self)

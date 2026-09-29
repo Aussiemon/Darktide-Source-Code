@@ -14,7 +14,7 @@ end
 
 PlayerMovement._teleport_callback = function (player_unit, boxed_position, boxed_rotation, keep_velocity, send_character_state_disruption_event)
 	if ALIVE[player_unit] then
-		PlayerMovement._teleport(player_unit, boxed_position:unbox(), boxed_rotation and boxed_rotation:unbox() or nil, send_character_state_disruption_event or false)
+		PlayerMovement._teleport(player_unit, boxed_position:unbox(), boxed_rotation and boxed_rotation:unbox() or nil, keep_velocity, send_character_state_disruption_event or false)
 	end
 end
 
@@ -27,6 +27,8 @@ PlayerMovement._teleport = function (player_unit, position, rotation, keep_veloc
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 	local locomotion_component = unit_data_extension:write_component("locomotion")
 	local inair_state_component = unit_data_extension:write_component("inair_state")
+	local locomotion_steering = unit_data_extension:write_component("locomotion_steering")
+	local player = Managers.state.player_unit_spawn:owner(player_unit)
 
 	locomotion_component.position = position
 
@@ -36,15 +38,18 @@ PlayerMovement._teleport = function (player_unit, position, rotation, keep_veloc
 
 	if keep_velocity then
 		inair_state_component.fell_from_height = inair_state_component.fell_from_height + (position.z - old_position.z)
+
+		if rotation then
+			local old_rotation = Unit.world_rotation(player_unit, 1)
+			local rotated_velocity = PlayerMovement.calculate_rotated_velocity(old_rotation, rotation, locomotion_component.velocity_current)
+
+			locomotion_steering.velocity_wanted = rotated_velocity
+			locomotion_component.velocity_current = rotated_velocity
+		end
 	else
 		inair_state_component.fell_from_height = position.z
-
-		local locomotion_steering = unit_data_extension:write_component("locomotion_steering")
-
 		locomotion_steering.velocity_wanted = Vector3.zero()
 	end
-
-	local player = Managers.state.player_unit_spawn:owner(player_unit)
 
 	if not player.remote and rotation then
 		local pitch = Quaternion.pitch(rotation)
@@ -118,6 +123,14 @@ PlayerMovement.calculate_relative_rotation = function (parent_unit, absolute_rot
 	local relative_pose = Matrix4x4.multiply(absolute_pose, inverted_parent_pose)
 
 	return Matrix4x4.rotation(relative_pose)
+end
+
+PlayerMovement.calculate_rotated_velocity = function (old_rotation, new_rotation, velocity)
+	local old_rotation_inverse = Quaternion.conjugate(old_rotation)
+	local rotation_delta = Quaternion.multiply(new_rotation, old_rotation_inverse)
+	local rotated_velocity = Quaternion.rotate(rotation_delta, velocity)
+
+	return rotated_velocity
 end
 
 local PI = math.pi

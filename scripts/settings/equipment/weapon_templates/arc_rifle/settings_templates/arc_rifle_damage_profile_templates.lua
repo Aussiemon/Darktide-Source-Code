@@ -33,7 +33,7 @@ local arc_rifle_p1_m1_adm = {
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_3,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
 			[armor_types.void_shield] = damage_lerp_values.lerp_0_7,
-			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_1
 		},
 		impact = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1_25,
@@ -43,8 +43,8 @@ local arc_rifle_p1_m1_adm = {
 			[armor_types.berserker] = damage_lerp_values.lerp_0_75,
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		},
+			[armor_types.void_shield] = damage_lerp_values.lerp_1
+		}
 	},
 	far = {
 		attack = {
@@ -55,7 +55,7 @@ local arc_rifle_p1_m1_adm = {
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_2,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_4,
 			[armor_types.void_shield] = damage_lerp_values.lerp_0_6,
-			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_1
 		},
 		impact = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_0_5,
@@ -65,9 +65,9 @@ local arc_rifle_p1_m1_adm = {
 			[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 			[armor_types.super_armor] = damage_lerp_values.no_damage,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_6,
-			[armor_types.void_shield] = damage_lerp_values.lerp_0_4,
-		},
-	},
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_4
+		}
+	}
 }
 
 damage_templates.arc_rifle_p1_m1_damage = {
@@ -78,12 +78,12 @@ damage_templates.arc_rifle_p1_m1_damage = {
 	ranges = {
 		min = {
 			11,
-			22,
+			22
 		},
 		max = {
 			23,
-			40,
-		},
+			40
+		}
 	},
 	wounds_template = WoundsTemplates.stubber,
 	armor_damage_modifier_ranged = arc_rifle_p1_m1_adm,
@@ -91,67 +91,67 @@ damage_templates.arc_rifle_p1_m1_damage = {
 		attack = {
 			[armor_types.unarmored] = {
 				0.1,
-				0.2,
+				0.2
 			},
 			[armor_types.armored] = {
 				0.1,
-				0.2,
+				0.2
 			},
 			[armor_types.resistant] = {
 				0.1,
-				0.2,
+				0.2
 			},
 			[armor_types.player] = {
 				0.1,
-				0.2,
+				0.2
 			},
 			[armor_types.berserker] = {
 				0.1,
-				0.2,
+				0.2
 			},
 			[armor_types.super_armor] = {
 				0.1,
-				0.2,
+				0.2
 			},
 			[armor_types.disgustingly_resilient] = {
 				0.1,
-				0.2,
+				0.2
 			},
 			[armor_types.void_shield] = {
 				0.1,
-				0.2,
-			},
+				0.2
+			}
 		},
-		impact = crit_impact_armor_mod,
+		impact = crit_impact_armor_mod
 	},
 	power_distribution = {
 		attack = {
 			370,
-			570,
+			570
 		},
 		impact = {
 			3,
-			6,
-		},
+			6
+		}
 	},
 	targets = {
 		default_target = {
 			boost_curve_multiplier_finesse = 0.1,
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	damage_type = damage_types.auto_bullet,
 	gibbing_power = gibbing_power.medium,
 	gibbing_type = gibbing_types.arc,
 	critical_strike = {
 		gibbing_power = gibbing_power.heavy,
-		gibbing_type = gibbing_types.arc,
+		gibbing_type = gibbing_types.arc
 	},
 	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
 	on_kill_area_suppression = {
 		distance = 3,
-		suppression_value = 4,
-	},
+		suppression_value = 4
+	}
 }
 damage_templates.arc_rifle_p1_m1_damage_braced = {
 	ragdoll_push_force = 200,
@@ -161,12 +161,12 @@ damage_templates.arc_rifle_p1_m1_damage_braced = {
 	ranges = {
 		min = {
 			11,
-			22,
+			22
 		},
 		max = {
 			23,
-			40,
-		},
+			40
+		}
 	},
 	wounds_template = WoundsTemplates.stubber,
 	armor_damage_modifier_ranged = arc_rifle_p1_m1_adm,
@@ -174,67 +174,67 @@ damage_templates.arc_rifle_p1_m1_damage_braced = {
 		attack = {
 			[armor_types.unarmored] = {
 				0.1,
-				0.2,
+				0.2
 			},
 			[armor_types.armored] = {
 				0.1,
-				0.2,
+				0.2
 			},
 			[armor_types.resistant] = {
 				0.1,
-				0.2,
+				0.2
 			},
 			[armor_types.player] = {
 				0.1,
-				0.2,
+				0.2
 			},
 			[armor_types.berserker] = {
 				0.1,
-				0.2,
+				0.2
 			},
 			[armor_types.super_armor] = {
 				0.1,
-				0.2,
+				0.2
 			},
 			[armor_types.disgustingly_resilient] = {
 				0.1,
-				0.2,
+				0.2
 			},
 			[armor_types.void_shield] = {
 				0.1,
-				0.2,
-			},
+				0.2
+			}
 		},
-		impact = crit_impact_armor_mod,
+		impact = crit_impact_armor_mod
 	},
 	power_distribution = {
 		attack = {
 			380,
-			580,
+			580
 		},
 		impact = {
 			4,
-			8,
-		},
+			8
+		}
 	},
 	targets = {
 		default_target = {
 			boost_curve_multiplier_finesse = 0.1,
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	damage_type = damage_types.auto_bullet,
 	gibbing_power = gibbing_power.medium,
 	gibbing_type = gibbing_types.arc,
 	critical_strike = {
 		gibbing_power = gibbing_power.heavy,
-		gibbing_type = gibbing_types.arc,
+		gibbing_type = gibbing_types.arc
 	},
 	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
 	on_kill_area_suppression = {
 		distance = 3,
-		suppression_value = 6,
-	},
+		suppression_value = 6
+	}
 }
 damage_templates.arc_rifle_arc_chain_lightning_link_damage = {
 	ignore_hitzone_multiplier = true,
@@ -249,7 +249,7 @@ damage_templates.arc_rifle_arc_chain_lightning_link_damage = {
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_4,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
 			[armor_types.void_shield] = damage_lerp_values.lerp_0_7,
-			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_1
 		},
 		impact = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1_25,
@@ -259,33 +259,33 @@ damage_templates.arc_rifle_arc_chain_lightning_link_damage = {
 			[armor_types.berserker] = damage_lerp_values.lerp_0_75,
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		},
+			[armor_types.void_shield] = damage_lerp_values.lerp_1
+		}
 	},
 	cleave_distribution = {
 		attack = 5,
-		impact = 5,
+		impact = 5
 	},
 	power_distribution = {
 		attack = 10,
-		impact = 10,
+		impact = 10
 	},
 	ranges = {
 		min = {
 			3,
-			6,
+			6
 		},
 		max = {
 			7,
-			12,
-		},
+			12
+		}
 	},
 	damage_type = damage_types.arc_chain,
 	gibbing_power = gibbing_power.medium,
 	gibbing_type = gibbing_types.arc,
 	critical_strike = {
 		gibbing_power = gibbing_power.heavy,
-		gibbing_type = gibbing_types.arc,
+		gibbing_type = gibbing_types.arc
 	},
 	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
 	targets = {
@@ -293,54 +293,54 @@ damage_templates.arc_rifle_arc_chain_lightning_link_damage = {
 			power_distribution = {
 				attack = {
 					40,
-					80,
+					80
 				},
 				impact = {
 					2,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					200,
-					220,
+					220
 				},
 				impact = {
 					6,
-					10,
-				},
-			},
+					10
+				}
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					220,
-					320,
+					320
 				},
 				impact = {
 					5,
-					8,
-				},
-			},
+					8
+				}
+			}
 		},
 		default_target = {
 			power_distribution = {
 				attack = {
 					300,
-					350,
+					350
 				},
 				impact = {
 					2,
-					5,
-				},
-			},
-		},
+					5
+				}
+			}
+		}
 	},
 	stat_buffs = {
-		"arc_chain_damage",
-	},
+		"arc_chain_damage"
+	}
 }
 damage_templates.arc_rifle_arc_chain_lightning_link_damage_brace = {
 	ignore_hitzone_multiplier = true,
@@ -355,7 +355,7 @@ damage_templates.arc_rifle_arc_chain_lightning_link_damage_brace = {
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_4,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
 			[armor_types.void_shield] = damage_lerp_values.lerp_0_7,
-			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_1
 		},
 		impact = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1_25,
@@ -365,23 +365,23 @@ damage_templates.arc_rifle_arc_chain_lightning_link_damage_brace = {
 			[armor_types.berserker] = damage_lerp_values.lerp_0_75,
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		},
+			[armor_types.void_shield] = damage_lerp_values.lerp_1
+		}
 	},
 	cleave_distribution = {
 		attack = 5,
-		impact = 5,
+		impact = 5
 	},
 	power_distribution = {
 		attack = 10,
-		impact = 10,
+		impact = 10
 	},
 	damage_type = damage_types.arc_chain,
 	gibbing_power = gibbing_power.medium,
 	gibbing_type = gibbing_types.arc,
 	critical_strike = {
 		gibbing_power = gibbing_power.heavy,
-		gibbing_type = gibbing_types.arc,
+		gibbing_type = gibbing_types.arc
 	},
 	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
 	targets = {
@@ -389,81 +389,81 @@ damage_templates.arc_rifle_arc_chain_lightning_link_damage_brace = {
 			power_distribution = {
 				attack = {
 					80,
-					100,
+					100
 				},
 				impact = {
 					3,
-					4,
-				},
-			},
+					4
+				}
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					90,
-					130,
+					130
 				},
 				impact = {
 					6,
-					10,
-				},
-			},
+					10
+				}
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					130,
-					180,
+					180
 				},
 				impact = {
 					5,
-					8,
-				},
-			},
+					8
+				}
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					150,
-					200,
+					200
 				},
 				impact = {
 					4,
-					7,
-				},
-			},
+					7
+				}
+			}
 		},
 		{
 			power_distribution = {
 				attack = {
 					180,
-					220,
+					220
 				},
 				impact = {
 					3,
-					6,
-				},
-			},
+					6
+				}
+			}
 		},
 		default_target = {
 			power_distribution = {
 				attack = {
 					180,
-					220,
+					220
 				},
 				impact = {
 					2,
-					5,
-				},
-			},
-		},
+					5
+				}
+			}
+		}
 	},
 	stat_buffs = {
-		"arc_chain_damage",
-	},
+		"arc_chain_damage"
+	}
 }
 
 return {
 	base_templates = damage_templates,
-	overrides = overrides,
+	overrides = overrides
 }

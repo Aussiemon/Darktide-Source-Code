@@ -10,15 +10,15 @@ local grid_width = 640
 local grid_height = 860
 local grid_size = {
 	grid_width - edge_padding,
-	grid_height,
+	grid_height
 }
 local grid_spacing = {
 	10,
-	10,
+	10
 }
 local mask_size = {
 	grid_width + 40,
-	grid_height,
+	grid_height
 }
 local grid_settings = {
 	scrollbar_width = 7,
@@ -30,7 +30,7 @@ local grid_settings = {
 	grid_size = grid_size,
 	mask_size = mask_size,
 	title_height = title_height,
-	edge_padding = edge_padding,
+	edge_padding = edge_padding
 }
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
@@ -40,13 +40,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			130,
-			272,
+			272
 		},
 		position = {
 			0,
 			0,
-			62,
-		},
+			62
+		}
 	},
 	corner_top_right = {
 		horizontal_alignment = "right",
@@ -54,13 +54,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			130,
-			272,
+			272
 		},
 		position = {
 			0,
 			0,
-			62,
-		},
+			62
+		}
 	},
 	corner_bottom_left = {
 		horizontal_alignment = "left",
@@ -68,13 +68,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			70,
-			202,
+			202
 		},
 		position = {
 			0,
 			0,
-			62,
-		},
+			62
+		}
 	},
 	corner_bottom_right = {
 		horizontal_alignment = "right",
@@ -82,13 +82,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			70,
-			202,
+			202
 		},
 		position = {
 			0,
 			0,
-			62,
-		},
+			62
+		}
 	},
 	canvas = {
 		horizontal_alignment = "center",
@@ -96,13 +96,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	item_grid_pivot = {
 		horizontal_alignment = "left",
@@ -110,13 +110,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			100,
 			40,
-			1,
-		},
+			1
+		}
 	},
 	weapon_stats_pivot = {
 		horizontal_alignment = "right",
@@ -124,13 +124,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			-1140,
 			60,
-			3,
-		},
+			3
+		}
 	},
 	weapon_compare_stats_pivot = {
 		horizontal_alignment = "right",
@@ -138,13 +138,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			-1140 + (grid_size[1] - 50),
 			60,
-			3,
-		},
+			3
+		}
 	},
 	display_name = {
 		horizontal_alignment = "left",
@@ -152,13 +152,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			1700,
-			50,
+			50
 		},
 		position = {
 			0,
 			-567,
-			3,
-		},
+			3
+		}
 	},
 	weapon_actions_pivot = {
 		horizontal_alignment = "right",
@@ -166,13 +166,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			-560,
 			40,
-			3,
-		},
+			3
+		}
 	},
 	equip_button = {
 		horizontal_alignment = "left",
@@ -180,13 +180,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			374,
-			76,
+			76
 		},
 		position = {
 			857,
 			-90,
-			1,
-		},
+			1
+		}
 	},
 	weapon_discard_pivot = {
 		horizontal_alignment = "left",
@@ -194,34 +194,34 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			1320,
 			60,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local widget_definitions = {
 	corner_bottom_left = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value_id = "texture",
-		},
+			value_id = "texture"
+		}
 	}, "corner_bottom_left"),
 	corner_bottom_right = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value_id = "texture",
-		},
+			value_id = "texture"
+		}
 	}, "corner_bottom_right"),
 	equip_button = UIWidget.create_definition(table.clone(ButtonPassTemplates.default_button), "equip_button", {
 		gamepad_action = "confirm_pressed",
 		original_text = Utf8.upper(Localize("loc_weapon_inventory_equip_button")),
 		hotspot = {
-			on_pressed_sound = nil,
-		},
+			on_pressed_sound = nil
+		}
 	}),
 	background = UIWidget.create_definition({
 		{
@@ -231,25 +231,25 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				color = {
 					100,
 					0,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "screen"),
 	discard_button = UIWidget.create_definition(table.clone(ButtonPassTemplates.default_button), "equip_button", {
 		gamepad_action = "gamepad_secondary_action_pressed",
 		visible = false,
 		original_text = Utf8.upper(Localize("loc_discard_items_button")),
 		hotspot = {
-			on_pressed_sound = nil,
-		},
-	}),
+			on_pressed_sound = nil
+		}
+	})
 }
 local legend_inputs = {
 	{
@@ -257,7 +257,7 @@ local legend_inputs = {
 		display_name = "loc_settings_menu_close_menu",
 		input_action = "back",
 		on_pressed_callback = "cb_on_close_pressed",
-		visibility_function = nil,
+		visibility_function = nil
 	},
 	{
 		alignment = "right_alignment",
@@ -268,7 +268,7 @@ local legend_inputs = {
 			local is_previewing_item = parent:is_previewing_item()
 
 			return is_previewing_item and not parent:is_selected_item_equipped() and not parent._discard_items_element and not parent._selected_options
-		end,
+		end
 	},
 	{
 		alignment = "right_alignment",
@@ -277,7 +277,7 @@ local legend_inputs = {
 		on_pressed_callback = "cb_on_discard_pressed",
 		visibility_function = function (parent)
 			return parent._offer_items_layout and table.size(parent._offer_items_layout) > 1 and not parent._discard_items_element
-		end,
+		end
 	},
 	{
 		alignment = "right_alignment",
@@ -309,8 +309,8 @@ local legend_inputs = {
 			end
 
 			return false
-		end,
-	},
+		end
+	}
 }
 local blueprints = {
 	button = {
@@ -322,8 +322,8 @@ local blueprints = {
 			content.text = entry.display_name or ""
 			content.icon = entry.display_icon or ""
 			content.hotspot.pressed_callback = entry.callback
-		end,
-	},
+		end
+	}
 }
 
 return {
@@ -331,5 +331,5 @@ return {
 	legend_inputs = legend_inputs,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
-	blueprints = blueprints,
+	blueprints = blueprints
 }

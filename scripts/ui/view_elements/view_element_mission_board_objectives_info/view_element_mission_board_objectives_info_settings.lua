@@ -4,7 +4,7 @@ local Settings = {}
 
 Settings.default_tab_size = {
 	68,
-	34,
+	34
 }
 Settings.panel_height = 68
 Settings.sidebar_tabs = {
@@ -15,19 +15,19 @@ Settings.sidebar_tabs = {
 	circumstance = 2,
 	main_objective = 3,
 	side_objective = 4,
-	story = 1,
+	story = 1
 }
 Settings.currency_icons = {
 	credits = "content/ui/materials/mission_board/currencies/credits_small_digital",
 	diamantine = "content/ui/materials/mission_board/currencies/diamantine_small_digital",
 	plasteel = "content/ui/materials/mission_board/currencies/plasteel_small_digital",
-	xp = "content/ui/materials/mission_board/currencies/experience_small_digital",
+	xp = "content/ui/materials/mission_board/currencies/experience_small_digital"
 }
 Settings.currency_order = {
 	"credits",
 	"xp",
 	"plasteel",
-	"diamantine",
+	"diamantine"
 }
 
 return settings("ViewElementMissionBoardObjectivesInfoSettings", Settings)

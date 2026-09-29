@@ -9,6 +9,7 @@ local LoadingReason = require("scripts/ui/loading_reason")
 local LoadingStateData = require("scripts/ui/loading_state_data")
 local MasterItems = require("scripts/backend/master_items")
 local PortraitUI = require("scripts/ui/portrait_ui")
+local ProfileUtils = require("scripts/utilities/profile_utils")
 local RenderTargetAtlasGenerator = require("scripts/ui/render_target_atlas_generator")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local TaskbarFlash = require("scripts/utilities/taskbar_flash")
@@ -154,7 +155,7 @@ UIManager._setup_icon_renderers = function (self)
 		width = 140,
 		world_layer = 1,
 		world_name = "portrait_world",
-		render_target_atlas_generator = self._render_target_atlas_generator,
+		render_target_atlas_generator = self._render_target_atlas_generator
 	}
 	local cosmetics_render_settings = {
 		always_render = true,
@@ -168,7 +169,7 @@ UIManager._setup_icon_renderers = function (self)
 		world_name = "cosmetics_portrait_world",
 		width = cosmetics_icon_size[1],
 		height = cosmetics_icon_size[2],
-		render_target_atlas_generator = self._render_target_atlas_generator,
+		render_target_atlas_generator = self._render_target_atlas_generator
 	}
 	local weapon_skins_render_settings = {
 		height = 128,
@@ -181,7 +182,7 @@ UIManager._setup_icon_renderers = function (self)
 		width = 128,
 		world_layer = 800,
 		world_name = "weapon_skins_icon_world",
-		render_target_atlas_generator = self._render_target_atlas_generator,
+		render_target_atlas_generator = self._render_target_atlas_generator
 	}
 	local companion_render_settings = {
 		height = 128,
@@ -194,7 +195,7 @@ UIManager._setup_icon_renderers = function (self)
 		width = 128,
 		world_layer = 800,
 		world_name = "companion_icon_world",
-		render_target_atlas_generator = self._render_target_atlas_generator,
+		render_target_atlas_generator = self._render_target_atlas_generator
 	}
 	local back_buffer_render_handlers = {}
 
@@ -298,7 +299,7 @@ UIManager.create_renderer = function (self, name, world, create_resource_target,
 
 	self._renderers[name] = {
 		renderer = renderer,
-		world = world,
+		world = world
 	}
 
 	ResourceReferenceContext.pop("UIManager:create_renderer")
@@ -327,7 +328,7 @@ UIManager._load_ui_element_packages = function (self, element_definitions, refer
 			package_references[reference_name] = {
 				id = nil,
 				loaded = false,
-				package = package,
+				package = package
 			}
 			is_loading = true
 		end
@@ -431,7 +432,7 @@ UIManager.create_player_hud = function (self, peer_id, local_player_id, elements
 	local params = {
 		peer_id = peer_id,
 		local_player_id = local_player_id or 1,
-		enable_world_bloom = enable_world_bloom,
+		enable_world_bloom = enable_world_bloom
 	}
 
 	self._hud = UIHud:new(elements, visibility_groups, params)
@@ -448,7 +449,7 @@ UIManager.create_spectator_hud = function (self, world_viewport_name, peer_id, l
 		peer_id = peer_id,
 		local_player_id = local_player_id or 1,
 		world_viewport_name = world_viewport_name,
-		enable_world_bloom = enable_world_bloom,
+		enable_world_bloom = enable_world_bloom
 	}
 
 	self._spectator_hud = UIHud:new(elements, visibility_groups, params)
@@ -632,8 +633,8 @@ UIManager._show_error_popup = function (self, view_name)
 			close_on_pressed = true,
 			hotkey = "back",
 			template_type = "terminal_button_small",
-			text = "loc_popup_unavailable_view_button_confirm",
-		},
+			text = "loc_popup_unavailable_view_button_confirm"
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", popup_params)
@@ -753,10 +754,10 @@ UIManager.create_world = function (self, world_name, optional_layer, optional_ti
 	local layer = optional_layer or 1
 	local parameters = {
 		layer = layer,
-		timer_name = optional_timer_name or self._timer_name,
+		timer_name = optional_timer_name or self._timer_name
 	}
 	local flags = optional_flags or {
-		Application.DISABLE_PHYSICS,
+		Application.DISABLE_PHYSICS
 	}
 	local world_manager = Managers.world
 
@@ -863,6 +864,16 @@ UIManager.emote_wheel_wants_camera_control = function (self)
 	local hud = self._hud
 
 	return hud and hud:emote_wheel_wants_camera_control()
+end
+
+UIManager.tactical_overlay_active = function (self)
+	local hud = self._hud
+
+	return hud and hud:tactical_overlay_active()
+end
+
+UIManager.gameplay_hud_overlay_active = function (self)
+	return self:emote_wheel_active() or self:communication_wheel_active() or self:tactical_overlay_active()
 end
 
 UIManager.wwise_music_state = function (self, wwise_state_group_name)
@@ -1149,14 +1160,14 @@ UIManager.load_view = function (self, view_name, reference_name, loaded_callback
 			packages_to_load_data[#packages_to_load_data + 1] = {
 				package_name = dynamic_package.name,
 				reference_name = package_reference_name,
-				is_level_package = dynamic_package.is_level_package or nil,
+				is_level_package = dynamic_package.is_level_package or nil
 			}
 		else
 			local package_reference_name = reference_name .. #packages_to_load_data
 
 			packages_to_load_data[#packages_to_load_data + 1] = {
 				package_name = dynamic_package,
-				reference_name = package_reference_name,
+				reference_name = package_reference_name
 			}
 		end
 	end
@@ -1171,7 +1182,7 @@ UIManager.load_view = function (self, view_name, reference_name, loaded_callback
 
 				packages_to_load_data[#packages_to_load_data + 1] = {
 					package_name = package_name[i],
-					reference_name = package_reference_name,
+					reference_name = package_reference_name
 				}
 			end
 		else
@@ -1179,7 +1190,7 @@ UIManager.load_view = function (self, view_name, reference_name, loaded_callback
 
 			packages_to_load_data[#packages_to_load_data + 1] = {
 				package_name = package_name,
-				reference_name = package_reference_name,
+				reference_name = package_reference_name
 			}
 		end
 	end
@@ -1192,7 +1203,7 @@ UIManager.load_view = function (self, view_name, reference_name, loaded_callback
 			packages_to_load_data[#packages_to_load_data + 1] = {
 				is_level_package = true,
 				package_name = level_name,
-				reference_name = package_reference_name,
+				reference_name = package_reference_name
 			}
 		end
 	end
@@ -1217,7 +1228,7 @@ UIManager.load_view = function (self, view_name, reference_name, loaded_callback
 		local view_loading_data = {
 			packages_load_data = packages_to_load_data,
 			loaded_callback = loaded_callback,
-			reference_name = reference_name,
+			reference_name = reference_name
 		}
 
 		self._views_loading_data[view_name][reference_name] = view_loading_data
@@ -1240,7 +1251,7 @@ UIManager.load_view = function (self, view_name, reference_name, loaded_callback
 
 					depenency_package_load_data[#depenency_package_load_data + 1] = {
 						package_name = dependency_package_name,
-						reference_name = package_reference_name,
+						reference_name = package_reference_name
 					}
 				end
 
@@ -1251,7 +1262,7 @@ UIManager.load_view = function (self, view_name, reference_name, loaded_callback
 						callback_fn(dependency_package_data, view_loading_data)
 					end
 
-					dependency_package_data.package_id = Managers.package:load(dependency_package_data.package_name, dependency_package_data.reference_name, load_cb)
+					dependency_package_data.package_id = Managers.package:load(dependency_package_data.package_name, dependency_package_data.reference_name, load_cb, true)
 				end
 			end
 
@@ -1283,7 +1294,7 @@ UIManager.load_view = function (self, view_name, reference_name, loaded_callback
 				callback_fn(package_data, view_loading_data)
 			end
 
-			package_data.package_id = Managers.package:load(package_data.package_name, package_data.reference_name, load_cb)
+			package_data.package_id = Managers.package:load(package_data.package_name, package_data.reference_name, load_cb, true)
 		end
 
 		return true
@@ -1316,7 +1327,7 @@ UIManager._unload_package = function (self, package_id, frame_delay_count)
 	if frame_delay_count then
 		self._package_unload_list[#self._package_unload_list + 1] = {
 			package_id = package_id,
-			frame_delay = frame_delay_count,
+			frame_delay = frame_delay_count
 		}
 		self._handle_package_unload_delay = true
 	else
@@ -1581,14 +1592,14 @@ UIManager.event_crossplay_change = function (self, enabled, category, id)
 			{
 				close_on_pressed = true,
 				text = "loc_popup_button_confirm",
-				callback = callback(self, "_set_crossplay_and_return_to_title_screen", enabled),
+				callback = callback(self, "_set_crossplay_and_return_to_title_screen", enabled)
 			},
 			{
 				close_on_pressed = true,
 				text = "loc_popup_button_close",
-				callback = callback(self, "_unset_crossplay", enabled, category, id),
-			},
-		},
+				callback = callback(self, "_unset_crossplay", enabled, category, id)
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context)
@@ -1643,11 +1654,8 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 
 		local player = Managers.player:local_player(1)
 		local profile = dummy_profile or player:profile()
-		local gender_name = profile and profile.gender
-		local breed_name = profile and profile.archetype.breed
-		local archetype_name = profile and profile.archetype and profile.archetype.name
 
-		dummy_profile = Items.create_mannequin_profile_by_item(real_item, gender_name, archetype_name, breed_name)
+		dummy_profile = ProfileUtils.create_mannequin_profile(real_item, profile)
 
 		if real_item.slots and not table.is_empty(item.slots) then
 			dummy_profile.loadout[item.slots[1]] = real_item
@@ -1679,6 +1687,12 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 			render_context.icon_camera_rotation_offset = nil
 		end
 
+		if table.find(slots, "slot_animation_end_of_round") then
+			render_context.use_end_of_round_camera = true
+		else
+			render_context.use_end_of_round_camera = nil
+		end
+
 		render_context.ignore_companion = not render_context.companion_state_machine and (real_item.companion_state_machine == "" or real_item.companion_state_machine == nil)
 		dummy_profile.character_id = string.format("%s_%s_%s", gear_id, dummy_profile.breed, dummy_profile.gender)
 
@@ -1703,16 +1717,13 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 
 		local player = Managers.player:local_player(1)
 		local profile = dummy_profile or player:profile()
-		local gender_name = profile and profile.gender
-		local breed_name = profile and profile.archetype.breed
-		local archetype_name = profile and profile.archetype and profile.archetype.name
 
-		dummy_profile = Items.create_mannequin_profile_by_item(items[1], gender_name, archetype_name, breed_name)
+		dummy_profile = ProfileUtils.create_mannequin_profile(items[1], profile)
 
 		local loadout = dummy_profile.loadout
 
-		for i = 1, #items do
-			local set_item = items[i]
+		for ii = 1, #items do
+			local set_item = items[ii]
 			local first_slot_name = set_item.slots[1]
 
 			loadout[first_slot_name] = set_item
@@ -1851,7 +1862,7 @@ UIManager.event_cinematic_skip_state = function (self, show_skip, can_skip)
 
 	self._cinematic_skip_state = {
 		show_skip = show_skip,
-		can_skip = can_skip,
+		can_skip = can_skip
 	}
 end
 

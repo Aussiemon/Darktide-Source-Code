@@ -130,9 +130,9 @@ OutOfBoundsManager.register_soft_oob_unit = function (self, unit, object, callba
 		registered_units[unit][object] = callback_name
 	else
 		registered_units[unit] = registered_units[unit] or setmetatable({
-			[object] = callback_name,
+			[object] = callback_name
 		}, {
-			__mode = "v",
+			__mode = "v"
 		})
 	end
 end

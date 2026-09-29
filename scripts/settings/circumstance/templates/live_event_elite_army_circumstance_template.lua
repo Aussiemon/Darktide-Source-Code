@@ -14,14 +14,14 @@ local core_mutators = {
 	"mutator_live_elite_army_override_roamer_pack",
 	"mutator_only_elite_terror_events",
 	"mutator_ignore_roamer_limits",
-	"mutator_no_encampments",
+	"mutator_no_encampments"
 }
 local base_templates = CircumstanceUtils.inherit(BaseLiveEventTemplate, core_mutators, {}, "elite_army")
 
 base_templates.elite_army_waves_spec = nil
 
 local circumstance_templates = table.reduce({
-	base_templates,
+	base_templates
 }, table.merge, {})
 local minion_health_modifier = {
 	0,
@@ -29,7 +29,7 @@ local minion_health_modifier = {
 	0.075,
 	0.075,
 	0.15,
-	0.15,
+	0.15
 }
 
 circumstance_templates.elite_army.ui.display_name = "loc_circumstance_elite_army_default_title"

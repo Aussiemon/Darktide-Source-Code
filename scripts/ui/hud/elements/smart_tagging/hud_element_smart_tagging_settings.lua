@@ -6,7 +6,7 @@ local hud_element_smart_tagging_settings = {
 	max_radius = 190,
 	min_radius = 185,
 	scan_delay = 0.2,
-	wheel_slots = 8,
+	wheel_slots = 8
 }
 
 return settings("HudElementSmartTaggingSettings", hud_element_smart_tagging_settings)

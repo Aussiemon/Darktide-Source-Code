@@ -173,7 +173,7 @@ GameModeExtensionHavoc.hot_join_sync = function (self, sender, channel)
 			local new_entry = {
 				order_owner_id = order_owner_id,
 				mission_id = mission_id,
-				order_joiner_id = sender_account_id,
+				order_joiner_id = sender_account_id
 			}
 
 			table.insert(self._join_personal_mission_queue, new_entry)

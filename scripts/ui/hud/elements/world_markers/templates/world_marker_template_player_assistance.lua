@@ -9,27 +9,27 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local template = {}
 local size = {
 	100,
-	100,
+	100
 }
 local icon_size = {
 	10,
-	32,
+	32
 }
 local background_size = {
 	58,
-	48,
+	48
 }
 local frame_size = {
 	66,
-	54,
+	54
 }
 local glow_size = {
 	108,
-	100,
+	100
 }
 local indicator_size = {
 	16,
-	28,
+	28
 }
 local icon_height_offset = -60
 
@@ -39,7 +39,7 @@ template.unit_node = "ui_interaction_marker"
 template.position_offset = {
 	0,
 	0,
-	0.3,
+	0.3
 }
 template.using_smart_tag_system = false
 template.max_distance = 200
@@ -48,13 +48,13 @@ template.screen_margins = {
 	down = 0.23148148148148148,
 	left = 0.234375,
 	right = 0.234375,
-	up = 0.23148148148148148,
+	up = 0.23148148148148148
 }
 template.scale_settings = {
 	distance_max = 20,
 	distance_min = 10,
 	scale_from = 0.5,
-	scale_to = 1,
+	scale_to = 1
 }
 
 local function _show_warning_state(unit_data_extension)
@@ -121,65 +121,65 @@ local template_visual_definitions = {
 				230,
 				164,
 				26,
-				26,
+				26
 			},
 			glow = {
 				255,
 				236,
 				50,
-				50,
+				50
 			},
 			frame = {
 				255,
 				236,
 				50,
-				50,
+				50
 			},
 			indicator = {
 				255,
 				236,
 				50,
-				50,
-			},
+				50
+			}
 		},
-		textures = {},
+		textures = {}
 	},
 	warning = {
 		template_settings_overrides = {
 			position_offset = {
 				0,
 				0,
-				0.8,
-			},
+				0.8
+			}
 		},
 		colors = {
 			progress_bar = {
 				230,
 				189,
 				118,
-				38,
+				38
 			},
 			glow = {
 				255,
 				236,
 				165,
-				50,
+				50
 			},
 			frame = {
 				255,
 				236,
 				165,
-				50,
+				50
 			},
 			indicator = {
 				255,
 				236,
 				165,
-				50,
-			},
+				50
+			}
 		},
-		textures = {},
-	},
+		textures = {}
+	}
 }
 
 local function _setup_marker_by_visual_type(widget, marker, visual_type)
@@ -231,23 +231,23 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					0,
 					icon_height_offset,
-					0,
+					0
 				},
 				default_offset = {
 					0,
 					icon_height_offset,
-					0,
+					0
 				},
 				color = {
 					230,
 					0,
 					0,
-					0,
-				},
+					0
+				}
 			},
 			visibility_function = function (content, style)
 				return content.background ~= nil
-			end,
+			end
 		},
 		{
 			pass_type = "texture_uv",
@@ -260,12 +260,12 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				uvs = {
 					{
 						0,
-						0,
+						0
 					},
 					{
 						1,
-						1,
-					},
+						1
+					}
 				},
 				texture_size = background_size,
 				size = background_size,
@@ -273,19 +273,19 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					0,
 					icon_height_offset,
-					1,
+					1
 				},
 				default_offset = {
 					0,
 					icon_height_offset,
-					1,
+					1
 				},
 				color = {
 					230,
 					164,
 					26,
-					26,
-				},
+					26
+				}
 			},
 			visibility_function = function (content, style)
 				return content.progress_bar_fraction ~= nil
@@ -302,7 +302,7 @@ template.create_widget_defintion = function (template, scenegraph_id)
 					style.offset[2] = style.default_offset[2] * scale + (texture_size[2] - style.size[2]) * 0.5
 					style.uvs[1][2] = 1 - progress_bar_fraction
 				end
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -317,23 +317,23 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					0,
 					icon_height_offset,
-					2,
+					2
 				},
 				default_offset = {
 					0,
 					icon_height_offset,
-					2,
+					2
 				},
 				color = {
 					255,
 					236,
 					50,
-					50,
-				},
+					50
+				}
 			},
 			visibility_function = function (content, style)
 				return content.glow ~= nil
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -348,23 +348,23 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					0,
 					icon_height_offset,
-					3,
+					3
 				},
 				default_offset = {
 					0,
 					icon_height_offset,
-					3,
+					3
 				},
 				color = {
 					255,
 					236,
 					50,
-					50,
-				},
+					50
+				}
 			},
 			visibility_function = function (content, style)
 				return content.frame ~= nil
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -379,18 +379,18 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					0,
 					icon_height_offset + 2,
-					4,
+					4
 				},
 				default_offset = {
 					0,
 					icon_height_offset + 2,
-					4,
+					4
 				},
-				color = Color.ui_hud_green_super_light(255, true),
+				color = Color.ui_hud_green_super_light(255, true)
 			},
 			visibility_function = function (content, style)
 				return content.icon ~= nil
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -405,18 +405,18 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					0,
 					-indicator_size[2] * 0.5,
-					4,
+					4
 				},
 				color = {
 					255,
 					236,
 					50,
-					50,
-				},
+					50
+				}
 			},
 			visibility_function = function (content, style)
 				return not (content.distance >= 10) and not content.is_clamped
-			end,
+			end
 		},
 		{
 			pass_type = "rotated_texture",
@@ -430,16 +430,16 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					0,
 					icon_height_offset,
-					1,
+					1
 				},
-				color = Color.ui_hud_green_super_light(255, true),
+				color = Color.ui_hud_green_super_light(255, true)
 			},
 			visibility_function = function (content, style)
 				return content.is_clamped
 			end,
 			change_function = function (content, style)
 				style.angle = content.angle
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -454,12 +454,12 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				offset = {
 					0,
 					40 + icon_height_offset,
-					2,
+					2
 				},
 				default_offset = {
 					0,
 					40 + icon_height_offset,
-					2,
+					2
 				},
 				font_type = header_font_settings.font_type,
 				font_size = header_font_settings.font_size,
@@ -467,13 +467,13 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				default_text_color = header_font_color,
 				size = {
 					200,
-					20,
-				},
+					20
+				}
 			},
 			visibility_function = function (content, style)
 				return content.distance >= 10 or content.is_clamped
-			end,
-		},
+			end
+		}
 	}, scenegraph_id)
 end
 

@@ -3,14 +3,14 @@
 local base_template = require("scripts/settings/breed/breed_blackboard_component_templates/base_blackboard_component_template")
 local ranged_base = {
 	blocked = {
-		is_blocked = "boolean",
+		is_blocked = "boolean"
 	},
 	slot = {
 		has_ghost_slot = "boolean",
 		has_slot = "boolean",
 		is_waiting_on_slot = "boolean",
 		slot_distance = "number",
-		wait_slot_distance = "number",
+		wait_slot_distance = "number"
 	},
 	behavior = {
 		combat_range = "string",
@@ -19,50 +19,87 @@ local ranged_base = {
 		lock_combat_range_switch = "boolean",
 		move_medium = "string",
 		move_state = "string",
-		restricted_combat_range = "string",
+		restricted_combat_range = "string"
 	},
 	suppression = {
 		direction = "Vector3Box",
 		is_suppressed = "boolean",
-		suppress_value = "number",
+		suppress_value = "number"
 	},
 	combat_vector = {
 		combat_vector_is_closer = "boolean",
 		distance = "number",
 		has_position = "boolean",
-		position = "Vector3Box",
+		position = "Vector3Box"
 	},
 	weapon_switch = {
 		is_switching_weapons = "boolean",
 		last_weapon_switch_t = "number",
 		wanted_combat_range = "string",
-		wanted_weapon_slot = "string",
+		wanted_weapon_slot = "string"
 	},
 	aim = {
 		controlled_aim_position = "Vector3Box",
 		controlled_aiming = "boolean",
-		lean_dot = "number",
+		lean_dot = "number"
 	},
 	gib_override = {
 		override_hit_zone_name = "string",
 		should_override = "boolean",
-		target_template = "string",
+		target_template = "string"
 	},
 	disable = {
 		attacker_unit = "Unit",
 		is_disabled = "boolean",
-		type = "string",
+		type = "string"
 	},
 	vortex_grabbed = {
 		eject_height = "number",
 		ejected_from_vortex = "Vector3Box",
 		in_vortex = "boolean",
 		in_vortex_state = "string",
-		landing_finished = "boolean",
-	},
+		landing_finished = "boolean"
+	}
 }
 
 table.merge(ranged_base, base_template)
+
+local summoner_base = table.clone(ranged_base)
+
+summoner_base.summon = {
+	amount = "number",
+	next_summon_t = "number"
+}
+summoner_base.slot = nil
+summoner_base.blocked = nil
+summoner_base.suppression = nil
+summoner_base.teleport = {
+	should_fly = "boolean",
+	teleport_allowed = "boolean",
+	teleport_position = "Vector3Box",
+	teleport_state = "string",
+	teleport_timings_t = "number"
+}
+
+local summoner_boss = table.clone(summoner_base)
+
+summoner_boss.abilites = {
+	ability_position = "Vector3Box",
+	base_ground_attack_allowed = "boolean",
+	basic_attack_multiplier = "number",
+	current_ability = "string",
+	default_look_at_position = "Vector3Box",
+	exhaust_duration = "number",
+	in_basic_attack = "boolean",
+	is_enraged = "boolean",
+	skip_exhaust_intro = "boolean",
+	t_to_next_base_attack = "number"
+}
+summoner_boss.toughness = {
+	max_toughness = "number",
+	toughness_damage = "number",
+	toughness_percent = "number"
+}
 
 local ranged_cover_user = table.clone(ranged_base)
 
@@ -74,7 +111,7 @@ ranged_cover_user.cover = {
 	navmesh_position = "Vector3Box",
 	peek_type = "string",
 	position = "Vector3Box",
-	type = "string",
+	type = "string"
 }
 
 local netgunner = table.clone(ranged_base)
@@ -90,10 +127,10 @@ netgunner.behavior = {
 	move_state = "string",
 	net_is_ready = "boolean",
 	restricted_combat_range = "string",
-	shoot_net_cooldown = "number",
+	shoot_net_cooldown = "number"
 }
 netgunner.record_state = {
-	has_disabled_player = "boolean",
+	has_disabled_player = "boolean"
 }
 netgunner.slot = nil
 netgunner.blocked = nil
@@ -107,7 +144,7 @@ cultist_flamer.suppression = nil
 cultist_flamer.statistics = {
 	flamer_backpack_impacts = "number",
 	num_attacks_done = "number",
-	num_in_liquid = "number",
+	num_in_liquid = "number"
 }
 
 local renegade_flamer = table.clone(cultist_flamer)
@@ -118,14 +155,14 @@ grenadier.throw_grenade = {
 	next_throw_at_t = "number",
 	throw_direction = "Vector3Box",
 	throw_position = "Vector3Box",
-	wanted_rotation = "QuaternionBox",
+	wanted_rotation = "QuaternionBox"
 }
 grenadier.slot = nil
 grenadier.blocked = nil
 grenadier.suppression = nil
 grenadier.statistics = {
 	num_attacks_done = "number",
-	num_in_liquid = "number",
+	num_in_liquid = "number"
 }
 
 local sniper = table.clone(ranged_cover_user)
@@ -143,12 +180,12 @@ riflemen.patrol = {
 	patrol_index = "number",
 	patrol_leader_unit = "Unit",
 	should_patrol = "boolean",
-	walk_position = "Vector3Box",
+	walk_position = "Vector3Box"
 }
 riflemen.stim = {
 	can_use_stim = "boolean",
 	currently_using_stim = "boolean",
-	t_til_use = "number",
+	t_til_use = "number"
 }
 
 local ranged_patroller = table.clone(ranged_base)
@@ -159,12 +196,12 @@ ranged_patroller.patrol = {
 	patrol_index = "number",
 	patrol_leader_unit = "Unit",
 	should_patrol = "boolean",
-	walk_position = "Vector3Box",
+	walk_position = "Vector3Box"
 }
 ranged_patroller.stim = {
 	can_use_stim = "boolean",
 	currently_using_stim = "boolean",
-	t_til_use = "number",
+	t_til_use = "number"
 }
 
 local ranged_patroller_no_suppression = table.clone(ranged_base)
@@ -175,12 +212,12 @@ ranged_patroller_no_suppression.patrol = {
 	patrol_index = "number",
 	patrol_leader_unit = "Unit",
 	should_patrol = "boolean",
-	walk_position = "Vector3Box",
+	walk_position = "Vector3Box"
 }
 ranged_patroller_no_suppression.stim = {
 	can_use_stim = "boolean",
 	currently_using_stim = "boolean",
-	t_til_use = "number",
+	t_til_use = "number"
 }
 ranged_patroller_no_suppression.suppression = nil
 
@@ -192,7 +229,7 @@ renegade_flamer_mutator.suppression = nil
 renegade_flamer_mutator.stim = nil
 renegade_flamer_mutator.statistics = {
 	num_attacks_done = "number",
-	num_in_liquid = "number",
+	num_in_liquid = "number"
 }
 
 local renegade_twin_captain = table.clone(grenadier)
@@ -213,12 +250,12 @@ renegade_twin_captain.behavior = {
 	restricted_combat_range = "string",
 	should_disappear = "boolean",
 	should_disappear_instant = "boolean",
-	toughness_broke = "boolean",
+	toughness_broke = "boolean"
 }
 renegade_twin_captain.statistics = nil
 renegade_twin_captain.nearby_units_broadphase = {
 	next_broadphase_t = "number",
-	num_units = "number",
+	num_units = "number"
 }
 renegade_twin_captain.disable = nil
 
@@ -240,7 +277,7 @@ renegade_twin_captain_two.behavior = {
 	restricted_combat_range = "string",
 	should_disappear = "boolean",
 	should_disappear_instant = "boolean",
-	toughness_broke = "boolean",
+	toughness_broke = "boolean"
 }
 renegade_twin_captain_two.suppression = nil
 renegade_twin_captain_two.combat_vector = nil
@@ -250,21 +287,21 @@ renegade_twin_captain_two.throw_grenade = {
 	next_throw_at_t = "number",
 	throw_direction = "Vector3Box",
 	throw_position = "Vector3Box",
-	wanted_rotation = "QuaternionBox",
+	wanted_rotation = "QuaternionBox"
 }
 renegade_twin_captain.toughness = {
 	max_toughness = "number",
 	toughness_damage = "number",
-	toughness_percent = "number",
+	toughness_percent = "number"
 }
 renegade_twin_captain_two.toughness = {
 	max_toughness = "number",
 	toughness_damage = "number",
-	toughness_percent = "number",
+	toughness_percent = "number"
 }
 renegade_twin_captain_two.nearby_units_broadphase = {
 	next_broadphase_t = "number",
-	num_units = "number",
+	num_units = "number"
 }
 renegade_twin_captain_two.disable = nil
 
@@ -273,12 +310,14 @@ local renegade_radio_operator = table.clone(riflemen)
 renegade_radio_operator.stim = nil
 renegade_radio_operator.summon = {
 	amount = "number",
-	next_summon_t = "number",
+	next_summon_t = "number"
 }
 
 local templates = {
 	cultist_flamer = cultist_flamer,
 	grenadier = grenadier,
+	summoner_base = summoner_base,
+	summoner_boss = summoner_boss,
 	netgunner = netgunner,
 	ranged_base = ranged_base,
 	ranged_cover_user = ranged_cover_user,
@@ -290,7 +329,7 @@ local templates = {
 	renegade_twin_captain = renegade_twin_captain,
 	renegade_twin_captain_two = renegade_twin_captain_two,
 	riflemen = riflemen,
-	sniper = sniper,
+	sniper = sniper
 }
 
 return templates

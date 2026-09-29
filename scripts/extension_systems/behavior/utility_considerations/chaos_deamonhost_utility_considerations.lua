@@ -14,9 +14,9 @@ local considerations = {
 				0.51001,
 				1,
 				1,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	daemonhost_melee = {
 		distance_to_target = {
@@ -31,8 +31,8 @@ local considerations = {
 				0.9,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		distance_to_target_z = {
 			blackboard_component = "perception",
@@ -44,9 +44,9 @@ local considerations = {
 				0.5,
 				0,
 				1,
-				0,
-			},
-		},
+				0
+			}
+		}
 	},
 	chaos_daemonhost_combo_attack = {
 		distance_to_target = {
@@ -61,8 +61,8 @@ local considerations = {
 				0.9,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		distance_to_target_z = {
 			blackboard_component = "perception",
@@ -74,13 +74,13 @@ local considerations = {
 				0.5,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_slot = {
 			blackboard_component = "slot",
 			component_field = "has_slot",
-			is_condition = true,
+			is_condition = true
 		},
 		last_done_time = {
 			component_field = "last_done_time",
@@ -94,9 +94,9 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	chaos_daemonhost_warp_grab = {
 		distance_to_target = {
@@ -111,9 +111,9 @@ local considerations = {
 				0.900001,
 				0.25,
 				1,
-				0.2,
-			},
-		},
+				0.2
+			}
+		}
 	},
 	chaos_daemonhost_warp_teleport = {
 		distance_to_target = {
@@ -128,8 +128,8 @@ local considerations = {
 				0.51001,
 				1,
 				1,
-				1,
-			},
+				1
+			}
 		},
 		last_done_time = {
 			component_field = "last_done_time",
@@ -143,10 +143,10 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
-		},
-	},
+				1
+			}
+		}
+	}
 }
 
 return considerations

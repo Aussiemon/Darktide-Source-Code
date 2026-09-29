@@ -11,7 +11,7 @@ VisualLoadoutExtractData.create = function (map_attachment_units, map_bind_poses
 		item_name_by_unit = map_item_names and {} or nil,
 		bind_poses_by_unit = map_bind_poses and {} or nil,
 		attachment_id_lookup = map_attachment_units and {} or nil,
-		attachment_name_lookup = map_attachment_units and {} or nil,
+		attachment_name_lookup = map_attachment_units and {} or nil
 	}
 
 	return extract_data

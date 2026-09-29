@@ -29,7 +29,7 @@ BanError.init = function (self, original_error)
 		if diff > 0 then
 			self._description_params = {
 				description = Localize(self._description),
-				time_remaining = Text.format_time_span_long_form_localized(diff),
+				time_remaining = Text.format_time_span_long_form_localized(diff)
 			}
 			self._description = "loc_error_banned_with_expire_time"
 		end

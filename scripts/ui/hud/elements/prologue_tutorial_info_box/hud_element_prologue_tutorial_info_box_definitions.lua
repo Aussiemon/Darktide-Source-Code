@@ -20,8 +20,8 @@ local scenegraph_definition = {
 		position = {
 			50,
 			100,
-			5,
-		},
+			5
+		}
 	},
 	entry_pivot_1 = {
 		horizontal_alignment = "left",
@@ -31,8 +31,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	entry_pivot_2 = {
 		horizontal_alignment = "left",
@@ -42,8 +42,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	entry_pivot_3 = {
 		horizontal_alignment = "left",
@@ -53,8 +53,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	entry_pivot_4 = {
 		horizontal_alignment = "left",
@@ -64,9 +64,9 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			0,
-		},
-	},
+			0
+		}
+	}
 }
 local entry_size = info_box_settings.tracker_entry_size
 local widget_definitions = {
@@ -81,36 +81,36 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					10,
-					10,
+					10
 				},
 				color = Color.terminal_grid_background(255, true),
 				offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
 			style_id = "title_text",
 			value = nil,
 			value_id = "title_text",
-			style = info_box_settings.title_text_style,
+			style = info_box_settings.title_text_style
 		},
 		{
 			pass_type = "text",
 			style_id = "input_description_text",
 			value_id = "input_description_text",
-			style = info_box_settings.input_description_text_style,
+			style = info_box_settings.input_description_text_style
 		},
 		{
 			pass_type = "text",
 			style_id = "description_text",
 			value_id = "description_text",
-			style = info_box_settings.description_text_style,
-		},
-	}, "background"),
+			style = info_box_settings.description_text_style
+		}
+	}, "background")
 }
 local animations = {
 	popup_enter = {
@@ -130,7 +130,7 @@ local animations = {
 
 				style.description_text.text_color[1] = alpha
 				widget.offset[1] = -size_x - 25
-			end,
+			end
 		},
 		{
 			end_time = 0.8,
@@ -145,7 +145,7 @@ local animations = {
 
 				widget.alpha_multiplier = anim_progress
 				widget.offset[1] = -size_x - 25 + (25 + size_x) * math.easeInCubic(progress)
-			end,
+			end
 		},
 		{
 			end_time = 0.8,
@@ -158,7 +158,7 @@ local animations = {
 
 				style.description_text.text_color[1] = alpha
 				style.input_description_text.text_color[1] = alpha
-			end,
+			end
 		},
 		{
 			end_time = 1.3,
@@ -166,8 +166,8 @@ local animations = {
 			start_time = 0.8,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress)
 				return
-			end,
-		},
+			end
+		}
 	},
 	popup_exit = {
 		{
@@ -181,7 +181,7 @@ local animations = {
 
 				style.description_text.text_color[1] = alpha
 				style.input_description_text.text_color[1] = alpha
-			end,
+			end
 		},
 		{
 			end_time = 0.8,
@@ -198,7 +198,7 @@ local animations = {
 				local size_x = size[1]
 
 				widget.offset[1] = 25 + (-size_x - 25) * math.easeInCubic(progress)
-			end,
+			end
 		},
 		{
 			end_time = 1.5,
@@ -206,8 +206,8 @@ local animations = {
 			start_time = 0.5,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress)
 				return
-			end,
-		},
+			end
+		}
 	},
 	add_entry = {
 		{
@@ -223,7 +223,7 @@ local animations = {
 				local size_x = size[1]
 
 				widget.offset[1] = -size_x - 25
-			end,
+			end
 		},
 		{
 			end_time = 0.8,
@@ -236,7 +236,7 @@ local animations = {
 				local size_x = size[1]
 
 				widget.offset[1] = -size_x - 25 + (25 + size_x) * math.easeInCubic(progress)
-			end,
+			end
 		},
 		{
 			end_time = 0.4,
@@ -244,8 +244,8 @@ local animations = {
 			start_time = 0.2,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
 				widget.alpha_multiplier = 1 * math.easeOutCubic(progress)
-			end,
-		},
+			end
+		}
 	},
 	remove_entry = {
 		{
@@ -261,7 +261,7 @@ local animations = {
 
 					widget.offset[1] = 25 + (-size_x - 25) * math.easeInCubic(progress)
 				end
-			end,
+			end
 		},
 		{
 			end_time = 0.8,
@@ -273,8 +273,8 @@ local animations = {
 				for _, widget in pairs(widgets) do
 					widget.alpha_multiplier = alpha
 				end
-			end,
-		},
+			end
+		}
 	},
 	uptick_entry = {
 		{
@@ -286,7 +286,7 @@ local animations = {
 				local alpha = 190 + 65 * math.sin(Managers.time:time("ui") * 20)
 
 				style.frame.color[1] = alpha
-			end,
+			end
 		},
 		{
 			end_time = 0.8,
@@ -297,8 +297,8 @@ local animations = {
 				local alpha = math.lerp(style.frame.color[1], 255, progress)
 
 				style.frame.color[1] = alpha
-			end,
-		},
+			end
+		}
 	},
 	complete_entry = {
 		{
@@ -310,7 +310,7 @@ local animations = {
 				local alpha = 190 + 65 * math.sin(Managers.time:time("ui") * 20)
 
 				style.frame.color[1] = alpha
-			end,
+			end
 		},
 		{
 			end_time = 1.2,
@@ -321,7 +321,7 @@ local animations = {
 				local alpha = math.lerp(style.frame.color[1], 255, progress)
 
 				style.frame.color[1] = alpha
-			end,
+			end
 		},
 		{
 			end_time = 0.6,
@@ -332,7 +332,7 @@ local animations = {
 				local alpha = 255 * (1 - progress)
 
 				style.counter_text.text_color[1] = alpha
-			end,
+			end
 		},
 		{
 			end_time = 0.8,
@@ -352,9 +352,9 @@ local animations = {
 				local alpha = 255 * progress
 
 				style.counter_text.text_color[1] = alpha
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 local function create_entry_widget(scenegraph_id)
@@ -363,7 +363,7 @@ local function create_entry_widget(scenegraph_id)
 	counter_text_style.offset = {
 		15,
 		0,
-		6,
+		6
 	}
 	counter_text_style.text_color = info_box_settings.tracker_entry_colors.entry_text
 	counter_text_style.default_text_color = info_box_settings.tracker_entry_colors.entry_text
@@ -373,7 +373,7 @@ local function create_entry_widget(scenegraph_id)
 	entry_text_style.offset = {
 		80,
 		0,
-		6,
+		6
 	}
 	entry_text_style.text_color = info_box_settings.tracker_entry_colors.entry_text
 	entry_text_style.default_text_color = info_box_settings.tracker_entry_colors.entry_text
@@ -389,15 +389,15 @@ local function create_entry_widget(scenegraph_id)
 				size = entry_size,
 				size_addition = {
 					20,
-					15,
+					15
 				},
 				color = Color.terminal_grid_background(255, true),
 				offset = {
 					-5,
 					-10,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			horizontal_alignment = "center",
@@ -406,7 +406,7 @@ local function create_entry_widget(scenegraph_id)
 			value = "",
 			value_id = "entry_text",
 			vertical_alignment = "top",
-			style = entry_text_style,
+			style = entry_text_style
 		},
 		{
 			horizontal_alignment = "left",
@@ -415,8 +415,8 @@ local function create_entry_widget(scenegraph_id)
 			value = "",
 			value_id = "counter_text",
 			vertical_alignment = "top",
-			style = counter_text_style,
-		},
+			style = counter_text_style
+		}
 	}, scenegraph_id)
 end
 
@@ -424,5 +424,5 @@ return {
 	animations = animations,
 	create_entry_widget = create_entry_widget,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

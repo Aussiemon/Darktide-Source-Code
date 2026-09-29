@@ -5,26 +5,26 @@ local special_pacing_template_settings = {}
 special_pacing_template_settings.interrupter_patrols = INTERRUPTER_PATROLS
 special_pacing_template_settings.default_foreshadow_stingers = {
 	chaos_hound = "wwise/events/minions/play_enemy_chaos_hound_spawn",
-	renegade_netgunner = "wwise/events/minions/play_minion_special_netgunner_spawn",
+	renegade_netgunner = "wwise/events/minions/play_minion_special_netgunner_spawn"
 }
 special_pacing_template_settings.default_foreshadow_stinger_timers = {
 	chaos_hound = 5,
 	cultist_mutant = 5,
-	renegade_netgunner = 4,
+	renegade_netgunner = 4
 }
 special_pacing_template_settings.default_spawn_stingers = {
 	chaos_poxwalker_bomber = "wwise/events/minions/play_minion_special_poxwalker_bomber_spawn",
-	cultist_mutant = "wwise/events/minions/play_minion_special_mutant_charger_spawn",
+	cultist_mutant = "wwise/events/minions/play_minion_special_mutant_charger_spawn"
 }
 special_pacing_template_settings.default_optional_prefered_spawn_direction = {
 	cultist_grenadier = "ahead",
 	renegade_grenadier = "ahead",
-	renegade_sniper = "ahead",
+	renegade_sniper = "ahead"
 }
 special_pacing_template_settings.default_optional_mainpath_offset = {
 	cultist_grenadier = 30,
 	renegade_grenadier = 30,
-	renegade_sniper = 40,
+	renegade_sniper = 40
 }
 special_pacing_template_settings.default_breeds = {
 	all = {
@@ -34,50 +34,50 @@ special_pacing_template_settings.default_breeds = {
 		"grenadier",
 		"renegade_netgunner",
 		"renegade_sniper",
-		"flamer",
+		"flamer"
 	},
 	disablers = {
 		"chaos_hound",
 		"renegade_netgunner",
-		"cultist_mutant",
+		"cultist_mutant"
 	},
 	scramblers = {
 		"chaos_poxwalker_bomber",
 		"grenadier",
 		"renegade_sniper",
-		"flamer",
-	},
+		"flamer"
+	}
 }
 special_pacing_template_settings.default_coordinated_strike_breeds = {
 	"chaos_hound",
 	"chaos_poxwalker_bomber",
 	"cultist_mutant",
 	"renegade_netgunner",
-	"flamer",
+	"flamer"
 }
 special_pacing_template_settings.default_rush_prevention_breeds = {
 	"chaos_hound",
-	"cultist_mutant",
+	"cultist_mutant"
 }
 special_pacing_template_settings.default_loner_prevention_breeds = {
 	"chaos_hound",
 	"cultist_mutant",
-	"renegade_netgunner",
+	"renegade_netgunner"
 }
 special_pacing_template_settings.default_speed_running_prevention_breeds = {
 	"chaos_hound",
 	"cultist_mutant",
-	"renegade_netgunner",
+	"renegade_netgunner"
 }
 special_pacing_template_settings.faction_bound_breeds = {
 	flamer = {
 		cultist = "cultist_flamer",
-		renegade = "renegade_flamer",
+		renegade = "renegade_flamer"
 	},
 	grenadier = {
 		cultist = "cultist_grenadier",
-		renegade = "renegade_grenadier",
-	},
+		renegade = "renegade_grenadier"
+	}
 }
 special_pacing_template_settings.default = {
 	default_min_distances_from_target = {
@@ -92,55 +92,55 @@ special_pacing_template_settings.default = {
 		renegade_flamer = 15,
 		renegade_grenadier = 20,
 		renegade_netgunner = 28,
-		renegade_sniper = 30,
+		renegade_sniper = 30
 	},
 	default_min_spawners_ranges = {
 		max = 49,
-		min = 20,
+		min = 20
 	},
 	default_num_allowed_disabled_per_alive_targets = {
 		{
 			0,
 			0,
 			1,
-			1,
+			1
 		},
 		{
 			0,
 			1,
 			1,
-			2,
+			2
 		},
 		{
 			0,
 			1,
 			2,
-			3,
+			3
 		},
 		{
 			1,
 			2,
 			3,
-			3,
+			3
 		},
 		{
 			1,
 			2,
 			3,
-			4,
-		},
+			4
+		}
 	},
 	default_disabler_override_duration = {
 		360,
 		240,
 		160,
 		100,
-		80,
+		80
 	},
 	default_disabler_target_alone_player_chance = {
 		chaos_hound = 0.75,
 		cultist_mutant = 0.25,
-		renegade_netgunner = 0.5,
+		renegade_netgunner = 0.5
 	},
 	low_max_of_same = {
 		chaos_beast_of_nurgle = 1,
@@ -156,7 +156,7 @@ special_pacing_template_settings.default = {
 		renegade_flamer = 2,
 		renegade_grenadier = 2,
 		renegade_netgunner = 1,
-		renegade_sniper = 2,
+		renegade_sniper = 2
 	},
 	default_max_of_same = {
 		chaos_beast_of_nurgle = 1,
@@ -172,7 +172,7 @@ special_pacing_template_settings.default = {
 		renegade_flamer = 2,
 		renegade_grenadier = 2,
 		renegade_netgunner = 2,
-		renegade_sniper = 2,
+		renegade_sniper = 2
 	},
 	high_max_of_same = {
 		chaos_beast_of_nurgle = 1,
@@ -188,14 +188,14 @@ special_pacing_template_settings.default = {
 		renegade_flamer = 2,
 		renegade_grenadier = 2,
 		renegade_netgunner = 2,
-		renegade_sniper = 3,
+		renegade_sniper = 3
 	},
 	always_update_at_challange_rating_breeds = {
 		cultist_grenadier = 2,
 		cultist_mutant = 5,
 		renegade_grenadier = 2,
-		renegade_sniper = 0,
-	},
+		renegade_sniper = 0
+	}
 }
 special_pacing_template_settings.havoc = {
 	default_min_distances_from_target = {
@@ -210,55 +210,55 @@ special_pacing_template_settings.havoc = {
 		renegade_flamer = 15,
 		renegade_grenadier = 20,
 		renegade_netgunner = 28,
-		renegade_sniper = 30,
+		renegade_sniper = 30
 	},
 	default_min_spawners_ranges = {
 		max = 49,
-		min = 20,
+		min = 20
 	},
 	default_num_allowed_disabled_per_alive_targets = {
 		{
 			0,
 			0,
 			1,
-			1,
+			1
 		},
 		{
 			0,
 			1,
 			1,
-			2,
+			2
 		},
 		{
 			2,
 			2,
 			3,
-			3,
+			3
 		},
 		{
 			3,
 			3,
 			3,
-			3,
+			3
 		},
 		{
 			4,
 			4,
 			4,
-			4,
-		},
+			4
+		}
 	},
 	default_disabler_override_duration = {
 		360,
 		240,
 		160,
 		100,
-		80,
+		80
 	},
 	default_disabler_target_alone_player_chance = {
 		chaos_hound = 0.75,
 		cultist_mutant = 0.25,
-		renegade_netgunner = 0.5,
+		renegade_netgunner = 0.5
 	},
 	low_max_of_same = {
 		chaos_beast_of_nurgle = 1,
@@ -274,7 +274,7 @@ special_pacing_template_settings.havoc = {
 		renegade_flamer = 2,
 		renegade_grenadier = 2,
 		renegade_netgunner = 1,
-		renegade_sniper = 2,
+		renegade_sniper = 2
 	},
 	default_max_of_same = {
 		chaos_beast_of_nurgle = 1,
@@ -290,7 +290,7 @@ special_pacing_template_settings.havoc = {
 		renegade_flamer = 2,
 		renegade_grenadier = 2,
 		renegade_netgunner = 2,
-		renegade_sniper = 2,
+		renegade_sniper = 2
 	},
 	high_max_of_same = {
 		chaos_beast_of_nurgle = 1,
@@ -306,66 +306,66 @@ special_pacing_template_settings.havoc = {
 		renegade_flamer = 2,
 		renegade_grenadier = 2,
 		renegade_netgunner = 2,
-		renegade_sniper = 3,
+		renegade_sniper = 3
 	},
 	always_update_at_challange_rating_breeds = {
 		cultist_grenadier = 2,
 		cultist_mutant = 5,
 		renegade_grenadier = 2,
-		renegade_sniper = 0,
-	},
+		renegade_sniper = 0
+	}
 }
 special_pacing_template_settings.expedition = {
 	optional_skip_main_path = true,
 	min_timer_diff_range = {
 		10,
-		35,
+		35
 	},
 	timer_reduction_multiplier = {
 		scrambler = {
 			{
 				0.2,
-				0.3,
+				0.3
 			},
 			{
 				0.3,
-				0.4,
+				0.4
 			},
 			{
 				0.4,
-				0.5,
+				0.5
 			},
 			{
 				0.5,
-				0.6,
+				0.6
 			},
 			{
 				0.6,
-				1.5,
-			},
+				1.5
+			}
 		},
 		disabler = {
 			{
 				0.2,
-				0.3,
+				0.3
 			},
 			{
 				0.3,
-				0.4,
+				0.4
 			},
 			{
 				0.4,
-				0.5,
+				0.5
 			},
 			{
 				0.5,
-				0.6,
+				0.6
 			},
 			{
 				0.6,
-				1.5,
-			},
-		},
+				1.5
+			}
+		}
 	},
 	default_min_distances_from_target = {
 		chaos_beast_of_nurgle = 30,
@@ -379,55 +379,55 @@ special_pacing_template_settings.expedition = {
 		renegade_flamer = 15,
 		renegade_grenadier = 20,
 		renegade_netgunner = 28,
-		renegade_sniper = 30,
+		renegade_sniper = 30
 	},
 	default_min_spawners_ranges = {
 		max = 49,
-		min = 20,
+		min = 20
 	},
 	default_num_allowed_disabled_per_alive_targets = {
 		{
 			0,
 			0,
 			1,
-			1,
+			1
 		},
 		{
 			0,
 			1,
 			1,
-			2,
+			2
 		},
 		{
 			0,
 			1,
 			2,
-			3,
+			3
 		},
 		{
 			1,
 			2,
 			3,
-			3,
+			3
 		},
 		{
 			1,
 			2,
 			3,
-			4,
-		},
+			4
+		}
 	},
 	default_disabler_override_duration = {
 		360,
 		240,
 		160,
 		100,
-		80,
+		80
 	},
 	default_disabler_target_alone_player_chance = {
 		chaos_hound = 0.75,
 		cultist_mutant = 0.25,
-		renegade_netgunner = 0.5,
+		renegade_netgunner = 0.5
 	},
 	low_max_of_same = {
 		chaos_beast_of_nurgle = 1,
@@ -443,7 +443,7 @@ special_pacing_template_settings.expedition = {
 		renegade_flamer = 2,
 		renegade_grenadier = 2,
 		renegade_netgunner = 1,
-		renegade_sniper = 2,
+		renegade_sniper = 2
 	},
 	default_max_of_same = {
 		chaos_beast_of_nurgle = 1,
@@ -459,7 +459,7 @@ special_pacing_template_settings.expedition = {
 		renegade_flamer = 2,
 		renegade_grenadier = 2,
 		renegade_netgunner = 2,
-		renegade_sniper = 2,
+		renegade_sniper = 2
 	},
 	high_max_of_same = {
 		chaos_beast_of_nurgle = 1,
@@ -475,9 +475,9 @@ special_pacing_template_settings.expedition = {
 		renegade_flamer = 2,
 		renegade_grenadier = 2,
 		renegade_netgunner = 2,
-		renegade_sniper = 3,
+		renegade_sniper = 3
 	},
-	always_update_at_challange_rating_breeds = {},
+	always_update_at_challange_rating_breeds = {}
 }
 
 return settings("SpecialPacingTemplateSettings", special_pacing_template_settings)

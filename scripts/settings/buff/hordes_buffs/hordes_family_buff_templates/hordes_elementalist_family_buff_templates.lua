@@ -1,59 +1,22 @@
 ﻿-- chunkname: @scripts/settings/buff/hordes_buffs/hordes_family_buff_templates/hordes_elementalist_family_buff_templates.lua
 
-local Action = require("scripts/utilities/action/action")
-local Ammo = require("scripts/utilities/ammo")
-local Armor = require("scripts/utilities/attack/armor")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
-local Attack = require("scripts/utilities/attack/attack")
-local AttackSettings = require("scripts/settings/damage/attack_settings")
-local Breeds = require("scripts/settings/breed/breeds")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local BurningSettings = require("scripts/settings/burning/burning_settings")
 local CheckProcFunctions = require("scripts/settings/buff/helper_functions/check_proc_functions")
-local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
-local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local Explosion = require("scripts/utilities/attack/explosion")
-local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local FixedFrame = require("scripts/utilities/fixed_frame")
-local Health = require("scripts/utilities/health")
-local HitZone = require("scripts/utilities/attack/hit_zone")
 local HordesBuffsData = require("scripts/settings/buff/hordes_buffs/hordes_buffs_data")
 local HordesBuffsUtilities = require("scripts/settings/buff/hordes_buffs/hordes_buffs_utilities")
-local ImpactEffect = require("scripts/utilities/attack/impact_effect")
-local LiquidArea = require("scripts/extension_systems/liquid_area/utilities/liquid_area")
-local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
 local MinionState = require("scripts/utilities/minion_state")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
-local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
-local SharedBuffFunctions = require("scripts/settings/buff/helper_functions/shared_buff_functions")
-local Stagger = require("scripts/utilities/attack/stagger")
-local StaggerSettings = require("scripts/settings/damage/stagger_settings")
-local Stamina = require("scripts/utilities/attack/stamina")
-local Suppression = require("scripts/utilities/attack/suppression")
-local Toughness = require("scripts/utilities/toughness/toughness")
-local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
-local PI = math.pi
-local PI_2 = PI * 2
 local buff_categories = BuffSettings.buff_categories
 local buff_keywords = BuffSettings.keywords
 local group_keywords = BuffSettings.group_keywords
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
-local armor_types = ArmorSettings.types
-local attack_types = AttackSettings.attack_types
-local damage_types = DamageSettings.damage_types
-local hit_zone_names = HitZone.hit_zone_names
-local stagger_types = StaggerSettings.stagger_types
-local stagger_impact_comparison = StaggerSettings.stagger_impact_comparison
-local minion_burning_buff_effects = BurningSettings.buff_effects.minions
 local SFX_NAMES = HordesBuffsUtilities.SFX_NAMES
 local VFX_NAMES = HordesBuffsUtilities.VFX_NAMES
 local BROADPHASE_RESULTS = {}
-local range_melee = DamageSettings.in_melee_range
 local range_close = DamageSettings.ranged_close
-local range_far = DamageSettings.ranged_far
 local templates = {}
 
 table.make_unique(templates)
@@ -66,7 +29,7 @@ templates.hordes_buff_shock_on_blocking_melee_attack = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_block] = 1,
+		[proc_events.on_block] = 1
 	},
 	start_func = function (template_data, template_context)
 		return
@@ -88,7 +51,7 @@ templates.hordes_buff_shock_on_blocking_melee_attack = {
 			fx_system:trigger_wwise_event(SFX_NAMES.shock_proc, enemy_position)
 			fx_system:trigger_vfx(VFX_NAMES.single_target_shock, enemy_position)
 		end
-	end,
+	end
 }
 
 local percent_damage_taken_to_ability_cooldown_conversion_rate = HordesBuffsData.hordes_buff_combat_ability_cooldown_on_damage_taken.buff_stats.damage_to_cooldown.value
@@ -100,7 +63,7 @@ templates.hordes_buff_combat_ability_cooldown_on_damage_taken = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_damage_taken] = 1,
+		[proc_events.on_damage_taken] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -137,8 +100,8 @@ templates.hordes_buff_combat_ability_cooldown_on_damage_taken = {
 		local damage_taken_to_ability_cd_percentage = percent_damage_taken_to_ability_cooldown_conversion_rate
 		local cooldown_percent = damage_taken * damage_taken_to_ability_cd_percentage
 
-		ability_extension:reduce_ability_cooldown_time("combat_ability", cooldown_percent)
-	end,
+		ability_extension:restore_ability_resource("combat_ability", cooldown_percent)
+	end
 }
 
 local max_toughness_stacks_gained_per_burning_shocked_enemy = 20
@@ -151,8 +114,8 @@ templates.hordes_buff_extra_toughness_near_burning_shocked_enemies = {
 	lerped_stat_buffs = {
 		[stat_buffs.toughness_bonus_flat] = {
 			min = 0,
-			max = toughness_gained_per_burning_shocked_enemy * max_toughness_stacks_gained_per_burning_shocked_enemy,
-		},
+			max = toughness_gained_per_burning_shocked_enemy * max_toughness_stacks_gained_per_burning_shocked_enemy
+		}
 	},
 	start_func = function (template_data, template_context)
 		template_data.range = range_close
@@ -205,7 +168,7 @@ templates.hordes_buff_extra_toughness_near_burning_shocked_enemies = {
 		end
 
 		return math.clamp(template_data.num_enemies_in_range / max_toughness_stacks_gained_per_burning_shocked_enemy, 0, 1)
-	end,
+	end
 }
 
 return templates

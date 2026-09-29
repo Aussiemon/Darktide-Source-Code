@@ -13,31 +13,31 @@ suppression_templates.force_staff_p1_m1_suppression_assault = {
 		immediate_spread = {
 			{
 				pitch = 0.5,
-				yaw = 0.5,
-			},
-		},
+				yaw = 0.5
+			}
+		}
 	},
 	moving = {
 		inherits = {
 			"force_staff_p1_m1_suppression_assault",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"force_staff_p1_m1_suppression_assault",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"force_staff_p1_m1_suppression_assault",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 
 return {
 	base_templates = suppression_templates,
-	overrides = overrides,
+	overrides = overrides
 }

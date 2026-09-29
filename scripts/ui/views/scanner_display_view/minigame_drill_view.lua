@@ -80,14 +80,14 @@ MinigameDrillView.draw_widgets = function (self, dt, t, input_service, ui_render
 				255,
 				0,
 				255,
-				0,
+				0
 			}
 		else
 			widget.style.highlight.color = {
 				255,
 				0,
 				64,
-				0,
+				0
 			}
 		end
 
@@ -115,10 +115,10 @@ MinigameDrillView._create_stage_widgets = function (self)
 						255,
 						0,
 						255,
-						0,
-					},
-				},
-			},
+						0
+					}
+				}
+			}
 		}
 		local stage_widgets = {}
 
@@ -156,10 +156,10 @@ MinigameDrillView._create_background_widgets = function (self)
 					255,
 					0,
 					255,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}
 	local background = {}
 
@@ -211,10 +211,10 @@ MinigameDrillView._create_target_widgets = function (self)
 							255,
 							0,
 							255,
-							0,
-						},
-					},
-				},
+							0
+						}
+					}
+				}
 			}
 			local stage_widgets = {}
 
@@ -242,7 +242,7 @@ end
 
 local NO_TARGET = {
 	x = 0,
-	y = 0,
+	y = 0
 }
 
 MinigameDrillView._update_background = function (self, widgets_by_name, minigame)
@@ -333,14 +333,14 @@ MinigameDrillView._update_target = function (self, widgets_by_name, minigame, t)
 					255,
 					255,
 					255,
-					255,
+					255
 				}
 			else
 				widget.style.highlight.color = {
 					255,
 					255,
 					0,
-					0,
+					0
 				}
 			end
 		else
@@ -352,7 +352,7 @@ MinigameDrillView._update_target = function (self, widgets_by_name, minigame, t)
 				alpha * 255,
 				0,
 				255,
-				0,
+				0
 			}
 		end
 	end
@@ -383,7 +383,7 @@ MinigameDrillView._update_search = function (self, widgets_by_name, minigame)
 			0,
 			0,
 			0,
-			0,
+			0
 		}
 	elseif is_searching then
 		if search_percentage >= 1 then
@@ -392,14 +392,14 @@ MinigameDrillView._update_search = function (self, widgets_by_name, minigame)
 					255,
 					255,
 					255,
-					255,
+					255
 				}
 			else
 				widget.style.frame.color = {
 					255,
 					255,
 					0,
-					0,
+					0
 				}
 			end
 		else
@@ -409,7 +409,7 @@ MinigameDrillView._update_search = function (self, widgets_by_name, minigame)
 				alpha,
 				0,
 				255,
-				0,
+				0
 			}
 		end
 	else
@@ -417,7 +417,7 @@ MinigameDrillView._update_search = function (self, widgets_by_name, minigame)
 			0,
 			0,
 			0,
-			0,
+			0
 		}
 	end
 end
@@ -447,28 +447,28 @@ MinigameDrillView._update_cursor = function (self, widgets_by_name, minigame)
 			0,
 			0,
 			0,
-			0,
+			0
 		}
 	elseif on_target and search_percentage >= 1 then
 		widget.style.frame.color = {
 			255,
 			255,
 			255,
-			150,
+			150
 		}
 	elseif selected_index then
 		widget.style.frame.color = {
 			255,
 			255,
 			165,
-			0,
+			0
 		}
 	else
 		widget.style.frame.color = {
 			128,
 			255,
 			165,
-			0,
+			0
 		}
 	end
 end

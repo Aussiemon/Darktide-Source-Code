@@ -5,7 +5,7 @@ local accepted_keys = {
 	"challenge",
 	"resistance",
 	"auric",
-	"category",
+	"category"
 }
 
 QPCode.encode = function (keys)

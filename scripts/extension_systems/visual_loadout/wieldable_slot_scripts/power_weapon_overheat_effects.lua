@@ -12,12 +12,12 @@ local _vfx_external_properties = {}
 local THRESHOLDS = {
 	critical = 0.9,
 	high = 0.7,
-	low = 0.3,
+	low = 0.3
 }
 local STAGE_RANKING = {
 	critical = 3,
 	high = 2,
-	low = 1,
+	low = 1
 }
 
 PowerWeaponOverheatEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)

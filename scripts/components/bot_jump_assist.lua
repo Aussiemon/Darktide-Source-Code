@@ -213,8 +213,8 @@ BotJumpAssist.component_data = {
 	should_jump = {
 		ui_name = "Should Jump",
 		ui_type = "check_box",
-		value = true,
-	},
+		value = true
+	}
 }
 
 return BotJumpAssist

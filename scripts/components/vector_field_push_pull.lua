@@ -15,7 +15,7 @@ VectorFieldPushPull.init = function (self, unit)
 	end
 
 	self._settings = {
-		duration = self._duration,
+		duration = self._duration
 	}
 
 	local world = Unit.world(unit)
@@ -103,7 +103,7 @@ VectorFieldPushPull.create_paramaters = function (self, unit)
 	return {
 		center = center,
 		radius = scale.x * 0.5,
-		speed = self._speed,
+		speed = self._speed
 	}
 end
 
@@ -111,7 +111,7 @@ VectorFieldPushPull.component_data = {
 	vector_field_name = {
 		ui_name = "Vector Field Name",
 		ui_type = "text_box",
-		value = "wind",
+		value = "wind"
 	},
 	duration = {
 		decimals = 2,
@@ -119,7 +119,7 @@ VectorFieldPushPull.component_data = {
 		step = 0.01,
 		ui_name = "Duration",
 		ui_type = "number",
-		value = 0,
+		value = 0
 	},
 	speed = {
 		decimals = 2,
@@ -128,7 +128,7 @@ VectorFieldPushPull.component_data = {
 		step = 0.01,
 		ui_name = "Speed",
 		ui_type = "slider",
-		value = 5,
+		value = 5
 	},
 	bounding_volume = {
 		ui_name = "Bounding Volume",
@@ -136,24 +136,24 @@ VectorFieldPushPull.component_data = {
 		value = "global_direction",
 		options = {
 			"none",
-			"sphere",
-		},
+			"sphere"
+		}
 	},
 	effect_resource_01 = {
 		filter = "vector_field",
 		ui_name = "Effect Resource",
-		ui_type = "resource",
+		ui_type = "resource"
 	},
 	inputs = {
 		start_effect = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		stop_effect = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return VectorFieldPushPull

@@ -5,7 +5,7 @@ local PlayerUnitOutlineExtension = class("PlayerUnitOutlineExtension")
 local IGNORED_DISABLED_OUTLINE_STATES = {
 	catapulted = true,
 	consumed = true,
-	grabbed = true,
+	grabbed = true
 }
 local UPDATE_WAITING_PERIOD = 0.5
 

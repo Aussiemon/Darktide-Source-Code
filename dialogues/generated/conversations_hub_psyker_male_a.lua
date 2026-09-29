@@ -6,18 +6,18 @@ local conversations_hub_psyker_male_a = {
 		sound_events_n = 2,
 		sound_events = {
 			[1] = "loc_psyker_male_a__com_wheel_vo_for_the_emperor_01",
-			[2] = "loc_psyker_male_a__com_wheel_vo_for_the_emperor_02",
+			[2] = "loc_psyker_male_a__com_wheel_vo_for_the_emperor_02"
 		},
 		sound_events_duration = {
 			[1] = 2.802958,
-			[2] = 2.628854,
+			[2] = 2.628854
 		},
 		sound_event_weights = {
 			[1] = 0.5,
-			[2] = 0.5,
+			[2] = 0.5
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("conversations_hub_psyker_male_a", conversations_hub_psyker_male_a)

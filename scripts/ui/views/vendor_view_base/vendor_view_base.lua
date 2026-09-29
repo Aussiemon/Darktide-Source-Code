@@ -405,7 +405,7 @@ VendorViewBase._generate_menu_tabs = function (self, layout, offers)
 						display_name = UiSettings.display_name_by_store_category[store_category],
 						icon = UiSettings.texture_by_store_category[store_category],
 						slot_types = use_item_categories and store_category_slot_stypes,
-						store_category = store_category,
+						store_category = store_category
 					}
 
 					menu_tab_content_by_store_category[store_category] = tab_content
@@ -490,12 +490,12 @@ VendorViewBase._convert_offers_to_layout_entries = function (self, item_offers)
 							offer = offer,
 							offer_id = offer_id,
 							slot = {
-								name = item.slots[1],
+								name = item.slots[1]
 							},
 							filter_slots = {
-								preview_item.slots[1],
+								preview_item.slots[1]
 							},
-							disable_equipped_status = self._disable_equipped_status,
+							disable_equipped_status = self._disable_equipped_status
 						}
 					else
 						Log.error("VendorViewBase", "Cannot find preview item (%s) for weapon skin (%s)", preview_item, item.name)
@@ -510,9 +510,9 @@ VendorViewBase._convert_offers_to_layout_entries = function (self, item_offers)
 						offer = offer,
 						offer_id = offer_id,
 						slot = {
-							name = item.slots[1],
+							name = item.slots[1]
 						},
-						disable_equipped_status = self._disable_equipped_status,
+						disable_equipped_status = self._disable_equipped_status
 					}
 				end
 			end
@@ -557,7 +557,7 @@ VendorViewBase._convert_offers_to_layout_entries = function (self, item_offers)
 					breeds = first_item.breeds,
 					archetypes = first_item.archetypes,
 					rarity = rarity,
-					description = sku.description,
+					description = sku.description
 				}
 
 				layout[#layout + 1] = {
@@ -568,7 +568,7 @@ VendorViewBase._convert_offers_to_layout_entries = function (self, item_offers)
 					offer_id = offer_id,
 					total_count = total_count,
 					owned_count = owned_count,
-					disable_equipped_status = self._disable_equipped_status,
+					disable_equipped_status = self._disable_equipped_status
 				}
 			end
 		end
@@ -628,31 +628,6 @@ VendorViewBase._update_bundle_offers_owned_skus = function (self)
 			end
 		end
 	end
-end
-
-VendorViewBase._generate_mannequin_loadout = function (self, profile)
-	local presentation_profile = profile
-	local gender_name = presentation_profile.gender
-	local archetype = presentation_profile.archetype
-	local breed_name = archetype.breed
-	local new_loadout = {}
-	local required_breed_item_names_per_slot = UiSettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed_name]
-	local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender_name]
-	local required_items = required_gender_item_names_per_slot and required_gender_item_names_per_slot.default
-
-	if required_items then
-		for slot_name, slot_item_name in pairs(required_items) do
-			local item_definition = MasterItems.get_item(slot_item_name)
-
-			if item_definition then
-				local slot_item = table.clone(item_definition)
-
-				new_loadout[slot_name] = slot_item
-			end
-		end
-	end
-
-	return new_loadout
 end
 
 VendorViewBase.update = function (self, dt, t, input_service)
@@ -875,18 +850,18 @@ VendorViewBase._update_wallets_presentation = function (self, wallets_data)
 	if wallets_data and wallets_data.wallets then
 		for i = 1, #wallets_data.wallets do
 			local currency = wallets_data.wallets[i].balance
-			local type = currency.type
-			local wallet = wallets_data:by_type(type)
+			local currency_type = currency.type
+			local wallet = wallets_data:by_type(currency_type)
 			local balance = wallet and wallet.balance
 			local amount = balance and balance.amount or 0
 
-			self._current_balance[type] = amount
+			self._current_balance[currency_type] = amount
 		end
 	end
 end
 
-VendorViewBase.can_afford = function (self, amount, type)
-	return amount <= (self._current_balance[type] or 0)
+VendorViewBase.can_afford = function (self, amount, currency_type)
+	return amount <= (self._current_balance[currency_type] or 0)
 end
 
 VendorViewBase._handle_input = function (self, input_service, dt, t)
@@ -932,7 +907,7 @@ VendorViewBase._setup_sort_options = function (self)
 		self._sort_options = {
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power")
 				}),
 				sort_function = Items.sort_comparator({
 					">",
@@ -940,12 +915,12 @@ VendorViewBase._setup_sort_options = function (self)
 					"<",
 					Items.compare_item_name,
 					"<",
-					Items.compare_item_rarity,
-				}),
+					Items.compare_item_rarity
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power")
 				}),
 				sort_function = Items.sort_comparator({
 					"<",
@@ -953,12 +928,12 @@ VendorViewBase._setup_sort_options = function (self)
 					"<",
 					Items.compare_item_name,
 					"<",
-					Items.compare_item_rarity,
-				}),
+					Items.compare_item_rarity
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
 				}),
 				sort_function = Items.sort_comparator({
 					">",
@@ -966,12 +941,12 @@ VendorViewBase._setup_sort_options = function (self)
 					">",
 					Items.compare_item_level,
 					"<",
-					Items.compare_item_name,
-				}),
+					Items.compare_item_name
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
 				}),
 				sort_function = Items.sort_comparator({
 					"<",
@@ -979,12 +954,12 @@ VendorViewBase._setup_sort_options = function (self)
 					">",
 					Items.compare_item_level,
 					"<",
-					Items.compare_item_name,
-				}),
+					Items.compare_item_name
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_item_price"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_item_price")
 				}),
 				sort_function = Items.sort_element_key_comparator({
 					"false",
@@ -998,12 +973,12 @@ VendorViewBase._setup_sort_options = function (self)
 					Items.compare_item_rarity,
 					"<",
 					"item",
-					Items.compare_item_name,
-				}),
+					Items.compare_item_name
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_item_price"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_item_price")
 				}),
 				sort_function = Items.sort_element_key_comparator({
 					"false",
@@ -1017,12 +992,12 @@ VendorViewBase._setup_sort_options = function (self)
 					Items.compare_item_rarity,
 					"<",
 					"item",
-					Items.compare_item_name,
-				}),
+					Items.compare_item_name
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_increasing_letters", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
 				}),
 				sort_function = Items.sort_comparator({
 					"<",
@@ -1030,12 +1005,12 @@ VendorViewBase._setup_sort_options = function (self)
 					"<",
 					Items.compare_item_level,
 					"<",
-					Items.compare_item_rarity,
-				}),
+					Items.compare_item_rarity
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_decreasing_letters", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
 				}),
 				sort_function = Items.sort_comparator({
 					">",
@@ -1043,9 +1018,9 @@ VendorViewBase._setup_sort_options = function (self)
 					"<",
 					Items.compare_item_level,
 					"<",
-					Items.compare_item_rarity,
-				}),
-			},
+					Items.compare_item_rarity
+				})
+			}
 		}
 	end
 

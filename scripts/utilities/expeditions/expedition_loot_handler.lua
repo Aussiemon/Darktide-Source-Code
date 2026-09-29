@@ -3,6 +3,7 @@
 local NavQueries = require("scripts/utilities/nav_queries")
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
 local Text = require("scripts/utilities/ui/text")
+local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local Vo = require("scripts/utilities/vo")
 
@@ -15,8 +16,8 @@ local CLIENT_RPCS = {
 	"rpc_client_expedition_loot_collected",
 	"rpc_client_expedition_remove_loot_collected",
 	"rpc_client_expedition_update_player_rescue_objective",
-	"rpc_client_expedition_register_dropped_heavy_loot_unit",
-	"rpc_expedition_register_dropped_heavy_loot_unit",
+	"rpc_client_expedition_register_picked_up_heavy_loot_unit",
+	"rpc_expedition_register_picked_up_heavy_loot_unit"
 }
 local ExpeditionLootHandler = class("ExpeditionLootHandler")
 
@@ -30,8 +31,9 @@ ExpeditionLootHandler.init = function (self, expedition_template, is_server, net
 	self._dropped_reason_by_pickup_unit = {}
 	self._marked_dropped_loot = {}
 	self._loot_calculations_dirty = false
-	self._dropped_heavy_loot_units = {}
+	self._picked_up_heavy_loot_units = {}
 	self._rescue_loot_amount_per_peer_id = {}
+	self._stored_rescue_loot_amount_per_account_id = {}
 	self._team_loot_collected = {}
 
 	local types = expedition_template.loot_settings.types
@@ -54,7 +56,8 @@ ExpeditionLootHandler.init = function (self, expedition_template, is_server, net
 		event_manager:register(self, "event_expedition_convert_and_collect", "event_expedition_convert_and_collect")
 		event_manager:register(self, "event_expedition_pocketable_dropped", "event_expedition_pocketable_dropped")
 		event_manager:register(self, "event_expedition_player_loot_collected", "event_expedition_player_loot_collected")
-		event_manager:register(self, "client_disconnected", "_event_client_disconnected")
+		event_manager:register(self, "host_game_session_manager_player_joined", "_event_client_connected")
+		event_manager:register(self, "multiplayer_session_client_disconnected", "_event_client_disconnected")
 	else
 		network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
 	end
@@ -76,8 +79,50 @@ ExpeditionLootHandler.event_player_died = function (self, player)
 	end
 end
 
-ExpeditionLootHandler._event_client_disconnected = function (self, network_interface, peer_id, channel_id)
-	self._telemetry_tracking_loot_by_player[peer_id] = nil
+local function _player_account_id(player)
+	local account_id = player:account_id()
+
+	if account_id and account_id ~= PlayerManager.NO_ACCOUNT_ID then
+		return account_id
+	end
+end
+
+ExpeditionLootHandler._event_client_connected = function (self, peer_id, player)
+	local account_id = _player_account_id(player)
+	local stored_bounty = self._stored_rescue_loot_amount_per_account_id[account_id]
+
+	if stored_bounty then
+		self._stored_rescue_loot_amount_per_account_id[account_id] = nil
+		self._rescue_loot_amount_per_peer_id[peer_id] = stored_bounty
+
+		local total_team_rescue_amount = self:_total_rescue_loot_amount()
+
+		self:_update_player_rescue_objective(total_team_rescue_amount)
+		Managers.state.game_session:send_rpc_clients("rpc_client_expedition_update_player_rescue_objective", total_team_rescue_amount)
+	end
+end
+
+ExpeditionLootHandler._event_client_disconnected = function (self, removed_players_data)
+	if not removed_players_data then
+		return
+	end
+
+	for i = 1, #removed_players_data do
+		local player_data = removed_players_data[i]
+		local peer_id = player_data.peer_id
+		local peer_rescue_amount = self._rescue_loot_amount_per_peer_id[peer_id]
+
+		if self._is_server and peer_rescue_amount and peer_rescue_amount > 0 then
+			self._rescue_loot_amount_per_peer_id[peer_id] = nil
+			self._stored_rescue_loot_amount_per_account_id[player_data.account_id] = peer_rescue_amount
+
+			local total_team_rescue_amount = self:_total_rescue_loot_amount()
+
+			Managers.state.game_session:send_rpc_clients("rpc_client_expedition_update_player_rescue_objective", total_team_rescue_amount)
+		end
+
+		self._telemetry_tracking_loot_by_player[peer_id] = nil
+	end
 end
 
 ExpeditionLootHandler.loot_type_settings = function (self, loot_type)
@@ -132,17 +177,8 @@ ExpeditionLootHandler.event_expedition_pocketable_collected = function (self, in
 	local amount = type_settings.values_per_tier[tier]
 
 	if loot_type == "heavy" then
-		local dropped_heavy_loot_units = self._dropped_heavy_loot_units
-
-		for i = 1, #dropped_heavy_loot_units do
-			local unit = dropped_heavy_loot_units[i]
-
-			if unit == pickup_unit then
-				table.remove(dropped_heavy_loot_units, i)
-
-				break
-			end
-		end
+		self:_register_picked_up_heavy_loot_unit(pickup_unit)
+		self:mark_loot_unit(pickup_unit, "luggable")
 	end
 
 	if self._is_server then
@@ -163,14 +199,6 @@ ExpeditionLootHandler.event_expedition_pocketable_dropped = function (self, inte
 	local type_settings = self:loot_type_settings(loot_type)
 	local amount = -type_settings.values_per_tier[tier]
 
-	if loot_type == "heavy" and pickup_unit then
-		self:_register_dropped_heavy_loot_unit(pickup_unit)
-
-		local pickup_is_level_unit, pickup_unit_id = Managers.state.unit_spawner:game_object_id_or_level_index(pickup_unit)
-
-		Managers.state.game_session:send_rpc_clients("rpc_client_expedition_register_dropped_heavy_loot_unit", pickup_unit_id, pickup_is_level_unit)
-	end
-
 	Managers.state.game_session:send_rpc_clients("rpc_client_expedition_loot_collected", peer_id, amount, loot_type, show_notification)
 
 	if show_notification then
@@ -181,15 +209,15 @@ ExpeditionLootHandler.event_expedition_pocketable_dropped = function (self, inte
 	Vo.set_npc_faction_memory("data_reliquary_carried", 0)
 end
 
-ExpeditionLootHandler.rpc_client_expedition_register_dropped_heavy_loot_unit = function (self, channel_id, pickup_unit_id, is_level_unit)
+ExpeditionLootHandler.rpc_client_expedition_register_picked_up_heavy_loot_unit = function (self, channel_id, pickup_unit_id, is_level_unit)
 	local pickup_unit = Managers.state.unit_spawner:unit(pickup_unit_id, is_level_unit)
 
-	self:_register_dropped_heavy_loot_unit(pickup_unit)
+	self:_register_picked_up_heavy_loot_unit(pickup_unit)
 end
 
-ExpeditionLootHandler._register_dropped_heavy_loot_unit = function (self, unit)
+ExpeditionLootHandler._register_picked_up_heavy_loot_unit = function (self, unit)
 	local unit_found = false
-	local dropped_heavy_loot_units = self._dropped_heavy_loot_units
+	local dropped_heavy_loot_units = self._picked_up_heavy_loot_units
 
 	for i = 1, #dropped_heavy_loot_units do
 		local heavy_loot_unit = dropped_heavy_loot_units[i]
@@ -202,9 +230,7 @@ ExpeditionLootHandler._register_dropped_heavy_loot_unit = function (self, unit)
 	end
 
 	if not unit_found then
-		self._dropped_heavy_loot_units[#self._dropped_heavy_loot_units + 1] = unit
-
-		self:mark_loot_unit(unit, "luggable")
+		self._picked_up_heavy_loot_units[#self._picked_up_heavy_loot_units + 1] = unit
 	end
 end
 
@@ -215,11 +241,11 @@ ExpeditionLootHandler.mark_loot_unit = function (self, pickup_unit, mark_type)
 		local pickup_is_level_unit, pickup_unit_id = Managers.state.unit_spawner:game_object_id_or_level_index(pickup_unit)
 		local mark_type_lookup_id = NetworkLookup.expedition_dropped_loot_mark_types[mark_type]
 
-		Managers.state.game_session:send_rpc_clients("rpc_expedition_register_dropped_heavy_loot_unit", pickup_unit_id, pickup_is_level_unit, mark_type_lookup_id)
+		Managers.state.game_session:send_rpc_clients("rpc_expedition_register_picked_up_heavy_loot_unit", pickup_unit_id, pickup_is_level_unit, mark_type_lookup_id)
 	end
 end
 
-ExpeditionLootHandler.rpc_expedition_register_dropped_heavy_loot_unit = function (self, channel_id, pickup_unit_id, is_level_unit, mark_type_lookup_id)
+ExpeditionLootHandler.rpc_expedition_register_picked_up_heavy_loot_unit = function (self, channel_id, pickup_unit_id, is_level_unit, mark_type_lookup_id)
 	local pickup_unit = Managers.state.unit_spawner:unit(pickup_unit_id, is_level_unit)
 	local mark_type = NetworkLookup.expedition_dropped_loot_mark_types[mark_type_lookup_id]
 
@@ -322,17 +348,11 @@ ExpeditionLootHandler.hot_join_sync = function (self, channel_id)
 	if total_team_rescue_amount > 0 then
 		RPC.rpc_client_expedition_update_player_rescue_objective(channel_id, total_team_rescue_amount)
 	end
-end
 
-ExpeditionLootHandler.on_client_left = function (self, removed_players_data)
-	local peer_id = removed_players_data.peer_id
+	local heavy_loot = self._picked_up_heavy_loot_units
 
-	if self.is_server then
-		self._rescue_loot_amount_per_peer_id[peer_id] = nil
-
-		local total_team_rescue_amount = self:_total_rescue_loot_amount()
-
-		Managers.state.game_session:send_rpc_clients("rpc_client_expedition_update_player_rescue_objective", total_team_rescue_amount)
+	for k, loot in ipairs(heavy_loot) do
+		self:mark_loot_unit(loot, "luggable")
 	end
 end
 
@@ -355,7 +375,7 @@ ExpeditionLootHandler._show_collected_materials_notification = function (self, p
 			currency = "expedition_loot",
 			amount = math.abs(amount),
 			player_name = player_name,
-			player = player,
+			player = player
 		})
 	else
 		local player_slot = player and player.slot and player:slot()
@@ -372,7 +392,7 @@ ExpeditionLootHandler._show_collected_materials_notification = function (self, p
 			currency = "expedition_loot",
 			amount = amount,
 			player_name = player_name,
-			optional_localization_key = optional_localization_key,
+			optional_localization_key = optional_localization_key
 		})
 	end
 end
@@ -512,13 +532,13 @@ ExpeditionLootHandler._update_player_rescue_objective = function (self, total_te
 end
 
 ExpeditionLootHandler.update = function (self, dt, t)
-	local dropped_heavy_loot_units = self._dropped_heavy_loot_units
+	local picked_up_heavy_loot_units = self._picked_up_heavy_loot_units
 
-	for i = #dropped_heavy_loot_units, 1, -1 do
-		local unit = dropped_heavy_loot_units[i]
+	for i = #picked_up_heavy_loot_units, 1, -1 do
+		local unit = picked_up_heavy_loot_units[i]
 
 		if not ALIVE[unit] then
-			table.remove(dropped_heavy_loot_units, i)
+			table.remove(picked_up_heavy_loot_units, i)
 		end
 	end
 
@@ -642,23 +662,21 @@ end
 ExpeditionLootHandler.server_clear_rescue = function (self)
 	local _, _, player_penalty_increment, _, player_hogtied_safe_zone_relocation_penalty_multiplier = self:player_death_penalty_values()
 	local rescue_loot_amount_per_peer_id = self._rescue_loot_amount_per_peer_id
-	local player_manager = Managers.player
-	local players = player_manager:players()
 
-	for _, player in pairs(players) do
-		local player_unit = player.player_unit
+	for peer_id, rescue_loot_amount in pairs(rescue_loot_amount_per_peer_id) do
+		local amount_to_deduct = math.round_down_with_precision(rescue_loot_amount * player_hogtied_safe_zone_relocation_penalty_multiplier)
+		local amount_to_deduct_by_increment = math.round_to_closest_multiple_toward_zero(amount_to_deduct, player_penalty_increment)
 
-		if player_unit and player:is_human_controlled() then
-			local peer_id = player:peer_id()
-			local rescue_loot_amount = rescue_loot_amount_per_peer_id[peer_id]
+		rescue_loot_amount_per_peer_id[peer_id] = rescue_loot_amount - amount_to_deduct_by_increment
+	end
 
-			if rescue_loot_amount then
-				local amount_to_deduct = math.round_down_with_precision(rescue_loot_amount * player_hogtied_safe_zone_relocation_penalty_multiplier)
-				local amount_to_deduct_by_increment = math.round_to_closest_multiple_toward_zero(amount_to_deduct, player_penalty_increment)
+	local stored_rescue_loot_amount_per_account_id = self._stored_rescue_loot_amount_per_account_id
 
-				rescue_loot_amount_per_peer_id[peer_id] = rescue_loot_amount - amount_to_deduct_by_increment
-			end
-		end
+	for account_id, rescue_loot_amount in pairs(stored_rescue_loot_amount_per_account_id) do
+		local amount_to_deduct = math.round_down_with_precision(rescue_loot_amount * player_hogtied_safe_zone_relocation_penalty_multiplier)
+		local amount_to_deduct_by_increment = math.round_to_closest_multiple_toward_zero(amount_to_deduct, player_penalty_increment)
+
+		stored_rescue_loot_amount_per_account_id[account_id] = rescue_loot_amount - amount_to_deduct_by_increment
 	end
 
 	local total_team_rescue_amount = self:_total_rescue_loot_amount()
@@ -700,7 +718,8 @@ ExpeditionLootHandler.destroy = function (self)
 		event_manager:unregister(self, "event_expedition_convert_and_collect")
 		event_manager:unregister(self, "event_expedition_pocketable_dropped")
 		event_manager:unregister(self, "event_expedition_player_loot_collected")
-		event_manager:unregister(self, "client_disconnected")
+		event_manager:unregister(self, "host_game_session_manager_player_joined")
+		event_manager:unregister(self, "multiplayer_session_client_disconnected")
 	else
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
 	end

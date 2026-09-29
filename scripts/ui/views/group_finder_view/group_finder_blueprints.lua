@@ -4,7 +4,6 @@ local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templ
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local Colors = require("scripts/utilities/ui/colors")
 local Danger = require("scripts/utilities/danger")
-local DangerSettings = require("scripts/settings/difficulty/danger_settings")
 local Text = require("scripts/utilities/ui/text")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISettings = require("scripts/settings/ui/ui_settings")
@@ -20,12 +19,12 @@ local tag_text_style = {
 	offset = {
 		0,
 		0,
-		3,
+		3
 	},
 	size_addition = {
 		-60,
-		0,
-	},
+		0
+	}
 }
 local tag_slot_header_text_style = {
 	font_size = 28,
@@ -38,12 +37,12 @@ local tag_slot_header_text_style = {
 	offset = {
 		0,
 		-15,
-		3,
+		3
 	},
 	size_addition = {
 		-60,
-		0,
-	},
+		0
+	}
 }
 local tag_slot_sub_header_text_style = {
 	font_size = 24,
@@ -56,23 +55,23 @@ local tag_slot_sub_header_text_style = {
 	offset = {
 		0,
 		15,
-		3,
+		3
 	},
 	size_addition = {
 		-60,
-		0,
-	},
+		0
+	}
 }
 local terminal_button_text_style = table.clone(UIFontSettings.button_primary)
 
 terminal_button_text_style.offset = {
 	70,
 	0,
-	6,
+	6
 }
 terminal_button_text_style.size_addition = {
 	-90,
-	0,
+	0
 }
 terminal_button_text_style.text_horizontal_alignment = "left"
 terminal_button_text_style.text_vertical_alignment = "center"
@@ -80,27 +79,27 @@ terminal_button_text_style.text_color = {
 	255,
 	216,
 	229,
-	207,
+	207
 }
 terminal_button_text_style.default_color = {
 	255,
 	216,
 	229,
-	207,
+	207
 }
 
 local function generate_blueprints_func(grid_size)
 	local tag_default = {
 		size = {
 			grid_size[1],
-			60,
+			60
 		},
 		size_function = function (parent, element, ui_renderer)
 			local size = element.size
 
 			return {
 				size and size[1] or grid_size[1],
-				size and size[2] or 60,
+				size and size[2] or 60
 			}
 		end,
 		pass_template = {
@@ -110,7 +109,7 @@ local function generate_blueprints_func(grid_size)
 				content = {
 					on_released_sound = nil,
 					on_hover_sound = UISoundEvents.default_mouse_hover,
-					on_pressed_sound = UISoundEvents.default_click,
+					on_pressed_sound = UISoundEvents.default_click
 				},
 				change_function = function (content, style, _, dt)
 					local checked = content.parent.checked
@@ -127,7 +126,7 @@ local function generate_blueprints_func(grid_size)
 
 						content.anim_checked_progress = anim_checked_progress
 					end
-				end,
+				end
 			},
 			{
 				pass_type = "rect",
@@ -139,20 +138,20 @@ local function generate_blueprints_func(grid_size)
 						180,
 						28,
 						31,
-						28,
+						28
 					},
 					size = {
-						50,
+						50
 					},
 					offset = {
 						0,
 						0,
-						2,
-					},
+						2
+					}
 				},
 				visibility_function = function (content, style)
 					return not content.element.is_preview
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -165,17 +164,17 @@ local function generate_blueprints_func(grid_size)
 					color = Color.black(150, true),
 					size_addition = {
 						-30,
-						20,
+						20
 					},
 					offset = {
 						10,
 						0,
-						3,
-					},
+						3
+					}
 				},
 				visibility_function = function (content, style)
 					return not content.element.is_preview
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -183,9 +182,9 @@ local function generate_blueprints_func(grid_size)
 				value = "content/ui/materials/backgrounds/default_square",
 				style = {
 					default_color = Color.terminal_background(nil, true),
-					selected_color = Color.terminal_background_selected(nil, true),
+					selected_color = Color.terminal_background_selected(nil, true)
 				},
-				change_function = ButtonPassTemplates.terminal_button_change_function,
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
 				pass_type = "texture",
@@ -199,18 +198,18 @@ local function generate_blueprints_func(grid_size)
 					disabled_color = Color.ui_grey_medium(255, true),
 					size_addition = {
 						-50,
-						0,
+						0
 					},
 					offset = {
 						0,
 						0,
-						1,
-					},
+						1
+					}
 				},
 				change_function = function (content, style)
 					ButtonPassTemplates.terminal_button_change_function(content, style)
 					ButtonPassTemplates.terminal_button_hover_change_function(content, style)
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -226,23 +225,23 @@ local function generate_blueprints_func(grid_size)
 					text_vertical_alignment = "center",
 					vertical_alignment = "center",
 					size = {
-						50,
+						50
 					},
 					text_color = {
 						255,
 						10,
 						10,
-						10,
+						10
 					},
 					offset = {
 						0,
 						0,
-						5,
-					},
+						5
+					}
 				},
 				visibility_function = function (content, style)
 					return not content.checked and not content.element.is_preview and not content.hotspot.disabled
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -258,18 +257,18 @@ local function generate_blueprints_func(grid_size)
 					text_vertical_alignment = "center",
 					vertical_alignment = "center",
 					size = {
-						50,
+						50
 					},
 					text_color = Color.terminal_corner_selected(nil, true),
 					offset = {
 						0,
 						0,
-						5,
-					},
+						5
+					}
 				},
 				visibility_function = function (content, style)
 					return content.checked and not content.element.is_preview and not content.hotspot.disabled
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -282,14 +281,14 @@ local function generate_blueprints_func(grid_size)
 					color = Color.black(200, true),
 					size_addition = {
 						20,
-						20,
+						20
 					},
 					offset = {
 						0,
 						0,
-						3,
-					},
-				},
+						3
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -302,13 +301,13 @@ local function generate_blueprints_func(grid_size)
 					color = Color.terminal_text_body(200, true),
 					size_addition = {
 						20,
-						20,
+						20
 					},
 					offset = {
 						0,
 						0,
-						4,
-					},
+						4
+					}
 				},
 				change_function = function (content, style, _, dt)
 					local any_visible_tag_selected_last_frame = content.any_visible_tag_selected_last_frame
@@ -333,7 +332,7 @@ local function generate_blueprints_func(grid_size)
 				end,
 				visibility_function = function (content, style)
 					return not content.element.is_preview and not content.hotspot.disabled
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -342,18 +341,18 @@ local function generate_blueprints_func(grid_size)
 					offset = {
 						0,
 						0,
-						7,
+						7
 					},
 					color = {
 						105,
 						45,
 						45,
-						45,
-					},
+						45
+					}
 				},
 				visibility_function = function (content, style)
 					return content.element.block_reason ~= nil
-				end,
+				end
 			},
 			{
 				pass_type = "rect",
@@ -362,18 +361,18 @@ local function generate_blueprints_func(grid_size)
 					offset = {
 						0,
 						0,
-						6,
+						6
 					},
 					color = {
 						150,
 						35,
 						0,
-						0,
-					},
+						0
+					}
 				},
 				visibility_function = function (content, style)
 					return content.element.block_reason ~= nil
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -390,23 +389,23 @@ local function generate_blueprints_func(grid_size)
 					vertical_alignment = "center",
 					size_addition = {
 						-40,
-						-20,
+						-20
 					},
 					text_color = {
 						255,
 						159,
 						67,
-						67,
+						67
 					},
 					offset = {
 						0,
 						0,
-						8,
-					},
+						8
+					}
 				},
 				visibility_function = function (content, style)
 					return content.element.block_reason ~= nil
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -420,23 +419,23 @@ local function generate_blueprints_func(grid_size)
 					text_vertical_alignment = "center",
 					vertical_alignment = "center",
 					size = {
-						50,
+						50
 					},
 					text_color = {
 						255,
 						159,
 						67,
-						67,
+						67
 					},
 					offset = {
 						0,
 						0,
-						8,
-					},
+						8
+					}
 				},
 				visibility_function = function (content, style)
 					return content.element.block_reason ~= nil
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -450,18 +449,18 @@ local function generate_blueprints_func(grid_size)
 					text_vertical_alignment = "center",
 					vertical_alignment = "center",
 					size = {
-						50,
+						50
 					},
 					text_color = Color.ui_grey_medium(255, true),
 					offset = {
 						0,
 						0,
-						8,
-					},
+						8
+					}
 				},
 				visibility_function = function (content, style)
 					return content.hotspot.disabled and content.element.block_reason == nil
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -473,14 +472,14 @@ local function generate_blueprints_func(grid_size)
 					offset = {
 						0,
 						0,
-						9,
+						9
 					},
 					default_color = Color.terminal_frame(nil, true),
 					selected_color = Color.terminal_frame_selected(nil, true),
 					disabled_color = Color.ui_grey_medium(255, true),
-					hover_color = Color.terminal_frame_hover(nil, true),
+					hover_color = Color.terminal_frame_hover(nil, true)
 				},
-				change_function = ButtonPassTemplates.terminal_button_change_function,
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
 				pass_type = "texture",
@@ -492,14 +491,14 @@ local function generate_blueprints_func(grid_size)
 					offset = {
 						0,
 						0,
-						10,
+						10
 					},
 					default_color = Color.terminal_corner(nil, true),
 					selected_color = Color.terminal_corner_selected(nil, true),
 					disabled_color = Color.ui_grey_light(255, true),
-					hover_color = Color.terminal_corner_hover(nil, true),
+					hover_color = Color.terminal_corner_hover(nil, true)
 				},
-				change_function = ButtonPassTemplates.terminal_button_change_function,
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
 				pass_type = "text",
@@ -517,8 +516,8 @@ local function generate_blueprints_func(grid_size)
 					if color and default_color and hover_color then
 						Colors.color_lerp(default_color, hover_color, progress, color)
 					end
-				end,
-			},
+				end
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -536,7 +535,7 @@ local function generate_blueprints_func(grid_size)
 			if element.block_reason then
 				content.required_level_text = element.block_reason
 			end
-		end,
+		end
 	}
 	local tag_checkbox = table.clone_instance(tag_default)
 
@@ -548,14 +547,14 @@ local function generate_blueprints_func(grid_size)
 		tag_radio_button = {
 			size = {
 				grid_size[1],
-				60,
+				60
 			},
 			size_function = function (parent, element, ui_renderer)
 				local size = element.size
 
 				return {
 					size and size[1] or grid_size[1],
-					size and size[2] or 60,
+					size and size[2] or 60
 				}
 			end,
 			pass_template = {
@@ -565,7 +564,7 @@ local function generate_blueprints_func(grid_size)
 					content = {
 						on_released_sound = nil,
 						on_hover_sound = UISoundEvents.default_mouse_hover,
-						on_pressed_sound = UISoundEvents.default_click,
+						on_pressed_sound = UISoundEvents.default_click
 					},
 					change_function = function (content, style, _, dt)
 						local checked = content.parent.checked
@@ -582,7 +581,7 @@ local function generate_blueprints_func(grid_size)
 
 							content.anim_checked_progress = anim_checked_progress
 						end
-					end,
+					end
 				},
 				{
 					pass_type = "rect",
@@ -594,20 +593,20 @@ local function generate_blueprints_func(grid_size)
 							180,
 							28,
 							31,
-							28,
+							28
 						},
 						size = {
-							50,
+							50
 						},
 						offset = {
 							0,
 							0,
-							2,
-						},
+							2
+						}
 					},
 					visibility_function = function (content, style)
 						return not content.element.is_preview
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -620,17 +619,17 @@ local function generate_blueprints_func(grid_size)
 						color = Color.black(150, true),
 						size_addition = {
 							-30,
-							20,
+							20
 						},
 						offset = {
 							10,
 							0,
-							3,
-						},
+							3
+						}
 					},
 					visibility_function = function (content, style)
 						return not content.element.is_preview
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -638,9 +637,9 @@ local function generate_blueprints_func(grid_size)
 					value = "content/ui/materials/backgrounds/default_square",
 					style = {
 						default_color = Color.terminal_background(nil, true),
-						selected_color = Color.terminal_background_selected(nil, true),
+						selected_color = Color.terminal_background_selected(nil, true)
 					},
-					change_function = ButtonPassTemplates.terminal_button_change_function,
+					change_function = ButtonPassTemplates.terminal_button_change_function
 				},
 				{
 					pass_type = "texture",
@@ -654,18 +653,18 @@ local function generate_blueprints_func(grid_size)
 						disabled_color = Color.ui_grey_medium(255, true),
 						size_addition = {
 							-50,
-							0,
+							0
 						},
 						offset = {
 							0,
 							0,
-							1,
-						},
+							1
+						}
 					},
 					change_function = function (content, style)
 						ButtonPassTemplates.terminal_button_change_function(content, style)
 						ButtonPassTemplates.terminal_button_hover_change_function(content, style)
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -681,23 +680,23 @@ local function generate_blueprints_func(grid_size)
 						text_vertical_alignment = "center",
 						vertical_alignment = "center",
 						size = {
-							50,
+							50
 						},
 						text_color = {
 							255,
 							10,
 							10,
-							10,
+							10
 						},
 						offset = {
 							0,
 							-5,
-							5,
-						},
+							5
+						}
 					},
 					visibility_function = function (content, style)
 						return not content.checked and not content.element.is_preview and not content.hotspot.disabled
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -713,18 +712,18 @@ local function generate_blueprints_func(grid_size)
 						text_vertical_alignment = "center",
 						vertical_alignment = "center",
 						size = {
-							50,
+							50
 						},
 						text_color = Color.terminal_corner_selected(nil, true),
 						offset = {
 							0,
 							-5,
-							5,
-						},
+							5
+						}
 					},
 					visibility_function = function (content, style)
 						return content.checked and not content.element.is_preview and not content.hotspot.disabled
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -737,14 +736,14 @@ local function generate_blueprints_func(grid_size)
 						color = Color.black(200, true),
 						size_addition = {
 							20,
-							20,
+							20
 						},
 						offset = {
 							0,
 							0,
-							3,
-						},
-					},
+							3
+						}
+					}
 				},
 				{
 					pass_type = "texture",
@@ -757,13 +756,13 @@ local function generate_blueprints_func(grid_size)
 						color = Color.terminal_text_body(200, true),
 						size_addition = {
 							20,
-							20,
+							20
 						},
 						offset = {
 							0,
 							0,
-							4,
-						},
+							4
+						}
 					},
 					change_function = function (content, style, _, dt)
 						local any_visible_tag_selected_last_frame = content.any_visible_tag_selected_last_frame
@@ -788,7 +787,7 @@ local function generate_blueprints_func(grid_size)
 					end,
 					visibility_function = function (content, style)
 						return not content.element.is_preview and not content.hotspot.disabled
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -797,18 +796,18 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							7,
+							7
 						},
 						color = {
 							105,
 							45,
 							45,
-							45,
-						},
+							45
+						}
 					},
 					visibility_function = function (content, style)
 						return content.element.block_reason ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "rect",
@@ -817,18 +816,18 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							6,
+							6
 						},
 						color = {
 							150,
 							35,
 							0,
-							0,
-						},
+							0
+						}
 					},
 					visibility_function = function (content, style)
 						return content.element.block_reason ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -845,23 +844,23 @@ local function generate_blueprints_func(grid_size)
 						vertical_alignment = "center",
 						size_addition = {
 							-40,
-							-20,
+							-20
 						},
 						text_color = {
 							255,
 							159,
 							67,
-							67,
+							67
 						},
 						offset = {
 							0,
 							0,
-							8,
-						},
+							8
+						}
 					},
 					visibility_function = function (content, style)
 						return content.element.block_reason ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -875,23 +874,23 @@ local function generate_blueprints_func(grid_size)
 						text_vertical_alignment = "center",
 						vertical_alignment = "center",
 						size = {
-							50,
+							50
 						},
 						text_color = {
 							255,
 							159,
 							67,
-							67,
+							67
 						},
 						offset = {
 							0,
 							0,
-							8,
-						},
+							8
+						}
 					},
 					visibility_function = function (content, style)
 						return content.element.block_reason ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -905,18 +904,18 @@ local function generate_blueprints_func(grid_size)
 						text_vertical_alignment = "center",
 						vertical_alignment = "center",
 						size = {
-							50,
+							50
 						},
 						text_color = Color.ui_grey_medium(255, true),
 						offset = {
 							0,
 							0,
-							8,
-						},
+							8
+						}
 					},
 					visibility_function = function (content, style)
 						return content.hotspot.disabled and content.element.block_reason == nil
-					end,
+					end
 				},
 				{
 					pass_type = "rect",
@@ -925,18 +924,18 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							6,
+							6
 						},
 						color = {
 							150,
 							35,
 							0,
-							0,
-						},
+							0
+						}
 					},
 					visibility_function = function (content, style)
 						return content.no_active_havoc_order
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -947,29 +946,29 @@ local function generate_blueprints_func(grid_size)
 						drop_shadow = true,
 						font_size = 22,
 						font_type = "proxima_nova_bold",
-						horizontal_alignment = "center",
-						text_horizontal_alignment = "right",
+						horizontal_alignment = "left",
+						text_horizontal_alignment = "left",
 						text_vertical_alignment = "center",
 						vertical_alignment = "center",
 						size_addition = {
-							-40,
-							-20,
+							-90,
+							-20
 						},
 						text_color = {
 							255,
 							159,
 							67,
-							67,
+							67
 						},
 						offset = {
+							70,
 							0,
-							0,
-							8,
-						},
+							8
+						}
 					},
 					visibility_function = function (content, style)
 						return content.no_active_havoc_order
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -983,23 +982,23 @@ local function generate_blueprints_func(grid_size)
 						text_vertical_alignment = "center",
 						vertical_alignment = "center",
 						size = {
-							50,
+							50
 						},
 						text_color = {
 							255,
 							159,
 							67,
-							67,
+							67
 						},
 						offset = {
 							0,
 							0,
-							8,
-						},
+							8
+						}
 					},
 					visibility_function = function (content, style)
 						return content.no_active_havoc_order
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -1013,18 +1012,18 @@ local function generate_blueprints_func(grid_size)
 						text_vertical_alignment = "center",
 						vertical_alignment = "center",
 						size = {
-							50,
+							50
 						},
 						text_color = Color.ui_grey_medium(255, true),
 						offset = {
 							0,
 							0,
-							8,
-						},
+							8
+						}
 					},
 					visibility_function = function (content, style)
 						return content.hotspot.disabled and content.no_active_havoc_order
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -1036,14 +1035,14 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							9,
+							9
 						},
 						default_color = Color.terminal_frame(nil, true),
 						selected_color = Color.terminal_frame_selected(nil, true),
 						disabled_color = Color.ui_grey_medium(255, true),
-						hover_color = Color.terminal_frame_hover(nil, true),
+						hover_color = Color.terminal_frame_hover(nil, true)
 					},
-					change_function = ButtonPassTemplates.terminal_button_change_function,
+					change_function = ButtonPassTemplates.terminal_button_change_function
 				},
 				{
 					pass_type = "texture",
@@ -1055,14 +1054,14 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							10,
+							10
 						},
 						default_color = Color.terminal_corner(nil, true),
 						selected_color = Color.terminal_corner_selected(nil, true),
 						disabled_color = Color.ui_grey_light(255, true),
-						hover_color = Color.terminal_corner_hover(nil, true),
+						hover_color = Color.terminal_corner_hover(nil, true)
 					},
-					change_function = ButtonPassTemplates.terminal_button_change_function,
+					change_function = ButtonPassTemplates.terminal_button_change_function
 				},
 				{
 					pass_type = "text",
@@ -1081,7 +1080,10 @@ local function generate_blueprints_func(grid_size)
 							Colors.color_lerp(default_color, hover_color, progress, color)
 						end
 					end,
-				},
+					visibility_function = function (content)
+						return not content.no_active_havoc_order
+					end
+				}
 			},
 			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 				local style = widget.style
@@ -1106,19 +1108,19 @@ local function generate_blueprints_func(grid_size)
 				else
 					content.hotspot.pressed_callback = element.pressed_callback
 				end
-			end,
+			end
 		},
 		tag_game_mode = {
 			size = {
 				grid_size[1],
-				60,
+				60
 			},
 			size_function = function (parent, element, ui_renderer)
 				local size = element.size
 
 				return {
 					size and size[1] or grid_size[1],
-					size and size[2] or 60,
+					size and size[2] or 60
 				}
 			end,
 			pass_template = {
@@ -1128,7 +1130,7 @@ local function generate_blueprints_func(grid_size)
 					content = {
 						on_released_sound = nil,
 						on_hover_sound = UISoundEvents.default_mouse_hover,
-						on_pressed_sound = UISoundEvents.default_click,
+						on_pressed_sound = UISoundEvents.default_click
 					},
 					change_function = function (content, style, _, dt)
 						local checked = content.parent.checked
@@ -1145,7 +1147,7 @@ local function generate_blueprints_func(grid_size)
 
 							content.anim_checked_progress = anim_checked_progress
 						end
-					end,
+					end
 				},
 				{
 					pass_type = "rect",
@@ -1157,20 +1159,20 @@ local function generate_blueprints_func(grid_size)
 							180,
 							28,
 							31,
-							28,
+							28
 						},
 						size = {
-							50,
+							50
 						},
 						offset = {
 							0,
 							0,
-							2,
-						},
+							2
+						}
 					},
 					visibility_function = function (content, style)
 						return not content.element.is_preview
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -1183,17 +1185,17 @@ local function generate_blueprints_func(grid_size)
 						color = Color.black(150, true),
 						size_addition = {
 							-30,
-							20,
+							20
 						},
 						offset = {
 							10,
 							0,
-							3,
-						},
+							3
+						}
 					},
 					visibility_function = function (content, style)
 						return not content.element.is_preview
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -1201,9 +1203,9 @@ local function generate_blueprints_func(grid_size)
 					value = "content/ui/materials/backgrounds/default_square",
 					style = {
 						default_color = Color.terminal_background(nil, true),
-						selected_color = Color.terminal_background_selected(nil, true),
+						selected_color = Color.terminal_background_selected(nil, true)
 					},
-					change_function = ButtonPassTemplates.terminal_button_change_function,
+					change_function = ButtonPassTemplates.terminal_button_change_function
 				},
 				{
 					pass_type = "texture",
@@ -1217,18 +1219,18 @@ local function generate_blueprints_func(grid_size)
 						disabled_color = Color.ui_grey_medium(255, true),
 						size_addition = {
 							-50,
-							0,
+							0
 						},
 						offset = {
 							0,
 							0,
-							1,
-						},
+							1
+						}
 					},
 					change_function = function (content, style)
 						ButtonPassTemplates.terminal_button_change_function(content, style)
 						ButtonPassTemplates.terminal_button_hover_change_function(content, style)
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -1244,23 +1246,23 @@ local function generate_blueprints_func(grid_size)
 						text_vertical_alignment = "center",
 						vertical_alignment = "center",
 						size = {
-							50,
+							50
 						},
 						text_color = {
 							255,
 							10,
 							10,
-							10,
+							10
 						},
 						offset = {
 							0,
 							-5,
-							5,
-						},
+							5
+						}
 					},
 					visibility_function = function (content, style)
 						return not content.checked and not content.element.is_preview
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -1276,18 +1278,18 @@ local function generate_blueprints_func(grid_size)
 						text_vertical_alignment = "center",
 						vertical_alignment = "center",
 						size = {
-							50,
+							50
 						},
 						text_color = Color.terminal_corner_selected(nil, true),
 						offset = {
 							0,
 							-5,
-							5,
-						},
+							5
+						}
 					},
 					visibility_function = function (content, style)
 						return content.checked and not content.element.is_preview
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -1300,14 +1302,14 @@ local function generate_blueprints_func(grid_size)
 						color = Color.black(200, true),
 						size_addition = {
 							20,
-							20,
+							20
 						},
 						offset = {
 							0,
 							0,
-							3,
-						},
-					},
+							3
+						}
+					}
 				},
 				{
 					pass_type = "texture",
@@ -1320,13 +1322,13 @@ local function generate_blueprints_func(grid_size)
 						color = Color.terminal_text_body(200, true),
 						size_addition = {
 							20,
-							20,
+							20
 						},
 						offset = {
 							0,
 							0,
-							4,
-						},
+							4
+						}
 					},
 					change_function = function (content, style, _, dt)
 						local any_visible_tag_selected_last_frame = content.any_visible_tag_selected_last_frame
@@ -1351,7 +1353,7 @@ local function generate_blueprints_func(grid_size)
 					end,
 					visibility_function = function (content, style)
 						return not content.element.is_preview and not content.hotspot.disabled
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -1360,18 +1362,18 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							7,
+							7
 						},
 						color = {
 							105,
 							45,
 							45,
-							45,
-						},
+							45
+						}
 					},
 					visibility_function = function (content, style)
 						return content.element.block_reason ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "rect",
@@ -1380,18 +1382,18 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							6,
+							6
 						},
 						color = {
 							150,
 							35,
 							0,
-							0,
-						},
+							0
+						}
 					},
 					visibility_function = function (content, style)
 						return content.element.block_reason ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -1408,23 +1410,23 @@ local function generate_blueprints_func(grid_size)
 						vertical_alignment = "center",
 						size_addition = {
 							-40,
-							-20,
+							-20
 						},
 						text_color = {
 							255,
 							159,
 							67,
-							67,
+							67
 						},
 						offset = {
 							0,
 							0,
-							8,
-						},
+							8
+						}
 					},
 					visibility_function = function (content, style)
 						return content.element.block_reason ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -1438,23 +1440,23 @@ local function generate_blueprints_func(grid_size)
 						text_vertical_alignment = "center",
 						vertical_alignment = "center",
 						size = {
-							50,
+							50
 						},
 						text_color = {
 							255,
 							159,
 							67,
-							67,
+							67
 						},
 						offset = {
 							0,
 							0,
-							8,
-						},
+							8
+						}
 					},
 					visibility_function = function (content, style)
 						return content.element.block_reason ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -1468,18 +1470,18 @@ local function generate_blueprints_func(grid_size)
 						text_vertical_alignment = "center",
 						vertical_alignment = "center",
 						size = {
-							50,
+							50
 						},
 						text_color = Color.ui_grey_medium(255, true),
 						offset = {
 							0,
 							0,
-							8,
-						},
+							8
+						}
 					},
 					visibility_function = function (content, style)
 						return content.hotspot.disabled and content.element.block_reason == nil
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -1491,14 +1493,14 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							9,
+							9
 						},
 						default_color = Color.terminal_frame(nil, true),
 						selected_color = Color.terminal_frame_selected(nil, true),
 						disabled_color = Color.ui_grey_medium(255, true),
-						hover_color = Color.terminal_frame_hover(nil, true),
+						hover_color = Color.terminal_frame_hover(nil, true)
 					},
-					change_function = ButtonPassTemplates.terminal_button_change_function,
+					change_function = ButtonPassTemplates.terminal_button_change_function
 				},
 				{
 					pass_type = "texture",
@@ -1510,14 +1512,14 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							10,
+							10
 						},
 						default_color = Color.terminal_corner(nil, true),
 						selected_color = Color.terminal_corner_selected(nil, true),
 						disabled_color = Color.ui_grey_light(255, true),
-						hover_color = Color.terminal_corner_hover(nil, true),
+						hover_color = Color.terminal_corner_hover(nil, true)
 					},
-					change_function = ButtonPassTemplates.terminal_button_change_function,
+					change_function = ButtonPassTemplates.terminal_button_change_function
 				},
 				{
 					pass_type = "text",
@@ -1535,7 +1537,7 @@ local function generate_blueprints_func(grid_size)
 						if color and default_color and hover_color then
 							Colors.color_lerp(default_color, hover_color, progress, color)
 						end
-					end,
+					end
 				},
 				{
 					pass_type = "texture_uv",
@@ -1546,41 +1548,41 @@ local function generate_blueprints_func(grid_size)
 						scale_to_material = true,
 						vertical_alignment = "center",
 						material_values = {
-							texture_map = "content/ui/textures/missions/lm_scavenge_big",
+							texture_map = "content/ui/textures/missions/lm_scavenge_big"
 						},
 						offset = {
 							0,
 							0,
-							2,
+							2
 						},
 						size_addition = {
 							-50,
-							0,
+							0
 						},
 						color = {
 							200,
 							200,
 							200,
-							200,
+							200
 						},
 						selected_color = {
 							200,
 							200,
 							200,
-							200,
+							200
 						},
 						uvs = {
 							{
 								0,
-								1,
+								1
 							},
 							{
 								1,
-								1,
-							},
-						},
-					},
-				},
+								1
+							}
+						}
+					}
+				}
 			},
 			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 				local style = widget.style
@@ -1616,19 +1618,19 @@ local function generate_blueprints_func(grid_size)
 					uvs[1][2] = (image_width - element_width) * 0.5 / image_width
 					uvs[2][2] = 1 - (image_height - element_height) * 0.5 / image_height
 				end
-			end,
+			end
 		},
 		tag_game_mode_with_unlocks = {
 			size = {
 				grid_size[1],
-				60,
+				60
 			},
 			size_function = function (parent, element, ui_renderer)
 				local size = element.size
 
 				return {
 					size and size[1] or grid_size[1],
-					size and size[2] or 60,
+					size and size[2] or 60
 				}
 			end,
 			pass_template = {
@@ -1638,7 +1640,7 @@ local function generate_blueprints_func(grid_size)
 					content = {
 						on_released_sound = nil,
 						on_hover_sound = UISoundEvents.default_mouse_hover,
-						on_pressed_sound = UISoundEvents.default_click,
+						on_pressed_sound = UISoundEvents.default_click
 					},
 					change_function = function (content, style, _, dt)
 						local checked = content.parent.checked
@@ -1655,7 +1657,7 @@ local function generate_blueprints_func(grid_size)
 
 							content.anim_checked_progress = anim_checked_progress
 						end
-					end,
+					end
 				},
 				{
 					pass_type = "rect",
@@ -1667,20 +1669,20 @@ local function generate_blueprints_func(grid_size)
 							180,
 							28,
 							31,
-							28,
+							28
 						},
 						size = {
-							50,
+							50
 						},
 						offset = {
 							0,
 							0,
-							2,
-						},
+							2
+						}
 					},
 					visibility_function = function (content, style)
 						return not content.element.is_preview
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -1693,17 +1695,17 @@ local function generate_blueprints_func(grid_size)
 						color = Color.black(150, true),
 						size_addition = {
 							-30,
-							20,
+							20
 						},
 						offset = {
 							10,
 							0,
-							3,
-						},
+							3
+						}
 					},
 					visibility_function = function (content, style)
 						return not content.element.is_preview
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -1711,9 +1713,9 @@ local function generate_blueprints_func(grid_size)
 					value = "content/ui/materials/backgrounds/default_square",
 					style = {
 						default_color = Color.terminal_background(nil, true),
-						selected_color = Color.terminal_background_selected(nil, true),
+						selected_color = Color.terminal_background_selected(nil, true)
 					},
-					change_function = ButtonPassTemplates.terminal_button_change_function,
+					change_function = ButtonPassTemplates.terminal_button_change_function
 				},
 				{
 					pass_type = "texture",
@@ -1727,18 +1729,18 @@ local function generate_blueprints_func(grid_size)
 						disabled_color = Color.ui_grey_medium(255, true),
 						size_addition = {
 							-50,
-							0,
+							0
 						},
 						offset = {
 							0,
 							0,
-							1,
-						},
+							1
+						}
 					},
 					change_function = function (content, style)
 						ButtonPassTemplates.terminal_button_change_function(content, style)
 						ButtonPassTemplates.terminal_button_hover_change_function(content, style)
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -1754,23 +1756,23 @@ local function generate_blueprints_func(grid_size)
 						text_vertical_alignment = "center",
 						vertical_alignment = "center",
 						size = {
-							50,
+							50
 						},
 						text_color = {
 							255,
 							10,
 							10,
-							10,
+							10
 						},
 						offset = {
 							0,
 							-5,
-							5,
-						},
+							5
+						}
 					},
 					visibility_function = function (content, style)
 						return not content.checked and not content.element.is_preview
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -1786,18 +1788,18 @@ local function generate_blueprints_func(grid_size)
 						text_vertical_alignment = "center",
 						vertical_alignment = "center",
 						size = {
-							50,
+							50
 						},
 						text_color = Color.terminal_corner_selected(nil, true),
 						offset = {
 							0,
 							-5,
-							5,
-						},
+							5
+						}
 					},
 					visibility_function = function (content, style)
 						return content.checked and not content.element.is_preview
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -1810,14 +1812,14 @@ local function generate_blueprints_func(grid_size)
 						color = Color.black(200, true),
 						size_addition = {
 							20,
-							20,
+							20
 						},
 						offset = {
 							0,
 							0,
-							3,
-						},
-					},
+							3
+						}
+					}
 				},
 				{
 					pass_type = "texture",
@@ -1830,13 +1832,13 @@ local function generate_blueprints_func(grid_size)
 						color = Color.terminal_text_body(200, true),
 						size_addition = {
 							20,
-							20,
+							20
 						},
 						offset = {
 							0,
 							0,
-							4,
-						},
+							4
+						}
 					},
 					change_function = function (content, style, _, dt)
 						local any_visible_tag_selected_last_frame = content.any_visible_tag_selected_last_frame
@@ -1861,7 +1863,7 @@ local function generate_blueprints_func(grid_size)
 					end,
 					visibility_function = function (content, style)
 						return not content.element.is_preview and not content.hotspot.disabled
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -1870,18 +1872,18 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							7,
+							7
 						},
 						color = {
 							105,
 							45,
 							45,
-							45,
-						},
+							45
+						}
 					},
 					visibility_function = function (content, style)
 						return content.element.block_reason ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "rect",
@@ -1890,18 +1892,18 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							6,
+							6
 						},
 						color = {
 							150,
 							35,
 							0,
-							0,
-						},
+							0
+						}
 					},
 					visibility_function = function (content, style)
 						return content.element.block_reason ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -1918,23 +1920,23 @@ local function generate_blueprints_func(grid_size)
 						vertical_alignment = "center",
 						size_addition = {
 							-40,
-							-20,
+							-20
 						},
 						text_color = {
 							255,
 							159,
 							67,
-							67,
+							67
 						},
 						offset = {
 							0,
 							0,
-							8,
-						},
+							8
+						}
 					},
 					visibility_function = function (content, style)
 						return content.element.block_reason ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -1948,23 +1950,23 @@ local function generate_blueprints_func(grid_size)
 						text_vertical_alignment = "center",
 						vertical_alignment = "center",
 						size = {
-							50,
+							50
 						},
 						text_color = {
 							255,
 							159,
 							67,
-							67,
+							67
 						},
 						offset = {
 							0,
 							0,
-							8,
-						},
+							8
+						}
 					},
 					visibility_function = function (content, style)
 						return content.element.block_reason ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -1978,18 +1980,18 @@ local function generate_blueprints_func(grid_size)
 						text_vertical_alignment = "center",
 						vertical_alignment = "center",
 						size = {
-							50,
+							50
 						},
 						text_color = Color.ui_grey_medium(255, true),
 						offset = {
 							0,
 							0,
-							8,
-						},
+							8
+						}
 					},
 					visibility_function = function (content, style)
 						return content.hotspot.disabled and content.element.block_reason == nil
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -2001,14 +2003,14 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							9,
+							9
 						},
 						default_color = Color.terminal_frame(nil, true),
 						selected_color = Color.terminal_frame_selected(nil, true),
 						disabled_color = Color.ui_grey_medium(255, true),
-						hover_color = Color.terminal_frame_hover(nil, true),
+						hover_color = Color.terminal_frame_hover(nil, true)
 					},
-					change_function = ButtonPassTemplates.terminal_button_change_function,
+					change_function = ButtonPassTemplates.terminal_button_change_function
 				},
 				{
 					pass_type = "texture",
@@ -2020,14 +2022,14 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							10,
+							10
 						},
 						default_color = Color.terminal_corner(nil, true),
 						selected_color = Color.terminal_corner_selected(nil, true),
 						disabled_color = Color.ui_grey_light(255, true),
-						hover_color = Color.terminal_corner_hover(nil, true),
+						hover_color = Color.terminal_corner_hover(nil, true)
 					},
-					change_function = ButtonPassTemplates.terminal_button_change_function,
+					change_function = ButtonPassTemplates.terminal_button_change_function
 				},
 				{
 					pass_type = "text",
@@ -2045,7 +2047,7 @@ local function generate_blueprints_func(grid_size)
 						if color and default_color and hover_color then
 							Colors.color_lerp(default_color, hover_color, progress, color)
 						end
-					end,
+					end
 				},
 				{
 					pass_type = "texture_uv",
@@ -2056,41 +2058,41 @@ local function generate_blueprints_func(grid_size)
 						scale_to_material = true,
 						vertical_alignment = "center",
 						material_values = {
-							texture_map = "content/ui/textures/missions/lm_scavenge_big",
+							texture_map = "content/ui/textures/missions/lm_scavenge_big"
 						},
 						offset = {
 							0,
 							0,
-							2,
+							2
 						},
 						size_addition = {
 							-50,
-							0,
+							0
 						},
 						color = {
 							200,
 							200,
 							200,
-							200,
+							200
 						},
 						selected_color = {
 							200,
 							200,
 							200,
-							200,
+							200
 						},
 						uvs = {
 							{
 								0,
-								1,
+								1
 							},
 							{
 								1,
-								1,
-							},
-						},
-					},
-				},
+								1
+							}
+						}
+					}
+				}
 			},
 			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 				local style = widget.style
@@ -2127,33 +2129,33 @@ local function generate_blueprints_func(grid_size)
 					uvs[1][2] = (image_width - element_width) * 0.5 / image_width
 					uvs[2][2] = 1 - (image_height - element_height) * 0.5 / image_height
 				end
-			end,
+			end
 		},
 		tag_slot_button = {
 			size = {
 				grid_size[1],
-				80,
+				80
 			},
 			size_function = function (parent, element, ui_renderer)
 				local size = element.size
 
 				return {
 					size and size[1] or grid_size[1],
-					size and size[2] or 80,
+					size and size[2] or 80
 				}
 			end,
 			pass_template = {
 				{
 					content_id = "hotspot",
 					pass_type = "hotspot",
-					content = {},
+					content = {}
 				},
 				{
 					pass_type = "rect",
 					style_id = "rect",
 					style = {
-						color = Color.black(200, true),
-					},
+						color = Color.black(200, true)
+					}
 				},
 				{
 					pass_type = "texture",
@@ -2164,20 +2166,20 @@ local function generate_blueprints_func(grid_size)
 						vertical_alignment = "center",
 						size = {
 							11.5,
-							17,
+							17
 						},
 						color = {
 							255,
 							255,
 							255,
-							255,
+							255
 						},
 						offset = {
 							-10,
 							0,
-							2,
-						},
-					},
+							2
+						}
+					}
 				},
 				{
 					pass_type = "texture",
@@ -2187,20 +2189,20 @@ local function generate_blueprints_func(grid_size)
 						vertical_alignment = "center",
 						size = {
 							11.5,
-							17,
+							17
 						},
 						color = {
 							255,
 							0,
 							0,
-							0,
+							0
 						},
 						offset = {
 							-9,
 							1,
-							1,
-						},
-					},
+							1
+						}
+					}
 				},
 				{
 					pass_type = "texture",
@@ -2212,14 +2214,14 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							7,
+							7
 						},
 						default_color = Color.terminal_frame(nil, true),
 						selected_color = Color.terminal_frame_selected(nil, true),
 						disabled_color = Color.ui_grey_medium(255, true),
-						hover_color = Color.terminal_frame_hover(nil, true),
+						hover_color = Color.terminal_frame_hover(nil, true)
 					},
-					change_function = ButtonPassTemplates.terminal_button_change_function,
+					change_function = ButtonPassTemplates.terminal_button_change_function
 				},
 				{
 					pass_type = "texture",
@@ -2231,14 +2233,14 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							8,
+							8
 						},
 						default_color = Color.terminal_corner(nil, true),
 						selected_color = Color.terminal_corner_selected(nil, true),
 						disabled_color = Color.ui_grey_light(255, true),
-						hover_color = Color.terminal_corner_hover(nil, true),
+						hover_color = Color.terminal_corner_hover(nil, true)
 					},
-					change_function = ButtonPassTemplates.terminal_button_change_function,
+					change_function = ButtonPassTemplates.terminal_button_change_function
 				},
 				{
 					pass_type = "texture",
@@ -2251,14 +2253,14 @@ local function generate_blueprints_func(grid_size)
 						color = Color.black(200, true),
 						size_addition = {
 							20,
-							20,
+							20
 						},
 						offset = {
 							0,
 							0,
-							4,
-						},
-					},
+							4
+						}
+					}
 				},
 				{
 					pass_type = "texture",
@@ -2271,13 +2273,13 @@ local function generate_blueprints_func(grid_size)
 						color = Color.terminal_text_body(200, true),
 						size_addition = {
 							20,
-							20,
+							20
 						},
 						offset = {
 							0,
 							0,
-							4,
-						},
+							4
+						}
 					},
 					change_function = function (content, style, _, dt)
 						local any_visible_tag_selected_last_frame = content.any_visible_tag_selected_last_frame
@@ -2302,7 +2304,7 @@ local function generate_blueprints_func(grid_size)
 					end,
 					visibility_function = function (content, style)
 						return not content.element.is_preview and not content.hotspot.disabled
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -2317,20 +2319,20 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							1,
-						},
+							1
+						}
 					},
 					change_function = function (content, style)
 						ButtonPassTemplates.terminal_button_change_function(content, style)
 						ButtonPassTemplates.terminal_button_hover_change_function(content, style)
-					end,
+					end
 				},
 				{
 					pass_type = "text",
 					style_id = "text",
 					value = "n/a",
 					value_id = "text",
-					style = tag_slot_header_text_style,
+					style = tag_slot_header_text_style
 				},
 				{
 					pass_type = "text",
@@ -2340,7 +2342,7 @@ local function generate_blueprints_func(grid_size)
 					value = Localize("loc_group_finder_slot_tag_button_default_value"),
 					visibility_function = function (content)
 						return content.slot_filled
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -2350,7 +2352,7 @@ local function generate_blueprints_func(grid_size)
 					value = Localize("loc_group_finder_slot_tag_button_default_value"),
 					visibility_function = function (content)
 						return not content.slot_filled
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -2365,13 +2367,13 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							-27,
 							0,
-							4,
+							4
 						},
 						size = {
 							48,
-							48,
-						},
-					},
+							48
+						}
+					}
 				},
 				{
 					pass_type = "texture",
@@ -2380,18 +2382,18 @@ local function generate_blueprints_func(grid_size)
 					style = {
 						scale_to_material = true,
 						material_values = {
-							texture_map = "content/ui/textures/missions/lm_scavenge_big",
+							texture_map = "content/ui/textures/missions/lm_scavenge_big"
 						},
 						offset = {
 							0,
 							0,
-							2,
+							2
 						},
 						default_color = Color.white(nil, true),
 						selected_color = Color.white(nil, true),
-						change_function = ButtonPassTemplates.terminal_button_change_function,
-					},
-				},
+						change_function = ButtonPassTemplates.terminal_button_change_function
+					}
+				}
 			},
 			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 				local style = widget.style
@@ -2422,7 +2424,7 @@ local function generate_blueprints_func(grid_size)
 
 						if #selected_tags > 1 then
 							sub_header_text = Localize("loc_group_finder_slot_tag_multiple_selected_tags_text", true, {
-								num_tags = tostring(#selected_tags),
+								num_tags = tostring(#selected_tags)
 							})
 						else
 							local first_selected_tag = selected_tags[1]
@@ -2430,8 +2432,7 @@ local function generate_blueprints_func(grid_size)
 							sub_header_text = first_selected_tag and first_selected_tag.text or "-"
 
 							local difficulty_name = first_selected_tag.difficulty
-							local difficulty_index = Danger.index_by_name(difficulty_name)
-							local danger_settings = DangerSettings[difficulty_index]
+							local danger_settings = Danger.danger_by_name(difficulty_name)
 
 							if danger_settings then
 								style.difficulty_icon.visible = true
@@ -2443,33 +2444,33 @@ local function generate_blueprints_func(grid_size)
 						content.sub_header_filled = Text.apply_color_to_text(sub_header_text, sub_header_color)
 					end
 				end
-			end,
+			end
 		},
 		tag_category_button = {
 			size = {
 				grid_size[1],
-				60,
+				60
 			},
 			size_function = function (parent, element, ui_renderer)
 				local size = element.size
 
 				return {
 					size and size[1] or grid_size[1],
-					size and size[2] or 60,
+					size and size[2] or 60
 				}
 			end,
 			pass_template = {
 				{
 					content_id = "hotspot",
 					pass_type = "hotspot",
-					content = {},
+					content = {}
 				},
 				{
 					pass_type = "rect",
 					style_id = "rect",
 					style = {
-						color = Color.black(200, true),
-					},
+						color = Color.black(200, true)
+					}
 				},
 				{
 					pass_type = "texture",
@@ -2480,20 +2481,20 @@ local function generate_blueprints_func(grid_size)
 						vertical_alignment = "center",
 						size = {
 							11.5,
-							17,
+							17
 						},
 						color = {
 							255,
 							255,
 							255,
-							255,
+							255
 						},
 						offset = {
 							-10,
 							0,
-							2,
-						},
-					},
+							2
+						}
+					}
 				},
 				{
 					pass_type = "texture",
@@ -2503,20 +2504,20 @@ local function generate_blueprints_func(grid_size)
 						vertical_alignment = "center",
 						size = {
 							11.5,
-							17,
+							17
 						},
 						color = {
 							255,
 							0,
 							0,
-							0,
+							0
 						},
 						offset = {
 							-9,
 							1,
-							1,
-						},
-					},
+							1
+						}
+					}
 				},
 				{
 					pass_type = "texture",
@@ -2525,18 +2526,18 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							7,
+							7
 						},
 						color = {
 							105,
 							45,
 							45,
-							45,
-						},
+							45
+						}
 					},
 					visibility_function = function (content, style)
 						return content.element.block_reason ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "rect",
@@ -2545,18 +2546,18 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							6,
+							6
 						},
 						color = {
 							150,
 							35,
 							0,
-							0,
-						},
+							0
+						}
 					},
 					visibility_function = function (content, style)
 						return content.element.block_reason ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -2573,23 +2574,23 @@ local function generate_blueprints_func(grid_size)
 						vertical_alignment = "center",
 						size_addition = {
 							-40,
-							-20,
+							-20
 						},
 						text_color = {
 							255,
 							159,
 							67,
-							67,
+							67
 						},
 						offset = {
 							0,
 							0,
-							8,
-						},
+							8
+						}
 					},
 					visibility_function = function (content, style)
 						return content.element.block_reason ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -2603,23 +2604,23 @@ local function generate_blueprints_func(grid_size)
 						text_vertical_alignment = "center",
 						vertical_alignment = "center",
 						size = {
-							50,
+							50
 						},
 						text_color = {
 							255,
 							159,
 							67,
-							67,
+							67
 						},
 						offset = {
 							0,
 							0,
-							8,
-						},
+							8
+						}
 					},
 					visibility_function = function (content, style)
 						return content.element.block_reason ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -2633,18 +2634,18 @@ local function generate_blueprints_func(grid_size)
 						text_vertical_alignment = "center",
 						vertical_alignment = "center",
 						size = {
-							50,
+							50
 						},
 						text_color = Color.ui_grey_medium(255, true),
 						offset = {
 							0,
 							0,
-							8,
-						},
+							8
+						}
 					},
 					visibility_function = function (content, style)
 						return content.hotspot.disabled and content.element.block_reason == nil
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -2656,14 +2657,14 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							9,
+							9
 						},
 						default_color = Color.terminal_frame(nil, true),
 						selected_color = Color.terminal_frame_selected(nil, true),
 						disabled_color = Color.ui_grey_medium(255, true),
-						hover_color = Color.terminal_frame_hover(nil, true),
+						hover_color = Color.terminal_frame_hover(nil, true)
 					},
-					change_function = ButtonPassTemplates.terminal_button_change_function,
+					change_function = ButtonPassTemplates.terminal_button_change_function
 				},
 				{
 					pass_type = "texture",
@@ -2675,14 +2676,14 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							10,
+							10
 						},
 						default_color = Color.terminal_corner(nil, true),
 						selected_color = Color.terminal_corner_selected(nil, true),
 						disabled_color = Color.ui_grey_light(255, true),
-						hover_color = Color.terminal_corner_hover(nil, true),
+						hover_color = Color.terminal_corner_hover(nil, true)
 					},
-					change_function = ButtonPassTemplates.terminal_button_change_function,
+					change_function = ButtonPassTemplates.terminal_button_change_function
 				},
 				{
 					pass_type = "texture",
@@ -2695,14 +2696,14 @@ local function generate_blueprints_func(grid_size)
 						color = Color.black(200, true),
 						size_addition = {
 							20,
-							20,
+							20
 						},
 						offset = {
 							0,
 							0,
-							4,
-						},
-					},
+							4
+						}
+					}
 				},
 				{
 					pass_type = "texture",
@@ -2715,13 +2716,13 @@ local function generate_blueprints_func(grid_size)
 						color = Color.terminal_text_body(200, true),
 						size_addition = {
 							20,
-							20,
+							20
 						},
 						offset = {
 							0,
 							0,
-							4,
-						},
+							4
+						}
 					},
 					change_function = function (content, style, _, dt)
 						local any_visible_tag_selected_last_frame = content.any_visible_tag_selected_last_frame
@@ -2746,7 +2747,7 @@ local function generate_blueprints_func(grid_size)
 					end,
 					visibility_function = function (content, style)
 						return not content.element.is_preview and not content.hotspot.disabled
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -2761,21 +2762,21 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							1,
-						},
+							1
+						}
 					},
 					change_function = function (content, style)
 						ButtonPassTemplates.terminal_button_change_function(content, style)
 						ButtonPassTemplates.terminal_button_hover_change_function(content, style)
-					end,
+					end
 				},
 				{
 					pass_type = "text",
 					style_id = "text",
 					value = "n/a",
 					value_id = "text",
-					style = tag_text_style,
-				},
+					style = tag_text_style
+				}
 			},
 			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 				local style = widget.style
@@ -2790,19 +2791,19 @@ local function generate_blueprints_func(grid_size)
 				if element.block_reason then
 					content.required_level_text = element.block_reason
 				end
-			end,
+			end
 		},
 		tag_difficulty = {
 			size = {
 				grid_size[1],
-				60,
+				60
 			},
 			size_function = function (parent, element, ui_renderer)
 				local size = element.size
 
 				return {
 					size and size[1] or grid_size[1],
-					size and size[2] or 60,
+					size and size[2] or 60
 				}
 			end,
 			pass_template = {
@@ -2812,7 +2813,7 @@ local function generate_blueprints_func(grid_size)
 					content = {
 						on_released_sound = nil,
 						on_hover_sound = UISoundEvents.default_mouse_hover,
-						on_pressed_sound = UISoundEvents.default_click,
+						on_pressed_sound = UISoundEvents.default_click
 					},
 					change_function = function (content, style, _, dt)
 						local checked = content.parent.checked
@@ -2829,7 +2830,7 @@ local function generate_blueprints_func(grid_size)
 
 							content.anim_checked_progress = anim_checked_progress
 						end
-					end,
+					end
 				},
 				{
 					pass_type = "rect",
@@ -2841,20 +2842,20 @@ local function generate_blueprints_func(grid_size)
 							180,
 							28,
 							31,
-							28,
+							28
 						},
 						size = {
-							50,
+							50
 						},
 						offset = {
 							0,
 							0,
-							2,
-						},
+							2
+						}
 					},
 					visibility_function = function (content, style)
 						return not content.element.is_preview
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -2867,17 +2868,17 @@ local function generate_blueprints_func(grid_size)
 						color = Color.black(150, true),
 						size_addition = {
 							-30,
-							20,
+							20
 						},
 						offset = {
 							10,
 							0,
-							3,
-						},
+							3
+						}
 					},
 					visibility_function = function (content, style)
 						return not content.element.is_preview
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -2885,9 +2886,9 @@ local function generate_blueprints_func(grid_size)
 					value = "content/ui/materials/backgrounds/default_square",
 					style = {
 						default_color = Color.terminal_background(nil, true),
-						selected_color = Color.terminal_background_selected(nil, true),
+						selected_color = Color.terminal_background_selected(nil, true)
 					},
-					change_function = ButtonPassTemplates.terminal_button_change_function,
+					change_function = ButtonPassTemplates.terminal_button_change_function
 				},
 				{
 					pass_type = "texture",
@@ -2901,18 +2902,18 @@ local function generate_blueprints_func(grid_size)
 						disabled_color = Color.ui_grey_medium(255, true),
 						size_addition = {
 							-50,
-							0,
+							0
 						},
 						offset = {
 							0,
 							0,
-							1,
-						},
+							1
+						}
 					},
 					change_function = function (content, style)
 						ButtonPassTemplates.terminal_button_change_function(content, style)
 						ButtonPassTemplates.terminal_button_hover_change_function(content, style)
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -2928,23 +2929,23 @@ local function generate_blueprints_func(grid_size)
 						text_vertical_alignment = "center",
 						vertical_alignment = "center",
 						size = {
-							50,
+							50
 						},
 						text_color = {
 							255,
 							10,
 							10,
-							10,
+							10
 						},
 						offset = {
 							0,
 							-5,
-							5,
-						},
+							5
+						}
 					},
 					visibility_function = function (content, style)
 						return not content.checked and not content.element.is_preview
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -2960,18 +2961,18 @@ local function generate_blueprints_func(grid_size)
 						text_vertical_alignment = "center",
 						vertical_alignment = "center",
 						size = {
-							50,
+							50
 						},
 						text_color = Color.terminal_corner_selected(nil, true),
 						offset = {
 							0,
 							-5,
-							5,
-						},
+							5
+						}
 					},
 					visibility_function = function (content, style)
 						return content.checked and not content.element.is_preview
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -2984,14 +2985,14 @@ local function generate_blueprints_func(grid_size)
 						color = Color.black(200, true),
 						size_addition = {
 							20,
-							20,
+							20
 						},
 						offset = {
 							0,
 							0,
-							3,
-						},
-					},
+							3
+						}
+					}
 				},
 				{
 					pass_type = "texture",
@@ -3004,13 +3005,13 @@ local function generate_blueprints_func(grid_size)
 						color = Color.terminal_text_body(200, true),
 						size_addition = {
 							20,
-							20,
+							20
 						},
 						offset = {
 							0,
 							0,
-							4,
-						},
+							4
+						}
 					},
 					change_function = function (content, style, _, dt)
 						local any_visible_tag_selected_last_frame = content.any_visible_tag_selected_last_frame
@@ -3035,7 +3036,7 @@ local function generate_blueprints_func(grid_size)
 					end,
 					visibility_function = function (content, style)
 						return not content.element.is_preview and not content.hotspot.disabled
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -3044,18 +3045,18 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							7,
+							7
 						},
 						color = {
 							105,
 							45,
 							45,
-							45,
-						},
+							45
+						}
 					},
 					visibility_function = function (content, style)
 						return content.element.block_reason ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "rect",
@@ -3064,18 +3065,18 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							6,
+							6
 						},
 						color = {
 							150,
 							35,
 							0,
-							0,
-						},
+							0
+						}
 					},
 					visibility_function = function (content, style)
 						return content.element.block_reason ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -3092,23 +3093,23 @@ local function generate_blueprints_func(grid_size)
 						vertical_alignment = "center",
 						size_addition = {
 							-40,
-							-20,
+							-20
 						},
 						text_color = {
 							255,
 							159,
 							67,
-							67,
+							67
 						},
 						offset = {
 							0,
 							0,
-							8,
-						},
+							8
+						}
 					},
 					visibility_function = function (content, style)
 						return content.element.block_reason ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -3122,23 +3123,23 @@ local function generate_blueprints_func(grid_size)
 						text_vertical_alignment = "center",
 						vertical_alignment = "center",
 						size = {
-							50,
+							50
 						},
 						text_color = {
 							255,
 							159,
 							67,
-							67,
+							67
 						},
 						offset = {
 							0,
 							0,
-							8,
-						},
+							8
+						}
 					},
 					visibility_function = function (content, style)
 						return content.element.block_reason ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -3152,18 +3153,18 @@ local function generate_blueprints_func(grid_size)
 						text_vertical_alignment = "center",
 						vertical_alignment = "center",
 						size = {
-							50,
+							50
 						},
 						text_color = Color.ui_grey_medium(255, true),
 						offset = {
 							0,
 							0,
-							8,
-						},
+							8
+						}
 					},
 					visibility_function = function (content, style)
 						return content.hotspot.disabled and content.element.block_reason == nil
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -3175,14 +3176,14 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							9,
+							9
 						},
 						default_color = Color.terminal_frame(nil, true),
 						selected_color = Color.terminal_frame_selected(nil, true),
 						disabled_color = Color.ui_grey_medium(255, true),
-						hover_color = Color.terminal_frame_hover(nil, true),
+						hover_color = Color.terminal_frame_hover(nil, true)
 					},
-					change_function = ButtonPassTemplates.terminal_button_change_function,
+					change_function = ButtonPassTemplates.terminal_button_change_function
 				},
 				{
 					pass_type = "texture",
@@ -3194,14 +3195,14 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							10,
+							10
 						},
 						default_color = Color.terminal_corner(nil, true),
 						selected_color = Color.terminal_corner_selected(nil, true),
 						disabled_color = Color.ui_grey_light(255, true),
-						hover_color = Color.terminal_corner_hover(nil, true),
+						hover_color = Color.terminal_corner_hover(nil, true)
 					},
-					change_function = ButtonPassTemplates.terminal_button_change_function,
+					change_function = ButtonPassTemplates.terminal_button_change_function
 				},
 				{
 					pass_type = "text",
@@ -3219,7 +3220,7 @@ local function generate_blueprints_func(grid_size)
 						if color and default_color and hover_color then
 							Colors.color_lerp(default_color, hover_color, progress, color)
 						end
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -3233,17 +3234,17 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							-27,
 							0,
-							4,
+							4
 						},
 						size = {
 							48,
-							48,
-						},
+							48
+						}
 					},
 					visibility_function = function (content, style)
 						return content.element.block_reason == nil
-					end,
-				},
+					end
+				}
 			},
 			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 				local style = widget.style
@@ -3264,25 +3265,24 @@ local function generate_blueprints_func(grid_size)
 
 				local tag = element.tag
 				local difficulty_name = tag.difficulty
-				local difficulty_index = Danger.index_by_name(difficulty_name)
-				local danger_settings = DangerSettings[difficulty_index]
+				local danger_settings = Danger.danger_by_name(difficulty_name)
 
 				if danger_settings then
 					content.difficulty_icon = danger_settings.icon
 				end
-			end,
+			end
 		},
 		tag_preview = {
 			size = {
 				grid_size[1],
-				45,
+				45
 			},
 			size_function = function (parent, element, ui_renderer)
 				local size = element.size
 
 				return {
 					size and size[1] or grid_size[1],
-					size and size[2] or 45,
+					size and size[2] or 45
 				}
 			end,
 			pass_template = {
@@ -3291,8 +3291,8 @@ local function generate_blueprints_func(grid_size)
 					style_id = "background",
 					value = "content/ui/materials/backgrounds/default_square",
 					style = {
-						color = Color.terminal_background(nil, true),
-					},
+						color = Color.terminal_background(nil, true)
+					}
 				},
 				{
 					pass_type = "texture",
@@ -3305,9 +3305,9 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							1,
-						},
-					},
+							1
+						}
+					}
 				},
 				{
 					pass_type = "texture",
@@ -3320,14 +3320,14 @@ local function generate_blueprints_func(grid_size)
 						color = Color.black(200, true),
 						size_addition = {
 							20,
-							20,
+							20
 						},
 						offset = {
 							0,
 							0,
-							3,
-						},
-					},
+							3
+						}
+					}
 				},
 				{
 					pass_type = "texture",
@@ -3339,10 +3339,10 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							9,
+							9
 						},
-						color = Color.terminal_frame(nil, true),
-					},
+						color = Color.terminal_frame(nil, true)
+					}
 				},
 				{
 					pass_type = "texture",
@@ -3354,10 +3354,10 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							10,
+							10
 						},
-						color = Color.terminal_corner(nil, true),
-					},
+						color = Color.terminal_corner(nil, true)
+					}
 				},
 				{
 					pass_type = "text",
@@ -3373,27 +3373,27 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							6,
+							6
 						},
 						size_addition = {
 							-20,
-							0,
+							0
 						},
 						text_color = {
 							255,
 							216,
 							229,
-							207,
-						},
-					},
-				},
+							207
+						}
+					}
+				}
 			},
 			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 				local content = widget.content
 
 				content.element = element
 				content.text = element.text or "n/a"
-			end,
+			end
 		},
 		dynamic_spacing = {
 			size_function = function (parent, element, ui_renderer)
@@ -3401,41 +3401,41 @@ local function generate_blueprints_func(grid_size)
 
 				return size and {
 					size[1],
-					size[2],
+					size[2]
 				} or {
 					225,
-					20,
+					20
 				}
-			end,
+			end
 		},
 		group = {
 			size = {
 				grid_size[1] * 0.5 - 5,
-				120,
+				120
 			},
 			size_function = function (parent, element, ui_renderer)
 				local size = element.size
 
 				return size and {
 					size[1],
-					size[2],
+					size[2]
 				} or {
 					grid_size[1] * 0.5 - 5,
-					120,
+					120
 				}
 			end,
 			pass_template = {
 				{
 					content_id = "hotspot",
 					pass_type = "hotspot",
-					content = {},
+					content = {}
 				},
 				{
 					pass_type = "rect",
 					style_id = "rect",
 					style = {
-						color = Color.black(200, true),
-					},
+						color = Color.black(200, true)
+					}
 				},
 				{
 					pass_type = "texture",
@@ -3445,23 +3445,23 @@ local function generate_blueprints_func(grid_size)
 						horizontal_alignment = "right",
 						vertical_alignment = "center",
 						material_values = {
-							texture_map = "content/ui/textures/backgrounds/group_finder/group_finder_generic_bg",
+							texture_map = "content/ui/textures/backgrounds/group_finder/group_finder_generic_bg"
 						},
 						offset = {
 							0,
 							0,
-							2,
+							2
 						},
 						color = {
 							150,
 							200,
 							200,
-							200,
-						},
+							200
+						}
 					},
 					visibility_function = function (content, style)
 						return style.material_values.texture_map ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -3473,14 +3473,14 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							9,
+							10
 						},
 						default_color = Color.terminal_frame(nil, true),
 						selected_color = Color.terminal_frame_selected(nil, true),
 						disabled_color = Color.terminal_frame(255, true),
-						hover_color = Color.terminal_frame_hover(nil, true),
+						hover_color = Color.terminal_frame_hover(nil, true)
 					},
-					change_function = ButtonPassTemplates.terminal_button_change_function,
+					change_function = ButtonPassTemplates.terminal_button_change_function
 				},
 				{
 					pass_type = "texture",
@@ -3492,14 +3492,14 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							10,
+							11
 						},
 						default_color = Color.terminal_corner(nil, true),
 						selected_color = Color.terminal_corner_selected(nil, true),
 						disabled_color = Color.terminal_corner(255, true),
-						hover_color = Color.terminal_corner_hover(nil, true),
+						hover_color = Color.terminal_corner_hover(nil, true)
 					},
-					change_function = ButtonPassTemplates.terminal_button_change_function,
+					change_function = ButtonPassTemplates.terminal_button_change_function
 				},
 				{
 					pass_type = "texture",
@@ -3512,14 +3512,14 @@ local function generate_blueprints_func(grid_size)
 						color = Color.black(200, true),
 						size_addition = {
 							20,
-							20,
+							20
 						},
 						offset = {
 							0,
 							0,
-							3,
-						},
-					},
+							3
+						}
+					}
 				},
 				{
 					pass_type = "texture",
@@ -3534,13 +3534,13 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							1,
-						},
+							1
+						}
 					},
 					change_function = function (content, style)
 						ButtonPassTemplates.terminal_button_change_function(content, style)
 						ButtonPassTemplates.terminal_button_hover_change_function(content, style)
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -3558,13 +3558,13 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							10,
-							3,
+							3
 						},
 						size_addition = {
 							-20,
-							0,
-						},
-					},
+							0
+						}
+					}
 				},
 				{
 					pass_type = "texture",
@@ -3579,13 +3579,13 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							-10,
 							-10,
-							5,
+							5
 						},
 						size = {
 							32,
-							32,
-						},
-					},
+							32
+						}
+					}
 				},
 				{
 					pass_type = "texture",
@@ -3595,18 +3595,18 @@ local function generate_blueprints_func(grid_size)
 						vertical_alignment = "bottom",
 						size = {
 							200,
-							45,
+							45
 						},
 						color = Color.black(255, true),
 						offset = {
 							0,
 							0,
-							3,
-						},
+							3
+						}
 					},
 					visibility_function = function (content, style)
 						return style.difficulty_icon and style.difficulty_icon.visible
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -3622,13 +3622,13 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							425,
 							-3,
-							4,
+							4
 						},
 						size_addition = {
 							0,
-							0,
-						},
-					},
+							0
+						}
+					}
 				},
 				{
 					pass_type = "text",
@@ -3644,13 +3644,13 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							385,
 							-3,
-							4,
+							4
 						},
 						size_addition = {
 							0,
-							0,
-						},
-					},
+							0
+						}
+					}
 				},
 				{
 					pass_type = "texture",
@@ -3660,18 +3660,18 @@ local function generate_blueprints_func(grid_size)
 						vertical_alignment = "bottom",
 						size = {
 							200,
-							45,
+							45
 						},
 						color = Color.black(255, true),
 						offset = {
 							0,
 							0,
-							3,
-						},
+							3
+						}
 					},
 					visibility_function = function (content, style)
 						return content.havoc_rank_text ~= ""
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -3682,18 +3682,18 @@ local function generate_blueprints_func(grid_size)
 						vertical_alignment = "bottom",
 						size = {
 							32,
-							32,
+							32
 						},
 						color = Color.terminal_text_key_value(255, true),
 						offset = {
 							-105,
 							-8,
-							5,
-						},
+							5
+						}
 					},
 					visibility_function = function (content, style)
 						return content.circumstance_icons and content.circumstance_icons[1] ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -3704,18 +3704,18 @@ local function generate_blueprints_func(grid_size)
 						vertical_alignment = "bottom",
 						size = {
 							32,
-							32,
+							32
 						},
 						color = Color.black(255, true),
 						offset = {
 							-103,
 							-6,
-							4,
-						},
+							4
+						}
 					},
 					visibility_function = function (content, style)
 						return content.circumstance_icons and content.circumstance_icons[1] ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -3726,18 +3726,18 @@ local function generate_blueprints_func(grid_size)
 						vertical_alignment = "bottom",
 						size = {
 							32,
-							32,
+							32
 						},
 						color = Color.terminal_text_key_value(255, true),
 						offset = {
 							-145,
 							-8,
-							5,
-						},
+							5
+						}
 					},
 					visibility_function = function (content, style)
 						return content.circumstance_icons and content.circumstance_icons[2] ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -3748,18 +3748,18 @@ local function generate_blueprints_func(grid_size)
 						vertical_alignment = "bottom",
 						size = {
 							32,
-							32,
+							32
 						},
 						color = Color.black(255, true),
 						offset = {
 							-143,
 							-6,
-							4,
-						},
+							4
+						}
 					},
 					visibility_function = function (content, style)
 						return content.circumstance_icons and content.circumstance_icons[2] ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -3770,18 +3770,18 @@ local function generate_blueprints_func(grid_size)
 						vertical_alignment = "bottom",
 						size = {
 							32,
-							32,
+							32
 						},
 						color = Color.terminal_text_key_value(255, true),
 						offset = {
 							-185,
 							-8,
-							5,
-						},
+							5
+						}
 					},
 					visibility_function = function (content, style)
 						return content.circumstance_icons and content.circumstance_icons[3] ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -3792,18 +3792,18 @@ local function generate_blueprints_func(grid_size)
 						vertical_alignment = "bottom",
 						size = {
 							32,
-							32,
+							32
 						},
 						color = Color.black(255, true),
 						offset = {
 							-183,
 							-6,
-							4,
-						},
+							4
+						}
 					},
 					visibility_function = function (content, style)
 						return content.circumstance_icons and content.circumstance_icons[3] ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -3814,18 +3814,18 @@ local function generate_blueprints_func(grid_size)
 						vertical_alignment = "bottom",
 						size = {
 							32,
-							32,
+							32
 						},
 						color = Color.terminal_text_key_value(255, true),
 						offset = {
 							-225,
 							-8,
-							5,
-						},
+							5
+						}
 					},
 					visibility_function = function (content, style)
 						return content.circumstance_icons and content.circumstance_icons[4] ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -3836,18 +3836,18 @@ local function generate_blueprints_func(grid_size)
 						vertical_alignment = "bottom",
 						size = {
 							32,
-							32,
+							32
 						},
 						color = Color.black(255, true),
 						offset = {
 							-223,
 							-6,
-							4,
-						},
+							4
+						}
 					},
 					visibility_function = function (content, style)
 						return content.circumstance_icons and content.circumstance_icons[4] ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -3863,13 +3863,13 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							10,
 							-48,
-							4,
+							4
 						},
 						size_addition = {
 							0,
-							0,
-						},
-					},
+							0
+						}
+					}
 				},
 				{
 					pass_type = "text",
@@ -3887,24 +3887,24 @@ local function generate_blueprints_func(grid_size)
 							255,
 							255,
 							255,
-							255,
+							255
 						},
 						color = {
 							255,
 							255,
 							255,
-							255,
+							255
 						},
 						size = {
 							40,
-							40,
+							40
 						},
 						offset = {
 							121,
 							-5,
-							3,
-						},
-					},
+							3
+						}
+					}
 				},
 				{
 					pass_type = "text",
@@ -3922,24 +3922,24 @@ local function generate_blueprints_func(grid_size)
 							255,
 							255,
 							255,
-							255,
+							255
 						},
 						color = {
 							255,
 							255,
 							255,
-							255,
+							255
 						},
 						size = {
 							40,
-							40,
+							40
 						},
 						offset = {
 							84,
 							-5,
-							3,
-						},
-					},
+							3
+						}
+					}
 				},
 				{
 					pass_type = "text",
@@ -3957,24 +3957,24 @@ local function generate_blueprints_func(grid_size)
 							255,
 							255,
 							255,
-							255,
+							255
 						},
 						color = {
 							255,
 							255,
 							255,
-							255,
+							255
 						},
 						size = {
 							40,
-							40,
+							40
 						},
 						offset = {
 							47,
 							-5,
-							3,
-						},
-					},
+							3
+						}
+					}
 				},
 				{
 					pass_type = "text",
@@ -3992,24 +3992,24 @@ local function generate_blueprints_func(grid_size)
 							255,
 							255,
 							255,
-							255,
+							255
 						},
 						color = {
 							255,
 							255,
 							255,
-							255,
+							255
 						},
 						size = {
 							40,
-							40,
+							40
 						},
 						offset = {
 							10,
 							-5,
-							3,
-						},
-					},
+							3
+						}
+					}
 				},
 				{
 					pass_type = "texture",
@@ -4018,18 +4018,18 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							7,
+							8
 						},
 						color = {
 							105,
 							45,
 							45,
-							45,
-						},
+							45
+						}
 					},
 					visibility_function = function (content, style)
 						return content.element.block_reason ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "rect",
@@ -4038,18 +4038,18 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							6,
+							7
 						},
 						color = {
 							150,
 							35,
 							0,
-							0,
-						},
+							0
+						}
 					},
 					visibility_function = function (content, style)
 						return content.element.block_reason ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "texture_uv",
@@ -4059,28 +4059,28 @@ local function generate_blueprints_func(grid_size)
 						vertical_alignment = "bottom",
 						size = {
 							nil,
-							45,
+							45
 						},
 						color = Color.black(255, true),
 						offset = {
 							0,
 							0,
-							8,
+							9
 						},
 						uvs = {
 							{
 								1,
-								0,
+								0
 							},
 							{
 								0,
-								1,
-							},
-						},
+								1
+							}
+						}
 					},
 					visibility_function = function (content, style)
 						return content.element.block_reason ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -4097,23 +4097,23 @@ local function generate_blueprints_func(grid_size)
 						vertical_alignment = "center",
 						size_addition = {
 							-40,
-							-20,
+							-20
 						},
 						text_color = {
 							255,
 							159,
 							67,
-							67,
+							67
 						},
 						offset = {
 							0,
 							0,
-							9,
-						},
+							10
+						}
 					},
 					visibility_function = function (content, style)
 						return content.element.block_reason ~= nil
-					end,
+					end
 				},
 				{
 					pass_type = "rect",
@@ -4122,13 +4122,13 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							5,
+							6
 						},
-						color = Color.black(220, true),
+						color = Color.black(220, true)
 					},
 					visibility_function = function (content, style)
 						return content.use_overlay
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -4137,18 +4137,18 @@ local function generate_blueprints_func(grid_size)
 						vertical_alignment = "center",
 						size = {
 							nil,
-							40,
+							40
 						},
 						color = Color.terminal_grid_background(70, true),
 						offset = {
 							0,
 							0,
-							6,
-						},
+							7
+						}
 					},
 					visibility_function = function (content, style)
 						return content.use_overlay
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -4166,17 +4166,17 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							7,
+							8
 						},
 						size_addition = {
 							0,
-							0,
-						},
+							0
+						}
 					},
 					visibility_function = function (content, style)
 						return content.use_overlay
-					end,
-				},
+					end
+				}
 			},
 			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 				local style = widget.style
@@ -4211,8 +4211,7 @@ local function generate_blueprints_func(grid_size)
 						background_texture_style.material_values.texture_map = background_texture
 					end
 
-					local difficulty_index = Danger.index_by_name(difficulty_name)
-					local danger_settings = DangerSettings[difficulty_index]
+					local danger_settings = Danger.danger_by_name(difficulty_name)
 
 					if danger_settings then
 						style.difficulty_icon.visible = true
@@ -4324,22 +4323,22 @@ local function generate_blueprints_func(grid_size)
 				end
 
 				content.use_overlay = use_overlay
-			end,
+			end
 		},
 		texture = {
 			size = {
 				64,
-				64,
+				64
 			},
 			size_function = function (parent, element, ui_renderer)
 				local size = element.size
 
 				return size and {
 					size[1],
-					size[2],
+					size[2]
 				} or {
 					64,
-					64,
+					64
 				}
 			end,
 			pass_template = {
@@ -4352,10 +4351,10 @@ local function generate_blueprints_func(grid_size)
 							255,
 							255,
 							255,
-							255,
-						},
-					},
-				},
+							255
+						}
+					}
+				}
 			},
 			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 				local style = widget.style
@@ -4394,7 +4393,7 @@ local function generate_blueprints_func(grid_size)
 					color[3] = texture_color[3]
 					color[4] = texture_color[4]
 				end
-			end,
+			end
 		},
 		header = {
 			size_function = function (parent, element, ui_renderer)
@@ -4402,15 +4401,15 @@ local function generate_blueprints_func(grid_size)
 
 				return size and {
 					size[1],
-					size[2],
+					size[2]
 				} or {
 					grid_size[1],
-					100,
+					100
 				}
 			end,
 			size = {
 				grid_size[1],
-				100,
+				100
 			},
 			pass_template = {
 				{
@@ -4427,10 +4426,10 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							3,
-						},
-					},
-				},
+							3
+						}
+					}
+				}
 			},
 			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 				local style = widget.style
@@ -4458,7 +4457,7 @@ local function generate_blueprints_func(grid_size)
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
 				local content = widget.content
 				local element = content.element
-			end,
+			end
 		},
 		body = {
 			size_function = function (parent, element, ui_renderer)
@@ -4466,15 +4465,15 @@ local function generate_blueprints_func(grid_size)
 
 				return size and {
 					size[1],
-					size[2],
+					size[2]
 				} or {
 					grid_size[1],
-					100,
+					100
 				}
 			end,
 			size = {
 				grid_size[1],
-				100,
+				100
 			},
 			pass_template = {
 				{
@@ -4491,10 +4490,10 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							3,
-						},
-					},
-				},
+							3
+						}
+					}
+				}
 			},
 			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 				local style = widget.style
@@ -4518,7 +4517,7 @@ local function generate_blueprints_func(grid_size)
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
 				local content = widget.content
 				local element = content.element
-			end,
+			end
 		},
 		body_centered = {
 			size_function = function (parent, element, ui_renderer)
@@ -4526,15 +4525,15 @@ local function generate_blueprints_func(grid_size)
 
 				return size and {
 					size[1],
-					size[2],
+					size[2]
 				} or {
 					grid_size[1],
-					100,
+					100
 				}
 			end,
 			size = {
 				grid_size[1],
-				100,
+				100
 			},
 			pass_template = {
 				{
@@ -4551,10 +4550,10 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							3,
-						},
-					},
-				},
+							3
+						}
+					}
+				}
 			},
 			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 				local style = widget.style
@@ -4578,8 +4577,8 @@ local function generate_blueprints_func(grid_size)
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
 				local content = widget.content
 				local element = content.element
-			end,
-		},
+			end
+		}
 	}
 end
 

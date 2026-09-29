@@ -5,7 +5,7 @@ local considerations = {
 		is_available = {
 			blackboard_component = "available_attacks",
 			component_field = "charge",
-			is_condition = true,
+			is_condition = true
 		},
 		last_weapon_switch = {
 			blackboard_component = "weapon_switch",
@@ -20,8 +20,8 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
+				1
+			}
 		},
 		distance_to_target = {
 			blackboard_component = "perception",
@@ -35,13 +35,13 @@ local considerations = {
 				0.7,
 				1,
 				1,
-				1,
-			},
+				1
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
+			is_condition = true
 		},
 		last_time = {
 			component_field = "last_time",
@@ -55,15 +55,15 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	renegade_captain_throw_fire_grenade = {
 		is_available = {
 			blackboard_component = "available_attacks",
 			component_field = "fire_grenade",
-			is_condition = true,
+			is_condition = true
 		},
 		last_weapon_switch = {
 			blackboard_component = "weapon_switch",
@@ -78,8 +78,8 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
+				1
+			}
 		},
 		distance_to_target = {
 			blackboard_component = "perception",
@@ -93,13 +93,13 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
+				1
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
+			is_condition = true
 		},
 		last_done_time = {
 			component_field = "last_done_time",
@@ -113,9 +113,9 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	renegade_captain_throw_frag_grenade = {
 		distance_to_target = {
@@ -130,13 +130,13 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
+				1
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
+			is_condition = true
 		},
 		last_done_time = {
 			component_field = "last_done_time",
@@ -150,9 +150,9 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	renegade_captain_kick = {
 		distance_to_target = {
@@ -167,8 +167,8 @@ local considerations = {
 				0.57002,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		distance_to_target_z = {
 			blackboard_component = "perception",
@@ -180,13 +180,13 @@ local considerations = {
 				0.5,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
+			is_condition = true
 		},
 		last_done_time = {
 			component_field = "last_done_time",
@@ -200,15 +200,15 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	renegade_captain_punch = {
 		is_available = {
 			blackboard_component = "available_attacks",
 			component_field = "punch",
-			is_condition = true,
+			is_condition = true
 		},
 		distance_to_target = {
 			blackboard_component = "perception",
@@ -222,8 +222,8 @@ local considerations = {
 				0.57002,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		target_speed_away = {
 			blackboard_component = "perception",
@@ -237,8 +237,8 @@ local considerations = {
 				0.1001,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		distance_to_target_z = {
 			blackboard_component = "perception",
@@ -250,13 +250,13 @@ local considerations = {
 				0.5,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
+			is_condition = true
 		},
 		last_done_time = {
 			component_field = "last_done_time",
@@ -270,15 +270,15 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	renegade_captain_void_shield_explosion = {
 		is_available = {
 			blackboard_component = "available_attacks",
 			component_field = "void_shield_explosion",
-			is_condition = true,
+			is_condition = true
 		},
 		shield_toughness = {
 			blackboard_component = "toughness",
@@ -294,8 +294,8 @@ local considerations = {
 				0.5001,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		nearby_units = {
 			blackboard_component = "nearby_units_broadphase",
@@ -311,8 +311,8 @@ local considerations = {
 				0.75,
 				0.75,
 				1,
-				1,
-			},
+				1
+			}
 		},
 		distance_to_target_z = {
 			blackboard_component = "perception",
@@ -324,8 +324,8 @@ local considerations = {
 				0.5,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		last_done_time = {
 			component_field = "last_done_time",
@@ -339,25 +339,25 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
+				1
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
+			is_condition = true
 		},
 		has_slot = {
 			blackboard_component = "slot",
 			component_field = "has_slot",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	renegade_captain_hellgun_shoot = {
 		is_available = {
 			blackboard_component = "available_attacks",
 			component_field = "hellgun_shoot",
-			is_condition = true,
+			is_condition = true
 		},
 		distance_to_target = {
 			blackboard_component = "perception",
@@ -371,14 +371,14 @@ local considerations = {
 				0.900001,
 				1,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	renegade_captain_hellgun_spray_and_pray = {
 		distance_to_target = {
@@ -393,13 +393,13 @@ local considerations = {
 				0.900001,
 				1,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
+			is_condition = true
 		},
 		last_time = {
 			component_field = "last_time",
@@ -413,15 +413,15 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	renegade_captain_hellgun_sweep_shoot = {
 		is_available = {
 			blackboard_component = "available_attacks",
 			component_field = "hellgun_sweep_shoot",
-			is_condition = true,
+			is_condition = true
 		},
 		distance_to_target = {
 			blackboard_component = "perception",
@@ -435,20 +435,20 @@ local considerations = {
 				0.900001,
 				1,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	renegade_captain_hellgun_strafe_shoot = {
 		is_available = {
 			blackboard_component = "available_attacks",
 			component_field = "hellgun_strafe_shoot",
-			is_condition = true,
+			is_condition = true
 		},
 		distance_to_combat_vector = {
 			blackboard_component = "combat_vector",
@@ -462,19 +462,19 @@ local considerations = {
 				0.50001,
 				1,
 				1,
-				1,
-			},
+				1
+			}
 		},
 		has_combat_vector_position = {
 			blackboard_component = "combat_vector",
 			component_field = "has_position",
-			is_condition = true,
+			is_condition = true
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	renegade_captain_bolt_pistol_shoot = {
 		distance_to_target = {
@@ -489,20 +489,20 @@ local considerations = {
 				0.900001,
 				0.25,
 				1,
-				0.1,
-			},
+				0.1
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	renegade_captain_shotgun_shoot = {
 		is_available = {
 			blackboard_component = "available_attacks",
 			component_field = "shotgun_shoot",
-			is_condition = true,
+			is_condition = true
 		},
 		distance_to_target = {
 			blackboard_component = "perception",
@@ -516,20 +516,20 @@ local considerations = {
 				0.900001,
 				0.25,
 				1,
-				0.1,
-			},
+				0.1
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	renegade_captain_shotgun_strafe_shoot = {
 		is_available = {
 			blackboard_component = "available_attacks",
 			component_field = "shotgun_strafe_shoot",
-			is_condition = true,
+			is_condition = true
 		},
 		distance_to_combat_vector = {
 			blackboard_component = "combat_vector",
@@ -543,19 +543,19 @@ local considerations = {
 				0.50001,
 				1,
 				1,
-				1,
-			},
+				1
+			}
 		},
 		has_combat_vector_position = {
 			blackboard_component = "combat_vector",
 			component_field = "has_position",
-			is_condition = true,
+			is_condition = true
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	renegade_captain_power_sword_moving_melee_attack = {
 		distance_to_target = {
@@ -570,8 +570,8 @@ local considerations = {
 				0.62002,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		target_speed_away = {
 			blackboard_component = "perception",
@@ -585,8 +585,8 @@ local considerations = {
 				0.1001,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		distance_to_target_z = {
 			blackboard_component = "perception",
@@ -598,20 +598,20 @@ local considerations = {
 				0.5,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	renegade_captain_power_sword_melee_combo_attack = {
 		is_available = {
 			blackboard_component = "available_attacks",
 			component_field = "power_sword_melee_combo_attack",
-			is_condition = true,
+			is_condition = true
 		},
 		slot_distance = {
 			blackboard_component = "slot",
@@ -625,8 +625,8 @@ local considerations = {
 				0.9,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		distance_to_target_z = {
 			blackboard_component = "perception",
@@ -638,19 +638,19 @@ local considerations = {
 				0.5,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
+			is_condition = true
 		},
 		has_slot = {
 			blackboard_component = "slot",
 			component_field = "has_slot",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	renegade_captain_power_sword_melee_sweep = {
 		distance_to_target = {
@@ -665,13 +665,13 @@ local considerations = {
 				0.60002,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
+			is_condition = true
 		},
 		nearby_units = {
 			blackboard_component = "nearby_units_broadphase",
@@ -687,8 +687,8 @@ local considerations = {
 				0.75,
 				0.75,
 				1,
-				1,
-			},
+				1
+			}
 		},
 		last_time = {
 			component_field = "last_time",
@@ -702,15 +702,15 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	renegade_captain_powermaul_ground_slam_attack = {
 		is_available = {
 			blackboard_component = "available_attacks",
 			component_field = "powermaul_ground_slam_attack",
-			is_condition = true,
+			is_condition = true
 		},
 		distance_to_target = {
 			blackboard_component = "perception",
@@ -724,8 +724,8 @@ local considerations = {
 				0.62002,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		target_speed_away = {
 			blackboard_component = "perception",
@@ -739,8 +739,8 @@ local considerations = {
 				0.1001,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		distance_to_target_z = {
 			blackboard_component = "perception",
@@ -752,14 +752,14 @@ local considerations = {
 				0.5,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	renegade_captain_plasma_pistol_shoot = {
 		distance_to_target = {
@@ -774,14 +774,14 @@ local considerations = {
 				0.900001,
 				0.25,
 				1,
-				0.1,
-			},
+				0.1
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	renegade_captain_plasma_pistol_shoot_volley = {
 		distance_to_target = {
@@ -796,13 +796,13 @@ local considerations = {
 				0.900001,
 				0.25,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
+			is_condition = true
 		},
 		last_time = {
 			component_field = "last_time",
@@ -816,9 +816,9 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	twin_captain_power_sword_melee_combo_attack = {
 		distance_to_target = {
@@ -833,8 +833,8 @@ local considerations = {
 				0.57002,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		distance_to_target_z = {
 			blackboard_component = "perception",
@@ -846,14 +846,14 @@ local considerations = {
 				0.5,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	twin_captain_dash = {
 		distance_to_target = {
@@ -868,13 +868,13 @@ local considerations = {
 				0.7,
 				1,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
+			is_condition = true
 		},
 		last_time = {
 			component_field = "last_time",
@@ -888,9 +888,9 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	twin_captain_random_dash = {
 		distance_to_target = {
@@ -905,13 +905,13 @@ local considerations = {
 				0.7,
 				1,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
+			is_condition = true
 		},
 		last_time = {
 			component_field = "last_time",
@@ -925,15 +925,15 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	twin_captain_multithrow = {
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
+			is_condition = true
 		},
 		last_done_time = {
 			component_field = "last_done_time",
@@ -947,8 +947,8 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
+				1
+			}
 		},
 		distance_to_target = {
 			blackboard_component = "perception",
@@ -962,15 +962,15 @@ local considerations = {
 				0.7,
 				1,
 				1,
-				0,
-			},
-		},
+				0
+			}
+		}
 	},
 	twin_captain_multithrow_empowered = {
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
+			is_condition = true
 		},
 		last_done_time = {
 			component_field = "last_done_time",
@@ -984,8 +984,8 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
+				1
+			}
 		},
 		distance_to_target = {
 			blackboard_component = "perception",
@@ -999,15 +999,15 @@ local considerations = {
 				0.7,
 				1,
 				1,
-				0,
-			},
-		},
+				0
+			}
+		}
 	},
 	twin_captain_quickthrow = {
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
+			is_condition = true
 		},
 		last_done_time = {
 			component_field = "last_done_time",
@@ -1021,8 +1021,8 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
+				1
+			}
 		},
 		distance_to_target = {
 			blackboard_component = "perception",
@@ -1036,9 +1036,9 @@ local considerations = {
 				0.7,
 				1,
 				1,
-				0,
-			},
-		},
+				0
+			}
+		}
 	},
 	twin_captain_void_shield_explosion = {
 		shield_toughness = {
@@ -1055,8 +1055,8 @@ local considerations = {
 				0.5001,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		nearby_units = {
 			blackboard_component = "nearby_units_broadphase",
@@ -1072,8 +1072,8 @@ local considerations = {
 				0.75,
 				0.75,
 				1,
-				1,
-			},
+				1
+			}
 		},
 		distance_to_target_z = {
 			blackboard_component = "perception",
@@ -1085,8 +1085,8 @@ local considerations = {
 				0.5,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		last_done_time = {
 			component_field = "last_done_time",
@@ -1100,14 +1100,14 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
+				1
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
-		},
+			is_condition = true
+		}
 	},
 	twin_captain_dash_and_sweep = {
 		distance_to_target = {
@@ -1122,13 +1122,13 @@ local considerations = {
 				0.7,
 				1,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
+			is_condition = true
 		},
 		last_time = {
 			component_field = "last_time",
@@ -1142,9 +1142,9 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	twin_kick = {
 		distance_to_target = {
@@ -1159,8 +1159,8 @@ local considerations = {
 				0.57002,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		distance_to_target_z = {
 			blackboard_component = "perception",
@@ -1172,13 +1172,13 @@ local considerations = {
 				0.5,
 				0,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		has_line_of_sight = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
+			is_condition = true
 		},
 		last_time = {
 			component_field = "last_time",
@@ -1192,10 +1192,10 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
-		},
-	},
+				1
+			}
+		}
+	}
 }
 
 return considerations

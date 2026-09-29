@@ -5,156 +5,156 @@ local adamant_female_c_psyker_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_31_a_01",
+			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_31_a_01"
 		},
 		sound_events_duration = {
-			[1] = 3.095875,
+			[1] = 3.095875
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	adamant_female_c_psyker_bonding_conversation_31_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_31_c_01",
+			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_31_c_01"
 		},
 		sound_events_duration = {
-			[1] = 1.843396,
+			[1] = 1.843396
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	adamant_female_c_psyker_bonding_conversation_32_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_32_a_01",
+			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_32_a_01"
 		},
 		sound_events_duration = {
-			[1] = 3.910521,
+			[1] = 3.910521
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	adamant_female_c_psyker_bonding_conversation_32_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_32_c_01",
+			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_32_c_01"
 		},
 		sound_events_duration = {
-			[1] = 2.108229,
+			[1] = 2.108229
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	adamant_female_c_psyker_bonding_conversation_36_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_36_b_01",
+			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_36_b_01"
 		},
 		sound_events_duration = {
-			[1] = 4.218583,
+			[1] = 4.218583
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	adamant_female_c_psyker_bonding_conversation_36_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_36_d_01",
+			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_36_d_01"
 		},
 		sound_events_duration = {
-			[1] = 3.28475,
+			[1] = 3.28475
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	adamant_female_c_psyker_bonding_conversation_37_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_37_b_01",
+			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_37_b_01"
 		},
 		sound_events_duration = {
-			[1] = 5.858813,
+			[1] = 5.858813
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	adamant_female_c_psyker_bonding_conversation_37_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_37_d_01",
+			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_37_d_01"
 		},
 		sound_events_duration = {
-			[1] = 2.516396,
+			[1] = 2.516396
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	adamant_female_c_psyker_bonding_conversation_38_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_38_b_01",
+			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_38_b_01"
 		},
 		sound_events_duration = {
-			[1] = 3.044417,
+			[1] = 3.044417
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	adamant_female_c_psyker_bonding_conversation_38_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_38_d_01",
+			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_38_d_01"
 		},
 		sound_events_duration = {
-			[1] = 2.766729,
+			[1] = 2.766729
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	adamant_female_c_psyker_bonding_conversation_39_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_39_b_01",
+			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_39_b_01"
 		},
 		sound_events_duration = {
-			[1] = 1.905229,
+			[1] = 1.905229
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	adamant_female_c_psyker_bonding_conversation_39_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_39_d_01",
+			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_39_d_01"
 		},
 		sound_events_duration = {
-			[1] = 2.459542,
+			[1] = 2.459542
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	adamant_female_c_psyker_bonding_conversation_40_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_40_b_01",
+			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_40_b_01"
 		},
 		sound_events_duration = {
-			[1] = 3.185083,
+			[1] = 3.185083
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	adamant_female_c_psyker_bonding_conversation_40_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_40_d_01",
+			[1] = "loc_psyker_female_a__adamant_female_c_psyker_bonding_conversation_40_d_01"
 		},
 		sound_events_duration = {
-			[1] = 1.524583,
+			[1] = 1.524583
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("adamant_female_c_psyker_female_a", adamant_female_c_psyker_female_a)

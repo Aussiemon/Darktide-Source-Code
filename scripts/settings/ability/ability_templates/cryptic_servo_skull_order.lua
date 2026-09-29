@@ -6,7 +6,7 @@ local ability_template = {}
 
 ability_template.allowed_inputs_in_sprint = {
 	grenade_ability = true,
-	wield = true,
+	wield = true
 }
 ability_template.action_inputs = {
 	aim_pressed = {
@@ -14,9 +14,9 @@ ability_template.action_inputs = {
 		input_sequence = {
 			{
 				input = "grenade_ability_pressed",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	aim_released = {
 		buffer_time = 0.1,
@@ -24,9 +24,9 @@ ability_template.action_inputs = {
 			{
 				input = "grenade_ability_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				time_window = math.huge
+			}
+		}
 	},
 	block_cancel = {
 		buffer_time = 0,
@@ -34,10 +34,10 @@ ability_template.action_inputs = {
 			{
 				hold_input = "grenade_ability_hold",
 				input = "action_two_pressed",
-				value = true,
-			},
-		},
-	},
+				value = true
+			}
+		}
+	}
 }
 ability_template.action_input_hierarchy = {
 	{
@@ -45,18 +45,17 @@ ability_template.action_input_hierarchy = {
 		transition = {
 			{
 				input = "aim_released",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "block_cancel",
-				transition = "base",
-			},
-		},
-	},
+				transition = "base"
+			}
+		}
+	}
 }
 ability_template.actions = {
 	action_aim = {
-		ability_type = "grenade_ability",
 		aim_ready_up_time = 0,
 		allowed_during_lunge = true,
 		allowed_during_sprint = true,
@@ -75,37 +74,36 @@ ability_template.actions = {
 		select_animation_event_func = CompanionServoSkullAbility.select_animation_event,
 		place_configuration = {
 			key_input = "action_one_pressed",
-			on_input_action_func = CompanionServoSkullAbility.on_input_action_func,
+			on_input_action_func = CompanionServoSkullAbility.on_input_action_func
 		},
 		aim_on_ground_validate_function = CompanionServoSkullAbility.can_aim_on_ground,
 		allowed_chain_actions = {
 			aim_released = {
-				action_name = "action_companion_start_ability",
-			},
-		},
+				action_name = "action_companion_start_ability"
+			}
+		}
 	},
 	action_companion_start_ability = {
-		ability_type = "grenade_ability",
 		allowed_during_sprint = true,
+		consume_ability_usage_cost = false,
 		kind = "companion_start_ability",
 		sprint_ready_up_time = 0,
 		total_time = 0.1,
 		uninterruptible = true,
-		use_ability_charge = false,
-		ability_function = CompanionServoSkullAbility.start_order_ability,
-	},
+		ability_function = CompanionServoSkullAbility.start_order_ability
+	}
 }
 ability_template.fx_sources = {}
 ability_template.equipped_ability_effect_scripts = {
-	"TargetedAllyEffects",
+	"TargetedAllyEffects"
 }
 ability_template.equipped_ability_effect_scripts_tweak_data = {
 	targeting = {
 		effect_validate_target_func = CompanionServoSkullAbility.effect_validate_target_func,
 		select_aim_on_ground_effect = CompanionServoSkullAbility.select_aim_on_ground_effect,
 		spawn_effect_validate_func = CompanionServoSkullAbility.can_aim_on_ground,
-		select_target_outline_func = CompanionServoSkullAbility.select_target_outline_func,
-	},
+		select_target_outline_func = CompanionServoSkullAbility.select_target_outline_func
+	}
 }
 ability_template.module_target_component_name = "action_module_ability_target_finder"
 

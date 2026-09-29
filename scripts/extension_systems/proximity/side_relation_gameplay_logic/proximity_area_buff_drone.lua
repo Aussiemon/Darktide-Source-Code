@@ -45,7 +45,11 @@ ProximityAreaBuffDrone.init = function (self, logic_context, init_data, owner_un
 	self._buff_to_add = improved_version and settings.improved_buff_to_add or settings.buff_to_add
 	self._start_time = nil
 	self._current_t = nil
-	self._life_time = settings.life_time
+
+	local improved_life_time_special_rule = settings.improved_life_time_special_rule
+	local improved_life_time_version = talent_extension:has_special_rule(improved_life_time_special_rule)
+
+	self._life_time = improved_life_time_version and settings.improved_life_time or settings.life_time
 
 	local fx_system = Managers.state.extension:system("fx_system")
 
@@ -248,7 +252,7 @@ ProximityAreaBuffDrone._add_buff_to_unit = function (self, t, unit)
 		local_index = index,
 		component_index = component_index,
 		special_rule_index = special_rule_index,
-		special_rule_component_index = special_rule_component_index,
+		special_rule_component_index = special_rule_component_index
 	}
 end
 

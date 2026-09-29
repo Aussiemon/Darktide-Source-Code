@@ -14,6 +14,7 @@ local LocalThemeState = require("scripts/loading/local_states/local_theme_state"
 local LocalRequestMissionSeedState = require("scripts/loading/local_states/local_request_mission_seed_state")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local StateMachine = require("scripts/foundation/utilities/state_machine")
+local LocalWaitForLeaveLobbyViewState = require("scripts/loading/local_states/local_wait_for_leave_lobby_view_state")
 local LocalWaitForMissionBriefingDoneState = require("scripts/loading/local_states/local_wait_for_mission_briefing_done_state")
 local LoadingClient = class("LoadingClient")
 
@@ -37,7 +38,7 @@ LoadingClient.init = function (self, network_delegate, host_channel_id, loaders)
 		host_channel_id = host_channel_id,
 		timeout = LoadingClient.TIMEOUT,
 		loaders = loaders,
-		themes = {},
+		themes = {}
 	}
 	local parent
 	local state_machine = StateMachine:new("LoadingClient", parent, shared_state)
@@ -70,10 +71,14 @@ LoadingClient.init = function (self, network_delegate, host_channel_id, loaders)
 	state_machine:add_transition("LocalRequestMissionSeedState", "mission_seed_received", LocalMechanismLevelState)
 	state_machine:add_transition("LocalRequestMissionSeedState", "reset", LocalResetState)
 	state_machine:add_transition("LocalRequestMissionSeedState", "disconnected", LocalLoadFailState)
-	state_machine:add_transition("LocalMechanismLevelState", "spawning_done", LocalWaitForMissionBriefingDoneState)
+	state_machine:add_transition("LocalMechanismLevelState", "spawning_done", LocalWaitForLeaveLobbyViewState)
 	state_machine:add_transition("LocalMechanismLevelState", "no_level_needed", StateMachine.IGNORE_EVENT)
 	state_machine:add_transition("LocalMechanismLevelState", "reset", LocalResetState)
 	state_machine:add_transition("LocalMechanismLevelState", "disconnected", LocalLoadFailState)
+	state_machine:add_transition("LocalWaitForLeaveLobbyViewState", "lobby_view_left", LocalWaitForMissionBriefingDoneState)
+	state_machine:add_transition("LocalWaitForLeaveLobbyViewState", "no_level_needed", StateMachine.IGNORE_EVENT)
+	state_machine:add_transition("LocalWaitForLeaveLobbyViewState", "reset", LocalResetState)
+	state_machine:add_transition("LocalWaitForLeaveLobbyViewState", "disconnected", LocalLoadFailState)
 	state_machine:add_transition("LocalWaitForMissionBriefingDoneState", "mission_briefing_done", LocalDetermineSpawnGroupState)
 	state_machine:add_transition("LocalWaitForMissionBriefingDoneState", "no_level_needed", StateMachine.IGNORE_EVENT)
 	state_machine:add_transition("LocalWaitForMissionBriefingDoneState", "reset", LocalResetState)

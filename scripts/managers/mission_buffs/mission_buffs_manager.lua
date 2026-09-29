@@ -6,33 +6,33 @@ local CLIENT_RPCS = {
 	"rpc_client_mission_buffs_buff_received",
 	"rpc_client_mission_buffs_family_received",
 	"rpc_client_mission_buffs_buff_removed",
-	"rpc_client_mission_buffs_family_removed",
+	"rpc_client_mission_buffs_family_removed"
 }
 local EVENTS = {
 	{
 		"mission_buffs_event_player_spawned",
-		"_manage_player_spawn",
+		"_manage_player_spawn"
 	},
 	{
 		"mission_buffs_event_notify_buff_to_player",
-		"notify_buff_given_to_player",
+		"notify_buff_given_to_player"
 	},
 	{
 		"mission_buffs_event_notify_buff_removed_from_player",
-		"notify_buff_removed_from_player",
+		"notify_buff_removed_from_player"
 	},
 	{
 		"mission_buffs_event_add_externally_controlled_to_player",
-		"_add_externally_controlled_buff_to_player",
+		"_add_externally_controlled_buff_to_player"
 	},
 	{
 		"mission_buffs_event_remove_externally_controlled_from_player",
-		"_remove_externally_controlled_buff_from_player",
+		"_remove_externally_controlled_buff_from_player"
 	},
 	{
 		"mission_buffs_event_request_specific_buff",
-		"_request_specific_buff",
-	},
+		"_request_specific_buff"
+	}
 }
 
 MissionBuffsManager._register_rpcs = function (self, network_event_delegate)

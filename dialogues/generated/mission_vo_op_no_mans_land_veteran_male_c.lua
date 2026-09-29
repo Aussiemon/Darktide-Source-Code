@@ -14,7 +14,7 @@ local mission_vo_op_no_mans_land_veteran_male_c = {
 			"loc_veteran_male_c__guidance_starting_area_07",
 			"loc_veteran_male_c__guidance_starting_area_08",
 			"loc_veteran_male_c__guidance_starting_area_09",
-			"loc_veteran_male_c__guidance_starting_area_10",
+			"loc_veteran_male_c__guidance_starting_area_10"
 		},
 		sound_events_duration = {
 			2.041813,
@@ -26,7 +26,7 @@ local mission_vo_op_no_mans_land_veteran_male_c = {
 			3.141052,
 			2.611063,
 			2.418073,
-			3.415063,
+			3.415063
 		},
 		sound_event_weights = {
 			0.1,
@@ -38,10 +38,10 @@ local mission_vo_op_no_mans_land_veteran_male_c = {
 			0.1,
 			0.1,
 			0.1,
-			0.1,
+			0.1
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_op_no_mans_land_veteran_male_c", mission_vo_op_no_mans_land_veteran_male_c)

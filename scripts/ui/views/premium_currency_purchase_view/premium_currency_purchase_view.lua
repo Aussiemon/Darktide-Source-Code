@@ -16,7 +16,7 @@ local ViewElementWallet = require("scripts/ui/view_elements/view_element_wallet/
 local AQUILA_STORE_LAYOUT = {
 	display_name = "loc_premium_store_category_title_currency",
 	storefront = "hard_currency_store",
-	template = ButtonPassTemplates.default_button,
+	template = ButtonPassTemplates.default_button
 }
 local PremiumCurrencyPurchaseView = class("PremiumCurrencyPurchaseView", "BaseView")
 
@@ -44,7 +44,7 @@ end
 
 PremiumCurrencyPurchaseView.open = function (callback_on_close, currency_required, item_name)
 	local filters = {
-		PremiumCurrencyPurchaseView.FILTER_OWNED,
+		PremiumCurrencyPurchaseView.FILTER_OWNED
 	}
 
 	if currency_required then
@@ -55,7 +55,7 @@ PremiumCurrencyPurchaseView.open = function (callback_on_close, currency_require
 		callback_on_close = callback_on_close,
 		filters = filters,
 		currency_required = currency_required,
-		item_name = item_name,
+		item_name = item_name
 	}
 
 	Managers.ui:open_view("premium_currency_purchase_view", nil, false, nil, nil, context, nil)
@@ -70,7 +70,7 @@ PremiumCurrencyPurchaseView.init = function (self, settings, context)
 
 	self._pass_draw = context.pass_draw == nil and true or context.pass_draw
 	self._wallet_type = {
-		"aquilas",
+		"aquilas"
 	}
 
 	if IS_PLAYSTATION then
@@ -96,7 +96,7 @@ PremiumCurrencyPurchaseView.on_enter = function (self)
 	self:_update_element_position("wallet_element_pivot", self._wallet_element, true)
 	self._wallet_element:generate_currencies(self._wallet_type, {
 		nil,
-		30,
+		30
 	})
 end
 
@@ -187,7 +187,7 @@ local function _merge_offers_and_platform_offers(offers, platform_offers)
 
 		platform_offer.value = {
 			type = "platform_offer",
-			amount = aquilas_amount,
+			amount = aquilas_amount
 		}
 
 		table.insert(merged, platform_offer)
@@ -228,7 +228,7 @@ PremiumCurrencyPurchaseView._fill_layout_with_offers = function (self, offers, p
 	local filters = self._context.filters
 
 	filters = filters or {
-		self.FILTER_OWNED,
+		self.FILTER_OWNED
 	}
 
 	return self:_filter_aquila_offers(offers, filters):next(function (filtered_offers)
@@ -260,7 +260,7 @@ PremiumCurrencyPurchaseView._load_offer_images = function (self, offer)
 
 		return self._promise_container:cancel_on_destroy(Managers.url_loader:load_texture(media_url, nil, "premium_currency_purchase_view"):next(function (data)
 			offer.texture_data = {
-				main = data,
+				main = data
 			}
 		end))
 	end
@@ -277,7 +277,7 @@ PremiumCurrencyPurchaseView._load_offer_images = function (self, offer)
 			local texture_promise = self._promise_container:cancel_on_destroy(Managers.url_loader:load_texture(media.url, nil, "premium_currency_purchase_view"):next(function (data)
 				return {
 					media = media,
-					data = data,
+					data = data
 				}
 			end))
 
@@ -384,27 +384,27 @@ PremiumCurrencyPurchaseView._create_aquilas_presentation = function (self, offer
 	local widgets = {}
 	local size_addition = {
 		20,
-		20,
+		20
 	}
 	local spacing = {
 		20,
-		25,
+		25
 	}
 	local large_size = {
 		260,
-		350,
+		350
 	}
 	local small_size = {
 		260,
-		250,
+		250
 	}
 	local medium_size = {
 		260,
-		300,
+		300
 	}
 	local golden_offer_size = {
 		350,
-		350,
+		350
 	}
 	local size_per_row = {}
 	local bonus_offer_count = 0
@@ -412,7 +412,7 @@ PremiumCurrencyPurchaseView._create_aquilas_presentation = function (self, offer
 	local non_bonus_offer_count = 0
 	local golden_element_first_row_positional_offset = {
 		-golden_offer_size[1] / 4,
-		-5,
+		-5
 	}
 	local global_x_offset = 0
 
@@ -494,7 +494,7 @@ PremiumCurrencyPurchaseView._create_aquilas_presentation = function (self, offer
 			local aquilas = offer.value.amount
 			local aquila_minus_bonus = aquilas - bonus_aquila
 			local bonus_text = Localize("loc_premium_store_credits_bonus", true, {
-				amount = bonus_aquila,
+				amount = bonus_aquila
 			})
 
 			description = string.format("%d\n%s", aquila_minus_bonus, bonus_text)
@@ -503,7 +503,7 @@ PremiumCurrencyPurchaseView._create_aquilas_presentation = function (self, offer
 		element.description = description
 		element.offer = offer
 		element.item_types = {
-			"currency",
+			"currency"
 		}
 
 		local size, max_allowed_items_per_row, total_elements_in_row
@@ -552,7 +552,7 @@ PremiumCurrencyPurchaseView._create_aquilas_presentation = function (self, offer
 		widget.offset = {
 			element_position * (size[1] + spacing[1]) + global_x_offset,
 			0,
-			0,
+			0
 		}
 
 		if offer.clean_offer.is_golden and row == 1 then
@@ -628,7 +628,7 @@ PremiumCurrencyPurchaseView._create_aquilas_presentation = function (self, offer
 		element.description = ""
 		element.offer = golden_offer
 		element.item_types = {
-			"currency",
+			"currency"
 		}
 
 		local blueprint = PremiumCurrencyPurchaseViewContentBlueprints.create_blueprint(golden_offer_size, golden_offer.texture_data, element.description ~= "", true)
@@ -673,7 +673,7 @@ PremiumCurrencyPurchaseView._create_aquilas_presentation = function (self, offer
 		widgets_by_slot_index = widgets_by_slot_index,
 		slots_per_row = slots_per_row,
 		total_slots = total_slots,
-		num_rows = needed_rows,
+		num_rows = needed_rows
 	}
 
 	if not self._using_cursor_navigation then
@@ -687,7 +687,7 @@ PremiumCurrencyPurchaseView._create_aquilas_presentation = function (self, offer
 		local POSITION = {
 			CENTER = 0,
 			LEFT = 1,
-			RIGHT = 2,
+			RIGHT = 2
 		}
 
 		if not self._ps_store_icon_showing then
@@ -701,7 +701,7 @@ PremiumCurrencyPurchaseView._create_aquilas_presentation = function (self, offer
 		self._widgets_by_name.required_aquilas_text.content.visible = true
 		self._widgets_by_name.required_aquilas_text.content.text = string.format("%s ", Localize("loc_premium_store_required_credits", true, {
 			offer = self._context.item_name,
-			value = self._context.currency_required,
+			value = self._context.currency_required
 		}))
 	end
 end
@@ -968,7 +968,7 @@ PremiumCurrencyPurchaseView.update = function (self, dt, t, input_service)
 
 			corner_right.content.original_size = {
 				corner_width,
-				corner_height,
+				corner_height
 			}
 		end
 
@@ -1016,7 +1016,7 @@ PremiumCurrencyPurchaseView._on_currency_widget_pressed = function (self, widget
 
 		Managers.event:trigger("event_add_notification_message", "currency", {
 			currency = currency,
-			amount = amount,
+			amount = amount
 		})
 		self:_update_wallets()
 		Managers.event:trigger("event_stop_waiting")
@@ -1033,9 +1033,9 @@ PremiumCurrencyPurchaseView._on_currency_widget_pressed = function (self, widget
 			options = {
 				{
 					close_on_pressed = true,
-					text = "loc_popup_button_confirm",
-				},
-			},
+					text = "loc_popup_button_confirm"
+				}
+			}
 		}
 
 		if error.player_message then
@@ -1060,7 +1060,7 @@ PremiumCurrencyPurchaseView._cb_platform_purchase_finished = function (self, ele
 	end
 
 	Managers.backend.interfaces.external_payment:reconcile_dlc({
-		element.offer.clean_offer.product_id,
+		element.offer.clean_offer.product_id
 	}):next(function (response)
 		local dlc_updates = response.dlcUpdates
 

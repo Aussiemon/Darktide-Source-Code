@@ -28,17 +28,17 @@ local psyker_force_field_unit_template = {
 		end
 
 		config:add("DeployableUnitLocomotionExtension", {
-			placed_on_unit = placed_on_unit,
+			placed_on_unit = placed_on_unit
 		})
 		config:add("PsykerForceFieldUnitExtension", {
 			owner_unit = owner_unit,
 			shape_override = shape_override,
-			deployable_settings = deployable_settings,
+			deployable_settings = deployable_settings
 		})
 		config:add("PsykerForceFieldUnitHealthExtension", {
 			owner_unit = owner_unit,
 			ability_type = ability_type,
-			deployable_settings = deployable_settings,
+			deployable_settings = deployable_settings
 		})
 
 		local rotation = Unit.local_rotation(unit, 1)
@@ -83,10 +83,10 @@ local psyker_force_field_unit_template = {
 		config:add("PsykerForceFieldUnitExtension", {
 			owner_unit = owner_unit,
 			shape_override = shape_override,
-			deployable_settings = deployable_settings,
+			deployable_settings = deployable_settings
 		})
 		config:add("PsykerForceFieldHuskHealthExtension", {})
-	end,
+	end
 }
 
 return psyker_force_field_unit_template

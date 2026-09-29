@@ -83,7 +83,7 @@ DialogueExtension.init = function (self, extension_init_context, unit, extension
 		story_stage = "none",
 		voice_fx_preset = 0,
 		voice_template = "none",
-		weapon_type = "none",
+		weapon_type = "none"
 	}
 
 	if self._local_player then
@@ -714,34 +714,49 @@ DialogueExtension.stop_currently_playing_vo = function (self)
 	end
 end
 
+DialogueExtension.add_to_local_rule_queue = function (self, rule_name, wwise_route_key, on_play_callback, seed, specific_line)
+	local dialogue_system = self._dialogue_system
+	local unit = self._unit
+	local rule_queue = dialogue_system._vo_rule_queue
+
+	rule_queue[#rule_queue + 1] = {
+		unit = unit,
+		rule_name = rule_name,
+		wwise_route_key = wwise_route_key,
+		on_play_callback = on_play_callback,
+		seed = seed,
+		specific_line = specific_line
+	}
+
+	return true
+end
+
 DialogueExtension.play_local_vo_events = function (self, rule_names, wwise_route_key, on_play_callback, seed, specific_lines)
 	local dialogue_system = self._dialogue_system
-	local vo_choice, rule_queue, unit = self._vo_choice, dialogue_system._vo_rule_queue, self._unit
+	local unit = self._unit
+	local vo_choice = self._vo_choice
+	local first_rule_name = rule_names[1]
 
-	for i = 1, #rule_names do
+	for i = #rule_names, 1, -1 do
 		local rule = rule_names[i]
 		local is_valid = vo_choice[rule]
 
 		if not is_valid then
-			Log.exception("DialogueExtension", "Invalid request. unit: %s, play_local_vo_events: %s, rule: %s", unit, self._vo_profile_name, rule)
-
-			return false
+			table.remove(rule_names, i)
 		end
 	end
 
-	local rule_count = #rule_queue
+	if #rule_names == 0 then
+		Log.exception("DialogueExtension", "Invalid request. unit: %s, play_local_vo_events: %s, rule: %s", unit, self._vo_profile_name, first_rule_name)
+
+		return false
+	end
 
 	for i = 1, #rule_names do
-		local rule = rule_names[i]
+		local rule_name = rule_names[i]
+		local specific_line = specific_lines and specific_lines[i]
 
-		rule_queue[rule_count + i] = {
-			unit = unit,
-			rule_name = rule,
-			wwise_route_key = wwise_route_key,
-			on_play_callback = on_play_callback,
-			seed = seed,
-			specific_line = specific_lines and specific_lines[i],
-		}
+		self:add_to_local_rule_queue(rule_name, wwise_route_key, on_play_callback, seed, specific_line)
 	end
 
 	local animation_event = "start_talking"
@@ -775,6 +790,8 @@ DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_k
 	local sound_event, subtitles_event, sound_event_duration = self:get_dialogue_event(rule_name, dialogue_index)
 
 	if not sound_event then
+		Log.warning("DialogueExtension", "dialogue index: %s not found for rule name %s", dialogue_index, rule_name)
+
 		return
 	end
 

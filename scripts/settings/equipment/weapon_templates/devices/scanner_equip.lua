@@ -17,9 +17,9 @@ weapon_template.action_inputs = {
 		input_sequence = {
 			{
 				input = "action_two_hold",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	scan_cancel = {
 		buffer_time = 0.02,
@@ -27,18 +27,18 @@ weapon_template.action_inputs = {
 			{
 				input = "action_two_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				time_window = math.huge
+			}
+		}
 	},
 	scan_confirm = {
 		buffer_time = 0.4,
 		input_sequence = {
 			{
 				input = "action_one_pressed",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	scan_confirm_cancel = {
 		buffer_time = 0.02,
@@ -46,33 +46,33 @@ weapon_template.action_inputs = {
 			{
 				input = "action_one_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				time_window = math.huge
+			}
+		}
 	},
 	push = {
 		buffer_time = 0.4,
 		input_sequence = {
 			{
 				input = "action_one_pressed",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	wield = {
 		buffer_time = 0,
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				inputs = wield_inputs,
-			},
-		},
+				inputs = wield_inputs
+			}
+		}
 	},
 	unwield = {
 		buffer_time = 0,
 		clear_input_queue = true,
-		input_sequence = nil,
-	},
+		input_sequence = nil
+	}
 }
 
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
@@ -83,68 +83,68 @@ weapon_template.action_input_hierarchy = {
 		transition = {
 			{
 				input = "scan_cancel",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "scan_confirm",
 				transition = {
 					{
 						input = "scan_cancel",
-						transition = "base",
+						transition = "base"
 					},
 					{
 						input = "scan_confirm_cancel",
-						transition = "previous",
+						transition = "previous"
 					},
 					{
 						input = "wield",
-						transition = "base",
+						transition = "base"
 					},
 					{
 						input = "unwield",
-						transition = "base",
-					},
-				},
+						transition = "base"
+					}
+				}
 			},
 			{
 				input = "wield",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "unwield",
-				transition = "base",
-			},
-		},
+				transition = "base"
+			}
+		}
 	},
 	{
 		input = "inspect_start",
 		transition = {
 			{
 				input = "inspect_stop",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "wield",
-				transition = "base",
+				transition = "base"
 			},
 			{
 				input = "unwield",
-				transition = "base",
-			},
-		},
+				transition = "base"
+			}
+		}
 	},
 	{
 		input = "push",
-		transition = "stay",
+		transition = "stay"
 	},
 	{
 		input = "wield",
-		transition = "stay",
+		transition = "stay"
 	},
 	{
 		input = "unwield",
-		transition = "stay",
-	},
+		transition = "stay"
+	}
 }
 
 ActionInputHierarchy.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
@@ -155,23 +155,23 @@ local scan_settings = {
 	outline_time = 0.5,
 	distance = {
 		far = 20,
-		near = 6,
+		near = 6
 	},
 	angle = {
 		outer = 1.57075,
 		inner = {
 			far = 0.174533,
-			near = 0.01,
+			near = 0.01
 		},
 		line_of_sight_check = {
 			horizontal = 0.174533,
-			vertical = 0.698132,
-		},
+			vertical = 0.698132
+		}
 	},
 	score_distribution = {
 		angle = 0.2,
-		distance = 0.8,
-	},
+		distance = 0.8
+	}
 }
 
 weapon_template.actions = {
@@ -182,23 +182,14 @@ weapon_template.actions = {
 		total_time = 0,
 		unequip_slot = true,
 		uninterruptible = true,
-		unwield_to_weapon = true,
-		allowed_chain_actions = {},
-	},
-	action_unwield = {
-		allowed_during_sprint = true,
-		kind = "unwield",
-		start_input = "wield",
-		total_time = 0,
-		uninterruptible = true,
-		allowed_chain_actions = {},
+		allowed_chain_actions = {}
 	},
 	action_wield = {
 		allowed_during_sprint = true,
 		anim_event = "equip_scanner",
 		kind = "wield",
 		total_time = 0,
-		uninterruptible = true,
+		uninterruptible = true
 	},
 	action_push = {
 		anim_end_event = "attack_finished",
@@ -211,21 +202,21 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 1.2,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 1.15,
-				t = 0.25,
+				t = 0.25
 			},
 			{
 				modifier = 0.5,
-				t = 0.4,
+				t = 0.4
 			},
 			{
 				modifier = 1,
-				t = 0.67,
+				t = 0.67
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		inner_push_rad = math.pi * 0.25,
 		outer_push_rad = math.pi * 1,
@@ -234,14 +225,12 @@ weapon_template.actions = {
 		outer_damage_profile = DamageProfileTemplates.light_push,
 		outer_damage_type = damage_types.physical,
 		allowed_chain_actions = {
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			push = {
 				action_name = "action_push",
-				chain_time = 0.4,
-			},
-		},
+				chain_time = 0.4
+			}
+		}
 	},
 	action_scan = {
 		abort_sprint = true,
@@ -254,28 +243,26 @@ weapon_template.actions = {
 		stop_input = "scan_cancel",
 		total_time = math.huge,
 		crosshair = {
-			crosshair_type = "dot",
+			crosshair_type = "dot"
 		},
 		allowed_chain_actions = {
 			scan_confirm = {
-				action_name = "action_scan_confirm",
+				action_name = "action_scan_confirm"
 			},
 			scan_cancel = {
-				action_name = "action_scan_cancel",
+				action_name = "action_scan_cancel"
 			},
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			unwield = {
-				action_name = "action_unwield_to_previous_and_unequip",
-			},
+				action_name = "action_unwield_to_previous_and_unequip"
+			}
 		},
 		running_action_state_to_action_input = {
 			no_mission_zone = {
-				input_name = "unwield",
-			},
+				input_name = "unwield"
+			}
 		},
-		scan_settings = scan_settings,
+		scan_settings = scan_settings
 	},
 	action_scan_confirm = {
 		abort_sprint = true,
@@ -291,27 +278,25 @@ weapon_template.actions = {
 		total_time = math.huge,
 		allowed_chain_actions = {
 			scan_confirm_cancel = {
-				action_name = "action_scan",
+				action_name = "action_scan"
 			},
 			scan_cancel = {
-				action_name = "action_scan_cancel",
+				action_name = "action_scan_cancel"
 			},
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			unwield = {
-				action_name = "action_unwield_to_previous_and_unequip",
-			},
+				action_name = "action_unwield_to_previous_and_unequip"
+			}
 		},
 		running_action_state_to_action_input = {
 			stop_scanning = {
-				input_name = "scan_confirm_cancel",
+				input_name = "scan_confirm_cancel"
 			},
 			no_mission_zone = {
-				input_name = "unwield",
-			},
+				input_name = "unwield"
+			}
 		},
-		scan_settings = scan_settings,
+		scan_settings = scan_settings
 	},
 	action_scan_cancel = {
 		kind = "unaim",
@@ -319,63 +304,13 @@ weapon_template.actions = {
 		total_time = 0.2,
 		allowed_chain_actions = {
 			scan_start = {
-				action_name = "action_scan",
+				action_name = "action_scan"
 			},
-			wield = {
-				action_name = "action_unwield",
-			},
-		},
+			wield = BaseTemplateSettings.generate_wield_chain_actions()
+		}
 	},
-	action_inspect_3p = {
-		action_prevents_jump = true,
-		block_first_person_rotation = true,
-		can_crouch = false,
-		can_jump = false,
-		force_look = true,
-		kind = "inspect_3p",
-		lock_view = false,
-		skip_3p_anims = false,
-		stop_input = "inspect_stop",
-		total_time = math.huge,
-		anim_end_event_condition_func = function (unit, data, end_reason)
-			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
-		end,
-		crosshair = {
-			crosshair_type = "inspect",
-		},
-		allowed_chain_actions = {
-			inspect_3p_stop = {
-				action_name = "action_inspect",
-				chain_time = 1.1,
-			},
-		},
-		action_movement_curve = {
-			{
-				modifier = 0,
-				t = 0,
-			},
-			start_modifier = 0,
-		},
-	},
-	action_inspect = {
-		anim_end_event = "inspect_end",
-		anim_event = "inspect_start",
-		kind = "inspect",
-		lock_view = true,
-		skip_3p_anims = false,
-		start_input = "inspect_start",
-		stop_input = "inspect_stop",
-		total_time = math.huge,
-		crosshair = {
-			crosshair_type = "inspect",
-		},
-		allowed_chain_actions = {
-			inspect_3p_start = {
-				action_name = "action_inspect_3p",
-				chain_time = 0.75,
-			},
-		},
-	},
+	action_inspect = BaseTemplateSettings.generate_inspect_action(),
+	action_inspect_3p = BaseTemplateSettings.generate_inspect_3p_action()
 }
 
 table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
@@ -383,8 +318,8 @@ table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
 weapon_template.conditional_state_to_action_input = {
 	{
 		conditional_state = "no_mission_zone",
-		input_name = "unwield",
-	},
+		input_name = "unwield"
+	}
 }
 weapon_template.alternate_fire_settings = {
 	always_interrupt = true,
@@ -393,31 +328,31 @@ weapon_template.alternate_fire_settings = {
 	movement_speed_modifier = {
 		{
 			modifier = 0.4,
-			t = 0,
+			t = 0
 		},
-		start_modifier = 0.4,
-	},
+		start_modifier = 0.4
+	}
 }
 weapon_template.crosshair = {
-	crosshair_type = "ironsight",
+	crosshair_type = "ironsight"
 }
 weapon_template.keywords = {
-	"pocketable",
+	"pocketable"
 }
 weapon_template.ammo_template = "no_ammo"
 weapon_template.breed_anim_state_machine_3p = {
 	cryptic = "content/characters/player/human/third_person/animations/pocketables_2h",
 	human = "content/characters/player/human/third_person/animations/pocketables_2h",
-	ogryn = "content/characters/player/ogryn/third_person/animations/pocketables_2h",
+	ogryn = "content/characters/player/ogryn/third_person/animations/pocketables_2h"
 }
 weapon_template.breed_anim_state_machine_1p = {
 	cryptic = "content/characters/player/human/first_person/animations/scanner_equip",
 	human = "content/characters/player/human/first_person/animations/scanner_equip",
-	ogryn = "content/characters/player/ogryn/first_person/animations/scanner_equip",
+	ogryn = "content/characters/player/ogryn/first_person/animations/scanner_equip"
 }
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.fx_sources = {
-	_speaker = "fx_speaker",
+	_speaker = "fx_speaker"
 }
 weapon_template.dodge_template = "default"
 weapon_template.sprint_template = "default"
@@ -426,7 +361,7 @@ weapon_template.toughness_template = "default"
 weapon_template.hud_icon = "content/ui/materials/icons/pocketables/hud/auspex_scanner"
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
-	uses_overheat = false,
+	uses_overheat = false
 }
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 

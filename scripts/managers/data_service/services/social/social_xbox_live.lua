@@ -47,7 +47,7 @@ local function _process_relationships_page(user_id, page_handle, promise, xuids)
 	if error then
 		XSocial.close_relationships_handle(page_handle)
 		promise:reject({
-			error,
+			error
 		})
 
 		return
@@ -72,7 +72,7 @@ local function _process_relationships_page(user_id, page_handle, promise, xuids)
 
 	if error then
 		promise:reject({
-			error,
+			error
 		})
 
 		return
@@ -84,7 +84,7 @@ local function _process_relationships_page(user_id, page_handle, promise, xuids)
 		if error then
 			XSocial.close_relationships_handle(next_page_handle)
 			promise:reject({
-				error,
+				error
 			})
 		else
 			_process_relationships_page(user_id, next_page_handle, promise, xuids)
@@ -99,19 +99,19 @@ SocialXboxLive.fetch_friends_list = function (self)
 		return friends_promise
 	end
 
-	local profiles = {}
-
 	self._friends_promise = Promise:new()
 
 	local friends_list = Managers.account:get_friends()
+	local num_friends = #friends_list
+	local profiles = Script.new_array(num_friends)
 
-	for i = 1, #friends_list do
+	for i = 1, num_friends do
 		local friend_data = friends_list[i]
 
-		profiles[#profiles + 1] = FriendXboxLive:new(friend_data)
+		profiles[i] = FriendXboxLive:new(friend_data)
 	end
 
-	self._num_friends = #profiles
+	self._num_friends = num_friends
 
 	self._friends_promise:resolve(profiles)
 
@@ -195,7 +195,7 @@ SocialXboxLive._update_recent_player = function (self, account_id)
 	presence_promise:next(function (presence)
 		if not presence then
 			return Promise.rejected({
-				"Missing presence",
+				"Missing presence"
 			})
 		end
 
@@ -211,7 +211,7 @@ SocialXboxLive._update_recent_player = function (self, account_id)
 
 		if not xuid then
 			return Promise.rejected({
-				"Missing xuid",
+				"Missing xuid"
 			})
 		end
 

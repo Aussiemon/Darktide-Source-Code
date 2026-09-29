@@ -4,16 +4,16 @@ local Component = require("scripts/utilities/component")
 local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
 local FX_SOURCE_NAME = "fx_muzzle_01"
 local VFX = {
-	"content/fx/particles/enemies/renegade_flamer/renegade_flame_thrower_show",
+	"content/fx/particles/enemies/renegade_flamer/renegade_flame_thrower_show"
 }
 local SFX = {
 	looping_sfx_start_event = "wwise/events/weapon/play_minion_flamethrower_mutator_start",
 	looping_sfx_stop_event = "wwise/events/weapon/play_minion_flamethrower_mutator_stop",
-	sfx_windup_event = "wwise/events/weapon/play_minion_flamethrower_mutator_wind_up",
+	sfx_windup_event = "wwise/events/weapon/play_minion_flamethrower_mutator_wind_up"
 }
 local resources = {
 	vfx = VFX,
-	sfx = SFX,
+	sfx = SFX
 }
 
 local function _start_effect(unit, position, node, template_data, template_context)
@@ -100,7 +100,7 @@ local effect_template = {
 		for _, component in pairs(unit_components) do
 			component:set_stop_time(t, attachment_unit)
 		end
-	end,
+	end
 }
 
 return effect_template

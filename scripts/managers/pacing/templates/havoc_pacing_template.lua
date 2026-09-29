@@ -13,7 +13,7 @@ local function _challenge_rating_multiplier_steps(value)
 		value * 1.25,
 		value * 1.5,
 		value * 1.75,
-		value * 2,
+		value * 2
 	}
 
 	return multiplier_step
@@ -29,7 +29,7 @@ pacing_template.challenge_rating_thresholds = {
 	hordes = _challenge_rating_multiplier_steps(90),
 	trickle_hordes = _challenge_rating_multiplier_steps(20),
 	roamers = _challenge_rating_multiplier_steps(90),
-	terror_events = _challenge_rating_multiplier_steps(100),
+	terror_events = _challenge_rating_multiplier_steps(100)
 }
 
 return pacing_template

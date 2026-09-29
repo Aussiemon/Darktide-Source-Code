@@ -9,7 +9,6 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CompanionServoSkullAbility = require("scripts/utilities/companion/companion_servo_skull_ability")
 local CompanionServoSkullSettings = require("scripts/settings/companion/companion_servo_skull_settings")
 local MinionState = require("scripts/utilities/minion_state")
-local BurningSettings = require("scripts/settings/burning/burning_settings")
 local CheckProcFunctions = require("scripts/settings/buff/helper_functions/check_proc_functions")
 local CrypticBuffUtils = require("scripts/settings/buff/cryptic_buff_utils")
 local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
@@ -33,7 +32,6 @@ local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local attack_results = AttackSettings.attack_results
 local attack_types = AttackSettings.attack_types
 local buff_categories = BuffSettings.buff_categories
-local damage_efficiencies = AttackSettings.damage_efficiencies
 local damage_types = DamageSettings.damage_types
 local group_keywords = BuffSettings.group_keywords
 local group_to_keywords = BuffSettings.group_to_keywords
@@ -49,7 +47,6 @@ local chordclaw_ability_talent_settings = talent_settings.chordclaw_ability
 local force_field_ability_talent_settings = talent_settings.force_field
 local arc_grenade_ability_talent_settings = talent_settings.arc_grenade
 local monster_hunter_keystone_talent_settings = talent_settings.monster_hunter
-local minion_burning_buff_effects = BurningSettings.buff_effects.minions
 local bionic_senses_talent_settings = talent_settings.bionic_senses
 local surge_keystone_talent_settings = talent_settings.surge
 local power_generation_keystone_talent_settings = talent_settings.power_generation
@@ -69,7 +66,7 @@ local HUD_PRIORITIES = {
 	abilities = 1,
 	auras = 5,
 	keystones = 2,
-	talents = 3,
+	talents = 3
 }
 local _bespoke_monster_hunter_keystone_hit_tracking_start = CrypticBuffUtils.bespoke_monster_hunter_keystone_hit_tracking_start
 local _bespoke_monster_hunter_keystone_hit_tracking_update = CrypticBuffUtils.bespoke_monster_hunter_keystone_hit_tracking_update
@@ -89,7 +86,7 @@ local function _toughness_regen_over_time_on_proc_generator()
 		toughness_regen_per_second = 0.05,
 		hud_priority = HUD_PRIORITIES.talents,
 		proc_events = {
-			[proc_events.on_kill] = 1,
+			[proc_events.on_kill] = 1
 		},
 		check_proc_func = CheckProcFunctions.on_melee_kill,
 		proc_func = function (params, template_data, template_context, t)
@@ -108,8 +105,8 @@ local function _toughness_regen_over_time_on_proc_generator()
 			end
 		end,
 		related_talents = {
-			"cryptic_electrocution_toughness",
-		},
+			"cryptic_electrocution_toughness"
+		}
 	}
 end
 
@@ -129,7 +126,7 @@ local function _give_cryptic_aura_ammo_reserve_effect_to_player(player, template
 			table.insert(template_data.buffs_given_to_other_players, {
 				player_unit = player_unit,
 				buff_index = buff_index,
-				component_index = component_index,
+				component_index = component_index
 			})
 		end
 	end
@@ -142,13 +139,13 @@ templates.cryptic_coherency_empty = {
 	max_stacks = 1,
 	max_stacks_cap = 1,
 	predicted = false,
-	buff_category = buff_categories.aura,
+	buff_category = buff_categories.aura
 }
 templates.cryptic_ammo_aura = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.toughness] = talent_settings.cryptic_ammo_aura.toughness,
+		[stat_buffs.toughness] = talent_settings.cryptic_ammo_aura.toughness
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -196,13 +193,13 @@ templates.cryptic_ammo_aura = {
 		end
 
 		Managers.event:unregister(template_context.buff, "mission_buffs_event_player_spawned")
-	end,
+	end
 }
 templates.cryptic_ammo_aura_effect = {
 	class_name = "stepped_stat_buff",
-	hud_always_never_stacks = true,
 	hud_icon = "content/ui/textures/icons/buffs/hud/cryptic/cryptic_ammo_aura",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_aura",
+	hud_never_show_stacks = true,
 	max_stacks = 4,
 	max_stacks_cap = 4,
 	predicted = false,
@@ -216,13 +213,13 @@ templates.cryptic_ammo_aura_effect = {
 		return 0, 1
 	end,
 	related_talents = {
-		"cryptic_ammo_aura",
-	},
+		"cryptic_ammo_aura"
+	}
 }
 
 for i = 1, templates.cryptic_ammo_aura_effect.max_stacks do
 	table.insert(templates.cryptic_ammo_aura_effect.stepped_stat_buffs, {
-		[stat_buffs.ammo_reserve_capacity] = talent_settings.cryptic_ammo_aura.ammo_reserve_capacity,
+		[stat_buffs.ammo_reserve_capacity] = talent_settings.cryptic_ammo_aura.ammo_reserve_capacity
 	})
 end
 
@@ -239,18 +236,18 @@ templates.cryptic_aura_weapon_improved = {
 	hud_priority = HUD_PRIORITIES.auras,
 	stat_buffs = {
 		[stat_buffs.max_hit_mass_attack_modifier] = talent_settings.cryptic_aura_weapon_improved.max_hit_mass_attack_modifier,
-		[stat_buffs.rending_multiplier] = talent_settings.cryptic_aura_weapon_improved.rending_multiplier,
+		[stat_buffs.rending_multiplier] = talent_settings.cryptic_aura_weapon_improved.rending_multiplier
 	},
 	related_talents = {
-		"cryptic_aura_weapon_improved",
-	},
+		"cryptic_aura_weapon_improved"
+	}
 }
 templates.cryptic_aura_weapon_improved_personal_boost = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.toughness] = talent_settings.cryptic_aura_weapon_improved.toughness,
-	},
+		[stat_buffs.toughness] = talent_settings.cryptic_aura_weapon_improved.toughness
+	}
 }
 templates.cryptic_coherency_regen_aura = {
 	class_name = "buff",
@@ -264,11 +261,11 @@ templates.cryptic_coherency_regen_aura = {
 	buff_category = buff_categories.aura,
 	hud_priority = HUD_PRIORITIES.auras,
 	stat_buffs = {
-		[stat_buffs.min_toughness_coherency_regen_rate_modifier] = talent_settings.cryptic_coherency_regen_aura.min_toughness_coherency_regen_rate_modifier,
+		[stat_buffs.min_toughness_coherency_regen_rate_modifier] = talent_settings.cryptic_coherency_regen_aura.min_toughness_coherency_regen_rate_modifier
 	},
 	related_talents = {
-		"cryptic_coherency_regen_aura",
-	},
+		"cryptic_coherency_regen_aura"
+	}
 }
 templates.cryptic_coherency_regen_aura_improved = {
 	class_name = "buff",
@@ -282,21 +279,21 @@ templates.cryptic_coherency_regen_aura_improved = {
 	buff_category = buff_categories.aura,
 	hud_priority = HUD_PRIORITIES.auras,
 	stat_buffs = {
-		[stat_buffs.min_toughness_coherency_regen_rate_modifier] = talent_settings.cryptic_coherency_regen_aura_improved.min_toughness_coherency_regen_rate_modifier,
+		[stat_buffs.min_toughness_coherency_regen_rate_modifier] = talent_settings.cryptic_coherency_regen_aura_improved.min_toughness_coherency_regen_rate_modifier
 	},
 	related_talents = {
-		"cryptic_coherency_regen_aura_improved",
-	},
+		"cryptic_coherency_regen_aura_improved"
+	}
 }
 templates.cryptic_coherency_regen_aura_improved_personal_boost = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.toughness] = talent_settings.cryptic_coherency_regen_aura_improved.toughness,
+		[stat_buffs.toughness] = talent_settings.cryptic_coherency_regen_aura_improved.toughness
 	},
 	related_talents = {
-		"cryptic_coherency_regen_aura_improved",
-	},
+		"cryptic_coherency_regen_aura_improved"
+	}
 }
 templates.cryptic_ability_recharge = {
 	class_name = "proc_buff",
@@ -308,7 +305,7 @@ templates.cryptic_ability_recharge = {
 	cooldown_replenish_base = combat_ability_cooldown_recharge_on_kill.cooldown_replenish_base,
 	cooldown_replenish_elite_or_special = combat_ability_cooldown_recharge_on_kill.cooldown_replenish_elite_or_special,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -340,10 +337,10 @@ templates.cryptic_ability_recharge = {
 			if cooldown_to_restore > 0 then
 				local cooldown_per_kill_stat_buff = 1
 
-				template_data.ability_extension:reduce_ability_cooldown_percentage(COMBAT_ABILITY_TYPE, cooldown_to_restore * cooldown_per_kill_stat_buff)
+				template_data.ability_extension:restore_ability_charge_percentage(COMBAT_ABILITY_TYPE, cooldown_to_restore * cooldown_per_kill_stat_buff)
 			end
 		end
-	end,
+	end
 }
 
 local function _extend_ability_duration(start_time, template_context, max_duration, added_duration, divisor, t)
@@ -373,12 +370,11 @@ templates.cryptic_precision_stance_one_charge = {
 	toughness_regen_per_second = precision_stance_talent_settings.cryptic_precision_stance_toughness_suppression.toughness_regen_per_second,
 	keywords = {
 		keywords.cryptic_precision_stance,
-		keywords.enable_auto_aim,
+		keywords.enable_auto_aim
 	},
 	stat_buffs = {
-		[stat_buffs.combat_ability_cooldown_regen_modifier] = -1,
 		[stat_buffs.spread_modifier] = precision_stance_talent_settings.spread_modifier,
-		[stat_buffs.recoil_modifier] = precision_stance_talent_settings.recoil_modifier,
+		[stat_buffs.recoil_modifier] = precision_stance_talent_settings.recoil_modifier
 	},
 	player_effects = {
 		looping_wwise_start_event = "wwise/events/player/play_ability_active_cryptic_precision_stance",
@@ -387,8 +383,8 @@ templates.cryptic_precision_stance_one_charge = {
 		wwise_state = {
 			group = "player_ability",
 			off_state = "none",
-			on_state = "cryptic_mechanical",
-		},
+			on_state = "cryptic_mechanical"
+		}
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -459,12 +455,12 @@ templates.cryptic_precision_stance_one_charge = {
 				Managers.event:trigger("cryptic_buffs_event_give_overload_keystone_stacks", template_context.player, num_stacks)
 			end
 
-			Managers.stats:record_private("hook_ability_charges_used_from_action", template_context.player, "combat_ability", num_charges_used_during_ability)
+			Managers.stats:record_private("hook_ability_charges_consumed_from_ability_use", template_context.player, "combat_ability", num_charges_used_during_ability)
 		end
 	end,
 	proc_events = {
 		[proc_events.on_shoot] = 1,
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	specific_check_proc_funcs = {
 		[proc_events.on_kill] = function (params, template_data, template_context, t)
@@ -477,7 +473,7 @@ templates.cryptic_precision_stance_one_charge = {
 			local is_elite_ranged_kill = is_ranged_kill and CheckProcFunctions.on_elite_kill(params, template_data, template_context, t)
 
 			return template_data.has_damage_on_elite_kills_talent and is_elite_ranged_kill
-		end,
+		end
 	},
 	specific_proc_func = {
 		[proc_events.on_shoot] = function (params, template_data, template_context, t)
@@ -486,7 +482,7 @@ templates.cryptic_precision_stance_one_charge = {
 			local hit_elite = params.hit_elite
 
 			if num_hits > 0 and hit_elite and can_extend_duration then
-				template_data.ability_extension:reduce_ability_cooldown_percentage(COMBAT_ABILITY_TYPE, horde_cryptic_precision_stance_cooldown_decrease_per_hit)
+				template_data.ability_extension:restore_ability_charge_percentage(COMBAT_ABILITY_TYPE, horde_cryptic_precision_stance_cooldown_decrease_per_hit)
 
 				return
 			end
@@ -495,15 +491,15 @@ templates.cryptic_precision_stance_one_charge = {
 
 			template_data.cooldown_percent_used = template_data.cooldown_percent_used + cooldown_percent_used_on_shoot
 
-			local new_num_charges, new_percent_cooldown = template_data.ability_extension:increase_ability_cooldown_percentage(COMBAT_ABILITY_TYPE, cooldown_percent_used_on_shoot)
+			local _, _, new_resource_amount = template_data.ability_extension:consume_ability_charge_percentage(COMBAT_ABILITY_TYPE, cooldown_percent_used_on_shoot)
 
-			if new_num_charges == 0 and new_percent_cooldown >= 1 then
+			if new_resource_amount <= 0 then
 				template_data.stop_ability = true
 			end
 		end,
 		[proc_events.on_kill] = function (params, template_data, template_context, t)
 			template_context.buff_extension:add_internally_controlled_buff("cryptic_precision_stance_damage_on_elite_kill_stack", t)
-		end,
+		end
 	},
 	update_func = function (template_data, template_context, dt, t)
 		local is_reloading = ConditionalFunctions.is_reloading(template_data, template_context)
@@ -514,9 +510,9 @@ templates.cryptic_precision_stance_one_charge = {
 
 			template_data.cooldown_percent_used = template_data.cooldown_percent_used + cooldown_percent_to_lose
 
-			local new_num_charges, new_percent_cooldown = template_data.ability_extension:increase_ability_cooldown_percentage(COMBAT_ABILITY_TYPE, cooldown_percent_to_lose)
+			local _, _, new_resource_amount = template_data.ability_extension:consume_ability_charge_percentage(COMBAT_ABILITY_TYPE, cooldown_percent_to_lose)
 
-			if new_num_charges == 0 and new_percent_cooldown >= 1 then
+			if new_resource_amount <= 0 then
 				template_data.stop_ability = true
 			end
 		end
@@ -572,8 +568,8 @@ templates.cryptic_precision_stance_one_charge = {
 		end
 	end,
 	related_talents = {
-		"cryptic_precision_stance",
-	},
+		"cryptic_precision_stance"
+	}
 }
 templates.cryptic_precision_stance_two_charges = table.clone(templates.cryptic_precision_stance_one_charge)
 templates.cryptic_precision_stance_two_charges.ability_charges_used = 2
@@ -584,8 +580,8 @@ templates.cryptic_precision_stance_suppression_immune = {
 	duration = 1,
 	predicted = false,
 	keywords = {
-		keywords.suppression_immune,
-	},
+		keywords.suppression_immune
+	}
 }
 
 local precision_stance_fire_rate_base = precision_stance_talent_settings.cryptic_precision_stance_fire_rate_increased.ranged_attack_speed
@@ -595,7 +591,7 @@ templates.cryptic_precision_stance_fire_rate_increased_base = {
 	class_name = "buff",
 	predicted = false,
 	conditional_stat_buffs = {
-		[stat_buffs.ranged_attack_speed] = precision_stance_fire_rate_base,
+		[stat_buffs.ranged_attack_speed] = precision_stance_fire_rate_base
 	},
 	start_func = function (template_data, template_context)
 		template_data.precision_stance_active = false
@@ -605,7 +601,7 @@ templates.cryptic_precision_stance_fire_rate_increased_base = {
 	end,
 	update_func = function (template_data, template_context, dt, t)
 		template_data.precision_stance_active = template_context.buff_extension:has_keyword(keywords.cryptic_precision_stance)
-	end,
+	end
 }
 templates.cryptic_precision_stance_fire_rate_increased_delayed = {
 	class_name = "buff",
@@ -614,7 +610,7 @@ templates.cryptic_precision_stance_fire_rate_increased_delayed = {
 	predicted = false,
 	hud_priority = HUD_PRIORITIES.abilities,
 	conditional_stat_buffs = {
-		[stat_buffs.ranged_attack_speed] = precision_stance_fire_rate_conditional_increase,
+		[stat_buffs.ranged_attack_speed] = precision_stance_fire_rate_conditional_increase
 	},
 	start_func = function (template_data, template_context)
 		template_data.precision_stance_active = false
@@ -642,8 +638,8 @@ templates.cryptic_precision_stance_fire_rate_increased_delayed = {
 		end
 	end,
 	related_talents = {
-		"cryptic_precision_stance_fire_rate_increased",
-	},
+		"cryptic_precision_stance_fire_rate_increased"
+	}
 }
 templates.cryptic_precision_stance_reload_speed_delayed = {
 	class_name = "buff",
@@ -652,7 +648,7 @@ templates.cryptic_precision_stance_reload_speed_delayed = {
 	predicted = false,
 	hud_priority = HUD_PRIORITIES.abilities,
 	conditional_stat_buffs = {
-		[stat_buffs.reload_speed] = precision_stance_talent_settings.cryptic_precision_stance_reload_speed_delayed.reload_speed,
+		[stat_buffs.reload_speed] = precision_stance_talent_settings.cryptic_precision_stance_reload_speed_delayed.reload_speed
 	},
 	start_func = function (template_data, template_context)
 		template_data.precision_stance_active = false
@@ -697,7 +693,7 @@ templates.cryptic_precision_stance_reload_speed_delayed = {
 		local duration_progress = duration_remaining / precision_stance_talent_settings.cryptic_precision_stance_reload_speed_delayed.lingering_buff_time
 
 		return math.clamp01(duration_progress)
-	end,
+	end
 }
 templates.cryptic_precision_stance_damage_on_elite_kill_stack = {
 	always_show_in_hud = true,
@@ -711,11 +707,11 @@ templates.cryptic_precision_stance_damage_on_elite_kill_stack = {
 	duration = precision_stance_talent_settings.cryptic_precision_stance_damage_on_elite_kill.duration,
 	hud_priority = HUD_PRIORITIES.abilities,
 	stat_buffs = {
-		[stat_buffs.damage] = precision_stance_talent_settings.cryptic_precision_stance_damage_on_elite_kill.damage,
+		[stat_buffs.damage] = precision_stance_talent_settings.cryptic_precision_stance_damage_on_elite_kill.damage
 	},
 	related_talents = {
-		"cryptic_precision_stance_damage_on_elite_kill",
-	},
+		"cryptic_precision_stance_damage_on_elite_kill"
+	}
 }
 
 local precision_stance_hit_mass_base = precision_stance_talent_settings.cryptic_precision_stance_crit_cleave.ranged_max_hit_mass_attack_modifier
@@ -728,7 +724,7 @@ templates.cryptic_precision_stance_crit_cleave_base = {
 	predicted = false,
 	conditional_stat_buffs = {
 		[stat_buffs.ranged_max_hit_mass_attack_modifier] = precision_stance_hit_mass_base,
-		[stat_buffs.ranged_critical_strike_chance] = precision_stance_crit_chance_base,
+		[stat_buffs.ranged_critical_strike_chance] = precision_stance_crit_chance_base
 	},
 	start_func = function (template_data, template_context)
 		template_data.precision_stance_active = false
@@ -738,7 +734,7 @@ templates.cryptic_precision_stance_crit_cleave_base = {
 	end,
 	update_func = function (template_data, template_context, dt, t)
 		template_data.precision_stance_active = template_context.buff_extension:has_keyword(keywords.cryptic_precision_stance)
-	end,
+	end
 }
 templates.cryptic_precision_stance_crit_cleave_increased = {
 	class_name = "buff",
@@ -748,7 +744,7 @@ templates.cryptic_precision_stance_crit_cleave_increased = {
 	hud_priority = HUD_PRIORITIES.abilities,
 	conditional_stat_buffs = {
 		[stat_buffs.ranged_max_hit_mass_attack_modifier] = precision_stance_hit_mass_conditional_increase,
-		[stat_buffs.ranged_critical_strike_chance] = precision_stance_crit_chance_conditional_increase,
+		[stat_buffs.ranged_critical_strike_chance] = precision_stance_crit_chance_conditional_increase
 	},
 	start_func = function (template_data, template_context)
 		template_data.precision_stance_active = false
@@ -776,21 +772,21 @@ templates.cryptic_precision_stance_crit_cleave_increased = {
 		end
 	end,
 	related_talents = {
-		"cryptic_precision_stance_crit_cleave",
-	},
+		"cryptic_precision_stance_crit_cleave"
+	}
 }
 templates.cryptic_discharge_weapon_malfunction = {
 	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	specific_check_proc_funcs = {
 		[proc_events.on_hit] = function (params, template_data, template_context, t)
 			local hit_unit = params.attacked_unit
 
 			return template_context.is_server and HEALTH_ALIVE[hit_unit] and params.damage_profile.name == "cryptic_discharge_weapon_malfunction_explosion"
-		end,
+		end
 	},
 	specific_proc_func = {
 		[proc_events.on_hit] = function (params, template_data, template_context, t)
@@ -805,8 +801,8 @@ templates.cryptic_discharge_weapon_malfunction = {
 			if template_context.is_server and is_target_breed_type then
 				Managers.stats:record_private("hook_cryptic_weapon_malfunction_applied_elite_ranged", template_context.player)
 			end
-		end,
-	},
+		end
+	}
 }
 templates.cryptic_discharge_weapon_shock_effect = {
 	always_show_in_hud = true,
@@ -822,10 +818,10 @@ templates.cryptic_discharge_weapon_shock_effect = {
 	player_effects = {
 		looping_wwise_start_event = "wwise/events/player/play_ability_cryptic_voltaic_buff_loop",
 		looping_wwise_stop_event = "wwise/events/player/stop_ability_cryptic_voltaic_buff_loop",
-		on_screen_effect = "content/fx/particles/screenspace/screen_voltaic_emitter_electric",
+		on_screen_effect = "content/fx/particles/screenspace/screen_voltaic_emitter_electric"
 	},
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		local non_kill = CheckProcFunctions.on_non_kill(params, template_data, template_context, t)
@@ -844,8 +840,8 @@ templates.cryptic_discharge_weapon_shock_effect = {
 		end
 	end,
 	related_talents = {
-		"cryptic_discharge",
-	},
+		"cryptic_discharge"
+	}
 }
 templates.cryptic_discharge_attack_speed_increase = {
 	class_name = "buff",
@@ -855,17 +851,23 @@ templates.cryptic_discharge_attack_speed_increase = {
 	hud_priority = HUD_PRIORITIES.abilities,
 	duration = discharge_talent_settings.two_charge_bonus.duration,
 	stat_buffs = {
-		[stat_buffs.attack_speed] = discharge_talent_settings.two_charge_bonus.attack_speed,
+		[stat_buffs.attack_speed] = discharge_talent_settings.two_charge_bonus.attack_speed
+	},
+	lerped_stat_buffs = {
+		[stat_buffs.attack_speed] = {
+			min = 0,
+			max = discharge_talent_settings.two_charge_bonus.attack_speed_per_charge * discharge_talent_settings.max_charges
+		}
 	},
 	related_talents = {
-		"cryptic_discharge_attack_speed_increase",
-	},
+		"cryptic_discharge_attack_speed_increase"
+	}
 }
 templates.cryptic_discharge_toughness = {
 	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		local hit_unit = params.attacked_unit
@@ -874,7 +876,7 @@ templates.cryptic_discharge_toughness = {
 	end,
 	proc_func = function (params, template_data, template_context, t)
 		Toughness.replenish_percentage(template_context.unit, discharge_talent_settings.cryptic_discharge_toughness.toughness_percent_per_hit, false, "ability_shout")
-	end,
+	end
 }
 templates.cryptic_chordclaw = {
 	class_name = "proc_buff",
@@ -885,10 +887,10 @@ templates.cryptic_chordclaw = {
 	predicted = true,
 	keywords = {
 		keywords.cryptic_chordclaw,
-		keywords.stun_immune,
+		keywords.stun_immune
 	},
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		local is_melee_kill = CheckProcFunctions.on_melee_kill(params, template_data, template_context, t)
@@ -903,14 +905,14 @@ templates.cryptic_chordclaw = {
 	stat_buffs = {
 		[stat_buffs.melee_damage] = chordclaw_ability_talent_settings.melee_damage,
 		[stat_buffs.consumed_hit_mass_modifier] = chordclaw_ability_talent_settings.consumed_hit_mass_modifier,
-		[stat_buffs.melee_rending_multiplier] = 1,
+		[stat_buffs.melee_rending_multiplier] = 1
 	},
 	stat_buff_multipliers = {
 		[stat_buffs.melee_rending_multiplier] = function (template_data, template_context)
 			local melee_rending_multiplier = chordclaw_ability_talent_settings.rending
 
 			return melee_rending_multiplier
-		end,
+		end
 	},
 	start_func = function (template_data, template_context)
 		local player_unit = template_context.unit
@@ -938,7 +940,7 @@ templates.cryptic_chordclaw = {
 		end
 
 		return template_data.ability_ended and fixed_t >= template_data.delayed_deactivation_t
-	end,
+	end
 }
 templates.cryptic_chordclaw_capacitance_restoration = {
 	allow_proc_while_active = true,
@@ -951,7 +953,7 @@ templates.cryptic_chordclaw_capacitance_restoration = {
 	cooldown_regen_time = chordclaw_ability_talent_settings.cooldown_restoration.cooldown_regen_time,
 	hud_priority = HUD_PRIORITIES.abilities,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		local damage_type = params.damage_type
@@ -973,9 +975,9 @@ templates.cryptic_chordclaw_capacitance_restoration = {
 		if template_context.buff:is_proc_active(t) then
 			local cooldown_to_regen = template_data.cooldown_to_regen_per_second * dt
 
-			template_data.ability_extension:reduce_ability_cooldown_percentage(COMBAT_ABILITY_TYPE, cooldown_to_regen)
+			template_data.ability_extension:restore_ability_charge_percentage(COMBAT_ABILITY_TYPE, cooldown_to_regen)
 		end
-	end,
+	end
 }
 templates.cryptic_chordclaw_consecutive_bonus = {
 	class_name = "buff",
@@ -988,8 +990,11 @@ templates.cryptic_chordclaw_consecutive_bonus = {
 	duration = chordclaw_ability_talent_settings.consecutive_bonus.duration,
 	hud_priority = HUD_PRIORITIES.abilities,
 	stat_buffs = {
-		[stat_buffs.cryptic_chordclaw_damage] = chordclaw_ability_talent_settings.consecutive_bonus.chordclaw_damage,
+		[stat_buffs.cryptic_chordclaw_damage] = chordclaw_ability_talent_settings.consecutive_bonus.chordclaw_damage
 	},
+	related_talents = {
+		"cryptic_chordclaw_consecutive_bonus"
+	}
 }
 templates.cryptic_servo_skull_tagging_buff = {
 	class_name = "buff",
@@ -999,7 +1004,7 @@ templates.cryptic_servo_skull_tagging_buff = {
 	refresh_duration_on_stack = true,
 	duration = talent_settings.servo_skull_shooting_tagging.duration,
 	stat_buffs = {
-		[stat_buffs.minion_shoot_cooldown_modifier] = talent_settings.servo_skull_shooting_tagging.cooldown_modifier,
+		[stat_buffs.minion_shoot_cooldown_modifier] = talent_settings.servo_skull_shooting_tagging.cooldown_modifier
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -1039,7 +1044,7 @@ templates.cryptic_servo_skull_tagging_buff = {
 		end
 
 		CompanionServoSkullAbility.finish_shooting_ability(template_context.unit)
-	end,
+	end
 }
 templates.cryptic_servo_skull_medicae_buff = {
 	class_name = "buff",
@@ -1047,13 +1052,13 @@ templates.cryptic_servo_skull_medicae_buff = {
 	predicted = false,
 	duration = talent_settings.servo_skull_medicae.duration,
 	stat_buffs = {
-		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings.servo_skull_medicae.tdr,
+		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings.servo_skull_medicae.tdr
 	},
 	update_func = function (template_data, template_context, dt, t)
 		local toughness = talent_settings.servo_skull_medicae.toughness_percent * dt
 
 		Toughness.replenish_percentage(template_context.unit, toughness, false, "medicae_skull")
-	end,
+	end
 }
 templates.cryptic_servo_skull_temporary_buff = {
 	class_name = "buff",
@@ -1063,10 +1068,10 @@ templates.cryptic_servo_skull_temporary_buff = {
 	duration = talent_settings.servo_skull_shooting_base.duration,
 	stat_buffs = {
 		[stat_buffs.minion_shoot_cooldown_modifier] = talent_settings.servo_skull_shooting_base.cooldown_modifier,
-		[stat_buffs.damage] = talent_settings.servo_skull_shooting_base.damage_modifier,
+		[stat_buffs.damage] = talent_settings.servo_skull_shooting_base.damage_modifier
 	},
 	keywords = {
-		keywords.training_ground_force_companion_in_combat_state,
+		keywords.training_ground_force_companion_in_combat_state
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -1128,7 +1133,7 @@ templates.cryptic_servo_skull_temporary_buff = {
 		if global_effect_id and fx_system:has_running_template_effect_with_global_effect_id(global_effect_id) then
 			fx_system:stop_template_effect(global_effect_id)
 		end
-	end,
+	end
 }
 templates.cryptic_servo_skull_temporary_buff_player_dummy = table.clone(templates.cryptic_servo_skull_temporary_buff)
 templates.cryptic_servo_skull_temporary_buff_player_dummy.stat_buffs = nil
@@ -1158,7 +1163,7 @@ templates.cryptic_servo_skull_order = {
 		template_data.companion_spawner_extension = companion_spawner_extension
 	end,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		local companion_unit = template_data.companion_spawner_extension:spawned_unit_lookup(special_rules.cryptic_servo_skull_hack)
@@ -1190,7 +1195,7 @@ templates.cryptic_servo_skull_order = {
 				hit_unit_buff_extension:refresh_duration_of_stacking_buff(burning_buff, t, "owner_unit", template_context.unit)
 			end
 		end
-	end,
+	end
 }
 templates.cryptic_servo_skull_debuff = {
 	class_name = "buff",
@@ -1200,14 +1205,14 @@ templates.cryptic_servo_skull_debuff = {
 	refresh_duration_on_stack = true,
 	duration = talent_settings.servo_skull_shooting_base.debuff_duration,
 	stat_buffs = {
-		[stat_buffs.damage_taken_modifier] = talent_settings.servo_skull_shooting_base.damage_taken_multiplier,
-	},
+		[stat_buffs.damage_taken_modifier] = talent_settings.servo_skull_shooting_base.damage_taken_multiplier
+	}
 }
 templates.servo_skull_extra_grenade = {
 	class_name = "buff",
 	predicted = false,
 	conditional_stat_buffs = {
-		[stat_buffs.extra_max_amount_of_grenades] = talent_settings.servo_skull_extra_charges.extra_grenade_charges,
+		[stat_buffs.extra_max_amount_of_grenades] = talent_settings.servo_skull_extra_charges.extra_grenade_charges
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1216,23 +1221,6 @@ templates.servo_skull_extra_grenade = {
 
 		template_data.allow_extra_grenade = has_inject_ally
 		template_data.charges_given = false
-	end,
-	update_func = function (template_data, template_context, dt, t)
-		if not template_context.is_server then
-			return
-		end
-
-		if template_data.allow_extra_grenade and not template_data.charges_given then
-			template_data.charges_given = true
-
-			local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
-			local template = template_context.template
-			local extra_grenades = template.conditional_stat_buffs[stat_buffs.extra_max_amount_of_grenades]
-			local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-
-			template_data.initial_num_charges = grenade_ability_component.num_charges
-			grenade_ability_component.num_charges = grenade_ability_component.num_charges + extra_grenades
-		end
 	end,
 	stop_func = function (template_data, template_context, extension_destroyed)
 		if not extension_destroyed and template_data.allow_extra_grenade and template_data.charges_given then
@@ -1249,15 +1237,15 @@ templates.servo_skull_extra_grenade = {
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.allow_extra_grenade
-	end,
+	end
 }
 templates.servo_skull_inject_ally_invulnerable = {
 	class_name = "buff",
 	max_stacks = 1,
 	predicted = false,
 	keywords = {
-		keywords.invulnerable,
-	},
+		keywords.invulnerable
+	}
 }
 templates.cryptic_grenade_ability_force_field_active = {
 	always_active = true,
@@ -1272,13 +1260,13 @@ templates.cryptic_grenade_ability_force_field_active = {
 	keywords = {
 		keywords.cryptic_grenade_ability_force_field,
 		keywords.suppression_immune,
-		keywords.count_as_dodge_vs_ranged,
+		keywords.count_as_dodge_vs_ranged
 	},
 	conditional_keywords = {
-		keywords.limit_health_damage_taken,
+		keywords.limit_health_damage_taken
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.max_health_damage_taken_per_hit] = force_field_ability_talent_settings.max_health_damage_taken_per_hit,
+		[stat_buffs.max_health_damage_taken_per_hit] = force_field_ability_talent_settings.max_health_damage_taken_per_hit
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.has_limit_damage_taken_talent
@@ -1300,34 +1288,15 @@ templates.cryptic_grenade_ability_force_field_active = {
 		return 1 - percentage_left
 	end,
 	related_talents = {
-		"cryptic_grenade_ability_force_field",
-	},
+		"cryptic_grenade_ability_force_field"
+	}
 }
 templates.cryptic_grenade_ability_force_field_extra_charges = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.extra_max_amount_of_grenades] = talent_settings.force_field_extra_charges.charges,
-	},
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local template = template_context.template
-		local buff_stat_buffs = template.stat_buffs.extra_max_amount_of_grenades
-		local extra_grenades = buff_stat_buffs
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-
-		template_context.initial_num_charges = grenade_ability_component.num_charges
-		grenade_ability_component.num_charges = grenade_ability_component.num_charges + extra_grenades
-	end,
-	stop_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-		local initial_num_charges = template_context.initial_num_charges
-
-		grenade_ability_component.num_charges = math.min(grenade_ability_component.num_charges, initial_num_charges)
-	end,
+		[stat_buffs.extra_max_amount_of_grenades] = talent_settings.force_field_extra_charges.charges
+	}
 }
 templates.cryptic_arc_grenades_capacitance_generation = {
 	class_name = "proc_buff",
@@ -1335,7 +1304,7 @@ templates.cryptic_arc_grenades_capacitance_generation = {
 	predicted = false,
 	capacitance_per_kill = arc_grenade_ability_talent_settings.capacitance_per_kill,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		local is_elite_or_special_kill = CheckProcFunctions.any(CheckProcFunctions.on_elite_kill, CheckProcFunctions.on_special_kill)(params, template_data, template_context, t)
@@ -1357,14 +1326,14 @@ templates.cryptic_arc_grenades_capacitance_generation = {
 	proc_func = function (params, template_data, template_context, t)
 		local capacitance_per_kill = template_context.template.capacitance_per_kill
 
-		template_data.ability_extension:reduce_ability_cooldown_percentage(COMBAT_ABILITY_TYPE, capacitance_per_kill)
-	end,
+		template_data.ability_extension:restore_ability_charge_percentage(COMBAT_ABILITY_TYPE, capacitance_per_kill)
+	end
 }
 templates.cryptic_arc_grenades_weapon_malfunction = {
 	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		local hit_unit = params.attacked_unit
@@ -1384,218 +1353,14 @@ templates.cryptic_arc_grenades_weapon_malfunction = {
 		if template_context.is_server and is_target_breed_type then
 			Managers.stats:record_private("hook_cryptic_weapon_malfunction_applied_elite_ranged", template_context.player)
 		end
-	end,
+	end
 }
 templates.cryptic_grenade_ability_arc_grenade_extra_arcs = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.arc_grenade_extra_arcs] = arc_grenade_ability_talent_settings.extra_arcs,
-	},
-}
-templates.cryptic_power_generation_strength_base = {
-	class_name = "server_only_proc_buff",
-	predicted = false,
-	proc_events = {
-		[proc_events.on_combat_ability] = 1,
-	},
-	proc_func = function (params, template_data, template_context, t)
-		local ability_charges_used = params.ability_charges_used or 1
-
-		template_context.buff_extension:add_internally_controlled_buff_with_stacks("cryptic_power_generation_strength_base_stack", ability_charges_used, t)
-	end,
-}
-templates.cryptic_power_generation_strength_base_stack = {
-	always_show_in_hud = true,
-	class_name = "stepped_stat_buff",
-	hud_icon = "content/ui/textures/icons/buffs/hud/cryptic/cryptic_default_offensive_talent",
-	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
-	predicted = false,
-	refresh_duration_on_stack = true,
-	max_stacks = power_generation_strength_keystone_talent_settings.max_stacks,
-	max_stacks_cap = power_generation_strength_keystone_talent_settings.max_stacks,
-	duration = power_generation_strength_keystone_talent_settings.duration,
-	hud_priority = HUD_PRIORITIES.keystones,
-	stepped_stat_buffs = {},
-	related_talents = {
-		"cryptic_power_generation_strength_base",
-	},
-}
-
-for i = 1, power_generation_strength_keystone_talent_settings.max_stacks do
-	table.insert(templates.cryptic_power_generation_strength_base_stack.stepped_stat_buffs, {
-		[stat_buffs.power_level_modifier] = power_generation_strength_keystone_talent_settings.base_power_level_modifier + power_generation_strength_keystone_talent_settings.power_level_modifier_per_stack * i,
-	})
-end
-
-local cryptic_power_generation_stats_for_charge_settings = power_generation_strength_keystone_talent_settings.cryptic_power_generation_stats_for_charge
-
-templates.cryptic_power_generation_stats_for_charge = {
-	class_name = "buff",
-	predicted = false,
-	stat_buffs = {
-		[stat_buffs.ability_extra_charges] = -cryptic_power_generation_stats_for_charge_settings.num_reduced_ability_charges,
-		[stat_buffs.damage] = cryptic_power_generation_stats_for_charge_settings.damage,
-		[stat_buffs.damage_taken_multiplier] = cryptic_power_generation_stats_for_charge_settings.damage_taken_multiplier,
-	},
-	start_func = function (template_data, template_context)
-		template_data.ability_extension = ScriptUnit.extension(template_context.unit, "ability_system")
-
-		local current_ability_charges = template_data.ability_extension:remaining_ability_charges(COMBAT_ABILITY_TYPE)
-
-		template_data.ability_extension:set_ability_charges(COMBAT_ABILITY_TYPE, current_ability_charges - cryptic_power_generation_stats_for_charge_settings.num_reduced_ability_charges)
-	end,
-	related_talents = {
-		"cryptic_power_generation_stats_for_charge",
-	},
-}
-
-local power_generation_capacitance_for_charge_settings = power_generation_strength_keystone_talent_settings.cryptic_power_generation_capacitance_for_charge
-
-templates.cryptic_power_generation_capacitance_for_charge = {
-	class_name = "interval_buff",
-	predicted = false,
-	interval = power_generation_capacitance_for_charge_settings.interval,
-	stat_buffs = {
-		[stat_buffs.ability_extra_charges] = -power_generation_capacitance_for_charge_settings.num_reduced_ability_charges,
-	},
-	start_func = function (template_data, template_context)
-		template_data.ability_extension = ScriptUnit.extension(template_context.unit, "ability_system")
-
-		local current_ability_charges = template_data.ability_extension:remaining_ability_charges(COMBAT_ABILITY_TYPE)
-
-		template_data.ability_extension:set_ability_charges(COMBAT_ABILITY_TYPE, current_ability_charges - power_generation_capacitance_for_charge_settings.num_reduced_ability_charges)
-	end,
-	interval_func = function (template_data, template_context, template, time_since_start, t, dt)
-		if not template_context.is_server then
-			return
-		end
-
-		template_data.ability_extension:restore_ability_charge(GRENADE_ABILITY_TYPE, power_generation_capacitance_for_charge_settings.blitz_charges)
-	end,
-	related_talents = {
-		"cryptic_power_generation_capacitance_for_charge",
-	},
-}
-
-local power_generation_mini_bonus_settings = power_generation_strength_keystone_talent_settings.cryptic_power_generation_charges_mini_bonus
-local power_generation_mini_bonus_target_num_current_charges_damage_bonus = {
-	[power_generation_mini_bonus_settings.damage_bonus_valid_charge_one] = true,
-	[power_generation_mini_bonus_settings.damage_bonus_valid_charge_two] = true,
-	[power_generation_mini_bonus_settings.damage_bonus_valid_charge_three] = true,
-}
-
-templates.cryptic_power_generation_charges_mini_bonus_damage = {
-	class_name = "buff",
-	predicted = false,
-	stat_buffs = {
-		[stat_buffs.ability_extra_charges] = power_generation_mini_bonus_settings.num_increased_ability_charges,
-	},
-	conditional_stat_buffs = {
-		[stat_buffs.damage] = power_generation_mini_bonus_settings.damage,
-	},
-	start_func = function (template_data, template_context)
-		template_data.ability_extension = ScriptUnit.extension(template_context.unit, "ability_system")
-		template_data.gave_extra_ability_charge_on_start = false
-	end,
-	conditional_stat_buffs_func = function (template_data, template_context)
-		local current_ability_charges = template_data.ability_extension:remaining_ability_charges(COMBAT_ABILITY_TYPE)
-
-		return not not power_generation_mini_bonus_target_num_current_charges_damage_bonus[current_ability_charges]
-	end,
-	post_update_keywords_and_stats_func = function (template_data, template_context, dt, t)
-		if not template_data.gave_extra_ability_charge_on_start then
-			template_data.gave_extra_ability_charge_on_start = true
-
-			local ability_extension = template_data.ability_extension
-			local current_ability_charges = ability_extension:remaining_ability_charges(COMBAT_ABILITY_TYPE)
-
-			ability_extension:set_ability_charges(COMBAT_ABILITY_TYPE, current_ability_charges + power_generation_mini_bonus_settings.num_increased_ability_charges)
-		end
-	end,
-	related_talents = {
-		"cryptic_power_generation_charges_mini_bonus",
-	},
-}
-
-local power_generation_mini_bonus_target_num_current_charges_toughness_regen_bonus = {
-	[power_generation_mini_bonus_settings.toughness_regen_bonus_valid_charge_one] = true,
-	[power_generation_mini_bonus_settings.toughness_regen_bonus_valid_charge_two] = true,
-	[power_generation_mini_bonus_settings.toughness_regen_bonus_valid_charge_three] = true,
-}
-
-templates.cryptic_power_generation_charges_mini_bonus_toughness_regen = {
-	class_name = "buff",
-	predicted = false,
-	conditional_stat_buffs = {
-		[stat_buffs.toughness_replenish_modifier] = power_generation_mini_bonus_settings.toughness_replenish_modifier,
-	},
-	start_func = function (template_data, template_context)
-		template_data.ability_extension = ScriptUnit.extension(template_context.unit, "ability_system")
-	end,
-	conditional_stat_buffs_func = function (template_data, template_context)
-		local current_ability_charges = template_data.ability_extension:remaining_ability_charges(COMBAT_ABILITY_TYPE)
-
-		return not not power_generation_mini_bonus_target_num_current_charges_toughness_regen_bonus[current_ability_charges]
-	end,
-	related_talents = {
-		"cryptic_power_generation_charges_mini_bonus",
-	},
-}
-
-local power_generation_capacitance_bonuses_settings = power_generation_strength_keystone_talent_settings.cryptic_power_generation_capacitance_bonuses
-
-templates.cryptic_power_generation_capacitance_bonuses_decreased_cooldown_regen = {
-	class_name = "buff",
-	predicted = false,
-	stat_buffs = {
-		[stat_buffs.ability_extra_charges] = power_generation_capacitance_bonuses_settings.num_increased_ability_charges,
-	},
-	conditional_stat_buffs = {
-		[stat_buffs.combat_ability_cooldown_regen_modifier] = power_generation_capacitance_bonuses_settings.cooldown_regen_modifier_low,
-		[stat_buffs.combat_ability_cooldown_replenish_modifier] = power_generation_capacitance_bonuses_settings.cooldown_regen_modifier_low,
-	},
-	start_func = function (template_data, template_context)
-		template_data.ability_extension = ScriptUnit.extension(template_context.unit, "ability_system")
-		template_data.gave_extra_ability_charge_on_start = false
-	end,
-	conditional_stat_buffs_func = function (template_data, template_context)
-		local current_ability_charges = template_data.ability_extension:remaining_ability_charges(COMBAT_ABILITY_TYPE)
-
-		return current_ability_charges < power_generation_capacitance_bonuses_settings.reduced_cooldown_regen_target_charges
-	end,
-	post_update_keywords_and_stats_func = function (template_data, template_context, dt, t)
-		if not template_data.gave_extra_ability_charge_on_start then
-			template_data.gave_extra_ability_charge_on_start = true
-
-			local ability_extension = template_data.ability_extension
-			local current_ability_charges = ability_extension:remaining_ability_charges(COMBAT_ABILITY_TYPE)
-
-			ability_extension:set_ability_charges(COMBAT_ABILITY_TYPE, current_ability_charges + power_generation_capacitance_bonuses_settings.num_increased_ability_charges)
-		end
-	end,
-	related_talents = {
-		"cryptic_power_generation_capacitance_bonuses",
-	},
-}
-templates.cryptic_power_generation_capacitance_bonuses_increased_cooldown_regen = {
-	class_name = "buff",
-	predicted = false,
-	conditional_stat_buffs = {
-		[stat_buffs.combat_ability_cooldown_regen_modifier] = power_generation_capacitance_bonuses_settings.cooldown_regen_modifier_high,
-		[stat_buffs.combat_ability_cooldown_replenish_modifier] = power_generation_capacitance_bonuses_settings.cooldown_regen_modifier_high,
-	},
-	start_func = function (template_data, template_context)
-		template_data.ability_extension = ScriptUnit.extension(template_context.unit, "ability_system")
-	end,
-	conditional_stat_buffs_func = function (template_data, template_context)
-		local current_ability_charges = template_data.ability_extension:remaining_ability_charges(COMBAT_ABILITY_TYPE)
-
-		return current_ability_charges >= power_generation_capacitance_bonuses_settings.increased_cooldown_regen_target_charges
-	end,
-	related_talents = {
-		"cryptic_power_generation_capacitance_bonuses",
-	},
+		[stat_buffs.arc_grenade_extra_arcs] = arc_grenade_ability_talent_settings.extra_arcs
+	}
 }
 templates.cryptic_dissector = {
 	class_name = "server_only_proc_buff",
@@ -1647,7 +1412,7 @@ templates.cryptic_dissector = {
 	proc_events = {
 		[proc_events.on_kill] = 1,
 		[proc_events.on_damage_taken] = 1,
-		[proc_events.on_combat_ability] = 1,
+		[proc_events.on_combat_ability] = 1
 	},
 	specific_check_proc_funcs = {
 		[proc_events.on_kill] = CheckProcFunctions.any(CheckProcFunctions.on_elite_kill, CheckProcFunctions.on_special_kill),
@@ -1662,7 +1427,7 @@ templates.cryptic_dissector = {
 		end,
 		[proc_events.on_combat_ability] = function (params, template_data, template_context, t)
 			return template_data.has_combat_ability_restores_stacks_talent
-		end,
+		end
 	},
 	specific_proc_func = {
 		[proc_events.on_kill] = function (params, template_data, template_context, t)
@@ -1708,7 +1473,7 @@ templates.cryptic_dissector = {
 					table.insert(template_data.buff_stacks_index, buff_index)
 				end
 			end
-		end,
+		end
 	},
 	update_func = function (template_data, template_context, dt, t)
 		if template_context.is_server then
@@ -1718,7 +1483,7 @@ templates.cryptic_dissector = {
 				Managers.stats:record_private("hook_cryptic_dissector_update_time_at_required_stacks", template_context.player, dt)
 			end
 		end
-	end,
+	end
 }
 templates.cryptic_dissector_stack = {
 	always_active = true,
@@ -1732,12 +1497,12 @@ templates.cryptic_dissector_stack = {
 	max_stacks_cap = dissector_keystone_talent_settings.max_stacks,
 	hud_priority = HUD_PRIORITIES.keystones,
 	stat_buffs = {
-		[stat_buffs.damage] = dissector_keystone_talent_settings.damage,
+		[stat_buffs.damage] = dissector_keystone_talent_settings.damage
 	},
 	stepped_stat_buffs = {},
 	conditional_stat_buffs = {
 		[stat_buffs.critical_strike_chance] = dissector_keystone_talent_settings.critical_strike_chance,
-		[stat_buffs.melee_attack_speed] = dissector_keystone_talent_settings.melee_attack_speed,
+		[stat_buffs.melee_attack_speed] = dissector_keystone_talent_settings.melee_attack_speed
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.give_crit_and_attack_speed
@@ -1752,13 +1517,13 @@ templates.cryptic_dissector_stack = {
 		end
 	end,
 	related_talents = {
-		"cryptic_dissector",
-	},
+		"cryptic_dissector"
+	}
 }
 
 for i = 1, dissector_keystone_talent_settings.max_stacks + dissector_keystone_talent_settings.extra_max_stacks do
 	table.insert(templates.cryptic_dissector_stack.stepped_stat_buffs, {
-		[stat_buffs.toughness_damage_taken_multiplier] = 1 - dissector_keystone_talent_settings.toughness_damage_taken_multiplier * i,
+		[stat_buffs.toughness_damage_taken_multiplier] = 1 - dissector_keystone_talent_settings.toughness_damage_taken_multiplier * i
 	})
 end
 
@@ -1960,7 +1725,7 @@ templates.cryptic_overload_keystone = {
 	end,
 	proc_events = {
 		[proc_events.on_minion_death] = 1,
-		[proc_events.on_combat_ability] = 1,
+		[proc_events.on_combat_ability] = 1
 	},
 	specific_check_proc_funcs = {
 		[proc_events.on_minion_death] = function (params, template_data, template_context, t)
@@ -1986,10 +1751,10 @@ templates.cryptic_overload_keystone = {
 				return false
 			end
 
-			local ability_charges_used = params.ability_charges_used or 1
+			local ability_charges_used = params.ability_cost or 1
 
 			return ability_charges_used > 0
-		end,
+		end
 	},
 	specific_proc_func = {
 		[proc_events.on_minion_death] = function (params, template_data, template_context, t)
@@ -1999,11 +1764,11 @@ templates.cryptic_overload_keystone = {
 			_add_overload_stack(num_stacks_gained, params, template_data, template_context, t)
 		end,
 		[proc_events.on_combat_ability] = function (params, template_data, template_context, t)
-			local ability_charges_used = params.ability_charges_used or 1
+			local ability_charges_used = params.ability_cost or 1
 
 			_add_overload_stack(ability_charges_used * overload_keystone_talent_settings.num_stacks_gained_per_combat_ability_charge, params, template_data, template_context, t)
-		end,
-	},
+		end
+	}
 }
 templates.cryptic_overload_keystone_stack = {
 	class_name = "stepped_stat_buff",
@@ -2015,8 +1780,8 @@ templates.cryptic_overload_keystone_stack = {
 	max_stacks_cap = overload_keystone_talent_settings.max_stacks,
 	hud_priority = HUD_PRIORITIES.keystones,
 	related_talents = {
-		"cryptic_overload_keystone",
-	},
+		"cryptic_overload_keystone"
+	}
 }
 templates.cryptic_overload_keystone_triggered_counter = {
 	always_show_in_hud = true,
@@ -2027,7 +1792,7 @@ templates.cryptic_overload_keystone_triggered_counter = {
 	skip_tactical_overlay = true,
 	max_stacks = num_overload_keystone_triggers_for_full_permanent_stacks,
 	max_stacks_cap = num_overload_keystone_triggers_for_full_permanent_stacks,
-	hud_priority = HUD_PRIORITIES.keystones,
+	hud_priority = HUD_PRIORITIES.keystones
 }
 templates.cryptic_overload_keystone_allies_buff = {
 	class_name = "buff",
@@ -2038,8 +1803,8 @@ templates.cryptic_overload_keystone_allies_buff = {
 	duration = overload_keystone_talent_settings.allies_buff_duration,
 	stat_buffs = {
 		[stat_buffs.damage] = overload_keystone_talent_settings.damage,
-		[stat_buffs.toughness_damage_taken_multiplier] = overload_keystone_talent_settings.toughness_damage_taken_multiplier,
-	},
+		[stat_buffs.toughness_damage_taken_multiplier] = overload_keystone_talent_settings.toughness_damage_taken_multiplier
+	}
 }
 templates.cryptic_overload_keystone_increase_damage_taken_debuff = {
 	class_name = "buff",
@@ -2049,10 +1814,10 @@ templates.cryptic_overload_keystone_increase_damage_taken_debuff = {
 	refresh_duration_on_stack = true,
 	duration = overload_keystone_talent_settings.aoe_damage_taken_multiplier_debuff_duration,
 	keywords = {
-		keywords.electrocuted,
+		keywords.electrocuted
 	},
 	stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = overload_keystone_talent_settings.aoe_damage_taken_multiplier_debuff,
+		[stat_buffs.damage_taken_multiplier] = overload_keystone_talent_settings.aoe_damage_taken_multiplier_debuff
 	},
 	minion_effects = {
 		node_effects = {
@@ -2062,15 +1827,15 @@ templates.cryptic_overload_keystone_increase_damage_taken_debuff = {
 					material_emission = true,
 					orphaned_policy = "destroy",
 					particle_effect = "content/fx/particles/enemies/buff_arclightning",
-					stop_type = "stop",
+					stop_type = "stop"
 				},
 				sfx = {
 					looping_wwise_start_event = "wwise/events/weapon/play_psyker_chain_lightning_hit",
-					looping_wwise_stop_event = "wwise/events/weapon/stop_psyker_chain_lightning_hit",
-				},
-			},
-		},
-	},
+					looping_wwise_stop_event = "wwise/events/weapon/stop_psyker_chain_lightning_hit"
+				}
+			}
+		}
+	}
 }
 templates.cryptic_overload_keystone_permanent_increase_damage = {
 	class_name = "buff",
@@ -2078,8 +1843,8 @@ templates.cryptic_overload_keystone_permanent_increase_damage = {
 	max_stacks_cap = 1,
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.damage] = overload_keystone_talent_settings.permanent_damage,
-	},
+		[stat_buffs.damage] = overload_keystone_talent_settings.permanent_damage
+	}
 }
 templates.cryptic_overload_keystone_permanent_reduce_toughness_damage_taken = {
 	class_name = "buff",
@@ -2087,8 +1852,8 @@ templates.cryptic_overload_keystone_permanent_reduce_toughness_damage_taken = {
 	max_stacks_cap = 1,
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.toughness_damage_taken_multiplier] = overload_keystone_talent_settings.permanent_toughness_damage_taken_multiplier,
-	},
+		[stat_buffs.toughness_damage_taken_multiplier] = overload_keystone_talent_settings.permanent_toughness_damage_taken_multiplier
+	}
 }
 templates.cryptic_overload_keystone_permanent_increase_cooldown_regen = {
 	class_name = "buff",
@@ -2096,40 +1861,28 @@ templates.cryptic_overload_keystone_permanent_increase_cooldown_regen = {
 	max_stacks_cap = 1,
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.combat_ability_cooldown_regen_modifier] = overload_keystone_talent_settings.permanent_combat_ability_cooldown_regen_modifier,
-		[stat_buffs.combat_ability_cooldown_replenish_modifier] = overload_keystone_talent_settings.permanent_combat_ability_cooldown_regen_modifier,
-	},
+		[stat_buffs.combat_ability_resource_regen_modifier] = overload_keystone_talent_settings.permanent_combat_ability_cooldown_regen_modifier,
+		[stat_buffs.combat_ability_resource_restored_modifier] = overload_keystone_talent_settings.permanent_combat_ability_cooldown_regen_modifier
+	}
 }
 templates.cryptic_redline = {
 	class_name = "server_only_proc_buff",
 	force_predicted_proc = true,
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.ability_extra_charges] = redline_keystone_talent_settings.ability_extra_charges,
+		[stat_buffs.ability_extra_charges] = redline_keystone_talent_settings.ability_extra_charges
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.rending_multiplier] = redline_keystone_talent_settings.cryptic_redline_rending.rending_multiplier,
+		[stat_buffs.rending_multiplier] = redline_keystone_talent_settings.cryptic_redline_rending.rending_multiplier
 	},
 	start_func = function (template_data, template_context)
 		local talent_extension = ScriptUnit.extension(template_context.unit, "talent_system")
 
 		template_data.has_rending_while_at_stacks_talent = talent_extension:has_special_rule("cryptic_redline_gives_rending_while_above_stacks")
-		template_data.ability_extension = ScriptUnit.extension(template_context.unit, "ability_system")
-		template_data.gave_extra_ability_charge_on_start = false
-	end,
-	post_update_keywords_and_stats_func = function (template_data, template_context, dt, t)
-		if not template_data.gave_extra_ability_charge_on_start then
-			template_data.gave_extra_ability_charge_on_start = true
-
-			local ability_extension = template_data.ability_extension
-			local current_ability_charges = ability_extension:remaining_ability_charges(COMBAT_ABILITY_TYPE)
-
-			ability_extension:set_ability_charges(COMBAT_ABILITY_TYPE, current_ability_charges + redline_keystone_talent_settings.ability_extra_charges)
-		end
 	end,
 	proc_events = {
 		[proc_events.on_combat_ability_charge_replenished] = 1,
-		[proc_events.on_combat_ability_charge_consumed] = 1,
+		[proc_events.on_combat_ability_charge_consumed] = 1
 	},
 	proc_func = function (params, template_data, template_context, t)
 		local num_stacks = params.num_charges_gained or params.num_charges_consumed or 1
@@ -2144,7 +1897,7 @@ templates.cryptic_redline = {
 		local currently_held_stacks = template_context.buff_extension:current_stacks("cryptic_redline_stack")
 
 		return currently_held_stacks >= redline_keystone_talent_settings.cryptic_redline_rending.num_stacks_needed
-	end,
+	end
 }
 templates.cryptic_redline_stack = {
 	class_name = "stepped_stat_buff",
@@ -2159,8 +1912,8 @@ templates.cryptic_redline_stack = {
 	hud_priority = HUD_PRIORITIES.keystones,
 	stepped_stat_buffs = {},
 	stat_buffs = {
-		[stat_buffs.combat_ability_cooldown_regen_modifier] = redline_keystone_talent_settings.combat_ability_cooldown_regen_modifier,
-		[stat_buffs.combat_ability_cooldown_replenish_modifier] = redline_keystone_talent_settings.combat_ability_cooldown_regen_modifier,
+		[stat_buffs.combat_ability_resource_regen_modifier] = redline_keystone_talent_settings.combat_ability_cooldown_regen_modifier,
+		[stat_buffs.combat_ability_resource_restored_modifier] = redline_keystone_talent_settings.combat_ability_cooldown_regen_modifier
 	},
 	start_func = function (template_data, template_context)
 		local talent_extension = ScriptUnit.extension(template_context.unit, "talent_system")
@@ -2172,13 +1925,13 @@ templates.cryptic_redline_stack = {
 		end
 	end,
 	related_talents = {
-		"cryptic_redline",
-	},
+		"cryptic_redline"
+	}
 }
 
 for i = 1, redline_keystone_talent_settings.max_stacks + redline_keystone_talent_settings.cryptic_redline_extra_max_stacks.extra_redline_max_stacks do
 	table.insert(templates.cryptic_redline_stack.stepped_stat_buffs, {
-		[stat_buffs.toughness_damage_taken_multiplier] = 1 - redline_keystone_talent_settings.toughness_damage_taken_multiplier_step * i,
+		[stat_buffs.toughness_damage_taken_multiplier] = 1 - redline_keystone_talent_settings.toughness_damage_taken_multiplier_step * i
 	})
 end
 
@@ -2186,13 +1939,13 @@ templates.cryptic_redline_strength = {
 	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_combat_ability] = 1,
+		[proc_events.on_combat_ability] = 1
 	},
 	proc_func = function (params, template_data, template_context, t)
 		local remaining_ability_charges_before_use = params.remaining_ability_charges_before_use or 1
 
 		template_context.buff_extension:add_internally_controlled_buff_with_stacks("cryptic_redline_strength_stack", remaining_ability_charges_before_use, t)
-	end,
+	end
 }
 templates.cryptic_redline_strength_stack = {
 	class_name = "buff",
@@ -2205,32 +1958,18 @@ templates.cryptic_redline_strength_stack = {
 	duration = redline_keystone_talent_settings.cryptic_redline_strength.duration,
 	hud_priority = HUD_PRIORITIES.keystones,
 	stat_buffs = {
-		[stat_buffs.power_level_modifier] = redline_keystone_talent_settings.cryptic_redline_strength.power_level_modifier_per_stack,
+		[stat_buffs.power_level_modifier] = redline_keystone_talent_settings.cryptic_redline_strength.power_level_modifier_per_stack
 	},
 	related_talents = {
-		"cryptic_redline_strength",
-	},
+		"cryptic_redline_strength"
+	}
 }
 templates.cryptic_redline_extra_max_stacks = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.ability_extra_charges] = redline_keystone_talent_settings.cryptic_redline_extra_max_stacks.ability_extra_charges,
-	},
-	start_func = function (template_data, template_context)
-		template_data.ability_extension = ScriptUnit.extension(template_context.unit, "ability_system")
-		template_data.gave_extra_ability_charge_on_start = false
-	end,
-	post_update_keywords_and_stats_func = function (template_data, template_context, dt, t)
-		if not template_data.gave_extra_ability_charge_on_start then
-			template_data.gave_extra_ability_charge_on_start = true
-
-			local ability_extension = template_data.ability_extension
-			local current_ability_charges = ability_extension:remaining_ability_charges(COMBAT_ABILITY_TYPE)
-
-			ability_extension:set_ability_charges(COMBAT_ABILITY_TYPE, current_ability_charges + redline_keystone_talent_settings.cryptic_redline_extra_max_stacks.ability_extra_charges)
-		end
-	end,
+		[stat_buffs.ability_extra_charges] = redline_keystone_talent_settings.cryptic_redline_extra_max_stacks.ability_extra_charges
+	}
 }
 templates.cryptic_redline_toughness = _toughness_regen_over_time_on_proc_generator()
 templates.cryptic_redline_toughness.active_duration = redline_keystone_talent_settings.cryptic_redline_toughness.duration
@@ -2240,7 +1979,7 @@ templates.cryptic_redline_toughness.toughness_regen_per_second = redline_keyston
 templates.cryptic_redline_toughness.check_proc_func = nil
 templates.cryptic_redline_toughness.proc_events = {
 	[proc_events.on_combat_ability_charge_replenished] = 1,
-	[proc_events.on_combat_ability_charge_consumed] = 1,
+	[proc_events.on_combat_ability_charge_consumed] = 1
 }
 
 local crits_grant_power_target_cd_time_to_gain = talent_settings.cryptic_crits_grant_power.cooldown_regen * talent_settings.general.combat_ability_cooldown_time
@@ -2261,15 +2000,15 @@ templates.cryptic_crits_grant_power = {
 		template_data.ability_extension = ScriptUnit.extension(unit, "ability_system")
 	end,
 	proc_stat_buffs = {
-		[stat_buffs.combat_ability_cooldown_regen_modifier] = crits_grant_power_cooldown_over_time_regen_modifier,
+		[stat_buffs.combat_ability_resource_regen_modifier] = crits_grant_power_cooldown_over_time_regen_modifier
 	},
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_crit,
 	proc_func = function (params, template_data, template_context, t)
 		return
-	end,
+	end
 }
 templates.cryptic_weakspot_kills_grant_power = {
 	class_name = "server_only_proc_buff",
@@ -2281,22 +2020,22 @@ templates.cryptic_weakspot_kills_grant_power = {
 		template_data.ability_extension = ScriptUnit.extension(unit, "ability_system")
 	end,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_weakspot_kill,
 	proc_func = function (params, template_data, template_context, t)
 		local cooldown_to_restore = template_context.template.cooldown_replenished_on_proc
 
 		if cooldown_to_restore > 0 then
-			template_data.ability_extension:reduce_ability_cooldown_percentage(COMBAT_ABILITY_TYPE, cooldown_to_restore)
+			template_data.ability_extension:restore_ability_charge_percentage(COMBAT_ABILITY_TYPE, cooldown_to_restore)
 		end
-	end,
+	end
 }
 templates.cryptic_multi_hits_grant_power = {
 	class_name = "server_only_proc_buff",
 	predicted = false,
 	buff_data = {
-		required_num_hits = talent_settings.cryptic_multi_hits_grant_power.num_hits,
+		required_num_hits = talent_settings.cryptic_multi_hits_grant_power.num_hits
 	},
 	cooldown_replenished_on_proc = talent_settings.cryptic_multi_hits_grant_power.cooldown_replenished_on_proc,
 	start_func = function (template_data, template_context)
@@ -2306,7 +2045,7 @@ templates.cryptic_multi_hits_grant_power = {
 		template_data.multi_hit_window_end_t = 0
 	end,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		local buff_data = template_context.template.buff_data
@@ -2326,9 +2065,9 @@ templates.cryptic_multi_hits_grant_power = {
 		local cooldown_to_restore = template_context.template.cooldown_replenished_on_proc
 
 		if cooldown_to_restore > 0 then
-			template_data.ability_extension:reduce_ability_cooldown_percentage(COMBAT_ABILITY_TYPE, cooldown_to_restore)
+			template_data.ability_extension:restore_ability_charge_percentage(COMBAT_ABILITY_TYPE, cooldown_to_restore)
 		end
-	end,
+	end
 }
 
 local increased_passive_cooldown_regen_percent_value = talent_settings.general.combat_ability_cooldown_time / (1 / talent_settings.cryptic_increased_passive_cooldown_regen.cooldown_percent_regen_per_second)
@@ -2338,15 +2077,15 @@ templates.cryptic_increased_passive_cooldown_regen = {
 	predicted = false,
 	cooldown_regen_per_second = talent_settings.cryptic_increased_passive_cooldown_regen.cooldown_percent_regen_per_second,
 	stat_buffs = {
-		[stat_buffs.combat_ability_cooldown_regen_modifier] = increased_passive_cooldown_regen_percent_value,
-	},
+		[stat_buffs.combat_ability_resource_regen_modifier] = increased_passive_cooldown_regen_percent_value
+	}
 }
 templates.cryptic_passive_cooldown_regen = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.combat_ability_cooldown_regen_modifier] = 0,
-	},
+		[stat_buffs.combat_ability_resource_regen_modifier] = 0
+	}
 }
 templates.cryptic_multi_hits_restore_toughness = {
 	allow_proc_while_active = true,
@@ -2358,14 +2097,14 @@ templates.cryptic_multi_hits_restore_toughness = {
 	hud_priority = HUD_PRIORITIES.talents,
 	toughness_regen_per_second = talent_settings.cryptic_multi_hits_restore_toughness.toughness_regen / talent_settings.cryptic_multi_hits_restore_toughness.toughness_regen_time,
 	buff_data = {
-		required_num_hits = talent_settings.cryptic_multi_hits_restore_toughness.num_hits,
+		required_num_hits = talent_settings.cryptic_multi_hits_restore_toughness.num_hits
 	},
 	start_func = function (template_data, template_context)
 		template_data.multi_hit_window_end_t = 0
 		template_data.multi_hit_procced = false
 	end,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		local buff_data = template_context.template.buff_data
@@ -2392,21 +2131,21 @@ templates.cryptic_multi_hits_restore_toughness = {
 
 			Toughness.replenish_percentage(template_context.unit, toughness_to_regen, false, "cryptic_talent")
 		end
-	end,
+	end
 }
 templates.cryptic_weakspot_kills_restore_toughness = {
 	class_name = "server_only_proc_buff",
 	predicted = false,
 	toughness_restored_on_proc = talent_settings.cryptic_weakspot_kills_restore_toughness.toughness_restored,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_weakspot_hit,
 	proc_func = function (params, template_data, template_context, t)
 		local toughness_to_regen = template_context.template.toughness_restored_on_proc
 
 		Toughness.replenish_percentage(template_context.unit, toughness_to_regen, false, "cryptic_talent")
-	end,
+	end
 }
 templates.cryptic_crits_grant_tdr = _toughness_regen_over_time_on_proc_generator()
 templates.cryptic_crits_grant_tdr.active_duration = talent_settings.cryptic_crits_grant_tdr.duration
@@ -2415,28 +2154,28 @@ templates.cryptic_crits_grant_tdr.toughness_restored_on_proc = talent_settings.c
 templates.cryptic_crits_grant_tdr.toughness_regen_per_second = talent_settings.cryptic_crits_grant_tdr.toughness_restored / talent_settings.cryptic_crits_grant_tdr.duration
 templates.cryptic_crits_grant_tdr.check_proc_func = CheckProcFunctions.on_crit
 templates.cryptic_crits_grant_tdr.proc_events = {
-	[proc_events.on_hit] = 1,
+	[proc_events.on_hit] = 1
 }
 templates.cryptic_crits_grant_tdr.proc_stat_buffs = {
-	[stat_buffs.toughness_damage_taken_multiplier] = talent_settings.cryptic_crits_grant_tdr.toughness_damage_taken_multiplier,
+	[stat_buffs.toughness_damage_taken_multiplier] = talent_settings.cryptic_crits_grant_tdr.toughness_damage_taken_multiplier
 }
 templates.cryptic_ammo_reserve = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.ammo_reserve_capacity] = talent_settings.cryptic_ammo_reserve.ammo_reserve_capacity,
-	},
+		[stat_buffs.ammo_reserve_capacity] = talent_settings.cryptic_ammo_reserve.ammo_reserve_capacity
+	}
 }
 templates.cryptic_ranged_kills_tdr = {
 	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_ranged_kill,
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("cryptic_ranged_kills_tdr_stack", t)
-	end,
+	end
 }
 templates.cryptic_ranged_kills_tdr_stack = {
 	class_name = "stepped_stat_buff",
@@ -2456,13 +2195,13 @@ templates.cryptic_ranged_kills_tdr_stack = {
 		return 0, max_steps
 	end,
 	related_talents = {
-		"cryptic_ranged_kills_tdr",
-	},
+		"cryptic_ranged_kills_tdr"
+	}
 }
 
 for i = 1, talent_settings.cryptic_ranged_kills_tdr.max_stacks do
 	table.insert(templates.cryptic_ranged_kills_tdr_stack.stepped_stat_buffs, {
-		[stat_buffs.toughness_damage_taken_multiplier] = 1 - math.min(talent_settings.cryptic_ranged_kills_tdr.toughness_damage_taken_multiplier_step * i, 1),
+		[stat_buffs.toughness_damage_taken_multiplier] = 1 - math.min(talent_settings.cryptic_ranged_kills_tdr.toughness_damage_taken_multiplier_step * i, 1)
 	})
 end
 
@@ -2470,12 +2209,12 @@ templates.cryptic_elite_kills_damage = {
 	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_ranged_kill, CheckProcFunctions.on_elite_kill),
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("cryptic_elite_kills_damage_stack", t)
-	end,
+	end
 }
 templates.cryptic_elite_kills_damage_stack = {
 	class_name = "buff",
@@ -2489,18 +2228,18 @@ templates.cryptic_elite_kills_damage_stack = {
 	duration = talent_settings.cryptic_elite_kills_damage.duration,
 	hud_priority = HUD_PRIORITIES.talents,
 	stat_buffs = {
-		[stat_buffs.damage] = talent_settings.cryptic_elite_kills_damage.damage,
+		[stat_buffs.damage] = talent_settings.cryptic_elite_kills_damage.damage
 	},
 	related_talents = {
-		"cryptic_elite_kills_damage",
-	},
+		"cryptic_elite_kills_damage"
+	}
 }
 templates.cryptic_weakspot_damage = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.weakspot_damage] = talent_settings.cryptic_weakspot_damage.weakspot_damage,
-	},
+		[stat_buffs.weakspot_damage] = talent_settings.cryptic_weakspot_damage.weakspot_damage
+	}
 }
 templates.cryptic_elite_kills_toughness = {
 	allow_proc_while_active = true,
@@ -2512,7 +2251,7 @@ templates.cryptic_elite_kills_toughness = {
 	hud_priority = HUD_PRIORITIES.talents,
 	toughness_regen_per_second = talent_settings.cryptic_elite_kills_toughness.toughness_regen / talent_settings.cryptic_elite_kills_toughness.toughness_regen_time,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_elite_kill,
 	proc_func = function (params, template_data, template_context, t)
@@ -2528,8 +2267,8 @@ templates.cryptic_elite_kills_toughness = {
 		end
 	end,
 	related_talents = {
-		"cryptic_elite_kills_toughness",
-	},
+		"cryptic_elite_kills_toughness"
+	}
 }
 templates.cryptic_electrocution_defense = {
 	always_show_in_hud = true,
@@ -2558,7 +2297,7 @@ templates.cryptic_electrocution_defense = {
 		template_data.enemy_side_names = enemy_side_names
 	end,
 	proc_events = {
-		[proc_events.on_player_hit_received] = 1,
+		[proc_events.on_player_hit_received] = 1
 	},
 	check_proc_func = function (params, template_data, template_context)
 		local is_hurting_hit = AttackSettings.is_damaging_result[params.attack_result]
@@ -2597,8 +2336,8 @@ templates.cryptic_electrocution_defense = {
 		end
 	end,
 	related_talents = {
-		"cryptic_electrocution_defense",
-	},
+		"cryptic_electrocution_defense"
+	}
 }
 templates.cryptic_mobile_defense = {
 	class_name = "buff",
@@ -2615,7 +2354,7 @@ templates.cryptic_mobile_defense = {
 		template_data.movement_state_component = unit_data_extension:read_component("movement_state")
 	end,
 	conditional_stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = talent_settings.cryptic_mobile_defense.damage_taken_multiplier,
+		[stat_buffs.damage_taken_multiplier] = talent_settings.cryptic_mobile_defense.damage_taken_multiplier
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -2624,7 +2363,7 @@ templates.cryptic_mobile_defense = {
 		local is_sliding = template_data.movement_state_component.method == "sliding"
 
 		return is_sprinting and current_stamina > 0 or is_sliding
-	end,
+	end
 }
 templates.cryptic_stun_suppression_immune = {
 	allow_proc_while_active = true,
@@ -2635,29 +2374,29 @@ templates.cryptic_stun_suppression_immune = {
 	active_duration = talent_settings.cryptic_stun_suppression_immune.duration,
 	hud_priority = HUD_PRIORITIES.keystones,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_weakspot_kill,
 	proc_keywords = {
 		keywords.stun_immune,
-		keywords.suppression_immune,
+		keywords.suppression_immune
 	},
 	related_talents = {
-		"cryptic_stun_suppression_immune",
-	},
+		"cryptic_stun_suppression_immune"
+	}
 }
 templates.cryptic_stacking_tdr = {
 	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		return params.target_index and params.target_index == 1 or false
 	end,
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("cryptic_stacking_tdr_buff", t)
-	end,
+	end
 }
 templates.cryptic_stacking_tdr_buff = {
 	class_name = "stepped_stat_buff",
@@ -2676,13 +2415,13 @@ templates.cryptic_stacking_tdr_buff = {
 		return 0, max_steps
 	end,
 	related_talents = {
-		"cryptic_stacking_tdr",
-	},
+		"cryptic_stacking_tdr"
+	}
 }
 
 for i = 1, talent_settings.cryptic_stacking_tdr.max_stacks do
 	table.insert(templates.cryptic_stacking_tdr_buff.stepped_stat_buffs, {
-		[stat_buffs.toughness_damage_taken_multiplier] = 1 - math.min(talent_settings.cryptic_stacking_tdr.toughness_damage_taken_multiplier * i, 1),
+		[stat_buffs.toughness_damage_taken_multiplier] = 1 - math.min(talent_settings.cryptic_stacking_tdr.toughness_damage_taken_multiplier * i, 1)
 	})
 end
 
@@ -2690,11 +2429,11 @@ templates.cryptic_successful_dodge_stamina = {
 	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_successful_dodge] = 1,
+		[proc_events.on_successful_dodge] = 1
 	},
 	proc_func = function (params, template_data, template_context, t)
 		Stamina.add_stamina_percent(template_context.unit, talent_settings.cryptic_successful_dodge_stamina.stamina_replenished_percent)
-	end,
+	end
 }
 templates.cryptic_pushing_grants_cleave = {
 	allow_proc_while_active = true,
@@ -2705,20 +2444,20 @@ templates.cryptic_pushing_grants_cleave = {
 	active_duration = talent_settings.cryptic_pushing_grants_cleave.duration,
 	hud_priority = HUD_PRIORITIES.talents,
 	proc_events = {
-		[proc_events.on_push_hit] = 1,
+		[proc_events.on_push_hit] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.max_melee_hit_mass_attack_modifier] = talent_settings.cryptic_pushing_grants_cleave.max_melee_hit_mass_attack_modifier,
+		[stat_buffs.max_melee_hit_mass_attack_modifier] = talent_settings.cryptic_pushing_grants_cleave.max_melee_hit_mass_attack_modifier
 	},
 	related_talents = {
-		"cryptic_pushing_grants_cleave",
-	},
+		"cryptic_pushing_grants_cleave"
+	}
 }
 templates.cryptic_melee_crits_electrocute_first = {
 	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_crit_melee, CheckProcFunctions.on_first_target_melee_hit),
 	proc_func = function (params, template_data, template_context)
@@ -2731,7 +2470,7 @@ templates.cryptic_melee_crits_electrocute_first = {
 
 			victim_buff_extension:add_internally_controlled_buff("cryptic_electrocution_default", t, "owner_unit", player_unit)
 		end
-	end,
+	end
 }
 templates.cryptic_cleave_while_above_stamina_threshold = {
 	class_name = "buff",
@@ -2746,14 +2485,14 @@ templates.cryptic_cleave_while_above_stamina_threshold = {
 		template_data.stamina_component = unit_data_extension:read_component("stamina")
 	end,
 	conditional_stat_buffs = {
-		[stat_buffs.max_melee_hit_mass_attack_modifier] = talent_settings.cryptic_cleave_and_impact.max_hit_mass_attack_modifier,
+		[stat_buffs.max_melee_hit_mass_attack_modifier] = talent_settings.cryptic_cleave_and_impact.max_hit_mass_attack_modifier
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local current_toughness_percent = Toughness.current_toughness_percent(unit)
 
 		return current_toughness_percent > talent_settings.cryptic_cleave_and_impact.stamina_threshold
-	end,
+	end
 }
 templates.cryptic_impact_while_below_stamina_threshold = {
 	class_name = "buff",
@@ -2768,14 +2507,14 @@ templates.cryptic_impact_while_below_stamina_threshold = {
 		template_data.stamina_component = unit_data_extension:read_component("stamina")
 	end,
 	conditional_stat_buffs = {
-		[stat_buffs.melee_impact_modifier] = talent_settings.cryptic_cleave_and_impact.impact_modifier,
+		[stat_buffs.melee_impact_modifier] = talent_settings.cryptic_cleave_and_impact.impact_modifier
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local current_toughness_percent = Toughness.current_toughness_percent(unit)
 
 		return current_toughness_percent <= talent_settings.cryptic_cleave_and_impact.stamina_threshold
-	end,
+	end
 }
 templates.cryptic_electrocution_applies_brittleness = {
 	class_name = "server_only_proc_buff",
@@ -2784,6 +2523,7 @@ templates.cryptic_electrocution_applies_brittleness = {
 		[proc_events.on_buff_added] = 1,
 		[proc_events.on_buff_stack_added] = 1,
 		[proc_events.on_max_stack_refresh_buff] = 1,
+		[proc_events.on_stackable_buff_refresh_duration] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		local buff_template = params.template
@@ -2815,7 +2555,7 @@ templates.cryptic_electrocution_applies_brittleness = {
 
 			target_buff_extension:add_internally_controlled_buff_with_stacks("rending_debuff", stacks, t, "owner_unit", player_unit)
 		end
-	end,
+	end
 }
 templates.cryptic_coherency_toughness_on_ability = {
 	class_name = "server_only_proc_buff",
@@ -2826,7 +2566,7 @@ templates.cryptic_coherency_toughness_on_ability = {
 		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
 	end,
 	proc_events = {
-		[proc_events.on_combat_ability] = 1,
+		[proc_events.on_combat_ability] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		local toughness_to_regen = talent_settings.cryptic_coherency_toughness_on_ability.toughness_replenish_percent
@@ -2835,13 +2575,13 @@ templates.cryptic_coherency_toughness_on_ability = {
 		for coherency_unit in pairs(units_in_coherency) do
 			Toughness.replenish_percentage(coherency_unit, toughness_to_regen, false, "cryptic_talent")
 		end
-	end,
+	end
 }
 templates.cryptic_hybrid_damage = {
 	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.any(CheckProcFunctions.on_ranged_kill, CheckProcFunctions.on_melee_kill),
 	proc_func = function (params, template_data, template_context, t)
@@ -2852,7 +2592,7 @@ templates.cryptic_hybrid_damage = {
 		elseif CheckProcFunctions.on_melee_kill(params, template_data, template_context, t) then
 			buff_extension:add_internally_controlled_buff("cryptic_hybrid_ranged_damage_buff", t)
 		end
-	end,
+	end
 }
 templates.cryptic_hybrid_melee_damage_buff = {
 	always_show_in_hud = true,
@@ -2867,11 +2607,11 @@ templates.cryptic_hybrid_melee_damage_buff = {
 	duration = talent_settings.cryptic_hybrid_damage.melee_duration,
 	hud_priority = HUD_PRIORITIES.talents,
 	stat_buffs = {
-		[stat_buffs.melee_damage] = talent_settings.cryptic_hybrid_damage.melee_damage,
+		[stat_buffs.melee_damage] = talent_settings.cryptic_hybrid_damage.melee_damage
 	},
 	related_talents = {
-		"cryptic_hybrid_damage",
-	},
+		"cryptic_hybrid_damage"
+	}
 }
 templates.cryptic_hybrid_ranged_damage_buff = {
 	always_show_in_hud = true,
@@ -2886,11 +2626,11 @@ templates.cryptic_hybrid_ranged_damage_buff = {
 	duration = talent_settings.cryptic_hybrid_damage.ranged_duration,
 	hud_priority = HUD_PRIORITIES.talents,
 	stat_buffs = {
-		[stat_buffs.ranged_damage] = talent_settings.cryptic_hybrid_damage.ranged_damage,
+		[stat_buffs.ranged_damage] = talent_settings.cryptic_hybrid_damage.ranged_damage
 	},
 	related_talents = {
-		"cryptic_hybrid_damage",
-	},
+		"cryptic_hybrid_damage"
+	}
 }
 templates.cryptic_electrocution_toughness = {
 	allow_proc_while_active = true,
@@ -2904,7 +2644,7 @@ templates.cryptic_electrocution_toughness = {
 	proc_events = {
 		[proc_events.on_buff_added] = 1,
 		[proc_events.on_buff_stack_added] = 1,
-		[proc_events.on_max_stack_refresh_buff] = 1,
+		[proc_events.on_max_stack_refresh_buff] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		local buff_template = params.template
@@ -2938,15 +2678,15 @@ templates.cryptic_electrocution_toughness = {
 		end
 	end,
 	related_talents = {
-		"cryptic_electrocution_toughness",
-	},
+		"cryptic_electrocution_toughness"
+	}
 }
 
 local AFFLICTED_KEYWORDS = {
 	keywords.bleeding,
 	keywords.burning,
 	keywords.toxin,
-	keywords.warpfire_burning,
+	keywords.warpfire_burning
 }
 
 templates.cryptic_afflicted_increased_damage = {
@@ -2958,7 +2698,7 @@ templates.cryptic_afflicted_increased_damage = {
 	active_duration = talent_settings.cryptic_afflicted_increased_damage.duration,
 	hud_priority = HUD_PRIORITIES.talents,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		local is_melee_or_ranged_hit = CheckProcFunctions.on_melee_hit(params, template_data, template_context, t) or CheckProcFunctions.on_ranged_hit(params, template_data, template_context, t)
@@ -2985,17 +2725,17 @@ templates.cryptic_afflicted_increased_damage = {
 		return false
 	end,
 	proc_stat_buffs = {
-		[stat_buffs.damage] = talent_settings.cryptic_afflicted_increased_damage.damage,
+		[stat_buffs.damage] = talent_settings.cryptic_afflicted_increased_damage.damage
 	},
 	related_talents = {
-		"cryptic_afflicted_increased_damage",
-	},
+		"cryptic_afflicted_increased_damage"
+	}
 }
 templates.cryptic_stacking_melee_damage = {
 	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		local num_hits = params.num_hit_units
@@ -3004,7 +2744,7 @@ templates.cryptic_stacking_melee_damage = {
 	end,
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("cryptic_stacking_melee_damage_buff", t)
-	end,
+	end
 }
 templates.cryptic_stacking_melee_damage_buff = {
 	always_show_in_hud = true,
@@ -3018,17 +2758,17 @@ templates.cryptic_stacking_melee_damage_buff = {
 	duration = talent_settings.cryptic_stacking_melee_damage.duration,
 	hud_priority = HUD_PRIORITIES.talents,
 	stat_buffs = {
-		[stat_buffs.damage] = talent_settings.cryptic_stacking_melee_damage.damage,
+		[stat_buffs.damage] = talent_settings.cryptic_stacking_melee_damage.damage
 	},
 	related_talents = {
-		"cryptic_stacking_melee_damage",
-	},
+		"cryptic_stacking_melee_damage"
+	}
 }
 templates.cryptic_shared_toughness = {
 	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_toughness_replenished] = 1,
+		[proc_events.on_toughness_replenished] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -3055,7 +2795,7 @@ templates.cryptic_shared_toughness = {
 				Toughness.replenish_flat(coherency_unit, toughness_to_regen, false, "shared")
 			end
 		end
-	end,
+	end
 }
 templates.cryptic_stamina_increases_damage = {
 	class_name = "buff",
@@ -3102,7 +2842,7 @@ templates.cryptic_stamina_increases_damage = {
 		end
 
 		template_data.last_stamina = current_stamina
-	end,
+	end
 }
 templates.cryptic_stamina_increases_damage_effect = {
 	always_show_in_hud = true,
@@ -3116,11 +2856,11 @@ templates.cryptic_stamina_increases_damage_effect = {
 	duration = talent_settings.cryptic_stamina_increases_damage.duration,
 	hud_priority = HUD_PRIORITIES.talents,
 	stat_buffs = {
-		[stat_buffs.damage] = talent_settings.cryptic_stamina_increases_damage.damage,
+		[stat_buffs.damage] = talent_settings.cryptic_stamina_increases_damage.damage
 	},
 	related_talents = {
-		"cryptic_stamina_increases_damage",
-	},
+		"cryptic_stamina_increases_damage"
+	}
 }
 templates.cryptic_stacking_ranged_damage = {
 	class_name = "buff",
@@ -3148,8 +2888,8 @@ templates.cryptic_stacking_ranged_damage = {
 	lerped_stat_buffs = {
 		[stat_buffs.ranged_damage] = {
 			min = 0,
-			max = talent_settings.cryptic_stacking_ranged_damage.ranged_damage_per_stack * talent_settings.cryptic_stacking_ranged_damage.max_stacks,
-		},
+			max = talent_settings.cryptic_stacking_ranged_damage.ranged_damage_per_stack * talent_settings.cryptic_stacking_ranged_damage.max_stacks
+		}
 	},
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		return template_data.lerp_t_value
@@ -3187,7 +2927,7 @@ templates.cryptic_stacking_ranged_damage = {
 
 		template_data.lerp_t_value = 1 / num_steps_for_max_stat * steps
 		template_data.steps = steps
-	end,
+	end
 }
 templates.cryptic_passive_ammo_replenishment = {
 	class_name = "interval_buff",
@@ -3202,16 +2942,17 @@ templates.cryptic_passive_ammo_replenishment = {
 		local unit = template_context.unit
 
 		Ammo.add_to_all_slots(unit, template.percent_ammo_replenish_per_tick)
-	end,
+	end
 }
 templates.cryptic_better_heavies = {
 	class_name = "buff",
 	predicted = false,
 	conditional_keywords = {
 		keywords.uninterruptible,
+		keywords.stun_immune
 	},
 	stat_buffs = {
-		[stat_buffs.melee_heavy_damage] = talent_settings.cryptic_better_heavies.melee_heavy_damage,
+		[stat_buffs.melee_heavy_damage] = talent_settings.cryptic_better_heavies.melee_heavy_damage
 	},
 	start_func = function (template_data, template_context)
 		local player_unit = template_context.unit
@@ -3226,17 +2967,17 @@ templates.cryptic_better_heavies = {
 		local is_windup = action_settings and action_settings.kind == "windup"
 
 		return is_windup
-	end,
+	end
 }
 templates.cryptic_stun_dr_power = {
 	class_name = "server_only_proc_buff",
 	predicted = false,
 	percent_cooldown_spent_per_melee_hit_taken = talent_settings.cryptic_stun_dr_power.percent_cooldown_spent_per_melee_hit_taken,
 	keywords = {
-		keywords.stun_immune,
+		keywords.stun_immune
 	},
 	stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = talent_settings.cryptic_stun_dr_power.damage_taken_multiplier,
+		[stat_buffs.damage_taken_multiplier] = talent_settings.cryptic_stun_dr_power.damage_taken_multiplier
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -3246,7 +2987,7 @@ templates.cryptic_stun_dr_power = {
 		template_data.ability_extension = ScriptUnit.extension(unit, "ability_system")
 	end,
 	proc_events = {
-		[proc_events.on_damage_taken] = 1,
+		[proc_events.on_damage_taken] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		local character_state_component = template_data.character_state_component
@@ -3259,15 +3000,15 @@ templates.cryptic_stun_dr_power = {
 		return params.attacked_unit == template_context.unit and CheckProcFunctions.on_melee_hit(params, template_data, template_context, t)
 	end,
 	proc_func = function (params, template_data, template_context, t)
-		template_data.ability_extension:increase_ability_cooldown_percentage(COMBAT_ABILITY_TYPE, template_context.template.percent_cooldown_spent_per_melee_hit_taken)
-	end,
+		template_data.ability_extension:consume_ability_charge_percentage(COMBAT_ABILITY_TYPE, template_context.template.percent_cooldown_spent_per_melee_hit_taken)
+	end
 }
 
 local valid_help_interactions = {
 	pull_up = true,
 	remove_net = true,
 	rescue = true,
-	revive = true,
+	revive = true
 }
 
 local function _passive_revive_conditional(template_data, template_context)
@@ -3286,10 +3027,10 @@ templates.cryptic_revive_speed_and_dr = {
 	class_name = "buff",
 	predicted = false,
 	conditional_stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = talent_settings.cryptic_revive_speed_and_dr.damage_taken_multiplier,
+		[stat_buffs.damage_taken_multiplier] = talent_settings.cryptic_revive_speed_and_dr.damage_taken_multiplier
 	},
 	stat_buffs = {
-		[stat_buffs.revive_speed_modifier] = talent_settings.cryptic_revive_speed_and_dr.revive_speed_modifier,
+		[stat_buffs.revive_speed_modifier] = talent_settings.cryptic_revive_speed_and_dr.revive_speed_modifier
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -3297,7 +3038,7 @@ templates.cryptic_revive_speed_and_dr = {
 
 		template_data.interactor_extension = interactor_extension
 	end,
-	conditional_stat_buffs_func = _passive_revive_conditional,
+	conditional_stat_buffs_func = _passive_revive_conditional
 }
 templates.cryptic_corruption_resistance_doom = {
 	class_name = "interval_buff",
@@ -3306,7 +3047,7 @@ templates.cryptic_corruption_resistance_doom = {
 	predicted = false,
 	interval = talent_settings.cryptic_corruption_resistance_doom.interval,
 	stat_buffs = {
-		[stat_buffs.corruption_taken_multiplier] = talent_settings.cryptic_corruption_resistance_doom.corruption_taken_multiplier,
+		[stat_buffs.corruption_taken_multiplier] = talent_settings.cryptic_corruption_resistance_doom.corruption_taken_multiplier
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -3346,21 +3087,21 @@ templates.cryptic_corruption_resistance_doom = {
 		if health_extension then
 			Attack.execute(player_unit, template_data.corruption_damage_profile, "power_level", template_data.corruption_damage_power_level, "is_critical_strike", false, "attack_type", attack_types.buff, "damage_type", DamageSettings.damage_types.grimoire)
 		end
-	end,
+	end
 }
 templates.cryptic_ranged_stacking_toughness = {
 	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_ranged_kill,
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("cryptic_ranged_stacking_toughness_stack", t)
 	end,
 	related_talents = {
-		"cryptic_ranged_stacking_toughness",
-	},
+		"cryptic_ranged_stacking_toughness"
+	}
 }
 templates.cryptic_ranged_stacking_toughness_stack = {
 	always_show_in_hud = true,
@@ -3383,8 +3124,8 @@ templates.cryptic_ranged_stacking_toughness_stack = {
 		end
 	end,
 	related_talents = {
-		"cryptic_ranged_stacking_toughness",
-	},
+		"cryptic_ranged_stacking_toughness"
+	}
 }
 templates.cryptic_toughness_on_damage_taken = _toughness_regen_over_time_on_proc_generator()
 templates.cryptic_toughness_on_damage_taken.active_duration = talent_settings.cryptic_toughness_on_damage_taken.toughness_regen_time
@@ -3393,7 +3134,7 @@ templates.cryptic_toughness_on_damage_taken.hud_icon = "content/ui/textures/icon
 templates.cryptic_toughness_on_damage_taken.toughness_regen_on_proc = talent_settings.cryptic_toughness_on_damage_taken.toughness_regen
 templates.cryptic_toughness_on_damage_taken.toughness_regen_per_second = talent_settings.cryptic_toughness_on_damage_taken.toughness_regen / talent_settings.cryptic_toughness_on_damage_taken.toughness_regen_time
 templates.cryptic_toughness_on_damage_taken.proc_events = {
-	[proc_events.on_damage_taken] = 1,
+	[proc_events.on_damage_taken] = 1
 }
 
 templates.cryptic_toughness_on_damage_taken.check_proc_func = function (params, template_data, template_context, t)
@@ -3401,7 +3142,7 @@ templates.cryptic_toughness_on_damage_taken.check_proc_func = function (params, 
 end
 
 templates.cryptic_toughness_on_damage_taken.related_talents = {
-	"cryptic_electrocution_toughness",
+	"cryptic_electrocution_toughness"
 }
 templates.cryptic_ranged_vs_bfg = {
 	class_name = "buff",
@@ -3409,17 +3150,17 @@ templates.cryptic_ranged_vs_bfg = {
 	stat_buffs = {
 		[stat_buffs.ranged_damage_vs_captains] = talent_settings.cryptic_ranged_vs_bfg.ranged_damage_vs_captains,
 		[stat_buffs.ranged_damage_vs_monsters] = talent_settings.cryptic_ranged_vs_bfg.ranged_damage_vs_monsters,
-		[stat_buffs.ranged_damage_vs_ogryn] = talent_settings.cryptic_ranged_vs_bfg.ranged_damage_vs_ogryn,
-	},
+		[stat_buffs.ranged_damage_vs_ogryn] = talent_settings.cryptic_ranged_vs_bfg.ranged_damage_vs_ogryn
+	}
 }
 templates.cryptic_crit_chance_based_on_charge = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.critical_strike_chance] = talent_settings.cryptic_crit_chance_based_on_charge.critical_strike_chance,
+		[stat_buffs.critical_strike_chance] = talent_settings.cryptic_crit_chance_based_on_charge.critical_strike_chance
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.critical_strike_chance] = talent_settings.cryptic_crit_chance_based_on_charge.extra_critical_strike_chance,
+		[stat_buffs.critical_strike_chance] = talent_settings.cryptic_crit_chance_based_on_charge.extra_critical_strike_chance
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		local num_combat_ability_charges = template_data.ability_extension:remaining_ability_charges(COMBAT_ABILITY_TYPE)
@@ -3430,20 +3171,20 @@ templates.cryptic_crit_chance_based_on_charge = {
 		local ability_extension = ScriptUnit.extension(template_context.unit, "ability_system")
 
 		template_data.ability_extension = ability_extension
-	end,
+	end
 }
 templates.cryptic_melee_attacks_give_melee_attack_speed = {
 	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		return params.num_hit_units > 0
 	end,
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("cryptic_melee_attacks_give_melee_attack_speed_stack", t)
-	end,
+	end
 }
 templates.cryptic_melee_attacks_give_melee_attack_speed_stack = {
 	always_show_in_hud = true,
@@ -3457,17 +3198,17 @@ templates.cryptic_melee_attacks_give_melee_attack_speed_stack = {
 	duration = talent_settings.cryptic_melee_attacks_give_melee_attack_speed.duration,
 	hud_priority = HUD_PRIORITIES.talents,
 	stat_buffs = {
-		[stat_buffs.melee_attack_speed] = talent_settings.cryptic_melee_attacks_give_melee_attack_speed.melee_attack_speed,
+		[stat_buffs.melee_attack_speed] = talent_settings.cryptic_melee_attacks_give_melee_attack_speed.melee_attack_speed
 	},
 	related_talents = {
-		"cryptic_melee_attacks_give_melee_attack_speed",
-	},
+		"cryptic_melee_attacks_give_melee_attack_speed"
+	}
 }
 templates.cryptic_tdr_based_on_charge = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.toughness_damage_taken_multiplier] = 1,
+		[stat_buffs.toughness_damage_taken_multiplier] = 1
 	},
 	stat_buff_multipliers = {
 		[stat_buffs.toughness_damage_taken_multiplier] = function (template_data, template_context)
@@ -3476,13 +3217,13 @@ templates.cryptic_tdr_based_on_charge = {
 			local toughness_damage_taken_per_charge_multiplier = 1 - base - current_ability_charges * talent_settings.cryptic_tdr_based_on_charge.toughness_damage_taken_multiplier_per_charge
 
 			return toughness_damage_taken_per_charge_multiplier
-		end,
+		end
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 
 		template_data.ability_extension = ScriptUnit.extension(unit, "ability_system")
-	end,
+	end
 }
 templates.cryptic_toughness_per_charge = {
 	class_name = "buff",
@@ -3503,16 +3244,16 @@ templates.cryptic_toughness_per_charge = {
 		end
 	end,
 	related_talents = {
-		"cryptic_toughness_per_charge",
-	},
+		"cryptic_toughness_per_charge"
+	}
 }
 templates.cryptic_no_braced_movement_penalty = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[stat_buffs.alternate_fire_movement_speed_reduction_modifier] = talent_settings.cryptic_no_braced_movement_penalty.alternate_fire_movement_speed_reduction_modifier,
-		[stat_buffs.spread_modifier] = talent_settings.cryptic_no_braced_movement_penalty.spread_modifier,
-	},
+		[stat_buffs.spread_modifier] = talent_settings.cryptic_no_braced_movement_penalty.spread_modifier
+	}
 }
 templates.cryptic_damage_on_ability = {
 	allow_proc_while_active = true,
@@ -3523,11 +3264,11 @@ templates.cryptic_damage_on_ability = {
 	active_duration = talent_settings.cryptic_damage_on_ability.duration,
 	hud_priority = HUD_PRIORITIES.talents,
 	proc_events = {
-		[proc_events.on_combat_ability] = 1,
+		[proc_events.on_combat_ability] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.damage] = talent_settings.cryptic_damage_on_ability.damage,
-	},
+		[stat_buffs.damage] = talent_settings.cryptic_damage_on_ability.damage
+	}
 }
 templates.cryptic_dr_on_toughness_break = {
 	class_name = "proc_buff",
@@ -3538,17 +3279,17 @@ templates.cryptic_dr_on_toughness_break = {
 	cooldown_duration = talent_settings.cryptic_dr_on_toughness_break.cooldown_duration,
 	hud_priority = HUD_PRIORITIES.talents,
 	proc_events = {
-		[proc_events.on_player_toughness_broken] = 1,
+		[proc_events.on_player_toughness_broken] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		return template_context.unit == params.unit
 	end,
 	proc_stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = talent_settings.cryptic_dr_on_toughness_break.damage_taken_multiplier,
+		[stat_buffs.damage_taken_multiplier] = talent_settings.cryptic_dr_on_toughness_break.damage_taken_multiplier
 	},
 	related_talents = {
-		"cryptic_dr_on_toughness_break",
-	},
+		"cryptic_dr_on_toughness_break"
+	}
 }
 templates.cryptic_push_stagger_stamina = {
 	class_name = "buff",
@@ -3565,7 +3306,7 @@ templates.cryptic_push_stagger_stamina = {
 		template_data.movement_state_component = unit_data_extension:read_component("movement_state")
 	end,
 	conditional_stat_buffs = {
-		[stat_buffs.push_impact_modifier] = talent_settings.cryptic_push_stagger_stamina.push_impact_modifier,
+		[stat_buffs.push_impact_modifier] = talent_settings.cryptic_push_stagger_stamina.push_impact_modifier
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -3573,7 +3314,7 @@ templates.cryptic_push_stagger_stamina = {
 		local current_percent = current_stamina / max_stamina
 
 		return current_percent >= talent_settings.cryptic_push_stagger_stamina.target_stamina_percent
-	end,
+	end
 }
 
 local function _init_outline_tracking(outline_name, range, should_outline_enemy_func, template_data, template_context)
@@ -3703,7 +3444,7 @@ templates.cryptic_specials_marking = {
 	end,
 	stop_func = function (template_data, template_context)
 		_stop_outlines(template_data, template_context)
-	end,
+	end
 }
 templates.cryptic_electrocution_push = {
 	class_name = "proc_buff",
@@ -3714,7 +3455,7 @@ templates.cryptic_electrocution_push = {
 	hud_priority = HUD_PRIORITIES.talents,
 	proc_events = {
 		[proc_events.on_push_hit] = 1,
-		[proc_events.on_push_finish] = 1,
+		[proc_events.on_push_finish] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.should_go_on_cooldown = false
@@ -3738,16 +3479,16 @@ templates.cryptic_electrocution_push = {
 		end,
 		[proc_events.on_push_finish] = function (params, template_data, template_context, t)
 			return template_data.should_go_on_cooldown
-		end,
+		end
 	},
 	specific_proc_func = {
 		[proc_events.on_push_finish] = function (params, template_data, template_context, t)
 			template_data.should_go_on_cooldown = false
-		end,
+		end
 	},
 	related_talents = {
-		"cryptic_electrocution_push",
-	},
+		"cryptic_electrocution_push"
+	}
 }
 
 local toughness_replenishment_on_kill_bonus_extra_toughness_melee_replenish = talent_settings.cryptic_toughness_replenishment_on_kill_bonus.improved_toughness_melee_replenish - talent_settings.cryptic_toughness_replenishment_on_kill_bonus.toughness_melee_replenish
@@ -3756,10 +3497,10 @@ templates.cryptic_toughness_replenishment_on_kill_bonus = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.toughness_melee_replenish] = talent_settings.cryptic_toughness_replenishment_on_kill_bonus.toughness_melee_replenish,
+		[stat_buffs.toughness_melee_replenish] = talent_settings.cryptic_toughness_replenishment_on_kill_bonus.toughness_melee_replenish
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.toughness_melee_replenish] = toughness_replenishment_on_kill_bonus_extra_toughness_melee_replenish,
+		[stat_buffs.toughness_melee_replenish] = toughness_replenishment_on_kill_bonus_extra_toughness_melee_replenish
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		local num_combat_ability_charges = template_data.ability_extension:remaining_ability_charges(COMBAT_ABILITY_TYPE)
@@ -3770,7 +3511,7 @@ templates.cryptic_toughness_replenishment_on_kill_bonus = {
 		local unit = template_context.unit
 
 		template_data.ability_extension = ScriptUnit.has_extension(unit, "ability_system")
-	end,
+	end
 }
 templates.cryptic_strength_on_charge_gain = {
 	allow_proc_while_active = true,
@@ -3781,17 +3522,17 @@ templates.cryptic_strength_on_charge_gain = {
 	active_duration = talent_settings.cryptic_strength_on_charge_gain.active_duration,
 	hud_priority = HUD_PRIORITIES.talents,
 	proc_events = {
-		[proc_events.on_combat_ability_charge_replenished] = 1,
+		[proc_events.on_combat_ability_charge_replenished] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.power_level_modifier] = talent_settings.cryptic_strength_on_charge_gain.power_level_modifier,
-	},
+		[stat_buffs.power_level_modifier] = talent_settings.cryptic_strength_on_charge_gain.power_level_modifier
+	}
 }
 templates.cryptic_assisted_allies_defense = {
 	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_player_assist_done] = 1,
+		[proc_events.on_player_assist_done] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		local assisted_unit = params.assisted_unit
@@ -3806,7 +3547,7 @@ templates.cryptic_assisted_allies_defense = {
 		if assisted_unit_buff_extension then
 			assisted_unit_buff_extension:add_internally_controlled_buff("cryptic_assisted_allies_defense_buff", t)
 		end
-	end,
+	end
 }
 templates.cryptic_assisted_allies_defense_buff = {
 	class_name = "buff",
@@ -3819,14 +3560,14 @@ templates.cryptic_assisted_allies_defense_buff = {
 	duration = talent_settings.cryptic_disabled_allies_defense.duration,
 	hud_priority = HUD_PRIORITIES.talents,
 	keywords = {
-		keywords.stun_immune,
+		keywords.stun_immune
 	},
 	stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = talent_settings.cryptic_disabled_allies_defense.damage_taken_multiplier,
+		[stat_buffs.damage_taken_multiplier] = talent_settings.cryptic_disabled_allies_defense.damage_taken_multiplier
 	},
 	related_talents = {
-		"cryptic_disabled_allies_defense",
-	},
+		"cryptic_disabled_allies_defense"
+	}
 }
 templates.cryptic_disabled_allies_defense = {
 	class_name = "buff",
@@ -3838,7 +3579,7 @@ templates.cryptic_disabled_allies_defense = {
 	buff_category = buff_categories.aura,
 	hud_priority = HUD_PRIORITIES.talents,
 	conditional_stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = talent_settings.cryptic_disabled_allies_defense.damage_taken_multiplier,
+		[stat_buffs.damage_taken_multiplier] = talent_settings.cryptic_disabled_allies_defense.damage_taken_multiplier
 	},
 	start_func = function (template_data, template_context)
 		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
@@ -3853,8 +3594,8 @@ templates.cryptic_disabled_allies_defense = {
 		return requires_help
 	end,
 	related_talents = {
-		"cryptic_disabled_allies_defense",
-	},
+		"cryptic_disabled_allies_defense"
+	}
 }
 templates.cryptic_auto_reload = {
 	allow_proc_while_cooling_down = true,
@@ -3865,10 +3606,10 @@ templates.cryptic_auto_reload = {
 	cooldown_duration = talent_settings.cryptic_auto_reload.cooldown_duration,
 	hud_priority = HUD_PRIORITIES.talents,
 	stat_buffs = {
-		[stat_buffs.reload_speed] = talent_settings.cryptic_auto_reload.reload_speed,
+		[stat_buffs.reload_speed] = talent_settings.cryptic_auto_reload.reload_speed
 	},
 	proc_events = {
-		[proc_events.on_shoot] = 1,
+		[proc_events.on_shoot] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.reload_interval_start_t = 0
@@ -3880,7 +3621,7 @@ templates.cryptic_auto_reload = {
 		template_data.inventory_slot_secondary_component = unit_data_extension:write_component("slot_secondary")
 		template_data.visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 	end,
-	proc_func = function (template_data, template_context, dt, t)
+	proc_func = function (params, template_data, template_context, t)
 		return
 	end,
 	update_func = function (template_data, template_context, dt, t)
@@ -3919,13 +3660,13 @@ templates.cryptic_auto_reload = {
 		elseif template_data.next_reload_t then
 			template_data.next_reload_t = nil
 		end
-	end,
+	end
 }
 templates.cryptic_damage_vs_electrocuted_scaling_on_charge = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.damage_vs_electrocuted] = 1,
+		[stat_buffs.damage_vs_electrocuted] = 1
 	},
 	stat_buff_multipliers = {
 		[stat_buffs.damage_vs_electrocuted] = function (template_data, template_context)
@@ -3933,13 +3674,13 @@ templates.cryptic_damage_vs_electrocuted_scaling_on_charge = {
 			local damage_vs_electrocuted_per_charge_multiplier = talent_settings.cryptic_damage_vs_electrocuted_scaling_on_charge.base_damage_vs_electrocuted + current_ability_charges * talent_settings.cryptic_damage_vs_electrocuted_scaling_on_charge.damage_per_charge
 
 			return damage_vs_electrocuted_per_charge_multiplier
-		end,
+		end
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 
 		template_data.ability_extension = ScriptUnit.extension(unit, "ability_system")
-	end,
+	end
 }
 templates.cryptic_ally_coherency_defenses_stamina = {
 	class_name = "proc_buff",
@@ -3947,7 +3688,7 @@ templates.cryptic_ally_coherency_defenses_stamina = {
 	skip_tactical_overlay = true,
 	cooldown_duration = talent_settings.cryptic_ally_coherency_defenses.stamina_cooldown_duration,
 	proc_events = {
-		[proc_events.on_damage_taken] = 1,
+		[proc_events.on_damage_taken] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -3971,7 +3712,7 @@ templates.cryptic_ally_coherency_defenses_stamina = {
 		local attacked_unit = params.attacked_unit
 
 		Stamina.add_stamina_percent(attacked_unit, talent_settings.cryptic_ally_coherency_defenses.stamina_percent_restored)
-	end,
+	end
 }
 templates.cryptic_ally_coherency_defenses_toughness = {
 	class_name = "proc_buff",
@@ -3981,7 +3722,7 @@ templates.cryptic_ally_coherency_defenses_toughness = {
 	cooldown_duration = talent_settings.cryptic_ally_coherency_defenses.toughness_cooldown_duration,
 	hud_priority = HUD_PRIORITIES.talents,
 	proc_events = {
-		[proc_events.on_damage_taken] = 1,
+		[proc_events.on_damage_taken] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -4007,20 +3748,20 @@ templates.cryptic_ally_coherency_defenses_toughness = {
 		Toughness.replenish_percentage(attacked_unit, talent_settings.cryptic_ally_coherency_defenses.toughness_percent_to_regen, false, "cryptic_talent")
 	end,
 	related_talents = {
-		"cryptic_ally_coherency_defenses",
-	},
+		"cryptic_ally_coherency_defenses"
+	}
 }
 templates.cryptic_next_hit_all_damage_on_dodge = {
 	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_successful_dodge] = 1,
+		[proc_events.on_successful_dodge] = 1
 	},
 	proc_func = function (params, template_data, template_context, t)
 		local buff_extension = template_context.buff_extension
 
 		buff_extension:add_internally_controlled_buff("cryptic_next_hit_all_damage_on_dodge_effect", t)
-	end,
+	end
 }
 templates.cryptic_next_hit_all_damage_on_dodge_effect = {
 	always_show_in_hud = true,
@@ -4033,11 +3774,11 @@ templates.cryptic_next_hit_all_damage_on_dodge_effect = {
 	hud_priority = HUD_PRIORITIES.talents,
 	conditional_stat_buffs = {
 		[stat_buffs.melee_damage] = talent_settings.cryptic_next_hit_all_damage_on_dodge.damage,
-		[stat_buffs.ranged_damage] = talent_settings.cryptic_next_hit_all_damage_on_dodge.damage,
+		[stat_buffs.ranged_damage] = talent_settings.cryptic_next_hit_all_damage_on_dodge.damage
 	},
 	proc_events = {
 		[proc_events.on_shoot] = 1,
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.attack_boost_active = true
@@ -4052,8 +3793,8 @@ templates.cryptic_next_hit_all_damage_on_dodge_effect = {
 		return not template_data.attack_boost_active
 	end,
 	related_talents = {
-		"cryptic_next_hit_all_damage_on_dodge",
-	},
+		"cryptic_next_hit_all_damage_on_dodge"
+	}
 }
 
 return templates

@@ -11,17 +11,17 @@ local view_settings = {
 	preload_in_hub = "not_ps5",
 	state_bound = true,
 	enter_sound_events = {
-		UISoundEvents.default_menu_enter,
+		UISoundEvents.default_menu_enter
 	},
 	exit_sound_events = {
-		UISoundEvents.default_menu_exit,
+		UISoundEvents.default_menu_exit
 	},
 	wwise_states = {
-		options = WwiseGameSyncSettings.state_groups.options.ingame_menu,
+		options = WwiseGameSyncSettings.state_groups.options.ingame_menu
 	},
 	testify_flags = {
-		ui_views = false,
-	},
+		ui_views = false
+	}
 }
 
 return settings("MasteriesOverviewViewDeclarationSettings", view_settings)

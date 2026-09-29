@@ -65,7 +65,7 @@ RespawnBeaconSystem._create_respawn_beacons = function (self)
 				local distance = main_path_manager:travel_distance_from_position(target_navmesh_position)
 				local entry = {
 					unit = unit,
-					distance = distance,
+					distance = distance
 				}
 
 				self._beacon_main_path_distance_lookup[unit] = distance
@@ -73,7 +73,7 @@ RespawnBeaconSystem._create_respawn_beacons = function (self)
 				local sorted_beacons_entry = {
 					unit = unit,
 					distance = distance,
-					position = position,
+					position = position
 				}
 
 				sorted_beacons[#sorted_beacons + 1] = sorted_beacons_entry

@@ -6,9 +6,9 @@ local circumstance_templates = {
 		theme_tag = "default",
 		wwise_state = "darkness_01",
 		mutators = {
-			"mutator_darkness_los",
-		},
-	},
+			"mutator_darkness_los"
+		}
+	}
 }
 
 return circumstance_templates

@@ -34,8 +34,6 @@ local function set_navtag_from_unit(navtag_settings, nav_gen, unit)
 end
 
 local function push_units(nav_gen, navtag_settings, units)
-	local color = to_color(navtag_settings.color)
-
 	for i = 1, #units do
 		local unit = units[i]
 		local consume_physics_mesh = Unit.get_data(unit, "gwnavgen_fromphysicsmesh")
@@ -290,7 +288,7 @@ BakeNavmesh.generate_navmesh = function (world, nav_world, nav_gen, navgen_setti
 	log(" * starting generate")
 
 	local sectors = {
-		[math.uuid()] = "BakeNavmesh_Sector01",
+		[math.uuid()] = "BakeNavmesh_Sector01"
 	}
 	local nav_data, job_id
 

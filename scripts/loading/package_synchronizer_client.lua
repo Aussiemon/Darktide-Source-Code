@@ -21,16 +21,9 @@ local RPCS = {
 	"rpc_player_profile_packages_changed",
 	"rpc_reevaluate_all_profile_packages",
 	"rpc_package_synchronizer_set_mission_name",
-	"rpc_set_alias_version",
+	"rpc_set_alias_version"
 }
 local PACKAGE_MANAGER_REFERENCE = "PackageSynchronizer"
-
-PackageSynchronizerClient.DEBUG_TAG = "Package Sync Client"
-
-local function _debug_print(str, ...)
-	Log.info(PackageSynchronizerClient.DEBUG_TAG, str, ...)
-end
-
 local LOADING_STATES = table.enum("loading", "ready_to_load", "loaded", "dirty")
 
 PackageSynchronizerClient.init = function (self, peer_id, is_host, network_delegate, host_channel_id)
@@ -58,8 +51,8 @@ PackageSynchronizerClient.init_item_definitions = function (self, item_definitio
 
 	local pending_peers = self._pending_peers
 
-	for i = 1, #self._pending_peers do
-		local peer_id = pending_peers[i]
+	for ii = 1, #self._pending_peers do
+		local peer_id = pending_peers[ii]
 
 		self:add_peer(peer_id)
 	end
@@ -87,18 +80,20 @@ PackageSynchronizerClient.add_peer = function (self, peer_id)
 
 	for local_player_id, player in pairs(players) do
 		local profile = player:profile()
-		local profile_packages = self:resolve_profile_packages(profile)
+		local profile_packages = self:_resolve_profile_packages(profile)
 
 		packages[local_player_id] = profile_packages
 
-		local player_string = player:is_human_controlled() and "Player" or "Bot Player"
-
-		_debug_print("Add %s, peer_id: %s, local_player_id: %s", player_string, peer_id, local_player_id)
+		if player:is_human_controlled() then
+			local var_5_0 = "Player"
+		else
+			local player_string = "Bot Player"
+		end
 	end
 
 	local data = {
 		enabled = self._enabled_peers_cache[peer_id] or false,
-		peer_packages = packages,
+		peer_packages = packages
 	}
 
 	self._packages[peer_id] = data
@@ -128,17 +123,15 @@ PackageSynchronizerClient.add_bot = function (self, peer_id, local_player_id)
 	if not data then
 		self:add_peer(peer_id)
 		self:enable_peers({
-			peer_id,
+			peer_id
 		})
 	else
 		local player = Managers.player:player(peer_id, local_player_id)
 		local profile = player:profile()
-		local profile_packages = self:resolve_profile_packages(profile)
+		local profile_packages = self:_resolve_profile_packages(profile)
 		local peer_packages = data.peer_packages
 
 		peer_packages[local_player_id] = profile_packages
-
-		_debug_print("Add Bot Player, peer_id: %s, local_player_id: %s", peer_id, local_player_id)
 	end
 end
 
@@ -169,18 +162,20 @@ local function _add_package_chunk(alias, dependencies, packages)
 	packages[alias].dependencies = dependencies
 end
 
-PackageSynchronizerClient.resolve_profile_packages = function (self, profile)
+PackageSynchronizerClient._resolve_profile_packages = function (self, profile)
+	local dependencies = {
+		sounds = {},
+		particles = {},
+		decals = {}
+	}
 	local profile_packages = {}
-	local sound_dependencies = {}
-	local particle_dependencies = {}
-	local decal_dependencies = {}
 
-	for i = 1, #PlayerPackageAliases do
-		local alias = PlayerPackageAliases[i]
+	for ii = 1, #PlayerPackageAliases do
+		local alias = PlayerPackageAliases[ii]
 
 		profile_packages[alias] = {
 			dependencies = {},
-			state = LOADING_STATES.ready_to_load,
+			state = LOADING_STATES.ready_to_load
 		}
 	end
 
@@ -221,11 +216,11 @@ PackageSynchronizerClient.resolve_profile_packages = function (self, profile)
 	end
 
 	self:_resolve_base_units(all_items, profile_packages)
-	self:_resolve_profile_properties(all_items, archetype, selected_voice, sound_dependencies, particle_dependencies, decal_dependencies)
-	self:_resolve_archetype_dependencies(archetype, sound_dependencies, particle_dependencies, decal_dependencies)
-	_add_package_chunk("sound_dependencies", sound_dependencies, profile_packages)
-	_add_package_chunk("particle_dependencies", particle_dependencies, profile_packages)
-	_add_package_chunk("decal_dependencies", decal_dependencies, profile_packages)
+	self:_resolve_profile_properties(all_items, archetype, selected_voice, dependencies)
+	self:_resolve_archetype_dependencies(archetype, dependencies, profile_packages)
+	_add_package_chunk("sound_dependencies", dependencies.sounds, profile_packages)
+	_add_package_chunk("particle_dependencies", dependencies.particles, profile_packages)
+	_add_package_chunk("decal_dependencies", dependencies.decals, profile_packages)
 
 	return profile_packages
 end
@@ -275,7 +270,7 @@ PackageSynchronizerClient._resolve_base_units = function (self, items, profile_p
 		end
 	end
 
-	_add_package_chunk("base_units", dependencies, profile_packages)
+	_add_package_chunk("base_unit_dependencies", dependencies, profile_packages)
 end
 
 local temp_abilities = {}
@@ -289,8 +284,8 @@ PackageSynchronizerClient._resolve_ability_packages = function (self, archetype,
 	table.clear(temp_abilities)
 	table.clear(temp_abilities_items)
 
-	for i = 1, #ability_types do
-		local ability_type = ability_types[i]
+	for ii = 1, #ability_types do
+		local ability_type = ability_types[ii]
 		local ability = class_loadout[ability_type]
 
 		temp_abilities[ability_configuration[ability_type]] = ability
@@ -322,7 +317,7 @@ PackageSynchronizerClient._resolve_ability_packages = function (self, archetype,
 	return temp_abilities_items
 end
 
-PackageSynchronizerClient._resolve_profile_properties = function (self, items, archetype, selected_voice, sound_dependencies, particle_dependencies, decal_dependencies)
+PackageSynchronizerClient._resolve_profile_properties = function (self, items, archetype, selected_voice, dependencies)
 	local profile_properties = {}
 
 	profile_properties.archetype = archetype.name
@@ -340,6 +335,7 @@ PackageSynchronizerClient._resolve_profile_properties = function (self, items, a
 		end
 	end
 
+	local sound_dependencies = dependencies.sounds
 	local events = PlayerCharacterSounds.events
 
 	for sound_alias, _ in pairs(events) do
@@ -356,6 +352,7 @@ PackageSynchronizerClient._resolve_profile_properties = function (self, items, a
 		end
 	end
 
+	local particle_dependencies = dependencies.particles
 	local particle_aliases = PlayerCharacterParticles.particle_aliases
 
 	for particle_alias, _ in pairs(particle_aliases) do
@@ -366,6 +363,7 @@ PackageSynchronizerClient._resolve_profile_properties = function (self, items, a
 		end
 	end
 
+	local decal_dependencies = dependencies.decals
 	local decal_aliases = PlayerCharacterDecals.decal_aliases
 
 	for decal_alias, _ in pairs(decal_aliases) do
@@ -403,16 +401,24 @@ PackageSynchronizerClient._resolve_profile_properties = function (self, items, a
 	profile_properties.wielded_weapon_template = nil
 end
 
-PackageSynchronizerClient._resolve_archetype_dependencies = function (self, archetype, sound_dependencies, particle_dependencies, decal_dependencies)
-	local sound_resources, particle_resources, decal_resources = ArchetypeResourceDependencies.generate(archetype)
+PackageSynchronizerClient._resolve_archetype_dependencies = function (self, archetype, dependencies, profile_packages)
+	local resources = ArchetypeResourceDependencies.generate(archetype)
+	local sound_resources = resources.sounds
+	local sound_dependencies = dependencies.sounds
 
 	for ii = 1, #sound_resources do
 		sound_dependencies[sound_resources[ii]] = false
 	end
 
+	local particle_resources = resources.particles
+	local particle_dependencies = dependencies.particles
+
 	for ii = 1, #particle_resources do
 		particle_dependencies[particle_resources[ii]] = false
 	end
+
+	local decal_resources = resources.decals
+	local decal_dependencies = dependencies.decals
 
 	for ii = 1, #decal_resources do
 		decal_dependencies[decal_resources[ii]] = false
@@ -448,8 +454,8 @@ PackageSynchronizerClient._update_package_loading = function (self, template, ho
 				local all_required_packages_loaded_for_enabled_peer = true
 				local inform_loading_complete = false
 
-				for i = 1, #required_package_aliases do
-					local alias = required_package_aliases[i]
+				for ii = 1, #required_package_aliases do
+					local alias = required_package_aliases[ii]
 					local package_data = player_packages[alias]
 					local previous_state = package_data.state
 					local prioritize = true
@@ -488,8 +494,8 @@ PackageSynchronizerClient._update_package_loading = function (self, template, ho
 		local peer_packages = data.peer_packages
 
 		for local_player_id, player_packages in pairs(peer_packages) do
-			for i = 1, #remaining_package_aliases do
-				local alias = remaining_package_aliases[i]
+			for ii = 1, #remaining_package_aliases do
+				local alias = remaining_package_aliases[ii]
 				local package_data = player_packages[alias]
 
 				self:_handle_dependency_loading(package_data)
@@ -507,8 +513,8 @@ PackageSynchronizerClient._update_package_loading = function (self, template, ho
 				local peer_packages = data.peer_packages
 
 				for local_player_id, player_packages in pairs(peer_packages) do
-					for i = 1, #remaining_package_aliases do
-						local alias = remaining_package_aliases[i]
+					for ii = 1, #remaining_package_aliases do
+						local alias = remaining_package_aliases[ii]
 						local package_data = player_packages[alias]
 
 						self:_handle_dependency_loading(package_data)
@@ -603,7 +609,7 @@ end
 PackageSynchronizerClient.player_profile_packages_changed = function (self, peer_id, local_player_id)
 	local player = Managers.player:player(peer_id, local_player_id)
 	local profile = player:profile()
-	local new_profile_packages = self:resolve_profile_packages(profile)
+	local new_profile_packages = self:_resolve_profile_packages(profile)
 	local data = self._packages[peer_id]
 	local player_packages = data.peer_packages[local_player_id]
 	local package_ids = {}
@@ -675,8 +681,8 @@ PackageSynchronizerClient._handle_dependency_differences = function (self, new_p
 
 	table.sort(sorted_dependencies)
 
-	for sorted_dependencie_index = 1, #sorted_dependencies do
-		local package_name = sorted_dependencies[sorted_dependencie_index]
+	for sorted_dependency_index = 1, #sorted_dependencies do
+		local package_name = sorted_dependencies[sorted_dependency_index]
 
 		if new_dependencies[package_name] == nil then
 			if current_state ~= LOADING_STATES.ready_to_load then
@@ -711,8 +717,8 @@ PackageSynchronizerClient.enable_peers = function (self, peer_ids)
 	local packages = self._packages
 	local enabled_peers_cache = self._enabled_peers_cache
 
-	for i = 1, #peer_ids do
-		local peer_id = peer_ids[i]
+	for ii = 1, #peer_ids do
+		local peer_id = peer_ids[ii]
 
 		if packages[peer_id] then
 			packages[peer_id].enabled = true
@@ -754,7 +760,7 @@ PackageSynchronizerClient._add_to_unload_delayer = function (self, package_ids)
 
 	unload_delayer[#unload_delayer + 1] = {
 		time = UNLOAD_DELAY,
-		package_ids = package_ids,
+		package_ids = package_ids
 	}
 end
 
@@ -794,8 +800,8 @@ PackageSynchronizerClient.rpc_set_alias_version = function (self, channel_id, pe
 		if player_packages then
 			local all_required_packages_loaded = true
 
-			for i = 1, #required_package_aliases do
-				local alias = required_package_aliases[i]
+			for ii = 1, #required_package_aliases do
+				local alias = required_package_aliases[ii]
 				local package_data = player_packages[alias]
 
 				if package_data.state ~= LOADING_STATES.loaded then

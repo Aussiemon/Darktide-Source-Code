@@ -47,7 +47,7 @@ end
 
 HazardProp.component_data = {
 	extensions = {
-		"HazardPropExtension",
+		"HazardPropExtension"
 	},
 	hazard_shape = {
 		ui_name = "Collider Setup",
@@ -55,12 +55,12 @@ HazardProp.component_data = {
 		value = "barrel",
 		options_keys = {
 			"barrel/canister/pipe",
-			"sphere",
+			"sphere"
 		},
 		options_values = {
 			"barrel",
-			"sphere",
-		},
+			"sphere"
+		}
 	},
 	broadphase_radius = {
 		decimals = 2,
@@ -69,8 +69,8 @@ HazardProp.component_data = {
 		step = 0.1,
 		ui_name = "Broadphase Radius",
 		ui_type = "number",
-		value = 0.5,
-	},
+		value = 0.5
+	}
 }
 
 return HazardProp

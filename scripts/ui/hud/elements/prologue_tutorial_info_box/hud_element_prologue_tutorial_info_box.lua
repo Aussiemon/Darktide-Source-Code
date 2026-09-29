@@ -10,7 +10,6 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local Vo = require("scripts/utilities/vo")
 local HudElementPrologueTutorialInfoBox = class("HudElementPrologueTutorialInfoBox", "HudElementBase")
 local info_box_settings = HudElementPrologueTutorialInfoBoxSettings
-local devices = info_box_settings.devices
 local NUM_ENTRY_SLOTS = 4
 
 HudElementPrologueTutorialInfoBox.init = function (self, parent, draw_layer, start_scale, definitions)
@@ -24,15 +23,11 @@ HudElementPrologueTutorialInfoBox.init = function (self, parent, draw_layer, sta
 	self._close_action_name = nil
 	self._use_ingame_input = false
 	self._ingame_input_service = Managers.input:get_input_service("Ingame")
-	self._previous_keys_info = {}
-	self._ui_manager = Managers.ui
-	self._input_manager = Managers.input
 	self._current_info_data = {}
 	self._current_objectives = {}
 	self._clearing_widgets = {}
 	self._entry_widgets = {}
 	self._last_index = nil
-	self._using_gamepad = InputDevice.gamepad_active
 
 	self:_register_events()
 end
@@ -75,18 +70,6 @@ HudElementPrologueTutorialInfoBox.update = function (self, dt, t, ui_renderer, r
 		self:_clear_objectives()
 	end
 
-	if self:_should_update_input(self._current_info_data) then
-		self:_set_widget_info(self._current_info_data)
-	end
-
-	if InputDevice.gamepad_active ~= self._using_gamepad then
-		self._using_gamepad = InputDevice.gamepad_active
-
-		if not table.is_empty(self._current_info_data) then
-			self:_set_widget_info(self._current_info_data)
-		end
-	end
-
 	HudElementPrologueTutorialInfoBox.super.update(self, dt, t, ui_renderer, render_settings, input_service)
 end
 
@@ -103,7 +86,7 @@ HudElementPrologueTutorialInfoBox.event_player_display_prologue_tutorial_info_bo
 		end
 
 		table.insert(self._popup_queue, 1, {
-			info_data = info_data,
+			info_data = info_data
 		})
 	else
 		self:_present_new_info_box(info_data)
@@ -152,41 +135,10 @@ HudElementPrologueTutorialInfoBox._present_new_info_box = function (self, info_d
 	self._active = true
 end
 
-HudElementPrologueTutorialInfoBox._should_update_input = function (self, info_data)
-	if not info_data or not info_data.input_descriptions then
-		return false
+HudElementPrologueTutorialInfoBox.event_on_input_changed = function (self)
+	if self._active and not table.is_empty(self._current_info_data) then
+		self:_set_widget_info(self._current_info_data)
 	end
-
-	if InputDevice.gamepad_active then
-		return false
-	end
-
-	local input_descriptions = info_data.input_descriptions
-	local service_type = "Ingame"
-	local alias = self._input_manager:alias_object(service_type)
-
-	if alias then
-		local index = 1
-
-		for _, input_info in pairs(input_descriptions) do
-			local input_action = input_info.input_action
-
-			if type(input_action) == "table" then
-				input_action = input_action.keyboard
-			end
-
-			local alias_name = self._ui_manager:get_input_alias_key(input_action, service_type)
-			local current_key_info = alias:get_keys_for_alias(alias_name, devices)
-
-			if current_key_info ~= self._previous_keys_info[index] then
-				return true
-			end
-
-			index = index + 1
-		end
-	end
-
-	return false
 end
 
 HudElementPrologueTutorialInfoBox._get_input_description_text = function (self, info_data)
@@ -210,12 +162,6 @@ HudElementPrologueTutorialInfoBox._get_input_description_text = function (self, 
 		local end_of_line = #input_actions ~= 1 and "\n" or ""
 
 		input_description_text = input_description_text .. Text.localize_with_button_hint(input_action, description, nil, service_type, Localize("loc_input_legend_text_template"), include_input_type) .. end_of_line
-
-		local alias = self._input_manager:alias_object(service_type)
-		local alias_name = self._ui_manager:get_input_alias_key(input_action, service_type)
-		local key_info = alias:get_keys_for_alias(alias_name, devices)
-
-		self._previous_keys_info[#self._previous_keys_info + 1] = key_info
 	end
 
 	return input_description_text
@@ -262,7 +208,6 @@ HudElementPrologueTutorialInfoBox._hide_info = function (self)
 
 	self._popup_animation_id = self:_start_animation("popup_exit", widget)
 
-	table.clear(self._previous_keys_info)
 	table.clear(self._current_info_data)
 
 	self._active = false
@@ -335,7 +280,7 @@ HudElementPrologueTutorialInfoBox._set_widget_size_from_content = function (self
 
 		style.input_description_text.size = {
 			input_description_width,
-			input_description_text_height,
+			input_description_text_height
 		}
 
 		local offset_y = total_height + 35
@@ -353,7 +298,7 @@ HudElementPrologueTutorialInfoBox._set_widget_size_from_content = function (self
 
 	style.description_text.size = {
 		description_width,
-		description_text_height,
+		description_text_height
 	}
 end
 

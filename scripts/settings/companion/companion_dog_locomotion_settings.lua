@@ -23,13 +23,13 @@ companion_dog_settings.dog_forward_follow_config = {
 	follow_aim = {
 		player = {
 			0,
-			4,
+			4
 		},
 		move_to_position = {
 			4,
-			math.huge,
-		},
-	},
+			math.huge
+		}
+	}
 }
 companion_dog_settings.dog_lrb_follow_config = {
 	adapt_threshold_multiplier = 1,
@@ -49,13 +49,13 @@ companion_dog_settings.dog_lrb_follow_config = {
 	follow_aim = {
 		player = {
 			0,
-			4,
+			4
 		},
 		move_to_position = {
 			4,
-			math.huge,
-		},
-	},
+			math.huge
+		}
+	}
 }
 
 local dog_forward_follow_hub_config = table.clone(companion_dog_settings.dog_forward_follow_config)
@@ -80,9 +80,9 @@ companion_dog_settings.dog_owner_follow_config = {
 	follow_aim = {
 		move_to_position = {
 			0,
-			math.huge,
-		},
-	},
+			math.huge
+		}
+	}
 }
 companion_dog_settings.dog_leap_settings = {
 	close_distance = 2,
@@ -103,7 +103,7 @@ companion_dog_settings.dog_leap_settings = {
 	long_leap_min_speed = 6,
 	move_time_to_use_fast_jump = 0.5,
 	max_jump_angle = math.pi / 3,
-	max_jump_angle_close_distance = math.pi / 6,
+	max_jump_angle_close_distance = math.pi / 6
 }
 companion_dog_settings.leaning = {
 	default_lean_value = 1,
@@ -112,7 +112,7 @@ companion_dog_settings.leaning = {
 	left_lean_value = 0,
 	max_dot_lean_value = 0.1,
 	path_lean_node_offset = 8,
-	right_lean_value = 2,
+	right_lean_value = 2
 }
 companion_dog_settings.initial_target_disable_cooldown = 1
 

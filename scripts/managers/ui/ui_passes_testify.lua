@@ -6,7 +6,7 @@ local function _center_position(position, size)
 
 	return {
 		x = center_x,
-		y = center_y,
+		y = center_y
 	}
 end
 
@@ -48,7 +48,7 @@ local UIPassesTestify = {
 		local size = pass_data.size
 
 		return _center_position(position, size)
-	end,
+	end
 }
 
 return UIPassesTestify

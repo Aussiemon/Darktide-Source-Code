@@ -43,6 +43,7 @@ InventoryWeaponsView.on_enter = function (self)
 	self:_register_event("event_replace_list_item", "event_replace_list_item")
 	self:_register_event("event_switch_mark_complete", "event_switch_mark_complete")
 	self:_register_event("event_discard_items", "event_discard_items")
+	self:_register_event("event_weapon_cosmetic_updated", "event_weapon_cosmetic_updated")
 	self:_register_button_callbacks()
 	self:_setup_input_legend()
 	self:_setup_background_world()
@@ -52,6 +53,28 @@ InventoryWeaponsView.on_enter = function (self)
 	local profile = self._preview_player:profile()
 
 	self:_setup_background_frames_by_archetype(profile)
+end
+
+InventoryWeaponsView.event_weapon_cosmetic_updated = function (self, item)
+	local selected_slot = self._selected_slot
+
+	if not item or not selected_slot then
+		return
+	end
+
+	local slots = item.slots
+
+	if not slots or not table.contains(slots, selected_slot.name) then
+		return
+	end
+
+	local inventory_items = self._inventory_items
+
+	if inventory_items and inventory_items[item.gear_id] then
+		self:event_replace_list_item(item)
+
+		return
+	end
 end
 
 InventoryWeaponsView.event_switch_mark_complete = function (self, item)
@@ -102,7 +125,7 @@ InventoryWeaponsView._setup_item_grid_materials = function (self)
 	grid_divider_top.content.texture = "content/ui/materials/frames/item_list_top"
 	grid_divider_top.style.texture.size = {
 		652,
-		118,
+		118
 	}
 
 	local grid_divider_bottom = self:_grid_widget_by_name("grid_divider_bottom")
@@ -110,7 +133,7 @@ InventoryWeaponsView._setup_item_grid_materials = function (self)
 	grid_divider_bottom.content.texture = "content/ui/materials/frames/item_list_lower"
 	grid_divider_bottom.style.texture.size = {
 		640,
-		36,
+		36
 	}
 
 	local grid_divider_title = self:_grid_widget_by_name("grid_divider_title")
@@ -136,15 +159,15 @@ InventoryWeaponsView._setup_weapon_actions = function (self)
 		local grid_height = 840
 		local grid_size = {
 			grid_width - edge_padding,
-			grid_height,
+			grid_height
 		}
 		local grid_spacing = {
 			0,
-			0,
+			0
 		}
 		local mask_size = {
 			grid_width + 40,
-			grid_height,
+			grid_height
 		}
 		local context = {
 			ignore_blur = true,
@@ -153,7 +176,7 @@ InventoryWeaponsView._setup_weapon_actions = function (self)
 			grid_size = grid_size,
 			mask_size = mask_size,
 			title_height = title_height,
-			edge_padding = edge_padding,
+			edge_padding = edge_padding
 		}
 
 		self._weapon_actions = self:_add_element(ViewElementWeaponActions, reference_name, layer, context)
@@ -300,7 +323,7 @@ InventoryWeaponsView.cb_on_discard_pressed = function (self)
 		self._discard_items_element = self:_add_element(ViewElementDiscardItems, "discard_items", 1, {
 			items = items,
 			selection_callback = callback(self, "_mark_items_to_sell"),
-			unselection_callback = callback(self, "_unmark_items_to_sell"),
+			unselection_callback = callback(self, "_unmark_items_to_sell")
 		})
 
 		local discard_items_position = self:_scenegraph_world_position("weapon_discard_pivot")
@@ -718,7 +741,7 @@ InventoryWeaponsView.cb_on_customize_pressed = function (self)
 			player = self._preview_player,
 			preview_item = self._previewed_item,
 			parent = self._parent,
-			new_items_gear_ids = self._parent and self._parent._new_items_gear_ids,
+			new_items_gear_ids = self._parent and self._parent._new_items_gear_ids
 		})
 	end
 end
@@ -784,7 +807,7 @@ InventoryWeaponsView.cb_on_inspect_pressed = function (self)
 
 		Managers.ui:open_view("inventory_weapon_details_view", nil, nil, nil, nil, {
 			player = self._preview_player,
-			preview_item = self._previewed_item,
+			preview_item = self._previewed_item
 		})
 	end
 end
@@ -795,7 +818,7 @@ InventoryWeaponsView.cb_on_marks_pressed = function (self)
 
 		Managers.ui:open_view("inventory_weapon_marks_view", nil, nil, nil, nil, {
 			player = self._preview_player,
-			preview_item = self._previewed_item,
+			preview_item = self._previewed_item
 		})
 	end
 end
@@ -901,12 +924,11 @@ InventoryWeaponsView.on_exit = function (self)
 end
 
 InventoryWeaponsView._fetch_inventory_items = function (self, selected_slot)
-	local local_player_id = 1
-	local player = Managers.player:local_player(local_player_id)
+	local player = self._preview_player or Managers.player:local_player(1)
 	local character_id = player:character_id()
 	local slot_name = selected_slot.name
 	local slot_filter = {
-		slot_name,
+		slot_name
 	}
 
 	Managers.data_service.gear:fetch_inventory(character_id, slot_filter):next(function (items)
@@ -940,7 +962,7 @@ InventoryWeaponsView._fetch_inventory_items = function (self, selected_slot)
 								slot = selected_slot,
 								widget_type = widget_type,
 								new_item_marker = is_new,
-								remove_new_marker_callback = remove_new_marker_callback,
+								remove_new_marker_callback = remove_new_marker_callback
 							}
 						end
 					end
@@ -951,20 +973,21 @@ InventoryWeaponsView._fetch_inventory_items = function (self, selected_slot)
 		self._offer_items_layout = layout
 
 		local slot_display_name = selected_slot and selected_slot.display_name
-		local start_index = #layout > 0 and 1
-		local equipped_item = start_index and self:equipped_item_in_slot(slot_name)
+		local keep_selected_gear_id = self._selected_gear_id
 
-		if equipped_item then
-			start_index = self:item_grid_index(equipped_item) or start_index
-
-			if start_index then
-				self._selected_gear_id = equipped_item and equipped_item.gear_id
-			end
+		if keep_selected_gear_id then
+			self._selected_gear_id = keep_selected_gear_id
 		else
-			local first_item = self:first_grid_item()
+			local equipped_item = self:equipped_item_in_slot(slot_name)
 
-			if first_item then
-				self._selected_gear_id = first_item and first_item.gear_id
+			if equipped_item then
+				self._selected_gear_id = equipped_item.gear_id
+			else
+				local first_item = self:first_grid_item()
+
+				if first_item then
+					self._selected_gear_id = first_item.gear_id
+				end
 			end
 		end
 
@@ -978,7 +1001,7 @@ InventoryWeaponsView._setup_weapon_options = function (self)
 		local top_padding = 30
 		local grid_size = {
 			button_size[1],
-			(button_size[2] + 20) * 3 + top_padding,
+			(button_size[2] + 20) * 3 + top_padding
 		}
 		local grid_options = {
 			edge_padding = 40,
@@ -989,14 +1012,14 @@ InventoryWeaponsView._setup_weapon_options = function (self)
 			use_terminal_background = true,
 			grid_spacing = {
 				10,
-				10,
+				10
 			},
 			grid_size = grid_size,
 			mask_size = {
 				grid_size[1] + 40,
-				grid_size[2] + 40,
+				grid_size[2] + 40
 			},
-			top_padding = top_padding,
+			top_padding = top_padding
 		}
 
 		self._weapon_options_element = self:_add_element(ViewElementGrid, "weapon_options", 10, grid_options)
@@ -1006,29 +1029,29 @@ InventoryWeaponsView._setup_weapon_options = function (self)
 				display_icon = "",
 				widget_type = "button",
 				display_name = Localize("loc_inventory_weapon_button_marks"),
-				callback = callback(self, "cb_on_marks_pressed"),
+				callback = callback(self, "cb_on_marks_pressed")
 			},
 			{
 				display_icon = "",
 				widget_type = "button",
 				display_name = Localize("loc_inventory_weapon_button_cosmetics"),
-				callback = callback(self, "cb_on_customize_pressed"),
+				callback = callback(self, "cb_on_customize_pressed")
 			},
 			{
 				display_icon = "",
 				widget_type = "button",
 				display_name = Localize("loc_inventory_weapon_button_inspect"),
-				callback = callback(self, "cb_on_inspect_pressed"),
-			},
+				callback = callback(self, "cb_on_inspect_pressed")
+			}
 		}
 
 		self._weapon_options_element:update_dividers("content/ui/materials/frames/marks_top", {
 			413.28,
-			58.8,
+			58.8
 		}, {
 			0,
 			-20,
-			20,
+			20
 		})
 		self._weapon_options_element:present_grid_layout(layout, self._definitions.blueprints)
 		self._weapon_options_element:disable_input(true)
@@ -1040,7 +1063,7 @@ InventoryWeaponsView._calc_text_size = function (self, widget, text_and_style_id
 	local text = widget.content[text_and_style_id]
 	local text_style = widget.style[text_and_style_id]
 	local size = text_style.size or widget.content.size or {
-		self:_scenegraph_size(widget.scenegraph_id),
+		self:_scenegraph_size(widget.scenegraph_id)
 	}
 
 	return Text.text_size(self._ui_renderer, text, text_style, size)

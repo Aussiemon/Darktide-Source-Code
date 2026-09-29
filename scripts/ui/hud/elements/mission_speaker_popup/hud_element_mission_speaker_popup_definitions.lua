@@ -16,9 +16,9 @@ local scenegraph_definition = {
 		position = {
 			-50,
 			300,
-			20,
-		},
-	},
+			20
+		}
+	}
 }
 local name_text_style = table.clone(UIFontSettings.hud_body)
 
@@ -28,12 +28,12 @@ name_text_style.text_horizontal_alignment = "right"
 name_text_style.text_vertical_alignment = "bottom"
 name_text_style.size = {
 	650,
-	40,
+	40
 }
 name_text_style.offset = {
 	-(portrait_size[1] + 20),
 	15,
-	2,
+	2
 }
 name_text_style.drop_shadow = true
 name_text_style.font_size = 24
@@ -43,7 +43,7 @@ local title_text_style = table.clone(name_text_style)
 title_text_style.offset = {
 	-(portrait_size[1] + 20),
 	-10,
-	2,
+	2
 }
 title_text_style.text_color = UIHudSettings.color_tint_main_2
 
@@ -59,18 +59,18 @@ local widget_definitions = {
 				offset = {
 					-1,
 					0,
-					0,
+					0
 				},
 				color = {
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				material_values = {
-					distortion = 1,
-				},
-			},
+					distortion = 1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -83,14 +83,14 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				size_addition = {
 					8,
-					5,
-				},
-			},
-		},
+					5
+				}
+			}
+		}
 	}, "background"),
 	name_text = UIWidget.create_definition({
 		{
@@ -98,8 +98,8 @@ local widget_definitions = {
 			style_id = "name_text",
 			value = "<name_text>",
 			value_id = "name_text",
-			style = name_text_style,
-		},
+			style = name_text_style
+		}
 	}, "background"),
 	title_text = UIWidget.create_definition({
 		{
@@ -107,8 +107,8 @@ local widget_definitions = {
 			style_id = "title_text",
 			value_id = "title_text",
 			value = Localize("loc_mission_speaker_title_text"),
-			style = title_text_style,
-		},
+			style = title_text_style
+		}
 	}, "background"),
 	radio = UIWidget.create_definition({
 		{
@@ -120,17 +120,17 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					64,
-					32,
+					32
 				},
 				offset = {
 					-250,
 					55,
-					0,
+					0
 				},
-				color = UIHudSettings.color_tint_main_2,
-			},
-		},
-	}, "background"),
+				color = UIHudSettings.color_tint_main_2
+			}
+		}
+	}, "background")
 }
 local num_bars = HudElementMissionSpeakerPopupSettings.bar_amount
 
@@ -150,9 +150,9 @@ for i = 1, num_bars do
 				offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -166,9 +166,9 @@ for i = 1, num_bars do
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -181,15 +181,15 @@ for i = 1, num_bars do
 				color = UIHudSettings.color_tint_main_3,
 				size_addition = {
 					4,
-					4,
+					4
 				},
 				offset = {
 					0,
 					2,
-					2,
-				},
-			},
-		},
+					2
+				}
+			}
+		}
 	}, "background")
 end
 
@@ -205,7 +205,7 @@ local animations = {
 				end
 
 				widgets.popup.style.portrait.material_values.distortion = 1
-			end,
+			end
 		},
 		{
 			end_time = 0.5,
@@ -217,7 +217,7 @@ local animations = {
 
 				popup_widget.alpha_multiplier = anim_progress
 				popup_widget.offset[1] = 50 - 50 * anim_progress
-			end,
+			end
 		},
 		{
 			end_time = 2,
@@ -228,7 +228,7 @@ local animations = {
 				local popup_widget = widgets.popup
 
 				popup_widget.style.portrait.material_values.distortion = anim_progress
-			end,
+			end
 		},
 		{
 			end_time = 1,
@@ -243,8 +243,8 @@ local animations = {
 						widget.alpha_multiplier = anim_progress
 					end
 				end
-			end,
-		},
+			end
+		}
 	},
 	popup_exit = {
 		{
@@ -259,7 +259,7 @@ local animations = {
 						widget.alpha_multiplier = anim_progress
 					end
 				end
-			end,
+			end
 		},
 		{
 			end_time = 0.8,
@@ -270,7 +270,7 @@ local animations = {
 				local popup_widget = widgets.popup
 
 				popup_widget.style.portrait.material_values.distortion = anim_progress
-			end,
+			end
 		},
 		{
 			end_time = 1,
@@ -282,13 +282,13 @@ local animations = {
 
 				popup_widget.alpha_multiplier = anim_progress
 				popup_widget.offset[1] = 50 - 50 * anim_progress
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
 	animations = animations,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

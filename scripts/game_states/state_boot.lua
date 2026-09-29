@@ -42,7 +42,7 @@ StateBoot.on_enter = function (self, parent, params)
 	local start_params = {
 		boot_state_index = 1,
 		boot_states = boot_states,
-		initialized_steps = initialized_steps,
+		initialized_steps = initialized_steps
 	}
 	local start_state = boot_states[1]
 

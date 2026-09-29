@@ -27,7 +27,7 @@ local function _patch_mail(mail, body)
 
 	return Managers.backend:title_request(BackendUtilities.url_builder(self_url):to_string(), {
 		method = "PATCH",
-		body = body,
+		body = body
 	}):next(function (data)
 		local result = data.body
 
@@ -76,7 +76,7 @@ MailBox.mark_mail_read_and_claimed = function (self, mail, reward_index)
 	return _patch_mail(mail, {
 		claimed = true,
 		read = true,
-		rewardIndex = reward_index,
+		rewardIndex = reward_index
 	}):next(function (reward)
 		mail.isRead = true
 		mail.claimed = true
@@ -93,7 +93,7 @@ MailBox.mark_mail_read = function (self, mail)
 	end
 
 	return _patch_mail(mail, {
-		read = true,
+		read = true
 	}):next(function ()
 		mail.isRead = true
 	end)
@@ -105,7 +105,7 @@ MailBox.mark_mail_unread = function (self, mail)
 	end
 
 	return _patch_mail(mail, {
-		read = false,
+		read = false
 	}):next(function ()
 		mail.isRead = false
 	end)
@@ -118,7 +118,7 @@ MailBox.mark_mail_claimed = function (self, mail, reward_index)
 
 	return _patch_mail(mail, {
 		claimed = true,
-		rewardIndex = reward_index,
+		rewardIndex = reward_index
 	}):next(function ()
 		mail.claimed = true
 		mail.rewardIndex = reward_index

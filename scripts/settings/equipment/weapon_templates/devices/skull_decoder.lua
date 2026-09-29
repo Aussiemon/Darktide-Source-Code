@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/devices/skull_decoder.lua
 
+local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local wield_inputs = PlayerCharacterConstants.wield_inputs
@@ -11,52 +12,46 @@ weapon_template.action_inputs = {
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				inputs = wield_inputs,
-			},
-		},
-	},
+				inputs = wield_inputs
+			}
+		}
+	}
 }
 weapon_template.action_input_hierarchy = {
 	{
 		input = "wield",
-		transition = "stay",
-	},
+		transition = "stay"
+	}
 }
 weapon_template.actions = {
-	action_unwield = {
-		allowed_during_sprint = true,
-		anim_event = "unequip",
-		kind = "unwield",
-		start_input = "wield",
-		total_time = 0,
-		uninterruptible = true,
-		allowed_chain_actions = {},
-	},
+	action_unwield = BaseTemplateSettings.generate_unwield_action({
+		anim_event = "unequip"
+	}),
 	action_wield = {
 		allowed_during_sprint = true,
 		anim_event = "servo_start",
 		kind = "wield",
 		total_time = 0.1,
-		uninterruptible = true,
-	},
+		uninterruptible = true
+	}
 }
 weapon_template.ammo_template = "no_ammo"
 weapon_template.keywords = {
-	"devices",
+	"devices"
 }
 weapon_template.breed_anim_state_machine_3p = {
 	cryptic = "content/characters/player/human/third_person/animations/unarmed",
 	human = "content/characters/player/human/third_person/animations/unarmed",
-	ogryn = "content/characters/player/ogryn/third_person/animations/unarmed",
+	ogryn = "content/characters/player/ogryn/third_person/animations/unarmed"
 }
 weapon_template.breed_anim_state_machine_1p = {
 	cryptic = "content/characters/player/human/first_person/animations/unarmed",
 	human = "content/characters/player/human/first_person/animations/unarmed",
-	ogryn = "content/characters/player/ogryn/first_person/animations/unarmed",
+	ogryn = "content/characters/player/ogryn/first_person/animations/unarmed"
 }
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.fx_sources = {
-	_source = "fx_source",
+	_source = "fx_source"
 }
 weapon_template.dodge_template = "default"
 weapon_template.sprint_template = "default"
@@ -66,7 +61,7 @@ weapon_template.hud_icon = "content/ui/materials/icons/pickups/default"
 weapon_template.hide_slot = true
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
-	uses_overheat = false,
+	uses_overheat = false
 }
 weapon_template.not_player_wieldable = true
 

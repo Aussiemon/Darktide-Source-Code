@@ -20,10 +20,10 @@ local Vector3_direction_length = Vector3.direction_length
 local Vector3_flat = Vector3.flat
 local Vector3_normalize = Vector3.normalize
 local resources = {
-	link_particle_name = link_particle_name,
+	link_particle_name = link_particle_name
 }
 local vfx = {
-	link_to_source = link_particle_name,
+	link_to_source = link_particle_name
 }
 local sfx = {}
 local chain_settings_spread = {
@@ -37,9 +37,9 @@ local chain_settings_spread = {
 	radius = 12,
 	staff = false,
 	max_targets = {
-		num_targets = 1,
+		num_targets = 1
 	},
-	max_angle = math.degrees_to_radians(135),
+	max_angle = math.degrees_to_radians(135)
 }
 local jump_target_priority_validation_functions = {
 	function (target_unit, breed_or_nil)
@@ -54,12 +54,12 @@ local jump_target_priority_validation_functions = {
 	end,
 	function (target_unit, breed_or_nil)
 		return HEALTH_ALIVE[target_unit] and not not breed_or_nil
-	end,
+	end
 }
 local arc_chain_damage_settings = {
 	damage_profile = DamageProfileTemplates.arc_grenade_chain_jump_damage,
 	damage_type = damage_types.arc_chain,
-	attack_type = attack_types.arc,
+	attack_type = attack_types.arc
 }
 
 local function _on_chain_node_add_func(node, context)
@@ -120,7 +120,7 @@ local function _init_chain(chain_lightning_data, template_context, is_server, pl
 		hit_units = chain_lightning_data.chain_lightning_hit_units,
 		player_unit = player_unit,
 		is_server = is_server,
-		apply_brittleness = talent_extension:has_special_rule("cryptic_arc_grenade_gives_brittleness"),
+		apply_brittleness = talent_extension:has_special_rule("cryptic_arc_grenade_gives_brittleness")
 	}
 
 	local depth, use_random = 0, false
@@ -208,7 +208,7 @@ local effect_template = {
 		end
 
 		ChainLightningSourceUtils.reset_chain_lightning(template_data.chain_lightning_data, template_data, template_context)
-	end,
+	end
 }
 
 return effect_template

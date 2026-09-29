@@ -6,7 +6,7 @@ local ExternalPaymentPlatformPlaystation = class("ExternalPaymentPlatformPlaysta
 local sku_annotation_names = {
 	BLUE_BAG = "BLUE_BAG",
 	NONE = "NONE",
-	RED_BAG = "RED_BAG",
+	RED_BAG = "RED_BAG"
 }
 
 ExternalPaymentPlatformPlaystation.get_payment_platform = function (self)
@@ -43,7 +43,7 @@ ExternalPaymentPlatformPlaystation.get_platform_token = function (self, retry_de
 			Log.error("ExternalPayment", "get_auth_code_results() " .. "%s", err)
 
 			return nil, {
-				message = err,
+				message = err
 			}
 		end
 
@@ -81,11 +81,11 @@ local function _show_commerce_dialogue(product_id, mode)
 
 		if result == NpCommerceDialog.RESULT_PURCHASED then
 			return {
-				success = true,
+				success = true
 			}
 		else
 			return {
-				success = false,
+				success = false
 			}
 		end
 	end)
@@ -107,8 +107,8 @@ ExternalPaymentPlatformPlaystation.reconcile_pending_txns = function (self, retr
 			return Managers.backend:title_request(builder:to_string(), {
 				method = "POST",
 				headers = {
-					["platform-token"] = token,
-				},
+					["platform-token"] = token
+				}
 			}):next(function (response)
 				return response.body
 			end)
@@ -128,7 +128,7 @@ ExternalPaymentPlatformPlaystation.reconcile_pending_txns = function (self, retr
 			Log.exception("ExternalPayment", "Failed to reconcile pending transactions, error: %s", tostring(error))
 
 			return Promise.rejected({
-				error,
+				error
 			})
 		end
 	end)
@@ -140,7 +140,7 @@ ExternalPaymentPlatformPlaystation.reconcile_account_entitlements = function (se
 			local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/entitlements/reconcile"):query("platform", self:get_payment_platform())
 
 			return Managers.backend:title_request(builder:to_string(), {
-				method = "POST",
+				method = "POST"
 			}):next(function (response)
 				return response.body
 			end)
@@ -160,7 +160,7 @@ ExternalPaymentPlatformPlaystation.reconcile_account_entitlements = function (se
 			Log.exception("ExternalPayment", "Failed to reconcile account entitlements, error: %s", tostring(error))
 
 			return Promise.rejected({
-				error,
+				error
 			})
 		end
 	end)
@@ -174,15 +174,15 @@ ExternalPaymentPlatformPlaystation.get_entitlement = function (self, entitlement
 			return Managers.backend:title_request(builder:to_string(), {
 				method = "GET",
 				headers = {
-					["platform-token"] = token,
-				},
+					["platform-token"] = token
+				}
 			}):next(function (response)
 				return response.body
 			end):catch(function (error)
 				Log.error("ExternalPayment", "Failed to get entitlement", tostring(error))
 
 				return Promise.rejected({
-					error = error,
+					error = error
 				})
 			end)
 		end)
@@ -200,8 +200,8 @@ ExternalPaymentPlatformPlaystation.init_txn = function (self, payment_option)
 		return Managers.backend:title_request(builder:to_string(), {
 			method = "POST",
 			body = {
-				paymentOptionId = payment_option,
-			},
+				paymentOptionId = payment_option
+			}
 		}):next(function (response)
 			return response.body.orderId
 		end)
@@ -216,11 +216,11 @@ ExternalPaymentPlatformPlaystation.finalize_txn = function (self, order_id)
 			return Managers.backend:title_request(builder:to_string(), {
 				method = "POST",
 				body = {
-					placeholder = "",
+					placeholder = ""
 				},
 				headers = {
-					["platform-token"] = token,
-				},
+					["platform-token"] = token
+				}
 			}):next(function (response)
 				return response.body.data
 			end)
@@ -233,12 +233,12 @@ ExternalPaymentPlatformPlaystation.fail_txn = function (self, order_id)
 		local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/payments/"):path(order_id):query("platform", self:get_payment_platform())
 
 		return Managers.backend:title_request(builder:to_string(), {
-			method = "DELETE",
+			method = "DELETE"
 		}):catch(function (error)
 			Log.error("ExternalPayment", "Failed to remove pending transaction %s", tostring(error))
 
 			return Promise.rejected({
-				error = error,
+				error = error
 			})
 		end)
 	end)
@@ -246,15 +246,15 @@ end
 
 local FAILED_TXN = {
 	body = {
-		state = "failed",
-	},
+		state = "failed"
+	}
 }
 
 ExternalPaymentPlatformPlaystation._get_entitlements = function (self)
 	if self._platform_entitlements then
 		return Promise.resolved({
 			success = true,
-			data = self._platform_entitlements,
+			data = self._platform_entitlements
 		})
 	end
 
@@ -275,7 +275,7 @@ ExternalPaymentPlatformPlaystation._get_entitlements = function (self)
 
 			if parsed[1] == nil then
 				return {
-					success = false,
+					success = false
 				}
 			end
 
@@ -308,7 +308,7 @@ ExternalPaymentPlatformPlaystation._get_entitlements = function (self)
 
 			if item_count == 0 then
 				return {
-					success = false,
+					success = false
 				}
 			end
 
@@ -316,11 +316,11 @@ ExternalPaymentPlatformPlaystation._get_entitlements = function (self)
 
 			return {
 				success = true,
-				data = self._platform_entitlements,
+				data = self._platform_entitlements
 			}
 		elseif status == web_api.ERROR then
 			return {
-				success = false,
+				success = false
 			}
 		end
 
@@ -331,10 +331,10 @@ end
 ExternalPaymentPlatformPlaystation._decorate_option = function (self, option, platform_entitlements)
 	option.description = {
 		type = "currency",
-		description = option.value.amount .. " " .. option.value.type,
+		description = option.value.amount .. " " .. option.value.type
 	}
 	option.price = {
-		amount = {},
+		amount = {}
 	}
 
 	local offer_id = option.psn and option.psn.productId
@@ -384,7 +384,7 @@ ExternalPaymentPlatformPlaystation._decorate_option = function (self, option, pl
 	option.make_purchase = function (self)
 		if self.pending_txn_promise then
 			return Promise.rejected({
-				message = "Called init transaction when a transaction was already pending",
+				message = "Called init transaction when a transaction was already pending"
 			})
 		end
 
@@ -459,7 +459,7 @@ ExternalPaymentPlatformPlaystation._clean_options = function (self, options)
 				formatted_price = v.raw.skus[1].displayPrice,
 				formatted_original_price = v.raw.skus[1].displayOriginalPrice,
 				is_platform_option = v.description.type == "platform_option",
-				metadata = v.metadata or {},
+				metadata = v.metadata or {}
 			}
 		end
 
@@ -476,18 +476,18 @@ ExternalPaymentPlatformPlaystation._is_platform_option_owned = function (self, o
 		for i = 1, #skus do
 			if skus[i].annotationName == sku_annotation_names.NONE or skus[i].annotationName == sku_annotation_names.BLUE_BAG then
 				return Promise.resolved({
-					is_owner = false,
+					is_owner = false
 				})
 			end
 		end
 
 		return Promise.resolved({
-			is_owner = true,
+			is_owner = true
 		})
 	end
 
 	return Promise.resolved({
-		is_owner = false,
+		is_owner = false
 	})
 end
 
@@ -520,7 +520,7 @@ ExternalPaymentPlatformPlaystation.show_empty_store_error = function (self)
 		MsgDialog.terminate()
 
 		return {
-			success = true,
+			success = true
 		}
 	end)
 end

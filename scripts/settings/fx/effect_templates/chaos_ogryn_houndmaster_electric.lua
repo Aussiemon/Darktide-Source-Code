@@ -7,12 +7,12 @@ local FX_SOURCE_NAME = "fx_impact_01"
 local LIGHT_NAME = "light"
 local VFX = {
 	"content/fx/particles/enemies/chaos_ogryn/houndmaster_poker_activate",
-	"content/fx/particles/enemies/chaos_ogryn/houndmaster_poker",
+	"content/fx/particles/enemies/chaos_ogryn/houndmaster_poker"
 }
 local SFX = "wwise/events/minions/play_chaos_hound_master_rod_blast"
 local resources = {
 	vfx = VFX,
-	sfx = SFX,
+	sfx = SFX
 }
 
 local function _start_effect(unit, position, node, template_data, template_context)
@@ -126,7 +126,7 @@ local effect_template = {
 
 			World.stop_spawning_particles(world, vfx_particle_id)
 		end
-	end,
+	end
 }
 
 return effect_template

@@ -10,82 +10,82 @@ template.dummy_auto_event_template = {
 	cooldown = {
 		{
 			22,
-			24,
+			24
 		},
 		{
 			20,
-			22,
+			22
 		},
 		{
 			5,
-			16,
+			16
 		},
 		{
 			9,
-			12,
+			12
 		},
 		{
 			7,
-			10,
-		},
+			10
+		}
 	},
 	waves_cooldown = {
 		{
 			9,
-			12,
+			12
 		},
 		{
 			8,
-			11,
+			11
 		},
 		{
 			5,
-			8,
+			8
 		},
 		{
 			4,
-			7,
+			7
 		},
 		{
 			3,
-			7,
-		},
+			7
+		}
 	},
 	inital_cooldown_types = {
-		default = 1,
+		default = 1
 	},
 	num_waves_by_resistance = {
 		3,
 		3,
 		3,
 		4,
-		5,
+		5
 	},
 	should_update_event_position = {
 		should_be_offset_from_main_path = 50,
-		wanted_direction = "fwd",
+		wanted_direction = "fwd"
 	},
 	pause_pacing_on_event = {
-		all = {},
+		all = {}
 	},
 	resistance_multiplier = {
 		0.5,
 		0.6,
 		0.7,
 		0.8,
-		0.9,
+		0.9
 	},
 	points_base = {
 		35,
 		40,
 		45,
 		50,
-		60,
+		60
 	},
 	size_multipliers = {
 		default = 1,
 		large = 1.5,
-		small = 0.5,
+		small = 0.5
 	},
 	composition = {
 		default = {
@@ -94,13 +94,13 @@ template.dummy_auto_event_template = {
 					points = 0,
 					breed_tags = {
 						{
-							"elite",
-						},
+							"elite"
+						}
 					},
 					excluded_breed_tags = {
 						{
-							"ogryn",
-						},
+							"ogryn"
+						}
 					},
 					weights = {
 						{
@@ -108,45 +108,45 @@ template.dummy_auto_event_template = {
 							0,
 							0,
 							0,
-							0,
+							0
 						},
 						{
 							0,
 							0,
 							0,
 							0,
-							0,
+							0
 						},
 						{
 							0.2,
 							0.3,
 							0.4,
 							0.5,
-							0.7,
+							0.7
 						},
 						{
 							0.4,
 							0.6,
 							0.8,
 							1,
-							1,
+							1
 						},
 						{
 							0.5,
 							0.7,
 							1,
 							1,
-							1.5,
-						},
-					},
+							1.5
+						}
+					}
 				},
 				{
 					points = 0,
 					breed_tags = {
 						{
 							"elite",
-							"ogryn",
-						},
+							"ogryn"
+						}
 					},
 					excluded_breed_tags = {},
 					weights = {
@@ -155,49 +155,49 @@ template.dummy_auto_event_template = {
 							0,
 							0,
 							0,
-							0,
+							0
 						},
 						{
 							0,
 							0,
 							0,
 							0,
-							0,
+							0
 						},
 						{
 							0.1,
 							0.2,
 							0.5,
 							0.8,
-							1,
+							1
 						},
 						{
 							0.2,
 							0.4,
 							0.8,
 							1,
-							1,
+							1
 						},
 						{
 							0.3,
 							0.5,
 							1,
 							1,
-							1.5,
-						},
-					},
+							1.5
+						}
+					}
 				},
 				{
 					points = 0,
 					breed_tags = {
 						{
-							"roamer",
-						},
+							"roamer"
+						}
 					},
 					excluded_breed_tags = {
 						{
-							"elite",
-						},
+							"elite"
+						}
 					},
 					weights = {
 						{
@@ -205,44 +205,44 @@ template.dummy_auto_event_template = {
 							1,
 							0.7,
 							0.5,
-							0.4,
+							0.4
 						},
 						{
 							1,
 							1,
 							0.7,
 							0.5,
-							0.4,
+							0.4
 						},
 						{
 							1,
 							1,
 							0.7,
 							0.5,
-							0.4,
+							0.4
 						},
 						{
 							1,
 							1,
 							0.7,
 							0.5,
-							0.4,
+							0.4
 						},
 						{
 							1,
 							1,
 							0.7,
 							0.5,
-							0.4,
-						},
-					},
+							0.4
+						}
+					}
 				},
 				{
 					points = 0,
 					breed_tags = {
 						{
-							"horde",
-						},
+							"horde"
+						}
 					},
 					excluded_breed_tags = {},
 					weights = {
@@ -251,39 +251,39 @@ template.dummy_auto_event_template = {
 							1.3,
 							1.1,
 							0.9,
-							0.7,
+							0.7
 						},
 						{
 							1.5,
 							1.3,
 							1.1,
 							0.9,
-							0.7,
+							0.7
 						},
 						{
 							1.5,
 							1.3,
 							1.1,
 							0.9,
-							0.7,
+							0.7
 						},
 						{
 							1.5,
 							1.3,
 							1.1,
 							0.9,
-							0.7,
+							0.7
 						},
 						{
 							1.5,
 							1.3,
 							1.1,
 							0.9,
-							0.7,
-						},
-					},
-				},
-			},
+							0.7
+						}
+					}
+				}
+			}
 		},
 		melee = {
 			breeds = {
@@ -292,8 +292,8 @@ template.dummy_auto_event_template = {
 					breed_tags = {
 						{
 							"elite",
-							"melee",
-						},
+							"melee"
+						}
 					},
 					excluded_breed_tags = {},
 					weights = {
@@ -302,45 +302,45 @@ template.dummy_auto_event_template = {
 							1.5,
 							1.5,
 							1.5,
-							1.5,
+							1.5
 						},
 						{
 							1.5,
 							1.5,
 							1.5,
 							1.5,
-							1.5,
+							1.5
 						},
 						{
 							1.5,
 							1.5,
 							1.5,
 							1.5,
-							1.5,
+							1.5
 						},
 						{
 							1.5,
 							1.5,
 							1.5,
 							1.5,
-							1.5,
+							1.5
 						},
 						{
 							1.5,
 							1.5,
 							1.5,
 							1.5,
-							1.5,
-						},
-					},
+							1.5
+						}
+					}
 				},
 				{
 					points = 0,
 					breed_tags = {
 						{
 							"elite",
-							"ranged",
-						},
+							"ranged"
+						}
 					},
 					excluded_breed_tags = {},
 					weights = {
@@ -349,45 +349,45 @@ template.dummy_auto_event_template = {
 							1,
 							1,
 							1,
-							1,
+							1
 						},
 						{
 							1,
 							1,
 							1,
 							1,
-							1,
+							1
 						},
 						{
 							1,
 							1,
 							1,
 							1,
-							1,
+							1
 						},
 						{
 							1,
 							1,
 							1,
 							1,
-							1,
+							1
 						},
 						{
 							1,
 							1,
 							1,
 							1,
-							1,
-						},
-					},
+							1
+						}
+					}
 				},
 				{
 					points = 0,
 					breed_tags = {
 						{
 							"elite",
-							"ogryn",
-						},
+							"ogryn"
+						}
 					},
 					excluded_breed_tags = {},
 					weights = {
@@ -396,50 +396,50 @@ template.dummy_auto_event_template = {
 							0,
 							0,
 							0,
-							0,
+							0
 						},
 						{
 							0,
 							0,
 							0,
 							0,
-							0,
+							0
 						},
 						{
 							0,
 							0,
 							0,
 							0,
-							0,
+							0
 						},
 						{
 							0,
 							0,
 							0,
 							0,
-							0,
+							0
 						},
 						{
 							0,
 							0,
 							0,
 							0,
-							0,
-						},
-					},
+							0
+						}
+					}
 				},
 				{
 					points = 0,
 					breed_tags = {
 						{
 							"ranged",
-							"roamer",
-						},
+							"roamer"
+						}
 					},
 					excluded_breed_tags = {
 						{
-							"elite",
-						},
+							"elite"
+						}
 					},
 					weights = {
 						{
@@ -447,50 +447,50 @@ template.dummy_auto_event_template = {
 							0.5,
 							0.5,
 							0.5,
-							0.5,
+							0.5
 						},
 						{
 							0.5,
 							0.5,
 							0.5,
 							0.5,
-							0.5,
+							0.5
 						},
 						{
 							0.5,
 							0.5,
 							0.5,
 							0.5,
-							0.5,
+							0.5
 						},
 						{
 							0.5,
 							0.5,
 							0.5,
 							0.5,
-							0.5,
+							0.5
 						},
 						{
 							0.5,
 							0.5,
 							0.5,
 							0.5,
-							0.5,
-						},
-					},
+							0.5
+						}
+					}
 				},
 				{
 					points = 0,
 					breed_tags = {
 						{
 							"melee",
-							"roamer",
-						},
+							"roamer"
+						}
 					},
 					excluded_breed_tags = {
 						{
-							"elite",
-						},
+							"elite"
+						}
 					},
 					weights = {
 						{
@@ -498,44 +498,44 @@ template.dummy_auto_event_template = {
 							1.5,
 							1.5,
 							1.5,
-							1.5,
+							1.5
 						},
 						{
 							1.5,
 							1.5,
 							1.5,
 							1.5,
-							1.5,
+							1.5
 						},
 						{
 							1.5,
 							1.5,
 							1.5,
 							1.5,
-							1.5,
+							1.5
 						},
 						{
 							1.5,
 							1.5,
 							1.5,
 							1.5,
-							1.5,
+							1.5
 						},
 						{
 							1.5,
 							1.5,
 							1.5,
 							1.5,
-							1.5,
-						},
-					},
+							1.5
+						}
+					}
 				},
 				{
 					points = 0,
 					breed_tags = {
 						{
-							"horde",
-						},
+							"horde"
+						}
 					},
 					excluded_breed_tags = {},
 					weights = {
@@ -544,39 +544,39 @@ template.dummy_auto_event_template = {
 							0.7,
 							0.7,
 							0.7,
-							0.7,
+							0.7
 						},
 						{
 							0.7,
 							0.7,
 							0.7,
 							0.7,
-							0.7,
+							0.7
 						},
 						{
 							0.7,
 							0.7,
 							0.7,
 							0.7,
-							0.7,
+							0.7
 						},
 						{
 							0.7,
 							0.7,
 							0.7,
 							0.7,
-							0.7,
+							0.7
 						},
 						{
 							0.7,
 							0.7,
 							0.7,
 							0.7,
-							0.7,
-						},
-					},
-				},
-			},
+							0.7
+						}
+					}
+				}
+			}
 		},
 		ranged = {
 			breeds = {
@@ -585,8 +585,8 @@ template.dummy_auto_event_template = {
 					breed_tags = {
 						{
 							"elite",
-							"melee",
-						},
+							"melee"
+						}
 					},
 					excluded_breed_tags = {},
 					weights = {
@@ -595,45 +595,45 @@ template.dummy_auto_event_template = {
 							1,
 							1,
 							1,
-							1,
+							1
 						},
 						{
 							1,
 							1,
 							1,
 							1,
-							1,
+							1
 						},
 						{
 							1,
 							1,
 							1,
 							1,
-							1,
+							1
 						},
 						{
 							1,
 							1,
 							1,
 							1,
-							1,
+							1
 						},
 						{
 							1,
 							1,
 							1,
 							1,
-							1,
-						},
-					},
+							1
+						}
+					}
 				},
 				{
 					points = 0,
 					breed_tags = {
 						{
 							"elite",
-							"ranged",
-						},
+							"ranged"
+						}
 					},
 					excluded_breed_tags = {},
 					weights = {
@@ -642,45 +642,45 @@ template.dummy_auto_event_template = {
 							1,
 							1,
 							1,
-							1,
+							1
 						},
 						{
 							0.7,
 							1,
 							1,
 							1,
-							1,
+							1
 						},
 						{
 							0.7,
 							1,
 							1,
 							1,
-							1,
+							1
 						},
 						{
 							0.7,
 							1,
 							1,
 							1,
-							1,
+							1
 						},
 						{
 							0.7,
 							1,
 							1,
 							1,
-							1,
-						},
-					},
+							1
+						}
+					}
 				},
 				{
 					points = 0,
 					breed_tags = {
 						{
 							"elite",
-							"ogryn",
-						},
+							"ogryn"
+						}
 					},
 					excluded_breed_tags = {},
 					weights = {
@@ -689,50 +689,50 @@ template.dummy_auto_event_template = {
 							0,
 							0,
 							0,
-							0,
+							0
 						},
 						{
 							0,
 							0,
 							0,
 							0,
-							0,
+							0
 						},
 						{
 							0,
 							0,
 							0,
 							0,
-							0,
+							0
 						},
 						{
 							0,
 							0,
 							0,
 							0,
-							0,
+							0
 						},
 						{
 							0,
 							0,
 							0,
 							0,
-							0,
-						},
-					},
+							0
+						}
+					}
 				},
 				{
 					points = 0,
 					breed_tags = {
 						{
 							"ranged",
-							"roamer",
-						},
+							"roamer"
+						}
 					},
 					excluded_breed_tags = {
 						{
-							"elite",
-						},
+							"elite"
+						}
 					},
 					weights = {
 						{
@@ -740,50 +740,50 @@ template.dummy_auto_event_template = {
 							1.5,
 							1.5,
 							1.5,
-							1.5,
+							1.5
 						},
 						{
 							1.5,
 							1.5,
 							1.5,
 							1.5,
-							1.5,
+							1.5
 						},
 						{
 							1.5,
 							1.5,
 							1.5,
 							1.5,
-							1.5,
+							1.5
 						},
 						{
 							1.5,
 							1.5,
 							1.5,
 							1.5,
-							1.5,
+							1.5
 						},
 						{
 							1.5,
 							1.5,
 							1.5,
 							1.5,
-							1.5,
-						},
-					},
+							1.5
+						}
+					}
 				},
 				{
 					points = 0,
 					breed_tags = {
 						{
 							"melee",
-							"roamer",
-						},
+							"roamer"
+						}
 					},
 					excluded_breed_tags = {
 						{
-							"elite",
-						},
+							"elite"
+						}
 					},
 					weights = {
 						{
@@ -791,44 +791,44 @@ template.dummy_auto_event_template = {
 							0.5,
 							0.5,
 							0.5,
-							0.5,
+							0.5
 						},
 						{
 							0.5,
 							0.5,
 							0.5,
 							0.5,
-							0.5,
+							0.5
 						},
 						{
 							0.5,
 							0.5,
 							0.5,
 							0.5,
-							0.5,
+							0.5
 						},
 						{
 							0.5,
 							0.5,
 							0.5,
 							0.5,
-							0.5,
+							0.5
 						},
 						{
 							0.5,
 							0.5,
 							0.5,
 							0.5,
-							0.5,
-						},
-					},
+							0.5
+						}
+					}
 				},
 				{
 					points = 0,
 					breed_tags = {
 						{
-							"horde",
-						},
+							"horde"
+						}
 					},
 					excluded_breed_tags = {},
 					weights = {
@@ -837,44 +837,44 @@ template.dummy_auto_event_template = {
 							0.7,
 							0.7,
 							0.7,
-							0.7,
+							0.7
 						},
 						{
 							0.7,
 							0.7,
 							0.7,
 							0.7,
-							0.7,
+							0.7
 						},
 						{
 							0.7,
 							0.7,
 							0.7,
 							0.7,
-							0.7,
+							0.7
 						},
 						{
 							0.7,
 							0.7,
 							0.7,
 							0.7,
-							0.7,
+							0.7
 						},
 						{
 							0.7,
 							0.7,
 							0.7,
 							0.7,
-							0.7,
-						},
-					},
-				},
-			},
-		},
+							0.7
+						}
+					}
+				}
+			}
+		}
 	},
 	conditional_function = function (t)
 		return t[1]
-	end,
+	end
 }
 
 return template

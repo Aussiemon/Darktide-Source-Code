@@ -19,7 +19,7 @@ local SFX_SOURCE = "head"
 local STINGER_ALIAS = "disabled_enter"
 local STINGER_EXIT_ALIAS = "disabled_exit"
 local STINGER_PROPERTIES = {
-	stinger_type = "vortex_grabbed",
+	stinger_type = "vortex_grabbed"
 }
 
 PlayerCharacterStateVortexGrabbed.init = function (self, character_state_init_context, ...)

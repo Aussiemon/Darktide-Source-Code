@@ -4,7 +4,7 @@ local WieldableSlotScriptInterface = {
 	"init",
 	"destroy",
 	"wield",
-	"unwield",
+	"unwield"
 }
 
 return WieldableSlotScriptInterface

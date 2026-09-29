@@ -5,7 +5,7 @@ local ItemPackage = require("scripts/foundation/managers/package/utilities/item_
 local LocalItemsLoader = require("scripts/settings/equipment/local_items_loader")
 local Promise = require("scripts/foundation/utilities/promise")
 local Interface = {
-	"items_cache",
+	"items_cache"
 }
 local MasterData = class("MasterData")
 local ITEMS_TO_PROCESS_PER_BATCH = 100
@@ -138,7 +138,7 @@ MasterData._get_items_from_backend = function (self, version, url)
 
 		promise = Managers.backend:url_request(url, {
 			require_auth = true,
-			response_timeout_seconds = 30,
+			response_timeout_seconds = 30
 		})
 	else
 		promise = self:_get_items_metadata():next(function (metadata)
@@ -146,7 +146,7 @@ MasterData._get_items_from_backend = function (self, version, url)
 
 			return Managers.backend:url_request(metadata.url, {
 				require_auth = true,
-				response_timeout_seconds = 30,
+				response_timeout_seconds = 30
 			})
 		end)
 	end
@@ -168,7 +168,7 @@ MasterData._get_local_items_metadata = function (self)
 
 	promise:resolve({
 		url = nil,
-		version = self._local_item_version,
+		version = self._local_item_version
 	})
 
 	return promise
@@ -176,7 +176,7 @@ end
 
 MasterData._fail_on_missing_metadata = function (self)
 	return Promise.rejected({
-		message = "Failed fetching item master data",
+		message = "Failed fetching item master data"
 	})
 end
 
@@ -186,7 +186,7 @@ MasterData._get_items_metadata = function (self)
 	end):next(function (metadata)
 		return {
 			version = metadata.playerItems.version,
-			url = metadata.playerItems.href,
+			url = metadata.playerItems.href
 		}
 	end)
 end

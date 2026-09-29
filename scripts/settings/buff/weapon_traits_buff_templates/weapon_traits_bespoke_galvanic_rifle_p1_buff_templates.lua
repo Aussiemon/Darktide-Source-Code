@@ -18,9 +18,9 @@ templates.weapon_trait_bespoke_galvanic_rifle_p1_target_hit_mass_reduction_on_we
 	class_name = "buff",
 	predicted = false,
 	conditional_stat_buffs = {
-		[stat_buffs.consumed_hit_mass_modifier_on_weakspot_hit] = 0.5,
+		[stat_buffs.consumed_hit_mass_modifier_on_weakspot_hit] = 0.5
 	},
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 templates.weapon_trait_bespoke_galvanic_rifle_p1_cleave_on_crit = table.clone(BaseWeaponTraitBuffTemplates.infinite_cleave_on_crit)
 templates.weapon_trait_bespoke_galvanic_rifle_p1_power_bonus_on_first_shot = table.clone(BaseWeaponTraitBuffTemplates.power_bonus_on_first_shot)
@@ -29,7 +29,7 @@ templates.weapon_trait_bespoke_galvanic_rifle_p1_chained_weakspot_hits_increases
 templates.weapon_trait_bespoke_galvanic_rifle_p1_chained_weakspot_hits_increases_power_parent.child_buff_template = "weapon_trait_bespoke_galvanic_rifle_p1_chained_weakspot_hits_increases_power_child"
 templates.weapon_trait_bespoke_galvanic_rifle_p1_chained_weakspot_hits_increases_power_child = table.clone(BaseWeaponTraitBuffTemplates.chained_weakspot_hits_increases_power_child)
 templates.weapon_trait_bespoke_galvanic_rifle_p1_chained_weakspot_hits_increases_power_child.conditional_stat_buffs = {
-	[stat_buffs.ranged_power_level_modifier] = 0.05,
+	[stat_buffs.ranged_power_level_modifier] = 0.05
 }
 templates.weapon_trait_bespoke_galvanic_rifle_p1_toughness_on_elite_kills = table.clone(BaseWeaponTraitBuffTemplates.toughness_on_elite_kills)
 

@@ -135,7 +135,7 @@ MinionDissolveExtension._dissolve = function (self, delay, t)
 		elapsed = 0,
 		start_t = t + delay,
 		value = dissolve_config.from,
-		dissolve_unit = slot_unit,
+		dissolve_unit = slot_unit
 	}
 end
 

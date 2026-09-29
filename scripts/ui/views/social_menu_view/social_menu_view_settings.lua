@@ -8,7 +8,7 @@ local social_menu_view_settings = {
 	roster_list_refresh_time = 2,
 	tab_switch_start_update_delay_time = 0.4,
 	widget_fade_delay = 0.35,
-	widget_fade_time = 0.3,
+	widget_fade_time = 0.3
 }
 
 return settings("SocialMenuViewSettings", social_menu_view_settings)

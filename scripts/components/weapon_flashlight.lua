@@ -87,8 +87,8 @@ WeaponFlashlight.component_data = {
 	start_enabled = {
 		ui_name = "Start Enabled",
 		ui_type = "check_box",
-		value = false,
-	},
+		value = false
+	}
 }
 
 return WeaponFlashlight

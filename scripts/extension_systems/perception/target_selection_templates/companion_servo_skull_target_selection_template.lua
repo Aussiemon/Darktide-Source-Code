@@ -6,7 +6,7 @@ local PerceptionSettings = require("scripts/settings/perception/perception_setti
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local non_aggressive_level_names = {
 	om_basic_combat_01 = true,
-	tg_shooting_range = true,
+	tg_shooting_range = true
 }
 
 local function _is_target_aggroed(target_unit)

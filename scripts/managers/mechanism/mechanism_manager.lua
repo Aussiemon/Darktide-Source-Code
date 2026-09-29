@@ -22,50 +22,50 @@ MechanismManager.EVENTS = {
 		type = EVENT_TYPES.all,
 		pack_function = function (self, result, session_id)
 			return NetworkLookup.game_mode_outcomes[result], session_id
-		end,
+		end
 	},
 	all_players_ready = {
 		rpc_name = "rpc_mechanism_event",
 		type = EVENT_TYPES.all,
 		pack_function = function (self, ...)
 			return self.id
-		end,
+		end
 	},
 	victory_defeat_done = {
 		rpc_name = "rpc_mechanism_event",
 		type = EVENT_TYPES.all,
 		pack_function = function (self, ...)
 			return self.id
-		end,
+		end
 	},
 	game_score_done = {
 		rpc_name = "rpc_mechanism_event",
 		type = EVENT_TYPES.all,
 		pack_function = function (self, ...)
 			return self.id
-		end,
+		end
 	},
 	client_exit_gameplay = {
-		type = EVENT_TYPES.locally,
+		type = EVENT_TYPES.locally
 	},
 	failed_fetching_session_report = {
 		rpc_name = "rpc_mechanism_event_failed_fetching_session_report",
 		type = EVENT_TYPES.server,
 		pack_function = function (self, ...)
 			return nil
-		end,
+		end
 	},
 	game_score_end_time = {
 		rpc_name = "rpc_mechanism_event_game_score_end_time",
 		type = EVENT_TYPES.all,
 		pack_function = function (self, time)
 			return time
-		end,
-	},
+		end
+	}
 }
 MechanismManager.EVENT_LOOKUP = {}
 MechanismManager.CLIENT_RPCS = {
-	"rpc_set_mechanism",
+	"rpc_set_mechanism"
 }
 MechanismManager.SERVER_RPCS = {}
 
@@ -232,7 +232,7 @@ MechanismManager.rpc_set_mechanism = function (self, channel_id, lookup_id)
 
 	_info("Received mechanism %q from host.", mechanism_name)
 	self:change_mechanism(mechanism_name, {
-		server_channel = channel_id,
+		server_channel = channel_id
 	})
 end
 
@@ -387,12 +387,6 @@ MechanismManager.mechanism_state = function (self)
 	local mechanism_state = self._mechanism and self._mechanism._state or false
 
 	return mechanism_state
-end
-
-MechanismManager.singleplay_type = function (self)
-	local mechanism = self._mechanism
-
-	return mechanism and mechanism.singleplay_type and mechanism:singleplay_type()
 end
 
 MechanismManager.backend_mission_id = function (self)

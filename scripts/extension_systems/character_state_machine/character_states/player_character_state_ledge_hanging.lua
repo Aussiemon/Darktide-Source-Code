@@ -28,27 +28,27 @@ local HAND_IK_CONFIG = {
 	hand_length = {
 		cryptic = 0.05,
 		human = 0.05,
-		ogryn = 0.1,
+		ogryn = 0.1
 	},
 	hand_separation = {
 		cryptic = 0.428,
 		human = 0.428,
-		ogryn = 0.896,
+		ogryn = 0.896
 	},
 	hand_thickness = {
 		cryptic = 0.05,
 		human = 0.05,
-		ogryn = 0.1,
+		ogryn = 0.1
 	},
 	ray_distance = IK_RAY_DISTANCE,
-	half_ray_distance = IK_RAY_DISTANCE * 0.5,
+	half_ray_distance = IK_RAY_DISTANCE * 0.5
 }
 local ENTER_ANIMATION_DURATION = 1
 local SFX_SOURCE = "head"
 local STINGER_ENTER_ALIAS = "disabled_enter"
 local STINGER_EXIT_ALIAS = "disabled_exit"
 local STINGER_PROPERTIES = {
-	stinger_type = "hanging",
+	stinger_type = "hanging"
 }
 local _update_hand_ik_to_hanging
 
@@ -97,7 +97,7 @@ PlayerCharacterStateLedgeHanging.init = function (self, character_state_init_con
 		left_transform_node = left_transform_node,
 		right_handle = right_handle,
 		right_transform_node = right_transform_node,
-		hips_handle = hips_handle,
+		hips_handle = hips_handle
 	}
 end
 
@@ -147,7 +147,7 @@ PlayerCharacterStateLedgeHanging.on_enter = function (self, unit, dt, t, previou
 		self._fx_extension:trigger_gear_wwise_event_with_source(STINGER_ENTER_ALIAS, STINGER_PROPERTIES, SFX_SOURCE, true, true)
 
 		local data = {
-			reason = "ledge_hanging",
+			reason = "ledge_hanging"
 		}
 
 		Managers.telemetry_events:player_knocked_down(self._player, data)
@@ -171,9 +171,10 @@ PlayerCharacterStateLedgeHanging.on_exit = function (self, unit, t, next_state)
 			PlayerUnitVisualLoadout.wield_previous_slot(self._inventory_component, unit, t)
 		end
 
-		local rewind_ms = LagCompensation.rewind_ms(is_server, self._is_local_unit, self._player)
+		local first_person_mode_component = self._first_person_mode_component
+		local rewind_seconds = LagCompensation.rewind_seconds(self._is_server, self._is_local_unit, self._player)
 
-		FirstPersonView.enter(t, self._first_person_mode_component, rewind_ms)
+		FirstPersonView.enter(t, first_person_mode_component, rewind_seconds)
 		ForceRotation.stop(self._locomotion_force_rotation_component)
 
 		if is_server then

@@ -31,8 +31,8 @@ local DEFUALT_NUM_CRITICAL_SHOTS = 1
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local EMPTY_TABLE = {}
 local ALT_FIRE_WWISE_SWITCH = {
-	[false] = "false",
 	[true] = "true",
+	[false] = "false"
 }
 local EXTERNAL_PROPERTIES = {}
 local TAIL_SOURCE_POS = Vector3Box(0, 0, 0)
@@ -53,6 +53,7 @@ ActionShoot.init = function (self, action_context, action_params, action_setting
 	self._action_component = unit_data_extension:write_component("action_shoot")
 	self._action_module_charge_component = unit_data_extension:write_component("action_module_charge")
 	self._alternate_fire_component = unit_data_extension:write_component("alternate_fire")
+	self._block_component = unit_data_extension:write_component("block")
 	self._recoil_control_component = unit_data_extension:write_component("recoil_control")
 	self._shooting_status_component = unit_data_extension:write_component("shooting_status")
 	self._spread_control_component = unit_data_extension:write_component("spread_control")
@@ -87,10 +88,10 @@ ActionShoot.init = function (self, action_context, action_params, action_setting
 
 	self._shot_result = {}
 	self._base_fire_configurations = action_settings.fire_configurations or {
-		action_settings.fire_configuration,
+		action_settings.fire_configuration
 	}
 	self._fire_special_configurations = action_settings.fire_special_configuration and {
-		action_settings.fire_special_configuration,
+		action_settings.fire_special_configuration
 	} or nil
 	self._multi_fire_mode = action_settings.multi_fire_mode or MultiFireModes.single
 	self._action_component.current_fire_config = 1
@@ -435,7 +436,7 @@ ActionShoot._prepare_shooting = function (self, dt, t)
 		rotation = Recoil.apply_weapon_recoil_rotation(recoil_template, recoil_component, movement_state_component, locomotion_component, inair_state_component, rotation)
 		rotation = Sway.apply_sway_rotation(sway_template, sway_component, rotation)
 
-		local gamepad_active = Managers.input:is_using_gamepad()
+		local gamepad_active = Managers.input:is_using_gamepad() and Managers.input:is_using_gamepad_without_motion()
 		local enable_aim_assist = gamepad_active
 
 		enable_aim_assist = enable_aim_assist or self._buff_extension and self._buff_extension:has_keyword("enable_auto_aim")
@@ -500,7 +501,7 @@ ActionShoot._spend_ammunition = function (self, dt, t, charge_level, fire_config
 			ammo_usage = math.round(charged_ammo)
 		end
 	else
-		ammo_usage = self._action_settings.ammunition_usage
+		ammo_usage = action_settings.ammunition_usage
 	end
 
 	if trigger_proc then
@@ -637,8 +638,8 @@ ActionShoot._set_fire_state = function (self, t, new_fire_state)
 	end
 end
 
-ActionShoot.server_correction_occurred = function (self)
-	ActionShoot.super.server_correction_occurred(self)
+ActionShoot.server_correction_occurred = function (self, ...)
+	ActionShoot.super.server_correction_occurred(self, ...)
 
 	if IS_PLAYSTATION then
 		local fire_state = self._action_component.fire_state
@@ -651,6 +652,8 @@ end
 
 ActionShoot.finish = function (self, reason, data, t, time_in_action)
 	ActionShoot.super.finish(self, reason, data, t, time_in_action)
+
+	self._block_component.is_blocking = false
 
 	local action_component = self._action_component
 
@@ -710,7 +713,7 @@ end
 
 ActionShoot._rewind_ms = function (self, is_local_unit, player, position, direction, max_distance)
 	local is_server = self._is_server
-	local rewind_ms = LagCompensation.rewind_ms(is_server, is_local_unit, self._player)
+	local rewind_ms = LagCompensation.rewind_miliseconds(is_server, is_local_unit, self._player)
 
 	return rewind_ms
 end

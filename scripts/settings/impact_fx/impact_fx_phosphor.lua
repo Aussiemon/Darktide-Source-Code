@@ -8,10 +8,10 @@ local armor_types = ArmorSettings.types
 local hit_types = SurfaceMaterialSettings.hit_types
 local default_armor_decal
 local blood_ball = {
-	"content/decals/blood_ball/blood_ball",
+	"content/decals/blood_ball/blood_ball"
 }
 local disgusting_blood_ball = {
-	"content/decals/blood_ball/blood_ball_poxwalker",
+	"content/decals/blood_ball/blood_ball_poxwalker"
 }
 local unarmored = {
 	sfx = {
@@ -19,222 +19,222 @@ local unarmored = {
 		weakspot_died = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death"
 			},
 			{
 				event = "wwise/events/weapon/play_indicator_weakspot",
-				only_1p = true,
-			},
+				only_1p = true
+			}
 		},
 		died = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death"
+			}
 		},
 		weakspot_damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored"
 			},
 			{
 				event = "wwise/events/weapon/play_indicator_weakspot",
-				only_1p = true,
-			},
+				only_1p = true
+			}
 		},
 		damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored"
+			}
 		},
 		damage_reduced = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored"
+			}
 		},
 		damage_negated = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated"
+			}
 		},
 		shield_blocked = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated"
+			}
 		},
 		blocked = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated"
+			}
 		},
 		dead = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
-			},
-		},
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored"
+			}
+		}
 	},
 	vfx = {
 		shove = nil,
 		weakspot_died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_ranged_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_ranged_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01",
-				},
+					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/gib_flesh_bits_01",
-				},
+					"content/fx/particles/impacts/flesh/gib_flesh_bits_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01",
-				},
+					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		weakspot_damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_ranged_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_ranged_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01",
-				},
+					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_small_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_small_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01",
-				},
+					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		damage_reduced = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01",
-				},
+					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
 		},
 		damage_negated = {
 			{
 				effects = {
-					"content/fx/particles/impacts/damage_blocked",
-				},
-			},
+					"content/fx/particles/impacts/damage_blocked"
+				}
+			}
 		},
 		shield_blocked = {
 			{
 				effects = {
-					"content/fx/particles/impacts/damage_blocked",
-				},
-			},
+					"content/fx/particles/impacts/damage_blocked"
+				}
+			}
 		},
 		blocked = {
 			{
 				effects = {
-					"content/fx/particles/impacts/damage_blocked",
-				},
-			},
+					"content/fx/particles/impacts/damage_blocked"
+				}
+			}
 		},
 		dead = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01",
-				},
-			},
-		},
+					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01"
+				}
+			}
+		}
 	},
 	linked_decal = {
 		blocked = nil,
@@ -246,7 +246,7 @@ local unarmored = {
 		died = default_armor_decal,
 		weakspot_damage = default_armor_decal,
 		damage = default_armor_decal,
-		damage_reduced = default_armor_decal,
+		damage_reduced = default_armor_decal
 	},
 	blood_ball = {
 		blocked = nil,
@@ -258,8 +258,8 @@ local unarmored = {
 		died = blood_ball,
 		weakspot_damage = blood_ball,
 		damage = blood_ball,
-		dead = blood_ball,
-	},
+		dead = blood_ball
+	}
 }
 local armored = {
 	sfx = {
@@ -267,232 +267,232 @@ local armored = {
 		weakspot_died = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_armored_death",
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored_death"
 			},
 			{
 				event = "wwise/events/weapon/play_indicator_weakspot_armored",
-				only_1p = true,
-			},
+				only_1p = true
+			}
 		},
 		died = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_armored_death",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored_death"
+			}
 		},
 		weakspot_damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_armored",
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored"
 			},
 			{
 				event = "wwise/events/weapon/play_indicator_weakspot_armored",
-				only_1p = true,
-			},
+				only_1p = true
+			}
 		},
 		damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_armored",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored"
+			}
 		},
 		damage_reduced = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_armored",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored"
+			}
 		},
 		damage_negated = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated"
+			}
 		},
 		shield_blocked = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated"
+			}
 		},
 		blocked = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated"
+			}
 		},
 		dead = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
-			},
-		},
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored"
+			}
+		}
 	},
 	vfx = {
 		shove = nil,
 		weakspot_died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_penetrate",
-				},
+					"content/fx/particles/impacts/armor_penetrate"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01",
-				},
-			},
+					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01"
+				}
+			}
 		},
 		died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_penetrate",
-				},
+					"content/fx/particles/impacts/armor_penetrate"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01",
-				},
-			},
+					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01"
+				}
+			}
 		},
 		weakspot_damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_penetrate",
-				},
+					"content/fx/particles/impacts/armor_penetrate"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01",
-				},
-			},
+					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01"
+				}
+			}
 		},
 		damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_small_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_small_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_penetrate",
-				},
+					"content/fx/particles/impacts/armor_penetrate"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01",
-				},
-			},
+					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01"
+				}
+			}
 		},
 		damage_reduced = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_penetrate",
-				},
+					"content/fx/particles/impacts/armor_penetrate"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01",
-				},
-			},
+					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01"
+				}
+			}
 		},
 		damage_negated = {
 			{
 				effects = {
-					"content/fx/particles/impacts/damage_blocked",
-				},
+					"content/fx/particles/impacts/damage_blocked"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_ricochet",
-				},
-			},
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			}
 		},
 		shield_blocked = {
 			{
 				effects = {
-					"content/fx/particles/impacts/damage_blocked",
-				},
+					"content/fx/particles/impacts/damage_blocked"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_ricochet",
-				},
-			},
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			}
 		},
 		blocked = {
 			{
 				effects = {
-					"content/fx/particles/impacts/damage_blocked",
-				},
+					"content/fx/particles/impacts/damage_blocked"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_ricochet",
-				},
-			},
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			}
 		},
 		dead = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01",
-				},
-			},
-		},
+					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01"
+				}
+			}
+		}
 	},
 	linked_decal = {
 		blocked = nil,
@@ -504,7 +504,7 @@ local armored = {
 		died = default_armor_decal,
 		weakspot_damage = default_armor_decal,
 		damage = default_armor_decal,
-		damage_reduced = default_armor_decal,
+		damage_reduced = default_armor_decal
 	},
 	blood_ball = {
 		blocked = nil,
@@ -516,8 +516,8 @@ local armored = {
 		weakspot_damage = blood_ball,
 		damage = blood_ball,
 		damage_reduced = blood_ball,
-		dead = blood_ball,
-	},
+		dead = blood_ball
+	}
 }
 local super_armor = {
 	sfx = {
@@ -525,232 +525,232 @@ local super_armor = {
 		weakspot_died = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_armored_death",
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored_death"
 			},
 			{
 				event = "wwise/events/weapon/play_indicator_weakspot_armored",
-				only_1p = true,
-			},
+				only_1p = true
+			}
 		},
 		died = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_armored_death",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored_death"
+			}
 		},
 		weakspot_damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_armored",
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored"
 			},
 			{
 				event = "wwise/events/weapon/play_indicator_weakspot_armored",
-				only_1p = true,
-			},
+				only_1p = true
+			}
 		},
 		damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_armored",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored"
+			}
 		},
 		damage_reduced = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_armored",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored"
+			}
 		},
 		damage_negated = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated"
+			}
 		},
 		shield_blocked = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated"
+			}
 		},
 		blocked = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated"
+			}
 		},
 		dead = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
-			},
-		},
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored"
+			}
+		}
 	},
 	vfx = {
 		shove = nil,
 		weakspot_died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_penetrate",
-				},
+					"content/fx/particles/impacts/armor_penetrate"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01",
-				},
-			},
+					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01"
+				}
+			}
 		},
 		died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_penetrate",
-				},
+					"content/fx/particles/impacts/armor_penetrate"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01",
-				},
-			},
+					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01"
+				}
+			}
 		},
 		weakspot_damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_penetrate",
-				},
+					"content/fx/particles/impacts/armor_penetrate"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01",
-				},
-			},
+					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01"
+				}
+			}
 		},
 		damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_small_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_small_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_penetrate",
-				},
+					"content/fx/particles/impacts/armor_penetrate"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01",
-				},
-			},
+					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01"
+				}
+			}
 		},
 		damage_reduced = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_penetrate",
-				},
+					"content/fx/particles/impacts/armor_penetrate"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01",
-				},
-			},
+					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01"
+				}
+			}
 		},
 		damage_negated = {
 			{
 				effects = {
-					"content/fx/particles/impacts/damage_blocked",
-				},
+					"content/fx/particles/impacts/damage_blocked"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_ricochet",
-				},
-			},
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			}
 		},
 		shield_blocked = {
 			{
 				effects = {
-					"content/fx/particles/impacts/damage_blocked",
-				},
+					"content/fx/particles/impacts/damage_blocked"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_ricochet",
-				},
-			},
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			}
 		},
 		blocked = {
 			{
 				effects = {
-					"content/fx/particles/impacts/damage_blocked",
-				},
+					"content/fx/particles/impacts/damage_blocked"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_ricochet",
-				},
-			},
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			}
 		},
 		dead = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01",
-				},
-			},
-		},
+					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01"
+				}
+			}
+		}
 	},
 	linked_decal = {
 		blocked = nil,
@@ -762,7 +762,7 @@ local super_armor = {
 		died = default_armor_decal,
 		weakspot_damage = default_armor_decal,
 		damage = default_armor_decal,
-		damage_reduced = default_armor_decal,
+		damage_reduced = default_armor_decal
 	},
 	blood_ball = {
 		blocked = nil,
@@ -774,8 +774,8 @@ local super_armor = {
 		weakspot_damage = blood_ball,
 		damage = blood_ball,
 		damage_reduced = blood_ball,
-		dead = blood_ball,
-	},
+		dead = blood_ball
+	}
 }
 local disgustingly_resilient = {
 	sfx = {
@@ -783,225 +783,225 @@ local disgustingly_resilient = {
 		weakspot_died = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death"
 			},
 			{
 				event = "wwise/events/weapon/play_indicator_weakspot",
-				only_1p = true,
-			},
+				only_1p = true
+			}
 		},
 		died = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death"
+			}
 		},
 		weakspot_damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored"
 			},
 			{
 				event = "wwise/events/weapon/play_indicator_weakspot",
-				only_1p = true,
-			},
+				only_1p = true
+			}
 		},
 		damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored"
+			}
 		},
 		damage_reduced = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored"
+			}
 		},
 		damage_negated = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated"
+			}
 		},
 		shield_blocked = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated"
+			}
 		},
 		blocked = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated"
+			}
 		},
 		dead = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
-			},
-		},
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored"
+			}
+		}
 	},
 	vfx = {
 		shove = nil,
 		weakspot_died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_01",
-				},
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/gib_flesh_bits_01",
-				},
+					"content/fx/particles/impacts/flesh/gib_flesh_bits_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01",
-				},
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01",
-				},
-			},
+					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01"
+				}
+			}
 		},
 		died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_01",
-				},
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01",
-				},
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01",
-				},
-			},
+					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01"
+				}
+			}
 		},
 		weakspot_damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_weakspot_ranged_01",
-				},
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_weakspot_ranged_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01",
-				},
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01",
-				},
+					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/gib_flesh_bits_01",
-				},
-			},
+					"content/fx/particles/impacts/flesh/gib_flesh_bits_01"
+				}
+			}
 		},
 		damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_small_01",
-				},
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_small_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01",
-				},
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01",
-				},
-			},
+					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01"
+				}
+			}
 		},
 		damage_reduced = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_reduced_damage_01",
-				},
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_reduced_damage_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01",
-				},
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01",
-				},
-			},
+					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01"
+				}
+			}
 		},
 		damage_negated = {
 			{
 				effects = {
-					"content/fx/particles/impacts/damage_blocked",
-				},
-			},
+					"content/fx/particles/impacts/damage_blocked"
+				}
+			}
 		},
 		shield_blocked = {
 			{
 				effects = {
-					"content/fx/particles/impacts/damage_blocked",
-				},
-			},
+					"content/fx/particles/impacts/damage_blocked"
+				}
+			}
 		},
 		dead = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_small_01",
-				},
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_small_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01",
-				},
-			},
-		},
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
+			}
+		}
 	},
 	linked_decal = {
 		blocked = nil,
@@ -1013,7 +1013,7 @@ local disgustingly_resilient = {
 		died = default_armor_decal,
 		weakspot_damage = default_armor_decal,
 		damage = default_armor_decal,
-		damage_reduced = default_armor_decal,
+		damage_reduced = default_armor_decal
 	},
 	blood_ball = {
 		blocked = nil,
@@ -1025,8 +1025,8 @@ local disgustingly_resilient = {
 		weakspot_damage = disgusting_blood_ball,
 		damage = disgusting_blood_ball,
 		damage_reduced = disgusting_blood_ball,
-		dead = disgusting_blood_ball,
-	},
+		dead = disgusting_blood_ball
+	}
 }
 local resistant = table.clone(unarmored)
 local berserker = table.clone(unarmored)
@@ -1039,63 +1039,63 @@ local player = {
 		weakspot_died = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored"
+			}
 		},
 		died = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored"
+			}
 		},
 		weakspot_damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored"
+			}
 		},
 		damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored"
+			}
 		},
 		damage_reduced = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored"
+			}
 		},
 		damage_negated = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_phosphor",
+				event = "wwise/events/weapon/play_bullet_hits_phosphor"
 			},
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
-			},
-		},
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored"
+			}
+		}
 	},
 	vfx = {
 		blocked = nil,
@@ -1109,27 +1109,27 @@ local player = {
 		damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/weapons/autogun/autogun_impact_02",
-				},
-			},
+					"content/fx/particles/impacts/weapons/autogun/autogun_impact_02"
+				}
+			}
 		},
 		damage_negated = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/weapons/autogun/autogun_impact_02",
-				},
-			},
-		},
+					"content/fx/particles/impacts/weapons/autogun/autogun_impact_02"
+				}
+			}
+		}
 	},
 	linked_decal = {
 		blocked = nil,
@@ -1141,7 +1141,7 @@ local player = {
 		shield_blocked = nil,
 		shove = nil,
 		weakspot_damage = nil,
-		weakspot_died = nil,
+		weakspot_died = nil
 	},
 	blood_ball = {
 		blocked = nil,
@@ -1153,8 +1153,8 @@ local player = {
 		shield_blocked = nil,
 		shove = nil,
 		weakspot_damage = nil,
-		weakspot_died = nil,
-	},
+		weakspot_died = nil
+	}
 }
 local surface_fx = {}
 local default_surface_fx = {
@@ -1164,17 +1164,17 @@ local default_surface_fx = {
 				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_materials_phosphor",
 				group = "surface_material",
-				normal_rotation = true,
-			},
+				normal_rotation = true
+			}
 		},
 		vfx = {
 			{
 				normal_rotation = true,
 				effects = {
-					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01",
-				},
-			},
-		},
+					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01"
+				}
+			}
+		}
 	},
 	[hit_types.penetration_entry] = {
 		sfx = {
@@ -1182,19 +1182,19 @@ local default_surface_fx = {
 				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_materials_phosphor",
 				group = "surface_material",
-				normal_rotation = true,
-			},
+				normal_rotation = true
+			}
 		},
 		vfx = {
 			{
 				normal_rotation = true,
 				effects = {
-					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01",
-				},
-			},
-		},
+					"content/fx/particles/impacts/weapons/phosphor_pistol/phosphor_impact_01"
+				}
+			}
+		}
 	},
-	[hit_types.penetration_exit] = nil,
+	[hit_types.penetration_exit] = nil
 }
 
 ImpactFxHelper.create_missing_surface_fx(surface_fx, default_surface_fx)
@@ -1204,345 +1204,345 @@ local surface_decal = {
 		[hit_types.stop] = {
 			uniform_extents = {
 				max = 0.26,
-				min = 0.22,
+				min = 0.22
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_concrete_small_01",
-				"content/fx/units/weapons/small_caliber_concrete_medium_01",
-			},
+				"content/fx/units/weapons/small_caliber_concrete_medium_01"
+			}
 		},
 		[hit_types.penetration_entry] = {
 			uniform_extents = {
 				max = 0.26,
-				min = 0.22,
+				min = 0.22
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_concrete_small_01",
-				"content/fx/units/weapons/small_caliber_concrete_medium_01",
-			},
+				"content/fx/units/weapons/small_caliber_concrete_medium_01"
+			}
 		},
 		[hit_types.penetration_exit] = {
 			uniform_extents = {
 				max = 0.35,
-				min = 0.3,
+				min = 0.3
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_concrete_large_01",
-			},
-		},
+				"content/fx/units/weapons/small_caliber_concrete_large_01"
+			}
+		}
 	},
 	concrete = {
 		[hit_types.stop] = {
 			uniform_extents = {
 				max = 0.26,
-				min = 0.22,
+				min = 0.22
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_concrete_small_01",
-				"content/fx/units/weapons/small_caliber_concrete_medium_01",
-			},
+				"content/fx/units/weapons/small_caliber_concrete_medium_01"
+			}
 		},
 		[hit_types.penetration_entry] = {
 			uniform_extents = {
 				max = 0.26,
-				min = 0.22,
+				min = 0.22
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_concrete_small_01",
-				"content/fx/units/weapons/small_caliber_concrete_medium_01",
-			},
+				"content/fx/units/weapons/small_caliber_concrete_medium_01"
+			}
 		},
 		[hit_types.penetration_exit] = {
 			uniform_extents = {
 				max = 0.35,
-				min = 0.3,
+				min = 0.3
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_concrete_large_01",
-			},
-		},
+				"content/fx/units/weapons/small_caliber_concrete_large_01"
+			}
+		}
 	},
 	metal_solid = {
 		[hit_types.stop] = {
 			uniform_extents = {
 				max = 0.15,
-				min = 0.15,
+				min = 0.15
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_metal_large_01",
 				"content/fx/units/weapons/small_caliber_metal_medium_01",
-				"content/fx/units/weapons/small_caliber_metal_small_01",
-			},
+				"content/fx/units/weapons/small_caliber_metal_small_01"
+			}
 		},
 		[hit_types.penetration_entry] = {
 			uniform_extents = {
 				max = 0.15,
-				min = 0.15,
+				min = 0.15
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_metal_large_01",
 				"content/fx/units/weapons/small_caliber_metal_medium_01",
-				"content/fx/units/weapons/small_caliber_metal_small_01",
-			},
+				"content/fx/units/weapons/small_caliber_metal_small_01"
+			}
 		},
 		[hit_types.penetration_exit] = {
 			uniform_extents = {
 				max = 0.15,
-				min = 0.15,
+				min = 0.15
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_metal_large_01",
 				"content/fx/units/weapons/small_caliber_metal_medium_01",
-				"content/fx/units/weapons/small_caliber_metal_small_01",
-			},
-		},
+				"content/fx/units/weapons/small_caliber_metal_small_01"
+			}
+		}
 	},
 	metal_sheet = {
 		[hit_types.stop] = {
 			uniform_extents = {
 				max = 0.15,
-				min = 0.15,
+				min = 0.15
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_metal_large_01",
 				"content/fx/units/weapons/small_caliber_metal_medium_01",
-				"content/fx/units/weapons/small_caliber_metal_small_01",
-			},
+				"content/fx/units/weapons/small_caliber_metal_small_01"
+			}
 		},
 		[hit_types.penetration_entry] = {
 			uniform_extents = {
 				max = 0.15,
-				min = 0.15,
+				min = 0.15
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_metal_large_01",
 				"content/fx/units/weapons/small_caliber_metal_medium_01",
-				"content/fx/units/weapons/small_caliber_metal_small_01",
-			},
+				"content/fx/units/weapons/small_caliber_metal_small_01"
+			}
 		},
 		[hit_types.penetration_exit] = {
 			uniform_extents = {
 				max = 0.15,
-				min = 0.15,
+				min = 0.15
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_metal_large_01",
 				"content/fx/units/weapons/small_caliber_metal_medium_01",
-				"content/fx/units/weapons/small_caliber_metal_small_01",
-			},
-		},
+				"content/fx/units/weapons/small_caliber_metal_small_01"
+			}
+		}
 	},
 	metal_catwalk = {
 		[hit_types.stop] = {
 			uniform_extents = {
 				max = 0.15,
-				min = 0.15,
+				min = 0.15
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_metal_large_01",
 				"content/fx/units/weapons/small_caliber_metal_medium_01",
-				"content/fx/units/weapons/small_caliber_metal_small_01",
-			},
+				"content/fx/units/weapons/small_caliber_metal_small_01"
+			}
 		},
 		[hit_types.penetration_entry] = {
 			uniform_extents = {
 				max = 0.15,
-				min = 0.15,
+				min = 0.15
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_metal_large_01",
 				"content/fx/units/weapons/small_caliber_metal_medium_01",
-				"content/fx/units/weapons/small_caliber_metal_small_01",
-			},
+				"content/fx/units/weapons/small_caliber_metal_small_01"
+			}
 		},
 		[hit_types.penetration_exit] = {
 			uniform_extents = {
 				max = 0.15,
-				min = 0.15,
+				min = 0.15
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_metal_large_01",
 				"content/fx/units/weapons/small_caliber_metal_medium_01",
-				"content/fx/units/weapons/small_caliber_metal_small_01",
-			},
-		},
+				"content/fx/units/weapons/small_caliber_metal_small_01"
+			}
+		}
 	},
 	cloth = {
 		[hit_types.stop] = {
 			uniform_extents = {
 				max = 0.2,
-				min = 0.2,
+				min = 0.2
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_cloth_large_01",
 				"content/fx/units/weapons/small_caliber_cloth_medium_01",
-				"content/fx/units/weapons/small_caliber_cloth_small_01",
-			},
+				"content/fx/units/weapons/small_caliber_cloth_small_01"
+			}
 		},
 		[hit_types.penetration_entry] = {
 			uniform_extents = {
 				max = 0.2,
-				min = 0.2,
+				min = 0.2
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_cloth_large_01",
 				"content/fx/units/weapons/small_caliber_cloth_medium_01",
-				"content/fx/units/weapons/small_caliber_cloth_small_01",
-			},
+				"content/fx/units/weapons/small_caliber_cloth_small_01"
+			}
 		},
 		[hit_types.penetration_exit] = {
 			uniform_extents = {
 				max = 0.2,
-				min = 0.2,
+				min = 0.2
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_cloth_large_01",
 				"content/fx/units/weapons/small_caliber_cloth_medium_01",
-				"content/fx/units/weapons/small_caliber_cloth_small_01",
-			},
-		},
+				"content/fx/units/weapons/small_caliber_cloth_small_01"
+			}
+		}
 	},
 	glass_breakable = {
 		[hit_types.stop] = {
 			uniform_extents = {
 				max = 0.4,
-				min = 0.4,
+				min = 0.4
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_glass_large_01",
 				"content/fx/units/weapons/small_caliber_glass_medium_01",
-				"content/fx/units/weapons/small_caliber_glass_small_01",
-			},
+				"content/fx/units/weapons/small_caliber_glass_small_01"
+			}
 		},
 		[hit_types.penetration_entry] = {
 			uniform_extents = {
 				max = 0.4,
-				min = 0.4,
+				min = 0.4
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_glass_large_01",
 				"content/fx/units/weapons/small_caliber_glass_medium_01",
-				"content/fx/units/weapons/small_caliber_glass_small_01",
-			},
+				"content/fx/units/weapons/small_caliber_glass_small_01"
+			}
 		},
 		[hit_types.penetration_exit] = {
 			uniform_extents = {
 				max = 0.4,
-				min = 0.4,
+				min = 0.4
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_glass_large_01",
 				"content/fx/units/weapons/small_caliber_glass_medium_01",
-				"content/fx/units/weapons/small_caliber_glass_small_01",
-			},
-		},
+				"content/fx/units/weapons/small_caliber_glass_small_01"
+			}
+		}
 	},
 	glass_unbreakable = {
 		[hit_types.stop] = {
 			uniform_extents = {
 				max = 0.2,
-				min = 0.2,
+				min = 0.2
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_glass_large_01",
 				"content/fx/units/weapons/small_caliber_glass_medium_01",
-				"content/fx/units/weapons/small_caliber_glass_small_01",
-			},
+				"content/fx/units/weapons/small_caliber_glass_small_01"
+			}
 		},
 		[hit_types.penetration_entry] = {
 			uniform_extents = {
 				max = 0.2,
-				min = 0.2,
+				min = 0.2
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_glass_large_01",
 				"content/fx/units/weapons/small_caliber_glass_medium_01",
-				"content/fx/units/weapons/small_caliber_glass_small_01",
-			},
+				"content/fx/units/weapons/small_caliber_glass_small_01"
+			}
 		},
 		[hit_types.penetration_exit] = {
 			uniform_extents = {
 				max = 0.2,
-				min = 0.2,
+				min = 0.2
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_glass_large_01",
 				"content/fx/units/weapons/small_caliber_glass_medium_01",
-				"content/fx/units/weapons/small_caliber_glass_small_01",
-			},
-		},
+				"content/fx/units/weapons/small_caliber_glass_small_01"
+			}
+		}
 	},
 	nurgle_flesh = NO_SURFACE_DECAL,
 	wood_solid = {
 		[hit_types.stop] = {
 			uniform_extents = {
 				max = 0.2,
-				min = 0.2,
+				min = 0.2
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_wood_large_01",
 				"content/fx/units/weapons/small_caliber_wood_medium_01",
-				"content/fx/units/weapons/small_caliber_wood_small_01",
-			},
+				"content/fx/units/weapons/small_caliber_wood_small_01"
+			}
 		},
 		[hit_types.penetration_entry] = {
 			uniform_extents = {
 				max = 0.2,
-				min = 0.2,
+				min = 0.2
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_wood_large_01",
 				"content/fx/units/weapons/small_caliber_wood_medium_01",
-				"content/fx/units/weapons/small_caliber_wood_small_01",
-			},
+				"content/fx/units/weapons/small_caliber_wood_small_01"
+			}
 		},
 		[hit_types.penetration_exit] = {
 			uniform_extents = {
 				max = 0.2,
-				min = 0.2,
+				min = 0.2
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_wood_large_01",
 				"content/fx/units/weapons/small_caliber_wood_medium_01",
-				"content/fx/units/weapons/small_caliber_wood_small_01",
-			},
-		},
+				"content/fx/units/weapons/small_caliber_wood_small_01"
+			}
+		}
 	},
 	wood_plywood = {
 		[hit_types.stop] = {
 			uniform_extents = {
 				max = 0.2,
-				min = 0.2,
+				min = 0.2
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_wood_large_01",
 				"content/fx/units/weapons/small_caliber_wood_medium_01",
-				"content/fx/units/weapons/small_caliber_wood_small_01",
-			},
+				"content/fx/units/weapons/small_caliber_wood_small_01"
+			}
 		},
 		[hit_types.penetration_entry] = {
 			uniform_extents = {
 				max = 0.2,
-				min = 0.2,
+				min = 0.2
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_wood_large_01",
 				"content/fx/units/weapons/small_caliber_wood_medium_01",
-				"content/fx/units/weapons/small_caliber_wood_small_01",
-			},
+				"content/fx/units/weapons/small_caliber_wood_small_01"
+			}
 		},
 		[hit_types.penetration_exit] = {
 			uniform_extents = {
 				max = 0.2,
-				min = 0.2,
+				min = 0.2
 			},
 			units = {
 				"content/fx/units/weapons/small_caliber_concrete_small_01",
 				"content/fx/units/weapons/small_caliber_concrete_medium_01",
-				"content/fx/units/weapons/small_caliber_concrete_large_01",
-			},
-		},
-	},
+				"content/fx/units/weapons/small_caliber_concrete_large_01"
+			}
+		}
+	}
 }
 
 ImpactFxHelper.create_missing_surface_decals(surface_decal)
@@ -1556,8 +1556,8 @@ return {
 		[armor_types.player] = player,
 		[armor_types.resistant] = resistant,
 		[armor_types.super_armor] = super_armor,
-		[armor_types.unarmored] = unarmored,
+		[armor_types.unarmored] = unarmored
 	},
 	surface = surface_fx,
-	surface_decal = surface_decal,
+	surface_decal = surface_decal
 }

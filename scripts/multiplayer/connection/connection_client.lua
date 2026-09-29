@@ -4,7 +4,7 @@ local RPCS = {
 	"rpc_player_connected",
 	"rpc_player_disconnected",
 	"rpc_sync_host_local_players",
-	"rpc_kicked",
+	"rpc_kicked"
 }
 local ConnectionLocalStateMachine = require("scripts/multiplayer/connection/connection_local_state_machine")
 local JWTTicketUtils = require("scripts/multiplayer/utilities/jwt_ticket_utils")
@@ -242,7 +242,7 @@ ConnectionClient.rpc_player_connected = function (self, channel_id, peer_id, loc
 
 	self._events[#self._events + 1] = function ()
 		observers[#observers + 1] = {
-			peer_id = peer_id,
+			peer_id = peer_id
 		}
 
 		return {
@@ -256,9 +256,9 @@ ConnectionClient.rpc_player_connected = function (self, channel_id, peer_id, loc
 					profile_chunks_array = profile_chunks_array,
 					player_session_id_array = player_session_id_array,
 					slot_array = slot_array,
-					player_instance_id_array = player_instance_id_array,
-				},
-			},
+					player_instance_id_array = player_instance_id_array
+				}
+			}
 		}
 	end
 end
@@ -278,8 +278,8 @@ ConnectionClient.rpc_player_disconnected = function (self, channel_id, peer_id)
 		return {
 			name = "player_disconnected",
 			parameters = {
-				peer_id = peer_id,
-			},
+				peer_id = peer_id
+			}
 		}
 	end
 end

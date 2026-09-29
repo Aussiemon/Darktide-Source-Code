@@ -10,8 +10,8 @@ local combat_ranges = {
 				distance = 30,
 				distance_operator = "lesser",
 				sticky_time = 0,
-				switch_combat_range = "close",
-			},
+				switch_combat_range = "close"
+			}
 		},
 		close = {
 			{
@@ -19,15 +19,15 @@ local combat_ranges = {
 				distance = 10,
 				distance_operator = "lesser",
 				sticky_time = 4,
-				switch_combat_range = "melee",
+				switch_combat_range = "melee"
 			},
 			{
 				activate_slot_system = true,
 				distance = 32,
 				distance_operator = "greater",
 				sticky_time = 0,
-				switch_combat_range = "far",
-			},
+				switch_combat_range = "far"
+			}
 		},
 		melee = {
 			{
@@ -35,11 +35,11 @@ local combat_ranges = {
 				distance = 12,
 				distance_operator = "greater",
 				sticky_time = 0,
-				switch_combat_range = "close",
+				switch_combat_range = "close"
 			},
-			effect_template_name = "renegade_executor_chainaxe",
-		},
-	},
+			effect_template_name = "renegade_executor_chainaxe"
+		}
+	}
 }
 
 return combat_ranges

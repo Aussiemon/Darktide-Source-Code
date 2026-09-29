@@ -97,26 +97,26 @@ NavBoxObstacle.component_data = {
 	box_center = {
 		ui_name = "Box Center",
 		ui_type = "vector",
-		value = Vector3Box(0, 0, 0),
+		value = Vector3Box(0, 0, 0)
 	},
 	box_extants = {
 		ui_name = "Box Extants",
 		ui_type = "vector",
-		value = Vector3Box(1, 1, 1),
+		value = Vector3Box(1, 1, 1)
 	},
 	is_static = {
 		ui_name = "Is Static",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	fake_with_cost = {
 		ui_name = "Should Fake With Cost",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	extensions = {
-		"NavBoxObstacleExtension",
-	},
+		"NavBoxObstacleExtension"
+	}
 }
 
 return NavBoxObstacle

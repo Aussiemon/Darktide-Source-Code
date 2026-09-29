@@ -18,18 +18,18 @@ weapon_template.action_inputs = {
 		input_sequence = {
 			{
 				input = "action_two_pressed",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	wield = {
 		buffer_time = 0,
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				inputs = wield_inputs,
-			},
-		},
+				inputs = wield_inputs
+			}
+		}
 	},
 	aim_give = {
 		buffer_time = 0.3,
@@ -39,9 +39,9 @@ weapon_template.action_inputs = {
 			{
 				hold_input = "weapon_extra_hold",
 				input = "weapon_extra_hold",
-				value = true,
-			},
-		},
+				value = true
+			}
+		}
 	},
 	aim_give_release = {
 		buffer_time = 0.3,
@@ -50,10 +50,10 @@ weapon_template.action_inputs = {
 			{
 				input = "weapon_extra_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
-	},
+				time_window = math.huge
+			}
+		}
+	}
 }
 
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
@@ -61,52 +61,36 @@ table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inp
 weapon_template.action_input_hierarchy = {
 	{
 		input = "push",
-		transition = "stay",
+		transition = "stay"
 	},
 	{
 		input = "wield",
-		transition = "stay",
+		transition = "stay"
 	},
 	{
 		input = "aim_give",
 		transition = {
 			{
 				input = "aim_give_release",
-				transition = "previous",
+				transition = "previous"
 			},
 			{
 				input = "wield",
-				transition = "base",
-			},
-			{
-				input = "combat_ability",
-				transition = "base",
-			},
-			{
-				input = "grenade_ability",
-				transition = "base",
-			},
-		},
-	},
+				transition = "base"
+			}
+		}
+	}
 }
 
 ActionInputHierarchy.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
-	action_unwield = {
-		allowed_during_sprint = true,
-		kind = "unwield",
-		start_input = "wield",
-		total_time = 0,
-		uninterruptible = true,
-		allowed_chain_actions = {},
-	},
 	action_wield = {
 		allowed_during_sprint = true,
 		anim_event = "equip_tome",
 		kind = "wield",
 		total_time = 0,
-		uninterruptible = true,
+		uninterruptible = true
 	},
 	action_push = {
 		anim_event = "attack_push",
@@ -118,28 +102,28 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 1.2,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 1.15,
-				t = 0.25,
+				t = 0.25
 			},
 			{
 				modifier = 0.5,
-				t = 0.4,
+				t = 0.4
 			},
 			{
 				modifier = 1,
-				t = 0.67,
+				t = 0.67
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		inner_push_rad = math.pi * 0.25,
 		outer_push_rad = math.pi * 1,
 		inner_damage_profile = DamageProfileTemplates.default_push,
 		inner_damage_type = damage_types.physical,
 		outer_damage_profile = DamageProfileTemplates.light_push,
-		outer_damage_type = damage_types.physical,
+		outer_damage_type = damage_types.physical
 	},
 	action_aim_give = {
 		abort_sprint = true,
@@ -164,16 +148,10 @@ weapon_template.actions = {
 		smart_targeting_template = SmartTargetingTemplates.target_ally_close,
 		allowed_chain_actions = {
 			aim_give_release = {
-				action_name = "action_give",
+				action_name = "action_give"
 			},
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
-		},
+			wield = BaseTemplateSettings.generate_wield_chain_actions()
+		}
 	},
 	action_give = {
 		allowed_during_sprint = true,
@@ -187,43 +165,32 @@ weapon_template.actions = {
 		validate_target_func = PocketableUtils.validate_give_pocketable_target_func,
 		voice_event_data = {
 			voice_tag_concept = "on_demand_com_wheel",
-			voice_tag_id = "com_take_this",
-		},
+			voice_tag_id = "com_take_this"
+		}
 	},
-	action_inspect = {
-		anim_end_event = "inspect_end",
-		anim_event = "inspect_start",
-		kind = "inspect",
-		lock_view = true,
-		skip_3p_anims = true,
-		start_input = "inspect_start",
-		stop_input = "inspect_stop",
-		total_time = math.huge,
-		crosshair = {
-			crosshair_type = "inspect",
-		},
-	},
+	action_inspect = BaseTemplateSettings.generate_inspect_action(),
+	action_inspect_3p = BaseTemplateSettings.generate_inspect_3p_action()
 }
 
 table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
 
 weapon_template.keywords = {
-	"pocketable",
+	"pocketable"
 }
 weapon_template.ammo_template = "no_ammo"
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
-	uses_overheat = false,
+	uses_overheat = false
 }
 weapon_template.breed_anim_state_machine_3p = {
 	cryptic = "content/characters/player/human/third_person/animations/pocketables",
 	human = "content/characters/player/human/third_person/animations/pocketables",
-	ogryn = "content/characters/player/ogryn/third_person/animations/pocketables",
+	ogryn = "content/characters/player/ogryn/third_person/animations/pocketables"
 }
 weapon_template.breed_anim_state_machine_1p = {
 	cryptic = "content/characters/player/human/first_person/animations/grimoire",
 	human = "content/characters/player/human/first_person/animations/grimoire",
-	ogryn = "content/characters/player/ogryn/first_person/animations/grimoire",
+	ogryn = "content/characters/player/ogryn/first_person/animations/grimoire"
 }
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.fx_sources = {}

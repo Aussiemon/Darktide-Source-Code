@@ -9,7 +9,7 @@ local template = {
 			"event_demo_stockpile_b",
 			1,
 			"event_demo_stockpile_c",
-			1,
+			1
 		},
 		dm_stockpile_demo_wave_2 = {
 			"event_demo_stockpile_d",
@@ -17,51 +17,51 @@ local template = {
 			"event_demo_stockpile_e",
 			1,
 			"event_demo_stockpile_f",
-			1,
+			1
 		},
 		dm_stockpile_mid_event_1 = {
 			"event_mid_stockpile_a",
 			1,
 			"event_mid_stockpile_b",
-			1,
+			1
 		},
 		dm_stockpile_mid_event_2 = {
 			"event_mid_stockpile_c",
 			1,
 			"event_mid_stockpile_d",
-			1,
-		},
+			1
+		}
 	},
 	events = {
 		event_pacing_off = {
 			{
 				"set_pacing_enabled",
-				enabled = false,
-			},
+				enabled = false
+			}
 		},
 		event_pacing_on = {
 			{
 				"set_pacing_enabled",
-				enabled = true,
-			},
+				enabled = true
+			}
 		},
 		event_hordes_off = {
 			{
 				"control_pacing_spawns",
 				enabled = false,
 				spawn_types = {
-					"hordes",
-				},
-			},
+					"hordes"
+				}
+			}
 		},
 		event_hordes_on = {
 			{
 				"control_pacing_spawns",
 				enabled = true,
 				spawn_types = {
-					"hordes",
-				},
-			},
+					"hordes"
+				}
+			}
 		},
 		event_only_specials_enabled = {
 			{
@@ -70,14 +70,14 @@ local template = {
 				spawn_types = {
 					"hordes",
 					"roamers",
-					"trickle_hordes",
-				},
-			},
+					"trickle_hordes"
+				}
+			}
 		},
 		event_pacing_on_stop_trickle = {
 			{
 				"set_pacing_enabled",
-				enabled = true,
+				enabled = true
 			},
 			{
 				"control_pacing_spawns",
@@ -87,17 +87,17 @@ local template = {
 					"roamers",
 					"trickle_hordes",
 					"monsters",
-					"specials",
-				},
+					"specials"
+				}
 			},
 			{
-				"stop_terror_trickle",
-			},
+				"stop_terror_trickle"
+			}
 		},
 		event_mid_stockpile_a = {
 			{
 				"delay",
-				duration = 1,
+				duration = 1
 			},
 			{
 				"spawn_by_points",
@@ -108,9 +108,9 @@ local template = {
 				breed_tags = {
 					{
 						"far",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -120,9 +120,9 @@ local template = {
 				breed_tags = {
 					{
 						"far",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"try_inject_special_minion",
@@ -132,13 +132,13 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"sniper",
-					},
-				},
+						"sniper"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 6,
+				duration = 6
 			},
 			{
 				"try_inject_special_minion",
@@ -148,35 +148,35 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"start_terror_trickle",
 				delay = 4,
 				spawner_group = "spawner_stockpile_elevator_far",
-				template_name = "low_melee",
+				template_name = "low_melee"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 4
-				end,
+				end
 			},
 			{
 				"delay",
-				duration = 6,
+				duration = 6
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "dm_stockpile_mid_event_1",
-			},
+				start_event_name = "dm_stockpile_mid_event_1"
+			}
 		},
 		event_mid_stockpile_b = {
 			{
 				"delay",
-				duration = 1,
+				duration = 1
 			},
 			{
 				"spawn_by_points",
@@ -187,13 +187,13 @@ local template = {
 				breed_tags = {
 					{
 						"horde",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 3,
+				duration = 3
 			},
 			{
 				"try_inject_special_minion",
@@ -203,13 +203,13 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 6,
+				duration = 6
 			},
 			{
 				"spawn_by_points",
@@ -220,9 +220,9 @@ local template = {
 				breed_tags = {
 					{
 						"horde",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"try_inject_special_minion",
@@ -232,35 +232,35 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"start_terror_trickle",
 				delay = 4,
 				spawner_group = "spawner_stockpile_elevator_far",
-				template_name = "low_melee",
+				template_name = "low_melee"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 4
-				end,
+				end
 			},
 			{
 				"delay",
-				duration = 6,
+				duration = 6
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "dm_stockpile_mid_event_1",
-			},
+				start_event_name = "dm_stockpile_mid_event_1"
+			}
 		},
 		event_mid_stockpile_c = {
 			{
 				"delay",
-				duration = 1,
+				duration = 1
 			},
 			{
 				"spawn_by_points",
@@ -271,9 +271,9 @@ local template = {
 				breed_tags = {
 					{
 						"close",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -283,13 +283,13 @@ local template = {
 				breed_tags = {
 					{
 						"close",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 6,
+				duration = 6
 			},
 			{
 				"try_inject_special_minion",
@@ -299,35 +299,35 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"start_terror_trickle",
 				delay = 4,
 				spawner_group = "spawner_stockpile_elevator_close",
-				template_name = "low_melee",
+				template_name = "low_melee"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 4
-				end,
+				end
 			},
 			{
 				"delay",
-				duration = 6,
+				duration = 6
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "dm_stockpile_mid_event_2",
-			},
+				start_event_name = "dm_stockpile_mid_event_2"
+			}
 		},
 		event_mid_stockpile_d = {
 			{
 				"delay",
-				duration = 1,
+				duration = 1
 			},
 			{
 				"spawn_by_points",
@@ -338,13 +338,13 @@ local template = {
 				breed_tags = {
 					{
 						"melee",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 4,
+				duration = 4
 			},
 			{
 				"spawn_by_points",
@@ -354,13 +354,13 @@ local template = {
 				breed_tags = {
 					{
 						"melee",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 4,
+				duration = 4
 			},
 			{
 				"spawn_by_points",
@@ -370,9 +370,9 @@ local template = {
 				breed_tags = {
 					{
 						"melee",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -382,19 +382,19 @@ local template = {
 				breed_tags = {
 					{
 						"melee",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 6,
+				duration = 6
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 4
-				end,
+				end
 			},
 			{
 				"try_inject_special_minion",
@@ -404,35 +404,35 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"start_terror_trickle",
 				delay = 4,
 				spawner_group = "spawner_stockpile_elevator_close",
-				template_name = "low_melee",
+				template_name = "low_melee"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 4
-				end,
+				end
 			},
 			{
 				"delay",
-				duration = 6,
+				duration = 6
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "dm_stockpile_mid_event_2",
-			},
+				start_event_name = "dm_stockpile_mid_event_2"
+			}
 		},
 		event_demo_stockpile_a = {
 			{
 				"delay",
-				duration = 1,
+				duration = 1
 			},
 			{
 				"spawn_by_points",
@@ -443,9 +443,9 @@ local template = {
 				breed_tags = {
 					{
 						"horde",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -455,13 +455,13 @@ local template = {
 				breed_tags = {
 					{
 						"far",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 3,
+				duration = 3
 			},
 			{
 				"spawn_by_points",
@@ -471,9 +471,9 @@ local template = {
 				breed_tags = {
 					{
 						"horde",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -482,40 +482,40 @@ local template = {
 				spawner_group = "spawner_stockpile_right",
 				breed_tags = {
 					{
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 3,
+				duration = 3
 			},
 			{
 				"start_terror_trickle",
 				delay = 4,
 				spawner_group = "spawner_stockpile_left",
-				template_name = "standard_melee",
+				template_name = "standard_melee"
 			},
 			{
 				"continue_when",
 				duration = 40,
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 4
-				end,
+				end
 			},
 			{
 				"delay",
-				duration = 8,
+				duration = 8
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "dm_stockpile_demo_wave_1",
-			},
+				start_event_name = "dm_stockpile_demo_wave_1"
+			}
 		},
 		event_demo_stockpile_b = {
 			{
 				"delay",
-				duration = 1,
+				duration = 1
 			},
 			{
 				"spawn_by_points",
@@ -526,9 +526,9 @@ local template = {
 				breed_tags = {
 					{
 						"horde",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"try_inject_special_minion",
@@ -538,40 +538,40 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 3,
+				duration = 3
 			},
 			{
 				"start_terror_trickle",
 				delay = 4,
 				spawner_group = "spawner_stockpile_forward",
-				template_name = "standard_melee",
+				template_name = "standard_melee"
 			},
 			{
 				"continue_when",
 				duration = 40,
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 4
-				end,
+				end
 			},
 			{
 				"delay",
-				duration = 8,
+				duration = 8
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "dm_stockpile_demo_wave_1",
-			},
+				start_event_name = "dm_stockpile_demo_wave_1"
+			}
 		},
 		event_demo_stockpile_c = {
 			{
 				"delay",
-				duration = 1,
+				duration = 1
 			},
 			{
 				"spawn_by_points",
@@ -582,9 +582,9 @@ local template = {
 				breed_tags = {
 					{
 						"close",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -594,13 +594,13 @@ local template = {
 				breed_tags = {
 					{
 						"far",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 3,
+				duration = 3
 			},
 			{
 				"spawn_by_points",
@@ -610,9 +610,9 @@ local template = {
 				breed_tags = {
 					{
 						"close",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"try_inject_special_minion",
@@ -622,40 +622,40 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 6,
+				duration = 6
 			},
 			{
 				"start_terror_trickle",
 				delay = 4,
 				spawner_group = "spawner_stockpile_right",
-				template_name = "standard_melee",
+				template_name = "standard_melee"
 			},
 			{
 				"continue_when",
 				duration = 40,
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 4
-				end,
+				end
 			},
 			{
 				"delay",
-				duration = 8,
+				duration = 8
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "dm_stockpile_demo_wave_1",
-			},
+				start_event_name = "dm_stockpile_demo_wave_1"
+			}
 		},
 		event_demo_stockpile_d = {
 			{
 				"delay",
-				duration = 1,
+				duration = 1
 			},
 			{
 				"spawn_by_points",
@@ -666,9 +666,9 @@ local template = {
 				breed_tags = {
 					{
 						"melee",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -678,9 +678,9 @@ local template = {
 				breed_tags = {
 					{
 						"far",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"try_inject_special_minion",
@@ -690,40 +690,40 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"disabler",
-					},
-				},
+						"disabler"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 3,
+				duration = 3
 			},
 			{
 				"start_terror_trickle",
 				delay = 4,
 				spawner_group = "spawner_stockpile_right",
-				template_name = "standard_melee",
+				template_name = "standard_melee"
 			},
 			{
 				"continue_when",
 				duration = 40,
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 4
-				end,
+				end
 			},
 			{
 				"delay",
-				duration = 8,
+				duration = 8
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "dm_stockpile_demo_wave_2",
-			},
+				start_event_name = "dm_stockpile_demo_wave_2"
+			}
 		},
 		event_demo_stockpile_e = {
 			{
 				"delay",
-				duration = 1,
+				duration = 1
 			},
 			{
 				"spawn_by_points",
@@ -734,13 +734,13 @@ local template = {
 				breed_tags = {
 					{
 						"melee",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 3,
+				duration = 3
 			},
 			{
 				"spawn_by_points",
@@ -750,9 +750,9 @@ local template = {
 				breed_tags = {
 					{
 						"far",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -762,13 +762,13 @@ local template = {
 				breed_tags = {
 					{
 						"melee",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 3,
+				duration = 3
 			},
 			{
 				"spawn_by_points",
@@ -778,9 +778,9 @@ local template = {
 				breed_tags = {
 					{
 						"far",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"try_inject_special_minion",
@@ -790,40 +790,40 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 3,
+				duration = 3
 			},
 			{
 				"start_terror_trickle",
 				delay = 4,
 				spawner_group = "spawner_stockpile_forward",
-				template_name = "standard_melee",
+				template_name = "standard_melee"
 			},
 			{
 				"continue_when",
 				duration = 40,
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 4
-				end,
+				end
 			},
 			{
 				"delay",
-				duration = 8,
+				duration = 8
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "dm_stockpile_demo_wave_2",
-			},
+				start_event_name = "dm_stockpile_demo_wave_2"
+			}
 		},
 		event_demo_stockpile_f = {
 			{
 				"delay",
-				duration = 1,
+				duration = 1
 			},
 			{
 				"spawn_by_points",
@@ -834,9 +834,9 @@ local template = {
 				breed_tags = {
 					{
 						"close",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -846,40 +846,40 @@ local template = {
 				breed_tags = {
 					{
 						"close",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 4,
+				duration = 4
 			},
 			{
 				"start_terror_trickle",
 				delay = 4,
 				spawner_group = "spawner_stockpile_right",
-				template_name = "standard_melee",
+				template_name = "standard_melee"
 			},
 			{
 				"continue_when",
 				duration = 40,
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 4
-				end,
+				end
 			},
 			{
 				"delay",
-				duration = 8,
+				duration = 8
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "dm_stockpile_demo_wave_2",
-			},
+				start_event_name = "dm_stockpile_demo_wave_2"
+			}
 		},
 		event_demo_stockpile_horde_escape = {
 			{
 				"delay",
-				duration = 5,
+				duration = 5
 			},
 			{
 				"spawn_by_points",
@@ -888,12 +888,12 @@ local template = {
 				spawner_group = "spawner_stockpile_forward",
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
-			},
-		},
-	},
+						"horde"
+					}
+				}
+			}
+		}
+	}
 }
 
 return template

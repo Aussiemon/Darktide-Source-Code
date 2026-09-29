@@ -163,7 +163,7 @@ RuleLoadingConditions.conversations_core = {
 		end,
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	all_max_level = {
 		"lore",
@@ -171,10 +171,10 @@ RuleLoadingConditions.conversations_core = {
 		"conversation_pilot",
 		"conversation_sergeant",
 		"conversation_tech_priest",
-		"conversation_zealot",
+		"conversation_zealot"
 	},
 	broker_present = {
-		"lore_hive_cities_one",
+		"lore_hive_cities_one"
 	},
 	expeditions = {
 		"conversation_atoma_lore_rookie_one",
@@ -183,46 +183,46 @@ RuleLoadingConditions.conversations_core = {
 		"lore_astra_militarum_four",
 		"lore_hadron_three",
 		"lore_daemons_three",
-		"lore_hive_cities",
-	},
+		"lore_hive_cities"
+	}
 }
 RuleLoadingConditions.enemy_vo = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
-		"captain_taunt",
-	},
+		"captain_taunt"
+	}
 }
 RuleLoadingConditions.adamant = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
 		"found_health_station",
-		"found_ammo",
-	},
+		"found_ammo"
+	}
 }
 RuleLoadingConditions.broker = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
 		"found_health_station",
-		"found_ammo",
-	},
+		"found_ammo"
+	}
 }
 RuleLoadingConditions.gameplay_vo = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
 		"away_from_squad",
@@ -233,18 +233,18 @@ RuleLoadingConditions.gameplay_vo = {
 		"look_at_healthstation",
 		"found_ammo",
 		"look_at_ammo",
-		"look_at_grenade",
-	},
+		"look_at_grenade"
+	}
 }
 RuleLoadingConditions.adamant_b = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
-		"combat_pause_quirk_adamant_b_trait_09",
-	},
+		"combat_pause_quirk_adamant_b_trait_09"
+	}
 }
 RuleLoadingConditions.adamant_female_a = {
 	exclude_conditions = {
@@ -256,12 +256,12 @@ RuleLoadingConditions.adamant_female_a = {
 		end,
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	all_adamant_not_has_dog = {
 		"adamant_to_adamant_bonding_conversation_13",
 		"adamant_to_adamant_bonding_conversation_19",
-		"adamant_to_adamant_bonding_conversation_39",
+		"adamant_to_adamant_bonding_conversation_39"
 	},
 	not_has_dog = {
 		"adamant_female_a_ogryn_bonding_conversation_13",
@@ -273,7 +273,7 @@ RuleLoadingConditions.adamant_female_a = {
 		"adamant_female_a_zealot_bonding_conversation_36",
 		"adamant_female_a_zealot_bonding_conversation_48",
 		"adamant_female_a_zealot_bonding_conversation_57",
-		"broker_male_b_adamant_bonding_conversation_09",
+		"broker_male_b_adamant_bonding_conversation_09"
 	},
 	expeditions = {
 		"adamant_female_a_ogryn_bonding_conversation_28",
@@ -283,11 +283,11 @@ RuleLoadingConditions.adamant_female_a = {
 		"adamant_female_a_zealot_bonding_conversation_22",
 		"adamant_female_a_zealot_bonding_conversation_26",
 		"adamant_female_a_zealot_bonding_conversation_43",
-		"adamant_female_a_zealot_bonding_conversation_58",
+		"adamant_female_a_zealot_bonding_conversation_58"
 	},
 	pre_habs = {
-		"adamant_female_a_ogryn_bonding_conversation_04",
-	},
+		"adamant_female_a_ogryn_bonding_conversation_04"
+	}
 }
 RuleLoadingConditions.adamant_female_b = {
 	exclude_conditions = {
@@ -296,7 +296,7 @@ RuleLoadingConditions.adamant_female_b = {
 		end,
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	not_has_dog = {
 		"adamant_female_b_ogryn_bonding_conversation_10",
@@ -308,7 +308,7 @@ RuleLoadingConditions.adamant_female_b = {
 		"adamant_female_b_psyker_bonding_conversation_57",
 		"adamant_female_b_veteran_bonding_conversation_34",
 		"adamant_female_b_zealot_bonding_conversation_30",
-		"broker_female_a_adamant_bonding_conversation_20",
+		"broker_female_a_adamant_bonding_conversation_20"
 	},
 	expeditions = {
 		"adamant_to_adamant_bonding_conversation_53",
@@ -320,8 +320,8 @@ RuleLoadingConditions.adamant_female_b = {
 		"adamant_female_b_psyker_bonding_conversation_60",
 		"adamant_female_b_veteran_bonding_conversation_58",
 		"adamant_female_b_zealot_bonding_conversation_16",
-		"adamant_female_b_zealot_bonding_conversation_47",
-	},
+		"adamant_female_b_zealot_bonding_conversation_47"
+	}
 }
 RuleLoadingConditions.adamant_female_c = {
 	exclude_conditions = {
@@ -333,10 +333,10 @@ RuleLoadingConditions.adamant_female_c = {
 		end,
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	all_adamant_not_has_dog = {
-		"adamant_to_adamant_bonding_conversation_114",
+		"adamant_to_adamant_bonding_conversation_114"
 	},
 	not_has_dog = {
 		"adamant_female_c_ogryn_bonding_conversation_05",
@@ -346,7 +346,7 @@ RuleLoadingConditions.adamant_female_c = {
 		"adamant_female_c_zealot_bonding_conversation_42",
 		"adamant_female_c_zealot_bonding_conversation_45",
 		"adamant_female_c_zealot_bonding_conversation_48",
-		"adamant_female_c_zealot_bonding_conversation_55",
+		"adamant_female_c_zealot_bonding_conversation_55"
 	},
 	expeditions = {
 		"adamant_to_adamant_bonding_conversation_102",
@@ -362,8 +362,8 @@ RuleLoadingConditions.adamant_female_c = {
 		"adamant_female_c_veteran_bonding_conversation_45",
 		"adamant_female_c_veteran_bonding_conversation_53",
 		"adamant_female_c_zealot_bonding_conversation_05",
-		"adamant_female_c_zealot_bonding_conversation_25",
-	},
+		"adamant_female_c_zealot_bonding_conversation_25"
+	}
 }
 RuleLoadingConditions.adamant_male_a = {
 	exclude_conditions = {
@@ -375,14 +375,14 @@ RuleLoadingConditions.adamant_male_a = {
 		end,
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	all_adamant_not_has_dog = {
 		"adamant_to_adamant_bonding_conversation_02",
 		"adamant_to_adamant_bonding_conversation_06",
 		"adamant_to_adamant_bonding_conversation_08",
 		"adamant_to_adamant_bonding_conversation_25",
-		"adamant_to_adamant_bonding_conversation_33",
+		"adamant_to_adamant_bonding_conversation_33"
 	},
 	not_has_dog = {
 		"adamant_male_a_ogryn_bonding_conversation_05",
@@ -398,13 +398,13 @@ RuleLoadingConditions.adamant_male_a = {
 		"adamant_male_a_psyker_bonding_conversation_40",
 		"adamant_male_a_psyker_bonding_conversation_43",
 		"adamant_male_a_psyker_bonding_conversation_57",
-		"adamant_male_a_zealot_bonding_conversation_53",
+		"adamant_male_a_zealot_bonding_conversation_53"
 	},
 	expeditions = {
 		"adamant_to_adamant_bonding_conversation_31",
 		"adamant_male_a_psyker_bonding_conversation_23",
-		"adamant_male_a_zealot_bonding_conversation_50",
-	},
+		"adamant_male_a_zealot_bonding_conversation_50"
+	}
 }
 RuleLoadingConditions.adamant_male_b = {
 	exclude_conditions = {
@@ -413,7 +413,7 @@ RuleLoadingConditions.adamant_male_b = {
 		end,
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	not_has_dog = {
 		"adamant_male_b_ogryn_bonding_conversation_29",
@@ -423,7 +423,7 @@ RuleLoadingConditions.adamant_male_b = {
 		"adamant_male_b_zealot_bonding_conversation_14",
 		"adamant_male_b_zealot_bonding_conversation_40",
 		"adamant_male_b_zealot_bonding_conversation_47",
-		"broker_female_b_adamant_bonding_conversation_15",
+		"broker_female_b_adamant_bonding_conversation_15"
 	},
 	expeditions = {
 		"adamant_male_b_psyker_bonding_conversation_19",
@@ -432,8 +432,8 @@ RuleLoadingConditions.adamant_male_b = {
 		"adamant_male_b_zealot_bonding_conversation_07",
 		"adamant_male_b_zealot_bonding_conversation_37",
 		"adamant_male_b_zealot_bonding_conversation_38",
-		"adamant_male_b_zealot_bonding_conversation_46",
-	},
+		"adamant_male_b_zealot_bonding_conversation_46"
+	}
 }
 RuleLoadingConditions.adamant_male_c = {
 	exclude_conditions = {
@@ -442,7 +442,7 @@ RuleLoadingConditions.adamant_male_c = {
 		end,
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	not_has_dog = {
 		"adamant_male_c_psyker_bonding_conversation_13",
@@ -452,46 +452,46 @@ RuleLoadingConditions.adamant_male_c = {
 		"adamant_male_c_zealot_bonding_conversation_22",
 		"adamant_male_c_zealot_bonding_conversation_33",
 		"adamant_male_c_zealot_bonding_conversation_58",
-		"broker_male_b_adamant_bonding_conversation_29",
+		"broker_male_b_adamant_bonding_conversation_29"
 	},
 	expeditions = {
 		"adamant_to_adamant_bonding_conversation_107",
 		"adamant_male_c_ogryn_bonding_conversation_13",
-		"adamant_male_c_veteran_bonding_conversation_38",
-	},
+		"adamant_male_c_veteran_bonding_conversation_38"
+	}
 }
 RuleLoadingConditions.broker_a = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
 		"combat_pause_limited_broker_a_03",
-		"combat_pause_quirk_broker_a_trait_07",
-	},
+		"combat_pause_quirk_broker_a_trait_07"
+	}
 }
 RuleLoadingConditions.broker_b = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
 		"combat_pause_limited_broker_b_01",
 		"combat_pause_limited_broker_b_08",
-		"combat_pause_quirk_broker_b_trait_10",
-	},
+		"combat_pause_quirk_broker_b_trait_10"
+	}
 }
 RuleLoadingConditions.broker_c = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
-		"combat_pause_quirk_broker_c_trait_05",
-	},
+		"combat_pause_quirk_broker_c_trait_05"
+	}
 }
 RuleLoadingConditions.broker_female_a = {
 	exclude_conditions = {
@@ -500,11 +500,11 @@ RuleLoadingConditions.broker_female_a = {
 		end,
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	throneside = {
 		"broker_female_a_psyker_bonding_conversation_32",
-		"broker_bonding_conversation_29",
+		"broker_bonding_conversation_29"
 	},
 	expeditions = {
 		"broker_female_a_adamant_bonding_conversation_16",
@@ -517,14 +517,14 @@ RuleLoadingConditions.broker_female_a = {
 		"broker_female_a_veteran_bonding_conversation_33",
 		"broker_female_a_zealot_bonding_conversation_04",
 		"broker_female_a_zealot_bonding_conversation_23",
-		"broker_female_a_zealot_bonding_conversation_35",
-	},
+		"broker_female_a_zealot_bonding_conversation_35"
+	}
 }
 RuleLoadingConditions.broker_female_b = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
 		"broker_female_b_adamant_bonding_conversation_02",
@@ -537,22 +537,22 @@ RuleLoadingConditions.broker_female_b = {
 		"broker_female_b_veteran_bonding_conversation_34",
 		"broker_female_b_zealot_bonding_conversation_25",
 		"broker_female_b_zealot_bonding_conversation_33",
-		"broker_female_b_zealot_bonding_conversation_34",
-	},
+		"broker_female_b_zealot_bonding_conversation_34"
+	}
 }
 RuleLoadingConditions.broker_female_c = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
 		"broker_female_c_adamant_bonding_conversation_12",
 		"broker_female_c_adamant_bonding_conversation_24",
 		"broker_female_c_psyker_bonding_conversation_12",
 		"broker_female_c_veteran_bonding_conversation_03",
-		"broker_female_c_zealot_bonding_conversation_26",
-	},
+		"broker_female_c_zealot_bonding_conversation_26"
+	}
 }
 RuleLoadingConditions.broker_male_a = {
 	exclude_conditions = {
@@ -561,11 +561,11 @@ RuleLoadingConditions.broker_male_a = {
 		end,
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	throneside = {
 		"broker_male_a_zealot_bonding_conversation_09",
-		"broker_male_a_zealot_bonding_conversation_15",
+		"broker_male_a_zealot_bonding_conversation_15"
 	},
 	expeditions = {
 		"broker_male_a_adamant_bonding_conversation_14",
@@ -578,14 +578,14 @@ RuleLoadingConditions.broker_male_a = {
 		"broker_male_a_veteran_bonding_conversation_31",
 		"broker_male_a_veteran_bonding_conversation_35",
 		"broker_male_a_zealot_bonding_conversation_05",
-		"broker_male_a_zealot_bonding_conversation_16",
-	},
+		"broker_male_a_zealot_bonding_conversation_16"
+	}
 }
 RuleLoadingConditions.broker_male_b = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
 		"broker_male_b_psyker_bonding_conversation_04",
@@ -594,14 +594,14 @@ RuleLoadingConditions.broker_male_b = {
 		"broker_male_b_psyker_bonding_conversation_36",
 		"broker_male_b_veteran_bonding_conversation_15",
 		"broker_male_b_veteran_bonding_conversation_23",
-		"broker_male_b_zealot_bonding_conversation_26",
-	},
+		"broker_male_b_zealot_bonding_conversation_26"
+	}
 }
 RuleLoadingConditions.broker_male_c = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
 		"broker_bonding_conversation_39",
@@ -612,18 +612,18 @@ RuleLoadingConditions.broker_male_c = {
 		"broker_male_c_veteran_bonding_conversation_13",
 		"broker_male_c_veteran_bonding_conversation_22",
 		"broker_male_c_zealot_bonding_conversation_21",
-		"broker_male_c_zealot_bonding_conversation_30",
-	},
+		"broker_male_c_zealot_bonding_conversation_30"
+	}
 }
 RuleLoadingConditions.cryptic_a = {
 	exclude_conditions = {
 		not_has_dog = function ()
 			return _has_talent("adamant_disable_companion", "adamant_male_a")
-		end,
+		end
 	},
 	not_has_dog = {
-		"cryptic_a_adamant_bonding_conversation_02",
-	},
+		"cryptic_a_adamant_bonding_conversation_02"
+	}
 }
 RuleLoadingConditions.cryptic_b = {
 	exclude_conditions = {
@@ -632,7 +632,7 @@ RuleLoadingConditions.cryptic_b = {
 		end,
 		not_has_dog = function ()
 			return _has_talent("adamant_disable_companion", "adamant_male_b")
-		end,
+		end
 	},
 	expeditions = {
 		"broker_bonding_conversation_39",
@@ -642,33 +642,33 @@ RuleLoadingConditions.cryptic_b = {
 		"cryptic_b_broker_bonding_conversation_01",
 		"cryptic_b_broker_bonding_conversation_23",
 		"cryptic_b_broker_bonding_conversation_33",
-		"cryptic_b_adamant_bonding_conversation_16",
+		"cryptic_b_adamant_bonding_conversation_16"
 	},
 	not_has_dog = {
-		"cryptic_b_adamant_bonding_conversation_17",
-	},
+		"cryptic_b_adamant_bonding_conversation_17"
+	}
 }
 
 local needed_bonus_voices = {
 	"ogryn_b",
-	"psyker_male_a",
+	"psyker_male_a"
 }
 
 RuleLoadingConditions.cryptic_d = {
 	exclude_conditions = {
 		bonus = function ()
 			return not _player_voices_present(needed_bonus_voices)
-		end,
+		end
 	},
 	bonus = {
-		"cryptic_bonding_conversation_bonus",
-	},
+		"cryptic_bonding_conversation_bonus"
+	}
 }
 RuleLoadingConditions.ogryn_a = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
 		"combat_pause_limited_bolt_on_a_ogryn_a_01",
@@ -676,343 +676,343 @@ RuleLoadingConditions.ogryn_a = {
 		"combat_pause_quirk_tank",
 		"bonding_conversation_metropolitan_noise",
 		"oval_bonding_conversation_unenlightened",
-		"bonding_conversation_round_three_tree",
-	},
+		"bonding_conversation_round_three_tree"
+	}
 }
 RuleLoadingConditions.ogryn_b = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
-		"combat_pause_quirk_homesick",
-	},
+		"combat_pause_quirk_homesick"
+	}
 }
 RuleLoadingConditions.ogryn_c = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	pre_heresy = {
-		"pimlico_bonding_conversation_penances",
+		"pimlico_bonding_conversation_penances"
 	},
 	expeditions = {
-		"bonding_conversation_metropolitan_fix",
-	},
+		"bonding_conversation_metropolitan_fix"
+	}
 }
 RuleLoadingConditions.ogryn_d = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	pre_twins = {
-		"bonding_conversation_hammersmith_even_more_wolfer",
+		"bonding_conversation_hammersmith_even_more_wolfer"
 	},
 	pre_heresy = {
-		"bonding_conversation_hammersmith_more_wolfer",
+		"bonding_conversation_hammersmith_more_wolfer"
 	},
 	expeditions = {
-		"bonding_conversation_needed_ammo",
-	},
+		"bonding_conversation_needed_ammo"
+	}
 }
 RuleLoadingConditions.psyker_a = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
-		"combat_pause_quirk_cold",
-	},
+		"combat_pause_quirk_cold"
+	}
 }
 RuleLoadingConditions.psyker_b = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
-		"combat_pause_quirk_heights",
-	},
+		"combat_pause_quirk_heights"
+	}
 }
 RuleLoadingConditions.psyker_c = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
 		"combat_pause_limited_psyker_c_06",
 		"combat_pause_limited_psyker_c_11",
-		"combat_pause_quirk_tertium_splendour",
-	},
+		"combat_pause_quirk_tertium_splendour"
+	}
 }
 RuleLoadingConditions.psyker_male_a = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
-	expeditions = {},
+	expeditions = {}
 }
 RuleLoadingConditions.psyker_female_a = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	pre_core_research = {
-		"pimlico_bonding_conversation_daviot_clandestium_02",
+		"pimlico_bonding_conversation_daviot_clandestium_02"
 	},
 	pre_twins = {
-		"bonding_conversation_hammersmith_even_more_zola",
+		"bonding_conversation_hammersmith_even_more_zola"
 	},
 	expeditions = {
-		"pimlico_bonding_conversation_angel",
-	},
+		"pimlico_bonding_conversation_angel"
+	}
 }
 RuleLoadingConditions.psyker_female_b = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	pre_resurgence = {
-		"pimlico_bonding_conversation_conversation",
+		"pimlico_bonding_conversation_conversation"
 	},
 	pre_heresy = {
-		"pimlico_bonding_conversation_road",
+		"pimlico_bonding_conversation_road"
 	},
 	pre_twins = {
-		"bonding_conversation_hammersmith_zola_steam",
+		"bonding_conversation_hammersmith_zola_steam"
 	},
 	expeditions = {
 		"bonding_conversation_hammersmith_spreading_war",
 		"bonding_conversation_metropolitan_head",
-		"bonding_conversation_metropolitan_weep",
-	},
+		"bonding_conversation_metropolitan_weep"
+	}
 }
 RuleLoadingConditions.psyker_female_c = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	pre_heresy = {
 		"pimlico_bonding_conversation_enemy",
-		"pimlico_bonding_conversation_forever",
+		"pimlico_bonding_conversation_forever"
 	},
 	pre_twins = {
 		"bonding_conversation_hammersmith_more_zola",
-		"bonding_conversation_hammersmith_zola",
+		"bonding_conversation_hammersmith_zola"
 	},
 	expeditions = {
 		"bonding_conversation_metropolitan_art",
 		"bonding_conversation_metropolitan_dedication",
-		"pimlico_bonding_conversation_forever",
-	},
+		"pimlico_bonding_conversation_forever"
+	}
 }
 RuleLoadingConditions.psyker_male_a = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
-		"bonding_conversation_hammersmith_cult",
-	},
+		"bonding_conversation_hammersmith_cult"
+	}
 }
 RuleLoadingConditions.psyker_male_c = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	pre_resurgence = {
-		"pimlico_bonding_conversation_elvanfoot_hestia_01",
+		"pimlico_bonding_conversation_elvanfoot_hestia_01"
 	},
 	expeditions = {
 		"bonding_conversation_hammersmith_dawn",
 		"bonding_conversation_hammersmith_pride",
 		"bonding_conversation_hammersmith_solace",
-		"bonding_conversation_metropolitan_vision_ruins",
-	},
+		"bonding_conversation_metropolitan_vision_ruins"
+	}
 }
 RuleLoadingConditions.veteran_a = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
 		"combat_pause_quirk_nostalgia",
 		"combat_pause_limited_veteran_a_09",
 		"combat_pause_quirk_discipline",
-		"combat_pause_quirk_emperor",
-	},
+		"combat_pause_quirk_emperor"
+	}
 }
 RuleLoadingConditions.veteran_b = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
-		"combat_pause_quirk_trinket",
-	},
+		"combat_pause_quirk_trinket"
+	}
 }
 RuleLoadingConditions.veteran_female_a = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
-		"oval_bonding_conversation_fond",
-	},
+		"oval_bonding_conversation_fond"
+	}
 }
 RuleLoadingConditions.veteran_female_b = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	pre_resurgence = {
-		"pimlico_bonding_conversation_cumbernauld_01",
+		"pimlico_bonding_conversation_cumbernauld_01"
 	},
 	expeditions = {
 		"bonding_conversation_metropolitan_come_play",
 		"bonding_conversation_metropolitan_soothing_blood",
-		"bonding_conversation_metropolitan_wax",
-	},
+		"bonding_conversation_metropolitan_wax"
+	}
 }
 RuleLoadingConditions.veteran_male_a = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
-		"bonding_conversation_metropolitan_bombs",
-	},
+		"bonding_conversation_metropolitan_bombs"
+	}
 }
 RuleLoadingConditions.veteran_male_b = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
-		"bonding_conversation_metropolitan_cheer",
-	},
+		"bonding_conversation_metropolitan_cheer"
+	}
 }
 RuleLoadingConditions.veteran_male_c = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	pre_core_research = {
-		"pimlico_bonding_conversation_daviot_moebian_steel_02",
+		"pimlico_bonding_conversation_daviot_moebian_steel_02"
 	},
 	pre_twins = {
-		"bonding_conversation_hammersmith_even_more_zola_two",
+		"bonding_conversation_hammersmith_even_more_zola_two"
 	},
 	expeditions = {
-		"bonding_conversation_metropolitan_dark_alley",
-	},
+		"bonding_conversation_metropolitan_dark_alley"
+	}
 }
 RuleLoadingConditions.zealot_a = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
-		"combat_pause_limited_zealot_a_13",
-	},
+		"combat_pause_limited_zealot_a_13"
+	}
 }
 RuleLoadingConditions.zealot_b = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
-		"combat_pause_quirk_ammo",
-	},
+		"combat_pause_quirk_ammo"
+	}
 }
 RuleLoadingConditions.zealot_c = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
-		"combat_pause_limited_zealot_c_14",
-	},
+		"combat_pause_limited_zealot_c_14"
+	}
 }
 RuleLoadingConditions.zealot_female_a = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
 		"bonding_conversation_metropolitan_leave",
-		"oval_bonding_conversation_spite",
-	},
+		"oval_bonding_conversation_spite"
+	}
 }
 RuleLoadingConditions.zealot_female_b = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
-		"pimlico_bonding_conversation_dedicated",
-	},
+		"pimlico_bonding_conversation_dedicated"
+	}
 }
 RuleLoadingConditions.zealot_female_c = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	pre_heresy = {
-		"pimlico_bonding_conversation_gareloch_01",
+		"pimlico_bonding_conversation_gareloch_01"
 	},
 	expeditions = {
-		"bonding_conversations_victoria_light",
-	},
+		"bonding_conversations_victoria_light"
+	}
 }
 RuleLoadingConditions.zealot_male_b = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	expeditions = {
-		"bonding_conversation_metropolitan_hasty",
-	},
+		"bonding_conversation_metropolitan_hasty"
+	}
 }
 RuleLoadingConditions.zealot_male_c = {
 	exclude_conditions = {
 		expeditions = function ()
 			return _game_mode_is("expedition")
-		end,
+		end
 	},
 	pre_heresy = {
 		"pimlico_bonding_conversation_charge",
-		"adamant_female_b_zealot_bonding_conversation_29_a",
+		"adamant_female_b_zealot_bonding_conversation_29_a"
 	},
 	expeditions = {
 		"pimlico_bonding_conversation_bright",
-		"pimlico_bonding_conversation_burn",
-	},
+		"pimlico_bonding_conversation_burn"
+	}
 }
 
 local all_char_conditions = {
@@ -1040,36 +1040,36 @@ local all_char_conditions = {
 		end,
 		pre_heresy = function ()
 			return not _all_completed_journey_step("journey_km_heresy")
-		end,
+		end
 	},
 	first_mission = {
-		"bonding",
+		"bonding"
 	},
 	different_archetypes = {
-		"gang",
+		"gang"
 	},
 	pre_twins = {
-		"bonding_conversation_waterloo_twins",
+		"bonding_conversation_waterloo_twins"
 	},
 	pre_habs = {
 		"oval_world_conversation_balta_nobles",
-		"pimlico_bonding_conversation_balta_nobles",
+		"pimlico_bonding_conversation_balta_nobles"
 	},
 	pre_resurgence = {
 		"bonding_conversation_waterloo_brahms",
 		"oval_world_conversation_cumbernauld_brahms",
 		"oval_world_conversation_elvanfoot_hestia",
-		"oval_world_conversation_universal_hestia",
+		"oval_world_conversation_universal_hestia"
 	},
 	pre_core_research = {
 		"oval_world_conversation_daviot_steel",
 		"oval_world_conversation_fingal_swagger",
-		"pimlico_bonding_conversation_fingal_swagger",
+		"pimlico_bonding_conversation_fingal_swagger"
 	},
 	pre_heresy = {
 		"bonding_conversation_waterloo_wolfer",
-		"oval_world_conversation_gareloch",
-	},
+		"oval_world_conversation_gareloch"
+	}
 }
 
 for voice, rule_groups in pairs(DialogueSettings.player_load_files) do

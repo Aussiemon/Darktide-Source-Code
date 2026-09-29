@@ -107,7 +107,7 @@ function _template_settings_test(weapon_template)
 end
 
 local MANDATORY_ACTIONS = {
-	action_wield = true,
+	action_wield = true
 }
 
 function _action_settings_test(weapon_template)
@@ -260,14 +260,6 @@ function _validate_hit_zone_priority(weapon_template, action_settings)
 	return success, error_msg
 end
 
-local _skip_ability_check_action_kinds = {
-	inspect = true,
-	inspect_3p = true,
-	toggle_special = true,
-	unwield = true,
-	unwield_to_specific = true,
-}
-
 function _validate_chain_actions(weapon_template, action_settings)
 	local allowed_chain_actions = action_settings.allowed_chain_actions
 
@@ -279,20 +271,10 @@ function _validate_chain_actions(weapon_template, action_settings)
 	local action_inputs = weapon_template.action_inputs
 	local success = true
 	local error_msg = ""
-	local has_grenade_ability = false
-	local has_combat_ability = false
 
 	for input, chain_action in pairs(allowed_chain_actions) do
 		local chain_action_success = true
 		local chain_action_error_msg = string.format("%q -> ", tostring(input))
-
-		if input == "combat_ability" then
-			has_combat_ability = true
-		end
-
-		if input == "grenade_ability" then
-			has_grenade_ability = true
-		end
 
 		if type(input) ~= "string" then
 			chain_action_success = false
@@ -347,32 +329,6 @@ function _validate_chain_actions(weapon_template, action_settings)
 		if not chain_action_success then
 			error_msg = error_msg .. chain_action_error_msg .. "\n"
 			success = false
-		end
-	end
-
-	local is_weapon = false
-	local is_bot_weapon = string.find(weapon_template.name, "bot_")
-
-	if not is_bot_weapon then
-		for i, keyword in pairs(weapon_template.keywords) do
-			if keyword == "ranged" or keyword == "melee" then
-				is_weapon = true
-			end
-		end
-	end
-
-	local kind = action_settings.kind
-	local make_ability_check = not _skip_ability_check_action_kinds[kind] and not action_settings.skip_ability_chain_action_check
-
-	if is_weapon and make_ability_check then
-		if not has_grenade_ability then
-			success = false
-			error_msg = error_msg .. "missing chain action for input grenade_ability\n"
-		end
-
-		if not has_combat_ability then
-			success = false
-			error_msg = error_msg .. "missing chain action for input combat_ability\n"
 		end
 	end
 

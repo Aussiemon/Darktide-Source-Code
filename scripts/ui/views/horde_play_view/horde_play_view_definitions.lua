@@ -7,7 +7,7 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local HordesModeSettings = require("scripts/settings/hordes_mode_settings")
 local option_size = {
 	400,
-	100,
+	100
 }
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
@@ -17,13 +17,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			3,
-		},
+			3
+		}
 	},
 	page_header = {
 		horizontal_alignment = "left",
@@ -31,13 +31,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			1200,
-			124,
+			124
 		},
 		position = {
 			110,
 			130,
-			2,
-		},
+			2
+		}
 	},
 	detail = {
 		horizontal_alignment = "left",
@@ -45,13 +45,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			483,
-			303,
+			303
 		},
 		position = {
 			0,
 			200,
-			2,
-		},
+			2
+		}
 	},
 	detail_header = {
 		horizontal_alignment = "right",
@@ -59,13 +59,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			483,
-			75,
+			75
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	detail_location = {
 		horizontal_alignment = "right",
@@ -73,13 +73,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			483,
-			228,
+			228
 		},
 		position = {
 			0,
 			228,
-			0,
-		},
+			0
+		}
 	},
 	objective = {
 		horizontal_alignment = "center",
@@ -87,13 +87,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			483,
-			200,
+			200
 		},
 		position = {
 			0,
 			313,
-			0,
-		},
+			0
+		}
 	},
 	objective_header = {
 		horizontal_alignment = "left",
@@ -101,13 +101,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			483,
-			68,
+			68
 		},
 		position = {
 			0,
 			0,
-			10,
-		},
+			10
+		}
 	},
 	objective_credits = {
 		horizontal_alignment = "left",
@@ -115,13 +115,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			110,
-			33,
+			33
 		},
 		position = {
 			-10,
 			10,
-			10,
-		},
+			10
+		}
 	},
 	objective_xp = {
 		horizontal_alignment = "left",
@@ -129,13 +129,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			110,
-			33,
+			33
 		},
 		position = {
 			115,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	objective_speaker = {
 		horizontal_alignment = "right",
@@ -143,13 +143,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			40,
-			48,
+			48
 		},
 		position = {
 			10,
 			10,
-			10,
-		},
+			10
+		}
 	},
 	option_header = {
 		horizontal_alignment = "right",
@@ -157,13 +157,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			option_size[1],
-			45,
+			45
 		},
 		position = {
 			option_size[1] + 40,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	option_1 = {
 		horizontal_alignment = "right",
@@ -173,8 +173,8 @@ local scenegraph_definition = {
 		position = {
 			option_size[1] + 40,
 			44,
-			0,
-		},
+			0
+		}
 	},
 	option_2 = {
 		horizontal_alignment = "left",
@@ -184,8 +184,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			option_size[2] + 20,
-			0,
-		},
+			0
+		}
 	},
 	option_3 = {
 		horizontal_alignment = "left",
@@ -195,8 +195,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			option_size[2] + 20,
-			0,
-		},
+			0
+		}
 	},
 	option_4 = {
 		horizontal_alignment = "left",
@@ -206,8 +206,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			option_size[2] + 20,
-			0,
-		},
+			0
+		}
 	},
 	option_5 = {
 		horizontal_alignment = "left",
@@ -217,8 +217,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			option_size[2] + 20,
-			0,
-		},
+			0
+		}
 	},
 	play_button = {
 		horizontal_alignment = "right",
@@ -228,8 +228,8 @@ local scenegraph_definition = {
 		position = {
 			-165,
 			-150,
-			1,
-		},
+			1
+		}
 	},
 	info_box = {
 		horizontal_alignment = "center",
@@ -237,13 +237,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			380,
-			60,
+			60
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	info_button = {
 		horizontal_alignment = "left",
@@ -251,14 +251,14 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			option_size[1],
-			40,
+			40
 		},
 		position = {
 			0,
 			55,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 
 local function _hide_when_disabled(content, style)
@@ -287,8 +287,8 @@ local function create_option_widget(scenegraph_id)
 			content_id = "hotspot",
 			pass_type = "hotspot",
 			content = {
-				on_hover_sound = UISoundEvents.story_mission_option_mouse_hover,
-			},
+				on_hover_sound = UISoundEvents.story_mission_option_mouse_hover
+			}
 		},
 		{
 			pass_type = "texture",
@@ -304,10 +304,10 @@ local function create_option_widget(scenegraph_id)
 				offset = {
 					0,
 					0,
-					6,
-				},
+					6
+				}
 			},
-			change_function = ButtonPassTemplates.terminal_button_change_function,
+			change_function = ButtonPassTemplates.terminal_button_change_function
 		},
 		{
 			pass_type = "texture",
@@ -323,10 +323,10 @@ local function create_option_widget(scenegraph_id)
 				offset = {
 					0,
 					0,
-					7,
-				},
+					7
+				}
 			},
-			change_function = ButtonPassTemplates.terminal_button_change_function,
+			change_function = ButtonPassTemplates.terminal_button_change_function
 		},
 		{
 			pass_type = "texture",
@@ -343,16 +343,16 @@ local function create_option_widget(scenegraph_id)
 				selected_color = Color.terminal_background_selected(nil, true),
 				size_addition = {
 					0,
-					-30,
+					-30
 				},
 				offset = {
 					0,
 					0,
-					2,
-				},
+					2
+				}
 			},
 			change_function = ButtonPassTemplates.terminal_list_button_frame_hover_change_function,
-			visibility_function = ButtonPassTemplates.list_button_focused_visibility_function,
+			visibility_function = ButtonPassTemplates.list_button_focused_visibility_function
 		},
 		{
 			pass_type = "texture",
@@ -361,20 +361,20 @@ local function create_option_widget(scenegraph_id)
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				color = {
 					107,
 					159,
 					67,
-					67,
+					67
 				},
 				size_addition = {
 					0,
-					-30,
-				},
+					-30
+				}
 			},
-			visibility_function = _show_when_disabled,
+			visibility_function = _show_when_disabled
 		},
 		{
 			pass_type = "texture",
@@ -390,15 +390,15 @@ local function create_option_widget(scenegraph_id)
 				color = Color.black(200, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
+					3
+				}
 			},
-			change_function = ButtonPassTemplates.terminal_button_change_function,
+			change_function = ButtonPassTemplates.terminal_button_change_function
 		},
 		{
 			pass_type = "texture",
@@ -411,14 +411,14 @@ local function create_option_widget(scenegraph_id)
 				color = Color.black(200, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -434,14 +434,14 @@ local function create_option_widget(scenegraph_id)
 				offset = {
 					0,
 					0,
-					6,
+					6
 				},
 				size_addition = {
 					0,
-					-30,
-				},
+					-30
+				}
 			},
-			change_function = ButtonPassTemplates.terminal_button_change_function,
+			change_function = ButtonPassTemplates.terminal_button_change_function
 		},
 		{
 			pass_type = "rect",
@@ -452,21 +452,21 @@ local function create_option_widget(scenegraph_id)
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size_addition = {
 					0,
-					-30,
-				},
-			},
+					-30
+				}
+			}
 		},
 		{
 			pass_type = "rect",
 			style_id = "background",
 			value_id = "content/ui/materials/backgrounds/default_square",
 			style = {
-				color = Color.black(150, true),
-			},
+				color = Color.black(150, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -479,19 +479,19 @@ local function create_option_widget(scenegraph_id)
 				offset = {
 					-22,
 					-6,
-					4,
+					4
 				},
 				default_offset = {
 					-22,
 					-6,
-					4,
+					4
 				},
 				size = {
 					28,
-					20,
-				},
+					20
+				}
 			},
-			visibility_function = _hide_when_disabled,
+			visibility_function = _hide_when_disabled
 		},
 		{
 			pass_type = "texture",
@@ -504,19 +504,19 @@ local function create_option_widget(scenegraph_id)
 				offset = {
 					-22,
 					-6,
-					4,
+					4
 				},
 				default_offset = {
 					-22,
 					-6,
-					4,
+					4
 				},
 				size = {
 					28,
-					20,
-				},
+					20
+				}
 			},
-			visibility_function = _hide_when_disabled,
+			visibility_function = _hide_when_disabled
 		},
 		{
 			pass_type = "text",
@@ -535,23 +535,23 @@ local function create_option_widget(scenegraph_id)
 				offset = {
 					-52,
 					-1,
-					4,
+					4
 				},
 				default_offset = {
 					-52,
 					-1,
-					4,
+					4
 				},
 				size = {
 					nil,
-					30,
+					30
 				},
 				size_addition = {
 					-100,
-					0,
-				},
+					0
+				}
 			},
-			visibility_function = _hide_when_disabled,
+			visibility_function = _hide_when_disabled
 		},
 		{
 			pass_type = "text",
@@ -570,23 +570,23 @@ local function create_option_widget(scenegraph_id)
 				offset = {
 					-52,
 					-1,
-					4,
+					4
 				},
 				default_offset = {
 					-52,
 					-1,
-					4,
+					4
 				},
 				size = {
 					nil,
-					30,
+					30
 				},
 				size_addition = {
 					-100,
-					0,
-				},
+					0
+				}
 			},
-			visibility_function = _hide_when_disabled,
+			visibility_function = _hide_when_disabled
 		},
 		{
 			pass_type = "text",
@@ -605,14 +605,14 @@ local function create_option_widget(scenegraph_id)
 				offset = {
 					30,
 					-12,
-					4,
+					4
 				},
 				size_addition = {
 					-100,
-					0,
-				},
+					0
+				}
 			},
-			change_function = _toggle_color_when_disabled("text_color", Color.terminal_text_header(nil, true), Color.terminal_text_header(128, true)),
+			change_function = _toggle_color_when_disabled("text_color", Color.terminal_text_header(nil, true), Color.terminal_text_header(128, true))
 		},
 		{
 			pass_type = "text",
@@ -631,18 +631,18 @@ local function create_option_widget(scenegraph_id)
 				offset = {
 					30,
 					-2,
-					5,
+					5
 				},
 				size = {
 					nil,
-					30,
+					30
 				},
 				size_addition = {
 					-100,
-					0,
-				},
+					0
+				}
 			},
-			visibility_function = _hide_when_disabled,
+			visibility_function = _hide_when_disabled
 		},
 		{
 			pass_type = "text",
@@ -662,23 +662,23 @@ local function create_option_widget(scenegraph_id)
 					255,
 					159,
 					67,
-					67,
+					67
 				},
 				offset = {
 					30,
 					-2,
-					5,
+					5
 				},
 				size = {
 					nil,
-					30,
+					30
 				},
 				size_addition = {
 					-100,
-					0,
-				},
+					0
+				}
 			},
-			visibility_function = _show_when_disabled,
+			visibility_function = _show_when_disabled
 		},
 		{
 			pass_type = "texture",
@@ -692,20 +692,20 @@ local function create_option_widget(scenegraph_id)
 				offset = {
 					-25,
 					10,
-					3,
+					3
 				},
 				size = {
 					48,
-					48,
-				},
+					48
+				}
 			},
 			change_function = _toggle_color_when_disabled("color", Color.terminal_text_header(255, true), {
 				255,
 				159,
 				67,
-				67,
-			}),
-		},
+				67
+			})
+		}
 	}, scenegraph_id)
 end
 
@@ -719,9 +719,9 @@ local widget_definitions = {
 					75,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -733,16 +733,16 @@ local widget_definitions = {
 					0,
 					0,
 					0,
-					0,
+					0
 				},
 				color_info = Color.golden_rod(nil, true),
 				color_warning = Color.ui_interaction_critical(255, true),
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -758,21 +758,21 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				size_addition = {
 					-10,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "info_box"),
 	play_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "play_button", {
 		gamepad_action = "confirm_pressed",
 		original_text = Utf8.upper(Localize("loc_story_mission_play_menu_button_start_mission")),
 		hotspot = {
-			on_pressed_sound = nil,
-		},
+			on_pressed_sound = nil
+		}
 	}),
 	play_button_legend = UIWidget.create_definition({
 		{
@@ -790,10 +790,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					50,
-					2,
-				},
-			},
-		},
+					2
+				}
+			}
+		}
 	}, "play_button"),
 	option_header = UIWidget.create_definition({
 		{
@@ -809,16 +809,16 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size_addition = {
 					0,
-					0,
+					0
 				},
-				text_color = Color.terminal_text_header(nil, true),
+				text_color = Color.terminal_text_header(nil, true)
 			},
-			value = Localize("loc_story_mission_play_menu_difficulty_options_header"),
-		},
+			value = Localize("loc_story_mission_play_menu_difficulty_options_header")
+		}
 	}, "option_header"),
 	option_1 = create_option_widget("option_1"),
 	option_2 = create_option_widget("option_2"),
@@ -841,10 +841,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
-			value = Localize("loc_horde_title"),
+			value = Localize("loc_horde_title")
 		},
 		{
 			pass_type = "text",
@@ -860,11 +860,11 @@ local widget_definitions = {
 				offset = {
 					0,
 					50,
-					1,
-				},
+					1
+				}
 			},
-			value = Localize("loc_horde_title_desc"),
-		},
+			value = Localize("loc_horde_title_desc")
+		}
 	}, "page_header"),
 	detail = UIWidget.create_definition({
 		{
@@ -876,9 +876,9 @@ local widget_definitions = {
 					200,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -895,9 +895,9 @@ local widget_definitions = {
 				offset = {
 					20,
 					-10,
-					2,
-				},
-			},
+					2
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -914,9 +914,9 @@ local widget_definitions = {
 				offset = {
 					20,
 					16,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -929,9 +929,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
-				},
-			},
+					5
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -944,14 +944,14 @@ local widget_definitions = {
 				color = Color.black(200, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -964,9 +964,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
-				},
-			},
+					5
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -976,10 +976,10 @@ local widget_definitions = {
 			value_id = "location_image",
 			style = {
 				material_values = {
-					texture_map = "content/ui/textures/missions/quickplay",
-				},
-			},
-		},
+					texture_map = "content/ui/textures/missions/quickplay"
+				}
+			}
+		}
 	}, "detail"),
 	objective = UIWidget.create_definition({
 		{
@@ -992,9 +992,9 @@ local widget_definitions = {
 					128,
 					169,
 					211,
-					158,
-				},
-			},
+					158
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -1010,13 +1010,13 @@ local widget_definitions = {
 				offset = {
 					70,
 					13,
-					3,
+					3
 				},
 				size_addition = {
 					-90,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -1031,14 +1031,14 @@ local widget_definitions = {
 				offset = {
 					70,
 					33,
-					4,
+					4
 				},
 				size_addition = {
 					-90,
-					0,
+					0
 				},
-				text_color = Color.terminal_text_header(nil, true),
-			},
+				text_color = Color.terminal_text_header(nil, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1051,13 +1051,13 @@ local widget_definitions = {
 				offset = {
 					20,
 					16,
-					2,
+					2
 				},
 				size = {
 					36,
-					36,
-				},
-			},
+					36
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -1074,12 +1074,12 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
 			visibility_function = function (content)
 				return content.is_locked
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -1092,9 +1092,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
-				},
-			},
+					5
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1107,14 +1107,14 @@ local widget_definitions = {
 				color = Color.black(200, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1127,9 +1127,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
-				},
-			},
+					5
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -1140,9 +1140,9 @@ local widget_definitions = {
 					200,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -1157,15 +1157,15 @@ local widget_definitions = {
 				offset = {
 					20,
 					80,
-					1,
+					1
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
-		},
-	}, "objective"),
+					0
+				}
+			}
+		}
+	}, "objective")
 }
 local animations = {
 	on_enter = {
@@ -1177,7 +1177,7 @@ local animations = {
 				for _, widget in pairs(widgets) do
 					widget.alpha_multiplier = 0
 				end
-			end,
+			end
 		},
 		{
 			end_time = 0.8,
@@ -1201,8 +1201,8 @@ local animations = {
 				parent:_set_scenegraph_position("play_button", scenegraph_definition.play_button.position[1] + x_anim_distance)
 				parent:_set_scenegraph_position("option_1", scenegraph_definition.option_1.position[1] - x_anim_distance)
 				parent:_set_scenegraph_position("option_4", scenegraph_definition.option_4.position[1] - x_anim_distance)
-			end,
-		},
+			end
+		}
 	},
 	on_enter_fast = {
 		{
@@ -1218,13 +1218,13 @@ local animations = {
 				for _, widget in pairs(widgets) do
 					widget.alpha_multiplier = anim_progress
 				end
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
 	animations = animations,
 	scenegraph_definition = scenegraph_definition,
-	widget_definitions = widget_definitions,
+	widget_definitions = widget_definitions
 }

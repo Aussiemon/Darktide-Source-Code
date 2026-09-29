@@ -105,11 +105,11 @@ templates.hordes_buff_dodge_staggers = {
 	buff_category = buff_categories.hordes_buff,
 	keywords = {
 		buff_keywords.disable_horde_minions_collision_during_dodge,
-		buff_keywords.disable_elite_minions_collision_during_dodge,
+		buff_keywords.disable_elite_minions_collision_during_dodge
 	},
 	proc_events = {
 		[proc_events.on_dodge_start] = 1,
-		[proc_events.on_dodge_end] = 1,
+		[proc_events.on_dodge_end] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -151,7 +151,7 @@ templates.hordes_buff_dodge_staggers = {
 		end,
 		on_dodge_end = function (params, template_data, template_context)
 			template_data.active = false
-		end,
+		end
 	},
 	update_func = function (template_data, template_context)
 		if not template_data.active then
@@ -159,7 +159,7 @@ templates.hordes_buff_dodge_staggers = {
 		end
 
 		compute_staggering_hits_during_movement(template_data, template_context, template_data.broadphase, template_data.enemy_side_names, template_data.stagger_zone_radius, template_data.stagger_strength_multiplier, template_data.dodge_direction:unbox())
-	end,
+	end
 }
 templates.hordes_buff_sprinting_staggers = {
 	class_name = "buff",
@@ -169,7 +169,7 @@ templates.hordes_buff_sprinting_staggers = {
 	buff_category = buff_categories.hordes_buff,
 	keywords = {
 		buff_keywords.disable_horde_minions_collision_during_sprint,
-		buff_keywords.disable_elite_minions_collision_during_sprint,
+		buff_keywords.disable_elite_minions_collision_during_sprint
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -219,7 +219,7 @@ templates.hordes_buff_sprinting_staggers = {
 
 			compute_staggering_hits_during_movement(template_data, template_context, template_data.broadphase, template_data.enemy_side_names, template_data.stagger_zone_radius, 1, movement_direction)
 		end
-	end,
+	end
 }
 templates.hordes_buff_uninterruptible_while_aiming_and_shooting = {
 	class_name = "buff",
@@ -228,7 +228,7 @@ templates.hordes_buff_uninterruptible_while_aiming_and_shooting = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	conditional_keywords = {
-		buff_keywords.uninterruptible,
+		buff_keywords.uninterruptible
 	},
 	start_func = function (template_data, template_context)
 		local player_unit = template_context.unit
@@ -254,7 +254,7 @@ templates.hordes_buff_uninterruptible_while_aiming_and_shooting = {
 		end
 
 		return false
-	end,
+	end
 }
 
 local percent_stamina_gained_per_hit = HordesBuffsData.hordes_buff_replenish_stamina_from_ranged_or_melee_hit.buff_stats.stamina.value
@@ -267,7 +267,7 @@ templates.hordes_buff_replenish_stamina_from_ranged_or_melee_hit = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_damage_dealt] = 1,
+		[proc_events.on_damage_dealt] = 1
 	},
 	check_proc_func = CheckProcFunctions.any(CheckProcFunctions.on_melee_hit, CheckProcFunctions.on_ranged_hit),
 	proc_func = function (params, template_data, template_context)
@@ -275,7 +275,7 @@ templates.hordes_buff_replenish_stamina_from_ranged_or_melee_hit = {
 		local percent_stamina_gained = math.round(damage_dealt) / 100 * percent_stamina_gained_per_hit
 
 		Stamina.add_stamina_percent(template_context.unit, percent_stamina_gained)
-	end,
+	end
 }
 
 local percent_toughness_coherency_regen_increase = HordesBuffsData.hordes_buff_toughness_coherency_regen_increase.buff_stats.toughness.value
@@ -287,8 +287,8 @@ templates.hordes_buff_toughness_coherency_regen_increase = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	stat_buffs = {
-		[stat_buffs.toughness_coherency_regen_rate_multiplier] = percent_toughness_coherency_regen_increase,
-	},
+		[stat_buffs.toughness_coherency_regen_rate_multiplier] = percent_toughness_coherency_regen_increase
+	}
 }
 templates.hordes_buff_no_movement_speed_reduction_on_aim_and_windup = {
 	class_name = "buff",
@@ -298,8 +298,8 @@ templates.hordes_buff_no_movement_speed_reduction_on_aim_and_windup = {
 	buff_category = buff_categories.hordes_buff,
 	stat_buffs = {
 		[stat_buffs.alternate_fire_movement_speed_reduction_modifier] = 0,
-		[stat_buffs.windup_action_movespeed_reduction_multiplier] = 0,
-	},
+		[stat_buffs.windup_action_movespeed_reduction_multiplier] = 0
+	}
 }
 templates.hordes_buff_increase_impact_on_push_attacks = {
 	class_name = "server_only_proc_buff",
@@ -308,10 +308,10 @@ templates.hordes_buff_increase_impact_on_push_attacks = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	stat_buffs = {
-		[stat_buffs.push_impact_modifier] = 2,
+		[stat_buffs.push_impact_modifier] = 2
 	},
 	proc_events = {
-		[proc_events.on_push_finish] = 1,
+		[proc_events.on_push_finish] = 1
 	},
 	start_func = function (template_data, template_context)
 		local player_unit = template_context.unit
@@ -331,7 +331,7 @@ templates.hordes_buff_increase_impact_on_push_attacks = {
 		local rotation = Quaternion.look(flat_forward_direction, Vector3.up())
 
 		template_data.fx_extension:spawn_particles(VFX_NAMES.push_wave, vfx_pos, rotation, nil, nil, nil, true)
-	end,
+	end
 }
 
 local percent_toughness_regen_on_melee_kill = HordesBuffsData.hordes_buff_toughness_on_melee_kills.buff_stats.toughness.value
@@ -343,12 +343,12 @@ templates.hordes_buff_toughness_on_melee_kills = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_melee_kill,
 	proc_func = function (params, template_data, template_context)
 		Toughness.replenish_percentage(template_context.unit, percent_toughness_regen_on_melee_kill, false)
-	end,
+	end
 }
 
 local percent_stamina_regen_on_toughness_broken = HordesBuffsData.hordes_buff_movement_bonuses_on_toughness_broken.buff_stats.stamina.value
@@ -363,21 +363,21 @@ templates.hordes_buff_movement_bonuses_on_toughness_broken = {
 	buff_category = buff_categories.hordes_buff,
 	active_duration = time_slow_and_stun_immunity_on_toughness_broken,
 	proc_events = {
-		[proc_events.on_player_toughness_broken] = 1,
+		[proc_events.on_player_toughness_broken] = 1
 	},
 	keywords = {
-		buff_keywords.stun_immune_toughness_broken,
+		buff_keywords.stun_immune_toughness_broken
 	},
 	proc_keywords = {
 		buff_keywords.stun_immune,
-		buff_keywords.slowdown_immune,
+		buff_keywords.slowdown_immune
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		return template_context.unit == params.unit
 	end,
 	proc_func = function (params, template_data, template_context)
 		Stamina.add_stamina_percent(template_context.unit, percent_stamina_regen_on_toughness_broken)
-	end,
+	end
 }
 templates.hordes_buff_suppression_immunity = {
 	class_name = "buff",
@@ -386,8 +386,8 @@ templates.hordes_buff_suppression_immunity = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	keywords = {
-		buff_keywords.suppression_immune,
-	},
+		buff_keywords.suppression_immune
+	}
 }
 templates.hordes_buff_windup_is_uninterruptible = {
 	class_name = "buff",
@@ -396,7 +396,7 @@ templates.hordes_buff_windup_is_uninterruptible = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	conditional_keywords = {
-		buff_keywords.uninterruptible,
+		buff_keywords.uninterruptible
 	},
 	start_func = function (template_data, template_context)
 		local player_unit = template_context.unit
@@ -411,7 +411,7 @@ templates.hordes_buff_windup_is_uninterruptible = {
 		local is_windup = action_settings and action_settings.kind == "windup"
 
 		return is_windup
-	end,
+	end
 }
 
 local cooldown_time_dodge_incapacitating_attacks = HordesBuffsData.hordes_buff_dodge_incapacitating_attacks.buff_stats.cooldown.value
@@ -425,19 +425,19 @@ templates.hordes_buff_dodge_incapacitating_attacks = {
 	buff_category = buff_categories.hordes_buff,
 	proc_effects = {
 		player_effects = {
-			on_screen_effect = "content/fx/particles/screenspace/screen_buff_unstoppable_shield_01",
-		},
+			on_screen_effect = "content/fx/particles/screenspace/screen_buff_unstoppable_shield_01"
+		}
 	},
 	conditional_keywords = {
 		buff_keywords.count_as_dodge_vs_netgunner,
-		buff_keywords.count_as_dodge_vs_chaos_hound_pounce,
+		buff_keywords.count_as_dodge_vs_chaos_hound_pounce
 	},
 	start_func = function (template_data, template_context)
 		template_data.is_active = true
 		template_data.last_activation_time = 0
 	end,
 	proc_events = {
-		[proc_events.on_successful_dodge] = 1,
+		[proc_events.on_successful_dodge] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		if not template_context.is_server then
@@ -487,7 +487,7 @@ templates.hordes_buff_dodge_incapacitating_attacks = {
 		end
 
 		return false
-	end,
+	end
 }
 
 local extra_stamina_for_damage_gained_per_full_stamina_bar = HordesBuffsData.hordes_buff_damage_per_full_stamina_bar.buff_stats.stamina.value
@@ -513,13 +513,13 @@ templates.hordes_buff_damage_per_full_stamina_bar = {
 		template_data.base_stamina_template = base_stamina_template
 	end,
 	stat_buffs = {
-		[stat_buffs.stamina_modifier] = extra_stamina_for_damage_gained_per_full_stamina_bar,
+		[stat_buffs.stamina_modifier] = extra_stamina_for_damage_gained_per_full_stamina_bar
 	},
 	lerped_stat_buffs = {
 		[stat_buffs.damage] = {
 			min = 0,
-			max = damage_gained_per_full_stamina_bar * max_num_bars_for_damage_gained_per_full_stamina_bar,
-		},
+			max = damage_gained_per_full_stamina_bar * max_num_bars_for_damage_gained_per_full_stamina_bar
+		}
 	},
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		local unit = template_context.unit
@@ -528,7 +528,7 @@ templates.hordes_buff_damage_per_full_stamina_bar = {
 		local lerp_t = math.min(missing_stamina_bars / max_num_bars_for_damage_gained_per_full_stamina_bar, 1)
 
 		return lerp_t
-	end,
+	end
 }
 
 return templates

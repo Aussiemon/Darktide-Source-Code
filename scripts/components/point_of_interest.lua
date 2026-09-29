@@ -48,17 +48,17 @@ PointOfInterest.component_data = {
 		step = 1,
 		ui_name = "View Distance (in m.)",
 		ui_type = "number",
-		value = 10,
+		value = 10
 	},
 	is_dynamic = {
 		ui_name = "Is Dynamic",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	tag = {
 		ui_name = "Tag",
 		ui_type = "text_box",
-		value = "",
+		value = ""
 	},
 	dialogue_event = {
 		category = "Dialogue",
@@ -67,12 +67,12 @@ PointOfInterest.component_data = {
 		value = "",
 		options_keys = {
 			"",
-			"look_at",
+			"look_at"
 		},
 		options_values = {
 			"",
-			"look_at",
-		},
+			"look_at"
+		}
 	},
 	dialogue_target_filter = {
 		category = "Dialogue",
@@ -83,14 +83,14 @@ PointOfInterest.component_data = {
 			"none",
 			"faction",
 			"mission_giver_mission_default",
-			"mission_giver_selected_voice",
+			"mission_giver_selected_voice"
 		},
 		options_values = {
 			"none",
 			"faction",
 			"mission_giver_mission_default",
-			"mission_giver_selected_voice",
-		},
+			"mission_giver_selected_voice"
+		}
 	},
 	faction_breed_name = {
 		category = "Dialogue",
@@ -99,12 +99,12 @@ PointOfInterest.component_data = {
 		value = "",
 		options_keys = {
 			"",
-			"npc",
+			"npc"
 		},
 		options_values = {
 			"",
-			"npc",
-		},
+			"npc"
+		}
 	},
 	mission_giver_selected_voice = {
 		category = "Dialogue",
@@ -117,7 +117,7 @@ PointOfInterest.component_data = {
 			"pilot_a",
 			"explicator_a",
 			"tech_priest_a",
-			"training_ground_psyker_a",
+			"training_ground_psyker_a"
 		},
 		options_values = {
 			"",
@@ -125,17 +125,17 @@ PointOfInterest.component_data = {
 			"pilot_a",
 			"explicator_a",
 			"tech_priest_a",
-			"training_ground_psyker_a",
-		},
+			"training_ground_psyker_a"
+		}
 	},
 	disabled = {
 		ui_name = "Disabled",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	extensions = {
-		"PointOfInterestTargetExtension",
-	},
+		"PointOfInterestTargetExtension"
+	}
 }
 
 return PointOfInterest

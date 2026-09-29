@@ -11,10 +11,10 @@ spawn_settings.horde_01 = {
 						name = "chaos_newly_infected",
 						amount = {
 							15,
-							25,
-						},
-					},
-				},
+							25
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -22,10 +22,10 @@ spawn_settings.horde_01 = {
 						name = "chaos_newly_infected",
 						amount = {
 							10,
-							15,
-						},
-					},
-				},
+							15
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -33,10 +33,10 @@ spawn_settings.horde_01 = {
 						name = "chaos_newly_infected",
 						amount = {
 							15,
-							20,
-						},
-					},
-				},
+							20
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -44,35 +44,35 @@ spawn_settings.horde_01 = {
 						name = "chaos_newly_infected",
 						amount = {
 							20,
+							25
+						}
+					}
+				}
+			},
+			{
+				breeds = {
+					{
+						name = "chaos_newly_infected",
+						amount = {
+							20,
+							30
+						}
+					}
+				}
+			},
+			{
+				breeds = {
+					{
+						name = "chaos_newly_infected",
+						amount = {
 							25,
-						},
-					},
-				},
-			},
-			{
-				breeds = {
-					{
-						name = "chaos_newly_infected",
-						amount = {
-							20,
-							30,
-						},
-					},
-				},
-			},
-			{
-				breeds = {
-					{
-						name = "chaos_newly_infected",
-						amount = {
-							25,
-							30,
-						},
-					},
-				},
-			},
-		},
-	},
+							30
+						}
+					}
+				}
+			}
+		}
+	}
 }
 spawn_settings.horde_02 = {
 	cultist = {
@@ -83,17 +83,17 @@ spawn_settings.horde_02 = {
 						name = "cultist_melee",
 						amount = {
 							2,
-							5,
-						},
+							5
+						}
 					},
 					{
 						name = "cultist_grenadier",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -101,17 +101,17 @@ spawn_settings.horde_02 = {
 						name = "cultist_melee",
 						amount = {
 							2,
-							5,
-						},
+							5
+						}
 					},
 					{
 						name = "cultist_grenadier",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -119,17 +119,17 @@ spawn_settings.horde_02 = {
 						name = "cultist_melee",
 						amount = {
 							2,
-							10,
-						},
+							10
+						}
 					},
 					{
 						name = "cultist_grenadier",
 						amount = {
 							1,
-							2,
-						},
-					},
-				},
+							2
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -137,17 +137,17 @@ spawn_settings.horde_02 = {
 						name = "cultist_melee",
 						amount = {
 							5,
-							10,
-						},
+							10
+						}
 					},
 					{
 						name = "cultist_grenadier",
 						amount = {
 							1,
-							3,
-						},
-					},
-				},
+							3
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -155,17 +155,17 @@ spawn_settings.horde_02 = {
 						name = "cultist_melee",
 						amount = {
 							7,
-							20,
-						},
+							20
+						}
 					},
 					{
 						name = "cultist_grenadier",
 						amount = {
 							2,
-							3,
-						},
-					},
-				},
+							3
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -173,20 +173,20 @@ spawn_settings.horde_02 = {
 						name = "cultist_melee",
 						amount = {
 							10,
-							20,
-						},
+							20
+						}
 					},
 					{
 						name = "cultist_grenadier",
 						amount = {
 							3,
-							3,
-						},
-					},
-				},
-			},
-		},
-	},
+							3
+						}
+					}
+				}
+			}
+		}
+	}
 }
 spawn_settings.horde_03 = {
 	cultist = {
@@ -197,10 +197,10 @@ spawn_settings.horde_03 = {
 						name = "chaos_plague_ogryn",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -208,10 +208,10 @@ spawn_settings.horde_03 = {
 						name = "chaos_plague_ogryn",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -219,10 +219,10 @@ spawn_settings.horde_03 = {
 						name = "chaos_plague_ogryn",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -230,10 +230,10 @@ spawn_settings.horde_03 = {
 						name = "chaos_plague_ogryn",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -241,10 +241,10 @@ spawn_settings.horde_03 = {
 						name = "chaos_plague_ogryn",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -252,13 +252,13 @@ spawn_settings.horde_03 = {
 						name = "chaos_plague_ogryn",
 						amount = {
 							1,
-							2,
-						},
-					},
-				},
-			},
-		},
-	},
+							2
+						}
+					}
+				}
+			}
+		}
+	}
 }
 spawn_settings.horde_04 = {
 	cultist = {
@@ -269,10 +269,10 @@ spawn_settings.horde_04 = {
 						name = "chaos_spawn",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -280,10 +280,10 @@ spawn_settings.horde_04 = {
 						name = "chaos_spawn",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -291,10 +291,10 @@ spawn_settings.horde_04 = {
 						name = "chaos_spawn",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -302,10 +302,10 @@ spawn_settings.horde_04 = {
 						name = "chaos_spawn",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -313,10 +313,10 @@ spawn_settings.horde_04 = {
 						name = "chaos_spawn",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -324,13 +324,13 @@ spawn_settings.horde_04 = {
 						name = "chaos_spawn",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
-			},
-		},
-	},
+							1
+						}
+					}
+				}
+			}
+		}
+	}
 }
 spawn_settings.horde_05 = {
 	cultist = {
@@ -341,10 +341,10 @@ spawn_settings.horde_05 = {
 						name = "renegade_twin_captain",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -352,10 +352,10 @@ spawn_settings.horde_05 = {
 						name = "renegade_twin_captain",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -363,10 +363,10 @@ spawn_settings.horde_05 = {
 						name = "renegade_twin_captain",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -374,10 +374,10 @@ spawn_settings.horde_05 = {
 						name = "renegade_twin_captain",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -385,10 +385,10 @@ spawn_settings.horde_05 = {
 						name = "renegade_twin_captain",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
+							1
+						}
+					}
+				}
 			},
 			{
 				breeds = {
@@ -396,13 +396,13 @@ spawn_settings.horde_05 = {
 						name = "renegade_twin_captain",
 						amount = {
 							1,
-							1,
-						},
-					},
-				},
-			},
-		},
-	},
+							1
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 return spawn_settings

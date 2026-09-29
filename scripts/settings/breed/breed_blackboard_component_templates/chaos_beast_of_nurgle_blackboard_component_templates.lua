@@ -21,32 +21,32 @@ local chaos_beast_of_nurgle = {
 		vomit_liquid_paint_id = "number",
 		wants_to_catapult_consumed_unit = "boolean",
 		wants_to_eat = "boolean",
-		wants_to_play_alerted = "boolean",
+		wants_to_play_alerted = "boolean"
 	},
 	aim = {
 		controlled_aim_position = "Vector3Box",
 		controlled_aiming = "boolean",
-		lean_dot = "number",
+		lean_dot = "number"
 	},
 	nearby_units_broadphase = {
 		next_broadphase_t = "number",
-		num_units = "number",
+		num_units = "number"
 	},
 	combat_vector = {
 		combat_vector_is_closer = "boolean",
 		distance = "number",
 		has_position = "boolean",
-		position = "Vector3Box",
+		position = "Vector3Box"
 	},
 	weapon_switch = {
 		is_switching_weapons = "boolean",
 		last_weapon_switch_t = "number",
 		wanted_combat_range = "string",
-		wanted_weapon_slot = "string",
+		wanted_weapon_slot = "string"
 	},
 	statistics = {
 		num_attacks_done = "number",
-		num_in_liquid = "number",
+		num_in_liquid = "number"
 	},
 	patrol = {
 		auto_patrol = "boolean",
@@ -54,14 +54,14 @@ local chaos_beast_of_nurgle = {
 		patrol_index = "number",
 		patrol_leader_unit = "Unit",
 		should_patrol = "boolean",
-		walk_position = "Vector3Box",
-	},
+		walk_position = "Vector3Box"
+	}
 }
 
 table.merge(chaos_beast_of_nurgle, base_template)
 
 local templates = {
-	chaos_beast_of_nurgle = chaos_beast_of_nurgle,
+	chaos_beast_of_nurgle = chaos_beast_of_nurgle
 }
 
 return templates

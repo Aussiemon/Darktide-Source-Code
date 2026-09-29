@@ -34,7 +34,7 @@ end
 VideoManager.play_queued_video = function (self)
 	Managers.ui:open_view("video_view", nil, nil, nil, nil, {
 		allow_skip_input = true,
-		template = self._queued_video_config,
+		template = self._queued_video_config
 	})
 
 	self._queued_video_config = nil
@@ -58,9 +58,9 @@ VideoManager._show_popup = function (self, config_name)
 			{
 				close_on_pressed = true,
 				text = settings.button_text,
-				callback = on_popup_continue,
-			},
-		},
+				callback = on_popup_continue
+			}
+		}
 	}
 
 	local function popup_callback(id)
@@ -73,7 +73,7 @@ end
 VideoManager.on_popup_continue = function (self)
 	Managers.ui:open_view("video_view", nil, true, true, nil, {
 		allow_skip_input = true,
-		template = self._video_config_name,
+		template = self._video_config_name
 	})
 
 	self._popup_id = nil

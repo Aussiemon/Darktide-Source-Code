@@ -14,7 +14,7 @@ local class_rework_psyker_female_b = {
 			"loc_psyker_female_b__ability_buff_stance_a_07",
 			"loc_psyker_female_b__ability_buff_stance_a_08",
 			"loc_psyker_female_b__ability_buff_stance_a_09",
-			"loc_psyker_female_b__ability_buff_stance_a_10",
+			"loc_psyker_female_b__ability_buff_stance_a_10"
 		},
 		sound_events_duration = {
 			4.434292,
@@ -26,9 +26,9 @@ local class_rework_psyker_female_b = {
 			2.114396,
 			2.06625,
 			2.322104,
-			2.526792,
+			2.526792
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	ability_gunslinger = {
 		randomize_indexes_n = 0,
@@ -48,7 +48,7 @@ local class_rework_psyker_female_b = {
 			"loc_psyker_female_b__ability_gunslinger_12",
 			"loc_psyker_female_b__ability_gunslinger_13",
 			"loc_psyker_female_b__ability_gunslinger_14",
-			"loc_psyker_female_b__ability_gunslinger_15",
+			"loc_psyker_female_b__ability_gunslinger_15"
 		},
 		sound_events_duration = {
 			1.762188,
@@ -65,9 +65,9 @@ local class_rework_psyker_female_b = {
 			2.727104,
 			2.953396,
 			2.442625,
-			2.438708,
+			2.438708
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	ability_protectorate_start = {
 		randomize_indexes_n = 0,
@@ -80,7 +80,7 @@ local class_rework_psyker_female_b = {
 			"loc_psyker_female_b__ability_protectorate_start_05",
 			"loc_psyker_female_b__ability_protectorate_start_06",
 			"loc_psyker_female_b__ability_protectorate_start_07",
-			"loc_psyker_female_b__ability_protectorate_start_08",
+			"loc_psyker_female_b__ability_protectorate_start_08"
 		},
 		sound_events_duration = {
 			1.764792,
@@ -90,9 +90,9 @@ local class_rework_psyker_female_b = {
 			1.313604,
 			2.617688,
 			3.296333,
-			2.470813,
+			2.470813
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	ability_protectorate_stop = {
 		randomize_indexes_n = 0,
@@ -105,7 +105,7 @@ local class_rework_psyker_female_b = {
 			"loc_psyker_female_b__ability_protectorate_stop_05",
 			"loc_psyker_female_b__ability_protectorate_stop_06",
 			"loc_psyker_female_b__ability_protectorate_stop_07",
-			"loc_psyker_female_b__ability_protectorate_stop_08",
+			"loc_psyker_female_b__ability_protectorate_stop_08"
 		},
 		sound_events_duration = {
 			2.006,
@@ -115,10 +115,10 @@ local class_rework_psyker_female_b = {
 			2.3365,
 			4.056167,
 			1.966667,
-			1.981167,
+			1.981167
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("class_rework_psyker_female_b", class_rework_psyker_female_b)

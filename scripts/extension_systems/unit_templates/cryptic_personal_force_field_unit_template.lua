@@ -24,10 +24,10 @@ local cryptic_personal_force_field_unit_template = {
 
 		config:add("CrypticPersonalForceFieldUnitExtension", {
 			owner_unit = owner_unit,
-			max_duration = max_duration,
+			max_duration = max_duration
 		})
 		config:add("CrypticPersonalForceFieldUnitHealthExtension", {
-			owner_unit = owner_unit,
+			owner_unit = owner_unit
 		})
 
 		game_object_data.unit_name_id = NetworkLookup.force_field_unit_names[husk_unit_name]
@@ -55,10 +55,10 @@ local cryptic_personal_force_field_unit_template = {
 
 		config:add("CrypticPersonalForceFieldUnitExtension", {
 			owner_unit = owner_unit,
-			max_duration = max_duration,
+			max_duration = max_duration
 		})
 		config:add("CrypticPersonalForceFieldHuskHealthExtension", {})
-	end,
+	end
 }
 
 return cryptic_personal_force_field_unit_template

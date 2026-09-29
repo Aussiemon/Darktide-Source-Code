@@ -13,7 +13,7 @@ local wwise_game_sync_settings = {
 		num_threshold_high = 16,
 		num_threshold_low = 4,
 		num_threshold_medium = 8,
-		query_radius = 30,
+		query_radius = 30
 	},
 	state_groups = {
 		music_game_state = {
@@ -39,7 +39,7 @@ local wwise_game_sync_settings = {
 			mission_start = "mission_start",
 			title = "title",
 			victory = "victory",
-			none = DEFAULT_GROUP_STATE,
+			none = DEFAULT_GROUP_STATE
 		},
 		music_zone = {
 			hub = "hub",
@@ -51,14 +51,14 @@ local wwise_game_sync_settings = {
 			zone_5 = "zone_5",
 			zone_6 = "zone_6",
 			zone_7 = "zone_7",
-			none = DEFAULT_GROUP_STATE,
+			none = DEFAULT_GROUP_STATE
 		},
 		music_combat = {
 			boss = "boss",
 			horde_high = "horde_high",
 			horde_low = "horde_low",
 			normal = "normal",
-			none = DEFAULT_GROUP_STATE,
+			none = DEFAULT_GROUP_STATE
 		},
 		music_expedition_combat = {
 			extraction = "extraction",
@@ -66,7 +66,7 @@ local wwise_game_sync_settings = {
 			low_combat = "low_combat",
 			med_combat = "med_combat",
 			no_combat = "no_combat",
-			safe_room = "safe_room",
+			safe_room = "safe_room"
 		},
 		music_objective = {
 			collect_event = "collect_event",
@@ -78,16 +78,16 @@ local wwise_game_sync_settings = {
 			kill_event = "kill_event",
 			last_man_standing = "last_man_standing",
 			prologue_combat = "prologue_combat",
-			none = DEFAULT_GROUP_STATE,
+			none = DEFAULT_GROUP_STATE
 		},
 		music_objective_progression = {
 			one = "one",
 			three = "three",
 			two = "two",
-			none = DEFAULT_GROUP_STATE,
+			none = DEFAULT_GROUP_STATE
 		},
 		music_circumstance = {
-			none = DEFAULT_GROUP_STATE,
+			none = DEFAULT_GROUP_STATE
 		},
 		options = {
 			appearance_menu = "appearance_menu",
@@ -96,18 +96,18 @@ local wwise_game_sync_settings = {
 			ingame_menu = "ingame_menu",
 			story_mission_menu = "story_mission_menu",
 			vendor_menu = "vendor_menu",
-			none = DEFAULT_GROUP_STATE,
+			none = DEFAULT_GROUP_STATE
 		},
 		minion_aggro_intensity = {
 			high = "high",
 			low = "low",
 			medium = "medium",
-			none = DEFAULT_GROUP_STATE,
+			none = DEFAULT_GROUP_STATE
 		},
 		event_intensity = {
 			high = "high",
 			low = "low",
-			none = DEFAULT_GROUP_STATE,
+			none = DEFAULT_GROUP_STATE
 		},
 		player_state = {
 			none = DEFAULT_GROUP_STATE,
@@ -122,21 +122,26 @@ local wwise_game_sync_settings = {
 				netted = "netted",
 				pounced = "pounced",
 				vortex_grabbed = "vortex_grabbed",
-				warp_grabbed = "warp_grabbed",
+				warp_grabbed = "warp_grabbed"
 			},
 			character_status = {
-				last_wound = "last_wound",
+				last_wound = "last_wound"
 			},
 			interaction = {
-				scanning = "auspex_scanner",
-			},
+				scanning = "auspex_scanner"
+			}
 		},
 		suppression_state = {
 			high = "high",
 			low = "low",
-			none = DEFAULT_GROUP_STATE,
-		},
+			none = DEFAULT_GROUP_STATE
+		}
 	},
+	story_settings = {
+		spillway_outro_win_01 = {
+			delay_music_switch = 6
+		}
+	}
 }
 
 return settings("WwiseGameSyncSettings", wwise_game_sync_settings)

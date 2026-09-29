@@ -27,7 +27,7 @@ SessionRemoteStateMachine.init = function (self, network_delegate, client_peer_i
 		gameobject_callback_object = gameobject_callback_object,
 		network_delegate = network_delegate,
 		timeout = SessionRemoteStateMachine.TIMEOUT,
-		event_list = {},
+		event_list = {}
 	}
 
 	self._shared_state = shared_state
@@ -79,8 +79,8 @@ SessionRemoteStateMachine.approve_channel = function (self, channel_id)
 			name = "session_joining",
 			parameters = {
 				peer_id = shared_state.peer_id,
-				channel_id = channel_id,
-			},
+				channel_id = channel_id
+			}
 		}
 
 		return true
@@ -131,7 +131,7 @@ end
 
 SessionRemoteStateMachine.force_leave = function (self)
 	self._state_machine:event("force_leave", {
-		game_reason = "force_leave",
+		game_reason = "force_leave"
 	})
 	self._state_machine:update(0)
 end

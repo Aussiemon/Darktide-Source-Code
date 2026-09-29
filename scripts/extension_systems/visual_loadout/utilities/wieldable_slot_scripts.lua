@@ -39,9 +39,9 @@ require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/magazin
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/missile_launcher_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/overheat_display")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/plasmagun_overheat_effects")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/power_sword_p3_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/power_weapon_charges_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/power_weapon_effects")
-require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/power_sword_p3_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/power_weapon_overheat_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/psyker_force_field_placement_preview_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/psyker_single_target_effects")
@@ -79,7 +79,7 @@ local SCRIPT_INDEX = table.mirror_array({
 	"SCRIPT_NAME",
 	"UNIT_1P",
 	"UNIT_3P",
-	"STRIDE",
+	"STRIDE"
 })
 
 local function _register_script(script_name, unit_1p, unit_3p, num_scripts)

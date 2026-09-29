@@ -46,18 +46,18 @@ PerlinLight.component_data = {
 		value = "default",
 		options_keys = {
 			"Default",
-			"Default 2",
+			"Default 2"
 		},
 		options_values = {
 			"default",
-			"default2",
-		},
+			"default2"
+		}
 	},
 	light_enabled = {
 		ui_name = "Light Enabled",
 		ui_type = "check_box",
-		value = true,
-	},
+		value = true
+	}
 }
 
 return PerlinLight

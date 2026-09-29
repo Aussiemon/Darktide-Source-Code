@@ -7,8 +7,8 @@ local plasma_smugglers = {
 	name = "loc_plasma_smugglers_event_name",
 	stat = "plasma_smugglers_captain_kills",
 	item_rewards = {
-		"content/items/2d/portrait_frames/events_plasma_smugglers",
-	},
+		"content/items/2d/portrait_frames/events_plasma_smugglers"
+	}
 }
 
 return plasma_smugglers

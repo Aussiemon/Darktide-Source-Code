@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/tests/test_cases/ui_test_cases.lua
 
 local TestifySnippets = require("scripts/tests/testify_snippets")
+local ArchetypeSettings = require("scripts/settings/archetype/archetype_settings")
 
 UITestCases = {}
 
@@ -26,7 +27,7 @@ UITestCases.change_render_settings = function ()
 						local option_data = {
 							setting = setting,
 							old_value = old_value,
-							new_value = new_value,
+							new_value = new_value
 						}
 
 						Testify:make_request("setting_on_activated", option_data)
@@ -38,7 +39,7 @@ UITestCases.change_render_settings = function ()
 				local option_data = {
 					setting = setting,
 					old_value = old_value,
-					new_value = new_value,
+					new_value = new_value
 				}
 
 				Testify:make_request("setting_on_activated", option_data)

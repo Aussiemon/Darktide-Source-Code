@@ -13,13 +13,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			3,
-		},
+			3
+		}
 	},
 	title = {
 		horizontal_alignment = "center",
@@ -27,13 +27,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			100,
-			0,
-		},
+			0
+		}
 	},
 	sub_title = {
 		horizontal_alignment = "center",
@@ -41,13 +41,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			160,
-			0,
-		},
+			0
+		}
 	},
 	buffs_area = {
 		horizontal_alignment = "center",
@@ -55,13 +55,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	buff = {
 		horizontal_alignment = "center",
@@ -69,14 +69,14 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
-	},
+			0
+		}
+	}
 }
 local title_style = {
 	font_size = 46,
@@ -89,12 +89,12 @@ local title_style = {
 	offset = {
 		0,
 		0,
-		1,
+		1
 	},
 	size_addition = {
 		20,
-		20,
-	},
+		20
+	}
 }
 local sub_title_style = table.clone(title_style)
 
@@ -107,7 +107,7 @@ local widget_definitions = {
 			style_id = "text",
 			value = "",
 			value_id = "text",
-			style = title_style,
+			style = title_style
 		},
 		{
 			pass_type = "texture",
@@ -121,15 +121,15 @@ local widget_definitions = {
 				color = Color.white(153, true),
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				material_values = {
-					texture_map = "content/ui/textures/masks/gradient_radial_invert",
-				},
+					texture_map = "content/ui/textures/masks/gradient_radial_invert"
+				}
 			},
 			visibility_function = function (content, style)
 				return not content.show_background and content.text and content.text ~= ""
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -142,22 +142,22 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					650,
-					90,
+					90
 				},
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				color = Color.terminal_text_body(255, true),
 				material_values = {
-					distortion = 1,
-				},
+					distortion = 1
+				}
 			},
 			visibility_function = function (content, style)
 				return content.show_background and content.text and content.text ~= ""
-			end,
-		},
+			end
+		}
 	}, "title"),
 	sub_title = UIWidget.create_definition({
 		{
@@ -165,7 +165,7 @@ local widget_definitions = {
 			style_id = "text",
 			value = "",
 			value_id = "text",
-			style = sub_title_style,
+			style = sub_title_style
 		},
 		{
 			pass_type = "texture",
@@ -179,17 +179,17 @@ local widget_definitions = {
 				color = Color.white(153, true),
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				material_values = {
-					texture_map = "content/ui/textures/masks/gradient_radial_invert",
-				},
+					texture_map = "content/ui/textures/masks/gradient_radial_invert"
+				}
 			},
 			visibility_function = function (content, style)
 				return content.text and content.text ~= ""
-			end,
-		},
-	}, "sub_title"),
+			end
+		}
+	}, "sub_title")
 }
 local animations = {
 	on_buff_enter = {
@@ -231,7 +231,7 @@ local animations = {
 						parent:_play_buff_acquired_sounds()
 					end
 				end
-			end,
+			end
 		},
 		{
 			end_time = 0.4,
@@ -268,7 +268,7 @@ local animations = {
 						widget.alpha_multiplier = 1
 					end
 				end
-			end,
+			end
 		},
 		{
 			end_time = 0.4,
@@ -301,8 +301,8 @@ local animations = {
 						style.description.text_color[1] = 255
 					end
 				end
-			end,
-		},
+			end
+		}
 	},
 	on_buff_exit = {
 		{
@@ -334,7 +334,7 @@ local animations = {
 
 					Managers.ui:play_2d_sound(UISoundEvents.mission_buffs_exit)
 				end
-			end,
+			end
 		},
 		{
 			end_time = 0.4,
@@ -373,7 +373,7 @@ local animations = {
 						end
 					end
 				end
-			end,
+			end
 		},
 		{
 			end_time = 0.4,
@@ -416,7 +416,7 @@ local animations = {
 						end
 					end
 				end
-			end,
+			end
 		},
 		{
 			end_time = 0.8,
@@ -449,8 +449,8 @@ local animations = {
 						end
 					end
 				end
-			end,
-		},
+			end
+		}
 	},
 	on_text_enter = {
 		{
@@ -474,7 +474,7 @@ local animations = {
 			on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				widgets.title.alpha_multiplier = 1
 				widgets.sub_title.alpha_multiplier = 1
-			end,
+			end
 		},
 		{
 			end_time = 1,
@@ -495,8 +495,8 @@ local animations = {
 				local widget = widgets.title
 
 				widget.style.text_background_terminal.material_values.distortion = 0.1
-			end,
-		},
+			end
+		}
 	},
 	on_text_exit = {
 		{
@@ -518,7 +518,7 @@ local animations = {
 				local widget = widgets.title
 
 				widget.style.text_background_terminal.material_values.distortion = 1
-			end,
+			end
 		},
 		{
 			end_time = 1,
@@ -537,13 +537,13 @@ local animations = {
 			on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				widgets.title.alpha_multiplier = 0
 				widgets.sub_title.alpha_multiplier = 0
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
 	scenegraph_definition = scenegraph_definition,
 	widget_definitions = widget_definitions,
-	animations = animations,
+	animations = animations
 }

@@ -34,7 +34,7 @@ templates.live_event_skull_guns_coherency_buff = {
 		[stat_buffs.damage] = 0.125,
 		[stat_buffs.toughness_damage_taken_multiplier] = 1,
 		[stat_buffs.attack_speed] = 0.05,
-		[stat_buffs.movement_speed] = 0.075,
+		[stat_buffs.movement_speed] = 0.075
 	},
 	stat_buff_multipliers = {
 		[stat_buffs.damage] = function (template_data, template_context)
@@ -57,7 +57,7 @@ templates.live_event_skull_guns_coherency_buff = {
 		end,
 		[stat_buffs.movement_speed] = function (template_data, template_context)
 			return 1 + math.max(0, _coherency_value(template_data) - 1) * 0.1
-		end,
+		end
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -81,7 +81,7 @@ templates.live_event_skull_guns_coherency_buff = {
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.is_active
-	end,
+	end
 }
 
 return templates

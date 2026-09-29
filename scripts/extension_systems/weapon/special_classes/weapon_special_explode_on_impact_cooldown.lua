@@ -63,7 +63,7 @@ end
 
 local extra_explosion_armor_types = {
 	[armor_types.armored] = true,
-	[armor_types.super_armor] = true,
+	[armor_types.super_armor] = true
 }
 
 WeaponSpecialExplodeOnImpactCooldown.process_hit = function (self, t, weapon, action_settings, num_hit_enemies, target_is_alive, target_unit, damage, result, damage_efficiency, stagger_result, hit_position, attack_direction, abort_attack, optional_origin_slot)

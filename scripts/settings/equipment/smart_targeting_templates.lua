@@ -25,10 +25,10 @@ local DEFAULT_AUTO_AIM_SETTINGS = {
 		distance_weight = 0.5,
 		tag_weights = {
 			elite = 3,
-			special = 3,
-		},
+			special = 3
+		}
 	},
-	target_node_for_visibility = HEAD,
+	target_node_for_visibility = HEAD
 }
 local smart_targeting_templates = {}
 
@@ -40,20 +40,20 @@ smart_targeting_templates.killshot = {
 		min_range = 1.5,
 		min_angle = _degrees_to_radians(0.15),
 		max_angle = _degrees_to_radians(0.3),
-		wanted_target = TORSO,
+		wanted_target = TORSO
 	},
 	aim_assist = {
 		always_auto_aim = false,
 		base_multiplier = 0.05,
-		no_aim_input_multiplier = 0,
+		no_aim_input_multiplier = 0
 	},
 	trajectory_assist = {
 		assist_multiplier = 0.6,
 		range = 30,
 		falloff_func = Range.power_4,
 		min_angle = _degrees_to_radians(1),
-		max_angle = _degrees_to_radians(2.3),
-	},
+		max_angle = _degrees_to_radians(2.3)
+	}
 }
 smart_targeting_templates.alternate_fire_killshot = {
 	proximity = nil,
@@ -63,20 +63,20 @@ smart_targeting_templates.alternate_fire_killshot = {
 		min_range = 1.5,
 		min_angle = _degrees_to_radians(0.15),
 		max_angle = _degrees_to_radians(0.3),
-		wanted_target = TORSO,
+		wanted_target = TORSO
 	},
 	aim_assist = {
 		always_auto_aim = true,
 		base_multiplier = 1.2,
-		no_aim_input_multiplier = 0,
+		no_aim_input_multiplier = 0
 	},
 	trajectory_assist = {
 		assist_multiplier = 0.6,
 		range = 30,
 		falloff_func = Range.power_4,
 		min_angle = _degrees_to_radians(1),
-		max_angle = _degrees_to_radians(2),
-	},
+		max_angle = _degrees_to_radians(2)
+	}
 }
 smart_targeting_templates.assault = {
 	proximity = nil,
@@ -86,20 +86,20 @@ smart_targeting_templates.assault = {
 		min_range = 1.5,
 		min_angle = _degrees_to_radians(0.15),
 		max_angle = _degrees_to_radians(0.3),
-		wanted_target = TORSO,
+		wanted_target = TORSO
 	},
 	aim_assist = {
 		always_auto_aim = false,
 		base_multiplier = 0.15,
-		no_aim_input_multiplier = 0,
+		no_aim_input_multiplier = 0
 	},
 	trajectory_assist = {
 		assist_multiplier = 0.6,
 		range = 20,
 		falloff_func = Range.power_4,
 		min_angle = _degrees_to_radians(0.15),
-		max_angle = _degrees_to_radians(0.3),
-	},
+		max_angle = _degrees_to_radians(0.3)
+	}
 }
 smart_targeting_templates.alternate_fire_assault = {
 	proximity = nil,
@@ -109,20 +109,20 @@ smart_targeting_templates.alternate_fire_assault = {
 		min_range = 1.5,
 		min_angle = _degrees_to_radians(0.15),
 		max_angle = _degrees_to_radians(0.3),
-		wanted_target = TORSO,
+		wanted_target = TORSO
 	},
 	aim_assist = {
 		always_auto_aim = true,
 		base_multiplier = 0.9,
-		no_aim_input_multiplier = 0,
+		no_aim_input_multiplier = 0
 	},
 	trajectory_assist = {
 		assist_multiplier = 0.6,
 		range = 20,
 		falloff_func = Range.power_4,
 		min_angle = _degrees_to_radians(0.5),
-		max_angle = _degrees_to_radians(1),
-	},
+		max_angle = _degrees_to_radians(1)
+	}
 }
 smart_targeting_templates.spray_n_pray = {
 	proximity = nil,
@@ -132,13 +132,13 @@ smart_targeting_templates.spray_n_pray = {
 		min_range = 1.5,
 		min_angle = _degrees_to_radians(0.15),
 		max_angle = _degrees_to_radians(0.3),
-		wanted_target = TORSO,
+		wanted_target = TORSO
 	},
 	aim_assist = {
 		always_auto_aim = false,
 		base_multiplier = 0.15,
-		no_aim_input_multiplier = 0,
-	},
+		no_aim_input_multiplier = 0
+	}
 }
 smart_targeting_templates.alternate_fire_snp = {
 	proximity = nil,
@@ -148,13 +148,13 @@ smart_targeting_templates.alternate_fire_snp = {
 		min_range = 1.5,
 		min_angle = _degrees_to_radians(0.15),
 		max_angle = _degrees_to_radians(0.3),
-		wanted_target = TORSO,
+		wanted_target = TORSO
 	},
 	aim_assist = {
 		always_auto_aim = true,
 		base_multiplier = 0.6,
-		no_aim_input_multiplier = 0,
-	},
+		no_aim_input_multiplier = 0
+	}
 }
 smart_targeting_templates.alternate_fire_bfg = {
 	proximity = nil,
@@ -165,13 +165,13 @@ smart_targeting_templates.alternate_fire_bfg = {
 		min_range = 1.5,
 		min_angle = _degrees_to_radians(0.15),
 		max_angle = _degrees_to_radians(0.3),
-		wanted_target = TORSO,
+		wanted_target = TORSO
 	},
 	aim_assist = {
 		always_auto_aim = true,
 		base_multiplier = 0.7,
-		no_aim_input_multiplier = 0,
-	},
+		no_aim_input_multiplier = 0
+	}
 }
 smart_targeting_templates.alternate_fire_slow_brace = {
 	proximity = nil,
@@ -181,13 +181,13 @@ smart_targeting_templates.alternate_fire_slow_brace = {
 		min_range = 1.5,
 		min_angle = _degrees_to_radians(0.15),
 		max_angle = _degrees_to_radians(0.3),
-		wanted_target = TORSO,
+		wanted_target = TORSO
 	},
 	aim_assist = {
 		always_auto_aim = true,
 		base_multiplier = 0.3,
-		no_aim_input_multiplier = 0,
-	},
+		no_aim_input_multiplier = 0
+	}
 }
 smart_targeting_templates.ogryn_heavystubber_p2_hipfire = {
 	proximity = nil,
@@ -197,20 +197,20 @@ smart_targeting_templates.ogryn_heavystubber_p2_hipfire = {
 		min_range = 1.5,
 		min_angle = _degrees_to_radians(1),
 		max_angle = _degrees_to_radians(2.25),
-		wanted_target = TORSO,
+		wanted_target = TORSO
 	},
 	aim_assist = {
 		always_auto_aim = false,
 		base_multiplier = 0.6,
-		no_aim_input_multiplier = 0,
+		no_aim_input_multiplier = 0
 	},
 	trajectory_assist = {
 		assist_multiplier = 0.6,
 		range = 35,
 		falloff_func = Range.power_4,
 		min_angle = _degrees_to_radians(1.5),
-		max_angle = _degrees_to_radians(2.3),
-	},
+		max_angle = _degrees_to_radians(2.3)
+	}
 }
 smart_targeting_templates.ogryn_heavystubber_p2_braced = {
 	proximity = nil,
@@ -220,20 +220,20 @@ smart_targeting_templates.ogryn_heavystubber_p2_braced = {
 		min_range = 1.5,
 		min_angle = _degrees_to_radians(0.15),
 		max_angle = _degrees_to_radians(0.3),
-		wanted_target = HEAD,
+		wanted_target = HEAD
 	},
 	aim_assist = {
 		always_auto_aim = true,
 		base_multiplier = 1.2,
-		no_aim_input_multiplier = 0,
+		no_aim_input_multiplier = 0
 	},
 	trajectory_assist = {
 		assist_multiplier = 0.6,
 		range = 25,
 		falloff_func = Range.power_4,
 		min_angle = _degrees_to_radians(0.5),
-		max_angle = _degrees_to_radians(1),
-	},
+		max_angle = _degrees_to_radians(1)
+	}
 }
 smart_targeting_templates.default_melee = {
 	trajectory_assist = nil,
@@ -242,12 +242,12 @@ smart_targeting_templates.default_melee = {
 		min_range = 1,
 		min_angle = _degrees_to_radians(0.1),
 		max_angle = _degrees_to_radians(0.2),
-		wanted_target = TORSO,
+		wanted_target = TORSO
 	},
 	aim_assist = {
 		always_auto_aim = false,
 		base_multiplier = 0,
-		no_aim_input_multiplier = 0,
+		no_aim_input_multiplier = 0
 	},
 	proximity = {
 		angle_weight = 0.8,
@@ -255,8 +255,8 @@ smart_targeting_templates.default_melee = {
 		max_range = 5,
 		max_results = 5,
 		min_range = 1,
-		max_angle = math.pi * 0.25,
-	},
+		max_angle = math.pi * 0.25
+	}
 }
 smart_targeting_templates.tank = {
 	trajectory_assist = nil,
@@ -265,12 +265,12 @@ smart_targeting_templates.tank = {
 		min_range = 1,
 		min_angle = _degrees_to_radians(0.1),
 		max_angle = _degrees_to_radians(0.2),
-		wanted_target = TORSO,
+		wanted_target = TORSO
 	},
 	aim_assist = {
 		always_auto_aim = false,
 		base_multiplier = 0,
-		no_aim_input_multiplier = 0,
+		no_aim_input_multiplier = 0
 	},
 	proximity = {
 		angle_weight = 0.8,
@@ -278,8 +278,8 @@ smart_targeting_templates.tank = {
 		max_range = 5,
 		max_results = 5,
 		min_range = 1,
-		max_angle = math.pi * 0.25,
-	},
+		max_angle = math.pi * 0.25
+	}
 }
 smart_targeting_templates.force_staff_single_target = {
 	proximity = nil,
@@ -289,20 +289,20 @@ smart_targeting_templates.force_staff_single_target = {
 		min_range = 1,
 		min_angle = _degrees_to_radians(0.05),
 		max_angle = _degrees_to_radians(0.1),
-		wanted_target = TORSO,
+		wanted_target = TORSO
 	},
 	aim_assist = {
 		always_auto_aim = true,
 		base_multiplier = 0.07,
-		no_aim_input_multiplier = 0,
+		no_aim_input_multiplier = 0
 	},
 	trajectory_assist = {
 		assist_multiplier = 1,
 		range = 35,
 		falloff_func = Range.power_4,
 		min_angle = _degrees_to_radians(3),
-		max_angle = _degrees_to_radians(15),
-	},
+		max_angle = _degrees_to_radians(15)
+	}
 }
 smart_targeting_templates.force_staff_p1_single_target = {
 	proximity = nil,
@@ -312,20 +312,20 @@ smart_targeting_templates.force_staff_p1_single_target = {
 		min_range = 1,
 		min_angle = _degrees_to_radians(0.05),
 		max_angle = _degrees_to_radians(0.1),
-		wanted_target = TORSO,
+		wanted_target = TORSO
 	},
 	aim_assist = {
 		always_auto_aim = true,
 		base_multiplier = 0.07,
-		no_aim_input_multiplier = 0,
+		no_aim_input_multiplier = 0
 	},
 	trajectory_assist = {
 		assist_multiplier = 1,
 		range = 35,
 		falloff_func = Range.power_4,
 		min_angle = _degrees_to_radians(3),
-		max_angle = _degrees_to_radians(15),
-	},
+		max_angle = _degrees_to_radians(15)
+	}
 }
 smart_targeting_templates.force_sword_single_target = {
 	trajectory_assist = nil,
@@ -334,12 +334,12 @@ smart_targeting_templates.force_sword_single_target = {
 		min_range = 1,
 		min_angle = _degrees_to_radians(0.05),
 		max_angle = _degrees_to_radians(0.1),
-		wanted_target = HEAD,
+		wanted_target = HEAD
 	},
 	aim_assist = {
 		always_auto_aim = true,
 		base_multiplier = 0,
-		no_aim_input_multiplier = 0,
+		no_aim_input_multiplier = 0
 	},
 	proximity = {
 		angle_weight = 0.8,
@@ -347,8 +347,8 @@ smart_targeting_templates.force_sword_single_target = {
 		max_range = 5,
 		max_results = 5,
 		min_range = 1,
-		max_angle = math.pi * 0.25,
-	},
+		max_angle = math.pi * 0.25
+	}
 }
 smart_targeting_templates.smite = {
 	proximity = nil,
@@ -363,6 +363,7 @@ smart_targeting_templates.smite = {
 			chaos_armored_infected = 1,
 			chaos_beast_of_nurgle = 5,
 			chaos_daemonhost = 5,
+			chaos_daemonhost_torment = 5,
 			chaos_hound = 20,
 			chaos_hound_mutator = 20,
 			chaos_lesser_mutated_poxwalker = 1,
@@ -409,24 +410,25 @@ smart_targeting_templates.smite = {
 			renegade_twin_captain = 10,
 			renegade_twin_captain_two = 10,
 			renegade_vanguard = 1,
+			renegade_wizard = 1
 		},
 		min_angle = _degrees_to_radians(0.05),
 		max_angle = _degrees_to_radians(0.1),
 		wanted_target = TORSO,
-		wanted_target_fallback = HEAD,
+		wanted_target_fallback = HEAD
 	},
 	aim_assist = {
 		always_auto_aim = true,
 		base_multiplier = 0.07,
-		no_aim_input_multiplier = 0,
+		no_aim_input_multiplier = 0
 	},
 	trajectory_assist = {
 		assist_multiplier = 1,
 		range = 35,
 		falloff_func = Range.power_4,
 		min_angle = _degrees_to_radians(3),
-		max_angle = _degrees_to_radians(15),
-	},
+		max_angle = _degrees_to_radians(15)
+	}
 }
 smart_targeting_templates.chain_lightning_single_target = {
 	proximity = nil,
@@ -441,6 +443,7 @@ smart_targeting_templates.chain_lightning_single_target = {
 			chaos_armored_infected = 1,
 			chaos_beast_of_nurgle = 5,
 			chaos_daemonhost = 5,
+			chaos_daemonhost_torment = 5,
 			chaos_hound = 20,
 			chaos_hound_mutator = 20,
 			chaos_lesser_mutated_poxwalker = 1,
@@ -487,24 +490,25 @@ smart_targeting_templates.chain_lightning_single_target = {
 			renegade_twin_captain = 10,
 			renegade_twin_captain_two = 10,
 			renegade_vanguard = 1,
+			renegade_wizard = 1
 		},
 		min_angle = _degrees_to_radians(0.05),
 		max_angle = _degrees_to_radians(0.1),
 		wanted_target = TORSO,
-		wanted_target_fallback = TORSO,
+		wanted_target_fallback = TORSO
 	},
 	aim_assist = {
 		always_auto_aim = true,
 		base_multiplier = 0.07,
-		no_aim_input_multiplier = 0,
+		no_aim_input_multiplier = 0
 	},
 	trajectory_assist = {
 		assist_multiplier = 1,
 		range = 35,
 		falloff_func = Range.power_4,
 		min_angle = _degrees_to_radians(3),
-		max_angle = _degrees_to_radians(15),
-	},
+		max_angle = _degrees_to_radians(15)
+	}
 }
 smart_targeting_templates.target_ally = {
 	proximity = nil,
@@ -515,20 +519,20 @@ smart_targeting_templates.target_ally = {
 		min_angle = _degrees_to_radians(0.05),
 		max_angle = _degrees_to_radians(0.1),
 		wanted_target = TORSO,
-		wanted_target_fallback = HEAD,
+		wanted_target_fallback = HEAD
 	},
 	aim_assist = {
 		always_auto_aim = true,
 		base_multiplier = 0.07,
-		no_aim_input_multiplier = 0,
+		no_aim_input_multiplier = 0
 	},
 	trajectory_assist = {
 		assist_multiplier = 1,
 		range = 35,
 		falloff_func = Range.power_4,
 		min_angle = _degrees_to_radians(3),
-		max_angle = _degrees_to_radians(15),
-	},
+		max_angle = _degrees_to_radians(15)
+	}
 }
 smart_targeting_templates.target_servo_skull_target = {
 	proximity = nil,
@@ -544,20 +548,20 @@ smart_targeting_templates.target_servo_skull_target = {
 		min_angle = _degrees_to_radians(0.05),
 		max_angle = _degrees_to_radians(0.1),
 		wanted_target = TORSO,
-		wanted_target_fallback = HEAD,
+		wanted_target_fallback = HEAD
 	},
 	aim_assist = {
 		always_auto_aim = true,
 		base_multiplier = 0.07,
-		no_aim_input_multiplier = 0,
+		no_aim_input_multiplier = 0
 	},
 	trajectory_assist = {
 		assist_multiplier = 1,
 		range = 35,
 		falloff_func = Range.power_4,
 		min_angle = _degrees_to_radians(3),
-		max_angle = _degrees_to_radians(15),
-	},
+		max_angle = _degrees_to_radians(15)
+	}
 }
 smart_targeting_templates.target_ally_close = {
 	proximity = nil,
@@ -568,20 +572,20 @@ smart_targeting_templates.target_ally_close = {
 		min_angle = _degrees_to_radians(0.05),
 		max_angle = _degrees_to_radians(0.1),
 		wanted_target = TORSO,
-		wanted_target_fallback = HEAD,
+		wanted_target_fallback = HEAD
 	},
 	aim_assist = {
 		always_auto_aim = true,
 		base_multiplier = 0.07,
-		no_aim_input_multiplier = 0,
+		no_aim_input_multiplier = 0
 	},
 	trajectory_assist = {
 		assist_multiplier = 1,
 		range = 35,
 		falloff_func = Range.power_4,
 		min_angle = _degrees_to_radians(3),
-		max_angle = _degrees_to_radians(15),
-	},
+		max_angle = _degrees_to_radians(15)
+	}
 }
 smart_targeting_templates.throwing_knives_default = {
 	aim_assist = nil,
@@ -592,8 +596,8 @@ smart_targeting_templates.throwing_knives_default = {
 		min_range = 1,
 		min_angle = _degrees_to_radians(0.05),
 		max_angle = _degrees_to_radians(0.1),
-		wanted_target = HEAD,
-	},
+		wanted_target = HEAD
+	}
 }
 smart_targeting_templates.throwing_knifes_single_target = {
 	aim_assist = nil,
@@ -604,8 +608,8 @@ smart_targeting_templates.throwing_knifes_single_target = {
 		min_range = 1,
 		min_angle = _degrees_to_radians(0.05),
 		max_angle = _degrees_to_radians(0.1),
-		wanted_target = HEAD,
-	},
+		wanted_target = HEAD
+	}
 }
 smart_targeting_templates.smart_tag_target = {
 	aim_assist = nil,
@@ -622,6 +626,7 @@ smart_targeting_templates.smart_tag_target = {
 			chaos_armored_infected = 1,
 			chaos_beast_of_nurgle = 30,
 			chaos_daemonhost = 30,
+			chaos_daemonhost_torment = 30,
 			chaos_hound = 80,
 			chaos_hound_mutator = 80,
 			chaos_lesser_mutated_poxwalker = 1,
@@ -668,12 +673,13 @@ smart_targeting_templates.smart_tag_target = {
 			renegade_twin_captain = 10,
 			renegade_twin_captain_two = 10,
 			renegade_vanguard = 1,
+			renegade_wizard = 1
 		},
 		min_angle = _degrees_to_radians(0.05),
 		max_angle = _degrees_to_radians(0.1),
 		wanted_target = TORSO,
-		wanted_target_fallback = HEAD,
-	},
+		wanted_target_fallback = HEAD
+	}
 }
 
 for name, template in pairs(smart_targeting_templates) do

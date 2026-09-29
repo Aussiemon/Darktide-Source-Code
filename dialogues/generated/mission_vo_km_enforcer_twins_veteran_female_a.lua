@@ -6,31 +6,31 @@ local mission_vo_km_enforcer_twins_veteran_female_a = {
 		sound_events_n = 2,
 		sound_events = {
 			[1] = "loc_veteran_female_a__enemy_kill_monster_02",
-			[2] = "loc_veteran_female_a__enemy_kill_monster_06",
+			[2] = "loc_veteran_female_a__enemy_kill_monster_06"
 		},
 		sound_events_duration = {
 			[1] = 3.225729,
-			[2] = 3.939125,
+			[2] = 3.939125
 		},
 		sound_event_weights = {
 			[1] = 0.5,
-			[2] = 0.5,
+			[2] = 0.5
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	mission_twins_go_around = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_veteran_female_a__mission_stockpile_main_access_02",
+			[1] = "loc_veteran_female_a__mission_stockpile_main_access_02"
 		},
 		sound_events_duration = {
-			[1] = 4.141438,
+			[1] = 4.141438
 		},
 		sound_event_weights = {
-			[1] = 1,
+			[1] = 1
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_enemy_kill_monster_twins = {
 		randomize_indexes_n = 0,
@@ -42,7 +42,7 @@ local mission_vo_km_enforcer_twins_veteran_female_a = {
 			"loc_veteran_female_a__response_for_enemy_kill_monster_05",
 			"loc_veteran_female_a__response_for_enemy_kill_monster_06",
 			"loc_veteran_female_a__response_for_enemy_kill_monster_07",
-			"loc_veteran_female_a__response_for_enemy_kill_monster_10",
+			"loc_veteran_female_a__response_for_enemy_kill_monster_10"
 		},
 		sound_events_duration = {
 			3.037229,
@@ -51,7 +51,7 @@ local mission_vo_km_enforcer_twins_veteran_female_a = {
 			3.097583,
 			2.913458,
 			3.413708,
-			1.797875,
+			1.797875
 		},
 		sound_event_weights = {
 			0.1428571,
@@ -60,10 +60,10 @@ local mission_vo_km_enforcer_twins_veteran_female_a = {
 			0.1428571,
 			0.1428571,
 			0.1428571,
-			0.1428571,
+			0.1428571
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_km_enforcer_twins_veteran_female_a", mission_vo_km_enforcer_twins_veteran_female_a)

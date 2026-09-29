@@ -13,28 +13,28 @@ suppression_templates.default_shotpistol_shield_hip = {
 		immediate_spread = {
 			{
 				pitch = 0.25,
-				yaw = 0.25,
-			},
-		},
+				yaw = 0.25
+			}
+		}
 	},
 	moving = {
 		inherits = {
 			"default_shotpistol_shield_hip",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"default_shotpistol_shield_hip",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"default_shotpistol_shield_hip",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 suppression_templates.default_shotpistol_shield_ads = {
 	still = {
@@ -44,76 +44,76 @@ suppression_templates.default_shotpistol_shield_ads = {
 			{
 				pitch = {
 					lerp_basic = 1.25,
-					lerp_perfect = 0.75,
+					lerp_perfect = 0.75
 				},
 				yaw = {
 					lerp_basic = 1.25,
-					lerp_perfect = 0.7,
-				},
+					lerp_perfect = 0.7
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 1.5,
-					lerp_perfect = 0.4,
+					lerp_perfect = 0.4
 				},
 				yaw = {
 					lerp_basic = 1.5,
-					lerp_perfect = 0.25,
-				},
+					lerp_perfect = 0.25
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 1.3,
-					lerp_perfect = 0.2,
+					lerp_perfect = 0.2
 				},
 				yaw = {
 					lerp_basic = 1.2,
-					lerp_perfect = 1.5,
-				},
+					lerp_perfect = 1.5
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 1.3,
-					lerp_perfect = 0.2,
+					lerp_perfect = 0.2
 				},
 				yaw = {
 					lerp_basic = 1.3,
-					lerp_perfect = 0.2,
-				},
+					lerp_perfect = 0.2
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 1.4,
-					lerp_perfect = 0.3,
+					lerp_perfect = 0.3
 				},
 				yaw = {
 					lerp_basic = 1.4,
-					lerp_perfect = 0.3,
-				},
-			},
-		},
+					lerp_perfect = 0.3
+				}
+			}
+		}
 	},
 	moving = {
 		inherits = {
 			"default_shotpistol_shield_ads",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"default_shotpistol_shield_ads",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"default_shotpistol_shield_ads",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 
 return {
 	base_templates = suppression_templates,
-	overrides = overrides,
+	overrides = overrides
 }

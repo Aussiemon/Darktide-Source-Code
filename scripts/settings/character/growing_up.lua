@@ -10,9 +10,9 @@ local growing_up_options = {
 		visibility = {
 			archetypes = {
 				"psyker",
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_02_description",
@@ -21,9 +21,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_growing_up_02_description_snippet",
 		visibility = {
 			archetypes = {
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_03_description",
@@ -32,9 +32,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_growing_up_03_description_snippet",
 		visibility = {
 			archetypes = {
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_04_description",
@@ -44,9 +44,9 @@ local growing_up_options = {
 		visibility = {
 			archetypes = {
 				"ogryn",
-				"veteran",
-			},
-		},
+				"veteran"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_05_description",
@@ -55,9 +55,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_growing_up_05_description_snippet",
 		visibility = {
 			archetypes = {
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_06_description",
@@ -67,9 +67,9 @@ local growing_up_options = {
 		visibility = {
 			archetypes = {
 				"ogryn",
-				"psyker",
-			},
-		},
+				"psyker"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_07_description",
@@ -78,9 +78,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_growing_up_07_description_snippet",
 		visibility = {
 			archetypes = {
-				"veteran",
-			},
-		},
+				"veteran"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_08_description",
@@ -89,9 +89,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_growing_up_08_description_snippet",
 		visibility = {
 			archetypes = {
-				"veteran",
-			},
-		},
+				"veteran"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_09_description",
@@ -100,9 +100,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_growing_up_09_description_snippet",
 		visibility = {
 			archetypes = {
-				"psyker",
-			},
-		},
+				"psyker"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_10_description",
@@ -111,9 +111,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_growing_up_10_description_snippet",
 		visibility = {
 			archetypes = {
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_11_description",
@@ -122,9 +122,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_growing_up_11_description_snippet",
 		visibility = {
 			archetypes = {
-				"veteran",
-			},
-		},
+				"veteran"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_12_description",
@@ -133,9 +133,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_growing_up_12_description_snippet",
 		visibility = {
 			archetypes = {
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_13_description",
@@ -144,9 +144,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_growing_up_13_description_snippet",
 		visibility = {
 			archetypes = {
-				"veteran",
-			},
-		},
+				"veteran"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_14_description",
@@ -155,9 +155,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_growing_up_14_description_snippet",
 		visibility = {
 			archetypes = {
-				"veteran",
-			},
-		},
+				"veteran"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_15_description",
@@ -166,9 +166,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_growing_up_15_description_snippet",
 		visibility = {
 			archetypes = {
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_16_description",
@@ -178,9 +178,9 @@ local growing_up_options = {
 		visibility = {
 			archetypes = {
 				"ogryn",
-				"psyker",
-			},
-		},
+				"psyker"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_17_description",
@@ -189,9 +189,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_growing_up_17_description_snippet",
 		visibility = {
 			archetypes = {
-				"ogryn",
-			},
-		},
+				"ogryn"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_18_description",
@@ -200,9 +200,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_growing_up_18_description_snippet",
 		visibility = {
 			archetypes = {
-				"psyker",
-			},
-		},
+				"psyker"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_19_description",
@@ -211,9 +211,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_growing_up_19_description_snippet",
 		visibility = {
 			archetypes = {
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_20_description",
@@ -222,9 +222,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_growing_up_20_description_snippet",
 		visibility = {
 			archetypes = {
-				"veteran",
-			},
-		},
+				"veteran"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_21_description",
@@ -234,9 +234,9 @@ local growing_up_options = {
 		visibility = {
 			archetypes = {
 				"ogryn",
-				"psyker",
-			},
-		},
+				"psyker"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_22_description",
@@ -246,9 +246,9 @@ local growing_up_options = {
 		visibility = {
 			archetypes = {
 				"psyker",
-				"zealot",
-			},
-		},
+				"zealot"
+			}
+		}
 	},
 	{
 		description = "loc_character_key_event_01_description",
@@ -257,9 +257,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_key_event_01_description_snippet",
 		visibility = {
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		description = "loc_character_key_event_02_description",
@@ -268,9 +268,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_key_event_02_description_snippet",
 		visibility = {
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		description = "loc_character_key_event_03_description",
@@ -279,9 +279,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_key_event_03_description_snippet",
 		visibility = {
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		description = "loc_character_key_event_04_description",
@@ -290,9 +290,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_key_event_04_description_snippet",
 		visibility = {
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		description = "loc_character_key_event_05_description",
@@ -301,9 +301,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_key_event_05_description_snippet",
 		visibility = {
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		description = "loc_character_key_event_06_description",
@@ -312,9 +312,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_key_event_06_description_snippet",
 		visibility = {
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		description = "loc_character_key_event_07_description",
@@ -323,9 +323,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_key_event_07_description_snippet",
 		visibility = {
 			archetypes = {
-				"adamant",
-			},
-		},
+				"adamant"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_23_description",
@@ -334,9 +334,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_growing_up_23_description_snippet",
 		visibility = {
 			archetypes = {
-				"broker",
-			},
-		},
+				"broker"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_24_description",
@@ -345,9 +345,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_growing_up_24_description_snippet",
 		visibility = {
 			archetypes = {
-				"broker",
-			},
-		},
+				"broker"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_25_description",
@@ -356,9 +356,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_growing_up_25_description_snippet",
 		visibility = {
 			archetypes = {
-				"broker",
-			},
-		},
+				"broker"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_26_description",
@@ -367,9 +367,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_growing_up_26_description_snippet",
 		visibility = {
 			archetypes = {
-				"broker",
-			},
-		},
+				"broker"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_27_description",
@@ -378,9 +378,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_growing_up_27_description_snippet",
 		visibility = {
 			archetypes = {
-				"broker",
-			},
-		},
+				"broker"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_28_description",
@@ -389,9 +389,9 @@ local growing_up_options = {
 		story_snippet = "loc_character_growing_up_28_description_snippet",
 		visibility = {
 			archetypes = {
-				"broker",
-			},
-		},
+				"broker"
+			}
+		}
 	},
 	{
 		description = "loc_character_growing_up_29_description",
@@ -400,10 +400,10 @@ local growing_up_options = {
 		story_snippet = "loc_character_growing_up_29_description_snippet",
 		visibility = {
 			archetypes = {
-				"broker",
-			},
-		},
-	},
+				"broker"
+			}
+		}
+	}
 }
 
 table.append(growing_up_options, GROWING_UP_CRYPTIC)

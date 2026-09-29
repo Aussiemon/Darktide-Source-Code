@@ -6,8 +6,12 @@ local PlayerUnitPeeking = require("scripts/utilities/player_unit_peeking")
 local Vo = require("scripts/utilities/vo")
 local ActionWield = class("ActionWield", "ActionWeaponBase")
 
-ActionWield.start = function (self, action_settings, ...)
-	ActionWield.super.start(self, action_settings, ...)
+ActionWield.start = function (self, action_settings, t, ...)
+	ActionWield.super.start(self, action_settings, t, ...)
+
+	local inventory_slot_component = self._inventory_slot_component
+
+	inventory_slot_component.last_wield_t = t
 
 	local weapon_tweak_templates_component = self._weapon_tweak_templates_component
 	local weapon_template = self._weapon_template

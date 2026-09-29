@@ -5,6 +5,7 @@ local EquipmentComponent = require("scripts/extension_systems/visual_loadout/equ
 local ImpactFxResourceDependencies = require("scripts/settings/damage/impact_fx_resource_dependencies")
 local MasterItems = require("scripts/backend/master_items")
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
+local PlayerCharacterBody = require("scripts/utilities/player_character_body")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerCharacterDecals = require("scripts/settings/decal/player_character_decals")
 local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
@@ -16,7 +17,7 @@ local PlayerHuskVisualLoadoutExtension = class("PlayerHuskVisualLoadoutExtension
 local RPCS = {
 	"rpc_player_equip_item_to_slot",
 	"rpc_player_equip_item_from_profile_to_slot",
-	"rpc_player_unequip_item_from_slot",
+	"rpc_player_unequip_item_from_slot"
 }
 
 local function _register_fx_sources(fx_extension, slot, source_config, slot_name, is_in_first_person_mode)
@@ -96,7 +97,7 @@ PlayerHuskVisualLoadoutExtension.init = function (self, extension_init_context, 
 	local extension_manager = Managers.state.extension
 	local item_streaming_settings = {
 		package_synchronizer_client = extension_init_data.package_synchronizer_client,
-		player = self._player,
+		player = self._player
 	}
 
 	self._item_definitions = MasterItems.get_cached()
@@ -152,14 +153,14 @@ PlayerHuskVisualLoadoutExtension.init = function (self, extension_init_context, 
 		visual_loadout_extension = self,
 		unit_data_extension = ScriptUnit.extension(unit, "unit_data_system"),
 		fx_extension = fx_extension,
-		player_particle_group_id = Managers.state.extension:system("fx_system").unit_to_particle_group_lookup[unit],
+		player_particle_group_id = Managers.state.extension:system("fx_system").unit_to_particle_group_lookup[unit]
 	}
 	self._mission = extension_init_data.mission
 	self._static_profile_properties = {
 		breed = extension_init_data.archetype.breed,
 		companion_breed = extension_init_data.archetype.companion_breed,
 		archetype = extension_init_data.archetype.name,
-		selected_voice = extension_init_data.selected_voice,
+		selected_voice = extension_init_data.selected_voice
 	}
 	self._profile_properties = equipment_component.resolve_profile_properties(equipment, self._wielded_slot, self._static_profile_properties)
 	self._dialogue_extension = ScriptUnit.extension(unit, "dialogue_system")
@@ -345,9 +346,10 @@ PlayerHuskVisualLoadoutExtension._equip_item_to_slot = function (self, slot_name
 	local parent_unit_3p = self._unit
 	local parent_unit_1p = self._first_person_unit
 	local deform_override_items = item.deform_override_items and table.clone(item.deform_override_items) or {}
+	local profile_wrap_deform_override_item_name = PlayerCharacterBody.wrap_deform_item_name_from_profile(profile)
 
-	if profile.gender == "female" then
-		deform_override_items[#deform_override_items + 1] = "content/items/material_overrides/player_wrap_deform/wrap_deform_human_body_female"
+	if profile_wrap_deform_override_item_name then
+		deform_override_items[#deform_override_items + 1] = profile_wrap_deform_override_item_name
 	end
 
 	local unit_data_extension = ScriptUnit.extension(self._unit, "unit_data_system")
@@ -590,7 +592,7 @@ PlayerHuskVisualLoadoutExtension.companion_slots = function (self)
 	for unit, path in pairs(gear_full) do
 		table.insert(self._companion_slots, {
 			use_outline = true,
-			unit = unit,
+			unit = unit
 		})
 	end
 

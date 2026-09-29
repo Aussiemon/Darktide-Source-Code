@@ -153,7 +153,7 @@ ViewElementItemResultOverlay.start = function (self, presentation_data)
 	local text_style = style.text
 	local title_text_width = Text.text_width(ui_renderer, content.text, text_style, text_style.size or {
 		900,
-		50,
+		50
 	})
 
 	self:_set_scenegraph_size("divider", math.max(title_text_width + 440, 600))
@@ -297,15 +297,15 @@ ViewElementItemResultOverlay._setup_weapon_stats = function (self)
 		local grid_height = 840
 		local grid_size = {
 			grid_width - edge_padding,
-			grid_height,
+			grid_height
 		}
 		local grid_spacing = {
 			0,
-			0,
+			0
 		}
 		local mask_size = {
 			grid_width + 40,
-			grid_height,
+			grid_height
 		}
 		local context = {
 			ignore_blur = true,
@@ -314,7 +314,7 @@ ViewElementItemResultOverlay._setup_weapon_stats = function (self)
 			grid_size = grid_size,
 			mask_size = mask_size,
 			title_height = title_height,
-			edge_padding = edge_padding,
+			edge_padding = edge_padding
 		}
 		local scale = self:render_scale()
 

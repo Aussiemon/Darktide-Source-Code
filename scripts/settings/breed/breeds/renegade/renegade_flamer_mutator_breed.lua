@@ -16,6 +16,7 @@ local TargetSelectionTemplates = require("scripts/extension_systems/perception/t
 local TargetSelectionWeights = require("scripts/settings/minion_target_selection/minion_target_selection_weights")
 local WeakspotSettings = require("scripts/settings/damage/weakspot_settings")
 local armor_types = ArmorSettings.types
+local breed_tags = BreedSettings.tags
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
 local stagger_types = StaggerSettings.stagger_types
@@ -57,13 +58,13 @@ local breed_data = {
 	breed_type = breed_types.minion,
 	power_level_type = {
 		melee = "renegade_default_melee",
-		ranged = "renegade_flamer_default",
+		ranged = "renegade_flamer_default"
 	},
 	tags = {
-		minion = true,
-		mutator = true,
-		scrambler = true,
-		special = true,
+		[breed_tags.special] = true,
+		[breed_tags.scrambler] = true,
+		[breed_tags.minion] = true,
+		[breed_tags.mutator] = true
 	},
 	point_cost = math.huge,
 	armor_type = armor_types.berserker,
@@ -76,7 +77,7 @@ local breed_data = {
 		[stagger_types.explosion] = 6.363636363636363,
 		[stagger_types.killshot] = 1.85,
 		[stagger_types.light_ranged] = 0.5,
-		[stagger_types.sticky] = 1.75,
+		[stagger_types.sticky] = 1.75
 	},
 	stagger_immune_times = {
 		[stagger_types.light] = 0.5,
@@ -85,7 +86,7 @@ local breed_data = {
 		[stagger_types.explosion] = 3,
 		[stagger_types.light_ranged] = 2.5,
 		[stagger_types.sticky] = 0.5,
-		[stagger_types.killshot] = 0.5,
+		[stagger_types.killshot] = 0.5
 	},
 	stagger_thresholds = {
 		[stagger_types.light] = 2.5,
@@ -93,62 +94,62 @@ local breed_data = {
 		[stagger_types.heavy] = 25,
 		[stagger_types.light_ranged] = 5,
 		[stagger_types.sticky] = 1,
-		[stagger_types.killshot] = 5,
+		[stagger_types.killshot] = 5
 	},
 	inventory = MinionVisualLoadoutTemplates.renegade_flamer,
 	sounds = require("scripts/settings/breed/breeds/renegade/renegade_flamer_mutator_sounds"),
 	vfx = require("scripts/settings/breed/breeds/renegade/renegade_common_vfx"),
 	behavior_tree_name = breed_name,
 	spawn_buffs = {
-		"renegade_flamer_liquid_immunity",
+		"renegade_flamer_liquid_immunity"
 	},
 	animation_variables = {
 		"lean",
-		"anim_move_speed",
+		"anim_move_speed"
 	},
 	combat_range_data = BreedCombatRanges.renegade_flamer,
 	combat_vector_config = {
 		default_combat_range = "close",
 		valid_combat_ranges = {
-			close = true,
-		},
+			close = true
+		}
 	},
 	attack_intensity_cooldowns = {
 		melee = {
 			0.7,
-			0.8,
+			0.8
 		},
 		ranged = {
 			0.3,
-			0.5,
+			0.5
 		},
 		moving_melee = {
 			0.7,
-			0.8,
-		},
+			0.8
+		}
 	},
 	line_of_sight_data = {
 		{
 			from_node = "j_head",
 			id = "eyes",
 			to_node = "enemy_aim_target_03",
-			offsets = PerceptionSettings.default_minion_line_of_sight_offsets,
+			offsets = PerceptionSettings.default_minion_line_of_sight_offsets
 		},
 		{
 			from_node = "j_righthand",
 			id = "gun",
 			to_node = "enemy_aim_target_03",
 			offsets = {
-				Vector3Box(0, 0, 0),
-			},
-		},
+				Vector3Box(0, 0, 0)
+			}
+		}
 	},
 	target_selection_template = TargetSelectionTemplates.ranged,
 	target_selection_weights = TargetSelectionWeights.renegade_flamer,
 	threat_config = {
 		max_threat = 50,
 		threat_decay_per_second = 5,
-		threat_multiplier = 0.1,
+		threat_multiplier = 0.1
 	},
 	aim_config = {
 		distance = 5,
@@ -158,106 +159,106 @@ local breed_data = {
 		lerp_speed = 5,
 		node = "j_hips",
 		target = "head_aim_target",
-		target_node = "enemy_aim_target_03",
+		target_node = "enemy_aim_target_03"
 	},
 	smart_object_template = SmartObjectSettings.templates.renegade,
 	size_variation_range = {
 		1.125,
-		1.125,
+		1.125
 	},
 	fade = {
 		max_distance = 0.7,
 		max_height_difference = 1,
-		min_distance = 0.2,
+		min_distance = 0.2
 	},
 	hit_zones = {
 		{
 			name = hit_zone_names.head,
 			actors = {
 				"c_head",
-				"c_neck",
-			},
+				"c_neck"
+			}
 		},
 		{
 			name = hit_zone_names.torso,
 			actors = {
 				"c_hips",
 				"c_spine",
-				"c_spine1",
-			},
+				"c_spine1"
+			}
 		},
 		{
 			name = hit_zone_names.upper_left_arm,
 			actors = {
 				"c_leftarm",
-				"c_leftshoulder",
-			},
+				"c_leftshoulder"
+			}
 		},
 		{
 			name = hit_zone_names.lower_left_arm,
 			actors = {
 				"c_leftforearm",
-				"c_lefthand",
-			},
+				"c_lefthand"
+			}
 		},
 		{
 			name = hit_zone_names.upper_right_arm,
 			actors = {
 				"c_rightarm",
-				"c_rightshoulder",
-			},
+				"c_rightshoulder"
+			}
 		},
 		{
 			name = hit_zone_names.lower_right_arm,
 			actors = {
 				"c_rightforearm",
-				"c_righthand",
-			},
+				"c_righthand"
+			}
 		},
 		{
 			name = hit_zone_names.upper_left_leg,
 			actors = {
-				"c_leftupleg",
-			},
+				"c_leftupleg"
+			}
 		},
 		{
 			name = hit_zone_names.lower_left_leg,
 			actors = {
 				"c_leftleg",
-				"c_leftfoot",
-			},
+				"c_leftfoot"
+			}
 		},
 		{
 			name = hit_zone_names.upper_right_leg,
 			actors = {
-				"c_rightupleg",
-			},
+				"c_rightupleg"
+			}
 		},
 		{
 			name = hit_zone_names.lower_right_leg,
 			actors = {
 				"c_rightleg",
-				"c_rightfoot",
-			},
+				"c_rightfoot"
+			}
 		},
 		{
 			name = hit_zone_names.afro,
 			actors = {
-				"r_afro",
-			},
+				"r_afro"
+			}
 		},
 		{
 			name = hit_zone_names.center_mass,
 			actors = {
 				"c_hips",
-				"c_spine",
-			},
-		},
+				"c_spine"
+			}
+		}
 	},
 	hit_zone_ragdoll_actors = {
 		[hit_zone_names.head] = {
 			"j_head",
-			"j_neck",
+			"j_neck"
 		},
 		[hit_zone_names.torso] = {
 			"j_head",
@@ -271,46 +272,46 @@ local breed_data = {
 			"j_rightarm",
 			"j_rightshoulder",
 			"j_rightforearm",
-			"j_righthand",
+			"j_righthand"
 		},
 		[hit_zone_names.upper_left_arm] = {
 			"j_leftarm",
 			"j_leftshoulder",
 			"j_leftforearm",
-			"j_lefthand",
+			"j_lefthand"
 		},
 		[hit_zone_names.lower_left_arm] = {
 			"j_leftforearm",
-			"j_lefthand",
+			"j_lefthand"
 		},
 		[hit_zone_names.upper_right_arm] = {
 			"j_rightarm",
 			"j_rightshoulder",
 			"j_rightforearm",
-			"j_righthand",
+			"j_righthand"
 		},
 		[hit_zone_names.lower_right_arm] = {
 			"j_rightforearm",
-			"j_righthand",
+			"j_righthand"
 		},
 		[hit_zone_names.upper_left_leg] = {
 			"j_leftupleg",
 			"j_leftleg",
-			"j_leftfoot",
+			"j_leftfoot"
 		},
 		[hit_zone_names.lower_left_leg] = {
 			"j_leftleg",
-			"j_leftfoot",
+			"j_leftfoot"
 		},
 		[hit_zone_names.upper_right_leg] = {
 			"j_rightupleg",
 			"j_rightleg",
-			"j_rightfoot",
+			"j_rightfoot"
 		},
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
-			"j_rightfoot",
-		},
+			"j_rightfoot"
+		}
 	},
 	hit_zone_ragdoll_pushes = {
 		[hit_zone_names.head] = {
@@ -319,7 +320,7 @@ local breed_data = {
 			j_neck = 0.3,
 			j_rightshoulder = 0.05,
 			j_spine = 0.2,
-			j_spine1 = 0.1,
+			j_spine1 = 0.1
 		},
 		[hit_zone_names.torso] = {
 			j_head = 0.1,
@@ -327,7 +328,7 @@ local breed_data = {
 			j_neck = 0.1,
 			j_rightshoulder = 0,
 			j_spine = 0.2,
-			j_spine1 = 0.7,
+			j_spine1 = 0.7
 		},
 		[hit_zone_names.upper_left_arm] = {
 			j_head = 0.05,
@@ -335,7 +336,7 @@ local breed_data = {
 			j_leftuparm = 0.8,
 			j_neck = 0.05,
 			j_spine = 0.15,
-			j_spine1 = 0.1,
+			j_spine1 = 0.1
 		},
 		[hit_zone_names.lower_left_arm] = {
 			j_head = 0.05,
@@ -343,7 +344,7 @@ local breed_data = {
 			j_leftuparm = 0.8,
 			j_neck = 0.05,
 			j_spine = 0.15,
-			j_spine1 = 0.1,
+			j_spine1 = 0.1
 		},
 		[hit_zone_names.upper_right_arm] = {
 			j_head = 0.05,
@@ -351,7 +352,7 @@ local breed_data = {
 			j_rightshoulder = 0.4,
 			j_rightuparm = 0.8,
 			j_spine = 0.15,
-			j_spine1 = 0.1,
+			j_spine1 = 0.1
 		},
 		[hit_zone_names.lower_right_arm] = {
 			j_head = 0.05,
@@ -359,7 +360,7 @@ local breed_data = {
 			j_rightshoulder = 0.4,
 			j_rightuparm = 0.8,
 			j_spine = 0.15,
-			j_spine1 = 0.1,
+			j_spine1 = 0.1
 		},
 		[hit_zone_names.upper_left_leg] = {
 			j_hips = 0.2,
@@ -367,7 +368,7 @@ local breed_data = {
 			j_leftleg = 0.35,
 			j_leftupleg = 0.35,
 			j_spine = 0,
-			j_spine1 = 0.1,
+			j_spine1 = 0.1
 		},
 		[hit_zone_names.lower_left_leg] = {
 			j_hips = 0.2,
@@ -375,7 +376,7 @@ local breed_data = {
 			j_leftleg = 0.35,
 			j_leftupleg = 0.35,
 			j_spine = 0,
-			j_spine1 = 0.1,
+			j_spine1 = 0.1
 		},
 		[hit_zone_names.upper_right_leg] = {
 			j_hips = 0.1,
@@ -383,7 +384,7 @@ local breed_data = {
 			j_rightleg = 0.25,
 			j_rightupleg = 0.4,
 			j_spine = 0,
-			j_spine1 = 0,
+			j_spine1 = 0
 		},
 		[hit_zone_names.lower_right_leg] = {
 			j_hips = 0.1,
@@ -391,22 +392,22 @@ local breed_data = {
 			j_rightleg = 0.25,
 			j_rightupleg = 0.4,
 			j_spine = 0,
-			j_spine1 = 0,
+			j_spine1 = 0
 		},
 		[hit_zone_names.center_mass] = {
 			j_hips = 0.5,
-			j_spine = 0.5,
-		},
+			j_spine = 0.5
+		}
 	},
 	hit_zone_weakspot_types = {
-		[hit_zone_names.head] = weakspot_types.headshot,
+		[hit_zone_names.head] = weakspot_types.headshot
 	},
 	hitzone_damage_multiplier = {
 		ranged = {
 			[hit_zone_names.lower_left_arm] = 0.5,
 			[hit_zone_names.lower_right_arm] = 0.5,
 			[hit_zone_names.lower_left_leg] = 0.5,
-			[hit_zone_names.lower_right_leg] = 0.5,
+			[hit_zone_names.lower_right_leg] = 0.5
 		},
 		melee = {
 			[hit_zone_names.head] = 3,
@@ -419,13 +420,13 @@ local breed_data = {
 			[hit_zone_names.lower_right_arm] = 3,
 			[hit_zone_names.lower_left_leg] = 3,
 			[hit_zone_names.lower_right_leg] = 3,
-			[hit_zone_names.center_mass] = 3,
-		},
+			[hit_zone_names.center_mass] = 3
+		}
 	},
 	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.renegade_flamer_mutator,
 	tokens = {
-		pounced = nil,
+		pounced = nil
 	},
 	companion_pounce_setting = {
 		companion_pounce_action = "human",
@@ -434,9 +435,9 @@ local breed_data = {
 		initial_damage_profile = DamageProfileTemplates.adamant_companion_initial_pounce,
 		required_token = {
 			free_target_on_assigned_token = true,
-			name = "pounced",
-		},
-	},
+			name = "pounced"
+		}
+	}
 }
 
 return breed_data

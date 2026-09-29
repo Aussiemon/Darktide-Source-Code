@@ -14,7 +14,7 @@ local class_rework_zealot_female_a = {
 			"loc_zealot_female_a__ability_banisher_07",
 			"loc_zealot_female_a__ability_banisher_08",
 			"loc_zealot_female_a__ability_banisher_09",
-			"loc_zealot_female_a__ability_banisher_10",
+			"loc_zealot_female_a__ability_banisher_10"
 		},
 		sound_events_duration = {
 			2.977688,
@@ -26,9 +26,9 @@ local class_rework_zealot_female_a = {
 			3.095104,
 			2.654979,
 			2.516958,
-			2.328375,
+			2.328375
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	ability_banisher_impact = {
 		randomize_indexes_n = 0,
@@ -43,7 +43,7 @@ local class_rework_zealot_female_a = {
 			"loc_zealot_female_a__ability_banisher_impact_07",
 			"loc_zealot_female_a__ability_banisher_impact_08",
 			"loc_zealot_female_a__ability_banisher_impact_09",
-			"loc_zealot_female_a__ability_banisher_impact_10",
+			"loc_zealot_female_a__ability_banisher_impact_10"
 		},
 		sound_events_duration = {
 			1.757833,
@@ -55,9 +55,9 @@ local class_rework_zealot_female_a = {
 			2.76825,
 			1.152938,
 			1.095021,
-			1.313813,
+			1.313813
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	ability_pious_stabber = {
 		randomize_indexes_n = 0,
@@ -77,7 +77,7 @@ local class_rework_zealot_female_a = {
 			"loc_zealot_female_a__ability_pious_stabber_12",
 			"loc_zealot_female_a__ability_pious_stabber_13",
 			"loc_zealot_female_a__ability_pious_stabber_14",
-			"loc_zealot_female_a__ability_pious_stabber_15",
+			"loc_zealot_female_a__ability_pious_stabber_15"
 		},
 		sound_events_duration = {
 			2.381313,
@@ -94,9 +94,9 @@ local class_rework_zealot_female_a = {
 			2.671146,
 			3.225313,
 			2.802458,
-			2.993271,
+			2.993271
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	ability_repent_a = {
 		randomize_indexes_n = 0,
@@ -111,7 +111,7 @@ local class_rework_zealot_female_a = {
 			"loc_zealot_female_a__ability_repent_a_07",
 			"loc_zealot_female_a__ability_repent_a_08",
 			"loc_zealot_female_a__ability_repent_a_09",
-			"loc_zealot_female_a__ability_repent_a_10",
+			"loc_zealot_female_a__ability_repent_a_10"
 		},
 		sound_events_duration = {
 			1.032833,
@@ -123,10 +123,10 @@ local class_rework_zealot_female_a = {
 			2.590292,
 			3.047771,
 			1.703208,
-			1.689604,
+			1.689604
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("class_rework_zealot_female_a", class_rework_zealot_female_a)

@@ -6,7 +6,7 @@ local MissionObjectiveTargetSystem = class("MissionObjectiveTargetSystem", "Exte
 local CLIENT_RPCS = {
 	"rpc_mission_objective_target_set_objective_name",
 	"rpc_mission_objective_target_set_objective_group",
-	"rpc_mission_objective_target_setup",
+	"rpc_mission_objective_target_setup"
 }
 
 MissionObjectiveTargetSystem.init = function (self, extension_system_creation_context, ...)

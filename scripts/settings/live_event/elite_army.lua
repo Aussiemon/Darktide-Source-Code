@@ -9,8 +9,8 @@ local elite_army = {
 	name = "loc_elite_army_name",
 	stat = "elite_army_mission_won",
 	item_rewards = {
-		"content/items/2d/insignias/insignia_event_elite_army",
-	},
+		"content/items/2d/insignias/insignia_event_elite_army"
+	}
 }
 
 return elite_army

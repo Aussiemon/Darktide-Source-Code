@@ -41,7 +41,7 @@ StoreService.init = function (self, backend_interface)
 		marks = GameParameters.wallet_cap_marks,
 		plasteel = GameParameters.wallet_cap_plasteel,
 		diamantine = GameParameters.wallet_cap_diamantine,
-		aquilas = GameParameters.wallet_cap_aquilas,
+		aquilas = GameParameters.wallet_cap_aquilas
 	}
 	self._current_store_id = nil
 	self._store_cache = {}
@@ -106,9 +106,9 @@ StoreService._get_store = function (self, function_name)
 		return
 	end
 
-	local store_interace = self._backend_interface.store
+	local store_interface = self._backend_interface.store
 
-	if not store_interace[function_name] then
+	if not store_interface[function_name] then
 		Log.error("StoreService", "Attempting fetch undefined store '%s'", function_name)
 
 		return
@@ -117,7 +117,7 @@ StoreService._get_store = function (self, function_name)
 	local character_id = _current_character_id()
 	local time_since_launch = Application.time_since_launch()
 
-	return store_interace[function_name](store_interace, time_since_launch, character_id)
+	return store_interface[function_name](store_interface, time_since_launch, character_id)
 end
 
 StoreService._get_cached_store = function (self, cache_key, logging_function)
@@ -185,7 +185,9 @@ StoreService._get_archetype_store_catalogue = function (self, store_by_archetype
 	local function_name = store_by_archetype[archetype_name]
 	local store_promise = self:_get_store(function_name)
 
-	store_promise = store_promise or Promise.rejected()
+	store_promise = store_promise or Promise.rejected({
+		code = 404
+	})
 
 	local full_promise = store_promise:catch(function (error)
 		local is_404 = type(error) == "table" and error.code == 404
@@ -215,7 +217,7 @@ StoreService._get_archetype_store_catalogue = function (self, store_by_archetype
 
 		return {
 			offers = offers or {},
-			current_rotation_end = current_rotation_end,
+			current_rotation_end = current_rotation_end
 		}
 	end)
 
@@ -355,7 +357,7 @@ end
 StoreService._decorate_wallets = function (self, wallets)
 	local decorated_wallets = {
 		wallets = wallets,
-		by_type = _get_wallet_by_type,
+		by_type = _get_wallet_by_type
 	}
 
 	return decorated_wallets
@@ -597,13 +599,13 @@ StoreService.get_premium_currency_store = function (self)
 		if error.error and error.error == "empty_store" and Managers.backend.interfaces.external_payment.show_empty_store_error then
 			return Managers.backend.interfaces.external_payment:show_empty_store_error():next(function ()
 				return Promise.rejected({
-					error = error.error,
+					error = error.error
 				})
 			end)
 		end
 
 		local show_error = error and (not type(error) == "table" and {
-			error = error,
+			error = error
 		} or error) or {}
 
 		return Promise.rejected(show_error)
@@ -624,13 +626,13 @@ StoreService.get_premium_store = function (self, storefront_key)
 					self._block_aquila_acquisition = true
 
 					return Promise.rejected({
-						error = error.error,
+						error = error.error
 					})
 				end)
 			end
 
 			local show_error = error and (not type(error) == "table" and {
-				error = error,
+				error = error
 			} or error) or {}
 
 			self._block_aquila_acquisition = false
@@ -706,7 +708,7 @@ StoreService.get_premium_store = function (self, storefront_key)
 			layout_config = layout_config or {},
 			current_rotation_end = current_rotation_end,
 			catalog_validity = catalog_validity,
-			bundle_rules = bundle_rules,
+			bundle_rules = bundle_rules
 		}
 	end):catch(function (error)
 		Log.error("StoreService", "Failed to fetch premium storefront %s %s", storefront_key, type(error) == "table" and table.tostring(error) or error)

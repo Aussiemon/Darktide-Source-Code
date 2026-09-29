@@ -6,7 +6,7 @@ local base_color = {
 	255,
 	0,
 	255,
-	0,
+	0
 }
 local scanner_display_view_expedition_map_settings = {
 	board_starting_offset_x = 0,
@@ -16,38 +16,38 @@ local scanner_display_view_expedition_map_settings = {
 	target_base_color = base_color,
 	target_widget_size = {
 		84,
-		84,
+		84
 	},
 	dropped_loot_settings = {
 		luggable = {
 			icon = "scanner_map_luggable",
 			widget_size = {
 				64,
-				64,
-			},
+				64
+			}
 		},
 		default = {
 			icon = "scanner_map_loot_small",
 			widget_size = {
 				128,
-				128,
-			},
-		},
+				128
+			}
+		}
 	},
 	marked_widget_size = {
 		128,
-		128,
+		128
 	},
 	cursor_widget_size = {
 		128,
-		128,
+		128
 	},
 	background_rings_size = {
 		render_size,
-		render_size,
+		render_size
 	},
 	board_width = board_size,
-	board_height = board_size,
+	board_height = board_size
 }
 
 scanner_display_view_expedition_map_settings.background_ring_definitions = {
@@ -64,9 +64,9 @@ scanner_display_view_expedition_map_settings.background_ring_definitions = {
 				255,
 				0,
 				255,
-				0,
-			},
-		},
+				0
+			}
+		}
 	},
 	{
 		pass_type = "texture",
@@ -80,9 +80,9 @@ scanner_display_view_expedition_map_settings.background_ring_definitions = {
 				128,
 				0,
 				255,
-				0,
-			},
-		},
+				0
+			}
+		}
 	},
 	{
 		pass_type = "texture",
@@ -97,10 +97,10 @@ scanner_display_view_expedition_map_settings.background_ring_definitions = {
 				50,
 				0,
 				255,
-				0,
-			},
-		},
-	},
+				0
+			}
+		}
+	}
 }
 scanner_display_view_expedition_map_settings.target_definitions = {
 	{
@@ -108,8 +108,8 @@ scanner_display_view_expedition_map_settings.target_definitions = {
 		style_id = "highlight",
 		style = {
 			hdr = true,
-			color = base_color,
-		},
+			color = base_color
+		}
 	},
 	{
 		pass_type = "texture",
@@ -117,8 +117,8 @@ scanner_display_view_expedition_map_settings.target_definitions = {
 		style = {
 			hdr = true,
 			visible = false,
-			color = base_color,
-		},
+			color = base_color
+		}
 	},
 	{
 		pass_type = "texture",
@@ -136,35 +136,35 @@ scanner_display_view_expedition_map_settings.target_definitions = {
 					0,
 					0,
 					0,
-					0,
+					0
 				},
 				part_2_color = {
 					0,
 					0,
 					0,
-					0,
+					0
 				},
 				part_3_color = {
 					0,
 					0,
 					0,
-					0,
+					0
 				},
 				part_4_color = {
 					0,
 					0,
 					0,
-					0,
-				},
+					0
+				}
 			},
 			color = {
 				255,
 				255,
 				255,
-				255,
-			},
-		},
-	},
+				255
+			}
+		}
+	}
 }
 
 return settings("ScannerDisplayViewExpeditionMapSettings", scanner_display_view_expedition_map_settings)

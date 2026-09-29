@@ -3,6 +3,7 @@
 local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
 local Ammo = require("scripts/utilities/ammo")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local MasterItems = require("scripts/backend/master_items")
 local Overheat = require("scripts/utilities/overheat")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
@@ -91,7 +92,7 @@ weapon_action_data.actions = {
 	weapon_throw = _require_weapon_action("action_weapon_throw"),
 	wield = _require_weapon_action("action_wield"),
 	windup = _require_weapon_action("action_windup"),
-	zealot_channel = _require_weapon_action("action_zealot_channel"),
+	zealot_channel = _require_weapon_action("action_zealot_channel")
 }
 
 local function _ammo_check(action_settings, condition_func_params)
@@ -128,13 +129,22 @@ local function _has_ammo(condition_func_params)
 	return current_clip_amount > 0
 end
 
+local function _ability_type(action_settings, condition_func_params)
+	if action_settings.ability_type_func then
+		return action_settings.ability_type_func(nil, condition_func_params)
+	else
+		return action_settings.ability_type or ItemSlotSettings[condition_func_params.slot_name].ability_type
+	end
+end
+
 local function _has_ability_charge(action_settings, condition_func_params)
-	local ability_extension = condition_func_params.ability_extension
-	local ability_type = action_settings.ability_type
+	local ability_type = _ability_type(action_settings, condition_func_params)
 
 	if not ability_type then
 		return false
 	end
+
+	local ability_extension = condition_func_params.ability_extension
 
 	if not ability_extension:has_ability_type(ability_type) then
 		return false
@@ -148,20 +158,14 @@ local function _has_ability_charge(action_settings, condition_func_params)
 end
 
 local function _has_ability_charge_or_ammo(action_settings, condition_func_params)
-	local is_ability = not not action_settings.ability_type
-
-	if is_ability then
-		return _has_ability_charge(action_settings, condition_func_params)
-	end
-
 	local inventory_slot_component = condition_func_params.inventory_slot_component
-	local has_ammo = not not inventory_slot_component and not not Ammo.current_ammo_in_clips(inventory_slot_component)
+	local uses_ammo = not not inventory_slot_component and not not Ammo.current_ammo_in_clips(inventory_slot_component)
 
-	if has_ammo then
+	if uses_ammo then
 		return _has_ammo(condition_func_params)
 	end
 
-	return true
+	return _has_ability_charge(action_settings, condition_func_params)
 end
 
 local function _ability_has_keyword(action_settings, condition_func_params)
@@ -172,7 +176,7 @@ local function _ability_has_keyword(action_settings, condition_func_params)
 	end
 
 	local item_definition = MasterItems.get_cached()
-	local ability_type = action_settings.ability_type
+	local ability_type = _ability_type(action_settings, condition_func_params)
 	local equipped_abilities = condition_func_params.ability_extension:equipped_abilities()
 	local ability = equipped_abilities[ability_type]
 	local ability_item_name = ability.inventory_item_name
@@ -319,7 +323,7 @@ weapon_action_data.action_kind_condition_funcs = {
 			return false
 		end
 
-		if action_settings.use_ability_charge then
+		if action_settings.consume_ability_usage_cost then
 			return _has_ability_charge(action_settings, condition_func_params)
 		end
 
@@ -376,7 +380,7 @@ weapon_action_data.action_kind_condition_funcs = {
 	end,
 	overload_target_finder = function (action_settings, condition_func_params, used_input, t, time_in_action)
 		local can_use = true
-		local ability_type = action_settings.ability_type
+		local ability_type = _ability_type(action_settings, condition_func_params)
 
 		if ability_type then
 			local ability_extension = condition_func_params.ability_extension
@@ -388,7 +392,7 @@ weapon_action_data.action_kind_condition_funcs = {
 	end,
 	chain_lightning = function (action_settings, condition_func_params, used_input, t, time_in_action)
 		local can_use = true
-		local ability_type = action_settings.ability_type
+		local ability_type = _ability_type(action_settings, condition_func_params)
 
 		if ability_type then
 			local ability_extension = condition_func_params.ability_extension
@@ -409,7 +413,7 @@ weapon_action_data.action_kind_condition_funcs = {
 	end,
 	smite_targeting = function (action_settings, condition_func_params, used_input, t, time_in_action)
 		local ability_extension = condition_func_params.ability_extension
-		local ability_type = action_settings.ability_type
+		local ability_type = _ability_type(action_settings, condition_func_params)
 		local can_use = ability_extension:can_use_ability(ability_type)
 
 		return can_use
@@ -430,9 +434,14 @@ weapon_action_data.action_kind_condition_funcs = {
 	end,
 	use_syringe = function (action_settings, condition_func_params, used_input, t, time_in_action)
 		local target_unit
+		local use_lunge_target = action_settings.use_lunge_target
 
 		if action_settings.self_use then
 			target_unit = condition_func_params.unit
+		elseif use_lunge_target then
+			local lunge_character_state_component = condition_func_params.lunge_character_state_component
+
+			target_unit = lunge_character_state_component.lunge_target
 		else
 			local action_module_target_finder_component = condition_func_params.action_module_target_finder_component
 
@@ -447,7 +456,7 @@ weapon_action_data.action_kind_condition_funcs = {
 		local can_use = not validate_target_func or validate_target_func(target_unit)
 
 		return can_use
-	end,
+	end
 }
 
 local function _get_toggle_special_total_time(action_settings, action_params)
@@ -469,7 +478,7 @@ weapon_action_data.action_kind_total_time_funcs = {
 		return total_time
 	end,
 	toggle_special = _get_toggle_special_total_time,
-	toggle_special_with_block = _get_toggle_special_total_time,
+	toggle_special_with_block = _get_toggle_special_total_time
 }
 
 local DEFAULT_NO_AMMO_DELAY_TIME = 1
@@ -664,12 +673,12 @@ weapon_action_data.conditional_state_functions = {
 	can_do_lunge = function (condition_func_params, action_params, remaining_time, t)
 		local talent_extension = condition_func_params.talent_extension
 
-		return talent_extension:has_special_rule("cryptic_chordclaw_dash")
+		return talent_extension:has_special_rule("allow_dash")
 	end,
 	cannot_do_lunge = function (condition_func_params, action_params, remaining_time, t)
 		local talent_extension = condition_func_params.talent_extension
 
-		return not talent_extension:has_special_rule("cryptic_chordclaw_dash")
+		return not talent_extension:has_special_rule("allow_dash")
 	end,
 	has_lunge_target = function (condition_func_params, action_params, remaining_time, t)
 		local lunge_character_state_component = condition_func_params.lunge_character_state_component
@@ -699,81 +708,81 @@ weapon_action_data.conditional_state_functions = {
 		local talent_extension = condition_func_params.talent_extension
 
 		return talent_extension:has_special_rule("cryptic_chordclaw_do_horizontal_swipe")
-	end,
+	end
 }
 weapon_action_data.action_kind_to_running_action_chain_event = {
 	aim = {
-		has_charge = true,
+		has_charge = true
 	},
 	block = {
-		has_blocked = true,
+		has_blocked = true
 	},
 	chain_lightning = {
 		charge_depleted = true,
 		force_vent = true,
-		stop_time_reached = true,
+		stop_time_reached = true
 	},
 	charge = {
-		fully_charged = true,
+		fully_charged = true
 	},
 	charge_ammo = {
-		fully_charged = true,
+		fully_charged = true
 	},
 	flamer_gas = {
 		charge_depleted = true,
 		clip_empty = true,
-		reserve_empty = true,
+		reserve_empty = true
 	},
 	lunge_start_and_wait_for_end = {
 		cancel = true,
 		lunge_ended = true,
 		lunging = true,
-		waiting_for_lunge = true,
+		waiting_for_lunge = true
 	},
 	overload_charge = {
 		fully_charged = true,
-		overheating = true,
+		overheating = true
 	},
 	overload_charge_position_finder = {
-		fully_charged = true,
+		fully_charged = true
 	},
 	overload_charge_target_finder = {
-		fully_charged = true,
+		fully_charged = true
 	},
 	overload_charge_weapon_special = {
 		fully_charged = true,
-		overheating = true,
+		overheating = true
 	},
 	reload_shotgun = {
-		reload_loop = true,
+		reload_loop = true
 	},
 	scan = {
-		no_mission_zone = true,
+		no_mission_zone = true
 	},
 	scan_confirm = {
 		no_mission_zone = true,
-		stop_scanning = true,
+		stop_scanning = true
 	},
 	smite_targeting = {
-		fully_charged = true,
+		fully_charged = true
 	},
 	spawn_projectile = {
 		force_vent = true,
-		out_of_charges = true,
+		out_of_charges = true
 	},
 	vent_overheat = {
-		fully_vented = true,
+		fully_vented = true
 	},
 	vent_warp_charge = {
-		fully_vented = true,
-	},
+		fully_vented = true
+	}
 }
 weapon_action_data.action_kinds_with_inverted_timescale = {
 	overload_charge = true,
 	overload_charge_position_finder = true,
 	overload_charge_target_finder = true,
 	overload_charge_weapon_special = true,
-	overload_target_finder = true,
+	overload_target_finder = true
 }
 
 for name, _ in pairs(weapon_action_data.action_kind_condition_funcs) do

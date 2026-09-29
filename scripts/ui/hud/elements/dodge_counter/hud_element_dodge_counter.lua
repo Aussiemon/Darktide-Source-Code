@@ -72,7 +72,7 @@ HudElementDodgeCounter._add_dodge_bar = function (self)
 		animation_id = nil,
 		status = starting_status,
 		widget_name = dodge_bar_widget_name,
-		widget = self:_create_widget(dodge_bar_widget_name, Definitions.dodge_bar_definition),
+		widget = self:_create_widget(dodge_bar_widget_name, Definitions.dodge_bar_definition)
 	}
 
 	if override_starting_color then
@@ -338,7 +338,7 @@ HudElementDodgeCounter._start_dodge_bar_animation = function (self, dodge_bar, a
 	local animation_id = self:_start_animation(animation_name, self._widgets_by_name, 1, {
 		dodge_bar = dodge_bar,
 		dodge_bar_widget = dodge_bar_widget,
-		name = dodge_bar.widget_name,
+		name = dodge_bar.widget_name
 	})
 
 	dodge_bar.animation_id = animation_id

@@ -1,23 +1,23 @@
 ﻿-- chunkname: @scripts/ui/views/credits_goods_vendor_view/credits_goods_vendor_view_definitions.lua
 
-local UIWidget = require("scripts/managers/ui/ui_widget")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local UIWidget = require("scripts/managers/ui/ui_widget")
 local edge_padding = 44
 local grid_width = 640
 local grid_height = 950
 local grid_size = {
 	grid_width - edge_padding,
-	grid_height,
+	grid_height
 }
 local grid_spacing = {
 	10,
-	10,
+	10
 }
 local mask_size = {
 	grid_width + 40,
-	grid_height,
+	grid_height
 }
 local grid_settings = {
 	scroll_start_margin = 200,
@@ -36,7 +36,7 @@ local grid_settings = {
 	grid_spacing = grid_spacing,
 	grid_size = grid_size,
 	mask_size = mask_size,
-	edge_padding = edge_padding,
+	edge_padding = edge_padding
 }
 local scenegraph_definition = {
 	item_grid_pivot = {
@@ -45,13 +45,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			grid_width,
-			grid_height,
+			grid_height
 		},
 		position = {
 			100,
 			40,
-			1,
-		},
+			1
+		}
 	},
 	grid_tab_panel = {
 		horizontal_alignment = "center",
@@ -59,13 +59,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			28,
-			1,
-		},
+			1
+		}
 	},
 	title_text = {
 		horizontal_alignment = "left",
@@ -73,13 +73,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			grid_size[1] + edge_padding,
-			200,
+			200
 		},
 		position = {
 			0,
 			10,
-			15,
-		},
+			15
+		}
 	},
 	divider = {
 		horizontal_alignment = "left",
@@ -87,13 +87,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			grid_size[1] + edge_padding,
-			50,
+			50
 		},
 		position = {
 			0,
 			50,
-			1,
-		},
+			1
+		}
 	},
 	description_text = {
 		horizontal_alignment = "left",
@@ -101,13 +101,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			grid_size[1] + edge_padding,
-			200,
+			200
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	info_box = {
 		horizontal_alignment = "center",
@@ -115,13 +115,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			505,
-			220,
+			220
 		},
 		position = {
 			0,
 			-56,
-			-6,
-		},
+			-6
+		}
 	},
 	purchase_button = {
 		horizontal_alignment = "left",
@@ -129,13 +129,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			310,
-			46,
+			46
 		},
 		position = {
 			900,
 			-143,
-			10,
-		},
+			10
+		}
 	},
 	price_text = {
 		horizontal_alignment = "center",
@@ -143,13 +143,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			1000,
-			50,
+			50
 		},
 		position = {
 			0,
 			47,
-			10,
-		},
+			10
+		}
 	},
 	price_icon = {
 		horizontal_alignment = "right",
@@ -157,14 +157,14 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			28,
-			20,
+			20
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local price_text_style = table.clone(UIFontSettings.currency_title)
 
@@ -178,23 +178,23 @@ local widget_definitions = {
 			style_id = "text",
 			value = "0",
 			value_id = "text",
-			style = price_text_style,
-		},
+			style = price_text_style
+		}
 	}, "price_text"),
 	price_icon = UIWidget.create_definition({
 		{
 			pass_type = "texture",
 			style_id = "texture",
 			value = "content/ui/materials/icons/currencies/credits_small",
-			value_id = "texture",
-		},
+			value_id = "texture"
+		}
 	}, "price_icon"),
 	purchase_button = UIWidget.create_definition(table.clone(ButtonPassTemplates.terminal_button), "purchase_button", {
 		gamepad_action = "confirm_pressed",
 		original_text = Utf8.upper(Localize("loc_vendor_purchase_button")),
 		hotspot = {
-			on_pressed_sound = UISoundEvents.default_click,
-		},
+			on_pressed_sound = UISoundEvents.default_click
+		}
 	}),
 	info_box = UIWidget.create_definition({
 		{
@@ -205,9 +205,9 @@ local widget_definitions = {
 				color = Color.terminal_grid_background_icon(100, true),
 				size_addition = {
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -220,13 +220,13 @@ local widget_definitions = {
 				offset = {
 					0,
 					-77,
-					2,
+					2
 				},
 				size = {
 					510,
-					106,
-				},
-			},
+					106
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -239,13 +239,13 @@ local widget_definitions = {
 				offset = {
 					0,
 					88,
-					2,
+					2
 				},
 				size = {
 					510,
-					108,
-				},
-			},
+					108
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -259,13 +259,13 @@ local widget_definitions = {
 				offset = {
 					0,
 					76,
-					0,
+					0
 				},
 				size = {
 					350,
-					83,
-				},
-			},
+					83
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -279,13 +279,13 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size_addition = {
 					24,
-					24,
-				},
-			},
+					24
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -299,13 +299,13 @@ local widget_definitions = {
 				offset = {
 					0,
 					100,
-					5,
+					5
 				},
 				size = {
 					200,
-					36,
-				},
-			},
+					36
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -323,21 +323,21 @@ local widget_definitions = {
 				offset = {
 					0,
 					30,
-					3,
+					3
 				},
 				size_addition = {
 					-40,
-					0,
+					0
 				},
 				size = {
 					nil,
-					70,
-				},
-			},
+					70
+				}
+			}
 		},
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/icons/weapons/hud/combat_blade_01",
+			value = "content/ui/materials/icons/weapons/hud/debug_primary",
 			value_id = "icon",
 			style = {
 				horizontal_alignment = "center",
@@ -346,14 +346,14 @@ local widget_definitions = {
 				offset = {
 					0,
 					40,
-					3,
+					3
 				},
 				size = {
 					256,
-					96,
-				},
-			},
-		},
+					96
+				}
+			}
+		}
 	}, "info_box"),
 	description_text = UIWidget.create_definition({
 		{
@@ -371,15 +371,15 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size = {
 					grid_size[1],
-					10,
-				},
+					10
+				}
 			},
-			value = Localize("loc_credits_goods_vendor_description_text"),
-		},
+			value = Localize("loc_credits_goods_vendor_description_text")
+		}
 	}, "description_text"),
 	divider = UIWidget.create_definition({
 		{
@@ -391,10 +391,10 @@ local widget_definitions = {
 				color = Color.terminal_corner(255, true),
 				size = {
 					468,
-					22,
-				},
-			},
-		},
+					22
+				}
+			}
+		}
 	}, "divider"),
 	title_text = UIWidget.create_definition({
 		{
@@ -412,16 +412,16 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size = {
 					grid_size[1],
-					10,
-				},
+					10
+				}
 			},
-			value = Localize("loc_credits_goods_vendor_title_text"),
-		},
-	}, "title_text"),
+			value = Localize("loc_credits_goods_vendor_title_text")
+		}
+	}, "title_text")
 }
 local animations = {}
 local tab_menu_settings = {
@@ -431,29 +431,29 @@ local tab_menu_settings = {
 	layer = 80,
 	button_size = {
 		132,
-		38,
+		38
 	},
 	button_template = ButtonPassTemplates.item_category_tab_menu_button,
 	input_label_offset = {
 		10,
-		5,
-	},
+		5
+	}
 }
 local item_category_tabs_content = {
 	{
 		hide_display_name = true,
 		icon = "content/ui/materials/icons/categories/melee",
 		slot_types = {
-			"slot_primary",
-		},
+			"slot_primary"
+		}
 	},
 	{
 		hide_display_name = true,
 		icon = "content/ui/materials/icons/categories/ranged",
 		slot_types = {
-			"slot_secondary",
-		},
-	},
+			"slot_secondary"
+		}
+	}
 }
 
 return {
@@ -462,5 +462,5 @@ return {
 	tab_menu_settings = tab_menu_settings,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
-	item_category_tabs_content = item_category_tabs_content,
+	item_category_tabs_content = item_category_tabs_content
 }

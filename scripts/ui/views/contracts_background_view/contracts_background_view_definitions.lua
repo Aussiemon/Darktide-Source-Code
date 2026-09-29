@@ -4,13 +4,13 @@ local UISettings = require("scripts/settings/ui/ui_settings")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local scenegraph_definition = {
-	screen = UIWorkspaceSettings.screen,
+	screen = UIWorkspaceSettings.screen
 }
 local widget_definitions = {}
 local input_legend_params = {}
 local intro_texts = {
 	description_text = "loc_contract_view_intro_description",
-	title_text = "loc_contract_view_intro_title",
+	title_text = "loc_contract_view_intro_title"
 }
 local button_options_definitions = {
 	{
@@ -22,13 +22,13 @@ local button_options_definitions = {
 				layer = 10,
 				tabs_params = {
 					{
-						view = "contracts_view",
-					},
-				},
+						view = "contracts_view"
+					}
+				}
 			}
 
 			self:_setup_tab_bar(tab_bar_params)
-		end,
+		end
 	},
 	{
 		blur_background = false,
@@ -66,7 +66,7 @@ local button_options_definitions = {
 									end
 
 									return false
-								end,
+								end
 							},
 							{
 								alignment = "right_alignment",
@@ -83,17 +83,17 @@ local button_options_definitions = {
 									end
 
 									return false
-								end,
-							},
-						},
-					},
-				},
+								end
+							}
+						}
+					}
+				}
 			}
 
 			self:_setup_tab_bar(tab_bar_params, {
-				hide_price = true,
+				hide_price = true
 			})
-		end,
+		end
 	},
 	{
 		blur_background = false,
@@ -106,15 +106,15 @@ local button_options_definitions = {
 					{
 						display_name = "loc_mark_vendor_view_title_standard",
 						view = "marks_goods_vendor_view",
-						view_function = "show_items",
-					},
-				},
+						view_function = "show_items"
+					}
+				}
 			}
 
 			self:_setup_tab_bar(tab_bar_params, {
-				hide_price = true,
+				hide_price = true
 			})
-		end,
+		end
 	},
 	{
 		blur_background = false,
@@ -125,9 +125,9 @@ local button_options_definitions = {
 				layer = 10,
 				tabs_params = {
 					{
-						view = "live_events_view",
-					},
-				},
+						view = "live_events_view"
+					}
+				}
 			}
 
 			self:_setup_tab_bar(tab_bar_params)
@@ -140,9 +140,9 @@ local button_options_definitions = {
 
 				content.text = Localize("loc_live_events_view_title")
 				content.hotspot.pressed_callback = callback_function
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 local background_world_params = {
 	level_name = "content/levels/ui/contracts_view/contracts_view",
@@ -154,7 +154,7 @@ local background_world_params = {
 	viewport_name = "ui_contracts_view_world_viewport",
 	viewport_type = "default",
 	world_layer = 1,
-	world_name = "ui_contracts_view_world",
+	world_name = "ui_contracts_view_world"
 }
 
 return {
@@ -163,5 +163,5 @@ return {
 	scenegraph_definition = scenegraph_definition,
 	button_options_definitions = button_options_definitions,
 	input_legend_params = input_legend_params,
-	background_world_params = background_world_params,
+	background_world_params = background_world_params
 }

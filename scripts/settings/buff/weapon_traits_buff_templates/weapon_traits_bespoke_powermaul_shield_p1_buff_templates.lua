@@ -30,7 +30,7 @@ templates.weapon_trait_bespoke_powermaul_shield_p1_block_grants_power_bonus_pare
 	stacks_to_remove = 0,
 	proc_events = {
 		[proc_events.on_block] = 1,
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	start_func = function (template_data, template_context)
@@ -59,8 +59,8 @@ templates.weapon_trait_bespoke_powermaul_shield_p1_block_grants_power_bonus_pare
 			local t = FixedFrame.approximate_latest_fixed_time()
 
 			template_data.last_hit_time = t
-		end,
-	},
+		end
+	}
 }
 templates.weapon_trait_bespoke_powermaul_shield_p1_block_grants_power_bonus_child = {
 	class_name = "buff",
@@ -69,9 +69,9 @@ templates.weapon_trait_bespoke_powermaul_shield_p1_block_grants_power_bonus_chil
 	predicted = false,
 	stack_offset = -1,
 	conditional_stat_buffs = {
-		[stat_buffs.melee_power_level_modifier] = 0.1,
+		[stat_buffs.melee_power_level_modifier] = 0.1
 	},
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 
 local _push_settings = {
@@ -80,7 +80,7 @@ local _push_settings = {
 	inner_damage_profile = DamageProfileTemplates.ogryn_shield_push,
 	inner_damage_type = damage_types.physical,
 	outer_damage_profile = DamageProfileTemplates.default_shield_push,
-	outer_damage_type = damage_types.physical,
+	outer_damage_type = damage_types.physical
 }
 
 templates.weapon_trait_bespoke_powermaul_shield_p1_block_break_pushes = {
@@ -88,14 +88,14 @@ templates.weapon_trait_bespoke_powermaul_shield_p1_block_break_pushes = {
 	cooldown_duration = 18,
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.block_cost_multiplier] = 0.85,
+		[stat_buffs.block_cost_multiplier] = 0.85
 	},
 	proc_events = {
-		[proc_events.on_block] = 1,
+		[proc_events.on_block] = 1
 	},
 	push_settings = {
 		push_radius = 5,
-		power_level = DEFAULT_POWER_LEVEL * 2,
+		power_level = DEFAULT_POWER_LEVEL * 2
 	},
 	start_func = function (template_data, template_context)
 		local player_unit = template_context.unit
@@ -146,7 +146,7 @@ templates.weapon_trait_bespoke_powermaul_shield_p1_block_break_pushes = {
 		local scale = Vector3.one()
 
 		fx_extension:spawn_particles(effect_name, player_position, fx_rotation, scale, nil, nil)
-	end,
+	end
 }
 templates.weapon_trait_bespoke_powermaul_shield_p1_rending_vs_staggered = table.clone(BaseWeaponTraitBuffTemplates.rending_vs_staggered)
 templates.weapon_trait_bespoke_powermaul_shield_p1_stacking_increase_impact_on_hit_parent = table.clone(BaseWeaponTraitBuffTemplates.stacking_increase_impact_on_hit_parent)
@@ -160,9 +160,10 @@ templates.weapon_trait_bespoke_powermaul_shield_p1_block_has_chance_to_stun = {
 	predicted = false,
 	proc_events = {
 		[proc_events.on_perfect_block] = 1,
+		[proc_events.on_block] = 1
 	},
 	add_child_proc_events = {
-		[proc_events.on_perfect_block] = 1,
+		[proc_events.on_block] = 1
 	},
 	conditional_proc_func = function (template_data, template_context, t)
 		local stacks = template_context.buff_extension:current_stacks("block_has_chance_to_stun_child")
@@ -177,36 +178,39 @@ templates.weapon_trait_bespoke_powermaul_shield_p1_block_has_chance_to_stun = {
 	check_proc_func = function (params, template_data, template_context)
 		return params.attack_type == "melee"
 	end,
-	proc_func = function (params, template_data, template_context, t)
-		local attacking_unit = params.attacking_unit
-		local attacking_unit_buff_extension = ScriptUnit.has_extension(attacking_unit, "buff_system")
+	specific_proc_func = {
+		on_perfect_block = function (params, template_data, template_context, t)
+			local attacking_unit = params.attacking_unit
+			local attacking_unit_buff_extension = ScriptUnit.has_extension(attacking_unit, "buff_system")
 
-		if attacking_unit_buff_extension then
-			attacking_unit_buff_extension:add_internally_controlled_buff("power_maul_stun", t)
+			if attacking_unit_buff_extension then
+				attacking_unit_buff_extension:add_internally_controlled_buff("power_maul_stun", t)
+			end
 		end
-	end,
+	}
 }
 templates.weapon_trait_bespoke_powermaul_shield_p1_attack_speed_on_perfect_block = {
 	active_duration = 3,
+	allow_proc_while_active = true,
 	class_name = "proc_buff",
 	cooldown_duration = 5,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_perfect_block] = 1,
+		[proc_events.on_block] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.melee_attack_speed] = 1.5,
+		[stat_buffs.melee_attack_speed] = 1.5
 	},
-	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded
 }
 templates.weapon_trait_bespoke_powermaul_shield_p1_damage_bonus_vs_electrocuted = {
 	class_name = "buff",
 	hide_icon_in_hud = true,
 	predicted = false,
 	conditional_stat_buffs = {
-		[stat_buffs.damage_vs_electrocuted] = 0.5,
+		[stat_buffs.damage_vs_electrocuted] = 0.5
 	},
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 templates.weapon_trait_bespoke_powermaul_shield_p1_power_bonus_scaled_on_stamina = table.clone(BaseWeaponTraitBuffTemplates.power_bonus_scaled_on_stamina)
 

@@ -15,9 +15,9 @@ local mutator_templates = {
 			specials_timer_modifier = 99999,
 			override_num_roamer_range = {
 				0,
-				0,
-			},
-		},
+				0
+			}
+		}
 	},
 	mutator_live_event_endless_hordes = {
 		activate_on_load = true,
@@ -25,9 +25,9 @@ local mutator_templates = {
 		gameplay_template = {
 			path = "scripts/managers/mutator/mutators/mutator_gameplay/mutator_gameplay_live_event_endless_hordes",
 			start_module_on_activate = true,
-			settings = {},
-		},
-	},
+			settings = {}
+		}
+	}
 }
 
 return mutator_templates

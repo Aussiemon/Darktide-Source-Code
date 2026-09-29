@@ -128,9 +128,9 @@ end
 MinigameExtension.set_active = function (self, enabled)
 	if self._active ~= enabled then
 		if enabled then
-			self._owner_system:enable_update_function(self.__class_name, "update", self._unit, self)
+			self._owner_system:enable_update_function(self._unit, "update")
 		else
-			self._owner_system:disable_update_function(self.__class_name, "update", self._unit, self)
+			self._owner_system:disable_update_function(self._unit, "update")
 		end
 	end
 

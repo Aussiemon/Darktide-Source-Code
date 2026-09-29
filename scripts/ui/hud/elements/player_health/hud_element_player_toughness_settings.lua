@@ -14,10 +14,10 @@ local hud_element_player_toughness_settings = {
 	health_animation_threshold = 0.1,
 	size = {
 		400,
-		16,
+		16
 	},
 	critical_health_color = color_tint_6,
-	default_health_color = color_tint_6,
+	default_health_color = color_tint_6
 }
 
 return settings("HudElementPlayerToughnessSettings", hud_element_player_toughness_settings)

@@ -10,14 +10,14 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local widget_definitions = {}
 local grid_cell_scenegraph_blueprint = {
@@ -26,17 +26,17 @@ local grid_cell_scenegraph_blueprint = {
 	vertical_alignment = "top",
 	size = {
 		0,
-		0,
+		0
 	},
 	position = {
 		0,
 		0,
-		1,
-	},
+		1
+	}
 }
 
 return {
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
-	grid_cell_scenegraph_blueprint = grid_cell_scenegraph_blueprint,
+	grid_cell_scenegraph_blueprint = grid_cell_scenegraph_blueprint
 }

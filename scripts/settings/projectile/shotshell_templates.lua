@@ -26,13 +26,13 @@ shotshell_templates.default_ogryn_shotgun = {
 		[armor_types.player] = 1,
 		[armor_types.berserker] = 5,
 		[armor_types.super_armor] = 2,
-		[armor_types.disgustingly_resilient] = 5,
+		[armor_types.disgustingly_resilient] = 5
 	},
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.default_ogryn_shotgun_assault,
-		},
-	},
+			damage_profile = DamageProfileTemplates.default_ogryn_shotgun_assault
+		}
+	}
 }
 shotshell_templates.shotgun_assault = {
 	bullseye = true,
@@ -49,13 +49,13 @@ shotshell_templates.shotgun_assault = {
 		[armor_types.player] = 1,
 		[armor_types.berserker] = 5,
 		[armor_types.super_armor] = 2,
-		[armor_types.disgustingly_resilient] = 8,
+		[armor_types.disgustingly_resilient] = 8
 	},
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.default_shotgun_assault,
-		},
-	},
+			damage_profile = DamageProfileTemplates.default_shotgun_assault
+		}
+	}
 }
 shotshell_templates.shotgun_killshot = {
 	bullseye = true,
@@ -72,13 +72,13 @@ shotshell_templates.shotgun_killshot = {
 		[armor_types.player] = 1,
 		[armor_types.berserker] = 5,
 		[armor_types.super_armor] = 2,
-		[armor_types.disgustingly_resilient] = 5,
+		[armor_types.disgustingly_resilient] = 5
 	},
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.default_shotgun_killshot,
-		},
-	},
+			damage_profile = DamageProfileTemplates.default_shotgun_killshot
+		}
+	}
 }
 shotshell_templates.shotgun_p1_m2_assault = {
 	bullseye = true,
@@ -98,13 +98,13 @@ shotshell_templates.shotgun_p1_m2_assault = {
 		[armor_types.player] = 1,
 		[armor_types.berserker] = 3,
 		[armor_types.super_armor] = 2,
-		[armor_types.disgustingly_resilient] = 4,
+		[armor_types.disgustingly_resilient] = 4
 	},
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.shotgun_p1_m2_assault,
-		},
-	},
+			damage_profile = DamageProfileTemplates.shotgun_p1_m2_assault
+		}
+	}
 }
 shotshell_templates.shotgun_p1_m3_assault = {
 	bullseye = false,
@@ -121,13 +121,13 @@ shotshell_templates.shotgun_p1_m3_assault = {
 		[armor_types.player] = 1,
 		[armor_types.berserker] = 7,
 		[armor_types.super_armor] = 3,
-		[armor_types.disgustingly_resilient] = 9,
+		[armor_types.disgustingly_resilient] = 9
 	},
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.shotgun_p1_m3_assault,
-		},
-	},
+			damage_profile = DamageProfileTemplates.shotgun_p1_m3_assault
+		}
+	}
 }
 shotshell_templates.shotgun_p1_m2_killshot = {
 	bullseye = true,
@@ -146,13 +146,13 @@ shotshell_templates.shotgun_p1_m2_killshot = {
 		[armor_types.player] = 1,
 		[armor_types.berserker] = 3,
 		[armor_types.super_armor] = 2,
-		[armor_types.disgustingly_resilient] = 4,
+		[armor_types.disgustingly_resilient] = 4
 	},
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.shotgun_p1_m2_killshot,
-		},
-	},
+			damage_profile = DamageProfileTemplates.shotgun_p1_m2_killshot
+		}
+	}
 }
 shotshell_templates.shotgun_p1_m3_killshot = {
 	bullseye = false,
@@ -169,13 +169,60 @@ shotshell_templates.shotgun_p1_m3_killshot = {
 		[armor_types.player] = 1,
 		[armor_types.berserker] = 9,
 		[armor_types.super_armor] = 6,
-		[armor_types.disgustingly_resilient] = 9,
+		[armor_types.disgustingly_resilient] = 9
 	},
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.shotgun_p1_m3_killshot,
-		},
+			damage_profile = DamageProfileTemplates.shotgun_p1_m3_killshot
+		}
+	}
+}
+shotshell_templates.shotgun_p3_m1_hip = {
+	bullseye = false,
+	num_pellets = 21,
+	num_spread_circles = 2,
+	pellets_per_frame = 12,
+	range = 100,
+	scatter_range = 0.15,
+	spread_pitch = 2.5,
+	spread_yaw = 2.5,
+	min_num_hits = {
+		[armor_types.unarmored] = 7,
+		[armor_types.armored] = 7,
+		[armor_types.resistant] = 7,
+		[armor_types.player] = 1,
+		[armor_types.berserker] = 7,
+		[armor_types.super_armor] = 7,
+		[armor_types.disgustingly_resilient] = 7
 	},
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.shotgun_p3_m1
+		}
+	}
+}
+shotshell_templates.shotgun_p3_m1_ads = {
+	bullseye = false,
+	num_pellets = 18,
+	num_spread_circles = 2,
+	pellets_per_frame = 6,
+	range = 100,
+	spread_pitch = 1.75,
+	spread_yaw = 1.75,
+	min_num_hits = {
+		[armor_types.unarmored] = 8,
+		[armor_types.armored] = 8,
+		[armor_types.resistant] = 8,
+		[armor_types.player] = 1,
+		[armor_types.berserker] = 8,
+		[armor_types.super_armor] = 7,
+		[armor_types.disgustingly_resilient] = 8
+	},
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.shotgun_p3_m1
+		}
+	}
 }
 shotshell_templates.shotgun_p4_m1_hip = {
 	bullseye = true,
@@ -195,13 +242,13 @@ shotshell_templates.shotgun_p4_m1_hip = {
 		[armor_types.player] = 1,
 		[armor_types.berserker] = 7,
 		[armor_types.super_armor] = 4,
-		[armor_types.disgustingly_resilient] = 6,
+		[armor_types.disgustingly_resilient] = 6
 	},
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.shotgun_p4_m1,
-		},
-	},
+			damage_profile = DamageProfileTemplates.shotgun_p4_m1
+		}
+	}
 }
 shotshell_templates.shotgun_p4_m1_ads = {
 	bullseye = true,
@@ -221,13 +268,13 @@ shotshell_templates.shotgun_p4_m1_ads = {
 		[armor_types.player] = 1,
 		[armor_types.berserker] = 8,
 		[armor_types.super_armor] = 5,
-		[armor_types.disgustingly_resilient] = 8,
+		[armor_types.disgustingly_resilient] = 8
 	},
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.shotgun_p4_m1,
-		},
-	},
+			damage_profile = DamageProfileTemplates.shotgun_p4_m1
+		}
+	}
 }
 shotshell_templates.shotgun_p4_m2_hip = {
 	bullseye = false,
@@ -245,13 +292,13 @@ shotshell_templates.shotgun_p4_m2_hip = {
 		[armor_types.player] = 1,
 		[armor_types.berserker] = 7,
 		[armor_types.super_armor] = 8,
-		[armor_types.disgustingly_resilient] = 7,
+		[armor_types.disgustingly_resilient] = 7
 	},
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.shotgun_p4_m2,
-		},
-	},
+			damage_profile = DamageProfileTemplates.shotgun_p4_m2
+		}
+	}
 }
 shotshell_templates.shotgun_p4_m2_ads = {
 	bullseye = false,
@@ -268,13 +315,13 @@ shotshell_templates.shotgun_p4_m2_ads = {
 		[armor_types.player] = 1,
 		[armor_types.berserker] = 9,
 		[armor_types.super_armor] = 8,
-		[armor_types.disgustingly_resilient] = 9,
+		[armor_types.disgustingly_resilient] = 9
 	},
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.shotgun_p4_m2,
-		},
-	},
+			damage_profile = DamageProfileTemplates.shotgun_p4_m2
+		}
+	}
 }
 shotshell_templates.shotpistol_shield = {
 	bullseye = true,
@@ -293,13 +340,13 @@ shotshell_templates.shotpistol_shield = {
 		[armor_types.player] = 1,
 		[armor_types.berserker] = 7,
 		[armor_types.super_armor] = 5,
-		[armor_types.disgustingly_resilient] = 8,
+		[armor_types.disgustingly_resilient] = 8
 	},
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.damage_shotpistol_shield_p1,
-		},
-	},
+			damage_profile = DamageProfileTemplates.damage_shotpistol_shield_p1
+		}
+	}
 }
 shotshell_templates.rippergun_assault = {
 	bullseye = true,
@@ -316,13 +363,13 @@ shotshell_templates.rippergun_assault = {
 		[armor_types.player] = 1,
 		[armor_types.berserker] = 5,
 		[armor_types.super_armor] = 2,
-		[armor_types.disgustingly_resilient] = 5,
+		[armor_types.disgustingly_resilient] = 5
 	},
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.default_rippergun_assault,
-		},
-	},
+			damage_profile = DamageProfileTemplates.default_rippergun_assault
+		}
+	}
 }
 shotshell_templates.rippergun_spraynpray = {
 	bullseye = true,
@@ -339,13 +386,13 @@ shotshell_templates.rippergun_spraynpray = {
 		[armor_types.player] = 1,
 		[armor_types.berserker] = 5,
 		[armor_types.super_armor] = 2,
-		[armor_types.disgustingly_resilient] = 5,
+		[armor_types.disgustingly_resilient] = 5
 	},
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.default_rippergun_snp,
-		},
-	},
+			damage_profile = DamageProfileTemplates.default_rippergun_snp
+		}
+	}
 }
 
 for name, template in pairs(shotshell_templates) do

@@ -107,13 +107,13 @@ DruglabTank.component_data = {
 		category = "Liquid",
 		ui_name = "Material Slot Name",
 		ui_type = "text_box",
-		value = "goo",
+		value = "goo"
 	},
 	liquid_level_variable_name = {
 		category = "Liquid",
 		ui_name = "Variable Name",
 		ui_type = "text_box",
-		value = "fluid_level",
+		value = "fluid_level"
 	},
 	liquid_drain_time = {
 		category = "Liquid",
@@ -122,7 +122,7 @@ DruglabTank.component_data = {
 		min = 0,
 		ui_name = "Drain Time",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	liquid_levels = {
 		category = "Liquid",
@@ -135,7 +135,7 @@ DruglabTank.component_data = {
 				min = 0,
 				ui_name = "Health Threshold",
 				ui_type = "number",
-				value = 1,
+				value = 1
 			},
 			liquid_level = {
 				decimals = 3,
@@ -143,14 +143,14 @@ DruglabTank.component_data = {
 				min = 0,
 				ui_name = "Liquid Level",
 				ui_type = "number",
-				value = 1,
-			},
+				value = 1
+			}
 		},
 		control_order = {
 			"health_threshold",
-			"liquid_level",
-		},
-	},
+			"liquid_level"
+		}
+	}
 }
 
 return DruglabTank

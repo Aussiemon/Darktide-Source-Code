@@ -6,7 +6,7 @@ local self = {
 	max_size = 8,
 	total_time = 120,
 	trigger_time = 0,
-	ids = {},
+	ids = {}
 }
 
 local function _test_movement_modifier(dt, t)

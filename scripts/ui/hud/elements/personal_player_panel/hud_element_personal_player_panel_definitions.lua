@@ -13,7 +13,7 @@ local icon_size = HudElementPersonalPlayerPanelSettings.icon_size
 local icon_bar_spacing = HudElementPersonalPlayerPanelSettings.icon_bar_spacing
 local toughness_bar_size = {
 	bar_size[1],
-	8,
+	8
 }
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
@@ -22,7 +22,7 @@ local scenegraph_definition = {
 		parent = "screen",
 		vertical_alignment = "top",
 		size = panel_size,
-		position = panel_offset,
+		position = panel_offset
 	},
 	panel_background = {
 		horizontal_alignment = "left",
@@ -32,8 +32,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	player_icon = {
 		horizontal_alignment = "left",
@@ -43,8 +43,8 @@ local scenegraph_definition = {
 		position = {
 			33,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	bar = {
 		horizontal_alignment = "left",
@@ -54,8 +54,8 @@ local scenegraph_definition = {
 		position = {
 			128,
 			18,
-			2,
-		},
+			2
+		}
 	},
 	toughness_bar = {
 		horizontal_alignment = "left",
@@ -65,8 +65,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			-20,
-			2,
-		},
+			2
+		}
 	},
 	respawn_timer = {
 		horizontal_alignment = "left",
@@ -76,8 +76,8 @@ local scenegraph_definition = {
 		position = {
 			icon_size[1] + icon_bar_spacing[1] * 2 + bar_size[1],
 			icon_bar_spacing[2],
-			3,
-		},
+			3
+		}
 	},
 	expedition_currency = {
 		horizontal_alignment = "left",
@@ -85,14 +85,14 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			200,
-			35,
+			35
 		},
 		position = {
 			415,
 			0,
-			2,
-		},
-	},
+			2
+		}
+	}
 }
 local hud_body_font_setting_name = "hud_body"
 local hud_body_font_settings = UIFontSettings[hud_body_font_setting_name]
@@ -119,8 +119,8 @@ local value_text_style = {
 	offset = {
 		0,
 		0,
-		2,
-	},
+		2
+	}
 }
 local widget_definitions = {
 	player_name = UIWidget.create_definition({
@@ -136,11 +136,11 @@ local widget_definitions = {
 				offset = {
 					0,
 					-(bar_size[2] + 5),
-					2,
+					2
 				},
 				size = {
 					bar_size[1] * 1.5,
-					bar_size[2],
+					bar_size[2]
 				},
 				font_type = hud_body_font_settings.font_type,
 				font_size = hud_body_font_settings.font_size,
@@ -151,10 +151,10 @@ local widget_definitions = {
 					200,
 					80,
 					80,
-					80,
-				},
-			},
-		},
+					80
+				}
+			}
+		}
 	}, "toughness_bar"),
 	respawn_timer = UIWidget.create_definition({
 		{
@@ -169,19 +169,19 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				size = {
 					bar_size[1] * 1.5,
-					bar_size[2],
+					bar_size[2]
 				},
 				font_type = hud_body_font_settings.font_type,
 				font_size = hud_body_font_settings.font_size,
 				default_font_size = hud_body_font_settings.font_size,
 				text_color = UIHudSettings.color_tint_main_1,
-				default_text_color = UIHudSettings.color_tint_main_1,
-			},
-		},
+				default_text_color = UIHudSettings.color_tint_main_1
+			}
+		}
 	}, "bar"),
 	toughness = UIWidget.create_definition({
 		{
@@ -194,12 +194,12 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				size = toughness_bar_size,
-				color = UIHudSettings.color_tint_6,
-			},
-		},
+				color = UIHudSettings.color_tint_6
+			}
+		}
 	}, "toughness_bar"),
 	toughness_ghost = UIWidget.create_definition({
 		{
@@ -212,17 +212,17 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
 				size = toughness_bar_size,
 				color = {
 					255,
 					90,
 					90,
-					90,
-				},
-			},
-		},
+					90
+				}
+			}
+		}
 	}, "toughness_bar"),
 	toughness_bar_background = UIWidget.create_definition({
 		{
@@ -235,12 +235,12 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size = toughness_bar_size,
-				color = UIHudSettings.color_tint_0,
-			},
-		},
+				color = UIHudSettings.color_tint_0
+			}
+		}
 	}, "toughness_bar"),
 	voice_indicator = UIWidget.create_definition({
 		{
@@ -252,16 +252,16 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size = {
 					32,
-					32,
+					32
 				},
 				offset = {
 					-8,
 					0,
-					6,
+					6
 				},
-				color = UIHudSettings.color_tint_main_1,
-			},
-		},
+				color = UIHudSettings.color_tint_main_1
+			}
+		}
 	}, "panel_background"),
 	panel_background = UIWidget.create_definition({
 		{
@@ -273,14 +273,14 @@ local widget_definitions = {
 				color = Color.terminal_background_gradient(178.5, true),
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					110,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -293,18 +293,18 @@ local widget_definitions = {
 				color = color_copy({}, UIHudSettings.color_tint_6, 0),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				default_size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -317,15 +317,15 @@ local widget_definitions = {
 				color = color_copy({}, UIHudSettings.color_tint_6, 0),
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "panel_background"),
 	health_text = UIWidget.create_definition({
 		{
@@ -339,9 +339,9 @@ local widget_definitions = {
 				default_color = UIHudSettings.color_tint_main_1,
 				dimmed_color = UIHudSettings.color_tint_main_3,
 				offset = {
-					52,
-				},
-			}),
+					52
+				}
+			})
 		},
 		{
 			pass_type = "text",
@@ -354,9 +354,9 @@ local widget_definitions = {
 				default_color = UIHudSettings.color_tint_main_1,
 				dimmed_color = UIHudSettings.color_tint_main_3,
 				offset = {
-					40,
-				},
-			}),
+					40
+				}
+			})
 		},
 		{
 			pass_type = "text",
@@ -369,9 +369,9 @@ local widget_definitions = {
 				default_color = UIHudSettings.color_tint_main_1,
 				dimmed_color = UIHudSettings.color_tint_main_3,
 				offset = {
-					28,
-				},
-			}),
+					28
+				}
+			})
 		},
 		{
 			pass_type = "text",
@@ -384,10 +384,10 @@ local widget_definitions = {
 				default_color = UIHudSettings.color_tint_main_1,
 				dimmed_color = UIHudSettings.color_tint_main_3,
 				offset = {
-					16,
-				},
-			}),
-		},
+					16
+				}
+			})
+		}
 	}, "bar"),
 	toughness_text = UIWidget.create_definition({
 		{
@@ -401,9 +401,9 @@ local widget_definitions = {
 				default_color = UIHudSettings.color_tint_6,
 				dimmed_color = UIHudSettings.color_tint_7,
 				offset = {
-					52,
-				},
-			}),
+					52
+				}
+			})
 		},
 		{
 			pass_type = "text",
@@ -416,9 +416,9 @@ local widget_definitions = {
 				default_color = UIHudSettings.color_tint_6,
 				dimmed_color = UIHudSettings.color_tint_7,
 				offset = {
-					40,
-				},
-			}),
+					40
+				}
+			})
 		},
 		{
 			pass_type = "text",
@@ -431,9 +431,9 @@ local widget_definitions = {
 				default_color = UIHudSettings.color_tint_6,
 				dimmed_color = UIHudSettings.color_tint_7,
 				offset = {
-					28,
-				},
-			}),
+					28
+				}
+			})
 		},
 		{
 			pass_type = "text",
@@ -446,10 +446,10 @@ local widget_definitions = {
 				default_color = UIHudSettings.color_tint_6,
 				dimmed_color = UIHudSettings.color_tint_7,
 				offset = {
-					16,
-				},
-			}),
-		},
+					16
+				}
+			})
+		}
 	}, "toughness_bar"),
 	bonus_toughness_text = UIWidget.create_definition({
 		{
@@ -462,9 +462,9 @@ local widget_definitions = {
 				default_color = UIHudSettings.color_tint_10,
 				dimmed_color = UIHudSettings.color_tint_7,
 				offset = {
-					55,
-				},
-			}),
+					55
+				}
+			})
 		},
 		{
 			pass_type = "text",
@@ -478,10 +478,10 @@ local widget_definitions = {
 				default_color = UIHudSettings.color_tint_6,
 				dimmed_color = UIHudSettings.color_tint_7,
 				offset = {
-					80,
-				},
-			}),
-		},
+					80
+				}
+			})
+		}
 	}, "toughness_bar"),
 	player_icon = UIWidget.create_definition({
 		{
@@ -494,11 +494,11 @@ local widget_definitions = {
 					columns = 1,
 					grid_index = 1,
 					rows = 1,
-					use_placeholder_texture = 1,
+					use_placeholder_texture = 1
 				},
-				color = UIHudSettings.color_tint_main_1,
-			},
-		},
+				color = UIHudSettings.color_tint_main_1
+			}
+		}
 	}, "player_icon"),
 	status_icon = UIWidget.create_definition({
 		{
@@ -511,10 +511,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "player_icon"),
 	expedition_currency = UIWidget.create_definition({
 		{
@@ -535,16 +535,16 @@ local widget_definitions = {
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				offset = {
 					0,
 					0,
-					2,
-				},
-			},
-		},
-	}, "expedition_currency"),
+					2
+				}
+			}
+		}
+	}, "expedition_currency")
 }
 local health_bar_segment_definition = UIWidget.create_definition({
 	{
@@ -557,11 +557,11 @@ local health_bar_segment_definition = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				2,
+				2
 			},
 			size = bar_size,
-			color = UIHudSettings.color_tint_0,
-		},
+			color = UIHudSettings.color_tint_0
+		}
 	},
 	{
 		pass_type = "texture",
@@ -573,11 +573,11 @@ local health_bar_segment_definition = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				4,
+				4
 			},
 			size = bar_size,
-			color = UIHudSettings.color_tint_main_1,
-		},
+			color = UIHudSettings.color_tint_main_1
+		}
 	},
 	{
 		pass_type = "texture",
@@ -589,16 +589,16 @@ local health_bar_segment_definition = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				3,
+				3
 			},
 			size = bar_size,
 			color = {
 				255,
 				90,
 				90,
-				90,
-			},
-		},
+				90
+			}
+		}
 	},
 	{
 		pass_type = "texture",
@@ -610,16 +610,16 @@ local health_bar_segment_definition = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				5,
+				5
 			},
 			size = bar_size,
-			color = UIHudSettings.color_tint_8,
-		},
-	},
+			color = UIHudSettings.color_tint_8
+		}
+	}
 }, "bar", nil, bar_size)
 
 return {
 	health_bar_segment_definition = health_bar_segment_definition,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

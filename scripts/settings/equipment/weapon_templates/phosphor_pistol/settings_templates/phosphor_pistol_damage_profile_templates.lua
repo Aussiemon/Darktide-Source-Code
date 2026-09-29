@@ -28,7 +28,7 @@ local pistol_crit_mod = {
 		[armor_types.berserker] = 0.1,
 		[armor_types.super_armor] = 0.1,
 		[armor_types.disgustingly_resilient] = 0.1,
-		[armor_types.void_shield] = 0,
+		[armor_types.void_shield] = 0
 	},
 	impact = {
 		[armor_types.unarmored] = 1.75,
@@ -38,8 +38,8 @@ local pistol_crit_mod = {
 		[armor_types.berserker] = 1.75,
 		[armor_types.super_armor] = 1.75,
 		[armor_types.disgustingly_resilient] = 0.75,
-		[armor_types.void_shield] = 0.75,
-	},
+		[armor_types.void_shield] = 0.75
+	}
 }
 
 damage_templates.phosphor_pistol_m1_m1_dmg = {
@@ -49,16 +49,16 @@ damage_templates.phosphor_pistol_m1_m1_dmg = {
 	cleave_distribution = {
 		attack = {
 			5,
-			10,
+			10
 		},
 		impact = {
 			4,
-			8,
-		},
+			8
+		}
 	},
 	ranges = {
 		max = 20,
-		min = 10,
+		min = 10
 	},
 	herding_template = HerdingTemplates.shot,
 	wounds_template = WoundsTemplates.phosphor,
@@ -72,7 +72,7 @@ damage_templates.phosphor_pistol_m1_m1_dmg = {
 				[armor_types.berserker] = damage_lerp_values.lerp_0_75,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_3,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_7,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_5
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -82,8 +82,8 @@ damage_templates.phosphor_pistol_m1_m1_dmg = {
 				[armor_types.berserker] = damage_lerp_values.lerp_0_6,
 				[armor_types.super_armor] = damage_lerp_values.no_damage,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_3,
-			},
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_3
+			}
 		},
 		far = {
 			attack = {
@@ -94,7 +94,7 @@ damage_templates.phosphor_pistol_m1_m1_dmg = {
 				[armor_types.berserker] = damage_lerp_values.lerp_0_7,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_6,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_4,
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_4
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_0_6,
@@ -104,33 +104,33 @@ damage_templates.phosphor_pistol_m1_m1_dmg = {
 				[armor_types.berserker] = damage_lerp_values.lerp_0_6,
 				[armor_types.super_armor] = damage_lerp_values.no_damage,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_25,
-			},
-		},
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_25
+			}
+		}
 	},
 	critical_strike = {
 		cleave_distribution = {
 			attack = {
 				6,
-				10,
+				10
 			},
 			impact = {
 				5,
-				10,
-			},
+				10
+			}
 		},
 		gibbing_power = gibbing_power.medium,
-		gibbing_type = gibbing_types.phosphor,
+		gibbing_type = gibbing_types.phosphor
 	},
 	power_distribution = {
 		attack = {
 			400,
-			600,
+			600
 		},
 		impact = {
 			8,
-			9,
-		},
+			9
+		}
 	},
 	damage_type = damage_types.laser,
 	gibbing_power = gibbing_power.light,
@@ -138,7 +138,7 @@ damage_templates.phosphor_pistol_m1_m1_dmg = {
 	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
 	on_kill_area_suppression = {
 		distance = 5,
-		suppression_value = 12,
+		suppression_value = 12
 	},
 	crit_mod = pistol_crit_mod,
 	targets = {
@@ -153,18 +153,18 @@ damage_templates.phosphor_pistol_m1_m1_dmg = {
 				[armor_types.berserker] = 0.2,
 				[armor_types.super_armor] = 0.2,
 				[armor_types.disgustingly_resilient] = 0.2,
-				[armor_types.void_shield] = 0.2,
+				[armor_types.void_shield] = 0.2
 			},
 			boost_curve_multiplier_finesse = {
 				1,
-				2,
-			},
-		},
+				2
+			}
+		}
 	},
 	ragdoll_push_force = {
 		20,
-		30,
-	},
+		30
+	}
 }
 
 local phosphor_burninating_adm = {
@@ -175,7 +175,7 @@ local phosphor_burninating_adm = {
 	[armor_types.berserker] = 1,
 	[armor_types.super_armor] = 0.1,
 	[armor_types.disgustingly_resilient] = 1,
-	[armor_types.void_shield] = 1,
+	[armor_types.void_shield] = 1
 }
 
 damage_templates.phosphor_pistol_backblast_explosion = {
@@ -185,26 +185,26 @@ damage_templates.phosphor_pistol_backblast_explosion = {
 	suppression_value = 10,
 	cleave_distribution = {
 		attack = 0,
-		impact = 0.1,
+		impact = 0.1
 	},
 	armor_damage_modifier = {
 		attack = phosphor_burninating_adm,
-		impact = phosphor_burninating_adm,
+		impact = phosphor_burninating_adm
 	},
 	power_distribution = {
 		attack = 0,
-		impact = 1,
+		impact = 1
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
 	gibbing_type = gibbing_types.fire,
-	gibbing_power = gibbing_power.light,
+	gibbing_power = gibbing_power.light
 }
 
 return {
 	base_templates = damage_templates,
-	overrides = overrides,
+	overrides = overrides
 }

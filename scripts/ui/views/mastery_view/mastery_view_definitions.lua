@@ -13,13 +13,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			3,
-		},
+			3
+		}
 	},
 	background_plaque = {
 		horizontal_alignment = "center",
@@ -27,13 +27,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			1766,
-			706,
+			706
 		},
 		position = {
 			0,
 			88,
-			1,
-		},
+			1
+		}
 	},
 	milestones_grid_pivot = {
 		horizontal_alignment = "center",
@@ -41,13 +41,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	traits_grid_pivot = {
 		horizontal_alignment = "left",
@@ -55,13 +55,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			564,
 			224,
-			1,
-		},
+			1
+		}
 	},
 	button = {
 		horizontal_alignment = "right",
@@ -71,8 +71,8 @@ local scenegraph_definition = {
 		position = {
 			-300,
 			-100,
-			1,
-		},
+			1
+		}
 	},
 	mastery_unlock_bar = {
 		horizontal_alignment = "left",
@@ -80,13 +80,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			364,
-			364,
+			364
 		},
 		position = {
 			161,
 			196,
-			1,
-		},
+			1
+		}
 	},
 	mastery_unlock_node = {
 		horizontal_alignment = "center",
@@ -94,13 +94,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	mastery_points = {
 		horizontal_alignment = "left",
@@ -108,13 +108,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			255,
-			120,
+			120
 		},
 		position = {
 			210,
 			590,
-			2,
-		},
+			2
+		}
 	},
 	tooltip = {
 		horizontal_alignment = "left",
@@ -122,13 +122,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			460,
-			200,
+			200
 		},
 		position = {
 			0,
 			0,
-			100,
-		},
+			100
+		}
 	},
 	mastery_level = {
 		horizontal_alignment = "left",
@@ -136,13 +136,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			232,
-			76,
+			76
 		},
 		position = {
 			190,
 			-85,
-			100,
-		},
+			100
+		}
 	},
 	loading = {
 		horizontal_alignment = "center",
@@ -150,22 +150,22 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			200,
-		},
-	},
+			200
+		}
+	}
 }
 local area_size = {
 	460,
-	400,
+	400
 }
 local icon_size = {
 	150,
-	50,
+	50
 }
 local bar_width = area_size[1] * 0.7
 local continue_button_pass_template = table.clone(ButtonPassTemplates.terminal_button)
@@ -183,15 +183,15 @@ continue_button_pass_template[#continue_button_pass_template + 1] = {
 		offset = {
 			0,
 			0,
-			2,
+			2
 		},
 		material_values = {
-			intensity = 0,
-		},
+			intensity = 0
+		}
 	},
 	visibility_function = function (content, style)
 		return style.play_pulse
-	end,
+	end
 }
 continue_button_pass_template[#continue_button_pass_template + 1] = {
 	pass_type = "texture",
@@ -206,8 +206,8 @@ continue_button_pass_template[#continue_button_pass_template + 1] = {
 		offset = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	visibility_function = function (content, style)
 		return style.play_pulse
@@ -225,7 +225,7 @@ continue_button_pass_template[#continue_button_pass_template + 1] = {
 		end
 
 		style.color[1] = alpha
-	end,
+	end
 }
 
 local weapon_trait_title_style = table.clone(UIFontSettings.header_3)
@@ -233,10 +233,10 @@ local weapon_trait_title_style = table.clone(UIFontSettings.header_3)
 weapon_trait_title_style.offset = {
 	98,
 	10,
-	10,
+	10
 }
 weapon_trait_title_style.size = {
-	324,
+	324
 }
 weapon_trait_title_style.font_size = 18
 weapon_trait_title_style.text_horizontal_alignment = "left"
@@ -245,20 +245,20 @@ weapon_trait_title_style.text_color = {
 	255,
 	216,
 	229,
-	207,
+	207
 }
 weapon_trait_title_style.default_color = {
 	255,
 	216,
 	229,
-	207,
+	207
 }
 weapon_trait_title_style.hover_color = Color.white(255, true)
 weapon_trait_title_style.disabled_color = {
 	255,
 	60,
 	60,
-	60,
+	60
 }
 
 local weapon_trait_header_style = table.clone(UIFontSettings.header_3)
@@ -266,10 +266,10 @@ local weapon_trait_header_style = table.clone(UIFontSettings.header_3)
 weapon_trait_header_style.offset = {
 	10,
 	0,
-	10,
+	10
 }
 weapon_trait_header_style.size = {
-	430,
+	430
 }
 weapon_trait_header_style.font_size = 18
 weapon_trait_header_style.text_horizontal_alignment = "left"
@@ -281,11 +281,11 @@ local weapon_trait_description_style = table.clone(UIFontSettings.body)
 weapon_trait_description_style.offset = {
 	98,
 	30,
-	11,
+	11
 }
 weapon_trait_description_style.size = {
 	324,
-	500,
+	500
 }
 weapon_trait_description_style.font_size = 18
 weapon_trait_description_style.text_horizontal_alignment = "left"
@@ -297,7 +297,7 @@ weapon_trait_description_style.disabled_color = {
 	255,
 	60,
 	60,
-	60,
+	60
 }
 
 local mastery_cost_style = table.clone(UIFontSettings.body)
@@ -307,7 +307,7 @@ mastery_cost_style.text_vertical_alignment = "bottom"
 mastery_cost_style.offset = {
 	0,
 	40,
-	11,
+	11
 }
 
 local required_level_text_style = table.clone(UIFontSettings.body_small)
@@ -320,50 +320,50 @@ required_level_text_style.font_size = 22
 required_level_text_style.offset = {
 	0,
 	0,
-	12,
+	12
 }
 required_level_text_style.size = {
 	nil,
-	50,
+	50
 }
 required_level_text_style.text_color = {
 	255,
 	159,
 	67,
-	67,
+	67
 }
 
 local function generate_mastery_unlock_bar_passes()
 	local passes = {}
 	local circle_size = {
 		100,
-		100,
+		100
 	}
 	local outer_circle_size = {
 		350,
-		350,
+		350
 	}
 	local position_by_rarity = {
 		{
 			0,
 			-(outer_circle_size[2] * 0.5),
-			2,
+			2
 		},
 		{
 			outer_circle_size[1] * 0.5,
 			0,
-			2,
+			2
 		},
 		{
 			0,
 			outer_circle_size[2] * 0.5,
-			2,
+			2
 		},
 		{
 			-(outer_circle_size[1] * 0.5),
 			0,
-			2,
-		},
+			2
+		}
 	}
 
 	passes[#passes + 1] = {
@@ -375,14 +375,14 @@ local function generate_mastery_unlock_bar_passes()
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
 			material_values = {
-				progress = 0,
+				progress = 0
 			},
 			offset = {
 				0,
 				0,
-				1,
-			},
-		},
+				1
+			}
+		}
 	}
 	passes[#passes + 1] = {
 		pass_type = "texture",
@@ -394,24 +394,24 @@ local function generate_mastery_unlock_bar_passes()
 			vertical_alignment = "center",
 			size = {
 				100,
-				100,
+				100
 			},
 			material_values = {
 				node_bg = "",
-				tier_selected = "",
+				tier_selected = ""
 			},
 			offset = {
 				0,
 				-35,
-				2,
-			},
+				2
+			}
 		},
 		change_function = function (content, style)
 			local unlocked_rarity = content.max_unlocked_rarity
 
 			style.material_values.node_bg = unlocked_rarity and "content/ui/textures/frames/mastery_tree/pattern_tier_" .. content.max_unlocked_rarity or ""
 			style.material_values.tier_selected = unlocked_rarity and "content/ui/textures/frames/mastery_tree/pattern_tier_" .. content.max_unlocked_rarity .. "_reached" or ""
-		end,
+		end
 	}
 
 	return passes
@@ -426,20 +426,20 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					128,
-					174,
+					174
 				},
 				offset = {
 					0,
 					0,
-					62,
+					62
 				},
 				color = {
 					255,
 					255,
 					255,
-					255,
-				},
-			},
+					255
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -449,20 +449,20 @@ local widget_definitions = {
 				vertical_alignment = "bottom",
 				size = {
 					128,
-					174,
+					174
 				},
 				offset = {
 					0,
 					0,
-					62,
+					62
 				},
 				color = {
 					255,
 					255,
 					255,
-					255,
-				},
-			},
+					255
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -471,20 +471,20 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					242,
-					750,
+					750
 				},
 				offset = {
 					0,
 					0,
-					62,
+					62
 				},
 				color = {
 					255,
 					255,
 					255,
-					255,
-				},
-			},
+					255
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -493,14 +493,14 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					242,
-					750,
+					750
 				},
 				offset = {
 					0,
 					0,
-					62,
-				},
-			},
+					62
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -510,20 +510,20 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					420,
-					750,
+					750
 				},
 				offset = {
 					0,
 					0,
-					62,
+					62
 				},
 				color = {
 					255,
 					255,
 					255,
-					255,
-				},
-			},
+					255
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -533,21 +533,21 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				size = {
 					420,
-					750,
+					750
 				},
 				offset = {
 					0,
 					0,
-					62,
-				},
-			},
-		},
+					62
+				}
+			}
+		}
 	}, "screen"),
 	background = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/backgrounds/mastery_tree/bg",
-		},
+			value = "content/ui/materials/backgrounds/mastery_tree/bg"
+		}
 	}, "screen"),
 	screen_effects = UIWidget.create_definition({
 		{
@@ -561,20 +561,20 @@ local widget_definitions = {
 					120,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					2,
-				},
-			},
-		},
+					2
+				}
+			}
+		}
 	}, "screen"),
 	background_plaque = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/backgrounds/mastery_tree/pattern_plaque_bg",
+			value = "content/ui/materials/backgrounds/mastery_tree/pattern_plaque_bg"
 		},
 		{
 			pass_type = "texture",
@@ -584,15 +584,15 @@ local widget_definitions = {
 			style = {
 				size = {
 					1550,
-					750,
+					750
 				},
 				offset = {
 					153,
 					-352,
-					62,
-				},
-			},
-		},
+					62
+				}
+			}
+		}
 	}, "background_plaque"),
 	mastery_unlock_bar = UIWidget.create_definition(generate_mastery_unlock_bar_passes(), "mastery_unlock_bar"),
 	header = UIWidget.create_definition({
@@ -610,13 +610,13 @@ local widget_definitions = {
 				offset = {
 					100,
 					16,
-					65,
+					65
 				},
 				size = {
 					614,
-					50,
-				},
-			}),
+					50
+				}
+			})
 		},
 		{
 			pass_type = "texture",
@@ -625,19 +625,19 @@ local widget_definitions = {
 			style = {
 				horizontal_alignment = "left",
 				material_values = {
-					texture_map = "content/ui/textures/frames/mastery_tree/pattern_nameplate_melee",
+					texture_map = "content/ui/textures/frames/mastery_tree/pattern_nameplate_melee"
 				},
 				size = {
 					914,
-					138,
+					138
 				},
 				offset = {
 					0,
 					0,
-					64,
-				},
-			},
-		},
+					64
+				}
+			}
+		}
 	}, "screen"),
 	mastery_points = UIWidget.create_definition({
 		{
@@ -654,9 +654,9 @@ local widget_definitions = {
 				offset = {
 					0,
 					5,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -672,10 +672,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					10,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "mastery_points"),
 	mastery_level = UIWidget.create_definition({
 		{
@@ -684,28 +684,28 @@ local widget_definitions = {
 			value = "",
 			value_id = "mastery_level",
 			style = table.merge_recursive(table.merge_recursive(table.clone(UIFontSettings.header_2), {
-				font_size = 50,
+				font_size = 50
 			}), {
 				text_horizontal_alignment = "center",
 				text_vertical_alignment = "center",
 				offset = {
 					0,
 					0,
-					1,
-				},
-			}),
-		},
+					1
+				}
+			})
+		}
 	}, "mastery_level", {
-		visible = false,
-	}),
+		visible = false
+	})
 }
 local tooltip_widget_definition = UIWidget.create_definition({
 	{
 		pass_type = "texture",
 		value = "content/ui/materials/base/ui_default_base",
 		style = {
-			color = Color.black(180, true),
-		},
+			color = Color.black(180, true)
+		}
 	},
 	{
 		pass_type = "texture",
@@ -718,14 +718,14 @@ local tooltip_widget_definition = UIWidget.create_definition({
 			color = Color.black(100, true),
 			size_addition = {
 				20,
-				20,
+				20
 			},
 			offset = {
 				0,
 				0,
-				3,
-			},
-		},
+				3
+			}
+		}
 	},
 	{
 		pass_type = "texture",
@@ -736,10 +736,10 @@ local tooltip_widget_definition = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				1,
+				1
 			},
-			color = Color.terminal_background(nil, true),
-		},
+			color = Color.terminal_background(nil, true)
+		}
 	},
 	{
 		pass_type = "texture",
@@ -751,10 +751,10 @@ local tooltip_widget_definition = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				2,
+				2
 			},
-			color = Color.terminal_background_gradient(nil, true),
-		},
+			color = Color.terminal_background_gradient(nil, true)
+		}
 	},
 	{
 		pass_type = "texture",
@@ -764,18 +764,18 @@ local tooltip_widget_definition = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				3,
+				3
 			},
 			color = {
 				105,
 				45,
 				45,
-				45,
-			},
+				45
+			}
 		},
 		visibility_function = function (content, style)
 			return content.warning_message and content.warning_message ~= ""
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -788,10 +788,10 @@ local tooltip_widget_definition = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				3,
+				3
 			},
-			color = Color.terminal_frame(nil, true),
-		},
+			color = Color.terminal_frame(nil, true)
+		}
 	},
 	{
 		pass_type = "texture",
@@ -804,10 +804,10 @@ local tooltip_widget_definition = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				4,
+				4
 			},
-			color = Color.terminal_corner(nil, true),
-		},
+			color = Color.terminal_corner(nil, true)
+		}
 	},
 	{
 		pass_type = "texture",
@@ -817,18 +817,18 @@ local tooltip_widget_definition = UIWidget.create_definition({
 			material_values = {},
 			size = {
 				64,
-				64,
+				64
 			},
 			offset = {
 				20,
 				10,
-				10,
+				10
 			},
-			color = Color.terminal_icon(255, true),
+			color = Color.terminal_icon(255, true)
 		},
 		visibility_function = function (content, style)
 			return content.has_rarity
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -838,18 +838,18 @@ local tooltip_widget_definition = UIWidget.create_definition({
 			material_values = {},
 			size = {
 				64,
-				64,
+				64
 			},
 			offset = {
 				20,
 				10,
-				10,
+				10
 			},
-			color = Color.terminal_icon(255, true),
+			color = Color.terminal_icon(255, true)
 		},
 		visibility_function = function (content, style)
 			return not content.reached_max_rarity
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -859,7 +859,7 @@ local tooltip_widget_definition = UIWidget.create_definition({
 		value = Localize("loc_mastery_current_trait"),
 		visibility_function = function (content, style)
 			return content.has_rarity
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -869,7 +869,7 @@ local tooltip_widget_definition = UIWidget.create_definition({
 		style = weapon_trait_title_style,
 		visibility_function = function (content, style)
 			return content.has_rarity
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -879,7 +879,7 @@ local tooltip_widget_definition = UIWidget.create_definition({
 		style = weapon_trait_description_style,
 		visibility_function = function (content, style)
 			return content.has_rarity
-		end,
+		end
 	},
 	{
 		pass_type = "rect",
@@ -888,17 +888,17 @@ local tooltip_widget_definition = UIWidget.create_definition({
 			color = Color.white(255, true),
 			size = {
 				nil,
-				2,
+				2
 			},
 			offset = {
 				0,
 				0,
-				1,
-			},
+				1
+			}
 		},
 		visibility_function = function (content, style)
 			return content.has_rarity and not content.reached_max_rarity
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -908,7 +908,7 @@ local tooltip_widget_definition = UIWidget.create_definition({
 		value = Localize("loc_mastery_next_trait"),
 		visibility_function = function (content, style)
 			return not content.reached_max_rarity
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -920,30 +920,30 @@ local tooltip_widget_definition = UIWidget.create_definition({
 			vertical_alignment = "top",
 			size = {
 				nil,
-				50,
+				50
 			},
 			offset = {
 				0,
 				0,
-				11,
+				11
 			},
 			color = {
 				255,
 				35,
 				0,
-				0,
-			},
+				0
+			}
 		},
 		visibility_function = function (content, style)
 			return content.warning_message and content.warning_message ~= ""
-		end,
+		end
 	},
 	{
 		pass_type = "text",
 		style_id = "warning_message",
 		value = "",
 		value_id = "warning_message",
-		style = required_level_text_style,
+		style = required_level_text_style
 	},
 	{
 		pass_type = "text",
@@ -953,7 +953,7 @@ local tooltip_widget_definition = UIWidget.create_definition({
 		style = weapon_trait_title_style,
 		visibility_function = function (content, style)
 			return not content.reached_max_rarity
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -963,7 +963,7 @@ local tooltip_widget_definition = UIWidget.create_definition({
 		style = weapon_trait_description_style,
 		visibility_function = function (content, style)
 			return not content.reached_max_rarity
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -976,17 +976,17 @@ local tooltip_widget_definition = UIWidget.create_definition({
 			offset = {
 				0,
 				-10,
-				11,
+				11
 			},
 			size = {
 				nil,
-				50,
+				50
 			},
-			text_color = Color.white(255, true),
+			text_color = Color.white(255, true)
 		},
 		visibility_function = function (content, style)
 			return not content.reached_max_rarity
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
@@ -997,24 +997,24 @@ local tooltip_widget_definition = UIWidget.create_definition({
 			vertical_alignment = "top",
 			size = {
 				nil,
-				50,
+				50
 			},
 			offset = {
 				0,
 				0,
-				10,
+				10
 			},
 			color = {
 				150,
 				0,
 				0,
-				0,
-			},
+				0
+			}
 		},
 		visibility_function = function (content, style)
 			return not content.reached_max_rarity
-		end,
-	},
+		end
+	}
 }, "tooltip")
 local legend_inputs = {
 	{
@@ -1022,7 +1022,7 @@ local legend_inputs = {
 		display_name = "loc_settings_menu_close_menu",
 		input_action = "back",
 		on_pressed_callback = "cb_on_close_pressed",
-		visibility_function = nil,
+		visibility_function = nil
 	},
 	{
 		alignment = "right_alignment",
@@ -1035,7 +1035,7 @@ local legend_inputs = {
 			parent._input_legend_element:set_display_name(id, display_name)
 
 			return not parent._using_cursor_navigation and parent._wintrack_element
-		end,
+		end
 	},
 	{
 		alignment = "right_alignment",
@@ -1044,8 +1044,8 @@ local legend_inputs = {
 		on_pressed_callback = "cb_on_help_pressed",
 		visibility_function = function (parent)
 			return parent._tutorial_overlay and not parent._tutorial_overlay:is_active()
-		end,
-	},
+		end
+	}
 }
 local node_widgets_definitions = UIWidget.create_definition({
 	{
@@ -1058,13 +1058,13 @@ local node_widgets_definitions = UIWidget.create_definition({
 		style = {
 			size = {
 				26,
-				26,
+				26
 			},
 			material_values = {
-				tier_icon_intensity = 1,
-			},
-		},
-	},
+				tier_icon_intensity = 1
+			}
+		}
+	}
 }, "mastery_unlock_node")
 local animations = {
 	on_threshold_reached = {
@@ -1101,7 +1101,7 @@ local animations = {
 						end
 					end
 				end
-			end,
+			end
 		},
 		{
 			end_time = 4,
@@ -1114,12 +1114,12 @@ local animations = {
 				widgets.mastery_unlock_bar.style.progress_bar.uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
+						1
+					}
 				}
 
 				if next_rarity == 4 then
@@ -1167,12 +1167,12 @@ local animations = {
 				widgets.mastery_unlock_bar.style.progress_bar.uvs = {
 					{
 						0,
-						0,
+						0
 					},
 					{
 						1,
-						1,
-					},
+						1
+					}
 				}
 
 				if parent._node_widgets then
@@ -1183,7 +1183,7 @@ local animations = {
 						widget.style.mastery_unlock_node.material_values.tier_icon_intensity = 0
 					end
 				end
-			end,
+			end
 		},
 		{
 			end_time = 4.5,
@@ -1199,16 +1199,16 @@ local animations = {
 						widget.alpha_multiplier = progress_anim
 					end
 				end
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 local loading_definitions = UIWidget.create_definition({
 	{
 		pass_type = "rect",
 		style = {
-			color = Color.black(127.5, true),
-		},
+			color = Color.black(127.5, true)
+		}
 	},
 	{
 		pass_type = "texture",
@@ -1218,15 +1218,15 @@ local loading_definitions = UIWidget.create_definition({
 			vertical_alignment = "center",
 			size = {
 				256,
-				256,
+				256
 			},
 			offset = {
 				0,
 				0,
-				1,
-			},
-		},
-	},
+				1
+			}
+		}
+	}
 }, "loading")
 
 return {
@@ -1236,5 +1236,5 @@ return {
 	tooltip_widget_definition = tooltip_widget_definition,
 	node_widgets_definitions = node_widgets_definitions,
 	animations = animations,
-	loading_definitions = loading_definitions,
+	loading_definitions = loading_definitions
 }

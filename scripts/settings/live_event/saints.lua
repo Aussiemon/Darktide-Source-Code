@@ -9,8 +9,8 @@ local saints = {
 	name = "loc_saints_name",
 	stat = "saint_points_acquired",
 	item_rewards = {
-		"content/items/2d/insignias/insignia_event_saint_b",
-	},
+		"content/items/2d/insignias/insignia_event_saint_b"
+	}
 }
 
 return saints

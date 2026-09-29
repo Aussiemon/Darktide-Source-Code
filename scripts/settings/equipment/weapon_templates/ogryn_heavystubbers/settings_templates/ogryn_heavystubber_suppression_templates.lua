@@ -14,76 +14,76 @@ suppression_templates.ogryn_heavystubber_p1_m1_assault = {
 			{
 				pitch = {
 					lerp_basic = 6,
-					lerp_perfect = 3,
+					lerp_perfect = 3
 				},
 				yaw = {
 					lerp_basic = 6,
-					lerp_perfect = 3,
-				},
+					lerp_perfect = 3
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 5.5,
-					lerp_perfect = 2.5,
+					lerp_perfect = 2.5
 				},
 				yaw = {
 					lerp_basic = 5.5,
-					lerp_perfect = 2.5,
-				},
+					lerp_perfect = 2.5
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 5,
-					lerp_perfect = 2,
+					lerp_perfect = 2
 				},
 				yaw = {
 					lerp_basic = 5,
-					lerp_perfect = 2,
-				},
+					lerp_perfect = 2
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 4.5,
-					lerp_perfect = 1.5,
+					lerp_perfect = 1.5
 				},
 				yaw = {
 					lerp_basic = 4.5,
-					lerp_perfect = 1.5,
-				},
+					lerp_perfect = 1.5
+				}
 			},
 			{
 				pitch = {
 					lerp_basic = 4,
-					lerp_perfect = 1,
+					lerp_perfect = 1
 				},
 				yaw = {
 					lerp_basic = 4,
-					lerp_perfect = 1,
-				},
-			},
-		},
+					lerp_perfect = 1
+				}
+			}
+		}
 	},
 	moving = {
 		inherits = {
 			"ogryn_heavystubber_p1_m1_assault",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"ogryn_heavystubber_p1_m1_assault",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"ogryn_heavystubber_p1_m1_assault",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 
 return {
 	base_templates = suppression_templates,
-	overrides = overrides,
+	overrides = overrides
 }

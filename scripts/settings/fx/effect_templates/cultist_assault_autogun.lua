@@ -13,7 +13,7 @@ local FIRE_RATE_PARAMETER_NAME = "wpn_fire_interval"
 local resources = {
 	start_shoot_sound_event = START_SHOOT_SOUND_EVENT,
 	stop_shoot_sound_event = STOP_SHOOT_SOUND_EVENT,
-	shoot_vfx = SHOOT_VFX,
+	shoot_vfx = SHOOT_VFX
 }
 local effect_template = {
 	name = "cultist_assault_autogun",
@@ -74,7 +74,7 @@ local effect_template = {
 		local unit = template_data.unit
 
 		Unit.animation_event(unit, "shoot_finished")
-	end,
+	end
 }
 
 return effect_template

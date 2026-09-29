@@ -20,6 +20,7 @@ ActionUseSyringe.init = function (self, action_context, action_params, action_se
 	local unit_data_extension = self._unit_data_extension
 
 	self._action_module_target_finder_component = unit_data_extension:write_component("action_module_target_finder")
+	self._lunge_character_state_component = unit_data_extension:write_component("lunge_character_state")
 end
 
 ActionUseSyringe.start = function (self, action_settings, t, time_scale, action_start_params)
@@ -90,10 +91,22 @@ ActionUseSyringe.fixed_update = function (self, dt, t, time_in_action)
 		action_module_target_finder_component.target_unit_2 = nil
 		action_module_target_finder_component.target_unit_3 = nil
 
-		local use_ability_charge = action_settings.use_ability_charge
+		local lunge_character_state_component = self._lunge_character_state_component
 
-		if use_ability_charge then
-			self:_use_ability_charge(1)
+		lunge_character_state_component.lunge_target = nil
+
+		local consume_ability_usage_cost = action_settings.consume_ability_usage_cost
+
+		if consume_ability_usage_cost then
+			self:_consume_ability_usage_cost()
+		end
+
+		local pause_ability_resource_regen = action_settings.pause_ability_resource_regen
+
+		if pause_ability_resource_regen and self._ability_type then
+			local ability_extension = self._ability_extension
+
+			ability_extension:pause_ability_resource_regen(self._ability_type)
 		end
 
 		local has_override_buff_rule = self._talent_extension:has_special_rule(special_rules.buff_target_buff_name_override_one)
@@ -120,6 +133,10 @@ ActionUseSyringe.fixed_update = function (self, dt, t, time_in_action)
 			owner_buff_extension:add_proc_event(BuffSettings.proc_events.on_syringe_used, param_table)
 		end
 
+		if action_settings.on_target_hit_func then
+			action_settings.on_target_hit_func(self._player_unit, target_unit, self._is_server)
+		end
+
 		if self._is_server then
 			local player = Managers.player:player_by_unit(self._player_unit)
 
@@ -142,7 +159,7 @@ ActionUseSyringe.fixed_update = function (self, dt, t, time_in_action)
 					used_on_ally = not action_settings.self_use,
 					time_held = time_hoarded,
 					tension = tension,
-					combat_state = combat_state,
+					combat_state = combat_state
 				}
 
 				Managers.telemetry_events:player_used_stimm(player, data)
@@ -204,8 +221,14 @@ end
 
 ActionUseSyringe._target_unit = function (self)
 	local action_settings = self._action_settings
-	local action_module_target_finder_component = self._action_module_target_finder_component
-	local target_unit = action_module_target_finder_component.target_unit_1
+	local target_unit
+
+	if action_settings.use_lunge_target then
+		target_unit = self._lunge_character_state_component.lunge_target
+	else
+		target_unit = self._action_module_target_finder_component.target_unit_1
+	end
+
 	local self_use = action_settings.self_use or action_settings.self_use_if_no_target and not target_unit
 	local target = self_use and self._player_unit or target_unit
 	local validate_target_func = action_settings.validate_target_func

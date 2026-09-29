@@ -7,12 +7,12 @@ local hordes_mode_settings = {
 	island_names = {
 		"island_void",
 		"island_rooftops",
-		"island_machine",
+		"island_machine"
 	},
 	give_legendary_buffs_at_waves = {
 		3,
 		6,
-		9,
+		9
 	},
 	give_family_buffs_at_waves = {
 		1,
@@ -21,18 +21,18 @@ local hordes_mode_settings = {
 		5,
 		7,
 		8,
-		10,
+		10
 	},
 	mission_objectives = {
 		wave_objective = {
-			name = "objective_psykhanium_void_wave",
+			name = "objective_psykhanium_void_wave"
 		},
 		between_waves_objective = {
-			name = "objective_psykhanium_void_inbetween_wave",
+			name = "objective_psykhanium_void_inbetween_wave"
 		},
 		name_formating_function = function (objective_name, wave_num)
 			return string.format("%s_%d", objective_name, wave_num)
-		end,
+		end
 	},
 	post_wave_pause_duration = {
 		20,
@@ -46,7 +46,7 @@ local hordes_mode_settings = {
 		30,
 		20,
 		20,
-		20,
+		20
 	},
 	terror_event_name_function = function (terror_event_name, difficulty, resistance)
 		local alt_difficulty_suffix = "_alt"
@@ -57,7 +57,7 @@ local hordes_mode_settings = {
 		end
 
 		return terror_event_name
-	end,
+	end
 }
 
 return settings("HordesModeSettings", hordes_mode_settings)

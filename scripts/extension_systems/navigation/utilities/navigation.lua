@@ -121,7 +121,7 @@ Navigation.vector3s_to_arrays = function (vectors)
 
 	for i = 1, #vectors do
 		arrays[i] = {
-			Vector3.to_elements(vectors[i]),
+			Vector3.to_elements(vectors[i])
 		}
 	end
 

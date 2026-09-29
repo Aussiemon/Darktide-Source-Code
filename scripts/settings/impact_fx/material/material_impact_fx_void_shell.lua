@@ -8,10 +8,10 @@ local stop = {
 		{
 			normal_rotation = true,
 			effects = {
-				"content/fx/particles/pocketables/void_shell_block",
-			},
-		},
-	},
+				"content/fx/particles/pocketables/void_shell_block"
+			}
+		}
+	}
 }
 local entry = {
 	sfx = nil,
@@ -19,15 +19,15 @@ local entry = {
 		{
 			normal_rotation = true,
 			effects = {
-				"content/fx/particles/pocketables/void_shell_block",
-			},
+				"content/fx/particles/pocketables/void_shell_block"
+			}
 		},
 		{
 			effects = {
-				"content/fx/particles/impacts/covers/cover_generic_penetration_01",
-			},
-		},
-	},
+				"content/fx/particles/impacts/covers/cover_generic_penetration_01"
+			}
+		}
+	}
 }
 local exit = {
 	sfx = nil,
@@ -35,19 +35,19 @@ local exit = {
 		{
 			normal_rotation = true,
 			effects = {
-				"content/fx/particles/pocketables/void_shell_block",
-			},
+				"content/fx/particles/pocketables/void_shell_block"
+			}
 		},
 		{
 			effects = {
-				"content/fx/particles/impacts/covers/cover_generic_exit_01",
-			},
-		},
-	},
+				"content/fx/particles/impacts/covers/cover_generic_exit_01"
+			}
+		}
+	}
 }
 
 return {
 	[hit_types.stop] = stop,
 	[hit_types.penetration_entry] = entry,
-	[hit_types.penetration_exit] = exit,
+	[hit_types.penetration_exit] = exit
 }

@@ -12,7 +12,7 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__ability_01_a_05",
 			"loc_broker_male_c__ability_01_a_06",
 			"loc_broker_male_c__ability_01_a_07",
-			"loc_broker_male_c__ability_01_a_08",
+			"loc_broker_male_c__ability_01_a_08"
 		},
 		sound_events_duration = {
 			3.103021,
@@ -22,9 +22,9 @@ local broker_broker_male_c = {
 			3.502625,
 			2.641208,
 			3.366646,
-			2.127208,
+			2.127208
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	ability_02_a = {
 		randomize_indexes_n = 0,
@@ -37,7 +37,7 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__ability_02_a_05",
 			"loc_broker_male_c__ability_02_a_06",
 			"loc_broker_male_c__ability_02_a_07",
-			"loc_broker_male_c__ability_02_a_08",
+			"loc_broker_male_c__ability_02_a_08"
 		},
 		sound_events_duration = {
 			2.668583,
@@ -47,9 +47,9 @@ local broker_broker_male_c = {
 			2.196792,
 			3.17475,
 			2.680271,
-			2.872583,
+			2.872583
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	ability_03_a = {
 		randomize_indexes_n = 0,
@@ -62,7 +62,7 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__ability_03_a_05",
 			"loc_broker_male_c__ability_03_a_06",
 			"loc_broker_male_c__ability_03_a_07",
-			"loc_broker_male_c__ability_03_a_08",
+			"loc_broker_male_c__ability_03_a_08"
 		},
 		sound_events_duration = {
 			2.137396,
@@ -72,9 +72,9 @@ local broker_broker_male_c = {
 			2.764979,
 			2.554813,
 			2.701729,
-			3.49475,
+			3.49475
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	blitz_01_a = {
 		randomize_indexes_n = 0,
@@ -87,7 +87,7 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__blitz_01_a_05",
 			"loc_broker_male_c__blitz_01_a_06",
 			"loc_broker_male_c__blitz_01_a_07",
-			"loc_broker_male_c__blitz_01_a_08",
+			"loc_broker_male_c__blitz_01_a_08"
 		},
 		sound_events_duration = {
 			1.141708,
@@ -97,9 +97,9 @@ local broker_broker_male_c = {
 			0.962906,
 			1.193104,
 			1.201385,
-			1.348073,
+			1.348073
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	blitz_02_a = {
 		randomize_indexes_n = 0,
@@ -112,7 +112,7 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__blitz_02_a_05",
 			"loc_broker_male_c__blitz_02_a_06",
 			"loc_broker_male_c__blitz_02_a_07",
-			"loc_broker_male_c__blitz_02_a_08",
+			"loc_broker_male_c__blitz_02_a_08"
 		},
 		sound_events_duration = {
 			1.488323,
@@ -122,9 +122,9 @@ local broker_broker_male_c = {
 			2.098208,
 			2.046844,
 			2.129563,
-			2.242365,
+			2.242365
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	blitz_03_a = {
 		randomize_indexes_n = 0,
@@ -137,7 +137,7 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__blitz_03_a_05",
 			"loc_broker_male_c__blitz_03_a_06",
 			"loc_broker_male_c__blitz_03_a_07",
-			"loc_broker_male_c__blitz_03_a_08",
+			"loc_broker_male_c__blitz_03_a_08"
 		},
 		sound_events_duration = {
 			0.821979,
@@ -147,9 +147,9 @@ local broker_broker_male_c = {
 			1.282938,
 			1.321354,
 			1.400719,
-			1.427781,
+			1.427781
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	broker_seen_killstreak_adamant = {
 		randomize_indexes_n = 0,
@@ -158,15 +158,15 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__broker_seen_killstreak_adamant_01",
 			"loc_broker_male_c__broker_seen_killstreak_adamant_02",
 			"loc_broker_male_c__broker_seen_killstreak_adamant_03",
-			"loc_broker_male_c__broker_seen_killstreak_adamant_04",
+			"loc_broker_male_c__broker_seen_killstreak_adamant_04"
 		},
 		sound_events_duration = {
 			2.258646,
 			2.214646,
 			2.315979,
-			2.706646,
+			2.706646
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	broker_seen_killstreak_broker = {
 		randomize_indexes_n = 0,
@@ -175,15 +175,15 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__broker_seen_killstreak_broker_01",
 			"loc_broker_male_c__broker_seen_killstreak_broker_02",
 			"loc_broker_male_c__broker_seen_killstreak_broker_03",
-			"loc_broker_male_c__broker_seen_killstreak_broker_04",
+			"loc_broker_male_c__broker_seen_killstreak_broker_04"
 		},
 		sound_events_duration = {
 			3.153333,
 			2.865333,
 			2.533333,
-			1.665333,
+			1.665333
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	broker_seen_killstreak_ogryn = {
 		randomize_indexes_n = 0,
@@ -192,15 +192,15 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__broker_seen_killstreak_ogryn_01",
 			"loc_broker_male_c__broker_seen_killstreak_ogryn_02",
 			"loc_broker_male_c__broker_seen_killstreak_ogryn_03",
-			"loc_broker_male_c__broker_seen_killstreak_ogryn_04",
+			"loc_broker_male_c__broker_seen_killstreak_ogryn_04"
 		},
 		sound_events_duration = {
 			2.331104,
 			2.173688,
 			2.281979,
-			1.994979,
+			1.994979
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	broker_seen_killstreak_psyker = {
 		randomize_indexes_n = 0,
@@ -209,15 +209,15 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__broker_seen_killstreak_psyker_01",
 			"loc_broker_male_c__broker_seen_killstreak_psyker_02",
 			"loc_broker_male_c__broker_seen_killstreak_psyker_03",
-			"loc_broker_male_c__broker_seen_killstreak_psyker_04",
+			"loc_broker_male_c__broker_seen_killstreak_psyker_04"
 		},
 		sound_events_duration = {
 			1.641083,
 			1.850438,
 			1.929521,
-			1.867229,
+			1.867229
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	broker_seen_killstreak_veteran = {
 		randomize_indexes_n = 0,
@@ -226,15 +226,15 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__broker_seen_killstreak_veteran_01",
 			"loc_broker_male_c__broker_seen_killstreak_veteran_02",
 			"loc_broker_male_c__broker_seen_killstreak_veteran_03",
-			"loc_broker_male_c__broker_seen_killstreak_veteran_04",
+			"loc_broker_male_c__broker_seen_killstreak_veteran_04"
 		},
 		sound_events_duration = {
 			1.859229,
 			2.389604,
 			2.698208,
-			2.756063,
+			2.756063
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	broker_seen_killstreak_zealot = {
 		randomize_indexes_n = 0,
@@ -243,15 +243,15 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__broker_seen_killstreak_zealot_01",
 			"loc_broker_male_c__broker_seen_killstreak_zealot_02",
 			"loc_broker_male_c__broker_seen_killstreak_zealot_03",
-			"loc_broker_male_c__broker_seen_killstreak_zealot_04",
+			"loc_broker_male_c__broker_seen_killstreak_zealot_04"
 		},
 		sound_events_duration = {
 			2.331792,
 			2.546917,
 			3.376354,
-			1.667188,
+			1.667188
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	broker_start_revive_adamant = {
 		randomize_indexes_n = 0,
@@ -261,16 +261,16 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__broker_start_revive_adamant_02",
 			"loc_broker_male_c__broker_start_revive_adamant_03",
 			"loc_broker_male_c__broker_start_revive_adamant_04",
-			"loc_broker_male_c__broker_start_revive_adamant_05",
+			"loc_broker_male_c__broker_start_revive_adamant_05"
 		},
 		sound_events_duration = {
 			3.134646,
 			1.703313,
 			3.303979,
 			3.245313,
-			3.527979,
+			3.527979
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	broker_start_revive_broker = {
 		randomize_indexes_n = 0,
@@ -280,16 +280,16 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__broker_start_revive_broker_02",
 			"loc_broker_male_c__broker_start_revive_broker_03",
 			"loc_broker_male_c__broker_start_revive_broker_04",
-			"loc_broker_male_c__broker_start_revive_broker_05",
+			"loc_broker_male_c__broker_start_revive_broker_05"
 		},
 		sound_events_duration = {
 			2.429333,
 			3.047979,
 			2.838646,
 			3.391979,
-			4.822667,
+			4.822667
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	broker_start_revive_ogryn = {
 		randomize_indexes_n = 0,
@@ -299,16 +299,16 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__broker_start_revive_ogryn_02",
 			"loc_broker_male_c__broker_start_revive_ogryn_03",
 			"loc_broker_male_c__broker_start_revive_ogryn_04",
-			"loc_broker_male_c__broker_start_revive_ogryn_05",
+			"loc_broker_male_c__broker_start_revive_ogryn_05"
 		},
 		sound_events_duration = {
 			1.76,
 			1.883354,
 			1.445646,
 			1.809,
-			2.272625,
+			2.272625
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	broker_start_revive_psyker = {
 		randomize_indexes_n = 0,
@@ -318,16 +318,16 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__broker_start_revive_psyker_02",
 			"loc_broker_male_c__broker_start_revive_psyker_03",
 			"loc_broker_male_c__broker_start_revive_psyker_04",
-			"loc_broker_male_c__broker_start_revive_psyker_05",
+			"loc_broker_male_c__broker_start_revive_psyker_05"
 		},
 		sound_events_duration = {
 			1.914167,
 			2.020063,
 			2.040938,
 			1.903125,
-			1.280833,
+			1.280833
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	broker_start_revive_veteran = {
 		randomize_indexes_n = 0,
@@ -337,16 +337,16 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__broker_start_revive_veteran_02",
 			"loc_broker_male_c__broker_start_revive_veteran_03",
 			"loc_broker_male_c__broker_start_revive_veteran_04",
-			"loc_broker_male_c__broker_start_revive_veteran_05",
+			"loc_broker_male_c__broker_start_revive_veteran_05"
 		},
 		sound_events_duration = {
 			2.179396,
 			2.428188,
 			2.894917,
 			2.769552,
-			1.936385,
+			1.936385
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	broker_start_revive_zealot = {
 		randomize_indexes_n = 0,
@@ -356,16 +356,16 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__broker_start_revive_zealot_02",
 			"loc_broker_male_c__broker_start_revive_zealot_03",
 			"loc_broker_male_c__broker_start_revive_zealot_04",
-			"loc_broker_male_c__broker_start_revive_zealot_05",
+			"loc_broker_male_c__broker_start_revive_zealot_05"
 		},
 		sound_events_duration = {
 			2.522917,
 			3.892167,
 			2.324646,
 			2.27675,
-			2.595104,
+			2.595104
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	deployed_ammo_crate_broker_low_on_ammo = {
 		randomize_indexes_n = 0,
@@ -374,21 +374,21 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__found_ammo_broker_low_on_ammo_01",
 			"loc_broker_male_c__found_ammo_broker_low_on_ammo_02",
 			"loc_broker_male_c__found_ammo_broker_low_on_ammo_03",
-			"loc_broker_male_c__found_ammo_broker_low_on_ammo_04",
+			"loc_broker_male_c__found_ammo_broker_low_on_ammo_04"
 		},
 		sound_events_duration = {
 			1.176,
 			1.490646,
 			1.751979,
-			1.897333,
+			1.897333
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25,
+			0.25
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	found_ammo_broker_low_on_ammo = {
 		randomize_indexes_n = 0,
@@ -397,15 +397,15 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__found_ammo_broker_low_on_ammo_01",
 			"loc_broker_male_c__found_ammo_broker_low_on_ammo_02",
 			"loc_broker_male_c__found_ammo_broker_low_on_ammo_03",
-			"loc_broker_male_c__found_ammo_broker_low_on_ammo_04",
+			"loc_broker_male_c__found_ammo_broker_low_on_ammo_04"
 		},
 		sound_events_duration = {
 			1.176,
 			1.490646,
 			1.751979,
-			1.897333,
+			1.897333
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	found_health_booster_broker_low_on_health = {
 		randomize_indexes_n = 0,
@@ -414,15 +414,15 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__found_health_booster_broker_low_on_health_01",
 			"loc_broker_male_c__found_health_booster_broker_low_on_health_02",
 			"loc_broker_male_c__found_health_booster_broker_low_on_health_03",
-			"loc_broker_male_c__found_health_booster_broker_low_on_health_04",
+			"loc_broker_male_c__found_health_booster_broker_low_on_health_04"
 		},
 		sound_events_duration = {
 			1.178646,
 			1.972,
 			1.817313,
-			1.541313,
+			1.541313
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	found_health_station_broker_low_on_health = {
 		randomize_indexes_n = 0,
@@ -431,21 +431,21 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__found_health_booster_broker_low_on_health_01",
 			"loc_broker_male_c__found_health_booster_broker_low_on_health_02",
 			"loc_broker_male_c__found_health_booster_broker_low_on_health_03",
-			"loc_broker_male_c__found_health_booster_broker_low_on_health_04",
+			"loc_broker_male_c__found_health_booster_broker_low_on_health_04"
 		},
 		sound_events_duration = {
 			1.178646,
 			1.972,
 			1.817313,
-			1.541313,
+			1.541313
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25,
+			0.25
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	friendly_fire_from_adamant_to_broker = {
 		randomize_indexes_n = 0,
@@ -455,16 +455,16 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__friendly_fire_from_adamant_to_broker_02",
 			"loc_broker_male_c__friendly_fire_from_adamant_to_broker_03",
 			"loc_broker_male_c__friendly_fire_from_adamant_to_broker_04",
-			"loc_broker_male_c__friendly_fire_from_adamant_to_broker_05",
+			"loc_broker_male_c__friendly_fire_from_adamant_to_broker_05"
 		},
 		sound_events_duration = {
 			1.62,
 			2.218667,
 			2.059979,
 			1.929313,
-			1.612,
+			1.612
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	friendly_fire_from_broker_to_broker = {
 		randomize_indexes_n = 0,
@@ -474,16 +474,16 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__friendly_fire_from_broker_to_broker_02",
 			"loc_broker_male_c__friendly_fire_from_broker_to_broker_03",
 			"loc_broker_male_c__friendly_fire_from_broker_to_broker_04",
-			"loc_broker_male_c__friendly_fire_from_broker_to_broker_05",
+			"loc_broker_male_c__friendly_fire_from_broker_to_broker_05"
 		},
 		sound_events_duration = {
 			1.722667,
 			2.208,
 			1.735979,
 			2.158646,
-			1.951979,
+			1.951979
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	friendly_fire_from_ogryn_to_broker = {
 		randomize_indexes_n = 0,
@@ -493,16 +493,16 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__friendly_fire_from_ogryn_to_broker_02",
 			"loc_broker_male_c__friendly_fire_from_ogryn_to_broker_03",
 			"loc_broker_male_c__friendly_fire_from_ogryn_to_broker_04",
-			"loc_broker_male_c__friendly_fire_from_ogryn_to_broker_05",
+			"loc_broker_male_c__friendly_fire_from_ogryn_to_broker_05"
 		},
 		sound_events_duration = {
 			1.202729,
 			2.167563,
 			1.411833,
 			1.971979,
-			1.705375,
+			1.705375
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	friendly_fire_from_psyker_to_broker = {
 		randomize_indexes_n = 0,
@@ -512,16 +512,16 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__friendly_fire_from_psyker_to_broker_02",
 			"loc_broker_male_c__friendly_fire_from_psyker_to_broker_03",
 			"loc_broker_male_c__friendly_fire_from_psyker_to_broker_04",
-			"loc_broker_male_c__friendly_fire_from_psyker_to_broker_05",
+			"loc_broker_male_c__friendly_fire_from_psyker_to_broker_05"
 		},
 		sound_events_duration = {
 			1.896854,
 			2.088271,
 			2.238042,
 			1.841083,
-			2.910792,
+			2.910792
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	friendly_fire_from_veteran_to_broker = {
 		randomize_indexes_n = 0,
@@ -531,16 +531,16 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__friendly_fire_from_veteran_to_broker_02",
 			"loc_broker_male_c__friendly_fire_from_veteran_to_broker_03",
 			"loc_broker_male_c__friendly_fire_from_veteran_to_broker_04",
-			"loc_broker_male_c__friendly_fire_from_veteran_to_broker_05",
+			"loc_broker_male_c__friendly_fire_from_veteran_to_broker_05"
 		},
 		sound_events_duration = {
 			3.654823,
 			3.402167,
 			1.903594,
 			3.282583,
-			3.209302,
+			3.209302
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	friendly_fire_from_zealot_to_broker = {
 		randomize_indexes_n = 0,
@@ -550,16 +550,16 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__friendly_fire_from_zealot_to_broker_02",
 			"loc_broker_male_c__friendly_fire_from_zealot_to_broker_03",
 			"loc_broker_male_c__friendly_fire_from_zealot_to_broker_04",
-			"loc_broker_male_c__friendly_fire_from_zealot_to_broker_05",
+			"loc_broker_male_c__friendly_fire_from_zealot_to_broker_05"
 		},
 		sound_events_duration = {
 			1.635771,
 			1.885146,
 			1.925813,
 			1.931708,
-			1.919729,
+			1.919729
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	knocked_down_multiple_times_broker = {
 		randomize_indexes_n = 0,
@@ -568,15 +568,15 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__knocked_down_multiple_times_broker_01",
 			"loc_broker_male_c__knocked_down_multiple_times_broker_02",
 			"loc_broker_male_c__knocked_down_multiple_times_broker_03",
-			"loc_broker_male_c__knocked_down_multiple_times_broker_04",
+			"loc_broker_male_c__knocked_down_multiple_times_broker_04"
 		},
 		sound_events_duration = {
 			1.915979,
 			2.057313,
 			2.06,
-			1.698667,
+			1.698667
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	player_death_broker = {
 		randomize_indexes_n = 0,
@@ -585,15 +585,15 @@ local broker_broker_male_c = {
 			"loc_broker_male_c__player_death_broker_01",
 			"loc_broker_male_c__player_death_broker_02",
 			"loc_broker_male_c__player_death_broker_03",
-			"loc_broker_male_c__player_death_broker_04",
+			"loc_broker_male_c__player_death_broker_04"
 		},
 		sound_events_duration = {
 			1.429333,
 			2.033313,
 			2.011979,
-			1.452,
+			1.452
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_adamant_seen_killstreak_broker = {
 		randomize_indexes_n = 0,
@@ -601,14 +601,14 @@ local broker_broker_male_c = {
 		sound_events = {
 			"loc_broker_male_c__response_for_adamant_seen_killstreak_broker_01",
 			"loc_broker_male_c__response_for_adamant_seen_killstreak_broker_02",
-			"loc_broker_male_c__response_for_adamant_seen_killstreak_broker_03",
+			"loc_broker_male_c__response_for_adamant_seen_killstreak_broker_03"
 		},
 		sound_events_duration = {
 			2.206646,
 			2.039333,
-			2.887979,
+			2.887979
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_adamant_start_revive_broker = {
 		randomize_indexes_n = 0,
@@ -616,14 +616,14 @@ local broker_broker_male_c = {
 		sound_events = {
 			"loc_broker_male_c__response_for_adamant_start_revive_broker_01",
 			"loc_broker_male_c__response_for_adamant_start_revive_broker_02",
-			"loc_broker_male_c__response_for_adamant_start_revive_broker_03",
+			"loc_broker_male_c__response_for_adamant_start_revive_broker_03"
 		},
 		sound_events_duration = {
 			3.487979,
 			3.653313,
-			2.933313,
+			2.933313
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_broker_cover_me = {
 		randomize_indexes_n = 0,
@@ -631,14 +631,14 @@ local broker_broker_male_c = {
 		sound_events = {
 			"loc_broker_male_c__response_for_broker_cover_me_01",
 			"loc_broker_male_c__response_for_broker_cover_me_02",
-			"loc_broker_male_c__response_for_broker_cover_me_03",
+			"loc_broker_male_c__response_for_broker_cover_me_03"
 		},
 		sound_events_duration = {
 			1.464,
 			2.013313,
-			1.325313,
+			1.325313
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_broker_critical_health = {
 		randomize_indexes_n = 0,
@@ -646,14 +646,14 @@ local broker_broker_male_c = {
 		sound_events = {
 			"loc_broker_male_c__response_for_broker_critical_health_01",
 			"loc_broker_male_c__response_for_broker_critical_health_02",
-			"loc_broker_male_c__response_for_broker_critical_health_03",
+			"loc_broker_male_c__response_for_broker_critical_health_03"
 		},
 		sound_events_duration = {
 			1.545333,
 			2.044,
-			1.993313,
+			1.993313
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_broker_disabled_by_chaos_hound = {
 		randomize_indexes_n = 0,
@@ -661,14 +661,14 @@ local broker_broker_male_c = {
 		sound_events = {
 			"loc_broker_male_c__response_for_broker_disabled_by_chaos_hound_01",
 			"loc_broker_male_c__response_for_broker_disabled_by_chaos_hound_02",
-			"loc_broker_male_c__response_for_broker_disabled_by_chaos_hound_03",
+			"loc_broker_male_c__response_for_broker_disabled_by_chaos_hound_03"
 		},
 		sound_events_duration = {
 			1.973333,
 			1.529313,
-			2.245333,
+			2.245333
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_broker_disabled_by_enemy = {
 		randomize_indexes_n = 0,
@@ -676,14 +676,14 @@ local broker_broker_male_c = {
 		sound_events = {
 			"loc_broker_male_c__response_for_broker_disabled_by_enemy_01",
 			"loc_broker_male_c__response_for_broker_disabled_by_enemy_02",
-			"loc_broker_male_c__response_for_broker_disabled_by_enemy_03",
+			"loc_broker_male_c__response_for_broker_disabled_by_enemy_03"
 		},
 		sound_events_duration = {
 			1.827979,
 			1.268,
-			2.52,
+			2.52
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_broker_enemy_kill_monster = {
 		randomize_indexes_n = 0,
@@ -691,14 +691,14 @@ local broker_broker_male_c = {
 		sound_events = {
 			"loc_broker_male_c__response_for_broker_enemy_kill_monster_01",
 			"loc_broker_male_c__response_for_broker_enemy_kill_monster_02",
-			"loc_broker_male_c__response_for_broker_enemy_kill_monster_03",
+			"loc_broker_male_c__response_for_broker_enemy_kill_monster_03"
 		},
 		sound_events_duration = {
 			3.137313,
 			2.749313,
-			2.035979,
+			2.035979
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_broker_knocked_down_3 = {
 		randomize_indexes_n = 0,
@@ -706,14 +706,14 @@ local broker_broker_male_c = {
 		sound_events = {
 			"loc_broker_male_c__response_for_broker_knocked_down_3_01",
 			"loc_broker_male_c__response_for_broker_knocked_down_3_02",
-			"loc_broker_male_c__response_for_broker_knocked_down_3_03",
+			"loc_broker_male_c__response_for_broker_knocked_down_3_03"
 		},
 		sound_events_duration = {
 			1.769333,
 			1.626667,
-			2.164,
+			2.164
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_broker_ledge_hanging = {
 		randomize_indexes_n = 0,
@@ -721,14 +721,14 @@ local broker_broker_male_c = {
 		sound_events = {
 			"loc_broker_male_c__response_for_broker_ledge_hanging_01",
 			"loc_broker_male_c__response_for_broker_ledge_hanging_02",
-			"loc_broker_male_c__response_for_broker_ledge_hanging_03",
+			"loc_broker_male_c__response_for_broker_ledge_hanging_03"
 		},
 		sound_events_duration = {
 			1.617333,
 			1.206667,
-			1.876,
+			1.876
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_broker_seen_killstreak_broker = {
 		randomize_indexes_n = 0,
@@ -736,14 +736,14 @@ local broker_broker_male_c = {
 		sound_events = {
 			"loc_broker_male_c__response_for_broker_seen_killstreak_broker_01",
 			"loc_broker_male_c__response_for_broker_seen_killstreak_broker_02",
-			"loc_broker_male_c__response_for_broker_seen_killstreak_broker_03",
+			"loc_broker_male_c__response_for_broker_seen_killstreak_broker_03"
 		},
 		sound_events_duration = {
 			1.568,
 			2.001333,
-			2.835979,
+			2.835979
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_friendly_fire_from_broker_to_adamant = {
 		randomize_indexes_n = 0,
@@ -751,14 +751,14 @@ local broker_broker_male_c = {
 		sound_events = {
 			"loc_broker_male_c__response_for_friendly_fire_from_broker_to_adamant_01",
 			"loc_broker_male_c__response_for_friendly_fire_from_broker_to_adamant_02",
-			"loc_broker_male_c__response_for_friendly_fire_from_broker_to_adamant_03",
+			"loc_broker_male_c__response_for_friendly_fire_from_broker_to_adamant_03"
 		},
 		sound_events_duration = {
 			1.166646,
 			2.002667,
-			1.602646,
+			1.602646
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_friendly_fire_from_broker_to_broker = {
 		randomize_indexes_n = 0,
@@ -766,14 +766,14 @@ local broker_broker_male_c = {
 		sound_events = {
 			"loc_broker_male_c__response_for_friendly_fire_from_broker_to_broker_01",
 			"loc_broker_male_c__response_for_friendly_fire_from_broker_to_broker_02",
-			"loc_broker_male_c__response_for_friendly_fire_from_broker_to_broker_03",
+			"loc_broker_male_c__response_for_friendly_fire_from_broker_to_broker_03"
 		},
 		sound_events_duration = {
 			1.32,
 			1.965333,
-			1.661313,
+			1.661313
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_friendly_fire_from_broker_to_ogryn = {
 		randomize_indexes_n = 0,
@@ -781,14 +781,14 @@ local broker_broker_male_c = {
 		sound_events = {
 			"loc_broker_male_c__response_for_friendly_fire_from_broker_to_ogryn_01",
 			"loc_broker_male_c__response_for_friendly_fire_from_broker_to_ogryn_02",
-			"loc_broker_male_c__response_for_friendly_fire_from_broker_to_ogryn_03",
+			"loc_broker_male_c__response_for_friendly_fire_from_broker_to_ogryn_03"
 		},
 		sound_events_duration = {
 			1.552688,
 			1.658875,
-			1.886396,
+			1.886396
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_friendly_fire_from_broker_to_psyker = {
 		randomize_indexes_n = 0,
@@ -796,14 +796,14 @@ local broker_broker_male_c = {
 		sound_events = {
 			"loc_broker_male_c__response_for_friendly_fire_from_broker_to_psyker_01",
 			"loc_broker_male_c__response_for_friendly_fire_from_broker_to_psyker_02",
-			"loc_broker_male_c__response_for_friendly_fire_from_broker_to_psyker_03",
+			"loc_broker_male_c__response_for_friendly_fire_from_broker_to_psyker_03"
 		},
 		sound_events_duration = {
 			1.181208,
 			2.049292,
-			1.658854,
+			1.658854
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_friendly_fire_from_broker_to_veteran = {
 		randomize_indexes_n = 0,
@@ -811,14 +811,14 @@ local broker_broker_male_c = {
 		sound_events = {
 			"loc_broker_male_c__response_for_friendly_fire_from_broker_to_veteran_01",
 			"loc_broker_male_c__response_for_friendly_fire_from_broker_to_veteran_02",
-			"loc_broker_male_c__response_for_friendly_fire_from_broker_to_veteran_03",
+			"loc_broker_male_c__response_for_friendly_fire_from_broker_to_veteran_03"
 		},
 		sound_events_duration = {
 			1.400219,
 			1.768583,
-			2.069458,
+			2.069458
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_friendly_fire_from_broker_to_zealot = {
 		randomize_indexes_n = 0,
@@ -826,14 +826,14 @@ local broker_broker_male_c = {
 		sound_events = {
 			"loc_broker_male_c__response_for_friendly_fire_from_broker_to_zealot_01",
 			"loc_broker_male_c__response_for_friendly_fire_from_broker_to_zealot_02",
-			"loc_broker_male_c__response_for_friendly_fire_from_broker_to_zealot_03",
+			"loc_broker_male_c__response_for_friendly_fire_from_broker_to_zealot_03"
 		},
 		sound_events_duration = {
 			0.870667,
 			1.645938,
-			1.670208,
+			1.670208
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_ogryn_seen_killstreak_broker = {
 		randomize_indexes_n = 0,
@@ -841,14 +841,14 @@ local broker_broker_male_c = {
 		sound_events = {
 			"loc_broker_male_c__response_for_ogryn_seen_killstreak_broker_01",
 			"loc_broker_male_c__response_for_ogryn_seen_killstreak_broker_02",
-			"loc_broker_male_c__response_for_ogryn_seen_killstreak_broker_03",
+			"loc_broker_male_c__response_for_ogryn_seen_killstreak_broker_03"
 		},
 		sound_events_duration = {
 			1.694792,
 			1.363521,
-			2.075896,
+			2.075896
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_ogryn_start_revive_broker = {
 		randomize_indexes_n = 0,
@@ -856,14 +856,14 @@ local broker_broker_male_c = {
 		sound_events = {
 			"loc_broker_male_c__response_for_ogryn_start_revive_broker_01",
 			"loc_broker_male_c__response_for_ogryn_start_revive_broker_02",
-			"loc_broker_male_c__response_for_ogryn_start_revive_broker_03",
+			"loc_broker_male_c__response_for_ogryn_start_revive_broker_03"
 		},
 		sound_events_duration = {
 			2.840667,
 			3.299521,
-			2.667708,
+			2.667708
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_pinned_by_enemies_broker = {
 		randomize_indexes_n = 0,
@@ -871,14 +871,14 @@ local broker_broker_male_c = {
 		sound_events = {
 			"loc_broker_male_c__response_for_pinned_by_enemies_broker_01",
 			"loc_broker_male_c__response_for_pinned_by_enemies_broker_02",
-			"loc_broker_male_c__response_for_pinned_by_enemies_broker_03",
+			"loc_broker_male_c__response_for_pinned_by_enemies_broker_03"
 		},
 		sound_events_duration = {
 			1.187979,
 			1.710667,
-			2.035979,
+			2.035979
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_psyker_seen_killstreak_broker = {
 		randomize_indexes_n = 0,
@@ -886,14 +886,14 @@ local broker_broker_male_c = {
 		sound_events = {
 			"loc_broker_male_c__response_for_psyker_seen_killstreak_broker_01",
 			"loc_broker_male_c__response_for_psyker_seen_killstreak_broker_02",
-			"loc_broker_male_c__response_for_psyker_seen_killstreak_broker_03",
+			"loc_broker_male_c__response_for_psyker_seen_killstreak_broker_03"
 		},
 		sound_events_duration = {
 			2.683333,
 			2.512875,
-			3.047833,
+			3.047833
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_psyker_start_revive_broker = {
 		randomize_indexes_n = 0,
@@ -901,14 +901,14 @@ local broker_broker_male_c = {
 		sound_events = {
 			"loc_broker_male_c__response_for_psyker_start_revive_broker_01",
 			"loc_broker_male_c__response_for_psyker_start_revive_broker_02",
-			"loc_broker_male_c__response_for_psyker_start_revive_broker_03",
+			"loc_broker_male_c__response_for_psyker_start_revive_broker_03"
 		},
 		sound_events_duration = {
 			3.135063,
 			3.157417,
-			3.046604,
+			3.046604
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_veteran_seen_killstreak_broker = {
 		randomize_indexes_n = 0,
@@ -916,14 +916,14 @@ local broker_broker_male_c = {
 		sound_events = {
 			"loc_broker_male_c__response_for_veteran_seen_killstreak_broker_01",
 			"loc_broker_male_c__response_for_veteran_seen_killstreak_broker_02",
-			"loc_broker_male_c__response_for_veteran_seen_killstreak_broker_03",
+			"loc_broker_male_c__response_for_veteran_seen_killstreak_broker_03"
 		},
 		sound_events_duration = {
 			1.834156,
 			2.111896,
-			1.452292,
+			1.452292
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_veteran_start_revive_broker = {
 		randomize_indexes_n = 0,
@@ -931,14 +931,14 @@ local broker_broker_male_c = {
 		sound_events = {
 			"loc_broker_male_c__response_for_veteran_start_revive_broker_01",
 			"loc_broker_male_c__response_for_veteran_start_revive_broker_02",
-			"loc_broker_male_c__response_for_veteran_start_revive_broker_03",
+			"loc_broker_male_c__response_for_veteran_start_revive_broker_03"
 		},
 		sound_events_duration = {
 			4.35299,
 			5.776344,
-			2.779208,
+			2.779208
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_zealot_seen_killstreak_broker = {
 		randomize_indexes_n = 0,
@@ -946,14 +946,14 @@ local broker_broker_male_c = {
 		sound_events = {
 			"loc_broker_male_c__response_for_zealot_seen_killstreak_broker_01",
 			"loc_broker_male_c__response_for_zealot_seen_killstreak_broker_02",
-			"loc_broker_male_c__response_for_zealot_seen_killstreak_broker_03",
+			"loc_broker_male_c__response_for_zealot_seen_killstreak_broker_03"
 		},
 		sound_events_duration = {
 			2.111708,
 			1.466333,
-			1.967271,
+			1.967271
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_zealot_start_revive_broker = {
 		randomize_indexes_n = 0,
@@ -961,15 +961,15 @@ local broker_broker_male_c = {
 		sound_events = {
 			"loc_broker_male_c__response_for_zealot_start_revive_broker_01",
 			"loc_broker_male_c__response_for_zealot_start_revive_broker_02",
-			"loc_broker_male_c__response_for_zealot_start_revive_broker_03",
+			"loc_broker_male_c__response_for_zealot_start_revive_broker_03"
 		},
 		sound_events_duration = {
 			4.485,
 			4.377917,
-			4.564729,
+			4.564729
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("broker_broker_male_c", broker_broker_male_c)

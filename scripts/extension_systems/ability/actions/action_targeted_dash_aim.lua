@@ -23,6 +23,7 @@ ActionTargetedDashAim.start = function (self, action_settings, t, time_scale, ac
 	ActionTargetedDashAim.super.start(self, action_settings, t, time_scale, action_start_params)
 
 	self._lunge_character_state_component.is_aiming = true
+	self._allow_to_target_player = action_settings.allow_to_target_player
 
 	local buff_extension = self._buff_extension
 	local param_table = buff_extension and buff_extension:request_proc_event_param_table()
@@ -62,7 +63,8 @@ ActionTargetedDashAim._find_target = function (self, time_in_action)
 		local lunge_template = self:_lunge_template()
 		local smart_targeting_data = self._smart_targeting_extension:targeting_data()
 		local smart_target_unit = smart_targeting_data.unit
-		local valid_target = smart_target_unit and not Managers.state.player_unit_spawn:is_player_unit(smart_target_unit)
+		local is_player_unit = Managers.state.player_unit_spawn:is_player_unit(smart_target_unit) and smart_target_unit ~= self._player_unit
+		local valid_target = smart_target_unit and (self._allow_to_target_player and is_player_unit or not Managers.state.player_unit_spawn:is_player_unit(smart_target_unit))
 
 		if valid_target then
 			local has_target = true

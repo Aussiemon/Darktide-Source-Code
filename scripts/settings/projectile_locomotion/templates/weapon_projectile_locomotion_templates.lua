@@ -6,16 +6,16 @@ local weapon_projectile_locomotion_templates = {
 	force_staff_ball = {
 		trajectory_parameters = {
 			spawn = {
-				locomotion_state = locomotion_states.manual_physics,
-			},
+				locomotion_state = locomotion_states.manual_physics
+			}
 		},
 		spawn_projectile_parameters = {
 			initial_speed = 60,
 			spawn_offset = Vector3Box(0, 0, 0),
 			pitch_offset = {
 				max = 0,
-				min = 0,
-			},
+				min = 0
+			}
 		},
 		integrator_parameters = {
 			air_density = 0,
@@ -28,23 +28,23 @@ local weapon_projectile_locomotion_templates = {
 			max_hit_count = 100,
 			radius = 0.125,
 			statics_raycast = true,
-			use_actor_mass_radius = false,
+			use_actor_mass_radius = false
 		},
-		vfx = {},
+		vfx = {}
 	},
 	force_staff_ball_heavy = {
 		trajectory_parameters = {
 			spawn = {
-				locomotion_state = locomotion_states.manual_physics,
-			},
+				locomotion_state = locomotion_states.manual_physics
+			}
 		},
 		spawn_projectile_parameters = {
 			initial_speed = 60,
 			spawn_offset = Vector3Box(0, 0, 0),
 			pitch_offset = {
 				max = 0,
-				min = 0,
-			},
+				min = 0
+			}
 		},
 		integrator_parameters = {
 			air_density = 0,
@@ -57,9 +57,9 @@ local weapon_projectile_locomotion_templates = {
 			max_hit_count = 100,
 			radius = 0.3,
 			statics_raycast = true,
-			use_actor_mass_radius = false,
+			use_actor_mass_radius = false
 		},
-		vfx = {},
+		vfx = {}
 	},
 	ogryn_gauntlet_grenade = {
 		trajectory_parameters = {
@@ -83,9 +83,9 @@ local weapon_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi * 2.2,
 					y = math.pi * 1.1,
-					z = math.pi * 2.2,
-				},
-			},
+					z = math.pi * 2.2
+				}
+			}
 		},
 		integrator_parameters = {
 			air_density = 0.7,
@@ -98,13 +98,13 @@ local weapon_projectile_locomotion_templates = {
 			max_hit_count = 10,
 			radius = 0.125,
 			rotate_towards_direction = true,
-			use_actor_mass_radius = false,
+			use_actor_mass_radius = false
 		},
 		vfx = {
 			trajectory = {
-				material_name = "content/fx/materials/master/trajectory",
-			},
-		},
+				material_name = "content/fx/materials/master/trajectory"
+			}
+		}
 	},
 	broker_missile = {
 		trajectory_parameters = {
@@ -128,9 +128,9 @@ local weapon_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi * 2.2,
 					y = math.pi * 1.1,
-					z = math.pi * 2.2,
-				},
-			},
+					z = math.pi * 2.2
+				}
+			}
 		},
 		integrator_parameters = {
 			air_density = 0.8,
@@ -144,13 +144,13 @@ local weapon_projectile_locomotion_templates = {
 			radius = 0.125,
 			rotate_towards_direction = true,
 			use_actor_mass_radius = false,
-			use_generous_bouncing = true,
+			use_generous_bouncing = true
 		},
 		vfx = {
 			trajectory = {
-				material_name = "content/fx/materials/master/trajectory",
-			},
-		},
+				material_name = "content/fx/materials/master/trajectory"
+			}
+		}
 	},
 	ogryn_thumper_grenade = {
 		trajectory_parameters = {
@@ -174,9 +174,9 @@ local weapon_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi * 2.2,
 					y = math.pi * 1.1,
-					z = math.pi * 2.2,
-				},
-			},
+					z = math.pi * 2.2
+				}
+			}
 		},
 		integrator_parameters = {
 			air_density = 2.7,
@@ -190,13 +190,13 @@ local weapon_projectile_locomotion_templates = {
 			radius = 0.125,
 			rotate_towards_direction = true,
 			use_actor_mass_radius = false,
-			use_generous_bouncing = true,
+			use_generous_bouncing = true
 		},
 		vfx = {
 			trajectory = {
-				material_name = "content/fx/materials/master/trajectory",
-			},
-		},
+				material_name = "content/fx/materials/master/trajectory"
+			}
+		}
 	},
 	ogryn_thumper_grenade_aimed = {
 		trajectory_parameters = {
@@ -220,9 +220,9 @@ local weapon_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi * 2.2,
 					y = math.pi * 1.1,
-					z = math.pi * 2.2,
-				},
-			},
+					z = math.pi * 2.2
+				}
+			}
 		},
 		integrator_parameters = {
 			air_density = 2.7,
@@ -236,13 +236,13 @@ local weapon_projectile_locomotion_templates = {
 			radius = 0.125,
 			rotate_towards_direction = true,
 			use_actor_mass_radius = false,
-			use_generous_bouncing = true,
+			use_generous_bouncing = true
 		},
 		vfx = {
 			trajectory = {
-				material_name = "content/fx/materials/master/trajectory",
-			},
-		},
+				material_name = "content/fx/materials/master/trajectory"
+			}
+		}
 	},
 	attack_valkyrie_missile = {
 		trajectory_parameters = {
@@ -264,9 +264,9 @@ local weapon_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi * 2.2,
 					y = math.pi * 1.1,
-					z = math.pi * 2.2,
-				},
-			},
+					z = math.pi * 2.2
+				}
+			}
 		},
 		integrator_parameters = {
 			air_density = 0.8,
@@ -280,13 +280,13 @@ local weapon_projectile_locomotion_templates = {
 			radius = 0.125,
 			rotate_towards_direction = true,
 			use_actor_mass_radius = false,
-			use_generous_bouncing = true,
+			use_generous_bouncing = true
 		},
 		vfx = {
 			trajectory = {
-				material_name = "content/fx/materials/master/trajectory",
-			},
-		},
+				material_name = "content/fx/materials/master/trajectory"
+			}
+		}
 	},
 	attack_valkyrie_bomb = {
 		trajectory_parameters = {
@@ -308,9 +308,9 @@ local weapon_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi * 2.2,
 					y = math.pi * 1.1,
-					z = math.pi * 2.2,
-				},
-			},
+					z = math.pi * 2.2
+				}
+			}
 		},
 		integrator_parameters = {
 			air_density = 1,
@@ -322,14 +322,14 @@ local weapon_projectile_locomotion_templates = {
 			mass = 0.8,
 			max_hit_count = 10,
 			radius = 0.125,
-			use_actor_mass_radius = false,
+			use_actor_mass_radius = false
 		},
 		vfx = {
 			trajectory = {
-				material_name = "content/fx/materials/master/trajectory",
-			},
-		},
-	},
+				material_name = "content/fx/materials/master/trajectory"
+			}
+		}
+	}
 }
 
 return weapon_projectile_locomotion_templates

@@ -11,8 +11,8 @@ LightControllerFlickerSettings.default = {
 		jitter_multiplier_xy = 0,
 		jitter_multiplier_z = 0,
 		octaves = 0,
-		persistance = 0,
-	},
+		persistance = 0
+	}
 }
 LightControllerFlickerSettings.default2 = {
 	frequency_multiplier = 1,
@@ -24,8 +24,8 @@ LightControllerFlickerSettings.default2 = {
 		jitter_multiplier_xy = 0,
 		jitter_multiplier_z = 0,
 		octaves = 0,
-		persistance = 0,
-	},
+		persistance = 0
+	}
 }
 LightControllerFlickerSettings.moving_expensive = {
 	frequency_multiplier = 1,
@@ -37,8 +37,8 @@ LightControllerFlickerSettings.moving_expensive = {
 		jitter_multiplier_xy = 1,
 		jitter_multiplier_z = 0,
 		octaves = 5,
-		persistance = 1,
-	},
+		persistance = 1
+	}
 }
 
 return LightControllerFlickerSettings

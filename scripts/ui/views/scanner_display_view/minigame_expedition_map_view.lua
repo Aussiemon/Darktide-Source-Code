@@ -3,10 +3,8 @@
 local ScannerDisplayViewExpeditionMapSettings = require("scripts/ui/views/scanner_display_view/scanner_display_view_expedition_map_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UISettings = require("scripts/settings/ui/ui_settings")
-local Colors = require("scripts/utilities/ui/colors")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local MinigameExpeditionMapView = class("MinigameExpeditionMapView")
-local PLAYER_SLOT_COLORS = UISettings.player_slot_colors
 local PLAYER_SLOT_COLORS_BRIGHT = UISettings.player_bright_slot_colors
 
 MinigameExpeditionMapView.init = function (self, context, ui_renderer)
@@ -74,16 +72,22 @@ MinigameExpeditionMapView.draw_widgets = function (self, dt, t, input_service, u
 		UIWidget.draw(widget, ui_renderer)
 	end
 
-	for _, widget in pairs(self._exit_widgets) do
-		UIWidget.draw(widget, ui_renderer)
+	for level_index, widget in pairs(self._exit_widgets) do
+		if self._navigation_handler:is_level_visible(level_index) then
+			UIWidget.draw(widget, ui_renderer)
+		end
 	end
 
-	for _, widget in pairs(self._extraction_widgets) do
-		UIWidget.draw(widget, ui_renderer)
+	for level_index, widget in pairs(self._extraction_widgets) do
+		if self._navigation_handler:is_level_visible(level_index) then
+			UIWidget.draw(widget, ui_renderer)
+		end
 	end
 
-	for _, widget in pairs(self._opportunity_widgets) do
-		UIWidget.draw(widget, ui_renderer)
+	for level_index, widget in pairs(self._opportunity_widgets) do
+		if self._navigation_handler:is_level_visible(level_index) then
+			UIWidget.draw(widget, ui_renderer)
+		end
 	end
 
 	for unit, widget in pairs(self._pickup_loot_widgets) do
@@ -180,7 +184,7 @@ local OPP_ID = {
 	"scanner_map_greek_21",
 	"scanner_map_greek_22",
 	"scanner_map_greek_23",
-	"scanner_map_greek_24",
+	"scanner_map_greek_24"
 }
 
 MinigameExpeditionMapView._update_target_widgets = function (self, widgets_by_name, navigation_handler)
@@ -368,16 +372,16 @@ MinigameExpeditionMapView._create_player_widget = function (self, widget_name, i
 					255,
 					0,
 					255,
-					0,
-				},
+					0
+				}
 			},
 			change_function = function (content, style, _, dt)
 				local is_hogtied = content.is_hogtied
 
 				content.highlight = is_hogtied and hogtied_texture or default_texture
 				style.angle = is_hogtied and 0 or style.angle
-			end,
-		},
+			end
+		}
 	}
 	local widget_definition = UIWidget.create_definition(definitions, "center_pivot", nil, ScannerDisplayViewExpeditionMapSettings.target_widget_size)
 
@@ -435,7 +439,7 @@ MinigameExpeditionMapView._update_player_widgets = function (self, camera_angle)
 					255,
 					255,
 					255,
-					150,
+					150
 				}
 			elseif player_slot_color then
 				widget.style.highlight.color = player_slot_color
@@ -444,7 +448,7 @@ MinigameExpeditionMapView._update_player_widgets = function (self, camera_angle)
 					128,
 					255,
 					165,
-					0,
+					0
 				}
 			end
 		end

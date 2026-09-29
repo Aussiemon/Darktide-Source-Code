@@ -6,7 +6,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 require("scripts/foundation/utilities/color")
 
 local scenegraph_definition = {
-	screen = UIWorkspaceSettings.screen,
+	screen = UIWorkspaceSettings.screen
 }
 local credits_text_style = {
 	font_size = 24,
@@ -20,12 +20,12 @@ local credits_text_style = {
 	offset = {
 		0,
 		0,
-		15,
+		15
 	},
 	size = {
 		1920,
-		60,
-	},
+		60
+	}
 }
 local credits_image_style = {
 	horizontal_alignment = "center",
@@ -33,14 +33,14 @@ local credits_image_style = {
 	offset = {
 		0,
 		0,
-		15,
+		15
 	},
 	color = {
 		255,
 		255,
 		255,
-		255,
-	},
+		255
+	}
 }
 local widget_definitions = {
 	background = UIWidget.create_definition({
@@ -52,14 +52,14 @@ local widget_definitions = {
 					120,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					10,
-				},
-			},
+					10
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -70,11 +70,11 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
-				},
-			},
-		},
-	}, "screen"),
+					5
+				}
+			}
+		}
+	}, "screen")
 }
 local text_widgets_definitions = {
 	credits_text = UIWidget.create_definition({
@@ -83,17 +83,17 @@ local text_widgets_definitions = {
 			style_id = "credits_text",
 			value = "",
 			value_id = "credits_text",
-			style = credits_text_style,
-		},
+			style = credits_text_style
+		}
 	}, "screen"),
 	credits_image = UIWidget.create_definition({
 		{
 			pass_type = "texture",
 			style_id = "credits_image",
 			value_id = "credits_image",
-			style = credits_image_style,
-		},
-	}, "screen"),
+			style = credits_image_style
+		}
+	}, "screen")
 }
 local legend_inputs = {
 	{
@@ -101,7 +101,7 @@ local legend_inputs = {
 		display_name = "loc_settings_menu_close_menu",
 		input_action = "back",
 		on_pressed_callback = "cb_on_close_pressed",
-		visibility_function = nil,
+		visibility_function = nil
 	},
 	{
 		alignment = "right_alignment",
@@ -109,7 +109,7 @@ local legend_inputs = {
 		input_action = "next_hold",
 		on_pressed_callback = "cb_credits_speed",
 		use_mouse_hold = true,
-		visibility_function = nil,
+		visibility_function = nil
 	},
 	{
 		alignment = "right_alignment",
@@ -117,8 +117,8 @@ local legend_inputs = {
 		input_action = "credits_pause",
 		on_pressed_callback = "cb_credits_pause",
 		use_mouse_hold = true,
-		visibility_function = nil,
-	},
+		visibility_function = nil
+	}
 }
 local animations = {
 	backgorund_transition = {
@@ -133,7 +133,7 @@ local animations = {
 				local anim_progress = 255 * (1 - progress)
 
 				widget.style.texture.color[1] = anim_progress
-			end,
+			end
 		},
 		{
 			end_time = 1,
@@ -146,9 +146,9 @@ local animations = {
 				local anim_progress = 255 * progress
 
 				widget.style.texture.color[1] = anim_progress
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
@@ -156,5 +156,5 @@ return {
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
 	text_widgets_definitions = text_widgets_definitions,
-	legend_inputs = legend_inputs,
+	legend_inputs = legend_inputs
 }

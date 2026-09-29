@@ -5,7 +5,7 @@ local VolumeEventFunctions = require("scripts/settings/volume_event/volume_event
 local extension_aliases = {
 	level_prop = "TriggerVolumeEventExtension",
 	minion = "MinionVolumeEventExtension",
-	player = "PlayerVolumeEventExtension",
+	player = "PlayerVolumeEventExtension"
 }
 local PLAYER = extension_aliases.player
 local MINION = extension_aliases.minion
@@ -13,7 +13,7 @@ local LEVEL_PROP = extension_aliases.level_prop
 local updates_per_frame = {
 	[PLAYER] = 4,
 	[MINION] = 10,
-	[LEVEL_PROP] = 10,
+	[LEVEL_PROP] = 10
 }
 local volume_type_events = {
 	["content/volume_types/minion_trigger"] = {
@@ -22,8 +22,8 @@ local volume_type_events = {
 			invert_volume = false,
 			params = nil,
 			traversal_cost = nil,
-			func = VolumeEventFunctions.trigger,
-		},
+			func = VolumeEventFunctions.trigger
+		}
 	},
 	["content/volume_types/minion_instakill_no_cost"] = {
 		[MINION] = {
@@ -31,8 +31,8 @@ local volume_type_events = {
 			invert_volume = false,
 			params = nil,
 			traversal_cost = nil,
-			func = VolumeEventFunctions.minion_instakill,
-		},
+			func = VolumeEventFunctions.minion_instakill
+		}
 	},
 	["content/volume_types/minion_instakill_gibbing_no_cost"] = {
 		[MINION] = {
@@ -40,8 +40,8 @@ local volume_type_events = {
 			invert_volume = false,
 			params = nil,
 			traversal_cost = nil,
-			func = VolumeEventFunctions.minion_instakill_with_gibbing,
-		},
+			func = VolumeEventFunctions.minion_instakill_with_gibbing
+		}
 	},
 	["content/volume_types/nav_tag_volumes/minion_instakill_high_cost"] = {
 		[MINION] = {
@@ -49,8 +49,8 @@ local volume_type_events = {
 			invert_volume = false,
 			params = nil,
 			traversal_cost = 100,
-			func = VolumeEventFunctions.minion_instakill,
-		},
+			func = VolumeEventFunctions.minion_instakill
+		}
 	},
 	["content/volume_types/nav_tag_volumes/bot_impassable"] = {
 		[PLAYER] = {
@@ -58,8 +58,8 @@ local volume_type_events = {
 			func = nil,
 			invert_volume = false,
 			params = nil,
-			traversal_cost = 0,
-		},
+			traversal_cost = 0
+		}
 	},
 	["content/volume_types/player_trigger"] = {
 		[PLAYER] = {
@@ -67,8 +67,8 @@ local volume_type_events = {
 			params = nil,
 			traversal_cost = nil,
 			func = VolumeEventFunctions.trigger,
-			filter = VolumeEventFilters.trigger,
-		},
+			filter = VolumeEventFilters.trigger
+		}
 	},
 	["content/volume_types/player_instakill"] = {
 		[PLAYER] = {
@@ -76,8 +76,8 @@ local volume_type_events = {
 			invert_volume = false,
 			params = nil,
 			traversal_cost = nil,
-			func = VolumeEventFunctions.player_instakill,
-		},
+			func = VolumeEventFunctions.player_instakill
+		}
 	},
 	["content/volume_types/level_prop_trigger"] = {
 		[LEVEL_PROP] = {
@@ -85,8 +85,8 @@ local volume_type_events = {
 			invert_volume = false,
 			params = nil,
 			traversal_cost = nil,
-			func = VolumeEventFunctions.trigger,
-		},
+			func = VolumeEventFunctions.trigger
+		}
 	},
 	["content/volume_types/end_zone"] = {
 		[PLAYER] = {
@@ -94,14 +94,14 @@ local volume_type_events = {
 			params = nil,
 			traversal_cost = nil,
 			func = VolumeEventFunctions.end_zone,
-			filter = VolumeEventFilters.end_zone,
-		},
-	},
+			filter = VolumeEventFilters.end_zone
+		}
+	}
 }
 local volume_event_settings = {
 	updates_per_frame = updates_per_frame,
 	volume_type_events = volume_type_events,
-	extension_aliases = extension_aliases,
+	extension_aliases = extension_aliases
 }
 
 return settings("VolumeEventSettings", volume_event_settings)

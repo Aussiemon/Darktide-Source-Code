@@ -81,7 +81,7 @@ local bar_offset = 150 - bar_width
 local default_button_content = {
 	on_released_sound = nil,
 	on_hover_sound = UISoundEvents.default_mouse_hover,
-	on_pressed_sound = UISoundEvents.default_select,
+	on_pressed_sound = UISoundEvents.default_select
 }
 
 local function _generate_blueprints_function(grid_size, optional_item)
@@ -92,7 +92,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	equipped_display_name_style.offset = {
 		0,
 		5,
-		3,
+		3
 	}
 	equipped_display_name_style.text_horizontal_alignment = "center"
 	equipped_display_name_style.text_vertical_alignment = "top"
@@ -104,11 +104,11 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	weapon_display_name_style.offset = {
 		20,
 		35,
-		4,
+		4
 	}
 	weapon_display_name_style.size = {
 		grid_width - 40,
-		500,
+		500
 	}
 	weapon_display_name_style.text_horizontal_alignment = "left"
 	weapon_display_name_style.text_vertical_alignment = "top"
@@ -119,12 +119,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	weapon_sub_display_name_style.offset = {
 		20,
 		35,
-		4,
+		4
 	}
 	weapon_sub_display_name_style.font_size = 18
 	weapon_sub_display_name_style.size = {
 		grid_width - 40,
-		500,
+		500
 	}
 	weapon_sub_display_name_style.text_horizontal_alignment = "left"
 	weapon_sub_display_name_style.text_vertical_alignment = "top"
@@ -135,7 +135,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	item_display_name_style.offset = {
 		20,
 		20,
-		4,
+		4
 	}
 
 	local item_sub_display_name_style = table.clone(weapon_sub_display_name_style)
@@ -143,7 +143,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	item_sub_display_name_style.offset = {
 		20,
 		22,
-		4,
+		4
 	}
 
 	local weapon_rarity_name_style = table.clone(weapon_sub_display_name_style)
@@ -152,11 +152,11 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	weapon_keyword_style.offset = {
 		0,
 		-20,
-		11,
+		11
 	}
 	weapon_keyword_style.size = {
 		grid_width,
-		40,
+		40
 	}
 	weapon_keyword_style.font_size = 18
 	weapon_keyword_style.text_horizontal_alignment = "center"
@@ -168,11 +168,11 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	weapon_skin_requirement_header_style.offset = {
 		10,
 		0,
-		3,
+		3
 	}
 	weapon_skin_requirement_header_style.size = {
 		grid_width - 20,
-		30,
+		30
 	}
 	weapon_skin_requirement_header_style.font_size = 22
 	weapon_skin_requirement_header_style.text_horizontal_alignment = "left"
@@ -184,11 +184,11 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	weapon_skin_requirement_style.offset = {
 		10,
 		0,
-		3,
+		3
 	}
 	weapon_skin_requirement_style.size = {
 		grid_width - 20,
-		500,
+		500
 	}
 	weapon_skin_requirement_style.font_size = 20
 	weapon_skin_requirement_style.text_horizontal_alignment = "left"
@@ -200,11 +200,11 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	weapon_stat_text_style.offset = {
 		0,
 		0,
-		4,
+		4
 	}
 	weapon_stat_text_style.size = {
 		160,
-		180,
+		180
 	}
 	weapon_stat_text_style.font_size = 18
 	weapon_stat_text_style.text_horizontal_alignment = "left"
@@ -216,11 +216,11 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	weapon_value_style.offset = {
 		0,
 		0,
-		4,
+		4
 	}
 	weapon_value_style.size = {
 		200,
-		180,
+		180
 	}
 	weapon_value_style.font_size = 28
 	weapon_value_style.text_horizontal_alignment = "left"
@@ -233,11 +233,11 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	gear_stat_text_style.offset = {
 		0,
 		-42,
-		5,
+		5
 	}
 	gear_stat_text_style.font_size = 16
 	gear_stat_text_style.size = {
-		100,
+		100
 	}
 	gear_stat_text_style.horizontal_alignment = "right"
 	gear_stat_text_style.text_horizontal_alignment = "left"
@@ -249,11 +249,11 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	gear_value_style.offset = {
 		0,
 		-10,
-		5,
+		5
 	}
 	gear_value_style.font_size = 28
 	gear_value_style.size = {
-		100,
+		100
 	}
 	gear_value_style.horizontal_alignment = "right"
 	gear_value_style.text_horizontal_alignment = "left"
@@ -266,10 +266,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	stamina_value_style.offset = {
 		0,
 		0,
-		4,
+		4
 	}
 	stamina_value_style.size = {
-		150,
+		150
 	}
 	stamina_value_style.font_size = 20
 	stamina_value_style.text_horizontal_alignment = "left"
@@ -281,10 +281,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	stat_percentage_style.offset = {
 		0,
 		0,
-		4,
+		4
 	}
 	stat_percentage_style.size = {
-		150,
+		150
 	}
 	stat_percentage_style.font_size = 20
 	stat_percentage_style.text_horizontal_alignment = "left"
@@ -296,11 +296,11 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	modification_lock_style.offset = {
 		grid_width - 20 - 10,
 		0,
-		9,
+		9
 	}
 	modification_lock_style.size = {
 		20,
-		20,
+		20
 	}
 	modification_lock_style.font_size = 20
 	modification_lock_style.text_horizontal_alignment = "center"
@@ -318,11 +318,11 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	weapon_perk_style.offset = {
 		55,
 		0,
-		8,
+		8
 	}
 	weapon_perk_style.size = {
 		grid_width - 106 - 40,
-		200,
+		200
 	}
 	weapon_perk_style.font_size = 18
 	weapon_perk_style.text_horizontal_alignment = "left"
@@ -334,10 +334,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	weapon_traits_style.offset = {
 		98,
 		0,
-		8,
+		8
 	}
 	weapon_traits_style.size = {
-		grid_width - 106,
+		grid_width - 106
 	}
 	weapon_traits_style.font_size = 18
 	weapon_traits_style.text_horizontal_alignment = "left"
@@ -349,11 +349,11 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	weapon_traits_description_style.offset = {
 		98,
 		20,
-		8,
+		8
 	}
 	weapon_traits_description_style.size = {
 		grid_width - 126 - 40,
-		500,
+		500
 	}
 	weapon_traits_description_style.font_size = 18
 	weapon_traits_description_style.text_horizontal_alignment = "left"
@@ -365,11 +365,11 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	description_style.offset = {
 		20,
 		0,
-		3,
+		3
 	}
 	description_style.size = {
 		grid_width - 40,
-		500,
+		500
 	}
 	description_style.font_size = 18
 	description_style.line_spacing = 1.4
@@ -382,11 +382,11 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	obtained_label_style.offset = {
 		20,
 		4,
-		4,
+		4
 	}
 	obtained_label_style.size = {
 		grid_width - 40,
-		500,
+		500
 	}
 	obtained_label_style.font_size = 18
 	obtained_label_style.text_horizontal_alignment = "left"
@@ -398,11 +398,11 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	obtained_header_style.offset = {
 		20,
 		0,
-		4,
+		4
 	}
 	obtained_header_style.size = {
 		grid_width - 40,
-		500,
+		500
 	}
 	obtained_header_style.font_size = 20
 	obtained_header_style.text_horizontal_alignment = "left"
@@ -414,11 +414,11 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	achievement_description_style.offset = {
 		20,
 		0,
-		3,
+		3
 	}
 	achievement_description_style.size = {
 		grid_width - 40,
-		500,
+		500
 	}
 	achievement_description_style.font_size = 18
 	achievement_description_style.line_spacing = 1.4
@@ -431,10 +431,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	weapon_attack_info_style.offset = {
 		52,
 		0,
-		4,
+		4
 	}
 	weapon_attack_info_style.size = {
-		grid_width - 62,
+		grid_width - 62
 	}
 	weapon_attack_info_style.font_size = 20
 	weapon_attack_info_style.text_horizontal_alignment = "left"
@@ -446,10 +446,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	weapon_attack_header_style.offset = {
 		10,
 		0,
-		4,
+		4
 	}
 	weapon_attack_header_style.size = {
-		grid_width - 20,
+		grid_width - 20
 	}
 	weapon_attack_header_style.font_size = 18
 	weapon_attack_header_style.text_horizontal_alignment = "left"
@@ -461,11 +461,11 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	weapon_action_value_style.offset = {
 		0,
 		0,
-		4,
+		4
 	}
 	weapon_action_value_style.size = {
 		200,
-		240,
+		240
 	}
 	weapon_action_value_style.font_size = 22
 	weapon_action_value_style.text_horizontal_alignment = "right"
@@ -478,11 +478,11 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	rating_info_style.offset = {
 		-25,
 		10,
-		5,
+		5
 	}
 	rating_info_style.size = {
 		grid_width,
-		40,
+		40
 	}
 	rating_info_style.font_size = 18
 	rating_info_style.text_horizontal_alignment = "right"
@@ -494,11 +494,11 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	rating_header_style.offset = {
 		20,
 		10,
-		5,
+		5
 	}
 	rating_header_style.size = {
 		grid_width,
-		40,
+		40
 	}
 	rating_header_style.font_size = 18
 	rating_header_style.text_horizontal_alignment = "left"
@@ -510,11 +510,11 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	special_description_style.offset = {
 		10,
 		10,
-		3,
+		3
 	}
 	special_description_style.size = {
 		grid_width - 20,
-		500,
+		500
 	}
 	special_description_style.font_size = 16
 	special_description_style.text_horizontal_alignment = "left"
@@ -525,12 +525,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 	weapon_display_name_header_style.size = {
 		grid_width - 20,
-		50,
+		50
 	}
 	weapon_display_name_header_style.offset = {
 		10,
 		0,
-		3,
+		3
 	}
 	weapon_display_name_header_style.font_size = 35
 	weapon_display_name_header_style.text_horizontal_alignment = "left"
@@ -543,11 +543,11 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	weapon_attack_type_desc_style.offset = {
 		10,
 		10,
-		3,
+		3
 	}
 	weapon_attack_type_desc_style.size = {
 		grid_width - 80,
-		500,
+		500
 	}
 	weapon_attack_type_desc_style.font_size = 16
 	weapon_attack_type_desc_style.text_horizontal_alignment = "center"
@@ -558,12 +558,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 	weapon_attack_type_display_name_header_style.size = {
 		grid_width - 20,
-		50,
+		50
 	}
 	weapon_attack_type_display_name_header_style.offset = {
 		10,
 		0,
-		3,
+		3
 	}
 	weapon_attack_type_display_name_header_style.font_size = 40
 	weapon_attack_type_display_name_header_style.text_horizontal_alignment = "left"
@@ -573,12 +573,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	local weapon_rarity_header_style = table.clone(UIFontSettings.header_2)
 
 	weapon_rarity_header_style.size = {
-		grid_width - 20,
+		grid_width - 20
 	}
 	weapon_rarity_header_style.offset = {
 		10,
 		40,
-		3,
+		3
 	}
 	weapon_rarity_header_style.font_size = 30
 	weapon_rarity_header_style.text_horizontal_alignment = "left"
@@ -590,7 +590,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	rating_icon_style.offset = {
 		0,
 		0,
-		3,
+		3
 	}
 	rating_icon_style.font_size = 80
 	rating_icon_style.text_horizontal_alignment = "left"
@@ -603,7 +603,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	rating_value_style.offset = {
 		0,
 		0,
-		3,
+		3
 	}
 	rating_value_style.font_size = 60
 	rating_value_style.text_horizontal_alignment = "left"
@@ -615,7 +615,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	weapon_keyword_expanded_header_style.offset = {
 		0,
 		0,
-		3,
+		3
 	}
 	weapon_keyword_expanded_header_style.font_size = 25
 	weapon_keyword_expanded_header_style.text_horizontal_alignment = "left"
@@ -627,12 +627,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 	weapon_keyword_desc_style.size = {
 		grid_width * 0.5 - 10,
-		400,
+		400
 	}
 	weapon_keyword_desc_style.offset = {
 		0,
 		0,
-		3,
+		3
 	}
 	weapon_keyword_desc_style.font_size = 16
 	weapon_keyword_desc_style.text_horizontal_alignment = "left"
@@ -643,12 +643,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 	weapon_description_desc_style.size = {
 		grid_width - 10,
-		400,
+		400
 	}
 	weapon_description_desc_style.offset = {
 		0,
 		80,
-		3,
+		3
 	}
 	weapon_description_desc_style.font_size = 18
 	weapon_description_desc_style.text_horizontal_alignment = "left"
@@ -660,10 +660,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	damage_grid_x_header_style.offset = {
 		0,
 		0,
-		3,
+		3
 	}
 	damage_grid_x_header_style.size = {
-		150,
+		150
 	}
 	damage_grid_x_header_style.font_size = 18
 	damage_grid_x_header_style.horizontal_alignment = "right"
@@ -679,10 +679,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	damage_grid_y_header_style.offset = {
 		0,
 		0,
-		3,
+		3
 	}
 	damage_grid_y_header_style.size = {
-		500,
+		500
 	}
 	damage_grid_y_header_style.font_size = 18
 	damage_grid_y_header_style.horizontal_alignment = "right"
@@ -698,10 +698,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	damage_stat_style.offset = {
 		0,
 		5,
-		3,
+		3
 	}
 	damage_stat_style.size = {
-		150,
+		150
 	}
 	damage_stat_style.font_size = 20
 	damage_stat_style.horizontal_alignment = "right"
@@ -715,10 +715,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 	damage_legend_style.offset = {
 		0,
 		0,
-		3,
+		3
 	}
 	damage_legend_style.size = {
-		600,
+		600
 	}
 	damage_legend_style.font_size = 18
 	damage_legend_style.horizontal_alignment = "right"
@@ -736,10 +736,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
-				color = Color.terminal_frame(25, true),
-			},
+				color = Color.terminal_frame(25, true)
+			}
 		}
 	end
 
@@ -780,7 +780,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 		for ii = 1, #attack_data_def, 3 do
 			y_axis_headers[#y_axis_headers + 1] = {
 				name = attack_data_def[ii],
-				display_name = UISettings.weapon_stats_armor_types[attack_data_def[ii]],
+				display_name = UISettings.weapon_stats_armor_types[attack_data_def[ii]]
 			}
 		end
 
@@ -804,13 +804,13 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							-20 - pass_grid_size[1] * (ii - 1),
 							25 + pass_grid_size[2] * (jj - 1),
-							1,
+							1
 						},
 						size = pass_grid_size,
 						color = Color.terminal_text_body(255, true),
 						base_color = Color.terminal_text_body(60, true),
-						selected_color = Color.terminal_corner_selected(128, 0),
-					},
+						selected_color = Color.terminal_corner_selected(128, 0)
+					}
 				}
 				pass_templates[#pass_templates + 1] = {
 					pass_type = "texture",
@@ -823,13 +823,13 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							-20 - pass_grid_size[1] * (ii - 1),
 							25 + pass_grid_size[2] * (jj - 1),
-							2,
+							2
 						},
 						size = pass_grid_size,
 						color = Color.terminal_text_body(255, true),
 						base_color = Color.terminal_text_body(60, true),
-						selected_color = Color.terminal_corner_selected(128, 0),
-					},
+						selected_color = Color.terminal_corner_selected(128, 0)
+					}
 				}
 				pass_templates[#pass_templates + 1] = {
 					pass_type = "texture",
@@ -842,18 +842,18 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							-20 - pass_grid_size[1] * (ii - 1),
 							25 + pass_grid_size[2] * (jj - 1),
-							2,
+							2
 						},
 						size = pass_grid_size,
-						color = Color.terminal_corner_selected(0, 0),
-					},
+						color = Color.terminal_corner_selected(0, 0)
+					}
 				}
 				pass_templates[#pass_templates + 1] = {
 					pass_type = "hotspot",
 					content_id = "hotspot_" .. (ii - 1) * num_y_axis_headers + jj,
 					content = table.merge(table.clone(default_button_content), {
 						x = ii,
-						y = jj,
+						y = jj
 					}),
 					style = {
 						horizontal_alignment = "right",
@@ -861,16 +861,16 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							-20 - pass_grid_size[1] * (ii - 1),
 							25 + pass_grid_size[2] * (jj - 1),
-							2,
+							2
 						},
 						size = pass_grid_size,
 						color = {
 							255,
 							math.random(255),
 							math.random(255),
-							math.random(255),
-						},
-					},
+							math.random(255)
+						}
+					}
 				}
 				pass_templates[#pass_templates + 1] = {
 					pass_type = "text",
@@ -881,9 +881,9 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							-15 - pass_grid_size[1] * (ii - 1),
 							damage_stat_style.font_size * 0.5 + pass_grid_size[2] * 0.5 + pass_grid_size[2] * (jj - 1),
-							2,
-						},
-					}),
+							2
+						}
+					})
 				}
 			end
 		end
@@ -900,9 +900,9 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					offset = {
 						-15 - pass_grid_size[1] * (ii - 1),
 						-5,
-						3,
-					},
-				}),
+						3
+					}
+				})
 			}
 		end
 
@@ -918,9 +918,9 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					offset = {
 						-pass_grid_size[1] * num_x_axis_headers - 30,
 						45 + pass_grid_size[2] * (ii - 1),
-						3,
-					},
-				}),
+						3
+					}
+				})
 			}
 		end
 
@@ -933,9 +933,9 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				offset = {
 					-20,
 					pass_grid_size[2] * num_y_axis_headers + 35,
-					2,
-				},
-			}),
+					2
+				}
+			})
 		}
 		pass_templates[#pass_templates + 1] = {
 			pass_type = "texture",
@@ -948,14 +948,14 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				offset = {
 					-15,
 					20,
-					2,
+					2
 				},
 				size = {
 					pass_grid_size[1] * num_x_axis_headers + 10,
-					pass_grid_size[2] * num_y_axis_headers + 10,
+					pass_grid_size[2] * num_y_axis_headers + 10
 				},
-				color = Color.terminal_text_body(60, true),
-			},
+				color = Color.terminal_text_body(60, true)
+			}
 		}
 
 		return pass_templates
@@ -1044,10 +1044,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					offset = {
 						0,
 						0,
-						1,
-					},
+						1
+					}
 				}),
-				value = Localize("loc_weapon_stats_attack_pattern"),
+				value = Localize("loc_weapon_stats_attack_pattern")
 			},
 			{
 				pass_type = "texture",
@@ -1059,15 +1059,15 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					vertical_alignment = "top",
 					size = {
 						grid_width - 50,
-						2,
+						2
 					},
 					offset = {
 						25,
 						50,
-						3,
+						3
 					},
-					color = Color.terminal_frame(128, true),
-				},
+					color = Color.terminal_frame(128, true)
+				}
 			},
 			{
 				pass_type = "text",
@@ -1082,14 +1082,14 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						0,
 						255,
 						255,
-						255,
+						255
 					},
 					offset = {
 						0,
 						80,
-						0,
-					},
-				}),
+						0
+					}
+				})
 			},
 			{
 				pass_type = "text",
@@ -1104,14 +1104,14 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						0,
 						255,
 						255,
-						255,
+						255
 					},
 					offset = {
 						0,
 						80,
-						0,
-					},
-				}),
+						0
+					}
+				})
 			},
 			{
 				pass_type = "text",
@@ -1126,14 +1126,14 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						0,
 						255,
 						255,
-						255,
+						255
 					},
 					offset = {
 						0,
 						80,
-						0,
-					},
-				}),
+						0
+					}
+				})
 			},
 			{
 				pass_type = "text",
@@ -1148,14 +1148,14 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						0,
 						255,
 						255,
-						255,
+						255
 					},
 					offset = {
 						0,
 						80,
-						0,
-					},
-				}),
+						0
+					}
+				})
 			},
 			{
 				pass_type = "texture",
@@ -1167,15 +1167,15 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					vertical_alignment = "top",
 					size = {
 						100,
-						2,
+						2
 					},
 					offset = {
 						0,
 						105,
-						3,
+						3
 					},
-					color = Color.terminal_frame(0, true),
-				},
+					color = Color.terminal_frame(0, true)
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1187,15 +1187,15 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					vertical_alignment = "top",
 					size = {
 						100,
-						2,
+						2
 					},
 					offset = {
 						0,
 						105,
-						3,
+						3
 					},
-					color = Color.terminal_frame(0, true),
-				},
+					color = Color.terminal_frame(0, true)
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1207,15 +1207,15 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					vertical_alignment = "top",
 					size = {
 						100,
-						2,
+						2
 					},
 					offset = {
 						0,
 						105,
-						3,
+						3
 					},
-					color = Color.terminal_frame(0, true),
-				},
+					color = Color.terminal_frame(0, true)
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1227,15 +1227,15 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					vertical_alignment = "top",
 					size = {
 						100,
-						2,
+						2
 					},
 					offset = {
 						0,
 						105,
-						3,
+						3
 					},
-					color = Color.terminal_frame(0, true),
-				},
+					color = Color.terminal_frame(0, true)
+				}
 			},
 			{
 				pass_type = "rect",
@@ -1245,15 +1245,15 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					vertical_alignment = "top",
 					size = {
 						2,
-						25,
+						25
 					},
 					offset = {
 						-16,
 						160,
-						0,
+						0
 					},
-					color = Color.terminal_frame(255, true),
-				},
+					color = Color.terminal_frame(255, true)
+				}
 			},
 			{
 				pass_type = "rect",
@@ -1263,15 +1263,15 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					vertical_alignment = "top",
 					size = {
 						100,
-						2,
+						2
 					},
 					offset = {
 						0,
 						185,
-						0,
+						0
 					},
-					color = Color.terminal_frame(255, true),
-				},
+					color = Color.terminal_frame(255, true)
+				}
 			},
 			{
 				pass_type = "rect",
@@ -1281,15 +1281,15 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					vertical_alignment = "top",
 					size = {
 						2,
-						25,
+						25
 					},
 					offset = {
 						-16,
 						185,
-						0,
+						0
 					},
-					color = Color.terminal_frame(255, true),
-				},
+					color = Color.terminal_frame(255, true)
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1302,14 +1302,14 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					offset = {
 						-16,
 						111,
-						1,
+						1
 					},
 					size = {
 						50,
-						50,
+						50
 					},
-					color = Color.terminal_corner_selected(128, 0),
-				},
+					color = Color.terminal_corner_selected(128, 0)
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1322,14 +1322,14 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					offset = {
 						-16,
 						111,
-						2,
+						2
 					},
 					size = {
 						50,
-						50,
+						50
 					},
-					color = Color.terminal_corner_selected(128, 0),
-				},
+					color = Color.terminal_corner_selected(128, 0)
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1342,15 +1342,15 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					offset = {
 						-16,
 						111,
-						2,
+						2
 					},
 					size = {
 						50,
-						50,
+						50
 					},
-					color = Color.terminal_corner_selected(60, 0),
-				},
-			},
+					color = Color.terminal_corner_selected(60, 0)
+				}
+			}
 		}
 
 		local displayed_attacks = weapon_template.displayed_attacks
@@ -1400,22 +1400,22 @@ local function _generate_blueprints_function(grid_size, optional_item)
 									vertical_alignment = "top",
 									size = {
 										32,
-										32,
+										32
 									},
 									offset = {
 										-16 + offset_x,
 										120,
-										1,
+										1
 									},
 									color = Color.terminal_text_body(255, true),
 									selected_color = Color.white(255, true),
-									base_color = Color.terminal_text_body(255, true),
+									base_color = Color.terminal_text_body(255, true)
 								},
 								change_function = function (content, style, animations, dt)
 									local hotspot = content["icon_hotspot_" .. index .. "_" .. ii]
 
 									style.color = (hotspot.is_hover or hotspot.is_selected) and style.selected_color or style.base_color
-								end,
+								end
 							}
 							pass_templates[#pass_templates + 1] = {
 								pass_type = "hotspot",
@@ -1428,13 +1428,13 @@ local function _generate_blueprints_function(grid_size, optional_item)
 									offset = {
 										-16 + offset_x,
 										120,
-										1,
+										1
 									},
 									size = {
 										32,
-										32,
-									},
-								},
+										32
+									}
+								}
 							}
 						end
 					else
@@ -1451,22 +1451,22 @@ local function _generate_blueprints_function(grid_size, optional_item)
 								vertical_alignment = "top",
 								size = {
 									32,
-									32,
+									32
 								},
 								offset = {
 									-16 + base_offset,
 									120,
-									1,
+									1
 								},
 								color = Color.terminal_text_body(255, true),
 								selected_color = Color.white(255, true),
-								base_color = Color.terminal_text_body(255, true),
+								base_color = Color.terminal_text_body(255, true)
 							},
 							change_function = function (content, style, animations, dt)
 								local hotspot = content["icon_hotspot_" .. index .. "_1"]
 
 								style.color = (hotspot.is_hover or hotspot.is_selected) and style.selected_color or style.base_color
-							end,
+							end
 						}
 						pass_templates[#pass_templates + 1] = {
 							pass_type = "hotspot",
@@ -1479,13 +1479,13 @@ local function _generate_blueprints_function(grid_size, optional_item)
 								offset = {
 									-16 + base_offset,
 									120,
-									1,
+									1
 								},
 								size = {
 									32,
-									32,
-								},
-							},
+									32
+								}
+							}
 						}
 					end
 
@@ -1518,7 +1518,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 	local function _generate_weapon_attack_action_passes(action_pass_optional_item)
 		local pass_templates = {
-			_generate_background_pass(),
+			_generate_background_pass()
 		}
 
 		if not action_pass_optional_item then
@@ -1567,15 +1567,15 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					offset = {
 						-step * (num_entries - 1) * 0.5 + (ii - 1) * step,
 						23 + (has_sub_icon and -4.5 or 0),
-						50,
+						50
 					},
 					size = {
 						20,
-						20,
+						20
 					},
 					color = Color.terminal_icon(255, true),
-					visible = has_icon,
-				},
+					visible = has_icon
+				}
 			}
 			pass_templates[#pass_templates + 1] = {
 				pass_type = "texture",
@@ -1587,16 +1587,16 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					vertical_alignment = "top",
 					size = {
 						20,
-						8,
+						8
 					},
 					offset = {
 						-step * (num_entries - 1) * 0.5 + (ii - 1) * step,
 						40.5,
-						50,
+						50
 					},
 					color = Color.terminal_icon(255, true),
-					visible = has_sub_icon,
-				},
+					visible = has_sub_icon
+				}
 			}
 			pass_templates[#pass_templates + 1] = {
 				pass_type = "text",
@@ -1611,10 +1611,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					offset = {
 						-step * (num_entries - 1) * 0.5 + (ii - 1) * step,
 						0,
-						50,
+						50
 					},
-					text_color = Color.terminal_text_body_sub_header(255, true),
-				}),
+					text_color = Color.terminal_text_body_sub_header(255, true)
+				})
 			}
 			pass_templates[#pass_templates + 1] = {
 				pass_type = "text",
@@ -1629,10 +1629,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					offset = {
 						-step * (num_entries - 1) * 0.5 + (ii - 1) * step,
 						20,
-						50,
+						50
 					},
-					text_color = Color.white(255, true),
-				}),
+					text_color = Color.white(255, true)
+				})
 			}
 		end
 
@@ -1641,7 +1641,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 	local function _generate_weapon_stats_passes(action_pass_optional_item)
 		local pass_templates = {
-			_generate_background_pass(),
+			_generate_background_pass()
 		}
 
 		for ii = 1, 5 do
@@ -1662,16 +1662,16 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					offset = {
 						20 + base_offset_x,
 						12 + base_offset_y,
-						3,
+						3
 					},
 					text_color = Color.terminal_text_body(255, true),
 					preview_color = Color.ui_blue_light(25, 55, true),
 					color = Color.red(255, true),
 					size = {
 						weapon_stat_text_style.size[1],
-						30,
-					},
-				}),
+						30
+					}
+				})
 			}
 			pass_templates[#pass_templates + 1] = {
 				pass_type = "text",
@@ -1684,10 +1684,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					offset = {
 						20 + base_offset_x,
 						20 + base_offset_y + bar_offset_y + 8,
-						3,
+						3
 					},
-					text_color = Color.terminal_text_header(255, true),
-				}),
+					text_color = Color.terminal_text_header(255, true)
+				})
 			}
 			pass_templates[#pass_templates + 1] = {
 				pass_type = "rect",
@@ -1697,14 +1697,14 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					offset = {
 						22 + base_offset_x + bar_offset,
 						20 + base_offset_y + bar_offset_y,
-						3,
+						3
 					},
 					size = {
 						bar_width,
-						bar_height,
+						bar_height
 					},
-					color = Color.black(200, true),
-				},
+					color = Color.black(200, true)
+				}
 			}
 			pass_templates[#pass_templates + 1] = {
 				pass_type = "rect",
@@ -1714,14 +1714,14 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					offset = {
 						20 + base_offset_x + bar_offset,
 						20 + base_offset_y + bar_offset_y - 2,
-						2,
+						2
 					},
 					size = {
 						bar_width + 4,
-						bar_height + bar_height * 0.5,
+						bar_height + bar_height * 0.5
 					},
-					color = Color.terminal_frame(200, true),
-				},
+					color = Color.terminal_frame(200, true)
+				}
 			}
 			pass_templates[#pass_templates + 1] = {
 				pass_type = "rect",
@@ -1731,14 +1731,14 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					offset = {
 						0,
 						20 + base_offset_y + bar_offset_y,
-						6,
+						6
 					},
 					size = {
 						2,
-						bar_height,
+						bar_height
 					},
-					color = Color.terminal_frame(200, true),
-				},
+					color = Color.terminal_frame(200, true)
+				}
 			}
 			pass_templates[#pass_templates + 1] = {
 				pass_type = "rect",
@@ -1748,14 +1748,14 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					offset = {
 						0,
 						20 + base_offset_y + bar_offset_y,
-						6,
+						6
 					},
 					size = {
 						2,
-						bar_height,
+						bar_height
 					},
-					color = Color.terminal_frame(200, true),
-				},
+					color = Color.terminal_frame(200, true)
+				}
 			}
 			pass_templates[#pass_templates + 1] = {
 				pass_type = "texture",
@@ -1766,14 +1766,14 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					offset = {
 						22 + base_offset_x + bar_offset,
 						20 + base_offset_y + bar_offset_y,
-						4,
+						4
 					},
 					size = {
 						bar_width,
-						bar_height,
+						bar_height
 					},
-					color = Color.terminal_stat_bar_background(255, true),
-				},
+					color = Color.terminal_stat_bar_background(255, true)
+				}
 			}
 			pass_templates[#pass_templates + 1] = {
 				pass_type = "texture",
@@ -1784,16 +1784,16 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					offset = {
 						22 + base_offset_x + bar_offset,
 						20 + base_offset_y + bar_offset_y,
-						5,
+						5
 					},
 					size = {
 						bar_width,
-						bar_height,
+						bar_height
 					},
 					default_color = Color.terminal_stat_bar_foreground(255, true),
 					preview_color = Color.ui_blue_light(255, true),
-					color = Color.terminal_stat_bar_foreground(255, true),
-				},
+					color = Color.terminal_stat_bar_foreground(255, true)
+				}
 			}
 			pass_templates[#pass_templates + 1] = {
 				pass_type = "hotspot",
@@ -1803,13 +1803,13 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					offset = {
 						20 + base_offset_x,
 						60 * ((ii - 1) % 2),
-						0,
+						0
 					},
 					size = {
 						150,
-						70,
-					},
-				},
+						70
+					}
+				}
 			}
 			pass_templates[#pass_templates + 1] = {
 				pass_type = "texture",
@@ -1822,18 +1822,18 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					offset = {
 						15 + base_offset_x,
 						base_offset_y + 8,
-						0,
+						0
 					},
 					size = {
 						160,
-						65,
+						65
 					},
 					color = Color.terminal_corner_selected(0, true),
 					size_addition = {
 						0,
-						0,
-					},
-				},
+						0
+					}
+				}
 			}
 			pass_templates[#pass_templates + 1] = {
 				pass_type = "texture",
@@ -1846,14 +1846,14 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					offset = {
 						15 + base_offset_x,
 						base_offset_y + 8,
-						1,
+						1
 					},
 					size = {
 						160,
-						65,
+						65
 					},
-					color = Color.terminal_corner_selected(0, true),
-				},
+					color = Color.terminal_corner_selected(0, true)
+				}
 			}
 			pass_templates[#pass_templates + 1] = {
 				pass_type = "texture",
@@ -1866,14 +1866,14 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					offset = {
 						15 + base_offset_x,
 						base_offset_y + 8,
-						2,
+						2
 					},
 					size = {
 						160,
-						65,
+						65
 					},
-					color = Color.terminal_corner_selected(0, true),
-				},
+					color = Color.terminal_corner_selected(0, true)
+				}
 			}
 		end
 
@@ -1887,9 +1887,9 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				offset = {
 					360,
 					80,
-					3,
-				},
-			}),
+					3
+				}
+			})
 		}
 		pass_templates[#pass_templates + 1] = {
 			content_id = "hotspot_6",
@@ -1899,13 +1899,13 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				offset = {
 					360,
 					60,
-					0,
+					0
 				},
 				size = {
 					150,
-					70,
-				},
-			},
+					70
+				}
+			}
 		}
 		pass_templates[#pass_templates + 1] = {
 			pass_type = "texture",
@@ -1918,18 +1918,18 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				offset = {
 					355,
 					58,
-					0,
+					0
 				},
 				size = {
 					160,
-					65,
+					65
 				},
 				color = Color.terminal_corner_selected(0, true),
 				size_addition = {
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		}
 		pass_templates[#pass_templates + 1] = {
 			pass_type = "texture",
@@ -1942,14 +1942,14 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				offset = {
 					355,
 					58,
-					1,
+					1
 				},
 				size = {
 					160,
-					65,
+					65
 				},
-				color = Color.terminal_corner_selected(0, true),
-			},
+				color = Color.terminal_corner_selected(0, true)
+			}
 		}
 		pass_templates[#pass_templates + 1] = {
 			pass_type = "texture",
@@ -1962,14 +1962,14 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				offset = {
 					355,
 					58,
-					2,
+					2
 				},
 				size = {
 					160,
-					65,
+					65
 				},
-				color = Color.terminal_corner_selected(0, true),
-			},
+				color = Color.terminal_corner_selected(0, true)
+			}
 		}
 		pass_templates[#pass_templates + 1] = {
 			pass_type = "texture",
@@ -1982,20 +1982,20 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				offset = {
 					0,
 					10,
-					52,
+					52
 				},
 				size_addition = {
 					20,
-					30,
+					30
 				},
-				color = Color.terminal_corner_selected(nil, true),
+				color = Color.terminal_corner_selected(nil, true)
 			},
 			change_function = function (content, style)
 				style.color[1] = 200 + 55 * math.cos(3 * Application.time_since_launch())
 			end,
 			visibility_function = function (content, style)
 				return not not content.show_glow
-			end,
+			end
 		}
 		pass_templates[#pass_templates + 1] = {
 			pass_type = "texture",
@@ -2008,20 +2008,20 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				offset = {
 					0,
 					10,
-					52,
+					52
 				},
 				size_addition = {
 					5,
-					5,
+					5
 				},
-				color = Color.terminal_corner_selected(nil, true),
+				color = Color.terminal_corner_selected(nil, true)
 			},
 			change_function = function (content, style)
 				style.color[1] = 50 + 5 * math.cos(3 * Application.time_since_launch())
 			end,
 			visibility_function = function (content, style)
 				return not not content.show_glow
-			end,
+			end
 		}
 
 		return pass_templates
@@ -2152,7 +2152,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 		equipped = {
 			size = {
 				grid_width,
-				50,
+				50
 			},
 			pass_template = {
 				_generate_background_pass(),
@@ -2161,14 +2161,14 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					style_id = "display_name",
 					value_id = "display_name",
 					style = equipped_display_name_style,
-					value = Localize("loc_item_information_equipped_label"),
-				},
-			},
+					value = Localize("loc_item_information_equipped_label")
+				}
+			}
 		},
 		weapon_header = {
 			size = {
 				grid_width,
-				120,
+				120
 			},
 			pass_template = {
 				_generate_background_pass(),
@@ -2183,45 +2183,45 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							0,
 							0,
-							1,
+							1
 						},
-						color = Color.white(255, true),
-					},
+						color = Color.white(255, true)
+					}
 				},
 				{
 					pass_type = "texture",
 					style_id = "icon",
-					value = "content/ui/materials/icons/weapons/hud/combat_blade_01",
+					value = "content/ui/materials/icons/weapons/hud/debug_primary",
 					value_id = "icon",
 					style = {
 						horizontal_alignment = "right",
 						vertical_alignment = "top",
 						size = {
 							weapon_header_icon_width,
-							weapon_header_icon_height,
+							weapon_header_icon_height
 						},
 						offset = {
 							-20,
 							30,
-							3,
+							3
 						},
 						color = Color.terminal_icon(nil, true),
-						material_values = {},
-					},
+						material_values = {}
+					}
 				},
 				{
 					pass_type = "text",
 					style_id = "sub_display_name",
 					value = "n/a",
 					value_id = "sub_display_name",
-					style = weapon_sub_display_name_style,
+					style = weapon_sub_display_name_style
 				},
 				{
 					pass_type = "text",
 					style_id = "rarity_name",
 					value = "n/a",
 					value_id = "rarity_name",
-					style = weapon_rarity_name_style,
+					style = weapon_rarity_name_style
 				},
 				{
 					pass_type = "texture",
@@ -2234,14 +2234,14 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							20,
 							44,
-							50,
+							50
 						},
 						size = {
 							24,
-							24,
+							24
 						},
-						color = Color.terminal_icon(255, true),
-					},
+						color = Color.terminal_icon(255, true)
+					}
 				},
 				{
 					pass_type = "text",
@@ -2257,15 +2257,15 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							50,
 							44,
-							50,
+							50
 						},
 						size = {
 							200,
-							20,
+							20
 						},
-						text_color = Color.terminal_icon(255, true),
-					}),
-				},
+						text_color = Color.terminal_icon(255, true)
+					})
+				}
 			},
 			init = function (parent, widget, element, callback_name, _, ui_renderer)
 				local content = widget.content
@@ -2279,7 +2279,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 				content.sub_display_name = sub_display_name
 				content.rarity_name = rarity_name
-				content.icon = item.hud_icon or "content/ui/materials/icons/weapons/hud/combat_blade_01"
+				content.icon = item.hud_icon or "content/ui/materials/icons/weapons/hud/debug_primary"
 
 				local rarity_name_style = style.rarity_name
 				local height_margin = -2
@@ -2310,16 +2310,16 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 				style.gradient_background.color = table.clone(rarity_color_dark)
 				style.gradient_background.material_values = {
-					invert = 1,
+					invert = 1
 				}
 				style.background.visible = not not element.add_background
 				style.rarity_name.text_color = table.clone(rarity_color)
-			end,
+			end
 		},
 		item_header = {
 			size = {
 				grid_width,
-				100,
+				100
 			},
 			size_function = function (parent, element, ui_renderer)
 				local item = element.item
@@ -2329,7 +2329,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 				return {
 					grid_width,
-					entry_height,
+					entry_height
 				}
 			end,
 			pass_template = {
@@ -2345,10 +2345,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							0,
 							-10,
-							1,
+							1
 						},
-						color = Color.terminal_grid_background(255, true),
-					},
+						color = Color.terminal_grid_background(255, true)
+					}
 				},
 				{
 					pass_type = "texture",
@@ -2361,25 +2361,25 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							0,
 							0,
-							1,
+							1
 						},
-						color = Color.black(47, true),
-					},
+						color = Color.black(47, true)
+					}
 				},
 				{
 					pass_type = "text",
 					style_id = "display_name",
 					value = "n/a",
 					value_id = "display_name",
-					style = item_display_name_style,
+					style = item_display_name_style
 				},
 				{
 					pass_type = "text",
 					style_id = "sub_display_name",
 					value = "n/a",
 					value_id = "sub_display_name",
-					style = item_sub_display_name_style,
-				},
+					style = item_sub_display_name_style
+				}
 			},
 			init = function (parent, widget, element, callback_name, _, ui_renderer)
 				local content = widget.content
@@ -2402,13 +2402,13 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 					style.gradient_background.color = table.clone(rarity_color_dark)
 					style.gradient_background.material_values = {
-						invert = 1,
+						invert = 1
 					}
 					sub_display_name_style.text_color = table.clone(rarity_color)
 				else
 					style.gradient_background.color = Color.terminal_grid_background(127, true)
 					style.gradient_background.material_values = {
-						invert = 1,
+						invert = 1
 					}
 				end
 
@@ -2418,12 +2418,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				local display_name_text_height = Text.text_height(ui_renderer, display_name, item_display_name_style, nil, true)
 
 				sub_display_name_style.offset[2] = sub_display_name_style.offset[2] + display_name_text_height
-			end,
+			end
 		},
 		character_title_header = {
 			size = {
 				grid_width,
-				100,
+				100
 			},
 			size_function = function (parent, element, ui_renderer)
 				local item = element.item
@@ -2435,7 +2435,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 				return {
 					grid_width,
-					entry_height,
+					entry_height
 				}
 			end,
 			pass_template = {
@@ -2451,10 +2451,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							0,
 							-15,
-							1,
+							1
 						},
-						color = Color.terminal_grid_background(255, true),
-					},
+						color = Color.terminal_grid_background(255, true)
+					}
 				},
 				{
 					pass_type = "texture",
@@ -2467,25 +2467,25 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							0,
 							0,
-							1,
+							1
 						},
-						color = Color.black(47, true),
-					},
+						color = Color.black(47, true)
+					}
 				},
 				{
 					pass_type = "text",
 					style_id = "display_name",
 					value = "n/a",
 					value_id = "display_name",
-					style = item_display_name_style,
+					style = item_display_name_style
 				},
 				{
 					pass_type = "text",
 					style_id = "sub_display_name",
 					value = "n/a",
 					value_id = "sub_display_name",
-					style = item_sub_display_name_style,
-				},
+					style = item_sub_display_name_style
+				}
 			},
 			init = function (parent, widget, element, callback_name, _, ui_renderer)
 				local content = widget.content
@@ -2509,13 +2509,13 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 					style.gradient_background.color = table.clone(rarity_color_dark)
 					style.gradient_background.material_values = {
-						invert = 1,
+						invert = 1
 					}
 					style.sub_display_name.text_color = table.clone(rarity_color)
 				else
 					style.gradient_background.color = Color.terminal_grid_background(127, true)
 					style.gradient_background.material_values = {
-						invert = 1,
+						invert = 1
 					}
 				end
 
@@ -2525,12 +2525,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				local display_name_text_height = Text.text_height(ui_renderer, display_name, item_display_name_style, nil, true)
 
 				sub_display_name_style.offset[2] = sub_display_name_style.offset[2] + display_name_text_height
-			end,
+			end
 		},
 		weapon_skin_icon = {
 			size = {
 				grid_width,
-				200,
+				200
 			},
 			pass_template = {
 				{
@@ -2543,17 +2543,17 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "bottom",
 						size = {
 							grid_width,
-							190,
+							190
 						},
 						offset = {
 							0,
 							0,
-							3,
+							3
 						},
 						color = Color.white(255, true),
-						material_values = {},
+						material_values = {}
 					},
-					visibility_function = _generated_icon_visibility,
+					visibility_function = _generated_icon_visibility
 				},
 				{
 					pass_type = "rotated_texture",
@@ -2565,23 +2565,23 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "center",
 						size = {
 							80,
-							80,
+							80
 						},
 						color = {
 							60,
 							160,
 							160,
-							160,
+							160
 						},
 						offset = {
 							0,
 							10,
-							3,
-						},
+							3
+						}
 					},
 					visibility_function = _loading_icon_visibility,
-					change_function = _loading_icon_change,
-				},
+					change_function = _loading_icon_change
+				}
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
@@ -2597,8 +2597,8 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					local context = {
 						size = {
 							grid_width * 2,
-							380,
-						},
+							380
+						}
 					}
 
 					content.icon_load_id = Managers.ui:load_item_icon(visual_item, cb, context)
@@ -2623,12 +2623,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 					content.icon_load_id = nil
 				end
-			end,
+			end
 		},
 		cosmetic_gear_icon = {
 			size = {
 				grid_width,
-				350,
+				350
 			},
 			pass_template = {
 				_generate_background_pass(),
@@ -2642,17 +2642,17 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "bottom",
 						size = {
 							grid_width,
-							350,
+							350
 						},
 						offset = {
 							0,
 							0,
-							3,
+							3
 						},
 						color = Color.white(255, true),
-						material_values = {},
+						material_values = {}
 					},
-					visibility_function = _generated_icon_visibility,
+					visibility_function = _generated_icon_visibility
 				},
 				{
 					pass_type = "rotated_texture",
@@ -2664,23 +2664,23 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "center",
 						size = {
 							80,
-							80,
+							80
 						},
 						color = {
 							60,
 							160,
 							160,
-							160,
+							160
 						},
 						offset = {
 							0,
 							0,
-							3,
-						},
+							3
+						}
 					},
 					visibility_function = _loading_icon_visibility,
-					change_function = _loading_icon_change,
-				},
+					change_function = _loading_icon_change
+				}
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
@@ -2714,8 +2714,8 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						companion_animation_event = item_companion_animation_event,
 						size = {
 							grid_width,
-							350,
-						},
+							350
+						}
 					}
 					local cb = callback(_apply_live_item_icon_cb_func, widget)
 
@@ -2741,12 +2741,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 					content.icon_load_id = nil
 				end
-			end,
+			end
 		},
 		gadget_header = {
 			size = {
 				grid_width,
-				250,
+				250
 			},
 			pass_template = {
 				{
@@ -2759,17 +2759,17 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "center",
 						size = {
 							grid_width * 0.9,
-							180,
+							180
 						},
 						offset = {
 							0,
 							30,
-							3,
+							3
 						},
 						color = Color.white(255, true),
-						material_values = {},
+						material_values = {}
 					},
-					visibility_function = _generated_icon_visibility,
+					visibility_function = _generated_icon_visibility
 				},
 				{
 					pass_type = "rotated_texture",
@@ -2781,22 +2781,22 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "center",
 						size = {
 							80,
-							80,
+							80
 						},
 						color = {
 							60,
 							160,
 							160,
-							160,
+							160
 						},
 						offset = {
 							0,
 							10,
-							3,
-						},
+							3
+						}
 					},
 					visibility_function = _loading_icon_visibility,
-					change_function = _loading_icon_change,
+					change_function = _loading_icon_change
 				},
 				_generate_background_pass(),
 				{
@@ -2809,23 +2809,23 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "top",
 						size = {
 							grid_width,
-							125,
+							125
 						},
 						offset = {
 							0,
 							0,
-							1,
+							1
 						},
-						color = Color.terminal_grid_background(255, true),
-					},
+						color = Color.terminal_grid_background(255, true)
+					}
 				},
 				{
 					pass_type = "text",
 					style_id = "rarity_name",
 					value = "n/a",
 					value_id = "rarity_name",
-					style = weapon_rarity_name_style,
-				},
+					style = weapon_rarity_name_style
+				}
 			},
 			init = function (parent, widget, element, callback_name, _, ui_renderer)
 				local content = widget.content
@@ -2845,13 +2845,13 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 					style.gradient_background.color = table.clone(rarity_color_dark)
 					style.gradient_background.material_values = {
-						invert = 1,
+						invert = 1
 					}
 					rarity_name_style.text_color = table.clone(rarity_color)
 				else
 					style.gradient_background.color = Color.terminal_grid_background(127, true)
 					style.gradient_background.material_values = {
-						invert = 1,
+						invert = 1
 					}
 				end
 			end,
@@ -2864,8 +2864,8 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					local context = {
 						size = {
 							grid_width * 2,
-							400,
-						},
+							400
+						}
 					}
 
 					content.icon_load_id = Managers.ui:load_item_icon(item, cb, context)
@@ -2890,12 +2890,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 					content.icon_load_id = nil
 				end
-			end,
+			end
 		},
 		divider_line = {
 			size = {
 				grid_width,
-				1,
+				1
 			},
 			pass_template = {
 				{
@@ -2905,22 +2905,22 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "top",
 						size = {
 							grid_width,
-							1,
+							1
 						},
 						offset = {
 							0,
 							0,
-							10,
+							10
 						},
-						color = Color.terminal_grid_background(255, true),
-					},
-				},
-			},
+						color = Color.terminal_grid_background(255, true)
+					}
+				}
+			}
 		},
 		portrait_frame = {
 			size = {
 				grid_width,
-				220,
+				220
 			},
 			pass_template = {
 				_generate_background_pass(),
@@ -2934,19 +2934,19 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "center",
 						size = {
 							140,
-							160,
+							160
 						},
 						offset = {
 							0,
 							0,
-							2,
+							2
 						},
 						color = Color.white(255, true),
 						material_values = {
-							use_placeholder_texture = 1,
-						},
+							use_placeholder_texture = 1
+						}
 					},
-					visibility_function = _generated_icon_visibility,
+					visibility_function = _generated_icon_visibility
 				},
 				{
 					pass_type = "rotated_texture",
@@ -2958,23 +2958,23 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "center",
 						size = {
 							80,
-							80,
+							80
 						},
 						color = {
 							60,
 							160,
 							160,
-							160,
+							160
 						},
 						offset = {
 							0,
 							0,
-							3,
-						},
+							3
+						}
 					},
 					visibility_function = _loading_icon_visibility,
-					change_function = _loading_icon_change,
-				},
+					change_function = _loading_icon_change
+				}
 			},
 			init = function (parent, widget, element, callback_name, _, ui_renderer)
 				local content = widget.content
@@ -2994,7 +2994,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					local slot_name = slots[1]
 					local cb = callback(_apply_package_item_icon_cb_func, widget, item, "portrait_frame_texture")
 					local render_context = {
-						camera_focus_slot_name = slot_name,
+						camera_focus_slot_name = slot_name
 					}
 
 					content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context)
@@ -3019,12 +3019,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 					content.icon_load_id = nil
 				end
-			end,
+			end
 		},
 		insignia = {
 			size = {
 				grid_width,
-				220,
+				220
 			},
 			pass_template = {
 				_generate_background_pass(),
@@ -3038,19 +3038,19 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "center",
 						size = {
 							60,
-							160,
+							160
 						},
 						offset = {
 							0,
 							0,
-							2,
+							2
 						},
 						color = Color.white(255, true),
 						material_values = {
-							use_placeholder_texture = 1,
-						},
+							use_placeholder_texture = 1
+						}
 					},
-					visibility_function = _generated_icon_visibility,
+					visibility_function = _generated_icon_visibility
 				},
 				{
 					pass_type = "rotated_texture",
@@ -3062,23 +3062,23 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "center",
 						size = {
 							80,
-							80,
+							80
 						},
 						color = {
 							60,
 							160,
 							160,
-							160,
+							160
 						},
 						offset = {
 							0,
 							0,
-							3,
-						},
+							3
+						}
 					},
 					visibility_function = _loading_icon_visibility,
-					change_function = _loading_icon_change,
-				},
+					change_function = _loading_icon_change
+				}
 			},
 			init = function (parent, widget, element, callback_name, _, ui_renderer)
 				local content = widget.content
@@ -3098,7 +3098,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					local slot_name = slots[1]
 					local cb = callback(_apply_package_item_icon_cb_func, widget, item, "texture_map")
 					local render_context = {
-						camera_focus_slot_name = slot_name,
+						camera_focus_slot_name = slot_name
 					}
 
 					content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context)
@@ -3123,12 +3123,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 					content.icon_load_id = nil
 				end
-			end,
+			end
 		},
 		emote = {
 			size = {
 				grid_width,
-				220,
+				220
 			},
 			pass_template = {
 				_generate_background_pass(),
@@ -3142,19 +3142,19 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "center",
 						size = {
 							128,
-							128,
+							128
 						},
 						offset = {
 							0,
 							0,
-							2,
+							2
 						},
 						color = Color.white(255, true),
 						material_values = {
-							use_placeholder_texture = 1,
-						},
+							use_placeholder_texture = 1
+						}
 					},
-					visibility_function = _generated_icon_visibility,
+					visibility_function = _generated_icon_visibility
 				},
 				{
 					pass_type = "rotated_texture",
@@ -3166,23 +3166,23 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "center",
 						size = {
 							80,
-							80,
+							80
 						},
 						color = {
 							60,
 							160,
 							160,
-							160,
+							160
 						},
 						offset = {
 							0,
 							0,
-							3,
-						},
+							3
+						}
 					},
 					visibility_function = _loading_icon_visibility,
-					change_function = _loading_icon_change,
-				},
+					change_function = _loading_icon_change
+				}
 			},
 			init = function (parent, widget, element, callback_name, _, ui_renderer)
 				local content = widget.content
@@ -3202,7 +3202,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					local slot_name = slots[1]
 					local cb = callback(_apply_package_item_icon_cb_func, widget, item, "texture_map")
 					local render_context = {
-						camera_focus_slot_name = slot_name,
+						camera_focus_slot_name = slot_name
 					}
 					local profile = element.profile
 
@@ -3228,12 +3228,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 					content.icon_load_id = nil
 				end
-			end,
+			end
 		},
 		weapon_keywords = {
 			size = {
 				grid_width,
-				0,
+				0
 			},
 			pass_template = {
 				{
@@ -3241,7 +3241,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					style_id = "text",
 					value = "n/a",
 					value_id = "text",
-					style = weapon_keyword_style,
+					style = weapon_keyword_style
 				},
 				{
 					pass_type = "texture",
@@ -3253,14 +3253,14 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							0,
 							0,
-							10,
+							10
 						},
 						size = {
 							grid_width,
-							30,
+							30
 						},
-						color = Color.terminal_grid_background(255, true),
-					},
+						color = Color.terminal_grid_background(255, true)
+					}
 				},
 				{
 					pass_type = "texture",
@@ -3272,19 +3272,19 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							0,
 							0,
-							9,
+							9
 						},
 						size = {
 							grid_width,
-							30,
+							30
 						},
 						color = {
 							255,
 							25,
 							31,
-							24,
-						},
-					},
+							24
+						}
+					}
 				},
 				{
 					pass_type = "rect",
@@ -3292,16 +3292,16 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						horizontal_alignment = "center",
 						size = {
 							grid_width,
-							1,
+							1
 						},
 						offset = {
 							0,
 							0,
-							1,
+							1
 						},
-						color = Color.terminal_grid_background(255, true),
-					},
-				},
+						color = Color.terminal_grid_background(255, true)
+					}
+				}
 			},
 			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 				local content = widget.content
@@ -3321,12 +3321,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				local inner_frame_style = style.inner_frame
 
 				inner_frame_style.size[1] = text_width + 50
-			end,
+			end
 		},
 		weapon_stats = {
 			size = {
 				grid_width,
-				134,
+				134
 			},
 			pass_template = _generate_weapon_stats_passes(optional_item),
 			init = function (parent, widget, element, callback_name)
@@ -3347,18 +3347,18 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				content.bar_breakdown_6 = {
 					description = "loc_weapon_stats_display_base_rating_desc",
 					display_name = "loc_weapon_stats_display_base_rating",
-					name = "base_rating",
+					name = "base_rating"
 				}
 				content.gamepad_bar_matrix = {
 					{
 						1,
 						5,
-						3,
+						3
 					},
 					{
 						4,
-						2,
-					},
+						2
+					}
 				}
 				content.gamepad_selected_index = {}
 				parent._weapon_advanced_stats = weapon_stats._weapon_statistics
@@ -3445,12 +3445,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				if parent.update_bar_breakdown_data then
 					parent:update_bar_breakdown_data(stat_data)
 				end
-			end,
+			end
 		},
 		rating_info = {
 			size = {
 				grid_width,
-				0,
+				0
 			},
 			pass_template = {
 				{
@@ -3458,32 +3458,32 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					style_id = "header",
 					value = "",
 					value_id = "header",
-					style = rating_header_style,
-				},
+					style = rating_header_style
+				}
 			},
 			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 				local content = widget.content
 				local header = element.header
 
 				content.header = header or ""
-			end,
+			end
 		},
 		trait_dynamic_spacing = {
 			size = {
 				0,
-				0,
+				0
 			},
 			pass_template = {
-				_generate_background_pass(),
+				_generate_background_pass()
 			},
 			size_function = function (parent, config)
 				return config.size
-			end,
+			end
 		},
 		weapon_attack_data = {
 			size = {
 				0,
-				0,
+				0
 			},
 			pass_template = _generate_weapon_attack_action_passes(optional_item),
 			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
@@ -3522,7 +3522,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 			end,
 			size_function = function (parent, config)
 				return config.size
-			end,
+			end
 		},
 		weapon_perk = {
 			size_function = function (parent, element, ui_renderer)
@@ -3535,7 +3535,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 				return {
 					grid_width,
-					entry_height,
+					entry_height
 				}
 			end,
 			pass_template = {
@@ -3548,22 +3548,22 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "center",
 						size = {
 							20,
-							20,
+							20
 						},
 						offset = {
 							20,
 							0,
-							8,
+							8
 						},
-						color = Color.terminal_icon(255, true),
-					},
+						color = Color.terminal_icon(255, true)
+					}
 				},
 				{
 					pass_type = "text",
 					style_id = "description",
 					value = "n/a",
 					value_id = "text",
-					style = weapon_perk_style,
+					style = weapon_perk_style
 				},
 				{
 					pass_type = "texture",
@@ -3576,17 +3576,17 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							0,
 							0,
-							7,
+							7
 						},
 						size_addition = {
 							24,
-							25,
+							25
 						},
-						color = Color.terminal_corner_selected(nil, true),
+						color = Color.terminal_corner_selected(nil, true)
 					},
 					change_function = function (content, style)
 						style.color[1] = 200 + 55 * math.cos(3 * Application.time_since_launch())
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -3599,17 +3599,17 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							0,
 							0,
-							6,
+							6
 						},
 						size_addition = {
 							2,
-							2,
+							2
 						},
-						color = Color.terminal_corner_selected(nil, true),
+						color = Color.terminal_corner_selected(nil, true)
 					},
 					change_function = function (content, style)
 						style.color[1] = 50 + 5 * math.cos(3 * Application.time_since_launch())
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -3622,10 +3622,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 							255,
 							255,
 							255,
-							255,
-						},
-					}),
-				},
+							255
+						}
+					})
+				}
 			},
 			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback_name, template)
 				local content = widget.content
@@ -3670,12 +3670,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
 				return
-			end,
+			end
 		},
 		weapon_trait = {
 			size = {
 				grid_width,
-				114,
+				114
 			},
 			size_function = function (parent, element, ui_renderer)
 				local trait_item = element.trait_item
@@ -3687,7 +3687,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 				return {
 					grid_width,
-					entry_height,
+					entry_height
 				}
 			end,
 			pass_template = {
@@ -3700,21 +3700,21 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						material_values = {},
 						size = {
 							64,
-							64,
+							64
 						},
 						offset = {
 							20,
 							0,
-							8,
+							8
 						},
-						color = Color.terminal_icon(255, true),
-					},
+						color = Color.terminal_icon(255, true)
+					}
 				},
 				{
 					pass_type = "text",
 					value = "n/a",
 					value_id = "display_name",
-					style = weapon_traits_style,
+					style = weapon_traits_style
 				},
 				{
 					pass_type = "text",
@@ -3727,16 +3727,16 @@ local function _generate_blueprints_function(grid_size, optional_item)
 							255,
 							255,
 							255,
-							255,
-						},
-					}),
+							255
+						}
+					})
 				},
 				{
 					pass_type = "text",
 					style_id = "description",
 					value = "n/a",
 					value_id = "description",
-					style = weapon_traits_description_style,
+					style = weapon_traits_description_style
 				},
 				{
 					pass_type = "texture",
@@ -3749,17 +3749,17 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							0,
 							0,
-							7,
+							7
 						},
 						size_addition = {
 							20,
-							30,
+							30
 						},
-						color = Color.terminal_corner_selected(nil, true),
+						color = Color.terminal_corner_selected(nil, true)
 					},
 					change_function = function (content, style)
 						style.color[1] = 200 + 55 * math.cos(3 * Application.time_since_launch())
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -3771,19 +3771,19 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "center",
 						size_addition = {
 							2,
-							2,
+							2
 						},
 						offset = {
 							0,
 							0,
-							6,
+							6
 						},
-						color = Color.terminal_corner_selected(nil, true),
+						color = Color.terminal_corner_selected(nil, true)
 					},
 					change_function = function (content, style)
 						style.color[1] = 50 + 5 * math.cos(3 * Application.time_since_launch())
-					end,
-				},
+					end
+				}
 			},
 			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback_name, template)
 				local content = widget.content
@@ -3862,7 +3862,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
 				return
-			end,
+			end
 		},
 		gadget_trait = {
 			size_function = function (parent, element, ui_renderer)
@@ -3875,7 +3875,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 				return {
 					grid_width,
-					entry_height,
+					entry_height
 				}
 			end,
 			pass_template = {
@@ -3888,22 +3888,22 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "top",
 						size = {
 							20,
-							20,
+							20
 						},
 						offset = {
 							20,
 							0,
-							8,
+							8
 						},
-						color = Color.terminal_icon(255, true),
-					},
+						color = Color.terminal_icon(255, true)
+					}
 				},
 				{
 					pass_type = "text",
 					value = "n/a",
 					value_id = "text",
-					style = weapon_perk_style,
-				},
+					style = weapon_perk_style
+				}
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
@@ -3921,12 +3921,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
 				return
-			end,
+			end
 		},
 		description = {
 			size = {
 				grid_width,
-				114,
+				114
 			},
 			size_function = function (parent, element, ui_renderer)
 				local item = element.item
@@ -3937,7 +3937,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 				return {
 					grid_width,
-					entry_height,
+					entry_height
 				}
 			end,
 			pass_template = {
@@ -3946,8 +3946,8 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					pass_type = "text",
 					value = "n/a",
 					value_id = "description",
-					style = description_style,
-				},
+					style = description_style
+				}
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
@@ -3966,12 +3966,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
 				return
-			end,
+			end
 		},
 		obtained_header = {
 			size = {
 				grid_width,
-				114,
+				114
 			},
 			size_function = function (parent, element, ui_renderer)
 				local text = Localize("loc_item_source_obtained_title")
@@ -3980,7 +3980,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 				return {
 					grid_width,
-					entry_height,
+					entry_height
 				}
 			end,
 			pass_template = {
@@ -3988,8 +3988,8 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					pass_type = "text",
 					value = "n/a",
 					value_id = "text",
-					style = obtained_header_style,
-				},
+					style = obtained_header_style
+				}
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
@@ -3999,12 +3999,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
 				return
-			end,
+			end
 		},
 		obtained_label = {
 			size = {
 				grid_width,
-				114,
+				114
 			},
 			size_function = function (parent, element, ui_renderer)
 				local label = element.label or ""
@@ -4013,7 +4013,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 				return {
 					grid_width,
-					entry_height,
+					entry_height
 				}
 			end,
 			pass_template = {
@@ -4021,8 +4021,8 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					pass_type = "text",
 					value = "n/a",
 					value_id = "label",
-					style = obtained_label_style,
-				},
+					style = obtained_label_style
+				}
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
@@ -4035,12 +4035,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
 				return
-			end,
+			end
 		},
 		achievement_description = {
 			size = {
 				grid_width,
-				114,
+				114
 			},
 			size_function = function (parent, element, ui_renderer)
 				local description = element.description or ""
@@ -4049,7 +4049,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 				return {
 					grid_width,
-					entry_height,
+					entry_height
 				}
 			end,
 			pass_template = {
@@ -4058,8 +4058,8 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					pass_type = "text",
 					value = "n/a",
 					value_id = "description",
-					style = achievement_description_style,
-				},
+					style = achievement_description_style
+				}
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
@@ -4072,12 +4072,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
 				return
-			end,
+			end
 		},
 		weapon_skin_requirements = {
 			size = {
 				grid_width,
-				114,
+				114
 			},
 			size_function = function (parent, element, ui_renderer)
 				local item = element.item
@@ -4087,7 +4087,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 				return {
 					grid_width,
-					entry_height,
+					entry_height
 				}
 			end,
 			pass_template = {
@@ -4095,8 +4095,8 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					pass_type = "text",
 					value = "n/a",
 					value_id = "description",
-					style = weapon_skin_requirement_style,
-				},
+					style = weapon_skin_requirement_style
+				}
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
@@ -4110,12 +4110,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
 				return
-			end,
+			end
 		},
 		gear_requirements = {
 			size = {
 				grid_width,
-				114,
+				114
 			},
 			size_function = function (parent, element, ui_renderer)
 				local item = element.item
@@ -4125,7 +4125,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 				return {
 					grid_width,
-					entry_height,
+					entry_height
 				}
 			end,
 			pass_template = {
@@ -4133,8 +4133,8 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					pass_type = "text",
 					value = "n/a",
 					value_id = "description",
-					style = weapon_skin_requirement_style,
-				},
+					style = weapon_skin_requirement_style
+				}
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
@@ -4148,12 +4148,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
 				return
-			end,
+			end
 		},
 		gear_requirement_header = {
 			size = {
 				grid_width,
-				36,
+				36
 			},
 			size_function = function (parent, element, ui_renderer)
 				local item = element.item
@@ -4165,7 +4165,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 				return {
 					grid_width,
-					entry_height,
+					entry_height
 				}
 			end,
 			pass_template = {
@@ -4173,8 +4173,8 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					pass_type = "text",
 					value = "n/a",
 					value_id = "text",
-					style = weapon_skin_requirement_header_style,
-				},
+					style = weapon_skin_requirement_header_style
+				}
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
@@ -4184,12 +4184,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				local item = element.item
 
 				content.text = Localize("loc_item_equippable_on_header")
-			end,
+			end
 		},
 		weapon_skin_requirement_header = {
 			size = {
 				grid_width,
-				36,
+				36
 			},
 			size_function = function (parent, element, ui_renderer)
 				local item = element.item
@@ -4201,7 +4201,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 				return {
 					grid_width,
-					entry_height,
+					entry_height
 				}
 			end,
 			pass_template = {
@@ -4209,8 +4209,8 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					pass_type = "text",
 					value = "n/a",
 					value_id = "text",
-					style = weapon_skin_requirement_header_style,
-				},
+					style = weapon_skin_requirement_header_style
+				}
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
@@ -4220,12 +4220,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				local item = element.item
 
 				content.text = Localize("loc_item_equippable_on_header")
-			end,
+			end
 		},
 		special_description = {
 			size = {
 				grid_width,
-				114,
+				114
 			},
 			size_function = function (parent, element, ui_renderer)
 				local data = element.data
@@ -4235,7 +4235,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 				return {
 					grid_width,
-					entry_height,
+					entry_height
 				}
 			end,
 			pass_template = {
@@ -4243,8 +4243,8 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					pass_type = "text",
 					value = "N/A",
 					value_id = "special_description",
-					style = special_description_style,
-				},
+					style = special_description_style
+				}
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
@@ -4257,20 +4257,20 @@ local function _generate_blueprints_function(grid_size, optional_item)
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
 				return
-			end,
+			end
 		},
 		header = {
 			size = {
 				grid_width,
-				40,
+				40
 			},
 			pass_template = {
 				{
 					pass_type = "text",
 					value = "n/a",
 					value_id = "header",
-					style = weapon_display_name_header_style,
-				},
+					style = weapon_display_name_header_style
+				}
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
@@ -4283,12 +4283,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
 				return
-			end,
+			end
 		},
 		weapon_attack_info = {
 			size = {
 				grid_width,
-				32,
+				32
 			},
 			pass_template = {
 				{
@@ -4299,22 +4299,22 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "center",
 						size = {
 							32,
-							32,
+							32
 						},
 						offset = {
 							10,
 							0,
-							0,
+							0
 						},
-						color = Color.ui_brown_light(255, true),
-					},
+						color = Color.ui_brown_light(255, true)
+					}
 				},
 				{
 					pass_type = "text",
 					value = "n/a",
 					value_id = "text",
-					style = weapon_attack_info_style,
-				},
+					style = weapon_attack_info_style
+				}
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
@@ -4332,12 +4332,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				if icon then
 					content.icon = icon
 				end
-			end,
+			end
 		},
 		weapon_attack_info_ranged = {
 			size = {
 				grid_width,
-				42,
+				42
 			},
 			pass_template = {
 				{
@@ -4348,15 +4348,15 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "center",
 						size = {
 							32,
-							32,
+							32
 						},
 						offset = {
 							10,
 							0,
-							0,
+							0
 						},
-						color = Color.ui_brown_light(255, true),
-					},
+						color = Color.ui_brown_light(255, true)
+					}
 				},
 				{
 					pass_type = "texture",
@@ -4366,18 +4366,18 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "center",
 						size = {
 							32,
-							10,
+							10
 						},
 						offset = {
 							10,
 							20,
-							0,
+							0
 						},
-						color = Color.ui_brown_light(255, true),
+						color = Color.ui_brown_light(255, true)
 					},
 					visibility_function = function (content, style)
 						return content.icon2
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -4386,10 +4386,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					style = table.merge_recursive(table.clone(weapon_attack_info_style), {
 						offset = {
 							nil,
-							4,
-						},
-					}),
-				},
+							4
+						}
+					})
+				}
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
@@ -4418,12 +4418,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				end
 
 				content.text = text
-			end,
+			end
 		},
 		weapon_attack_header = {
 			size = {
 				grid_width,
-				30,
+				30
 			},
 			pass_template = {
 				{
@@ -4431,8 +4431,8 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					style_id = "text",
 					value = "n/a",
 					value_id = "text",
-					style = weapon_attack_header_style,
-				},
+					style = weapon_attack_header_style
+				}
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
@@ -4451,12 +4451,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				local text_color = element.text_color
 
 				style.text.text_color = text_color or style.text.text_color
-			end,
+			end
 		},
 		divider = {
 			size = {
 				grid_width,
-				12,
+				12
 			},
 			pass_template = {
 				{
@@ -4469,22 +4469,22 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "center",
 						size = {
 							nil,
-							2,
+							2
 						},
 						offset = {
 							0,
 							0,
-							3,
+							3
 						},
-						color = Color.terminal_frame(128, true),
-					},
-				},
-			},
+						color = Color.terminal_frame(128, true)
+					}
+				}
+			}
 		},
 		extended_weapon_keywords = {
 			size = {
 				grid_width,
-				0,
+				0
 			},
 			size_function = function (parent, element, ui_renderer)
 				local item = element.item
@@ -4509,7 +4509,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 				return {
 					grid_width,
-					entry_height + 45,
+					entry_height + 45
 				}
 			end,
 			pass_template = {
@@ -4522,10 +4522,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							10,
 							10,
-							0,
+							0
 						},
-						text_color = Color.white(0, true),
-					}),
+						text_color = Color.white(0, true)
+					})
 				},
 				{
 					pass_type = "text",
@@ -4536,10 +4536,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							10,
 							45,
-							0,
+							0
 						},
-						text_color = Color.terminal_text_body_dark(0, true),
-					}),
+						text_color = Color.terminal_text_body_dark(0, true)
+					})
 				},
 				{
 					pass_type = "text",
@@ -4550,10 +4550,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							300,
 							10,
-							0,
+							0
 						},
-						text_color = Color.white(0, true),
-					}),
+						text_color = Color.white(0, true)
+					})
 				},
 				{
 					pass_type = "text",
@@ -4564,11 +4564,11 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							300,
 							45,
-							0,
+							0
 						},
-						text_color = Color.terminal_text_body_dark(0, true),
-					}),
-				},
+						text_color = Color.terminal_text_body_dark(0, true)
+					})
+				}
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
@@ -4597,12 +4597,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				end
 
 				content.element = element
-			end,
+			end
 		},
 		bar_breakdown_info = {
 			size = {
 				grid_width - 10,
-				70,
+				70
 			},
 			pass_template = {
 				{
@@ -4617,17 +4617,17 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							20,
 							-5,
-							1,
+							1
 						},
-						text_color = Color.ui_chalk_grey(255, true),
-					}),
-				},
-			},
+						text_color = Color.ui_chalk_grey(255, true)
+					})
+				}
+			}
 		},
 		extended_weapon_stats_header = {
 			size = {
 				grid_width,
-				80,
+				80
 			},
 			size_function = function (parent, element, ui_renderer)
 				local item = element.item
@@ -4639,7 +4639,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 				return {
 					grid_width,
-					entry_height + 80,
+					entry_height + 80
 				}
 			end,
 			pass_template = {
@@ -4653,9 +4653,9 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						text_vertical_alignment = "top",
 						size_addition = {
 							0,
-							0,
-						},
-					}),
+							0
+						}
+					})
 				},
 				{
 					pass_type = "text",
@@ -4665,8 +4665,8 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					style = table.merge_recursive(table.clone(weapon_rarity_header_style), {
 						font_size = 25,
 						horizontal_alignment = "left",
-						text_vertical_alignment = "top",
-					}),
+						text_vertical_alignment = "top"
+					})
 				},
 				{
 					pass_type = "text",
@@ -4680,14 +4680,14 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						text_vertical_alignment = "top",
 						size = {
 							0,
-							0,
+							0
 						},
 						offset = {
 							0,
 							0,
-							3,
-						},
-					}),
+							3
+						}
+					})
 				},
 				{
 					pass_type = "text",
@@ -4698,11 +4698,11 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							10,
 							75,
-							6,
+							6
 						},
-						text_color = Color.terminal_text_body_dark(0, true),
-					}),
-				},
+						text_color = Color.terminal_text_body_dark(0, true)
+					})
+				}
 			},
 			init = function (parent, widget, element, callback_name, _, ui_renderer)
 				local content = widget.content
@@ -4749,12 +4749,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				end
 
 				content.size[2] = calculated_height
-			end,
+			end
 		},
 		extended_weapon_stats = {
 			size = {
 				grid_width,
-				195,
+				195
 			},
 			pass_template = {
 				{
@@ -4768,13 +4768,13 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							10,
 							10,
-							6,
+							6
 						},
-						text_color = Color.white(255, true),
+						text_color = Color.white(255, true)
 					}),
 					visibility_function = function (content, style)
 						return content.text_rating_value ~= ""
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -4787,10 +4787,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							90,
 							35,
-							6,
+							6
 						},
-						text_color = Color.white(255, true),
-					}),
+						text_color = Color.white(255, true)
+					})
 				},
 				{
 					pass_type = "text",
@@ -4804,13 +4804,13 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							90,
 							17,
-							6,
+							6
 						},
-						text_color = Color.white(255, true),
+						text_color = Color.white(255, true)
 					}),
 					visibility_function = function (content, style)
 						return content.text_rating_value ~= ""
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -4824,10 +4824,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							240,
 							32,
-							6,
+							6
 						},
-						text_color = Color.white(0, true),
-					}),
+						text_color = Color.white(0, true)
+					})
 				},
 				{
 					pass_type = "text",
@@ -4841,10 +4841,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							240,
 							52,
-							6,
+							6
 						},
-						text_color = Color.white(0, true),
-					}),
+						text_color = Color.white(0, true)
+					})
 				},
 				{
 					pass_type = "text",
@@ -4858,10 +4858,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							390,
 							32,
-							6,
+							6
 						},
-						text_color = Color.white(0, true),
-					}),
+						text_color = Color.white(0, true)
+					})
 				},
 				{
 					pass_type = "text",
@@ -4875,10 +4875,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							390,
 							52,
-							6,
+							6
 						},
-						text_color = Color.white(0, true),
-					}),
+						text_color = Color.white(0, true)
+					})
 				},
 				{
 					pass_type = "texture",
@@ -4888,15 +4888,15 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					style = {
 						size = {
 							nil,
-							2,
+							2
 						},
 						offset = {
 							0,
 							110,
-							3,
+							3
 						},
-						color = Color.terminal_frame(128, true),
-					},
+						color = Color.terminal_frame(128, true)
+					}
 				},
 				{
 					pass_type = "text",
@@ -4910,10 +4910,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							10,
 							125,
-							6,
+							6
 						},
-						text_color = Color.white(0, true),
-					}),
+						text_color = Color.white(0, true)
+					})
 				},
 				{
 					pass_type = "text",
@@ -4927,10 +4927,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							10,
 							145,
-							6,
+							6
 						},
-						text_color = Color.white(0, true),
-					}),
+						text_color = Color.white(0, true)
+					})
 				},
 				{
 					pass_type = "text",
@@ -4944,10 +4944,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							160,
 							125,
-							6,
+							6
 						},
-						text_color = Color.white(0, true),
-					}),
+						text_color = Color.white(0, true)
+					})
 				},
 				{
 					pass_type = "text",
@@ -4961,10 +4961,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							160,
 							145,
-							6,
+							6
 						},
-						text_color = Color.white(0, true),
-					}),
+						text_color = Color.white(0, true)
+					})
 				},
 				{
 					pass_type = "text",
@@ -4978,10 +4978,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							310,
 							125,
-							6,
+							6
 						},
-						text_color = Color.white(0, true),
-					}),
+						text_color = Color.white(0, true)
+					})
 				},
 				{
 					pass_type = "text",
@@ -4995,10 +4995,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							310,
 							145,
-							6,
+							6
 						},
-						text_color = Color.white(0, true),
-					}),
+						text_color = Color.white(0, true)
+					})
 				},
 				{
 					pass_type = "text",
@@ -5012,10 +5012,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							460,
 							125,
-							6,
+							6
 						},
-						text_color = Color.white(0, true),
-					}),
+						text_color = Color.white(0, true)
+					})
 				},
 				{
 					pass_type = "text",
@@ -5029,10 +5029,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							460,
 							145,
-							6,
+							6
 						},
-						text_color = Color.white(0, true),
-					}),
+						text_color = Color.white(0, true)
+					})
 				},
 				{
 					pass_type = "texture",
@@ -5042,16 +5042,16 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					style = {
 						size = {
 							nil,
-							2,
+							2
 						},
 						offset = {
 							0,
 							190,
-							3,
+							3
 						},
-						color = Color.terminal_frame(128, true),
-					},
-				},
+						color = Color.terminal_frame(128, true)
+					}
+				}
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
@@ -5173,12 +5173,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						style.text_stat_4.text_color[1] = 255
 					end
 				end
-			end,
+			end
 		},
 		weapon_stat = {
 			size = {
 				grid_width,
-				30,
+				30
 			},
 			pass_template = {
 				{
@@ -5189,15 +5189,15 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "top",
 						size = {
 							15,
-							15,
+							15
 						},
 						offset = {
 							20,
 							3,
-							0,
+							0
 						},
-						color = Color.terminal_icon(255, true),
-					},
+						color = Color.terminal_icon(255, true)
+					}
 				},
 				{
 					pass_type = "text",
@@ -5210,10 +5210,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							40,
 							0,
-							3,
-						},
-					}),
-				},
+							3
+						}
+					})
+				}
 			},
 			init = function (parent, widget, element)
 				local content = widget.content
@@ -5223,6 +5223,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				local display_name = type_data.display_name or ""
 				local display_type = type_data.display_type or "default"
 				local signed = type_data.signed
+				local inverted = type_data.inverted
 				local display_units = type_data.display_units or ""
 				local stat_value = stat.value
 
@@ -5235,10 +5236,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				elseif display_type == "percentage" then
 					stat_value = stat_value * 100
 				elseif display_type == "angle" then
-					value = math.radians_to_degrees(value)
+					stat_value = math.radians_to_degrees(stat_value)
 				end
 
 				local value = signed and stat_value or stat_value * math.sign(stat_value)
+
+				value = inverted and -value or value
 
 				if value >= math.huge then
 					value = Localize("loc_weapon_stats_display_unlimited")
@@ -5250,12 +5253,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 				value = Text.apply_color_to_text(value, Color.terminal_icon(255, true))
 				content.text = string.format(" %s: %s", Localize(display_name), value)
-			end,
+			end
 		},
 		attack_pattern_header = {
 			size = {
 				grid_width,
-				210,
+				210
 			},
 			pass_template = _generate_attack_pattern_passes(optional_item),
 			init = function (parent, widget, element)
@@ -5406,12 +5409,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 					content.gamepad_selected_attack = math.clamp(gamepad_selected_attack, 1, horizontal_index - 1)
 				end
-			end,
+			end
 		},
 		pattern_type_breakdown = {
 			size = {
 				grid_width,
-				180,
+				180
 			},
 			pass_template = {
 				{
@@ -5422,15 +5425,15 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						horizontal_alignment = "center",
 						vertical_alignment = "top",
 						size = {
-							grid_width - 45,
+							grid_width - 45
 						},
 						offset = {
 							0,
 							0,
-							0,
+							0
 						},
-						color = Color.terminal_text_body_dark(255, true),
-					},
+						color = Color.terminal_text_body_dark(255, true)
+					}
 				},
 				{
 					pass_type = "texture",
@@ -5440,19 +5443,19 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						horizontal_alignment = "center",
 						vertical_alignment = "top",
 						size = {
-							grid_width - 35,
+							grid_width - 35
 						},
 						offset = {
 							0,
 							-5,
-							0,
+							0
 						},
 						size_addition = {
 							0,
-							10,
+							10
 						},
-						color = Color.terminal_text_body_dark(255, true),
-					},
+						color = Color.terminal_text_body_dark(255, true)
+					}
 				},
 				{
 					pass_type = "texture",
@@ -5464,18 +5467,18 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "top",
 						size = {
 							32,
-							32,
+							32
 						},
 						offset = {
 							-16,
 							16,
-							0,
+							0
 						},
-						color = Color.white(255, true),
+						color = Color.white(255, true)
 					},
 					visibility_function = function (content, style)
 						return content.attack_type_icon
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -5486,18 +5489,18 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "top",
 						size = {
 							grid_width - 45,
-							1,
+							1
 						},
 						offset = {
 							0,
 							115,
-							2,
+							2
 						},
-						color = Color.terminal_text_body_dark(255, true),
+						color = Color.terminal_text_body_dark(255, true)
 					},
 					visibility_function = function (content, style)
 						return content.extra_information ~= ""
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -5512,10 +5515,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							0,
 							0,
-							0,
+							0
 						},
-						text_color = Color.white(0, true),
-					}),
+						text_color = Color.white(0, true)
+					})
 				},
 				{
 					pass_type = "text",
@@ -5529,9 +5532,9 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							40,
 							0,
-							0,
-						},
-					}),
+							0
+						}
+					})
 				},
 				{
 					pass_type = "text",
@@ -5545,11 +5548,11 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							40,
 							0,
-							0,
+							0
 						},
-						text_color = Color.terminal_text_body_dark(255, true),
-					}),
-				},
+						text_color = Color.terminal_text_body_dark(255, true)
+					})
+				}
 			},
 			init = function (parent, widget, element)
 				local content = widget.content
@@ -5601,7 +5604,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 							local title_width, title_height = Text.text_size(ui_renderer, display_name, attack_type_name_style, {
 								attack_type_name_style.size[1],
-								2000,
+								2000
 							}, true)
 
 							attack_type_icon_style.offset[1] = -title_width * 0.5 - attack_type_icon_style.size[1] - spacing
@@ -5618,7 +5621,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 							local desc = desc_id and Localize(desc_id) or ""
 							local desc_height = Text.text_height(ui_renderer, desc, attack_type_desc_style, {
 								attack_type_desc_style.size[1],
-								2000,
+								2000
 							})
 
 							attack_type_desc_style.offset[2] = new_height + desc_margin + margin
@@ -5636,7 +5639,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 							local extra_info = explosion_template and Localize("loc_weapon_stats_display_explosions_vary") or ""
 							local extra_info_height = Text.text_height(ui_renderer, extra_info, attack_extra_info_style, {
 								attack_extra_info_style.size[1],
-								2000,
+								2000
 							})
 							local title_bottom_extra_size = 10
 
@@ -5662,16 +5665,16 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				content.current_attack_index = attack_index
 				content.current_chain_index = chain_index
 				widget.content.size[2] = new_height
-			end,
+			end
 		},
 		damage_grid = {
 			size = {
 				grid_width,
-				430,
+				430
 			},
 			pass_template = _generate_damage_grid_pass_templates({
 				140,
-				60,
+				60
 			}, optional_item),
 			init = function (parent, widget, element)
 				local content = widget.content
@@ -5727,12 +5730,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 					_update_damage_data(damage_stats, widget, attack_index, chain_index)
 				end
-			end,
+			end
 		},
 		weapon_attack_chain = {
 			size = {
 				grid_width,
-				50,
+				50
 			},
 			pass_template = {
 				{
@@ -5743,14 +5746,14 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							0,
 							0,
-							0,
+							0
 						},
 						color = Color.ui_brown_light(20, true),
 						size_addition = {
 							-20,
-							-10,
-						},
-					},
+							-10
+						}
+					}
 				},
 				{
 					content_id = "hotspot_icon_1",
@@ -5762,13 +5765,13 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							0,
 							0,
-							0,
+							0
 						},
 						size = {
 							32,
-							32,
-						},
-					},
+							32
+						}
+					}
 				},
 				{
 					pass_type = "texture",
@@ -5780,18 +5783,18 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "center",
 						size = {
 							32,
-							32,
+							32
 						},
 						offset = {
 							0,
 							0,
-							1,
+							1
 						},
-						color = Color.ui_brown_light(255, true),
+						color = Color.ui_brown_light(255, true)
 					},
 					visibility_function = function (content, style)
 						return content.icon_1
-					end,
+					end
 				},
 				{
 					content_id = "hotspot_icon_2",
@@ -5803,13 +5806,13 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							0,
 							0,
-							0,
+							0
 						},
 						size = {
 							32,
-							32,
-						},
-					},
+							32
+						}
+					}
 				},
 				{
 					pass_type = "texture",
@@ -5821,18 +5824,18 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "center",
 						size = {
 							32,
-							32,
+							32
 						},
 						offset = {
 							0,
 							0,
-							1,
+							1
 						},
-						color = Color.ui_brown_light(255, true),
+						color = Color.ui_brown_light(255, true)
 					},
 					visibility_function = function (content, style)
 						return content.icon_2
-					end,
+					end
 				},
 				{
 					content_id = "hotspot_icon_3",
@@ -5844,13 +5847,13 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							0,
 							0,
-							0,
+							0
 						},
 						size = {
 							32,
-							32,
-						},
-					},
+							32
+						}
+					}
 				},
 				{
 					pass_type = "texture",
@@ -5862,18 +5865,18 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "center",
 						size = {
 							32,
-							32,
+							32
 						},
 						offset = {
 							0,
 							0,
-							1,
+							1
 						},
-						color = Color.ui_brown_light(255, true),
+						color = Color.ui_brown_light(255, true)
 					},
 					visibility_function = function (content, style)
 						return content.icon_3
-					end,
+					end
 				},
 				{
 					content_id = "hotspot_icon_4",
@@ -5885,13 +5888,13 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							0,
 							0,
-							0,
+							0
 						},
 						size = {
 							32,
-							32,
-						},
-					},
+							32
+						}
+					}
 				},
 				{
 					pass_type = "texture",
@@ -5903,18 +5906,18 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "center",
 						size = {
 							32,
-							32,
+							32
 						},
 						offset = {
 							0,
 							0,
-							1,
+							1
 						},
-						color = Color.ui_brown_light(255, true),
+						color = Color.ui_brown_light(255, true)
 					},
 					visibility_function = function (content, style)
 						return content.icon_4
-					end,
+					end
 				},
 				{
 					content_id = "hotspot_icon_5",
@@ -5926,13 +5929,13 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							0,
 							0,
-							0,
+							0
 						},
 						size = {
 							32,
-							32,
-						},
-					},
+							32
+						}
+					}
 				},
 				{
 					pass_type = "texture",
@@ -5944,18 +5947,18 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "center",
 						size = {
 							32,
-							32,
+							32
 						},
 						offset = {
 							0,
 							0,
-							1,
+							1
 						},
-						color = Color.ui_brown_light(255, true),
+						color = Color.ui_brown_light(255, true)
 					},
 					visibility_function = function (content, style)
 						return content.icon_5
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -5967,18 +5970,18 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "center",
 						size = {
 							8,
-							14,
+							14
 						},
 						offset = {
 							0,
 							0,
-							1,
+							1
 						},
-						color = Color.white(80, true),
+						color = Color.white(80, true)
 					},
 					visibility_function = function (content, style)
 						return content.icon_2
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -5990,18 +5993,18 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "center",
 						size = {
 							8,
-							14,
+							14
 						},
 						offset = {
 							0,
 							0,
-							1,
+							1
 						},
-						color = Color.white(80, true),
+						color = Color.white(80, true)
 					},
 					visibility_function = function (content, style)
 						return content.icon_3
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -6013,18 +6016,18 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "center",
 						size = {
 							8,
-							14,
+							14
 						},
 						offset = {
 							0,
 							0,
-							1,
+							1
 						},
-						color = Color.white(80, true),
+						color = Color.white(80, true)
 					},
 					visibility_function = function (content, style)
 						return content.icon_4
-					end,
+					end
 				},
 				{
 					pass_type = "texture",
@@ -6036,18 +6039,18 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "center",
 						size = {
 							8,
-							14,
+							14
 						},
 						offset = {
 							0,
 							0,
-							1,
+							1
 						},
-						color = Color.white(80, true),
+						color = Color.white(80, true)
 					},
 					visibility_function = function (content, style)
 						return content.icon_5
-					end,
+					end
 				},
 				{
 					pass_type = "rect",
@@ -6057,15 +6060,15 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "top",
 						size = {
 							grid_width - 45 + 60,
-							100,
+							100
 						},
 						offset = {
 							0,
 							-100,
-							5,
+							5
 						},
-						color = Color.black(0, true),
-					},
+						color = Color.black(0, true)
+					}
 				},
 				{
 					pass_type = "texture",
@@ -6076,15 +6079,15 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "top",
 						size = {
 							grid_width - 45 + 60,
-							100,
+							100
 						},
 						offset = {
 							0,
 							-100,
-							5,
+							5
 						},
-						color = Color.terminal_text_body_dark(0, true),
-					},
+						color = Color.terminal_text_body_dark(0, true)
+					}
 				},
 				{
 					pass_type = "texture",
@@ -6095,15 +6098,15 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "top",
 						size = {
 							grid_width - 45 + 60,
-							100,
+							100
 						},
 						offset = {
 							0,
 							-100,
-							6,
+							6
 						},
-						color = Color.terminal_text_body_dark(0, true),
-					},
+						color = Color.terminal_text_body_dark(0, true)
+					}
 				},
 				{
 					pass_type = "texture",
@@ -6114,15 +6117,15 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "top",
 						size = {
 							grid_width - 35 + 60,
-							110,
+							110
 						},
 						offset = {
 							0,
 							-105,
-							5,
+							5
 						},
-						color = Color.terminal_text_body_dark(0, true),
-					},
+						color = Color.terminal_text_body_dark(0, true)
+					}
 				},
 				{
 					pass_type = "texture",
@@ -6134,18 +6137,18 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "top",
 						size = {
 							32,
-							32,
+							32
 						},
 						offset = {
 							-16,
 							-84,
-							5,
+							5
 						},
-						color = Color.white(0, true),
+						color = Color.white(0, true)
 					},
 					visibility_function = function (content, style)
 						return content.hover_icon
-					end,
+					end
 				},
 				{
 					pass_type = "text",
@@ -6160,10 +6163,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							0,
 							-40,
-							5,
+							5
 						},
-						text_color = Color.white(0, true),
-					}),
+						text_color = Color.white(0, true)
+					})
 				},
 				{
 					pass_type = "text",
@@ -6178,10 +6181,10 @@ local function _generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							40,
 							-60,
-							5,
-						},
-					}),
-				},
+							5
+						}
+					})
+				}
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
@@ -6238,6 +6241,8 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 							style[spacing_pass_id].offset[1] = pass_style.offset[1] + (icon_width * 2 + spacing) * 0.5 - spacing_icon_width * 0.5
 						end
+					else
+						content["hotspot_icon_" .. i].disabled = true
 					end
 				end
 			end,
@@ -6300,15 +6305,15 @@ local function _generate_blueprints_function(grid_size, optional_item)
 					style.hover_icon_name.text_color[1] = 0
 					style.hover_icon_desc.text_color[1] = 0
 				end
-			end,
+			end
 		},
 		dynamic_spacing = {
 			size = {
 				0,
-				0,
+				0
 			},
 			pass_template = {
-				_generate_background_pass(),
+				_generate_background_pass()
 			},
 			init = function (parent, widget, element)
 				local style = widget.style
@@ -6317,20 +6322,20 @@ local function _generate_blueprints_function(grid_size, optional_item)
 			end,
 			size_function = function (parent, config)
 				return config.size
-			end,
+			end
 		},
 		spacing_vertical = {
 			size = {
 				grid_width,
-				20,
-			},
+				20
+			}
 		},
 		spacing_vertical_small = {
 			size = {
 				grid_width,
-				10,
-			},
-		},
+				10
+			}
+		}
 	}
 
 	return blueprints

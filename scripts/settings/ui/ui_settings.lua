@@ -9,57 +9,57 @@ local ui_settings = {
 	portrait_frame_default_texture = "content/ui/textures/nameplates/portrait_frames/default",
 	item_icon_size = {
 		128,
-		128,
+		128
 	},
 	cosmetics_item_size = {
 		128,
-		128,
+		128
 	},
 	cosmetics_bundle_item_size = {
 		128,
-		266,
+		266
 	},
 	nested_bundle_grid_item_size = {
 		542,
-		128,
+		128
 	},
 	ui_item_size = {
 		128,
-		128,
+		128
 	},
 	weapon_item_size = {
 		600,
-		112,
+		112
 	},
 	weapon_icon_size = {
 		256,
-		128,
+		128
 	},
 	character_title_item_size = {
 		404,
-		64,
+		64
 	},
 	character_title_button_size = {
 		340,
-		48,
+		48
 	},
 	gadget_item_size = {
 		193,
-		250,
+		250
 	},
 	gadget_icon_size = {
 		256,
-		128,
+		128
 	},
 	sizes = {
 		header_1 = {
 			nil,
-			84,
+			84
 		},
 		spacing_header_1 = {
 			nil,
-			20,
-		},
+			20
+		}
 	},
 	menu_navigation = {
 		button_navigation_cooldown = 0.25,
@@ -71,11 +71,11 @@ local ui_settings = {
 		view_min_fast_speed_multiplier = 0.1,
 		view_min_speed_multiplier = 0.5,
 		view_speed_multiplier_decrease = 1.3,
-		view_speed_multiplier_frame_decrease = 0.025,
+		view_speed_multiplier_frame_decrease = 0.025
 	},
 	cutscenes_skip = {
 		fade_inactivity_time = 5,
-		hold_time = 0.5,
+		hold_time = 0.5
 	},
 	ITEM_TYPES = table.enum("BODY_TATTOO", "BOON", "CHARACTER_INSIGNIA", "CHARACTER_TITLE", "DEVICE", "EMOTE", "END_OF_ROUND", "EYE_COLOR", "FACE_HAIR", "FACE_MAKEUP", "FACE_SCAR", "FACE_TATTOO", "FACE", "GADGET", "GEAR_EXTRA_COSMETIC", "GEAR_HEAD", "GEAR_LOWERBODY", "GEAR_UPPERBODY", "HAIR_COLOR", "HAIR", "LUGGABLE", "PERK", "POCKETABLE", "PORTRAIT_FRAME", "SET", "SKIN_COLOR", "TRAIT", "WEAPON_MELEE", "WEAPON_RANGED", "WEAPON_SKIN", "WEAPON_TRINKET", "COMPANION_GEAR_FULL"),
 	item_type_group_lookup = {
@@ -116,7 +116,7 @@ local ui_settings = {
 		WEAPON_MELEE = "weapons",
 		WEAPON_RANGED = "weapons",
 		WEAPON_SKIN = "weapon_skin",
-		WEAPON_TRINKET = "weapon_trinket",
+		WEAPON_TRINKET = "weapon_trinket"
 	},
 	inspectable_item_types = {
 		COMPANION_GEAR_FULL = true,
@@ -129,7 +129,7 @@ local ui_settings = {
 		SET = true,
 		WEAPON_MELEE = true,
 		WEAPON_RANGED = true,
-		WEAPON_SKIN = true,
+		WEAPON_SKIN = true
 	},
 	item_variant_localization_lookup = {
 		assault = "loc_item_weapon_variant_assault",
@@ -139,7 +139,7 @@ local ui_settings = {
 		linesman = "loc_item_weapon_variant_linesman",
 		ninjafencer = "loc_item_weapon_variant_ninjafencer",
 		smiter = "loc_item_weapon_variant_smiter",
-		tank = "loc_item_weapon_variant_tank",
+		tank = "loc_item_weapon_variant_tank"
 	},
 	set_item_parts_presentation_order = {
 		ARMS = 0,
@@ -180,7 +180,7 @@ local ui_settings = {
 		WEAPON_MELEE = 0,
 		WEAPON_RANGED = 0,
 		WEAPON_SKIN = 0,
-		WEAPON_TRINKET = 0,
+		WEAPON_TRINKET = 0
 	},
 	item_type_localization_lookup = {
 		ARMS = "loc_item_type_arms",
@@ -222,7 +222,7 @@ local ui_settings = {
 		WEAPON_MELEE = "loc_item_type_weapon_melee",
 		WEAPON_RANGED = "loc_item_type_weapon_ranged",
 		WEAPON_SKIN = "loc_item_type_weapon_skin",
-		WEAPON_TRINKET = "loc_item_type_trinket",
+		WEAPON_TRINKET = "loc_item_type_trinket"
 	},
 	item_type_texture_lookup = {
 		ARMS = nil,
@@ -261,7 +261,7 @@ local ui_settings = {
 		WEAPON_MELEE = "content/ui/textures/icons/item_types/melee_weapons",
 		WEAPON_RANGED = "content/ui/textures/icons/item_types/ranged_weapons",
 		WEAPON_SKIN = "content/ui/textures/icons/item_types/weapons",
-		WEAPON_TRINKET = "content/ui/textures/icons/item_types/weapon_trinkets",
+		WEAPON_TRINKET = "content/ui/textures/icons/item_types/weapon_trinkets"
 	},
 	item_type_material_lookup = {
 		ARMS = nil,
@@ -301,23 +301,7 @@ local ui_settings = {
 		WEAPON_MELEE = "content/ui/materials/icons/item_types/melee_weapons",
 		WEAPON_RANGED = "content/ui/materials/icons/item_types/ranged_weapons",
 		WEAPON_SKIN = "content/ui/materials/icons/item_types/weapons",
-		WEAPON_TRINKET = "content/ui/materials/icons/item_types/weapon_trinkets",
-	},
-	item_pattern_localization_lookup = {
-		cadia = "loc_item_pattern_cadia",
-		graia = "loc_item_pattern_graia",
-		lucius = "loc_item_pattern_lucius",
-		mars = "loc_item_pattern_mars",
-	},
-	item_store_categories = {
-		"companion_gear_full",
-		"boons",
-		"devices",
-		"emotes",
-		"nameplates",
-		"outfits",
-		"poses",
-		"weapons",
+		WEAPON_TRINKET = "content/ui/materials/icons/item_types/weapon_trinkets"
 	},
 	texture_by_store_category = {
 		boons = "content/ui/materials/icons/item_types/boons",
@@ -327,17 +311,17 @@ local ui_settings = {
 		nameplates = "content/ui/materials/icons/item_types/nameplates",
 		outfits = "content/ui/materials/icons/item_types/outfits",
 		poses = "content/ui/materials/icons/item_types/poses",
-		weapons = "content/ui/materials/icons/item_types/weapons",
+		weapons = "content/ui/materials/icons/item_types/weapons"
 	},
 	display_name_by_store_category = {
 		boons = "loc_store_category_display_name_boons",
-		companion_gear_full = "loc_store_category_display_name_archetype_specific",
+		companion_gear_full = "loc_store_category_display_name_companion_gear_full",
 		devices = "loc_store_category_display_name_devices",
 		emotes = "loc_store_category_display_name_emotes",
 		nameplates = "loc_store_category_display_name_nameplates",
 		outfits = "loc_store_category_display_name_outfits",
 		poses = "loc_store_category_display_name_poses",
-		weapons = "loc_store_category_display_name_weapons",
+		weapons = "loc_store_category_display_name_weapons"
 	},
 	store_category_sort_order = {
 		boons = 7,
@@ -347,31 +331,31 @@ local ui_settings = {
 		nameplates = 4,
 		outfits = 3,
 		poses = 5,
-		weapons = 1,
+		weapons = 1
 	},
 	player_slot_colors = {
 		Color.player_slot_1(255, true),
 		Color.player_slot_2(255, true),
 		Color.player_slot_3(255, true),
-		(Color.player_slot_4(255, true)),
+		(Color.player_slot_4(255, true))
 	},
 	player_bright_slot_colors = {
 		Color.player_slot_1_bright(255, true),
 		Color.player_slot_2_bright(255, true),
 		Color.player_slot_3_bright(255, true),
-		(Color.player_slot_4_bright(255, true)),
+		(Color.player_slot_4_bright(255, true))
 	},
 	weapon_action_title_display_names = {
 		extra = "loc_glossary_term_ranged_attacks",
 		primary = "loc_weapon_action_title_primary",
 		secondary = "loc_weapon_action_title_secondary",
-		special = "loc_weapon_action_title_special",
+		special = "loc_weapon_action_title_special"
 	},
 	weapon_action_title_display_names_melee = {
 		extra = "loc_weapon_action_title_secondary",
 		primary = "loc_weapon_action_title_light",
 		secondary = "loc_weapon_action_title_heavy",
-		special = "loc_weapon_action_title_special",
+		special = "loc_weapon_action_title_special"
 	},
 	weapon_card_headers = {
 		activate = "loc_weapon_special_activate",
@@ -398,7 +382,7 @@ local ui_settings = {
 		switch_mode = "loc_weapon_special_mode_switch",
 		vent = "loc_stats_special_action_venting_desc",
 		weapon_bash = "loc_weapon_special_fist_attack",
-		wind_slash = "loc_weapon_special_wind_slash",
+		wind_slash = "loc_weapon_special_wind_slash"
 	},
 	weapon_card_icons = {
 		activate = "content/ui/materials/icons/weapons/actions/activate",
@@ -422,7 +406,7 @@ local ui_settings = {
 		special_ammo = "content/ui/materials/icons/weapons/actions/special_bullet",
 		special_attack = "content/ui/materials/icons/weapons/actions/special_attack",
 		tank = "content/ui/materials/icons/weapons/actions/tank",
-		vent = "content/ui/materials/icons/weapons/actions/vent",
+		vent = "content/ui/materials/icons/weapons/actions/vent"
 	},
 	weapon_card_value_funcs = {
 		primary_attack = function (weapon_stats)
@@ -463,25 +447,25 @@ local ui_settings = {
 			local value = magazine and string.format("%i/%i", magazine.ammo, magazine.reserve)
 
 			return value
-		end,
+		end
 	},
 	weapon_action_display_order = {
 		extra = 4,
 		primary = 1,
 		secondary = 2,
-		special = 3,
+		special = 3
 	},
 	weapon_action_display_order_array = {
 		"primary",
 		"secondary",
 		"special",
-		"extra",
+		"extra"
 	},
 	weapon_action_extended_display_order_array = {
 		"special",
 		"primary",
 		"secondary",
-		"extra",
+		"extra"
 	},
 	weapon_stats_armor_types = {
 		armored = "loc_weapon_stats_display_armored",
@@ -489,13 +473,13 @@ local ui_settings = {
 		disgustingly_resilient = "loc_weapon_stats_display_disgustingly_resilient",
 		resistant = "loc_glossary_armour_type_resistant",
 		super_armor = "loc_weapon_stats_display_super_armor",
-		unarmored = "loc_weapon_stats_display_unarmored",
+		unarmored = "loc_weapon_stats_display_unarmored"
 	},
 	attack_type_lookup = {
 		linesman = "loc_gestalt_linesman",
 		ninja_fencer = "loc_gestalt_ninja_fencer",
 		smiter = "loc_gestalt_smiter",
-		tank = "loc_gestalt_tank",
+		tank = "loc_gestalt_tank"
 	},
 	attack_type_desc_lookup = {
 		ads = "loc_stats_fire_mode_ads_desc",
@@ -506,7 +490,7 @@ local ui_settings = {
 		ninja_fencer = "loc_stats_gestalt_ninjafencer_desc",
 		smiter = "loc_stats_gestalt_smite_desc",
 		tank = "loc_stats_gestalt_tank_desc",
-		vent = "loc_stats_special_action_venting_desc",
+		vent = "loc_stats_special_action_venting_desc"
 	},
 	weapon_action_type_icons = {
 		activate = "content/ui/materials/icons/weapons/actions/activate",
@@ -525,21 +509,21 @@ local ui_settings = {
 		special_attack = "content/ui/materials/icons/weapons/actions/special_attack",
 		special_bullet = "content/ui/materials/icons/weapons/actions/special_bullet",
 		tank = "content/ui/materials/icons/weapons/actions/tank",
-		vent = "content/ui/materials/icons/weapons/actions/vent",
+		vent = "content/ui/materials/icons/weapons/actions/vent"
 	},
 	weapon_fire_type_icons = {
 		burst = "content/ui/materials/icons/weapons/actions/burst",
 		full_auto = "content/ui/materials/icons/weapons/actions/full_auto",
 		projectile = "content/ui/materials/icons/weapons/actions/projectile",
 		semi_auto = "content/ui/materials/icons/weapons/actions/semi_auto",
-		shotgun = "content/ui/materials/icons/weapons/actions/shotgun",
+		shotgun = "content/ui/materials/icons/weapons/actions/shotgun"
 	},
 	weapon_fire_type_display_text = {
 		burst = "loc_weapon_stats_fire_mode_burst",
 		full_auto = "loc_weapon_stats_fire_mode_full_auto",
 		projectile = "loc_weapon_stats_fire_mode_projectile",
 		semi_auto = "loc_weapon_stats_fire_mode_semi_auto",
-		shotgun = "loc_weapon_stats_fire_mode_shotgun",
+		shotgun = "loc_weapon_stats_fire_mode_shotgun"
 	},
 	trait_category_icon = {
 		melee_activated = "",
@@ -548,7 +532,7 @@ local ui_settings = {
 		ranged_common = "",
 		ranged_explosive = "",
 		ranged_overheat = "",
-		ranged_warpcharge = "",
+		ranged_warpcharge = ""
 	},
 	contracts_icons_by_type = {
 		BlockDamage = "content/ui/textures/icons/contracts/contracts_type_01",
@@ -559,7 +543,7 @@ local ui_settings = {
 		CompleteMissionsNoDeath = "content/ui/textures/icons/contracts/contracts_type_05",
 		KillBosses = "content/ui/textures/icons/contracts/contracts_type_02",
 		KillMinions = "content/ui/textures/icons/contracts/contracts_type_02",
-		default = "content/ui/textures/icons/contracts/contracts_type_03",
+		default = "content/ui/textures/icons/contracts/contracts_type_03"
 	},
 	digital_clock_numbers = {
 		[0] = "",
@@ -571,7 +555,7 @@ local ui_settings = {
 		"",
 		"",
 		"",
-		"",
+		""
 	},
 	archetype_font_icon = {
 		adamant = "",
@@ -580,77 +564,118 @@ local ui_settings = {
 		ogryn = "",
 		psyker = "",
 		veteran = "",
-		zealot = "",
+		zealot = ""
 	},
 	inventory_frames_by_archetype = {
 		adamant = {
 			left_lower = "content/ui/materials/frames/screen/class_adamant_01_lower_left",
 			left_upper = "content/ui/materials/frames/screen/class_adamant_01_upper_left",
+			left_upper_inventory = "content/ui/materials/frames/screen/class_adamant_01_inventory_upper_left",
 			right_lower = "content/ui/materials/frames/screen/class_adamant_01_lower_right",
-			right_upper = "content/ui/materials/frames/screen/class_adamant_01_upper_right",
+			right_upper = "content/ui/materials/frames/screen/class_adamant_01_upper_right"
 		},
 		broker = {
 			left_lower = "content/ui/materials/frames/screen/class_broker_01_lower_left",
 			left_upper = "content/ui/materials/frames/screen/class_broker_01_upper_left",
+			left_upper_inventory = "content/ui/materials/frames/screen/class_broker_01_inventory_upper_left",
 			right_lower = "content/ui/materials/frames/screen/class_broker_01_lower_right",
 			right_upper = "content/ui/materials/frames/screen/class_broker_01_upper_right",
 			by_home_planet = {
 				option_9 = {
 					left_lower = "content/ui/materials/frames/screen/class_broker_02_lower_left",
 					left_upper = "content/ui/materials/frames/screen/class_broker_02_upper_left",
+					left_upper_inventory = "content/ui/materials/frames/screen/class_broker_02_inventory_upper_left",
 					right_lower = "content/ui/materials/frames/screen/class_broker_02_lower_right",
-					right_upper = "content/ui/materials/frames/screen/class_broker_02_upper_right",
+					right_upper = "content/ui/materials/frames/screen/class_broker_02_upper_right"
 				},
 				option_10 = {
 					left_lower = "content/ui/materials/frames/screen/class_broker_03_lower_left",
 					left_upper = "content/ui/materials/frames/screen/class_broker_03_upper_left",
+					left_upper_inventory = "content/ui/materials/frames/screen/class_broker_03_inventory_upper_left",
 					right_lower = "content/ui/materials/frames/screen/class_broker_03_lower_right",
-					right_upper = "content/ui/materials/frames/screen/class_broker_03_upper_right",
+					right_upper = "content/ui/materials/frames/screen/class_broker_03_upper_right"
 				},
 				option_11 = {
 					left_lower = "content/ui/materials/frames/screen/class_broker_04_lower_left",
 					left_upper = "content/ui/materials/frames/screen/class_broker_04_upper_left",
+					left_upper_inventory = "content/ui/materials/frames/screen/class_broker_04_inventory_upper_left",
 					right_lower = "content/ui/materials/frames/screen/class_broker_04_lower_right",
-					right_upper = "content/ui/materials/frames/screen/class_broker_04_upper_right",
+					right_upper = "content/ui/materials/frames/screen/class_broker_04_upper_right"
 				},
 				option_12 = {
 					left_lower = "content/ui/materials/frames/screen/class_broker_05_lower_left",
 					left_upper = "content/ui/materials/frames/screen/class_broker_05_upper_left",
+					left_upper_inventory = "content/ui/materials/frames/screen/class_broker_05_inventory_upper_left",
 					right_lower = "content/ui/materials/frames/screen/class_broker_05_lower_right",
-					right_upper = "content/ui/materials/frames/screen/class_broker_05_upper_right",
-				},
-			},
+					right_upper = "content/ui/materials/frames/screen/class_broker_05_upper_right"
+				}
+			}
 		},
 		cryptic = {
 			left_lower = "content/ui/materials/frames/screen/class_cryptic_01_lower_left",
 			left_upper = "content/ui/materials/frames/screen/class_cryptic_01_upper_left",
+			left_upper_inventory = "content/ui/materials/frames/screen/class_cryptic_01_inventory_upper_left",
 			right_lower = "content/ui/materials/frames/screen/class_cryptic_01_lower_right",
 			right_upper = "content/ui/materials/frames/screen/class_cryptic_01_upper_right",
+			by_home_planet = {
+				option_13 = {
+					left_lower = "content/ui/materials/frames/screen/class_cryptic_02_lower_left",
+					left_upper = "content/ui/materials/frames/screen/class_cryptic_02_upper_left",
+					left_upper_inventory = "content/ui/materials/frames/screen/class_cryptic_02_inventory_upper_left",
+					right_lower = "content/ui/materials/frames/screen/class_cryptic_02_lower_right",
+					right_upper = "content/ui/materials/frames/screen/class_cryptic_02_upper_right"
+				},
+				option_14 = {
+					left_lower = "content/ui/materials/frames/screen/class_cryptic_03_lower_left",
+					left_upper = "content/ui/materials/frames/screen/class_cryptic_03_upper_left",
+					left_upper_inventory = "content/ui/materials/frames/screen/class_cryptic_03_inventory_upper_left",
+					right_lower = "content/ui/materials/frames/screen/class_cryptic_03_lower_right",
+					right_upper = "content/ui/materials/frames/screen/class_cryptic_03_upper_right"
+				},
+				option_15 = {
+					left_lower = "content/ui/materials/frames/screen/class_cryptic_04_lower_left",
+					left_upper = "content/ui/materials/frames/screen/class_cryptic_04_upper_left",
+					left_upper_inventory = "content/ui/materials/frames/screen/class_cryptic_04_inventory_upper_left",
+					right_lower = "content/ui/materials/frames/screen/class_cryptic_04_lower_right",
+					right_upper = "content/ui/materials/frames/screen/class_cryptic_04_upper_right"
+				},
+				option_16 = {
+					left_lower = "content/ui/materials/frames/screen/class_cryptic_05_lower_left",
+					left_upper = "content/ui/materials/frames/screen/class_cryptic_05_upper_left",
+					left_upper_inventory = "content/ui/materials/frames/screen/class_cryptic_05_inventory_upper_left",
+					right_lower = "content/ui/materials/frames/screen/class_cryptic_05_lower_right",
+					right_upper = "content/ui/materials/frames/screen/class_cryptic_05_upper_right"
+				}
+			}
 		},
 		ogryn = {
 			left_lower = "content/ui/materials/frames/screen/class_ogryn_01_lower_left",
 			left_upper = "content/ui/materials/frames/screen/class_ogryn_01_upper_left",
+			left_upper_inventory = "content/ui/materials/frames/screen/class_ogryn_01_inventory_upper_left",
 			right_lower = "content/ui/materials/frames/screen/class_ogryn_01_lower_right",
-			right_upper = "content/ui/materials/frames/screen/class_ogryn_01_upper_right",
+			right_upper = "content/ui/materials/frames/screen/class_ogryn_01_upper_right"
 		},
 		psyker = {
 			left_lower = "content/ui/materials/frames/screen/class_psyker_01_lower_left",
 			left_upper = "content/ui/materials/frames/screen/class_psyker_01_upper_left",
+			left_upper_inventory = "content/ui/materials/frames/screen/class_psyker_01_inventory_upper_left",
 			right_lower = "content/ui/materials/frames/screen/class_psyker_01_lower_right",
-			right_upper = "content/ui/materials/frames/screen/class_psyker_01_upper_right",
+			right_upper = "content/ui/materials/frames/screen/class_psyker_01_upper_right"
 		},
 		veteran = {
 			left_lower = "content/ui/materials/frames/screen/class_veteran_01_lower_left",
 			left_upper = "content/ui/materials/frames/screen/class_veteran_01_upper_left",
+			left_upper_inventory = "content/ui/materials/frames/screen/class_veteran_01_inventory_upper_left",
 			right_lower = "content/ui/materials/frames/screen/class_veteran_01_lower_right",
-			right_upper = "content/ui/materials/frames/screen/class_veteran_01_upper_right",
+			right_upper = "content/ui/materials/frames/screen/class_veteran_01_upper_right"
 		},
 		zealot = {
 			left_lower = "content/ui/materials/frames/screen/class_zealot_01_lower_left",
 			left_upper = "content/ui/materials/frames/screen/class_zealot_01_upper_left",
+			left_upper_inventory = "content/ui/materials/frames/screen/class_zealot_01_inventory_upper_left",
 			right_lower = "content/ui/materials/frames/screen/class_zealot_01_lower_right",
-			right_upper = "content/ui/materials/frames/screen/class_zealot_01_upper_right",
-		},
+			right_upper = "content/ui/materials/frames/screen/class_zealot_01_upper_right"
+		}
 	},
 	archetype_badge_texture_by_name = {
 		adamant = "content/ui/textures/icons/class_badges/adamant_01",
@@ -659,121 +684,7 @@ local ui_settings = {
 		ogryn = "content/ui/textures/icons/class_badges/ogryn_01",
 		psyker = "content/ui/textures/icons/class_badges/psyker_01",
 		veteran = "content/ui/textures/icons/class_badges/veteran_01",
-		zealot = "content/ui/textures/icons/class_badges/zealot_01",
-	},
-	item_preview_required_slot_items_per_slot_by_breed_and_gender = {
-		cryptic = {
-			male = {
-				default = {
-					slot_body_arms = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_arms",
-					slot_body_face = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_face",
-					slot_body_legs = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_legs",
-					slot_gear_lowerbody = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_lowerbody",
-					slot_gear_upperbody = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_upperbody",
-				},
-				slot_body_arms = {
-					slot_body_face = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_face",
-					slot_body_legs = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_legs",
-					slot_gear_lowerbody = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_lowerbody",
-					slot_gear_upperbody = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_upperbody",
-				},
-				slot_body_legs = {
-					slot_body_arms = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_arms",
-					slot_body_face = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_face",
-					slot_body_legs = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_legs",
-					slot_gear_lowerbody = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_lowerbody",
-					slot_gear_upperbody = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_upperbody",
-				},
-				slot_gear_head = {
-					slot_body_arms = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_arms",
-					slot_body_legs = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_legs",
-					slot_gear_lowerbody = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_lowerbody",
-					slot_gear_upperbody = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_upperbody",
-				},
-				slot_gear_upperbody = {
-					slot_body_arms = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_arms",
-					slot_body_face = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_face",
-					slot_body_legs = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_legs",
-					slot_gear_lowerbody = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_lowerbody",
-				},
-				slot_gear_lowerbody = {
-					slot_body_arms = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_arms",
-					slot_body_face = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_face",
-					slot_body_legs = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_legs",
-					slot_gear_upperbody = "content/items/characters/player/human/cryptic_base/cryptic_mannequin_upperbody",
-				},
-			},
-		},
-		human = {
-			male = {
-				default = {
-					slot_body_arms = "content/items/characters/player/human/attachment_base/male_mannequin_arms",
-					slot_body_face = "content/items/characters/player/human/attachment_base/male_mannequin_face",
-					slot_body_legs = "content/items/characters/player/human/attachment_base/male_mannequin_legs",
-					slot_body_torso = "content/items/characters/player/human/attachment_base/male_mannequin_torso",
-					slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/empty_upperbody",
-				},
-				slot_gear_upperbody = {
-					slot_body_arms = "content/items/characters/player/human/attachment_base/male_mannequin_arms",
-					slot_body_face = "content/items/characters/player/human/attachment_base/male_mannequin_face",
-					slot_body_legs = "content/items/characters/player/human/attachment_base/male_mannequin_legs",
-					slot_body_torso = "content/items/characters/player/human/attachment_base/male_mannequin_torso",
-				},
-				slot_gear_lowerbody = {
-					slot_body_arms = "content/items/characters/player/human/attachment_base/male_mannequin_arms",
-					slot_body_face = "content/items/characters/player/human/attachment_base/male_mannequin_face",
-					slot_body_legs = "content/items/characters/player/human/attachment_base/male_mannequin_legs",
-					slot_body_torso = "content/items/characters/player/human/attachment_base/male_mannequin_torso",
-					slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/preview_belt_mannequin",
-				},
-			},
-			female = {
-				default = {
-					slot_body_arms = "content/items/characters/player/human/attachment_base/female_mannequin_arms",
-					slot_body_face = "content/items/characters/player/human/attachment_base/female_mannequin_face",
-					slot_body_legs = "content/items/characters/player/human/attachment_base/female_mannequin_legs",
-					slot_body_torso = "content/items/characters/player/human/attachment_base/female_mannequin_torso",
-					slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/empty_upperbody",
-				},
-				slot_gear_upperbody = {
-					slot_body_arms = "content/items/characters/player/human/attachment_base/female_mannequin_arms",
-					slot_body_face = "content/items/characters/player/human/attachment_base/female_mannequin_face",
-					slot_body_legs = "content/items/characters/player/human/attachment_base/female_mannequin_legs",
-					slot_body_torso = "content/items/characters/player/human/attachment_base/female_mannequin_torso",
-				},
-				slot_gear_lowerbody = {
-					slot_body_arms = "content/items/characters/player/human/attachment_base/female_mannequin_arms",
-					slot_body_face = "content/items/characters/player/human/attachment_base/female_mannequin_face",
-					slot_body_legs = "content/items/characters/player/human/attachment_base/female_mannequin_legs",
-					slot_body_torso = "content/items/characters/player/human/attachment_base/female_mannequin_torso",
-					slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/preview_belt_mannequin",
-				},
-			},
-		},
-		ogryn = {
-			male = {
-				default = {
-					slot_body_arms = "content/items/characters/player/ogryn/attachment_base/mannequin_arms",
-					slot_body_face = "content/items/characters/player/ogryn/attachment_base/mannequin_face",
-					slot_body_legs = "content/items/characters/player/ogryn/attachment_base/mannequin_legs",
-					slot_body_torso = "content/items/characters/player/ogryn/attachment_base/mannequin_torso",
-					slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/empty_upperbody",
-				},
-				slot_gear_upperbody = {
-					slot_body_arms = "content/items/characters/player/ogryn/attachment_base/mannequin_arms",
-					slot_body_face = "content/items/characters/player/ogryn/attachment_base/mannequin_face",
-					slot_body_legs = "content/items/characters/player/ogryn/attachment_base/mannequin_legs",
-					slot_body_torso = "content/items/characters/player/ogryn/attachment_base/mannequin_torso",
-				},
-				slot_gear_lowerbody = {
-					slot_body_arms = "content/items/characters/player/ogryn/attachment_base/mannequin_arms",
-					slot_body_face = "content/items/characters/player/ogryn/attachment_base/mannequin_face",
-					slot_body_legs = "content/items/characters/player/ogryn/attachment_base/mannequin_legs",
-					slot_body_torso = "content/items/characters/player/ogryn/attachment_base/mannequin_torso",
-					slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/ogryn_preview_belt_mannequin",
-				},
-			},
-		},
+		zealot = "content/ui/textures/icons/class_badges/zealot_01"
 	},
 	weapon_patterns = UiWeaponPatternSettings,
 	assist_type_localization_lookup = {
@@ -783,7 +694,7 @@ local ui_settings = {
 		rescued = "loc_notification_desc_rescued_by",
 		revived = "loc_notification_desc_revived_by",
 		saved = "loc_notification_desc_saved_by",
-		stimmed = "loc_notification_desc_stimmed_by",
+		stimmed = "loc_notification_desc_stimmed_by"
 	},
 	assist_type_enter_sound_lookup = {
 		assisted = "notification_assist_assisted",
@@ -792,8 +703,8 @@ local ui_settings = {
 		rescued = "notification_assist_rescued",
 		revived = "notification_assist_revived",
 		saved = "notification_assist_saved",
-		stimmed = "notification_assist_stimmed",
-	},
+		stimmed = "notification_assist_stimmed"
+	}
 }
 
 return settings("UiSettings", ui_settings)

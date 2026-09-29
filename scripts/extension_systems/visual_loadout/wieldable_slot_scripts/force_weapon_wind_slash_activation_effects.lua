@@ -14,12 +14,12 @@ local VFX_FINGER_DURATION = 1.6
 local CAGE_FX_SOURCE_LOOKUP = {
 	right = {
 		hand = "fx_right_hand",
-		sword = "fx_anim_01",
+		sword = "fx_anim_01"
 	},
 	left = {
 		hand = "fx_left_hand",
-		sword = "fx_anim_01",
-	},
+		sword = "fx_anim_01"
+	}
 }
 local FINGER_FX_SOURCE_LOOKUP = {
 	right = {
@@ -27,15 +27,15 @@ local FINGER_FX_SOURCE_LOOKUP = {
 		middle = "fx_right_finger_tip_middle",
 		pinky = "fx_right_finger_tip_pinky",
 		ring = "fx_right_finger_tip_ring",
-		thumb = "fx_right_finger_tip_thumb",
+		thumb = "fx_right_finger_tip_thumb"
 	},
 	left = {
 		index = "fx_left_finger_tip_index",
 		middle = "fx_left_finger_tip_middle",
 		pinky = "fx_left_finger_tip_pinky",
 		ring = "fx_left_finger_tip_ring",
-		thumb = "fx_left_finger_tip_thumb",
-	},
+		thumb = "fx_left_finger_tip_thumb"
+	}
 }
 local _external_properties = {}
 
@@ -57,7 +57,7 @@ ForceWeaponWindSlashActivationEffects.init = function (self, context, slot, weap
 	self._is_in_first_person = nil
 	self._cage_particle_ids = {
 		left = nil,
-		right = nil,
+		right = nil
 	}
 	self._finger_particle_ids = {
 		right = {
@@ -65,15 +65,15 @@ ForceWeaponWindSlashActivationEffects.init = function (self, context, slot, weap
 			middle = nil,
 			pinky = nil,
 			ring = nil,
-			thumb = nil,
+			thumb = nil
 		},
 		left = {
 			index = nil,
 			middle = nil,
 			pinky = nil,
 			ring = nil,
-			thumb = nil,
-		},
+			thumb = nil
+		}
 	}
 
 	local owner_unit = context.owner_unit

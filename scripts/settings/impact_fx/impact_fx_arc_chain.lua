@@ -10,22 +10,22 @@ local default_armor_decal = {
 	extents = {
 		min = {
 			x = 0.25,
-			y = 0.25,
+			y = 0.25
 		},
 		max = {
 			x = 0.25,
-			y = 0.25,
-		},
+			y = 0.25
+		}
 	},
 	units = {
-		"content/fx/units/weapons/vfx_decal_lasgun_scorchmark",
-	},
+		"content/fx/units/weapons/vfx_decal_lasgun_scorchmark"
+	}
 }
 local blood_ball = {
-	"content/decals/blood_ball/blood_ball",
+	"content/decals/blood_ball/blood_ball"
 }
 local disgusting_blood_ball = {
-	"content/decals/blood_ball/blood_ball_poxwalker",
+	"content/decals/blood_ball/blood_ball_poxwalker"
 }
 local unarmored = {
 	sfx = {
@@ -36,39 +36,39 @@ local unarmored = {
 		weakspot_died = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_arc_chain",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_arc_chain"
+			}
 		},
 		died = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_arc_chain",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_arc_chain"
+			}
 		},
 		weakspot_damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_arc_chain",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_arc_chain"
+			}
 		},
 		damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_arc_chain",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_arc_chain"
+			}
 		},
 		damage_reduced = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_arc_chain",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_arc_chain"
+			}
 		},
 		damage_negated = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_arc_chain",
-			},
-		},
+				event = "wwise/events/weapon/play_bullet_hits_arc_chain"
+			}
+		}
 	},
 	vfx = {
 		blocked = nil,
@@ -77,97 +77,97 @@ local unarmored = {
 		weakspot_died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_ranged_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_ranged_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/gib_flesh_bits_01",
-				},
+					"content/fx/particles/impacts/flesh/gib_flesh_bits_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1",
-				},
-			},
+					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1"
+				}
+			}
 		},
 		died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_small_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_small_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/gib_flesh_bits_01",
-				},
+					"content/fx/particles/impacts/flesh/gib_flesh_bits_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1",
-				},
-			},
+					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1"
+				}
+			}
 		},
 		weakspot_damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_ranged_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_ranged_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1",
-				},
-			},
+					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1"
+				}
+			}
 		},
 		damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_small_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_small_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1",
-				},
-			},
+					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1"
+				}
+			}
 		},
 		damage_reduced = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1",
-				},
-			},
+					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1"
+				}
+			}
 		},
 		damage_negated = {
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1",
-				},
+					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_ricochet",
-				},
-			},
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			}
 		},
 		dead = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_small_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_small_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1",
-				},
-			},
-		},
+					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1"
+				}
+			}
+		}
 	},
 	linked_decal = {
 		blocked = nil,
@@ -179,7 +179,7 @@ local unarmored = {
 		shield_blocked = nil,
 		shove = nil,
 		weakspot_damage = nil,
-		weakspot_died = nil,
+		weakspot_died = nil
 	},
 	blood_ball = {
 		blocked = nil,
@@ -191,8 +191,8 @@ local unarmored = {
 		weakspot_damage = nil,
 		weakspot_died = blood_ball,
 		died = blood_ball,
-		dead = blood_ball,
-	},
+		dead = blood_ball
+	}
 }
 local armored = {
 	sfx = {
@@ -203,39 +203,39 @@ local armored = {
 		weakspot_died = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_arc_chain",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_arc_chain"
+			}
 		},
 		died = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_arc_chain",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_arc_chain"
+			}
 		},
 		weakspot_damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_arc_chain",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_arc_chain"
+			}
 		},
 		damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_arc_chain",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_arc_chain"
+			}
 		},
 		damage_reduced = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_arc_chain",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_arc_chain"
+			}
 		},
 		damage_negated = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_arc_chain",
-			},
-		},
+				event = "wwise/events/weapon/play_bullet_hits_arc_chain"
+			}
+		}
 	},
 	vfx = {
 		blocked = nil,
@@ -245,80 +245,80 @@ local armored = {
 		weakspot_died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_ranged_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_ranged_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/gib_flesh_bits_01",
-				},
+					"content/fx/particles/impacts/flesh/gib_flesh_bits_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1",
-				},
-			},
+					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1"
+				}
+			}
 		},
 		died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/gib_flesh_bits_01",
-				},
+					"content/fx/particles/impacts/flesh/gib_flesh_bits_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1",
-				},
-			},
+					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1"
+				}
+			}
 		},
 		weakspot_damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_ranged_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_ranged_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1",
-				},
-			},
+					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1"
+				}
+			}
 		},
 		damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_small_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_small_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1",
-				},
-			},
+					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1"
+				}
+			}
 		},
 		damage_reduced = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1",
-				},
-			},
+					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1"
+				}
+			}
 		},
 		damage_negated = {
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_ricochet",
-				},
-			},
-		},
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			}
+		}
 	},
 	linked_decal = {
 		blocked = nil,
@@ -330,7 +330,7 @@ local armored = {
 		died = default_armor_decal,
 		weakspot_damage = default_armor_decal,
 		damage = default_armor_decal,
-		damage_reduced = default_armor_decal,
+		damage_reduced = default_armor_decal
 	},
 	blood_ball = {
 		blocked = nil,
@@ -342,8 +342,8 @@ local armored = {
 		shove = nil,
 		weakspot_damage = nil,
 		weakspot_died = blood_ball,
-		died = blood_ball,
-	},
+		died = blood_ball
+	}
 }
 local super_armor = {
 	sfx = {
@@ -354,39 +354,39 @@ local super_armor = {
 		weakspot_died = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_arc_chain",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_arc_chain"
+			}
 		},
 		died = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_arc_chain",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_arc_chain"
+			}
 		},
 		weakspot_damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_arc_chain",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_arc_chain"
+			}
 		},
 		damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_arc_chain",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_arc_chain"
+			}
 		},
 		damage_reduced = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_arc_chain",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_arc_chain"
+			}
 		},
 		damage_negated = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_arc_chain",
-			},
-		},
+				event = "wwise/events/weapon/play_bullet_hits_arc_chain"
+			}
+		}
 	},
 	vfx = {
 		blocked = nil,
@@ -396,80 +396,80 @@ local super_armor = {
 		weakspot_died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_ranged_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_ranged_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/gib_flesh_bits_01",
-				},
+					"content/fx/particles/impacts/flesh/gib_flesh_bits_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1",
-				},
-			},
+					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1"
+				}
+			}
 		},
 		died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/gib_flesh_bits_01",
-				},
+					"content/fx/particles/impacts/flesh/gib_flesh_bits_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1",
-				},
-			},
+					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1"
+				}
+			}
 		},
 		weakspot_damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_ranged_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_ranged_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1",
-				},
-			},
+					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1"
+				}
+			}
 		},
 		damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_small_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_small_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1",
-				},
-			},
+					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1"
+				}
+			}
 		},
 		damage_reduced = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01",
-				},
+					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1",
-				},
-			},
+					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1"
+				}
+			}
 		},
 		damage_negated = {
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_ricochet",
-				},
-			},
-		},
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			}
+		}
 	},
 	linked_decal = {
 		blocked = nil,
@@ -481,7 +481,7 @@ local super_armor = {
 		died = default_armor_decal,
 		weakspot_damage = default_armor_decal,
 		damage = default_armor_decal,
-		damage_reduced = default_armor_decal,
+		damage_reduced = default_armor_decal
 	},
 	blood_ball = {
 		blocked = nil,
@@ -493,8 +493,8 @@ local super_armor = {
 		shove = nil,
 		weakspot_damage = nil,
 		weakspot_died = blood_ball,
-		died = blood_ball,
-	},
+		died = blood_ball
+	}
 }
 local disgustingly_resilient = {
 	sfx = {
@@ -505,39 +505,39 @@ local disgustingly_resilient = {
 		weakspot_died = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_arc_chain",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_arc_chain"
+			}
 		},
 		died = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_arc_chain",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_arc_chain"
+			}
 		},
 		weakspot_damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_arc_chain",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_arc_chain"
+			}
 		},
 		damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_arc_chain",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_arc_chain"
+			}
 		},
 		damage_reduced = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_arc_chain",
-			},
+				event = "wwise/events/weapon/play_bullet_hits_arc_chain"
+			}
 		},
 		damage_negated = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_arc_chain",
-			},
-		},
+				event = "wwise/events/weapon/play_bullet_hits_arc_chain"
+			}
+		}
 	},
 	vfx = {
 		blocked = nil,
@@ -546,107 +546,107 @@ local disgustingly_resilient = {
 		weakspot_died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_weakspot_ranged_01",
-				},
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_weakspot_ranged_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/gib_flesh_bits_01",
-				},
+					"content/fx/particles/impacts/flesh/gib_flesh_bits_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01",
-				},
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1",
-				},
-			},
+					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1"
+				}
+			}
 		},
 		died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_01",
-				},
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/gib_flesh_bits_01",
-				},
+					"content/fx/particles/impacts/flesh/gib_flesh_bits_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01",
-				},
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1",
-				},
-			},
+					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1"
+				}
+			}
 		},
 		weakspot_damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_weakspot_ranged_01",
-				},
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_weakspot_ranged_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1",
-				},
+					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01",
-				},
-			},
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
+			}
 		},
 		damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_small_01",
-				},
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_small_01"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1",
-				},
+					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01",
-				},
-			},
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
+			}
 		},
 		damage_reduced = {
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1",
-				},
+					"content/fx/particles/weapons/rifles/arc_rifle/impact_arc_rifle_p1"
+				}
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01",
-				},
-			},
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
+			}
 		},
 		damage_negated = {
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_ricochet",
-				},
-			},
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			}
 		},
 		dead = {
 			{
 				effects = {
-					"content/fx/particles/impacts/generic_dust_unarmored",
-				},
-			},
-		},
+					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			}
+		}
 	},
 	linked_decal = {
 		blocked = nil,
@@ -658,7 +658,7 @@ local disgustingly_resilient = {
 		shield_blocked = nil,
 		shove = nil,
 		weakspot_damage = nil,
-		weakspot_died = nil,
+		weakspot_died = nil
 	},
 	blood_ball = {
 		blocked = nil,
@@ -670,8 +670,8 @@ local disgustingly_resilient = {
 		weakspot_died = disgusting_blood_ball,
 		died = disgusting_blood_ball,
 		weakspot_damage = disgusting_blood_ball,
-		damage = disgusting_blood_ball,
-	},
+		damage = disgusting_blood_ball
+	}
 }
 local resistant = table.clone(unarmored)
 local berserker = table.clone(unarmored)
@@ -689,9 +689,9 @@ local player = {
 		damage = {
 			{
 				event = "wwise/events/weapon/play_bullet_hits_large_death",
-				only_1p = true,
-			},
-		},
+				only_1p = true
+			}
+		}
 	},
 	vfx = {
 		blocked = nil,
@@ -706,10 +706,10 @@ local player = {
 		damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_small_01",
-				},
-			},
-		},
+					"content/fx/particles/impacts/flesh/blood_splatter_small_01"
+				}
+			}
+		}
 	},
 	linked_decal = {
 		blocked = nil,
@@ -721,7 +721,7 @@ local player = {
 		shield_blocked = nil,
 		shove = nil,
 		weakspot_damage = nil,
-		weakspot_died = nil,
+		weakspot_died = nil
 	},
 	blood_ball = {
 		blocked = nil,
@@ -733,8 +733,8 @@ local player = {
 		shield_blocked = nil,
 		shove = nil,
 		weakspot_damage = nil,
-		weakspot_died = nil,
-	},
+		weakspot_died = nil
+	}
 }
 local surface_fx = {}
 local default_surface_fx = {
@@ -745,9 +745,9 @@ local default_surface_fx = {
 				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_gen",
 				group = "surface_material",
-				normal_rotation = true,
-			},
-		},
+				normal_rotation = true
+			}
+		}
 	},
 	[hit_types.penetration_entry] = {
 		vfx = nil,
@@ -756,11 +756,11 @@ local default_surface_fx = {
 				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_gen",
 				group = "surface_material",
-				normal_rotation = true,
-			},
-		},
+				normal_rotation = true
+			}
+		}
 	},
-	[hit_types.penetration_exit] = nil,
+	[hit_types.penetration_exit] = nil
 }
 
 ImpactFxHelper.create_missing_surface_fx(surface_fx, default_surface_fx)
@@ -778,8 +778,8 @@ return {
 		[armor_types.player] = player,
 		[armor_types.resistant] = resistant,
 		[armor_types.super_armor] = super_armor,
-		[armor_types.unarmored] = unarmored,
+		[armor_types.unarmored] = unarmored
 	},
 	surface = surface_fx,
-	surface_decal = surface_decal,
+	surface_decal = surface_decal
 }

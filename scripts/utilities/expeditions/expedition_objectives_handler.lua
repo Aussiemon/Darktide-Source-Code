@@ -8,13 +8,13 @@ local RADIUS_BY_LEVEL_TAG = {
 	level_size_16 = 8,
 	level_size_32 = 16,
 	level_size_48 = 24,
-	level_size_64 = 32,
+	level_size_64 = 32
 }
 local MARGIN_BY_LEVEL_TAG = {
 	level_size_16 = 10,
 	level_size_32 = 10,
 	level_size_48 = 10,
-	level_size_64 = 10,
+	level_size_64 = 10
 }
 local CLIENT_RPCS = {}
 local SERVER_RPCS = {}

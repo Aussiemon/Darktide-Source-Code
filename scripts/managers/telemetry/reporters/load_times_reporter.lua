@@ -113,7 +113,7 @@ local TIMERS = {
 	"wait_for_network_timer",
 	"resource_loading_timer",
 	"wait_for_spawn_timer",
-	"mission_intro_timer",
+	"mission_intro_timer"
 }
 
 LoadTimesReporter.reset_timers = function (self)

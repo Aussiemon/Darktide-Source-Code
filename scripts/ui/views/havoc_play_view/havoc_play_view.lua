@@ -69,7 +69,7 @@ HavocPlayView._setup_text_positions = function (self)
 	local reward_title_width = self:_scenegraph_size(reward_title_widget.scenegraph_id)
 	local reward_title_size = {
 		reward_title_width,
-		2000,
+		2000
 	}
 	local reward_title_height = Text.text_height(self._ui_renderer, reward_title_text, reward_title_style, reward_title_size)
 	local reward_description_widget = self._widgets_by_name.reward_description
@@ -78,7 +78,7 @@ HavocPlayView._setup_text_positions = function (self)
 	local reward_description_width = self:_scenegraph_size(reward_description_widget.scenegraph_id)
 	local reward_description_size = {
 		reward_description_width,
-		2000,
+		2000
 	}
 	local reward_description_height = Text.text_height(self._ui_renderer, reward_description_text, reward_description_style, reward_description_size)
 	local reward_objective_1_widget = self._widgets_by_name.reward_objective_1
@@ -87,7 +87,7 @@ HavocPlayView._setup_text_positions = function (self)
 	local reward_objective_1_width = self:_scenegraph_size(reward_objective_1_widget.scenegraph_id) + reward_objective_1_style.size_addition[1]
 	local reward_objective_1_size = {
 		reward_objective_1_width,
-		2000,
+		2000
 	}
 	local reward_objective_1_height = Text.text_height(self._ui_renderer, reward_objective_1_text, reward_objective_1_style, reward_objective_1_size)
 	local reward_objective_2_widget = self._widgets_by_name.reward_objective_2
@@ -96,7 +96,7 @@ HavocPlayView._setup_text_positions = function (self)
 	local reward_objective_2_width = self:_scenegraph_size(reward_objective_2_widget.scenegraph_id) + reward_objective_2_style.size_addition[1]
 	local reward_objective_2_size = {
 		reward_objective_2_width,
-		2000,
+		2000
 	}
 	local reward_objective_2_height = Text.text_height(self._ui_renderer, reward_objective_2_text, reward_objective_2_style, reward_objective_2_size)
 	local reward_objective_margin = 40
@@ -124,7 +124,7 @@ HavocPlayView._setup_current_havoc_mission_data = function (self)
 	local rank_badge_definitions = definitions.badge_definitions
 	local rank_badge_size = rank_badge_definitions.size
 	local rank_badge_passes = rank_badge_definitions.pass_template_function(self, {
-		rank = current_havoc_order.data.rank,
+		rank = current_havoc_order.data.rank
 	})
 	local rank_badge_widget_definition = UIWidget.create_definition(rank_badge_passes, "current_rank", nil, rank_badge_size)
 	local widget = UIWidget.init("rank_badge", rank_badge_widget_definition)
@@ -149,7 +149,7 @@ HavocPlayView._setup_current_havoc_mission_data = function (self)
 				255,
 				74,
 				21,
-				21,
+				21
 			}, destination_color)
 		end
 	end
@@ -237,7 +237,7 @@ HavocPlayView._extract_havoc_flags_data = function (self)
 		applied_themes = "havoc-theme-",
 		circumstances = "havoc-circ-",
 		factions = "havoc-faction-",
-		negative_modifiers = "havoc-mods-",
+		negative_modifiers = "havoc-mods-"
 	}
 	local result = {}
 
@@ -301,7 +301,7 @@ HavocPlayView._populate_week_data = function (self, data)
 			local wallet = WalletSettings[wallet_type]
 
 			rewards[#rewards + 1] = {
-				icon = wallet.icon_texture_small,
+				icon = wallet.icon_texture_small
 			}
 		end
 
@@ -382,13 +382,13 @@ HavocPlayView._setup_mission_detail_grid = function (self, mission_circumstances
 			widget_icon_load_margin = 0,
 			grid_spacing = {
 				10,
-				10,
+				10
 			},
 			grid_size = grid_size,
 			mask_size = {
 				grid_size[1] + 40,
-				grid_size[2] + mask_padding_size,
-			},
+				grid_size[2] + mask_padding_size
+			}
 		}
 		local layer = (self._draw_layer or 0) + 10
 
@@ -413,7 +413,7 @@ HavocPlayView._setup_mission_detail_grid = function (self, mission_circumstances
 			header = Localize(title),
 			text = Localize(description),
 			background = background,
-			icon = icon,
+			icon = icon
 		}
 	end
 
@@ -446,7 +446,7 @@ HavocPlayView._cb_on_mission_revoke_pressed = function (self)
 			callback = function ()
 				self._revoke_popup_id = nil
 				self._revoke_mission_on_update = true
-			end,
+			end
 		},
 		{
 			close_on_pressed = true,
@@ -455,8 +455,8 @@ HavocPlayView._cb_on_mission_revoke_pressed = function (self)
 			text = "loc_main_menu_delete_character_popup_cancel",
 			callback = function ()
 				self._revoke_popup_id = nil
-			end,
-		},
+			end
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", popup_params, function (id)
@@ -470,7 +470,7 @@ HavocPlayView._cb_on_party_finder_pressed = function (self)
 	end
 
 	local context = {
-		can_exit = true,
+		can_exit = true
 	}
 	local view_name = "group_finder_view"
 
@@ -494,7 +494,7 @@ HavocPlayView._cb_on_mission_start = function (self)
 
 	if current_havoc_order.ongoing_mission_id then
 		activate_mission_promise = Promise.resolved({
-			id = current_havoc_order.ongoing_mission_id,
+			id = current_havoc_order.ongoing_mission_id
 		})
 	else
 		activate_mission_promise = Managers.data_service.havoc:activate_havoc_mission(current_havoc_order.id)
@@ -517,7 +517,7 @@ HavocPlayView._cb_on_mission_start = function (self)
 		if error and error.code == 400 and string.find(error.description, "already_has_ongoing_mission") then
 			self:_play_sound(UISoundEvents.havoc_terminal_deny_mission)
 			Managers.event:trigger("event_add_notification_message", "alert", {
-				text = Localize("loc_havoc_must_cancel_ongoing_mission"),
+				text = Localize("loc_havoc_must_cancel_ongoing_mission")
 			})
 		end
 	end)
@@ -558,7 +558,7 @@ HavocPlayView._update_mission_participants = function (self, participants)
 				local widget_width = self:_scenegraph_size(widget.scenegraph_id) + widget_style.size_addition[1]
 				local widget_size = {
 					widget_width,
-					2000,
+					2000
 				}
 				local widget_text_height = Text.text_height(self._ui_renderer, widget_text, widget_style, widget_size)
 
@@ -582,7 +582,7 @@ HavocPlayView._update_mission_participants = function (self, participants)
 
 				initial_names[#initial_names + 1] = {
 					character_name = character_name,
-					account_name = account_name,
+					account_name = account_name
 				}
 
 				if player_info and player_info:online_status() ~= "online" then
@@ -590,18 +590,18 @@ HavocPlayView._update_mission_participants = function (self, participants)
 					name_promises[#name_promises + 1] = Managers.backend.interfaces.account:get_account_name_by_account_id(account_id):next(function (data)
 						return {
 							character_name = "",
-							account_name = data,
+							account_name = data
 						}
 					end):catch(function ()
 						return {
 							character_name = "",
-							account_name = account_name,
+							account_name = account_name
 						}
 					end)
 				else
 					name_promises[#name_promises + 1] = Promise.resolved({
 						character_name = character_name,
-						account_name = account_name,
+						account_name = account_name
 					})
 				end
 			else
@@ -850,7 +850,7 @@ HavocPlayView._update_can_play = function (self)
 
 		if not is_min_party_size then
 			reason = Localize("loc_minimum_participants_required", true, {
-				amount = min_participants,
+				amount = min_participants
 			})
 		elseif found_myself then
 			reason = Localize("loc_havoc_play_player_prohibited")
@@ -948,49 +948,49 @@ HavocPlayView.cb_on_help_pressed = function (self)
 		window_width = 800,
 		widgets_name = {
 			"page_header",
-			"reward_timer_header",
+			"reward_timer_header"
 		},
 		position_data = {
 			horizontal_alignment = "left",
 			vertical_alignment = "top",
 			x = 154,
 			y = 164,
-			z = 0,
+			z = 0
 		},
 		layout = {
 			{
 				widget_type = "dynamic_spacing",
 				size = {
 					800,
-					25,
-				},
+					25
+				}
 			},
 			{
 				widget_type = "text",
 				text = Localize("loc_havoc_onboarding_rank_title"),
 				style = {
-					font_size = 30,
-				},
+					font_size = 30
+				}
 			},
 			{
 				widget_type = "dynamic_spacing",
 				size = {
 					800,
-					20,
-				},
+					20
+				}
 			},
 			{
 				widget_type = "text",
-				text = Localize("loc_havoc_onboarding_rank_description"),
+				text = Localize("loc_havoc_onboarding_rank_description")
 			},
 			{
 				widget_type = "dynamic_spacing",
 				size = {
 					800,
-					25,
-				},
-			},
-		},
+					25
+				}
+			}
+		}
 	}
 	tutorial_overlay_data[#tutorial_overlay_data + 1] = {
 		grow_from_center = true,
@@ -1002,52 +1002,52 @@ HavocPlayView.cb_on_help_pressed = function (self)
 			"objective",
 			"detail",
 			"mission_detail_grid",
-			"mission_detail_grid_background",
+			"mission_detail_grid_background"
 		},
 		elements = {
-			self._mission_detail_grid,
+			self._mission_detail_grid
 		},
 		position_data = {
 			horizontal_alignment = "left",
 			vertical_alignment = "top",
 			x = 780,
 			y = 60,
-			z = 0,
+			z = 0
 		},
 		layout = {
 			{
 				widget_type = "dynamic_spacing",
 				size = {
 					800,
-					25,
-				},
+					25
+				}
 			},
 			{
 				widget_type = "text",
 				text = Localize("loc_havoc_onboarding_order_title"),
 				style = {
-					font_size = 30,
-				},
+					font_size = 30
+				}
 			},
 			{
 				widget_type = "dynamic_spacing",
 				size = {
 					800,
-					20,
-				},
+					20
+				}
 			},
 			{
 				widget_type = "text",
-				text = Localize("loc_havoc_onboarding_order_description"),
+				text = Localize("loc_havoc_onboarding_order_description")
 			},
 			{
 				widget_type = "dynamic_spacing",
 				size = {
 					800,
-					25,
-				},
-			},
-		},
+					25
+				}
+			}
+		}
 	}
 	tutorial_overlay_data[#tutorial_overlay_data + 1] = {
 		grow_from_center = true,
@@ -1058,49 +1058,49 @@ HavocPlayView.cb_on_help_pressed = function (self)
 			"reward_objective_1",
 			"reward_objective_2",
 			"reward_header",
-			"weekly_reward",
+			"weekly_reward"
 		},
 		position_data = {
 			horizontal_alignment = "left",
 			vertical_alignment = "top",
 			x = 510,
 			y = 140,
-			z = 0,
+			z = 0
 		},
 		layout = {
 			{
 				widget_type = "dynamic_spacing",
 				size = {
 					800,
-					25,
-				},
+					25
+				}
 			},
 			{
 				widget_type = "text",
 				text = Localize("loc_havoc_onboarding_reward_title"),
 				style = {
-					font_size = 30,
-				},
+					font_size = 30
+				}
 			},
 			{
 				widget_type = "dynamic_spacing",
 				size = {
 					800,
-					20,
-				},
+					20
+				}
 			},
 			{
 				widget_type = "text",
-				text = Localize("loc_havoc_onboarding_reward_description"),
+				text = Localize("loc_havoc_onboarding_reward_description")
 			},
 			{
 				widget_type = "dynamic_spacing",
 				size = {
 					800,
-					25,
-				},
-			},
-		},
+					25
+				}
+			}
+		}
 	}
 	tutorial_overlay_data[#tutorial_overlay_data + 1] = {
 		grow_from_center = true,
@@ -1108,49 +1108,49 @@ HavocPlayView.cb_on_help_pressed = function (self)
 		widgets_name = {
 			"party_finder_button",
 			"current_order_charges_remaining_description",
-			"play_button",
+			"play_button"
 		},
 		position_data = {
 			horizontal_alignment = "left",
 			vertical_alignment = "bottom",
 			x = 930,
 			y = 672,
-			z = 0,
+			z = 0
 		},
 		layout = {
 			{
 				widget_type = "dynamic_spacing",
 				size = {
 					800,
-					25,
-				},
+					25
+				}
 			},
 			{
 				widget_type = "text",
 				text = Localize("loc_havoc_onboarding_party_title"),
 				style = {
-					font_size = 30,
-				},
+					font_size = 30
+				}
 			},
 			{
 				widget_type = "dynamic_spacing",
 				size = {
 					800,
-					20,
-				},
+					20
+				}
 			},
 			{
 				widget_type = "text",
-				text = Localize("loc_havoc_onboarding_party_description"),
+				text = Localize("loc_havoc_onboarding_party_description")
 			},
 			{
 				widget_type = "dynamic_spacing",
 				size = {
 					800,
-					25,
-				},
-			},
-		},
+					25
+				}
+			}
+		}
 	}
 
 	local tutorial_start_delay = 0.5
@@ -1198,7 +1198,7 @@ end
 
 HavocPlayView._callback_open_options = function (self, region_data)
 	self._mission_board_options = self:_add_element(ViewElementMissionBoardOptions, "mission_board_options_element", 200, {
-		on_destroy_callback = callback(self, "_callback_close_options"),
+		on_destroy_callback = callback(self, "_callback_close_options")
 	})
 
 	local regions_latency = self._regions_latency
@@ -1249,7 +1249,7 @@ HavocPlayView._callback_open_options = function (self, region_data)
 						display_name = region_display_name,
 						ignore_localization = ignore_localization,
 						value = region_name,
-						latency_order = latency_data.min_latency,
+						latency_order = latency_data.min_latency
 					}
 				end
 
@@ -1261,7 +1261,7 @@ HavocPlayView._callback_open_options = function (self, region_data)
 			end,
 			on_changed = function (value)
 				Managers.data_service.region_latency:set_prefered_mission_region(value)
-			end,
+			end
 		}
 	end
 

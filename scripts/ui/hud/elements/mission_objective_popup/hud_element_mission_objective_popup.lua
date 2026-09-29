@@ -69,25 +69,25 @@ HudElementMissionObjectivePopup._present_popup = function (self, popup_data)
 		255,
 		255,
 		151,
-		29,
+		29
 	} or ColorUtilities.clone(UIHudSettings.color_tint_main_1)
 	widget.style.description_text.text_color = alert and {
 		255,
 		255,
 		151,
-		29,
+		29
 	} or ColorUtilities.clone(UIHudSettings.color_tint_main_1)
 	widget.style.frame.color = alert and {
 		255,
 		255,
 		151,
-		29,
+		29
 	} or UIHudSettings.get_hud_color("color_tint_main_3", 255)
 	widget.style.effect.color = alert and UIHudSettings.get_hud_color("color_tint_alert_3", 255) or {
 		100,
 		101,
 		133,
-		96,
+		96
 	}
 	widget.style.background.color = UIHudSettings.get_hud_color(alert and "color_tint_alert_3" or "color_tint_main_3", 255)
 
@@ -138,7 +138,7 @@ HudElementMissionObjectivePopup.event_mission_objective_start = function (self, 
 		title_text = title_text,
 		description_text = description_text,
 		icon = icon,
-		sound_event = Managers.state.game_mode:game_mode_name() == "expedition" and UISoundEvents.mission_objective_popup_new_expeditions or UISoundEvents.mission_objective_popup_new,
+		sound_event = Managers.state.game_mode:game_mode_name() == "expedition" and UISoundEvents.mission_objective_popup_new_expeditions or UISoundEvents.mission_objective_popup_new
 	}
 
 	if self._popup_animation_id then
@@ -158,7 +158,7 @@ HudElementMissionObjectivePopup.on_event_show_objective_popup = function (self, 
 		alert = style == "alert",
 		title_text = event_subtitle and self:_localize(event_subtitle) or "",
 		description_text = event_title and self:_localize(event_title) or "",
-		sound_event = ui_sound_event,
+		sound_event = ui_sound_event
 	}
 
 	if self._popup_animation_id then
@@ -205,7 +205,7 @@ HudElementMissionObjectivePopup.event_mission_objective_update = function (self,
 		description_text = description_text,
 		update_text = update_text,
 		icon = icon,
-		sound_event = UISoundEvents.mission_objective_popup_part_complete,
+		sound_event = UISoundEvents.mission_objective_popup_part_complete
 	}
 
 	if self._popup_animation_id then
@@ -233,7 +233,7 @@ HudElementMissionObjectivePopup.event_mission_objective_complete = function (sel
 		alert = alert,
 		description_text = description_text,
 		icon = icon,
-		sound_event = UISoundEvents.mission_objective_popup_complete,
+		sound_event = UISoundEvents.mission_objective_popup_complete
 	}
 
 	if self._popup_animation_id then

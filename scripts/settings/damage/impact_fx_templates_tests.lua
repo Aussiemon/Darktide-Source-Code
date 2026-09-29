@@ -15,7 +15,7 @@ local IMPACT_FX_INTERFACE = {
 	unit = true,
 	vfx = true,
 	vfx_1p = true,
-	vfx_3p = true,
+	vfx_3p = true
 }
 local success
 

@@ -7,68 +7,68 @@ local defined_level_rewards = {
 		level = 5,
 		text = "New Talent Point",
 		type = "acquired",
-		duration = display_duration,
+		duration = display_duration
 	},
 	{
 		level = 10,
 		text = "New Talent Point",
 		type = "acquired",
-		duration = display_duration,
+		duration = display_duration
 	},
 	{
 		level = 15,
 		text = "New Talent Point",
 		type = "acquired",
-		duration = display_duration,
+		duration = display_duration
 	},
 	{
 		level = 20,
 		text = "New Talent Point",
 		type = "acquired",
-		duration = display_duration,
+		duration = display_duration
 	},
 	{
 		level = 25,
 		text = "New Talent Point",
 		type = "acquired",
-		duration = display_duration,
+		duration = display_duration
 	},
 	{
 		level = 30,
 		text = "New Talent Point",
 		type = "acquired",
-		duration = display_duration,
+		duration = display_duration
 	},
 	{
 		level = 2,
 		text = "Vendors Now Available",
 		type = "unlock",
-		duration = display_duration,
+		duration = display_duration
 	},
 	{
 		level = 8,
 		text = "Career Path Now Available",
 		type = "unlock",
-		duration = display_duration,
+		duration = display_duration
 	},
 	{
 		level = 14,
 		text = "Gadgets",
 		type = "unlock",
-		duration = display_duration,
+		duration = display_duration
 	},
 	{
 		level = 19,
 		text = "Crafting Station Now Available",
 		type = "unlock",
-		duration = display_duration,
+		duration = display_duration
 	},
 	{
 		level = 23,
 		text = "Contracts Now Available",
 		type = "unlock",
-		duration = display_duration,
-	},
+		duration = display_duration
+	}
 }
 local rewards = table.clone(defined_level_rewards)
 local weapon_items_array = {}
@@ -91,13 +91,13 @@ for i = 1, 30 do
 		type = "item",
 		level = i,
 		item = item,
-		duration = display_duration,
+		duration = display_duration
 	}
 end
 
 local player_level_reward_settings = {
 	rewards = rewards,
-	duration_per_reward = display_duration,
+	duration_per_reward = display_duration
 }
 
 return player_level_reward_settings

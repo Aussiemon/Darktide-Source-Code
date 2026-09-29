@@ -71,7 +71,7 @@ OptionsView._map_validations = function (self, config)
 		categories[category_config.display_name] = {
 			validation_function = category_config.validation_function,
 			validation_result = validation_result,
-			settings = {},
+			settings = {}
 		}
 	end
 
@@ -90,7 +90,7 @@ OptionsView._map_validations = function (self, config)
 
 		categories[category].settings[id] = {
 			validation_function = setting.validation_function,
-			validation_result = validation_result,
+			validation_result = validation_result
 		}
 	end
 
@@ -181,7 +181,7 @@ OptionsView.cb_reset_category_to_default = function (self)
 					end
 
 					self._popup_id = nil
-				end,
+				end
 			},
 			{
 				close_on_pressed = true,
@@ -190,9 +190,9 @@ OptionsView.cb_reset_category_to_default = function (self)
 				text = "loc_popup_button_cancel_settings_reset_default",
 				callback = function ()
 					self._popup_id = nil
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -216,9 +216,9 @@ OptionsView._restart_popup_info = function (self)
 					self._require_restart = false
 
 					Managers.ui:close_view(view_name)
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -312,7 +312,7 @@ OptionsView._setup_content_widgets = function (self, content, scenegraph_id, cal
 			end
 
 			alignment_list[#alignment_list + 1] = widget or {
-				size = size,
+				size = size
 			}
 		end
 	end
@@ -498,7 +498,7 @@ OptionsView.update = function (self, dt, t, input_service, view_data)
 	if self._tooltip_data and self._tooltip_data.widget and (self._using_cursor_navigation and not self._tooltip_data.widget.content.hotspot.is_hover or not self._using_cursor_navigation and not self._tooltip_data.widget.content.hotspot.is_focused) then
 		self._tooltip_data = {
 			text = nil,
-			widget = nil,
+			widget = nil
 		}
 		self._widgets_by_name.tooltip.content.visible = false
 	end
@@ -539,15 +539,61 @@ OptionsView._on_navigation_input_changed = function (self)
 	end
 end
 
+OptionsView._focused_settings_entry_id = function (self)
+	local widget = self._selected_settings_widget
+
+	if not widget then
+		local widgets = self._navigation_widgets and self._navigation_widgets[SETTINGS_GRID]
+		local row = self._selected_navigation_row_index
+
+		widget = widgets and row and widgets[row]
+	end
+
+	local entry = widget and widget.content and widget.content.entry
+
+	if not entry then
+		return nil
+	end
+
+	return entry.id or entry.display_name
+end
+
+OptionsView._restore_settings_navigation = function (self, setting_id)
+	local widgets = self._settings_content_widgets
+
+	if not widgets or not setting_id then
+		return false
+	end
+
+	for i = 1, #widgets do
+		local widget = widgets[i]
+		local entry = widget.content.entry
+		local id = entry and (entry.id or entry.display_name)
+
+		if id == setting_id then
+			self:_set_selected_navigation_widget(widget)
+
+			return true
+		end
+	end
+
+	return false
+end
+
 OptionsView._reset_options_view = function (self, reset_all)
+	local restore_setting_id
+
+	if not reset_all and self._selected_navigation_column_index == SETTINGS_GRID then
+		restore_setting_id = self:_focused_settings_entry_id()
+	end
+
 	if reset_all then
 		self._selected_category = nil
 		self._selected_settings_widget = nil
 		self._selected_navigation_row_index = nil
 		self._selected_navigation_column_index = nil
+		restore_setting_id = nil
 	end
-
-	self._selected_category_widget = nil
 
 	self:_setup_settings_config(self._options_templates)
 	self:_setup_category_config(self._options_templates)
@@ -557,13 +603,30 @@ OptionsView._reset_options_view = function (self, reset_all)
 
 		for i = 1, #self._category_content_widgets do
 			local widget = self._category_content_widgets[i]
+			local is_current = widget.content.entry.display_name == self._selected_category
 
-			widget.content.hotspot.is_focused = widget.content.entry.display_name == self._selected_category
-			widget.content.hotspot.is_selected = widget.content.entry.display_name == self._selected_category
+			widget.content.hotspot.is_selected = is_current
+			widget.content.hotspot.is_focused = false
+
+			if is_current then
+				self._selected_category_widget = widget
+			end
 		end
 	end
 
-	self:_update_grid_navigation_selection()
+	if self._selected_category then
+		self:present_category_widgets(self._selected_category, restore_setting_id ~= nil)
+	end
+
+	if restore_setting_id and not self._using_cursor_navigation then
+		local restored = self:_restore_settings_navigation(restore_setting_id)
+
+		if not restored and self._selected_category_widget then
+			self:_set_selected_navigation_widget(self._selected_category_widget)
+		end
+	else
+		self:_update_grid_navigation_selection()
+	end
 end
 
 OptionsView.settings_grid_length = function (self)
@@ -654,7 +717,7 @@ OptionsView._update_grid_navigation_selection = function (self)
 	end
 end
 
-OptionsView.present_category_widgets = function (self, category)
+OptionsView.present_category_widgets = function (self, category, skip_navigation_update)
 	self._selected_category = category
 
 	local settings_category_widgets = self._settings_category_widgets
@@ -687,7 +750,9 @@ OptionsView.present_category_widgets = function (self, category)
 		self._navigation_widgets[SETTINGS_GRID] = widgets
 		self._navigation_grids[SETTINGS_GRID] = self._settings_content_grid
 
-		self:_update_grid_navigation_selection()
+		if not skip_navigation_update then
+			self:_update_grid_navigation_selection()
+		end
 	end
 end
 
@@ -736,7 +801,7 @@ OptionsView._setup_category_config = function (self, config)
 				end,
 				select_function = function (parent, widget, entry)
 					self:present_category_widgets(category_display_name)
-				end,
+				end
 			}
 
 			entries[#entries + 1] = entry
@@ -764,10 +829,10 @@ OptionsView._setup_category_config = function (self, config)
 	self._reset_functions_by_category = reset_functions_by_category
 	self._categories_by_display_name = categories_by_display_name
 	self._navigation_widgets = {
-		self._category_content_widgets,
+		self._category_content_widgets
 	}
 	self._navigation_grids = {
-		self._category_content_grid,
+		self._category_content_grid
 	}
 end
 
@@ -822,7 +887,7 @@ OptionsView._setup_settings_config = function (self, config)
 
 			category_widgets[category][#widgets + 1] = {
 				widget = widget,
-				alignment_widget = alignment_widget,
+				alignment_widget = alignment_widget
 			}
 		end
 	end
@@ -891,7 +956,7 @@ OptionsView._set_tooltip_data = function (self, widget)
 	if current_widget ~= widget or current_widget == widget and new_y ~= current_y then
 		self._tooltip_data = {
 			widget = widget,
-			text = localized_text,
+			text = localized_text
 		}
 		self._widgets_by_name.tooltip.content.text = localized_text
 
@@ -900,13 +965,13 @@ OptionsView._set_tooltip_data = function (self, widget)
 		local width = widget.content.size[1] * 0.5
 		local _, text_height = self:_text_size(localized_text, text_style, {
 			width,
-			0,
+			0
 		})
 		local height = text_height
 
 		self._widgets_by_name.tooltip.content.size = {
 			width,
-			height,
+			height
 		}
 		self._widgets_by_name.tooltip.offset[1] = x_pos - width * 0.8
 		self._widgets_by_name.tooltip.offset[2] = math.max(new_y - height, 20)
@@ -983,7 +1048,7 @@ OptionsView._create_settings_widget_from_config = function (self, config, catego
 	local indentation_spacing = OptionsViewSettings.indentation_spacing * indentation_level
 	local new_size = {
 		size[1] - indentation_spacing,
-		size[2],
+		size[2]
 	}
 	local pass_template_function = template.pass_template_function
 	local pass_template = pass_template_function and pass_template_function(self, config, new_size) or template.pass_template
@@ -1009,11 +1074,11 @@ OptionsView._create_settings_widget_from_config = function (self, config, catego
 		return widget, {
 			horizontal_alignment = "right",
 			size = size,
-			name = name,
+			name = name
 		}
 	else
 		return nil, {
-			size = size,
+			size = size
 		}
 	end
 end
@@ -1046,7 +1111,8 @@ OptionsView.show_keybind_popup = function (self, widget, entry)
 						alias_name = setting.alias_name,
 						service_type = setting.service_type,
 						display_name = setting.display_name,
-						devices = setting.devices,
+						display_text = setting.display_text,
+						devices = setting.devices
 					}
 
 					if setting.alias_name == entry.alias_name then

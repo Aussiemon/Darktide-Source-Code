@@ -17,15 +17,15 @@ local widget_definitions = {
 				horizontal_alignment = "center",
 				vertical_alignment = "center",
 				size = ScannerDisplayViewExpeditionsMapSettings.cursor_widget_size,
-				color = Color.terminal_text_key_value(255, true),
-			},
-		},
-	}, "center_pivot", nil, ScannerDisplayViewExpeditionsMapSettings.target_widget_size),
+				color = Color.terminal_text_key_value(255, true)
+			}
+		}
+	}, "center_pivot", nil, ScannerDisplayViewExpeditionsMapSettings.target_widget_size)
 }
 
 return {
 	expedition_map = {
 		widget_definitions = widget_definitions,
-		scenegraph_definition = scenegraph_definition,
-	},
+		scenegraph_definition = scenegraph_definition
+	}
 }

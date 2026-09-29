@@ -82,7 +82,7 @@ end
 
 ExpeditionHologramTable.component_data = {
 	inputs = {},
-	extensions = {},
+	extensions = {}
 }
 
 return ExpeditionHologramTable

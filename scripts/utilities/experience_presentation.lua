@@ -140,7 +140,7 @@ ExperiencePresentation.setup_presentation_data = function (experience_settings, 
 		starting_experience = starting_experience,
 		duration = presentation_duration,
 		spare_time = spare_time,
-		level_up_delay = level_up_delay,
+		level_up_delay = level_up_delay
 	}
 end
 

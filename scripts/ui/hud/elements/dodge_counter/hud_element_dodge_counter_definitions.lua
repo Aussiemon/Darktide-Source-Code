@@ -19,8 +19,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			center_offset,
-			0,
-		},
+			0
+		}
 	},
 	gauge = {
 		horizontal_alignment = "center",
@@ -28,13 +28,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			212,
-			10,
+			10
 		},
 		position = {
 			0,
 			-5,
-			1,
-		},
+			1
+		}
 	},
 	overlap_bar = {
 		horizontal_alignment = "center",
@@ -44,8 +44,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			2,
-			1,
-		},
+			1
+		}
 	},
 	dodge_bar = {
 		horizontal_alignment = "center",
@@ -55,20 +55,20 @@ local scenegraph_definition = {
 		position = {
 			0,
 			2,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local value_text_style = table.clone(UIFontSettings.body_small)
 
 value_text_style.offset = {
 	0,
 	10,
-	3,
+	3
 }
 value_text_style.size = {
 	500,
-	30,
+	30
 }
 value_text_style.vertical_alignment = "top"
 value_text_style.horizontal_alignment = "left"
@@ -81,7 +81,7 @@ local name_text_style = table.clone(value_text_style)
 name_text_style.offset = {
 	0,
 	18,
-	3,
+	3
 }
 name_text_style.horizontal_alignment = "right"
 name_text_style.text_horizontal_alignment = "right"
@@ -103,11 +103,11 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
-				color = UIHudSettings.color_tint_main_2,
-			},
-		},
+				color = UIHudSettings.color_tint_main_2
+			}
+		}
 	}, "gauge"),
 	wide_bar = UIWidget.create_definition({
 		{
@@ -120,16 +120,16 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				size_addition = {
 					0,
-					0,
+					0
 				},
-				color = DODGE_STATE_COLORS_OVERLAP_BAR.hidden,
-			},
-		},
-	}, "overlap_bar"),
+				color = DODGE_STATE_COLORS_OVERLAP_BAR.hidden
+			}
+		}
+	}, "overlap_bar")
 }
 local dodge_bar_definition = UIWidget.create_definition({
 	{
@@ -143,14 +143,14 @@ local dodge_bar_definition = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				3,
+				3
 			},
 			size_addition = {
 				0,
-				0,
+				0
 			},
-			color = DODGE_BAR_STATE_COLORS_BAR_FILL.available,
-		},
+			color = DODGE_BAR_STATE_COLORS_BAR_FILL.available
+		}
 	},
 	{
 		pass_type = "rect",
@@ -163,15 +163,15 @@ local dodge_bar_definition = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				2,
+				2
 			},
 			size_addition = {
 				0,
-				0,
+				0
 			},
-			color = DODGE_BAR_STATE_COLORS_BAR_BACKGROUND.default,
-		},
-	},
+			color = DODGE_BAR_STATE_COLORS_BAR_BACKGROUND.default
+		}
+	}
 }, "dodge_bar")
 local animations = {
 	on_bar_spent = {
@@ -199,8 +199,8 @@ local animations = {
 				local dodge_bar = params.dodge_bar
 
 				dodge_bar.animation_id = nil
-			end,
-		},
+			end
+		}
 	},
 	on_bar_enter_cooldown = {
 		{
@@ -232,8 +232,8 @@ local animations = {
 				local dodge_bar = params.dodge_bar
 
 				dodge_bar.animation_id = nil
-			end,
-		},
+			end
+		}
 	},
 	on_bar_exit_cooldown = {
 		{
@@ -265,8 +265,8 @@ local animations = {
 				local dodge_bar = params.dodge_bar
 
 				dodge_bar.animation_id = nil
-			end,
-		},
+			end
+		}
 	},
 	on_bar_restored = {
 		{
@@ -293,8 +293,8 @@ local animations = {
 				local dodge_bar = params.dodge_bar
 
 				dodge_bar.animation_id = nil
-			end,
-		},
+			end
+		}
 	},
 	on_inefficient_dodge = {
 		{
@@ -313,14 +313,14 @@ local animations = {
 				local fill_widget_color = widget_style.bar_overlap.color
 
 				fill_widget_color[1] = 255 * (1 - color_anim_progress)
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
 	animations = animations,
 	dodge_bar_definition = dodge_bar_definition,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

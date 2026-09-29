@@ -7,12 +7,12 @@ local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local Mastery = require("scripts/utilities/mastery")
 local Promise = require("scripts/foundation/utilities/promise")
+local Text = require("scripts/utilities/ui/text")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
 local WeaponUnlockSettings = require("scripts/settings/weapon_unlock/weapon_unlock_settings")
-local Text = require("scripts/utilities/ui/text")
 local FALLBACK_TEXTURE = "core/fallback_resources/missing_texture"
 local MasteriesOverviewView = class("MasteriesOverviewView", "BaseView")
 
@@ -89,64 +89,28 @@ MasteriesOverviewView._update_mastery_data = function (self, mastery_id)
 			mastery_data.current_xp = mastery_xp
 			mastery_data.start_exp = mastery_start_exp
 			mastery_data.end_exp = mastery_end_exp
+			self._mastery_traits[mastery_id] = mastery_data.traits
 
-			local trait_cat_id = Mastery.get_pattern_id_to_category_id(mastery_id)
+			local points_spent = Mastery.get_spent_points(mastery_data.traits)
+			local points_total = Mastery.get_all_unlocked_points(mastery_data)
+			local points_available = Mastery.get_available_points(mastery_data, mastery_data.traits)
 
-			Managers.data_service.crafting:get_trait_sticker_book_by_id(trait_cat_id):next(function (data)
-				if self._destroyed then
-					return
+			mastery_data.points_available = points_available
+			mastery_data.points_used = points_spent
+			mastery_data.points_total = points_total
+			mastery_data.syncing = parent_mastery_data.syncing
+
+			for i = 1, #self._masteries_layout do
+				local layout = self._masteries_layout[i]
+
+				if layout.mastery_id == mastery_id then
+					layout.mastery_level = mastery_level
+					layout.claimed_level = claimed_level
+					layout.show_alert = points_available > 0
+
+					break
 				end
-
-				local valid_traits = {}
-
-				for name, trait_data in pairs(data) do
-					if MasterItems.get_item(name) then
-						valid_traits[#valid_traits + 1] = {
-							trait_status = trait_data,
-							trait_name = name,
-						}
-					end
-				end
-
-				table.sort(valid_traits, function (a, b)
-					return a.trait_name < b.trait_name
-				end)
-
-				self._mastery_traits[mastery_id] = valid_traits
-
-				local points_spent = Mastery.get_spent_points(valid_traits)
-				local points_total = Mastery.get_all_unlocked_points(mastery_data)
-				local points_available = Mastery.get_available_points(mastery_data, valid_traits)
-
-				mastery_data.points_available = points_available
-				mastery_data.points_used = points_spent
-				mastery_data.points_total = points_total
-				mastery_data.syncing = parent_mastery_data.syncing
-
-				for i = 1, #self._masteries_layout do
-					local layout = self._masteries_layout[i]
-
-					if layout.mastery_id == mastery_id then
-						layout.mastery_level = mastery_level
-						layout.claimed_level = claimed_level
-						layout.show_alert = points_available > 0
-
-						break
-					end
-				end
-
-				self:_update_mastery_presentation(mastery_id)
-				Managers.event:trigger("event_mastery_overview_updated", mastery_id)
-			end):catch(function ()
-				if self._destroyed then
-					return
-				end
-
-				self._masteries[mastery_id].syncing = parent_mastery_data.syncing
-
-				self:_update_mastery_presentation(mastery_id)
-				Managers.event:trigger("event_mastery_overview_updated", mastery_id)
-			end)
+			end
 		end
 	end
 end
@@ -244,7 +208,7 @@ MasteriesOverviewView._set_button_callbacks = function (self)
 			milestones = self._mastery_milestones[self._selected_pattern],
 			slot_type = slot_type,
 			traits_id = trait_category,
-			parent = self,
+			parent = self
 		})
 	end
 end
@@ -261,82 +225,75 @@ MasteriesOverviewView._setup_layout_entries = function (self)
 	local masteries = {}
 
 	for id, data in pairs(weapon_patterns) do
-		repeat
-			local mastery_data = masteries_data[id]
-			local display_name = Localize(data.display_name)
-			local master_item_name = mastery_data and Mastery.get_default_mark_for_mastery(mastery_data)
-			local master_item = master_item_name and MasterItems.get_item(master_item_name)
+		local mastery_data = masteries_data[id]
+		local display_name = Localize(data.display_name)
+		local master_item_name = mastery_data and Mastery.get_default_mark_for_mastery(mastery_data)
+		local master_item = master_item_name and MasterItems.get_item(master_item_name)
 
-			if master_item and mastery_data then
-				local marks = Mastery.get_all_mastery_marks(mastery_data)
-				local hud_icon = master_item.hud_icon
+		if master_item and mastery_data then
+			local marks = Mastery.get_all_mastery_marks(mastery_data)
+			local hud_icon = master_item.hud_icon
 
-				hud_icon = hud_icon or "content/ui/materials/icons/weapons/hud/combat_blade_01"
+			hud_icon = hud_icon or "content/ui/materials/icons/weapons/hud/debug_primary"
 
-				local allowed_archetypes = master_item.archetypes
+			local weapon_level_requirement
 
-				if not table.contains(allowed_archetypes, archetype_name) then
+			for weapon_level, weapon_list in ipairs(archetype_weapon_unlocks) do
+				if table.contains(weapon_list, master_item_name) then
+					weapon_level_requirement = weapon_level
+
 					break
 				end
-
-				local weapon_level_requirement
-
-				for weapon_level, weapon_list in ipairs(archetype_weapon_unlocks) do
-					if table.contains(weapon_list, master_item_name) then
-						weapon_level_requirement = weapon_level
-
-						break
-					end
-				end
-
-				if weapon_level_requirement == nil then
-					weapon_level_requirement = 1
-				end
-
-				local mastery_level = mastery_data.mastery_level or 0
-				local claimed_level = mastery_data.claimed_level or -1
-				local mastery_xp = mastery_data.current_xp or 0
-				local mastery_start_exp = mastery_data.start_xp or 0
-				local mastery_end_exp = mastery_data.end_xp or 0
-				local mastery_max_level = Mastery.get_mastery_max_level(mastery_data)
-				local expertise_level = Mastery.get_current_expertise_cap(mastery_data)
-				local traits = self._mastery_traits[id]
-				local points_spent = Mastery.get_spent_points(traits)
-				local points_total = Mastery.get_all_unlocked_points(mastery_data)
-				local points_available = Mastery.get_available_points(mastery_data, traits)
-
-				layout[#layout + 1] = {
-					widget_type = "weapon_pattern",
-					icon = hud_icon,
-					display_name = display_name,
-					weapon_level_requirement = weapon_level_requirement,
-					slot = master_item.slots[1],
-					mastery_id = id,
-					mastery_level = mastery_level,
-					expertise_level = expertise_level,
-					claimed_level = claimed_level,
-					mastery_max_level = mastery_max_level,
-					show_alert = points_available > 0,
-				}
-				masteries[id] = {
-					display_name = display_name,
-					mastery_level = mastery_level,
-					claimed_level = claimed_level,
-					mastery_max_level = mastery_max_level,
-					current_xp = mastery_xp,
-					icon = hud_icon,
-					milestones = mastery_data.milestones,
-					start_exp = mastery_start_exp,
-					end_exp = mastery_end_exp,
-					is_unlocked = weapon_level_requirement <= self:character_level(),
-					mastery_id = id,
-					points_total = points_total,
-					points_used = points_spent,
-					points_available = points_available,
-					syncing = mastery_data.syncing,
-				}
 			end
-		until true
+
+			if weapon_level_requirement == nil then
+				weapon_level_requirement = 1
+			end
+
+			local mastery_level = mastery_data.mastery_level or 0
+			local claimed_level = mastery_data.claimed_level or -1
+			local mastery_xp = mastery_data.current_xp or 0
+			local mastery_start_exp = mastery_data.start_xp or 0
+			local mastery_end_exp = mastery_data.end_xp or 0
+			local mastery_max_level = Mastery.get_mastery_max_level(mastery_data)
+			local expertise_level = Mastery.get_current_expertise_cap(mastery_data)
+			local traits = self._mastery_traits[id]
+			local points_spent = Mastery.get_spent_points(traits)
+			local points_total = Mastery.get_all_unlocked_points(mastery_data)
+			local points_available = Mastery.get_available_points(mastery_data, traits)
+
+			layout[#layout + 1] = {
+				widget_type = "weapon_pattern",
+				icon = hud_icon,
+				display_name = display_name,
+				weapon_level_requirement = weapon_level_requirement,
+				slot = master_item.slots[1],
+				mastery_id = id,
+				mastery_level = mastery_level,
+				expertise_level = expertise_level,
+				claimed_level = claimed_level,
+				mastery_max_level = mastery_max_level,
+				show_alert = points_available > 0
+			}
+			masteries[id] = {
+				display_name = display_name,
+				mastery_level = mastery_level,
+				claimed_level = claimed_level,
+				mastery_max_level = mastery_max_level,
+				current_xp = mastery_xp,
+				icon = hud_icon,
+				milestones = mastery_data.milestones,
+				start_exp = mastery_start_exp,
+				end_exp = mastery_end_exp,
+				is_unlocked = weapon_level_requirement <= self:character_level(),
+				mastery_id = id,
+				points_total = points_total,
+				points_used = points_spent,
+				points_available = points_available,
+				syncing = mastery_data.syncing,
+				traits = mastery_data.traits
+			}
+		end
 	end
 
 	self._masteries = masteries
@@ -464,7 +421,7 @@ MasteriesOverviewView._setup_menu_tabs = function (self, content)
 	tab_button_template[1].style = {
 		on_released_sound = nil,
 		on_hover_sound = UISoundEvents.tab_secondary_button_hovered,
-		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
+		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed
 	}
 
 	for i = 1, #tab_button_template do
@@ -536,7 +493,7 @@ MasteriesOverviewView._present_layout_by_slot_filter = function (self, slot_filt
 		local grid_settings = self._definitions.patterns_grid_settings
 		local grid_size = grid_settings.grid_size
 		local spacing_entry = {
-			widget_type = "spacing_vertical",
+			widget_type = "spacing_vertical"
 		}
 
 		table.insert(filtered_layout, 1, spacing_entry)
@@ -672,10 +629,7 @@ MasteriesOverviewView._present_mastery = function (self, mastery_id)
 		local pattern_info_widget = widgets_by_name.pattern_info
 		local mastery_button_widget = widgets_by_name.mastery_button
 		local mastery_data = self._masteries[mastery_id]
-		local milestones = self._mastery_milestones[mastery_id]
-		local traits = self._mastery_traits[mastery_id]
 		local marks = self._mastery_marks[mastery_id]
-		local claimed_level = mastery_data.claimed_level
 		local mastery_level = mastery_data.mastery_level
 
 		mastery_button_widget.content.visible = true
@@ -683,7 +637,6 @@ MasteriesOverviewView._present_mastery = function (self, mastery_id)
 
 		local mastery_display_name = mastery_data.display_name
 		local mastery_max_level = mastery_data.mastery_max_level
-		local mastery_icon = marks and marks[1] and marks[1].icon
 		local mastery_start_exp = mastery_data.start_exp
 		local mastery_end_exp = mastery_data.end_exp
 		local mastery_current_xp = mastery_data.current_xp
@@ -710,14 +663,13 @@ MasteriesOverviewView._present_mastery = function (self, mastery_id)
 		local font_size = self._render_settings.scale * 30
 		local current_expertise = Mastery.get_current_expertise_cap(mastery_data)
 		local max_expertise = Mastery.get_max_expertise_cap(mastery_data)
-		local remaining_expertise_to_max = max_expertise - current_expertise
 
 		expertise_level_widget.content.info = string.format("{#size(" .. font_size * 2 .. ")} %d{#reset()} / %d", current_expertise, max_expertise)
 		mastery_level_widget.content.info = string.format("{#size(" .. font_size * 2 .. ")} %d{#reset()}", mastery_level)
 		mastery_level_widget.content.mastery_level_next = string.format(" %d", mastery_next_level)
 		mastery_level_widget.content.description = Localize("loc_mastery_exp_current_next", true, {
 			current = mastery_current_xp_text,
-			next = mastery_end_exp_text,
+			next = mastery_end_exp_text
 		})
 
 		local max_bar_width = mastery_level_widget.style.experience_bar_background.size[1]
@@ -725,10 +677,6 @@ MasteriesOverviewView._present_mastery = function (self, mastery_id)
 		local bar_width = bar_progress * max_bar_width
 
 		mastery_level_widget.style.experience_bar.size[1] = bar_width
-
-		local mastery_info_width, mastery_info_height = self:_scenegraph_size("mastery_level")
-		local size_addition_removed_value = 80
-
 		mastery_info_widget.content.visible = true
 		mastery_level_widget.content.visible = true
 		expertise_level_widget.content.visible = true
@@ -755,7 +703,7 @@ MasteriesOverviewView._get_milestones_data = function (self, mastery_id)
 	end
 
 	local mastery_data = self._masteries[mastery_id]
-	local milestones_data = Mastery.get_milestones_ui_data(mastery_data)
+	local milestones_data = Mastery.get_milestones_data(mastery_data)
 
 	return Promise.resolved(milestones_data)
 end
@@ -776,11 +724,10 @@ MasteriesOverviewView._get_traits_data = function (self, mastery_id)
 		return
 	end
 
-	if self._mastery_traits[mastery_id] then
-		return Promise.resolved(self._mastery_traits[mastery_id])
-	else
-		return Managers.data_service.mastery:get_traits_data_by_mastery_id(mastery_id)
-	end
+	local mastery_data = self._masteries[mastery_id]
+	local traits_data = Mastery.get_traits_data(mastery_data)
+
+	return Promise.resolved(traits_data)
 end
 
 MasteriesOverviewView._set_pattern_icon = function (self, mastery_id, is_max_level)

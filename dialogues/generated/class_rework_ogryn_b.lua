@@ -19,7 +19,7 @@ local class_rework_ogryn_b = {
 			"loc_ogryn_b__ability_bullgryn_12",
 			"loc_ogryn_b__ability_bullgryn_13",
 			"loc_ogryn_b__ability_bullgryn_14",
-			"loc_ogryn_b__ability_bullgryn_15",
+			"loc_ogryn_b__ability_bullgryn_15"
 		},
 		sound_events_duration = {
 			2.647625,
@@ -36,9 +36,9 @@ local class_rework_ogryn_b = {
 			2.268729,
 			2.659146,
 			2.654792,
-			2.875667,
+			2.875667
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	ability_gun_lugger = {
 		randomize_indexes_n = 0,
@@ -58,7 +58,7 @@ local class_rework_ogryn_b = {
 			"loc_ogryn_b__ability_gun_lugger_12",
 			"loc_ogryn_b__ability_gun_lugger_13",
 			"loc_ogryn_b__ability_gun_lugger_14",
-			"loc_ogryn_b__ability_gun_lugger_15",
+			"loc_ogryn_b__ability_gun_lugger_15"
 		},
 		sound_events_duration = {
 			2.495188,
@@ -75,10 +75,10 @@ local class_rework_ogryn_b = {
 			3.3335,
 			3.085646,
 			2.043125,
-			1.671271,
+			1.671271
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("class_rework_ogryn_b", class_rework_ogryn_b)

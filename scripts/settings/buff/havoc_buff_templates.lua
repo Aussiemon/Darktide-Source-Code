@@ -36,27 +36,27 @@ table.make_unique(templates)
 local BOLSTERING_COLOR = {
 	0.98,
 	0.27,
-	0,
+	0
 }
 local BOLSTER_1_COLOR = {
 	BOLSTERING_COLOR[1] * 0.25,
 	BOLSTERING_COLOR[2] * 0.25,
-	BOLSTERING_COLOR[3] * 0.25,
+	BOLSTERING_COLOR[3] * 0.25
 }
 local BOLSTER_2_COLOR = {
 	BOLSTERING_COLOR[1] * 0.35,
 	BOLSTERING_COLOR[2] * 0.35,
-	BOLSTERING_COLOR[3] * 0.35,
+	BOLSTERING_COLOR[3] * 0.35
 }
 local BOLSTER_3_COLOR = {
 	BOLSTERING_COLOR[1] * 0.65,
 	BOLSTERING_COLOR[2] * 0.65,
-	BOLSTERING_COLOR[3] * 0.65,
+	BOLSTERING_COLOR[3] * 0.65
 }
 local BOLSTER_4_COLOR = {
 	BOLSTERING_COLOR[1] * 0.85,
 	BOLSTERING_COLOR[2] * 0.85,
-	BOLSTERING_COLOR[3] * 0.85,
+	BOLSTERING_COLOR[3] * 0.85
 }
 local BOLSTERING_MINION_EFFECTS = {
 	node_effects = {
@@ -70,20 +70,20 @@ local BOLSTERING_MINION_EFFECTS = {
 					{
 						material_name = "eye_socket",
 						variable_name = "material_variable_21872256",
-						value = BOLSTERING_COLOR,
+						value = BOLSTERING_COLOR
 					},
 					{
 						material_name = "eye_glow",
 						variable_name = "trail_color",
-						value = BOLSTERING_COLOR,
+						value = BOLSTERING_COLOR
 					},
 					{
 						material_name = "eye_glow",
 						variable_name = "material_variable_21872256_69bf7e2a",
-						value = BOLSTER_1_COLOR,
-					},
-				},
-			},
+						value = BOLSTER_1_COLOR
+					}
+				}
+			}
 		},
 		{
 			node_name = "j_righteye",
@@ -95,34 +95,34 @@ local BOLSTERING_MINION_EFFECTS = {
 					{
 						material_name = "eye_socket",
 						variable_name = "material_variable_21872256",
-						value = BOLSTERING_COLOR,
+						value = BOLSTERING_COLOR
 					},
 					{
 						material_name = "eye_glow",
 						variable_name = "trail_color",
-						value = BOLSTERING_COLOR,
+						value = BOLSTERING_COLOR
 					},
 					{
 						material_name = "eye_glow",
 						variable_name = "material_variable_21872256_69bf7e2a",
-						value = BOLSTERING_COLOR,
-					},
-				},
-			},
-		},
+						value = BOLSTERING_COLOR
+					}
+				}
+			}
+		}
 	},
 	material_vector = {
 		name = "stimmed_color",
 		value = BOLSTERING_COLOR,
-		priority = minion_effects_priorities.mutators,
-	},
+		priority = minion_effects_priorities.mutators
+	}
 }
 local LOW_BOLSTERING_MINION_EFFECTS = {
 	material_vector = {
 		name = "stimmed_color",
 		value = BOLSTERING_COLOR,
-		priority = minion_effects_priorities.mutators,
-	},
+		priority = minion_effects_priorities.mutators
+	}
 }
 local BOLSTERING_1_MINION_EFFECTS = table.clone(LOW_BOLSTERING_MINION_EFFECTS)
 
@@ -145,6 +145,12 @@ local DPLUS_RESULTS_1 = {}
 
 local function _bolstering_stop_function(template_context, template_data)
 	if not template_context.is_server then
+		return
+	end
+
+	local havoc_extension = Managers.state.game_mode:game_mode():extension("havoc")
+
+	if not havoc_extension then
 		return
 	end
 
@@ -266,7 +272,7 @@ templates.havoc_bolstering = {
 	max_stacks = 5,
 	predicted = false,
 	keywords = {
-		"bolstered",
+		"bolstered"
 	},
 	start_func = function (template_data, template_context)
 		template_data.stack = 1
@@ -289,19 +295,19 @@ templates.havoc_bolstering = {
 		_bolstering_stop_function(template_context, template_data)
 	end,
 	minion_effects = {
-		node_effects_priotity = minion_effects_priorities.mutators,
+		node_effects_priority = minion_effects_priorities.mutators,
 		stack_material_vectors = {
 			BOLSTERING_1_MINION_EFFECTS.material_vector,
 			BOLSTERING_2_MINION_EFFECTS.material_vector,
 			BOLSTERING_3_MINION_EFFECTS.material_vector,
 			BOLSTERING_4_MINION_EFFECTS.material_vector,
-			BOLSTERING_MINION_EFFECTS.material_vector,
+			BOLSTERING_MINION_EFFECTS.material_vector
 		},
 		stack_node_effects = {
-			[5] = BOLSTERING_MINION_EFFECTS.node_effects,
+			[5] = BOLSTERING_MINION_EFFECTS.node_effects
 		},
-		material_vector = BOLSTERING_1_MINION_EFFECTS.material_vector,
-	},
+		material_vector = BOLSTERING_1_MINION_EFFECTS.material_vector
+	}
 }
 
 local CORRUPTED_COLOR = mutator_havoc_enemies_corrupted_config_settings.corruption_color
@@ -313,7 +319,7 @@ local CORRUPTION_FALLBACK_RANKS_PER_CHALLENGE = {
 	10,
 	15,
 	20,
-	25,
+	25
 }
 
 local function _corruption_stop_function(template_context, template_data)
@@ -378,7 +384,7 @@ templates.havoc_corrupted_enemies = {
 	max_stacks = 1,
 	predicted = false,
 	keywords = {
-		"corrupted",
+		"corrupted"
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -418,7 +424,7 @@ templates.havoc_corrupted_enemies = {
 		_corruption_stop_function(template_context, template_data)
 	end,
 	minion_effects = {
-		node_effects_priotity = minion_effects_priorities.mutators,
+		node_effects_priority = minion_effects_priorities.mutators,
 		node_effects = {
 			{
 				node_name = "j_spine",
@@ -426,27 +432,27 @@ templates.havoc_corrupted_enemies = {
 					material_emission = true,
 					orphaned_policy = "destroy",
 					particle_effect = "content/fx/particles/enemies/buff_nurgle_blessing",
-					stop_type = "stop",
-				},
+					stop_type = "stop"
+				}
 			},
 			{
 				node_name = "j_spine",
 				vfx = {
 					orphaned_policy = "destroy",
 					particle_effect = "content/fx/particles/enemies/buff_nurgle_blessing_flies",
-					stop_type = "stop",
-				},
+					stop_type = "stop"
+				}
 			},
 			{
 				node_name = "j_spine1",
 				vfx = {
 					orphaned_policy = "destroy",
 					particle_effect = "content/fx/particles/enemies/flies_1m",
-					stop_type = "stop",
-				},
-			},
-		},
-	},
+					stop_type = "stop"
+				}
+			}
+		}
+	}
 }
 templates.common_minion_on_fire = {
 	class_name = "interval_buff",
@@ -454,7 +460,7 @@ templates.common_minion_on_fire = {
 	max_stacks = 1,
 	predicted = false,
 	keywords = {
-		buff_keywords.burning,
+		buff_keywords.burning
 	},
 	interval_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -481,11 +487,19 @@ templates.common_minion_on_fire = {
 			end
 		end
 	end,
-	minion_effects = minion_burning_buff_effects.fire,
+	minion_effects = minion_burning_buff_effects.fire
 }
 
 local function _get_damage_reduction_value()
-	local rank = Managers.state.game_mode:game_mode():extension("havoc"):get_current_rank()
+	local rank
+	local havoc_extension = Managers.state.game_mode:game_mode():extension("havoc")
+
+	if havoc_extension then
+		rank = Managers.state.game_mode:game_mode():extension("havoc"):get_current_rank()
+	else
+		rank = 40
+	end
+
 	local reduction_rate = 0.1 + 0.01 * rank
 
 	return reduction_rate
@@ -494,7 +508,7 @@ end
 local TOUGHNED_SKIN_COLOR = {
 	0.8274509803921568,
 	0.9882352941176471,
-	0.011764705882352941,
+	0.011764705882352941
 }
 
 templates.havoc_toughened_skin = {
@@ -527,7 +541,7 @@ templates.havoc_toughened_skin = {
 		end
 	end,
 	minion_effects = {
-		node_effects_priotity = minion_effects_priorities.mutators,
+		node_effects_priority = minion_effects_priorities.mutators,
 		node_effects = {
 			{
 				node_name = "j_spine",
@@ -535,27 +549,27 @@ templates.havoc_toughened_skin = {
 					material_emission = true,
 					orphaned_policy = "destroy",
 					particle_effect = "content/fx/particles/enemies/buff_pus_slime",
-					stop_type = "stop",
-				},
+					stop_type = "stop"
+				}
 			},
 			{
 				node_name = "j_spine",
 				vfx = {
 					orphaned_policy = "destroy",
 					particle_effect = "content/fx/particles/enemies/buff_pus_slow",
-					stop_type = "stop",
-				},
+					stop_type = "stop"
+				}
 			},
 			{
 				node_name = "j_spine1",
 				vfx = {
 					orphaned_policy = "destroy",
 					particle_effect = "content/fx/particles/enemies/flies_1m",
-					stop_type = "stop",
-				},
-			},
-		},
-	},
+					stop_type = "stop"
+				}
+			}
+		}
+	}
 }
 
 local TEMP_BROADPHASE_RESULTS = {}
@@ -612,7 +626,7 @@ templates.havoc_sticky_poxburster = {
 				nurgle_warp_mutator:spawn_random_from_template(num_players_hit[i])
 			end
 		end
-	end,
+	end
 }
 
 local rotten_armor_data = rotten_armor_config_settings
@@ -685,10 +699,10 @@ templates.mutator_rotten_armor = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_minion_damage_taken] = 1,
+		[proc_events.on_minion_damage_taken] = 1
 	},
 	keywords = {
-		buff_keywords.rotten_armor,
+		buff_keywords.rotten_armor
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -764,11 +778,11 @@ templates.mutator_rotten_armor = {
 				node_name = "j_head",
 				sfx = {
 					looping_wwise_start_event = "wwise/events/minions/play_fly_swarm_plague_loop_mutator",
-					looping_wwise_stop_event = "wwise/events/minions/stop_fly_swarm_plague_loop_mutator",
-				},
-			},
-		},
-	},
+					looping_wwise_stop_event = "wwise/events/minions/stop_fly_swarm_plague_loop_mutator"
+				}
+			}
+		}
+	}
 }
 
 local ENCROACHING_GARDEN_RADIUS = mutator_encroaching_garden_config_settings.healing_radius
@@ -813,19 +827,19 @@ templates.blessed_by_the_garden_immunity = {
 	class_name = "buff",
 	predicted = false,
 	keywords = {
-		buff_keywords.havoc_gardens_embrace,
-	},
+		buff_keywords.havoc_gardens_embrace
+	}
 }
 templates.havoc_encroaching_garden = {
 	class_name = "buff",
 	predicted = false,
 	keywords = {
-		buff_keywords.havoc_gardens_embrace,
+		buff_keywords.havoc_gardens_embrace
 	},
 	stat_buffs = {
 		[buff_stat_buffs.max_health_modifier] = mutator_encroaching_garden_config_settings.stat_buff_settings.max_health_modifier,
 		[buff_stat_buffs.impact_modifier] = mutator_encroaching_garden_config_settings.stat_buff_settings.impact_modifier,
-		[buff_stat_buffs.suppressor_decay_multiplier] = mutator_encroaching_garden_config_settings.stat_buff_settings.suppressor_decay_multiplier,
+		[buff_stat_buffs.suppressor_decay_multiplier] = mutator_encroaching_garden_config_settings.stat_buff_settings.suppressor_decay_multiplier
 	},
 	start_func = function (template_data, template_context)
 		local time_variation = mutator_encroaching_garden_config_settings.healing_frequency
@@ -852,18 +866,18 @@ templates.havoc_encroaching_garden = {
 		end
 	end,
 	minion_effects = {
-		node_effects_priotity = minion_effects_priorities.mutators + 1,
+		node_effects_priority = minion_effects_priorities.mutators + 1,
 		node_effects = {
 			{
 				node_name = "j_head",
 				vfx = {
 					orphaned_policy = "destroy",
 					particle_effect = "content/fx/particles/enemies/buff_gardens_embrace_head",
-					stop_type = "stop",
-				},
-			},
-		},
-	},
+					stop_type = "stop"
+				}
+			}
+		}
+	}
 }
 templates.blessed_by_the_garden = {
 	class_name = "interval_buff",
@@ -902,7 +916,7 @@ templates.blessed_by_the_garden = {
 		return
 	end,
 	minion_effects = {
-		node_effects_priotity = minion_effects_priorities.mutators,
+		node_effects_priority = minion_effects_priorities.mutators,
 		node_effects = {
 			{
 				node_name = "j_lefteye",
@@ -914,20 +928,20 @@ templates.blessed_by_the_garden = {
 						{
 							material_name = "eye_flash_init",
 							variable_name = "material_variable_21872256",
-							value = ENCROACHING_GARDEN_COLOR,
+							value = ENCROACHING_GARDEN_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = ENCROACHING_GARDEN_COLOR,
+							value = ENCROACHING_GARDEN_COLOR
 						},
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = ENCROACHING_GARDEN_COLOR,
-						},
-					},
-				},
+							value = ENCROACHING_GARDEN_COLOR
+						}
+					}
+				}
 			},
 			{
 				node_name = "j_righteye",
@@ -939,26 +953,26 @@ templates.blessed_by_the_garden = {
 						{
 							material_name = "eye_flash_init",
 							variable_name = "material_variable_21872256",
-							value = ENCROACHING_GARDEN_COLOR,
+							value = ENCROACHING_GARDEN_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = ENCROACHING_GARDEN_COLOR,
+							value = ENCROACHING_GARDEN_COLOR
 						},
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = ENCROACHING_GARDEN_COLOR,
-						},
-					},
-				},
-			},
-		},
+							value = ENCROACHING_GARDEN_COLOR
+						}
+					}
+				}
+			}
+		}
 	},
 	player_effects = {
-		on_screen_effect = "content/fx/particles/screenspace/screen_gardens_embrace",
-	},
+		on_screen_effect = "content/fx/particles/screenspace/screen_gardens_embrace"
+	}
 }
 templates.live_heal_test = table.clone(templates.blessed_by_the_garden)
 templates.live_heal_test.duration = math.huge
@@ -1001,7 +1015,7 @@ templates.havoc_nurgle_elite_moral_improve = {
 	predicted = false,
 	keywords = {
 		buff_keywords.infested_head_armor_override,
-		buff_keywords.has_nurgle_parasite,
+		buff_keywords.has_nurgle_parasite
 	},
 	start_func = function (template_data, template_context)
 		local time_variation = 2
@@ -1038,20 +1052,20 @@ templates.havoc_nurgle_elite_moral_improve = {
 							value = {
 								0,
 								10.75,
-								0.005,
-							},
-						},
-					},
-				},
-			},
-		},
-	},
+								0.005
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 local NURGLE_MORALE_IMPROVED_BUFF = {
 	0.7529411764705882,
 	0.39215686274509803,
-	0.5764705882352941,
+	0.5764705882352941
 }
 
 templates.blessed_by_nurgle_parasite = {
@@ -1062,7 +1076,7 @@ templates.blessed_by_nurgle_parasite = {
 	refresh_duration_on_stack = true,
 	stat_buffs = {
 		[buff_stat_buffs.impact_modifier] = -3,
-		[buff_stat_buffs.suppressor_decay_multiplier] = -3,
+		[buff_stat_buffs.suppressor_decay_multiplier] = -3
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1113,20 +1127,20 @@ templates.blessed_by_nurgle_parasite = {
 						{
 							material_name = "eye_flash_init",
 							variable_name = "material_variable_21872256",
-							value = NURGLE_MORALE_IMPROVED_BUFF,
+							value = NURGLE_MORALE_IMPROVED_BUFF
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = NURGLE_MORALE_IMPROVED_BUFF,
+							value = NURGLE_MORALE_IMPROVED_BUFF
 						},
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = NURGLE_MORALE_IMPROVED_BUFF,
-						},
-					},
-				},
+							value = NURGLE_MORALE_IMPROVED_BUFF
+						}
+					}
+				}
 			},
 			{
 				node_name = "j_lefteyesocket",
@@ -1138,20 +1152,20 @@ templates.blessed_by_nurgle_parasite = {
 						{
 							material_name = "eye_flash_init",
 							variable_name = "material_variable_21872256",
-							value = NURGLE_MORALE_IMPROVED_BUFF,
+							value = NURGLE_MORALE_IMPROVED_BUFF
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = NURGLE_MORALE_IMPROVED_BUFF,
+							value = NURGLE_MORALE_IMPROVED_BUFF
 						},
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = NURGLE_MORALE_IMPROVED_BUFF,
-						},
-					},
-				},
+							value = NURGLE_MORALE_IMPROVED_BUFF
+						}
+					}
+				}
 			},
 			{
 				node_name = "j_righteye",
@@ -1163,23 +1177,23 @@ templates.blessed_by_nurgle_parasite = {
 						{
 							material_name = "eye_flash_init",
 							variable_name = "material_variable_21872256",
-							value = NURGLE_MORALE_IMPROVED_BUFF,
+							value = NURGLE_MORALE_IMPROVED_BUFF
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = NURGLE_MORALE_IMPROVED_BUFF,
+							value = NURGLE_MORALE_IMPROVED_BUFF
 						},
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = NURGLE_MORALE_IMPROVED_BUFF,
-						},
-					},
-				},
-			},
-		},
-	},
+							value = NURGLE_MORALE_IMPROVED_BUFF
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 local MUTATOR_ENRAGED_DEFAULT_DAMAGE_REQUIRED = mutator_havoc_enraged_config_settings.damage_required_to_trigger
@@ -1190,7 +1204,7 @@ templates.havoc_enraged_enemies_trigger = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_minion_damage_taken] = 1,
+		[proc_events.on_minion_damage_taken] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		if not template_context.is_server then
@@ -1217,17 +1231,17 @@ templates.havoc_enraged_enemies_trigger = {
 			buff_extension:add_internally_controlled_buff(MUTATOR_ENRAGED_TEMPLATE_NAME, t)
 			buff_extension:_update_stat_buffs_and_keywords(current_time)
 		end
-	end,
+	end
 }
 templates.havoc_enraged_enemies = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[buff_stat_buffs.melee_attack_speed] = mutator_havoc_enraged_config_settings.stat_buff_settings.melee_attack_speed,
-		[buff_stat_buffs.stagger_duration_multiplier] = mutator_havoc_enraged_config_settings.stat_buff_settings.stagger_duration_multiplier,
+		[buff_stat_buffs.stagger_duration_multiplier] = mutator_havoc_enraged_config_settings.stat_buff_settings.stagger_duration_multiplier
 	},
 	keywords = {
-		"no_stagger",
+		"no_stagger"
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1291,15 +1305,15 @@ templates.havoc_enraged_enemies = {
 		Unit.set_vector3_for_materials(unit, "stimmed_color", Vector3(0, 0, 0), true)
 	end,
 	minion_effects = {
-		node_effects_priotity = minion_effects_priorities.mutators + 1,
+		node_effects_priority = minion_effects_priorities.mutators + 1,
 		node_effects = {
 			{
 				node_name = "j_head",
 				vfx = {
 					orphaned_policy = "destroy",
 					particle_effect = "content/fx/particles/enemies/enraged_elites_rage",
-					stop_type = "stop",
-				},
+					stop_type = "stop"
+				}
 			},
 			{
 				node_name = "j_lefteye",
@@ -1311,20 +1325,20 @@ templates.havoc_enraged_enemies = {
 						{
 							material_name = "eye_flash_init",
 							variable_name = "material_variable_21872256",
-							value = MUTATOR_ENRAGED_COLOR,
+							value = MUTATOR_ENRAGED_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = MUTATOR_ENRAGED_COLOR,
+							value = MUTATOR_ENRAGED_COLOR
 						},
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = MUTATOR_ENRAGED_COLOR,
-						},
-					},
-				},
+							value = MUTATOR_ENRAGED_COLOR
+						}
+					}
+				}
 			},
 			{
 				node_name = "j_lefteyesocket",
@@ -1336,20 +1350,20 @@ templates.havoc_enraged_enemies = {
 						{
 							material_name = "eye_flash_init",
 							variable_name = "material_variable_21872256",
-							value = MUTATOR_ENRAGED_COLOR,
+							value = MUTATOR_ENRAGED_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = MUTATOR_ENRAGED_COLOR,
+							value = MUTATOR_ENRAGED_COLOR
 						},
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = MUTATOR_ENRAGED_COLOR,
-						},
-					},
-				},
+							value = MUTATOR_ENRAGED_COLOR
+						}
+					}
+				}
 			},
 			{
 				node_name = "j_righteye",
@@ -1361,44 +1375,44 @@ templates.havoc_enraged_enemies = {
 						{
 							material_name = "eye_flash_init",
 							variable_name = "material_variable_21872256",
-							value = MUTATOR_ENRAGED_COLOR,
+							value = MUTATOR_ENRAGED_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = MUTATOR_ENRAGED_COLOR,
+							value = MUTATOR_ENRAGED_COLOR
 						},
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = MUTATOR_ENRAGED_COLOR,
-						},
-					},
-				},
-			},
-		},
-	},
+							value = MUTATOR_ENRAGED_COLOR
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 local GREEN_STIM_COLOR = {
 	0,
 	0.75,
-	0.005,
+	0.005
 }
 local BLUE_STIM_COLOR = {
 	0,
 	0.75,
-	0.75,
+	0.75
 }
 local RED_STIM_COLOR = {
 	0.9,
 	0,
-	0.005,
+	0.005
 }
 local YELLOW_STIM_COLOR = {
 	0.7843137254901961,
 	0.8745098039215686,
-	0.0784313725490196,
+	0.0784313725490196
 }
 local green_stimm_settings = mutator_stimmed_minions_config_settings.green_stimm_settings
 local blue_stimm_settings = mutator_stimmed_minions_config_settings.blue_stimm_settings
@@ -1411,7 +1425,7 @@ templates.mutator_stimmed_minion_blue = {
 	target = buff_targets.minion_only,
 	keywords = {
 		buff_keywords.stimmed,
-		buff_keywords.super_armor_override,
+		buff_keywords.super_armor_override
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -1455,18 +1469,18 @@ templates.mutator_stimmed_minion_blue = {
 		[buff_stat_buffs.disgustingly_resilient_damage] = blue_stimm_settings.stat_buff_settings.disgustingly_resilient_damage,
 		[buff_stat_buffs.berserker_damage] = blue_stimm_settings.stat_buff_settings.berserker_damage,
 		[buff_stat_buffs.armored_damage] = blue_stimm_settings.stat_buff_settings.armored_damage,
-		[buff_stat_buffs.super_armor_damage] = blue_stimm_settings.stat_buff_settings.super_armor_damage,
+		[buff_stat_buffs.super_armor_damage] = blue_stimm_settings.stat_buff_settings.super_armor_damage
 	},
 	minion_effects = {
-		node_effects_priotity = minion_effects_priorities.mutators + 3,
+		node_effects_priority = minion_effects_priorities.mutators + 3,
 		node_effects = {
 			{
 				node_name = "j_spine",
 				vfx = {
 					orphaned_policy = "stop",
 					particle_effect = "content/fx/particles/enemies/buff_stimmed_speed",
-					stop_type = "destroy",
-				},
+					stop_type = "destroy"
+				}
 			},
 			{
 				node_name = "j_lefteye",
@@ -1478,20 +1492,20 @@ templates.mutator_stimmed_minion_blue = {
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = BLUE_STIM_COLOR,
+							value = BLUE_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = BLUE_STIM_COLOR,
+							value = BLUE_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "material_variable_21872256_69bf7e2a",
-							value = BLUE_STIM_COLOR,
-						},
-					},
-				},
+							value = BLUE_STIM_COLOR
+						}
+					}
+				}
 			},
 			{
 				node_name = "j_righteye",
@@ -1503,23 +1517,23 @@ templates.mutator_stimmed_minion_blue = {
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = BLUE_STIM_COLOR,
+							value = BLUE_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = BLUE_STIM_COLOR,
+							value = BLUE_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "material_variable_21872256_69bf7e2a",
-							value = BLUE_STIM_COLOR,
-						},
-					},
-				},
-			},
-		},
-	},
+							value = BLUE_STIM_COLOR
+						}
+					}
+				}
+			}
+		}
+	}
 }
 templates.mutator_stimmed_minion_green = {
 	class_name = "proc_buff",
@@ -1527,17 +1541,17 @@ templates.mutator_stimmed_minion_green = {
 	predicted = false,
 	target = buff_targets.minion_only,
 	keywords = {
-		buff_keywords.stimmed,
+		buff_keywords.stimmed
 	},
 	stat_buffs = {
 		[buff_stat_buffs.damage_taken_from_burning] = green_stimm_settings.stat_buff_settings.damage_taken_from_burning,
 		[buff_stat_buffs.damage_taken_from_bleeding] = green_stimm_settings.stat_buff_settings.damage_taken_from_bleeding,
 		[buff_stat_buffs.damage_taken_from_electrocution] = green_stimm_settings.stat_buff_settings.damage_taken_from_electrocution,
 		[buff_stat_buffs.warp_damage] = green_stimm_settings.stat_buff_settings.warp_damage,
-		[buff_stat_buffs.impact_modifier] = green_stimm_settings.stat_buff_settings.impact_modifier,
+		[buff_stat_buffs.impact_modifier] = green_stimm_settings.stat_buff_settings.impact_modifier
 	},
 	proc_events = {
-		[proc_events.on_minion_damage_taken] = 1,
+		[proc_events.on_minion_damage_taken] = 1
 	},
 	start_func = function (template_data, template_context)
 		local is_server = template_context.is_server
@@ -1588,15 +1602,15 @@ templates.mutator_stimmed_minion_green = {
 		end
 	end,
 	minion_effects = {
-		node_effects_priotity = minion_effects_priorities.mutators + 3,
+		node_effects_priority = minion_effects_priorities.mutators + 3,
 		node_effects = {
 			{
 				node_name = "j_spine",
 				vfx = {
 					orphaned_policy = "stop",
 					particle_effect = "content/fx/particles/enemies/buff_stimmed_heal",
-					stop_type = "destroy",
-				},
+					stop_type = "destroy"
+				}
 			},
 			{
 				node_name = "j_lefteye",
@@ -1608,20 +1622,20 @@ templates.mutator_stimmed_minion_green = {
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = GREEN_STIM_COLOR,
+							value = GREEN_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = GREEN_STIM_COLOR,
+							value = GREEN_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "material_variable_21872256_69bf7e2a",
-							value = GREEN_STIM_COLOR,
-						},
-					},
-				},
+							value = GREEN_STIM_COLOR
+						}
+					}
+				}
 			},
 			{
 				node_name = "j_righteye",
@@ -1633,35 +1647,35 @@ templates.mutator_stimmed_minion_green = {
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = GREEN_STIM_COLOR,
+							value = GREEN_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = GREEN_STIM_COLOR,
+							value = GREEN_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "material_variable_21872256_69bf7e2a",
-							value = GREEN_STIM_COLOR,
-						},
-					},
-				},
-			},
-		},
-	},
+							value = GREEN_STIM_COLOR
+						}
+					}
+				}
+			}
+		}
+	}
 }
 templates.mutator_stimmed_minion_red = {
 	class_name = "buff",
 	predicted = false,
 	target = buff_targets.minion_only,
 	keywords = {
-		buff_keywords.stimmed,
+		buff_keywords.stimmed
 	},
 	stat_buffs = {
 		[buff_stat_buffs.melee_attack_speed] = red_stimm_settings.stat_buff_settings.melee_attack_speed,
 		[buff_stat_buffs.stagger_duration_multiplier] = red_stimm_settings.stat_buff_settings.stagger_duration_multiplier,
-		[buff_stat_buffs.impact_modifier] = red_stimm_settings.stat_buff_settings.impact_modifier,
+		[buff_stat_buffs.impact_modifier] = red_stimm_settings.stat_buff_settings.impact_modifier
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1682,15 +1696,15 @@ templates.mutator_stimmed_minion_red = {
 		end
 	end,
 	minion_effects = {
-		node_effects_priotity = minion_effects_priorities.mutators + 3,
+		node_effects_priority = minion_effects_priorities.mutators + 3,
 		node_effects = {
 			{
 				node_name = "j_spine",
 				vfx = {
 					orphaned_policy = "stop",
 					particle_effect = "content/fx/particles/enemies/buff_stimmed_power",
-					stop_type = "destroy",
-				},
+					stop_type = "destroy"
+				}
 			},
 			{
 				node_name = "j_lefteye",
@@ -1702,20 +1716,20 @@ templates.mutator_stimmed_minion_red = {
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = RED_STIM_COLOR,
+							value = RED_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = RED_STIM_COLOR,
+							value = RED_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "material_variable_21872256_69bf7e2a",
-							value = RED_STIM_COLOR,
-						},
-					},
-				},
+							value = RED_STIM_COLOR
+						}
+					}
+				}
 			},
 			{
 				node_name = "j_righteye",
@@ -1727,30 +1741,30 @@ templates.mutator_stimmed_minion_red = {
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = RED_STIM_COLOR,
+							value = RED_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = RED_STIM_COLOR,
+							value = RED_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "material_variable_21872256_69bf7e2a",
-							value = RED_STIM_COLOR,
-						},
-					},
-				},
-			},
-		},
-	},
+							value = RED_STIM_COLOR
+						}
+					}
+				}
+			}
+		}
+	}
 }
 templates.mutator_stimmed_minion_yellow = {
 	class_name = "buff",
 	predicted = false,
 	target = buff_targets.minion_only,
 	keywords = {
-		buff_keywords.stimmed,
+		buff_keywords.stimmed
 	},
 	stat_buffs = {
 		[buff_stat_buffs.weakspot_damage_taken] = yellow_stimm_settings.stat_buff_settings.weakspot_damage_taken,
@@ -1763,7 +1777,7 @@ templates.mutator_stimmed_minion_yellow = {
 		[buff_stat_buffs.impact_modifier] = yellow_stimm_settings.stat_buff_settings.ranged_attack_speed,
 		[buff_stat_buffs.ranged_attack_speed] = yellow_stimm_settings.stat_buff_settings.ranged_attack_speed,
 		[buff_stat_buffs.minion_num_shots_modifier] = yellow_stimm_settings.stat_buff_settings.minion_num_shots_modifier,
-		[buff_stat_buffs.melee_attack_speed] = yellow_stimm_settings.stat_buff_settings.melee_attack_speed,
+		[buff_stat_buffs.melee_attack_speed] = yellow_stimm_settings.stat_buff_settings.melee_attack_speed
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -1802,15 +1816,15 @@ templates.mutator_stimmed_minion_yellow = {
 		health_extension:set_hit_mass(template_data.old_hit_mass)
 	end,
 	minion_effects = {
-		node_effects_priotity = minion_effects_priorities.mutators + 3,
+		node_effects_priority = minion_effects_priorities.mutators + 3,
 		node_effects = {
 			{
 				node_name = "j_spine",
 				vfx = {
 					orphaned_policy = "stop",
 					particle_effect = "content/fx/particles/enemies/buff_stimmed_ability",
-					stop_type = "destroy",
-				},
+					stop_type = "destroy"
+				}
 			},
 			{
 				node_name = "j_lefteye",
@@ -1822,20 +1836,20 @@ templates.mutator_stimmed_minion_yellow = {
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "material_variable_21872256_69bf7e2a",
-							value = YELLOW_STIM_COLOR,
-						},
-					},
-				},
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
 			},
 			{
 				node_name = "j_righteye",
@@ -1847,35 +1861,35 @@ templates.mutator_stimmed_minion_yellow = {
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "material_variable_21872256_69bf7e2a",
-							value = YELLOW_STIM_COLOR,
-						},
-					},
-				},
-			},
-		},
-	},
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
+			}
+		}
+	}
 }
 templates.ogryn_mutator_stimmed_minion_red = table.clone(templates.mutator_stimmed_minion_red)
 templates.ogryn_mutator_stimmed_minion_red.minion_effects = {
-	node_effects_priotity = minion_effects_priorities.mutators + 3,
+	node_effects_priority = minion_effects_priorities.mutators + 3,
 	node_effects = {
 		{
 			node_name = "j_spine",
 			vfx = {
 				orphaned_policy = "stop",
 				particle_effect = "content/fx/particles/enemies/buff_stimmed_ogryn_power",
-				stop_type = "destroy",
-			},
+				stop_type = "destroy"
+			}
 		},
 		{
 			node_name = "j_lefteye",
@@ -1887,20 +1901,20 @@ templates.ogryn_mutator_stimmed_minion_red.minion_effects = {
 					{
 						material_name = "eye_socket",
 						variable_name = "material_variable_21872256",
-						value = RED_STIM_COLOR,
+						value = RED_STIM_COLOR
 					},
 					{
 						material_name = "eye_glow",
 						variable_name = "trail_color",
-						value = RED_STIM_COLOR,
+						value = RED_STIM_COLOR
 					},
 					{
 						material_name = "eye_glow",
 						variable_name = "material_variable_21872256_69bf7e2a",
-						value = RED_STIM_COLOR,
-					},
-				},
-			},
+						value = RED_STIM_COLOR
+					}
+				}
+			}
 		},
 		{
 			node_name = "j_righteye",
@@ -1912,34 +1926,34 @@ templates.ogryn_mutator_stimmed_minion_red.minion_effects = {
 					{
 						material_name = "eye_socket",
 						variable_name = "material_variable_21872256",
-						value = RED_STIM_COLOR,
+						value = RED_STIM_COLOR
 					},
 					{
 						material_name = "eye_glow",
 						variable_name = "trail_color",
-						value = RED_STIM_COLOR,
+						value = RED_STIM_COLOR
 					},
 					{
 						material_name = "eye_glow",
 						variable_name = "material_variable_21872256_69bf7e2a",
-						value = RED_STIM_COLOR,
-					},
-				},
-			},
-		},
-	},
+						value = RED_STIM_COLOR
+					}
+				}
+			}
+		}
+	}
 }
 templates.ogryn_mutator_stimmed_minion_green = table.clone(templates.mutator_stimmed_minion_green)
 templates.ogryn_mutator_stimmed_minion_green.minion_effects = {
-	node_effects_priotity = minion_effects_priorities.mutators + 3,
+	node_effects_priority = minion_effects_priorities.mutators + 3,
 	node_effects = {
 		{
 			node_name = "j_spine",
 			vfx = {
 				orphaned_policy = "stop",
 				particle_effect = "content/fx/particles/enemies/buff_stimmed_ogryn_heal",
-				stop_type = "destroy",
-			},
+				stop_type = "destroy"
+			}
 		},
 		{
 			node_name = "j_lefteye",
@@ -1951,20 +1965,20 @@ templates.ogryn_mutator_stimmed_minion_green.minion_effects = {
 					{
 						material_name = "eye_socket",
 						variable_name = "material_variable_21872256",
-						value = GREEN_STIM_COLOR,
+						value = GREEN_STIM_COLOR
 					},
 					{
 						material_name = "eye_glow",
 						variable_name = "trail_color",
-						value = GREEN_STIM_COLOR,
+						value = GREEN_STIM_COLOR
 					},
 					{
 						material_name = "eye_glow",
 						variable_name = "material_variable_21872256_69bf7e2a",
-						value = GREEN_STIM_COLOR,
-					},
-				},
-			},
+						value = GREEN_STIM_COLOR
+					}
+				}
+			}
 		},
 		{
 			node_name = "j_righteye",
@@ -1976,34 +1990,34 @@ templates.ogryn_mutator_stimmed_minion_green.minion_effects = {
 					{
 						material_name = "eye_socket",
 						variable_name = "material_variable_21872256",
-						value = GREEN_STIM_COLOR,
+						value = GREEN_STIM_COLOR
 					},
 					{
 						material_name = "eye_glow",
 						variable_name = "trail_color",
-						value = GREEN_STIM_COLOR,
+						value = GREEN_STIM_COLOR
 					},
 					{
 						material_name = "eye_glow",
 						variable_name = "material_variable_21872256_69bf7e2a",
-						value = GREEN_STIM_COLOR,
-					},
-				},
-			},
-		},
-	},
+						value = GREEN_STIM_COLOR
+					}
+				}
+			}
+		}
+	}
 }
 templates.ogryn_mutator_stimmed_minion_blue = table.clone(templates.mutator_stimmed_minion_blue)
 templates.ogryn_mutator_stimmed_minion_blue.minion_effects = {
-	node_effects_priotity = minion_effects_priorities.mutators + 3,
+	node_effects_priority = minion_effects_priorities.mutators + 3,
 	node_effects = {
 		{
 			node_name = "j_spine",
 			vfx = {
 				orphaned_policy = "stop",
 				particle_effect = "content/fx/particles/enemies/buff_stimmed_ogryn_speed",
-				stop_type = "destroy",
-			},
+				stop_type = "destroy"
+			}
 		},
 		{
 			node_name = "j_lefteye",
@@ -2015,20 +2029,20 @@ templates.ogryn_mutator_stimmed_minion_blue.minion_effects = {
 					{
 						material_name = "eye_socket",
 						variable_name = "material_variable_21872256",
-						value = BLUE_STIM_COLOR,
+						value = BLUE_STIM_COLOR
 					},
 					{
 						material_name = "eye_glow",
 						variable_name = "trail_color",
-						value = BLUE_STIM_COLOR,
+						value = BLUE_STIM_COLOR
 					},
 					{
 						material_name = "eye_glow",
 						variable_name = "material_variable_21872256_69bf7e2a",
-						value = BLUE_STIM_COLOR,
-					},
-				},
-			},
+						value = BLUE_STIM_COLOR
+					}
+				}
+			}
 		},
 		{
 			node_name = "j_righteye",
@@ -2040,34 +2054,34 @@ templates.ogryn_mutator_stimmed_minion_blue.minion_effects = {
 					{
 						material_name = "eye_socket",
 						variable_name = "material_variable_21872256",
-						value = BLUE_STIM_COLOR,
+						value = BLUE_STIM_COLOR
 					},
 					{
 						material_name = "eye_glow",
 						variable_name = "trail_color",
-						value = BLUE_STIM_COLOR,
+						value = BLUE_STIM_COLOR
 					},
 					{
 						material_name = "eye_glow",
 						variable_name = "material_variable_21872256_69bf7e2a",
-						value = BLUE_STIM_COLOR,
-					},
-				},
-			},
-		},
-	},
+						value = BLUE_STIM_COLOR
+					}
+				}
+			}
+		}
+	}
 }
 templates.ogryn_mutator_stimmed_minion_yellow = table.clone(templates.mutator_stimmed_minion_yellow)
 templates.ogryn_mutator_stimmed_minion_yellow.minion_effects = {
-	node_effects_priotity = minion_effects_priorities.mutators + 3,
+	node_effects_priority = minion_effects_priorities.mutators + 3,
 	node_effects = {
 		{
 			node_name = "j_spine",
 			vfx = {
 				orphaned_policy = "stop",
 				particle_effect = "content/fx/particles/enemies/buff_stimmed_ogryn_ability",
-				stop_type = "destroy",
-			},
+				stop_type = "destroy"
+			}
 		},
 		{
 			node_name = "j_lefteye",
@@ -2079,20 +2093,20 @@ templates.ogryn_mutator_stimmed_minion_yellow.minion_effects = {
 					{
 						material_name = "eye_socket",
 						variable_name = "material_variable_21872256",
-						value = YELLOW_STIM_COLOR,
+						value = YELLOW_STIM_COLOR
 					},
 					{
 						material_name = "eye_glow",
 						variable_name = "trail_color",
-						value = YELLOW_STIM_COLOR,
+						value = YELLOW_STIM_COLOR
 					},
 					{
 						material_name = "eye_glow",
 						variable_name = "material_variable_21872256_69bf7e2a",
-						value = YELLOW_STIM_COLOR,
-					},
-				},
-			},
+						value = YELLOW_STIM_COLOR
+					}
+				}
+			}
 		},
 		{
 			node_name = "j_righteye",
@@ -2104,711 +2118,604 @@ templates.ogryn_mutator_stimmed_minion_yellow.minion_effects = {
 					{
 						material_name = "eye_socket",
 						variable_name = "material_variable_21872256",
-						value = YELLOW_STIM_COLOR,
+						value = YELLOW_STIM_COLOR
 					},
 					{
 						material_name = "eye_glow",
 						variable_name = "trail_color",
-						value = YELLOW_STIM_COLOR,
+						value = YELLOW_STIM_COLOR
 					},
 					{
 						material_name = "eye_glow",
 						variable_name = "material_variable_21872256_69bf7e2a",
-						value = YELLOW_STIM_COLOR,
-					},
-				},
-			},
-		},
-	},
+						value = YELLOW_STIM_COLOR
+					}
+				}
+			}
+		}
+	}
 }
 templates.havoc_no_stagger = {
 	class_name = "buff",
 	predicted = false,
 	keywords = {
-		"no_stagger",
-	},
+		"no_stagger"
+	}
 }
 templates.havoc_rotten_armor_dr_01 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[buff_stat_buffs.ranged_damage_taken_multiplier] = 0.25,
-		[buff_stat_buffs.melee_damage_taken_multiplier] = 0.25,
-	},
+		[buff_stat_buffs.melee_damage_taken_multiplier] = 0.25
+	}
 }
 templates.havoc_rotten_armor_dr_02 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[buff_stat_buffs.ranged_damage_taken_multiplier] = 0.5,
-		[buff_stat_buffs.melee_damage_taken_multiplier] = 0.5,
-	},
+		[buff_stat_buffs.melee_damage_taken_multiplier] = 0.5
+	}
 }
 templates.havoc_rotten_armor_dr_03 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[buff_stat_buffs.ranged_damage_taken_multiplier] = 0.75,
-		[buff_stat_buffs.melee_damage_taken_multiplier] = 0.75,
-	},
+		[buff_stat_buffs.melee_damage_taken_multiplier] = 0.75
+	}
 }
 templates.havoc_rotten_armor_dr_04 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[buff_stat_buffs.ranged_damage_taken_multiplier] = 1,
-		[buff_stat_buffs.melee_damage_taken_multiplier] = 1,
-	},
+		[buff_stat_buffs.melee_damage_taken_multiplier] = 1
+	}
 }
 templates.havoc_rotten_armor_dr_05 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[buff_stat_buffs.ranged_damage_taken_multiplier] = 1.25,
-		[buff_stat_buffs.melee_damage_taken_multiplier] = 1.25,
-	},
+		[buff_stat_buffs.melee_damage_taken_multiplier] = 1.25
+	}
 }
 templates.havoc_toughness_modifier_1 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.toughness] = -10,
-	},
+		[buff_stat_buffs.toughness] = -10
+	}
 }
 templates.havoc_toughness_modifier_2 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.toughness] = -15,
-	},
+		[buff_stat_buffs.toughness] = -15
+	}
 }
 templates.havoc_toughness_modifier_3 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.toughness] = -30,
-	},
+		[buff_stat_buffs.toughness] = -30
+	}
 }
 templates.havoc_toughness_modifier_4 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.toughness] = -40,
-	},
+		[buff_stat_buffs.toughness] = -40
+	}
 }
 templates.havoc_toughness_modifier_5 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.toughness] = -45,
-	},
+		[buff_stat_buffs.toughness] = -45
+	}
 }
 templates.havoc_increased_cd_1 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.ability_cooldown_modifier] = 5,
-	},
+		[buff_stat_buffs.combat_ability_resource_cost_per_use_modifier] = 0.05
+	}
 }
 templates.havoc_vent_speed_reduction_1 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.vent_warp_charge_speed] = 1.15,
-	},
+		[buff_stat_buffs.vent_warp_charge_speed] = 1.15
+	}
 }
 templates.havoc_vent_speed_reduction_2 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.vent_warp_charge_speed] = 1.35,
-	},
+		[buff_stat_buffs.vent_warp_charge_speed] = 1.35
+	}
 }
 templates.havoc_vent_speed_reduction_3 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.vent_warp_charge_speed] = 1.5,
-	},
+		[buff_stat_buffs.vent_warp_charge_speed] = 1.5
+	}
 }
 templates.havoc_vent_speed_reduction_4 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.vent_warp_charge_speed] = 1.75,
-	},
+		[buff_stat_buffs.vent_warp_charge_speed] = 1.75
+	}
 }
 templates.havoc_vent_speed_reduction_5 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.vent_warp_charge_speed] = 1.85,
-	},
+		[buff_stat_buffs.vent_warp_charge_speed] = 1.85
+	}
 }
 templates.havoc_toughness_regen_modifier_1 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.toughness_regen_rate_modifier] = -0.15,
-	},
+		[buff_stat_buffs.toughness_regen_rate_modifier] = -0.15
+	}
 }
 templates.havoc_toughness_regen_modifier_2 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.toughness_regen_rate_modifier] = -0.2,
-	},
+		[buff_stat_buffs.toughness_regen_rate_modifier] = -0.2
+	}
 }
 templates.havoc_toughness_regen_modifier_3 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.toughness_regen_rate_modifier] = -0.3,
-	},
+		[buff_stat_buffs.toughness_regen_rate_modifier] = -0.3
+	}
 }
 templates.havoc_toughness_regen_modifier_4 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.toughness_regen_rate_modifier] = -0.4,
-	},
+		[buff_stat_buffs.toughness_regen_rate_modifier] = -0.4
+	}
 }
 templates.havoc_toughness_regen_modifier_5 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.toughness_regen_rate_modifier] = -0.5,
-	},
+		[buff_stat_buffs.toughness_regen_rate_modifier] = -0.5
+	}
 }
 templates.havoc_knocked_down_health_modifier_1 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.knocked_down_health_modifier] = 0.2,
-	},
+		[buff_stat_buffs.knocked_down_health_modifier] = 0.2
+	}
 }
 templates.havoc_knocked_down_health_modifier_2 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.knocked_down_health_modifier] = 0.4,
-	},
+		[buff_stat_buffs.knocked_down_health_modifier] = 0.4
+	}
 }
 templates.havoc_knocked_down_health_modifier_3 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.knocked_down_health_modifier] = 0.6,
-	},
+		[buff_stat_buffs.knocked_down_health_modifier] = 0.6
+	}
 }
 templates.havoc_knocked_down_health_modifier_4 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.knocked_down_health_modifier] = 0.8,
-	},
+		[buff_stat_buffs.knocked_down_health_modifier] = 0.8
+	}
 }
 templates.havoc_knocked_down_health_modifier_5 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.knocked_down_health_modifier] = 1,
-	},
+		[buff_stat_buffs.knocked_down_health_modifier] = 1
+	}
 }
 templates.havoc_health_modifier_1 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.max_health_modifier] = -0.15,
-	},
+		[buff_stat_buffs.max_health_modifier] = -0.15
+	}
 }
 templates.havoc_health_modifier_2 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.max_health_modifier] = -0.2,
-	},
+		[buff_stat_buffs.max_health_modifier] = -0.2
+	}
 }
 templates.havoc_health_modifier_3 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.max_health_modifier] = -0.25,
-	},
+		[buff_stat_buffs.max_health_modifier] = -0.25
+	}
 }
 templates.havoc_health_modifier_4 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.max_health_modifier] = -0.3,
-	},
+		[buff_stat_buffs.max_health_modifier] = -0.3
+	}
 }
 templates.havoc_health_modifier_5 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.max_health_modifier] = -0.35,
-	},
+		[buff_stat_buffs.max_health_modifier] = -0.35
+	}
 }
 templates.havoc_melee_permanent_damage_01 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.permanent_damage_ratio] = 0.1,
-	},
+		[buff_stat_buffs.permanent_damage_ratio] = 0.1
+	}
 }
 templates.havoc_melee_permanent_damage_02 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.permanent_damage_ratio] = 0.15,
-	},
+		[buff_stat_buffs.permanent_damage_ratio] = 0.15
+	}
 }
 templates.havoc_melee_permanent_damage_03 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.permanent_damage_ratio] = 0.2,
-	},
+		[buff_stat_buffs.permanent_damage_ratio] = 0.2
+	}
 }
 templates.havoc_melee_permanent_damage_04 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.permanent_damage_ratio] = 0.25,
-	},
+		[buff_stat_buffs.permanent_damage_ratio] = 0.25
+	}
 }
 templates.havoc_melee_permanent_damage_05 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.permanent_damage_ratio] = 0.3,
-	},
+		[buff_stat_buffs.permanent_damage_ratio] = 0.3
+	}
 }
 templates.havoc_positive_grenade_buff_1 = {
 	class_name = "buff",
 	predicted = false,
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local template = template_context.template
-		local stat_buffs = template.stat_buffs.extra_max_amount_of_grenades
-		local extra_grenades = stat_buffs
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-
-		template_context.initial_num_charges = grenade_ability_component.num_charges
-		grenade_ability_component.num_charges = grenade_ability_component.num_charges + extra_grenades
-	end,
-	stop_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-		local initial_num_charges = template_context.initial_num_charges
-
-		grenade_ability_component.num_charges = math.min(grenade_ability_component.num_charges, initial_num_charges)
-	end,
 	stat_buffs = {
 		[buff_stat_buffs.extra_max_amount_of_grenades] = 1,
-		[buff_stat_buffs.warp_charge_amount_smite] = 0.2,
-	},
+		[buff_stat_buffs.warp_charge_amount_smite] = 0.2
+	}
 }
-templates.havoc_positive_grenade_buff_2 = {
-	class_name = "buff",
-	predicted = false,
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local template = template_context.template
-		local stat_buffs = template.stat_buffs.extra_max_amount_of_grenades
-		local extra_grenades = stat_buffs
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-
-		template_context.initial_num_charges = grenade_ability_component.num_charges
-		grenade_ability_component.num_charges = grenade_ability_component.num_charges + extra_grenades
-	end,
-	stop_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-		local initial_num_charges = template_context.initial_num_charges
-
-		grenade_ability_component.num_charges = math.min(grenade_ability_component.num_charges, initial_num_charges)
-	end,
-	stat_buffs = {
-		[buff_stat_buffs.extra_max_amount_of_grenades] = 1,
-		[buff_stat_buffs.warp_charge_amount_smite] = 0.3,
-	},
+templates.havoc_positive_grenade_buff_2 = table.clone(templates.havoc_positive_grenade_buff_1)
+templates.havoc_positive_grenade_buff_2.stat_buffs = {
+	[buff_stat_buffs.extra_max_amount_of_grenades] = 1,
+	[buff_stat_buffs.warp_charge_amount_smite] = 0.3
 }
-templates.havoc_positive_grenade_buff_3 = {
-	class_name = "buff",
-	predicted = false,
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local template = template_context.template
-		local stat_buffs = template.stat_buffs.extra_max_amount_of_grenades
-		local extra_grenades = stat_buffs
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-
-		template_context.initial_num_charges = grenade_ability_component.num_charges
-		grenade_ability_component.num_charges = grenade_ability_component.num_charges + extra_grenades
-	end,
-	stop_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-		local initial_num_charges = template_context.initial_num_charges
-
-		grenade_ability_component.num_charges = math.min(grenade_ability_component.num_charges, initial_num_charges)
-	end,
-	stat_buffs = {
-		[buff_stat_buffs.extra_max_amount_of_grenades] = 2,
-		[buff_stat_buffs.warp_charge_amount_smite] = 0.4,
-	},
+templates.havoc_positive_grenade_buff_3 = table.clone(templates.havoc_positive_grenade_buff_1)
+templates.havoc_positive_grenade_buff_3.stat_buffs = {
+	[buff_stat_buffs.extra_max_amount_of_grenades] = 2,
+	[buff_stat_buffs.warp_charge_amount_smite] = 0.4
 }
-templates.havoc_positive_grenade_buff_4 = {
-	class_name = "buff",
-	predicted = false,
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local template = template_context.template
-		local stat_buffs = template.stat_buffs.extra_max_amount_of_grenades
-		local extra_grenades = stat_buffs
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-
-		template_context.initial_num_charges = grenade_ability_component.num_charges
-		grenade_ability_component.num_charges = grenade_ability_component.num_charges + extra_grenades
-	end,
-	stop_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-		local initial_num_charges = template_context.initial_num_charges
-
-		grenade_ability_component.num_charges = math.min(grenade_ability_component.num_charges, initial_num_charges)
-	end,
-	stat_buffs = {
-		[buff_stat_buffs.extra_max_amount_of_grenades] = 2,
-		[buff_stat_buffs.warp_charge_amount_smite] = 0.5,
-	},
+templates.havoc_positive_grenade_buff_4 = table.clone(templates.havoc_positive_grenade_buff_1)
+templates.havoc_positive_grenade_buff_4.stat_buffs = {
+	[buff_stat_buffs.extra_max_amount_of_grenades] = 2,
+	[buff_stat_buffs.warp_charge_amount_smite] = 0.5
 }
-templates.havoc_positive_grenade_buff_5 = {
-	class_name = "buff",
-	predicted = false,
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local template = template_context.template
-		local stat_buffs = template.stat_buffs.extra_max_amount_of_grenades
-		local extra_grenades = stat_buffs
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-
-		template_context.initial_num_charges = grenade_ability_component.num_charges
-		grenade_ability_component.num_charges = grenade_ability_component.num_charges + extra_grenades
-	end,
-	stop_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-		local initial_num_charges = template_context.initial_num_charges
-
-		grenade_ability_component.num_charges = math.min(grenade_ability_component.num_charges, initial_num_charges)
-	end,
-	stat_buffs = {
-		[buff_stat_buffs.extra_max_amount_of_grenades] = 3,
-		[buff_stat_buffs.warp_charge_amount_smite] = 0.6,
-	},
+templates.havoc_positive_grenade_buff_5 = table.clone(templates.havoc_positive_grenade_buff_1)
+templates.havoc_positive_grenade_buff_5.stat_buffs = {
+	[buff_stat_buffs.extra_max_amount_of_grenades] = 3,
+	[buff_stat_buffs.warp_charge_amount_smite] = 0.6
 }
 templates.havoc_melee_attack_speed_01 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.melee_attack_speed] = 0.2,
-	},
+		[buff_stat_buffs.melee_attack_speed] = 0.2
+	}
 }
 templates.havoc_melee_attack_speed_02 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.melee_attack_speed] = 0.35,
-	},
+		[buff_stat_buffs.melee_attack_speed] = 0.35
+	}
 }
 templates.havoc_melee_attack_speed_03 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.melee_attack_speed] = 0.5,
-	},
+		[buff_stat_buffs.melee_attack_speed] = 0.5
+	}
 }
 templates.havoc_melee_attack_speed_04 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.melee_attack_speed] = 0.75,
-	},
+		[buff_stat_buffs.melee_attack_speed] = 0.75
+	}
 }
 templates.havoc_melee_attack_speed_05 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.melee_attack_speed] = 1,
-	},
+		[buff_stat_buffs.melee_attack_speed] = 1
+	}
 }
 templates.havoc_ranged_attack_speed_01 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[buff_stat_buffs.ranged_attack_speed] = 0.1,
-		[buff_stat_buffs.minion_num_shots_modifier] = 1.25,
-	},
+		[buff_stat_buffs.minion_num_shots_modifier] = 1.25
+	}
 }
 templates.havoc_ranged_attack_speed_02 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[buff_stat_buffs.ranged_attack_speed] = 0.15,
-		[buff_stat_buffs.minion_num_shots_modifier] = 1.5,
-	},
+		[buff_stat_buffs.minion_num_shots_modifier] = 1.5
+	}
 }
 templates.havoc_ranged_attack_speed_03 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[buff_stat_buffs.ranged_attack_speed] = 0.2,
-		[buff_stat_buffs.minion_num_shots_modifier] = 1.75,
-	},
+		[buff_stat_buffs.minion_num_shots_modifier] = 1.75
+	}
 }
 templates.havoc_ranged_attack_speed_04 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[buff_stat_buffs.ranged_attack_speed] = 0.25,
-		[buff_stat_buffs.minion_num_shots_modifier] = 2,
-	},
+		[buff_stat_buffs.minion_num_shots_modifier] = 2
+	}
 }
 templates.havoc_ranged_attack_speed_05 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[buff_stat_buffs.ranged_attack_speed] = 0.3,
-		[buff_stat_buffs.minion_num_shots_modifier] = 2.25,
-	},
+		[buff_stat_buffs.minion_num_shots_modifier] = 2.25
+	}
 }
 templates.havoc_positive_weakspot_01 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.weakspot_damage] = 0.1,
-	},
+		[buff_stat_buffs.weakspot_damage] = 0.1
+	}
 }
 templates.havoc_positive_weakspot_02 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.weakspot_damage] = 0.2,
-	},
+		[buff_stat_buffs.weakspot_damage] = 0.2
+	}
 }
 templates.havoc_positive_weakspot_03 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.weakspot_damage] = 0.3,
-	},
+		[buff_stat_buffs.weakspot_damage] = 0.3
+	}
 }
 templates.havoc_positive_weakspot_04 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.weakspot_damage] = 0.4,
-	},
+		[buff_stat_buffs.weakspot_damage] = 0.4
+	}
 }
 templates.havoc_positive_weakspot_05 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.weakspot_damage] = 0.5,
-	},
+		[buff_stat_buffs.weakspot_damage] = 0.5
+	}
 }
 templates.havoc_positive_stamina_01 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.stamina_modifier] = 1,
-	},
+		[buff_stat_buffs.stamina_modifier] = 1
+	}
 }
 templates.havoc_positive_stamina_02 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.stamina_modifier] = 2,
-	},
+		[buff_stat_buffs.stamina_modifier] = 2
+	}
 }
 templates.havoc_positive_stamina_03 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.stamina_modifier] = 3,
-	},
+		[buff_stat_buffs.stamina_modifier] = 3
+	}
 }
 templates.havoc_positive_stamina_04 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.stamina_modifier] = 4,
-	},
+		[buff_stat_buffs.stamina_modifier] = 4
+	}
 }
 templates.havoc_positive_stamina_05 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.stamina_modifier] = 5,
-	},
+		[buff_stat_buffs.stamina_modifier] = 5
+	}
 }
 templates.havoc_positive_reload_speed_1 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.reload_speed] = 0.05,
-	},
+		[buff_stat_buffs.reload_speed] = 0.05
+	}
 }
 templates.havoc_positive_reload_speed_2 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.reload_speed] = 0.1,
-	},
+		[buff_stat_buffs.reload_speed] = 0.1
+	}
 }
 templates.havoc_positive_reload_speed_3 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.reload_speed] = 0.15,
-	},
+		[buff_stat_buffs.reload_speed] = 0.15
+	}
 }
 templates.havoc_positive_reload_speed_4 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.reload_speed] = 0.2,
-	},
+		[buff_stat_buffs.reload_speed] = 0.2
+	}
 }
 templates.havoc_positive_reload_speed_5 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.reload_speed] = 0.25,
-	},
+		[buff_stat_buffs.reload_speed] = 0.25
+	}
 }
 templates.havoc_positive_critical_chance_1 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.critical_strike_chance] = 0.04,
-	},
+		[buff_stat_buffs.critical_strike_chance] = 0.04
+	}
 }
 templates.havoc_positive_critical_chance_2 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.critical_strike_chance] = 0.08,
-	},
+		[buff_stat_buffs.critical_strike_chance] = 0.08
+	}
 }
 templates.havoc_positive_critical_chance_3 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.critical_strike_chance] = 0.12,
-	},
+		[buff_stat_buffs.critical_strike_chance] = 0.12
+	}
 }
 templates.havoc_positive_critical_chance_4 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.critical_strike_chance] = 0.16,
-	},
+		[buff_stat_buffs.critical_strike_chance] = 0.16
+	}
 }
 templates.havoc_positive_critical_chance_5 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.critical_strike_chance] = 0.2,
-	},
+		[buff_stat_buffs.critical_strike_chance] = 0.2
+	}
 }
 templates.havoc_positive_movement_speed_1 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.movement_speed] = 0.030000000000000027,
-	},
+		[buff_stat_buffs.movement_speed] = 0.030000000000000027
+	}
 }
 templates.havoc_positive_movement_speed_2 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.movement_speed] = 0.06000000000000005,
-	},
+		[buff_stat_buffs.movement_speed] = 0.06000000000000005
+	}
 }
 templates.havoc_positive_movement_speed_3 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.movement_speed] = 0.09000000000000008,
-	},
+		[buff_stat_buffs.movement_speed] = 0.09000000000000008
+	}
 }
 templates.havoc_positive_movement_speed_4 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.movement_speed] = 0.1200000000000001,
-	},
+		[buff_stat_buffs.movement_speed] = 0.1200000000000001
+	}
 }
 templates.havoc_positive_movement_speed_5 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.movement_speed] = 0.1499999999999999,
-	},
+		[buff_stat_buffs.movement_speed] = 0.1499999999999999
+	}
 }
 templates.havoc_positive_attack_speed_1 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[buff_stat_buffs.melee_attack_speed] = 0.03,
-		[buff_stat_buffs.ranged_attack_speed] = 0.03,
-	},
+		[buff_stat_buffs.ranged_attack_speed] = 0.03
+	}
 }
 templates.havoc_positive_attack_speed_2 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[buff_stat_buffs.melee_attack_speed] = 0.06,
-		[buff_stat_buffs.ranged_attack_speed] = 0.06,
-	},
+		[buff_stat_buffs.ranged_attack_speed] = 0.06
+	}
 }
 templates.havoc_positive_attack_speed_3 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[buff_stat_buffs.melee_attack_speed] = 0.09,
-		[buff_stat_buffs.ranged_attack_speed] = 0.09,
-	},
+		[buff_stat_buffs.ranged_attack_speed] = 0.09
+	}
 }
 templates.havoc_positive_attack_speed_4 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[buff_stat_buffs.melee_attack_speed] = 0.12,
-		[buff_stat_buffs.ranged_attack_speed] = 0.12,
-	},
+		[buff_stat_buffs.ranged_attack_speed] = 0.12
+	}
 }
 templates.havoc_positive_attack_speed_5 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[buff_stat_buffs.melee_attack_speed] = 0.15,
-		[buff_stat_buffs.ranged_attack_speed] = 0.15,
-	},
+		[buff_stat_buffs.ranged_attack_speed] = 0.15
+	}
 }
 
 return templates

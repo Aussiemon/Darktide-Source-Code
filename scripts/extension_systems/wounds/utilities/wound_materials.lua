@@ -82,7 +82,7 @@ local wound_param_settings = {
 	"radii",
 	SHAPE_SCALE_KEY_IDS[1],
 	2,
-	"shape_scales",
+	"shape_scales"
 }
 local WoundMaterials = {}
 
@@ -131,7 +131,7 @@ WoundMaterials.create_data = function ()
 			shape_scale_material_key_id = SHAPE_SCALE_KEY_IDS[shape_scale_key_index],
 			shape_mask_uv_offset = Vector3Box(),
 			color_brightness_value = Vector3Box(),
-			color_time_duration = Vector3Box(),
+			color_time_duration = Vector3Box()
 		}
 	end
 
@@ -225,8 +225,10 @@ WoundMaterials.apply = function (unit, wounds_data, optional_index, optional_slo
 		_engine_optimized_set_wound_position_for_item(unit, material_key_id, hit_shader_vector)
 
 		for slot_name, slot_data in pairs(slot_items) do
-			if slot_data.state ~= "unequipped" then
-				_engine_optimized_set_wound_position_for_item(slot_data.unit, material_key_id, hit_shader_vector)
+			local slot_unit = slot_data.unit
+
+			if slot_unit and slot_data.state ~= "unequipped" then
+				_engine_optimized_set_wound_position_for_item(slot_unit, material_key_id, hit_shader_vector)
 
 				local attachments = slot_data.attachments
 

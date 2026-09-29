@@ -70,19 +70,19 @@ WeaponSpecialDisplay.component_data = {
 	material_slot_name = {
 		ui_name = "Material Slot Name",
 		ui_type = "text_box",
-		value = "display_01",
+		value = "display_01"
 	},
 	material_variable_name = {
 		ui_name = "Material Variable Name (Scalar)",
 		ui_type = "text_box",
-		value = "is_special_active",
+		value = "is_special_active"
 	},
 	material_update_delay = {
 		decimals = 2,
 		ui_name = "Material Update Delay",
 		ui_type = "number",
-		value = 0,
-	},
+		value = 0
+	}
 }
 
 return WeaponSpecialDisplay

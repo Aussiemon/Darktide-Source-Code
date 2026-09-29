@@ -31,13 +31,13 @@ templates.weapon_trait_bespoke_combataxe_p1_stacking_rending_on_one_hit_kill_par
 	predicted = false,
 	stacks_to_remove = 1,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	add_child_proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.on_one_hit_kill),
+	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.on_one_hit_kill)
 }
 templates.weapon_trait_bespoke_combataxe_p1_stacking_rending_on_one_hit_kill_child = {
 	class_name = "buff",
@@ -46,9 +46,9 @@ templates.weapon_trait_bespoke_combataxe_p1_stacking_rending_on_one_hit_kill_chi
 	predicted = false,
 	stack_offset = -1,
 	conditional_stat_buffs = {
-		[stat_buffs.melee_finesse_modifier_bonus] = 0.1,
+		[stat_buffs.melee_finesse_modifier_bonus] = 0.1
 	},
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 templates.weapon_trait_bespoke_combataxe_p1_power_bonus_on_first_attack = table.clone(BaseWeaponTraitBuffTemplates.power_bonus_on_first_attack)
 templates.weapon_trait_bespoke_combataxe_p1_power_bonus_scaled_on_stamina = table.clone(BaseWeaponTraitBuffTemplates.power_bonus_scaled_on_stamina)

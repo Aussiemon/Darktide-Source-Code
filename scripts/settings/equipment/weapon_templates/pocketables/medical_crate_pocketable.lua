@@ -28,30 +28,30 @@ weapon_template.actions = {
 		use_aim_date = false,
 		deployable_settings = Deployables.medical_crate,
 		place_configuration = {
-			distance = 2,
-		},
-	},
+			distance = 2
+		}
+	}
 }
 
 table.add_missing(weapon_template.actions, PocketablesTemplateSettings.actions)
 
 weapon_template.keywords = {
-	"pocketable",
+	"pocketable"
 }
 weapon_template.ammo_template = "no_ammo"
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
-	uses_overheat = false,
+	uses_overheat = false
 }
 weapon_template.breed_anim_state_machine_3p = {
 	cryptic = "content/characters/player/human/third_person/animations/pocketables",
 	human = "content/characters/player/human/third_person/animations/pocketables",
-	ogryn = "content/characters/player/ogryn/third_person/animations/pocketables",
+	ogryn = "content/characters/player/ogryn/third_person/animations/pocketables"
 }
 weapon_template.breed_anim_state_machine_1p = {
 	cryptic = "content/characters/player/human/first_person/animations/pocketables",
 	human = "content/characters/player/human/first_person/animations/pocketables",
-	ogryn = "content/characters/player/ogryn/first_person/animations/pocketables",
+	ogryn = "content/characters/player/ogryn/first_person/animations/pocketables"
 }
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.fx_sources = {}

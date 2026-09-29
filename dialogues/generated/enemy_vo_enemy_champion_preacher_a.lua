@@ -14,7 +14,7 @@ local enemy_vo_enemy_champion_preacher_a = {
 			"loc_enemy_champion_preacher_a__long_death_a_07",
 			"loc_enemy_champion_preacher_a__long_death_a_08",
 			"loc_enemy_champion_preacher_a__long_death_a_09",
-			"loc_enemy_champion_preacher_a__long_death_a_10",
+			"loc_enemy_champion_preacher_a__long_death_a_10"
 		},
 		sound_events_duration = {
 			6.657271,
@@ -26,9 +26,9 @@ local enemy_vo_enemy_champion_preacher_a = {
 			11.19454,
 			9.925938,
 			11.2106,
-			9.537438,
+			9.537438
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	cultist_captain_reinforcements = {
 		randomize_indexes_n = 0,
@@ -38,16 +38,16 @@ local enemy_vo_enemy_champion_preacher_a = {
 			"loc_enemy_champion_preacher_a__reinforcements_a_02",
 			"loc_enemy_champion_preacher_a__reinforcements_a_03",
 			"loc_enemy_champion_preacher_a__reinforcements_a_04",
-			"loc_enemy_champion_preacher_a__reinforcements_a_05",
+			"loc_enemy_champion_preacher_a__reinforcements_a_05"
 		},
 		sound_events_duration = {
 			6.365208,
 			6.816688,
 			9.042688,
 			7.897396,
-			8.006521,
+			8.006521
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	cultist_captain_taunt = {
 		randomize_indexes_n = 0,
@@ -62,7 +62,7 @@ local enemy_vo_enemy_champion_preacher_a = {
 			"loc_enemy_champion_preacher_a__taunt_a_07",
 			"loc_enemy_champion_preacher_a__taunt_a_08",
 			"loc_enemy_champion_preacher_a__taunt_a_09",
-			"loc_enemy_champion_preacher_a__taunt_a_10",
+			"loc_enemy_champion_preacher_a__taunt_a_10"
 		},
 		sound_events_duration = {
 			7.694688,
@@ -74,9 +74,9 @@ local enemy_vo_enemy_champion_preacher_a = {
 			7.363354,
 			6.113708,
 			6.218542,
-			6.283417,
+			6.283417
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	cultist_captain_taunt_combat = {
 		randomize_indexes_n = 0,
@@ -91,7 +91,7 @@ local enemy_vo_enemy_champion_preacher_a = {
 			"loc_enemy_champion_preacher_a__taunt_combat_a_07",
 			"loc_enemy_champion_preacher_a__taunt_combat_a_08",
 			"loc_enemy_champion_preacher_a__taunt_combat_a_09",
-			"loc_enemy_champion_preacher_a__taunt_combat_a_10",
+			"loc_enemy_champion_preacher_a__taunt_combat_a_10"
 		},
 		sound_events_duration = {
 			4.531896,
@@ -103,10 +103,10 @@ local enemy_vo_enemy_champion_preacher_a = {
 			4.088729,
 			4.4715,
 			5.059042,
-			5.256271,
+			5.256271
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("enemy_vo_enemy_champion_preacher_a", enemy_vo_enemy_champion_preacher_a)

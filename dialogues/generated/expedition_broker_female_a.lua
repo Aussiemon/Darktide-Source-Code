@@ -7,14 +7,14 @@ local expedition_broker_female_a = {
 		sound_events = {
 			"loc_broker_female_a__expeditions_call_extraction_a_01",
 			"loc_broker_female_a__expeditions_call_extraction_a_02",
-			"loc_broker_female_a__expeditions_call_extraction_a_03",
+			"loc_broker_female_a__expeditions_call_extraction_a_03"
 		},
 		sound_events_duration = {
 			2.438552,
 			1.387625,
-			1.96076,
+			1.96076
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	expeditions_sentry_gun_activated_a = {
 		randomize_indexes_n = 0,
@@ -22,14 +22,14 @@ local expedition_broker_female_a = {
 		sound_events = {
 			"loc_broker_female_a__expeditions_sentry_gun_activated_a_01",
 			"loc_broker_female_a__expeditions_sentry_gun_activated_a_02",
-			"loc_broker_female_a__expeditions_sentry_gun_activated_a_03",
+			"loc_broker_female_a__expeditions_sentry_gun_activated_a_03"
 		},
 		sound_events_duration = {
 			1.957031,
 			2.496729,
-			1.692375,
+			1.692375
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	expeditions_sentry_gun_deactivated_a = {
 		randomize_indexes_n = 0,
@@ -37,15 +37,15 @@ local expedition_broker_female_a = {
 		sound_events = {
 			"loc_broker_female_a__expeditions_sentry_gun_deactivated_a_01",
 			"loc_broker_female_a__expeditions_sentry_gun_deactivated_a_02",
-			"loc_broker_female_a__expeditions_sentry_gun_deactivated_a_03",
+			"loc_broker_female_a__expeditions_sentry_gun_deactivated_a_03"
 		},
 		sound_events_duration = {
 			1.295333,
 			1.714427,
-			1.635833,
+			1.635833
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("expedition_broker_female_a", expedition_broker_female_a)

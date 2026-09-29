@@ -22,7 +22,7 @@ explosion_templates.needlepistol_explosion = {
 	vfx = nil,
 	explosion_area_suppression = {
 		distance = 0.01,
-		suppression_value = 0.01,
+		suppression_value = 0.01
 	},
 	close_damage_profile = DamageProfileTemplates.needlepistol_explosion_parent,
 	close_damage_type = damage_types.boltshell,
@@ -31,30 +31,30 @@ explosion_templates.needlepistol_explosion = {
 	broadphase_explosion_filter = {
 		"heroes",
 		"villains",
-		"destructibles",
-	},
+		"destructibles"
+	}
 }
 overrides.needlepistol_explosion_1 = {
 	parent_template_name = "needlepistol_explosion",
 	overrides = {
 		{
 			"close_damage_profile",
-			DamageProfileTemplates.needlepistol_explosion_1,
+			DamageProfileTemplates.needlepistol_explosion_1
 		},
 		{
 			"damage_profile",
-			DamageProfileTemplates.needlepistol_explosion_1,
+			DamageProfileTemplates.needlepistol_explosion_1
 		},
 		{
 			"vfx",
 			{
-				"content/fx/particles/impacts/weapons/needlepistol/needlepistol_impact_primary_m2",
-			},
-		},
-	},
+				"content/fx/particles/impacts/weapons/needlepistol/needlepistol_impact_primary_m2"
+			}
+		}
+	}
 }
 
 return {
 	base_templates = explosion_templates,
-	overrides = overrides,
+	overrides = overrides
 }

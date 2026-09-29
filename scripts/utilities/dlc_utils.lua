@@ -8,7 +8,7 @@ local DLCUtils = {}
 
 local function _also_grants_recursive(dlc_id, ids_out, backend_auth_method, found_map)
 	found_map = found_map or {
-		[dlc_id] = true,
+		[dlc_id] = true
 	}
 
 	local also_grants = DLCSettings.also_grants[dlc_id]
@@ -35,7 +35,7 @@ DLCUtils.get_ids_for_auth_method = function (dlc_id, backend_auth_method)
 	local dlc_settings = DLCSettings.dlcs[dlc_id]
 	local platform_settings = dlc_settings.ids[backend_auth_method]
 	local ids = {
-		platform_settings.id,
+		platform_settings.id
 	}
 
 	if not DLCSettings.client_predicted_includes_platforms[backend_auth_method] then
@@ -53,7 +53,7 @@ DLCUtils.is_archetype_available = function (archetype)
 	if not requires_dlc then
 		return Promise.resolved({
 			available = true,
-			archetype = archetype,
+			archetype = archetype
 		})
 	end
 
@@ -61,12 +61,12 @@ DLCUtils.is_archetype_available = function (archetype)
 		Managers.dlc:is_owner_of(archetype.requires_dlc):next(function (ok)
 			resolve({
 				archetype = archetype,
-				available = ok,
+				available = ok
 			})
 		end):catch(function (err)
 			reject({
 				archetype = archetype,
-				error = err,
+				error = err
 			})
 		end)
 	end)
@@ -98,14 +98,14 @@ DLCUtils.show_reward_notifications = function (dlc_updates)
 
 							ItemUtils.mark_item_id_as_new({
 								gear_id = gear_id,
-								item_type = item_type,
+								item_type = item_type
 							}, true)
 						end
 					end
 				elseif reward.rewardType == "currency" then
 					Managers.event:trigger("event_add_notification_message", "currency", {
 						currency = reward.currencyType,
-						amount = reward.amount,
+						amount = reward.amount
 					})
 				end
 			end
@@ -135,13 +135,13 @@ DLCUtils.update_local_gear_cache = function (dlc_updates)
 					rewarded_master_item.masterDataInstance = {
 						id = master_id,
 						overrides = {},
-						slots = rewarded_master_item.slots,
+						slots = rewarded_master_item.slots
 					}
 
 					local _, gear = ItemUtils.track_reward_item_to_gear(rewarded_master_item)
 					local gear_data = {
 						gear_id = gear_id,
-						gear = gear,
+						gear = gear
 					}
 
 					if dlc.status == "granted" then
@@ -153,7 +153,7 @@ DLCUtils.update_local_gear_cache = function (dlc_updates)
 			elseif reward.rewardType == "currency" and dlc.status == "granted" then
 				currency_granted[#currency_granted + 1] = {
 					currency_type = reward.currencyType,
-					amount = reward.amount,
+					amount = reward.amount
 				}
 			end
 		end

@@ -282,7 +282,7 @@ local function _create_loadout(cinematic_name, player)
 		wants_slot_with_companion = wants_slot_with_companion,
 		companion_breed_name = has_companion and companion_breed_name or "none",
 		profile = profile,
-		items = items,
+		items = items
 	}
 
 	return new_player_loadout

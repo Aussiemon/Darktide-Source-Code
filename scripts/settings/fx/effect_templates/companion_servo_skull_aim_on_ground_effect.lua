@@ -9,7 +9,7 @@ local servo_skull_flamethrower_types = CompanionServoSkullSettings.FLAMETHROWER_
 local vfx = CompanionServoSkullAimOnGroundEffectSettings.vfx
 local _spawn_effects, _destroy_effects, _update_effect_positions, _get_target_position, _select_aim_on_ground_effect
 local resources = {
-	resources_vfx = vfx,
+	resources_vfx = vfx
 }
 local effect_template = {
 	name = "companion_servo_skull_aim_on_ground_effect",
@@ -119,7 +119,7 @@ local effect_template = {
 		end
 
 		_destroy_effects(template_data)
-	end,
+	end
 }
 
 function _spawn_effects(template_data, targeting_fx_name)

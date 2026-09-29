@@ -12,13 +12,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			84,
-			224,
+			224
 		},
 		position = {
 			0,
 			0,
-			62,
-		},
+			62
+		}
 	},
 	corner_bottom_right = {
 		horizontal_alignment = "right",
@@ -26,13 +26,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			84,
-			224,
+			224
 		},
 		position = {
 			0,
 			0,
-			62,
-		},
+			62
+		}
 	},
 	corner_top_right = {
 		horizontal_alignment = "right",
@@ -40,13 +40,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			540,
-			224,
+			224
 		},
 		position = {
 			0,
 			-65,
-			55,
-		},
+			55
+		}
 	},
 	wallet_pivot = {
 		horizontal_alignment = "right",
@@ -54,27 +54,27 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			-20,
 			50,
-			56,
-		},
-	},
+			56
+		}
+	}
 }
 local widget_definitions = {
 	corner_bottom_left = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/armoury_01_lower",
-		},
+			value = "content/ui/materials/frames/screen/armoury_01_lower"
+		}
 	}, "corner_bottom_left"),
 	corner_bottom_right = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/armoury_02_lower",
-		},
+			value = "content/ui/materials/frames/screen/armoury_02_lower"
+		}
 	}, "corner_bottom_right"),
 	corner_top_right = UIWidget.create_definition({
 		{
@@ -85,16 +85,16 @@ local widget_definitions = {
 				offset = {
 					0,
 					-2,
-					1,
-				},
-			},
-		},
-	}, "corner_top_right"),
+					1
+				}
+			}
+		}
+	}, "corner_top_right")
 }
 local input_legend_params = {}
 local intro_texts = {
 	description_text = "loc_credits_vendor_view_intro_description",
-	title_text = "loc_credits_vendor_view_intro_title",
+	title_text = "loc_credits_vendor_view_intro_title"
 }
 local button_options_definitions = {
 	{
@@ -109,7 +109,7 @@ local button_options_definitions = {
 						display_name = "loc_credits_vendor_view_title",
 						view = "credits_vendor_view",
 						context = {
-							use_item_categories = true,
+							use_item_categories = true
 						},
 						input_legend_buttons = {
 							{
@@ -135,7 +135,7 @@ local button_options_definitions = {
 									end
 
 									return false
-								end,
+								end
 							},
 							{
 								alignment = "right_alignment",
@@ -152,18 +152,18 @@ local button_options_definitions = {
 									end
 
 									return false
-								end,
-							},
-						},
-					},
-				},
+								end
+							}
+						}
+					}
+				}
 			}
 
 			self:_setup_tab_bar(tab_bar_params, {
 				fetch_store_items_on_enter = true,
-				hide_price = true,
+				hide_price = true
 			})
-		end,
+		end
 	},
 	{
 		display_name = "loc_credits_goods_vendor_title_text",
@@ -177,17 +177,17 @@ local button_options_definitions = {
 						display_name = "loc_credits_goods_vendor_view_title",
 						view = "credits_goods_vendor_view",
 						context = {
-							use_item_categories = true,
-						},
-					},
-				},
+							use_item_categories = true
+						}
+					}
+				}
 			}
 
 			self:_setup_tab_bar(tab_bar_params, {
-				fetch_store_items_on_enter = true,
+				fetch_store_items_on_enter = true
 			})
-		end,
-	},
+		end
+	}
 }
 local background_world_params = {
 	level_name = "content/levels/ui/credits_vendor/credits_vendor",
@@ -199,7 +199,7 @@ local background_world_params = {
 	viewport_name = "ui_credits_vendor_world_viewport",
 	viewport_type = "default",
 	world_layer = 1,
-	world_name = "ui_credits_vendor_world",
+	world_name = "ui_credits_vendor_world"
 }
 
 return {
@@ -208,5 +208,5 @@ return {
 	scenegraph_definition = scenegraph_definition,
 	button_options_definitions = button_options_definitions,
 	input_legend_params = input_legend_params,
-	background_world_params = background_world_params,
+	background_world_params = background_world_params
 }

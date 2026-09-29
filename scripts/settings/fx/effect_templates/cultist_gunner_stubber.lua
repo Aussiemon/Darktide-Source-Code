@@ -13,7 +13,7 @@ local STIMMED_PARAMETER_NAME = "minion_stimmed"
 local resources = {
 	shoot_vfx = SHOOT_VFX,
 	wwise_gun_start = WWISE_GUN_START,
-	wwise_gun_stop = WWISE_GUN_STOP,
+	wwise_gun_stop = WWISE_GUN_STOP
 }
 local FX_MUZZLE_1_SOURCE_NAME = "muzzle"
 local ORPHANED_POLICY = "stop"
@@ -91,7 +91,7 @@ local effect_template = {
 		local unit = template_data.unit
 
 		Unit.animation_event(unit, "shoot_finished")
-	end,
+	end
 }
 
 return effect_template

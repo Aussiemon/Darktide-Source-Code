@@ -17,7 +17,7 @@ WwiseStateGroupGame.init = function (self, wwise_world, wwise_state_group_name)
 		StateLoading = "loading",
 		StateMainMenu = "main_menu",
 		StateTitle = "title",
-		StateVictoryDefeat = "None",
+		StateVictoryDefeat = "None"
 	}
 end
 
@@ -36,6 +36,19 @@ WwiseStateGroupGame.update = function (self, dt, t)
 	end
 
 	if self:_in_cinematic_mode() then
+		local cinematic_manager = Managers.state.cinematic
+		local story_name = cinematic_manager and cinematic_manager:active_story_name()
+		local story_settings = WwiseGameSyncSettings.story_settings[story_name]
+		local delay_music_switch = story_settings and story_settings.delay_music_switch
+
+		self._delay_music_switch = self._delay_music_switch or delay_music_switch
+
+		if self._delay_music_switch and self._delay_music_switch > 0 then
+			self._delay_music_switch = self._delay_music_switch - dt
+
+			return
+		end
+
 		local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
 		local cinematic_name = cinematic_scene_system:current_cinematic_name()
 		local template = CinematicSceneTemplates[cinematic_name]
@@ -47,6 +60,8 @@ WwiseStateGroupGame.update = function (self, dt, t)
 			self:_set_wwise_state("None")
 		end
 	else
+		self._delay_music_switch = nil
+
 		local ui_wwise_state = Managers.ui:wwise_music_state(self._wwise_state_group_name)
 
 		if ui_wwise_state then

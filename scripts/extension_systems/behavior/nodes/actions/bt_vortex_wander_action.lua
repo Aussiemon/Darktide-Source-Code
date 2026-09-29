@@ -66,7 +66,7 @@ end
 local condition_names = {
 	"at_jump_smart_object",
 	"at_climb_smart_object",
-	"at_teleport_smart_object",
+	"at_teleport_smart_object"
 }
 
 BTVortexWanderAction._need_to_teleport = function (self, unit, blackboard, scratchpad, condition_args, action_data, is_running)

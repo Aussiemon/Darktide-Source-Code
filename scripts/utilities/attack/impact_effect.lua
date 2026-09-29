@@ -386,7 +386,7 @@ function _find_surface_impact_fx(damage_type, material_type, hit_type)
 end
 
 local MUTATOR_IMPACT_FX_OVERRIDES = {
-	"rotten_armor",
+	"rotten_armor"
 }
 
 function _check_for_mutator_override(unit)

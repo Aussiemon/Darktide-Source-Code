@@ -8,24 +8,24 @@ Date.seconds_in_a_day = 24 * Date.seconds_in_an_hour
 Date.seconds_in_a_week = 7 * Date.seconds_in_a_day
 Date.denominations = {
 	{
-		length_in_seconds = Date.seconds_in_a_week,
+		length_in_seconds = Date.seconds_in_a_week
 	},
 	{
 		name = "wday",
-		length_in_seconds = Date.seconds_in_a_day,
+		length_in_seconds = Date.seconds_in_a_day
 	},
 	{
 		name = "hour",
-		length_in_seconds = Date.seconds_in_an_hour,
+		length_in_seconds = Date.seconds_in_an_hour
 	},
 	{
 		name = "min",
-		length_in_seconds = Date.seconds_in_a_minute,
+		length_in_seconds = Date.seconds_in_a_minute
 	},
 	{
 		length_in_seconds = 1,
-		name = "sec",
-	},
+		name = "sec"
+	}
 }
 
 Date.to_seconds = function (days, hours, minutes, seconds)

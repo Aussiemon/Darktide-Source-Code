@@ -8,8 +8,8 @@ local get_em_in_shape = {
 	name = "loc_get_em_in_shape_event_name",
 	stat = "live_event_get_em_in_shape_won",
 	item_rewards = {
-		"content/items/weapons/player/trinkets/trinket_15c",
-	},
+		"content/items/weapons/player/trinkets/trinket_15c"
+	}
 }
 
 return get_em_in_shape

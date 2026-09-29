@@ -30,7 +30,7 @@ MinionSpawnerQueue.enqueue = function (self, breed_list, spawn_data)
 		queue_id = queue_id,
 		breed_list = breed_list,
 		breed_list_size = breed_list_size,
-		spawn_data = table.set_readonly(spawn_data),
+		spawn_data = table.set_readonly(spawn_data)
 	}
 
 	return queue_id

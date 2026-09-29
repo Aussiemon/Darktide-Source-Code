@@ -270,13 +270,13 @@ ViewElementExpeditionViewMissionInfo._update_mission_info_stats = function (self
 		stats_widget.offset = {
 			0,
 			downward_offset,
-			0,
+			0
 		}
 	else
 		stats_widget.offset = {
 			0,
 			0,
-			0,
+			0
 		}
 	end
 end

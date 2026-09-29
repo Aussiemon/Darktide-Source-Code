@@ -20,8 +20,8 @@ local roamer_packs = {
 				renegade_gunner,
 				renegade_gunner,
 				renegade_executor,
-				renegade_berzerker,
-			},
+				renegade_berzerker
+			}
 		},
 		{
 			weight = 2,
@@ -29,8 +29,8 @@ local roamer_packs = {
 				ogryn_gunner,
 				renegade_plasma_gunner,
 				renegade_berzerker,
-				renegade_gunner,
-			},
+				renegade_gunner
+			}
 		},
 		{
 			weight = 1,
@@ -39,8 +39,8 @@ local roamer_packs = {
 				renegade_plasma_gunner,
 				renegade_berzerker,
 				renegade_plasma_gunner,
-				renegade_gunner,
-			},
+				renegade_gunner
+			}
 		},
 		{
 			weight = 1,
@@ -49,8 +49,8 @@ local roamer_packs = {
 				renegade_gunner,
 				renegade_berzerker,
 				renegade_shocktrooper,
-				renegade_shocktrooper,
-			},
+				renegade_shocktrooper
+			}
 		},
 		{
 			weight = 0.5,
@@ -58,8 +58,8 @@ local roamer_packs = {
 				ogryn_gunner,
 				ogryn_bulwark,
 				renegade_shocktrooper,
-				renegade_shocktrooper,
-			},
+				renegade_shocktrooper
+			}
 		},
 		{
 			weight = 0.5,
@@ -69,9 +69,9 @@ local roamer_packs = {
 				ogryn_bulwark,
 				ogryn_executor,
 				renegade_gunner,
-				renegade_gunner,
-			},
-		},
+				renegade_gunner
+			}
+		}
 	},
 	mutator_renegade_mixed_high_elite_only = {
 		{
@@ -85,8 +85,8 @@ local roamer_packs = {
 				renegade_berzerker,
 				renegade_executor,
 				renegade_gunner,
-				renegade_gunner,
-			},
+				renegade_gunner
+			}
 		},
 		{
 			weight = 1,
@@ -99,8 +99,8 @@ local roamer_packs = {
 				ogryn_bulwark,
 				ogryn_bulwark,
 				renegade_gunner,
-				renegade_gunner,
-			},
+				renegade_gunner
+			}
 		},
 		{
 			weight = 1,
@@ -109,8 +109,8 @@ local roamer_packs = {
 				renegade_gunner,
 				renegade_gunner,
 				ogryn_gunner,
-				ogryn_bulwark,
-			},
+				ogryn_bulwark
+			}
 		},
 		{
 			weight = 0.5,
@@ -122,8 +122,8 @@ local roamer_packs = {
 				renegade_berzerker,
 				renegade_gunner,
 				renegade_plasma_gunner,
-				renegade_plasma_gunner,
-			},
+				renegade_plasma_gunner
+			}
 		},
 		{
 			weight = 1,
@@ -132,8 +132,8 @@ local roamer_packs = {
 				renegade_plasma_gunner,
 				renegade_gunner,
 				renegade_gunner,
-				renegade_executor,
-			},
+				renegade_executor
+			}
 		},
 		{
 			weight = 1,
@@ -145,8 +145,8 @@ local roamer_packs = {
 				renegade_gunner,
 				ogryn_bulwark,
 				ogryn_bulwark,
-				renegade_shocktrooper,
-			},
+				renegade_shocktrooper
+			}
 		},
 		{
 			weight = 0.5,
@@ -161,8 +161,8 @@ local roamer_packs = {
 				renegade_shocktrooper,
 				renegade_shocktrooper,
 				renegade_shocktrooper,
-				renegade_shocktrooper,
-			},
+				renegade_shocktrooper
+			}
 		},
 		{
 			weight = 0.5,
@@ -170,9 +170,9 @@ local roamer_packs = {
 				ogryn_bulwark,
 				renegade_berzerker,
 				renegade_berzerker,
-				ogryn_gunner,
-			},
-		},
+				ogryn_gunner
+			}
+		}
 	},
 	mutator_cultist_mixed_low_elite_only = {
 		{
@@ -183,8 +183,8 @@ local roamer_packs = {
 				ogryn_bulwark,
 				cultist_berzerker,
 				cultist_gunner,
-				cultist_gunner,
-			},
+				cultist_gunner
+			}
 		},
 		{
 			weight = 1,
@@ -196,8 +196,8 @@ local roamer_packs = {
 				ogryn_bulwark,
 				cultist_shocktrooper,
 				cultist_shocktrooper,
-				cultist_berzerker,
-			},
+				cultist_berzerker
+			}
 		},
 		{
 			weight = 2,
@@ -206,8 +206,8 @@ local roamer_packs = {
 				cultist_gunner,
 				ogryn_bulwark,
 				cultist_shocktrooper,
-				cultist_berzerker,
-			},
+				cultist_berzerker
+			}
 		},
 		{
 			weight = 1,
@@ -216,8 +216,8 @@ local roamer_packs = {
 				cultist_gunner,
 				cultist_gunner,
 				cultist_gunner,
-				ogryn_bulwark,
-			},
+				ogryn_bulwark
+			}
 		},
 		{
 			weight = 0.5,
@@ -225,8 +225,8 @@ local roamer_packs = {
 				ogryn_gunner,
 				cultist_gunner,
 				cultist_berzerker,
-				cultist_shocktrooper,
-			},
+				cultist_shocktrooper
+			}
 		},
 		{
 			weight = 0.5,
@@ -234,9 +234,9 @@ local roamer_packs = {
 				ogryn_gunner,
 				cultist_berzerker,
 				ogryn_executor,
-				ogryn_executor,
-			},
-		},
+				ogryn_executor
+			}
+		}
 	},
 	mutator_cultist_mixed_high_elite_only = {
 		{
@@ -250,8 +250,8 @@ local roamer_packs = {
 				cultist_gunner,
 				cultist_gunner,
 				cultist_gunner,
-				cultist_gunner,
-			},
+				cultist_gunner
+			}
 		},
 		{
 			weight = 1,
@@ -261,8 +261,8 @@ local roamer_packs = {
 				cultist_gunner,
 				cultist_shocktrooper,
 				ogryn_bulwark,
-				cultist_berzerker,
-			},
+				cultist_berzerker
+			}
 		},
 		{
 			weight = 1,
@@ -273,8 +273,8 @@ local roamer_packs = {
 				cultist_shocktrooper,
 				cultist_shocktrooper,
 				cultist_berzerker,
-				cultist_berzerker,
-			},
+				cultist_berzerker
+			}
 		},
 		{
 			weight = 0.5,
@@ -284,10 +284,10 @@ local roamer_packs = {
 				cultist_gunner,
 				ogryn_gunner,
 				ogryn_executor,
-				ogryn_executor,
-			},
-		},
-	},
+				ogryn_executor
+			}
+		}
+	}
 }
 
 return roamer_packs

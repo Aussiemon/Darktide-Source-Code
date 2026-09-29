@@ -14,17 +14,17 @@ local view_settings = {
 	state_bound = true,
 	use_transition_ui = false,
 	wwise_states = {
-		options = WwiseGameSyncSettings.state_groups.options.vendor_menu,
+		options = WwiseGameSyncSettings.state_groups.options.vendor_menu
 	},
 	dummy_data = {
-		debug = true,
+		debug = true
 	},
 	enter_sound_events = {
-		UISoundEvents.default_menu_enter,
+		UISoundEvents.default_menu_enter
 	},
 	exit_sound_events = {
-		UISoundEvents.default_menu_exit,
-	},
+		UISoundEvents.default_menu_exit
+	}
 }
 
 return settings("CreditsGoodsVendorViewDeclarationSettings", view_settings)

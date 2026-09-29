@@ -36,7 +36,7 @@ LevelGridHandler.grid_cell_by_position = function (self, position, deep_search, 
 		local cell_position = cell.position
 		local cell_lower_left_corner = {
 			cell_position[1] - cell_size[1] * 0.5,
-			cell_position[2] - cell_size[2] * 0.5,
+			cell_position[2] - cell_size[2] * 0.5
 		}
 
 		if math.box_overlap_point_radius(cell_lower_left_corner[1], cell_lower_left_corner[2], cell_lower_left_corner[1] + cell_size[1], cell_lower_left_corner[2] + cell_size[2], position.x, position.y, 0.1) then

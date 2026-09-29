@@ -28,7 +28,7 @@ LocalRequestJoinSessionState.update = function (self, dt)
 		Log.info("LocalRequestJoinSessionState", "Lost game session channel")
 
 		return "lost_session", {
-			engine_reason = reason,
+			engine_reason = reason
 		}
 	end
 
@@ -40,7 +40,7 @@ LocalRequestJoinSessionState.update = function (self, dt)
 		Log.info("LocalRequestJoinSessionState", "Timeout while waiting for in_session")
 
 		return "timeout", {
-			game_reason = "timeout",
+			game_reason = "timeout"
 		}
 	end
 end

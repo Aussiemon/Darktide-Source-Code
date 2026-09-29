@@ -5,7 +5,7 @@ local NETWORK_EVENTS = {
 	"game_object_migrated_to_me",
 	"game_object_created",
 	"game_object_destroyed",
-	"game_session_disconnect",
+	"game_session_disconnect"
 }
 
 local function _info(...)
@@ -31,6 +31,7 @@ GameSessionManager.init = function (self, fixed_time_step)
 	self._session_client = nil
 	self._session_host = nil
 	self._joined_peers_cache = {}
+	self._pending_hot_joins = {}
 	self._delayed_peer_disconnects = {}
 	self._connected_to_host = false
 end
@@ -139,6 +140,7 @@ GameSessionManager.disconnect = function (self)
 	table.clear(self._peer_to_channel)
 	table.clear(self._channel_to_peer)
 	table.clear(self._joined_peers_cache)
+	table.clear(self._pending_hot_joins)
 	table.clear(self._delayed_peer_disconnects)
 end
 
@@ -260,9 +262,8 @@ GameSessionManager.game_object_created = function (self, game_object_id, owner_p
 	elseif game_object_type == "prop_health" then
 		if Managers.state.game_mode:game_mode_name() == "expedition" then
 			local mechanism = Managers.mechanism:current_mechanism()
-			local level_spawner = mechanism:levels_spawner()
 
-			level_spawner.prop_health_game_objects[#level_spawner.prop_health_game_objects + 1] = game_object_id
+			mechanism:levels_spawner():defer_prop_health_game_object(game_object_id)
 		else
 			local is_level_unit = GameSession.game_object_field(self._engine_game_session, game_object_id, "is_level_unit")
 			local unit_id = GameSession.game_object_field(self._engine_game_session, game_object_id, "unit_id")
@@ -330,6 +331,13 @@ GameSessionManager.game_object_destroyed = function (self, game_object_id, owner
 			end
 		end
 	elseif game_object_type == "prop_health" then
+		local mechanism = Managers.mechanism:current_mechanism()
+		local levels_spawner = mechanism and mechanism.levels_spawner and mechanism:levels_spawner()
+
+		if levels_spawner then
+			levels_spawner:remove_deferred_prop_health_game_object(game_object_id)
+		end
+
 		local is_level_unit = GameSession.game_object_field(self._engine_game_session, game_object_id, "is_level_unit")
 		local unit_id = GameSession.game_object_field(self._engine_game_session, game_object_id, "unit_id")
 		local unit
@@ -443,6 +451,8 @@ GameSessionManager._update_host = function (self, dt)
 
 		self:_handle_host_event(event, parameters)
 	end
+
+	self:_update_pending_hot_joins()
 end
 
 GameSessionManager._handle_host_event = function (self, event, parameters)
@@ -499,6 +509,39 @@ GameSessionManager._client_joined = function (self, channel_id, peer_id)
 	local player = Managers.player:player(peer_id, local_player_id)
 
 	player:create_input_handler(self.fixed_time_step)
+
+	if self:_game_mode_ready_for_hot_join() then
+		self:_hot_join_sync_and_spawn(channel_id, peer_id, player, local_player_id)
+	else
+		self._pending_hot_joins[peer_id] = {
+			channel_id = channel_id,
+			player = player,
+			local_player_id = local_player_id
+		}
+	end
+end
+
+GameSessionManager._game_mode_ready_for_hot_join = function (self)
+	local game_mode_manager = Managers.state.game_mode
+
+	return not game_mode_manager or game_mode_manager:is_ready_for_hot_join()
+end
+
+GameSessionManager._update_pending_hot_joins = function (self)
+	local pending = self._pending_hot_joins
+
+	if not next(pending) or not self:_game_mode_ready_for_hot_join() then
+		return
+	end
+
+	self._pending_hot_joins = {}
+
+	for peer_id, join in pairs(pending) do
+		self:_hot_join_sync_and_spawn(join.channel_id, peer_id, join.player, join.local_player_id)
+	end
+end
+
+GameSessionManager._hot_join_sync_and_spawn = function (self, channel_id, peer_id, player, local_player_id)
 	Managers.state.unit_spawner:hot_join_sync(peer_id, channel_id)
 	Managers.state.game_mode:hot_join_sync(peer_id, channel_id)
 	Managers.state.level_instance:hot_join_sync(peer_id, channel_id)
@@ -541,6 +584,7 @@ GameSessionManager._client_left = function (self, channel_id, peer_id, game_reas
 	_info("Member %s left with %s reason %s", peer_id, source, reason)
 
 	self._joined_peers_cache[peer_id] = nil
+	self._pending_hot_joins[peer_id] = nil
 
 	if engine_reason ~= "remote_disconnected" then
 		self._delayed_peer_disconnects[peer_id] = 0

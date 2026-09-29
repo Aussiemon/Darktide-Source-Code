@@ -9,7 +9,7 @@ local crafting_mechanicus_barter_items_view_settings = {
 	viewport_name = "ui_crafting_view_sacrifice_viewport",
 	viewport_type = "default",
 	world_layer = 10,
-	world_name = "ui_crafting_view_sacrifice",
+	world_name = "ui_crafting_view_sacrifice"
 }
 
 return settings("CraftingMechanicusBarterItemsViewSettings", crafting_mechanicus_barter_items_view_settings)

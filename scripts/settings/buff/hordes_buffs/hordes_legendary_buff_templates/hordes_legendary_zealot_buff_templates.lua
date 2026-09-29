@@ -37,7 +37,7 @@ templates.hordes_buff_zealot_fire_pulse_while_aiming_lunge = {
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
 		[proc_events.on_lunge_aim_start] = 1,
-		[proc_events.on_lunge_aim_end] = 1,
+		[proc_events.on_lunge_aim_end] = 1
 	},
 	start_func = function (template_data, template_context)
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -72,8 +72,8 @@ templates.hordes_buff_zealot_fire_pulse_while_aiming_lunge = {
 			if template_context.is_server then
 				template_data.is_active = false
 			end
-		end,
-	},
+		end
+	}
 }
 
 local liquid_areas_in_position = {}
@@ -126,7 +126,7 @@ templates.hordes_buff_zealot_regen_toughness_inside_fire_grenade = {
 				break
 			end
 		end
-	end,
+	end
 }
 templates.hordes_buff_zealot_lunge_hit_triggers_shout = {
 	class_name = "proc_buff",
@@ -136,7 +136,7 @@ templates.hordes_buff_zealot_lunge_hit_triggers_shout = {
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
 		[proc_events.on_lunge_start] = 1,
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -151,7 +151,7 @@ templates.hordes_buff_zealot_lunge_hit_triggers_shout = {
 	specific_check_proc_funcs = {
 		[proc_events.on_hit] = function (params, template_data)
 			return params.damage_profile and params.damage_profile.name == "zealot_dash_impact"
-		end,
+		end
 	},
 	specific_proc_func = {
 		[proc_events.on_lunge_start] = function (params, template_data, template_context)
@@ -177,8 +177,8 @@ templates.hordes_buff_zealot_lunge_hit_triggers_shout = {
 
 				player_fx_extension:spawn_particles(VFX_NAMES.veteran_shout, vfx_position, nil, nil, variable_name, variable_value, true)
 			end
-		end,
-	},
+		end
+	}
 }
 templates.hordes_buff_zealot_channel_heals_corruption = {
 	class_name = "buff",
@@ -187,8 +187,8 @@ templates.hordes_buff_zealot_channel_heals_corruption = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	keywords = {
-		buff_keywords.zealot_channel_heals_corruption,
-	},
+		buff_keywords.zealot_channel_heals_corruption
+	}
 }
 
 local zealot_percent_damage_taken_increase_after_shock = HordesBuffsData.hordes_buff_zealot_shock_grenade_increase_next_hit_damage.buff_stats.damage.value
@@ -200,7 +200,7 @@ templates.hordes_buff_zealot_shock_grenade_increase_next_hit_damage = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		return params.attack_type == attack_types.explosion and params.damage_type == damage_types.electrocution
@@ -215,7 +215,7 @@ templates.hordes_buff_zealot_shock_grenade_increase_next_hit_damage = {
 
 			victim_buff_extension:add_internally_controlled_buff("hordes_buff_increase_next_hit_damage", t, "owner_unit", player_unit)
 		end
-	end,
+	end
 }
 templates.hordes_buff_increase_next_hit_damage = {
 	class_name = "server_only_proc_buff",
@@ -224,10 +224,10 @@ templates.hordes_buff_increase_next_hit_damage = {
 	predicted = false,
 	buff_category = buff_categories.hordes_sub_buff,
 	stat_buffs = {
-		[stat_buffs.damage_taken_modifier] = zealot_percent_damage_taken_increase_after_shock,
+		[stat_buffs.damage_taken_modifier] = zealot_percent_damage_taken_increase_after_shock
 	},
 	proc_events = {
-		[proc_events.on_minion_damage_taken] = 1,
+		[proc_events.on_minion_damage_taken] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.hit_taken = false
@@ -244,7 +244,7 @@ templates.hordes_buff_increase_next_hit_damage = {
 	end,
 	conditional_exit_func = function (template_data, template_context)
 		return template_data.hit_taken
-	end,
+	end
 }
 
 local zealot_percent_toughness_replenished_on_bleeding_enemy_kill = HordesBuffsData.hordes_buff_zealot_knives_bleed_and_restore_thoughness_on_kill.buff_stats.thoughness.value
@@ -257,7 +257,7 @@ templates.hordes_buff_zealot_knives_bleed_and_restore_thoughness_on_kill = {
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_bleeding_minion_death] = 1,
+		[proc_events.on_bleeding_minion_death] = 1
 	},
 	start_func = function (template_data, template_context)
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -275,7 +275,7 @@ templates.hordes_buff_zealot_knives_bleed_and_restore_thoughness_on_kill = {
 	specific_check_proc_funcs = {
 		[proc_events.on_hit] = function (params, template_data)
 			return params.damage_type == damage_types.throwing_knife_zealot
-		end,
+		end
 	},
 	specific_proc_func = {
 		[proc_events.on_hit] = function (params, template_data, template_context)
@@ -303,8 +303,8 @@ templates.hordes_buff_zealot_knives_bleed_and_restore_thoughness_on_kill = {
 			local toughness_recovered = bleed_stacks * zealot_percent_toughness_replenished_on_bleeding_enemy_kill
 
 			Toughness.replenish_percentage(player_unit, toughness_recovered, true)
-		end,
-	},
+		end
+	}
 }
 
 return templates

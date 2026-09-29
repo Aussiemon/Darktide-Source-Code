@@ -15,32 +15,32 @@ local hud_element_player_compass_settings = {
 		255,
 		114,
 		247,
-		119,
+		119
 	},
 	direction_icon_color = {
 		255,
 		255,
 		255,
-		255,
+		255
 	},
 	direction_icon_size = {
 		25,
-		25,
+		25
 	},
 	degree_direction_icons = {
 		[0] = "content/ui/vector_textures/hud/compass_icon_direction_north",
 		[90] = "content/ui/vector_textures/hud/compass_icon_direction_east",
 		[180] = "content/ui/vector_textures/hud/compass_icon_direction_south",
 		[270] = "content/ui/vector_textures/hud/compass_icon_direction_west",
-		[360] = "content/ui/vector_textures/hud/compass_icon_direction_north",
+		[360] = "content/ui/vector_textures/hud/compass_icon_direction_north"
 	},
 	degree_direction_abbreviations = {
 		[0] = "N",
 		[90] = "E",
 		[180] = "S",
 		[270] = "W",
-		[360] = "N",
-	},
+		[360] = "N"
+	}
 }
 
 return settings("HudElementPlayerCompassSettings", hud_element_player_compass_settings)

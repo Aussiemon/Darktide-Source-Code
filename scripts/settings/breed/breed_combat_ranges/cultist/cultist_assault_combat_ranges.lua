@@ -19,8 +19,8 @@ local combat_ranges = {
 				switch_weapon_slot = "slot_melee_weapon",
 				target_weapon_type_distance = {
 					melee = 6,
-					ranged = 5,
-				},
+					ranged = 5
+				}
 			},
 			{
 				distance = 9,
@@ -28,8 +28,8 @@ local combat_ranges = {
 				require_line_of_sight = true,
 				sticky_time = 0.25,
 				switch_anim_state = "to_assaulter",
-				switch_combat_range = "close",
-			},
+				switch_combat_range = "close"
+			}
 		},
 		close = {
 			{
@@ -44,23 +44,23 @@ local combat_ranges = {
 				switch_weapon_slot = "slot_melee_weapon",
 				target_weapon_type_distance = {
 					melee = 6,
-					ranged = 5,
+					ranged = 5
 				},
 				target_velocity_dot_duration_inverted = {
 					6,
 					5,
 					4,
 					4,
-					3,
-				},
+					3
+				}
 			},
 			{
 				distance = 11,
 				distance_operator = "greater",
 				sticky_time = 2,
 				switch_anim_state = "to_riflemen",
-				switch_combat_range = "far",
-			},
+				switch_combat_range = "far"
+			}
 		},
 		melee = {
 			{
@@ -70,7 +70,7 @@ local combat_ranges = {
 				switch_anim_state = "to_riflemen",
 				switch_combat_range = "far",
 				switch_on_wait_slot = true,
-				switch_weapon_slot = "slot_ranged_weapon",
+				switch_weapon_slot = "slot_ranged_weapon"
 			},
 			{
 				distance = 7,
@@ -83,18 +83,18 @@ local combat_ranges = {
 				z_distance = 1.9,
 				target_weapon_type_distance = {
 					melee = 8,
-					ranged = 6,
+					ranged = 6
 				},
 				target_velocity_dot_duration = {
 					6,
 					5,
 					4,
 					4,
-					3,
-				},
-			},
-		},
-	},
+					3
+				}
+			}
+		}
+	}
 }
 
 return combat_ranges

@@ -6,9 +6,9 @@ local behavior_gestalts = BotSettings.behavior_gestalts
 local function training_ground_bot_profiles(all_profiles)
 	all_profiles.bot_training_grounds = {
 		archetype = "veteran",
+		character_height = 1,
 		current_level = 1,
 		gender = "male",
-		name_list_id = "male_names_1",
 		selected_voice = "veteran_male_a",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/gear_arms/empty_arms",
@@ -27,13 +27,13 @@ local function training_ground_bot_profiles(all_profiles)
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/d7_veteran_m_lowerbody",
 			slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/d7_veteran_m_upperbody",
 			slot_primary = "content/items/weapons/player/melee/chainsword_p1_m1",
-			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot",
+			slot_secondary = "content/items/weapons/player/ranged/bot_lasgun_killshot"
 		},
 		bot_gestalts = {
 			melee = behavior_gestalts.linesman,
-			ranged = behavior_gestalts.killshot,
+			ranged = behavior_gestalts.killshot
 		},
-		talents = {},
+		talents = {}
 	}
 end
 

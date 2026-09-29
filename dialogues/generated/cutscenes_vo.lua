@@ -12,24 +12,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot01_01",
+				"cs_pot01_01"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -42,24 +42,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot01_02",
+				"cs_pot01_02"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -72,24 +72,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot01_03",
+				"cs_pot01_03"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -102,24 +102,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot01_04",
+				"cs_pot01_04"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -132,24 +132,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot02_01",
+				"cs_pot02_01"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -162,24 +162,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot02_02",
+				"cs_pot02_02"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -192,24 +192,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot02_03",
+				"cs_pot02_03"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -222,24 +222,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot02_04",
+				"cs_pot02_04"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -252,24 +252,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot02_05",
+				"cs_pot02_05"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -282,24 +282,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot03_01",
+				"cs_pot03_01"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -312,24 +312,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot03_02",
+				"cs_pot03_02"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -342,24 +342,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot03_03",
+				"cs_pot03_03"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -372,24 +372,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot03_04",
+				"cs_pot03_04"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -402,24 +402,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot03_05",
+				"cs_pot03_05"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -432,24 +432,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot04_01",
+				"cs_pot04_01"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"interrogator",
-				},
-			},
+					"interrogator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -462,24 +462,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot04_02",
+				"cs_pot04_02"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"interrogator",
-				},
-			},
+					"interrogator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -492,24 +492,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot04_03",
+				"cs_pot04_03"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"interrogator",
-				},
-			},
+					"interrogator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -522,24 +522,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot04_04",
+				"cs_pot04_04"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"interrogator",
-				},
-			},
+					"interrogator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -552,24 +552,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot04_05",
+				"cs_pot04_05"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"interrogator",
-				},
-			},
+					"interrogator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -582,24 +582,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot05_01",
+				"cs_pot05_01"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -612,24 +612,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot05_02",
+				"cs_pot05_02"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -642,24 +642,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot05_03",
+				"cs_pot05_03"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -672,24 +672,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot05_04",
+				"cs_pot05_04"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -702,24 +702,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot05_05",
+				"cs_pot05_05"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -732,24 +732,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot05_06",
+				"cs_pot05_06"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -762,24 +762,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot05_07",
+				"cs_pot05_07"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -792,24 +792,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot06_01",
+				"cs_pot06_01"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -822,24 +822,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot06_02",
+				"cs_pot06_02"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -852,24 +852,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot06_03",
+				"cs_pot06_03"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -882,24 +882,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot06_04",
+				"cs_pot06_04"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -912,24 +912,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot06_05",
+				"cs_pot06_05"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -942,24 +942,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot07_01",
+				"cs_pot07_01"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -972,24 +972,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot07_02",
+				"cs_pot07_02"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1002,24 +1002,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot07_03",
+				"cs_pot07_03"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1032,24 +1032,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot07_04",
+				"cs_pot07_04"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest",
-				},
-			},
+					"tech_priest"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1062,24 +1062,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot08_01",
+				"cs_pot08_01"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1092,24 +1092,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot08_02",
+				"cs_pot08_02"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1122,24 +1122,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot08_03",
+				"cs_pot08_03"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1152,24 +1152,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot08_04",
+				"cs_pot08_04"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1182,24 +1182,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot08_05",
+				"cs_pot08_05"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1212,24 +1212,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot09_01",
+				"cs_pot09_01"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"interrogator",
-				},
-			},
+					"interrogator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1242,24 +1242,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot09_02",
+				"cs_pot09_02"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"interrogator",
-				},
-			},
+					"interrogator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1272,24 +1272,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot09_03",
+				"cs_pot09_03"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"interrogator",
-				},
-			},
+					"interrogator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1302,24 +1302,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot09_04",
+				"cs_pot09_04"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"interrogator",
-				},
-			},
+					"interrogator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1332,24 +1332,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot09_05",
+				"cs_pot09_05"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"interrogator",
-				},
-			},
+					"interrogator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1362,24 +1362,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot09_06",
+				"cs_pot09_06"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"interrogator",
-				},
-			},
+					"interrogator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1392,24 +1392,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot09_07",
+				"cs_pot09_07"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"interrogator",
-				},
-			},
+					"interrogator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1422,24 +1422,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot09_08",
+				"cs_pot09_08"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"interrogator",
-				},
-			},
+					"interrogator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1452,24 +1452,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_pot09_09",
+				"cs_pot09_09"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"interrogator",
-				},
-			},
+					"interrogator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1482,24 +1482,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_five_01",
+				"cs_prologue_five_01"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1515,24 +1515,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_five_02",
+				"cs_prologue_five_02"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1545,24 +1545,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_five_03",
+				"cs_prologue_five_03"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1575,24 +1575,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_five_04",
+				"cs_prologue_five_04"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1605,13 +1605,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_five_05",
+				"cs_prologue_five_05"
 			},
 			{
 				"user_context",
@@ -1621,11 +1621,11 @@ return function ()
 					"ogryn",
 					"psyker",
 					"veteran",
-					"zealot",
-				},
-			},
+					"zealot"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1638,24 +1638,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_five_06",
+				"cs_prologue_five_06"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1668,24 +1668,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_five_07",
+				"cs_prologue_five_07"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1698,24 +1698,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_five_08",
+				"cs_prologue_five_08"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1731,24 +1731,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_five_09",
+				"cs_prologue_five_09"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1761,24 +1761,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_four_01",
+				"cs_prologue_four_01"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1792,24 +1792,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_four_02",
+				"cs_prologue_four_02"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1822,24 +1822,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_four_03",
+				"cs_prologue_four_03"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1852,24 +1852,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_one_01",
+				"cs_prologue_one_01"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"prison_guard",
-				},
-			},
+					"prison_guard"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1882,24 +1882,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_seven_01",
+				"cs_prologue_seven_01"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1912,24 +1912,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_seven_02",
+				"cs_prologue_seven_02"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -1942,24 +1942,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_seven_03",
+				"cs_prologue_seven_03"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene_prio_high",
@@ -1972,24 +1972,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_seven_04",
+				"cs_prologue_seven_04"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2002,24 +2002,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_seven_05",
+				"cs_prologue_seven_05"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2032,24 +2032,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_seven_06",
+				"cs_prologue_seven_06"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2062,24 +2062,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_seven_07",
+				"cs_prologue_seven_07"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
-				},
-			},
+					"sergeant"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2092,24 +2092,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_seven_08",
+				"cs_prologue_seven_08"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2122,24 +2122,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_three_01",
+				"cs_prologue_three_01"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2152,24 +2152,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_three_02",
+				"cs_prologue_three_02"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2182,24 +2182,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_three_03",
+				"cs_prologue_three_03"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2212,13 +2212,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_three_04",
+				"cs_prologue_three_04"
 			},
 			{
 				"user_context",
@@ -2228,11 +2228,11 @@ return function ()
 					"ogryn",
 					"psyker",
 					"veteran",
-					"zealot",
-				},
-			},
+					"zealot"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2245,24 +2245,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_three_05",
+				"cs_prologue_three_05"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2275,24 +2275,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_two_01",
+				"cs_prologue_two_01"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2305,24 +2305,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_two_02",
+				"cs_prologue_two_02"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"prison_guard",
-				},
-			},
+					"prison_guard"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2335,24 +2335,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_two_03",
+				"cs_prologue_two_03"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"prison_guard",
-				},
-			},
+					"prison_guard"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2365,24 +2365,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_two_04",
+				"cs_prologue_two_04"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2395,24 +2395,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_two_05",
+				"cs_prologue_two_05"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2425,24 +2425,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_two_06",
+				"cs_prologue_two_06"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2455,24 +2455,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_two_07",
+				"cs_prologue_two_07"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"prison_guard",
-				},
-			},
+					"prison_guard"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2485,24 +2485,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_two_08",
+				"cs_prologue_two_08"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2515,24 +2515,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_two_09",
+				"cs_prologue_two_09"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"prison_guard",
-				},
-			},
+					"prison_guard"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2545,24 +2545,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_two_10",
+				"cs_prologue_two_10"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2575,24 +2575,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_two_11",
+				"cs_prologue_two_11"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"prison_guard",
-				},
-			},
+					"prison_guard"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2605,24 +2605,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_two_12",
+				"cs_prologue_two_12"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2635,24 +2635,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_two_13",
+				"cs_prologue_two_13"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"prison_guard",
-				},
-			},
+					"prison_guard"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene_prio_high",
@@ -2665,24 +2665,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_two_14",
+				"cs_prologue_two_14"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2695,24 +2695,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_two_15",
+				"cs_prologue_two_15"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2725,13 +2725,13 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_two_16",
+				"cs_prologue_two_16"
 			},
 			{
 				"user_context",
@@ -2741,11 +2741,11 @@ return function ()
 					"ogryn",
 					"zealot",
 					"veteran",
-					"psyker",
-				},
-			},
+					"psyker"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2758,24 +2758,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_two_17",
+				"cs_prologue_two_17"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"prison_guard",
-				},
-			},
+					"prison_guard"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2788,24 +2788,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_two_18",
+				"cs_prologue_two_18"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2818,24 +2818,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_two_19",
+				"cs_prologue_two_19"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"prison_guard",
-				},
-			},
+					"prison_guard"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2848,24 +2848,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_two_20",
+				"cs_prologue_two_20"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2878,24 +2878,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_two_22",
+				"cs_prologue_two_22"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"prologue_traitor",
-				},
-			},
+					"prologue_traitor"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2908,24 +2908,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_two_23",
+				"cs_prologue_two_23"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"prologue_traitor",
-				},
-			},
+					"prologue_traitor"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2938,24 +2938,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_two_24",
+				"cs_prologue_two_24"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"enemy_nemesis_wolfer",
-				},
-			},
+					"enemy_nemesis_wolfer"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -2970,24 +2970,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"cs_prologue_two_25",
+				"cs_prologue_two_25"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -3000,24 +3000,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"narrative_event_bay_01",
+				"narrative_event_bay_01"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -3030,24 +3030,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"narrative_event_bay_02",
+				"narrative_event_bay_02"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"prison_guard",
-				},
-			},
+					"prison_guard"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -3060,24 +3060,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"player_first_intro_cinematic_a",
+				"player_first_intro_cinematic_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"training_ground_psyker",
-				},
-			},
+					"training_ground_psyker"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -3090,24 +3090,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"player_first_intro_cinematic_b",
+				"player_first_intro_cinematic_b"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"training_ground_psyker",
-				},
-			},
+					"training_ground_psyker"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -3120,24 +3120,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"player_first_intro_cinematic_c",
+				"player_first_intro_cinematic_c"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"training_ground_psyker",
-				},
-			},
+					"training_ground_psyker"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -3150,24 +3150,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"player_first_intro_cinematic_d",
+				"player_first_intro_cinematic_d"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"training_ground_psyker",
-				},
-			},
+					"training_ground_psyker"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -3180,24 +3180,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"prologue_gameplay_hub_a",
+				"prologue_gameplay_hub_a"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -3213,24 +3213,24 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"prologue_gameplay_hub_mission_board",
+				"prologue_gameplay_hub_mission_board"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 	define_rule({
 		category = "cutscene",
@@ -3246,23 +3246,23 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"cutscene_vo_line",
+				"cutscene_vo_line"
 			},
 			{
 				"query_context",
 				"vo_line_id",
 				OP.EQ,
-				"prologue_gameplay_hub_training_deck",
+				"prologue_gameplay_hub_training_deck"
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"explicator",
-				},
-			},
+					"explicator"
+				}
+			}
 		},
-		on_done = {},
+		on_done = {}
 	})
 end

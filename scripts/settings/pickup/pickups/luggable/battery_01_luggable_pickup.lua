@@ -13,7 +13,7 @@ local pickup_data = {
 	smart_tag_target_type = "pickup",
 	unit_name = "content/pickups/luggables/battery_01/luggable_battery_01",
 	projectile_template = ProjectileTemplates.luggable,
-	spawn_offset = Vector3Box(0, 0, 0.4),
+	spawn_offset = Vector3Box(0, 0, 0.4)
 }
 
 return pickup_data

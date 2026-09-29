@@ -190,7 +190,7 @@ RemotePlayer.set_profile = function (self, profile)
 	self._telemetry_subject = {
 		remote = true,
 		account_id = self._account_id,
-		character_id = profile.character_id,
+		character_id = profile.character_id
 	}
 
 	Managers.event:trigger("event_player_set_profile", self, profile)

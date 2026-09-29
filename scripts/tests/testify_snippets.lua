@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/tests/testify_snippets.lua
 
+local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local TestifySnippets = {}
 
 TestifySnippets.create_new_character = function ()
@@ -30,7 +31,7 @@ TestifySnippets.exit_to_main_menu_and_wait = function (duration)
 	Testify:make_request("exit_to_main_menu")
 
 	if not DEDICATED_SERVER then
-		Testify:make_request("wait_for_main_menu_displayed")
+		Testify:make_request("wait_for_state_main_menu")
 	end
 
 	TestifySnippets.wait(duration)
@@ -71,7 +72,7 @@ TestifySnippets.skip_splash_and_title_screen = function ()
 end
 
 TestifySnippets.wait_for_main_menu = function ()
-	Testify:make_request("wait_for_main_menu_displayed")
+	Testify:make_request("wait_for_state_main_menu")
 	Testify:make_request("wait_for_profile_synchronization")
 end
 
@@ -83,7 +84,7 @@ TestifySnippets.load_mission = function (mission_name, challenge, resistance, ci
 		challenge = challenge,
 		resistance = resistance,
 		circumstance_name = circumstance_name,
-		side_mission = side_mission,
+		side_mission = side_mission
 	}
 
 	Testify:make_request("load_mission", mission_context)
@@ -100,7 +101,7 @@ TestifySnippets.load_mission_in_mission_board = function (level_key, challenge, 
 		challenge = challenge,
 		resistance = resistance,
 		circumstance_name = circumstance_name,
-		side_mission = side_mission,
+		side_mission = side_mission
 	}
 
 	if peer_id == nil then
@@ -178,7 +179,7 @@ TestifySnippets.free_flight_camera_follow_path = function (coordinates, speed)
 			local current_position = Vector3.lerp(previous_position, next_position, lerp_ratio)
 			local camera_data = {
 				rotation = camera_rotation,
-				position = Vector3Box(current_position),
+				position = Vector3Box(current_position)
 			}
 
 			TestifySnippets.set_free_flight_camera_position(camera_data)
@@ -213,14 +214,14 @@ end
 TestifySnippets.set_difficulty = function (difficulty)
 	local resistance = {
 		name = "resistance",
-		value = difficulty.resistance,
+		value = difficulty.resistance
 	}
 
 	Testify:make_request("change_dev_parameter", resistance)
 
 	local challenge = {
 		name = "challenge",
-		value = difficulty.challenge,
+		value = difficulty.challenge
 	}
 
 	Testify:make_request("change_dev_parameter", challenge)
@@ -231,7 +232,7 @@ TestifySnippets.set_render_settings = function (setting_id, value, wait_time)
 	local new_value = value
 	local option_data = {
 		setting = setting,
-		new_value = new_value,
+		new_value = new_value
 	}
 
 	Testify:make_request("setting_on_activated", option_data)
@@ -425,12 +426,12 @@ TestifySnippets.equip_all_traits_support_snippet = function (player, slot_name, 
 	local data = {
 		player = player,
 		slot = slot_name,
-		item = weapon,
+		item = weapon
 	}
 	local trait_params = {
 		player = player,
 		slot_name = slot_name,
-		traits = traits,
+		traits = traits
 	}
 
 	units_to_spawn = units_to_spawn or 1
@@ -439,7 +440,7 @@ TestifySnippets.equip_all_traits_support_snippet = function (player, slot_name, 
 	local minion = {
 		breed_side = 2,
 		breed_name = breed_name,
-		spawn_position = Vector3Box(Vector3.zero()),
+		spawn_position = Vector3Box(Vector3.zero())
 	}
 
 	if not has_local_profile then
@@ -470,7 +471,7 @@ TestifySnippets.reset_weapon_traits = function (player, slot_name)
 	local empty_trait_params = {
 		player = player,
 		slot_name = slot_name,
-		traits = {},
+		traits = {}
 	}
 
 	Testify:make_request("apply_select_traits", empty_trait_params)
@@ -489,8 +490,8 @@ TestifySnippets.open_barber_surgeon_shop = function ()
 		view_name = "barber_vendor_background_view",
 		dummy_data = {
 			can_exit = true,
-			debug_preview = true,
-		},
+			debug_preview = true
+		}
 	}
 
 	Testify:make_request("open_view", view_data)

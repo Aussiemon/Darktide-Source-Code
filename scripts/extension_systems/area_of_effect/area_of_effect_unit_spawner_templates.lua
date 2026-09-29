@@ -21,7 +21,7 @@ AreaOfEffectUnitSpawnerTemplates.expeditions_artillery_strike = {
 		num_salvos = DEFAULT_NUM_SALVOS,
 		time_between_salvos = {
 			DEAFAULT_TIME_BETWEEN_SALVOS,
-			DEAFAULT_TIME_BETWEEN_SALVOS * 1.2,
+			DEAFAULT_TIME_BETWEEN_SALVOS * 1.2
 		},
 		generate_source_position = function (seed, unit)
 			local position = Unit.local_position(unit, 1)
@@ -69,9 +69,9 @@ AreaOfEffectUnitSpawnerTemplates.expeditions_artillery_strike = {
 				offset = {
 					0,
 					0,
-					300,
-				},
-			},
+					300
+				}
+			}
 		},
 		spread = {
 			raycast_height = 20,
@@ -81,17 +81,17 @@ AreaOfEffectUnitSpawnerTemplates.expeditions_artillery_strike = {
 			num_spread_units = DEFAULT_SPREAD_UNITS,
 			spread_delay = {
 				DEFAULT_SPREAD_DELAY * 0.65,
-				DEFAULT_SPREAD_DELAY * 1.35,
+				DEFAULT_SPREAD_DELAY * 1.35
 			},
 			sfxs = {
 				{
 					sfx_name = "wwise/events/weapon/play_explosion_artillery",
-					delay = DEFAULT_TIME_TO_ARRIVE,
+					delay = DEFAULT_TIME_TO_ARRIVE
 				},
 				{
 					sfx_name = "wwise/events/weapon/play_explosion_refl_gen",
-					delay = DEFAULT_TIME_TO_ARRIVE,
-				},
+					delay = DEFAULT_TIME_TO_ARRIVE
+				}
 			},
 			local_unit = {
 				initial_path_progress = 0.5,
@@ -102,16 +102,16 @@ AreaOfEffectUnitSpawnerTemplates.expeditions_artillery_strike = {
 				vfx = {
 					link = true,
 					orphaned_policy = "stop",
-					particle_name = "content/fx/particles/weapons/grenades/broker_boom_bringer_projectile_trail",
-				},
+					particle_name = "content/fx/particles/weapons/grenades/broker_boom_bringer_projectile_trail"
+				}
 			},
 			explosion = {
 				explosion_template_name = "expeditions_artillery_strike",
 				rotate_flat_towards_source_position = true,
-				delay = DEFAULT_TIME_TO_ARRIVE,
-			},
-		},
-	},
+				delay = DEFAULT_TIME_TO_ARRIVE
+			}
+		}
+	}
 }
 AreaOfEffectUnitSpawnerTemplates.expeditions_artillery_strike_focused = table.clone(AreaOfEffectUnitSpawnerTemplates.expeditions_artillery_strike)
 

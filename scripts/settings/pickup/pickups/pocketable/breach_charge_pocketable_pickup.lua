@@ -11,7 +11,7 @@ local pickup_data = {
 	name = "breach_charge_pocketable",
 	pickup_sound = "wwise/events/player/play_pick_up_ammopack",
 	smart_tag_target_type = "pickup",
-	unit_name = "content/pickups/pocketables/syringe/pup_syringe_case",
+	unit_name = "content/pickups/pocketables/syringe/pup_syringe_case"
 }
 
 return pickup_data

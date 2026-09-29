@@ -57,7 +57,7 @@ local function _button_factory(button_pass_template)
 			content.original_text = element.text
 			content.hotspot.pressed_callback = element.callback
 			widget.handle_input = _button_input_handler
-		end,
+		end
 	}
 end
 
@@ -68,17 +68,17 @@ local widget_blueprints_by_type = {
 
 			return size and {
 				size[1],
-				size[2],
+				size[2]
 			} or {
 				225,
-				20,
+				20
 			}
-		end,
+		end
 	},
 	image = {
 		size = {
 			grid_size[1],
-			100,
+			100
 		},
 		pass_template = {
 			{
@@ -93,24 +93,24 @@ local widget_blueprints_by_type = {
 					offset = {
 						0,
 						0,
-						1,
+						1
 					},
 					size_addition = {
 						0,
-						0,
-					},
-				},
-			},
+						0
+					}
+				}
+			}
 		},
 		size_function = function (parent, element, ui_renderer)
 			local size = element.size
 
 			return size and {
 				size[1],
-				size[2],
+				size[2]
 			} or {
 				225,
-				20,
+				20
 			}
 		end,
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
@@ -125,12 +125,12 @@ local widget_blueprints_by_type = {
 			if color then
 				style.texture.color = color
 			end
-		end,
+		end
 	},
 	header = {
 		size = {
 			grid_size[1],
-			100,
+			100
 		},
 		pass_template = {
 			{
@@ -146,19 +146,19 @@ local widget_blueprints_by_type = {
 					text_color = Color.terminal_text_header(255, true),
 					size = {
 						grid_size[1],
-						0,
+						0
 					},
 					offset = {
 						0,
 						0,
-						1,
+						1
 					},
 					size_addition = {
 						0,
-						0,
-					},
-				},
-			},
+						0
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -186,12 +186,12 @@ local widget_blueprints_by_type = {
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end,
+		end
 	},
 	sub_header = {
 		size = {
 			grid_size[1],
-			100,
+			100
 		},
 		pass_template = {
 			{
@@ -207,19 +207,19 @@ local widget_blueprints_by_type = {
 					text_color = Color.terminal_text_body_sub_header(255, true),
 					size = {
 						grid_size[1],
-						0,
+						0
 					},
 					offset = {
 						0,
 						0,
-						1,
+						1
 					},
 					size_addition = {
 						0,
-						0,
-					},
-				},
-			},
+						0
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -247,12 +247,12 @@ local widget_blueprints_by_type = {
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end,
+		end
 	},
 	body = {
 		size = {
 			grid_size[1],
-			100,
+			100
 		},
 		pass_template = {
 			{
@@ -269,10 +269,10 @@ local widget_blueprints_by_type = {
 					offset = {
 						0,
 						0,
-						3,
-					},
-				},
-			},
+						3
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -300,11 +300,11 @@ local widget_blueprints_by_type = {
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end,
+		end
 	},
 	terminal_button = _button_factory(ButtonPassTemplates.terminal_button),
 	default_button = _button_factory(ButtonPassTemplates.default_button),
-	aquila_button = _button_factory(ButtonPassTemplates.aquila_button),
+	aquila_button = _button_factory(ButtonPassTemplates.aquila_button)
 }
 
 return widget_blueprints_by_type

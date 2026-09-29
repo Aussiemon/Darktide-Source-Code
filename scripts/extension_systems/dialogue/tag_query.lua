@@ -28,88 +28,88 @@ TagQuery.OP = TagQuery.OP or {
 	EQ = setmetatable({}, {
 		__tostring = function ()
 			return "EQ"
-		end,
+		end
 	}),
 	LT = setmetatable({}, {
 		__tostring = function ()
 			return "LT"
-		end,
+		end
 	}),
 	GT = setmetatable({}, {
 		__tostring = function ()
 			return "GT"
-		end,
+		end
 	}),
 	LTEQ = setmetatable({}, {
 		__tostring = function ()
 			return "LTEQ"
-		end,
+		end
 	}),
 	GTEQ = setmetatable({}, {
 		__tostring = function ()
 			return "GTEQ"
-		end,
+		end
 	}),
 	SUB = setmetatable({}, {
 		__tostring = function ()
 			return "SUB"
-		end,
+		end
 	}),
 	ADD = setmetatable({}, {
 		__tostring = function ()
 			return "ADD"
-		end,
+		end
 	}),
 	NEQ = setmetatable({}, {
 		__tostring = function ()
 			return "NEQ"
-		end,
+		end
 	}),
 	NOT = setmetatable({}, {
 		__tostring = function ()
 			return "NOT"
-		end,
+		end
 	}),
 	RAND = setmetatable({}, {
 		__tostring = function ()
 			return "RAND"
-		end,
+		end
 	}),
 	TIMEDIFF = setmetatable({}, {
 		__tostring = function ()
 			return "TIMEDIFF"
-		end,
+		end
 	}),
 	TIMESET = setmetatable({}, {
 		__tostring = function ()
 			return "TIMESET"
-		end,
+		end
 	}),
 	NUMSET = setmetatable({}, {
 		__tostring = function ()
 			return "NUMSET"
-		end,
+		end
 	}),
 	SET_INCLUDES = setmetatable({}, {
 		__tostring = function ()
 			return "SET_INCLUDES"
-		end,
+		end
 	}),
 	SET_INTERSECTS = setmetatable({}, {
 		__tostring = function ()
 			return "SET_INTERSECTS"
-		end,
+		end
 	}),
 	SET_NOT_INTERSECTS = setmetatable({}, {
 		__tostring = function ()
 			return "SET_NOT_INTERSECTS"
-		end,
+		end
 	}),
 	SET_NOT_INCLUDES = setmetatable({}, {
 		__tostring = function ()
 			return "SET_NOT_INCLUDES"
-		end,
-	}),
+		end
+	})
 }
 
 return TagQuery

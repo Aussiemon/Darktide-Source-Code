@@ -8,14 +8,14 @@ ViewTransitionUI.init = function (self, overlay_ui_world, render_settings)
 		timer_name = "ui",
 		viewport_layer = 1,
 		viewport_type = "overlay",
-		world_layer = 990,
+		world_layer = 990
 	}
 	self._external_world = overlay_ui_world
 	self._render_settings = render_settings
 	self._fade_color = {
 		x = 0,
 		y = 0,
-		z = 0,
+		z = 0
 	}
 end
 

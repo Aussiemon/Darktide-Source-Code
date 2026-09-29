@@ -18,7 +18,7 @@ local gameplay_vo_medicae_servitor_b = {
 			"loc_medicae_servitor_b__medicae_servitor_idle_empty_a_11",
 			"loc_medicae_servitor_b__medicae_servitor_idle_empty_a_12",
 			"loc_medicae_servitor_b__medicae_servitor_idle_empty_a_13",
-			"loc_medicae_servitor_b__medicae_servitor_idle_empty_a_15",
+			"loc_medicae_servitor_b__medicae_servitor_idle_empty_a_15"
 		},
 		sound_events_duration = {
 			3.321875,
@@ -34,9 +34,9 @@ local gameplay_vo_medicae_servitor_b = {
 			2.545729,
 			4.563979,
 			1.897375,
-			6.430792,
+			6.430792
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	medicae_servitor_idle_full_a = {
 		randomize_indexes_n = 0,
@@ -61,7 +61,7 @@ local gameplay_vo_medicae_servitor_b = {
 			"loc_medicae_servitor_b__medicae_servitor_idle_full_a_17",
 			"loc_medicae_servitor_b__medicae_servitor_idle_full_a_18",
 			"loc_medicae_servitor_b__medicae_servitor_idle_full_a_19",
-			"loc_medicae_servitor_b__medicae_servitor_idle_full_a_20",
+			"loc_medicae_servitor_b__medicae_servitor_idle_full_a_20"
 		},
 		sound_events_duration = {
 			4.581542,
@@ -83,9 +83,9 @@ local gameplay_vo_medicae_servitor_b = {
 			6.190896,
 			6.111167,
 			2.277042,
-			4.292833,
+			4.292833
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	medicae_servitor_recharge_a = {
 		randomize_indexes_n = 0,
@@ -100,7 +100,7 @@ local gameplay_vo_medicae_servitor_b = {
 			"loc_medicae_servitor_b__medicae_servitor_recharge_a_07",
 			"loc_medicae_servitor_b__medicae_servitor_recharge_a_08",
 			"loc_medicae_servitor_b__medicae_servitor_recharge_a_09",
-			"loc_medicae_servitor_b__medicae_servitor_recharge_a_10",
+			"loc_medicae_servitor_b__medicae_servitor_recharge_a_10"
 		},
 		sound_events_duration = {
 			3.642396,
@@ -112,9 +112,9 @@ local gameplay_vo_medicae_servitor_b = {
 			3.821792,
 			2.216688,
 			4.345229,
-			1.441563,
+			1.441563
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	medicae_servitor_working_a = {
 		randomize_indexes_n = 0,
@@ -137,7 +137,7 @@ local gameplay_vo_medicae_servitor_b = {
 			"loc_medicae_servitor_b__medicae_servitor_working_a_16",
 			"loc_medicae_servitor_b__medicae_servitor_working_a_17",
 			"loc_medicae_servitor_b__medicae_servitor_working_a_18",
-			"loc_medicae_servitor_b__medicae_servitor_working_a_20",
+			"loc_medicae_servitor_b__medicae_servitor_working_a_20"
 		},
 		sound_events_duration = {
 			1.942917,
@@ -157,10 +157,10 @@ local gameplay_vo_medicae_servitor_b = {
 			1.448854,
 			2.594583,
 			7.3475,
-			5.545646,
+			5.545646
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("gameplay_vo_medicae_servitor_b", gameplay_vo_medicae_servitor_b)

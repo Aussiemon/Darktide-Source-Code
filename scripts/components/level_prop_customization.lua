@@ -265,7 +265,7 @@ LevelPropCustomization.component_data = {
 				category = "Parent",
 				ui_name = "Node Name",
 				ui_type = "text_box",
-				value = "",
+				value = ""
 			},
 			child_unit = {
 				category = "Child",
@@ -273,33 +273,33 @@ LevelPropCustomization.component_data = {
 				preview = true,
 				ui_name = "Unit",
 				ui_type = "resource",
-				value = "",
+				value = ""
 			},
 			child_scale = {
 				category = "Child",
 				step = 0.1,
 				ui_name = "Scale",
 				ui_type = "vector",
-				value = Vector3Box(1, 1, 1),
+				value = Vector3Box(1, 1, 1)
 			},
 			is_static = {
 				category = "Child",
 				ui_name = "Static",
 				ui_type = "check_box",
-				value = true,
+				value = true
 			},
 			cast_shadows = {
 				category = "Child",
 				ui_name = "Cast Shadows",
 				ui_type = "check_box",
-				value = true,
+				value = true
 			},
 			enabled = {
 				category = "Child",
 				ui_name = "Enabled",
 				ui_type = "check_box",
-				value = true,
-			},
+				value = true
+			}
 		},
 		control_order = {
 			"parent_node_name",
@@ -307,8 +307,8 @@ LevelPropCustomization.component_data = {
 			"child_scale",
 			"is_static",
 			"cast_shadows",
-			"enabled",
-		},
+			"enabled"
+		}
 	},
 	set_material_variables = {
 		category = "Material Variables",
@@ -318,43 +318,43 @@ LevelPropCustomization.component_data = {
 			material = {
 				ui_name = "Material",
 				ui_type = "text_box",
-				value = "",
+				value = ""
 			},
 			variable = {
 				ui_name = "Variable",
 				ui_type = "text_box",
-				value = "",
+				value = ""
 			},
 			use_scalar = {
 				ui_name = "Use Scalar",
 				ui_type = "check_box",
-				value = false,
+				value = false
 			},
 			scalar = {
 				ui_name = "Scalar",
 				ui_type = "number",
-				value = 0,
+				value = 0
 			},
 			use_vector = {
 				ui_name = "Use Vector",
 				ui_type = "check_box",
-				value = false,
+				value = false
 			},
 			vector = {
 				ui_name = "Vector",
 				ui_type = "vector",
-				value = Vector3Box(1, 0, 0),
+				value = Vector3Box(1, 0, 0)
 			},
 			use_color = {
 				ui_name = "Use Color",
 				ui_type = "check_box",
-				value = false,
+				value = false
 			},
 			color = {
 				ui_name = "Color",
 				ui_type = "color",
-				value = QuaternionBox(1, 0, 0, 0),
-			},
+				value = QuaternionBox(1, 0, 0, 0)
+			}
 		},
 		control_order = {
 			"material",
@@ -364,8 +364,8 @@ LevelPropCustomization.component_data = {
 			"use_vector",
 			"vector",
 			"use_color",
-			"color",
-		},
+			"color"
+		}
 	},
 	lerp_material_variables = {
 		category = "Material Variables",
@@ -375,47 +375,47 @@ LevelPropCustomization.component_data = {
 			material = {
 				ui_name = "Material",
 				ui_type = "text_box",
-				value = "",
+				value = ""
 			},
 			variable = {
 				ui_name = "Variable",
 				ui_type = "text_box",
-				value = "",
+				value = ""
 			},
 			scalar_from = {
 				ui_name = "From Value (Scalar)",
 				ui_type = "number",
-				value = 0,
+				value = 0
 			},
 			scalar_to = {
 				ui_name = "To Value (Scalar)",
 				ui_type = "number",
-				value = 0,
+				value = 0
 			},
 			duration = {
 				ui_name = "Duration",
 				ui_type = "number",
-				value = 0,
-			},
+				value = 0
+			}
 		},
 		control_order = {
 			"material",
 			"variable",
 			"scalar_from",
 			"scalar_to",
-			"duration",
-		},
+			"duration"
+		}
 	},
 	inputs = {
 		play_lerp_material_variables = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		reverse_lerp_material_variables = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return LevelPropCustomization

@@ -7,7 +7,7 @@ Widget.new = function (display_name, optional_width)
 	local position = {
 		0,
 		0,
-		0,
+		0
 	}
 	local ImguiInputWidgets = require("scripts/managers/imgui/widgets/imgui_input_widgets")
 	local widget = {
@@ -19,14 +19,14 @@ Widget.new = function (display_name, optional_width)
 		play_sound_event = ImguiWidgetUtilities.create_unique_label("Play Sound"),
 		play_stop_sound_event = ImguiWidgetUtilities.create_unique_label("Play Stop Sound"),
 		relative_to_player = {
-			false,
+			false
 		},
 		position = position,
 		position_widget = ImguiInputWidgets.vector3.new("", function ()
 			return position
 		end, function (new_value)
 			position[1], position[2], position[3] = new_value[1], new_value[2], new_value[3]
-		end),
+		end)
 	}
 
 	return widget

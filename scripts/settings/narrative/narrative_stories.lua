@@ -170,174 +170,174 @@ local narrative_stories = {
 			{
 				backend_id = 1,
 				name = "km_station",
-				requirement = journey_mission_completed("km_station"),
+				requirement = journey_mission_completed("km_station")
 			},
 			{
 				backend_id = 2,
 				name = "dm_stockpile",
-				requirement = journey_mission_completed("dm_stockpile"),
+				requirement = journey_mission_completed("dm_stockpile")
 			},
 			{
 				backend_id = 3,
 				name = "hm_cartel",
-				requirement = journey_mission_completed("hm_cartel"),
+				requirement = journey_mission_completed("hm_cartel")
 			},
 			{
 				backend_id = 4,
 				name = "km_enforcer",
-				requirement = journey_mission_completed("km_enforcer"),
+				requirement = journey_mission_completed("km_enforcer")
 			},
 			{
 				backend_id = 5,
 				name = "cm_habs",
-				requirement = journey_mission_completed("cm_habs"),
+				requirement = journey_mission_completed("cm_habs")
 			},
 			{
 				backend_id = 6,
 				name = "dm_propaganda_1_0",
-				requirement = on_story_chapter("main_story", "km_enforcer") and journey_mission_completed("dm_propaganda"),
+				requirement = on_story_chapter("main_story", "km_enforcer") and journey_mission_completed("dm_propaganda")
 			},
 			{
 				backend_id = 7,
 				name = "fm_cargo_0_1",
-				requirement = on_story_chapter("main_story", "km_enforcer") and journey_mission_completed("fm_cargo"),
+				requirement = on_story_chapter("main_story", "km_enforcer") and journey_mission_completed("fm_cargo")
 			},
 			{
 				backend_id = 8,
 				name = "fm_cargo_1_1",
-				requirement = last_completed_chapter_is("main_story", "dm_propaganda_1_0") and journey_mission_completed("fm_cargo"),
+				requirement = last_completed_chapter_is("main_story", "dm_propaganda_1_0") and journey_mission_completed("fm_cargo")
 			},
 			{
 				backend_id = 9,
 				name = "hm_strain_2_0",
-				requirement = last_completed_chapter_is("main_story", "dm_propaganda_1_0") and journey_mission_completed("hm_strain"),
+				requirement = last_completed_chapter_is("main_story", "dm_propaganda_1_0") and journey_mission_completed("hm_strain")
 			},
 			{
 				backend_id = 10,
 				name = "dm_propaganda_1_1",
-				requirement = last_completed_chapter_is("main_story", "fm_cargo_0_1") and journey_mission_completed("dm_propaganda"),
+				requirement = last_completed_chapter_is("main_story", "fm_cargo_0_1") and journey_mission_completed("dm_propaganda")
 			},
 			{
 				backend_id = 11,
 				name = "core_research_0_2",
-				requirement = last_completed_chapter_is("main_story", "fm_cargo_0_1") and journey_mission_completed("core_research"),
+				requirement = last_completed_chapter_is("main_story", "fm_cargo_0_1") and journey_mission_completed("core_research")
 			},
 			{
 				backend_id = 12,
 				name = "hm_strain_2_1",
-				requirement = (last_completed_chapter_is("main_story", "fm_cargo_1_1") or last_completed_chapter_is("main_story", "dm_propaganda_1_1")) and journey_mission_completed("hm_strain"),
+				requirement = (last_completed_chapter_is("main_story", "fm_cargo_1_1") or last_completed_chapter_is("main_story", "dm_propaganda_1_1")) and journey_mission_completed("hm_strain")
 			},
 			{
 				backend_id = 13,
 				name = "core_research_1_2",
-				requirement = (last_completed_chapter_is("main_story", "fm_cargo_1_1") or last_completed_chapter_is("main_story", "dm_propaganda_1_1")) and journey_mission_completed("core_research"),
+				requirement = (last_completed_chapter_is("main_story", "fm_cargo_1_1") or last_completed_chapter_is("main_story", "dm_propaganda_1_1")) and journey_mission_completed("core_research")
 			},
 			{
 				backend_id = 14,
 				name = "fm_cargo_2_1",
-				requirement = last_completed_chapter_is("main_story", "hm_strain_2_0") and journey_mission_completed("fm_cargo"),
+				requirement = last_completed_chapter_is("main_story", "hm_strain_2_0") and journey_mission_completed("fm_cargo")
 			},
 			{
 				backend_id = 15,
 				name = "dm_propaganda_1_2",
-				requirement = last_completed_chapter_is("main_story", "core_research_0_2") and journey_mission_completed("dm_propaganda"),
+				requirement = last_completed_chapter_is("main_story", "core_research_0_2") and journey_mission_completed("dm_propaganda")
 			},
 			{
 				backend_id = 16,
 				name = "core_research_2_2",
-				requirement = (last_completed_chapter_is("main_story", "fm_cargo_2_1") or last_completed_chapter_is("main_story", "hm_strain_2_1")) and journey_mission_completed("core_research"),
+				requirement = (last_completed_chapter_is("main_story", "fm_cargo_2_1") or last_completed_chapter_is("main_story", "hm_strain_2_1")) and journey_mission_completed("core_research")
 			},
 			{
 				backend_id = 17,
 				name = "hm_strain_2_2",
-				requirement = (last_completed_chapter_is("main_story", "core_research_1_2") or last_completed_chapter_is("main_story", "dm_propaganda_1_2")) and journey_mission_completed("hm_strain"),
+				requirement = (last_completed_chapter_is("main_story", "core_research_1_2") or last_completed_chapter_is("main_story", "dm_propaganda_1_2")) and journey_mission_completed("hm_strain")
 			},
 			{
 				backend_id = 18,
 				name = "fm_armoury",
-				requirement = journey_mission_completed("fm_armoury"),
+				requirement = journey_mission_completed("fm_armoury")
 			},
 			{
 				backend_id = 19,
 				name = "cm_raid",
-				requirement = journey_mission_completed("cm_raid"),
+				requirement = journey_mission_completed("cm_raid")
 			},
 			{
 				backend_id = 20,
 				name = "km_enforcer_twins",
-				requirement = journey_mission_completed("km_enforcer_twins"),
+				requirement = journey_mission_completed("km_enforcer_twins")
 			},
 			{
 				backend_id = 21,
 				name = "fm_resurgence_1_0",
-				requirement = journey_mission_completed("fm_resurgence"),
+				requirement = journey_mission_completed("fm_resurgence")
 			},
 			{
 				backend_id = 22,
 				name = "dm_rise_0_1",
-				requirement = journey_mission_completed("dm_rise"),
+				requirement = journey_mission_completed("dm_rise")
 			},
 			{
 				backend_id = 23,
 				name = "cm_archives_2_0",
-				requirement = last_completed_chapter_is("main_story", "fm_resurgence_1_0") and journey_mission_completed("cm_archives"),
+				requirement = last_completed_chapter_is("main_story", "fm_resurgence_1_0") and journey_mission_completed("cm_archives")
 			},
 			{
 				backend_id = 24,
 				name = "dm_rise_1_1",
-				requirement = last_completed_chapter_is("main_story", "fm_resurgence_1_0") and journey_mission_completed("fm_resurgence"),
+				requirement = last_completed_chapter_is("main_story", "fm_resurgence_1_0") and journey_mission_completed("fm_resurgence")
 			},
 			{
 				backend_id = 25,
 				name = "fm_resurgence_1_1",
-				requirement = last_completed_chapter_is("main_story", "dm_rise_0_1") and journey_mission_completed("fm_resurgence"),
+				requirement = last_completed_chapter_is("main_story", "dm_rise_0_1") and journey_mission_completed("fm_resurgence")
 			},
 			{
 				backend_id = 26,
 				name = "hm_complex_3_0",
-				requirement = last_completed_chapter_is("main_story", "cm_archives_2_0") and journey_mission_completed("hm_complex"),
+				requirement = last_completed_chapter_is("main_story", "cm_archives_2_0") and journey_mission_completed("hm_complex")
 			},
 			{
 				backend_id = 27,
 				name = "dm_rise_2_1",
-				requirement = last_completed_chapter_is("main_story", "cm_archives_2_0") and journey_mission_completed("dm_rise"),
+				requirement = last_completed_chapter_is("main_story", "cm_archives_2_0") and journey_mission_completed("dm_rise")
 			},
 			{
 				backend_id = 28,
 				name = "cm_archives_2_1",
-				requirement = (last_completed_chapter_is("main_story", "dm_rise_1_1") or last_completed_chapter_is("main_story", "fm_resurgence_1_1")) and journey_mission_completed("cm_archives"),
+				requirement = (last_completed_chapter_is("main_story", "dm_rise_1_1") or last_completed_chapter_is("main_story", "fm_resurgence_1_1")) and journey_mission_completed("cm_archives")
 			},
 			{
 				backend_id = 29,
 				name = "dm_rise_3_1",
-				requirement = (last_completed_chapter_is("main_story", "hm_complex_3_0") or last_completed_chapter_is("main_story", "cm_archives_2_1")) and journey_mission_completed("dm_rise"),
+				requirement = (last_completed_chapter_is("main_story", "hm_complex_3_0") or last_completed_chapter_is("main_story", "cm_archives_2_1")) and journey_mission_completed("dm_rise")
 			},
 			{
 				backend_id = 30,
 				name = "hm_complex_3_1",
-				requirement = (last_completed_chapter_is("main_story", "dm_rise_2_1") or last_completed_chapter_is("main_story", "cm_archives_2_1")) and journey_mission_completed("hm_complex"),
+				requirement = (last_completed_chapter_is("main_story", "dm_rise_2_1") or last_completed_chapter_is("main_story", "cm_archives_2_1")) and journey_mission_completed("hm_complex")
 			},
 			{
 				backend_id = 31,
 				name = "km_heresy",
-				requirement = journey_mission_completed("km_heresy") or journey_skipped(),
-			},
+				requirement = journey_mission_completed("km_heresy") or journey_skipped()
+			}
 		},
 		onboarding = {
 			{
 				backend_id = 1,
 				name = "play_prologue",
 				data = {
-					mission_name = "prologue",
+					mission_name = "prologue"
 				},
 				archetype_skip_func = _should_archetype_skip_onboarding_chapter,
-				on_complete = achievement_unlocked("prologue"),
+				on_complete = achievement_unlocked("prologue")
 			},
 			{
 				backend_id = 2,
 				name = "speak_to_morrow",
 				data = {
-					mission_name = "om_hub_01",
+					mission_name = "om_hub_01"
 				},
 				archetype_skip_func = _should_archetype_skip_onboarding_chapter,
 				on_skip = function ()
@@ -350,48 +350,48 @@ local narrative_stories = {
 					elseif _should_skip_onboarding_intro_video(player_profile) then
 						Managers.narrative:complete_event("onboarding_step_chapel_video_viewed")
 					end
-				end,
+				end
 			},
 			{
 				backend_id = 3,
 				name = "go_to_training",
 				data = {
-					mission_name = "om_hub_01",
-				},
+					mission_name = "om_hub_01"
+				}
 			},
 			{
 				backend_id = 4,
 				name = "play_training",
 				data = {
-					mission_name = "om_basic_combat_01",
+					mission_name = "om_basic_combat_01"
 				},
-				on_complete = achievement_unlocked("basic_training"),
+				on_complete = achievement_unlocked("basic_training")
 			},
 			{
 				backend_id = 5,
 				name = "training_reward",
 				data = {
-					mission_name = "om_hub_02",
+					mission_name = "om_hub_02"
 				},
-				archetype_skip_func = _should_archetype_skip_onboarding_chapter,
+				archetype_skip_func = _should_archetype_skip_onboarding_chapter
 			},
 			{
 				backend_id = 6,
 				name = "inventory_popup",
 				data = {
-					mission_name = "om_hub_02",
+					mission_name = "om_hub_02"
 				},
-				archetype_skip_func = _should_archetype_skip_onboarding_chapter,
+				archetype_skip_func = _should_archetype_skip_onboarding_chapter
 			},
 			{
 				backend_id = 7,
 				name = "visit_chapel",
 				data = {
-					mission_name = "om_hub_02",
+					mission_name = "om_hub_02"
 				},
 				archetype_skip_func = _should_archetype_skip_onboarding_chapter,
-				on_complete = set_account_has_completed_onboarding(),
-			},
+				on_complete = set_account_has_completed_onboarding()
+			}
 		},
 		path_of_trust = {
 			{
@@ -400,10 +400,10 @@ local narrative_stories = {
 				data = {
 					localization_key = "loc_progression_step_01",
 					vo_story_stage = "pot_1",
-					level_to_reach = PlayerProgressionUnlocks.pot_story_traitor_first,
+					level_to_reach = PlayerProgressionUnlocks.pot_story_traitor_first
 				},
 				requirement = can_start_path_of_trust(PlayerProgressionUnlocks.pot_story_traitor_first),
-				on_complete = on_path_of_trust_chapter_completion("path_of_trust_1"),
+				on_complete = on_path_of_trust_chapter_completion("path_of_trust_1")
 			},
 			{
 				backend_id = 2,
@@ -411,10 +411,10 @@ local narrative_stories = {
 				data = {
 					localization_key = "loc_progression_step_02",
 					vo_story_stage = "pot_2",
-					level_to_reach = PlayerProgressionUnlocks.pot_crafting,
+					level_to_reach = PlayerProgressionUnlocks.pot_crafting
 				},
 				requirement = level_at_least(PlayerProgressionUnlocks.pot_crafting),
-				on_complete = on_path_of_trust_chapter_completion("unlock_crafting"),
+				on_complete = on_path_of_trust_chapter_completion("unlock_crafting")
 			},
 			{
 				backend_id = 3,
@@ -422,10 +422,10 @@ local narrative_stories = {
 				data = {
 					localization_key = "loc_progression_step_03",
 					vo_story_stage = "pot_3",
-					level_to_reach = PlayerProgressionUnlocks.pot_gadgets,
+					level_to_reach = PlayerProgressionUnlocks.pot_gadgets
 				},
 				requirement = level_at_least(PlayerProgressionUnlocks.pot_gadgets),
-				on_complete = on_path_of_trust_chapter_completion("unlock_gadgets"),
+				on_complete = on_path_of_trust_chapter_completion("unlock_gadgets")
 			},
 			{
 				backend_id = 4,
@@ -433,9 +433,9 @@ local narrative_stories = {
 				data = {
 					localization_key = "loc_progression_step_04",
 					vo_story_stage = "pot_4",
-					level_to_reach = PlayerProgressionUnlocks.pot_contracts,
+					level_to_reach = PlayerProgressionUnlocks.pot_contracts
 				},
-				requirement = level_at_least(PlayerProgressionUnlocks.pot_gadgets),
+				requirement = level_at_least(PlayerProgressionUnlocks.pot_gadgets)
 			},
 			{
 				backend_id = 5,
@@ -443,10 +443,10 @@ local narrative_stories = {
 				data = {
 					localization_key = "loc_progression_step_05",
 					vo_story_stage = "pot_5",
-					level_to_reach = PlayerProgressionUnlocks.pot_story_traitor_second,
+					level_to_reach = PlayerProgressionUnlocks.pot_story_traitor_second
 				},
 				requirement = level_at_least(PlayerProgressionUnlocks.pot_story_traitor_second),
-				on_complete = on_path_of_trust_chapter_completion("path_of_trust_2"),
+				on_complete = on_path_of_trust_chapter_completion("path_of_trust_2")
 			},
 			{
 				backend_id = 6,
@@ -454,10 +454,10 @@ local narrative_stories = {
 				data = {
 					localization_key = "loc_progression_step_06",
 					vo_story_stage = "pot_6",
-					level_to_reach = PlayerProgressionUnlocks.pot_story_masozi,
+					level_to_reach = PlayerProgressionUnlocks.pot_story_masozi
 				},
 				requirement = level_at_least(PlayerProgressionUnlocks.pot_story_masozi),
-				on_complete = on_path_of_trust_chapter_completion("path_of_trust_3"),
+				on_complete = on_path_of_trust_chapter_completion("path_of_trust_3")
 			},
 			{
 				backend_id = 7,
@@ -465,10 +465,10 @@ local narrative_stories = {
 				data = {
 					localization_key = "loc_progression_step_07",
 					vo_story_stage = "pot_7",
-					level_to_reach = PlayerProgressionUnlocks.pot_story_hadron,
+					level_to_reach = PlayerProgressionUnlocks.pot_story_hadron
 				},
 				requirement = level_at_least(PlayerProgressionUnlocks.pot_story_hadron),
-				on_complete = on_path_of_trust_chapter_completion("path_of_trust_4"),
+				on_complete = on_path_of_trust_chapter_completion("path_of_trust_4")
 			},
 			{
 				backend_id = 8,
@@ -476,10 +476,10 @@ local narrative_stories = {
 				data = {
 					localization_key = "loc_progression_step_08",
 					vo_story_stage = "pot_8",
-					level_to_reach = PlayerProgressionUnlocks.pot_story_do_or_die,
+					level_to_reach = PlayerProgressionUnlocks.pot_story_do_or_die
 				},
 				requirement = level_at_least(PlayerProgressionUnlocks.pot_story_do_or_die),
-				on_complete = on_path_of_trust_chapter_completion("path_of_trust_5"),
+				on_complete = on_path_of_trust_chapter_completion("path_of_trust_5")
 			},
 			{
 				backend_id = 9,
@@ -487,166 +487,166 @@ local narrative_stories = {
 				data = {
 					localization_key = "loc_progression_step_09",
 					vo_story_stage = "pot_9",
-					level_to_reach = PlayerProgressionUnlocks.pot_story_final,
+					level_to_reach = PlayerProgressionUnlocks.pot_story_final
 				},
 				requirement = level_at_least(PlayerProgressionUnlocks.pot_story_final),
-				on_complete = on_path_of_trust_chapter_completion("path_of_trust_6"),
-			},
+				on_complete = on_path_of_trust_chapter_completion("path_of_trust_6")
+			}
 		},
 		s1_q3 = {
 			{
 				backend_id = 1,
 				name = "itemization_intro",
-				requirement = event_done("onboarding_step_mission_board_introduction"),
+				requirement = event_done("onboarding_step_mission_board_introduction")
 			},
 			{
 				backend_id = 2,
 				name = "commissar_intro",
-				requirement = beyond_story_chapter("s1_q3", "itemization_intro"),
-			},
+				requirement = beyond_story_chapter("s1_q3", "itemization_intro")
+			}
 		},
 		s1_q4 = {
 			{
 				backend_id = 1,
 				name = "heresy_intro",
-				requirement = event_done("onboarding_step_mission_board_introduction"),
-			},
+				requirement = event_done("onboarding_step_mission_board_introduction")
+			}
 		},
 		horde_intro = {
 			{
 				backend_id = 1,
 				name = "horde_intro",
-				requirement = game_mode_unlocked(PlayerProgressionUnlocks.horde_progression),
-			},
+				requirement = game_mode_unlocked(PlayerProgressionUnlocks.horde_progression)
+			}
 		},
 		level_unlock_popups = {
 			{
 				backend_id = 1,
 				name = "level_unlock_credits_store_popup",
-				requirement = beyond_story_chapter("path_of_trust", "pot_story_traitor_first"),
+				requirement = beyond_story_chapter("path_of_trust", "pot_story_traitor_first")
 			},
 			{
 				backend_id = 2,
 				name = "level_unlock_mission_board_popup_difficulty_increased_1",
-				requirement = level_at_least(PlayerProgressionUnlocks.mission_difficulty_unlocks.normal[3]),
+				requirement = level_at_least(PlayerProgressionUnlocks.mission_difficulty_unlocks.normal[3])
 			},
 			{
 				backend_id = 3,
 				name = "level_unlock_crafting_station_popup",
-				requirement = beyond_story_chapter("path_of_trust", "pot_crafting"),
+				requirement = beyond_story_chapter("path_of_trust", "pot_crafting")
 			},
 			{
 				backend_id = 4,
 				name = "level_unlock_talent_tier_1",
-				requirement = nil,
+				requirement = nil
 			},
 			{
 				backend_id = 5,
 				name = "level_unlock_gadget_slot_1",
-				requirement = beyond_story_chapter("path_of_trust", "pot_gadgets"),
+				requirement = beyond_story_chapter("path_of_trust", "pot_gadgets")
 			},
 			{
 				backend_id = 6,
 				name = "level_unlock_mission_board_popup_difficulty_increased_2",
-				requirement = level_at_least(PlayerProgressionUnlocks.mission_difficulty_unlocks.normal[4]),
+				requirement = level_at_least(PlayerProgressionUnlocks.mission_difficulty_unlocks.normal[4])
 			},
 			{
 				backend_id = 7,
 				name = "level_unlock_talent_tier_2",
-				requirement = nil,
+				requirement = nil
 			},
 			{
 				backend_id = 8,
 				name = "level_unlock_contract_store_popup",
-				requirement = beyond_story_chapter("path_of_trust", "pot_contracts"),
+				requirement = beyond_story_chapter("path_of_trust", "pot_contracts")
 			},
 			{
 				backend_id = 9,
 				name = "level_unlock_mission_board_popup_difficulty_increased_3",
-				requirement = level_at_least(PlayerProgressionUnlocks.mission_difficulty_unlocks.normal[5]),
+				requirement = level_at_least(PlayerProgressionUnlocks.mission_difficulty_unlocks.normal[5])
 			},
 			{
 				backend_id = 10,
 				name = "level_unlock_gadget_slot_2",
-				requirement = level_at_least(PlayerProgressionUnlocks.gadget_slot_2),
+				requirement = level_at_least(PlayerProgressionUnlocks.gadget_slot_2)
 			},
 			{
 				backend_id = 11,
 				name = "level_unlock_talent_tier_3",
-				requirement = nil,
+				requirement = nil
 			},
 			{
 				backend_id = 12,
 				name = "level_unlock_talent_tier_4",
-				requirement = nil,
+				requirement = nil
 			},
 			{
 				backend_id = 13,
 				name = "level_unlock_gadget_slot_3",
-				requirement = level_at_least(PlayerProgressionUnlocks.gadget_slot_3),
+				requirement = level_at_least(PlayerProgressionUnlocks.gadget_slot_3)
 			},
 			{
 				backend_id = 14,
 				name = "level_unlock_talent_tier_5",
-				requirement = nil,
+				requirement = nil
 			},
 			{
 				backend_id = 15,
 				name = "level_unlock_talent_tier_6",
-				requirement = nil,
-			},
+				requirement = nil
+			}
 		},
 		unlock_havoc = {
 			{
 				backend_id = 1,
 				name = "unlock_havoc_1",
-				requirement = is_story_complete("path_of_trust"),
+				requirement = is_story_complete("path_of_trust")
 			},
 			{
 				backend_id = 2,
 				name = "unlock_havoc_2",
-				requirement = beyond_story_chapter("unlock_havoc", "unlock_havoc_1"),
+				requirement = beyond_story_chapter("unlock_havoc", "unlock_havoc_1")
 			},
 			{
 				backend_id = 3,
 				name = "unlock_havoc_3",
-				requirement = beyond_story_chapter("unlock_havoc", "unlock_havoc_2"),
-			},
-		},
+				requirement = beyond_story_chapter("unlock_havoc", "unlock_havoc_2")
+			}
+		}
 	},
 	events = {
 		mission_board = {},
 		crafting_table = {},
 		onboarding_step_archetype_intro_video_viewed = {
-			requirement = _archetype_has_onboarding_intro_video,
+			requirement = _archetype_has_onboarding_intro_video
 		},
 		onboarding_step_chapel_video_viewed = {},
 		onboarding_step_chapel_cutscene_played = {
-			requirement = event_done("onboarding_step_chapel_video_viewed"),
+			requirement = event_done("onboarding_step_chapel_video_viewed")
 		},
 		onboarding_step_mission_board_introduction = {
-			requirement = event_done("onboarding_step_chapel_cutscene_played"),
+			requirement = event_done("onboarding_step_chapel_cutscene_played")
 		},
 		level_unlock_credits_store_visited = {
-			requirement = facility_unlocked(PlayerProgressionUnlocks.credits_vendor),
+			requirement = facility_unlocked(PlayerProgressionUnlocks.credits_vendor)
 		},
 		level_unlock_crafting_station_visited = {
-			requirement = facility_unlocked(PlayerProgressionUnlocks.crafting),
+			requirement = facility_unlocked(PlayerProgressionUnlocks.crafting)
 		},
 		level_unlock_contract_store_visited = {
-			requirement = facility_unlocked(PlayerProgressionUnlocks.contracts),
+			requirement = facility_unlocked(PlayerProgressionUnlocks.contracts)
 		},
 		level_unlock_cosmetic_store_visited = {
-			requirement = facility_unlocked(PlayerProgressionUnlocks.cosmetics_vendor),
+			requirement = facility_unlocked(PlayerProgressionUnlocks.cosmetics_vendor)
 		},
 		level_unlock_cosmetic_store_popup = {
-			requirement = facility_unlocked(PlayerProgressionUnlocks.cosmetics_vendor),
+			requirement = facility_unlocked(PlayerProgressionUnlocks.cosmetics_vendor)
 		},
 		level_unlock_premium_store_visited = {
-			requirement = level_at_least(PlayerProgressionUnlocks.premium_store),
+			requirement = level_at_least(PlayerProgressionUnlocks.premium_store)
 		},
 		level_unlock_barber_visited = {
-			requirement = level_at_least(PlayerProgressionUnlocks.barber),
+			requirement = level_at_least(PlayerProgressionUnlocks.barber)
 		},
 		hli_mission_board_viewed = {},
 		hli_barbershop_viewed = {},
@@ -655,11 +655,11 @@ local narrative_stories = {
 		hli_gun_shop_viewed = {},
 		hli_penances_viewed = {},
 		hli_expeditions_viewed = {
-			requirement = game_mode_unlocked(PlayerProgressionUnlocks.expeditions),
+			requirement = game_mode_unlocked(PlayerProgressionUnlocks.expeditions)
 		},
 		s1_intro_viewed = {},
-		core_research_intro_viewed = {},
-	},
+		core_research_intro_viewed = {}
+	}
 }
 
 for _, chapters in pairs(narrative_stories.stories) do

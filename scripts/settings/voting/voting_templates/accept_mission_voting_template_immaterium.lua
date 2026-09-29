@@ -16,7 +16,7 @@ local function _open_voting_view(voting_id)
 					Managers.voting:cast_vote(voting_id, "yes")
 
 					_voting_popup_ids[voting_id] = nil
-				end,
+				end
 			},
 			{
 				close_on_pressed = true,
@@ -26,9 +26,9 @@ local function _open_voting_view(voting_id)
 					Managers.voting:cast_vote(voting_id, "no")
 
 					_voting_popup_ids[voting_id] = nil
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -83,7 +83,7 @@ local accept_mission_voting_template_immaterium = {
 
 				promise:next(function (presence)
 					local message = Localize("loc_party_notification_accept_mission_voting_decline", true, {
-						member_character_name = presence:character_name(),
+						member_character_name = presence:character_name()
 					})
 					local sound_event = UISoundEvents.mission_vote_player_declined
 
@@ -91,7 +91,7 @@ local accept_mission_voting_template_immaterium = {
 				end)
 			end
 		end
-	end,
+	end
 }
 
 return accept_mission_voting_template_immaterium

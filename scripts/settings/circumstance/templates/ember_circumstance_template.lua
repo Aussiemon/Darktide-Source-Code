@@ -12,14 +12,14 @@ circumstance_templates.ember_01 = {
 		description = "loc_circumstance_ember_description",
 		display_name = "loc_circumstance_ember_title",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
-		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
+		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01"
 	},
 	mutators = {
 		"mutator_renegade_flamer_none_packs",
 		"mutator_only_traitor_guard_faction",
-		"mutator_renegade_grenadier",
+		"mutator_renegade_grenadier"
 	},
-	mission_overrides = MissionOverrides.all_fire_barrels,
+	mission_overrides = MissionOverrides.all_fire_barrels
 }
 circumstance_templates.ember_01_hunt_grou = {
 	dialogue_id = "circumstance_vo_ember",
@@ -31,15 +31,15 @@ circumstance_templates.ember_01_hunt_grou = {
 		description = "loc_circumstance_ember_hunting_grounds_description",
 		display_name = "loc_circumstance_ember_hunting_grounds_title",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
-		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
+		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01"
 	},
 	mutators = {
 		"mutator_renegade_flamer_none_packs",
 		"mutator_only_traitor_guard_faction",
 		"mutator_renegade_grenadier",
-		"mutator_chaos_hounds",
+		"mutator_chaos_hounds"
 	},
-	mission_overrides = MissionOverrides.all_fire_barrels,
+	mission_overrides = MissionOverrides.all_fire_barrels
 }
 circumstance_templates.ember_01_waves_spec = {
 	dialogue_id = "circumstance_vo_ember",
@@ -49,7 +49,7 @@ circumstance_templates.ember_01_waves_spec = {
 		description = "loc_circumstance_ember_waves_of_specials_description",
 		display_name = "loc_circumstance_ember_waves_of_specials_title",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
-		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
+		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01"
 	},
 	mutators = {
 		"mutator_renegade_flamer_none_packs",
@@ -58,9 +58,9 @@ circumstance_templates.ember_01_waves_spec = {
 		"mutator_waves_of_specials",
 		"mutator_increase_terror_event_points",
 		"mutator_auric_tension_modifier",
-		"mutator_reduced_ramp_duration_low",
+		"mutator_reduced_ramp_duration_low"
 	},
-	mission_overrides = MissionOverrides.all_fire_barrels,
+	mission_overrides = MissionOverrides.all_fire_barrels
 }
 circumstance_templates.ember_01_more_res = {
 	dialogue_id = "circumstance_vo_ember",
@@ -70,15 +70,15 @@ circumstance_templates.ember_01_more_res = {
 		description = "loc_circumstance_ember_more_resistance_description",
 		display_name = "loc_circumstance_ember_more_resistance_title",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
-		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
+		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01"
 	},
 	mutators = {
 		"mutator_renegade_flamer_none_packs",
 		"mutator_only_traitor_guard_faction",
 		"mutator_renegade_grenadier",
-		"mutator_add_resistance",
+		"mutator_add_resistance"
 	},
-	mission_overrides = MissionOverrides.all_fire_barrels,
+	mission_overrides = MissionOverrides.all_fire_barrels
 }
 circumstance_templates.ember_01_havoc = {
 	dialogue_id = "circumstance_vo_ember",
@@ -89,14 +89,14 @@ circumstance_templates.ember_01_havoc = {
 		description = "loc_circumstance_ember_description",
 		display_name = "loc_circumstance_ember_title",
 		icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_ember",
-		mission_board_icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_ember",
+		mission_board_icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_ember"
 	},
 	mutators = {
 		"mutator_renegade_flamer_none_packs",
 		"mutator_only_traitor_guard_faction",
-		"mutator_renegade_grenadier",
+		"mutator_renegade_grenadier"
 	},
-	mission_overrides = MissionOverrides.all_fire_barrels,
+	mission_overrides = MissionOverrides.all_fire_barrels
 }
 
 return circumstance_templates

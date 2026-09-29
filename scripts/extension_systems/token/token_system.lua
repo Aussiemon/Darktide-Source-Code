@@ -5,7 +5,7 @@ require("scripts/extension_systems/token/token_extension")
 local TokenSystem = class("TokenSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
 	"rpc_assign_token",
-	"rpc_free_token",
+	"rpc_free_token"
 }
 
 TokenSystem.init = function (self, context, ...)

@@ -4,11 +4,11 @@ local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PlayerUnitHologramExtension = class("PlayerUnitHologramExtension")
 local UPDATE_WAITING_PERIOD = 0.5
 local SWITCH_STATES = {
-	consumed = true,
+	consumed = true
 }
 local IGNORED_DISABLED_OUTLINE_STATES = {
 	catapulted = true,
-	grabbed = true,
+	grabbed = true
 }
 local _spawn_hologram_unit, _despawn_hologram_unit
 

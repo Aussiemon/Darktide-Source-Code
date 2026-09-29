@@ -46,7 +46,7 @@ local expedition_airstrike_bomb_unit_template = {
 
 		Actor.add_impulse(actor, force_direction * mass * speed)
 		Actor.add_angular_velocity(actor, force_direction * mass * speed)
-	end,
+	end
 }
 
 return expedition_airstrike_bomb_unit_template

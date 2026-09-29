@@ -6,7 +6,7 @@ disorientation_settings.disorientation_templates = {
 	toughness = {
 		hit_react_anim_1p = nil,
 		hit_react_anim_3p = "hit_react",
-		screen_space_effect = "content/fx/particles/screenspace/screen_stunned_light",
+		screen_space_effect = "content/fx/particles/screenspace/screen_stunned_light"
 	},
 	toughness_melee = {
 		hit_react_anim_1p = nil,
@@ -23,24 +23,24 @@ disorientation_settings.disorientation_templates = {
 			start_anim = "hit_react",
 			start_anim_3p = "hit_stun",
 			stun_duration = 0.3,
-			stun_immunity_time_buff = "stun_immune_medium",
-		},
+			stun_immunity_time_buff = "stun_immune_medium"
+		}
 	},
 	ranged = {
 		hit_react_anim_1p = "shake_light",
 		hit_react_anim_3p = "hit_react",
 		screen_space_effect = "content/fx/particles/screenspace/screen_stunned_light",
-		sound_event = "wwise/events/player/play_player_get_hit_light_2d",
+		sound_event = "wwise/events/player/play_player_get_hit_light_2d"
 	},
 	electrocuting = {
 		hit_react_anim_1p = "shake_light",
 		hit_react_anim_3p = "hit_react",
-		sound_event = "wwise/events/player/play_player_get_hit_electricity",
+		sound_event = "wwise/events/player/play_player_get_hit_electricity"
 	},
 	toughness_electrocuting = {
 		hit_react_anim_1p = nil,
 		hit_react_anim_3p = "hit_react",
-		sound_event = "wwise/events/player/play_player_get_hit_electricity_toughness",
+		sound_event = "wwise/events/player/play_player_get_hit_electricity_toughness"
 	},
 	burninating = {
 		hit_react_anim_1p = "shake_light",
@@ -57,8 +57,8 @@ disorientation_settings.disorientation_templates = {
 			start_anim = "hit_react",
 			start_anim_3p = "hit_stun",
 			stun_duration = 0.15,
-			stun_immunity_time_buff = "stun_immune_very_long",
-		},
+			stun_immunity_time_buff = "stun_immune_very_long"
+		}
 	},
 	toughness_burning = {
 		hit_react_anim_1p = nil,
@@ -75,14 +75,14 @@ disorientation_settings.disorientation_templates = {
 			start_anim = "hit_react",
 			start_anim_3p = "hit_react",
 			stun_duration = 0,
-			stun_immunity_time_buff = "stun_immune_short",
-		},
+			stun_immunity_time_buff = "stun_immune_short"
+		}
 	},
 	ranged_sprinting = {
 		hit_react_anim_1p = "shake_light",
 		hit_react_anim_3p = "hit_react",
 		screen_space_effect = "content/fx/particles/screenspace/screen_stunned_light",
-		sound_event = "wwise/events/player/play_player_get_hit_light_2d",
+		sound_event = "wwise/events/player/play_player_get_hit_light_2d"
 	},
 	light = {
 		hit_react_anim_1p = "shake_light",
@@ -100,8 +100,8 @@ disorientation_settings.disorientation_templates = {
 			start_anim = "hit_stun",
 			start_anim_3p = "hit_stun",
 			stun_duration = 0.5,
-			stun_immunity_time_buff = "stun_immune_short",
-		},
+			stun_immunity_time_buff = "stun_immune_short"
+		}
 	},
 	medium = {
 		hit_react_anim_1p = "shake_medium",
@@ -119,20 +119,20 @@ disorientation_settings.disorientation_templates = {
 			start_anim = "hit_stun_medium",
 			start_anim_3p = "hit_stun_medium",
 			stun_duration = 0.7,
-			stun_immunity_time_buff = "stun_immune_medium",
-		},
+			stun_immunity_time_buff = "stun_immune_medium"
+		}
 	},
 	fumbled = {
 		hit_react_anim_1p = "shake_heavy",
 		hit_react_anim_3p = "hit_react",
 		screen_space_effect = "content/fx/particles/screenspace/screen_stunned_heavy",
-		sound_event = "wwise/events/player/play_player_get_hit_heavy_2d",
+		sound_event = "wwise/events/player/play_player_get_hit_heavy_2d"
 	},
 	ogryn_fumbled = {
 		hit_react_anim_1p = "shake_heavy",
 		hit_react_anim_3p = "hit_react",
 		screen_space_effect = "content/fx/particles/screenspace/screen_stunned_heavy",
-		sound_event = "wwise/events/player/play_player_get_hit_heavy_2d",
+		sound_event = "wwise/events/player/play_player_get_hit_heavy_2d"
 	},
 	heavy = {
 		hit_react_anim_1p = "shake_heavy",
@@ -150,8 +150,8 @@ disorientation_settings.disorientation_templates = {
 			start_anim = "hit_stun_medium",
 			start_anim_3p = "hit_stun_heavy",
 			stun_duration = 1.25,
-			stun_immunity_time_buff = "stun_immune_very_long",
-		},
+			stun_immunity_time_buff = "stun_immune_very_long"
+		}
 	},
 	shield_push = {
 		hit_react_anim_1p = "shake_heavy",
@@ -169,8 +169,8 @@ disorientation_settings.disorientation_templates = {
 			start_anim = "hit_stun_medium",
 			start_anim_3p = "hit_stun_medium",
 			stun_duration = 1,
-			stun_immunity_time_buff = "stun_immune_very_long",
-		},
+			stun_immunity_time_buff = "stun_immune_very_long"
+		}
 	},
 	ogryn_executor_heavy = {
 		hit_react_anim_1p = "shake_heavy",
@@ -188,8 +188,8 @@ disorientation_settings.disorientation_templates = {
 			start_anim = "hit_stun_medium",
 			start_anim_3p = "hit_stun_heavy",
 			stun_duration = 1.25,
-			stun_immunity_time_buff = "stun_immune_very_long",
-		},
+			stun_immunity_time_buff = "stun_immune_very_long"
+		}
 	},
 	chaos_ogryn_gunner_bullet = {
 		hit_react_anim_1p = "shake_heavy",
@@ -207,8 +207,8 @@ disorientation_settings.disorientation_templates = {
 			start_anim = "hit_stun_medium",
 			start_anim_3p = "hit_stun_medium",
 			stun_duration = 0.75,
-			stun_immunity_time_buff = "stun_immune_very_long",
-		},
+			stun_immunity_time_buff = "stun_immune_very_long"
+		}
 	},
 	grenadier = {
 		hit_react_anim_1p = "shake_medium",
@@ -226,8 +226,8 @@ disorientation_settings.disorientation_templates = {
 			start_anim = "hit_stun",
 			start_anim_3p = "hit_stun_medium",
 			stun_duration = 0.5,
-			stun_immunity_time_buff = "stun_immune_very_long",
-		},
+			stun_immunity_time_buff = "stun_immune_very_long"
+		}
 	},
 	twin_grenade = {
 		hit_react_anim_1p = "shake_medium",
@@ -246,8 +246,8 @@ disorientation_settings.disorientation_templates = {
 			start_anim = "hit_stun",
 			start_anim_3p = "hit_stun_medium",
 			stun_duration = 1.5,
-			stun_immunity_time_buff = "stun_immune_very_long",
-		},
+			stun_immunity_time_buff = "stun_immune_very_long"
+		}
 	},
 	fortitude_broken = {
 		hit_react_anim_1p = "shake_medium",
@@ -265,8 +265,8 @@ disorientation_settings.disorientation_templates = {
 			start_anim = "hit_stun",
 			start_anim_3p = "hit_stun",
 			stun_duration = 0.75,
-			stun_immunity_time_buff = "stun_immune_very_long",
-		},
+			stun_immunity_time_buff = "stun_immune_very_long"
+		}
 	},
 	block_broken = {
 		hit_react_anim_1p = "shake_medium",
@@ -284,8 +284,8 @@ disorientation_settings.disorientation_templates = {
 			start_anim = "hit_stun",
 			start_anim_3p = "hit_stun_medium",
 			stun_duration = 1,
-			stun_immunity_time_buff = nil,
-		},
+			stun_immunity_time_buff = nil
+		}
 	},
 	block_broken_heavy = {
 		hit_react_anim_1p = "shake_heavy",
@@ -303,8 +303,8 @@ disorientation_settings.disorientation_templates = {
 			start_anim = "hit_stun",
 			start_anim_3p = "hit_stun_heavy",
 			stun_duration = 1.75,
-			stun_immunity_time_buff = nil,
-		},
+			stun_immunity_time_buff = nil
+		}
 	},
 	sniper = {
 		hit_react_anim_1p = "shake_heavy",
@@ -322,8 +322,8 @@ disorientation_settings.disorientation_templates = {
 			start_anim = "hit_stun_medium",
 			start_anim_3p = "hit_stun_heavy",
 			stun_duration = 1.75,
-			stun_immunity_time_buff = "stun_immune_long",
-		},
+			stun_immunity_time_buff = "stun_immune_long"
+		}
 	},
 	falling_light = {
 		hit_react_anim_1p = "shake_light",
@@ -341,8 +341,8 @@ disorientation_settings.disorientation_templates = {
 			start_anim = "fall_dmg_light",
 			start_anim_3p = "fall_dmg_light",
 			stun_duration = 0.6,
-			stun_immunity_time_buff = "stun_immune_short",
-		},
+			stun_immunity_time_buff = "stun_immune_short"
+		}
 	},
 	falling_heavy = {
 		hit_react_anim_1p = "shake_heavy",
@@ -360,8 +360,8 @@ disorientation_settings.disorientation_templates = {
 			start_anim = "fall_dmg_light",
 			start_anim_3p = "fall_dmg_light",
 			stun_duration = 1.2,
-			stun_immunity_time_buff = "stun_immune_long",
-		},
+			stun_immunity_time_buff = "stun_immune_long"
+		}
 	},
 	thunder_hammer_light = {
 		hit_react_anim_1p = "shake_heavy",
@@ -380,8 +380,8 @@ disorientation_settings.disorientation_templates = {
 			start_anim = nil,
 			start_anim_3p = nil,
 			stun_duration = 0.3,
-			stun_immunity_time_buff = "stun_immune_short",
-		},
+			stun_immunity_time_buff = "stun_immune_short"
+		}
 	},
 	thunder_hammer_heavy = {
 		hit_react_anim_1p = "shake_heavy",
@@ -400,8 +400,8 @@ disorientation_settings.disorientation_templates = {
 			start_anim = nil,
 			start_anim_3p = nil,
 			stun_duration = 0.5,
-			stun_immunity_time_buff = "stun_immune_short",
-		},
+			stun_immunity_time_buff = "stun_immune_short"
+		}
 	},
 	thunder_hammer_m2_light = {
 		hit_react_anim_1p = "shake_heavy",
@@ -420,8 +420,8 @@ disorientation_settings.disorientation_templates = {
 			start_anim = nil,
 			start_anim_3p = nil,
 			stun_duration = 0.25,
-			stun_immunity_time_buff = "stun_immune_short",
-		},
+			stun_immunity_time_buff = "stun_immune_short"
+		}
 	},
 	thunder_hammer_m2_heavy = {
 		hit_react_anim_1p = "shake_heavy",
@@ -440,8 +440,8 @@ disorientation_settings.disorientation_templates = {
 			start_anim = nil,
 			start_anim_3p = nil,
 			stun_duration = 0.4,
-			stun_immunity_time_buff = "stun_immune_short",
-		},
+			stun_immunity_time_buff = "stun_immune_short"
+		}
 	},
 	ogryn_shovel = {
 		hit_react_anim_1p = "shake_heavy",
@@ -460,8 +460,8 @@ disorientation_settings.disorientation_templates = {
 			start_anim = nil,
 			start_anim_3p = nil,
 			stun_duration = 1.3,
-			stun_immunity_time_buff = "stun_immune_short",
-		},
+			stun_immunity_time_buff = "stun_immune_short"
+		}
 	},
 	shocktrooper_frag = {
 		hit_react_anim_1p = "shake_heavy",
@@ -479,23 +479,23 @@ disorientation_settings.disorientation_templates = {
 			start_anim = "hit_stun_medium",
 			start_anim_3p = nil,
 			stun_duration = 2,
-			stun_immunity_time_buff = "stun_immune_very_long",
-		},
+			stun_immunity_time_buff = "stun_immune_very_long"
+		}
 	},
 	corruption = {
 		hit_react_anim_1p = nil,
 		hit_react_anim_3p = nil,
-		sound_event = "wwise/events/player/play_player_get_hit_corruption_2d",
+		sound_event = "wwise/events/player/play_player_get_hit_corruption_2d"
 	},
 	corruption_tick = {
 		hit_react_anim_1p = nil,
 		hit_react_anim_3p = nil,
-		sound_event = "wwise/events/player/play_player_get_hit_corruption_2d_tick",
+		sound_event = "wwise/events/player/play_player_get_hit_corruption_2d_tick"
 	},
 	toughness_corruption = {
 		hit_react_anim_1p = nil,
 		hit_react_anim_3p = nil,
-		sound_event = "wwise/events/player/play_player_get_hit_2d_corruption_tick_toughness",
+		sound_event = "wwise/events/player/play_player_get_hit_2d_corruption_tick_toughness"
 	},
 	ogryn_toughness = {
 		hit_react_anim_1p = "shake_light",
@@ -507,8 +507,8 @@ disorientation_settings.disorientation_templates = {
 			interrupt_delay = nil,
 			intoxication_level = 0,
 			stun_duration = 0,
-			stun_immunity_time_buff = "stun_immune_short",
-		},
+			stun_immunity_time_buff = "stun_immune_short"
+		}
 	},
 	ogryn_toughness_melee = {
 		hit_react_anim_1p = nil,
@@ -520,8 +520,8 @@ disorientation_settings.disorientation_templates = {
 			interrupt_delay = nil,
 			intoxication_level = 0,
 			stun_duration = 0,
-			stun_immunity_time_buff = "stun_immune_short",
-		},
+			stun_immunity_time_buff = "stun_immune_short"
+		}
 	},
 	ogryn_light = {
 		hit_react_anim_1p = "shake_light",
@@ -534,8 +534,8 @@ disorientation_settings.disorientation_templates = {
 			interrupt_delay = nil,
 			intoxication_level = 0,
 			stun_duration = 0,
-			stun_immunity_time_buff = "stun_immune_short",
-		},
+			stun_immunity_time_buff = "stun_immune_short"
+		}
 	},
 	ogryn_medium = {
 		hit_react_anim_1p = "shake_medium",
@@ -548,8 +548,8 @@ disorientation_settings.disorientation_templates = {
 			interrupt_delay = nil,
 			intoxication_level = 0,
 			stun_duration = 0,
-			stun_immunity_time_buff = "stun_immune_short",
-		},
+			stun_immunity_time_buff = "stun_immune_short"
+		}
 	},
 	ogryn_heavy = {
 		hit_react_anim_1p = "shake_heavy",
@@ -563,8 +563,8 @@ disorientation_settings.disorientation_templates = {
 			interrupt_delay = 0.05,
 			intoxication_level = 4,
 			stun_duration = 0.5,
-			stun_immunity_time_buff = "stun_immune_medium",
-		},
+			stun_immunity_time_buff = "stun_immune_medium"
+		}
 	},
 	ogryn_powermaul_disorientation = {
 		hit_react_anim_1p = "shake_heavy",
@@ -582,13 +582,13 @@ disorientation_settings.disorientation_templates = {
 			start_anim = nil,
 			start_anim_3p = nil,
 			stun_duration = 2,
-			stun_immunity_time_buff = "stun_immune_short",
-		},
+			stun_immunity_time_buff = "stun_immune_short"
+		}
 	},
 	ranged_auto_light = {
 		hit_react_anim_3p = "hit_react",
 		screen_space_effect = "content/fx/particles/screenspace/screen_stunned_light",
-		sound_event = "wwise/events/player/play_player_get_hit_light_2d",
+		sound_event = "wwise/events/player/play_player_get_hit_light_2d"
 	},
 	berzerker_combo = {
 		hit_react_anim_1p = "shake_medium",
@@ -606,20 +606,20 @@ disorientation_settings.disorientation_templates = {
 			start_anim = "hit_stun_medium",
 			start_anim_3p = "hit_stun_medium",
 			stun_duration = 0.35,
-			stun_immunity_time_buff = "stun_immune_medium",
-		},
+			stun_immunity_time_buff = "stun_immune_medium"
+		}
 	},
 	ogryn_berzerker_combo = {
 		hit_react_anim_1p = "shake_medium",
 		hit_react_anim_3p = "hit_react",
 		movement_speed_buff = "ogryn_stun_movement_speed_up",
 		screen_space_effect = "content/fx/particles/screenspace/screen_stunned_light",
-		sound_event = "wwise/events/player/play_player_get_hit_light_2d",
+		sound_event = "wwise/events/player/play_player_get_hit_light_2d"
 	},
 	trait_bespoke_powersword_2h_p1_trade_overheat_lockout_for_damage = {
 		hit_react_anim_1p = nil,
 		hit_react_anim_3p = nil,
-		sound_event = "wwise/events/player/play_player_get_hit_light_2d",
+		sound_event = "wwise/events/player/play_player_get_hit_light_2d"
 	},
 	friendly_explosion_light = {
 		hit_react_anim_1p = "shake_light",
@@ -637,8 +637,8 @@ disorientation_settings.disorientation_templates = {
 			start_anim = "hit_react",
 			start_anim_3p = "hit_react",
 			stun_duration = 0.5,
-			stun_immunity_time_buff = "stun_immune_short",
-		},
+			stun_immunity_time_buff = "stun_immune_short"
+		}
 	},
 	friendly_explosion_medium = {
 		hit_react_anim_1p = "shake_medium",
@@ -656,8 +656,8 @@ disorientation_settings.disorientation_templates = {
 			start_anim = "hit_react",
 			start_anim_3p = "hit_react",
 			stun_duration = 0.7,
-			stun_immunity_time_buff = "stun_immune_medium",
-		},
+			stun_immunity_time_buff = "stun_immune_medium"
+		}
 	},
 	friendly_explosion_heavy = {
 		hit_react_anim_1p = "shake_heavy",
@@ -675,9 +675,9 @@ disorientation_settings.disorientation_templates = {
 			start_anim = "hit_react",
 			start_anim_3p = "hit_react",
 			stun_duration = 1.25,
-			stun_immunity_time_buff = "stun_immune_very_long",
-		},
-	},
+			stun_immunity_time_buff = "stun_immune_very_long"
+		}
+	}
 }
 disorientation_settings.disorientation_types = table.enum(unpack(table.keys(disorientation_settings.disorientation_templates)))
 

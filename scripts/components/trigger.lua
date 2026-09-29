@@ -25,7 +25,7 @@ Trigger.init = function (self, unit)
 			action_location_name_full = action_location_name_full,
 			action_location_name_short = action_location_name_short,
 			action_player_side = action_player_side,
-			action_machine_target = action_on_machine,
+			action_machine_target = action_on_machine
 		}
 
 		trigger_extension:setup_from_component(trigger_condition, condition_evaluates_bots, trigger_action, action_parameters, only_once, start_active, volume_type, target_extension_name)
@@ -98,7 +98,7 @@ Trigger.component_data = {
 	start_active = {
 		ui_name = "Start Active",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	trigger_condition = {
 		category = "Condition",
@@ -114,7 +114,7 @@ Trigger.component_data = {
 			"at_least_one_boss_inside",
 			"at_least_one_player_inside",
 			"only_enter",
-			"luggable_inside",
+			"luggable_inside"
 		},
 		options_values = {
 			"all_alive_players_inside",
@@ -125,8 +125,8 @@ Trigger.component_data = {
 			"at_least_one_boss_inside",
 			"at_least_one_player_inside",
 			"only_enter",
-			"luggable_inside",
-		},
+			"luggable_inside"
+		}
 	},
 	only_once = {
 		category = "Condition",
@@ -136,19 +136,19 @@ Trigger.component_data = {
 		options_keys = {
 			"false",
 			"only_once_per_unit",
-			"only_once_for_all_units",
+			"only_once_for_all_units"
 		},
 		options_values = {
 			"none",
 			"only_once_per_unit",
-			"only_once_for_all_units",
-		},
+			"only_once_for_all_units"
+		}
 	},
 	condition_evaluates_bots = {
 		category = "Condition",
 		ui_name = "Include Bots",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	trigger_action = {
 		category = "Action",
@@ -159,14 +159,14 @@ Trigger.component_data = {
 			"send_flow",
 			"set_location",
 			"safe_volume",
-			"vector_field",
+			"vector_field"
 		},
 		options_values = {
 			"send_flow",
 			"set_location",
 			"safe_volume",
-			"vector_field",
-		},
+			"vector_field"
+		}
 	},
 	action_target = {
 		category = "Action",
@@ -179,7 +179,7 @@ Trigger.component_data = {
 			"entering_unit",
 			"exiting_unit",
 			"entering_and_exiting_unit",
-			"units_in_volume",
+			"units_in_volume"
 		},
 		options_values = {
 			"none",
@@ -187,8 +187,8 @@ Trigger.component_data = {
 			"entering_unit",
 			"exiting_unit",
 			"entering_and_exiting_unit",
-			"units_in_volume",
-		},
+			"units_in_volume"
+		}
 	},
 	action_on_machine = {
 		category = "Action",
@@ -198,37 +198,37 @@ Trigger.component_data = {
 		options_keys = {
 			"server",
 			"client",
-			"server_and_client",
+			"server_and_client"
 		},
 		options_values = {
 			"server",
 			"client",
-			"server_and_client",
-		},
+			"server_and_client"
+		}
 	},
 	action_location_name = {
 		category = "Action",
 		ui_name = "Location Name",
 		ui_type = "text_box",
-		value = "loc_location_name",
+		value = "loc_location_name"
 	},
 	action_location_name_full = {
 		category = "Action",
 		ui_name = "Location Name (Full)",
 		ui_type = "text_box",
-		value = "loc_location_name_full",
+		value = "loc_location_name_full"
 	},
 	action_location_name_short = {
 		category = "Action",
 		ui_name = "Location Name (Short)",
 		ui_type = "text_box",
-		value = "loc_location_name_short",
+		value = "loc_location_name_short"
 	},
 	action_player_side = {
 		category = "Action",
 		ui_name = "Player Side",
 		ui_type = "text_box",
-		value = "heroes",
+		value = "heroes"
 	},
 	volume_type = {
 		ui_name = "Volume Type",
@@ -244,7 +244,7 @@ Trigger.component_data = {
 			"content/volume_types/player_instakill",
 			"content/volume_types/level_prop_trigger",
 			"content/volume_types/end_zone",
-			"content/volume_types/safe_volume",
+			"content/volume_types/safe_volume"
 		},
 		options_values = {
 			"content/volume_types/minion_trigger",
@@ -256,8 +256,8 @@ Trigger.component_data = {
 			"content/volume_types/player_instakill",
 			"content/volume_types/level_prop_trigger",
 			"content/volume_types/end_zone",
-			"content/volume_types/safe_volume",
-		},
+			"content/volume_types/safe_volume"
+		}
 	},
 	target_extension_name = {
 		ui_name = "Target Extension Name",
@@ -266,31 +266,31 @@ Trigger.component_data = {
 		options_keys = {
 			"PlayerVolumeEventExtension",
 			"MinionVolumeEventExtension",
-			"TriggerVolumeEventExtension",
+			"TriggerVolumeEventExtension"
 		},
 		options_values = {
 			"PlayerVolumeEventExtension",
 			"MinionVolumeEventExtension",
-			"TriggerVolumeEventExtension",
-		},
+			"TriggerVolumeEventExtension"
+		}
 	},
 	inputs = {
 		activate = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		deactivate = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		reset = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"TriggerExtension",
-	},
+		"TriggerExtension"
+	}
 }
 
 return Trigger

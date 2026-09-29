@@ -58,7 +58,7 @@ ViewElementCraftingRecipe.init = function (self, parent, draw_layer, start_scale
 
 	self._widgets_by_name.continue_button_hold.content.size = {
 		420,
-		50,
+		50
 	}
 
 	self:set_empty_message("")
@@ -68,7 +68,7 @@ ViewElementCraftingRecipe.init = function (self, parent, draw_layer, start_scale
 		start_input_action = "hotkey_menu_special_2",
 		timer = 0.5,
 		text = Utf8.upper(Localize("loc_crafting_upgrade_button")),
-		complete_function = callback(self, "_cb_on_continue_pressed"),
+		complete_function = callback(self, "_cb_on_continue_pressed")
 	})
 	self:present_grid_layout({}, ViewElementCraftingRecipeBlueprints)
 end
@@ -97,8 +97,8 @@ end
 ViewElementCraftingRecipe.present_recipe_navigation = function (self, recipes, left_click_callback, optional_on_present_callback, type, additional_data)
 	local layout = {
 		{
-			widget_type = "spacing_vertical",
-		},
+			widget_type = "spacing_vertical"
+		}
 	}
 	local active_recipes = {}
 
@@ -109,7 +109,7 @@ ViewElementCraftingRecipe.present_recipe_navigation = function (self, recipes, l
 			if show_navigation then
 				layout[#layout + 1] = {
 					widget_type = "navigation_button",
-					recipe = recipe,
+					recipe = recipe
 				}
 				active_recipes[#active_recipes + 1] = recipe
 			end
@@ -118,12 +118,12 @@ ViewElementCraftingRecipe.present_recipe_navigation = function (self, recipes, l
 
 	if #active_recipes == 0 then
 		layout[#layout + 1] = {
-			widget_type = "spacing_vertical_large",
+			widget_type = "spacing_vertical_large"
 		}
 	end
 
 	layout[#layout + 1] = {
-		widget_type = "spacing_vertical",
+		widget_type = "spacing_vertical"
 	}
 	self.content.recipes = active_recipes
 	self.content.insufficient_funds = {}
@@ -141,7 +141,7 @@ ViewElementCraftingRecipe.present_recipe_navigation_with_item = function (self, 
 	end
 
 	layout[#layout + 1] = {
-		widget_type = "spacing_vertical",
+		widget_type = "spacing_vertical"
 	}
 
 	local item_pattern = item and item.parent_pattern
@@ -157,7 +157,7 @@ ViewElementCraftingRecipe.present_recipe_navigation_with_item = function (self, 
 		expertise_data = {
 			start = start_value,
 			max_available = max_available_value,
-			max = max_value,
+			max = max_value
 		}
 	end
 
@@ -169,7 +169,7 @@ ViewElementCraftingRecipe.present_recipe_navigation_with_item = function (self, 
 				layout[#layout + 1] = {
 					widget_type = "navigation_button",
 					recipe = recipe,
-					expertise_data = expertise_data,
+					expertise_data = expertise_data
 				}
 				active_recipes[#active_recipes + 1] = recipe
 			end
@@ -178,12 +178,12 @@ ViewElementCraftingRecipe.present_recipe_navigation_with_item = function (self, 
 
 	if #active_recipes == 0 then
 		layout[#layout + 1] = {
-			widget_type = "spacing_vertical_large",
+			widget_type = "spacing_vertical_large"
 		}
 	end
 
 	layout[#layout + 1] = {
-		widget_type = "spacing_vertical",
+		widget_type = "spacing_vertical"
 	}
 	self.content.recipes = active_recipes
 
@@ -206,7 +206,7 @@ local function _push_traitlike_items(layout, widget_type, traits, item_is_locked
 				item = MasterItems.get_item(trait.id),
 				rarity = trait.rarity,
 				value = trait.value,
-				index = i,
+				index = i
 			}
 		end
 	end
@@ -223,12 +223,12 @@ ViewElementCraftingRecipe.present_recipe = function (self, recipe, ingredients, 
 	local layout = {}
 
 	layout[#layout + 1] = {
-		widget_type = "spacing_vertical",
+		widget_type = "spacing_vertical"
 	}
 	layout[#layout + 1] = {
 		widget_type = "title",
 		text = recipe.display_name,
-		unlocalized_text = recipe.unlocalized_display_name,
+		unlocalized_text = recipe.unlocalized_display_name
 	}
 
 	local extra_elements = recipe.extra_elements
@@ -238,14 +238,14 @@ ViewElementCraftingRecipe.present_recipe = function (self, recipe, ingredients, 
 			local element = extra_elements[i]
 
 			layout[#layout + 1] = {
-				widget_type = "spacing_vertical_small",
+				widget_type = "spacing_vertical_small"
 			}
 			layout[#layout + 1] = {
 				widget_type = element.widget_type,
 				element = element,
 				ingredients = ingredients,
 				recipe = recipe,
-				additional_data = additional_data,
+				additional_data = additional_data
 			}
 		end
 	end
@@ -257,12 +257,12 @@ ViewElementCraftingRecipe.present_recipe = function (self, recipe, ingredients, 
 	layout[#layout + 1] = {
 		widget_type = "description",
 		text = recipe.description_text,
-		unlocalized_text = recipe.unlocalized_description_text,
+		unlocalized_text = recipe.unlocalized_description_text
 	}
 
 	if item and recipe.requires_perk_selection then
 		layout[#layout + 1] = {
-			widget_type = "spacing_vertical_small",
+			widget_type = "spacing_vertical_small"
 		}
 
 		_push_traitlike_items(layout, "perk_button", item and item.perks)
@@ -270,7 +270,7 @@ ViewElementCraftingRecipe.present_recipe = function (self, recipe, ingredients, 
 
 	if item and recipe.requires_trait_selection then
 		layout[#layout + 1] = {
-			widget_type = "spacing_vertical_small",
+			widget_type = "spacing_vertical_small"
 		}
 
 		_push_traitlike_items(layout, "trait_button", item and item.traits)
@@ -284,13 +284,13 @@ ViewElementCraftingRecipe.present_recipe = function (self, recipe, ingredients, 
 			layout[#layout + 1] = {
 				widget_type = "expertise_value_max",
 				additional_data = additional_data,
-				item = item,
+				item = item
 			}
 		else
 			layout[#layout + 1] = {
 				widget_type = "expertise_value",
 				additional_data = additional_data,
-				item = item,
+				item = item
 			}
 		end
 
@@ -307,13 +307,13 @@ ViewElementCraftingRecipe.present_recipe = function (self, recipe, ingredients, 
 
 	self.content.costs = costs
 	layout[#layout + 1] = {
-		widget_type = "spacing_vertical_small",
+		widget_type = "spacing_vertical_small"
 	}
 	layout[#layout + 1] = {
-		widget_type = "warning",
+		widget_type = "warning"
 	}
 	layout[#layout + 1] = {
-		widget_type = "spacing_vertical",
+		widget_type = "spacing_vertical"
 	}
 
 	local widgets_by_name = self._widgets_by_name
@@ -358,7 +358,7 @@ ViewElementCraftingRecipe._add_stats_to_layout = function (self, item, layout, a
 		5,
 		3,
 		4,
-		2,
+		2
 	}
 	local compared_sorted_stats = {}
 
@@ -373,7 +373,7 @@ ViewElementCraftingRecipe._add_stats_to_layout = function (self, item, layout, a
 
 	if start_value == max_available then
 		layout[#layout + 1] = {
-			widget_type = "stat_title_max",
+			widget_type = "stat_title_max"
 		}
 
 		for i = 1, num_stats do
@@ -388,19 +388,19 @@ ViewElementCraftingRecipe._add_stats_to_layout = function (self, item, layout, a
 					widget_type = "stat_max",
 					start_stat = start_stat,
 					max_stat = max_stat,
-					display_name = display_name,
+					display_name = display_name
 				}
 
 				if i < num_stats then
 					layout[#layout + 1] = {
-						widget_type = "spacing_vertical_small",
+						widget_type = "spacing_vertical_small"
 					}
 				end
 			end
 		end
 	else
 		layout[#layout + 1] = {
-			widget_type = "stat_title",
+			widget_type = "stat_title"
 		}
 
 		for i = 1, num_stats do
@@ -417,12 +417,12 @@ ViewElementCraftingRecipe._add_stats_to_layout = function (self, item, layout, a
 					start_stat = start_stat,
 					end_stat = end_stat,
 					max_stat = max_stat,
-					display_name = display_name,
+					display_name = display_name
 				}
 
 				if i < num_stats then
 					layout[#layout + 1] = {
-						widget_type = "spacing_vertical_small",
+						widget_type = "spacing_vertical_small"
 					}
 				end
 			end
@@ -477,14 +477,14 @@ ViewElementCraftingRecipe._update_costs_presentation = function (self, costs, ui
 				local text_style = style.text
 				local text_width = Text.text_width(ui_renderer, text, text_style, {
 					1920,
-					100,
+					100
 				})
 				local icon_size = widget.style.texture.size
 
 				widget.offset[1] = total_width
 				widget.content.size = {
 					text_width + icon_size[1] + text_margin,
-					icon_size[2],
+					icon_size[2]
 				}
 				total_width = total_width + text_width + icon_size[1] + text_margin + price_margin
 				widgets[#widgets + 1] = widget

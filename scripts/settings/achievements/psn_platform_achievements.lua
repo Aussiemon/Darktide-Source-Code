@@ -38,7 +38,7 @@ PSNPlatformAchievements.backend_to_platform = {
 	veteran_2_weakspot_hits_during_volley_fire_alternate_fire = 29,
 	zealot_2_kills_of_shocked_enemies_last_15 = 36,
 	zealot_2_stagger_sniper_with_grenade_distance = 35,
-	zelot_2_kill_mutant_charger_with_melee_while_dashing = 34,
+	zelot_2_kill_mutant_charger_with_melee_while_dashing = 34
 }
 PSNPlatformAchievements.show_progress = {
 	nil,
@@ -73,7 +73,7 @@ PSNPlatformAchievements.show_progress = {
 	nil,
 	true,
 	[35] = true,
-	[36] = true,
+	[36] = true
 }
 PSNPlatformAchievements.platform_to_backend = {}
 

@@ -22,7 +22,7 @@ ScannerDisplayView.MINIGAMES = {
 	[MinigameSettings.types.decode_symbols] = MinigameDecodeSymbolsView,
 	[MinigameSettings.types.drill] = MinigameDrillView,
 	[MinigameSettings.types.frequency] = MinigameFrequencyView,
-	[MinigameSettings.types.expedition_map] = MinigameExpeditionMapView,
+	[MinigameSettings.types.expedition_map] = MinigameExpeditionMapView
 }
 
 ScannerDisplayView.init = function (self, settings, context)

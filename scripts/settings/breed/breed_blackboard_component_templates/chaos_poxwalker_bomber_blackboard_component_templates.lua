@@ -9,14 +9,14 @@ local chaos_poxwalker_bomber = {
 		lock_combat_range_switch = "boolean",
 		move_medium = "string",
 		move_state = "string",
-		restricted_combat_range = "string",
+		restricted_combat_range = "string"
 	},
 	weapon_switch = {
 		is_switching_weapons = "boolean",
 		last_weapon_switch_t = "number",
 		wanted_combat_range = "string",
-		wanted_weapon_slot = "string",
-	},
+		wanted_weapon_slot = "string"
+	}
 }
 
 table.merge(chaos_poxwalker_bomber, base_template)
@@ -31,11 +31,11 @@ chaos_poxwalker_bomber.death = {
 	hit_zone_name = "string",
 	is_dead = "boolean",
 	killing_damage_type = "string",
-	staggered_during_lunge = "boolean",
+	staggered_during_lunge = "boolean"
 }
 
 local templates = {
-	chaos_poxwalker_bomber = chaos_poxwalker_bomber,
+	chaos_poxwalker_bomber = chaos_poxwalker_bomber
 }
 
 return templates

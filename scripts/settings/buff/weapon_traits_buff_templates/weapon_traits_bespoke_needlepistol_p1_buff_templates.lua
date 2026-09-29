@@ -28,9 +28,9 @@ templates.weapon_trait_bespoke_needlepistol_p1_target_hit_mass_reduction_on_weak
 	class_name = "buff",
 	predicted = false,
 	conditional_stat_buffs = {
-		[stat_buffs.consumed_hit_mass_modifier_on_weakspot_hit] = 0.5,
+		[stat_buffs.consumed_hit_mass_modifier_on_weakspot_hit] = 0.5
 	},
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 templates.weapon_trait_bespoke_needlepistol_p1_reload_speed_on_slide_parent = {
 	allow_proc_while_active = true,
@@ -45,22 +45,22 @@ templates.weapon_trait_bespoke_needlepistol_p1_reload_speed_on_slide_parent = {
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	add_child_proc_events = {
 		[proc_events.on_kill] = 1,
-		[proc_events.on_minion_death] = 1,
+		[proc_events.on_minion_death] = 1
 	},
 	proc_events = {
 		[proc_events.on_kill] = 1,
 		[proc_events.on_hit] = 1,
-		[proc_events.on_minion_death] = 1,
+		[proc_events.on_minion_death] = 1
 	},
 	specific_check_proc_funcs = {
 		[proc_events.on_kill] = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.on_ranged_close_kill),
 		[proc_events.on_hit] = BrokerBuffUtils.bespoke_needlepistol_close_range_kill_check_proc_hit,
-		[proc_events.on_minion_death] = BrokerBuffUtils.bespoke_needle_pistol_close_range_kill_check_proc_minion_death,
+		[proc_events.on_minion_death] = BrokerBuffUtils.bespoke_needle_pistol_close_range_kill_check_proc_minion_death
 	},
 	specific_proc_func = {
 		[proc_events.on_hit] = BrokerBuffUtils.bespoke_needle_pistol_close_range_kill_proc_hit,
-		[proc_events.on_minion_death] = BrokerBuffUtils.bespoke_needle_pistol_close_range_kill_proc_on_minion_death,
-	},
+		[proc_events.on_minion_death] = BrokerBuffUtils.bespoke_needle_pistol_close_range_kill_proc_on_minion_death
+	}
 }
 templates.weapon_trait_bespoke_needlepistol_p1_reload_speed_on_slide_child = {
 	class_name = "buff",
@@ -69,8 +69,8 @@ templates.weapon_trait_bespoke_needlepistol_p1_reload_speed_on_slide_child = {
 	predicted = false,
 	stack_offset = -1,
 	stat_buffs = {
-		[stat_buffs.reload_speed] = 0.1,
-	},
+		[stat_buffs.reload_speed] = 0.1
+	}
 }
 
 return templates

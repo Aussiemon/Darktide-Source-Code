@@ -6,12 +6,13 @@ local BreedSettings = require("scripts/settings/breed/breed_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local TargetSelectionTemplates = require("scripts/extension_systems/perception/target_selection_templates")
 local armor_types = ArmorSettings.types
+local breed_tags = BreedSettings.tags
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
 local DEFAULT_HEIGHT = BreedSettings.base_player_body_size_heights.human_sized
 local HUMAN_SIZE_VARIATION_RANGE = {
 	0.95,
-	1.08,
+	1.08
 }
 local AVERAGE_HUMAN_SIZE = HUMAN_SIZE_VARIATION_RANGE[1] + (HUMAN_SIZE_VARIATION_RANGE[2] - HUMAN_SIZE_VARIATION_RANGE[1]) * 0.5
 local breed_data = {
@@ -32,17 +33,17 @@ local breed_data = {
 	breed_type = breed_types.player,
 	genders = {
 		"male",
-		"female",
+		"female"
 	},
 	hologram_units = {
 		consumed = "content/characters/player/human/attachments_base/shared/see_through_skeleton/see_through_skeleton_bon",
-		default = "content/characters/player/human/attachments_base/shared/see_through_skeleton/see_through_skeleton",
+		default = "content/characters/player/human/attachments_base/shared/see_through_skeleton/see_through_skeleton"
 	},
 	testify_flags = {
-		spawn_all_enemies = false,
+		spawn_all_enemies = false
 	},
 	tags = {
-		human = true,
+		[breed_tags.human] = true
 	},
 	armor_type = armor_types.player,
 	heights = {
@@ -50,7 +51,7 @@ local breed_data = {
 		sprint = 1.4 / AVERAGE_HUMAN_SIZE,
 		crouch = 1 / AVERAGE_HUMAN_SIZE,
 		slide = 0.85 / AVERAGE_HUMAN_SIZE,
-		vault = 0.9 / AVERAGE_HUMAN_SIZE,
+		vault = 0.9 / AVERAGE_HUMAN_SIZE
 	},
 	size_variation_range = HUMAN_SIZE_VARIATION_RANGE,
 	first_person_pose_scale = AVERAGE_HUMAN_SIZE * 1,
@@ -58,11 +59,11 @@ local breed_data = {
 	fade = {
 		max_distance = 0.9,
 		max_height_difference = 1,
-		min_distance = 0.3,
+		min_distance = 0.3
 	},
 	threat_config = {
 		max_threat = 50,
-		threat_decay_per_second = 5,
+		threat_decay_per_second = 5
 	},
 	target_selection_template = TargetSelectionTemplates.bot_default,
 	hit_zones = {
@@ -70,8 +71,8 @@ local breed_data = {
 			name = hit_zone_names.head,
 			actors = {
 				"c_head",
-				"c_neck",
-			},
+				"c_neck"
+			}
 		},
 		{
 			name = hit_zone_names.torso,
@@ -79,77 +80,77 @@ local breed_data = {
 				"c_hips",
 				"c_spine",
 				"c_spine1",
-				"c_spine2",
-			},
+				"c_spine2"
+			}
 		},
 		{
 			name = hit_zone_names.upper_left_arm,
 			actors = {
 				"c_leftarm",
-				"c_leftshoulder",
-			},
+				"c_leftshoulder"
+			}
 		},
 		{
 			name = hit_zone_names.lower_left_arm,
 			actors = {
 				"c_leftforearm",
-				"c_lefthand",
-			},
+				"c_lefthand"
+			}
 		},
 		{
 			name = hit_zone_names.upper_right_arm,
 			actors = {
 				"c_rightarm",
-				"c_rightshoulder",
-			},
+				"c_rightshoulder"
+			}
 		},
 		{
 			name = hit_zone_names.lower_right_arm,
 			actors = {
 				"c_rightforearm",
-				"c_righthand",
-			},
+				"c_righthand"
+			}
 		},
 		{
 			name = hit_zone_names.upper_left_leg,
 			actors = {
-				"c_leftupleg",
-			},
+				"c_leftupleg"
+			}
 		},
 		{
 			name = hit_zone_names.lower_left_leg,
 			actors = {
 				"c_leftleg",
-				"c_leftfoot",
-			},
+				"c_leftfoot"
+			}
 		},
 		{
 			name = hit_zone_names.upper_right_leg,
 			actors = {
-				"c_rightupleg",
-			},
+				"c_rightupleg"
+			}
 		},
 		{
 			name = hit_zone_names.lower_right_leg,
 			actors = {
 				"c_rightleg",
-				"c_rightfoot",
-			},
+				"c_rightfoot"
+			}
 		},
 		{
 			name = hit_zone_names.afro,
 			actors = {
-				"r_afro",
-			},
+				"r_afro"
+			}
 		},
 		{
 			name = hit_zone_names.center_mass,
 			actors = {
 				"c_hips",
 				"c_spine",
-				"c_spine1",
-			},
-		},
+				"c_spine1"
+			}
+		}
 	},
 	hit_reaction_keys = {
 		catapulting_template = "catapulting_template",
@@ -158,7 +159,7 @@ local breed_data = {
 		ignore_stun_immunity = "ignore_stun_immunity",
 		interrupt_alternate_fire = "interrupt_alternate_fire",
 		push_template = "push_template",
-		toughness_disorientation_type = "toughness_disorientation_type",
+		toughness_disorientation_type = "toughness_disorientation_type"
 	},
 	hit_reaction_stun_types = {
 		fumbled = "fumbled",
@@ -168,23 +169,23 @@ local breed_data = {
 		toughness_broken_default = "medium",
 		toughness_broken_ranged = "ranged",
 		toughness_broken_ranged_sprinting = "ranged_sprinting",
-		toughness_burning = "toughness_burning",
+		toughness_burning = "toughness_burning"
 	},
 	ledge_finder_tweak_data = {
 		player_height = 1.21,
 		player_width = 0.5,
-		significant_obstacle_distance = 1.31,
+		significant_obstacle_distance = 1.31
 	},
 	ledge_vault_tweak_values = {
 		allowed_flat_distance_to_ledge = 1.5,
 		allowed_height_distance_max = 1.3,
 		allowed_height_distance_min = 0.31,
 		inair_allowed_height_distance_max = 0.65,
-		inair_allowed_height_distance_min = 0.31,
+		inair_allowed_height_distance_min = 0.31
 	},
 	spawn_buffs = {
 		"grimoire_damage_tick",
-		"sprint_with_stamina_buff",
+		"sprint_with_stamina_buff"
 	},
 	blackboard_component_config = BotSettings.blackboard_component_config,
 	base_unit_sound_sources = {
@@ -211,7 +212,7 @@ local breed_data = {
 		left_foot = "j_leftfoot",
 		left_toe = "j_lefttoebase",
 		right_foot = "j_rightfoot",
-		right_toe = "j_righttoebase",
+		right_toe = "j_righttoebase"
 	},
 	base_unit_fx_sources = {
 		fx_anim_01 = "fx_anim_01",
@@ -238,22 +239,22 @@ local breed_data = {
 		left_toe = "j_lefttoebase",
 		right_foot = "j_rightfoot",
 		right_toe = "j_righttoebase",
-		root = "root_point",
+		root = "root_point"
 	},
 	sfx = {
 		footstep = "player_footstep",
 		footstep_dodge = "player_footstep_dodge",
 		footstep_jump = "player_footstep_jump",
 		footstep_land = "player_footstep_land",
-		sliding_alias = "player_slide_loop",
+		sliding_alias = "player_slide_loop"
 	},
 	vfx = {
 		footstep = "player_footstep",
 		footstep_dodge = "player_footstep_dodge",
 		footstep_jump = "player_footstep_jump",
 		footstep_land = "player_footstep_land",
-		sliding_alias = "player_slide_loop",
-	},
+		sliding_alias = "player_slide_loop"
+	}
 }
 
 return breed_data

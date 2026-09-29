@@ -134,7 +134,7 @@ HudElementPlayerBuffs._add_buff = function (self, buff_instance)
 		activated_time = math.huge,
 		start_index = index,
 		buff_category = buff_category,
-		buff_name = buff_template.name,
+		buff_name = buff_template.name
 	}
 end
 
@@ -226,7 +226,7 @@ end
 local RESERVED_SPOTS = {
 	[buff_categories.generic] = 0,
 	[buff_categories.talents] = 0,
-	[buff_categories.weapon_traits] = 0,
+	[buff_categories.weapon_traits] = 0
 }
 local GAP_OFFSET_SIZE = 0.5
 local _number_of_buffs_per_category = {}
@@ -276,7 +276,7 @@ HudElementPlayerBuffs._update_buff_alignments = function (self, force_update, dt
 			local buff_data = active_buffs_data[i]
 			local buff_category = buff_data.buff_category or buff_categories.generic
 
-			if buff_data.show and not buff_data.is_negative then
+			if buff_data.show and buff_data.widget and not buff_data.is_negative then
 				_number_of_buffs_per_category[buff_category] = (_number_of_buffs_per_category[buff_category] or 0) + 1
 			end
 		end
@@ -421,7 +421,7 @@ HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 					end
 
 					if is_negative then
-						if self._old_active_negative_buffs >= QUATER_MAX_BUFF then
+						if self._old_active_negative_buffs >= QUATER_MAX_BUFF or self._active_negative_buffs >= QUATER_MAX_BUFF then
 							break
 						end
 
@@ -433,7 +433,7 @@ HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 
 						self._active_negative_buffs = self._active_negative_buffs + 1
 					else
-						if self._old_active_positive_buffs >= THREE_QUATER_MAX_BUFF then
+						if self._old_active_positive_buffs >= THREE_QUATER_MAX_BUFF or self._active_positive_buffs >= THREE_QUATER_MAX_BUFF then
 							break
 						end
 
@@ -520,7 +520,7 @@ HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 				if content.text and content.text ~= "" then
 					local buff_size = widget.size or {
 						38,
-						38,
+						38
 					}
 					local text_width, text_height = self:_text_size(ui_renderer, content.text, text_style, buff_size)
 					local text_margin = 5

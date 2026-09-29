@@ -10,7 +10,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__binharic_long_aggressive_03",
 			"loc_cryptic_c__binharic_long_aggressive_04",
 			"loc_cryptic_c__binharic_long_aggressive_05",
-			"loc_cryptic_c__binharic_long_aggressive_06",
+			"loc_cryptic_c__binharic_long_aggressive_06"
 		},
 		sound_events_duration = {
 			2,
@@ -18,9 +18,9 @@ local cryptic_cryptic_c = {
 			2,
 			2,
 			2,
-			2,
+			2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	binharic_long_hurt = {
 		randomize_indexes_n = 0,
@@ -31,7 +31,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__binharic_long_hurt_03",
 			"loc_cryptic_c__binharic_long_hurt_04",
 			"loc_cryptic_c__binharic_long_hurt_05",
-			"loc_cryptic_c__binharic_long_hurt_06",
+			"loc_cryptic_c__binharic_long_hurt_06"
 		},
 		sound_events_duration = {
 			2,
@@ -39,9 +39,9 @@ local cryptic_cryptic_c = {
 			2,
 			2,
 			2,
-			1.957958,
+			1.957958
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	binharic_medium_aggressive = {
 		randomize_indexes_n = 0,
@@ -50,15 +50,15 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__binharic_medium_aggressive_01",
 			"loc_cryptic_c__binharic_medium_aggressive_02",
 			"loc_cryptic_c__binharic_medium_aggressive_03",
-			"loc_cryptic_c__binharic_medium_aggressive_04",
+			"loc_cryptic_c__binharic_medium_aggressive_04"
 		},
 		sound_events_duration = {
 			3.45678,
 			3.45678,
 			3.45678,
-			3.45678,
+			3.45678
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	binharic_medium_hurt = {
 		randomize_indexes_n = 0,
@@ -67,15 +67,15 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__binharic_medium_hurt_01",
 			"loc_cryptic_c__binharic_medium_hurt_02",
 			"loc_cryptic_c__binharic_medium_hurt_03",
-			"loc_cryptic_c__binharic_medium_hurt_04",
+			"loc_cryptic_c__binharic_medium_hurt_04"
 		},
 		sound_events_duration = {
 			0.8,
 			0.8,
 			0.8,
-			0.8,
+			0.8
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	binharic_short_aggressive = {
 		randomize_indexes_n = 0,
@@ -84,15 +84,15 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__binharic_short_aggressive_01",
 			"loc_cryptic_c__binharic_short_aggressive_02",
 			"loc_cryptic_c__binharic_short_aggressive_03",
-			"loc_cryptic_c__binharic_short_aggressive_04",
+			"loc_cryptic_c__binharic_short_aggressive_04"
 		},
 		sound_events_duration = {
 			0.5,
 			0.5,
 			0.5,
-			0.5,
+			0.5
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	binharic_short_hurt = {
 		randomize_indexes_n = 0,
@@ -101,15 +101,15 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__binharic_short_hurt_01",
 			"loc_cryptic_c__binharic_short_hurt_02",
 			"loc_cryptic_c__binharic_short_hurt_03",
-			"loc_cryptic_c__binharic_short_hurt_04",
+			"loc_cryptic_c__binharic_short_hurt_04"
 		},
 		sound_events_duration = {
 			0.5,
 			0.5,
 			0.5,
-			0.5,
+			0.5
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	cryptic_ability_01_a = {
 		randomize_indexes_n = 0,
@@ -122,7 +122,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__ability_01_a_05",
 			"loc_cryptic_c__ability_01_a_06",
 			"loc_cryptic_c__ability_01_a_07",
-			"loc_cryptic_c__ability_01_a_08",
+			"loc_cryptic_c__ability_01_a_08"
 		},
 		sound_events_duration = {
 			2.48701,
@@ -132,9 +132,9 @@ local cryptic_cryptic_c = {
 			1.510792,
 			1.010396,
 			1.497208,
-			1.96526,
+			1.96526
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	cryptic_ability_02_a = {
 		randomize_indexes_n = 0,
@@ -147,7 +147,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__ability_02_a_05",
 			"loc_cryptic_c__ability_02_a_06",
 			"loc_cryptic_c__ability_02_a_07",
-			"loc_cryptic_c__ability_02_a_08",
+			"loc_cryptic_c__ability_02_a_08"
 		},
 		sound_events_duration = {
 			2.154229,
@@ -157,9 +157,9 @@ local cryptic_cryptic_c = {
 			1.989438,
 			2.14174,
 			2.877448,
-			2.797813,
+			2.797813
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	cryptic_ability_03_a = {
 		randomize_indexes_n = 0,
@@ -172,7 +172,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__ability_03_a_05",
 			"loc_cryptic_c__ability_03_a_06",
 			"loc_cryptic_c__ability_03_a_07",
-			"loc_cryptic_c__ability_03_a_08",
+			"loc_cryptic_c__ability_03_a_08"
 		},
 		sound_events_duration = {
 			0.683792,
@@ -182,9 +182,9 @@ local cryptic_cryptic_c = {
 			1.457469,
 			0.781156,
 			1.675469,
-			1.150344,
+			1.150344
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	cryptic_blitz_01_a = {
 		randomize_indexes_n = 0,
@@ -197,7 +197,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__blitz_01_a_05",
 			"loc_cryptic_c__blitz_01_a_06",
 			"loc_cryptic_c__blitz_01_a_07",
-			"loc_cryptic_c__blitz_01_a_08",
+			"loc_cryptic_c__blitz_01_a_08"
 		},
 		sound_events_duration = {
 			1.725063,
@@ -207,9 +207,9 @@ local cryptic_cryptic_c = {
 			1.732396,
 			1.699948,
 			1.551385,
-			1.62574,
+			1.62574
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	cryptic_blitz_02_a = {
 		randomize_indexes_n = 0,
@@ -222,7 +222,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__blitz_02_a_05",
 			"loc_cryptic_c__blitz_02_a_06",
 			"loc_cryptic_c__blitz_02_a_07",
-			"loc_cryptic_c__blitz_02_a_08",
+			"loc_cryptic_c__blitz_02_a_08"
 		},
 		sound_events_duration = {
 			1.04225,
@@ -232,9 +232,9 @@ local cryptic_cryptic_c = {
 			1.517698,
 			1.296427,
 			1.563375,
-			1.659438,
+			1.659438
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	cryptic_blitz_03_a = {
 		randomize_indexes_n = 0,
@@ -243,15 +243,15 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__blitz_03_a_03",
 			"loc_cryptic_c__blitz_03_a_04",
 			"loc_cryptic_c__blitz_03_a_05",
-			"loc_cryptic_c__blitz_03_a_06",
+			"loc_cryptic_c__blitz_03_a_06"
 		},
 		sound_events_duration = {
 			1.273344,
 			1.279469,
 			1.965573,
-			1.635615,
+			1.635615
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	cryptic_seen_killstreak_acryptic = {
 		randomize_indexes_n = 0,
@@ -268,7 +268,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__cryptic_seen_killstreak_acryptic_09",
 			"loc_cryptic_c__cryptic_seen_killstreak_acryptic_10",
 			"loc_cryptic_c__cryptic_seen_killstreak_acryptic_11",
-			"loc_cryptic_c__cryptic_seen_killstreak_acryptic_12",
+			"loc_cryptic_c__cryptic_seen_killstreak_acryptic_12"
 		},
 		sound_events_duration = {
 			1.93126,
@@ -282,9 +282,9 @@ local cryptic_cryptic_c = {
 			2.879615,
 			2.438042,
 			2.17426,
-			2.6,
+			2.6
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	cryptic_seen_killstreak_cryptic = {
 		randomize_indexes_n = 0,
@@ -293,15 +293,15 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__cryptic_seen_killstreak_cryptic_01",
 			"loc_cryptic_c__cryptic_seen_killstreak_cryptic_02",
 			"loc_cryptic_c__cryptic_seen_killstreak_cryptic_03",
-			"loc_cryptic_c__cryptic_seen_killstreak_cryptic_04",
+			"loc_cryptic_c__cryptic_seen_killstreak_cryptic_04"
 		},
 		sound_events_duration = {
 			2.90826,
 			2.4,
 			3.248125,
-			2.832594,
+			2.832594
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	cryptic_start_revive_acryptic = {
 		randomize_indexes_n = 0,
@@ -321,7 +321,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__cryptic_start_revive_acryptic_12",
 			"loc_cryptic_c__cryptic_start_revive_acryptic_13",
 			"loc_cryptic_c__cryptic_start_revive_acryptic_14",
-			"loc_cryptic_c__cryptic_start_revive_acryptic_15",
+			"loc_cryptic_c__cryptic_start_revive_acryptic_15"
 		},
 		sound_events_duration = {
 			1.992969,
@@ -338,9 +338,9 @@ local cryptic_cryptic_c = {
 			2.036896,
 			1.597573,
 			2.936542,
-			3.20351,
+			3.20351
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	cryptic_start_revive_cryptic = {
 		randomize_indexes_n = 0,
@@ -350,16 +350,16 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__cryptic_start_revive_cryptic_02",
 			"loc_cryptic_c__cryptic_start_revive_cryptic_03",
 			"loc_cryptic_c__cryptic_start_revive_cryptic_04",
-			"loc_cryptic_c__cryptic_start_revive_cryptic_05",
+			"loc_cryptic_c__cryptic_start_revive_cryptic_05"
 		},
 		sound_events_duration = {
 			1.508927,
 			1.869719,
 			2.2,
 			1.6,
-			1.625167,
+			1.625167
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	deployed_ammo_crate_acryptic_low_on_ammo = {
 		randomize_indexes_n = 0,
@@ -376,7 +376,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__found_ammo_acryptic_low_on_ammo_09",
 			"loc_cryptic_c__found_ammo_acryptic_low_on_ammo_10",
 			"loc_cryptic_c__found_ammo_acryptic_low_on_ammo_11",
-			"loc_cryptic_c__found_ammo_acryptic_low_on_ammo_12",
+			"loc_cryptic_c__found_ammo_acryptic_low_on_ammo_12"
 		},
 		sound_events_duration = {
 			2.573344,
@@ -390,7 +390,7 @@ local cryptic_cryptic_c = {
 			1.833781,
 			2.016969,
 			2.800792,
-			2.846385,
+			2.846385
 		},
 		sound_event_weights = {
 			0.08333334,
@@ -404,9 +404,9 @@ local cryptic_cryptic_c = {
 			0.08333334,
 			0.08333334,
 			0.08333334,
-			0.08333334,
+			0.08333334
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	deployed_ammo_crate_cryptic_low_on_ammo = {
 		randomize_indexes_n = 0,
@@ -415,21 +415,21 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__found_ammo_cryptic_low_on_ammo_01",
 			"loc_cryptic_c__found_ammo_cryptic_low_on_ammo_02",
 			"loc_cryptic_c__found_ammo_cryptic_low_on_ammo_03",
-			"loc_cryptic_c__found_ammo_cryptic_low_on_ammo_04",
+			"loc_cryptic_c__found_ammo_cryptic_low_on_ammo_04"
 		},
 		sound_events_duration = {
 			2.443135,
 			2.265365,
 			2.137563,
-			1.380385,
+			1.380385
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25,
+			0.25
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	found_ammo_acryptic_low_on_ammo = {
 		randomize_indexes_n = 0,
@@ -446,7 +446,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__found_ammo_acryptic_low_on_ammo_09",
 			"loc_cryptic_c__found_ammo_acryptic_low_on_ammo_10",
 			"loc_cryptic_c__found_ammo_acryptic_low_on_ammo_11",
-			"loc_cryptic_c__found_ammo_acryptic_low_on_ammo_12",
+			"loc_cryptic_c__found_ammo_acryptic_low_on_ammo_12"
 		},
 		sound_events_duration = {
 			2.573344,
@@ -460,9 +460,9 @@ local cryptic_cryptic_c = {
 			1.833781,
 			2.016969,
 			2.800792,
-			2.846385,
+			2.846385
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	found_ammo_cryptic_low_on_ammo = {
 		randomize_indexes_n = 0,
@@ -471,15 +471,15 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__found_ammo_cryptic_low_on_ammo_01",
 			"loc_cryptic_c__found_ammo_cryptic_low_on_ammo_02",
 			"loc_cryptic_c__found_ammo_cryptic_low_on_ammo_03",
-			"loc_cryptic_c__found_ammo_cryptic_low_on_ammo_04",
+			"loc_cryptic_c__found_ammo_cryptic_low_on_ammo_04"
 		},
 		sound_events_duration = {
 			2.443135,
 			2.265365,
 			2.137563,
-			1.380385,
+			1.380385
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	found_health_booster_acryptic_low_on_health = {
 		randomize_indexes_n = 0,
@@ -496,7 +496,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__found_health_booster_acryptic_low_on_health_09",
 			"loc_cryptic_c__found_health_booster_acryptic_low_on_health_10",
 			"loc_cryptic_c__found_health_booster_acryptic_low_on_health_11",
-			"loc_cryptic_c__found_health_booster_acryptic_low_on_health_12",
+			"loc_cryptic_c__found_health_booster_acryptic_low_on_health_12"
 		},
 		sound_events_duration = {
 			2.950156,
@@ -510,9 +510,9 @@ local cryptic_cryptic_c = {
 			2.901292,
 			2.537635,
 			2.035354,
-			3.964083,
+			3.964083
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	found_health_booster_cryptic_low_on_health = {
 		randomize_indexes_n = 0,
@@ -521,15 +521,15 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__found_health_booster_cryptic_low_on_health_01",
 			"loc_cryptic_c__found_health_booster_cryptic_low_on_health_02",
 			"loc_cryptic_c__found_health_booster_cryptic_low_on_health_03",
-			"loc_cryptic_c__found_health_booster_cryptic_low_on_health_04",
+			"loc_cryptic_c__found_health_booster_cryptic_low_on_health_04"
 		},
 		sound_events_duration = {
 			2.1,
 			2.045917,
 			1.527865,
-			3.63174,
+			3.63174
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	found_health_station_acryptic_low_on_health = {
 		randomize_indexes_n = 0,
@@ -546,7 +546,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__found_health_booster_acryptic_low_on_health_09",
 			"loc_cryptic_c__found_health_booster_acryptic_low_on_health_10",
 			"loc_cryptic_c__found_health_booster_acryptic_low_on_health_11",
-			"loc_cryptic_c__found_health_booster_acryptic_low_on_health_12",
+			"loc_cryptic_c__found_health_booster_acryptic_low_on_health_12"
 		},
 		sound_events_duration = {
 			2.950156,
@@ -560,7 +560,7 @@ local cryptic_cryptic_c = {
 			2.901292,
 			2.537635,
 			2.035354,
-			3.964083,
+			3.964083
 		},
 		sound_event_weights = {
 			0.08333334,
@@ -574,9 +574,9 @@ local cryptic_cryptic_c = {
 			0.08333334,
 			0.08333334,
 			0.08333334,
-			0.08333334,
+			0.08333334
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	found_health_station_cryptic_low_on_health = {
 		randomize_indexes_n = 0,
@@ -585,21 +585,21 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__found_health_booster_cryptic_low_on_health_01",
 			"loc_cryptic_c__found_health_booster_cryptic_low_on_health_02",
 			"loc_cryptic_c__found_health_booster_cryptic_low_on_health_03",
-			"loc_cryptic_c__found_health_booster_cryptic_low_on_health_04",
+			"loc_cryptic_c__found_health_booster_cryptic_low_on_health_04"
 		},
 		sound_events_duration = {
 			2.1,
 			2.045917,
 			1.527865,
-			3.63174,
+			3.63174
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25,
+			0.25
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	friendly_fire_from_acryptic_to_cryptic = {
 		randomize_indexes_n = 0,
@@ -619,7 +619,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__friendly_fire_from_acryptic_to_cryptic_12",
 			"loc_cryptic_c__friendly_fire_from_acryptic_to_cryptic_13",
 			"loc_cryptic_c__friendly_fire_from_acryptic_to_cryptic_14",
-			"loc_cryptic_c__friendly_fire_from_acryptic_to_cryptic_15",
+			"loc_cryptic_c__friendly_fire_from_acryptic_to_cryptic_15"
 		},
 		sound_events_duration = {
 			3.036635,
@@ -636,9 +636,9 @@ local cryptic_cryptic_c = {
 			1.91101,
 			2,
 			2.6,
-			3.064104,
+			3.064104
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	friendly_fire_from_cryptic_to_cryptic = {
 		randomize_indexes_n = 0,
@@ -648,16 +648,16 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__friendly_fire_from_cryptic_to_cryptic_02",
 			"loc_cryptic_c__friendly_fire_from_cryptic_to_cryptic_03",
 			"loc_cryptic_c__friendly_fire_from_cryptic_to_cryptic_04",
-			"loc_cryptic_c__friendly_fire_from_cryptic_to_cryptic_05",
+			"loc_cryptic_c__friendly_fire_from_cryptic_to_cryptic_05"
 		},
 		sound_events_duration = {
 			2.435917,
 			2.048844,
 			2.447188,
 			2.439438,
-			3,
+			3
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	knocked_down_multiple_times_acryptic = {
 		randomize_indexes_n = 0,
@@ -674,7 +674,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__knocked_down_multiple_times_acryptic_09",
 			"loc_cryptic_c__knocked_down_multiple_times_acryptic_10",
 			"loc_cryptic_c__knocked_down_multiple_times_acryptic_11",
-			"loc_cryptic_c__knocked_down_multiple_times_acryptic_12",
+			"loc_cryptic_c__knocked_down_multiple_times_acryptic_12"
 		},
 		sound_events_duration = {
 			2.208646,
@@ -688,9 +688,9 @@ local cryptic_cryptic_c = {
 			2.799604,
 			2.36224,
 			2.033833,
-			1.82925,
+			1.82925
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	knocked_down_multiple_times_cryptic = {
 		randomize_indexes_n = 0,
@@ -699,15 +699,15 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__knocked_down_multiple_times_cryptic_01",
 			"loc_cryptic_c__knocked_down_multiple_times_cryptic_02",
 			"loc_cryptic_c__knocked_down_multiple_times_cryptic_03",
-			"loc_cryptic_c__knocked_down_multiple_times_cryptic_04",
+			"loc_cryptic_c__knocked_down_multiple_times_cryptic_04"
 		},
 		sound_events_duration = {
 			3.284802,
 			2.562042,
 			3.2,
-			4.047021,
+			4.047021
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	player_death_acryptic = {
 		randomize_indexes_n = 0,
@@ -724,7 +724,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__player_death_acryptic_09",
 			"loc_cryptic_c__player_death_acryptic_10",
 			"loc_cryptic_c__player_death_acryptic_11",
-			"loc_cryptic_c__player_death_acryptic_12",
+			"loc_cryptic_c__player_death_acryptic_12"
 		},
 		sound_events_duration = {
 			2.480708,
@@ -738,9 +738,9 @@ local cryptic_cryptic_c = {
 			2.259656,
 			2.229458,
 			2.031521,
-			2.8,
+			2.8
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	player_death_cryptic = {
 		randomize_indexes_n = 0,
@@ -749,15 +749,15 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__player_death_cryptic_01",
 			"loc_cryptic_c__player_death_cryptic_02",
 			"loc_cryptic_c__player_death_cryptic_03",
-			"loc_cryptic_c__player_death_cryptic_04",
+			"loc_cryptic_c__player_death_cryptic_04"
 		},
 		sound_events_duration = {
 			2.875552,
 			2.535583,
 			3.153563,
-			2.517563,
+			2.517563
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_acryptic_cover_me = {
 		randomize_indexes_n = 0,
@@ -771,7 +771,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__response_for_acryptic_cover_me_06",
 			"loc_cryptic_c__response_for_acryptic_cover_me_07",
 			"loc_cryptic_c__response_for_acryptic_cover_me_08",
-			"loc_cryptic_c__response_for_acryptic_cover_me_09",
+			"loc_cryptic_c__response_for_acryptic_cover_me_09"
 		},
 		sound_events_duration = {
 			1.365427,
@@ -782,9 +782,9 @@ local cryptic_cryptic_c = {
 			1.410781,
 			2.561073,
 			1.932604,
-			1.712563,
+			1.712563
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_acryptic_critical_health = {
 		randomize_indexes_n = 0,
@@ -798,7 +798,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__response_for_acryptic_critical_health_06",
 			"loc_cryptic_c__response_for_acryptic_critical_health_07",
 			"loc_cryptic_c__response_for_acryptic_critical_health_08",
-			"loc_cryptic_c__response_for_acryptic_critical_health_09",
+			"loc_cryptic_c__response_for_acryptic_critical_health_09"
 		},
 		sound_events_duration = {
 			0.966333,
@@ -809,9 +809,9 @@ local cryptic_cryptic_c = {
 			2.254052,
 			1.5285,
 			3.222719,
-			2.56351,
+			2.56351
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_acryptic_disabled_by_chaos_hound = {
 		randomize_indexes_n = 0,
@@ -825,7 +825,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__response_for_acryptic_disabled_by_chaos_hound_06",
 			"loc_cryptic_c__response_for_acryptic_disabled_by_chaos_hound_07",
 			"loc_cryptic_c__response_for_acryptic_disabled_by_chaos_hound_08",
-			"loc_cryptic_c__response_for_acryptic_disabled_by_chaos_hound_09",
+			"loc_cryptic_c__response_for_acryptic_disabled_by_chaos_hound_09"
 		},
 		sound_events_duration = {
 			1.529573,
@@ -836,9 +836,9 @@ local cryptic_cryptic_c = {
 			2,
 			2.361094,
 			2.841938,
-			2.828375,
+			2.828375
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_acryptic_disabled_by_enemy = {
 		randomize_indexes_n = 0,
@@ -852,7 +852,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__response_for_acryptic_disabled_by_enemy_06",
 			"loc_cryptic_c__response_for_acryptic_disabled_by_enemy_07",
 			"loc_cryptic_c__response_for_acryptic_disabled_by_enemy_08",
-			"loc_cryptic_c__response_for_acryptic_disabled_by_enemy_09",
+			"loc_cryptic_c__response_for_acryptic_disabled_by_enemy_09"
 		},
 		sound_events_duration = {
 			2.6,
@@ -863,9 +863,9 @@ local cryptic_cryptic_c = {
 			2.2,
 			2.334813,
 			1.976135,
-			2.1,
+			2.1
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_acryptic_enemy_kill_monster = {
 		randomize_indexes_n = 0,
@@ -879,7 +879,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__response_for_acryptic_enemy_kill_monster_06",
 			"loc_cryptic_c__response_for_acryptic_enemy_kill_monster_07",
 			"loc_cryptic_c__response_for_acryptic_enemy_kill_monster_08",
-			"loc_cryptic_c__response_for_acryptic_enemy_kill_monster_09",
+			"loc_cryptic_c__response_for_acryptic_enemy_kill_monster_09"
 		},
 		sound_events_duration = {
 			2.503521,
@@ -890,9 +890,9 @@ local cryptic_cryptic_c = {
 			2.499094,
 			1.94424,
 			4.130708,
-			2.97824,
+			2.97824
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_acryptic_knocked_down_3 = {
 		randomize_indexes_n = 0,
@@ -906,7 +906,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__response_for_acryptic_knocked_down_3_06",
 			"loc_cryptic_c__response_for_acryptic_knocked_down_3_07",
 			"loc_cryptic_c__response_for_acryptic_knocked_down_3_08",
-			"loc_cryptic_c__response_for_acryptic_knocked_down_3_09",
+			"loc_cryptic_c__response_for_acryptic_knocked_down_3_09"
 		},
 		sound_events_duration = {
 			1.346927,
@@ -917,9 +917,9 @@ local cryptic_cryptic_c = {
 			1.717531,
 			2,
 			3.4,
-			2.290177,
+			2.290177
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_acryptic_ledge_hanging = {
 		randomize_indexes_n = 0,
@@ -933,7 +933,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__response_for_acryptic_ledge_hanging_06",
 			"loc_cryptic_c__response_for_acryptic_ledge_hanging_07",
 			"loc_cryptic_c__response_for_acryptic_ledge_hanging_08",
-			"loc_cryptic_c__response_for_acryptic_ledge_hanging_09",
+			"loc_cryptic_c__response_for_acryptic_ledge_hanging_09"
 		},
 		sound_events_duration = {
 			2.2,
@@ -944,9 +944,9 @@ local cryptic_cryptic_c = {
 			2.174479,
 			2.442885,
 			3.941708,
-			1.37276,
+			1.37276
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_acryptic_seen_killstreak_cryptic = {
 		randomize_indexes_n = 0,
@@ -960,7 +960,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__response_for_acryptic_seen_killstreak_cryptic_06",
 			"loc_cryptic_c__response_for_acryptic_seen_killstreak_cryptic_07",
 			"loc_cryptic_c__response_for_acryptic_seen_killstreak_cryptic_08",
-			"loc_cryptic_c__response_for_acryptic_seen_killstreak_cryptic_09",
+			"loc_cryptic_c__response_for_acryptic_seen_killstreak_cryptic_09"
 		},
 		sound_events_duration = {
 			1.4,
@@ -971,9 +971,9 @@ local cryptic_cryptic_c = {
 			3.674375,
 			2.677542,
 			2.8,
-			2.172042,
+			2.172042
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_acryptic_start_revive_cryptic = {
 		randomize_indexes_n = 0,
@@ -987,7 +987,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__response_for_acryptic_start_revive_cryptic_06",
 			"loc_cryptic_c__response_for_acryptic_start_revive_cryptic_07",
 			"loc_cryptic_c__response_for_acryptic_start_revive_cryptic_08",
-			"loc_cryptic_c__response_for_acryptic_start_revive_cryptic_09",
+			"loc_cryptic_c__response_for_acryptic_start_revive_cryptic_09"
 		},
 		sound_events_duration = {
 			2.325948,
@@ -998,9 +998,9 @@ local cryptic_cryptic_c = {
 			4.173458,
 			3.687292,
 			4.735156,
-			2.679927,
+			2.679927
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_cryptic_cover_me = {
 		randomize_indexes_n = 0,
@@ -1008,14 +1008,14 @@ local cryptic_cryptic_c = {
 		sound_events = {
 			"loc_cryptic_c__response_for_cryptic_cover_me_01",
 			"loc_cryptic_c__response_for_cryptic_cover_me_02",
-			"loc_cryptic_c__response_for_cryptic_cover_me_03",
+			"loc_cryptic_c__response_for_cryptic_cover_me_03"
 		},
 		sound_events_duration = {
 			2.124167,
 			2.657521,
-			2.349802,
+			2.349802
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_cryptic_critical_health = {
 		randomize_indexes_n = 0,
@@ -1023,14 +1023,14 @@ local cryptic_cryptic_c = {
 		sound_events = {
 			"loc_cryptic_c__response_for_cryptic_critical_health_01",
 			"loc_cryptic_c__response_for_cryptic_critical_health_02",
-			"loc_cryptic_c__response_for_cryptic_critical_health_03",
+			"loc_cryptic_c__response_for_cryptic_critical_health_03"
 		},
 		sound_events_duration = {
 			2.170094,
 			2.4,
-			1.97126,
+			1.97126
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_cryptic_disabled_by_chaos_hound = {
 		randomize_indexes_n = 0,
@@ -1038,14 +1038,14 @@ local cryptic_cryptic_c = {
 		sound_events = {
 			"loc_cryptic_c__response_for_cryptic_disabled_by_chaos_hound_01",
 			"loc_cryptic_c__response_for_cryptic_disabled_by_chaos_hound_02",
-			"loc_cryptic_c__response_for_cryptic_disabled_by_chaos_hound_03",
+			"loc_cryptic_c__response_for_cryptic_disabled_by_chaos_hound_03"
 		},
 		sound_events_duration = {
 			1.378,
 			2,
-			1.7,
+			1.7
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_cryptic_disabled_by_enemy = {
 		randomize_indexes_n = 0,
@@ -1053,14 +1053,14 @@ local cryptic_cryptic_c = {
 		sound_events = {
 			"loc_cryptic_c__response_for_cryptic_disabled_by_enemy_01",
 			"loc_cryptic_c__response_for_cryptic_disabled_by_enemy_02",
-			"loc_cryptic_c__response_for_cryptic_disabled_by_enemy_03",
+			"loc_cryptic_c__response_for_cryptic_disabled_by_enemy_03"
 		},
 		sound_events_duration = {
 			1.864719,
 			2.146542,
-			1.9,
+			1.9
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_cryptic_enemy_kill_monster = {
 		randomize_indexes_n = 0,
@@ -1068,14 +1068,14 @@ local cryptic_cryptic_c = {
 		sound_events = {
 			"loc_cryptic_c__response_for_cryptic_enemy_kill_monster_01",
 			"loc_cryptic_c__response_for_cryptic_enemy_kill_monster_02",
-			"loc_cryptic_c__response_for_cryptic_enemy_kill_monster_03",
+			"loc_cryptic_c__response_for_cryptic_enemy_kill_monster_03"
 		},
 		sound_events_duration = {
 			2.20526,
 			2.346146,
-			3.2,
+			3.2
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_cryptic_knocked_down_3 = {
 		randomize_indexes_n = 0,
@@ -1083,14 +1083,14 @@ local cryptic_cryptic_c = {
 		sound_events = {
 			"loc_cryptic_c__response_for_cryptic_knocked_down_3_01",
 			"loc_cryptic_c__response_for_cryptic_knocked_down_3_02",
-			"loc_cryptic_c__response_for_cryptic_knocked_down_3_03",
+			"loc_cryptic_c__response_for_cryptic_knocked_down_3_03"
 		},
 		sound_events_duration = {
 			2.357656,
 			2.817104,
-			2.452365,
+			2.452365
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_cryptic_ledge_hanging = {
 		randomize_indexes_n = 0,
@@ -1098,14 +1098,14 @@ local cryptic_cryptic_c = {
 		sound_events = {
 			"loc_cryptic_c__response_for_cryptic_ledge_hanging_01",
 			"loc_cryptic_c__response_for_cryptic_ledge_hanging_02",
-			"loc_cryptic_c__response_for_cryptic_ledge_hanging_03",
+			"loc_cryptic_c__response_for_cryptic_ledge_hanging_03"
 		},
 		sound_events_duration = {
 			1.106365,
 			1.82,
-			1.347594,
+			1.347594
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_cryptic_seen_killstreak_cryptic = {
 		randomize_indexes_n = 0,
@@ -1113,14 +1113,14 @@ local cryptic_cryptic_c = {
 		sound_events = {
 			"loc_cryptic_c__response_for_cryptic_seen_killstreak_cryptic_01",
 			"loc_cryptic_c__response_for_cryptic_seen_killstreak_cryptic_02",
-			"loc_cryptic_c__response_for_cryptic_seen_killstreak_cryptic_03",
+			"loc_cryptic_c__response_for_cryptic_seen_killstreak_cryptic_03"
 		},
 		sound_events_duration = {
 			1.613,
 			2.894448,
-			5.5,
+			5.5
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_cryptic_start_revive_cryptic = {
 		randomize_indexes_n = 0,
@@ -1128,14 +1128,14 @@ local cryptic_cryptic_c = {
 		sound_events = {
 			"loc_cryptic_c__response_for_cryptic_start_revive_cryptic_01",
 			"loc_cryptic_c__response_for_cryptic_start_revive_cryptic_02",
-			"loc_cryptic_c__response_for_cryptic_start_revive_cryptic_03",
+			"loc_cryptic_c__response_for_cryptic_start_revive_cryptic_03"
 		},
 		sound_events_duration = {
 			2.2,
 			3.3,
-			3.52749,
+			3.52749
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_friendly_fire_from_cryptic_to_acryptic = {
 		randomize_indexes_n = 0,
@@ -1149,7 +1149,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__response_for_friendly_fire_from_cryptic_to_acryptic_06",
 			"loc_cryptic_c__response_for_friendly_fire_from_cryptic_to_acryptic_07",
 			"loc_cryptic_c__response_for_friendly_fire_from_cryptic_to_acryptic_08",
-			"loc_cryptic_c__response_for_friendly_fire_from_cryptic_to_acryptic_09",
+			"loc_cryptic_c__response_for_friendly_fire_from_cryptic_to_acryptic_09"
 		},
 		sound_events_duration = {
 			1.085406,
@@ -1160,9 +1160,9 @@ local cryptic_cryptic_c = {
 			2.907427,
 			1.757198,
 			2.257052,
-			1.629667,
+			1.629667
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_friendly_fire_from_cryptic_to_cryptic = {
 		randomize_indexes_n = 0,
@@ -1170,14 +1170,14 @@ local cryptic_cryptic_c = {
 		sound_events = {
 			"loc_cryptic_c__response_for_friendly_fire_from_cryptic_to_cryptic_01",
 			"loc_cryptic_c__response_for_friendly_fire_from_cryptic_to_cryptic_02",
-			"loc_cryptic_c__response_for_friendly_fire_from_cryptic_to_cryptic_03",
+			"loc_cryptic_c__response_for_friendly_fire_from_cryptic_to_cryptic_03"
 		},
 		sound_events_duration = {
 			2.2,
 			1.645156,
-			2.547469,
+			2.547469
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_pinned_by_enemies_acryptic = {
 		randomize_indexes_n = 0,
@@ -1191,7 +1191,7 @@ local cryptic_cryptic_c = {
 			"loc_cryptic_c__response_for_pinned_by_enemies_acryptic_06",
 			"loc_cryptic_c__response_for_pinned_by_enemies_acryptic_07",
 			"loc_cryptic_c__response_for_pinned_by_enemies_acryptic_08",
-			"loc_cryptic_c__response_for_pinned_by_enemies_acryptic_09",
+			"loc_cryptic_c__response_for_pinned_by_enemies_acryptic_09"
 		},
 		sound_events_duration = {
 			2.61851,
@@ -1202,9 +1202,9 @@ local cryptic_cryptic_c = {
 			2.262323,
 			2.02076,
 			2.046625,
-			3.24499,
+			3.24499
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_pinned_by_enemies_cryptic = {
 		randomize_indexes_n = 0,
@@ -1212,15 +1212,15 @@ local cryptic_cryptic_c = {
 		sound_events = {
 			"loc_cryptic_c__response_for_pinned_by_enemies_cryptic_01",
 			"loc_cryptic_c__response_for_pinned_by_enemies_cryptic_02",
-			"loc_cryptic_c__response_for_pinned_by_enemies_cryptic_03",
+			"loc_cryptic_c__response_for_pinned_by_enemies_cryptic_03"
 		},
 		sound_events_duration = {
 			1.330271,
 			2.01549,
-			2.488938,
+			2.488938
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("cryptic_cryptic_c", cryptic_cryptic_c)

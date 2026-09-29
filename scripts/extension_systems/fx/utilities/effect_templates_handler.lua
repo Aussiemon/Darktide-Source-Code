@@ -18,7 +18,7 @@ EffectTemplatesHandler.init = function (self, max_num_template_effects, allow_te
 			template = nil,
 			buffer_index = i,
 			template_data = {},
-			optional_position = Vector3Box(Vector3.invalid_vector()),
+			optional_position = Vector3Box(Vector3.invalid_vector())
 		}
 	end
 

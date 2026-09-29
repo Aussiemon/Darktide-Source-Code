@@ -13,7 +13,7 @@ local mission_vo_km_enforcer_twins_ogryn_a = {
 			"loc_ogryn_a__enemy_kill_monster_07",
 			"loc_ogryn_a__enemy_kill_monster_08",
 			"loc_ogryn_a__enemy_kill_monster_09",
-			"loc_ogryn_a__enemy_kill_monster_10",
+			"loc_ogryn_a__enemy_kill_monster_10"
 		},
 		sound_events_duration = {
 			1.359938,
@@ -24,7 +24,7 @@ local mission_vo_km_enforcer_twins_ogryn_a = {
 			1.561542,
 			1.433479,
 			2.319417,
-			2.691083,
+			2.691083
 		},
 		sound_event_weights = {
 			0.1111111,
@@ -35,23 +35,23 @@ local mission_vo_km_enforcer_twins_ogryn_a = {
 			0.1111111,
 			0.1111111,
 			0.1111111,
-			0.1111111,
+			0.1111111
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	mission_twins_go_around = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_ogryn_a__mission_stockpile_main_access_02",
+			[1] = "loc_ogryn_a__mission_stockpile_main_access_02"
 		},
 		sound_events_duration = {
-			[1] = 2.304333,
+			[1] = 2.304333
 		},
 		sound_event_weights = {
-			[1] = 1,
+			[1] = 1
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	response_for_enemy_kill_monster_twins = {
 		randomize_indexes_n = 0,
@@ -61,24 +61,24 @@ local mission_vo_km_enforcer_twins_ogryn_a = {
 			"loc_ogryn_a__response_for_enemy_kill_monster_02",
 			"loc_ogryn_a__response_for_enemy_kill_monster_03",
 			"loc_ogryn_a__response_for_enemy_kill_monster_04",
-			"loc_ogryn_a__response_for_enemy_kill_monster_05",
+			"loc_ogryn_a__response_for_enemy_kill_monster_05"
 		},
 		sound_events_duration = {
 			1.104688,
 			1.054083,
 			1.506688,
 			2.287375,
-			1.944229,
+			1.944229
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_km_enforcer_twins_ogryn_a", mission_vo_km_enforcer_twins_ogryn_a)

@@ -8,24 +8,24 @@ local dummy_dlc_settings = {
 	steam_dlc_target = 3710910,
 	ids = {
 		[Backend.AUTH_METHOD_NONE] = {
-			id = 3710910,
+			id = 3710910
 		},
 		[Backend.AUTH_METHOD_STEAM] = {
-			id = 3710910,
+			id = 3710910
 		},
 		[Backend.AUTH_METHOD_XBOXLIVE] = {
-			id = "TESTXBOXID",
+			id = "TESTXBOXID"
 		},
 		[Backend.AUTH_METHOD_PSN] = {
-			id = "TESTPSNID",
+			id = "TESTPSNID"
 		},
 		[Backend.AUTH_METHOD_DEV_USER] = {
-			id = 3710910,
+			id = 3710910
 		},
 		[Backend.AUTH_METHOD_AWS] = {
-			id = 3710910,
-		},
-	},
+			id = 3710910
+		}
+	}
 }
 local dummy_dlc_settings_deluxe = {
 	dlc_id = "test_dlc_deluxe",
@@ -34,24 +34,24 @@ local dummy_dlc_settings_deluxe = {
 	steam_dlc_target = 3710950,
 	ids = {
 		[Backend.AUTH_METHOD_NONE] = {
-			id = 3710950,
+			id = 3710950
 		},
 		[Backend.AUTH_METHOD_STEAM] = {
-			id = 3710950,
+			id = 3710950
 		},
 		[Backend.AUTH_METHOD_XBOXLIVE] = {
-			id = "TESTXBOXIDBUNDLE",
+			id = "TESTXBOXIDBUNDLE"
 		},
 		[Backend.AUTH_METHOD_PSN] = {
-			id = "TESTPSNIDBUNDLE",
+			id = "TESTPSNIDBUNDLE"
 		},
 		[Backend.AUTH_METHOD_DEV_USER] = {
-			id = 3710950,
+			id = 3710950
 		},
 		[Backend.AUTH_METHOD_AWS] = {
-			id = 3710950,
-		},
-	},
+			id = 3710950
+		}
+	}
 }
 local view_settings = {
 	class = "DLCPurchaseView",
@@ -62,15 +62,15 @@ local view_settings = {
 	path = "scripts/ui/views/dlc_purchase_view/dlc_purchase_view",
 	use_transition_ui = false,
 	enter_sound_events = {
-		UISoundEvents.aquilas_vendor_on_enter,
+		UISoundEvents.aquilas_vendor_on_enter
 	},
 	exit_sound_events = {
-		UISoundEvents.aquilas_vendor_on_exit,
+		UISoundEvents.aquilas_vendor_on_exit
 	},
 	dummy_data = {
 		dlc_settings = dummy_dlc_settings,
-		dlc_settings_deluxe = dummy_dlc_settings_deluxe,
-	},
+		dlc_settings_deluxe = dummy_dlc_settings_deluxe
+	}
 }
 
 return settings("DLCPurchaseViewDeclarationSettings", view_settings)

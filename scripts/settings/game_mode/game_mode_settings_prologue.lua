@@ -15,7 +15,7 @@ local settings = {
 	vaulting_allowed = true,
 	states = {
 		"running",
-		"prologue_complete",
+		"prologue_complete"
 	},
 	side_compositions = {
 		{
@@ -23,36 +23,36 @@ local settings = {
 			name = "heroes",
 			relations = {
 				enemy = {
-					"villains",
-				},
-			},
+					"villains"
+				}
+			}
 		},
 		{
 			color_name = "red",
 			name = "villains",
 			relations = {
 				enemy = {
-					"heroes",
-				},
-			},
-		},
+					"heroes"
+				}
+			}
+		}
 	},
 	side_sub_faction_types = {
 		villains = {
 			"chaos",
 			"cultist",
-			"renegade",
-		},
+			"renegade"
+		}
 	},
 	hud_settings = {
-		player_composition = "players",
+		player_composition = "players"
 	},
 	hotkeys = {
-		hotkey_system = "system_view",
+		hotkey_system = "system_view"
 	},
 	human_controlled_initial_items_excluded_slots = {
-		"slot_secondary",
-	},
+		"slot_secondary"
+	}
 }
 
 return settings

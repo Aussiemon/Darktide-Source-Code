@@ -62,11 +62,9 @@ ZealotRelicEffects.update = function (self, unit, dt, t, frame)
 
 	self._tick_cooldown = tick_cooldown
 
-	local max = self._ability_extension:max_ability_cooldown("combat_ability")
-	local current = self._ability_extension:remaining_ability_cooldown("combat_ability")
-	local variable = (max - current) / max
+	local next_charge_regen_progress = self._ability_extension:get_ability_resource_regen_progress("combat_ability")
 
-	WwiseWorld.set_source_parameter(self._wwise_world, self._source_id, "player_ability_health", variable)
+	WwiseWorld.set_source_parameter(self._wwise_world, self._source_id, "player_ability_health", next_charge_regen_progress)
 end
 
 ZealotRelicEffects.update_first_person_mode = function (self, first_person_mode)

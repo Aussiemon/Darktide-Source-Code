@@ -8,13 +8,13 @@ local distance_threshold_sq = CompanionServoSkullSettings.distance_threshold_sq
 local action_data = {
 	name = "companion_servo_skull",
 	manual_teleport = {
-		wait_time = 1,
+		wait_time = 1
 	},
 	teleport = {
-		keep_outline = false,
+		keep_outline = false
 	},
 	idle = {
-		ignore_rotate_towards_target = true,
+		ignore_rotate_towards_target = true
 	},
 	shoot = {
 		charged_effect_template = "companion_servo_skull_charged_shooting",
@@ -25,36 +25,36 @@ local action_data = {
 		restore_ammo_if_no_line_of_sight = true,
 		update_game_object_shooting_cooldown = true,
 		aim_anim_events = {
-			"aim_standing",
+			"aim_standing"
 		},
 		aim_duration = {
 			aim_standing = {
 				{
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		shoot_cooldown = {
 			{
 				3,
-				3.25,
-			},
+				3.25
+			}
 		},
 		num_shots = {
 			{
 				1,
-				1,
-			},
+				1
+			}
 		},
 		time_per_shot = {
 			{
 				0.5,
-				0.8,
-			},
+				0.8
+			}
 		},
 		aim_dot_threshold = math.cos(math.pi / 9),
-		shoot_template = BreedShootTemplates.companion_servo_skull_default,
+		shoot_template = BreedShootTemplates.companion_servo_skull_default
 	},
 	shoot_flames = {
 		duration = 15,
@@ -75,18 +75,18 @@ local action_data = {
 		wait_to_reach_position = true,
 		flame_cone = {
 			rotation_angle_speed = 2,
-			max_angle = math.pi / 18,
+			max_angle = math.pi / 18
 		},
 		flame_circle = {
-			rotation_angle_speed = 3.5,
+			rotation_angle_speed = 3.5
 		},
 		flamer_gas_template = CompanionServoSkullFlamerGasTemplates.auto,
 		optional_leave_function = CompanionServoSkullAbility.finish_flamethrower_ability,
 		trigger_stat_hooks_for_player_owner = {
 			action_enter = "hook_cryptic_servo_skull_flame_attack_start",
-			unique_hit = "hook_cryptic_servo_skull_flame_attack_unique_minion_hit",
+			unique_hit = "hook_cryptic_servo_skull_flame_attack_unique_minion_hit"
 		},
-		distance_threshold_sq = distance_threshold_sq.flamethrower,
+		distance_threshold_sq = distance_threshold_sq.flamethrower
 	},
 	inject_ally = {
 		assist_notification_type = "stimmed",
@@ -100,7 +100,7 @@ local action_data = {
 		revive = true,
 		syringe_effect_template_name = "companion_servo_skull_heal_effect",
 		optional_leave_function = CompanionServoSkullAbility.finish_inject_ally_ability,
-		distance_threshold_sq = distance_threshold_sq.inject_ally,
+		distance_threshold_sq = distance_threshold_sq.inject_ally
 	},
 	hack_decode = {
 		hacking_effect_template_name = "companion_servo_skull_hacking_effect",
@@ -111,8 +111,8 @@ local action_data = {
 		out_rotation_speed = 0,
 		hacking_minigame_duration = CompanionServoSkullSettings.hacking_minigame_duration,
 		optional_leave_function = CompanionServoSkullAbility.finish_hacking_ability,
-		distance_threshold_sq = distance_threshold_sq.hacking,
-	},
+		distance_threshold_sq = distance_threshold_sq.hacking
+	}
 }
 
 return action_data

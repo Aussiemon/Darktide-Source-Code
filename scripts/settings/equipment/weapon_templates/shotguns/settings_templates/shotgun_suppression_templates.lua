@@ -13,28 +13,28 @@ suppression_templates.shotgun_p1_m1_suppression_assault = {
 		immediate_spread = {
 			{
 				pitch = 0.5,
-				yaw = 0.5,
-			},
-		},
+				yaw = 0.5
+			}
+		}
 	},
 	moving = {
 		inherits = {
 			"shotgun_p1_m1_suppression_assault",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"shotgun_p1_m1_suppression_assault",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"shotgun_p1_m1_suppression_assault",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 suppression_templates.shotgun_p1_m1_suppression_killshot = {
 	still = {
@@ -43,31 +43,31 @@ suppression_templates.shotgun_p1_m1_suppression_killshot = {
 		immediate_spread = {
 			{
 				pitch = 0.25,
-				yaw = 0.25,
-			},
-		},
+				yaw = 0.25
+			}
+		}
 	},
 	moving = {
 		inherits = {
 			"shotgun_p1_m1_suppression_killshot",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"shotgun_p1_m1_suppression_killshot",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"shotgun_p1_m1_suppression_killshot",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 
 return {
 	base_templates = suppression_templates,
-	overrides = overrides,
+	overrides = overrides
 }

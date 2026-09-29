@@ -116,8 +116,8 @@ local function add_presentation_perks(item, layout, grid_size)
 			widget_type = "dynamic_spacing",
 			size = {
 				grid_size[1],
-				15,
-			},
+				15
+			}
 		}
 		add_end_margin = true
 	end
@@ -138,8 +138,8 @@ local function add_presentation_perks(item, layout, grid_size)
 				perk_value = perk_value,
 				perk_rarity = perk_rarity,
 				description_size = {
-					400,
-				},
+					400
+				}
 			}
 
 			if i < num_perks then
@@ -148,8 +148,8 @@ local function add_presentation_perks(item, layout, grid_size)
 					widget_type = "dynamic_spacing",
 					size = {
 						grid_size[1],
-						15,
-					},
+						15
+					}
 				}
 			end
 		end
@@ -173,8 +173,8 @@ local function add_presentation_traits(item, layout, grid_size)
 			widget_type = "dynamic_spacing",
 			size = {
 				grid_size[1],
-				20,
-			},
+				20
+			}
 		}
 		add_end_margin = true
 	end
@@ -197,9 +197,9 @@ local function add_presentation_traits(item, layout, grid_size)
 				trait_value = trait_value,
 				trait_rarity = trait_rarity,
 				description_size = {
-					400,
+					400
 				},
-				trait_category = trait_category,
+				trait_category = trait_category
 			}
 
 			if i < num_traits then
@@ -207,8 +207,8 @@ local function add_presentation_traits(item, layout, grid_size)
 					widget_type = "dynamic_spacing",
 					size = {
 						grid_size[1],
-						16,
-					},
+						16
+					}
 				}
 			end
 		end
@@ -219,8 +219,8 @@ local function add_presentation_traits(item, layout, grid_size)
 			widget_type = "dynamic_spacing",
 			size = {
 				grid_size[1],
-				20,
-			},
+				20
+			}
 		}
 	end
 
@@ -239,8 +239,8 @@ ViewElementWeaponInfo.present_item = function (self, item, on_present_callback, 
 		widget_type = "dynamic_spacing",
 		size = {
 			grid_size[1],
-			10,
-		},
+			10
+		}
 	}
 
 	local weapon_template = WeaponTemplate.weapon_template_from_item(item)
@@ -248,27 +248,27 @@ ViewElementWeaponInfo.present_item = function (self, item, on_present_callback, 
 	if not ignore_list.ignore_header then
 		layout[#layout + 1] = {
 			widget_type = "extended_weapon_stats_header",
-			item = item,
+			item = item
 		}
 		layout[#layout + 1] = {
-			widget_type = "divider",
+			widget_type = "divider"
 		}
 	end
 
 	if not ignore_list.ignore_keywords then
 		layout[#layout + 1] = {
 			widget_type = "extended_weapon_keywords",
-			item = item,
+			item = item
 		}
 		layout[#layout + 1] = {
-			widget_type = "divider",
+			widget_type = "divider"
 		}
 	end
 
 	if not ignore_list.ignore_extended_stats then
 		layout[#layout + 1] = {
 			widget_type = "extended_weapon_stats",
-			item = item,
+			item = item
 		}
 	end
 
@@ -281,18 +281,18 @@ ViewElementWeaponInfo.present_item = function (self, item, on_present_callback, 
 			widget_type = "dynamic_spacing",
 			size = {
 				grid_size[1],
-				10,
-			},
+				10
+			}
 		}
 		layout[#layout + 1] = {
-			widget_type = "divider",
+			widget_type = "divider"
 		}
 	end
 
 	if not ignore_list.ignore_traits and add_presentation_traits(item, layout, grid_size) then
 		add_end_margin = true
 		layout[#layout + 1] = {
-			widget_type = "divider",
+			widget_type = "divider"
 		}
 	end
 
@@ -300,7 +300,7 @@ ViewElementWeaponInfo.present_item = function (self, item, on_present_callback, 
 		layout[#layout + 1] = {
 			interactive = true,
 			widget_type = "weapon_stats",
-			item = item,
+			item = item
 		}
 	end
 
@@ -308,8 +308,8 @@ ViewElementWeaponInfo.present_item = function (self, item, on_present_callback, 
 		widget_type = "dynamic_spacing",
 		size = {
 			grid_size[1],
-			10,
-		},
+			10
+		}
 	}
 
 	self:present_grid_layout(layout, on_present_callback)
@@ -422,10 +422,12 @@ ViewElementWeaponInfo._scale_value_by_type = function (self, value, display_type
 	return value
 end
 
-ViewElementWeaponInfo._value_to_text = function (self, value, is_signed)
+ViewElementWeaponInfo._value_to_text = function (self, value, is_signed, is_inverted)
 	if value >= math.huge then
 		return Localize("loc_weapon_stats_display_unlimited")
 	end
+
+	value = is_inverted and -value or value
 
 	if is_signed and value >= 0 then
 		return string.format("+%0.2f", value)
@@ -439,15 +441,16 @@ ViewElementWeaponInfo._get_stats_text = function (self, stat)
 	local type_data = stat.type_data
 	local display_type = override_data.display_type or type_data.display_type
 	local is_signed = type_data.signed
+	local is_inverted = type_data.inverted
 	local value = self:_scale_value_by_type(stat.value, display_type)
-	local value_text = self:_value_to_text(value, is_signed)
+	local value_text = self:_value_to_text(value, is_signed, is_inverted)
 	local range = ""
 	local min, max = stat.min, stat.max
 
 	if min and max then
 		min = self:_scale_value_by_type(min, display_type)
 		max = self:_scale_value_by_type(max, display_type)
-		range = string.format("{#color(90,90,90)}[%s | %s]", self:_value_to_text(min, is_signed), self:_value_to_text(max, is_signed))
+		range = string.format("{#color(90,90,90)}[%s | %s]", self:_value_to_text(min, is_signed, is_inverted), self:_value_to_text(max, is_signed, is_inverted))
 	end
 
 	local name = Localize(override_data.display_name or type_data.display_name)

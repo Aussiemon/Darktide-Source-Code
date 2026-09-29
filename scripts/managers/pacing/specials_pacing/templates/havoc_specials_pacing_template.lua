@@ -41,7 +41,7 @@ local specials_pacing_template = {
 			travel_distance_spawning = true,
 			timer_range = {
 				200,
-				420,
+				420
 			},
 			always_update_breeds = ALWAYS_UPDATE_AT_CHALLANGE_RATING_BREEDS,
 			max_of_same = LOW_MAX_OF_SAME,
@@ -59,23 +59,23 @@ local specials_pacing_template = {
 			spawners_max_range = DEFAULT_MIN_SPAWNERS_RANGES.max,
 			coordinated_strike_timer_range = {
 				180,
-				240,
+				240
 			},
 			coordinated_strike_breeds = DEFAULT_COORDINATED_STRIKE_BREEDS,
 			coordinated_strike_num_breeds = {
 				2,
-				3,
+				3
 			},
 			rush_prevention_breeds = DEFAULT_RUSH_PREVENTION_BREEDS,
 			rush_prevention_cooldown = {
 				150,
-				250,
+				250
 			},
 			rush_prevention_failed_cooldown = {
 				5,
-				10,
+				10
 			},
-			faction_bound_breeds = FACTION_BOUND_BREEDS,
+			faction_bound_breeds = FACTION_BOUND_BREEDS
 		},
 		{
 			chance_for_coordinated_strike = 0.15,
@@ -97,7 +97,7 @@ local specials_pacing_template = {
 			travel_distance_spawning = true,
 			timer_range = {
 				200,
-				420,
+				420
 			},
 			always_update_breeds = ALWAYS_UPDATE_AT_CHALLANGE_RATING_BREEDS,
 			max_of_same = LOW_MAX_OF_SAME,
@@ -115,32 +115,32 @@ local specials_pacing_template = {
 			spawners_max_range = DEFAULT_MIN_SPAWNERS_RANGES.max,
 			coordinated_strike_timer_range = {
 				100,
-				350,
+				350
 			},
 			coordinated_strike_breeds = DEFAULT_COORDINATED_STRIKE_BREEDS,
 			coordinated_strike_num_breeds = {
 				3,
-				4,
+				4
 			},
 			rush_prevention_breeds = DEFAULT_RUSH_PREVENTION_BREEDS,
 			rush_prevention_cooldown = {
 				80,
-				120,
+				120
 			},
 			rush_prevention_failed_cooldown = {
 				5,
-				10,
+				10
 			},
 			faction_bound_breeds = FACTION_BOUND_BREEDS,
 			speed_running_prevention_breeds = DEFAULT_SPEED_RUNNING_PREVENTION_BREEDS,
 			speed_running_prevention_cooldown = {
 				20,
-				40,
+				40
 			},
 			speed_running_prevention_failed_cooldown = {
 				5,
-				10,
-			},
+				10
+			}
 		},
 		{
 			chance_for_coordinated_strike = 0.2,
@@ -162,7 +162,7 @@ local specials_pacing_template = {
 			travel_distance_spawning = true,
 			timer_range = {
 				180,
-				400,
+				400
 			},
 			always_update_breeds = ALWAYS_UPDATE_AT_CHALLANGE_RATING_BREEDS,
 			max_of_same = DEFAULT_MAX_OF_SAME,
@@ -180,32 +180,32 @@ local specials_pacing_template = {
 			spawners_max_range = DEFAULT_MIN_SPAWNERS_RANGES.max,
 			coordinated_strike_timer_range = {
 				100,
-				280,
+				280
 			},
 			coordinated_strike_breeds = DEFAULT_COORDINATED_STRIKE_BREEDS,
 			coordinated_strike_num_breeds = {
 				4,
-				5,
+				5
 			},
 			rush_prevention_breeds = DEFAULT_RUSH_PREVENTION_BREEDS,
 			rush_prevention_cooldown = {
 				60,
-				100,
+				100
 			},
 			rush_prevention_failed_cooldown = {
 				5,
-				10,
+				10
 			},
 			faction_bound_breeds = FACTION_BOUND_BREEDS,
 			speed_running_prevention_breeds = DEFAULT_SPEED_RUNNING_PREVENTION_BREEDS,
 			speed_running_prevention_cooldown = {
 				20,
-				40,
+				40
 			},
 			speed_running_prevention_failed_cooldown = {
 				5,
-				10,
-			},
+				10
+			}
 		},
 		{
 			chance_for_coordinated_strike = 0.25,
@@ -229,7 +229,7 @@ local specials_pacing_template = {
 			travel_distance_spawning = true,
 			timer_range = {
 				120,
-				320,
+				320
 			},
 			always_update_breeds = ALWAYS_UPDATE_AT_CHALLANGE_RATING_BREEDS,
 			max_of_same = HIGH_MAX_OF_SAME,
@@ -247,57 +247,57 @@ local specials_pacing_template = {
 			spawners_max_range = DEFAULT_MIN_SPAWNERS_RANGES.max,
 			coordinated_strike_timer_range = {
 				100,
-				200,
+				200
 			},
 			coordinated_strike_breeds = DEFAULT_COORDINATED_STRIKE_BREEDS,
 			coordinated_strike_num_breeds = {
 				4,
-				6,
+				6
 			},
 			coordinated_surge_timer_range = {
 				8,
-				16,
+				16
 			},
 			coordinated_surge_duration_range = {
 				20,
-				60,
+				60
 			},
 			num_coordinated_surges_range = {
 				2,
-				4,
+				4
 			},
 			loner_prevention_breeds = DEFAULT_LONER_PREVENTION_BREEDS,
 			loner_prevention_cooldown = {
 				40,
-				60,
+				60
 			},
 			loner_prevention_failed_cooldown = {
 				3,
-				7,
+				7
 			},
 			loner_time = {
 				10,
-				14,
+				14
 			},
 			rush_prevention_breeds = DEFAULT_RUSH_PREVENTION_BREEDS,
 			rush_prevention_cooldown = {
 				50,
-				80,
+				80
 			},
 			rush_prevention_failed_cooldown = {
 				5,
-				10,
+				10
 			},
 			faction_bound_breeds = FACTION_BOUND_BREEDS,
 			speed_running_prevention_breeds = DEFAULT_SPEED_RUNNING_PREVENTION_BREEDS,
 			speed_running_prevention_cooldown = {
 				10,
-				15,
+				15
 			},
 			speed_running_prevention_failed_cooldown = {
 				2,
-				8,
-			},
+				8
+			}
 		},
 		{
 			chance_for_coordinated_strike = 0.5,
@@ -321,7 +321,7 @@ local specials_pacing_template = {
 			travel_distance_spawning = true,
 			timer_range = {
 				80,
-				240,
+				240
 			},
 			always_update_breeds = ALWAYS_UPDATE_AT_CHALLANGE_RATING_BREEDS,
 			max_of_same = HIGH_MAX_OF_SAME,
@@ -339,57 +339,57 @@ local specials_pacing_template = {
 			spawners_max_range = DEFAULT_MIN_SPAWNERS_RANGES.max,
 			coordinated_strike_timer_range = {
 				100,
-				200,
+				200
 			},
 			coordinated_strike_breeds = DEFAULT_COORDINATED_STRIKE_BREEDS,
 			coordinated_strike_num_breeds = {
 				7,
-				10,
+				10
 			},
 			coordinated_surge_timer_range = {
 				5,
-				13,
+				13
 			},
 			coordinated_surge_duration_range = {
 				40,
-				80,
+				80
 			},
 			num_coordinated_surges_range = {
 				5,
-				8,
+				8
 			},
 			loner_prevention_breeds = DEFAULT_LONER_PREVENTION_BREEDS,
 			loner_prevention_cooldown = {
 				20,
-				40,
+				40
 			},
 			loner_prevention_failed_cooldown = {
 				3,
-				7,
+				7
 			},
 			loner_time = {
 				6,
-				10,
+				10
 			},
 			rush_prevention_breeds = DEFAULT_RUSH_PREVENTION_BREEDS,
 			rush_prevention_cooldown = {
 				30,
-				50,
+				50
 			},
 			rush_prevention_failed_cooldown = {
 				5,
-				10,
+				10
 			},
 			faction_bound_breeds = FACTION_BOUND_BREEDS,
 			speed_running_prevention_breeds = DEFAULT_SPEED_RUNNING_PREVENTION_BREEDS,
 			speed_running_prevention_cooldown = {
 				10,
-				15,
+				15
 			},
 			speed_running_prevention_failed_cooldown = {
 				2,
-				8,
-			},
+				8
+			}
 		},
 		{
 			chance_for_coordinated_strike = 0.6,
@@ -413,7 +413,7 @@ local specials_pacing_template = {
 			travel_distance_spawning = true,
 			timer_range = {
 				60,
-				220,
+				220
 			},
 			always_update_breeds = ALWAYS_UPDATE_AT_CHALLANGE_RATING_BREEDS,
 			max_of_same = HIGH_MAX_OF_SAME,
@@ -431,59 +431,59 @@ local specials_pacing_template = {
 			spawners_max_range = DEFAULT_MIN_SPAWNERS_RANGES.max,
 			coordinated_strike_timer_range = {
 				90,
-				190,
+				190
 			},
 			coordinated_strike_breeds = DEFAULT_COORDINATED_STRIKE_BREEDS,
 			coordinated_strike_num_breeds = {
 				8,
-				11,
+				11
 			},
 			coordinated_surge_timer_range = {
 				4,
-				11,
+				11
 			},
 			coordinated_surge_duration_range = {
 				40,
-				80,
+				80
 			},
 			num_coordinated_surges_range = {
 				3,
-				6,
+				6
 			},
 			loner_prevention_breeds = DEFAULT_LONER_PREVENTION_BREEDS,
 			loner_prevention_cooldown = {
 				15,
-				35,
+				35
 			},
 			loner_prevention_failed_cooldown = {
 				3,
-				7,
+				7
 			},
 			loner_time = {
 				5,
-				9,
+				9
 			},
 			rush_prevention_breeds = DEFAULT_RUSH_PREVENTION_BREEDS,
 			rush_prevention_cooldown = {
 				25,
-				45,
+				45
 			},
 			rush_prevention_failed_cooldown = {
 				5,
-				10,
+				10
 			},
 			faction_bound_breeds = FACTION_BOUND_BREEDS,
 			speed_running_prevention_breeds = DEFAULT_SPEED_RUNNING_PREVENTION_BREEDS,
 			speed_running_prevention_cooldown = {
 				10,
-				15,
+				15
 			},
 			speed_running_prevention_failed_cooldown = {
 				2,
-				8,
-			},
-		},
-	},
+				8
+			}
+		}
+	}
 }
 
 return specials_pacing_template

@@ -40,14 +40,14 @@ ItemPreviewer.update = function (self, dt, t)
 			local texture_size = texture_data.texture_size
 			local texture_scale = texture_data.texture_scale or {
 				x = 1,
-				y = 1,
+				y = 1
 			}
 			local texture_coverage = texture_data.texture_coverage or 1
 			local scaled_x = texture_size.x * texture_scale_value * texture_scale.x * texture_coverage
 			local scaled_y = texture_size.y * texture_scale_value * texture_scale.y * texture_coverage
 			local texture_docking = texture_data.texture_docking or {
 				horizontal = "center",
-				vertical = "center",
+				vertical = "center"
 			}
 			local x = backbuffer_x / 2 - scaled_x / 2
 			local y = backbuffer_y / 2 - scaled_y / 2
@@ -66,7 +66,7 @@ ItemPreviewer.update = function (self, dt, t)
 
 			local stack_offset = {
 				x = 0,
-				y = 0,
+				y = 0
 			}
 
 			if texture_data.texture_stacking == "vertical" then
@@ -141,67 +141,67 @@ ItemPreviewer.preview = function (self, resource, return_data)
 				if table.array_contains(item_data.breeds, "human") then
 					item_data.attachments = {
 						{
-							item = "content/items/characters/player/human/attachment_base/female_torso",
+							item = "content/items/characters/player/human/attachment_base/female_torso"
 						},
 						{
-							item = "content/items/characters/player/human/attachment_base/female_legs",
+							item = "content/items/characters/player/human/attachment_base/female_legs"
 						},
 						{
-							item = "content/items/characters/player/human/attachment_base/female_arms",
+							item = "content/items/characters/player/human/attachment_base/female_arms"
 						},
 						{
-							item = "content/items/characters/player/human/faces/female_caucasian_face_01",
+							item = "content/items/characters/player/human/faces/female_caucasian_face_01"
 						},
 						{
-							item = item_data.prop_item,
+							item = item_data.prop_item
 						},
 						{
-							item = item_data.prop_item_2,
-						},
+							item = item_data.prop_item_2
+						}
 					}
 					item_data.base_unit = "content/characters/player/human/third_person/base_body_rig"
 				elseif table.array_contains(item_data.breeds, "cryptic") then
 					item_data.attachments = {
 						{
-							item = "content/items/characters/player/human/cryptic_base_body/body_01",
+							item = "content/items/characters/player/human/cryptic_base_body/body_01"
 						},
 						{
-							item = "content/items/characters/player/human/cryptic_base_legs/base_legs_01",
+							item = "content/items/characters/player/human/cryptic_base_legs/base_legs_01"
 						},
 						{
-							item = "content/items/characters/player/human/cryptic_base_arms/base_arms_01",
+							item = "content/items/characters/player/human/cryptic_base_arms/base_arms_01"
 						},
 						{
-							item = "content/items/characters/player/human/faces/empty_face",
+							item = "content/items/characters/player/human/faces/empty_face"
 						},
 						{
-							item = item_data.prop_item,
+							item = item_data.prop_item
 						},
 						{
-							item = item_data.prop_item_2,
-						},
+							item = item_data.prop_item_2
+						}
 					}
 					item_data.base_unit = "content/characters/player/human/third_person/base_body_rig"
 				else
 					item_data.attachments = {
 						{
-							item = "content/items/characters/player/ogryn/attachment_base/male_torso",
+							item = "content/items/characters/player/ogryn/attachment_base/male_torso"
 						},
 						{
-							item = "content/items/characters/player/ogryn/attachment_base/male_legs",
+							item = "content/items/characters/player/ogryn/attachment_base/male_legs"
 						},
 						{
-							item = "content/items/characters/player/ogryn/attachment_base/male_arms",
+							item = "content/items/characters/player/ogryn/attachment_base/male_arms"
 						},
 						{
-							item = "content/items/characters/player/ogryn/attachment_base/male_face_caucasian_03",
+							item = "content/items/characters/player/ogryn/attachment_base/male_face_caucasian_03"
 						},
 						{
-							item = item_data.prop_item,
+							item = item_data.prop_item
 						},
 						{
-							item = item_data.prop_item_2,
-						},
+							item = item_data.prop_item_2
+						}
 					}
 					item_data.base_unit = "content/characters/player/human/third_person/base_body_rig"
 				end
@@ -248,24 +248,24 @@ ItemPreviewer.preview = function (self, resource, return_data)
 							local texture_coverage = 1
 							local texture_docking = {
 								horizontal = "center",
-								vertical = "bottom",
+								vertical = "bottom"
 							}
 							local texture_stacking = "vertical"
 							local texture_scale = {
 								x = 1,
-								y = 1,
+								y = 1
 							}
 
 							if item_data.item_type == "COLOR_MATERIAL_OVERRIDE" then
 								texture_scale = {
 									x = 1,
-									y = 3,
+									y = 3
 								}
 							elseif item_data.item_type == "PATTERN_MATERIAL_OVERRIDE" then
 								texture_coverage = 0.35
 								texture_docking = {
 									horizontal = "left",
-									vertical = "top",
+									vertical = "top"
 								}
 								texture_stacking = "horizontal"
 							end
@@ -278,7 +278,7 @@ ItemPreviewer.preview = function (self, resource, return_data)
 								texture_material = texture_material,
 								texture_coverage = texture_coverage,
 								texture_docking = texture_docking,
-								texture_stacking = texture_stacking,
+								texture_stacking = texture_stacking
 							}
 						else
 							Log.error("ItemPreviewer", string.format("Couldn't find valid texture_resource field for 2D item %s!", resource))
@@ -328,7 +328,7 @@ ItemPreviewer.preview = function (self, resource, return_data)
 						self.preview_2D_textures[texture_name] = {
 							texture_handle = texture_handle,
 							texture_size = texture_size,
-							texture_material = texture_material,
+							texture_material = texture_material
 						}
 					else
 						Log.error("ItemPreviewer", string.format("Couldn't find valid texture_resource field for 2D item %s!", resource))
@@ -414,7 +414,7 @@ ItemPreviewer._build_bounding_box = function (self, item_data)
 
 	self.preview_bounding_box = {
 		Matrix4x4Box(tm),
-		Vector3Box(half_extents),
+		Vector3Box(half_extents)
 	}
 end
 
@@ -454,7 +454,7 @@ ItemPreviewer._select_root_unit_resource = function (self, item_data)
 		end
 
 		if table.array_contains(slots, "slot_body_hair_color") or table.array_contains(slots, "slot_body_face_hair_color") then
-			root_unit = "content/characters/player/ogryn/attachments_base/hair/hair_medium_mullet_a/hair_medium_mullet_a"
+			root_unit = "content/characters/player/human/attachments_base/hair/female/hair_long_modular_c_01/hair_long_modular_c_01"
 		end
 
 		if table.array_contains(slots, "slot_body_face_tattoo") or table.array_contains(slots, "slot_body_eye_color") or table.array_contains(slots, "slot_body_eye_color_secondary") or table.array_contains(slots, "slot_body_skin_color") or table.array_contains(slots, "slot_body_skin_color_secondary") or table.array_contains(slots, "slot_body_skin_discoloration") or table.array_contains(slots, "slot_body_face_scar") or table.array_contains(slots, "slot_body_hair") or table.array_contains(slots, "slot_body_face_hair") or table.array_contains(slots, "slot_body_face_makeup") then
@@ -495,7 +495,7 @@ ItemPreviewer._select_hardcoded_bounding_box = function (self, item_data)
 	local is_ogryn_sized = breeds and table.array_contains(breeds, "ogryn")
 	local is_lowerbody = slots and table.array_contains(slots, "slot_gear_lowerbody")
 	local is_upperbody = slots and table.array_contains(slots, "slot_gear_upperbody")
-	local is_face = slots and (table.array_contains(slots, "slot_body_face") or table.array_contains(slots, "slot_body_face_tattoo") or table.array_contains(slots, "slot_body_eye_color") or table.array_contains(slots, "slot_body_eye_color_secondary") or table.array_contains(slots, "slot_body_skin_color") or table.array_contains(slots, "slot_body_skin_color_secondary") or table.array_contains(slots, "slot_body_skin_discoloration") or table.array_contains(slots, "slot_body_face_scar") or table.array_contains(slots, "slot_body_hair") or table.array_contains(slots, "slot_body_face_hair") or table.array_contains(slots, "slot_body_face_makeup"))
+	local is_face = slots and (table.array_contains(slots, "slot_body_face") or table.array_contains(slots, "slot_body_face_tattoo") or table.array_contains(slots, "slot_body_eye_color") or table.array_contains(slots, "slot_body_eye_color_secondary") or table.array_contains(slots, "slot_body_skin_color") or table.array_contains(slots, "slot_body_skin_color_secondary") or table.array_contains(slots, "slot_body_skin_discoloration") or table.array_contains(slots, "slot_body_face_scar") or table.array_contains(slots, "slot_body_hair") or table.array_contains(slots, "slot_body_hair_color") or table.array_contains(slots, "slot_body_face_hair_color") or table.array_contains(slots, "slot_body_face_hair") or table.array_contains(slots, "slot_body_face_makeup"))
 
 	if item_type == "SET" then
 		if is_human_sized then
@@ -536,7 +536,7 @@ end
 
 ItemPreviewer.get_supported_types = function (self)
 	return {
-		"item",
+		"item"
 	}
 end
 

@@ -37,7 +37,7 @@ end
 
 local DEFUALT_TIMINGS = {
 	1,
-	5,
+	5
 }
 
 BtUseStimAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)

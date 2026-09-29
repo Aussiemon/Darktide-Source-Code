@@ -11,13 +11,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			480,
-			140,
+			140
 		},
 		position = {
 			0,
 			-100,
-			12,
-		},
+			12
+		}
 	},
 	grid_divider_bottom = {
 		horizontal_alignment = "center",
@@ -25,13 +25,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			480,
-			124,
+			124
 		},
 		position = {
 			0,
 			100,
-			15,
-		},
+			15
+		}
 	},
 	crafting_recipe_background = {
 		horizontal_alignment = "center",
@@ -39,13 +39,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			890,
-			620,
+			620
 		},
 		position = {
 			5,
 			-400,
-			-50,
-		},
+			-50
+		}
 	},
 	continue_button_background = {
 		horizontal_alignment = "center",
@@ -53,13 +53,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			440,
-			65,
+			65
 		},
 		position = {
 			0,
 			-38,
-			-12,
-		},
+			-12
+		}
 	},
 	continue_button = {
 		horizontal_alignment = "center",
@@ -67,13 +67,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			420,
-			50,
+			50
 		},
 		position = {
 			0,
 			-47,
-			30,
-		},
+			30
+		}
 	},
 	cost_background = {
 		horizontal_alignment = "center",
@@ -81,13 +81,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			200,
-			36,
+			36
 		},
 		position = {
 			0,
 			6,
-			30,
-		},
+			30
+		}
 	},
 	cost_pivot = {
 		horizontal_alignment = "center",
@@ -95,14 +95,14 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local continue_hold_button_pass_template = table.clone(ButtonPassTemplates.terminal_button_hold_small)
 local continue_button_pass_template = table.clone(ButtonPassTemplates.terminal_button)
@@ -120,15 +120,15 @@ continue_button_pass_template[#continue_button_pass_template + 1] = {
 		offset = {
 			0,
 			0,
-			2,
+			2
 		},
 		material_values = {
-			intensity = 0,
-		},
+			intensity = 0
+		}
 	},
 	visibility_function = function (content, style)
 		return style.play_pulse
-	end,
+	end
 }
 continue_button_pass_template[#continue_button_pass_template + 1] = {
 	pass_type = "texture",
@@ -143,8 +143,8 @@ continue_button_pass_template[#continue_button_pass_template + 1] = {
 		offset = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	visibility_function = function (content, style)
 		return style.play_pulse
@@ -162,7 +162,7 @@ continue_button_pass_template[#continue_button_pass_template + 1] = {
 		end
 
 		style.color[1] = alpha
-	end,
+	end
 }
 
 local widget_definitions = {
@@ -176,10 +176,10 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					18,
-					16,
+					16
 				},
-				color = Color.terminal_grid_background(255, true),
-			},
+				color = Color.terminal_grid_background(255, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -190,9 +190,9 @@ local widget_definitions = {
 				material_values = {
 					intensity = 0,
 					intensity_boost = 0,
-					overlay_texture = nil,
-				},
-			},
+					overlay_texture = nil
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -201,11 +201,11 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					-1,
+					-1
 				},
-				color = Color.terminal_frame(50, true),
-			},
-		},
+				color = Color.terminal_frame(50, true)
+			}
+		}
 	}, "grid_background"),
 	grid_divider_top = UIWidget.create_definition({
 		{
@@ -215,8 +215,8 @@ local widget_definitions = {
 			value_id = "texture",
 			style = {
 				horizontal_alignment = "center",
-				vertical_alignment = "top",
-			},
+				vertical_alignment = "top"
+			}
 		},
 		{
 			pass_type = "texture",
@@ -229,10 +229,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "grid_divider_top_border"),
 	grid_divider_bottom = UIWidget.create_definition({
 		{
@@ -242,9 +242,9 @@ local widget_definitions = {
 			value_id = "texture",
 			style = {
 				horizontal_alignment = "center",
-				vertical_alignment = "center",
-			},
-		},
+				vertical_alignment = "center"
+			}
+		}
 	}, "grid_divider_bottom"),
 	cost_background = UIWidget.create_definition({
 		{
@@ -259,20 +259,20 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				size_addition = {
 					130,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "cost_background"),
 	continue_button = UIWidget.create_definition(continue_button_pass_template, "continue_button", {
 		gamepad_action = "hotkey_menu_special_2",
 		hotspot = {
-			on_pressed_sound = UISoundEvents.default_click,
-		},
+			on_pressed_sound = UISoundEvents.default_click
+		}
 	}),
 	continue_button_background = UIWidget.create_definition({
 		{
@@ -284,19 +284,19 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				size_addition = {
 					25,
-					25,
+					25
 				},
-				color = Color.terminal_grid_background(255, true),
-			},
-		},
+				color = Color.terminal_grid_background(255, true)
+			}
+		}
 	}, "continue_button_background"),
 	continue_button_hold = UIWidget.create_definition(continue_hold_button_pass_template, "continue_button", {
 		gamepad_action = "hotkey_menu_special_2",
 		visible = false,
 		hotspot = {
-			on_pressed_sound = UISoundEvents.default_click,
-		},
-	}),
+			on_pressed_sound = UISoundEvents.default_click
+		}
+	})
 }
 local cost_text_font_style = table.clone(UIFontSettings.currency_title)
 
@@ -315,22 +315,22 @@ local cost_definitions = UIWidget.create_definition({
 			vertical_alignment = "center",
 			size = {
 				28,
-				20,
+				20
 			},
 			offset = {
 				0,
 				0,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	{
 		pass_type = "text",
 		style_id = "text",
 		value = "0",
 		value_id = "text",
-		style = cost_text_font_style,
-	},
+		style = cost_text_font_style
+	}
 }, "cost_pivot")
 local animations = {
 	activate_continue_button = {
@@ -344,7 +344,7 @@ local animations = {
 			end,
 			update = function (parent, ui_scenegraph, _scenegraph_definition, widgets, progress, params)
 				widgets.continue_button.style.button_attention.color[1] = 255 * progress
-			end,
+			end
 		},
 		{
 			end_time = 1,
@@ -352,7 +352,7 @@ local animations = {
 			start_time = 0,
 			update = function (parent, ui_scenegraph, _scenegraph_definition, widgets, progress, params)
 				widgets.continue_button.style.button_attention.material_values.intensity = 1 - math.ease_sine(progress)
-			end,
+			end
 		},
 		{
 			end_time = 2,
@@ -360,8 +360,8 @@ local animations = {
 			start_time = 0.8,
 			update = function (parent, ui_scenegraph, _scenegraph_definition, widgets, progress, params)
 				widgets.continue_button.style.button_attention.color[1] = 255 - 255 * math.easeOutCubic(progress)
-			end,
-		},
+			end
+		}
 	},
 	deactivate_continue_button = {
 		{
@@ -371,8 +371,8 @@ local animations = {
 			init = function (parent, ui_scenegraph, _scenegraph_definition, widgets, progress, params)
 				widgets.continue_button.style.inner_frame_glow.play_pulse = false
 				widgets.continue_button.style.button_attention.play_pulse = true
-			end,
-		},
+			end
+		}
 	},
 	on_enter = {
 		{
@@ -381,8 +381,8 @@ local animations = {
 			start_time = 0,
 			update = function (parent, ui_scenegraph, _scenegraph_definition, widgets, progress, params)
 				widgets.grid_background.style.crafting_recipe_background.material_values.intensity = math.ease_sine(progress)
-			end,
-		},
+			end
+		}
 	},
 	on_craft = {
 		{
@@ -391,7 +391,7 @@ local animations = {
 			start_time = 0,
 			update = function (parent, ui_scenegraph, _scenegraph_definition, widgets, progress, params)
 				widgets.grid_background.style.crafting_recipe_background.material_values.intensity_boost = math.ease_sine(progress)
-			end,
+			end
 		},
 		{
 			end_time = 4,
@@ -399,14 +399,14 @@ local animations = {
 			start_time = 1,
 			update = function (parent, ui_scenegraph, _scenegraph_definition, widgets, progress, params)
 				widgets.grid_background.style.crafting_recipe_background.material_values.intensity_boost = 1 - math.ease_sine(progress)
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
 	cost_definitions = cost_definitions,
 	scenegraph_definition = scenegraph_definition,
 	widget_definitions = widget_definitions,
-	animations = animations,
+	animations = animations
 }

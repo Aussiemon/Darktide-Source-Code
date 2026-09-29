@@ -5,13 +5,13 @@ local default_nav_cost_maps_minions = {
 	daemonhost = 1,
 	fire = 1,
 	obstacle = 1,
-	payload = 1,
+	payload = 1
 }
 local default_nav_cost_maps_bots = {
 	daemonhost = 1,
 	fire = 1,
 	obstacle = 1,
-	payload = 1,
+	payload = 1
 }
 local default_nav_tag_layers_minions = {
 	bot_damage_drops = 0,
@@ -26,7 +26,7 @@ local default_nav_tag_layers_minions = {
 	ledges = 10,
 	ledges_with_fence = 10,
 	monster_walls = 0,
-	teleporters = 5,
+	teleporters = 5
 }
 local default_nav_tag_layers_bots = {
 	bot_damage_drops = 10,
@@ -41,7 +41,7 @@ local default_nav_tag_layers_bots = {
 	ledges = 0,
 	ledges_with_fence = 0,
 	monster_walls = 0,
-	teleporters = 0,
+	teleporters = 0
 }
 
 return settings("NavigationCostSettings", {
@@ -49,5 +49,5 @@ return settings("NavigationCostSettings", {
 	default_nav_cost_maps_minions = default_nav_cost_maps_minions,
 	default_nav_cost_maps_bots = default_nav_cost_maps_bots,
 	default_nav_tag_layers_minions = default_nav_tag_layers_minions,
-	default_nav_tag_layers_bots = default_nav_tag_layers_bots,
+	default_nav_tag_layers_bots = default_nav_tag_layers_bots
 })

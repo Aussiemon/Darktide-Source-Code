@@ -9,7 +9,7 @@ local ColorUtilities = require("scripts/utilities/ui/colors")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local badge_size = {
 	420,
-	336,
+	336
 }
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
@@ -19,13 +19,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	corner_top_left = {
 		horizontal_alignment = "left",
@@ -33,13 +33,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			112,
-			230,
+			230
 		},
 		position = {
 			0,
 			0,
-			62,
-		},
+			62
+		}
 	},
 	corner_top_right = {
 		horizontal_alignment = "right",
@@ -47,13 +47,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			112,
-			230,
+			230
 		},
 		position = {
 			0,
 			0,
-			62,
-		},
+			62
+		}
 	},
 	corner_bottom_left = {
 		horizontal_alignment = "left",
@@ -61,13 +61,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			78,
-			212,
+			212
 		},
 		position = {
 			0,
 			0,
-			62,
-		},
+			62
+		}
 	},
 	corner_bottom_right = {
 		horizontal_alignment = "right",
@@ -75,13 +75,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			78,
-			212,
+			212
 		},
 		position = {
 			0,
 			0,
-			62,
-		},
+			62
+		}
 	},
 	display_name = {
 		horizontal_alignment = "center",
@@ -89,13 +89,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			1700,
-			200,
+			200
 		},
 		position = {
 			0,
 			100,
-			3,
-		},
+			3
+		}
 	},
 	divider = {
 		horizontal_alignment = "center",
@@ -103,13 +103,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			306,
-			48,
+			48
 		},
 		position = {
 			0,
 			55,
-			4,
-		},
+			4
+		}
 	},
 	sub_display_name = {
 		horizontal_alignment = "center",
@@ -117,13 +117,13 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = {
 			1700,
-			132,
+			132
 		},
 		position = {
 			0,
 			-70,
-			4,
-		},
+			4
+		}
 	},
 	rewards = {
 		horizontal_alignment = "center",
@@ -131,13 +131,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			1700,
-			100,
+			100
 		},
 		position = {
 			0,
 			60,
-			4,
-		},
+			4
+		}
 	},
 	badge = {
 		horizontal_alignment = "center",
@@ -147,43 +147,43 @@ local scenegraph_definition = {
 		position = {
 			0,
 			140,
-			4,
-		},
-	},
+			4
+		}
+	}
 }
 local rank_badges = {
 	{
 		level = 1,
-		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_1",
+		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_1"
 	},
 	{
 		level = 5,
-		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_2",
+		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_2"
 	},
 	{
 		level = 10,
-		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_3",
+		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_3"
 	},
 	{
 		level = 15,
-		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_4",
+		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_4"
 	},
 	{
 		level = 20,
-		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_5",
+		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_5"
 	},
 	{
 		level = 25,
-		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_6",
+		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_6"
 	},
 	{
 		level = 30,
-		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_7",
+		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_7"
 	},
 	{
 		level = 35,
-		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_8",
-	},
+		texture = "content/ui/textures/frames/havoc_ranks/havoc_rank_8"
+	}
 }
 local sub_title_style = table.clone(UIFontSettings.header_1)
 
@@ -194,7 +194,7 @@ sub_title_style.vertical_alignment = "top"
 sub_title_style.offset = {
 	0,
 	0,
-	1,
+	1
 }
 sub_title_style.font_size = 24
 sub_title_style.text_color = Color.terminal_text_body_sub_header(255, true)
@@ -212,7 +212,7 @@ local display_name_style = table.clone(UIFontSettings.header_1)
 display_name_style.offset = {
 	0,
 	0,
-	1,
+	1
 }
 display_name_style.text_horizontal_alignment = "center"
 display_name_style.text_vertical_alignment = "center"
@@ -229,14 +229,14 @@ local widget_definitions = {
 					255,
 					0,
 					0,
-					0,
+					0
 				},
 				size_addition = {
 					0,
-					-60,
-				},
-			},
-		},
+					-60
+				}
+			}
+		}
 	}, "screen"),
 	rank_display_name = UIWidget.create_definition({
 		{
@@ -244,10 +244,10 @@ local widget_definitions = {
 			style_id = "text",
 			value_id = "text",
 			value = Localize("loc_havoc_reset_Highest_order"),
-			style = display_name_style,
-		},
+			style = display_name_style
+		}
 	}, "display_name", {
-		visible = false,
+		visible = false
 	}),
 	reward_display_name = UIWidget.create_definition({
 		{
@@ -255,10 +255,10 @@ local widget_definitions = {
 			style_id = "text",
 			value_id = "text",
 			value = Localize("loc_havoc_reset_rewards"),
-			style = sub_display_name_style,
-		},
+			style = sub_display_name_style
+		}
 	}, "sub_display_name", {
-		visible = false,
+		visible = false
 	}),
 	divider = UIWidget.create_definition({
 		{
@@ -268,17 +268,17 @@ local widget_definitions = {
 			value_id = "divivder",
 			style = {
 				scale_to_material = true,
-				color = Color.white(255, true),
-			},
-		},
+				color = Color.white(255, true)
+			}
+		}
 	}, "divider", {
-		visible = false,
-	}),
+		visible = false
+	})
 }
 local reward_defintions = {
 	size = {
 		200,
-		66,
+		66
 	},
 	passes = {
 		{
@@ -291,18 +291,18 @@ local reward_defintions = {
 				vertical_alignment = "center",
 				default_size = {
 					78,
-					66,
+					66
 				},
 				size = {
 					78,
-					66,
+					66
 				},
 				offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -316,11 +316,11 @@ local reward_defintions = {
 				offset = {
 					0,
 					80,
-					1,
+					1
 				},
-				text_color = Color.white(255, true),
-			},
-		},
+				text_color = Color.white(255, true)
+			}
+		}
 	},
 	init = function (widget, config)
 		local currency_data = WalletSettings[config.currency]
@@ -329,7 +329,7 @@ local reward_defintions = {
 		widget.content.text = Text.format_currency(config.value)
 		widget.style.text.material = currency_data.font_gradient_material
 		widget.content.value = config.value
-	end,
+	end
 }
 local havoc_info = Managers.data_service.havoc:get_settings()
 local min_rank = 1
@@ -340,11 +340,11 @@ local badge_definitions = {
 	pass_template_function = function (parent, config)
 		local icon_size = {
 			150,
-			150,
+			150
 		}
 		local letter_size = {
 			86,
-			86,
+			86
 		}
 		local letter_margin = 18
 		local current_charges = config.current and config.current.charges
@@ -397,14 +397,14 @@ local badge_definitions = {
 					in_focus_color = Color.terminal_corner_selected(255, true),
 					size = {
 						400,
-						400,
+						400
 					},
 					offset = {
 						0,
 						50,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "circle",
@@ -415,17 +415,17 @@ local badge_definitions = {
 					offset = {
 						0,
 						148,
-						4,
+						4
 					},
 					size = {
 						icon_size[1],
-						icon_size[2],
+						icon_size[2]
 					},
 					color = Color.black(0, true),
 					start_color = Color.black(0, true),
-					in_focus_color = Color.black(255, true),
-				},
-			},
+					in_focus_color = Color.black(255, true)
+				}
+			}
 		}
 
 		pass_templates[#pass_templates + 1] = {
@@ -441,21 +441,21 @@ local badge_definitions = {
 				offset = {
 					0,
 					80,
-					10,
+					10
 				},
 				size = {
 					badge_size[1],
-					badge_size[2],
+					badge_size[2]
 				},
 				material_values = {
 					AnimationSpeedFireAmountt = {
 						previous_rank and current_rank and current_rank < previous_rank and 1 or 0,
-						0.045,
+						0.045
 					},
 					beforeTexure = previous_rank and current_rank and current_rank < previous_rank and current_rank_badge.texture or previous_rank_badge.texture,
-					afterTexture = previous_rank and current_rank and current_rank < previous_rank and previous_rank_badge.texture or current_rank_badge.texture,
-				},
-			},
+					afterTexture = previous_rank and current_rank and current_rank < previous_rank and previous_rank_badge.texture or current_rank_badge.texture
+				}
+			}
 		}
 
 		if use_charges and not is_min then
@@ -482,25 +482,25 @@ local badge_definitions = {
 							255,
 							74,
 							21,
-							21,
+							21
 						},
 						offset = {
 							current_x_offset,
 							badge_size[2] + 50,
-							1,
+							1
 						},
 						size = {
 							124,
-							124,
+							124
 						},
 						default_size = {
 							124,
-							124,
+							124
 						},
 						material_values = {
-							texture_map = "content/ui/textures/icons/generic/havoc_strike",
-						},
-					},
+							texture_map = "content/ui/textures/icons/generic/havoc_strike"
+						}
+					}
 				}
 				pass_templates[#pass_templates + 1] = {
 					pass_type = "texture",
@@ -514,20 +514,20 @@ local badge_definitions = {
 						offset = {
 							current_x_offset,
 							badge_size[2] + 50,
-							0,
+							0
 						},
 						size = {
 							124,
-							124,
+							124
 						},
 						default_size = {
 							124,
-							124,
+							124
 						},
 						material_values = {
-							texture_map = "content/ui/textures/icons/generic/havoc_strike",
-						},
-					},
+							texture_map = "content/ui/textures/icons/generic/havoc_strike"
+						}
+					}
 				}
 			end
 		end
@@ -554,17 +554,17 @@ local badge_definitions = {
 						in_focus_color = Color.white(255, true),
 						size = {
 							letter_size[1],
-							letter_size[2],
+							letter_size[2]
 						},
 						offset = {
 							x_offset,
 							180,
-							5,
+							5
 						},
 						material_values = {
-							number = rank_number,
-						},
-					},
+							number = rank_number
+						}
+					}
 				}
 			end
 		end
@@ -588,7 +588,7 @@ local badge_definitions = {
 						start_offset_y = 180,
 						size = {
 							letter_size[1],
-							letter_size[2],
+							letter_size[2]
 						},
 						color = Color.white(0, true),
 						start_color = Color.white(0, true),
@@ -596,12 +596,12 @@ local badge_definitions = {
 						offset = {
 							x_offset,
 							180,
-							6,
+							6
 						},
 						material_values = {
-							number = rank_number,
-						},
-					},
+							number = rank_number
+						}
+					}
 				}
 			end
 		end
@@ -635,7 +635,7 @@ local badge_definitions = {
 
 		content.previous_rank_size = previous_rank_to_string and #previous_rank_to_string
 		content.current_rank_size = current_rank_to_string and #current_rank_to_string
-	end,
+	end
 }
 
 local function badge_fade_in(widget, progress)
@@ -647,7 +647,7 @@ local function badge_fade_in(widget, progress)
 		"havoc_charge_1",
 		"havoc_charge_2",
 		"havoc_charge_3",
-		"havoc_rank_badge",
+		"havoc_rank_badge"
 	}
 	local anim_progress = math.easeInCubic(progress)
 
@@ -775,7 +775,7 @@ local function weekly_anim_reward_entry(start_time, end_time, widget_index)
 					end
 				end
 			end
-		end,
+		end
 	}
 end
 
@@ -797,7 +797,7 @@ local animations = {
 						reward_widget.alpha_multiplier = 0
 					end
 				end
-			end,
+			end
 		},
 		{
 			name = "fade_in",
@@ -807,7 +807,7 @@ local animations = {
 				local anim_progress = math.easeOutCubic(progress)
 
 				parent:set_alpha_multiplier(anim_progress)
-			end,
+			end
 		},
 		{
 			name = "badge_fade_in",
@@ -817,7 +817,7 @@ local animations = {
 				local anim_progress = math.easeOutCubic(progress)
 
 				badge_fade_in(widget, anim_progress)
-			end,
+			end
 		},
 		{
 			name = "badge_move_in",
@@ -828,7 +828,7 @@ local animations = {
 				local y_anim_distance = 50 - anim_progress * 50
 
 				parent:_set_scenegraph_position("badge", nil, scenegraph_definition.badge.position[2] - y_anim_distance)
-			end,
+			end
 		},
 		{
 			name = "badge_glow_fade_in",
@@ -842,7 +842,7 @@ local animations = {
 				if style then
 					ColorUtilities.color_lerp(style.start_color, style.in_focus_color, anim_progress, style.color)
 				end
-			end,
+			end
 		},
 		{
 			name = "title_move_in",
@@ -853,7 +853,7 @@ local animations = {
 				local y_anim_distance = anim_progress * 50
 
 				parent:_set_scenegraph_position("display_name", nil, scenegraph_definition.display_name.position[2] - y_anim_distance)
-			end,
+			end
 		},
 		{
 			name = "sub_title_move_in",
@@ -864,14 +864,14 @@ local animations = {
 				local y_anim_distance = anim_progress * -50
 
 				parent:_set_scenegraph_position("divider", nil, scenegraph_definition.divider.position[2] - y_anim_distance)
-			end,
+			end
 		},
 		weekly_anim_reward_entry(0.5, 1.5, 1),
 		weekly_anim_reward_entry(1.5, 2.5, 2),
 		weekly_anim_reward_entry(2.5, 3.5, 3),
 		weekly_anim_reward_entry(3.5, 4.5, 4),
 		weekly_anim_reward_entry(4.5, 5.5, 5),
-		weekly_anim_reward_entry(5.5, 6.5, 6),
+		weekly_anim_reward_entry(5.5, 6.5, 6)
 	},
 	rank_increase = {
 		{
@@ -888,7 +888,7 @@ local animations = {
 				else
 					parent:_play_sound(UISoundEvents.havoc_terminal_rank_up)
 				end
-			end,
+			end
 		},
 		{
 			end_time = 2,
@@ -898,7 +898,7 @@ local animations = {
 				local anim_progress = math.easeOutCubic(progress)
 
 				parent:set_alpha_multiplier(anim_progress)
-			end,
+			end
 		},
 		{
 			end_time = 1.4,
@@ -909,7 +909,7 @@ local animations = {
 				local y_anim_distance = anim_progress * 50
 
 				parent:_set_scenegraph_position("display_name", nil, scenegraph_definition.display_name.position[2] - y_anim_distance)
-			end,
+			end
 		},
 		{
 			end_time = 1,
@@ -917,7 +917,7 @@ local animations = {
 			start_time = 0.5,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
 				badge_fade_in(widget, progress)
-			end,
+			end
 		},
 		{
 			end_time = 1.5,
@@ -928,7 +928,7 @@ local animations = {
 				local y_anim_distance = 50 - anim_progress * 50
 
 				parent:_set_scenegraph_position("badge", nil, scenegraph_definition.badge.position[2] - y_anim_distance)
-			end,
+			end
 		},
 		{
 			end_time = 2.2,
@@ -946,7 +946,7 @@ local animations = {
 					style["previous_havoc_rank_value_" .. i].color[1] = 255 - anim_progress * 255
 					style["previous_havoc_rank_value_" .. i].offset[2] = style["previous_havoc_rank_value_" .. i].start_offset_y - y_anim_offset * anim_progress
 				end
-			end,
+			end
 		},
 		{
 			end_time = 2.4,
@@ -964,7 +964,7 @@ local animations = {
 					style["current_havoc_rank_value_" .. i].color[1] = anim_progress * 255
 					style["current_havoc_rank_value_" .. i].offset[2] = style["current_havoc_rank_value_" .. i].start_offset_y + y_anim_offset - y_anim_offset * anim_progress
 				end
-			end,
+			end
 		},
 		{
 			end_time = 2.6,
@@ -979,15 +979,15 @@ local animations = {
 					parent:_play_sound(UISoundEvents.havoc_charge_change)
 				end
 			end,
-			update = charge_update_anim,
+			update = charge_update_anim
 		},
 		{
 			end_time = 4.2,
 			name = "change_badge",
 			start_time = 2.4,
 			init = badge_init_anim,
-			update = badge_update_anim,
-		},
+			update = badge_update_anim
+		}
 	},
 	rank_decrease = {
 		{
@@ -997,7 +997,7 @@ local animations = {
 			init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 				parent:set_alpha_multiplier(0)
 				parent:_play_sound(UISoundEvents.havoc_terminal_rank_down)
-			end,
+			end
 		},
 		{
 			end_time = 2,
@@ -1007,7 +1007,7 @@ local animations = {
 				local anim_progress = math.easeOutCubic(progress)
 
 				parent:set_alpha_multiplier(anim_progress)
-			end,
+			end
 		},
 		{
 			end_time = 1.4,
@@ -1018,7 +1018,7 @@ local animations = {
 				local y_anim_distance = anim_progress * 50
 
 				parent:_set_scenegraph_position("display_name", nil, scenegraph_definition.display_name.position[2] - y_anim_distance)
-			end,
+			end
 		},
 		{
 			end_time = 1,
@@ -1028,7 +1028,7 @@ local animations = {
 				local anim_progress = math.easeOutCubic(progress)
 
 				badge_fade_in(widget, anim_progress)
-			end,
+			end
 		},
 		{
 			end_time = 1.5,
@@ -1039,7 +1039,7 @@ local animations = {
 				local y_anim_distance = 50 - anim_progress * 50
 
 				parent:_set_scenegraph_position("badge", nil, scenegraph_definition.badge.position[2] - y_anim_distance)
-			end,
+			end
 		},
 		{
 			end_time = 2.2,
@@ -1057,7 +1057,7 @@ local animations = {
 					style["previous_havoc_rank_value_" .. i].color[1] = 255 - anim_progress * 255
 					style["previous_havoc_rank_value_" .. i].offset[2] = style["previous_havoc_rank_value_" .. i].start_offset_y - y_anim_offset * anim_progress
 				end
-			end,
+			end
 		},
 		{
 			end_time = 2.4,
@@ -1075,7 +1075,7 @@ local animations = {
 					style["current_havoc_rank_value_" .. i].color[1] = anim_progress * 255
 					style["current_havoc_rank_value_" .. i].offset[2] = style["current_havoc_rank_value_" .. i].start_offset_y + y_anim_offset - y_anim_offset * anim_progress
 				end
-			end,
+			end
 		},
 		{
 			end_time = 3,
@@ -1090,15 +1090,15 @@ local animations = {
 					parent:_play_sound(UISoundEvents.havoc_charge_change)
 				end
 			end,
-			update = charge_update_anim,
+			update = charge_update_anim
 		},
 		{
 			end_time = 3.8,
 			name = "change_badge",
 			start_time = 2,
 			init = badge_init_anim,
-			update = badge_update_anim,
-		},
+			update = badge_update_anim
+		}
 	},
 	charge_change = {
 		{
@@ -1107,7 +1107,7 @@ local animations = {
 			start_time = 0,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 				parent:set_alpha_multiplier(0)
-			end,
+			end
 		},
 		{
 			end_time = 2,
@@ -1117,7 +1117,7 @@ local animations = {
 				local anim_progress = math.easeOutCubic(progress)
 
 				parent:set_alpha_multiplier(anim_progress)
-			end,
+			end
 		},
 		{
 			end_time = 1.4,
@@ -1128,7 +1128,7 @@ local animations = {
 				local y_anim_distance = anim_progress * 50
 
 				parent:_set_scenegraph_position("display_name", nil, scenegraph_definition.display_name.position[2] - y_anim_distance)
-			end,
+			end
 		},
 		{
 			end_time = 1,
@@ -1138,7 +1138,7 @@ local animations = {
 				local anim_progress = math.easeOutCubic(progress)
 
 				badge_fade_in(widget, anim_progress)
-			end,
+			end
 		},
 		{
 			end_time = 1.5,
@@ -1149,7 +1149,7 @@ local animations = {
 				local y_anim_distance = 50 - anim_progress * 50
 
 				parent:_set_scenegraph_position("badge", nil, scenegraph_definition.badge.position[2] - y_anim_distance)
-			end,
+			end
 		},
 		{
 			end_time = 1.8,
@@ -1158,9 +1158,9 @@ local animations = {
 			init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 				parent:_play_sound(UISoundEvents.havoc_charge_change)
 			end,
-			update = charge_update_anim,
-		},
-	},
+			update = charge_update_anim
+		}
+	}
 }
 
 return {
@@ -1168,5 +1168,5 @@ return {
 	widget_definitions = widget_definitions,
 	reward_defintions = reward_defintions,
 	badge_definitions = badge_definitions,
-	animations = animations,
+	animations = animations
 }

@@ -20,8 +20,8 @@ local mission_objective_templates = {
 					770,
 					660,
 					583,
-					550,
-				},
+					550
+				}
 			},
 			objective_flash_train_alert = {
 				additional_height = 20,
@@ -34,7 +34,7 @@ local mission_objective_templates = {
 				objective_category = "overarching",
 				progress_timer = true,
 				turn_off_backfill = true,
-				ui_state = "alert",
+				ui_state = "alert"
 			},
 			objective_flash_train_defuse_bomb_one = {
 				description = "loc_objective_op_train_defuse_one_desc",
@@ -42,7 +42,7 @@ local mission_objective_templates = {
 				mission_objective_type = "decode",
 				music_wwise_state = "operation_stage_1",
 				progress_bar = true,
-				progression_sync_granularity = 0.001,
+				progression_sync_granularity = 0.001
 			},
 			objective_flash_train_defuse_bomb_two = {
 				description = "loc_objective_op_train_defuse_two_desc",
@@ -51,19 +51,19 @@ local mission_objective_templates = {
 				music_wwise_state = "operation_stage_2",
 				progress_bar = true,
 				progression_sync_granularity = 0.001,
-				turn_off_backfill = true,
+				turn_off_backfill = true
 			},
 			objective_op_train_luggable_one = {
 				description = "loc_objective_op_train_luggable_one_desc",
 				header = "loc_objective_op_train_luggable_one_header",
 				mission_objective_type = "luggable",
-				music_wwise_state = "operation_stage_2",
+				music_wwise_state = "operation_stage_2"
 			},
 			objective_op_train_activate_mechanism = {
 				description = "loc_objective_op_train_activate_mechanism_desc",
 				header = "loc_objective_op_train_activate_mechanism_header",
 				mission_objective_type = "goal",
-				music_wwise_state = "operation_stage_2",
+				music_wwise_state = "operation_stage_2"
 			},
 			objective_flash_train_defuse_bomb_three = {
 				description = "loc_objective_op_train_defuse_final_desc",
@@ -71,7 +71,7 @@ local mission_objective_templates = {
 				mission_objective_type = "decode",
 				music_wwise_state = "operation_stage_2",
 				progress_bar = true,
-				progression_sync_granularity = 0.001,
+				progression_sync_granularity = 0.001
 			},
 			objective_flash_train_defuse_bomb_four = {
 				description = "loc_objective_op_train_defuse_final_desc",
@@ -79,34 +79,34 @@ local mission_objective_templates = {
 				hide_widget = true,
 				mission_objective_type = "decode",
 				music_wwise_state = "operation_stage_2",
-				progression_sync_granularity = 0.001,
+				progression_sync_granularity = 0.001
 			},
 			objective_flash_train_defuse_final_bombs = {
 				description = "loc_objective_op_train_defuse_final_desc",
 				header = "loc_objective_op_train_defuse_final_header",
 				mission_objective_type = "goal",
-				music_wwise_state = "operation_stage_2",
+				music_wwise_state = "operation_stage_2"
 			},
 			objective_flash_train_eliminate_target = {
 				description = "loc_objective_op_train_kill_captain_desc",
 				header = "loc_objective_op_train_kill_captain_header",
 				mission_objective_type = "kill",
-				music_wwise_state = "operation_stage_3",
+				music_wwise_state = "operation_stage_3"
 			},
 			objective_flash_train_stop_train = {
 				description = "loc_objective_op_stop_train_desc",
 				header = "loc_objective_op_stop_train_header",
 				mission_objective_type = "goal",
-				music_wwise_state = "operation_stage_4",
+				music_wwise_state = "operation_stage_4"
 			},
 			objective_flash_train_extract = {
 				description = "loc_objective_op_extract_desc",
 				header = "loc_objective_op_extract_header",
 				mission_objective_type = "goal",
-				music_wwise_state = "escape_event",
-			},
-		},
-	},
+				music_wwise_state = "escape_event"
+			}
+		}
+	}
 }
 
 return mission_objective_templates

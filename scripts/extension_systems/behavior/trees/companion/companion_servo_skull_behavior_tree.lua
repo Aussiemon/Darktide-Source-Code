@@ -13,18 +13,18 @@ local ABILITIES = {
 		condition = "is_correct_state",
 		name = "hack_decode",
 		condition_args = {
-			state = servo_skull_states.hacking,
+			state = servo_skull_states.hacking
 		},
-		action_data = action_data.hack_decode,
+		action_data = action_data.hack_decode
 	},
 	{
 		"BtInjectSyringeAction",
 		condition = "is_correct_state",
 		name = "inject_ally",
 		condition_args = {
-			state = servo_skull_states.inject_ally,
+			state = servo_skull_states.inject_ally
 		},
-		action_data = action_data.inject_ally,
+		action_data = action_data.inject_ally
 	},
 	{
 		"BtShootFlamesAroundAction",
@@ -33,12 +33,12 @@ local ABILITIES = {
 		condition_args = {
 			state = {
 				servo_skull_states.flamethrower,
-				servo_skull_states.flamethrower_shooting,
-			},
+				servo_skull_states.flamethrower_shooting
+			}
 		},
-		action_data = action_data.shoot_flames,
+		action_data = action_data.shoot_flames
 	},
-	name = "ABILITIES",
+	name = "ABILITIES"
 }
 local behavior_tree = {
 	"BtSelectorNode",
@@ -48,17 +48,17 @@ local behavior_tree = {
 		{
 			"BtShootAction",
 			name = "shoot",
-			action_data = action_data.shoot,
+			action_data = action_data.shoot
 		},
 		condition = "can_servo_skull_shoot",
-		name = "shoots",
+		name = "shoots"
 	},
 	{
 		"BtIdleAction",
 		name = "idle",
-		action_data = action_data.idle,
+		action_data = action_data.idle
 	},
-	name = "companion_servo_skull",
+	name = "companion_servo_skull"
 }
 
 return behavior_tree

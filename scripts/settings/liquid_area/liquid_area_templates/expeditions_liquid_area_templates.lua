@@ -18,7 +18,7 @@ local templates = {
 		use_liquid_drawer = true,
 		vfx_name_filled = "content/fx/particles/weapons/grenades/fire_grenade/fire_grenade_player_lingering_fire",
 		vfx_name_rim = "content/fx/particles/liquid_area/fire_lingering_edge",
-		spread_function = LiquidSpread.pour,
+		spread_function = LiquidSpread.pour
 	},
 	shock_trap = {
 		buff_target_side_relation = "enemy",
@@ -35,7 +35,7 @@ local templates = {
 		start_pressure = 40,
 		use_liquid_drawer = true,
 		vfx_name_filled = "content/fx/particles/liquid_area/lightning_liguid_area",
-		spread_function = LiquidSpread.pour,
+		spread_function = LiquidSpread.pour
 	},
 	promethium = {
 		buff_target_side_relation = "enemy",
@@ -54,8 +54,8 @@ local templates = {
 		use_liquid_drawer = true,
 		vfx_name_filled = "content/fx/particles/liquid_area/promethium_fire_lingering",
 		vfx_name_rim = "content/fx/particles/liquid_area/fire_lingering_edge",
-		spread_function = LiquidSpread.pour,
-	},
+		spread_function = LiquidSpread.pour
+	}
 }
 
 return templates

@@ -3,8 +3,8 @@
 local circumstance_templates = {
 	dawn = {
 		theme_tag = "dawn",
-		wwise_state = "None",
-	},
+		wwise_state = "None"
+	}
 }
 
 return circumstance_templates

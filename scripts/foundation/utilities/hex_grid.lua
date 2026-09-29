@@ -7,33 +7,33 @@ local DIRECTIONS = {
 	{
 		angle = 0,
 		i = 1,
-		j = 0,
+		j = 0
 	},
 	{
 		i = 1,
 		j = -1,
-		angle = two_pi - pi_div_3,
+		angle = two_pi - pi_div_3
 	},
 	{
 		i = 0,
 		j = -1,
-		angle = two_pi - pi_div_3 * 2,
+		angle = two_pi - pi_div_3 * 2
 	},
 	{
 		i = -1,
 		j = 0,
-		angle = two_pi - pi_div_3 * 3,
+		angle = two_pi - pi_div_3 * 3
 	},
 	{
 		i = -1,
 		j = 1,
-		angle = two_pi - pi_div_3 * 4,
+		angle = two_pi - pi_div_3 * 4
 	},
 	{
 		i = 0,
 		j = 1,
-		angle = two_pi - pi_div_3 * 5,
-	},
+		angle = two_pi - pi_div_3 * 5
+	}
 }
 local NUM_DIRECTIONS = #DIRECTIONS
 

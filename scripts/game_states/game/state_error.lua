@@ -21,7 +21,7 @@ end
 
 StateError._cleanup = function (self)
 	Managers.ui:close_all_views(true, {
-		"loading_view",
+		"loading_view"
 	})
 	Managers.multiplayer_session:reset("reset_from_state_error")
 	Managers.mechanism:leave_mechanism()

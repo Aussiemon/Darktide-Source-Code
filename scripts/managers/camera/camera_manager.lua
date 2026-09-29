@@ -28,6 +28,7 @@ require("scripts/managers/camera/transitions/camera_transition_rotation_lerp")
 
 local CameraEffectSettings = require("scripts/settings/camera/camera_effect_settings")
 local CameraSettings = require("scripts/settings/camera/camera_settings")
+local CameraTransitionTemplates = require("scripts/settings/camera/camera_transition_templates")
 local CameraShakeEvent = require("scripts/managers/camera/camera_shake_event")
 local EnvironmentBlend = require("scripts/managers/camera/environment_blend")
 local ScriptCamera = require("scripts/foundation/utilities/script_camera")
@@ -46,7 +47,7 @@ CameraManager.NODE_PROPERTY_MAP = {
 	"far_range",
 	"shading_environment",
 	"fade_to_black",
-	"exposure_snap",
+	"exposure_snap"
 }
 
 CameraManager.init = function (self, world)
@@ -74,7 +75,7 @@ CameraManager.init = function (self, world)
 		recovery_values = nil,
 		start_time = 0,
 		time_to_recover = 0,
-		transition_function = nil,
+		transition_function = nil
 	}
 	self._shake_event_settings = {}
 	self._active_events = {}
@@ -178,7 +179,7 @@ CameraManager.load_node_tree = function (self, viewport_name, tree_id, tree_name
 	local root_node = self:_setup_child_nodes(node_table, viewport_name, tree_id, nil, tree_settings)
 	local tree_table = {
 		root_node = root_node,
-		nodes = node_table,
+		nodes = node_table
 	}
 
 	self._node_trees[viewport_name][tree_id] = tree_table
@@ -352,7 +353,7 @@ CameraManager._update_level_particle_effects = function (self, viewport_name)
 	end
 end
 
-CameraManager.set_camera_node = function (self, viewport_name, tree_id, node_name)
+CameraManager.set_camera_node = function (self, viewport_name, tree_id, node_name, force_instant_transition)
 	local old_tree_id = self._current_trees[viewport_name]
 
 	self._current_trees[viewport_name] = tree_id
@@ -361,13 +362,15 @@ CameraManager.set_camera_node = function (self, viewport_name, tree_id, node_nam
 	local current_node = camera_nodes[#camera_nodes]
 	local tree = self._node_trees[viewport_name][tree_id]
 	local next_node = {
-		node = tree.nodes[node_name],
+		node = tree.nodes[node_name]
 	}
 
 	if current_node then
 		local transition_template
 
-		if old_tree_id ~= tree_id then
+		if force_instant_transition then
+			transition_template = CameraTransitionTemplates.instant_cut
+		elseif old_tree_id ~= tree_id then
 			local tree_transitions = current_node.node:tree_transitions()
 
 			transition_template = tree_transitions[tree_id] or tree_transitions.default
@@ -797,7 +800,7 @@ CameraManager._calculate_sequence_event_values_recovery = function (self, t)
 		x = 0,
 		y = 0,
 		yaw = 0,
-		z = 0,
+		z = 0
 	}
 	local sequence_event_settings = self._sequence_event_settings
 	local time_to_recover = sequence_event_settings.time_to_recover
@@ -825,7 +828,7 @@ CameraManager._calculate_sequence_event_values_normal = function (self, event_va
 		x = 0,
 		y = 0,
 		yaw = 0,
-		z = 0,
+		z = 0
 	}
 
 	for modifier_type, modifiers in pairs(event_values) do

@@ -6,15 +6,17 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FriendlyFire = require("scripts/utilities/attack/friendly_fire")
 local Health = require("scripts/utilities/health")
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ToughnessDepleted = require("scripts/utilities/toughness/toughness_depleted")
 local ToughnessSettings = require("scripts/settings/toughness/toughness_settings")
+local ability_types = table.keys(PlayerCharacterConstants.ability_configuration)
 local attack_results = AttackSettings.attack_results
 local damage_types = DamageSettings.damage_types
 local health_settings = AttackSettings.health_settings
 local shield_settings = AttackSettings.shield_settings
 local toughness_template_types = ToughnessSettings.template_types
 local buff_keywords = BuffSettings.keywords
-local _calculate_shield_damage, _calculate_toughness_damage, _calculate_toughness_damage_player, _calculate_toughness_damage_minion, _calculate_health_damage, _calculate_health_damage_player, _calculate_health_damage_minion
+local _calculate_ability_resource_absorbed_damage, _calculate_shield_damage, _calculate_toughness_damage, _calculate_toughness_damage_player, _calculate_toughness_damage_minion, _calculate_health_damage, _calculate_health_damage_player, _calculate_health_damage_minion
 local DamageTakenCalculation = {}
 
 DamageTakenCalculation.calculation_parameters = function (attacked_unit, attacked_breed_or_nil, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor, attacker_buff_extension, attack_type)
@@ -95,6 +97,12 @@ DamageTakenCalculation.calculate_attack_result = function (damage_amount, damage
 	end
 
 	if remaining_damage > 0 then
+		local ability_resource_attack_result, ability_resource_damage_absorbed
+
+		ability_resource_attack_result, remaining_damage, ability_resource_damage_absorbed = _calculate_ability_resource_absorbed_damage(attacked_unit, remaining_damage, damage_profile, instakill)
+	end
+
+	if remaining_damage > 0 then
 		local health_attack_result
 
 		health_attack_result, remaining_damage, remaining_permanent_damage = _calculate_health_damage(remaining_damage, damage_profile, damage_type, current_health_damage, current_permanent_damage, max_health, max_wounds, instakill, is_invulnerable, attacked_unit_stat_buffs, attacked_unit_keywords, health_setting, attacking_unit_stat_buffs)
@@ -143,6 +151,45 @@ function _calculate_shield_damage(attacked_unit, damage_amount, damage_profile, 
 	end
 
 	return nil, damage_amount, 0
+end
+
+function _calculate_ability_resource_absorbed_damage(attacked_unit, damage_amount, damage_profile, instakill)
+	if damage_amount <= 0 then
+		return nil, damage_amount, 0
+	end
+
+	local ignore_absorbtion = instakill
+	local attacked_unit_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
+	local attacked_unit_ability_extension = ScriptUnit.has_extension(attacked_unit, "ability_system")
+	local attacked_unit_stat_buffs = attacked_unit_buff_extension and attacked_unit_buff_extension:stat_buffs()
+
+	if ignore_absorbtion or not attacked_unit_stat_buffs or not attacked_unit_ability_extension then
+		return nil, damage_amount, 0
+	end
+
+	local original_damage_amount = damage_amount
+	local damage_absorbed = 0
+
+	for i = 1, #ability_types do
+		local ability_type = ability_types[i]
+		local target_ability_resource_absorbtion_percentage = (attacked_unit_stat_buffs["damage_taken_percentage_absorbed_by_" .. ability_type .. "_resource"] or 1) - 1
+		local target_damage_absorbtion = math.clamp(original_damage_amount * target_ability_resource_absorbtion_percentage, 0, damage_amount)
+
+		if target_damage_absorbtion > 0 then
+			local _, actual_resource_consumed, _ = attacked_unit_ability_extension:consume_ability_resource(ability_type, target_damage_absorbtion)
+
+			damage_absorbed = damage_absorbed + actual_resource_consumed
+			damage_amount = damage_amount - damage_absorbed
+		end
+
+		if damage_amount <= damage_absorbed then
+			break
+		end
+	end
+
+	local attack_result = damage_amount <= 0 and attack_results.ability_resource_absorbed or nil
+
+	return attack_result, damage_amount, damage_absorbed
 end
 
 function _calculate_toughness_damage(damage_amount, damage_profile, attack_type, attack_direction, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, attacked_unit_stat_buffs, attacked_unit_keywords, instakill, attacked_unit)
@@ -237,13 +284,9 @@ function _calculate_toughness_damage_player(damage_amount, damage_profile, attac
 		toughness_broken = not absorbed_attack and toughness_before_damage > 0 or false
 
 		if toughness_broken and damage_profile.on_depleted_toughness_function_override_name then
-			if has_bolstered_toughness then
-				remaining_damage = 0
-			else
-				local toughness_depleted_func = ToughnessDepleted[damage_profile.on_depleted_toughness_function_override_name]
+			local toughness_depleted_func = ToughnessDepleted[damage_profile.on_depleted_toughness_function_override_name]
 
-				remaining_damage = toughness_depleted_func(current_toughness_damage, max_toughness, damage_amount)
-			end
+			remaining_damage = toughness_depleted_func(current_toughness_damage, max_toughness, damage_amount)
 		end
 
 		remaining_damage = remaining_damage + bleedthrough_damage
@@ -252,9 +295,7 @@ function _calculate_toughness_damage_player(damage_amount, damage_profile, attac
 		toughness_broken = not absorbed_attack and toughness_before_damage > 0
 
 		if toughness_broken then
-			if has_bolstered_toughness then
-				remaining_damage = 0
-			elseif damage_profile.on_depleted_toughness_function_override_name then
+			if damage_profile.on_depleted_toughness_function_override_name then
 				local toughness_depleted_func = ToughnessDepleted[damage_profile.on_depleted_toughness_function_override_name]
 
 				remaining_damage = toughness_depleted_func(current_toughness_damage, max_toughness, damage_amount)

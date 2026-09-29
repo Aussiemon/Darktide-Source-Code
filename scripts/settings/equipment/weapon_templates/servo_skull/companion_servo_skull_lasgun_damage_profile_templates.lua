@@ -27,7 +27,7 @@ local companion_servo_skull_lasgun_armor_mod_default = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
-			[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_5
 		},
 		impact = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_0_6,
@@ -37,8 +37,8 @@ local companion_servo_skull_lasgun_armor_mod_default = {
 			[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 			[armor_types.super_armor] = damage_lerp_values.no_damage,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_25,
-			[armor_types.void_shield] = damage_lerp_values.lerp_0_25,
-		},
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_25
+		}
 	},
 	far = {
 		attack = {
@@ -49,7 +49,7 @@ local companion_servo_skull_lasgun_armor_mod_default = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
-			[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_5
 		},
 		impact = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -59,9 +59,9 @@ local companion_servo_skull_lasgun_armor_mod_default = {
 			[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 			[armor_types.super_armor] = damage_lerp_values.no_damage,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_0_8,
-		},
-	},
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_8
+		}
+	}
 }
 
 damage_templates.default_companion_servo_skull_lasgun_killshot = {
@@ -71,33 +71,33 @@ damage_templates.default_companion_servo_skull_lasgun_killshot = {
 	cleave_distribution = single_cleave,
 	ranges = {
 		max = 15,
-		min = 7,
+		min = 7
 	},
 	wounds_template = WoundsTemplates.laser,
 	armor_damage_modifier_ranged = companion_servo_skull_lasgun_armor_mod_default,
 	critical_strike = {
 		gibbing_power = gibbing_power.always,
-		gibbing_type = gibbing_types.laser,
+		gibbing_type = gibbing_types.laser
 	},
 	power_distribution = {
-		attack = 160,
-		impact = 5,
+		attack = 100,
+		impact = 5
 	},
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.laser,
 	suppression_value = {
 		0.4,
-		0.6,
+		0.6
 	},
 	on_kill_area_suppression = {
 		suppression_value = {
 			0.4,
-			0.6,
+			0.6
 		},
 		distance = {
 			2,
-			3,
-		},
+			3
+		}
 	},
 	targets = {
 		default_target = {
@@ -106,28 +106,28 @@ damage_templates.default_companion_servo_skull_lasgun_killshot = {
 				[armor_types.armored] = 0.75,
 				[armor_types.super_armor] = 0.1,
 				[armor_types.berserker] = 0.25,
-				[armor_types.resistant] = 0.25,
+				[armor_types.resistant] = 0.25
 			},
-			boost_curve_multiplier_finesse = damage_lerp_values.lerp_2,
-		},
+			boost_curve_multiplier_finesse = damage_lerp_values.lerp_2
+		}
 	},
 	ragdoll_push_force = {
 		150,
-		250,
+		250
 	},
 	charge_level_scaler = {
 		{
 			modifier = 1,
-			t = 1,
+			t = 1
 		},
-		start_modifier = 0,
-	},
+		start_modifier = 0
+	}
 }
 damage_templates.improved_companion_servo_skull_lasgun_killshot = table.clone(damage_templates.default_companion_servo_skull_lasgun_killshot)
-damage_templates.improved_companion_servo_skull_lasgun_killshot.power_distribution.attack = 160
+damage_templates.improved_companion_servo_skull_lasgun_killshot.power_distribution.attack = 100
 damage_templates.improved_companion_servo_skull_lasgun_killshot.power_distribution.impact = 5
 
 return {
 	base_templates = damage_templates,
-	overrides = overrides,
+	overrides = overrides
 }

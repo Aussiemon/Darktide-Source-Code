@@ -17,7 +17,7 @@ end
 ResistanceUtils.constant = function (lo, hi, from_resistance)
 	local t = ResistanceUtils.empty({
 		0,
-		0,
+		0
 	})
 
 	from_resistance = from_resistance or 1
@@ -26,12 +26,12 @@ ResistanceUtils.constant = function (lo, hi, from_resistance)
 		if i < from_resistance then
 			t[i] = {
 				0,
-				0,
+				0
 			}
 		else
 			t[i] = {
 				lo,
-				hi,
+				hi
 			}
 		end
 	end

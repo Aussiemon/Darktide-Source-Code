@@ -28,7 +28,7 @@ local enemy_vo_enemy_cultist_berzerker_a = {
 			"loc_enemy_cultist_berzerker_a__assault_32",
 			"loc_enemy_cultist_berzerker_a__assault_35",
 			"loc_enemy_cultist_berzerker_a__assault_37",
-			"loc_enemy_cultist_berzerker_a__assault_40",
+			"loc_enemy_cultist_berzerker_a__assault_40"
 		},
 		sound_events_duration = {
 			2.192167,
@@ -54,7 +54,7 @@ local enemy_vo_enemy_cultist_berzerker_a = {
 			1.898854,
 			2.192938,
 			1.084771,
-			1.643042,
+			1.643042
 		},
 		sound_event_weights = {
 			0.04166667,
@@ -80,10 +80,10 @@ local enemy_vo_enemy_cultist_berzerker_a = {
 			0.04166667,
 			0.04166667,
 			0.04166667,
-			0.04166667,
+			0.04166667
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("enemy_vo_enemy_cultist_berzerker_a", enemy_vo_enemy_cultist_berzerker_a)

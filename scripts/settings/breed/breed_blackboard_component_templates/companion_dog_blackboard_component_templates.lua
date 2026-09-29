@@ -9,7 +9,7 @@ local companion_dog = {
 		move_state = "string",
 		move_to_position = "Vector3Box",
 		owner_unit = "Unit",
-		should_skip_start_anim = "boolean",
+		should_skip_start_anim = "boolean"
 	},
 	follow = {
 		adaptive_angle_enlarge_t = "number",
@@ -21,7 +21,7 @@ local companion_dog = {
 		current_position_cooldown = "number",
 		last_owner_cooldown_time = "number",
 		last_referenced_vector = "Vector3Box",
-		speed_reference = "number",
+		speed_reference = "number"
 	},
 	perception = {
 		aggro_state = "string",
@@ -38,7 +38,7 @@ local companion_dog = {
 		target_distance_z = "number",
 		target_position = "Vector3Box",
 		target_speed_away = "number",
-		target_unit = "Unit",
+		target_unit = "Unit"
 	},
 	spawn = {
 		anim_translation_scale_factor = "number",
@@ -50,12 +50,12 @@ local companion_dog = {
 		spawner_spawn_index = "number",
 		spawner_unit = "Unit",
 		unit = "Unit",
-		world = "World",
+		world = "World"
 	},
 	aim = {
 		controlled_aim_position = "Vector3Box",
 		controlled_aiming = "boolean",
-		lean_dot = "number",
+		lean_dot = "number"
 	},
 	nav_smart_object = {
 		entrance_is_at_bot_progress_on_path = "boolean",
@@ -64,7 +64,7 @@ local companion_dog = {
 		exit_position = "Vector3Box",
 		id = "number",
 		type = "string",
-		unit = "Unit",
+		unit = "Unit"
 	},
 	pounce = {
 		has_jump_off_direction = "boolean",
@@ -75,26 +75,26 @@ local companion_dog = {
 		pounce_target = "Unit",
 		started_leap = "boolean",
 		target_hit_zone_name = "string",
-		use_fast_jump = "boolean",
+		use_fast_jump = "boolean"
 	},
 	whistle = {
-		current_target = "Unit",
+		current_target = "Unit"
 	},
 	movable_platform = {
 		has_leave_teleport_position = "boolean",
 		leave_teleport_position = "Vector3Box",
 		node = "string",
-		unit_reference = "Unit",
+		unit_reference = "Unit"
 	},
 	teleport = {
 		has_teleport_position = "boolean",
-		teleport_position = "Vector3Box",
-	},
+		teleport_position = "Vector3Box"
+	}
 }
 local companion_dog_hub = table.clone(companion_dog)
 
 companion_dog_hub.hub_interaction_with_player = {
-	has_owner_started_interaction = "boolean",
+	has_owner_started_interaction = "boolean"
 }
 companion_dog_hub.behavior.is_out_of_bound = nil
 companion_dog_hub.pounce = nil
@@ -103,7 +103,7 @@ companion_dog_hub.movable_platform = nil
 
 local templates = {
 	companion_dog = companion_dog,
-	companion_dog_hub = companion_dog_hub,
+	companion_dog_hub = companion_dog_hub
 }
 
 return templates

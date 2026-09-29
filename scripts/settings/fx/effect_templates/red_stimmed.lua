@@ -7,7 +7,7 @@ local PARTICLE_2_NODE = "j_lefteye"
 local PARTICLE_3_NAME = "content/fx/particles/enemies/red_glowing_eyes"
 local PARTICLE_3_NODE = "j_righteye"
 local resources = {
-	eye_vfx = PARTICLE_2_NAME,
+	eye_vfx = PARTICLE_2_NAME
 }
 local SMOKE_VARIBLE_NAME_1 = "lerp_color_a"
 local SMOKE_VARIBLE_NAME_2 = "lerp_color_b"
@@ -15,7 +15,7 @@ local EYE_MATERIAL_VARIABLE_NAME = "material_variable_21872256"
 local COLOR = {
 	0.9,
 	0,
-	0.005,
+	0.005
 }
 local effect_template = {
 	name = "red_stimmed",
@@ -79,7 +79,7 @@ local effect_template = {
 		if vfx_particle_3_id then
 			World.stop_spawning_particles(world, vfx_particle_3_id)
 		end
-	end,
+	end
 }
 
 return effect_template

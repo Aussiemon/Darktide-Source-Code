@@ -7,7 +7,7 @@ local vfx = CompanionServoSkullFlamerSettings.vfx
 local sfx = CompanionServoSkullFlamerSettings.sfx
 local resources = {
 	resources_vfx = vfx,
-	resources_sfx = sfx,
+	resources_sfx = sfx
 }
 local effect_template = {
 	name = "companion_servo_skull_flamer",
@@ -115,7 +115,7 @@ local effect_template = {
 		template_data.source_id = nil
 		template_data.playing_id = nil
 		template_data.stop_event_name = nil
-	end,
+	end
 }
 
 return effect_template

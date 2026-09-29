@@ -7,13 +7,13 @@ local SIGNALS = {
 	last_request = "last_request",
 	ready = "ready",
 	reply = "reply",
-	request = "request",
+	request = "request"
 }
 local SERVER_RPCS = {
-	"rpc_testify_wait_for_response",
+	"rpc_testify_wait_for_response"
 }
 local CLIENT_RPCS = {
-	"rpc_testify_make_request",
+	"rpc_testify_make_request"
 }
 
 Testify = {
@@ -24,7 +24,7 @@ Testify = {
 	_peers = {},
 	_cache = {},
 	RETRY = newproxy(false),
-	expect = TestifyExpect:new(),
+	expect = TestifyExpect:new()
 }
 
 local __raw_print = print
@@ -116,7 +116,7 @@ Testify.make_request_to_runner = function (self, request_name, ...)
 
 	local request = {
 		name = request_name,
-		parameters = request_parameters,
+		parameters = request_parameters
 	}
 
 	self:_signal(SIGNALS.request, cjson_encode(request))
@@ -182,7 +182,7 @@ end
 
 Testify.respond_to_runner_request = function (self, request_name, responses, num_responses)
 	self:respond_to_request(request_name, {
-		responses,
+		responses
 	}, num_responses)
 end
 
@@ -229,7 +229,7 @@ Testify._signal = function (self, signal, message, print_signal)
 		system = "Testify",
 		type = "signal",
 		signal = signal,
-		message = tostring(message),
+		message = tostring(message)
 	})
 end
 

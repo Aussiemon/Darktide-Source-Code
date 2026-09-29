@@ -11,7 +11,7 @@ local pickup_data = {
 	name = "medical_crate_pocketable",
 	pickup_sound = "wwise/events/player/play_pick_up_box",
 	smart_tag_target_type = "pickup",
-	unit_name = "content/pickups/pocketables/medical_crate/pickup_medical_crate",
+	unit_name = "content/pickups/pocketables/medical_crate/pickup_medical_crate"
 }
 
 return pickup_data

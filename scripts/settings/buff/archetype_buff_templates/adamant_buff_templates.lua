@@ -67,8 +67,8 @@ templates.adamant_companion_damage_per_level = {
 	lerped_stat_buffs = {
 		[stat_buffs.companion_damage_multiplier] = {
 			max = 2,
-			min = 1,
-		},
+			min = 1
+		}
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -82,7 +82,7 @@ templates.adamant_companion_damage_per_level = {
 	end,
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		return template_data.lerp_value
-	end,
+	end
 }
 templates.adamant_charge_passive_buff = {
 	class_name = "proc_buff",
@@ -90,13 +90,13 @@ templates.adamant_charge_passive_buff = {
 	predicted = false,
 	proc_events = {
 		[proc_events.on_lunge_start] = 1,
-		[proc_events.on_lunge_end] = 1,
+		[proc_events.on_lunge_end] = 1
 	},
 	conditional_keywords = {
 		keywords.count_as_blocking,
 		keywords.count_as_blocking_vs_ranged,
 		keywords.count_as_dodge_vs_chaos_hound_pounce,
-		keywords.count_as_dodge_vs_netgunner,
+		keywords.count_as_dodge_vs_netgunner
 	},
 	conditional_keywords_func = function (template_data)
 		return template_data.lunging
@@ -116,8 +116,8 @@ templates.adamant_charge_passive_buff = {
 			local buff_extension = template_context.buff_extension
 
 			buff_extension:add_internally_controlled_buff("adamant_post_charge_buff", t)
-		end,
-	},
+		end
+	}
 }
 templates.adamant_post_charge_buff = {
 	class_name = "buff",
@@ -127,16 +127,16 @@ templates.adamant_post_charge_buff = {
 	predicted = false,
 	refresh_duration_on_stack = true,
 	player_effects = {
-		on_screen_effect = "content/fx/particles/screenspace/screen_adamant_charge_02",
+		on_screen_effect = "content/fx/particles/screenspace/screen_adamant_charge_02"
 	},
 	duration = talent_settings.combat_ability.charge.duration,
 	stat_buffs = {
 		[stat_buffs.impact_modifier] = talent_settings.combat_ability.charge.impact,
-		[stat_buffs.damage] = talent_settings.combat_ability.charge.damage,
+		[stat_buffs.damage] = talent_settings.combat_ability.charge.damage
 	},
 	related_talents = {
-		"adamant_charge",
-	},
+		"adamant_charge"
+	}
 }
 templates.adamant_charge_cooldown_buff = {
 	class_name = "proc_buff",
@@ -144,7 +144,7 @@ templates.adamant_charge_cooldown_buff = {
 	predicted = false,
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_lunge_end] = 1,
+		[proc_events.on_lunge_end] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -169,12 +169,12 @@ templates.adamant_charge_cooldown_buff = {
 			local cooldown_time = math.min(template_data.cooldown, talent_settings.combat_ability.charge.cooldown_max)
 
 			if cooldown_time > 0 then
-				template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", cooldown_time)
+				template_data.ability_extension:restore_ability_resource("combat_ability", cooldown_time)
 
 				template_data.cooldown = 0
 			end
-		end,
-	},
+		end
+	}
 }
 
 local _adamant_toughness_hits = {}
@@ -185,7 +185,7 @@ templates.adamant_charge_toughness_buff = {
 	predicted = false,
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_lunge_end] = 1,
+		[proc_events.on_lunge_end] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -232,30 +232,30 @@ templates.adamant_charge_toughness_buff = {
 			template_data.hits = 0
 
 			table.clear(_adamant_toughness_hits)
-		end,
-	},
+		end
+	}
 }
 templates.adamant_charge_increased_distance = {
 	class_name = "buff",
 	max_stacks = 1,
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.lunge_distance] = talent_settings.combat_ability.charge.distance_increase,
-	},
+		[stat_buffs.lunge_distance] = talent_settings.combat_ability.charge.distance_increase
+	}
 }
 templates.adamant_grenade_radius_increase = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.explosion_radius_modifier_frag] = talent_settings.blitz_ability.grenade.radius_increase,
-	},
+		[stat_buffs.explosion_radius_modifier_frag] = talent_settings.blitz_ability.grenade.radius_increase
+	}
 }
 templates.adamant_grenade_damage_increase = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.frag_damage] = talent_settings.blitz_ability.grenade.damage_increase,
-	},
+		[stat_buffs.frag_damage] = talent_settings.blitz_ability.grenade.damage_increase
+	}
 }
 
 local external_properties = {}
@@ -314,10 +314,10 @@ templates.adamant_whistle_replenishment = {
 		local next_charge_t = template_data.next_charge_t
 
 		if not next_charge_t then
-			local cooldown = ability_extension:max_ability_cooldown("grenade_ability")
+			local ability_charge_regen_time = ability_extension:max_regen_time_for_ability_charge("grenade_ability")
 
-			template_data.next_charge_t = t + cooldown
-			template_data.cooldown = cooldown
+			template_data.next_charge_t = t + ability_charge_regen_time
+			template_data.ability_charge_regen_time = ability_charge_regen_time
 
 			return
 		end
@@ -348,13 +348,13 @@ templates.adamant_whistle_replenishment = {
 
 		local t = FixedFrame.get_latest_fixed_time()
 		local time_until_next = next_charge_t - t
-		local percentage_left = time_until_next / template_data.cooldown
+		local percentage_left = time_until_next / template_data.ability_charge_regen_time
 
 		return 1 - percentage_left
 	end,
 	related_talents = {
-		"adamant_whistle",
-	},
+		"adamant_whistle"
+	}
 }
 templates.adamant_whistle_explosion_stagger_tracking_buff = {
 	class_name = "proc_buff",
@@ -362,7 +362,7 @@ templates.adamant_whistle_explosion_stagger_tracking_buff = {
 	max_stacks_cap = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		local damage_profile = params.damage_profile
@@ -378,7 +378,7 @@ templates.adamant_whistle_explosion_stagger_tracking_buff = {
 		end
 
 		Managers.stats:record_private("hook_adamant_whistle_explosion_stagger_monster", template_context.player)
-	end,
+	end
 }
 
 local target_num_enemies_killed_from_grenade = 3
@@ -389,7 +389,7 @@ templates.adamant_grenade_cluster_kills_tracking_buff = {
 	max_stacks_cap = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.last_grenade_kill_t = 0
@@ -419,7 +419,7 @@ templates.adamant_grenade_cluster_kills_tracking_buff = {
 
 			template_data.recorded_cluster = true
 		end
-	end,
+	end
 }
 templates.adamant_drone_base_buff = {
 	class_name = "buff",
@@ -434,8 +434,8 @@ templates.adamant_drone_base_buff = {
 		Toughness.replenish_percentage(template_context.unit, toughness, false, "adamant_buff_drone")
 	end,
 	player_effects = {
-		on_screen_effect = "content/fx/particles/screenspace/screen_adamant_drone_buff",
-	},
+		on_screen_effect = "content/fx/particles/screenspace/screen_adamant_drone_buff"
+	}
 }
 templates.adamant_drone_improved_buff = {
 	class_name = "buff",
@@ -447,12 +447,12 @@ templates.adamant_drone_improved_buff = {
 	keywords = {
 		keywords.suppression_immune,
 		keywords.slowdown_immune,
-		keywords.stun_immune,
+		keywords.stun_immune
 	},
 	stat_buffs = {
 		[stat_buffs.suppression_dealt] = talent_settings.blitz_ability.drone.suppression,
 		[stat_buffs.impact_modifier] = talent_settings.blitz_ability.drone.impact,
-		[stat_buffs.recoil_modifier] = talent_settings.blitz_ability.drone.recoil_modifier,
+		[stat_buffs.recoil_modifier] = talent_settings.blitz_ability.drone.recoil_modifier
 	},
 	update_func = function (template_data, template_context, dt, t)
 		local toughness = talent_settings.blitz_ability.drone.toughness_improved * dt
@@ -460,8 +460,8 @@ templates.adamant_drone_improved_buff = {
 		Toughness.replenish_percentage(template_context.unit, toughness, false, "adamant_buff_drone")
 	end,
 	player_effects = {
-		on_screen_effect = "content/fx/particles/screenspace/screen_adamant_drone_buff",
-	},
+		on_screen_effect = "content/fx/particles/screenspace/screen_adamant_drone_buff"
+	}
 }
 templates.adamant_drone_talent_buff = {
 	class_name = "buff",
@@ -470,16 +470,16 @@ templates.adamant_drone_talent_buff = {
 	stat_buffs = {
 		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings.blitz_ability.drone.tdr,
 		[stat_buffs.revive_speed_modifier] = talent_settings.blitz_ability.drone.revive_speed_modifier,
-		[stat_buffs.attack_speed] = talent_settings.blitz_ability.drone.attack_speed,
-	},
+		[stat_buffs.attack_speed] = talent_settings.blitz_ability.drone.attack_speed
+	}
 }
 templates.adamant_drone_enemy_debuff = {
 	class_name = "buff",
 	max_stacks = 1,
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = talent_settings.blitz_ability.drone.damage_taken,
-	},
+		[stat_buffs.damage_taken_multiplier] = talent_settings.blitz_ability.drone.damage_taken
+	}
 }
 templates.adamant_drone_talent_debuff = {
 	class_name = "buff",
@@ -487,8 +487,8 @@ templates.adamant_drone_talent_debuff = {
 	predicted = false,
 	stat_buffs = {
 		[stat_buffs.melee_attack_speed] = talent_settings.blitz_ability.drone.enemy_melee_attack_speed,
-		[stat_buffs.melee_damage] = talent_settings.blitz_ability.drone.enemy_melee_damage,
-	},
+		[stat_buffs.melee_damage] = talent_settings.blitz_ability.drone.enemy_melee_damage
+	}
 }
 templates.adamant_reload_speed_aura = {
 	class_name = "buff",
@@ -501,19 +501,19 @@ templates.adamant_reload_speed_aura = {
 	predicted = false,
 	buff_category = buff_categories.aura,
 	stat_buffs = {
-		[stat_buffs.reload_speed] = talent_settings.coherency.reload_speed_aura.reload_speed,
+		[stat_buffs.reload_speed] = talent_settings.coherency.reload_speed_aura.reload_speed
 	},
 	start_func = _penance_start_func("adamant_wield_speed_aura_tracking_buff"),
 	related_talents = {
-		"adamant_reload_speed_aura",
-	},
+		"adamant_reload_speed_aura"
+	}
 }
 templates.adamant_wield_speed_aura_tracking_buff = {
 	class_name = "proc_buff",
 	max_stacks = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -529,7 +529,7 @@ templates.adamant_wield_speed_aura_tracking_buff = {
 		end
 
 		template_data.last_num_in_coherency = template_data.coherency_extension:evaluate_and_send_achievement_data(template_data.parent_buff_name, template_data.hook_name)
-	end,
+	end
 }
 templates.adamant_companion_aura_base = {
 	class_name = "buff",
@@ -542,8 +542,8 @@ templates.adamant_companion_aura_base = {
 	predicted = false,
 	buff_category = buff_categories.aura,
 	related_talents = {
-		"adamant_companion_coherency",
-	},
+		"adamant_companion_coherency"
+	}
 }
 templates.adamant_companion_aura = {
 	class_name = "buff",
@@ -556,11 +556,11 @@ templates.adamant_companion_aura = {
 	predicted = false,
 	buff_category = buff_categories.aura,
 	stat_buffs = {
-		[stat_buffs.toughness_damage_taken_modifier] = talent_settings.coherency.companion.tdr,
+		[stat_buffs.toughness_damage_taken_modifier] = talent_settings.coherency.companion.tdr
 	},
 	related_talents = {
-		"adamant_companion_coherency",
-	},
+		"adamant_companion_coherency"
+	}
 }
 templates.adamant_damage_vs_staggered_aura = {
 	class_name = "buff",
@@ -573,19 +573,19 @@ templates.adamant_damage_vs_staggered_aura = {
 	predicted = false,
 	buff_category = buff_categories.aura,
 	stat_buffs = {
-		[stat_buffs.damage_vs_staggered] = talent_settings.coherency.adamant_damage_vs_staggered_aura.damage_vs_staggered,
+		[stat_buffs.damage_vs_staggered] = talent_settings.coherency.adamant_damage_vs_staggered_aura.damage_vs_staggered
 	},
 	start_func = _penance_start_func("adamant_damage_vs_staggered_aura_tracking_buff"),
 	related_talents = {
-		"adamant_damage_vs_staggered_aura",
-	},
+		"adamant_damage_vs_staggered_aura"
+	}
 }
 templates.adamant_damage_vs_staggered_aura_tracking_buff = {
 	class_name = "proc_buff",
 	max_stacks = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -608,7 +608,7 @@ templates.adamant_damage_vs_staggered_aura_tracking_buff = {
 		end
 
 		template_data.last_num_in_coherency = template_data.coherency_extension:evaluate_and_send_achievement_data(template_data.parent_buff_name, template_data.hook_name)
-	end,
+	end
 }
 templates.adamant_companion_counts_for_coherency = {
 	class_name = "proc_buff",
@@ -616,7 +616,7 @@ templates.adamant_companion_counts_for_coherency = {
 	max_stacks_cap = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_player_companion_spawn] = 1,
+		[proc_events.on_player_companion_spawn] = 1
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -649,12 +649,12 @@ templates.adamant_companion_counts_for_coherency = {
 		end
 	end,
 	related_talents = {
-		"adamant_companion_coherency",
-	},
+		"adamant_companion_coherency"
+	}
 }
 templates.adamant_no_companion_coherency = {
 	class_name = "buff",
-	predicted = false,
+	predicted = false
 }
 templates.adamant_companion_coherency_tracking_buff = {
 	class_name = "proc_buff",
@@ -665,7 +665,7 @@ templates.adamant_companion_coherency_tracking_buff = {
 	predicted = false,
 	buff_category = buff_categories.aura,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -701,7 +701,7 @@ templates.adamant_companion_coherency_tracking_buff = {
 				end
 			end
 		end
-	end,
+	end
 }
 templates.adamant_hunt_stance = {
 	class_name = "proc_buff",
@@ -718,22 +718,22 @@ templates.adamant_hunt_stance = {
 		wwise_state = {
 			group = "player_ability",
 			off_state = "none",
-			on_state = "ogryn_stance",
-		},
+			on_state = "ogryn_stance"
+		}
 	},
 	stat_buffs = {
 		[stat_buffs.movement_speed] = talent_settings.combat_ability.stance.movement_speed,
 		[stat_buffs.alternate_fire_movement_speed_reduction_modifier] = talent_settings.combat_ability.stance.movement_speed_reduction_multiplier,
 		[stat_buffs.weapon_action_movespeed_reduction_multiplier] = talent_settings.combat_ability.stance.movement_speed_reduction_multiplier,
 		[stat_buffs.damage_taken_multiplier] = talent_settings.combat_ability.stance.damage_taken_multiplier,
-		[stat_buffs.power_level_modifier] = talent_settings.combat_ability.stance.damage,
+		[stat_buffs.power_level_modifier] = talent_settings.combat_ability.stance.damage
 	},
 	keywords = {
 		keywords.no_sprint,
-		keywords.adamant_hunt_stance,
+		keywords.adamant_hunt_stance
 	},
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_kill,
 	start_func = function (template_data, template_context)
@@ -788,19 +788,19 @@ templates.adamant_hunt_stance = {
 		template_context.buff_extension:add_internally_controlled_buff("adamant_hunt_stance_linger_dr", t)
 	end,
 	related_talents = {
-		"adamant_stance",
-	},
+		"adamant_stance"
+	}
 }
 templates.adamant_hunt_stance_linger_dr = {
 	class_name = "buff",
 	predicted = false,
 	duration = talent_settings.combat_ability.stance.linger_time,
 	stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = talent_settings.combat_ability.stance.damage_taken_multiplier,
+		[stat_buffs.damage_taken_multiplier] = talent_settings.combat_ability.stance.damage_taken_multiplier
 	},
 	related_talents = {
-		"adamant_stance",
-	},
+		"adamant_stance"
+	}
 }
 templates.adamant_hunt_stance_damage = {
 	class_name = "buff",
@@ -812,26 +812,26 @@ templates.adamant_hunt_stance_damage = {
 	max_stacks = talent_settings.combat_ability.stance.damage_talent_stacks,
 	duration = talent_settings.combat_ability.stance.damage_talent_duration,
 	stat_buffs = {
-		[stat_buffs.damage] = talent_settings.combat_ability.stance.damage_talent_damage,
+		[stat_buffs.damage] = talent_settings.combat_ability.stance.damage_talent_damage
 	},
 	related_talents = {
-		"adamant_stance_elite_kills_stack_damage",
-	},
+		"adamant_stance_elite_kills_stack_damage"
+	}
 }
 templates.adamant_hunt_stance_dog_bloodlust = {
 	class_name = "proc_buff",
 	max_stacks = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_combat_ability] = 1,
+		[proc_events.on_combat_ability] = 1
 	},
 	active_duration = talent_settings.combat_ability.stance.duration,
 	proc_keywords = {
-		keywords.adamant_dog_bloodlust,
+		keywords.adamant_dog_bloodlust
 	},
 	proc_stat_buffs = {
-		[stat_buffs.companion_damage_modifier] = talent_settings.combat_ability.stance.companion_damage,
-	},
+		[stat_buffs.companion_damage_modifier] = talent_settings.combat_ability.stance.companion_damage
+	}
 }
 
 local function _adamant_mark_enemies_select_unit(template_data, template_context, last_unit_pos, t)
@@ -994,7 +994,7 @@ templates.adamant_execution_order = {
 	predicted = false,
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_minion_death] = 1,
+		[proc_events.on_minion_death] = 1
 	},
 	start_func = function (template_data, template_context)
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -1092,8 +1092,8 @@ templates.adamant_execution_order = {
 		end,
 		on_minion_death = function (params, template_data, template_context, t)
 			return
-		end,
-	},
+		end
+	}
 }
 templates.adamant_execution_order_buff = {
 	class_name = "buff",
@@ -1107,8 +1107,8 @@ templates.adamant_execution_order_buff = {
 	duration = talent_settings.execution_order.time,
 	stat_buffs = {
 		[stat_buffs.damage] = talent_settings.execution_order.damage,
-		[stat_buffs.attack_speed] = talent_settings.execution_order.attack_speed,
-	},
+		[stat_buffs.attack_speed] = talent_settings.execution_order.attack_speed
+	}
 }
 templates.adamant_execution_order_companion_buff = {
 	class_name = "buff",
@@ -1117,8 +1117,8 @@ templates.adamant_execution_order_companion_buff = {
 	refresh_duration_on_stack = true,
 	duration = talent_settings.execution_order.time,
 	stat_buffs = {
-		[stat_buffs.companion_damage_modifier] = talent_settings.execution_order.companion_damage,
-	},
+		[stat_buffs.companion_damage_modifier] = talent_settings.execution_order.companion_damage
+	}
 }
 templates.adamant_execution_order_crit = {
 	class_name = "buff",
@@ -1128,11 +1128,11 @@ templates.adamant_execution_order_crit = {
 	duration = talent_settings.execution_order.time,
 	stat_buffs = {
 		[stat_buffs.critical_strike_chance] = talent_settings.execution_order.crit_chance,
-		[stat_buffs.critical_strike_damage] = talent_settings.execution_order.crit_damage,
+		[stat_buffs.critical_strike_damage] = talent_settings.execution_order.crit_damage
 	},
 	related_talents = {
-		"adamant_execution_order_crit",
-	},
+		"adamant_execution_order_crit"
+	}
 }
 templates.adamant_execution_order_rending = {
 	class_name = "buff",
@@ -1141,11 +1141,11 @@ templates.adamant_execution_order_rending = {
 	refresh_duration_on_stack = true,
 	duration = talent_settings.execution_order.time,
 	stat_buffs = {
-		[stat_buffs.rending_multiplier] = talent_settings.execution_order.rending,
+		[stat_buffs.rending_multiplier] = talent_settings.execution_order.rending
 	},
 	related_talents = {
-		"adamant_execution_order_rending",
-	},
+		"adamant_execution_order_rending"
+	}
 }
 templates.adamant_execution_order_cdr = {
 	class_name = "buff",
@@ -1174,12 +1174,12 @@ templates.adamant_execution_order_cdr = {
 		if t > template_data.timer then
 			template_data.timer = template_data.timer + 1
 
-			template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", talent_settings.execution_order.cdr)
+			template_data.ability_extension:restore_ability_resource("combat_ability", talent_settings.execution_order.cdr)
 		end
 	end,
 	related_talents = {
-		"adamant_execution_order_cdr",
-	},
+		"adamant_execution_order_cdr"
+	}
 }
 templates.adamant_execution_order_permastack = {
 	class_name = "buff",
@@ -1190,19 +1190,19 @@ templates.adamant_execution_order_permastack = {
 	max_stacks = talent_settings.execution_order.perma_max_stack,
 	stat_buffs = {
 		[stat_buffs.damage_vs_monsters] = talent_settings.execution_order.damage_vs_monsters,
-		[stat_buffs.monster_damage_taken_multiplier] = talent_settings.execution_order.damage_taken_vs_monsters,
+		[stat_buffs.monster_damage_taken_multiplier] = talent_settings.execution_order.damage_taken_vs_monsters
 	},
 	related_talents = {
-		"adamant_execution_order_permastack",
-	},
+		"adamant_execution_order_permastack"
+	}
 }
 templates.adamant_execution_order_monster_debuff = {
 	class_name = "buff",
 	max_stacks = 1,
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.melee_damage] = talent_settings.execution_order.monster_damage,
-	},
+		[stat_buffs.melee_damage] = talent_settings.execution_order.monster_damage
+	}
 }
 templates.adamant_forceful = {
 	class_name = "proc_buff",
@@ -1211,7 +1211,7 @@ templates.adamant_forceful = {
 		[proc_events.on_hit] = 1,
 		[proc_events.on_block] = 1,
 		[proc_events.on_player_hit_received] = 1,
-		[proc_events.on_combat_ability] = 1,
+		[proc_events.on_combat_ability] = 1
 	},
 	start_func = function (template_data, template_context)
 		local ability_strength = special_rules.adamant_forceful_ability_strength
@@ -1263,8 +1263,8 @@ templates.adamant_forceful = {
 			end
 
 			template_context.buff_extension:add_internally_controlled_buff("adamant_forceful_stacks", t)
-		end,
-	},
+		end
+	}
 }
 templates.adamant_forceful_stacks = {
 	always_active = true,
@@ -1280,15 +1280,15 @@ templates.adamant_forceful_stacks = {
 	max_stacks = talent_settings.forceful.stacks,
 	proc_events = {
 		[proc_events.on_player_hit_received] = 1,
-		[proc_events.on_combat_ability] = 1,
+		[proc_events.on_combat_ability] = 1
 	},
 	stat_buffs = {
 		[stat_buffs.impact_modifier] = talent_settings.forceful.impact,
-		[stat_buffs.damage_taken_multiplier] = talent_settings.forceful.dr,
+		[stat_buffs.damage_taken_multiplier] = talent_settings.forceful.dr
 	},
 	conditional_stat_buffs = {
 		[stat_buffs.ranged_attack_speed] = talent_settings.forceful.ranged_attack_speed,
-		[stat_buffs.reload_speed] = talent_settings.forceful.reload_speed,
+		[stat_buffs.reload_speed] = talent_settings.forceful.reload_speed
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1390,7 +1390,7 @@ templates.adamant_forceful_stacks = {
 
 			template_data.next_allowed_remove_t = t + 0.25
 			template_data.wanted_stacks = template_data.wanted_stacks - 1
-		end,
+		end
 	},
 	on_add_stack_func = function (template_data, template_context)
 		template_data.wanted_stacks = math.min(template_context.stack_count, talent_settings.forceful.stacks)
@@ -1412,7 +1412,7 @@ templates.adamant_forceful_stacks = {
 		end
 
 		return false
-	end,
+	end
 }
 templates.adamant_forceful_max_stacks_tracking_buff = {
 	class_name = "buff",
@@ -1429,7 +1429,7 @@ templates.adamant_forceful_max_stacks_tracking_buff = {
 		if template_context.player and time_at_max_stacks_rounded > 0 then
 			Managers.stats:record_private("hook_adamant_exited_max_forceful_stacks", template_context.player, time_at_max_stacks_rounded)
 		end
-	end,
+	end
 }
 
 local function _forceful_explosion(template_data, template_context)
@@ -1472,15 +1472,15 @@ templates.adamant_forceful_stagger = {
 		end
 
 		template_data.stacks = stacks
-	end,
+	end
 }
 templates.adamant_forceful_active_effect = {
 	class_name = "buff",
 	max_stacks = 1,
 	predicted = false,
 	player_effects = {
-		on_screen_effect = "content/fx/particles/screenspace/screen_adamant_forceful_keystone",
-	},
+		on_screen_effect = "content/fx/particles/screenspace/screen_adamant_forceful_keystone"
+	}
 }
 templates.adamant_forceful_strength_stacks = {
 	class_name = "buff",
@@ -1491,19 +1491,19 @@ templates.adamant_forceful_strength_stacks = {
 	max_stacks = talent_settings.forceful.stacks,
 	duration = talent_settings.forceful.strength_duration,
 	stat_buffs = {
-		[stat_buffs.power_level_modifier] = talent_settings.forceful.strength,
+		[stat_buffs.power_level_modifier] = talent_settings.forceful.strength
 	},
 	related_talents = {
-		"adamant_forceful_ability_damage",
-	},
+		"adamant_forceful_ability_damage"
+	}
 }
 templates.adamant_forceful_offensive = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[stat_buffs.attack_speed] = talent_settings.forceful.attack_speed,
-		[stat_buffs.max_hit_mass_attack_modifier] = talent_settings.forceful.cleave,
-	},
+		[stat_buffs.max_hit_mass_attack_modifier] = talent_settings.forceful.cleave
+	}
 }
 templates.adamant_forceful_offensive_duration = {
 	class_name = "buff",
@@ -1514,21 +1514,21 @@ templates.adamant_forceful_offensive_duration = {
 	duration = talent_settings.forceful.stun_immune_linger_time,
 	stat_buffs = {
 		[stat_buffs.attack_speed] = talent_settings.forceful.attack_speed,
-		[stat_buffs.max_hit_mass_attack_modifier] = talent_settings.forceful.cleave,
+		[stat_buffs.max_hit_mass_attack_modifier] = talent_settings.forceful.cleave
 	},
 	related_talents = {
-		"adamant_forceful_offensive",
-	},
+		"adamant_forceful_offensive"
+	}
 }
 templates.adamant_forceful_stun_immune = {
 	class_name = "buff",
 	predicted = false,
 	keywords = {
 		keywords.stun_immune,
-		keywords.slowdown_immune,
+		keywords.slowdown_immune
 	},
 	conditional_keywords = {
-		keywords.block_unblockable,
+		keywords.block_unblockable
 	},
 	start_func = function (template_data, template_context)
 		local unit_data = ScriptUnit.extension(template_context.unit, "unit_data_system")
@@ -1538,7 +1538,7 @@ templates.adamant_forceful_stun_immune = {
 	end,
 	conditional_keywords_func = function (template_data, template_context)
 		return template_data.block_component.is_perfect_blocking
-	end,
+	end
 }
 templates.adamant_forceful_stun_immune_duration = {
 	always_show_in_hud = true,
@@ -1549,10 +1549,10 @@ templates.adamant_forceful_stun_immune_duration = {
 	predicted = false,
 	keywords = {
 		keywords.stun_immune,
-		keywords.slowdown_immune,
+		keywords.slowdown_immune
 	},
 	conditional_keywords = {
-		keywords.block_unblockable,
+		keywords.block_unblockable
 	},
 	duration = talent_settings.forceful.stun_immune_linger_time,
 	start_func = function (template_data, template_context)
@@ -1565,8 +1565,8 @@ templates.adamant_forceful_stun_immune_duration = {
 		return template_data.block_component.is_perfect_blocking
 	end,
 	related_talents = {
-		"adamant_forceful_stun_immune_and_block_all",
-	},
+		"adamant_forceful_stun_immune_and_block_all"
+	}
 }
 
 local teminus_warrant_attacked_units = {}
@@ -1575,13 +1575,13 @@ templates.adamant_terminus_warrant = {
 	class_name = "proc_buff",
 	predicted = false,
 	keywords = {
-		keywords.adamant_terminus_warrant,
+		keywords.adamant_terminus_warrant
 	},
 	proc_events = {
 		[proc_events.on_hit] = 1,
 		[proc_events.on_wield_melee] = 1,
 		[proc_events.on_wield_ranged] = 1,
-		[proc_events.on_shoot] = 1,
+		[proc_events.on_shoot] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1710,7 +1710,7 @@ templates.adamant_terminus_warrant = {
 		end,
 		on_shoot = function (params, template_data, template_context, t)
 			table.clear(teminus_warrant_attacked_units)
-		end,
+		end
 	},
 	stop_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -1728,7 +1728,7 @@ templates.adamant_terminus_warrant = {
 
 			template_data.melee_buff_id = nil
 		end
-	end,
+	end
 }
 templates.adamant_terminus_warrant_upgrade_stat_buff = {
 	class_name = "buff",
@@ -1742,8 +1742,11 @@ templates.adamant_terminus_warrant_upgrade_stat_buff = {
 	stat_buffs = {
 		[stat_buffs.melee_attack_speed] = talent_settings.terminus_warrant.ranged_attack_speed,
 		[stat_buffs.ranged_attack_speed] = talent_settings.terminus_warrant.melee_attack_speed,
-		[stat_buffs.critical_strike_chance] = talent_settings.terminus_warrant.crit_chance,
+		[stat_buffs.critical_strike_chance] = talent_settings.terminus_warrant.crit_chance
 	},
+	related_talents = {
+		"adamant_terminus_warrant_improved_combined"
+	}
 }
 templates.adamant_terminus_warrant_cdr_buff = {
 	class_name = "buff",
@@ -1775,9 +1778,12 @@ templates.adamant_terminus_warrant_cdr_buff = {
 		if t > template_data.timer then
 			template_data.timer = template_data.timer + 1
 
-			template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", talent_settings.terminus_warrant.cdr)
+			template_data.ability_extension:restore_ability_resource("combat_ability", talent_settings.terminus_warrant.cdr)
 		end
 	end,
+	related_talents = {
+		"adamant_terminus_warrant_cdr"
+	}
 }
 templates.adamant_terminus_warrant_melee = {
 	always_show_in_hud = true,
@@ -1797,7 +1803,7 @@ templates.adamant_terminus_warrant_melee = {
 		local using_keystone = template_context.buff_extension:has_buff_using_buff_template("adamant_terminus_warrant")
 
 		return wielding_melee or not using_keystone
-	end,
+	end
 }
 templates.adamant_terminus_warrant_ranged = {
 	always_show_in_hud = true,
@@ -1817,7 +1823,7 @@ templates.adamant_terminus_warrant_ranged = {
 		local using_keystone = template_context.buff_extension:has_buff_using_buff_template("adamant_terminus_warrant")
 
 		return wielding_ranged or not using_keystone
-	end,
+	end
 }
 templates.adamant_terminus_warrant_melee_stat_buff = {
 	always_active = true,
@@ -1831,11 +1837,11 @@ templates.adamant_terminus_warrant_melee_stat_buff = {
 	duration = talent_settings.terminus_warrant.melee_duration,
 	proc_events = {
 		[proc_events.on_toughness_replenished] = 1,
-		[proc_events.on_wield_ranged] = 1,
+		[proc_events.on_wield_ranged] = 1
 	},
 	stat_buffs = {
 		[stat_buffs.melee_power_level_modifier] = talent_settings.terminus_warrant.melee_power_level_modifier,
-		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings.terminus_warrant.toughness_damage_taken_multiplier,
+		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings.terminus_warrant.toughness_damage_taken_multiplier
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1872,17 +1878,17 @@ templates.adamant_terminus_warrant_melee_stat_buff = {
 		end,
 		on_wield_ranged = function (params, template_data, template_context, t)
 			template_data.finish = true
-		end,
+		end
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.toughness_melee_replenish] = talent_settings.terminus_warrant.melee_toughness,
+		[stat_buffs.toughness_melee_replenish] = talent_settings.terminus_warrant.melee_toughness
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.has_talent
 	end,
 	conditional_exit_func = function (template_data, template_context)
 		return template_data.finish
-	end,
+	end
 }
 templates.adamant_terminus_warrant_melee_stat_buff_improved = table.clone(templates.adamant_terminus_warrant_melee_stat_buff)
 templates.adamant_terminus_warrant_melee_stat_buff_improved.stat_buffs[stat_buffs.melee_rending_multiplier] = talent_settings.terminus_warrant.melee_rending
@@ -1900,13 +1906,13 @@ templates.adamant_terminus_warrant_ranged_stat_buff = {
 	stat_buffs = {
 		[stat_buffs.ranged_power_level_modifier] = talent_settings.terminus_warrant.ranged_power_level_modifier,
 		[stat_buffs.suppression_dealt] = talent_settings.terminus_warrant.suppression_dealt,
-		[stat_buffs.ranged_max_hit_mass_attack_modifier] = talent_settings.terminus_warrant.ranged_max_hit_mass_attack_modifier,
+		[stat_buffs.ranged_max_hit_mass_attack_modifier] = talent_settings.terminus_warrant.ranged_max_hit_mass_attack_modifier
 	},
 	proc_events = {
-		[proc_events.on_wield_melee] = 1,
+		[proc_events.on_wield_melee] = 1
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.reload_speed] = talent_settings.terminus_warrant.reload_speed,
+		[stat_buffs.reload_speed] = talent_settings.terminus_warrant.reload_speed
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.has_talent
@@ -1922,7 +1928,7 @@ templates.adamant_terminus_warrant_ranged_stat_buff = {
 	end,
 	conditional_exit_func = function (template_data, template_context)
 		return template_data.finish
-	end,
+	end
 }
 templates.adamant_terminus_warrant_ranged_stat_buff_improved = table.clone(templates.adamant_terminus_warrant_ranged_stat_buff)
 templates.adamant_terminus_warrant_ranged_stat_buff_improved.stat_buffs[stat_buffs.finesse_modifier_bonus] = talent_settings.terminus_warrant.crit_damage
@@ -1937,8 +1943,8 @@ templates.adamant_terminus_warrant_ranged_attack_speed = {
 	skip_tactical_overlay = true,
 	duration = talent_settings.terminus_warrant.ranged_duration,
 	stat_buffs = {
-		[stat_buffs.ranged_attack_speed] = talent_settings.terminus_warrant.ranged_attack_speed,
-	},
+		[stat_buffs.ranged_attack_speed] = talent_settings.terminus_warrant.ranged_attack_speed
+	}
 }
 templates.adamant_terminus_warrant_no_ammo_consumption = {
 	always_active = true,
@@ -1951,14 +1957,14 @@ templates.adamant_terminus_warrant_no_ammo_consumption = {
 	skip_tactical_overlay = true,
 	duration = talent_settings.terminus_warrant.no_ammo_duration,
 	keywords = {
-		keywords.no_ammo_consumption,
-	},
+		keywords.no_ammo_consumption
+	}
 }
 templates.adamant_melee_weakspot_hits_count_as_stagger = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_weakspot_hit, CheckProcFunctions.on_melee_hit),
 	proc_func = function (params, template_data, template_context, t)
@@ -1968,15 +1974,15 @@ templates.adamant_melee_weakspot_hits_count_as_stagger = {
 		if buff_extension then
 			buff_extension:add_internally_controlled_buff("adamant_melee_weakspot_hits_count_as_stagger_debuff", t)
 		end
-	end,
+	end
 }
 templates.adamant_melee_weakspot_hits_count_as_stagger_debuff = {
 	class_name = "buff",
 	predicted = false,
 	duration = talent_settings.melee_weakspot_hits_count_as_stagger.duration,
 	keywords = {
-		keywords.count_as_staggered,
-	},
+		keywords.count_as_staggered
+	}
 }
 
 local function _is_in_weapon_alternate_fire(template_data, template_context)
@@ -2009,11 +2015,11 @@ templates.adamant_weapon_handling_buff = {
 	max_stacks = talent_settings.weapon_handling.stacks,
 	max_stacks_cap = talent_settings.weapon_handling.stacks,
 	proc_events = {
-		[proc_events.on_shoot] = 1,
+		[proc_events.on_shoot] = 1
 	},
 	stat_buffs = {
 		[stat_buffs.spread_modifier] = talent_settings.weapon_handling.spread,
-		[stat_buffs.recoil_modifier] = talent_settings.weapon_handling.recoil,
+		[stat_buffs.recoil_modifier] = talent_settings.weapon_handling.recoil
 	},
 	start_func = function (template_data, template_context)
 		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
@@ -2032,8 +2038,8 @@ templates.adamant_weapon_handling_buff = {
 		return template_data.finish
 	end,
 	related_talents = {
-		"adamant_weapon_handling",
-	},
+		"adamant_weapon_handling"
+	}
 }
 templates.adamant_weapon_handling = {
 	class_name = "buff",
@@ -2053,7 +2059,7 @@ templates.adamant_weapon_handling = {
 
 			template_context.buff_extension:add_internally_controlled_buff("adamant_weapon_handling_buff", t)
 		end
-	end,
+	end
 }
 templates.adamant_ranged_damage_on_melee_stagger = {
 	class_name = "proc_buff",
@@ -2064,7 +2070,7 @@ templates.adamant_ranged_damage_on_melee_stagger = {
 	active_duration = talent_settings.ranged_damage_on_melee_stagger.duration,
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_push_hit] = 1,
+		[proc_events.on_push_hit] = 1
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		if not CheckProcFunctions.on_staggering_hit(params, template_data, template_context) then
@@ -2080,8 +2086,8 @@ templates.adamant_ranged_damage_on_melee_stagger = {
 		return true
 	end,
 	proc_stat_buffs = {
-		[stat_buffs.ranged_damage] = talent_settings.ranged_damage_on_melee_stagger.ranged_damage,
-	},
+		[stat_buffs.ranged_damage] = talent_settings.ranged_damage_on_melee_stagger.ranged_damage
+	}
 }
 templates.adamant_movement_speed_on_block = {
 	class_name = "proc_buff",
@@ -2091,36 +2097,36 @@ templates.adamant_movement_speed_on_block = {
 	predicted = true,
 	active_duration = talent_settings.movement_speed_on_block.duration,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_ranged_hit,
 	proc_stat_buffs = {
-		[stat_buffs.movement_speed] = talent_settings.movement_speed_on_block.movement_speed,
+		[stat_buffs.movement_speed] = talent_settings.movement_speed_on_block.movement_speed
 	},
 	related_talents = {
-		"adamant_movement_speed_on_block",
-	},
+		"adamant_movement_speed_on_block"
+	}
 }
 templates.adamant_damage_vs_suppressed = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.damage_vs_suppressed] = talent_settings.damage_vs_suppressed.damage_vs_suppressed,
-	},
+		[stat_buffs.damage_vs_suppressed] = talent_settings.damage_vs_suppressed.damage_vs_suppressed
+	}
 }
 templates.adamant_clip_size = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.clip_size_modifier] = talent_settings.clip_size.clip_size_modifier,
-	},
+		[stat_buffs.clip_size_modifier] = talent_settings.clip_size.clip_size_modifier
+	}
 }
 templates.adamant_suppression_immunity = {
 	class_name = "buff",
 	predicted = false,
 	keywords = {
-		keywords.suppression_immune,
-	},
+		keywords.suppression_immune
+	}
 }
 templates.adamant_disable_companion_buff = {
 	class_name = "buff",
@@ -2129,20 +2135,11 @@ templates.adamant_disable_companion_buff = {
 		[stat_buffs.damage] = talent_settings.disable_companion.damage,
 		[stat_buffs.toughness_damage_taken_modifier] = talent_settings.disable_companion.tdr,
 		[stat_buffs.attack_speed] = talent_settings.disable_companion.attack_speed,
-		[stat_buffs.extra_max_amount_of_grenades] = talent_settings.disable_companion.extra_max_amount_of_grenades,
+		[stat_buffs.extra_max_amount_of_grenades] = talent_settings.disable_companion.extra_max_amount_of_grenades
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local template = template_context.template
-		local stat_buffs = template.stat_buffs.extra_max_amount_of_grenades
-		local extra_grenades = stat_buffs
 		local is_server = template_context.is_server
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-
-		template_context.initial_num_charges = grenade_ability_component.num_charges
-		grenade_ability_component.num_charges = grenade_ability_component.num_charges + extra_grenades
-
 		local unit_spawner_manager = Managers.state.unit_spawner
 
 		if is_server and unit_spawner_manager then
@@ -2152,15 +2149,7 @@ templates.adamant_disable_companion_buff = {
 				companion_spawner_extension:despawn_companion_units()
 			end
 		end
-	end,
-	stop_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-		local initial_num_charges = template_context.initial_num_charges
-
-		grenade_ability_component.num_charges = math.min(grenade_ability_component.num_charges, initial_num_charges)
-	end,
+	end
 }
 
 local grenade_replenishment_cooldown = talent_settings.disable_companion.grenade_blitz_replenish_time
@@ -2262,15 +2251,15 @@ templates.adamant_grenade_replenishment = {
 		return 1 - percentage_left
 	end,
 	related_talents = {
-		"adamant_disable_companion",
-	},
+		"adamant_disable_companion"
+	}
 }
 templates.adamant_elite_special_kills_replenish_toughness = {
 	class_name = "proc_buff",
 	max_stacks = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_elite_or_special_kill,
 	proc_func = function (params, template_data, template_context, t)
@@ -2278,7 +2267,7 @@ templates.adamant_elite_special_kills_replenish_toughness = {
 
 		buff_extension:add_internally_controlled_buff("adamant_toughness_on_elite_kill_effect", t)
 		Toughness.replenish_percentage(template_context.unit, talent_settings.elite_special_kills_replenish_toughness.instant_toughness, false)
-	end,
+	end
 }
 templates.adamant_toughness_on_elite_kill_effect = {
 	class_name = "buff",
@@ -2297,29 +2286,29 @@ templates.adamant_toughness_on_elite_kill_effect = {
 		template_data.next_regen_t = nil
 	end,
 	related_talents = {
-		"adamant_elite_special_kills_replenish_toughness",
-	},
+		"adamant_elite_special_kills_replenish_toughness"
+	}
 }
 templates.adamant_close_kills_restore_toughness = {
 	class_name = "proc_buff",
 	max_stacks = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_close_kill,
 	proc_func = function (params, template_data, template_context, t)
 		local toughness = talent_settings.close_kills_restore_toughness.toughness
 
 		Toughness.replenish_percentage(template_context.unit, toughness)
-	end,
+	end
 }
 templates.adamant_staggers_replenish_toughness = {
 	class_name = "proc_buff",
 	max_stacks = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_staggering_hit, CheckProcFunctions.on_melee_hit),
 	proc_func = function (params, template_data, template_context, t)
@@ -2330,69 +2319,69 @@ templates.adamant_staggers_replenish_toughness = {
 		local toughness = talent_settings.staggers_replenish_toughness.toughness
 
 		Toughness.replenish_percentage(template_context.unit, toughness)
-	end,
+	end
 }
 templates.adamant_limit_dmg_taken_from_hits = {
 	class_name = "buff",
 	max_stacks = 1,
 	predicted = false,
 	keywords = {
-		keywords.limit_health_damage_taken,
+		keywords.limit_health_damage_taken
 	},
 	stat_buffs = {
-		[stat_buffs.max_health_damage_taken_per_hit] = talent_settings.limit_dmg_taken_from_hits.limit,
-	},
+		[stat_buffs.max_health_damage_taken_per_hit] = talent_settings.limit_dmg_taken_from_hits.limit
+	}
 }
 templates.adamant_increased_damage_to_high_health = {
 	class_name = "buff",
 	max_stacks = 1,
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.damage_vs_healthy] = talent_settings.increased_damage_to_high_health.damage,
-	},
+		[stat_buffs.damage_vs_healthy] = talent_settings.increased_damage_to_high_health.damage
+	}
 }
 templates.adamant_increased_damage_vs_horde = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.damage_vs_horde] = talent_settings.increased_damage_vs_horde.damage,
-	},
+		[stat_buffs.damage_vs_horde] = talent_settings.increased_damage_vs_horde.damage
+	}
 }
 templates.adamant_armor = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.toughness] = talent_settings.armor.toughness,
-	},
+		[stat_buffs.toughness] = talent_settings.armor.toughness
+	}
 }
 templates.adamant_mag_strips = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.wield_speed] = talent_settings.mag_strips.wield_speed,
-	},
+		[stat_buffs.wield_speed] = talent_settings.mag_strips.wield_speed
+	}
 }
 templates.adamant_plasteel_plates = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.toughness] = talent_settings.plasteel_plates.toughness,
-	},
+		[stat_buffs.toughness] = talent_settings.plasteel_plates.toughness
+	}
 }
 templates.adamant_ammo_belt = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.ammo_reserve_capacity] = talent_settings.ammo_belt.ammo_reserve_capacity,
-	},
+		[stat_buffs.ammo_reserve_capacity] = talent_settings.ammo_belt.ammo_reserve_capacity
+	}
 }
 templates.adamant_rebreather = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[stat_buffs.corruption_taken_multiplier] = talent_settings.rebreather.corruption_taken_multiplier,
-		[stat_buffs.damage_taken_from_toxic_gas_multiplier] = talent_settings.rebreather.damage_taken_from_toxic_gas_multiplier,
-	},
+		[stat_buffs.damage_taken_from_toxic_gas_multiplier] = talent_settings.rebreather.damage_taken_from_toxic_gas_multiplier
+	}
 }
 
 local OUTLINE_NAME = "special_target"
@@ -2460,7 +2449,7 @@ templates.adamant_verispex = {
 		end
 
 		template_data.next_update_t = t + 1
-	end,
+	end
 }
 templates.adamant_shield_plates = {
 	class_name = "proc_buff",
@@ -2468,7 +2457,7 @@ templates.adamant_shield_plates = {
 	predicted = false,
 	proc_events = {
 		[proc_events.on_perfect_block] = 1,
-		[proc_events.on_block] = 1,
+		[proc_events.on_block] = 1
 	},
 	specific_proc_func = {
 		on_perfect_block = function (params, template_data, template_context, t)
@@ -2482,11 +2471,11 @@ templates.adamant_shield_plates = {
 		end,
 		on_block = function (params, template_data, template_context, t)
 			template_context.buff_extension:add_internally_controlled_buff("adamant_shield_plates_buff", t)
-		end,
+		end
 	},
 	related_talents = {
-		"adamant_shield_plates",
-	},
+		"adamant_shield_plates"
+	}
 }
 templates.adamant_shield_plates_buff = {
 	class_name = "buff",
@@ -2503,8 +2492,8 @@ templates.adamant_shield_plates_buff = {
 		Toughness.replenish_percentage(template_context.unit, toughness)
 	end,
 	related_talents = {
-		"adamant_shield_plates",
-	},
+		"adamant_shield_plates"
+	}
 }
 templates.adamant_damage_after_reloading = {
 	allow_proc_while_active = true,
@@ -2515,11 +2504,11 @@ templates.adamant_damage_after_reloading = {
 	predicted = false,
 	active_duration = talent_settings.damage_after_reloading.duration,
 	proc_events = {
-		[proc_events.on_reload] = 1,
+		[proc_events.on_reload] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.ranged_damage] = talent_settings.damage_after_reloading.ranged_damage,
-	},
+		[stat_buffs.ranged_damage] = talent_settings.damage_after_reloading.ranged_damage
+	}
 }
 templates.adamant_cleave_after_push = {
 	allow_proc_while_active = true,
@@ -2530,14 +2519,14 @@ templates.adamant_cleave_after_push = {
 	predicted = false,
 	active_duration = talent_settings.cleave_after_push.duration,
 	proc_events = {
-		[proc_events.on_push_finish] = 1,
+		[proc_events.on_push_finish] = 1
 	},
 	check_proc_func = function (params, template_data, template_context)
 		return params.num_hit_units > 0
 	end,
 	proc_stat_buffs = {
-		[stat_buffs.max_melee_hit_mass_attack_modifier] = talent_settings.cleave_after_push.cleave,
-	},
+		[stat_buffs.max_melee_hit_mass_attack_modifier] = talent_settings.cleave_after_push.cleave
+	}
 }
 templates.adamant_dog_damage_after_ability = {
 	allow_proc_while_active = true,
@@ -2549,11 +2538,11 @@ templates.adamant_dog_damage_after_ability = {
 	skip_tactical_overlay = true,
 	active_duration = talent_settings.dog_damage_after_ability.duration,
 	proc_events = {
-		[proc_events.on_combat_ability] = 1,
+		[proc_events.on_combat_ability] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.companion_damage_modifier] = talent_settings.dog_damage_after_ability.damage,
-	},
+		[stat_buffs.companion_damage_modifier] = talent_settings.dog_damage_after_ability.damage
+	}
 }
 templates.adamant_heavy_attacks_increase_damage = {
 	allow_proc_while_active = true,
@@ -2564,7 +2553,7 @@ templates.adamant_heavy_attacks_increase_damage = {
 	predicted = false,
 	active_duration = talent_settings.heavy_attacks_increase_damage.duration,
 	proc_events = {
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	check_proc_func = function (params, template_data, template_context)
 		local is_heavy = params.is_heavy or params.melee_attack_strength == "heavy"
@@ -2576,19 +2565,19 @@ templates.adamant_heavy_attacks_increase_damage = {
 		return params.num_hit_units > 0
 	end,
 	proc_stat_buffs = {
-		[stat_buffs.damage] = talent_settings.heavy_attacks_increase_damage.damage,
-	},
+		[stat_buffs.damage] = talent_settings.heavy_attacks_increase_damage.damage
+	}
 }
 templates.adamant_wield_speed_on_melee_kill = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_melee_kill,
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("adamant_wield_speed_on_melee_kill_buff", t)
-	end,
+	end
 }
 templates.adamant_wield_speed_on_melee_kill_buff = {
 	class_name = "buff",
@@ -2599,8 +2588,11 @@ templates.adamant_wield_speed_on_melee_kill_buff = {
 	duration = talent_settings.wield_speed_on_melee_kill.duration,
 	max_stacks = talent_settings.wield_speed_on_melee_kill.max_stacks,
 	stat_buffs = {
-		[stat_buffs.wield_speed] = talent_settings.wield_speed_on_melee_kill.wield_speed_per_stack,
+		[stat_buffs.wield_speed] = talent_settings.wield_speed_on_melee_kill.wield_speed_per_stack
 	},
+	related_talents = {
+		"adamant_wield_speed_on_melee_kill"
+	}
 }
 templates.adamant_elite_special_kills_offensive_boost = {
 	allow_proc_while_active = true,
@@ -2611,20 +2603,20 @@ templates.adamant_elite_special_kills_offensive_boost = {
 	predicted = true,
 	active_duration = talent_settings.elite_special_kills_offensive_boost.duration,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_elite_or_special_kill,
 	proc_stat_buffs = {
 		[stat_buffs.damage] = talent_settings.elite_special_kills_offensive_boost.damage,
-		[stat_buffs.movement_speed] = talent_settings.elite_special_kills_offensive_boost.movement_speed,
-	},
+		[stat_buffs.movement_speed] = talent_settings.elite_special_kills_offensive_boost.movement_speed
+	}
 }
 templates.adamant_melee_attacks_on_staggered_rend = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.melee_rending_vs_staggered_multiplier] = talent_settings.melee_attacks_on_staggered_rend.rending_multiplier,
-	},
+		[stat_buffs.melee_rending_vs_staggered_multiplier] = talent_settings.melee_attacks_on_staggered_rend.rending_multiplier
+	}
 }
 templates.adamant_hitting_multiple_gives_tdr = {
 	allow_proc_while_active = true,
@@ -2635,7 +2627,7 @@ templates.adamant_hitting_multiple_gives_tdr = {
 	predicted = false,
 	active_duration = talent_settings.hitting_multiple_gives_tdr.duration,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = function (params, template_data, template_context)
 		local min = talent_settings.hitting_multiple_gives_tdr.num_hits
@@ -2644,8 +2636,8 @@ templates.adamant_hitting_multiple_gives_tdr = {
 		return min == hit
 	end,
 	proc_stat_buffs = {
-		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings.hitting_multiple_gives_tdr.tdr,
-	},
+		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings.hitting_multiple_gives_tdr.tdr
+	}
 }
 templates.adamant_multiple_hits_attack_speed = {
 	allow_proc_while_active = true,
@@ -2656,7 +2648,7 @@ templates.adamant_multiple_hits_attack_speed = {
 	predicted = false,
 	active_duration = talent_settings.multiple_hits_attack_speed.duration,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = function (params, template_data, template_context)
 		local is_melee = params.attack_type == attack_types.melee
@@ -2671,14 +2663,14 @@ templates.adamant_multiple_hits_attack_speed = {
 		return min == hit
 	end,
 	proc_stat_buffs = {
-		[stat_buffs.melee_attack_speed] = talent_settings.multiple_hits_attack_speed.melee_attack_speed,
-	},
+		[stat_buffs.melee_attack_speed] = talent_settings.multiple_hits_attack_speed.melee_attack_speed
+	}
 }
 templates.adamant_restore_toughness_to_allies_on_combat_ability = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_combat_ability] = 1,
+		[proc_events.on_combat_ability] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -2694,13 +2686,13 @@ templates.adamant_restore_toughness_to_allies_on_combat_ability = {
 		for coherency_unit, _ in pairs(units_in_coherence) do
 			Toughness.replenish_percentage(coherency_unit, toughness)
 		end
-	end,
+	end
 }
 templates.adamant_dog_pounces_bleed_nearby = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.attacker_is_my_companion,
 	proc_func = function (params, template_data, template_context, t)
@@ -2727,13 +2719,13 @@ templates.adamant_dog_pounces_bleed_nearby = {
 				end
 			end
 		end
-	end,
+	end
 }
 templates.adamant_dog_applies_brittleness = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.attacker_is_my_companion,
 	proc_func = function (params, template_data, template_context, t)
@@ -2752,7 +2744,7 @@ templates.adamant_dog_applies_brittleness = {
 				end
 			end
 		end
-	end,
+	end
 }
 templates.adamant_pinning_dog_elite_damage = {
 	class_name = "proc_buff",
@@ -2760,7 +2752,7 @@ templates.adamant_pinning_dog_elite_damage = {
 	proc_events = {
 		[proc_events.on_player_companion_pounce] = 1,
 		[proc_events.on_player_companion_pounce_finish] = 1,
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	specific_proc_func = {
 		on_player_companion_pounce = function (params, template_data, template_context)
@@ -2785,8 +2777,8 @@ templates.adamant_pinning_dog_elite_damage = {
 			end
 
 			template_context.buff_extension:add_internally_controlled_buff("adamant_pinning_dog_elite_damage_buff", t)
-		end,
-	},
+		end
+	}
 }
 templates.adamant_pinning_dog_elite_damage_buff = {
 	class_name = "buff",
@@ -2799,11 +2791,11 @@ templates.adamant_pinning_dog_elite_damage_buff = {
 	duration = talent_settings.pinning_dog_elite_damage.duration,
 	stat_buffs = {
 		[stat_buffs.damage_vs_elites] = talent_settings.pinning_dog_elite_damage.damage,
-		[stat_buffs.damage_vs_specials] = talent_settings.pinning_dog_elite_damage.damage,
+		[stat_buffs.damage_vs_specials] = talent_settings.pinning_dog_elite_damage.damage
 	},
 	related_talents = {
-		"adamant_pinning_dog_elite_damage",
-	},
+		"adamant_pinning_dog_elite_damage"
+	}
 }
 templates.adamant_pinning_dog_kills_cdr = {
 	class_name = "proc_buff",
@@ -2811,7 +2803,7 @@ templates.adamant_pinning_dog_kills_cdr = {
 	proc_events = {
 		[proc_events.on_player_companion_pounce] = 1,
 		[proc_events.on_player_companion_pounce_finish] = 1,
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	specific_proc_func = {
 		on_player_companion_pounce = function (params, template_data, template_context)
@@ -2832,8 +2824,8 @@ templates.adamant_pinning_dog_kills_cdr = {
 			end
 
 			template_context.buff_extension:add_internally_controlled_buff("adamant_pinning_dog_kills_cdr_buff", t)
-		end,
-	},
+		end
+	}
 }
 templates.adamant_pinning_dog_kills_cdr_buff = {
 	class_name = "buff",
@@ -2865,9 +2857,12 @@ templates.adamant_pinning_dog_kills_cdr_buff = {
 		if t > template_data.timer then
 			template_data.timer = template_data.timer + 1
 
-			template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", talent_settings.pinning_dog_kills_cdr.regen)
+			template_data.ability_extension:restore_ability_resource("combat_ability", talent_settings.pinning_dog_kills_cdr.regen)
 		end
 	end,
+	related_talents = {
+		"adamant_pinning_dog_kills_cdr"
+	}
 }
 templates.adamant_pinning_dog_permanent_stacks = {
 	class_name = "proc_buff",
@@ -2875,7 +2870,7 @@ templates.adamant_pinning_dog_permanent_stacks = {
 	proc_events = {
 		[proc_events.on_player_companion_pounce] = 1,
 		[proc_events.on_player_companion_pounce_finish] = 1,
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	specific_proc_func = {
 		on_player_companion_pounce = function (params, template_data, template_context)
@@ -2896,8 +2891,8 @@ templates.adamant_pinning_dog_permanent_stacks = {
 			end
 
 			template_context.buff_extension:add_internally_controlled_buff("adamant_pinning_dog_permanent_stacks_buff", t)
-		end,
-	},
+		end
+	}
 }
 templates.adamant_pinning_dog_permanent_stacks_buff = {
 	class_name = "buff",
@@ -2907,20 +2902,23 @@ templates.adamant_pinning_dog_permanent_stacks_buff = {
 	predicted = false,
 	max_stacks = talent_settings.pinning_dog_permanent_stacks.stacks,
 	stat_buffs = {
-		[stat_buffs.companion_damage_modifier] = talent_settings.pinning_dog_permanent_stacks.damage,
+		[stat_buffs.companion_damage_modifier] = talent_settings.pinning_dog_permanent_stacks.damage
 	},
+	related_talents = {
+		"adamant_pinning_dog_permanent_stacks"
+	}
 }
 templates.adamant_pinning_dog_bonus_moving_towards = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_player_companion_pounce] = 1,
+		[proc_events.on_player_companion_pounce] = 1
 	},
 	specific_proc_func = {
 		on_player_companion_pounce = function (params, template_data, template_context, t)
 			template_context.buff_extension:add_internally_controlled_buff("adamant_pinning_dog_bonus_moving_towards_buff", t)
-		end,
-	},
+		end
+	}
 }
 templates.adamant_pinning_dog_bonus_moving_towards_buff = {
 	class_name = "buff",
@@ -2933,11 +2931,11 @@ templates.adamant_pinning_dog_bonus_moving_towards_buff = {
 	duration = talent_settings.pinning_dog_bonus_moving_towards.time,
 	stat_buffs = {
 		[stat_buffs.damage] = talent_settings.pinning_dog_bonus_moving_towards.damage,
-		[stat_buffs.movement_speed] = talent_settings.pinning_dog_bonus_moving_towards.movement_speed,
+		[stat_buffs.movement_speed] = talent_settings.pinning_dog_bonus_moving_towards.movement_speed
 	},
 	related_talents = {
-		"adamant_pinning_dog_bonus_moving_towards",
-	},
+		"adamant_pinning_dog_bonus_moving_towards"
+	}
 }
 templates.adamant_pinning_dog_kills_buff_allies = {
 	class_name = "proc_buff",
@@ -2945,7 +2943,7 @@ templates.adamant_pinning_dog_kills_buff_allies = {
 	proc_events = {
 		[proc_events.on_player_companion_pounce] = 1,
 		[proc_events.on_player_companion_pounce_finish] = 1,
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -2980,8 +2978,8 @@ templates.adamant_pinning_dog_kills_buff_allies = {
 					buff_extension:add_internally_controlled_buff("adamant_pinning_dog_kills_buff_allies_buff", t)
 				end
 			end
-		end,
-	},
+		end
+	}
 }
 templates.adamant_pinning_dog_kills_buff_allies_buff = {
 	class_name = "buff",
@@ -2993,7 +2991,7 @@ templates.adamant_pinning_dog_kills_buff_allies_buff = {
 	refresh_duration_on_stack = true,
 	duration = talent_settings.pinning_dog_kills_buff_allies.duration,
 	stat_buffs = {
-		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings.pinning_dog_kills_buff_allies.tdr,
+		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings.pinning_dog_kills_buff_allies.tdr
 	},
 	update_func = function (template_data, template_context, dt)
 		local percent_toughness = talent_settings.pinning_dog_kills_buff_allies.toughness * dt / talent_settings.pinning_dog_kills_buff_allies.duration
@@ -3001,8 +2999,8 @@ templates.adamant_pinning_dog_kills_buff_allies_buff = {
 		Toughness.replenish_percentage(template_context.unit, percent_toughness, false, "pinning_dog_kills_buff_allies")
 	end,
 	related_talents = {
-		"adamant_pinning_dog_kills_buff_allies",
-	},
+		"adamant_pinning_dog_kills_buff_allies"
+	}
 }
 templates.adamant_sprinting_sliding = {
 	allow_proc_while_active = true,
@@ -3013,40 +3011,40 @@ templates.adamant_sprinting_sliding = {
 	predicted = false,
 	active_duration = talent_settings.sprinting_sliding.duration,
 	proc_events = {
-		[proc_events.on_slide_end] = 1,
+		[proc_events.on_slide_end] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.sprint_movement_speed] = talent_settings.sprinting_sliding.speed,
+		[stat_buffs.sprint_movement_speed] = talent_settings.sprinting_sliding.speed
 	},
 	related_talents = {
-		"adamant_sprinting_sliding",
-	},
+		"adamant_sprinting_sliding"
+	}
 }
 templates.adamant_sprinting_sliding_kills = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	cooldown_duration = talent_settings.sprinting_sliding.cd,
 	proc_func = function (params, template_data, template_context)
 		local stamina = talent_settings.sprinting_sliding.stamina
 
 		Stamina.add_stamina_percent(template_context.unit, stamina)
-	end,
+	end
 }
 templates.adamant_monster_hunter = {
 	class_name = "buff",
 	prediced = false,
 	stat_buffs = {
-		[stat_buffs.damage_vs_ogryn_and_monsters] = talent_settings.monster_hunter.damage,
-	},
+		[stat_buffs.damage_vs_ogryn_and_monsters] = talent_settings.monster_hunter.damage
+	}
 }
 templates.adamant_uninterruptible_heavies = {
 	class_name = "buff",
 	predicted = false,
 	conditional_keywords = {
-		keywords.uninterruptible,
+		keywords.uninterruptible
 	},
 	start_func = function (template_data, template_context)
 		local player_unit = template_context.unit
@@ -3061,7 +3059,7 @@ templates.adamant_uninterruptible_heavies = {
 		local is_windup = action_settings and action_settings.kind == "windup"
 
 		return is_windup
-	end,
+	end
 }
 templates.adamant_first_melee_hit_increased_damage = {
 	class_name = "proc_buff",
@@ -3069,11 +3067,11 @@ templates.adamant_first_melee_hit_increased_damage = {
 	proc_events = {
 		[proc_events.on_sweep_start] = 1,
 		[proc_events.on_sweep_finish] = 1,
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	conditional_stat_buffs = {
 		[stat_buffs.melee_damage] = talent_settings.first_melee_hit_increased_damage.damage,
-		[stat_buffs.impact_modifier] = talent_settings.first_melee_hit_increased_damage.impact,
+		[stat_buffs.impact_modifier] = talent_settings.first_melee_hit_increased_damage.impact
 	},
 	specific_proc_func = {
 		on_sweep_start = function (params, template_data, template_context)
@@ -3088,11 +3086,11 @@ templates.adamant_first_melee_hit_increased_damage = {
 		end,
 		on_sweep_finish = function (params, template_data, template_context)
 			template_data.active = false
-		end,
+		end
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.active
-	end,
+	end
 }
 templates.adamant_stamina_spent_replenish_toughness = {
 	class_name = "buff",
@@ -3137,7 +3135,7 @@ templates.adamant_stamina_spent_replenish_toughness = {
 		end
 
 		template_data.last_stamina = current_stamina
-	end,
+	end
 }
 templates.adamant_stamina_spent_replenish_toughness_buff = {
 	class_name = "buff",
@@ -3154,38 +3152,38 @@ templates.adamant_stamina_spent_replenish_toughness_buff = {
 		Toughness.replenish_percentage(template_context.unit, percent_toughness, false, "stamina_spent_replenish_toughness")
 	end,
 	related_talents = {
-		"adamant_stamina_spent_replenish_toughness",
-	},
+		"adamant_stamina_spent_replenish_toughness"
+	}
 }
 templates.adamant_dodge_improvement = {
 	class_name = "buff",
 	prediced = false,
 	stat_buffs = {
 		[stat_buffs.extra_consecutive_dodges] = talent_settings.dodge_improvement.dodge,
-		[stat_buffs.dodge_linger_time_modifier] = talent_settings.dodge_improvement.dodge_duration,
-	},
+		[stat_buffs.dodge_linger_time_modifier] = talent_settings.dodge_improvement.dodge_duration
+	}
 }
 templates.adamant_companion_focus_melee = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.companion_damage_vs_melee] = talent_settings.companion_focus_melee.damage,
-	},
+		[stat_buffs.companion_damage_vs_melee] = talent_settings.companion_focus_melee.damage
+	}
 }
 templates.adamant_companion_focus_ranged = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.companion_damage_vs_ranged] = talent_settings.companion_focus_ranged.damage,
-	},
+		[stat_buffs.companion_damage_vs_ranged] = talent_settings.companion_focus_ranged.damage
+	}
 }
 templates.adamant_companion_focus_elite = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
 		[stat_buffs.companion_damage_vs_elites] = talent_settings.companion_focus_elite.damage,
-		[stat_buffs.companion_damage_vs_special] = talent_settings.companion_focus_elite.damage,
-	},
+		[stat_buffs.companion_damage_vs_special] = talent_settings.companion_focus_elite.damage
+	}
 }
 templates.adamant_no_movement_penalty = {
 	class_name = "proc_buff",
@@ -3193,11 +3191,11 @@ templates.adamant_no_movement_penalty = {
 	predicted = false,
 	proc_events = {
 		[proc_events.on_wield_ranged] = 1,
-		[proc_events.on_wield_melee] = 1,
+		[proc_events.on_wield_melee] = 1
 	},
 	conditional_stat_buffs = {
 		[stat_buffs.alternate_fire_movement_speed_reduction_modifier] = talent_settings.no_movement_penalty.reduced_move_penalty,
-		[stat_buffs.weapon_action_movespeed_reduction_multiplier] = talent_settings.no_movement_penalty.reduced_move_penalty,
+		[stat_buffs.weapon_action_movespeed_reduction_multiplier] = talent_settings.no_movement_penalty.reduced_move_penalty
 	},
 	start_func = function (template_data, template_context)
 		template_data.wielding_ranged = false
@@ -3208,17 +3206,17 @@ templates.adamant_no_movement_penalty = {
 		end,
 		on_wield_melee = function (params, template_data, template_context)
 			template_data.wielding_ranged = false
-		end,
+		end
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.wielding_ranged
-	end,
+	end
 }
 templates.adamant_dog_attacks_electrocute = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.attacker_is_my_companion,
 	proc_func = function (params, template_data, template_context, t)
@@ -3237,7 +3235,7 @@ templates.adamant_dog_attacks_electrocute = {
 				end
 			end
 		end
-	end,
+	end
 }
 
 local PI = math.pi
@@ -3252,11 +3250,11 @@ templates.dog_attacks_electrocute_electrocute_buff = {
 	start_interval_on_apply = true,
 	start_with_frame_offset = true,
 	keywords = {
-		keywords.electrocuted,
+		keywords.electrocuted
 	},
 	interval = {
 		0.3,
-		0.8,
+		0.8
 	},
 	duration = talent_settings.dog_attacks_electrocute.duration,
 	interval_func = function (template_data, template_context, template, dt, t)
@@ -3288,8 +3286,8 @@ templates.dog_attacks_electrocute_electrocute_buff = {
 		end
 	end,
 	minion_effects = {
-		ailment_effect = ailment_effects.electrocution,
-	},
+		ailment_effect = ailment_effects.electrocution
+	}
 }
 templates.adamant_damage_reduction_after_elite_kill = {
 	allow_proc_while_active = true,
@@ -3300,15 +3298,15 @@ templates.adamant_damage_reduction_after_elite_kill = {
 	predicted = false,
 	active_duration = talent_settings.damage_reduction_after_elite_kill.duration,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = talent_settings.damage_reduction_after_elite_kill.damage_taken_multiplier,
+		[stat_buffs.damage_taken_multiplier] = talent_settings.damage_reduction_after_elite_kill.damage_taken_multiplier
 	},
 	check_proc_func = CheckProcFunctions.on_elite_or_special_kill,
 	related_talents = {
-		"adamant_damage_reduction_after_elite_kill",
-	},
+		"adamant_damage_reduction_after_elite_kill"
+	}
 }
 
 local toughness_range_sq = talent_settings.toughness_regen_near_companion.range * talent_settings.toughness_regen_near_companion.range
@@ -3369,21 +3367,21 @@ templates.adamant_toughness_regen_near_companion = {
 		return template_data.is_active
 	end,
 	related_talents = {
-		"adamant_toughness_regen_near_companion",
-	},
+		"adamant_toughness_regen_near_companion"
+	}
 }
 templates.adamant_perfect_block_damage_boost = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_perfect_block] = 1,
+		[proc_events.on_perfect_block] = 1
 	},
 	stat_buffs = {
-		[stat_buffs.block_cost_multiplier] = talent_settings.perfect_block_damage_boost.block_cost,
+		[stat_buffs.block_cost_multiplier] = talent_settings.perfect_block_damage_boost.block_cost
 	},
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("adamant_perfect_block_damage_boost_buff", t)
-	end,
+	end
 }
 templates.adamant_perfect_block_damage_boost_buff = {
 	class_name = "buff",
@@ -3396,17 +3394,17 @@ templates.adamant_perfect_block_damage_boost_buff = {
 	duration = talent_settings.perfect_block_damage_boost.duration,
 	stat_buffs = {
 		[stat_buffs.damage] = talent_settings.perfect_block_damage_boost.damage,
-		[stat_buffs.attack_speed] = talent_settings.perfect_block_damage_boost.attack_speed,
+		[stat_buffs.attack_speed] = talent_settings.perfect_block_damage_boost.attack_speed
 	},
 	related_talents = {
-		"adamant_perfect_block_damage_boost",
-	},
+		"adamant_perfect_block_damage_boost"
+	}
 }
 templates.adamant_staggers_reduce_damage_taken = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_staggering_hit,
 	proc_func = function (params, template_data, template_context, t)
@@ -3415,7 +3413,7 @@ templates.adamant_staggers_reduce_damage_taken = {
 		local stacks = is_ogryn and talent_settings.staggers_reduce_damage_taken.ogryn_stacks or talent_settings.staggers_reduce_damage_taken.normal_stacks
 
 		template_context.buff_extension:add_internally_controlled_buff_with_stacks("adamant_staggers_reduce_damage_taken_buff", stacks, t)
-	end,
+	end
 }
 templates.adamant_staggers_reduce_damage_taken_buff = {
 	class_name = "proc_buff",
@@ -3427,10 +3425,10 @@ templates.adamant_staggers_reduce_damage_taken_buff = {
 	max_stacks = talent_settings.staggers_reduce_damage_taken.max_stacks,
 	duration = talent_settings.staggers_reduce_damage_taken.duration,
 	stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = talent_settings.staggers_reduce_damage_taken.damage_taken_multiplier,
+		[stat_buffs.damage_taken_multiplier] = talent_settings.staggers_reduce_damage_taken.damage_taken_multiplier
 	},
 	proc_events = {
-		[proc_events.on_player_hit_received] = 1,
+		[proc_events.on_player_hit_received] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		local is_melee = params.attack_type == attack_types.melee
@@ -3445,14 +3443,14 @@ templates.adamant_staggers_reduce_damage_taken_buff = {
 		return template_data.finish
 	end,
 	related_talents = {
-		"adamant_staggers_reduce_damage_taken",
-	},
+		"adamant_staggers_reduce_damage_taken"
+	}
 }
 templates.adamant_crit_chance_on_kill = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		local unit = template_context.unit
@@ -3464,7 +3462,7 @@ templates.adamant_crit_chance_on_kill = {
 			buff_extension:add_internally_controlled_buff("adamant_crit_chance_on_kill_effect", t)
 		end
 	end,
-	check_proc_func = CheckProcFunctions.on_kill,
+	check_proc_func = CheckProcFunctions.on_kill
 }
 templates.adamant_crit_chance_on_kill_effect = {
 	class_name = "buff",
@@ -3477,24 +3475,24 @@ templates.adamant_crit_chance_on_kill_effect = {
 	max_stacks = talent_settings.crit_chance_on_kill.max_stacks,
 	max_stacks_cap = talent_settings.crit_chance_on_kill.max_stacks,
 	stat_buffs = {
-		[stat_buffs.critical_strike_chance] = talent_settings.crit_chance_on_kill.crit_chance,
+		[stat_buffs.critical_strike_chance] = talent_settings.crit_chance_on_kill.crit_chance
 	},
 	related_talents = {
-		"adamant_crit_chance_on_kill",
-	},
+		"adamant_crit_chance_on_kill"
+	}
 }
 templates.adamant_crits_rend = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.ranged_critical_strike_rending_multiplier] = talent_settings.crits_rend.rending,
-	},
+		[stat_buffs.ranged_critical_strike_rending_multiplier] = talent_settings.crits_rend.rending
+	}
 }
 templates.adamant_elite_special_kills_reload_speed = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_elite_or_special_kill,
 	proc_func = function (params, template_data, template_context, t)
@@ -3503,7 +3501,7 @@ templates.adamant_elite_special_kills_reload_speed = {
 		local reload_buff = "adamant_increased_reload_speed_elite_kill"
 
 		buff_extension:add_internally_controlled_buff(reload_buff, t)
-	end,
+	end
 }
 templates.adamant_increased_reload_speed_elite_kill = {
 	always_show_in_hud = true,
@@ -3514,10 +3512,10 @@ templates.adamant_increased_reload_speed_elite_kill = {
 	max_stacks = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_reload] = 1,
+		[proc_events.on_reload] = 1
 	},
 	stat_buffs = {
-		[stat_buffs.reload_speed] = talent_settings.elite_special_kills_reload_speed.reload_speed,
+		[stat_buffs.reload_speed] = talent_settings.elite_special_kills_reload_speed.reload_speed
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -3544,8 +3542,8 @@ templates.adamant_increased_reload_speed_elite_kill = {
 		return template_data.done and not is_reloading
 	end,
 	related_talents = {
-		"adamant_elite_special_kills_reload_speed",
-	},
+		"adamant_elite_special_kills_reload_speed"
+	}
 }
 templates.adamant_dodge_grants_damage = {
 	allow_proc_while_active = true,
@@ -3556,25 +3554,25 @@ templates.adamant_dodge_grants_damage = {
 	predicted = false,
 	active_duration = talent_settings.dodge_grants_damage.duration,
 	proc_events = {
-		[proc_events.on_successful_dodge] = 1,
+		[proc_events.on_successful_dodge] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.damage] = talent_settings.dodge_grants_damage.damage,
+		[stat_buffs.damage] = talent_settings.dodge_grants_damage.damage
 	},
 	related_talents = {
-		"adamant_dodge_grants_damage",
-	},
+		"adamant_dodge_grants_damage"
+	}
 }
 templates.adamant_stacking_weakspot_strength = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_weakspot_hit,
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("adamant_stacking_weakspot_strength_buff", t)
-	end,
+	end
 }
 templates.adamant_stacking_weakspot_strength_buff = {
 	class_name = "buff",
@@ -3586,17 +3584,17 @@ templates.adamant_stacking_weakspot_strength_buff = {
 	duration = talent_settings.stacking_weakspot_strength.duration,
 	max_stacks = talent_settings.stacking_weakspot_strength.max_stacks,
 	stat_buffs = {
-		[stat_buffs.weakspot_power_level_modifier] = talent_settings.stacking_weakspot_strength.strength,
+		[stat_buffs.weakspot_power_level_modifier] = talent_settings.stacking_weakspot_strength.strength
 	},
 	related_talents = {
-		"adamant_stacking_weakspot_strength",
-	},
+		"adamant_stacking_weakspot_strength"
+	}
 }
 templates.adamant_stacking_damage = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	proc_func = function (params, template_data, template_context, t)
 		if params.target_number > 1 then
@@ -3604,7 +3602,7 @@ templates.adamant_stacking_damage = {
 		end
 
 		template_context.buff_extension:add_internally_controlled_buff("adamant_stacking_damage_buff", t)
-	end,
+	end
 }
 templates.adamant_stacking_damage_buff = {
 	class_name = "buff",
@@ -3616,18 +3614,18 @@ templates.adamant_stacking_damage_buff = {
 	duration = talent_settings.stacking_damage.duration,
 	max_stacks = talent_settings.stacking_damage.stacks,
 	stat_buffs = {
-		[stat_buffs.damage] = talent_settings.stacking_damage.damage,
+		[stat_buffs.damage] = talent_settings.stacking_damage.damage
 	},
 	related_talents = {
-		"adamant_stacking_damage",
-	},
+		"adamant_stacking_damage"
+	}
 }
 templates.adamant_staggering_increases_damage_taken = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_push_hit] = 1,
+		[proc_events.on_push_hit] = 1
 	},
 	specific_proc_func = {
 		on_hit = function (params, template_data, template_context, t)
@@ -3662,8 +3660,8 @@ templates.adamant_staggering_increases_damage_taken = {
 
 				buff_extension:add_internally_controlled_buff_with_stacks("adamant_staggering_enemies_take_more_damage", num_stacks, t, "owner_unit", template_context.unit)
 			end
-		end,
-	},
+		end
+	}
 }
 templates.adamant_staggering_enemies_take_more_damage = {
 	class_name = "buff",
@@ -3672,15 +3670,15 @@ templates.adamant_staggering_enemies_take_more_damage = {
 	refresh_duration_on_stack = true,
 	duration = talent_settings.staggering_enemies_take_more_damage.duration,
 	stat_buffs = {
-		[stat_buffs.melee_damage_taken_modifier] = talent_settings.staggering_enemies_take_more_damage.damage,
-	},
+		[stat_buffs.melee_damage_taken_modifier] = talent_settings.staggering_enemies_take_more_damage.damage
+	}
 }
 templates.adamant_staggered_enemies_deal_less_damage = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_push_hit] = 1,
+		[proc_events.on_push_hit] = 1
 	},
 	specific_proc_func = {
 		on_hit = function (params, template_data, template_context, t)
@@ -3715,8 +3713,8 @@ templates.adamant_staggered_enemies_deal_less_damage = {
 
 				buff_extension:add_internally_controlled_buff_with_stacks("adamant_staggered_enemies_deal_less_damage_debuff", num_stacks, t, "owner_unit", template_context.unit)
 			end
-		end,
-	},
+		end
+	}
 }
 templates.adamant_staggered_enemies_deal_less_damage_debuff = {
 	class_name = "buff",
@@ -3725,8 +3723,8 @@ templates.adamant_staggered_enemies_deal_less_damage_debuff = {
 	refresh_duration_on_stack = true,
 	duration = talent_settings.staggered_enemies_deal_less_damage.duration,
 	stat_buffs = {
-		[stat_buffs.damage] = talent_settings.staggered_enemies_deal_less_damage.damage,
-	},
+		[stat_buffs.damage] = talent_settings.staggered_enemies_deal_less_damage.damage
+	}
 }
 
 return templates

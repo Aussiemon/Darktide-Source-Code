@@ -135,7 +135,7 @@ local function construct_interface_settings_percent_slider(template)
 		validation_function = template.validation_function,
 		tooltip_text = template.tooltip_text,
 		disable_rules = template.disable_rules,
-		apply_on_startup = template.apply_on_startup,
+		apply_on_startup = template.apply_on_startup
 	}
 
 	return OptionsUtilities.create_percent_slider_template(params)
@@ -189,7 +189,7 @@ local function construct_interface_settings_value_slider(template)
 		validation_function = template.validation_function,
 		tooltip_text = template.tooltip_text,
 		disable_rules = template.disable_rules,
-		apply_on_startup = template.apply_on_startup,
+		apply_on_startup = template.apply_on_startup
 	}
 
 	return OptionsUtilities.create_value_slider_template(params)
@@ -213,7 +213,7 @@ local function construct_interface_settings_dropdown(template)
 			id = value.name,
 			value = value.name,
 			display_name = value.display_name,
-			icon = value.icon,
+			icon = value.icon
 		}
 	end
 
@@ -240,7 +240,7 @@ local function construct_interface_settings_dropdown(template)
 		id = template.id,
 		tooltip_text = template.tooltip_text,
 		disable_rules = template.disable_rules,
-		default_value = template.default_value,
+		default_value = template.default_value
 	}
 
 	return params
@@ -251,27 +251,27 @@ local template_functions = {
 	boolean = construct_interface_settings_boolean,
 	percent_slider = construct_interface_settings_percent_slider,
 	value_slider = construct_interface_settings_value_slider,
-	dropdown = construct_interface_settings_dropdown,
+	dropdown = construct_interface_settings_dropdown
 }
 
 local function _companion_outline_options()
 	local options = {
 		{
 			display_name = "loc_setting_companion_outline_in_mission_all",
-			name = "both",
+			name = "both"
 		},
 		{
 			display_name = "loc_setting_companion_outline_in_mission_self",
-			name = "own",
+			name = "own"
 		},
 		{
 			display_name = "loc_setting_companion_outline_in_mission_allies",
-			name = "allies",
+			name = "allies"
 		},
 		{
 			display_name = "loc_setting_companion_outline_in_mission_none",
-			name = "none",
-		},
+			name = "none"
+		}
 	}
 
 	return options
@@ -280,22 +280,22 @@ end
 local _notification_options = {
 	{
 		display_name = "loc_setting_notification_type_none",
-		name = "none",
+		name = "none"
 	},
 	{
 		display_name = "loc_setting_notification_type_combat_feed",
-		name = "combat_feed",
+		name = "combat_feed"
 	},
 	{
 		display_name = "loc_setting_notification_type_notification",
-		name = "notification",
-	},
+		name = "notification"
+	}
 }
 local settings_definitions = {
 	{
 		display_name = "loc_settings_menu_group_gameplay_settings",
 		group_name = "gameplay_settings",
-		widget_type = "group_header",
+		widget_type = "group_header"
 	},
 	{
 		default_value = true,
@@ -305,7 +305,7 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			return
-		end,
+		end
 	},
 	{
 		default_value = "none",
@@ -316,7 +316,7 @@ local settings_definitions = {
 		options = _companion_outline_options(),
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_companion_outlines", value)
-		end,
+		end
 	},
 	{
 		default_value = "dynamic",
@@ -328,36 +328,36 @@ local settings_definitions = {
 		options = {
 			{
 				display_name = "loc_setting_dodge_stamina_hud_both_dynamic",
-				name = "dynamic",
+				name = "dynamic"
 			},
 			{
 				display_name = "loc_setting_dodge_stamina_hud_both_always",
-				name = "always_both",
+				name = "always_both"
 			},
 			{
 				display_name = "loc_setting_dodge_stamina_hud_always_stamina",
-				name = "always_stamina",
+				name = "always_stamina"
 			},
 			{
 				display_name = "loc_setting_dodge_stamina_hud_always_dodge",
-				name = "always_dodge",
+				name = "always_dodge"
 			},
 			{
 				display_name = "loc_setting_dodge_stamina_hud_disable_stamina",
-				name = "stamina_disabled",
+				name = "stamina_disabled"
 			},
 			{
 				display_name = "loc_setting_dodge_stamina_hud_disable_dodge",
-				name = "dodge_disabled",
+				name = "dodge_disabled"
 			},
 			{
 				display_name = "loc_setting_dodge_stamina_hud_disabled_both",
-				name = "both_disabled",
-			},
+				name = "both_disabled"
+			}
 		},
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_stamina_and_dodge_hud_visibility_changed", value)
-		end,
+		end
 	},
 	{
 		default_value = false,
@@ -367,7 +367,7 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_stamina_and_dodge_hud_syncronized", value)
-		end,
+		end
 	},
 	{
 		default_value = false,
@@ -377,7 +377,7 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_show_stamina_with_fixed_dividers", value)
-		end,
+		end
 	},
 	{
 		default_value = true,
@@ -387,7 +387,7 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_show_stamina_percentage_text", value)
-		end,
+		end
 	},
 	{
 		default_value = true,
@@ -397,7 +397,7 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_hit_indicator_enabled", value)
-		end,
+		end
 	},
 	{
 		default_value = 0.5,
@@ -411,7 +411,7 @@ local settings_definitions = {
 		widget_type = "value_slider",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_hit_indicator_duration", value)
-		end,
+		end
 	},
 	{
 		default_value = true,
@@ -421,7 +421,7 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_crosshair_enabled", value)
-		end,
+		end
 	},
 	{
 		default_value = true,
@@ -431,7 +431,7 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_aim_trajectory_enabled", value)
-		end,
+		end
 	},
 	{
 		default_value = false,
@@ -442,7 +442,7 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_forced_dot_crosshair", value)
-		end,
+		end
 	},
 	{
 		default_value = "weapon",
@@ -454,42 +454,42 @@ local settings_definitions = {
 		options = {
 			{
 				display_name = "loc_setting_crosshair_type_override_weapon",
-				name = "weapon",
+				name = "weapon"
 			},
 			{
 				display_name = "loc_setting_crosshair_type_override_killshot",
 				icon = "content/ui/materials/icons/system/settings/dropdown/icon_crosshair_killshot",
-				name = "cross",
+				name = "cross"
 			},
 			{
 				display_name = "loc_setting_crosshair_type_override_assault",
 				icon = "content/ui/materials/icons/system/settings/dropdown/icon_crosshair_assault",
-				name = "assault",
+				name = "assault"
 			},
 			{
 				display_name = "loc_setting_crosshair_type_override_bfg",
 				icon = "content/ui/materials/icons/system/settings/dropdown/icon_crosshair_bfg",
-				name = "bfg",
+				name = "bfg"
 			},
 			{
 				display_name = "loc_setting_crosshair_type_override_shotgun",
 				icon = "content/ui/materials/icons/system/settings/dropdown/icon_crosshair_shotgun",
-				name = "shotgun",
+				name = "shotgun"
 			},
 			{
 				display_name = "loc_setting_crosshair_type_override_spray_n_pray",
 				icon = "content/ui/materials/icons/system/settings/dropdown/icon_crosshair_spray_n_pray",
-				name = "spray_n_pray",
+				name = "spray_n_pray"
 			},
 			{
 				display_name = "loc_setting_crosshair_type_override_dot",
 				icon = "content/ui/materials/icons/system/settings/dropdown/icon_crosshair_dot",
-				name = "dot",
-			},
+				name = "dot"
+			}
 		},
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_crosshair_type_override", value)
-		end,
+		end
 	},
 	{
 		default_value = true,
@@ -500,7 +500,7 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_dot_special_crosshair", value)
-		end,
+		end
 	},
 	{
 		default_value = true,
@@ -510,12 +510,12 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_input_hints_enabled", value)
-		end,
+		end
 	},
 	{
 		display_name = "loc_settings_menu_group_buff_interface_settings",
 		group_name = "buff_interface_settings",
-		widget_type = "group_header",
+		widget_type = "group_header"
 	},
 	{
 		default_value = true,
@@ -526,7 +526,7 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			return
-		end,
+		end
 	},
 	{
 		default_value = true,
@@ -537,12 +537,12 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			return
-		end,
+		end
 	},
 	{
 		display_name = "loc_settings_menu_group_combat_feed_settings",
 		group_name = "combat_feed_settings",
-		widget_type = "group_header",
+		widget_type = "group_header"
 	},
 	{
 		default_value = true,
@@ -552,7 +552,7 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_combat_feed_enabled", value)
-		end,
+		end
 	},
 	{
 		default_value = 8,
@@ -566,7 +566,7 @@ local settings_definitions = {
 		widget_type = "value_slider",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_combat_feed_max_messages", value)
-		end,
+		end
 	},
 	{
 		default_value = 5,
@@ -580,12 +580,12 @@ local settings_definitions = {
 		widget_type = "value_slider",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_combat_feed_message_duration", value)
-		end,
+		end
 	},
 	{
 		display_name = "loc_setting_menu_group_notification_settings",
 		group_name = "notification_settings",
-		widget_type = "group_header",
+		widget_type = "group_header"
 	},
 	{
 		default_value = "notification",
@@ -596,7 +596,7 @@ local settings_definitions = {
 		options = _notification_options,
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_assist_notification_type", value)
-		end,
+		end
 	},
 	{
 		default_value = "notification",
@@ -607,7 +607,7 @@ local settings_definitions = {
 		options = _notification_options,
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_crafting_pickup_notification_type", value)
-		end,
+		end
 	},
 	{
 		default_value = "others",
@@ -618,24 +618,24 @@ local settings_definitions = {
 		options = {
 			{
 				display_name = "loc_setting_notification_type_none",
-				name = "none",
+				name = "none"
 			},
 			{
 				display_name = "loc_setting_notification_type_mine",
-				name = "mine",
+				name = "mine"
 			},
 			{
 				display_name = "loc_setting_notification_type_others",
-				name = "others",
+				name = "others"
 			},
 			{
 				display_name = "loc_setting_notification_type_all",
-				name = "all",
-			},
+				name = "all"
+			}
 		},
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_penance_unlock_chat_message_type", value)
-		end,
+		end
 	},
 	{
 		default_value = true,
@@ -649,12 +649,12 @@ local settings_definitions = {
 		end,
 		validation_function = function ()
 			return not IS_PLAYSTATION
-		end,
+		end
 	},
 	{
 		display_name = "loc_settings_menu_group_subtitle_settings",
 		group_name = "subtitle_settings",
-		widget_type = "group_header",
+		widget_type = "group_header"
 	},
 	{
 		default_value = true,
@@ -664,7 +664,7 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_subtitles_enabled", value)
-		end,
+		end
 	},
 	{
 		default_value = true,
@@ -674,7 +674,7 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_secondary_subtitles_enabled", value)
-		end,
+		end
 	},
 	{
 		default_value = true,
@@ -684,7 +684,7 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_subtitle_speaker_enabled", value)
-		end,
+		end
 	},
 	{
 		default_value = 60,
@@ -695,7 +695,7 @@ local settings_definitions = {
 		widget_type = "percent_slider",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_subtitles_background_opacity", value)
-		end,
+		end
 	},
 	{
 		default_value = 100,
@@ -706,7 +706,7 @@ local settings_definitions = {
 		widget_type = "percent_slider",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_subtitle_text_opacity", value)
-		end,
+		end
 	},
 	{
 		default_value = 32,
@@ -720,7 +720,7 @@ local settings_definitions = {
 		widget_type = "value_slider",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_subtitles_font_size", value)
-		end,
+		end
 	},
 	{
 		default_value = 28,
@@ -734,12 +734,12 @@ local settings_definitions = {
 		widget_type = "value_slider",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_secondary_subtitles_font_size", value)
-		end,
+		end
 	},
 	{
 		display_name = "loc_settings_menu_group_accessibility_settings",
 		group_name = "other_settings",
-		widget_type = "group_header",
+		widget_type = "group_header"
 	},
 	{
 		default_value = 100,
@@ -752,7 +752,7 @@ local settings_definitions = {
 		widget_type = "percent_slider",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_hud_scale", value)
-		end,
+		end
 	},
 	{
 		default_value = 100,
@@ -760,7 +760,7 @@ local settings_definitions = {
 		id = "camera_movement_offset_sway_intensity",
 		min_value = 0,
 		save_location = "interface_settings",
-		widget_type = "percent_slider",
+		widget_type = "percent_slider"
 	},
 	{
 		default_value = 100,
@@ -773,12 +773,12 @@ local settings_definitions = {
 			Wwise.set_parameter("psyker_overload_global", (value or 100) / 100)
 			Application.set_user_setting("interface_settings", "psyker_overload_intensity", value)
 			Application.save_user_settings()
-		end,
+		end
 	},
 	{
 		display_name = "loc_settings_menu_group_nameplate_settings",
 		group_name = "nameplate_settings",
-		widget_type = "group_header",
+		widget_type = "group_header"
 	},
 	{
 		default_value = "name_and_title",
@@ -790,20 +790,20 @@ local settings_definitions = {
 		options = {
 			{
 				display_name = "loc_setting_nameplates_in_mission_name_and_title",
-				name = "name_and_title",
+				name = "name_and_title"
 			},
 			{
 				display_name = "loc_setting_nameplates_in_mission_name",
-				name = "name",
+				name = "name"
 			},
 			{
 				display_name = "loc_setting_nameplates_in_mission_none",
-				name = "none",
-			},
+				name = "none"
+			}
 		},
 		on_value_changed = function (value)
 			Managers.event:trigger("event_titles_in_mission_setting_changed", value)
-		end,
+		end
 	},
 	{
 		default_value = false,
@@ -814,7 +814,7 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_titles_my_title_in_hub_setting_changed", value)
-		end,
+		end
 	},
 	{
 		default_value = "rarity_colors",
@@ -825,17 +825,17 @@ local settings_definitions = {
 		options = {
 			{
 				display_name = "loc_setting_title_color_type_rarities",
-				name = "rarity_colors",
+				name = "rarity_colors"
 			},
 			{
 				display_name = "loc_setting_title_color_type_no_colors",
-				name = "no_colors",
-			},
+				name = "no_colors"
+			}
 		},
 		on_value_changed = function (value)
 			Managers.event:trigger("event_hub_title_color_type_changed", value)
 			Managers.event:trigger("event_titles_my_title_in_hub_setting_changed", value)
-		end,
+		end
 	},
 	{
 		default_value = "rarity_colors",
@@ -846,16 +846,16 @@ local settings_definitions = {
 		options = {
 			{
 				display_name = "loc_setting_title_color_type_rarities",
-				name = "rarity_colors",
+				name = "rarity_colors"
 			},
 			{
 				display_name = "loc_setting_title_color_type_no_colors",
-				name = "no_colors",
-			},
+				name = "no_colors"
+			}
 		},
 		on_value_changed = function (value)
 			Managers.event:trigger("event_in_mission_title_color_type_changed", "color_changed")
-		end,
+		end
 	},
 	{
 		default_value = "mine_only",
@@ -867,20 +867,20 @@ local settings_definitions = {
 		options = {
 			{
 				display_name = "loc_setting_notification_type_all",
-				name = "all",
+				name = "all"
 			},
 			{
 				display_name = "loc_setting_notification_type_mine",
-				name = "mine_only",
+				name = "mine_only"
 			},
 			{
 				display_name = "loc_setting_nameplates_in_mission_none",
-				name = "none",
-			},
+				name = "none"
+			}
 		},
 		on_value_changed = function (value)
 			Managers.event:trigger("event_companion_nameplate_in_mission_setting_changed", value)
-		end,
+		end
 	},
 	{
 		default_value = "all",
@@ -892,25 +892,25 @@ local settings_definitions = {
 		options = {
 			{
 				display_name = "loc_setting_notification_type_all",
-				name = "all",
+				name = "all"
 			},
 			{
 				display_name = "loc_setting_notification_type_mine",
-				name = "mine_only",
+				name = "mine_only"
 			},
 			{
 				display_name = "loc_setting_nameplates_in_mission_none",
-				name = "none",
-			},
+				name = "none"
+			}
 		},
 		on_value_changed = function (value)
 			Managers.event:trigger("event_companion_nameplate_in_hub_setting_changed", value)
-		end,
+		end
 	},
 	{
 		display_name = "loc_settings_menu_group_chat_bubbles_settings",
 		group_name = "chat_bubbles_settings",
-		widget_type = "group_header",
+		widget_type = "group_header"
 	},
 	{
 		default_value = true,
@@ -920,7 +920,7 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_chat_bubbles_hub_enabled", value)
-		end,
+		end
 	},
 	{
 		default_value = true,
@@ -930,7 +930,7 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_chat_bubbles_strike_team_enabled", value)
-		end,
+		end
 	},
 	{
 		default_value = 70,
@@ -943,7 +943,7 @@ local settings_definitions = {
 		widget_type = "percent_slider",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_chat_bubbles_background_opacity", value)
-		end,
+		end
 	},
 	{
 		default_value = 100,
@@ -956,7 +956,7 @@ local settings_definitions = {
 		widget_type = "percent_slider",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_chat_bubbles_text_opacity", value)
-		end,
+		end
 	},
 	{
 		default_value = 100,
@@ -969,7 +969,7 @@ local settings_definitions = {
 		widget_type = "percent_slider",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_chat_bubbles_lifetime_multiplier", value)
-		end,
+		end
 	},
 	{
 		default_value = 24,
@@ -983,12 +983,12 @@ local settings_definitions = {
 		widget_type = "value_slider",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_chat_bubbles_text_size", value)
-		end,
+		end
 	},
 	{
 		display_name = "loc_settings_menu_group_other_settings",
 		group_name = "other_settings",
-		widget_type = "group_header",
+		widget_type = "group_header"
 	},
 	{
 		default_value = true,
@@ -998,7 +998,7 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_profanity_filter_enabled", value)
-		end,
+		end
 	},
 	{
 		default_value = true,
@@ -1012,7 +1012,7 @@ local settings_definitions = {
 		end,
 		validation_function = function ()
 			return not IS_XBS and not IS_PLAYSTATION
-		end,
+		end
 	},
 	{
 		default_value = true,
@@ -1023,7 +1023,7 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_portrait_render_change", value)
-		end,
+		end
 	},
 	{
 		default_value = true,
@@ -1034,7 +1034,7 @@ local settings_definitions = {
 		widget_type = "boolean",
 		validation_function = function ()
 			return IS_WINDOWS
-		end,
+		end
 	},
 	{
 		default_value = true,
@@ -1048,7 +1048,7 @@ local settings_definitions = {
 		end,
 		validation_function = function ()
 			return IS_PLAYSTATION
-		end,
+		end
 	},
 	{
 		default_value = true,
@@ -1062,8 +1062,8 @@ local settings_definitions = {
 		end,
 		validation_function = function ()
 			return IS_PLAYSTATION
-		end,
-	},
+		end
+	}
 }
 local settings = {}
 
@@ -1087,5 +1087,5 @@ return {
 	icon = "content/ui/materials/icons/system/settings/category_interface",
 	settings_utilities = SettingsUtilities,
 	settings_by_id = SettingsUtilities.settings_by_id,
-	settings = settings,
+	settings = settings
 }

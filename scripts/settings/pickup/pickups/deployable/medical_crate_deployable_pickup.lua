@@ -12,7 +12,7 @@ local pickup_data = {
 	unit_name = "content/pickups/pocketables/medical_crate/deployable_medical_crate",
 	health_amount_func = function (max_health, pickup_data)
 		return max_health * 0.3
-	end,
+	end
 }
 
 return pickup_data

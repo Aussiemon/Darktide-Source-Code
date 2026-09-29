@@ -5,69 +5,96 @@ local NO_ACTION_INPUT = "NO_ACTION_INPUT"
 local NO_RAW_INPUT = "NO_RAW_INPUT"
 local _read_action_inputs, _read_hierarchy
 local ActionInputFormatter = {}
+local _format_cache = {}
 
 ActionInputFormatter.format = function (action_input_type, templates, raw_inputs)
-	local raw_inputs_network_lookup = {}
+	local action_inputs_configs, action_inputs_network_lookups, action_inputs_hierarchy, raw_inputs_network_lookup, max_action_inputs, max_action_input_queue, max_hierarchy_depth
 
-	for i = 1, #raw_inputs do
-		local raw_input = raw_inputs[i]
+	if _format_cache[action_input_type] then
+		local cached = _format_cache[action_input_type]
 
-		raw_inputs_network_lookup[i] = raw_input
-		raw_inputs_network_lookup[raw_input] = i
-	end
+		action_inputs_configs = cached.action_inputs_configs
+		action_inputs_network_lookups = cached.action_inputs_network_lookups
+		action_inputs_hierarchy = cached.action_inputs_hierarchy
+		raw_inputs_network_lookup = cached.raw_inputs_network_lookup
+		max_action_inputs = cached.max_action_inputs
+		max_action_input_queue = cached.max_action_input_queue
+		max_hierarchy_depth = cached.max_hierarchy_depth
+	else
+		action_inputs_configs = {}
+		action_inputs_network_lookups = {}
+		action_inputs_hierarchy = {}
+		raw_inputs_network_lookup = {}
 
-	local no_raw_input_index = #raw_inputs_network_lookup + 1
+		local action_input_settings = ActionInputFormatterSettings[action_input_type]
 
-	raw_inputs_network_lookup[no_raw_input_index] = NO_RAW_INPUT
-	raw_inputs_network_lookup[NO_RAW_INPUT] = no_raw_input_index
+		max_action_inputs = action_input_settings.max_action_inputs
+		max_action_input_queue = action_input_settings.max_action_input_queue
+		max_hierarchy_depth = 0
 
-	local action_input_settings = ActionInputFormatterSettings[action_input_type]
-	local max_action_inputs = action_input_settings.max_action_inputs
-	local max_action_input_queue = action_input_settings.max_action_input_queue
-	local max_hierarchy_depth = 0
-	local action_inputs_hierarchy = {}
-	local action_inputs_configs = {}
-	local action_inputs_network_lookups = {}
-	local template_keys = table.keys(templates)
+		for i = 1, #raw_inputs do
+			local raw_input = raw_inputs[i]
 
-	table.sort(template_keys)
-
-	for key_index = 1, #template_keys do
-		local name = template_keys[key_index]
-		local template = templates[name]
-		local action_inputs = template.action_inputs
-
-		if action_inputs then
-			local sequences = {}
-
-			action_inputs_configs[name] = sequences
-
-			local network_lookup = {}
-
-			action_inputs_network_lookups[name] = network_lookup
-
-			local num_action_inputs = 1
-
-			network_lookup[num_action_inputs] = NO_ACTION_INPUT
-			network_lookup[NO_ACTION_INPUT] = num_action_inputs
-			num_action_inputs = _read_action_inputs(name, action_inputs, sequences, network_lookup, num_action_inputs)
-
-			local hierarchy_data = template.action_input_hierarchy
-
-			if hierarchy_data then
-				local hierarchy = hierarchy_data
-
-				action_inputs_hierarchy[name] = hierarchy
-
-				local hierarchy_depth = _read_hierarchy(hierarchy_data, sequences)
-
-				if max_hierarchy_depth < hierarchy_depth then
-					max_hierarchy_depth = hierarchy_depth
-				end
-			end
-		else
-			Log.error("ActionInputFormatter", "No action_inputs defined for Template (%s)", name)
+			raw_inputs_network_lookup[i] = raw_input
+			raw_inputs_network_lookup[raw_input] = i
 		end
+
+		local no_raw_input_index = #raw_inputs_network_lookup + 1
+
+		raw_inputs_network_lookup[no_raw_input_index] = NO_RAW_INPUT
+		raw_inputs_network_lookup[NO_RAW_INPUT] = no_raw_input_index
+
+		local template_keys = table.keys(templates)
+
+		table.sort(template_keys)
+
+		for key_index = 1, #template_keys do
+			local name = template_keys[key_index]
+			local template = templates[name]
+			local action_inputs = template.action_inputs
+
+			if action_inputs then
+				local sequences = {}
+
+				action_inputs_configs[name] = sequences
+
+				local network_lookup = {}
+
+				action_inputs_network_lookups[name] = network_lookup
+
+				local num_action_inputs = 1
+
+				network_lookup[num_action_inputs] = NO_ACTION_INPUT
+				network_lookup[NO_ACTION_INPUT] = num_action_inputs
+				num_action_inputs = _read_action_inputs(name, action_inputs, sequences, network_lookup, num_action_inputs)
+
+				local hierarchy_data = template.action_input_hierarchy
+
+				if hierarchy_data then
+					local hierarchy = hierarchy_data
+
+					action_inputs_hierarchy[name] = hierarchy
+
+					local hierarchy_depth = _read_hierarchy(hierarchy_data, sequences)
+
+					if max_hierarchy_depth < hierarchy_depth then
+						max_hierarchy_depth = hierarchy_depth
+					end
+				end
+			else
+				Log.error("ActionInputFormatter", "No action_inputs defined for Template (%s)", name)
+			end
+		end
+
+		_format_cache[action_input_type] = {
+			action_inputs_configs = action_inputs_configs,
+			action_inputs_network_lookups = action_inputs_network_lookups,
+			action_inputs_hierarchy = action_inputs_hierarchy,
+			raw_inputs_network_lookup = raw_inputs_network_lookup,
+			max_action_inputs = max_action_inputs,
+			max_action_input_queue = max_action_input_queue,
+			max_hierarchy_depth = max_hierarchy_depth
+		}
 	end
 
 	return action_inputs_configs, action_inputs_network_lookups, action_inputs_hierarchy, raw_inputs_network_lookup, max_action_inputs, max_action_input_queue, max_hierarchy_depth, NO_ACTION_INPUT, NO_RAW_INPUT
@@ -94,7 +121,7 @@ function _read_action_inputs(name, action_inputs, sequences, network_lookup, tot
 			reevaluation_time = data.reevaluation_time or nil,
 			clear_input_queue = data.clear_input_queue or false,
 			max_queue = data.max_queue or false,
-			dont_queue = data.dont_queue,
+			dont_queue = data.dont_queue
 		}
 
 		for ii = 1, num_elements do
@@ -137,7 +164,7 @@ function _read_hierarchy(hierarchy_data, sequences, hierarchy_depth)
 			local base = transition == "base"
 
 			if transition ~= "previous" then
-				local var_1_0 = false
+				local var_3_0 = false
 			else
 				local previous = true
 			end

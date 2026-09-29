@@ -9,7 +9,7 @@ local method_to_string = {
 	[web_api.GET] = "GET",
 	[web_api.PUT] = "PUT",
 	[web_api.POST] = "POST",
-	[web_api.DELETE] = "DELETE",
+	[web_api.DELETE] = "DELETE"
 }
 
 ScriptWebApiPsn.init = function (self)
@@ -61,7 +61,7 @@ ScriptWebApiPsn._handle_request_response = function (self, request_index, succes
 			response_promise:resolve(response)
 		else
 			response_promise:reject({
-				message = string.format("PSN web API returned nil result: %s", request.debug_text or "unknown"),
+				message = string.format("PSN web API returned nil result: %s", request.debug_text or "unknown")
 			})
 		end
 	else
@@ -70,7 +70,7 @@ ScriptWebApiPsn._handle_request_response = function (self, request_index, succes
 		end
 
 		response_promise:reject({
-			message = string.format("PSN web API request failed: %s", request.debug_text or "unknown"),
+			message = string.format("PSN web API request failed: %s", request.debug_text or "unknown")
 		})
 	end
 
@@ -81,7 +81,7 @@ end
 ScriptWebApiPsn.send_request = function (self, user_id, api_group, path, method, content, headers, response_format)
 	if user_id == nil then
 		return Promise.rejected({
-			message = "PSN web API send_request called with nil user_id",
+			message = "PSN web API send_request called with nil user_id"
 		})
 	end
 
@@ -92,7 +92,7 @@ ScriptWebApiPsn.send_request = function (self, user_id, api_group, path, method,
 		id = id,
 		response_promise = response_promise,
 		response_format = response_format,
-		debug_text = string.format("%s %s", method_to_string[method], path),
+		debug_text = string.format("%s %s", method_to_string[method], path)
 	}
 
 	return response_promise

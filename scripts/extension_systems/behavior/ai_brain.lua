@@ -10,6 +10,7 @@ AiBrain.init = function (self, unit, breed, blackboard, behavior_tree, behavior_
 	self._active = true
 	self._node_data = {}
 	self._scratchpad = {}
+	self._update_rate = 0
 	self._running_child_nodes = {}
 	self._old_running_child_nodes = {}
 	self._running_state_node = nil
@@ -32,10 +33,18 @@ AiBrain.set_active = function (self, active)
 	end
 
 	self._active = active
+
+	local behavior_system = Managers.state.extension:system("behavior_system")
+
+	behavior_system:set_iterate_brain(self._behavior_extension, active)
 end
 
 AiBrain.active = function (self)
 	return self._active
+end
+
+AiBrain.update_rate = function (self)
+	return self._update_rate
 end
 
 AiBrain.set_behavior_tree = function (self, behavior_tree)
@@ -107,6 +116,8 @@ AiBrain.state_event = function (self, state_name)
 
 	if new_state_node then
 		self._running_state_node = new_state_node
+
+		self._behavior_extension:prioritize_staggered_update()
 	end
 end
 
@@ -249,11 +260,12 @@ AiBrain.update = function (self, unit, dt, t)
 
 	local root_tree_node = state_node.tree_node
 	local root_action_data = root_tree_node.action_data
-	local result, evaluate_utility_next_frame = state_node:run(unit, breed, blackboard, scratchpad, root_action_data, dt, t, node_data, new_running_child_nodes)
+	local result, evaluate_utility_next_frame, update_rate = state_node:run(unit, breed, blackboard, scratchpad, root_action_data, dt, t, node_data, new_running_child_nodes)
 	local leaf_node_done = result ~= "running"
 
 	self._running_leaf_node_result = result
 	self._evaluate_utility = evaluate_utility_next_frame or leaf_node_done
+	self._update_rate = update_rate
 
 	if leaf_node_done then
 		local destroy = false

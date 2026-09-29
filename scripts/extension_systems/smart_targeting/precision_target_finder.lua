@@ -71,7 +71,7 @@ PrecisionTargetFinder.update_precision_target = function (self, unit, smart_targ
 
 	local best_score = -math.huge
 	local best_unit, best_unit_is_direct_hit, best_unit_distance, best_unit_aim_position, static_hit_position, best_unit_distance_to_box, best_unit_distance_to_box_x, best_unit_distance_to_box_y
-	local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player)
+	local rewind_ms = LagCompensation.rewind_miliseconds(self._is_server, self._is_local_unit, self._player)
 	local physics_world = self._physics_world
 	local min_range = precision_target_settings.min_range
 	local max_range = precision_target_settings.max_range

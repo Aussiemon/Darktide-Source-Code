@@ -11,8 +11,9 @@ BootStateStartupTests.test_definitions = {
 			cjson = true,
 			gRPC = true,
 			navigation = true,
+			opengjk = false,
 			["rule database"] = true,
-			wwise_plugin = true,
+			wwise_plugin = true
 		},
 		run = function (config)
 			if not IS_WINDOWS then
@@ -42,8 +43,8 @@ BootStateStartupTests.test_definitions = {
 					return string.format("Plugin %q is required but was not loaded.%s", plugin_name, fix_hint)
 				end
 			end
-		end,
-	},
+		end
+	}
 }
 
 BootStateStartupTests._run_test = function (self, test_name)

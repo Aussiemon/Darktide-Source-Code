@@ -9,7 +9,7 @@ local HazardPropSystem = class("HazardPropSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
 	"rpc_hazard_prop_set_state",
 	"rpc_hazard_prop_set_content",
-	"rpc_hazard_prop_hot_join",
+	"rpc_hazard_prop_hot_join"
 }
 
 HazardPropSystem.init = function (self, context, system_init_data, ...)

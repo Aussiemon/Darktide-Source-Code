@@ -7,7 +7,7 @@ local friend_interface = {
 	"platform_icon",
 	"is_friend",
 	"is_blocked",
-	"online_status",
+	"online_status"
 }
 
 return friend_interface

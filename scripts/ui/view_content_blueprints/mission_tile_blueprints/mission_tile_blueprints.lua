@@ -22,14 +22,14 @@ local DETAIL_FRAME_SIZE_MULTYPLIER_BY_CATEGORY = {
 	default = 1,
 	event = 1.25,
 	maelstrom = 1.25,
-	story = 1.15,
+	story = 1.15
 }
 local DETAIL_FRAME_Y_OFFSET_BY_CATEGORY = {
 	common = -6,
 	default = 0,
 	event = 0,
 	maelstrom = -6,
-	story = -6,
+	story = -6
 }
 local DETAIL_FRAME_SIZE_ADDITION_BY_CATEGORY = {
 	common = 1.15,
@@ -37,7 +37,7 @@ local DETAIL_FRAME_SIZE_ADDITION_BY_CATEGORY = {
 	event = 1.2,
 	maelstrom = 1.2,
 	story = 1.5,
-	story_no_bg = 1.25,
+	story_no_bg = 1.25
 }
 
 local function _adjust_color(color, k)
@@ -46,7 +46,7 @@ local function _adjust_color(color, k)
 			255,
 			255,
 			255,
-			255,
+			255
 		}
 	end
 
@@ -54,14 +54,14 @@ local function _adjust_color(color, k)
 		color[1],
 		math.clamp(color[2] * k, 0, 255),
 		math.clamp(color[3] * k, 0, 255),
-		math.clamp(color[4] * k, 0, 255),
+		math.clamp(color[4] * k, 0, 255)
 	}
 end
 
 local _default_text_width = Dimensions.details_width - 2 * Dimensions.sidebar_buffer
 local _internal_text_size = {
 	0,
-	2000,
+	2000
 }
 
 local function text_size(ui_renderer, text, style, optional_width_delta)
@@ -80,7 +80,7 @@ local function _generate_noise_offset(min, max)
 
 	return {
 		noise_x,
-		noise_y,
+		noise_y
 	}
 end
 
@@ -174,7 +174,7 @@ local function _update_offset_by_selection_state(content, style, animations, dt)
 	local offset = style.offset or {
 		0,
 		0,
-		1,
+		1
 	}
 	local offset_x, offset_y = 0, 0
 
@@ -193,7 +193,7 @@ local function _center_pass_offset(content, style, animations, dt)
 	local offset = style.offset or {
 		0,
 		0,
-		1,
+		1
 	}
 	local offset_x, offset_y = 0, 0
 	local size = style.size
@@ -246,15 +246,15 @@ do
 					anim_hover_speed = 10,
 					anim_select_speed = 10,
 					horizontal_alignment = "center",
-					vertical_alignment = "center",
+					vertical_alignment = "center"
 				},
 				content = {
 					on_hover_sound = UISoundEvents.mission_board_node_hover,
-					on_pressed_sound = UISoundEvents.mission_board_node_pressed,
+					on_pressed_sound = UISoundEvents.mission_board_node_pressed
 				},
 				change_function = function (content, style, animations, dt)
 					_update_size_by_selection_state(content, style, animations, dt)
-				end,
+				end
 			},
 			{
 				pass_type = "rect",
@@ -265,18 +265,18 @@ do
 					offset = {
 						0,
 						0,
-						-1,
+						-1
 					},
 					default_offset = {
 						0,
 						0,
-						-1,
-					},
+						-1
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					_update_size_by_selection_state(content, style, animations, dt)
-				end,
-			},
+				end
+			}
 		},
 		init = function (widget, mission_data, creation_context)
 			local content, style = widget.content, widget.style
@@ -289,23 +289,23 @@ do
 
 			style.background.size = {
 				tile_size[1] * size_modifier,
-				tile_size[2] * size_modifier,
+				tile_size[2] * size_modifier
 			}
 			style.background.default_size = {
 				tile_size[1] * size_modifier,
-				tile_size[2] * size_modifier,
+				tile_size[2] * size_modifier
 			}
 			style.hotspot.size = {
 				tile_size[1] * size_modifier,
-				tile_size[2] * size_modifier,
+				tile_size[2] * size_modifier
 			}
 			style.hotspot.default_size = {
 				tile_size[1] * size_modifier,
-				tile_size[2] * size_modifier,
+				tile_size[2] * size_modifier
 			}
 			style.background.color = Styles.colors[palette_name].main
 			content.is_locked = creation_context.is_locked
-		end,
+		end
 	}
 	local fluff_frame = {
 		pass_templates = {
@@ -321,22 +321,22 @@ do
 						80,
 						113,
 						126,
-						103,
+						103
 					},
 					offset = {
 						0,
 						0,
-						-2,
+						-2
 					},
 					size_addition = {
 						80,
-						60,
-					},
+						60
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					_update_size_by_selection_state(content, style, animations, dt)
-				end,
-			},
+				end
+			}
 		},
 		init = function (widget, mission_data, creation_context)
 			local content, style = widget.content, widget.style
@@ -349,24 +349,24 @@ do
 			content.fluff_frame = math.random_array_entry(Settings.fluff_frames)
 			style.fluff_frame.size = {
 				tile_size[1] * size_modifier,
-				tile_size[2] * size_modifier,
+				tile_size[2] * size_modifier
 			}
 			style.fluff_frame.default_size = {
 				tile_size[1] * size_modifier,
-				tile_size[2] * size_modifier,
+				tile_size[2] * size_modifier
 			}
 			style.fluff_frame.offset = {
 				0,
 				0,
-				-2,
+				-2
 			}
 			style.fluff_frame.default_offset = {
 				0,
 				0,
-				-2,
+				-2
 			}
 			style.fluff_frame.visible = not content.is_locked
-		end,
+		end
 	}
 	local selected_state_details = {
 		pass_templates = {
@@ -384,30 +384,30 @@ do
 						255,
 						250,
 						189,
-						73,
+						73
 					},
 					hover_color = {
 						255,
 						204,
 						255,
-						204,
+						204
 					},
 					default_color = {
 						255,
 						0,
 						0,
-						0,
+						0
 					},
 					offset = {
 						0,
 						0,
-						10,
+						10
 					},
 					size_addition = {
 						24,
-						24,
-					},
-				},
+						24
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -422,18 +422,18 @@ do
 					offset = {
 						0,
 						0,
-						-1,
+						-1
 					},
 					default_size = Dimensions.small_mission_size,
 					size_addition = {
 						26,
-						26,
+						26
 					},
 					default_size_addition = {
 						26,
-						26,
+						26
 					},
-					material_values = {},
+					material_values = {}
 				},
 				change_function = function (content, style, animations, dt)
 					local hotspot = content.hotspot
@@ -465,8 +465,8 @@ do
 					end
 
 					style.color[1] = 255 * hotspot.anim_select_progress
-				end,
-			},
+				end
+			}
 		},
 		init = function (widget, mission_data, creation_context)
 			local content, style = widget.content, widget.style
@@ -490,35 +490,35 @@ do
 
 			local selected_frame_size = {
 				tile_size[1] * slected_frame_size_addition,
-				tile_size[2] * slected_frame_size_addition,
+				tile_size[2] * slected_frame_size_addition
 			}
 
 			if category ~= "common" and not creation_context.skip_background_frame then
 				style.selected_frame_detail.size_addition = {
 					40,
-					40,
+					40
 				}
 				style.selected_frame_detail.default_size_addition = {
 					40,
-					40,
+					40
 				}
 			end
 
 			style.selected_frame_detail.size = {
 				selected_frame_size[1],
-				selected_frame_size[2],
+				selected_frame_size[2]
 			}
 			style.selected_frame_detail.default_size = {
 				selected_frame_size[1],
-				selected_frame_size[2],
+				selected_frame_size[2]
 			}
 			style.frame_glow.size = {
 				tile_size[1] * size_modifier,
-				tile_size[2] * size_modifier,
+				tile_size[2] * size_modifier
 			}
 			style.frame_glow.default_size = {
 				tile_size[1] * size_modifier,
-				tile_size[2] * size_modifier,
+				tile_size[2] * size_modifier
 			}
 			style.selected_frame_detail.offset[2] = DETAIL_FRAME_Y_OFFSET_BY_CATEGORY[is_story and "story" or category] or 0
 
@@ -527,7 +527,7 @@ do
 				style.selected_frame_detail.selected_gradient = category_data.selected_gradient
 				style.selected_frame_detail.material_values.gradient_map = category_data.selected_gradient
 			end
-		end,
+		end
 	}
 	local category_background_details = {
 		pass_templates = {
@@ -542,22 +542,22 @@ do
 					offset = {
 						0,
 						0,
-						-1,
+						-1
 					},
 					color = {
 						255,
 						255,
 						255,
-						255,
+						255
 					},
 					material_values = {
-						gradient_map = "content/ui/textures/mission_board/gradient_digital_green",
-					},
+						gradient_map = "content/ui/textures/mission_board/gradient_digital_green"
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					gradient_map_by_category_change_function(content, style, animations, dt)
 					_update_size_by_selection_state(content, style, animations, dt)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -570,17 +570,17 @@ do
 					offset = {
 						0,
 						0,
-						-2,
+						-2
 					},
 					color = {
 						255,
 						255,
 						255,
-						255,
+						255
 					},
 					material_values = {
-						gradient_map = "content/ui/textures/mission_board/gradient_digital_green",
-					},
+						gradient_map = "content/ui/textures/mission_board/gradient_digital_green"
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					local hotspot = content.hotspot
@@ -589,8 +589,8 @@ do
 					_update_size_by_selection_state(content, style, animations, dt)
 
 					style.color[1] = 255 * hotspot.anim_select_progress
-				end,
-			},
+				end
+			}
 		},
 		init = function (widget, mission_data, creation_context)
 			local content, style = widget.content, widget.style
@@ -601,34 +601,34 @@ do
 			local tile_size = is_large and Dimensions.large_mission_size or Dimensions.small_mission_size
 			local background_tile_size = is_large and {
 				600,
-				500,
+				500
 			} or Dimensions.small_mission_background_size
 			local selected_frame_multiplier = DETAIL_FRAME_SIZE_MULTYPLIER_BY_CATEGORY[is_story and "story" or category] or DETAIL_FRAME_SIZE_MULTYPLIER_BY_CATEGORY.default
 			local selected_frame_size = {
 				tile_size[1] + 80 * selected_frame_multiplier,
-				tile_size[2] + 80 * selected_frame_multiplier,
+				tile_size[2] + 80 * selected_frame_multiplier
 			}
 			local selected_glow_size_multiplier = category ~= "common" and 0.6 or 0.4
 			local selected_glow_size = {
 				500 * selected_glow_size_multiplier,
-				600 * selected_glow_size_multiplier,
+				600 * selected_glow_size_multiplier
 			}
 
 			style.background_frame.size = {
 				background_tile_size[1] * size_modifier,
-				background_tile_size[2] * size_modifier,
+				background_tile_size[2] * size_modifier
 			}
 			style.background_frame.default_size = {
 				background_tile_size[1] * size_modifier,
-				background_tile_size[2] * size_modifier,
+				background_tile_size[2] * size_modifier
 			}
 			style.selected_frame_glow.size = {
 				selected_glow_size[1] * size_modifier,
-				selected_glow_size[2] * size_modifier,
+				selected_glow_size[2] * size_modifier
 			}
 			style.selected_frame_glow.default_size = {
 				selected_glow_size[1] * size_modifier,
-				selected_glow_size[2] * size_modifier,
+				selected_glow_size[2] * size_modifier
 			}
 			content.is_locked = creation_context.is_locked
 			content.category = category
@@ -644,13 +644,13 @@ do
 			style.background_frame.material_values.gradient_map = content.is_locked and category_data.disabled_gradient or category_data.selected_gradient
 			style.background_frame.visible = mission_data and mission_data.category ~= "common" or is_story
 			style.selected_frame_glow.visible = true
-		end,
+		end
 	}
 	local mission_small_timer = {
 		pass_templates = {
 			{
 				pass_type = "logic",
-				value = timer_logic,
+				value = timer_logic
 			},
 			{
 				pass_type = "rect",
@@ -662,17 +662,17 @@ do
 						255,
 						0,
 						0,
-						0,
+						0
 					},
 					size = {
 						Dimensions.small_mission_size[1],
-						5,
+						5
 					},
 					offset = {
 						0,
 						-5,
-						1,
-					},
+						1
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					_update_size_by_selection_state(content, style, animations, dt)
@@ -681,7 +681,7 @@ do
 					local offset = style.offset or {
 						0,
 						0,
-						1,
+						1
 					}
 					local offset_y = 0
 
@@ -689,7 +689,7 @@ do
 					offset_y = style.parent_y_size + style.parent_y_size * SELECTED_SIZE_MULTIPLIER * (hotspot.anim_select_progress or 0)
 					offset[2] = -style.size[2] - offset_y * 0.5
 					style.offset = offset
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -700,16 +700,16 @@ do
 					vertical_alignment = "center",
 					size = {
 						Dimensions.small_mission_size[1],
-						5,
+						5
 					},
 					offset = {
 						0,
 						-5,
-						1,
+						1
 					},
 					material_values = {
-						progress = 0.1,
-					},
+						progress = 0.1
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					color_by_selection_state(content, style, animations, dt)
@@ -719,7 +719,7 @@ do
 					local offset = style.offset or {
 						0,
 						0,
-						1,
+						1
 					}
 					local offset_y = 0
 
@@ -727,8 +727,8 @@ do
 					offset_y = style.parent_y_size + style.parent_y_size * SELECTED_SIZE_MULTIPLIER * (hotspot.anim_select_progress or 0)
 					offset[2] = -style.size[2] - offset_y * 0.5
 					style.offset = offset
-				end,
-			},
+				end
+			}
 		},
 		init = function (widget, mission_data, creation_context)
 			local palette_name = creation_context.palette_name or "default"
@@ -746,7 +746,7 @@ do
 			local timer_bar_offset = {
 				style.timer_bar.offset[1],
 				style.timer_bar.offset[2],
-				style.timer_bar.offset[3],
+				style.timer_bar.offset[3]
 			}
 
 			style.timer_bar.offset = timer_bar_offset
@@ -755,7 +755,7 @@ do
 			style.timer_background.parent_y_size = parent_tile_y_size
 			style.timer_bar.size = {
 				style.timer_bar.size[1] * size_multiplier,
-				style.timer_bar.size[2] * size_multiplier,
+				style.timer_bar.size[2] * size_multiplier
 			}
 			style.timer_bar.default_size = table.shallow_copy(style.timer_bar.size)
 			style.timer_background.default_size = table.shallow_copy(style.timer_bar.size)
@@ -769,14 +769,14 @@ do
 			end
 
 			style.timer_bar.visible = not is_story
-		end,
+		end
 	}
 	local large_mission_vertical_spacing = Dimensions.sidebar_small_buffer - 8
 	local mission_large_timer = {
 		pass_templates = {
 			{
 				pass_type = "logic",
-				value = timer_logic,
+				value = timer_logic
 			},
 			{
 				pass_type = "texture",
@@ -789,17 +789,17 @@ do
 					offset = {
 						0,
 						-(large_mission_vertical_spacing + 13),
-						3,
+						3
 					},
 					size = {
 						nil,
-						6,
+						6
 					},
 					size_addition = {
 						-80,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -811,20 +811,20 @@ do
 					offset = {
 						0,
 						-(large_mission_vertical_spacing + 13),
-						3,
+						3
 					},
 					size = {
 						nil,
-						6,
+						6
 					},
 					size_addition = {
 						-80,
-						0,
+						0
 					},
 					material_values = {
-						progress = 1,
-					},
-				},
+						progress = 1
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -835,14 +835,14 @@ do
 					vertical_alignment = "top",
 					size = {
 						19,
-						19,
+						19
 					},
 					offset = {
 						-4,
 						-(19 + large_mission_vertical_spacing),
-						3,
-					},
-				},
+						3
+					}
+				}
 			},
 			{
 				pass_type = "text",
@@ -858,15 +858,15 @@ do
 					vertical_alignment = "top",
 					size = {
 						nil,
-						24,
+						24
 					},
 					offset = {
 						18,
 						-(large_mission_vertical_spacing + 21),
-						3,
-					},
-				},
-			},
+						3
+					}
+				}
+			}
 		},
 		init = function (widget, mission_data, creation_context)
 			local palette_name = creation_context.palette_name or "default"
@@ -878,7 +878,7 @@ do
 			style.timer_frame.color = Styles.colors[palette_name].frame
 			content.start_game_time = mission_data.start_game_time
 			content.expiry_game_time = mission_data.expiry_game_time
-		end,
+		end
 	}
 	local mission_location = {
 		pass_templates = {
@@ -893,11 +893,11 @@ do
 					offset = {
 						0,
 						0,
-						1,
+						1
 					},
 					material_values = {
-						texture_map = "content/ui/textures/missions/quickplay",
-					},
+						texture_map = "content/ui/textures/missions/quickplay"
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					_update_size_by_selection_state(content, style, animations, dt)
@@ -907,7 +907,7 @@ do
 					else
 						style.color[1] = 255
 					end
-				end,
+				end
 			},
 			{
 				pass_type = "rect",
@@ -919,15 +919,15 @@ do
 					offset = {
 						0,
 						0,
-						2,
+						2
 					},
 					color = {
 						200,
 						0,
 						0,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -941,15 +941,15 @@ do
 						255,
 						0,
 						0,
-						0,
+						0
 					},
 					offset = {
 						0,
 						0,
-						2,
-					},
+						2
+					}
 				},
-				change_function = _update_size_by_selection_state,
+				change_function = _update_size_by_selection_state
 			},
 			{
 				pass_type = "texture",
@@ -967,26 +967,26 @@ do
 						255,
 						250,
 						189,
-						73,
+						73
 					},
 					hover_color = {
 						255,
 						204,
 						255,
-						204,
+						204
 					},
 					default_color = {
 						255,
 						0,
 						0,
-						0,
+						0
 					},
 					offset = {
 						0,
 						0,
-						3,
-					},
-				},
+						3
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1005,26 +1005,26 @@ do
 						255,
 						250,
 						189,
-						73,
+						73
 					},
 					hover_color = {
 						255,
 						204,
 						255,
-						204,
+						204
 					},
 					default_color = {
 						255,
 						0,
 						0,
-						0,
+						0
 					},
 					offset = {
 						0,
 						0,
-						4,
-					},
-				},
+						4
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1037,24 +1037,24 @@ do
 					visible = false,
 					size = {
 						58.8,
-						58.8,
+						58.8
 					},
 					offset = {
 						0,
 						0,
-						5,
+						5
 					},
 					color = {
 						125,
 						255,
 						255,
-						255,
-					},
+						255
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					_update_size_by_selection_state(content, style, animations, dt)
-				end,
-			},
+				end
+			}
 		},
 		init = function (widget, mission_data, creation_context)
 			local palette_name = creation_context.palette_name or "default"
@@ -1077,58 +1077,58 @@ do
 
 			style.location_image.size = {
 				initial_size[1] * size_modifier * image_modifier,
-				initial_size[2] * size_modifier * image_modifier,
+				initial_size[2] * size_modifier * image_modifier
 			}
 			style.location_image.default_size = {
 				initial_size[1] * size_modifier * image_modifier,
-				initial_size[2] * size_modifier * image_modifier,
+				initial_size[2] * size_modifier * image_modifier
 			}
 			style.location_rect.size = {
 				initial_size[1] * size_modifier,
-				initial_size[2] * size_modifier,
+				initial_size[2] * size_modifier
 			}
 			style.location_rect.default_size = {
 				initial_size[1] * size_modifier,
-				initial_size[2] * size_modifier,
+				initial_size[2] * size_modifier
 			}
 			style.location_vignette.size = {
 				initial_size[1] * size_modifier,
-				initial_size[2] * size_modifier,
+				initial_size[2] * size_modifier
 			}
 			style.location_vignette.default_size = {
 				initial_size[1] * size_modifier,
-				initial_size[2] * size_modifier,
+				initial_size[2] * size_modifier
 			}
 			style.location_frame.size = {
 				initial_size[1] * size_modifier,
-				initial_size[2] * size_modifier,
+				initial_size[2] * size_modifier
 			}
 			style.location_frame.default_size = {
 				initial_size[1] * size_modifier,
-				initial_size[2] * size_modifier,
+				initial_size[2] * size_modifier
 			}
 			style.location_corner.size = {
 				initial_size[1] * size_modifier,
-				initial_size[2] * size_modifier,
+				initial_size[2] * size_modifier
 			}
 			style.location_corner.default_size = {
 				initial_size[1] * size_modifier,
-				initial_size[2] * size_modifier,
+				initial_size[2] * size_modifier
 			}
 			style.location_lock.size = {
 				location_lock_size * size_modifier,
-				location_lock_size * size_modifier,
+				location_lock_size * size_modifier
 			}
 			style.location_lock.default_size = {
 				location_lock_size * size_modifier,
-				location_lock_size * size_modifier,
+				location_lock_size * size_modifier
 			}
 			style.location_corner.size_addition = category ~= "common" and {
 				0,
-				0,
+				0
 			} or {
 				8,
-				8,
+				8
 			}
 			content.default_size_multiplier = size_modifier
 
@@ -1162,7 +1162,7 @@ do
 				style.location_corner.selected_color = table.shallow_copy(mission_type_colors.selected_color)
 				style.location_corner.hover_color = table.shallow_copy(mission_type_colors.hover_color)
 			end
-		end,
+		end
 	}
 	local mission_category = {
 		pass_templates = {
@@ -1178,21 +1178,21 @@ do
 					visible = false,
 					size = {
 						48,
-						48,
+						48
 					},
 					offset = {
 						-44,
 						-56,
-						6,
+						6
 					},
 					material_values = {
-						gradient_map = "content/ui/textures/mission_board/gradient_digital_green",
-					},
+						gradient_map = "content/ui/textures/mission_board/gradient_digital_green"
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					gradient_map_by_category_change_function(content, style, animations, dt)
 					_update_offset_by_selection_state(content, style, animations, dt)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1206,25 +1206,25 @@ do
 					visible = false,
 					size = {
 						50,
-						50,
+						50
 					},
 					size_addition = {
 						0,
-						0,
+						0
 					},
 					offset = {
 						-45,
 						-57,
-						7,
+						7
 					},
 					material_values = {
-						gradient_map = "content/ui/textures/mission_board/gradient_digital_green",
-					},
+						gradient_map = "content/ui/textures/mission_board/gradient_digital_green"
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					gradient_map_by_category_change_function(content, style, animations, dt)
 					_update_offset_by_selection_state(content, style, animations, dt)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1237,18 +1237,18 @@ do
 					visible = false,
 					size = {
 						202.5,
-						54,
+						54
 					},
 					offset = {
 						-44,
 						-62,
-						10,
+						10
 					},
 					material_values = {
-						gradient_map = "content/ui/textures/mission_board/gradient_digital_green",
-					},
+						gradient_map = "content/ui/textures/mission_board/gradient_digital_green"
+					}
 				},
-				change_function = _update_offset_by_selection_state,
+				change_function = _update_offset_by_selection_state
 			},
 			{
 				pass_type = "text",
@@ -1266,22 +1266,22 @@ do
 					visible = false,
 					size = {
 						202.5,
-						54,
+						54
 					},
 					offset = {
 						-24,
 						-62,
-						11,
+						11
 					},
 					text_color = {
 						255,
 						0,
 						0,
-						0,
-					},
+						0
+					}
 				},
-				change_function = _update_offset_by_selection_state,
-			},
+				change_function = _update_offset_by_selection_state
+			}
 		},
 		init = function (widget, mission_data, creation_context)
 			local palette_name = creation_context.palette_name or "default"
@@ -1306,7 +1306,7 @@ do
 			local mission_icon_offset = {
 				style.mission_type_icon.offset[1] + noise_offset[1],
 				style.mission_type_icon.offset[2] + noise_offset[2],
-				style.mission_type_icon.offset[3],
+				style.mission_type_icon.offset[3]
 			}
 
 			style.mission_type_icon.offset = mission_icon_offset
@@ -1315,7 +1315,7 @@ do
 			local mission_type_frame_offset = {
 				style.mission_type_frame.offset[1] + noise_offset[1],
 				style.mission_type_frame.offset[2] + noise_offset[2],
-				style.mission_type_frame.offset[3],
+				style.mission_type_frame.offset[3]
 			}
 
 			style.mission_type_frame.offset = mission_type_frame_offset
@@ -1324,7 +1324,7 @@ do
 			local mission_type_banner_offset = {
 				math.abs(style.mission_type_frame.offset[1]) + style.mission_type_banner.offset[1] + noise_offset[1],
 				style.mission_type_banner.offset[2],
-				style.mission_type_banner.offset[3],
+				style.mission_type_banner.offset[3]
 			}
 
 			style.mission_type_banner.offset = mission_type_banner_offset
@@ -1333,7 +1333,7 @@ do
 			local mission_type_banner_text_offset = {
 				math.abs(style.mission_type_frame.offset[1]) + style.mission_type_banner_text.offset[1] + noise_offset[1],
 				style.mission_type_banner_text.offset[2],
-				style.mission_type_banner_text.offset[3],
+				style.mission_type_banner_text.offset[3]
 			}
 
 			style.mission_type_banner_text.offset = mission_type_banner_text_offset
@@ -1375,7 +1375,7 @@ do
 				style.mission_type_banner.visible = true
 				style.mission_type_banner_text.visible = true
 			end
-		end,
+		end
 	}
 	local mission_main_objective = {
 		pass_templates = {
@@ -1389,22 +1389,22 @@ do
 					vertical_alignment = "center",
 					size = {
 						48,
-						48,
+						48
 					},
 					offset = {
 						-40,
 						-18,
-						21,
+						21
 					},
 					material_values = {
 						gradient_map = "content/ui/textures/mission_board/gradient_digital_green",
-						texture_map = "content/ui/textures/mission_board/mission_frame_objective",
-					},
+						texture_map = "content/ui/textures/mission_board/mission_frame_objective"
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					gradient_map_by_category_change_function(content, style, animations, dt)
 					_update_offset_by_selection_state(content, style, animations, dt)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1417,28 +1417,28 @@ do
 					vertical_alignment = "center",
 					size = {
 						40,
-						40,
+						40
 					},
 					offset = {
 						-36,
 						-18,
-						23,
+						23
 					},
 					material_values = {
-						gradient_map = "content/ui/textures/mission_board/gradient_digital_green",
+						gradient_map = "content/ui/textures/mission_board/gradient_digital_green"
 					},
 					color = {
 						165,
 						255,
 						255,
-						255,
-					},
+						255
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					gradient_map_by_category_change_function(content, style, animations, dt)
 					_update_offset_by_selection_state(content, style, animations, dt)
-				end,
-			},
+				end
+			}
 		},
 		init = function (widget, mission_data, creation_context)
 			local palette_name = creation_context.palette_name or "default"
@@ -1453,7 +1453,7 @@ do
 			local main_objective_frame_offset = {
 				style.main_objective_frame.offset[1] + noise_offset[1],
 				style.main_objective_frame.offset[2] + noise_offset[2],
-				style.main_objective_frame.offset[3],
+				style.main_objective_frame.offset[3]
 			}
 
 			style.main_objective_frame.offset = main_objective_frame_offset
@@ -1462,7 +1462,7 @@ do
 			local main_objective_icon_offset = {
 				style.main_objective_icon.offset[1] + noise_offset[1],
 				style.main_objective_icon.offset[2] + noise_offset[2],
-				style.main_objective_icon.offset[3],
+				style.main_objective_icon.offset[3]
 			}
 
 			style.main_objective_icon.offset = main_objective_icon_offset
@@ -1482,7 +1482,7 @@ do
 			style.main_objective_icon.selected_gradient = category_data.selected_gradient
 			style.main_objective_icon.disabled_gradient = category_data.disabled_gradient
 			style.main_objective_icon.material_values.gradient_map = is_locked and category_data.disabled_gradient or category_data.default_gradient
-		end,
+		end
 	}
 	local mission_side_objective = {
 		pass_templates = {
@@ -1495,17 +1495,17 @@ do
 					visible = false,
 					size = {
 						32,
-						32,
+						32
 					},
 					offset = {
 						-32,
 						0,
-						6,
-					},
+						6
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					_update_offset_by_selection_state(content, style, animations, dt)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1518,18 +1518,18 @@ do
 					visible = false,
 					size = {
 						32,
-						32,
+						32
 					},
 					offset = {
 						-32,
 						0,
-						8,
-					},
+						8
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					color_by_selection_state(content, style, animations, dt)
 					_update_offset_by_selection_state(content, style, animations, dt)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1542,26 +1542,26 @@ do
 					visible = false,
 					size = {
 						36,
-						36,
+						36
 					},
 					size_addition = {
 						0,
-						0,
+						0
 					},
 					offset = {
 						-34,
 						2,
-						8,
+						8
 					},
 					material_values = {
-						gradient_map = "content/ui/textures/mission_board/gradient_digital_green",
-					},
+						gradient_map = "content/ui/textures/mission_board/gradient_digital_green"
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					_update_offset_by_selection_state(content, style, animations, dt)
 					gradient_map_by_category_change_function(content, style, animations, dt)
-				end,
-			},
+				end
+			}
 		},
 		init = function (widget, mission_data, creation_context)
 			local palette_name = creation_context.palette_name or "default"
@@ -1580,7 +1580,7 @@ do
 			local side_objective_background_offset = {
 				style.side_objective_background.offset[1] + noise_offset[1],
 				style.side_objective_background.offset[2] + noise_offset[2],
-				style.side_objective_background.offset[3],
+				style.side_objective_background.offset[3]
 			}
 
 			style.side_objective_background.offset = side_objective_background_offset
@@ -1589,7 +1589,7 @@ do
 			local side_objective_frame_offset = {
 				style.side_objective_frame.offset[1] + noise_offset[1],
 				style.side_objective_frame.offset[2] + noise_offset[2],
-				style.side_objective_frame.offset[3],
+				style.side_objective_frame.offset[3]
 			}
 
 			style.side_objective_frame.offset = side_objective_frame_offset
@@ -1598,7 +1598,7 @@ do
 			local side_objective_icon_offset = {
 				style.side_objective_icon.offset[1] + noise_offset[1],
 				style.side_objective_icon.offset[2] + noise_offset[2],
-				style.side_objective_icon.offset[3],
+				style.side_objective_icon.offset[3]
 			}
 
 			style.side_objective_icon.offset = side_objective_icon_offset
@@ -1630,7 +1630,7 @@ do
 			end
 
 			content.has_side_objective = has_side_objective
-		end,
+		end
 	}
 	local mission_circumstance = {
 		pass_templates = {
@@ -1645,26 +1645,26 @@ do
 					visible = false,
 					size = {
 						42,
-						42,
+						42
 					},
 					size_addition = {
 						-4,
-						-4,
+						-4
 					},
 					offset = {
 						24,
 						31,
-						7,
+						7
 					},
 					material_values = {
-						gradient_map = "content/ui/textures/mission_board/gradient_digital_circumnstance_default",
-					},
+						gradient_map = "content/ui/textures/mission_board/gradient_digital_circumnstance_default"
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					_update_offset_by_selection_state(content, style, animations, dt)
 					gradient_map_by_category_change_function(content, style, animations, dt)
-				end,
-			},
+				end
+			}
 		},
 		init = function (widget, mission_data, creation_context)
 			local palette_name = creation_context.palette_name or "default"
@@ -1675,14 +1675,14 @@ do
 				255,
 				255,
 				255,
-				255,
+				255
 			}
 
 			local noise_offset = _generate_noise_offset(-6, 6)
 			local circumstance_icon_offset = {
 				style.circumstance_icon.offset[1] + noise_offset[1],
 				style.circumstance_icon.offset[2] + noise_offset[2],
-				style.circumstance_icon.offset[3],
+				style.circumstance_icon.offset[3]
 			}
 
 			style.circumstance_icon.offset = circumstance_icon_offset
@@ -1717,7 +1717,7 @@ do
 				style.circumstance_icon.disabled_gradient = category_data.disabled_gradient
 				style.circumstance_icon.material_values.gradient_map = is_locked and category_data.disabled_gradient or category_data.default_gradient
 			end
-		end,
+		end
 	}
 	local mission_line = {
 		pass_templates = {
@@ -1734,16 +1734,16 @@ do
 					offset = {
 						0,
 						0,
-						-5,
+						-5
 					},
 					size = {
 						2,
-						300,
+						300
 					},
 					default_size = {
 						2,
-						300,
-					},
+						300
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					local hotspot = content.hotspot
@@ -1773,8 +1773,8 @@ do
 					content.line_delay = line_delay
 					style.size[2] = height
 					style.offset[2] = height
-				end,
-			},
+				end
+			}
 		},
 		init = function (widget, mission_data, creation_context)
 			local palette_name = creation_context.palette_name or "default"
@@ -1786,7 +1786,7 @@ do
 			style.mission_line.offset[2] = height
 			style.mission_line.size[2] = height
 			style.mission_line.default_size[2] = height
-		end,
+		end
 	}
 	local mission_completed = {
 		pass_templates = {
@@ -1803,12 +1803,12 @@ do
 					offset = {
 						0,
 						-100,
-						-14,
+						-14
 					},
 					size = {
 						161.28000000000003,
-						107.52000000000001,
-					},
+						107.52000000000001
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					local hotspot = content.hotspot or content.parent.hotspot
@@ -1832,7 +1832,7 @@ do
 					local offset = style.offset or {
 						0,
 						0,
-						1,
+						1
 					}
 					local offset_y = 0
 
@@ -1840,7 +1840,7 @@ do
 					offset_y = style.parent_y_size + style.parent_y_size * SELECTED_SIZE_MULTIPLIER * (hotspot.anim_select_progress or 0)
 					offset[2] = -50 + style.size[2] * 0.5 + offset_y * 0.5
 					style.offset = offset
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1855,12 +1855,12 @@ do
 					offset = {
 						0,
 						-100,
-						4,
+						4
 					},
 					size = {
 						115.2,
-						76.80000000000001,
-					},
+						76.80000000000001
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					local hotspot = content.hotspot or content.parent.hotspot
@@ -1884,7 +1884,7 @@ do
 					local offset = style.offset or {
 						0,
 						0,
-						1,
+						1
 					}
 					local offset_y = 0
 
@@ -1892,8 +1892,8 @@ do
 					offset_y = style.parent_y_size + style.parent_y_size * SELECTED_SIZE_MULTIPLIER * (hotspot.anim_select_progress or 0)
 					offset[2] = -30 + style.size[2] * 0.5 + offset_y * 0.5
 					style.offset = offset
-				end,
-			},
+				end
+			}
 		},
 		init = function (widget, mission_data, creation_context)
 			local palette_name = creation_context.palette_name or "default"
@@ -1919,21 +1919,21 @@ do
 			style.mission_completed_icon_front.parent_y_size = parent_tile_y_size
 			style.mission_completed_icon_back.size = {
 				style.mission_completed_icon_back.size[1] * size_multiplier,
-				style.mission_completed_icon_back.size[2] * size_multiplier,
+				style.mission_completed_icon_back.size[2] * size_multiplier
 			}
 			style.mission_completed_icon_back.default_size = {
 				style.mission_completed_icon_back.size[1] * size_multiplier,
-				style.mission_completed_icon_back.size[2] * size_multiplier,
+				style.mission_completed_icon_back.size[2] * size_multiplier
 			}
 			style.mission_completed_icon_front.size = {
 				style.mission_completed_icon_front.size[1] * size_multiplier,
-				style.mission_completed_icon_front.size[2] * size_multiplier,
+				style.mission_completed_icon_front.size[2] * size_multiplier
 			}
 			style.mission_completed_icon_front.default_size = {
 				style.mission_completed_icon_front.size[1] * size_multiplier,
-				style.mission_completed_icon_front.size[2] * size_multiplier,
+				style.mission_completed_icon_front.size[2] * size_multiplier
 			}
-		end,
+		end
 	}
 	local decorative_eagle = {
 		pass_templates = {
@@ -1946,17 +1946,17 @@ do
 					vertical_alignment = "top",
 					size = {
 						90,
-						30,
+						30
 					},
 					offset = {
 						14,
 						-2,
-						5,
+						5
 					},
 					material_values = {
 						gradient_map = "content/ui/textures/mission_board/gradient_digital_green",
-						texture_map = "content/ui/textures/mission_board/aquilla_digital",
-					},
+						texture_map = "content/ui/textures/mission_board/aquilla_digital"
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					gradient_map_by_category_change_function(content, style, animations, dt)
@@ -1966,7 +1966,7 @@ do
 					local offset = style.offset or {
 						0,
 						0,
-						1,
+						1
 					}
 					local offset_x, offset_y = 0, 0
 					local parent_size = style.parent.background and style.parent.background.size
@@ -1979,8 +1979,8 @@ do
 						offset[2] = default_offset[2] - offset_y * 0.5
 						style.offset = offset
 					end
-				end,
-			},
+				end
+			}
 		},
 		init = function (widget, mission_data, creation_context)
 			local palette_name = creation_context.palette_name or "default"
@@ -1994,14 +1994,14 @@ do
 			style.decorative_eagle.offset = {
 				14,
 				-2,
-				5,
+				5
 			}
 			style.decorative_eagle.default_offset = {
 				14,
 				-2,
-				5,
+				5
 			}
-		end,
+		end
 	}
 	local banner = {
 		pass_templates = {
@@ -2014,13 +2014,13 @@ do
 					visible = false,
 					size = {
 						nil,
-						36,
+						36
 					},
 					offset = {
 						0,
 						0,
-						2,
-					},
+						2
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					_update_size_by_selection_state(content, style, animations, dt)
@@ -2030,7 +2030,7 @@ do
 					local offset = style.offset or {
 						0,
 						0,
-						1,
+						1
 					}
 					local offset_x, offset_y = 0, 0
 					local parent_size = style.parent.background and style.parent.background.size
@@ -2041,7 +2041,7 @@ do
 						offset[2] = default_offset[2] + offset_y * 0.5
 						style.offset = offset
 					end
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -2059,14 +2059,14 @@ do
 					offset = {
 						-10,
 						-8,
-						5,
+						5
 					},
 					text_color = {
 						255,
 						167,
 						190,
-						151,
-					},
+						151
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					local hotspot = content.hotspot or content.parent.hotspot
@@ -2074,7 +2074,7 @@ do
 					local offset = style.offset or {
 						0,
 						0,
-						1,
+						1
 					}
 					local offset_x, offset_y = 0, 0
 					local parent_size = style.parent.background and style.parent.background.size
@@ -2087,7 +2087,7 @@ do
 						offset[2] = default_offset[2] + offset_y * 0.5
 						style.offset = offset
 					end
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2100,16 +2100,16 @@ do
 					visible = false,
 					size = {
 						32,
-						32,
+						32
 					},
 					offset = {
 						6,
 						-3,
-						5,
+						5
 					},
 					material_values = {
-						gradient_map = "content/ui/textures/mission_board/gradient_digital_green",
-					},
+						gradient_map = "content/ui/textures/mission_board/gradient_digital_green"
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					gradient_map_by_category_change_function(content, style, animations, dt)
@@ -2119,7 +2119,7 @@ do
 					local offset = style.offset or {
 						0,
 						0,
-						1,
+						1
 					}
 					local offset_x, offset_y = 0, 0
 					local parent_size = style.parent.background and style.parent.background.size
@@ -2132,8 +2132,8 @@ do
 						offset[2] = default_offset[2] + offset_y * 0.5
 						style.offset = offset
 					end
-				end,
-			},
+				end
+			}
 		},
 		init = function (widget, mission_data, creation_context)
 			local palette_name = creation_context.palette_name or "default"
@@ -2150,41 +2150,41 @@ do
 			style.banner_background.color = Styles.colors.default.background
 			style.banner_background.size = {
 				large_mission_size[1],
-				36,
+				36
 			}
 			style.banner_background.default_size = {
 				large_mission_size[1],
-				36,
+				36
 			}
 			style.banner_background.offset = {
 				0,
 				0,
-				2,
+				2
 			}
 			style.banner_background.default_offset = {
 				0,
 				0,
-				2,
+				2
 			}
 			style.banner_text.offset = {
 				-10,
 				-8,
-				5,
+				5
 			}
 			style.banner_text.default_offset = {
 				-10,
 				-8,
-				5,
+				5
 			}
 			style.banner_icon.offset = {
 				6,
 				-3,
-				5,
+				5
 			}
 			style.banner_icon.default_offset = {
 				6,
 				-3,
-				5,
+				5
 			}
 			content.banner_text = banner_text
 			style.banner_text.visible = true
@@ -2202,7 +2202,7 @@ do
 				style.banner_icon.disabled_gradient = category_data.disabled_gradient
 				style.banner_icon.visible = true
 			end
-		end,
+		end
 	}
 	local header_text = {
 		pass_templates = {
@@ -2222,8 +2222,8 @@ do
 					offset = {
 						8,
 						3,
-						5,
-					},
+						5
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					local hotspot = content.hotspot or content.parent.hotspot
@@ -2231,7 +2231,7 @@ do
 					local offset = style.offset or {
 						0,
 						0,
-						1,
+						1
 					}
 					local offset_x, offset_y = 0, 0
 					local parent_size = style.parent.background and style.parent.background.size
@@ -2244,8 +2244,8 @@ do
 						offset[2] = default_offset[2] - offset_y * 0.5
 						style.offset = offset
 					end
-				end,
-			},
+				end
+			}
 		},
 		init = function (widget, mission_data, creation_context)
 			local palette_name = creation_context.palette_name or "default"
@@ -2259,12 +2259,12 @@ do
 			style.header_text.offset = {
 				8,
 				3,
-				5,
+				5
 			}
 			style.header_text.default_offset = {
 				8,
 				3,
-				5,
+				5
 			}
 			content.header_text = header_text
 
@@ -2272,7 +2272,7 @@ do
 
 			style.header_text.text_color = creation_context.is_locked and table.shallow_copy(Styles.colors.default.terminal_text_darker) or table.shallow_copy(Styles.colors.default.terminal_text_dark)
 			style.header_text.visible = true
-		end,
+		end
 	}
 	local display_order_text = {
 		pass_templates = {
@@ -2285,19 +2285,19 @@ do
 					offset = {
 						0,
 						0,
-						10,
+						10
 					},
 					default_offset = {
 						0,
 						0,
-						10,
+						10
 					},
 					color = {
 						255,
 						0,
 						0,
-						0,
-					},
+						0
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					local hotspot = content.hotspot or content.parent.hotspot
@@ -2305,7 +2305,7 @@ do
 					local offset = style.offset or {
 						0,
 						0,
-						1,
+						1
 					}
 					local offset_x, offset_y = 0, 0
 					local parent_size = style.parent.background and style.parent.background.size
@@ -2320,7 +2320,7 @@ do
 					end
 
 					_update_size_by_selection_state(content, style, animations, dt)
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -2337,19 +2337,19 @@ do
 					offset = {
 						0,
 						0,
-						12,
+						12
 					},
 					default_offset = {
 						0,
 						0,
-						12,
+						12
 					},
 					text_color = {
 						255,
 						255,
 						255,
-						255,
-					},
+						255
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					color_by_selection_state(content, style, animations, dt)
@@ -2359,7 +2359,7 @@ do
 					local offset = style.offset or {
 						0,
 						0,
-						1,
+						1
 					}
 					local offset_x, offset_y = 0, 0
 					local parent_size = style.parent.background and style.parent.background.size
@@ -2374,7 +2374,7 @@ do
 					end
 
 					_update_size_by_selection_state(content, style, animations, dt)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2387,13 +2387,13 @@ do
 					offset = {
 						0,
 						0,
-						13,
+						13
 					},
 					default_offset = {
 						0,
 						0,
-						13,
-					},
+						13
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					color_by_selection_state(content, style, animations, dt)
@@ -2403,7 +2403,7 @@ do
 					local offset = style.offset or {
 						0,
 						0,
-						1,
+						1
 					}
 					local offset_x, offset_y = 0, 0
 					local parent_size = style.parent.background and style.parent.background.size
@@ -2418,8 +2418,8 @@ do
 					end
 
 					_update_size_by_selection_state(content, style, animations, dt)
-				end,
-			},
+				end
+			}
 		},
 		init = function (widget, mission_data, creation_context)
 			local content, style = widget.content, widget.style
@@ -2428,57 +2428,57 @@ do
 
 			style.display_order_background.size = {
 				widget_size[1] - 6,
-				24,
+				24
 			}
 			style.display_order_background.default_size = {
 				widget_size[1] - 6,
-				24,
+				24
 			}
 			style.display_order_background.offset = {
 				3,
 				-22,
-				10,
+				10
 			}
 			style.display_order_background.default_offset = {
 				3,
 				-22,
-				10,
+				10
 			}
 			style.display_order_text.size = {
 				widget_size[1] - 6,
-				24,
+				24
 			}
 			style.display_order_text.default_size = {
 				widget_size[1] - 6,
-				24,
+				24
 			}
 			style.display_order_text.offset = {
 				3,
 				-22,
-				12,
+				12
 			}
 			style.display_order_text.default_offset = {
 				3,
 				-22,
-				12,
+				12
 			}
 			style.display_order_text_frame.size = {
 				widget_size[1] - 6,
-				24,
+				24
 			}
 			style.display_order_text_frame.default_size = {
 				widget_size[1] - 6,
-				24,
+				24
 			}
 			style.display_order_text_frame.offset = {
 				3,
 				-22,
-				13,
+				13
 			}
 			style.display_order_text_frame.default_offset = {
 				3,
 				-22,
-				13,
+				13
 			}
 
 			local category = mission_data.category or "default"
@@ -2508,20 +2508,20 @@ do
 			if style.selected_frame_detail then
 				style.selected_frame_detail.size_addition = {
 					18,
-					30,
+					30
 				}
 				style.selected_frame_detail.default_size_addition = {
 					18,
-					30,
+					30
 				}
 			end
-		end,
+		end
 	}
 	local highest_difficulty_completed_icon = {
 		pass_templates = {},
 		init = function (widget, mission_data, creation_context)
 			return
-		end,
+		end
 	}
 	local tile_button_background_hotspot = {
 		pass_templates = {
@@ -2533,12 +2533,12 @@ do
 					anim_hover_speed = 10,
 					anim_select_speed = 10,
 					horizontal_alignment = "center",
-					vertical_alignment = "center",
+					vertical_alignment = "center"
 				},
 				content = {
 					on_hover_sound = UISoundEvents.mission_board_node_hover,
-					on_pressed_sound = UISoundEvents.mission_board_node_pressed,
-				},
+					on_pressed_sound = UISoundEvents.mission_board_node_pressed
+				}
 			},
 			{
 				pass_type = "rect",
@@ -2549,14 +2549,14 @@ do
 					offset = {
 						0,
 						0,
-						-1,
+						-1
 					},
 					default_offset = {
 						0,
 						0,
-						-1,
-					},
-				},
+						-1
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -2570,17 +2570,17 @@ do
 					offset = {
 						0,
 						0,
-						2,
+						2
 					},
 					default_offset = {
 						0,
 						0,
-						2,
-					},
+						2
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					color_by_selection_state(content, style, animations, dt)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2595,18 +2595,18 @@ do
 					offset = {
 						0,
 						0,
-						-1,
+						-1
 					},
 					default_size = Dimensions.small_mission_size,
 					size_addition = {
 						10,
-						10,
+						10
 					},
 					default_size_addition = {
 						10,
-						10,
+						10
 					},
-					material_values = {},
+					material_values = {}
 				},
 				change_function = function (content, style, animations, dt)
 					local hotspot = content.hotspot
@@ -2638,8 +2638,8 @@ do
 					end
 
 					style.color[1] = 255 * hotspot.anim_select_progress
-				end,
-			},
+				end
+			}
 		},
 		init = function (widget, mission_data, creation_context)
 			local content, style = widget.content, widget.style
@@ -2652,27 +2652,27 @@ do
 
 			style.background.size = {
 				tile_size[1],
-				tile_size[2],
+				tile_size[2]
 			}
 			style.background.default_size = {
 				tile_size[1],
-				tile_size[2],
+				tile_size[2]
 			}
 			style.hotspot.size = {
 				tile_size[1],
-				tile_size[2],
+				tile_size[2]
 			}
 			style.hotspot.default_size = {
 				tile_size[1],
-				tile_size[2],
+				tile_size[2]
 			}
 			style.background_frame.size = {
 				tile_size[1],
-				tile_size[2],
+				tile_size[2]
 			}
 			style.background_frame.default_size = {
 				tile_size[1],
-				tile_size[2],
+				tile_size[2]
 			}
 
 			local mission_type_colors = Styles.colors.color_by_mission_type.default
@@ -2684,11 +2684,11 @@ do
 			style.background_frame.disabled_color = table.shallow_copy(mission_type_colors.disabled_color)
 			style.selected_frame_detail.size = {
 				tile_size[1],
-				tile_size[2],
+				tile_size[2]
 			}
 			style.selected_frame_detail.default_size = {
 				tile_size[1],
-				tile_size[2],
+				tile_size[2]
 			}
 			style.selected_frame_detail.offset[2] = 0
 
@@ -2704,10 +2704,10 @@ do
 				255,
 				0,
 				0,
-				0,
+				0
 			}
 			content.is_locked = creation_context.is_locked
-		end,
+		end
 	}
 	local tile_button_icon = {
 		pass_templates = {
@@ -2721,30 +2721,30 @@ do
 					vertical_alignment = "center",
 					size = {
 						60,
-						60,
+						60
 					},
 					default_size = {
 						60,
-						60,
+						60
 					},
 					offset = {
 						0,
 						0,
-						4,
+						4
 					},
 					default_offset = {
 						0,
 						0,
-						4,
+						4
 					},
 					material_values = {
 						gradient_map = "content/ui/textures/mission_board/gradient_digital_green",
-						texture_map = "content/ui/textures/icons/mission_types_pj/mission_type_quick",
-					},
+						texture_map = "content/ui/textures/icons/mission_types_pj/mission_type_quick"
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					gradient_map_by_category_change_function(content, style, animations, dt)
-				end,
+				end
 			},
 			{
 				pass_type = "rotated_texture",
@@ -2757,27 +2757,27 @@ do
 					angle = math.degrees_to_radians(180),
 					size = {
 						60,
-						60,
+						60
 					},
 					default_size = {
 						60,
-						60,
+						60
 					},
 					offset = {
 						0,
 						0,
-						5,
+						5
 					},
 					default_offset = {
 						0,
 						0,
-						5,
-					},
+						5
+					}
 				},
 				change_function = function (content, style, animations, dt)
 					color_by_selection_state(content, style, animations, dt)
-				end,
-			},
+				end
+			}
 		},
 		init = function (widget, mission_data, creation_context)
 			local content, style = widget.content, widget.style
@@ -2788,19 +2788,19 @@ do
 			style.static_button_icon.material_values.texture_map = creation_context.icon or "content/ui/textures/icons/mission_types_pj/mission_type_quick"
 			style.static_button_icon.size = {
 				content.size[2],
-				content.size[2],
+				content.size[2]
 			}
 			style.static_button_icon.default_size = {
 				content.size[2],
-				content.size[2],
+				content.size[2]
 			}
 			style.static_button_icon_frame.size = {
 				content.size[2],
-				content.size[2],
+				content.size[2]
 			}
 			style.static_button_icon_frame.default_size = {
 				content.size[2],
-				content.size[2],
+				content.size[2]
 			}
 
 			local mission_type_colors = Styles.colors.color_by_mission_type.default
@@ -2819,7 +2819,7 @@ do
 				style.static_button_icon.disabled_gradient = category_data.disabled_gradient
 				style.static_button_icon.material_values.gradient_map = category_data.default_gradient
 			end
-		end,
+		end
 	}
 	local tile_button_header_text = {
 		pass_templates = {
@@ -2838,9 +2838,9 @@ do
 					offset = {
 						70,
 						-4,
-						5,
+						5
 					},
-					text_color = table.shallow_copy(Styles.colors.default.terminal_text_dark),
+					text_color = table.shallow_copy(Styles.colors.default.terminal_text_dark)
 				},
 				change_function = function (content, style, animations, dt)
 					color_by_selection_state(content, style, animations, dt)
@@ -2850,8 +2850,8 @@ do
 					local is_selected = hotspot and hotspot.is_selected
 
 					style.font_size = 16 + (is_selected and 0.5 or 1) * (hotspot.anim_hover_progress or 0) + 1 * (hotspot.anim_select_progress or 0)
-				end,
-			},
+				end
+			}
 		},
 		init = function (widget, mission_data, creation_context)
 			local content, style = widget.content, widget.style
@@ -2868,7 +2868,7 @@ do
 
 			style.static_header_text.size = {
 				content.size[1] - content.size[2] + 4,
-				content.size[2],
+				content.size[2]
 			}
 			style.static_header_text.offset[1] = content.size[2] + 8
 			content.static_header_text = header_text
@@ -2880,7 +2880,7 @@ do
 			style.static_header_text.selected_color = _adjust_color(text_color, 1.35)
 			style.static_header_text.hover_color = _adjust_color(text_color, 1.15)
 			style.static_header_text.disabled_color = _adjust_color(text_color, 0.5)
-		end,
+		end
 	}
 	local tile_button_sub_header_text = {
 		pass_templates = {
@@ -2899,9 +2899,9 @@ do
 					offset = {
 						70,
 						8,
-						5,
+						5
 					},
-					text_color = table.shallow_copy(Styles.colors.color_by_mission_type.default.default_color),
+					text_color = table.shallow_copy(Styles.colors.color_by_mission_type.default.default_color)
 				},
 				change_function = function (content, style, animations, dt)
 					color_by_selection_state(content, style, animations, dt)
@@ -2911,8 +2911,8 @@ do
 					local is_selected = hotspot and hotspot.is_selected
 
 					style.font_size = 12 + (is_selected and 0.5 or 1) * (hotspot.anim_hover_progress or 0) + 1 * (hotspot.anim_select_progress or 0)
-				end,
-			},
+				end
+			}
 		},
 		init = function (widget, mission_data, creation_context)
 			local content, style = widget.content, widget.style
@@ -2929,7 +2929,7 @@ do
 
 			style.static_sub_header_text.size = {
 				content.size[1] - content.size[2] + 4,
-				content.size[2],
+				content.size[2]
 			}
 			style.static_sub_header_text.offset[1] = content.size[2] + 8
 			content.static_sub_header_text = sub_header_text
@@ -2941,7 +2941,7 @@ do
 			style.static_sub_header_text.selected_color = _adjust_color(text_color, 1.35)
 			style.static_sub_header_text.hover_color = _adjust_color(text_color, 1.15)
 			style.static_sub_header_text.disabled_color = _adjust_color(text_color, 0.5)
-		end,
+		end
 	}
 	local has_new = {
 		pass_templates = {
@@ -2955,22 +2955,22 @@ do
 					vertical_alignment = "center",
 					size = {
 						24,
-						24,
+						24
 					},
 					offset = {
 						0,
 						0,
-						10,
+						10
 					},
 					material_values = {
 						gradient_map = "content/ui/textures/mission_board/gradient_digital_circumstances",
-						texture_map = "content/ui/textures/mission_board/exclamation_mark",
-					},
+						texture_map = "content/ui/textures/mission_board/exclamation_mark"
+					}
 				},
 				visibility_function = function (content, style)
 					return content.has_new == true
-				end,
-			},
+				end
+			}
 		},
 		init = function (widget, mission_data, creation_context)
 			local content, style = widget.content, widget.style
@@ -2978,10 +2978,10 @@ do
 			content.has_new = creation_context.has_new or false
 			style.has_new_icon.size = {
 				content.size[2] - 18,
-				content.size[2] - 18,
+				content.size[2] - 18
 			}
 			style.has_new_icon.offset[1] = -8
-		end,
+		end
 	}
 
 	Blueprints.small_mission_tile_pass_templates = {
@@ -2996,7 +2996,7 @@ do
 		mission_side_objective,
 		mission_circumstance,
 		mission_line,
-		mission_completed,
+		mission_completed
 	}
 	Blueprints.replay_mission_tile_pass_templates = {
 		background_hotspot,
@@ -3005,14 +3005,14 @@ do
 		mission_main_objective,
 		mission_side_objective,
 		mission_circumstance,
-		display_order_text,
+		display_order_text
 	}
 	Blueprints.replay_mission_upsell_tile_pass_templates = {
 		background_hotspot,
 		fluff_frame,
 		category_background_details,
 		selected_state_details,
-		mission_location,
+		mission_location
 	}
 	Blueprints.static_mission_pass_templates = {
 		background_hotspot,
@@ -3021,14 +3021,14 @@ do
 		mission_location,
 		decorative_eagle,
 		banner,
-		header_text,
+		header_text
 	}
 	Blueprints.small_static_tile_pass_templates = {
 		tile_button_background_hotspot,
 		tile_button_icon,
 		tile_button_header_text,
 		tile_button_sub_header_text,
-		has_new,
+		has_new
 	}
 end
 

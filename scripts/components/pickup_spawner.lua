@@ -96,7 +96,7 @@ PickupSpawner.component_data = {
 			"guaranteed_spawn",
 			"manual_spawn",
 			"flow_spawn",
-			"side_mission",
+			"side_mission"
 		},
 		options_values = {
 			"primary_distribution",
@@ -108,14 +108,14 @@ PickupSpawner.component_data = {
 			"guaranteed_spawn",
 			"manual_spawn",
 			"flow_spawn",
-			"side_mission",
-		},
+			"side_mission"
+		}
 	},
 	ignore_item_list = {
 		category = "Items",
 		ui_name = "Accept Any Pool Items",
 		ui_type = "check_box",
-		value = true,
+		value = true
 	},
 	items = {
 		category = "Items",
@@ -187,7 +187,7 @@ PickupSpawner.component_data = {
 			"expedition_explosive_luggable_01",
 			"live_event_leftover_01_pickup_large",
 			"live_event_leftover_01_pickup_medium",
-			"live_event_leftover_01_pickup_small",
+			"live_event_leftover_01_pickup_small"
 		},
 		options_values = {
 			"none",
@@ -253,8 +253,8 @@ PickupSpawner.component_data = {
 			"expedition_explosive_luggable_01",
 			"live_event_leftover_01_pickup_large",
 			"live_event_leftover_01_pickup_medium",
-			"live_event_leftover_01_pickup_small",
-		},
+			"live_event_leftover_01_pickup_small"
+		}
 	},
 	item_spawn_selection = {
 		category = "Spawn Parameters",
@@ -263,12 +263,12 @@ PickupSpawner.component_data = {
 		value = "random_in_list",
 		options_keys = {
 			"next_in_list",
-			"random_in_list",
+			"random_in_list"
 		},
 		options_values = {
 			"next_in_list",
-			"random_in_list",
-		},
+			"random_in_list"
+		}
 	},
 	spawn_nodes = {
 		category = "Spawn Parameters",
@@ -276,18 +276,18 @@ PickupSpawner.component_data = {
 		ui_name = "Spawn Nodes",
 		ui_type = "text_box_array",
 		values = {
-			"c_pickup",
-		},
+			"c_pickup"
+		}
 	},
 	inputs = {
 		spawn_item = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"PickupSpawnerExtension",
-	},
+		"PickupSpawnerExtension"
+	}
 }
 
 return PickupSpawner

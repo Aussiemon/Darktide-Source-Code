@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/backend/schemas.lua
 
 local Interface = {
-	"fetch",
+	"fetch"
 }
 local Schemas = class("Schemas")
 

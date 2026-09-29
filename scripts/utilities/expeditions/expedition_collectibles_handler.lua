@@ -5,7 +5,7 @@ local ExpeditionCollectible = require("scripts/utilities/expeditions/expedition_
 local ExpeditionCollectibleSettings = require("scripts/settings/expeditions/expedition_collectibles")
 local CLIENT_RPCS = {
 	"rpc_client_expedition_collectible_collected",
-	"rpc_client_expedition_remove_collectible_collected",
+	"rpc_client_expedition_remove_collectible_collected"
 }
 local SERVER_RPCS = {}
 local ExpeditionCollectiblesHandler = class("ExpeditionCollectiblesHandler")
@@ -79,7 +79,7 @@ ExpeditionCollectiblesHandler.event_expedition_register_interactable_requirement
 
 	requirements_data[collectible_id] = {
 		collectible_id = collectible_id,
-		amount = amount,
+		amount = amount
 	}
 
 	if self._is_server and DEDICATED_SERVER then
@@ -202,7 +202,7 @@ ExpeditionCollectiblesHandler._update_interaction_presentation = function (self,
 	if can_interact then
 		local text_context = {
 			description = Localize(original_description),
-			value = description_text,
+			value = description_text
 		}
 
 		unit_interactee_extension:set_block_text(nil)
@@ -215,7 +215,7 @@ ExpeditionCollectiblesHandler._update_interaction_presentation = function (self,
 			value = description_text,
 			r = key_value_color[2],
 			g = key_value_color[3],
-			b = key_value_color[4],
+			b = key_value_color[4]
 		}
 
 		unit_interactee_extension:set_block_text("loc_group_finder_tag_requirement_warning")

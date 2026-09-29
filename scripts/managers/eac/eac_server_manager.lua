@@ -62,7 +62,7 @@ EACServerManager.add_peer = function (self, channel_id, account_name, ip_address
 	local peer_data = {
 		channel_id = channel_id,
 		account_name = account_name,
-		ip_address = ip_address,
+		ip_address = ip_address
 	}
 
 	self._peers_list[channel_id] = peer_data

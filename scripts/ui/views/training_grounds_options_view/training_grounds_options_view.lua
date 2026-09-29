@@ -7,12 +7,9 @@ local InputDevice = require("scripts/managers/input/input_device")
 local InputUtils = require("scripts/managers/input/input_utils")
 local TrainingGroundsOptionsViewSettings = require("scripts/ui/views/training_grounds_options_view/training_grounds_options_view_settings")
 local TrainingGroundsSoundEvents = require("scripts/settings/training_grounds/training_grounds_sound_events")
-local StepperPassTemplates = require("scripts/ui/pass_templates/stepper_pass_templates")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local UIWidget = require("scripts/managers/ui/ui_widget")
-local Text = require("scripts/utilities/ui/text")
 local ViewElementDifficultySelector = require("scripts/ui/view_elements/view_element_mission_board_difficulty_selector/view_element_mission_board_difficulty_selector")
 local TrainingGroundsOptionsView = class("TrainingGroundsOptionsView", "BaseView")
+local DANGER_LEVELS = DangerSettings.danger_levels
 local view_settings = TrainingGroundsOptionsViewSettings
 
 local function get_input_text(action_name, input_service_name)
@@ -70,7 +67,7 @@ TrainingGroundsOptionsView._load_reward_item_icons = function (self)
 	local slot_name = "slot_primary"
 	local render_context = {
 		camera_focus_slot_name = slot_name,
-		size = TrainingGroundsOptionsViewSettings.weapon_size,
+		size = TrainingGroundsOptionsViewSettings.weapon_size
 	}
 	local primary_item = loadout.slot_primary
 	local reward_1 = self._widgets_by_name.reward_1
@@ -131,7 +128,7 @@ TrainingGroundsOptionsView._start_training_grounds = function (self, mechanism_c
 
 	local difficulty_stepper = self:_element("difficulty_selector")
 	local danger_level = difficulty_stepper and difficulty_stepper:get_current_selected_difficulty() or 1
-	local difficulty_setting = DangerSettings[danger_level]
+	local difficulty_setting = DANGER_LEVELS[danger_level]
 	local challenge_level = difficulty_setting and difficulty_setting.challenge
 
 	if not challenge_level then
@@ -265,7 +262,7 @@ TrainingGroundsOptionsView._resize_background = function (self, new_size)
 
 	style.background.size = {
 		new_size[1] - 40,
-		new_size[2] + 136,
+		new_size[2] + 136
 	}
 	background_widget.dirty = true
 end

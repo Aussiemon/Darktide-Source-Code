@@ -10,12 +10,14 @@ local BtCombatIdleAction = class("BtCombatIdleAction", "BtNode")
 
 BtCombatIdleAction.TIME_TO_FIRST_EVALUATE = {
 	0.3,
-	0.5,
+	0.5
 }
 BtCombatIdleAction.CONSECUTIVE_EVALUATE_INTERVAL = {
 	0.2,
-	0.25,
+	0.25
 }
+
+local UPDATE_RATE = 0.5
 
 BtCombatIdleAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
@@ -62,7 +64,7 @@ BtCombatIdleAction.run = function (self, unit, breed, blackboard, scratchpad, ac
 		scratchpad.time_to_next_evaluate = t + math.random_range(consecutive_evaluate_interval[1], consecutive_evaluate_interval[2])
 	end
 
-	return "running", should_evaluate
+	return "running", should_evaluate, UPDATE_RATE
 end
 
 return BtCombatIdleAction

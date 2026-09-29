@@ -19,7 +19,7 @@ templates.weapon_trait_bespoke_shotpistol_shield_p1_chained_weakspot_hits_increa
 templates.weapon_trait_bespoke_shotpistol_shield_p1_chained_weakspot_hits_increases_power_parent.child_buff_template = "weapon_trait_bespoke_shotpistol_shield_p1_chained_weakspot_hits_increases_power_child"
 templates.weapon_trait_bespoke_shotpistol_shield_p1_chained_weakspot_hits_increases_power_child = table.clone(BaseWeaponTraitBuffTemplates.chained_weakspot_hits_increases_power_child)
 templates.weapon_trait_bespoke_shotpistol_shield_p1_chained_weakspot_hits_increases_power_child.conditional_stat_buffs = {
-	[stat_buffs.ranged_power_level_modifier] = 0.05,
+	[stat_buffs.ranged_power_level_modifier] = 0.05
 }
 templates.weapon_trait_bespoke_shotpistol_shield_p1_crit_chance_based_on_ammo_left = table.clone(BaseWeaponTraitBuffTemplates.crit_chance_based_on_ammo_left)
 templates.weapon_trait_bespoke_shotpistol_shield_p1_crit_chance_bonus_on_melee_kills = table.clone(BaseWeaponTraitBuffTemplates.crit_chance_bonus_on_melee_kills)
@@ -45,9 +45,9 @@ templates.weapon_trait_bespoke_shotpistol_shield_p1_damage_bonus_vs_electrocuted
 	hide_icon_in_hud = true,
 	predicted = false,
 	conditional_stat_buffs = {
-		[stat_buffs.damage_vs_electrocuted] = 0.5,
+		[stat_buffs.damage_vs_electrocuted] = 0.5
 	},
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 
 return templates

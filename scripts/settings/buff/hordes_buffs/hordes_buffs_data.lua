@@ -18,13 +18,13 @@ hordes_buffs_data.hordes_buff_damage_immunity_after_game_end = {
 	description = "",
 	icon = "",
 	is_family_buff = false,
-	title = "",
+	title = ""
 }
 hordes_buffs_data.hordes_buff_ogryn_basic_box_spawns_cluster = {
 	description = "",
 	icon = "",
 	is_family_buff = false,
-	title = "",
+	title = ""
 }
 
 _create_entry("scripts/settings/buff/hordes_buffs/hordes_buffs_data/hordes_family_buffs_data", true)

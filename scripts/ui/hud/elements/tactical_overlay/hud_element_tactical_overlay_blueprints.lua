@@ -40,34 +40,42 @@ local base_text_style = {
 	offset = {
 		-buffer,
 		buffer,
-		1,
+		1
 	},
 	size = {
 		text_width,
-		100,
+		100
 	},
-	text_color = Color.terminal_text_body(255, true),
+	text_color = Color.terminal_text_body(255, true)
 }
 local right_content_description_style = table.add_missing({
 	font_size = 19,
-	text_color = Color.terminal_text_body(255, true),
+	text_color = Color.terminal_text_body(255, true)
 }, base_text_style)
 local right_content_header_style = table.add_missing({
 	font_size = 16,
-	text_color = Color.terminal_text_body_sub_header(255, true),
+	text_color = Color.terminal_text_body_sub_header(255, true)
 }, base_text_style)
 local right_content_title_style = table.add_missing({
 	font_size = 21,
-	text_color = Color.terminal_text_header(255, true),
+	text_color = Color.terminal_text_header(255, true)
 }, base_text_style)
 local right_content_progression_style = table.add_missing({
 	font_size = 21,
-	text_color = Color.terminal_text_body(255, true),
+	text_color = Color.terminal_text_body(255, true)
 }, base_text_style)
+local right_content_locked_style = table.add_missing({
+	visible = false,
+	text_color = Color.terminal_text_body_sub_header(255, true),
+	size = {
+		content_width,
+		100
+	}
+}, right_content_progression_style)
 local right_content_reward_style = table.add_missing({
 	font_size = 22,
 	text_horizontal_alignment = "right",
-	text_color = Color.terminal_text_body(255, true),
+	text_color = Color.terminal_text_body(255, true)
 }, base_text_style)
 local base_bar_style = {
 	horizontal_alignment = "left",
@@ -75,92 +83,92 @@ local base_bar_style = {
 	size = {
 		text_width,
 		line_width,
-		1,
-	},
+		1
+	}
 }
 local reward_texture_icon = {
 	horizontal_alignment = "right",
 	visible = false,
 	size = {
 		24,
-		24,
+		24
 	},
 	color = Color.terminal_text_body(255, true),
 	offset = {
 		-buffer,
-		buffer,
-	},
+		buffer
+	}
 }
 local right_content_progress_border = table.add_missing({
 	offset = {
 		2 * buffer + icon_size,
 		buffer,
-		1,
+		1
 	},
-	color = Color.terminal_frame(255, true),
+	color = Color.terminal_frame(255, true)
 }, base_bar_style)
 local right_content_progress_background = table.add_missing({
 	offset = {
 		2 * buffer + icon_size + 1,
 		buffer + 1,
-		2,
+		2
 	},
 	size = {
 		text_width - 2,
 		line_width - 2,
-		1,
+		1
 	},
-	color = Color.ui_hud_green_dark(255, true),
+	color = Color.ui_hud_green_dark(255, true)
 }, base_bar_style)
 local right_content_progress_bar = table.add_missing({
 	offset = {
 		2 * buffer + icon_size,
 		buffer,
-		3,
+		3
 	},
-	color = Color.terminal_text_body(255, true),
+	color = Color.terminal_text_body(255, true)
 }, base_bar_style)
 local right_full_progress_border = table.add_missing({
 	offset = {
 		buffer,
 		buffer,
-		1,
+		1
 	},
 	size = {
 		content_width,
 		line_width,
-		1,
-	},
+		1
+	}
 }, right_content_progress_border)
 local right_full_progress_background = table.add_missing({
 	offset = {
 		buffer + 1,
 		buffer,
-		2,
+		2
 	},
 	size = {
 		content_width - 2,
 		line_width - 2,
-		1,
-	},
+		1
+	}
 }, right_content_progress_background)
 local right_full_progress_bar = table.add_missing({
 	offset = {
 		buffer,
 		buffer,
-		3,
+		3
 	},
 	size = {
 		content_width,
 		line_width,
-		1,
-	},
+		1
+	}
 }, right_content_progress_bar)
 
 Blueprints.achievement = {
 	size = {
 		ElementSettings.right_grid_width,
-		0,
+		0
 	},
 	pass_template = {
 		{
@@ -168,39 +176,39 @@ Blueprints.achievement = {
 			style_id = "title",
 			value = "<UNDEFINED>",
 			value_id = "title",
-			style = right_content_title_style,
+			style = right_content_title_style
 		},
 		{
 			pass_type = "rect",
 			style_id = "progress_border",
 			value = "content/ui/materials/backgrounds/default_square",
-			style = right_content_progress_border,
+			style = right_content_progress_border
 		},
 		{
 			pass_type = "rect",
 			style_id = "progress_background",
 			value = "content/ui/materials/backgrounds/default_square",
-			style = right_content_progress_background,
+			style = right_content_progress_background
 		},
 		{
 			pass_type = "rect",
 			style_id = "progress_bar",
 			value = "content/ui/materials/backgrounds/default_square",
-			style = right_content_progress_bar,
+			style = right_content_progress_bar
 		},
 		{
 			pass_type = "text",
 			style_id = "description",
 			value = "<UNDEFINED>",
 			value_id = "description",
-			style = right_content_description_style,
+			style = right_content_description_style
 		},
 		{
 			pass_type = "text",
 			style_id = "progress",
 			value = "<UNDEFINED>",
 			value_id = "progress",
-			style = right_content_progression_style,
+			style = right_content_progression_style
 		},
 		{
 			pass_type = "texture",
@@ -210,21 +218,21 @@ Blueprints.achievement = {
 			style = {
 				size = {
 					icon_size,
-					icon_size,
+					icon_size
 				},
 				color = Color.terminal_text_header(255, true),
 				offset = {
 					buffer,
 					buffer,
-					1,
+					1
 				},
 				material_values = {
 					frame = "content/ui/textures/icons/achievements/frames/default_frame",
 					icon_color = Color.white(255, true),
-					background_color = Color.white(0, true),
-				},
-			},
-		},
+					background_color = Color.white(0, true)
+				}
+			}
+		}
 	},
 	complete = function (widget)
 		widget.is_complete = true
@@ -329,12 +337,12 @@ Blueprints.achievement = {
 		if is_complete and not was_complete then
 			Blueprints.achievement.complete(widget)
 		end
-	end,
+	end
 }
 Blueprints.contract = {
 	size = {
 		ElementSettings.right_grid_width,
-		0,
+		0
 	},
 	pass_template = {
 		{
@@ -342,39 +350,39 @@ Blueprints.contract = {
 			style_id = "title",
 			value = "<UNDEFINED>",
 			value_id = "title",
-			style = right_content_description_style,
+			style = right_content_description_style
 		},
 		{
 			pass_type = "text",
 			style_id = "progress",
 			value = "<UNDEFINED>",
 			value_id = "progress",
-			style = right_content_progression_style,
+			style = right_content_progression_style
 		},
 		{
 			pass_type = "rect",
 			style_id = "progress_border",
 			value = "content/ui/materials/backgrounds/default_square",
-			style = right_content_progress_border,
+			style = right_content_progress_border
 		},
 		{
 			pass_type = "rect",
 			style_id = "progress_background",
 			value = "content/ui/materials/backgrounds/default_square",
-			style = right_content_progress_background,
+			style = right_content_progress_background
 		},
 		{
 			pass_type = "rect",
 			style_id = "progress_bar",
 			value = "content/ui/materials/backgrounds/default_square",
-			style = right_content_progress_bar,
+			style = right_content_progress_bar
 		},
 		{
 			pass_type = "text",
 			style_id = "reward",
 			value = "<UNDEFINED>",
 			value_id = "reward",
-			style = right_content_reward_style,
+			style = right_content_reward_style
 		},
 		{
 			pass_type = "texture",
@@ -384,19 +392,19 @@ Blueprints.contract = {
 			style = {
 				size = {
 					icon_size,
-					icon_size,
+					icon_size
 				},
 				color = Color.terminal_text_header(255, true),
 				offset = {
 					buffer,
 					buffer,
-					1,
+					1
 				},
 				material_values = {
-					checkmark_color = Color.terminal_text_body_sub_header(255, true),
-				},
-			},
-		},
+					checkmark_color = Color.terminal_text_body_sub_header(255, true)
+				}
+			}
+		}
 	},
 	complete = function (widget)
 		widget.is_complete = true
@@ -474,45 +482,58 @@ Blueprints.contract = {
 		if is_complete and not widget.is_complete then
 			Blueprints.contract.complete(widget)
 		end
-	end,
+	end
 }
+
+local function _set_locked(widget, locked)
+	local content, style = widget.content, widget.style
+
+	widget.locked = locked
+	content.locked = locked and "" or ""
+	style.locked.visible = locked
+	style.progress.visible = not locked
+	style.progress_border.visible = not locked
+	style.progress_background.visible = not locked
+	style.progress_bar.visible = not locked
+end
+
 Blueprints.event_tier = {
 	size = {
 		ElementSettings.right_grid_width,
-		0,
+		0
 	},
 	pass_template = {
 		{
 			pass_type = "rect",
 			style_id = "progress_border",
 			value = "content/ui/materials/backgrounds/default_square",
-			style = right_full_progress_border,
+			style = right_full_progress_border
 		},
 		{
 			pass_type = "rect",
 			style_id = "progress_background",
 			value = "content/ui/materials/backgrounds/default_square",
-			style = right_full_progress_background,
+			style = right_full_progress_background
 		},
 		{
 			pass_type = "rect",
 			style_id = "progress_bar",
 			value = "content/ui/materials/backgrounds/default_square",
-			style = right_full_progress_bar,
+			style = right_full_progress_bar
 		},
 		{
 			pass_type = "texture",
 			style_id = "reward_icon",
 			value = "content/ui/materials/backgrounds/default_square",
 			value_id = "reward_icon",
-			style = reward_texture_icon,
+			style = reward_texture_icon
 		},
 		{
 			pass_type = "text",
 			style_id = "reward",
 			value = "<UNDEFINED>",
 			value_id = "reward",
-			style = right_content_reward_style,
+			style = right_content_reward_style
 		},
 		{
 			pass_type = "text",
@@ -522,9 +543,9 @@ Blueprints.event_tier = {
 			style = table.add_missing({
 				size = {
 					content_width,
-					100,
-				},
-			}, right_content_description_style),
+					100
+				}
+			}, right_content_description_style)
 		},
 		{
 			pass_type = "text",
@@ -534,10 +555,17 @@ Blueprints.event_tier = {
 			style = table.add_missing({
 				size = {
 					content_width,
-					100,
-				},
-			}, right_content_progression_style),
+					100
+				}
+			}, right_content_progression_style)
 		},
+		{
+			pass_type = "text",
+			style_id = "locked",
+			value = "",
+			value_id = "locked",
+			style = right_content_locked_style
+		}
 	},
 	complete = function (widget)
 		widget.is_complete = true
@@ -558,21 +586,29 @@ Blueprints.event_tier = {
 		local at = math.min(progress, target)
 		local content, style = widget.content, widget.style
 		local size = widget.content.size[2]
-		local title = Localize(template.condition, true, {
-			target = target,
-		})
 
-		content.title = title
-		style.title.offset[2] = size
-		size = size + Text.text_height(ui_renderer, content.title, style.title, style.title.size, true) + internal_buffer
+		content.title = ""
+		style.title.visible = false
+		widget.prev_ceiling = config.prev_ceiling
 
-		local percent_done = at / target
+		_set_locked(widget, config.prev_ceiling ~= nil and progress < config.prev_ceiling)
 
-		style.progress_border.offset[2] = size
-		style.progress_background.offset[2] = size + 1
-		style.progress_bar.offset[2] = size
-		style.progress_bar.size[1] = content_width * percent_done
-		size = size + style.progress_bar.size[2] + internal_buffer
+		widget.segment_offset = config.prev_ceiling or 0
+		target = math.max(target - widget.segment_offset, 1)
+		at = math.min(math.max(progress - widget.segment_offset, 0), target)
+
+		local show_progress = true
+		local show_progress = not widget.locked
+
+		if show_progress then
+			local percent_done = at / target
+
+			style.progress_border.offset[2] = size
+			style.progress_background.offset[2] = size + 1
+			style.progress_bar.offset[2] = size
+			style.progress_bar.size[1] = content_width * percent_done
+			size = size + style.progress_bar.size[2] + internal_buffer
+		end
 
 		local rewards = config.rewards
 		local reward_strings = {}
@@ -581,6 +617,10 @@ Blueprints.event_tier = {
 			local reward = rewards[i]
 			local reward_type = reward.type
 			local reward_id = reward.id
+
+			if i > 1 then
+				reward_strings[#reward_strings + 1] = "+"
+			end
 
 			if reward_type == "currency" and WalletSettings[reward.currency] then
 				reward_strings[#reward_strings + 1] = string.format("%s %s", Text.format_currency(reward.amount or 0), WalletSettings[reward.currency].string_symbol)
@@ -596,13 +636,21 @@ Blueprints.event_tier = {
 		end
 
 		content.reward = table.concat(reward_strings, " ")
-		content.progress = _format_progress(at, target, true)
 		style.reward.offset[2] = size
 		style.reward_icon.offset[2] = size
-		style.progress.offset[2] = size
-		size = size + Text.text_height(ui_renderer, content.progress, style.progress, style.progress.size, true) + internal_buffer
+
+		if widget.locked then
+			style.locked.offset[2] = size
+			size = size + Text.text_height(ui_renderer, content.locked, style.locked, style.locked.size, true) + internal_buffer
+		else
+			content.progress = _format_progress(at, target, true)
+			style.progress.offset[2] = size
+			size = size + Text.text_height(ui_renderer, content.progress, style.progress, style.progress.size, true) + internal_buffer
+		end
+
 		widget.target = target
 		content.size[2] = size
+		content.size[2] = content.size[2] + 10
 		widget.event_id = event_id
 
 		local is_complete = at == target
@@ -614,7 +662,19 @@ Blueprints.event_tier = {
 	update = function (parent, widget, ui_renderer)
 		local content, style = widget.content, widget.style
 		local target = widget.target
-		local at = math.min(Managers.live_event:event_progress(nil, widget.event_id), target)
+		local progress = Managers.live_event:event_progress(nil, widget.event_id)
+		local at = math.min(math.max(progress - (widget.segment_offset or 0), 0), target)
+		local is_locked = widget.prev_ceiling ~= nil and progress < widget.prev_ceiling
+
+		if is_locked ~= widget.locked then
+			_set_locked(widget, is_locked)
+			parent:_on_live_event_activated(widget.event_id)
+		end
+
+		if widget.locked then
+			return
+		end
+
 		local percent_done = math.min(at / target, 1)
 
 		content.progress = _format_progress(at, target, true)
@@ -625,12 +685,12 @@ Blueprints.event_tier = {
 		if is_complete and not widget.is_complete then
 			Blueprints.event_tier.complete(widget)
 		end
-	end,
+	end
 }
 Blueprints.divider = {
 	size = {
 		ElementSettings.right_grid_width,
-		buffer,
+		buffer
 	},
 	pass_template = {
 		{
@@ -641,18 +701,18 @@ Blueprints.divider = {
 				color = Color.terminal_text_body_sub_header(255, true),
 				size = {
 					content_width,
-					2,
-				},
-			},
+					2
+				}
+			}
 		},
 		{
 			pass_type = "text",
 			style_id = "text",
 			value_id = "text",
 			style = table.add_missing({
-				text_horizontal_alignment = "center",
-			}, right_content_description_style),
-		},
+				text_horizontal_alignment = "center"
+			}, right_content_description_style)
+		}
 	},
 	init = function (parent, widget, config, ui_renderer)
 		local text = config.text
@@ -671,7 +731,7 @@ Blueprints.divider = {
 		end
 
 		content.size[2] = size
-	end,
+	end
 }
 
 do
@@ -691,7 +751,7 @@ do
 	Blueprints.body = {
 		size = {
 			ElementSettings.right_grid_width,
-			0,
+			0
 		},
 		pass_template = {
 			{
@@ -699,15 +759,15 @@ do
 				style_id = "text",
 				value = "<UNDEFINED>",
 				value_id = "text",
-				style = right_content_description_style,
-			},
+				style = right_content_description_style
+			}
 		},
-		init = init_text,
+		init = init_text
 	}
 	Blueprints.header = {
 		size = {
 			ElementSettings.right_grid_width,
-			ElementSettings.section_buffer,
+			ElementSettings.section_buffer
 		},
 		pass_template = {
 			{
@@ -715,15 +775,15 @@ do
 				style_id = "text",
 				value = "<UNDEFINED>",
 				value_id = "text",
-				style = right_content_header_style,
-			},
+				style = right_content_header_style
+			}
 		},
-		init = init_text,
+		init = init_text
 	}
 	Blueprints.title = {
 		size = {
 			ElementSettings.right_grid_width,
-			ElementSettings.internal_buffer,
+			ElementSettings.internal_buffer
 		},
 		pass_template = {
 			{
@@ -731,10 +791,10 @@ do
 				style_id = "text",
 				value = "<UNDEFINED>",
 				value_id = "text",
-				style = right_content_title_style,
-			},
+				style = right_content_title_style
+			}
 		},
-		init = init_text,
+		init = init_text
 	}
 end
 
@@ -753,20 +813,20 @@ local _counter_pass = {
 		offset = {
 			0,
 			20,
-			2,
+			2
 		},
 		size = {
 			icon_size,
-			14,
+			14
 		},
-		text_color = Color.terminal_text_header(255, true),
-	},
+		text_color = Color.terminal_text_header(255, true)
+	}
 }
 
 Blueprints.text_icon = {
 	size = {
 		icon_size,
-		icon_size,
+		icon_size
 	},
 	pass_template = {
 		{
@@ -782,15 +842,15 @@ Blueprints.text_icon = {
 				offset = {
 					0,
 					-1,
-					1,
+					1
 				},
 				size = {
 					icon_size,
-					icon_size - (3 + internal_buffer),
+					icon_size - (3 + internal_buffer)
 				},
 				text_color = Color.terminal_text_header(255, true),
-				font_size = icon_size - 8,
-			},
+				font_size = icon_size - 8
+			}
 		},
 		{
 			pass_type = "rect",
@@ -801,17 +861,17 @@ Blueprints.text_icon = {
 				vertical_alignment = "bottom",
 				size = {
 					icon_size - 2 * internal_buffer,
-					3,
+					3
 				},
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
-				color = Color.terminal_text_header(255, true),
-			},
+				color = Color.terminal_text_header(255, true)
+			}
 		},
-		_counter_pass,
+		_counter_pass
 	},
 	init = function (parent, widget, config, ui_renderer)
 		local value = config.value
@@ -839,12 +899,12 @@ Blueprints.text_icon = {
 		else
 			style.counter_text.visible = false
 		end
-	end,
+	end
 }
 Blueprints.texture_icon = {
 	size = {
 		icon_size,
-		icon_size,
+		icon_size
 	},
 	pass_template = {
 		{
@@ -858,14 +918,14 @@ Blueprints.texture_icon = {
 				offset = {
 					0,
 					1,
-					1,
+					1
 				},
 				size = {
 					icon_size - (3 + internal_buffer),
-					icon_size - (3 + internal_buffer),
+					icon_size - (3 + internal_buffer)
 				},
-				color = Color.terminal_text_header(255, true),
-			},
+				color = Color.terminal_text_header(255, true)
+			}
 		},
 		{
 			pass_type = "rect",
@@ -876,17 +936,17 @@ Blueprints.texture_icon = {
 				vertical_alignment = "bottom",
 				size = {
 					icon_size - 2 * internal_buffer,
-					3,
+					3
 				},
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
-				color = Color.terminal_text_header(255, true),
-			},
+				color = Color.terminal_text_header(255, true)
+			}
 		},
-		_counter_pass,
+		_counter_pass
 	},
 	init = function (parent, widget, config, ui_renderer)
 		local value = config.value
@@ -914,12 +974,12 @@ Blueprints.texture_icon = {
 		else
 			style.counter_text.visible = false
 		end
-	end,
+	end
 }
 Blueprints.buff_title = {
 	size = {
 		300,
-		50,
+		50
 	},
 	pass_template = {
 		{
@@ -929,13 +989,13 @@ Blueprints.buff_title = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size = {
-					5,
+					5
 				},
-				color = Color.terminal_text_header(255, true),
-			},
+				color = Color.terminal_text_header(255, true)
+			}
 		},
 		{
 			pass_type = "text",
@@ -951,15 +1011,15 @@ Blueprints.buff_title = {
 				offset = {
 					25,
 					0,
-					1,
+					1
 				},
 				text_color = Color.terminal_text_header(255, true),
 				size = {
 					250,
-					2000,
-				},
-			},
-		},
+					2000
+				}
+			}
+		}
 	},
 	init = function (parent, widget, config, ui_renderer)
 		local content = widget.content
@@ -973,12 +1033,12 @@ Blueprints.buff_title = {
 		style.title.size[2] = title_height
 		style.title.offset[2] = big_margin
 		content.size[2] = title_height + big_margin * 2
-	end,
+	end
 }
 Blueprints.buff_sub_title = {
 	size = {
 		300,
-		60,
+		60
 	},
 	pass_template = {
 		{
@@ -988,13 +1048,13 @@ Blueprints.buff_sub_title = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size = {
-					5,
+					5
 				},
-				color = Color.terminal_text_header(255, true),
-			},
+				color = Color.terminal_text_header(255, true)
+			}
 		},
 		{
 			pass_type = "texture_uv",
@@ -1007,24 +1067,24 @@ Blueprints.buff_sub_title = {
 				offset = {
 					25,
 					0,
-					1,
+					1
 				},
 				size = {
 					150,
-					2,
+					2
 				},
 				color = Color.terminal_text_header(255, true),
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
-				},
-			},
+						1
+					}
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -1040,15 +1100,15 @@ Blueprints.buff_sub_title = {
 				offset = {
 					25,
 					0,
-					1,
+					1
 				},
 				text_color = Color.terminal_text_header(255, true),
 				size = {
 					250,
-					2000,
-				},
-			},
-		},
+					2000
+				}
+			}
+		}
 	},
 	init = function (parent, widget, config, ui_renderer)
 		local content = widget.content
@@ -1067,18 +1127,18 @@ Blueprints.buff_sub_title = {
 		local bottom_margin = math.min(0, big_margin - small_margin - style.line.size[2])
 
 		content.size[2] = style.line.offset[2] + style.line.size[2] + big_margin + bottom_margin
-	end,
+	end
 }
 
 local buff_icon_size = {
 	50,
-	50,
+	50
 }
 
 Blueprints.buff = {
 	size = {
 		400,
-		60,
+		60
 	},
 	pass_template = {
 		{
@@ -1088,13 +1148,13 @@ Blueprints.buff = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size = {
-					5,
+					5
 				},
-				color = Color.terminal_text_header(255, true),
-			},
+				color = Color.terminal_text_header(255, true)
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1108,13 +1168,13 @@ Blueprints.buff = {
 				offset = {
 					25,
 					0,
-					1,
+					1
 				},
 				size = buff_icon_size,
 				material_values = {
-					texture_map = "content/ui/textures/placeholder_texture",
-				},
-			},
+					texture_map = "content/ui/textures/placeholder_texture"
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -1130,14 +1190,14 @@ Blueprints.buff = {
 				offset = {
 					85,
 					0,
-					1,
+					1
 				},
 				text_color = Color.terminal_text_header(255, true),
 				size = {
 					265,
-					2000,
-				},
-			},
+					2000
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -1153,15 +1213,15 @@ Blueprints.buff = {
 				offset = {
 					85,
 					24,
-					1,
+					1
 				},
 				text_color = Color.terminal_text_body(255, true),
 				size = {
 					265,
-					2000,
-				},
-			},
-		},
+					2000
+				}
+			}
+		}
 	},
 	init = function (parent, widget, config, ui_renderer)
 		local content = widget.content
@@ -1224,13 +1284,13 @@ Blueprints.buff = {
 		style.icon.offset[2] = big_margin
 		style.description.offset[2] = style.title.offset[2] + style.title.size[2] + small_margin
 		content.size[2] = math.max(style.description.offset[2] + description_height + big_margin * 2, buff_icon_size[2] + big_margin * 2)
-	end,
+	end
 }
 Blueprints.buff_spacing = {
 	size = {
 		400,
-		5,
-	},
+		5
+	}
 }
 
 return Blueprints

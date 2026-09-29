@@ -7,7 +7,7 @@ local CollectiblesManager = class("CollectiblesManager")
 local CLIENT_RPCS = {
 	"rpc_player_destroyed_destructible_collectible",
 	"rpc_player_collected_collectible",
-	"rpc_player_helped_collecting_collectible",
+	"rpc_player_helped_collecting_collectible"
 }
 local NOTIFICATION_TYPES = table.enum("collected", "helped_collect")
 
@@ -219,7 +219,7 @@ CollectiblesManager._show_destructible_notification = function (self, peer_id, l
 		player_name = player_name,
 		player = player,
 		num_collected = self._num_destructibles_destroyed,
-		num_total = num_total,
+		num_total = num_total
 	}
 
 	Managers.event:trigger("event_add_notification_message", "destructible", notification_data, nil, nil, nil, DELAY)
@@ -255,7 +255,7 @@ CollectiblesManager._show_collectible_notification = function (self, peer_id, co
 	if notification_type == NOTIFICATION_TYPES.collected then
 		Managers.event:trigger("event_add_notification_message", "collectible", {
 			player_name = player_name,
-			player = player,
+			player = player
 		}, nil, nil, nil, delay)
 	elseif notification_type == NOTIFICATION_TYPES.helped_collect then
 		local local_player_peer_id = Network.peer_id()
@@ -276,7 +276,7 @@ CollectiblesManager._show_collectible_notification = function (self, peer_id, co
 		Managers.event:trigger("event_add_notification_message", "helped_collect_collectible", {
 			player_name = player_name,
 			player = player,
-			helped_string = helped_string,
+			helped_string = helped_string
 		}, nil, nil, nil, delay)
 	end
 end

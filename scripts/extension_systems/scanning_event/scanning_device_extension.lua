@@ -28,7 +28,7 @@ ScanningDeviceExtension.init = function (self, extension_init_context, unit, ext
 		last_synch_time = 0,
 		spline_index = 1,
 		spline_t = 0,
-		subdivision_index = 1,
+		subdivision_index = 1
 	}
 end
 
@@ -60,7 +60,7 @@ ScanningDeviceExtension._create_game_object = function (self)
 		spline_t = 0,
 		subdivision_index = 1,
 		game_object_type = NetworkLookup.game_object_types.scanning_device,
-		level_unit_id = level_unit_id,
+		level_unit_id = level_unit_id
 	}
 	local game_session = self._game_session
 

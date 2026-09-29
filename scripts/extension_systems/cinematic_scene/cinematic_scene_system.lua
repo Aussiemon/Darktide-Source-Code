@@ -12,10 +12,10 @@ local CinematicSceneSystem = class("CinematicSceneSystem", "ExtensionSystemBase"
 local NUM_CPT_PER_UNIT = 1
 local CLIENT_RPCS = {
 	"rpc_play_cutscene",
-	"rpc_cinematic_intro_played",
+	"rpc_cinematic_intro_played"
 }
 local SERVER_RPCS = {
-	"rpc_request_play_cutscene",
+	"rpc_request_play_cutscene"
 }
 local CINEMATIC_VIEWS = {
 	[CINEMATIC_NAMES.intro_abc] = "cutscene_view",
@@ -42,12 +42,13 @@ local CINEMATIC_VIEWS = {
 	[CINEMATIC_NAMES.path_of_trust_08] = "cutscene_view",
 	[CINEMATIC_NAMES.path_of_trust_09] = "cutscene_view",
 	[CINEMATIC_NAMES.traitor_captain_intro] = "cutscene_view",
+	[CINEMATIC_NAMES.spillway_wizard_intro] = "cutscene_view",
 	[CINEMATIC_NAMES.hub_location_intro_barber] = "cutscene_view",
 	[CINEMATIC_NAMES.hub_location_intro_mission_board] = "cutscene_view",
 	[CINEMATIC_NAMES.hub_location_intro_training_grounds] = "cutscene_view",
 	[CINEMATIC_NAMES.hub_location_intro_contracts] = "cutscene_view",
 	[CINEMATIC_NAMES.hub_location_intro_crafting] = "cutscene_view",
-	[CINEMATIC_NAMES.hub_location_intro_gun_shop] = "cutscene_view",
+	[CINEMATIC_NAMES.hub_location_intro_gun_shop] = "cutscene_view"
 }
 
 local function _origin_level_names(cinematic_name)
@@ -172,16 +173,53 @@ CinematicSceneSystem.on_gameplay_post_init = function (self, level)
 	end
 end
 
-CinematicSceneSystem.rpc_cinematic_intro_played = function (self)
+local function _live_level_unit_id(unit)
+	if not unit or not Unit.alive(unit) then
+		return NetworkConstants.invalid_level_unit_id
+	end
+
+	return Managers.state.unit_spawner:level_index(unit) or NetworkConstants.invalid_level_unit_id
+end
+
+local function _flow_event_level_unit(level_unit_id, flow_event)
+	if level_unit_id == NetworkConstants.invalid_level_unit_id then
+		return
+	end
+
+	local unit = Managers.state.unit_spawner:unit(level_unit_id, true)
+
+	if not unit then
+		return
+	end
+
+	Unit.flow_event(unit, flow_event)
+end
+
+CinematicSceneSystem.rpc_cinematic_intro_played = function (self, channel, scene_unit_origin_level_id, scene_unit_destination_level_id)
 	self._intro_played = true
+
+	_flow_event_level_unit(scene_unit_origin_level_id, "lua_cinematic_played_client")
+	_flow_event_level_unit(scene_unit_destination_level_id, "lua_cinematic_played_client")
 end
 
 CinematicSceneSystem.intro_played = function (self)
 	return self._intro_played
 end
 
+CinematicSceneSystem.intro_played_unit_ids = function (self)
+	local intro_played_data = self._intro_played_data
+
+	if not intro_played_data then
+		return NetworkConstants.invalid_level_unit_id, NetworkConstants.invalid_level_unit_id
+	end
+
+	return _live_level_unit_id(intro_played_data.scene_unit_origin), _live_level_unit_id(intro_played_data.scene_unit_destination)
+end
+
 CinematicSceneSystem._can_play = function (self, cinematic_name, check_currently_playing, check_sub_cinematics, check_cinematics_setup)
 	if GameParameters.skip_cinematics then
+		self:_store_intro_units()
+
 		return false
 	end
 
@@ -219,6 +257,7 @@ CinematicSceneSystem._cinematic_played = function (self, cinematic_name, cinemat
 		self:_uninitialize_cutscene_characters(cinematic_name)
 		self:_activate_view(CINEMATIC_NAMES.none)
 		self:_set_cinematic_name(CINEMATIC_NAMES.none)
+		self:_store_intro_units()
 		self:_send_cinematic_played_flow_event(cinematic_name)
 		self:_uninitialize_cinematic(cinematic_name)
 
@@ -483,6 +522,35 @@ CinematicSceneSystem._initialize_sub_cinematics = function (self, cinematic_name
 	return sub_cinematics_setup
 end
 
+CinematicSceneSystem._store_intro_units = function (self)
+	if not self._is_server then
+		return
+	end
+
+	local cinematic_name = CINEMATIC_NAMES.intro_abc
+
+	self:_initialize_cinematic(cinematic_name)
+
+	local sub_cinematics = self._cinematics[cinematic_name]
+	local sub_cinematics_setup = self._cinematics_setups[cinematic_name]
+	local intro_played_data = {}
+
+	self._intro_played_data = intro_played_data
+
+	if sub_cinematics then
+		for _, cinematic_category in ipairs(sub_cinematics) do
+			local cinematic_setup = sub_cinematics_setup[cinematic_category]
+
+			if cinematic_setup then
+				intro_played_data.scene_unit_origin = cinematic_setup.scene_unit_origin
+				intro_played_data.scene_unit_destination = cinematic_setup.scene_unit_destination
+			end
+
+			break
+		end
+	end
+end
+
 CinematicSceneSystem._initialize_cutscene_characters = function (self, cinematic_name)
 	if not DEDICATED_SERVER then
 		local cutscene_character_system = Managers.state.extension:system("cutscene_character_system")
@@ -525,6 +593,10 @@ CinematicSceneSystem.is_active = function (self)
 	return self._current_cinematic_name ~= CINEMATIC_NAMES.none
 end
 
+CinematicSceneSystem.has_cutscene = function (self, cinematic_name)
+	return CinematicSceneTemplates[cinematic_name] and true or false
+end
+
 CinematicSceneSystem.is_cinematic_active = function (self, cinematic_name)
 	return self._current_cinematic_name == cinematic_name
 end
@@ -550,7 +622,7 @@ CinematicSceneSystem._activate_view = function (self, cinematic_name)
 				local use_transition_ui = template.use_transition_ui and not ui_manager:view_active("video_view")
 				local no_transition_ui = use_transition_ui == false
 				local view_settings_override = no_transition_ui and {
-					use_transition_ui = false,
+					use_transition_ui = false
 				}
 
 				ui_manager:open_view(view, nil, nil, nil, nil, view_context, view_settings_override)

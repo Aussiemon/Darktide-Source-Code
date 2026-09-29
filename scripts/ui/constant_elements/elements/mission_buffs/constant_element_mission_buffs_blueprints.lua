@@ -4,19 +4,19 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local Text = require("scripts/utilities/ui/text")
 local card_size = {
 	440,
-	335,
+	335
 }
 local hightlight_color = {
 	255,
 	193,
 	229,
-	241,
+	241
 }
 local progress_color = {
 	255,
 	226,
 	199,
-	126,
+	126
 }
 local blueprints = {}
 
@@ -29,8 +29,8 @@ blueprints.buff_card = {
 			content = {
 				on_hover_sound = UISoundEvents.mission_buffs_buff_hover_enter,
 				hold_sound = UISoundEvents.mission_buffs_buff_hold_start,
-				hold_release = UISoundEvents.mission_buffs_buff_hold_stop,
-			},
+				hold_release = UISoundEvents.mission_buffs_buff_hold_stop
+			}
 		},
 		{
 			pass_type = "texture",
@@ -43,13 +43,13 @@ blueprints.buff_card = {
 				offset = {
 					-12,
 					-10,
-					0,
+					0
 				},
 				size_addition = {
 					24,
-					20,
-				},
-			},
+					20
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -63,20 +63,20 @@ blueprints.buff_card = {
 				color = table.clone(hightlight_color),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
 			change_function = function (content, style, animations, dt)
 				style.color[1] = 255 * (content.hold_progress or 0)
 			end,
 			visibility_function = function (content, style)
 				return content.is_choice
-			end,
+			end
 		},
 		{
 			pass_type = "rect",
@@ -87,21 +87,21 @@ blueprints.buff_card = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size = {
-					0,
+					0
 				},
 				color = table.merge(table.clone(progress_color), {
-					153,
-				}),
+					153
+				})
 			},
 			change_function = function (content, style, animations, dt)
 				style.size[1] = (content.size and content.size[1] or 0) * (content.hold_progress or 0)
 			end,
 			visibility_function = function (content, style)
 				return content.is_choice
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -118,13 +118,13 @@ blueprints.buff_card = {
 				offset = {
 					20,
 					75,
-					6,
+					6
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -141,13 +141,13 @@ blueprints.buff_card = {
 				offset = {
 					20,
 					100,
-					6,
+					6
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
@@ -164,13 +164,13 @@ blueprints.buff_card = {
 				offset = {
 					20,
 					140,
-					6,
+					6
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -181,20 +181,20 @@ blueprints.buff_card = {
 				horizontal_alignment = "center",
 				size = {
 					144,
-					144,
+					144
 				},
 				material_values = {
 					frame = "content/ui/textures/frames/horde/hex_frame_horde",
 					icon_mask = "content/ui/textures/frames/horde/hex_frame_horde_mask",
 					intensity = 0,
-					saturation = 1,
+					saturation = 1
 				},
 				offset = {
 					0,
 					-75,
-					4,
-				},
-			},
+					4
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -206,17 +206,17 @@ blueprints.buff_card = {
 				vertical_alignment = "top",
 				size = {
 					462,
-					44,
+					44
 				},
 				offset = {
 					0,
 					-20,
-					2,
+					2
 				},
 				material_values = {
-					texture_map = "content/ui/textures/frames/horde/horde_buff_boon_granted",
-				},
-			},
+					texture_map = "content/ui/textures/frames/horde/horde_buff_boon_granted"
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -226,17 +226,17 @@ blueprints.buff_card = {
 				vertical_alignment = "bottom",
 				size = {
 					470,
-					52,
+					52
 				},
 				offset = {
 					0,
 					30,
-					2,
+					2
 				},
 				material_values = {
-					texture_map = "content/ui/textures/frames/horde/horde_buff_bottom",
-				},
-			},
+					texture_map = "content/ui/textures/frames/horde/horde_buff_bottom"
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -249,16 +249,16 @@ blueprints.buff_card = {
 				offset = {
 					0,
 					-80,
-					3,
+					3
 				},
 				size = {
 					172,
-					156,
+					156
 				},
 				color = table.clone(hightlight_color),
 				material_values = {
-					texture_map = "content/ui/textures/frames/horde/hex_frame_horde_glow",
-				},
+					texture_map = "content/ui/textures/frames/horde/hex_frame_horde_glow"
+				}
 			},
 			visibility_function = function (content, style)
 				local hotspot = content.hotspot
@@ -269,7 +269,7 @@ blueprints.buff_card = {
 				local is_chosen_buff = content.is_chosen_buff
 
 				return is_chosen_buff or not is_disabled and (is_selected or is_focused or is_hover)
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -281,17 +281,17 @@ blueprints.buff_card = {
 				scale_to_material = true,
 				size = {
 					117,
-					117,
+					117
 				},
 				offset = {
 					0,
 					-60,
-					5,
+					5
 				},
 				color = table.clone(hightlight_color),
 				material_values = {
-					texture_map = "content/ui/textures/frames/horde/hex_frame_horde_selected",
-				},
+					texture_map = "content/ui/textures/frames/horde/hex_frame_horde_selected"
+				}
 			},
 			visibility_function = function (content, style)
 				local hotspot = content.hotspot
@@ -302,7 +302,7 @@ blueprints.buff_card = {
 				local is_chosen_buff = content.is_chosen_buff
 
 				return is_chosen_buff or not is_disabled and (is_selected or is_focused or is_hover)
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -313,22 +313,22 @@ blueprints.buff_card = {
 				horizontal_alignment = "center",
 				size = {
 					nil,
-					22,
+					22
 				},
 				size_addition = {
 					-60,
-					0,
+					0
 				},
 				color = Color.terminal_text_body_dark(255, true),
 				offset = {
 					0,
 					250,
-					6,
-				},
+					6
+				}
 			},
 			visibility_function = function (content, style)
 				return content.is_family and content.has_sub_buff
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -339,23 +339,23 @@ blueprints.buff_card = {
 				horizontal_alignment = "center",
 				size = {
 					100,
-					100,
+					100
 				},
 				material_values = {
 					frame = "content/ui/textures/frames/horde/hex_frame_horde",
 					icon_mask = "content/ui/textures/frames/horde/hex_frame_horde_mask",
 					intensity = 0,
-					saturation = 1,
+					saturation = 1
 				},
 				offset = {
 					0,
 					280,
-					4,
-				},
+					4
+				}
 			},
 			visibility_function = function (content, style)
 				return content.is_family and content.has_sub_buff
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -372,16 +372,16 @@ blueprints.buff_card = {
 				offset = {
 					20,
 					375,
-					6,
+					6
 				},
 				size_addition = {
 					-40,
-					0,
-				},
+					0
+				}
 			},
 			visibility_function = function (content, style)
 				return content.is_family and content.has_sub_buff
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -398,16 +398,16 @@ blueprints.buff_card = {
 				offset = {
 					20,
 					400,
-					6,
+					6
 				},
 				size_addition = {
 					-40,
-					0,
-				},
+					0
+				}
 			},
 			visibility_function = function (content, style)
 				return content.is_family and content.has_sub_buff
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -424,16 +424,16 @@ blueprints.buff_card = {
 				offset = {
 					20,
 					440,
-					6,
+					6
 				},
 				size_addition = {
 					-40,
-					0,
-				},
+					0
+				}
 			},
 			visibility_function = function (content, style)
 				return content.is_family and content.has_sub_buff
-			end,
+			end
 		},
 		{
 			pass_type = "text",
@@ -450,12 +450,12 @@ blueprints.buff_card = {
 				offset = {
 					20,
 					-30,
-					6,
+					6
 				},
 				size_addition = {
 					-40,
-					0,
-				},
+					0
+				}
 			},
 			visibility_function = function (content, style)
 				local hotspot = content.hotspot
@@ -466,7 +466,7 @@ blueprints.buff_card = {
 				local is_chosen_buff = content.is_chosen_buff
 
 				return content.is_choice and not is_disabled and (is_selected or is_focused or is_hover)
-			end,
+			end
 		},
 		{
 			pass_type = "logic",
@@ -547,8 +547,8 @@ blueprints.buff_card = {
 					content.current_timer = 0
 					content.hold_progress = 0
 				end
-			end,
-		},
+			end
+		}
 	},
 	init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 		local content = widget.content
@@ -576,13 +576,13 @@ blueprints.buff_card = {
 			style.icon_glow.offset[2] = -84
 			style.icon_glow.size = {
 				190,
-				172,
+				172
 			}
 			style.icon_selected.material_values.texture_map = "content/ui/textures/frames/horde/circle_frame_horde_selected"
 			style.icon_selected.offset[2] = -60
 			style.icon_selected.size = {
 				122,
-				122,
+				122
 			}
 			style.icon.offset[2] = -70
 
@@ -590,7 +590,7 @@ blueprints.buff_card = {
 				style.top.material_values.texture_map = "content/ui/textures/frames/horde/horde_buff_family_left"
 				style.top.size = {
 					486,
-					206,
+					206
 				}
 				style.top.offset[1] = -5
 				style.top.offset[2] = -75
@@ -598,7 +598,7 @@ blueprints.buff_card = {
 				style.top.material_values.texture_map = "content/ui/textures/frames/horde/horde_buff_family_right"
 				style.top.size = {
 					486,
-					206,
+					206
 				}
 				style.top.offset[1] = 5
 				style.top.offset[2] = -75
@@ -606,7 +606,7 @@ blueprints.buff_card = {
 				style.top.material_values.texture_map = "content/ui/textures/frames/horde/horde_buff_family_mid"
 				style.top.size = {
 					480,
-					86,
+					86
 				}
 				style.top.offset[2] = -40
 			end
@@ -614,7 +614,7 @@ blueprints.buff_card = {
 			style.top.material_values.texture_map = "content/ui/textures/frames/horde/horde_buff_boon_selected"
 			style.top.size = {
 				480,
-				60,
+				60
 			}
 			style.top.offset[2] = -20
 		end
@@ -653,7 +653,7 @@ blueprints.buff_card = {
 
 			widget.content.size[2] = widget.content.size[2] + 250
 		end
-	end,
+	end
 }
 
 return blueprints

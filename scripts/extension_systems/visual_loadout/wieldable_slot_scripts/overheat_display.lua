@@ -23,7 +23,7 @@ OverheatDisplay.init = function (self, context, slot, weapon_template, fx_source
 			for _, ammo_display_component in ipairs(ammo_display_components) do
 				self._ammo_displays[#self._ammo_displays + 1] = {
 					unit = attachment_unit,
-					component = ammo_display_component,
+					component = ammo_display_component
 				}
 			end
 		end

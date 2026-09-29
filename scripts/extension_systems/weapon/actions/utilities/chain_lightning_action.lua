@@ -9,7 +9,7 @@ local ChainLightningAction = {}
 local ACTION_MODULE_TARGET_FINDER_COMPONENT_KEYS = {
 	"target_unit_1",
 	"target_unit_2",
-	"target_unit_3",
+	"target_unit_3"
 }
 local BREADTH_FIRST_VALIDATION = ChainLightning.breadth_first_validation_functions
 local DEPTH_FIRST_VALIDATION = ChainLightning.depth_first_validation_functions
@@ -17,7 +17,7 @@ local JUMP_VALIDATION = ChainLightning.jump_validation_functions
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local DEFAULT_POWER_LEVEL_RANDOM_RANGE = {
 	max = 1.25,
-	min = 0.75,
+	min = 0.75
 }
 local Vector3_flat = Vector3.flat
 local Vector3_normalize = Vector3.normalize
@@ -55,7 +55,7 @@ ChainLightningAction.init_chain_lightning = function (chain_lightning_action_dat
 		hit_units = chain_lightning_action_data.chain_lightning_hit_units,
 		player_unit = player_unit,
 		talent_extension = talent_extension,
-		source_item = weapon and weapon.item,
+		source_item = weapon and weapon.item
 	}
 
 	if action_context.is_server then

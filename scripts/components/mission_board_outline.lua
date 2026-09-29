@@ -39,28 +39,28 @@ MissionBoardOutline.component_data = {
 	variable_name = {
 		ui_name = "variable name",
 		ui_type = "text_box",
-		value = "on_off",
+		value = "on_off"
 	},
 	material_slot_name = {
 		ui_name = "material slot name",
 		ui_type = "text_box",
-		value = "hologram",
+		value = "hologram"
 	},
 	material_layer_name = {
 		ui_name = "material layer name",
 		ui_type = "text_box",
-		value = "hologram_outline",
+		value = "hologram_outline"
 	},
 	inputs = {
 		outline_on = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		outline_off = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return MissionBoardOutline

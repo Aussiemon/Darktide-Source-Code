@@ -9,7 +9,7 @@ local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/pl
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local hit_zone_names = HitZone.hit_zone_names
 local IMPACT_FX_DATA = {
-	will_be_predicted = true,
+	will_be_predicted = true
 }
 local ActionVentOverheat = class("ActionVentOverheat", "ActionWeaponBase")
 

@@ -9,24 +9,24 @@ local mission_vo_dm_propaganda_cryptic_b = {
 			"loc_cryptic_b__guidance_starting_area_02",
 			"loc_cryptic_b__guidance_starting_area_03",
 			"loc_cryptic_b__guidance_starting_area_04",
-			"loc_cryptic_b__guidance_starting_area_05",
+			"loc_cryptic_b__guidance_starting_area_05"
 		},
 		sound_events_duration = {
 			3.329385,
 			4.440385,
 			3.256146,
 			3.062646,
-			4.296688,
+			4.296688
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2,
+			0.2
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_dm_propaganda_cryptic_b", mission_vo_dm_propaganda_cryptic_b)

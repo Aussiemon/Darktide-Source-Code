@@ -18,7 +18,7 @@ local DISABLED_STATES = {
 	netted = true,
 	pounced = true,
 	vortex_grabbed = true,
-	warp_grabbed = true,
+	warp_grabbed = true
 }
 local REQUIRES_HELP = {
 	consumed = true,
@@ -29,18 +29,18 @@ local REQUIRES_HELP = {
 	mutant_charged = true,
 	netted = true,
 	pounced = true,
-	warp_grabbed = true,
+	warp_grabbed = true
 }
 local REQUIRES_ALLIED_INTERACTION_HELP = {
 	hogtied = true,
 	knocked_down = true,
 	ledge_hanging = true,
-	netted = true,
+	netted = true
 }
 local OBJECTIVE_INTERACTION_STATES = {
 	interacting = true,
 	sprinting = true,
-	walking = true,
+	walking = true
 }
 local VALID_END_ZONE_STATES = {
 	catapulted = true,
@@ -73,11 +73,11 @@ local VALID_END_ZONE_STATES = {
 	sprinting = true,
 	stunned = true,
 	walking = true,
-	warp_grabbed = true,
+	warp_grabbed = true
 }
 local MISSION_FAILURE_DEAD_STATES = {
 	dead = true,
-	hogtied = true,
+	hogtied = true
 }
 local MISSION_FAILURE_DISABLED_STATES = {
 	dead = true,
@@ -85,7 +85,7 @@ local MISSION_FAILURE_DISABLED_STATES = {
 	knocked_down = true,
 	ledge_hanging = true,
 	netted = true,
-	warp_grabbed = true,
+	warp_grabbed = true
 }
 local KNOCKED_DOWN_STATE_NAME = "knocked_down"
 local CATAPULTED_STATE_NAME = "catapulted"

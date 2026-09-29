@@ -60,8 +60,14 @@ local function _editor_setup_shared_nav_worlds(nav_info, with_traverse_logic)
 
 			for i = 1, num_nav_data_paths do
 				local nav_data_path = nav_data_paths[i]
+				local f = io.open(nav_data_path, "r")
 
-				GwNavGeneration.add_navdata_to_world(nav_world, nav_data_path)
+				if f then
+					f:close()
+					GwNavGeneration.add_navdata_to_world(nav_world, nav_data_path)
+				else
+					Log.error("SharedNav", "Can't show navdata for '%s', because the file doesn't exist on disk. Did you manually delete the file?", nav_data_path)
+				end
 			end
 
 			nav_world_from_level_id[level_id] = nav_world

@@ -8,7 +8,7 @@ local sfx = CompanionServoSkullChargedShootingSettings.sfx
 local slot_name = "slot_weapon"
 local resources = {
 	resources_vfx = vfx,
-	resources_sfx = sfx,
+	resources_sfx = sfx
 }
 local effect_template = {
 	name = "companion_servo_skull_charged_shooting",
@@ -97,7 +97,7 @@ local effect_template = {
 		if playing_id then
 			WwiseWorld.stop_event(wwise_world, playing_id)
 		end
-	end,
+	end
 }
 
 return effect_template

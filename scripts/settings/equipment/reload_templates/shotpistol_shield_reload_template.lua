@@ -6,7 +6,7 @@ local reload_template = {
 	states = {
 		"eject_mag",
 		"fit_new_mag",
-		"cock_weapon",
+		"cock_weapon"
 	},
 	eject_mag = {
 		show_magazine_ammo_time = 1,
@@ -43,12 +43,12 @@ local reload_template = {
 		state_transitions = {
 			cock_weapon = 2.467,
 			eject_mag = 2.967,
-			fit_new_mag = 0.967,
+			fit_new_mag = 0.967
 		},
 		functionality = {
 			refill_ammunition = 2.967,
-			remove_ammunition = 0.967,
-		},
+			remove_ammunition = 0.967
+		}
 	},
 	fit_new_mag = {
 		show_magazine_ammo_time = 1,
@@ -84,11 +84,11 @@ local reload_template = {
 		end,
 		state_transitions = {
 			cock_weapon = 0.967,
-			eject_mag = 1.533,
+			eject_mag = 1.533
 		},
 		functionality = {
-			refill_ammunition = 1.533,
-		},
+			refill_ammunition = 1.533
+		}
 	},
 	cock_weapon = {
 		show_magazine_ammo_time = 0,
@@ -123,12 +123,12 @@ local reload_template = {
 			end
 		end,
 		state_transitions = {
-			eject_mag = 0.533,
+			eject_mag = 0.533
 		},
 		functionality = {
-			refill_ammunition = 0.533,
-		},
-	},
+			refill_ammunition = 0.533
+		}
+	}
 }
 
 return reload_template

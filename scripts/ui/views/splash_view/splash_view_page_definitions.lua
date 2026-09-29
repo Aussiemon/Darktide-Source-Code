@@ -7,9 +7,9 @@ local splash_definitions = {
 			exit_sound_name = "wwise/events/cinematics/stop_fatshark_splash",
 			sound_name = "wwise/events/cinematics/play_fatshark_splash",
 			type = "video",
-			video_name = "content/videos/fatshark_splash",
+			video_name = "content/videos/fatshark_splash"
 		},
-		duration = 18,
+		duration = 18
 	},
 	{
 		{
@@ -20,12 +20,12 @@ local splash_definitions = {
 			position = {
 				0,
 				-100,
-				11,
+				11
 			},
 			size = {
 				510.5,
-				497,
-			},
+				497
+			}
 		},
 		{
 			horizontal_alignment = "center",
@@ -35,21 +35,21 @@ local splash_definitions = {
 			position = {
 				0,
 				400,
-				801,
+				801
 			},
 			size = {
 				1500,
-				50,
+				50
 			},
 			style = {
 				text_horizontal_alignment = "center",
 				text_vertical_alignment = "center",
 				font_type = UIFontSettings.body.font_type,
 				font_size = UIFontSettings.body.font_size,
-				text_color = UIFontSettings.body.text_color,
-			},
+				text_color = UIFontSettings.body.text_color
+			}
 		},
-		duration = 5,
+		duration = 5
 	},
 	{
 		{
@@ -60,14 +60,14 @@ local splash_definitions = {
 			position = {
 				0,
 				0,
-				11,
+				11
 			},
 			size = {
 				1920,
-				1080,
-			},
+				1080
+			}
 		},
-		duration = 5,
+		duration = 5
 	},
 	{
 		{
@@ -77,13 +77,13 @@ local splash_definitions = {
 			position = {
 				0,
 				-165,
-				11,
+				11
 			},
 			size = {
 				1500,
-				3,
+				3
 			},
-			color = UIFontSettings.body.text_color,
+			color = UIFontSettings.body.text_color
 		},
 		{
 			horizontal_alignment = "center",
@@ -93,19 +93,19 @@ local splash_definitions = {
 			position = {
 				0,
 				20,
-				11,
+				11
 			},
 			size = {
 				1500,
-				500,
+				500
 			},
 			style = {
 				text_horizontal_alignment = "left",
 				text_vertical_alignment = "top",
 				font_type = UIFontSettings.header_1.font_type,
 				font_size = UIFontSettings.header_1.font_size,
-				text_color = UIFontSettings.body.text_color,
-			},
+				text_color = UIFontSettings.body.text_color
+			}
 		},
 		{
 			horizontal_alignment = "center",
@@ -115,11 +115,11 @@ local splash_definitions = {
 			position = {
 				0,
 				110,
-				801,
+				801
 			},
 			size = {
 				1500,
-				500,
+				500
 			},
 			style = {
 				line_spacing = 1.6,
@@ -127,10 +127,10 @@ local splash_definitions = {
 				text_vertical_alignment = "top",
 				font_type = UIFontSettings.body.font_type,
 				font_size = UIFontSettings.header_3.font_size,
-				text_color = UIFontSettings.body.text_color,
-			},
+				text_color = UIFontSettings.body.text_color
+			}
 		},
-		duration = 5,
+		duration = 5
 	},
 	{
 		{
@@ -140,13 +140,13 @@ local splash_definitions = {
 			video_name = "content/videos/darktide_world_intro",
 			size = {
 				1920,
-				816,
+				816
 			},
 			position = {
 				0,
 				132,
-				0,
-			},
+				0
+			}
 		},
 		duration = 165,
 		hold_to_skip = true,
@@ -159,11 +159,11 @@ local splash_definitions = {
 			end
 
 			return true
-		end,
+		end
 	},
 	{
-		duration = 1,
-	},
+		duration = 1
+	}
 }
 local legend_inputs = {
 	{
@@ -175,8 +175,8 @@ local legend_inputs = {
 		use_mouse_hold = true,
 		visibility_function = function (parent)
 			return parent._hold_to_skip
-		end,
-	},
+		end
+	}
 }
 local total_duration = 0
 
@@ -188,5 +188,5 @@ return {
 	time_between_pages = 1,
 	pages = splash_definitions,
 	duration = total_duration,
-	legend_inputs = legend_inputs,
+	legend_inputs = legend_inputs
 }

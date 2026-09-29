@@ -26,21 +26,21 @@ end
 
 NewsActionHandler._on_action_cb_open_view = function (action_data)
 	Managers.ui:open_view(action_data.target, nil, nil, nil, nil, table.add_missing(action_data.view_context or {}, {
-		pass_draw = false,
+		pass_draw = false
 	}))
 end
 
 NewsActionHandler._on_action_cb_open_store = function (action_data)
 	Managers.ui:open_view("store_view", nil, nil, nil, nil, table.add_missing(action_data.view_context or {}, {
 		pass_draw = false,
-		target_storefront = action_data.target,
+		target_storefront = action_data.target
 	}))
 end
 
 NewsActionHandler._on_action_cb_open_survey = function (action_data)
 	PlayerSurveyView.open(table.add_missing(action_data.view_context or {}, {
 		pass_draw = false,
-		survey_id = action_data.target,
+		survey_id = action_data.target
 	}))
 end
 

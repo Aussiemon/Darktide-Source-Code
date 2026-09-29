@@ -10,10 +10,10 @@ local enemy_event_spawner_compositions = {
 							name = "chaos_spawn",
 							amount = {
 								1,
-								1,
-							},
-						},
-					},
+								1
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -21,10 +21,10 @@ local enemy_event_spawner_compositions = {
 							name = "chaos_spawn",
 							amount = {
 								1,
-								1,
-							},
-						},
-					},
+								1
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -32,17 +32,17 @@ local enemy_event_spawner_compositions = {
 							name = "chaos_spawn",
 							amount = {
 								1,
-								1,
-							},
+								1
+							}
 						},
 						{
 							name = "renegade_melee",
 							amount = {
 								1,
-								2,
-							},
-						},
-					},
+								2
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -50,24 +50,24 @@ local enemy_event_spawner_compositions = {
 							name = "chaos_spawn",
 							amount = {
 								1,
-								1,
-							},
+								1
+							}
 						},
 						{
 							name = "renegade_flamer",
 							amount = {
 								1,
-								3,
-							},
+								3
+							}
 						},
 						{
 							name = "renegade_grenadier",
 							amount = {
 								1,
-								3,
-							},
-						},
-					},
+								3
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -75,25 +75,25 @@ local enemy_event_spawner_compositions = {
 							name = "chaos_spawn",
 							amount = {
 								1,
-								1,
-							},
+								1
+							}
 						},
 						{
 							name = "renegade_flamer",
 							amount = {
 								1,
-								4,
-							},
+								4
+							}
 						},
 						{
 							name = "renegade_grenadier",
 							amount = {
 								1,
-								3,
-							},
-						},
-					},
-				},
+								3
+							}
+						}
+					}
+				}
 			},
 			{
 				{
@@ -102,10 +102,10 @@ local enemy_event_spawner_compositions = {
 							name = "chaos_spawn",
 							amount = {
 								1,
-								1,
-							},
-						},
-					},
+								1
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -113,10 +113,10 @@ local enemy_event_spawner_compositions = {
 							name = "chaos_spawn",
 							amount = {
 								1,
-								1,
-							},
-						},
-					},
+								1
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -124,24 +124,24 @@ local enemy_event_spawner_compositions = {
 							name = "chaos_spawn",
 							amount = {
 								1,
-								1,
-							},
+								1
+							}
 						},
 						{
 							name = "renegade_melee",
 							amount = {
 								1,
-								2,
-							},
+								2
+							}
 						},
 						{
 							name = "renegade_berzerker",
 							amount = {
 								1,
-								2,
-							},
-						},
-					},
+								2
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -149,24 +149,24 @@ local enemy_event_spawner_compositions = {
 							name = "chaos_spawn",
 							amount = {
 								1,
-								1,
-							},
+								1
+							}
 						},
 						{
 							name = "renegade_executor",
 							amount = {
 								1,
-								3,
-							},
+								3
+							}
 						},
 						{
 							name = "renegade_berzerker",
 							amount = {
 								1,
-								3,
-							},
-						},
-					},
+								3
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -174,26 +174,26 @@ local enemy_event_spawner_compositions = {
 							name = "chaos_spawn",
 							amount = {
 								1,
-								1,
-							},
+								1
+							}
 						},
 						{
 							name = "renegade_executor",
 							amount = {
 								1,
-								4,
-							},
+								4
+							}
 						},
 						{
 							name = "renegade_berzerker",
 							amount = {
 								1,
-								3,
-							},
-						},
-					},
-				},
-			},
+								3
+							}
+						}
+					}
+				}
+			}
 		},
 		cultist = {
 			{
@@ -203,10 +203,10 @@ local enemy_event_spawner_compositions = {
 							name = "chaos_spawn",
 							amount = {
 								1,
-								1,
-							},
-						},
-					},
+								1
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -214,10 +214,10 @@ local enemy_event_spawner_compositions = {
 							name = "chaos_spawn",
 							amount = {
 								1,
-								1,
-							},
-						},
-					},
+								1
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -225,17 +225,17 @@ local enemy_event_spawner_compositions = {
 							name = "chaos_spawn",
 							amount = {
 								1,
-								1,
-							},
+								1
+							}
 						},
 						{
 							name = "cultist_melee",
 							amount = {
 								1,
-								2,
-							},
-						},
-					},
+								2
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -243,24 +243,24 @@ local enemy_event_spawner_compositions = {
 							name = "chaos_spawn",
 							amount = {
 								1,
-								1,
-							},
+								1
+							}
 						},
 						{
 							name = "cultist_flamer",
 							amount = {
 								1,
-								3,
-							},
+								3
+							}
 						},
 						{
 							name = "cultist_grenadier",
 							amount = {
 								1,
-								3,
-							},
-						},
-					},
+								3
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -268,25 +268,25 @@ local enemy_event_spawner_compositions = {
 							name = "chaos_spawn",
 							amount = {
 								1,
-								1,
-							},
+								1
+							}
 						},
 						{
 							name = "cultist_flamer",
 							amount = {
 								1,
-								4,
-							},
+								4
+							}
 						},
 						{
 							name = "cultist_grenadier",
 							amount = {
 								1,
-								3,
-							},
-						},
-					},
-				},
+								3
+							}
+						}
+					}
+				}
 			},
 			{
 				{
@@ -295,10 +295,10 @@ local enemy_event_spawner_compositions = {
 							name = "chaos_spawn",
 							amount = {
 								1,
-								1,
-							},
-						},
-					},
+								1
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -306,10 +306,10 @@ local enemy_event_spawner_compositions = {
 							name = "chaos_spawn",
 							amount = {
 								1,
-								1,
-							},
-						},
-					},
+								1
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -317,24 +317,24 @@ local enemy_event_spawner_compositions = {
 							name = "chaos_spawn",
 							amount = {
 								1,
-								1,
-							},
+								1
+							}
 						},
 						{
 							name = "cultist_flamer",
 							amount = {
 								1,
-								2,
-							},
+								2
+							}
 						},
 						{
 							name = "cultist_berzerker",
 							amount = {
 								1,
-								2,
-							},
-						},
-					},
+								2
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -342,24 +342,24 @@ local enemy_event_spawner_compositions = {
 							name = "chaos_spawn",
 							amount = {
 								1,
-								1,
-							},
+								1
+							}
 						},
 						{
 							name = "cultist_flamer",
 							amount = {
 								1,
-								3,
-							},
+								3
+							}
 						},
 						{
 							name = "cultist_berzerker",
 							amount = {
 								1,
-								3,
-							},
-						},
-					},
+								3
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -367,27 +367,27 @@ local enemy_event_spawner_compositions = {
 							name = "chaos_spawn",
 							amount = {
 								1,
-								1,
-							},
+								1
+							}
 						},
 						{
 							name = "cultist_flamer",
 							amount = {
 								1,
-								4,
-							},
+								4
+							}
 						},
 						{
 							name = "cultist_berzerker",
 							amount = {
 								1,
-								3,
-							},
-						},
-					},
-				},
-			},
-		},
+								3
+							}
+						}
+					}
+				}
+			}
+		}
 	},
 	live_event_skull_totem_guards = {
 		renegade = {
@@ -398,10 +398,10 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_melee",
 							amount = {
 								3,
-								5,
-							},
-						},
-					},
+								5
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -409,10 +409,10 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_melee",
 							amount = {
 								4,
-								8,
-							},
-						},
-					},
+								8
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -420,17 +420,17 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_melee",
 							amount = {
 								2,
-								4,
-							},
+								4
+							}
 						},
 						{
 							name = "renegade_berzerker",
 							amount = {
 								1,
-								2,
-							},
-						},
-					},
+								2
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -438,17 +438,17 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_melee",
 							amount = {
 								2,
-								4,
-							},
+								4
+							}
 						},
 						{
 							name = "renegade_berzerker",
 							amount = {
 								2,
-								4,
-							},
-						},
-					},
+								4
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -456,17 +456,17 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_melee",
 							amount = {
 								2,
-								4,
-							},
+								4
+							}
 						},
 						{
 							name = "renegade_berzerker",
 							amount = {
 								2,
-								4,
-							},
-						},
-					},
+								4
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -474,19 +474,19 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_melee",
 							amount = {
 								2,
-								4,
-							},
+								4
+							}
 						},
 						{
 							name = "renegade_berzerker",
 							amount = {
 								2,
-								4,
-							},
-						},
-					},
-				},
-			},
+								4
+							}
+						}
+					}
+				}
+			}
 		},
 		cultist = {
 			{
@@ -496,10 +496,10 @@ local enemy_event_spawner_compositions = {
 							name = "cultist_melee",
 							amount = {
 								3,
-								5,
-							},
-						},
-					},
+								5
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -507,10 +507,10 @@ local enemy_event_spawner_compositions = {
 							name = "cultist_melee",
 							amount = {
 								4,
-								8,
-							},
-						},
-					},
+								8
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -518,17 +518,17 @@ local enemy_event_spawner_compositions = {
 							name = "cultist_melee",
 							amount = {
 								2,
-								4,
-							},
+								4
+							}
 						},
 						{
 							name = "cultist_berzerker",
 							amount = {
 								1,
-								2,
-							},
-						},
-					},
+								2
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -536,17 +536,17 @@ local enemy_event_spawner_compositions = {
 							name = "cultist_melee",
 							amount = {
 								2,
-								4,
-							},
+								4
+							}
 						},
 						{
 							name = "cultist_berzerker",
 							amount = {
 								2,
-								4,
-							},
-						},
-					},
+								4
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -554,17 +554,17 @@ local enemy_event_spawner_compositions = {
 							name = "cultist_melee",
 							amount = {
 								2,
-								4,
-							},
+								4
+							}
 						},
 						{
 							name = "cultist_berzerker",
 							amount = {
 								2,
-								4,
-							},
-						},
-					},
+								4
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -572,20 +572,20 @@ local enemy_event_spawner_compositions = {
 							name = "cultist_melee",
 							amount = {
 								2,
-								4,
-							},
+								4
+							}
 						},
 						{
 							name = "cultist_berzerker",
 							amount = {
 								2,
-								4,
-							},
-						},
-					},
-				},
-			},
-		},
+								4
+							}
+						}
+					}
+				}
+			}
+		}
 	},
 	live_event_plasma_smugglers = {
 		renegade = {
@@ -596,17 +596,17 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_captain",
 							amount = {
 								1,
-								1,
-							},
+								1
+							}
 						},
 						{
 							name = "renegade_plasma_gunner",
 							amount = {
 								2,
-								3,
-							},
-						},
-					},
+								3
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -614,17 +614,17 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_captain",
 							amount = {
 								1,
-								1,
-							},
+								1
+							}
 						},
 						{
 							name = "renegade_plasma_gunner",
 							amount = {
 								2,
-								4,
-							},
-						},
-					},
+								4
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -632,17 +632,17 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_captain",
 							amount = {
 								1,
-								1,
-							},
+								1
+							}
 						},
 						{
 							name = "renegade_plasma_gunner",
 							amount = {
 								3,
-								4,
-							},
-						},
-					},
+								4
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -650,17 +650,17 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_captain",
 							amount = {
 								1,
-								1,
-							},
+								1
+							}
 						},
 						{
 							name = "renegade_plasma_gunner",
 							amount = {
 								3,
-								5,
-							},
-						},
-					},
+								5
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -668,17 +668,17 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_captain",
 							amount = {
 								1,
-								1,
-							},
+								1
+							}
 						},
 						{
 							name = "renegade_plasma_gunner",
 							amount = {
 								4,
-								6,
-							},
-						},
-					},
+								6
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -686,20 +686,20 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_captain",
 							amount = {
 								1,
-								1,
-							},
+								1
+							}
 						},
 						{
 							name = "renegade_plasma_gunner",
 							amount = {
 								5,
-								6,
-							},
-						},
-					},
-				},
-			},
-		},
+								6
+							}
+						}
+					}
+				}
+			}
+		}
 	},
 	exp_rotten_armor = {
 		renegade = {
@@ -710,10 +710,10 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_berzerker",
 							amount = {
 								1,
-								2,
-							},
-						},
-					},
+								2
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -721,10 +721,10 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_berzerker",
 							amount = {
 								1,
-								2,
-							},
-						},
-					},
+								2
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -732,17 +732,17 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_executor",
 							amount = {
 								2,
-								4,
-							},
+								4
+							}
 						},
 						{
 							name = "renegade_berzerker",
 							amount = {
 								1,
-								2,
-							},
-						},
-					},
+								2
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -750,17 +750,17 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_executor",
 							amount = {
 								2,
-								4,
-							},
+								4
+							}
 						},
 						{
 							name = "renegade_berzerker",
 							amount = {
 								2,
-								4,
-							},
-						},
-					},
+								4
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -768,26 +768,26 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_executor",
 							amount = {
 								2,
-								4,
-							},
+								4
+							}
 						},
 						{
 							name = "renegade_berzerker",
 							amount = {
 								2,
-								4,
-							},
+								4
+							}
 						},
 						{
 							name = "chaos_ogryn_executor",
 							amount = {
 								1,
-								1,
-							},
-						},
-					},
-				},
-			},
+								1
+							}
+						}
+					}
+				}
+			}
 		},
 		cultist = {
 			{
@@ -797,10 +797,10 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_berzerker",
 							amount = {
 								1,
-								2,
-							},
-						},
-					},
+								2
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -808,10 +808,10 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_berzerker",
 							amount = {
 								1,
-								2,
-							},
-						},
-					},
+								2
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -819,17 +819,17 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_executor",
 							amount = {
 								2,
-								4,
-							},
+								4
+							}
 						},
 						{
 							name = "renegade_berzerker",
 							amount = {
 								1,
-								2,
-							},
-						},
-					},
+								2
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -837,17 +837,17 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_executor",
 							amount = {
 								2,
-								4,
-							},
+								4
+							}
 						},
 						{
 							name = "renegade_berzerker",
 							amount = {
 								2,
-								4,
-							},
-						},
-					},
+								4
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -855,27 +855,27 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_executor",
 							amount = {
 								2,
-								4,
-							},
+								4
+							}
 						},
 						{
 							name = "renegade_berzerker",
 							amount = {
 								2,
-								4,
-							},
+								4
+							}
 						},
 						{
 							name = "chaos_ogryn_executor",
 							amount = {
 								1,
-								1,
-							},
-						},
-					},
-				},
-			},
-		},
+								1
+							}
+						}
+					}
+				}
+			}
+		}
 	},
 	live_event_stolen_rations_stat_recover_spawns = {
 		renegade = {
@@ -886,10 +886,10 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_captain",
 							amount = {
 								1,
-								1,
-							},
-						},
-					},
+								1
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -897,10 +897,10 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_captain",
 							amount = {
 								1,
-								1,
-							},
-						},
-					},
+								1
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -908,10 +908,10 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_captain",
 							amount = {
 								1,
-								1,
-							},
-						},
-					},
+								1
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -919,24 +919,24 @@ local enemy_event_spawner_compositions = {
 							name = "renegade_captain",
 							amount = {
 								1,
+								2
+							}
+						}
+					}
+				},
+				{
+					breeds = {
+						{
+							name = "renegade_captain",
+							amount = {
 								2,
-							},
-						},
-					},
-				},
-				{
-					breeds = {
-						{
-							name = "renegade_captain",
-							amount = {
-								2,
-								2,
-							},
-						},
-					},
-				},
-			},
-		},
+								2
+							}
+						}
+					}
+				}
+			}
+		}
 	},
 	live_event_stolen_rations_stat_destroy_spawns = {
 		renegade = {
@@ -947,10 +947,10 @@ local enemy_event_spawner_compositions = {
 							name = "chaos_plague_ogryn",
 							amount = {
 								1,
-								1,
-							},
-						},
-					},
+								1
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -958,10 +958,10 @@ local enemy_event_spawner_compositions = {
 							name = "chaos_plague_ogryn",
 							amount = {
 								1,
-								1,
-							},
-						},
-					},
+								1
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -969,10 +969,10 @@ local enemy_event_spawner_compositions = {
 							name = "chaos_plague_ogryn",
 							amount = {
 								1,
-								1,
-							},
-						},
-					},
+								1
+							}
+						}
+					}
 				},
 				{
 					breeds = {
@@ -980,25 +980,25 @@ local enemy_event_spawner_compositions = {
 							name = "chaos_plague_ogryn",
 							amount = {
 								1,
+								2
+							}
+						}
+					}
+				},
+				{
+					breeds = {
+						{
+							name = "chaos_plague_ogryn",
+							amount = {
 								2,
-							},
-						},
-					},
-				},
-				{
-					breeds = {
-						{
-							name = "chaos_plague_ogryn",
-							amount = {
-								2,
-								2,
-							},
-						},
-					},
-				},
-			},
-		},
-	},
+								2
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 return enemy_event_spawner_compositions

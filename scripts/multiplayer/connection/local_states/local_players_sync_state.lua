@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/multiplayer/connection/local_states/local_players_sync_state.lua
 
 local RPCS = {
-	"rpc_sync_local_players_reply",
+	"rpc_sync_local_players_reply"
 }
 local LocalPlayersSyncState = class("LocalPlayersSyncState")
 
@@ -38,7 +38,7 @@ LocalPlayersSyncState.update = function (self, dt)
 		Log.info("LocalPlayersSyncState", "Timeout waiting for rpc_sync_local_players_reply")
 
 		return "timeout", {
-			game_reason = "timeout",
+			game_reason = "timeout"
 		}
 	end
 
@@ -48,7 +48,7 @@ LocalPlayersSyncState.update = function (self, dt)
 		Log.info("LocalPlayersSyncState", "Connection channel disconnected")
 
 		return "disconnected", {
-			engine_reason = reason,
+			engine_reason = reason
 		}
 	end
 

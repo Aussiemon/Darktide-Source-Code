@@ -19,7 +19,7 @@ local sound_data = {
 		vce_melee_attack_charged = "wwise/events/minions/play_minion_captain__melee_attack_charged_vce",
 		vce_melee_attack_charged_long = "wwise/events/minions/play_minion_captain__melee_attack_charged_long_vce",
 		vce_melee_attack_short = "wwise/events/minions/play_minion_captain__melee_attack_short_vce",
-		vce_mocking_laughter = "wwise/events/minions/play_minion_captain__mocking_laughter_vce",
+		vce_mocking_laughter = "wwise/events/minions/play_minion_captain__mocking_laughter_vce"
 	},
 	use_proximity_culling = {
 		foley_drastic_long = false,
@@ -34,8 +34,8 @@ local sound_data = {
 		vce_melee_attack_charged = false,
 		vce_melee_attack_charged_long = false,
 		vce_melee_attack_short = false,
-		vce_mocking_laughter = false,
-	},
+		vce_mocking_laughter = false
+	}
 }
 
 table.add_missing(sound_data.events, RenegadeCommonSounds.events)

@@ -339,21 +339,21 @@ MinionMultiTeleporter.component_data = {
 	toggleable = {
 		ui_name = "Toggleable",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	inputs = {
 		flow_enable = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		flow_disable = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"NavGraphExtension",
-	},
+		"NavGraphExtension"
+	}
 }
 
 return MinionMultiTeleporter

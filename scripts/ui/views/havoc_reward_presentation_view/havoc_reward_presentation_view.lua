@@ -104,7 +104,7 @@ HavocRewardPresentationView._generate_reward_widgets = function (self, rewards)
 		local widget = UIWidget.init("reward_" .. type, widget_definition)
 		local config = {
 			currency = type,
-			value = value,
+			value = value
 		}
 
 		rewards_definitions.init(widget, config)

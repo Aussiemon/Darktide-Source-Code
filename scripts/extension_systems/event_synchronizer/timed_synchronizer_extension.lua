@@ -9,16 +9,11 @@ TimedSynchronizerExtension.init = function (self, extension_init_context, unit, 
 	self._paused = false
 end
 
-TimedSynchronizerExtension.setup_from_component = function (self, objective_name, global_group, auto_start, curve_power)
+TimedSynchronizerExtension.setup_from_component = function (self, objective_name, auto_start, curve_power)
 	self._objective_name = objective_name
 	self._auto_start = auto_start
 	self._curve_power = curve_power
-
-	if global_group then
-		self._group_id = 0
-	end
-
-	self._group_id = self._mission_objective_system:register_objective_synchronizer(objective_name, global_group and 0 or nil, self._unit)
+	self._group_id = self._mission_objective_system:register_objective_synchronizer(objective_name, self._unit)
 end
 
 TimedSynchronizerExtension.objective_started = function (self)

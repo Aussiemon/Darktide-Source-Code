@@ -111,7 +111,7 @@ HudElementWorldMarkers.event_add_world_marker_unit = function (self, marker_type
 		type = marker_type,
 		unit = unit,
 		position = Vector3Box(),
-		my_player = my_player,
+		my_player = my_player
 	}
 	local id = self:_register_marker(marker)
 	local widget_name = "marker_widget_id_" .. id
@@ -142,7 +142,7 @@ HudElementWorldMarkers.event_add_world_marker_position = function (self, marker_
 		type = marker_type,
 		world_position = Vector3Box(world_position),
 		position = Vector3Box(),
-		my_player = my_player,
+		my_player = my_player
 	}
 	local id = self:_register_marker(marker)
 	local widget_name = "marker_widget_id_" .. id
@@ -515,6 +515,15 @@ HudElementWorldMarkers._draw_markers = function (self, dt, t, input_service, ui_
 						local new_scale = marker.ignore_scale and 1 or marker.scale
 
 						self:_apply_scale(widget, new_scale)
+					end
+
+					local marker_size_multiplier = marker.marker_size_multiplier
+					local applied_scale = marker.ignore_scale and 1 or marker.scale
+
+					if marker_size_multiplier then
+						applied_scale = marker.scale * marker_size_multiplier
+
+						self:_apply_scale(widget, applied_scale)
 					end
 
 					local alpha_multiplier = 1

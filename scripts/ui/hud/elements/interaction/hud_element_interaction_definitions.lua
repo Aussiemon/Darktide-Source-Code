@@ -12,7 +12,7 @@ local background_size = HudElementInteractionSettings.background_size
 local background_size_small = HudElementInteractionSettings.background_size_small
 local description_box_size = {
 	background_size[1] - edge_spacing[1] * 2,
-	background_size[2] - input_box_height - edge_spacing[2] * 2,
+	background_size[2] - input_box_height - edge_spacing[2] * 2
 }
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
@@ -22,13 +22,13 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			100,
-		},
+			100
+		}
 	},
 	background = {
 		horizontal_alignment = "left",
@@ -38,8 +38,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	description_box = {
 		horizontal_alignment = "center",
@@ -49,8 +49,8 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	extra_info_pivot = {
 		horizontal_alignment = "left",
@@ -58,13 +58,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			5,
-			1,
-		},
+			1
+		}
 	},
 	extra_info_background = {
 		horizontal_alignment = "left",
@@ -74,9 +74,9 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local input_interact_text_style = table.clone(UIFontSettings.hud_body)
 
@@ -88,11 +88,11 @@ input_interact_text_style.text_color = get_hud_color("color_tint_main_1", 255)
 input_interact_text_style.offset = {
 	edge_spacing[1],
 	0,
-	6,
+	6
 }
 input_interact_text_style.size = {
 	background_size[1] - edge_spacing[1] * 2,
-	input_box_height,
+	input_box_height
 }
 
 local input_tag_text_style = table.clone(UIFontSettings.hud_body)
@@ -105,11 +105,11 @@ input_tag_text_style.text_color = get_hud_color("color_tint_main_1", 255)
 input_tag_text_style.offset = {
 	0,
 	0,
-	6,
+	6
 }
 input_tag_text_style.size = {
 	background_size[1] - edge_spacing[1] * 2,
-	input_box_height,
+	input_box_height
 }
 
 local description_text_style = table.clone(UIFontSettings.hud_body)
@@ -122,7 +122,7 @@ description_text_style.font_size = 26
 description_text_style.offset = {
 	0,
 	0,
-	6,
+	6
 }
 
 local extra_info_text_style = table.clone(UIFontSettings.hud_body)
@@ -135,11 +135,11 @@ extra_info_text_style.font_size = 20
 extra_info_text_style.offset = {
 	0,
 	0,
-	6,
+	6
 }
 extra_info_text_style.size_addition = {
 	-edge_spacing[1] * 2,
-	0,
+	0
 }
 extra_info_text_style.text_color = get_hud_color("color_tint_main_2", 255)
 
@@ -149,12 +149,12 @@ type_description_text_style.text_color = {
 	255,
 	226,
 	199,
-	126,
+	126
 }
 type_description_text_style.offset = {
 	0,
 	14,
-	6,
+	6
 }
 type_description_text_style.font_size = 20
 
@@ -168,17 +168,17 @@ event_text_style.font_size = 20
 event_text_style.offset = {
 	0,
 	35,
-	7,
+	7
 }
 event_text_style.size = {
 	background_size[1],
-	30,
+	30
 }
 event_text_style.text_color = {
 	255,
 	70,
 	38,
-	0,
+	0
 }
 event_text_style.drop_shadow = false
 
@@ -189,8 +189,8 @@ local widget_definitions = {
 			style_id = "text",
 			value = "<text>",
 			value_id = "text",
-			style = input_interact_text_style,
-		},
+			style = input_interact_text_style
+		}
 	}, "background"),
 	tag_text = UIWidget.create_definition({
 		{
@@ -198,8 +198,8 @@ local widget_definitions = {
 			style_id = "text",
 			value = "<text>",
 			value_id = "text",
-			style = input_tag_text_style,
-		},
+			style = input_tag_text_style
+		}
 	}, "background"),
 	description_text = UIWidget.create_definition({
 		{
@@ -207,8 +207,8 @@ local widget_definitions = {
 			style_id = "text",
 			value = "<text>",
 			value_id = "text",
-			style = description_text_style,
-		},
+			style = description_text_style
+		}
 	}, "description_box"),
 	type_description_text = UIWidget.create_definition({
 		{
@@ -216,8 +216,8 @@ local widget_definitions = {
 			style_id = "text",
 			value = "FORGE MATERIALS",
 			value_id = "text",
-			style = type_description_text_style,
-		},
+			style = type_description_text_style
+		}
 	}, "description_box"),
 	background = UIWidget.create_definition({
 		{
@@ -231,17 +231,17 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				size_addition = {
 					0,
-					-1,
+					-1
 				},
-				color = get_hud_color("color_tint_main_4", 230),
+				color = get_hud_color("color_tint_main_4", 230)
 			},
 			visibility_function = function (content)
 				return not content.use_minimal_presentation
-			end,
+			end
 		},
 		{
 			pass_type = "rect",
@@ -252,21 +252,21 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size = {
-					[2] = input_box_height,
+					[2] = input_box_height
 				},
 				color = {
 					180,
 					121,
 					136,
-					109,
-				},
+					109
+				}
 			},
 			visibility_function = function (content)
 				return not content.use_minimal_presentation
-			end,
+			end
 		},
 		{
 			pass_type = "texture_uv",
@@ -278,26 +278,26 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				size = {
-					[2] = input_box_height,
+					[2] = input_box_height
 				},
 				color = Color.terminal_background(200, true),
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
-				},
+						1
+					}
+				}
 			},
 			visibility_function = function (content)
 				return content.use_minimal_presentation
-			end,
+			end
 		},
 		{
 			pass_type = "rect",
@@ -308,19 +308,19 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				size = {
 					0,
-					10,
+					10
 				},
 				color = {
 					255,
 					226,
 					199,
-					126,
-				},
-			},
+					126
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -331,22 +331,22 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				size = {
-					0,
+					0
 				},
 				size_addition = {
 					0,
-					-input_box_height,
+					-input_box_height
 				},
 				color = {
 					60,
 					226,
 					199,
-					126,
-				},
-			},
+					126
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -359,29 +359,29 @@ local widget_definitions = {
 				offset = {
 					10,
 					10,
-					4,
+					4
 				},
 				default_offset = {
 					10,
 					0,
-					4,
+					4
 				},
 				size = {
 					0,
-					10,
+					10
 				},
 				color = {
 					255,
 					226,
 					199,
-					126,
+					126
 				},
 				size_addition = {
 					20,
-					20,
-				},
-			},
-		},
+					20
+				}
+			}
+		}
 	}, "background"),
 	extra_info_background = UIWidget.create_definition({
 		{
@@ -395,17 +395,17 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				size_addition = {
 					0,
-					-1,
+					-1
 				},
-				color = get_hud_color("color_tint_main_4", 230),
+				color = get_hud_color("color_tint_main_4", 230)
 			},
 			visibility_function = function (content)
 				return not content.use_minimal_presentation
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -419,21 +419,21 @@ local widget_definitions = {
 					255,
 					0,
 					0,
-					0,
+					0
 				},
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
+					3
+				}
 			},
 			visibility_function = function (content)
 				return not content.use_minimal_presentation
-			end,
+			end
 		},
 		{
 			pass_type = "texture_uv",
@@ -447,39 +447,39 @@ local widget_definitions = {
 					255,
 					0,
 					0,
-					0,
+					0
 				},
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
+						1
+					}
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
+					3
+				}
 			},
 			visibility_function = function (content)
 				return content.use_minimal_presentation
-			end,
+			end
 		},
 		{
 			pass_type = "text",
 			style_id = "text",
 			value = "",
 			value_id = "text",
-			style = extra_info_text_style,
-		},
+			style = extra_info_text_style
+		}
 	}, "extra_info_background"),
 	frame = UIWidget.create_definition({
 		{
@@ -494,21 +494,21 @@ local widget_definitions = {
 					255,
 					0,
 					0,
-					0,
+					0
 				},
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
+					3
+				}
 			},
 			visibility_function = function (content)
 				return not content.use_minimal_presentation
-			end,
+			end
 		},
 		{
 			pass_type = "texture_uv",
@@ -522,32 +522,32 @@ local widget_definitions = {
 					255,
 					0,
 					0,
-					0,
+					0
 				},
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
+						1
+					}
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
+					3
+				}
 			},
 			visibility_function = function (content)
 				return content.use_minimal_presentation
-			end,
-		},
+			end
+		}
 	}, "background"),
 	progress_highlight = UIWidget.create_definition({
 		{
@@ -562,19 +562,19 @@ local widget_definitions = {
 					0,
 					226,
 					199,
-					126,
+					126
 				},
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					4,
-				},
-			},
-		},
+					4
+				}
+			}
+		}
 	}, "background"),
 	event_background = UIWidget.create_definition({
 		{
@@ -582,7 +582,7 @@ local widget_definitions = {
 			style_id = "text",
 			value_id = "text",
 			value = Utf8.upper(Localize("loc_interaction_start_event_text")),
-			style = event_text_style,
+			style = event_text_style
 		},
 		{
 			pass_type = "rect",
@@ -593,19 +593,19 @@ local widget_definitions = {
 				offset = {
 					0,
 					35,
-					0,
+					0
 				},
 				size = {
 					background_size[1],
-					30,
+					30
 				},
 				color = {
 					230,
 					255,
 					151,
-					29,
-				},
-			},
+					29
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -618,30 +618,30 @@ local widget_definitions = {
 				offset = {
 					0,
 					45,
-					0,
+					0
 				},
 				size = {
 					background_size[1],
-					30,
+					30
 				},
 				color = {
 					255,
 					0,
 					0,
-					0,
+					0
 				},
 				size_addition = {
 					20,
-					20,
-				},
-			},
-		},
-	}, "background"),
+					20
+				}
+			}
+		}
+	}, "background")
 }
 local animations = {}
 
 return {
 	animations = animations,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

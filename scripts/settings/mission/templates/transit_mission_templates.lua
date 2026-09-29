@@ -2,7 +2,6 @@
 
 local mission_templates = {
 	cm_habs = {
-		coordinates = "loc_mission_coordinates_cm_habs",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/transit/missions/mission_cm_habs",
@@ -21,23 +20,23 @@ local mission_templates = {
 		zone_id = "transit",
 		cinematics = {
 			intro_abc = {
-				"c_cam",
+				"c_cam"
 			},
 			outro_fail = {
-				"outro_fail",
+				"outro_fail"
 			},
 			outro_win = {
-				"outro_win",
-			},
+				"outro_win"
+			}
 		},
 		hazard_prop_settings = {
 			explosion = 0.3,
 			fire = 0.2,
-			none = 0.4,
+			none = 0.4
 		},
 		pickup_settings = {},
 		terror_event_templates = {
-			"terror_events_cm_habs",
+			"terror_events_cm_habs"
 		},
 		testify_flags = {},
 		health_station = {},
@@ -47,38 +46,40 @@ local mission_templates = {
 			vo_events = {
 				"mission_habs_redux_briefing_a",
 				"mission_habs_redux_briefing_b",
-				"mission_habs_redux_briefing_c",
+				"mission_habs_redux_briefing_c"
 			},
 			mission_giver_packs = {
 				sergeant_a = {
 					"sergeant",
 					"boon_vendor",
 					"tertium_noble",
-					"pilot",
+					"pilot"
 				},
 				sergeant_b = {
 					"sergeant",
 					"enemy_nemesis_wolfer",
 					"enemy_wolfer_adjutant",
-					"pilot",
+					"pilot"
 				},
 				shipmistress_a = {
 					"shipmistress",
 					"enginseer",
-					"pilot",
-				},
-			},
+					"pilot"
+				}
+			}
 		},
 		dialogue_settings = {
 			short_story_ticker_enabled = true,
-			story_ticker_enabled = true,
+			story_ticker_enabled = true
 		},
 		spawn_settings = {
-			next_mission = "recent_mission",
+			next_mission = "recent_mission"
 		},
+		controllable_object_set_prefixes = {
+			"flow"
+		}
 	},
 	lm_rails = {
-		coordinates = "loc_mission_coordinates_lm_rails",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/transit/missions/mission_lm_rails",
@@ -96,23 +97,23 @@ local mission_templates = {
 		zone_id = "transit",
 		cinematics = {
 			intro_abc = {
-				"c_cam",
+				"c_cam"
 			},
 			outro_fail = {
-				"outro_fail",
+				"outro_fail"
 			},
 			outro_win = {
-				"outro_win",
-			},
+				"outro_win"
+			}
 		},
 		hazard_prop_settings = {
 			explosion = 0.3,
 			fire = 0.2,
-			none = 0.4,
+			none = 0.4
 		},
 		pickup_settings = {},
 		terror_event_templates = {
-			"terror_events_lm_rails",
+			"terror_events_lm_rails"
 		},
 		health_station = {},
 		testify_flags = {},
@@ -122,19 +123,21 @@ local mission_templates = {
 			vo_events = {
 				"mission_rails_briefing_a",
 				"mission_rails_briefing_b",
-				"mission_rails_briefing_c",
-			},
+				"mission_rails_briefing_c"
+			}
 		},
 		dialogue_settings = {
 			short_story_ticker_enabled = true,
-			story_ticker_enabled = true,
+			story_ticker_enabled = true
 		},
 		spawn_settings = {
-			next_mission = "recent_mission",
+			next_mission = "recent_mission"
 		},
+		controllable_object_set_prefixes = {
+			"flow"
+		}
 	},
 	km_station = {
-		coordinates = "loc_mission_coordinates_km_station",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/transit/missions/mission_km_station",
@@ -152,27 +155,27 @@ local mission_templates = {
 		zone_id = "transit",
 		cinematics = {
 			intro_abc = {
-				"c_cam",
+				"c_cam"
 			},
 			outro_fail = {
-				"outro_fail",
+				"outro_fail"
 			},
 			outro_win = {
-				"outro_win",
+				"outro_win"
 			},
 			traitor_captain_intro = {
-				"traitor_captain_intro",
-			},
+				"traitor_captain_intro"
+			}
 		},
 		pickup_settings = {},
 		health_station = {},
 		hazard_prop_settings = {
 			explosion = 0.3,
 			fire = 0.2,
-			none = 0.4,
+			none = 0.4
 		},
 		terror_event_templates = {
-			"terror_events_km_station",
+			"terror_events_km_station"
 		},
 		testify_flags = {},
 		mission_brief_vo = {
@@ -181,19 +184,21 @@ local mission_templates = {
 			vo_events = {
 				"mission_station_briefing_a",
 				"mission_station_briefing_b",
-				"mission_station_briefing_c",
-			},
+				"mission_station_briefing_c"
+			}
 		},
 		dialogue_settings = {
 			short_story_ticker_enabled = true,
-			story_ticker_enabled = true,
+			story_ticker_enabled = true
 		},
 		spawn_settings = {
-			next_mission = "recent_mission",
+			next_mission = "recent_mission"
 		},
+		controllable_object_set_prefixes = {
+			"flow"
+		}
 	},
 	dm_rise = {
-		coordinates = "loc_mission_coordinates_dm_rise",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/transit/missions/mission_dm_rise",
@@ -211,57 +216,60 @@ local mission_templates = {
 		zone_id = "transit",
 		cinematics = {
 			intro_abc = {
-				"c_cam",
+				"c_cam"
 			},
 			outro_fail = {
-				"outro_fail",
+				"outro_fail"
 			},
 			outro_win = {
-				"outro_win",
-			},
+				"outro_win"
+			}
 		},
 		hazard_prop_settings = {
 			explosion = 0.3,
 			fire = 0.2,
-			none = 0.4,
+			none = 0.4
 		},
 		pickup_settings = {},
 		terror_event_templates = {
-			"terror_events_dm_rise",
+			"terror_events_dm_rise"
 		},
 		health_station = {},
 		testify_flags = {},
 		mission_brief_vo = {
-			vo_profile = "purser_a",
+			vo_profile = "sergeant_a",
 			wwise_route_key = 1,
 			vo_events = {
 				"mission_rise_briefing_a_intro",
 				"mission_rise_briefing_a",
 				"mission_rise_briefing_b",
-				"mission_rise_briefing_c",
+				"mission_rise_briefing_c"
 			},
 			mission_giver_packs = {
 				sergeant_a = {
-					"sergeant",
+					"sergeant"
 				},
 				purser_a = {
 					"purser",
-					"contract_vendor",
+					"contract_vendor"
 				},
 				training_ground_psyker_a = {
 					"training_ground_psyker",
-					"barber",
-				},
-			},
+					"barber"
+				}
+			}
 		},
 		dialogue_settings = {
 			short_story_ticker_enabled = true,
-			story_ticker_enabled = true,
+			story_ticker_enabled = true
 		},
 		spawn_settings = {
-			next_mission = "recent_mission",
+			next_mission = "recent_mission"
 		},
-	},
+		controllable_object_set_prefixes = {
+			"flow"
+		}
+	}
 }
 
 return mission_templates

@@ -10,7 +10,7 @@ local expedition_dreg_report_a = {
 			"loc_dreg_report_a__expeditions_heat_alert_heat_drop_a_03",
 			"loc_dreg_report_a__expeditions_heat_alert_heat_drop_a_04",
 			"loc_dreg_report_a__expeditions_heat_alert_heat_drop_a_05",
-			"loc_dreg_report_a__expeditions_heat_alert_heat_drop_a_06",
+			"loc_dreg_report_a__expeditions_heat_alert_heat_drop_a_06"
 		},
 		sound_events_duration = {
 			4.194,
@@ -18,9 +18,9 @@ local expedition_dreg_report_a = {
 			4.624917,
 			3.700042,
 			4.870542,
-			4.758375,
+			4.758375
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	expeditions_heat_alert_safe_room_entered_a = {
 		randomize_indexes_n = 0,
@@ -35,7 +35,7 @@ local expedition_dreg_report_a = {
 			"loc_dreg_report_a__expeditions_heat_alert_safe_room_entered_a_07",
 			"loc_dreg_report_a__expeditions_heat_alert_safe_room_entered_a_08",
 			"loc_dreg_report_a__expeditions_heat_alert_safe_room_entered_a_09",
-			"loc_dreg_report_a__expeditions_heat_alert_safe_room_entered_a_10",
+			"loc_dreg_report_a__expeditions_heat_alert_safe_room_entered_a_10"
 		},
 		sound_events_duration = {
 			5.725354,
@@ -47,9 +47,9 @@ local expedition_dreg_report_a = {
 			5.236771,
 			4.087458,
 			4.257229,
-			6.227729,
+			6.227729
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	expeditions_heat_detected_heat_drop_a = {
 		randomize_indexes_n = 0,
@@ -60,7 +60,7 @@ local expedition_dreg_report_a = {
 			"loc_dreg_report_a__expeditions_heat_detected_heat_drop_a_03",
 			"loc_dreg_report_a__expeditions_heat_detected_heat_drop_a_04",
 			"loc_dreg_report_a__expeditions_heat_detected_heat_drop_a_05",
-			"loc_dreg_report_a__expeditions_heat_detected_heat_drop_a_06",
+			"loc_dreg_report_a__expeditions_heat_detected_heat_drop_a_06"
 		},
 		sound_events_duration = {
 			4.399771,
@@ -68,9 +68,9 @@ local expedition_dreg_report_a = {
 			5.045521,
 			4.915042,
 			4.393958,
-			3.483688,
+			3.483688
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	expeditions_heat_detected_loner_targeted_a = {
 		randomize_indexes_n = 0,
@@ -83,7 +83,7 @@ local expedition_dreg_report_a = {
 			"loc_dreg_report_a__expeditions_heat_detected_loner_targeted_a_05",
 			"loc_dreg_report_a__expeditions_heat_detected_loner_targeted_a_06",
 			"loc_dreg_report_a__expeditions_heat_detected_loner_targeted_a_07",
-			"loc_dreg_report_a__expeditions_heat_detected_loner_targeted_a_08",
+			"loc_dreg_report_a__expeditions_heat_detected_loner_targeted_a_08"
 		},
 		sound_events_duration = {
 			4.501729,
@@ -93,9 +93,9 @@ local expedition_dreg_report_a = {
 			5.097292,
 			3.215,
 			2.910828,
-			3.726771,
+			3.726771
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	expeditions_heat_detected_safe_room_exit_a = {
 		randomize_indexes_n = 0,
@@ -106,7 +106,7 @@ local expedition_dreg_report_a = {
 			"loc_dreg_report_a__expeditions_heat_detected_safe_room_exit_a_03",
 			"loc_dreg_report_a__expeditions_heat_detected_safe_room_exit_a_04",
 			"loc_dreg_report_a__expeditions_heat_detected_safe_room_exit_a_05",
-			"loc_dreg_report_a__expeditions_heat_detected_safe_room_exit_a_06",
+			"loc_dreg_report_a__expeditions_heat_detected_safe_room_exit_a_06"
 		},
 		sound_events_duration = {
 			3.964708,
@@ -114,9 +114,9 @@ local expedition_dreg_report_a = {
 			5.204479,
 			6.059375,
 			4.623646,
-			3.729438,
+			3.729438
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	expeditions_heat_max_safe_room_exit_a = {
 		randomize_indexes_n = 0,
@@ -125,15 +125,15 @@ local expedition_dreg_report_a = {
 			"loc_dreg_report_a__expeditions_heat_max_safe_room_exit_a_02",
 			"loc_dreg_report_a__expeditions_heat_max_safe_room_exit_a_03",
 			"loc_dreg_report_a__expeditions_heat_max_safe_room_exit_a_05",
-			"loc_dreg_report_a__expeditions_heat_max_safe_room_exit_a_06",
+			"loc_dreg_report_a__expeditions_heat_max_safe_room_exit_a_06"
 		},
 		sound_events_duration = {
 			4.688667,
 			4.636083,
 			3.032083,
-			5.303125,
+			5.303125
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	expeditions_heat_undetected_heat_drop_a = {
 		randomize_indexes_n = 0,
@@ -146,7 +146,7 @@ local expedition_dreg_report_a = {
 			"loc_dreg_report_a__expeditions_heat_undetected_heat_drop_a_05",
 			"loc_dreg_report_a__expeditions_heat_undetected_heat_drop_a_06",
 			"loc_dreg_report_a__expeditions_heat_undetected_heat_drop_a_07",
-			"loc_dreg_report_a__expeditions_heat_undetected_heat_drop_a_08",
+			"loc_dreg_report_a__expeditions_heat_undetected_heat_drop_a_08"
 		},
 		sound_events_duration = {
 			3.475771,
@@ -156,10 +156,10 @@ local expedition_dreg_report_a = {
 			3.060771,
 			5.025625,
 			5.379396,
-			4.149396,
+			4.149396
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("expedition_dreg_report_a", expedition_dreg_report_a)

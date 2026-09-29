@@ -20,14 +20,14 @@ local sound_data = {
 		vce_long_attack = "wwise/events/minions/play_chaos_hound_master_charge_vce",
 		vce_melee_attack_final_vce = "wwise/events/minions/play_enemy_chaos_ogryn_houndmaster__melee_attack_final_vce",
 		vce_melee_attack_normal = "wwise/events/minions/play_enemy_chaos_ogryn_houndmaster__melee_attack_normal_vce",
-		vce_melee_attack_short = "wwise/events/minions/play_enemy_chaos_ogryn_houndmaster__melee_attack_short_vce",
+		vce_melee_attack_short = "wwise/events/minions/play_enemy_chaos_ogryn_houndmaster__melee_attack_short_vce"
 	},
 	use_proximity_culling = {
 		vce_long_attack = false,
 		vce_melee_attack_final_vce = false,
 		vce_melee_attack_normal = false,
-		vce_melee_attack_short = false,
-	},
+		vce_melee_attack_short = false
+	}
 }
 
 table.add_missing(sound_data.events, ChaosOgrynCommonSounds.events)

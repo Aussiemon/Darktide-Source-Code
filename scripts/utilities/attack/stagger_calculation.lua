@@ -69,7 +69,7 @@ function _calculate_stagger_strength(damage_profile, target_settings, power_leve
 	local min, max = stagger_table.min, stagger_table.max
 	local stagger_strength_range = max - min
 	local charged_power_level = PowerLevel.scale_by_charge_level(power_level, charge_level, damage_profile.charge_level_scaler)
-	local stagger_power_level, scaled_power_level = DamageProfile.power_distribution_from_power_level(charged_power_level, "impact", damage_profile, target_settings, is_critical_strike, dropoff_scalar, armor_type, lerp_values, attacker_stat_buffs, attack_type, attacker_unit_or_nil, target_unit_or_nil)
+	local stagger_power_level, scaled_power_level = DamageProfile.power_distribution_from_power_level(charged_power_level, "impact", damage_profile, target_settings, is_critical_strike, dropoff_scalar, armor_type, lerp_values, attacker_stat_buffs, attack_type, hit_weakspot, attacker_unit_or_nil, target_unit_or_nil)
 	local stagger_buff_modifier = _calculate_stagger_buffs(attack_type, target_stat_buffs, attacker_stat_buffs, armor_type, hit_weakspot, is_critical_strike)
 
 	stagger_power_level = stagger_power_level * stagger_buff_modifier

@@ -13,7 +13,7 @@ local default_breed_tag_charges = {
 	elite = 2,
 	monster = 10,
 	ogryn = 2,
-	special = 2,
+	special = 2
 }
 local default_num_charges_to_add = 1
 

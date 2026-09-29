@@ -11,12 +11,12 @@ local hud_element_boss_health_settings = {
 	health_animation_threshold = 0.05,
 	size = {
 		640,
-		8,
+		8
 	},
 	size_small = {
 		305,
-		8,
-	},
+		8
+	}
 }
 
 return settings("HudElementBossHealthSettings", hud_element_boss_health_settings)

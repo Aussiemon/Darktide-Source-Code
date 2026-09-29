@@ -19,7 +19,7 @@ local conversations_hub_mourningstar_hadron_servitor_a = {
 			"loc_mourningstar_hadron_servitor_a__hub_hadron_servitor_idle_mutter_a_12",
 			"loc_mourningstar_hadron_servitor_a__hub_hadron_servitor_idle_mutter_a_13",
 			"loc_mourningstar_hadron_servitor_a__hub_hadron_servitor_idle_mutter_a_14",
-			"loc_mourningstar_hadron_servitor_a__hub_hadron_servitor_idle_mutter_a_15",
+			"loc_mourningstar_hadron_servitor_a__hub_hadron_servitor_idle_mutter_a_15"
 		},
 		sound_events_duration = {
 			4.311125,
@@ -36,9 +36,9 @@ local conversations_hub_mourningstar_hadron_servitor_a = {
 			4.837063,
 			4.051125,
 			4.891625,
-			5.688938,
+			5.688938
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	hub_hadron_servitor_idle_mutter_c = {
 		randomize_indexes_n = 0,
@@ -48,17 +48,17 @@ local conversations_hub_mourningstar_hadron_servitor_a = {
 			"loc_mourningstar_hadron_servitor_a__hub_hadron_servitor_idle_mutter_c_02",
 			"loc_mourningstar_hadron_servitor_a__hub_hadron_servitor_idle_mutter_c_03",
 			"loc_mourningstar_hadron_servitor_a__hub_hadron_servitor_idle_mutter_c_04",
-			"loc_mourningstar_hadron_servitor_a__hub_hadron_servitor_idle_mutter_c_05",
+			"loc_mourningstar_hadron_servitor_a__hub_hadron_servitor_idle_mutter_c_05"
 		},
 		sound_events_duration = {
 			2.047229,
 			1.848188,
 			6.528604,
 			7.968479,
-			3.604083,
+			3.604083
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("conversations_hub_mourningstar_hadron_servitor_a", conversations_hub_mourningstar_hadron_servitor_a)

@@ -97,43 +97,43 @@ CountPlayerHits.component_data = {
 	enabled = {
 		ui_name = "Enabled",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	hit_count = {
 		ui_name = "Hit Count",
 		ui_type = "number",
-		value = 1,
+		value = 1
 	},
 	level_flow_on_hit_count = {
 		ui_name = "Level Flow Event On Reached Hit Count",
 		ui_type = "text_box",
-		value = "none",
+		value = "none"
 	},
 	unit_flow_on_hit_count = {
 		ui_name = "Unit Flow Event On Reached Hit Count",
 		ui_type = "text_box",
-		value = "none",
+		value = "none"
 	},
 	unit_flow_on_unique_hit_count = {
 		ui_name = "Unique Unit Flow Event On Reached Hit Count",
 		ui_type = "text_box",
-		value = "none",
+		value = "none"
 	},
 	unique_counting = {
 		ui_name = "Unique Counting",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	set_hit_count_to_num_players = {
 		ui_name = "Set Hit Count To Num Players",
 		ui_type = "check_box",
-		value = false,
+		value = false
 	},
 	min_unique_hit_count = {
 		ui_name = "Min Unique Hit Count",
 		ui_type = "number",
-		value = 0,
-	},
+		value = 0
+	}
 }
 
 return CountPlayerHits

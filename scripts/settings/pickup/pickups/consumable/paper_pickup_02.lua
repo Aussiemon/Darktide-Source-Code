@@ -12,7 +12,7 @@ local pickup_data = {
 		local level = Managers.state.mission:mission_level()
 
 		Level.trigger_event(level, "paper_grabbed")
-	end,
+	end
 }
 
 return pickup_data

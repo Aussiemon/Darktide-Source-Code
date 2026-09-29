@@ -52,7 +52,7 @@ MutatorGameplayLiveEventEndlessHordes.update = function (self, dt, t)
 				inject_twin = false,
 				size = "default",
 				worldposition = position,
-				node_id = self._node_id,
+				node_id = self._node_id
 			}
 
 			self._auto_event_id = Managers.state.pacing:request_auto_event(auto_event_context)

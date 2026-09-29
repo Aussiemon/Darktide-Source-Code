@@ -424,7 +424,7 @@ local ABILITIES_ALLOW_RECOVERY_REASONS = {
 	psyker_sphere = true,
 	veteran_ranged_stance = true,
 	zealot_channel = true,
-	zealot_stealth = true,
+	zealot_stealth = true
 }
 local COMBAT_ABILITIES_ALLOWED_RECOVERY_REASONS = {
 	ability_shout = true,
@@ -441,7 +441,7 @@ local COMBAT_ABILITIES_ALLOWED_RECOVERY_REASONS = {
 	psyker_sphere = true,
 	veteran_ranged_stance = true,
 	zealot_channel = true,
-	zealot_stealth = true,
+	zealot_stealth = true
 }
 
 PlayerUnitToughnessExtension._toughness_regen_disabled = function (self, ignore_state_block, optional_recovery_type, optional_reason)

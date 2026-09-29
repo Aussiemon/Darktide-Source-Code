@@ -47,7 +47,7 @@ Offer.reject = function (self)
 	local builder = BackendUtilities.url_builder():path("/store/storefront/"):path(store_front.data.name):path("/offers/"):path(self.offerId):query("accountId", store_front.account_id):query("characterId", store_front.character_id)
 
 	return Managers.backend:title_request(builder:to_string(), {
-		method = "DELETE",
+		method = "DELETE"
 	})
 end
 
@@ -71,13 +71,13 @@ Offer.make_purchase = function (self, wallet)
 		offerId = offer_id,
 		characterId = store_front.character_id,
 		latestTransactionId = wallet.lastTransactionId,
-		ownedSkus = self.owned_skus,
+		ownedSkus = self.owned_skus
 	}
 	local builder = BackendUtilities.url_builder():path("/store/"):path(store_front.account_id):path("/wallets/"):path(wallet.owner or store_front.wallet_owner):path("/purchases")
 
 	return Managers.backend:title_request(builder:to_string(), {
 		method = "POST",
-		body = purchase_request,
+		body = purchase_request
 	}):next(function (purchase_result)
 		wallet.balance.amount = wallet.balance.amount - purchase_result.body.amount.amount
 		wallet.lastTransactionId = (wallet.lastTransactionId or 0) + 1

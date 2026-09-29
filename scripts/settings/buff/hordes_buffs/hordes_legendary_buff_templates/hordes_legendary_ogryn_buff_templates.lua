@@ -35,8 +35,8 @@ templates.hordes_buff_ogryn_basic_box_spawns_cluster = {
 	predicted = false,
 	buff_category = buff_categories.hordes_sub_buff,
 	keywords = {
-		buff_keywords.ogryn_basic_box_spawns_cluster,
-	},
+		buff_keywords.ogryn_basic_box_spawns_cluster
+	}
 }
 
 local ogryn_big_boom_stat_increase = HordesBuffsData.hordes_buff_ogryn_biggest_boom_grenade.buff_stats.dammage.value
@@ -50,7 +50,7 @@ templates.hordes_buff_ogryn_biggest_boom_grenade = {
 	stat_buffs = {
 		[stat_buffs.frag_damage] = ogryn_big_boom_stat_increase,
 		[stat_buffs.explosion_impact_modifier] = 1,
-		[stat_buffs.explosion_radius_modifier] = 1,
+		[stat_buffs.explosion_radius_modifier] = 1
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -58,7 +58,7 @@ templates.hordes_buff_ogryn_biggest_boom_grenade = {
 		end
 
 		HordesBuffsUtilities.give_passive_grenade_replenishment_buff(template_context.unit)
-	end,
+	end
 }
 
 local ogryn_fire_trail_burning_stacks = HordesBuffsData.hordes_buff_ogryn_fire_trail_on_lunge.buff_stats.stacks.value
@@ -70,11 +70,11 @@ templates.hordes_buff_ogryn_fire_trail_on_lunge = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	keywords = {
-		buff_keywords.fire_trail_on_lunge,
+		buff_keywords.fire_trail_on_lunge
 	},
 	proc_events = {
 		[proc_events.on_lunge_start] = 1,
-		[proc_events.on_lunge_end] = 1,
+		[proc_events.on_lunge_end] = 1
 	},
 	specific_proc_func = {
 		[proc_events.on_lunge_start] = function (params, template_data, template_context)
@@ -89,7 +89,7 @@ templates.hordes_buff_ogryn_fire_trail_on_lunge = {
 		end,
 		[proc_events.on_lunge_end] = function (params, template_data, template_context, t)
 			template_data.is_lunging = false
-		end,
+		end
 	},
 	start_func = function (template_data, template_context)
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -113,7 +113,7 @@ templates.hordes_buff_ogryn_fire_trail_on_lunge = {
 
 			template_data.next_pulse_t = t + template_data.fire_pulse_interval
 		end
-	end,
+	end
 }
 templates.hordes_buff_zealot_fire_trail_on_lunge = table.clone(templates.hordes_buff_ogryn_fire_trail_on_lunge)
 templates.hordes_buff_ogryn_box_of_surprises = {
@@ -123,7 +123,7 @@ templates.hordes_buff_ogryn_box_of_surprises = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	keywords = {
-		buff_keywords.ogryn_box_of_surprise,
+		buff_keywords.ogryn_box_of_surprise
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -131,7 +131,7 @@ templates.hordes_buff_ogryn_box_of_surprises = {
 		end
 
 		HordesBuffsUtilities.give_passive_grenade_replenishment_buff(template_context.unit)
-	end,
+	end
 }
 
 local ogryn_percent_chance_rock_instakill = HordesBuffsData.hordes_buff_ogryn_omega_lucky_rock.buff_stats.chance.value
@@ -143,7 +143,7 @@ templates.hordes_buff_ogryn_omega_lucky_rock = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_hit] = ogryn_percent_chance_rock_instakill,
+		[proc_events.on_hit] = ogryn_percent_chance_rock_instakill
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		return params.damage_type and params.damage_type == "ogryn_friend_rock"
@@ -168,7 +168,7 @@ templates.hordes_buff_ogryn_omega_lucky_rock = {
 		if player_fx_extension then
 			player_fx_extension:trigger_wwise_events_local_only(SFX_NAMES.super_crit, nil, player_unit)
 		end
-	end,
+	end
 }
 
 local ogryn_rock_charge_max_damage_increase = 4
@@ -254,12 +254,12 @@ templates.hordes_buff_ogryn_rock_charge_while_wield = {
 	lerped_stat_buffs = {
 		[stat_buffs.ogryn_friendly_rock_damage_modifier] = {
 			min = 0,
-			max = ogryn_rock_charge_max_damage_increase,
-		},
+			max = ogryn_rock_charge_max_damage_increase
+		}
 	},
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		return template_data.damage_increase_stacks / ogryn_rock_charge_max_stacks
-	end,
+	end
 }
 
 local ogryn_percent_damage_taken_reduction_from_taunted_enemies = HordesBuffsData.hordes_buff_ogryn_taunt_on_lunge.buff_stats.damage.value
@@ -271,7 +271,7 @@ templates.hordes_buff_ogryn_taunt_on_lunge = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	conditional_stat_buffs = {
-		[stat_buffs.damage_taken_vs_taunted] = -ogryn_percent_damage_taken_reduction_from_taunted_enemies,
+		[stat_buffs.damage_taken_vs_taunted] = -ogryn_percent_damage_taken_reduction_from_taunted_enemies
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.is_damage_reduction_active
@@ -284,7 +284,7 @@ templates.hordes_buff_ogryn_taunt_on_lunge = {
 	end,
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_lunge_end] = 1,
+		[proc_events.on_lunge_end] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.is_damage_reduction_active = false
@@ -300,7 +300,7 @@ templates.hordes_buff_ogryn_taunt_on_lunge = {
 		end,
 		[proc_events.on_lunge_end] = function (params, template_data)
 			return true
-		end,
+		end
 	},
 	specific_proc_func = {
 		[proc_events.on_lunge_end] = function (params, template_data, template_context, t)
@@ -318,8 +318,8 @@ templates.hordes_buff_ogryn_taunt_on_lunge = {
 					buff_extension:add_internally_controlled_buff("taunted", t, "owner_unit", player_unit)
 				end
 			end
-		end,
-	},
+		end
+	}
 }
 
 local ogryn_num_burning_stacks_on_shout = HordesBuffsData.hordes_buff_ogryn_apply_fire_on_shout.buff_stats.stacks.value
@@ -331,7 +331,7 @@ templates.hordes_buff_ogryn_apply_fire_on_shout = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.hit_units = {}
@@ -354,7 +354,7 @@ templates.hordes_buff_ogryn_apply_fire_on_shout = {
 				fx_system:trigger_wwise_event(SFX_NAMES.burning_proc, enemy_position)
 			end
 		end
-	end,
+	end
 }
 
 local ogryn_percent_decrease_range_hit_mass_consumption_on_crits = HordesBuffsData.hordes_buff_ogryn_increase_penetration_during_stance.buff_stats.penetration.value
@@ -366,7 +366,7 @@ templates.hordes_buff_ogryn_increase_penetration_during_stance = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	conditional_stat_buffs = {
-		[stat_buffs.consumed_hit_mass_modifier_on_ranged_critical_hit] = 1 / (1 + ogryn_percent_decrease_range_hit_mass_consumption_on_crits),
+		[stat_buffs.consumed_hit_mass_modifier_on_ranged_critical_hit] = 1 / (1 + ogryn_percent_decrease_range_hit_mass_consumption_on_crits)
 	},
 	start_func = function (template_data, template_context)
 		template_data.is_active = false
@@ -376,7 +376,7 @@ templates.hordes_buff_ogryn_increase_penetration_during_stance = {
 	end,
 	update_func = function (template_data, template_context)
 		template_data.is_active = template_context.buff_extension and template_context.buff_extension:has_keyword(buff_keywords.ogryn_combat_ability_stance)
-	end,
+	end
 }
 
 return templates

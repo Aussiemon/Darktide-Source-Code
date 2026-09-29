@@ -17,14 +17,14 @@ DummySessionReport.fetch_session_report = function (account_id)
 			resistance = 1,
 			startTime = "1618834762768",
 			win = false,
-			sideMissions = {},
+			sideMissions = {}
 		},
 		serverDetails = {
 			type = "local",
 			properties = {
 				ipAddress = "127.0.0.1",
-				serverId = "4141e272-249f-428a-836a-1f5152097b86",
-			},
+				serverId = "4141e272-249f-428a-836a-1f5152097b86"
+			}
 		},
 		team = {
 			sessionStatistics = {},
@@ -41,7 +41,7 @@ DummySessionReport.fetch_session_report = function (account_id)
 							neededXpForNextLevel = 0,
 							startLevel = 9,
 							startXp = 4553,
-							type = "character",
+							type = "character"
 						},
 						{
 							currentLevel = 1,
@@ -52,28 +52,28 @@ DummySessionReport.fetch_session_report = function (account_id)
 							neededXpForNextLevel = 14842,
 							startLevel = 1,
 							startXp = 4553,
-							type = "account",
-						},
+							type = "account"
+						}
 					},
 					sessionStatistics = {
 						{
 							typePath = "team_deaths",
 							sessionValue = {
-								none = 3,
-							},
+								none = 3
+							}
 						},
 						{
 							typePath = "team_kills",
 							sessionValue = {
-								none = 33,
-							},
+								none = 33
+							}
 						},
 						{
 							typePath = "team_expedition_loot_retrieved",
 							sessionValue = {
-								none = 1337,
-							},
-						},
+								none = 1337
+							}
+						}
 					},
 					accountId = account_id,
 					rewardCards = {
@@ -89,10 +89,10 @@ DummySessionReport.fetch_session_report = function (account_id)
 										fromSideMission = 0,
 										fromSideMissionBonus = 250,
 										fromTotalBonus = 0,
-										total = 1337,
-									},
-								},
-							},
+										total = 1337
+									}
+								}
+							}
 						},
 						{
 							kind = "track",
@@ -104,18 +104,18 @@ DummySessionReport.fetch_session_report = function (account_id)
 									trackId = "a6117884-cbd1-42ed-bd55-fd6bad9f7361",
 									trackType = "mastery",
 									reward = {
-										xp = 2500,
+										xp = 2500
 									},
 									current = {
 										tier = 1,
-										xp = 5375,
+										xp = 5375
 									},
 									trackDetails = {
 										mastery = "bespoke_powermaul_p1",
-										slot = "slot_primary",
-									},
-								},
-							},
+										slot = "slot_primary"
+									}
+								}
+							}
 						},
 						{
 							kind = "havocOrder",
@@ -125,9 +125,9 @@ DummySessionReport.fetch_session_report = function (account_id)
 									charges = 3,
 									rank = 5,
 									rewardType = "havocOrder",
-									source = "skill",
-								},
-							},
+									source = "skill"
+								}
+							}
 						},
 						{
 							kind = "havocOrder",
@@ -136,9 +136,9 @@ DummySessionReport.fetch_session_report = function (account_id)
 								{
 									rank = 5,
 									rewardType = "havocHighestRank",
-									statType = "week",
-								},
-							},
+									statType = "week"
+								}
+							}
 						},
 						{
 							kind = "havocOrder",
@@ -147,9 +147,9 @@ DummySessionReport.fetch_session_report = function (account_id)
 								{
 									rank = 5,
 									rewardType = "havocHighestRank",
-									statType = "all-time",
-								},
-							},
+									statType = "all-time"
+								}
+							}
 						},
 						{
 							kind = "levelUp",
@@ -161,27 +161,27 @@ DummySessionReport.fetch_session_report = function (account_id)
 									masterId = "content/items/characters/player/human/gear_head/astra_upperbody_a_01_helmet",
 									rewardType = "item",
 									overrides = {
-										rarity = 2,
-									},
+										rarity = 2
+									}
 								},
 								{
 									gearId = "ef2ae1dd-09ca-49e4-9722-1899c15ab326",
 									masterId = "content/items/characters/player/human/gear_head/astra_upperbody_a_02_helmet",
-									rewardType = "item",
-								},
-							},
+									rewardType = "item"
+								}
+							}
 						},
 						{
 							kind = "levelUp",
 							level = 10,
 							target = "character",
-							rewards = {},
+							rewards = {}
 						},
 						{
 							kind = "levelUp",
 							level = 5,
 							target = "account",
-							rewards = {},
+							rewards = {}
 						},
 						{
 							kind = "salary",
@@ -196,8 +196,8 @@ DummySessionReport.fetch_session_report = function (account_id)
 										fromSideMission = 0,
 										fromSideMissionBonus = 0,
 										fromTotalBonus = 0,
-										total = 3780,
-									},
+										total = 3780
+									}
 								},
 								{
 									amount = 10,
@@ -205,8 +205,8 @@ DummySessionReport.fetch_session_report = function (account_id)
 									rewardType = "currency",
 									source = "missionPickup",
 									details = {
-										total = 10,
-									},
+										total = 10
+									}
 								},
 								{
 									amount = 0,
@@ -214,10 +214,10 @@ DummySessionReport.fetch_session_report = function (account_id)
 									rewardType = "currency",
 									source = "missionPickup",
 									details = {
-										total = 5,
-									},
-								},
-							},
+										total = 5
+									}
+								}
+							}
 						},
 						{
 							kind = "weaponDrop",
@@ -229,10 +229,10 @@ DummySessionReport.fetch_session_report = function (account_id)
 									source = "weaponDrop",
 									overrides = {
 										itemLevel = 9000,
-										rarity = 3,
-									},
-								},
-							},
+										rarity = 3
+									}
+								}
+							}
 						},
 						{
 							kind = "weaponDrop",
@@ -243,10 +243,10 @@ DummySessionReport.fetch_session_report = function (account_id)
 									rewardType = "gear",
 									source = "weaponDrop",
 									overrides = {
-										rarity = 5,
-									},
-								},
-							},
+										rarity = 5
+									}
+								}
+							}
 						},
 						{
 							kind = "expeditionStats",
@@ -259,52 +259,52 @@ DummySessionReport.fetch_session_report = function (account_id)
 										{
 											scope = "all_time",
 											path = {
-												"expedition",
+												"expedition"
 											},
 											stats = {
 												count = {
 													fromValue = 1,
-													toValue = 2,
+													toValue = 2
 												},
 												count_malice = {
 													fromValue = 1,
-													toValue = 2,
+													toValue = 2
 												},
 												total_loot = {
 													fromValue = 30,
-													toValue = 40,
+													toValue = 40
 												},
 												total_loot_malice = {
 													fromValue = 30,
-													toValue = 40,
-												},
-											},
+													toValue = 40
+												}
+											}
 										},
 										{
 											scope = "campaign",
 											path = {
 												"expedition",
 												"campaign",
-												"CAMP001",
+												"CAMP001"
 											},
 											stats = {
 												count = {
 													fromValue = 1,
-													toValue = 2,
+													toValue = 2
 												},
 												count_malice = {
 													fromValue = 1,
-													toValue = 2,
+													toValue = 2
 												},
 												total_loot = {
 													fromValue = 30,
-													toValue = 40,
+													toValue = 40
 												},
 												total_loot_malice = {
 													fromValue = 30,
-													toValue = 40,
-												},
-											},
+													toValue = 40
+												}
+											}
 										},
 										{
 											scope = "rotation",
@@ -313,26 +313,26 @@ DummySessionReport.fetch_session_report = function (account_id)
 												"campaign",
 												"CAMP001",
 												"rotation",
-												"ROT01",
+												"ROT01"
 											},
 											stats = {
 												count = {
 													fromValue = 1,
-													toValue = 2,
+													toValue = 2
 												},
 												count_malice = {
 													fromValue = 1,
-													toValue = 2,
+													toValue = 2
 												},
 												total_loot = {
 													fromValue = 30,
-													toValue = 40,
+													toValue = 40
 												},
 												total_loot_malice = {
 													fromValue = 30,
-													toValue = 40,
-												},
-											},
+													toValue = 40
+												}
+											}
 										},
 										{
 											scope = "node",
@@ -343,31 +343,31 @@ DummySessionReport.fetch_session_report = function (account_id)
 												"rotation",
 												"ROT01",
 												"node",
-												"node_704adcaa-a450-46d7-829d-386d265cca21",
+												"node_704adcaa-a450-46d7-829d-386d265cca21"
 											},
 											stats = {
 												count = {
 													fromValue = 1,
-													toValue = 2,
+													toValue = 2
 												},
 												count_malice = {
 													fromValue = 1,
-													toValue = 2,
+													toValue = 2
 												},
 												total_loot = {
 													fromValue = 30,
-													toValue = 40,
+													toValue = 40
 												},
 												total_loot_malice = {
 													fromValue = 30,
-													toValue = 40,
-												},
-											},
-										},
-									},
-								},
-							},
-						},
+													toValue = 40
+												}
+											}
+										}
+									}
+								}
+							}
+						}
 					},
 					characterDetails = {
 						breed = "human",
@@ -378,11 +378,11 @@ DummySessionReport.fetch_session_report = function (account_id)
 						selected_voice = "veteran_male_a",
 						skin_color = "skin_dark_02",
 						lore = {
-							backstory = {},
+							backstory = {}
 						},
 						abilities = {
 							combat_ability = "zealot_dash",
-							grenade_ability = "fire_grenade",
+							grenade_ability = "fire_grenade"
 						},
 						inventory = {
 							slot_body_arms = "cosmetic-3fae375d-1345-4145-a5a9-e06da58a94c3-slot_body_arms",
@@ -397,12 +397,12 @@ DummySessionReport.fetch_session_report = function (account_id)
 							slot_gear_shoes = "default-zealot-slot_gear_shoes",
 							slot_gear_torso = "default-zealot-slot_gear_torso",
 							slot_primary = "default-zealot-slot_primary",
-							slot_secondary = "default-zealot-slot_secondary",
-						},
-					},
-				},
-			},
-		},
+							slot_secondary = "default-zealot-slot_secondary"
+						}
+					}
+				}
+			}
+		}
 	}
 
 	return session_report
@@ -421,16 +421,16 @@ local xp_tables = {
 		4275,
 		5285,
 		6380,
-		7560,
+		7560
 	},
 	account = {
 		0,
 		20000,
 		41500,
 		64500,
-		89000,
+		89000
 	},
-	weapon = Mastery.get_dummy_weapon_xp_per_level(),
+	weapon = Mastery.get_dummy_weapon_xp_per_level()
 }
 
 DummySessionReport.fetch_xp_table = function (entity_type)

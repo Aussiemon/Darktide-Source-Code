@@ -14,21 +14,21 @@ local core_mutators = {
 	"mutator_live_event_broker_stimms_more_tox_bombers",
 	"mutator_live_event_broker_stimms_stat_trigger",
 	"mutator_enable_twin_havoc_inventory",
-	"mutator_live_event_broker_stimms_gameplay",
+	"mutator_live_event_broker_stimms_gameplay"
 }
 local base_templates = CircumstanceUtils.inherit(BaseLiveEventTemplate, core_mutators, {
 	"pickups_more_syringes",
-	"stats_live_event_broker_stimms",
+	"stats_live_event_broker_stimms"
 }, "broker_stimms")
 local circumstance_templates = table.reduce({
-	base_templates,
+	base_templates
 }, table.merge, {})
 
 circumstance_templates.broker_stimms.ui.display_name = "loc_circumstance_broker_stimms_default_title"
 circumstance_templates.broker_stimms.ui.description = "loc_circumstance_broker_stimms_default_description"
 circumstance_templates.broker_stimms_more_res = table.clone(circumstance_templates.broker_stimms_gas)
 circumstance_templates.broker_stimms_more_res.mutators = table.append(circumstance_templates.broker_stimms_more_res.mutators, {
-	"mutator_add_resistance",
+	"mutator_add_resistance"
 })
 circumstance_templates.broker_stimms_more_res.ui.display_name = "loc_circumstance_broker_stimms_increased_resistance_title"
 circumstance_templates.broker_stimms_more_res.ui.description = "loc_circumstance_broker_stimms_increased_resistance_description"
@@ -37,13 +37,13 @@ circumstance_templates.broker_stimms_waves_spec.mutators = table.append(circumst
 	"mutator_waves_of_specials",
 	"mutator_increase_terror_event_points",
 	"mutator_reduced_ramp_duration_low",
-	"mutator_auric_tension_modifier",
+	"mutator_auric_tension_modifier"
 })
 circumstance_templates.broker_stimms_waves_spec.ui.display_name = "loc_circumstance_broker_stimms_waves_of_specials_title"
 circumstance_templates.broker_stimms_waves_spec.ui.description = "loc_circumstance_broker_stimms_waves_of_specials_description"
 circumstance_templates.broker_stimms_hunt_grou = table.clone(circumstance_templates.broker_stimms_gas)
 circumstance_templates.broker_stimms_hunt_grou.mutators = table.append(circumstance_templates.broker_stimms_hunt_grou.mutators, {
-	"mutator_chaos_hounds",
+	"mutator_chaos_hounds"
 })
 circumstance_templates.broker_stimms_hunt_grou.ui.display_name = "loc_circumstance_broker_stimms_hunting_grounds_title"
 circumstance_templates.broker_stimms_hunt_grou.ui.description = "loc_circumstance_broker_stimms_hunting_grounds_description"

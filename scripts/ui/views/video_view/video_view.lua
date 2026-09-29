@@ -11,7 +11,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local device_list = {
 	Keyboard,
 	Mouse,
-	Pad1,
+	Pad1
 }
 local DUMMY_VIDEO_TIME = 5
 local VideoView = class("VideoView", "BaseView")
@@ -205,7 +205,7 @@ VideoView._trigger_action = function (self, action)
 
 	if action_type == "open_hub_view" then
 		local hub_view_context = {
-			hub_interaction = true,
+			hub_interaction = true
 		}
 
 		Managers.ui:open_view(action.view_name, nil, nil, nil, nil, hub_view_context)
@@ -558,7 +558,7 @@ VideoView._setup_input_legend = function (self)
 		if key then
 			input_legends_by_key[key] = {
 				id = id,
-				settings = legend_input,
+				settings = legend_input
 			}
 		end
 	end
@@ -573,8 +573,8 @@ VideoView._setup_input_legend = function (self)
 			pass_type = "rect",
 			style_id = "background",
 			style = {
-				color = Color.ui_grey_medium(255, true),
-			},
+				color = Color.ui_grey_medium(255, true)
+			}
 		},
 		{
 			pass_type = "rect",
@@ -582,10 +582,10 @@ VideoView._setup_input_legend = function (self)
 			style = {
 				color = Color.ui_terminal(255, true),
 				size = {
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, entry_widget.scenegraph_id)
 
 	self._skip_bar_widget = self:_create_widget("skip", widget_definition)
@@ -625,11 +625,11 @@ VideoView.draw = function (self, dt, t, input_service, layer)
 		self._skip_bar_widget.offset = {
 			position[1] + entry_widget.offset[1] + (entry_widget.content.size[1] - width) * 0.5,
 			position[2] + entry_widget.offset[2] + entry_widget.content.size[2] - bar_margin,
-			z_offset,
+			z_offset
 		}
 		self._skip_bar_widget.content.size = {
 			width,
-			5,
+			5
 		}
 
 		local progress = UISettings.cutscenes_skip.hold_time and math.min(self._hold_timer / UISettings.cutscenes_skip.hold_time, 1) or 1

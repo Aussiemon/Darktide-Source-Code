@@ -6,7 +6,7 @@ local moebian_21 = {
 	icon = "",
 	id = "infected_moebian",
 	name = "loc_moebian_21_event_name",
-	stat = "live_event_moebian_21_deliveries",
+	stat = "live_event_moebian_21_deliveries"
 }
 
 return moebian_21

@@ -5,203 +5,203 @@ local mission_vo_prologue_zealot_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_zealot_female_b__prologue_combat_01",
+			[1] = "loc_zealot_female_b__prologue_combat_01"
 		},
 		sound_events_duration = {
-			[1] = 1.010625,
+			[1] = 1.010625
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	prologue_combat_02 = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_zealot_female_b__prologue_combat_02",
+			[1] = "loc_zealot_female_b__prologue_combat_02"
 		},
 		sound_events_duration = {
-			[1] = 1.2285,
+			[1] = 1.2285
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	prologue_combat_03 = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_zealot_female_b__prologue_combat_03",
+			[1] = "loc_zealot_female_b__prologue_combat_03"
 		},
 		sound_events_duration = {
-			[1] = 1.262146,
+			[1] = 1.262146
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	prologue_combat_04 = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_zealot_female_b__prologue_combat_04",
+			[1] = "loc_zealot_female_b__prologue_combat_04"
 		},
 		sound_events_duration = {
-			[1] = 2.074542,
+			[1] = 2.074542
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	prologue_combat_05 = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_zealot_female_b__prologue_combat_05",
+			[1] = "loc_zealot_female_b__prologue_combat_05"
 		},
 		sound_events_duration = {
-			[1] = 1.178854,
+			[1] = 1.178854
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	prologue_end_event_conversation_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_zealot_female_b__prologue_end_event_conversation_b_01",
+			[1] = "loc_zealot_female_b__prologue_end_event_conversation_b_01"
 		},
 		sound_events_duration = {
-			[1] = 3.122958,
+			[1] = 3.122958
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	prologue_firefight_conversation_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_zealot_female_b__prologue_firefight_conversation_b_01",
+			[1] = "loc_zealot_female_b__prologue_firefight_conversation_b_01"
 		},
 		sound_events_duration = {
-			[1] = 2.066563,
+			[1] = 2.066563
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	prologue_monologue_01 = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_zealot_female_b__prologue_monologue_01",
+			[1] = "loc_zealot_female_b__prologue_monologue_01"
 		},
 		sound_events_duration = {
-			[1] = 4.715125,
+			[1] = 4.715125
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	prologue_monologue_02 = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_zealot_female_b__prologue_monologue_02",
+			[1] = "loc_zealot_female_b__prologue_monologue_02"
 		},
 		sound_events_duration = {
-			[1] = 2.750229,
+			[1] = 2.750229
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	prologue_monologue_03 = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_zealot_female_b__prologue_monologue_03",
+			[1] = "loc_zealot_female_b__prologue_monologue_03"
 		},
 		sound_events_duration = {
-			[1] = 4.927729,
+			[1] = 4.927729
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	prologue_monologue_04 = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_zealot_female_b__prologue_monologue_04",
+			[1] = "loc_zealot_female_b__prologue_monologue_04"
 		},
 		sound_events_duration = {
-			[1] = 3.275292,
+			[1] = 3.275292
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	prologue_monologue_05 = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_zealot_female_b__prologue_monologue_05",
+			[1] = "loc_zealot_female_b__prologue_monologue_05"
 		},
 		sound_events_duration = {
-			[1] = 5.147438,
+			[1] = 5.147438
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	prologue_monologue_06 = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_zealot_female_b__prologue_monologue_06",
+			[1] = "loc_zealot_female_b__prologue_monologue_06"
 		},
 		sound_events_duration = {
-			[1] = 3.380583,
+			[1] = 3.380583
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	prologue_monologue_07 = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_zealot_female_b__prologue_monologue_07",
+			[1] = "loc_zealot_female_b__prologue_monologue_07"
 		},
 		sound_events_duration = {
-			[1] = 5.150479,
+			[1] = 5.150479
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	prologue_monologue_08 = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_zealot_female_b__prologue_combat_05",
+			[1] = "loc_zealot_female_b__prologue_combat_05"
 		},
 		sound_events_duration = {
-			[1] = 1.178854,
+			[1] = 1.178854
 		},
 		sound_event_weights = {
-			[1] = 1,
+			[1] = 1
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	prologue_monologue_09 = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_zealot_female_b__prologue_monologue_09",
+			[1] = "loc_zealot_female_b__prologue_monologue_09"
 		},
 		sound_events_duration = {
-			[1] = 2.713146,
+			[1] = 2.713146
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	prologue_monologue_10 = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_zealot_female_b__prologue_monologue_10",
+			[1] = "loc_zealot_female_b__prologue_monologue_10"
 		},
 		sound_events_duration = {
-			[1] = 4.778646,
+			[1] = 4.778646
 		},
-		randomize_indexes = {},
+		randomize_indexes = {}
 	},
 	ranged_gameplay_04 = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_zealot_female_b__ranged_gameplay_04_01",
+			[1] = "loc_zealot_female_b__ranged_gameplay_04_01"
 		},
 		sound_events_duration = {
-			[1] = 1.686844,
+			[1] = 1.686844
 		},
-		randomize_indexes = {},
-	},
+		randomize_indexes = {}
+	}
 }
 
 return settings("mission_vo_prologue_zealot_female_b", mission_vo_prologue_zealot_female_b)

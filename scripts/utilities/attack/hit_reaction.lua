@@ -18,7 +18,6 @@ local Push = require("scripts/extension_systems/character_state_machine/characte
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local Stagger = require("scripts/utilities/attack/stagger")
 local Stun = require("scripts/utilities/attack/stun")
-local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local attack_results = AttackSettings.attack_results
 local attack_types = AttackSettings.attack_types
 local stagger_results = AttackSettings.stagger_results
@@ -397,6 +396,13 @@ function _drop_luggable(unit, unit_data_extension, attack_type)
 	local weapon_template = visual_loadout_extension:weapon_template_from_slot("slot_luggable")
 
 	if not weapon_template or weapon_template.retain_luggable_when_damaged then
+		return
+	end
+
+	local weapon_extension = ScriptUnit.extension(unit, "weapon_system")
+	local action_settings = weapon_extension:running_action_settings()
+
+	if action_settings and action_settings.kind == "throw_luggable" then
 		return
 	end
 

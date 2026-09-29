@@ -19,36 +19,36 @@ local tooltip_grid_size = PenanceOverviewViewSettings.tooltip_grid_size
 local tooltip_entries_width = PenanceOverviewViewSettings.tooltip_entries_width
 local tooltip_blueprint_size = {
 	tooltip_entries_width,
-	tooltip_grid_size[2],
+	tooltip_grid_size[2]
 }
 local reward_icon_large = {
 	164,
-	164,
+	164
 }
 local reward_glow_large = {
 	328,
-	328,
+	328
 }
 local reward_icon_medium = {
 	112,
-	112,
+	112
 }
 local reward_glow_medium = {
 	224,
-	224,
+	224
 }
 local reward_icon_small = {
 	94,
-	94,
+	94
 }
 local reward_glow_small = {
 	188,
-	188,
+	188
 }
 local default_button_content = {
 	on_released_sound = nil,
 	on_hover_sound = UISoundEvents.default_mouse_hover,
-	on_pressed_sound = UISoundEvents.default_click,
+	on_pressed_sound = UISoundEvents.default_click
 }
 
 local function _apply_package_item_icon_cb_func(widget, item)
@@ -128,7 +128,7 @@ local function _setup_blueprint_penance_tracked(input_size, edge_padding)
 	return {
 		size = {
 			input_size[1],
-			20,
+			20
 		},
 		pass_template = {
 			{
@@ -144,25 +144,25 @@ local function _setup_blueprint_penance_tracked(input_size, edge_padding)
 					hover_color = Color.terminal_frame_hover(180, true),
 					size = {
 						40,
-						40,
+						40
 					},
 					offset = {
 						-10,
 						-5,
-						1,
-					},
+						1
+					}
 				},
 				visibility_function = function (content, style)
 					return content.tracked
-				end,
-			},
+				end
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local content = widget.content
 
 			content.element = element
 			content.tracked = element.tracked
-		end,
+		end
 	}
 end
 
@@ -170,7 +170,7 @@ local function _setup_blueprint_penance_icon(input_size, edge_padding)
 	return {
 		size = {
 			input_size[1],
-			120,
+			120
 		},
 		pass_template = {
 			{
@@ -181,23 +181,23 @@ local function _setup_blueprint_penance_icon(input_size, edge_padding)
 					horizontal_alignment = "center",
 					size = {
 						120,
-						120,
+						120
 					},
 					material_values = {
-						icon = "content/ui/textures/icons/achievements/default",
+						icon = "content/ui/textures/icons/achievements/default"
 					},
 					color = {
 						255,
 						255,
 						255,
-						255,
+						255
 					},
 					offset = {
 						0,
 						0,
-						1,
-					},
-				},
+						1
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -209,19 +209,19 @@ local function _setup_blueprint_penance_icon(input_size, edge_padding)
 					vertical_alignment = "center",
 					size = {
 						136,
-						136,
+						136
 					},
 					color = Color.black(200, true),
 					size_addition = {
-						0,
+						0
 					},
 					offset = {
 						0,
 						0,
-						0,
-					},
-				},
-			},
+						0
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -250,7 +250,7 @@ local function _setup_blueprint_penance_icon(input_size, edge_padding)
 					style.texture.material_values.icon_number = number_texture
 				end
 			end
-		end,
+		end
 	}
 end
 
@@ -258,7 +258,7 @@ local function _setup_blueprint_penance_icon_small(input_size, edge_padding)
 	return {
 		size = {
 			50,
-			50,
+			50
 		},
 		pass_template = {
 			{
@@ -269,9 +269,9 @@ local function _setup_blueprint_penance_icon_small(input_size, edge_padding)
 						0,
 						0,
 						0,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -279,20 +279,20 @@ local function _setup_blueprint_penance_icon_small(input_size, edge_padding)
 				value = "content/ui/materials/icons/achievements/achievement_icon_container_v2",
 				style = {
 					material_values = {
-						icon = "content/ui/textures/icons/achievements/default",
+						icon = "content/ui/textures/icons/achievements/default"
 					},
 					color = {
 						255,
 						120,
 						120,
-						120,
+						120
 					},
 					offset = {
 						0,
 						0,
-						1,
-					},
-				},
+						1
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -304,19 +304,19 @@ local function _setup_blueprint_penance_icon_small(input_size, edge_padding)
 					vertical_alignment = "center",
 					size = {
 						57,
-						57,
+						57
 					},
 					color = Color.black(200, true),
 					size_addition = {
 						0,
-						0,
+						0
 					},
 					offset = {
 						0,
 						0,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "text",
@@ -332,13 +332,13 @@ local function _setup_blueprint_penance_icon_small(input_size, edge_padding)
 					offset = {
 						0,
 						0,
-						2,
-					},
+						2
+					}
 				},
 				visibility_function = function (content, style)
 					return content.completed
-				end,
-			},
+				end
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -360,7 +360,7 @@ local function _setup_blueprint_penance_icon_small(input_size, edge_padding)
 			end
 
 			content.completed = element.completed
-		end,
+		end
 	}
 end
 
@@ -368,17 +368,17 @@ local function _setup_blueprint_penance_text(input_size, edge_padding, default_h
 	return {
 		size = {
 			input_size[1],
-			default_height,
+			default_height
 		},
 		size_function = function (parent, element, ui_renderer)
 			local size = element.size
 
 			return size and {
 				size[1] or input_size[1],
-				size[2] or 50,
+				size[2] or 50
 			} or {
 				input_size[1],
-				default_height,
+				default_height
 			}
 		end,
 		pass_template = {
@@ -387,8 +387,8 @@ local function _setup_blueprint_penance_text(input_size, edge_padding, default_h
 				style_id = "text",
 				value = "n/a",
 				value_id = "text",
-				style = base_style,
-			},
+				style = base_style
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -418,16 +418,16 @@ local function _setup_blueprint_penance_text(input_size, edge_padding, default_h
 			if can_resize then
 				local size_addition = text_style.size_addition or {
 					0,
-					0,
+					0
 				}
 				local height = Text.text_height(ui_renderer, text, text_style, {
 					size[1] + size_addition[1],
-					size[2] + size_addition[2],
+					size[2] + size_addition[2]
 				}) + size_addition[2]
 
 				size[2] = height
 			end
-		end,
+		end
 	}
 end
 
@@ -444,12 +444,12 @@ local function _setup_blueprint_penance_header(input_size, edge_padding)
 		offset = {
 			0,
 			0,
-			3,
+			3
 		},
 		size_addition = {
 			-(20 + edge_padding),
-			0,
-		},
+			0
+		}
 	})
 end
 
@@ -464,14 +464,14 @@ local function _setup_blueprint_penance_body(input_size, edge_padding)
 		text_vertical_alignment = "center",
 		size_addition = {
 			-(0 + edge_padding),
-			0,
+			0
 		},
 		text_color = Color.terminal_text_header(255, true),
 		offset = {
 			0,
 			0,
-			3,
-		},
+			3
+		}
 	})
 end
 
@@ -479,7 +479,7 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 	return {
 		size = {
 			input_size[1],
-			130,
+			130
 		},
 		pass_template = {
 			{
@@ -487,8 +487,8 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 				style_id = "background",
 				value = "content/ui/materials/backgrounds/default_square",
 				style = {
-					color = Color.terminal_background_dark(nil, true),
-				},
+					color = Color.terminal_background_dark(nil, true)
+				}
 			},
 			{
 				pass_type = "texture",
@@ -499,15 +499,15 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 					vertical_alignment = "center",
 					size = {
 						100,
-						100,
+						100
 					},
 					offset = {
 						-80,
 						0,
-						1,
+						1
 					},
-					color = Color.terminal_background_dark(nil, true),
-				},
+					color = Color.terminal_background_dark(nil, true)
+				}
 			},
 			{
 				pass_type = "texture",
@@ -518,15 +518,15 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 					vertical_alignment = "center",
 					size = {
 						100,
-						100,
+						100
 					},
 					color = Color.terminal_grid_background_gradient(nil, true),
 					offset = {
 						-80,
 						0,
-						2,
-					},
-				},
+						2
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -538,20 +538,20 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 					vertical_alignment = "center",
 					size = {
 						100,
-						100,
+						100
 					},
 					material_values = {},
 					color = {
 						255,
 						255,
 						255,
-						255,
+						255
 					},
 					offset = {
 						-80,
 						0,
-						4,
-					},
+						4
+					}
 				},
 				visibility_function = function (content, style)
 					local use_placeholder_texture = content.use_placeholder_texture
@@ -561,7 +561,7 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 					end
 
 					return false
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -573,19 +573,19 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 					vertical_alignment = "center",
 					size = {
 						100,
-						100,
+						100
 					},
 					color = Color.black(180, true),
 					size_addition = {
 						20,
-						20,
+						20
 					},
 					offset = {
 						-80,
 						0,
-						4,
-					},
-				},
+						4
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -596,15 +596,15 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 					vertical_alignment = "center",
 					size = {
 						100,
-						100,
+						100
 					},
 					color = Color.terminal_frame(nil, true),
 					offset = {
 						-80,
 						0,
-						7,
-					},
-				},
+						7
+					}
+				}
 			},
 			{
 				pass_type = "text",
@@ -620,9 +620,9 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 					offset = {
 						80,
 						-20,
-						3,
-					},
-				},
+						3
+					}
+				}
 			},
 			{
 				pass_type = "text",
@@ -639,10 +639,10 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 					offset = {
 						80,
 						35,
-						3,
-					},
-				},
-			},
+						3
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -668,7 +668,7 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 
 			if step then
 				content.label = Localize("loc_achievements_view_family_reward_label", true, {
-					step = step,
+					step = step
 				})
 			end
 
@@ -704,7 +704,7 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 
 				item_icon_size = {
 					icon_width,
-					icon_height,
+					icon_height
 				}
 				style.icon.material_values.icon_size = item_icon_size
 			end
@@ -736,7 +736,7 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 					state_machine = item_state_machine,
 					animation_event = item_animation_event,
 					companion_state_machine = item_companion_state_machine,
-					companion_animation_event = item_companion_animation_event,
+					companion_animation_event = item_companion_animation_event
 				}
 				local cb, unload_cb
 
@@ -778,7 +778,7 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 			if content.icon_load_id then
 				Managers.ui:update_item_icon_priority(content.icon_load_id)
 			end
-		end,
+		end
 	}
 end
 
@@ -786,7 +786,7 @@ local function _setup_blueprint_penance_score(input_size, edge_padding)
 	return {
 		size = {
 			input_size[1],
-			130,
+			130
 		},
 		pass_template = {
 			{
@@ -798,9 +798,9 @@ local function _setup_blueprint_penance_score(input_size, edge_padding)
 						120,
 						0,
 						0,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "text",
@@ -816,9 +816,9 @@ local function _setup_blueprint_penance_score(input_size, edge_padding)
 					offset = {
 						0,
 						-20,
-						3,
-					},
-				},
+						3
+					}
+				}
 			},
 			{
 				pass_type = "text",
@@ -835,17 +835,17 @@ local function _setup_blueprint_penance_score(input_size, edge_padding)
 					offset = {
 						0,
 						35,
-						3,
-					},
-				},
-			},
+						3
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local content = widget.content
 
 			content.element = element
 			content.reward_score = "+" .. element.score
-		end,
+		end
 	}
 end
 
@@ -855,7 +855,7 @@ local function _setup_blueprint_penance_progress_bar(input_size, edge_padding)
 	return {
 		size = {
 			input_size[1],
-			37,
+			37
 		},
 		pass_template = {
 			{
@@ -867,14 +867,14 @@ local function _setup_blueprint_penance_progress_bar(input_size, edge_padding)
 					color = Color.terminal_background_dark(255, true),
 					size = {
 						input_size[1] - (40 + edge_padding),
-						12,
+						12
 					},
 					offset = {
 						20 + edge_padding * 0.5,
 						0,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -885,15 +885,15 @@ local function _setup_blueprint_penance_progress_bar(input_size, edge_padding)
 					vertical_alignment = "top",
 					size = {
 						input_size[1] - (40 + edge_padding),
-						12,
+						12
 					},
 					color = Color.terminal_frame(nil, true),
 					offset = {
 						20 + edge_padding * 0.5,
 						0,
-						4,
-					},
-				},
+						4
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -905,18 +905,18 @@ local function _setup_blueprint_penance_progress_bar(input_size, edge_padding)
 						255,
 						255,
 						255,
-						255,
+						255
 					},
 					size = {
 						input_size[1] - (40 + edge_padding),
-						12,
+						12
 					},
 					offset = {
 						20 + edge_padding * 0.5,
 						0,
-						1,
-					},
-				},
+						1
+					}
+				}
 			},
 			{
 				pass_type = "text",
@@ -931,15 +931,15 @@ local function _setup_blueprint_penance_progress_bar(input_size, edge_padding)
 					text_vertical_alignment = "bottom",
 					text_color = Color.terminal_text_body(255, true),
 					size = {
-						input_size[1] - (40 + edge_padding),
+						input_size[1] - (40 + edge_padding)
 					},
 					offset = {
 						0,
 						0,
-						3,
-					},
-				},
-			},
+						3
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -956,7 +956,7 @@ local function _setup_blueprint_penance_progress_bar(input_size, edge_padding)
 			style.progress_bar.size[1] = style.background.size[1] * progress
 			content.element = element
 			content.text = text
-		end,
+		end
 	}
 end
 
@@ -966,17 +966,17 @@ local function _setup_blueprint_penance_stat(input_size, edge_padding)
 	return {
 		size = {
 			input_size[1],
-			25,
+			25
 		},
 		size_function = function (parent, element, ui_renderer)
 			local size = element.size
 
 			return size and {
 				size[1] or input_size[1] * 0.5,
-				size[2] or 25,
+				size[2] or 25
 			} or {
 				input_size[1] * 0.5,
-				25,
+				25
 			}
 		end,
 		pass_template = {
@@ -994,9 +994,9 @@ local function _setup_blueprint_penance_stat(input_size, edge_padding)
 					offset = {
 						10 + edge_padding * 0.5,
 						0,
-						3,
-					},
-				},
+						3
+					}
+				}
 			},
 			{
 				pass_type = "text",
@@ -1012,10 +1012,10 @@ local function _setup_blueprint_penance_stat(input_size, edge_padding)
 					offset = {
 						-(10 + edge_padding * 0.5),
 						0,
-						3,
-					},
-				},
-			},
+						3
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -1036,7 +1036,7 @@ local function _setup_blueprint_penance_stat(input_size, edge_padding)
 			content.element = element
 			content.text = croped_text
 			content.value = value
-		end,
+		end
 	}
 end
 
@@ -1046,17 +1046,17 @@ local function _setup_blueprint_penance_icon_and_name(input_size, edge_padding)
 	return {
 		size = {
 			input_size[1],
-			50,
+			50
 		},
 		size_function = function (parent, element, ui_renderer)
 			local size = element.size
 
 			return size and {
 				size[1] or input_size[1],
-				size[2] or 50,
+				size[2] or 50
 			} or {
 				input_size[1],
-				50,
+				50
 			}
 		end,
 		pass_template = {
@@ -1068,23 +1068,23 @@ local function _setup_blueprint_penance_icon_and_name(input_size, edge_padding)
 					horizontal_alignment = "left",
 					size = {
 						50,
-						50,
+						50
 					},
 					material_values = {
-						icon = "content/ui/textures/icons/achievements/default",
+						icon = "content/ui/textures/icons/achievements/default"
 					},
 					color = {
 						255,
 						120,
 						120,
-						120,
+						120
 					},
 					offset = {
 						edge_padding * 0.5,
 						0,
-						1,
-					},
-				},
+						1
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1095,19 +1095,19 @@ local function _setup_blueprint_penance_icon_and_name(input_size, edge_padding)
 					scale_to_material = true,
 					size = {
 						56,
-						56,
+						56
 					},
 					color = Color.black(200, true),
 					size_addition = {
 						0,
-						0,
+						0
 					},
 					offset = {
 						12,
 						-3,
-						7,
-					},
-				},
+						7
+					}
+				}
 			},
 			{
 				pass_type = "text",
@@ -1121,18 +1121,18 @@ local function _setup_blueprint_penance_icon_and_name(input_size, edge_padding)
 					text_vertical_alignment = "center",
 					size = {
 						50,
-						50,
+						50
 					},
 					text_color = Color.ui_terminal(255, true),
 					offset = {
 						edge_padding * 0.5,
 						0,
-						2,
-					},
+						2
+					}
 				},
 				visibility_function = function (content, style)
 					return content.completed
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -1148,14 +1148,14 @@ local function _setup_blueprint_penance_icon_and_name(input_size, edge_padding)
 					offset = {
 						edge_padding * 0.5 + 50 + 10,
 						0,
-						3,
+						3
 					},
 					size_addition = {
 						-(50 + edge_padding + 10),
-						0,
-					},
-				},
-			},
+						0
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -1192,7 +1192,7 @@ local function _setup_blueprint_penance_icon_and_name(input_size, edge_padding)
 					style.texture.material_values.icon_number = number_texture
 				end
 			end
-		end,
+		end
 	}
 end
 
@@ -1200,7 +1200,7 @@ local function _setup_blueprint_penance_completed(input_size, edge_padding)
 	return {
 		size = {
 			input_size[1],
-			0,
+			0
 		},
 		pass_template = {
 			{
@@ -1211,18 +1211,18 @@ local function _setup_blueprint_penance_completed(input_size, edge_padding)
 					vertical_alignment = "top",
 					size = {
 						62.400000000000006,
-						62.400000000000006,
+						62.400000000000006
 					},
 					color = Color.terminal_frame_hover(180, true),
 					offset = {
 						0,
 						-20,
-						8,
-					},
+						8
+					}
 				},
 				visibility_function = function (content, style)
 					return content.completed
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -1238,19 +1238,19 @@ local function _setup_blueprint_penance_completed(input_size, edge_padding)
 					offset = {
 						-6,
 						-16,
-						10,
-					},
+						10
+					}
 				},
 				visibility_function = function (content, style)
 					return content.completed
-				end,
-			},
+				end
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local content = widget.content
 
 			content.completed = element.completed
-		end,
+		end
 	}
 end
 
@@ -1258,7 +1258,7 @@ local function _setup_blueprint_penance_category(input_size, edge_padding)
 	return {
 		size = {
 			input_size[1],
-			0,
+			0
 		},
 		pass_template = {
 			{
@@ -1276,15 +1276,15 @@ local function _setup_blueprint_penance_category(input_size, edge_padding)
 					hover_color = Color.terminal_frame_hover(180, true),
 					size = {
 						70,
-						50,
+						50
 					},
 					offset = {
 						0,
 						-10,
-						1,
-					},
-				},
-			},
+						1
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local content = widget.content
@@ -1303,7 +1303,7 @@ local function _setup_blueprint_penance_category(input_size, edge_padding)
 			end
 
 			content.icon = PenanceOverviewViewSettings.category_icons[category] or "content/ui/materials/icons/item_types/upper_bodies"
-		end,
+		end
 	}
 end
 
@@ -1335,7 +1335,7 @@ local grid_blueprints = {
 	claim_text = {
 		size = {
 			carousel_penance_size[1],
-			50,
+			50
 		},
 		pass_template = {
 			{
@@ -1351,14 +1351,14 @@ local grid_blueprints = {
 					offset = {
 						20,
 						0,
-						13,
+						13
 					},
 					size_addition = {
 						-40,
-						0,
-					},
+						0
+					}
 				},
-				value = Localize("loc_penance_menu_completed_title"),
+				value = Localize("loc_penance_menu_completed_title")
 			},
 			{
 				pass_type = "text",
@@ -1373,15 +1373,15 @@ local grid_blueprints = {
 					offset = {
 						20,
 						0,
-						13,
+						13
 					},
 					size_addition = {
 						-40,
-						0,
-					},
+						0
+					}
 				},
-				value = Localize("loc_penance_menu_claim_button"),
-			},
+				value = Localize("loc_penance_menu_claim_button")
+			}
 		},
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			if parent._using_cursor_navigation then
@@ -1396,12 +1396,12 @@ local grid_blueprints = {
 			else
 				widget.content.description = ""
 			end
-		end,
+		end
 	},
 	claim_overlay = {
 		size = {
 			carousel_penance_size[1],
-			0,
+			0
 		},
 		pass_template = {
 			{
@@ -1411,20 +1411,20 @@ local grid_blueprints = {
 				style = {
 					size = {
 						0,
-						0,
+						0
 					},
 					color = {
 						160,
 						0,
 						0,
-						0,
+						0
 					},
 					offset = {
 						0,
 						0,
-						10,
-					},
-				},
+						10
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1436,14 +1436,14 @@ local grid_blueprints = {
 						255,
 						255,
 						255,
-						255,
+						255
 					},
 					offset = {
 						0,
 						0,
-						12,
-					},
-				},
+						12
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1455,11 +1455,11 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						11,
+						11
 					},
-					size = reward_glow_small,
-				},
-			},
+					size = reward_glow_small
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local size = element.size
@@ -1497,22 +1497,22 @@ local grid_blueprints = {
 				offset[1] = (size[1] - texture_size[1]) * 0.5
 				offset[2] = (size[2] - texture_size[2]) * 0
 			end
-		end,
+		end
 	},
 	texture = {
 		size = {
 			64,
-			64,
+			64
 		},
 		size_function = function (parent, element, ui_renderer)
 			local size = element.size
 
 			return size and {
 				size[1],
-				size[2],
+				size[2]
 			} or {
 				64,
-				64,
+				64
 			}
 		end,
 		pass_template = {
@@ -1525,10 +1525,10 @@ local grid_blueprints = {
 						255,
 						255,
 						255,
-						255,
-					},
-				},
-			},
+						255
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -1553,12 +1553,12 @@ local grid_blueprints = {
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end,
+		end
 	},
 	header = {
 		size = {
 			penance_grid_size[1],
-			100,
+			100
 		},
 		pass_template = {
 			{
@@ -1575,10 +1575,10 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						3,
-					},
-				},
-			},
+						3
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -1602,12 +1602,12 @@ local grid_blueprints = {
 			local height = Text.text_height(ui_renderer, text, text_style, size)
 
 			size[2] = height + 0
-		end,
+		end
 	},
 	body = {
 		size = {
 			penance_grid_size[1],
-			100,
+			100
 		},
 		pass_template = {
 			{
@@ -1624,10 +1624,10 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						3,
-					},
-				},
-			},
+						3
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -1651,12 +1651,12 @@ local grid_blueprints = {
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end,
+		end
 	},
 	body_centered = {
 		size = {
 			penance_grid_size[1],
-			100,
+			100
 		},
 		pass_template = {
 			{
@@ -1673,10 +1673,10 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						3,
-					},
-				},
-			},
+						3
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -1696,7 +1696,7 @@ local grid_blueprints = {
 			local height = Text.text_height(ui_renderer, text, text_style, size)
 
 			size[2] = height + 0
-		end,
+		end
 	},
 	dynamic_spacing = {
 		size_function = function (parent, element, ui_renderer)
@@ -1704,12 +1704,12 @@ local grid_blueprints = {
 
 			return size and {
 				size[1],
-				size[2],
+				size[2]
 			} or {
 				225,
-				20,
+				20
 			}
-		end,
+		end
 	},
 	external_dynamic_spacing = {
 		pass_template = {
@@ -1718,21 +1718,21 @@ local grid_blueprints = {
 				style_id = "background",
 				style = {
 					visible = false,
-					color = Color.black(200, true),
-				},
-			},
+					color = Color.black(200, true)
+				}
+			}
 		},
 		size_function = function (parent, element, ui_renderer)
 			local size = element.size
 
 			return size and {
 				size[1],
-				size[2],
+				size[2]
 			} or {
 				225,
-				20,
+				20
 			}
-		end,
+		end
 	},
 	penance = {
 		size = penance_size,
@@ -1741,14 +1741,14 @@ local grid_blueprints = {
 
 			return size and {
 				size[1],
-				size[2],
+				size[2]
 			} or penance_size
 		end,
 		pass_template = {
 			{
 				content_id = "hotspot",
 				pass_type = "hotspot",
-				content = default_button_content,
+				content = default_button_content
 			},
 			{
 				pass_type = "texture",
@@ -1761,14 +1761,14 @@ local grid_blueprints = {
 					color = Color.black(200, true),
 					size_addition = {
 						20,
-						20,
+						20
 					},
 					offset = {
 						0,
 						0,
-						3,
-					},
-				},
+						3
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1783,13 +1783,13 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						1,
-					},
+						1
+					}
 				},
 				change_function = function (content, style)
 					ButtonPassTemplates.terminal_button_change_function(content, style)
 					ButtonPassTemplates.terminal_button_hover_change_function(content, style)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1801,17 +1801,17 @@ local grid_blueprints = {
 					color = Color.terminal_corner_selected(255, true),
 					size = {
 						20,
-						20,
+						20
 					},
 					offset = {
 						-2,
 						-2,
-						7,
-					},
+						7
+					}
 				},
 				visibility_function = function (content, style)
 					return content.tracked
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1827,10 +1827,10 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						8,
-					},
+						8
+					}
 				},
-				change_function = ButtonPassTemplates.terminal_button_change_function,
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
 				pass_type = "texture",
@@ -1846,10 +1846,10 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						9,
-					},
+						9
+					}
 				},
-				change_function = ButtonPassTemplates.terminal_button_change_function,
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
 				pass_type = "texture",
@@ -1860,22 +1860,22 @@ local grid_blueprints = {
 					vertical_alignment = "center",
 					size_addition = {
 						-20,
-						-20,
+						-20
 					},
 					material_values = {
-						icon = "content/ui/textures/icons/achievements/default",
+						icon = "content/ui/textures/icons/achievements/default"
 					},
 					color = {
 						255,
 						255,
 						255,
-						255,
+						255
 					},
 					offset = {
 						0,
 						0,
-						3,
-					},
+						3
+					}
 				},
 				change_function = function (content, style)
 					local hotspot = content.hotspot
@@ -1892,7 +1892,7 @@ local grid_blueprints = {
 					style.color[2] = color_value
 					style.color[3] = color_value
 					style.color[4] = color_value
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1905,14 +1905,14 @@ local grid_blueprints = {
 					color = Color.black(200, true),
 					size_addition = {
 						-10,
-						-10,
+						-10
 					},
 					offset = {
 						0,
 						0,
-						5,
-					},
-				},
+						5
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -1924,18 +1924,18 @@ local grid_blueprints = {
 					size = reward_icon_small,
 					size_addition = {
 						-20,
-						-20,
+						-20
 					},
 					color = Color.white(255, true),
 					offset = {
 						0,
 						0,
-						9,
-					},
+						9
+					}
 				},
 				visibility_function = function (content, style)
 					return content.can_claim and not content.completed
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1949,12 +1949,12 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						8,
-					},
+						8
+					}
 				},
 				visibility_function = function (content, style)
 					return content.can_claim and not content.completed
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1964,17 +1964,17 @@ local grid_blueprints = {
 						220,
 						0,
 						0,
-						0,
+						0
 					},
 					offset = {
 						0,
 						0,
-						3,
-					},
+						3
+					}
 				},
 				visibility_function = function (content, style)
 					return content.can_claim
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1984,17 +1984,17 @@ local grid_blueprints = {
 						100,
 						0,
 						0,
-						0,
+						0
 					},
 					offset = {
 						0,
 						0,
-						2,
-					},
+						2
+					}
 				},
 				visibility_function = function (content, style)
 					return not content.completed and not content.can_claim
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -2011,12 +2011,12 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						9,
-					},
+						9
+					}
 				},
 				visibility_function = function (content, style)
 					return content.can_claim and not content.completed and (content.hotspot.is_hover or content.hotspot.is_selected)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2026,7 +2026,7 @@ local grid_blueprints = {
 					vertical_alignment = "top",
 					size = {
 						penance_size[1] / 100 * 40,
-						penance_size[2] / 100 * 40,
+						penance_size[2] / 100 * 40
 					},
 					default_color = Color.terminal_frame(180, true),
 					selected_color = Color.terminal_frame_selected(180, true),
@@ -2035,13 +2035,13 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						8,
-					},
+						8
+					}
 				},
 				visibility_function = function (content, style)
 					return content.completed and not content.can_claim
 				end,
-				change_function = ButtonPassTemplates.terminal_button_change_function,
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
 				pass_type = "text",
@@ -2060,14 +2060,14 @@ local grid_blueprints = {
 					offset = {
 						-4,
 						-1,
-						9,
-					},
+						9
+					}
 				},
 				visibility_function = function (content, style)
 					return content.completed and not content.can_claim
 				end,
-				change_function = ButtonPassTemplates.terminal_button_change_function,
-			},
+				change_function = ButtonPassTemplates.terminal_button_change_function
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -2126,7 +2126,7 @@ local grid_blueprints = {
 
 				widget.content.claim_description = input_text
 			end
-		end,
+		end
 	},
 	penance_large = {
 		size = penance_size_large,
@@ -2135,14 +2135,14 @@ local grid_blueprints = {
 
 			return size and {
 				size[1],
-				size[2],
+				size[2]
 			} or penance_size_large
 		end,
 		pass_template = {
 			{
 				content_id = "hotspot",
 				pass_type = "hotspot",
-				content = default_button_content,
+				content = default_button_content
 			},
 			{
 				pass_type = "texture",
@@ -2155,14 +2155,14 @@ local grid_blueprints = {
 					color = Color.black(200, true),
 					size_addition = {
 						20,
-						20,
+						20
 					},
 					offset = {
 						0,
 						0,
-						3,
-					},
-				},
+						3
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -2177,13 +2177,13 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						1,
-					},
+						1
+					}
 				},
 				change_function = function (content, style)
 					ButtonPassTemplates.terminal_button_change_function(content, style)
 					ButtonPassTemplates.terminal_button_hover_change_function(content, style)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2195,17 +2195,17 @@ local grid_blueprints = {
 					color = Color.terminal_corner_selected(255, true),
 					size = {
 						20,
-						20,
+						20
 					},
 					offset = {
 						-2,
 						-2,
-						9,
-					},
+						9
+					}
 				},
 				visibility_function = function (content, style)
 					return content.tracked
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2221,10 +2221,10 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						10,
-					},
+						10
+					}
 				},
-				change_function = ButtonPassTemplates.terminal_button_change_function,
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
 				pass_type = "texture",
@@ -2240,10 +2240,10 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						11,
-					},
+						11
+					}
 				},
-				change_function = ButtonPassTemplates.terminal_button_change_function,
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
 				pass_type = "texture",
@@ -2252,22 +2252,22 @@ local grid_blueprints = {
 				style = {
 					size = {
 						70,
-						70,
+						70
 					},
 					material_values = {
-						icon = "content/ui/textures/icons/achievements/default",
+						icon = "content/ui/textures/icons/achievements/default"
 					},
 					color = {
 						255,
 						255,
 						255,
-						255,
+						255
 					},
 					offset = {
 						10,
 						10,
-						6,
-					},
+						6
+					}
 				},
 				change_function = function (content, style)
 					local hotspot = content.hotspot
@@ -2283,7 +2283,7 @@ local grid_blueprints = {
 					style.color[2] = color_value
 					style.color[3] = color_value
 					style.color[4] = color_value
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2295,19 +2295,19 @@ local grid_blueprints = {
 					vertical_alignment = "top",
 					size = {
 						79,
-						79,
+						79
 					},
 					color = Color.black(200, true),
 					size_addition = {
 						0,
-						0,
+						0
 					},
 					offset = {
 						5,
 						5,
-						5,
-					},
-				},
+						5
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -2317,17 +2317,17 @@ local grid_blueprints = {
 						120,
 						0,
 						0,
-						0,
+						0
 					},
 					offset = {
 						0,
 						0,
-						2,
-					},
+						2
+					}
 				},
 				visibility_function = function (content, style)
 					return not content.completed and not content.hotspot.is_selected
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2337,7 +2337,7 @@ local grid_blueprints = {
 					vertical_alignment = "top",
 					size = {
 						penance_size[1] / 100 * 40,
-						penance_size[2] / 100 * 40,
+						penance_size[2] / 100 * 40
 					},
 					default_color = Color.terminal_frame(180, true),
 					selected_color = Color.terminal_frame_selected(180, true),
@@ -2346,13 +2346,13 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						8,
-					},
+						8
+					}
 				},
 				visibility_function = function (content, style)
 					return content.completed and not content.can_claim
 				end,
-				change_function = ButtonPassTemplates.terminal_button_change_function,
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
 				pass_type = "text",
@@ -2371,13 +2371,13 @@ local grid_blueprints = {
 					offset = {
 						-4,
 						-1,
-						9,
-					},
+						9
+					}
 				},
 				visibility_function = function (content, style)
 					return content.completed and not content.can_claim
 				end,
-				change_function = ButtonPassTemplates.terminal_button_change_function,
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
 				pass_type = "text",
@@ -2394,13 +2394,13 @@ local grid_blueprints = {
 					offset = {
 						90,
 						10,
-						3,
+						3
 					},
 					size_addition = {
 						-170,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "text",
@@ -2417,13 +2417,13 @@ local grid_blueprints = {
 					offset = {
 						90,
 						40,
-						3,
+						3
 					},
 					size_addition = {
 						-170,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -2433,18 +2433,18 @@ local grid_blueprints = {
 					vertical_alignment = "top",
 					size = {
 						penance_size_large[1] - 230,
-						12,
+						12
 					},
 					offset = {
 						90,
 						45,
-						4,
+						4
 					},
-					color = Color.terminal_background_dark(255, true),
+					color = Color.terminal_background_dark(255, true)
 				},
 				visibility_function = function (content, style)
 					return not content.completed and content.bar_progress
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2455,23 +2455,23 @@ local grid_blueprints = {
 					vertical_alignment = "top",
 					size = {
 						penance_size_large[1] - 230,
-						12,
+						12
 					},
 					offset = {
 						90,
 						45,
-						6,
+						6
 					},
 					color = Color.terminal_frame(nil, true),
 					default_color = Color.terminal_frame(nil, true),
 					selected_color = Color.terminal_frame_selected(nil, true),
 					disabled_color = Color.ui_grey_medium(255, true),
-					hover_color = Color.terminal_frame_hover(nil, true),
+					hover_color = Color.terminal_frame_hover(nil, true)
 				},
 				visibility_function = function (content, style)
 					return not content.completed and content.bar_progress
 				end,
-				change_function = ButtonPassTemplates.terminal_button_change_function,
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
 				pass_type = "texture",
@@ -2481,27 +2481,27 @@ local grid_blueprints = {
 					vertical_alignment = "top",
 					size = {
 						penance_size_large[1] - 230,
-						12,
+						12
 					},
 					default_size = {
 						penance_size_large[1] - 230,
-						12,
+						12
 					},
 					offset = {
 						90,
 						45,
-						5,
+						5
 					},
 					color = {
 						255,
 						255,
 						255,
-						255,
-					},
+						255
+					}
 				},
 				visibility_function = function (content, style)
 					return not content.completed and content.bar_progress
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -2517,14 +2517,14 @@ local grid_blueprints = {
 					offset = {
 						-70,
 						45,
-						3,
+						3
 					},
 					size = {
 						70,
-						12,
+						12
 					},
-					text_color = Color.terminal_text_body(255, true),
-				},
+					text_color = Color.terminal_text_body(255, true)
+				}
 			},
 			{
 				pass_type = "texture",
@@ -2532,20 +2532,20 @@ local grid_blueprints = {
 				style = {
 					horizontal_alignment = "right",
 					size = {
-						70,
+						70
 					},
 					color = {
 						200,
 						0,
 						0,
-						0,
+						0
 					},
 					offset = {
 						0,
 						0,
-						2,
-					},
-				},
+						2
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -2557,19 +2557,19 @@ local grid_blueprints = {
 					vertical_alignment = "top",
 					size = {
 						40,
-						40,
+						40
 					},
 					material_values = {},
 					color = Color.terminal_text_body(255, true),
 					offset = {
 						-15,
 						10,
-						3,
-					},
+						3
+					}
 				},
 				visibility_function = function (content, style)
 					return style.material_values.texture_map
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -2583,15 +2583,15 @@ local grid_blueprints = {
 					text_horizontal_alignment = "center",
 					text_vertical_alignment = "center",
 					size = {
-						70,
+						70
 					},
 					text_color = Color.terminal_text_body(255, true),
 					offset = {
 						0,
 						25,
-						3,
-					},
-				},
+						3
+					}
+				}
 			},
 			{
 				pass_type = "text",
@@ -2606,15 +2606,15 @@ local grid_blueprints = {
 					text_horizontal_alignment = "center",
 					text_vertical_alignment = "center",
 					size = {
-						70,
+						70
 					},
 					text_color = Color.terminal_text_body(255, true),
 					offset = {
 						0,
 						25,
-						4,
-					},
-				},
+						4
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -2626,18 +2626,18 @@ local grid_blueprints = {
 					size = reward_icon_medium,
 					size_addition = {
 						-20,
-						-20,
+						-20
 					},
 					color = Color.white(255, true),
 					offset = {
 						0,
 						-20,
-						9,
-					},
+						9
+					}
 				},
 				visibility_function = function (content, style)
 					return content.can_claim and not content.completed
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2651,12 +2651,12 @@ local grid_blueprints = {
 					offset = {
 						0,
 						-20,
-						8,
-					},
+						8
+					}
 				},
 				visibility_function = function (content, style)
 					return content.can_claim and not content.completed
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -2671,13 +2671,13 @@ local grid_blueprints = {
 					offset = {
 						0,
 						-20,
-						9,
-					},
+						9
+					}
 				},
 				value = Localize("loc_glossary_completed") .. " ",
 				visibility_function = function (content, style)
 					return content.can_claim and not content.completed
-				end,
+				end
 			},
 			{
 				pass_type = "text",
@@ -2692,13 +2692,13 @@ local grid_blueprints = {
 					offset = {
 						0,
 						-5,
-						9,
-					},
+						9
+					}
 				},
 				value = Localize("loc_penance_menu_claim_button"),
 				visibility_function = function (content, style)
 					return content.can_claim and not content.completed
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2708,18 +2708,18 @@ local grid_blueprints = {
 						220,
 						0,
 						0,
-						0,
+						0
 					},
 					offset = {
 						0,
 						0,
-						7,
-					},
+						7
+					}
 				},
 				visibility_function = function (content, style)
 					return content.can_claim
-				end,
-			},
+				end
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -2830,7 +2830,7 @@ local grid_blueprints = {
 			else
 				widget.content.claim_description = Localize("loc_penance_menu_claim_button")
 			end
-		end,
+		end
 	},
 	category_button = {
 		pass_template = {
@@ -2840,7 +2840,7 @@ local grid_blueprints = {
 				style_id = "hotspot",
 				content = {
 					on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
-					on_hover_sound = UISoundEvents.default_mouse_hover,
+					on_hover_sound = UISoundEvents.default_mouse_hover
 				},
 				style = {
 					anim_focus_speed = 8,
@@ -2848,8 +2848,8 @@ local grid_blueprints = {
 					anim_input_speed = 8,
 					anim_select_speed = 8,
 					on_hover_sound = UISoundEvents.default_mouse_hover,
-					on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
-				},
+					on_pressed_sound = UISoundEvents.tab_secondary_button_pressed
+				}
 			},
 			{
 				pass_type = "texture",
@@ -2857,9 +2857,9 @@ local grid_blueprints = {
 				value = "content/ui/materials/backgrounds/default_square",
 				style = {
 					default_color = Color.terminal_background(nil, true),
-					selected_color = Color.terminal_background_selected(nil, true),
+					selected_color = Color.terminal_background_selected(nil, true)
 				},
-				change_function = ButtonPassTemplates.terminal_button_change_function,
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
 				pass_type = "texture",
@@ -2874,13 +2874,13 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						1,
-					},
+						1
+					}
 				},
 				change_function = function (content, style)
 					ButtonPassTemplates.terminal_button_change_function(content, style)
 					ButtonPassTemplates.terminal_button_hover_change_function(content, style)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -2893,14 +2893,14 @@ local grid_blueprints = {
 					color = Color.black(200, true),
 					size_addition = {
 						20,
-						20,
+						20
 					},
 					offset = {
 						0,
 						0,
-						3,
-					},
-				},
+						3
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -2915,10 +2915,10 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						2,
-					},
+						2
+					}
 				},
-				change_function = ButtonPassTemplates.terminal_button_change_function,
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
 				pass_type = "texture",
@@ -2930,14 +2930,14 @@ local grid_blueprints = {
 					color = Color.black(150, true),
 					size = {
 						68,
-						18,
+						18
 					},
 					offset = {
 						0,
 						-1,
-						8,
-					},
-				},
+						8
+					}
+				}
 			},
 			{
 				pass_type = "text",
@@ -2953,9 +2953,9 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						9,
-					},
-				},
+						9
+					}
+				}
 			},
 			{
 				pass_type = "texture",
@@ -2970,21 +2970,21 @@ local grid_blueprints = {
 					hover_color = Color.terminal_text_header_selected(255, true),
 					size = {
 						72,
-						52,
+						52
 					},
 					original_size_addition = {
 						-10,
-						-10,
+						-10
 					},
 					size_addition = {
 						0,
-						0,
+						0
 					},
 					offset = {
 						0,
 						-6,
-						6,
-					},
+						6
+					}
 				},
 				change_function = function (content, style)
 					local hotspot = content.hotspot
@@ -2997,7 +2997,7 @@ local grid_blueprints = {
 					style_size_addition[2] = original_size_addition[1] + size_addition * 2
 
 					ButtonPassTemplates.list_button_label_change_function(content, style)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -3008,18 +3008,18 @@ local grid_blueprints = {
 					vertical_alignment = "bottom",
 					size = {
 						90,
-						90,
+						90
 					},
 					offset = {
 						23,
 						-5,
-						4,
+						4
 					},
-					color = Color.terminal_corner_selected(255, true),
+					color = Color.terminal_corner_selected(255, true)
 				},
 				visibility_function = function (content, style)
 					return content.has_unclaimed_penances
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -3030,21 +3030,21 @@ local grid_blueprints = {
 					vertical_alignment = "top",
 					size = {
 						20,
-						20,
+						20
 					},
 					offset = {
 						-2,
 						-2,
-						4,
+						4
 					},
-					color = Color.terminal_corner_selected(255, true),
+					color = Color.terminal_corner_selected(255, true)
 				},
 				visibility_function = function (content, style)
 					return content.has_favorite_penances and not content.has_unclaimed_penances
-				end,
-			},
-		},
-	},
+				end
+			}
+		}
+	}
 }
 
 return grid_blueprints

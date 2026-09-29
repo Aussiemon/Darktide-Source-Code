@@ -2,12 +2,10 @@
 
 local CharacterCreate = require("scripts/utilities/character_create")
 local MasterItems = require("scripts/backend/master_items")
-local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local Promise = require("scripts/foundation/utilities/promise")
 local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local StateMainMenuTestify = GameParameters.testify and require("scripts/game_states/game/state_main_menu_testify")
-local SINGLEPLAY_TYPES = MatchmakingConstants.SINGLEPLAY_TYPES
 local StateMainMenu = class("StateMainMenu")
 
 local function _set_player_profile(profile)
@@ -254,11 +252,11 @@ StateMainMenu._create_new_character_start = function (self)
 	if not self._character_create then
 		self._character_create_state_views = {
 			{
-				"class_selection_view",
+				"class_selection_view"
 			},
 			{
-				"character_appearance_view",
-			},
+				"character_appearance_view"
+			}
 		}
 		self._character_create = CharacterCreate:new(self._item_definitions, self._gear)
 	end
@@ -410,7 +408,7 @@ StateMainMenu._open_character_create_state_views = function (self, index)
 			character_create = self._character_create,
 			parent = self,
 			force_character_creation = self._force_create_first_character,
-			migration_data = self._migration_data,
+			migration_data = self._migration_data
 		}
 
 		for i = 1, #next_views do
@@ -430,8 +428,8 @@ end
 
 local state_views = {
 	main_menu = {
-		"main_menu_background_view",
-	},
+		"main_menu_background_view"
+	}
 }
 
 StateMainMenu._close_current_state_views = function (self)
@@ -481,7 +479,7 @@ StateMainMenu._set_view_state_cb = function (self, state)
 		local view_context = {
 			parent = self,
 			migration_data = self._migration_data,
-			show_news_popup = show_news_popup,
+			show_news_popup = show_news_popup
 		}
 
 		for i = 1, #new_state_views do
@@ -572,11 +570,11 @@ StateMainMenu.update = function (self, main_dt, main_t)
 		local next_state, state_context
 
 		if self._onboarding_mission_name then
-			next_state, state_context = Managers.multiplayer_session:start_singleplayer_session(self._onboarding_mission_name, SINGLEPLAY_TYPES.onboarding)
-		elseif not Managers.multiplayer_session:has_session() then
-			next_state, state_context = Managers.multiplayer_session:find_available_session()
-		else
+			next_state, state_context = Managers.multiplayer_session:start_singleplayer_session(self._onboarding_mission_name)
+		elseif Managers.multiplayer_session:is_booting_session() or Managers.multiplayer_session:has_session() then
 			next_state, state_context = Managers.multiplayer_session:poll_available_session()
+		else
+			next_state, state_context = Managers.multiplayer_session:find_available_session()
 		end
 
 		return next_state, state_context
@@ -690,7 +688,7 @@ StateMainMenu._show_reconnect_popup = function (self)
 					self._reconnect_pressed = true
 
 					self:_rejoin_game()
-				end,
+				end
 			},
 			{
 				close_on_pressed = true,
@@ -698,9 +696,9 @@ StateMainMenu._show_reconnect_popup = function (self)
 				text = "loc_popup_reconnect_to_session_leave_button",
 				callback = function ()
 					Managers.party_immaterium:leave_party()
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)

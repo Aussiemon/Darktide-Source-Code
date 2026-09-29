@@ -50,7 +50,7 @@ local function _get_clouds(gas_clouds, nav_world)
 
 				local entry = {
 					fog_unit = fog_unit,
-					max_liquid = max_liquid,
+					max_liquid = max_liquid
 				}
 
 				table.insert(gas_clouds[section_id][id], entry)
@@ -273,7 +273,7 @@ local definition = {
 							position = boxed_position,
 							max_liquid = max_liquid,
 							fog_component = wanted_component,
-							buff_volume_component = wanted_buff_volume_component,
+							buff_volume_component = wanted_buff_volume_component
 						}
 
 						num_active_clouds = num_active_clouds + 1
@@ -304,7 +304,7 @@ local definition = {
 
 			local broadphase_category = settings.broadphase_category
 			local categories = {
-				broadphase_category,
+				broadphase_category
 			}
 			local player_broadphase_radius = settings.player_broadphase_radius
 			local player_manager = Managers.player
@@ -369,7 +369,7 @@ local definition = {
 
 			data.minion_unit = nil
 		end
-	end,
+	end
 }
 
 return definition

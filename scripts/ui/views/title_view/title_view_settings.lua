@@ -9,7 +9,7 @@ local title_view_settings = {
 	viewport_name = "ui_title_screen_viewport",
 	viewport_type = "default_with_alpha",
 	world_layer = 800,
-	world_name = "ui_title_screen_world",
+	world_name = "ui_title_screen_world"
 }
 
 return settings("TitleViewSettings", title_view_settings)

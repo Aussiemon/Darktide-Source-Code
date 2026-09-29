@@ -6,7 +6,7 @@ local GlobalStatWrapper = class("GlobalStatWrapper")
 GlobalStatWrapper.init = function (self, obj, func_name, category, stat_name, options)
 	self._options = table.add_missing(options or {}, {
 		delay = 1,
-		delay_jitter = 0,
+		delay_jitter = 0
 	})
 	self._category, self._stat_name = category, stat_name
 	self._object, self._func_name = obj, func_name
